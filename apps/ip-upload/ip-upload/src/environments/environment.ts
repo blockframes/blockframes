@@ -14,7 +14,11 @@ export const environment = {
   },
   network: 'ropsten' as 'ropsten',
   contracts: {
-    scriptHash: '0x3a7bfeb49b2fd1399a38e748b3a18ab2a76b042a'
+    scriptHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185'
+  },
+  pubsub: {
+    projectID: 'blockframes-laurent-230215',
+    topicRootName: 'eth-events'
   }
 };
 
