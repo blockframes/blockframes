@@ -6,7 +6,7 @@
   <!-- Content -->
   <mat-sidenav-content>
     <mat-toolbar fxLayout="row-reverse" fxLayoutAlign="space-between center">
-      <auth-logger></auth-logger>
+      <auth-logger (loggedOut)="logout()"></auth-logger>
       <button *ngIf="!!(user$ | async)" mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
