@@ -44,6 +44,12 @@ export class NgWallet extends Signer {
     return this.query.getSnapshot().privateKey;
   }
 
+  /** Create a wallet with a random mnemonic */
+  public createRandom(language?: lang) {
+    const mnemnonic = this.randomMnemonic(language);
+    this.fromMnemonic(mnemnonic);
+  }
+
   /** Create a random mnemnonic */
   public randomMnemonic(language: lang = 'en') {
     const bytes = utils.randomBytes(16);
