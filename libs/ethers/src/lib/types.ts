@@ -1,8 +1,4 @@
-import { ContractFunction, Contract } from 'ethers';
-import { Inject, Type, Injectable } from '@angular/core';
-import { NgWallet } from './wallet/+state';
-import { environment } from '@env/environment';
-import { PROVIDER } from './tokens';
+import { ContractFunction } from 'ethers';
 
 export interface INgContract {
   [methods: string]: ContractFunction;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ContractConfig, NgContract, INgContract } from '@blockframes/ethers';
+import { NgContract, INgContract, NgWallet } from '@blockframes/ethers';
 
 export interface ScriptHash extends INgContract {
   scriptsOwner(hash: string): Promise<string>;
@@ -14,5 +14,8 @@ export const abi = [
 ];
 
 @Injectable({ providedIn: 'root' })
-@ContractConfig('scriptHash', abi)
-export class ScriptHashContract extends NgContract<ScriptHash> {}
+export class ScriptHashContract extends NgContract<ScriptHash> {
+  constructor(wallet: NgWallet) {
+    super('scriptHash', abi, wallet)
+  }
+}
