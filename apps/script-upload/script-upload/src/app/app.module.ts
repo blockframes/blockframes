@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AppRoutingModule } from './app-routing.module';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
@@ -24,9 +24,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
 
 // Libraries
-import { AuthModule, AuthGuard } from '@blockframes/auth';
+import { AuthModule } from '@blockframes/auth';
 import { UploadModule } from '@blockframes/ui';
-import { EthersModule, WalletModule } from '@blockframes/ethers';
+import { WalletModule } from '@blockframes/ethers';
 
 // Components
 import { AppComponent } from './app.component';
@@ -45,10 +45,7 @@ import { HomeComponent } from './home/home.component';
     FlexLayoutModule,
     BrowserAnimationsModule,
     WalletModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent },
-      { path: 'form', component: FormComponent, canActivate: [AuthGuard] }
-    ]),
+    AppRoutingModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
