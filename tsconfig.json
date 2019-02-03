@@ -11,8 +11,8 @@
     "lib": ["es2017", "dom"],
     "baseUrl": ".",
     "paths": {
-      "@env/*": ["apps/script-upload/script-upload/src/environments/*"],
-      "@blockframes/script": ["libs/script/src/index.ts"],
+      "@env/*": ["apps/ip-upload/ip-upload/src/environments/*"],
+      "@blockframes/ip": ["libs/ip/src/index.ts"],
       "@blockframes/auth": ["libs/auth/src/index.ts"],
       "@blockframes/ui": ["libs/ui/src/index.ts"],
       "@blockframes/ethers": ["libs/ethers/src/index.ts"]

@@ -3,11 +3,11 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "script-upload": {
-      "root": "apps/script-upload/script-upload/",
-      "sourceRoot": "apps/script-upload/script-upload/src",
+    "ip-upload": {
+      "root": "apps/ip-upload/ip-upload/",
+      "sourceRoot": "apps/ip-upload/ip-upload/src",
       "projectType": "application",
-      "prefix": "script",
+      "prefix": "ip",
       "schematics": {
         "@schematics/angular:component": {
           "styleext": "scss"
@@ -17,19 +17,19 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/script-upload/script-upload",
-            "index": "apps/script-upload/script-upload/src/index.html",
-            "main": "apps/script-upload/script-upload/src/main.ts",
-            "polyfills": "apps/script-upload/script-upload/src/polyfills.ts",
-            "tsConfig": "apps/script-upload/script-upload/tsconfig.app.json",
+            "outputPath": "dist/apps/ip-upload/ip-upload",
+            "index": "apps/ip-upload/ip-upload/src/index.html",
+            "main": "apps/ip-upload/ip-upload/src/main.ts",
+            "polyfills": "apps/ip-upload/ip-upload/src/polyfills.ts",
+            "tsConfig": "apps/ip-upload/ip-upload/tsconfig.app.json",
             "assets": [
-              "apps/script-upload/script-upload/src/favicon.ico",
-              "apps/script-upload/script-upload/src/assets",
-              "apps/script-upload/script-upload/src/manifest.json"
+              "apps/ip-upload/ip-upload/src/favicon.ico",
+              "apps/ip-upload/ip-upload/src/assets",
+              "apps/ip-upload/ip-upload/src/manifest.json"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "apps/script-upload/script-upload/src/styles.scss"
+              "apps/ip-upload/ip-upload/src/styles.scss"
             ],
             "scripts": []
           },
@@ -37,8 +37,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/script-upload/script-upload/src/environments/environment.ts",
-                  "with": "apps/script-upload/script-upload/src/environments/environment.prod.ts"
+                  "replace": "apps/ip-upload/ip-upload/src/environments/environment.ts",
+                  "with": "apps/ip-upload/ip-upload/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -64,26 +64,26 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "script-upload:build"
+            "browserTarget": "ip-upload:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "script-upload:build:production"
+              "browserTarget": "ip-upload:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "script-upload:build"
+            "browserTarget": "ip-upload:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/script-upload/script-upload/tsconfig.app.json",
-              "apps/script-upload/script-upload/tsconfig.spec.json"
+              "apps/ip-upload/ip-upload/tsconfig.app.json",
+              "apps/ip-upload/ip-upload/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -91,66 +91,66 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "apps/script-upload/script-upload/jest.config.js",
-            "tsConfig": "apps/script-upload/script-upload/tsconfig.spec.json",
-            "setupFile": "apps/script-upload/script-upload/src/test-setup.ts"
+            "jestConfig": "apps/ip-upload/ip-upload/jest.config.js",
+            "tsConfig": "apps/ip-upload/ip-upload/tsconfig.spec.json",
+            "setupFile": "apps/ip-upload/ip-upload/src/test-setup.ts"
           }
         }
       }
     },
-    "script-upload-e2e": {
-      "root": "apps/script-upload/script-upload-e2e",
+    "ip-upload-e2e": {
+      "root": "apps/ip-upload/ip-upload-e2e",
       "projectType": "application",
       "prefix": "",
       "architect": {
         "e2e": {
           "builder": "@nrwl/builders:cypress",
           "options": {
-            "cypressConfig": "apps/script-upload/script-upload-e2e/cypress.json",
-            "tsConfig": "apps/script-upload/script-upload-e2e/tsconfig.e2e.json",
-            "devServerTarget": "script-upload:serve"
+            "cypressConfig": "apps/ip-upload/ip-upload-e2e/cypress.json",
+            "tsConfig": "apps/ip-upload/ip-upload-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ip-upload:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "script-upload:serve:production"
+              "devServerTarget": "ip-upload:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": "apps/script-upload/script-upload-e2e/tsconfig.e2e.json",
+            "tsConfig": "apps/ip-upload/ip-upload-e2e/tsconfig.e2e.json",
             "exclude": ["**/node_modules/**"]
           }
         }
       }
     },
-    "script": {
-      "root": "libs/script",
-      "sourceRoot": "libs/script/src",
+    "ip": {
+      "root": "libs/ip",
+      "sourceRoot": "libs/ip/src",
       "projectType": "library",
-      "prefix": "script",
+      "prefix": "ip",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/script/tsconfig.lib.json",
-            "project": "libs/script/ng-package.json"
+            "tsConfig": "libs/ip/tsconfig.lib.json",
+            "project": "libs/ip/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/script/tsconfig.lib.json", "libs/script/tsconfig.spec.json"],
+            "tsConfig": ["libs/ip/tsconfig.lib.json", "libs/ip/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/script/jest.config.js",
-            "tsConfig": "libs/script/tsconfig.spec.json",
-            "setupFile": "libs/script/src/test-setup.ts"
+            "jestConfig": "libs/ip/jest.config.js",
+            "tsConfig": "libs/ip/tsconfig.spec.json",
+            "setupFile": "libs/ip/src/test-setup.ts"
           }
         }
       }
@@ -298,5 +298,5 @@
     },
     "defaultCollection": "akita-schematics"
   },
-  "defaultProject": "script-upload"
+  "defaultProject": "ip-upload"
 }

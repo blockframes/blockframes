@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/apps/script-upload/script-upload",
+    "public": "dist/apps/ip-upload/ip-upload",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {

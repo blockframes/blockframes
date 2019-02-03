@@ -1,0 +1,10 @@
+<mat-toolbar matRipple routerLink="form">
+  <mat-icon>add</mat-icon>
+  <h2>New Ip</h2>
+</mat-toolbar>
+
+<mat-list>
+  <mat-list-item *ngFor="let ip of (scripts$ | async)">
+    {{ ip.title }}
+  </mat-list-item>
+</mat-list>

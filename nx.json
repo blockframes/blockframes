@@ -8,18 +8,18 @@
     "nx.json": "*"
   },
   "projects": {
-    "script-upload": {
+    "ip-upload": {
       "tags": [
-        "script",
+        "ip",
         "upload"
       ]
     },
-    "script-upload-e2e": {
+    "ip-upload-e2e": {
       "tags": []
     },
-    "script": {
+    "ip": {
       "tags": [
-        "script"
+        "ip"
       ]
     },
     "auth": {
