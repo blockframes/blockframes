@@ -7,5 +7,5 @@ export interface Script {
  * A factory function that creates Script
  */
 export function createScript(params: Partial<Script>) {
-  return { ...params } as Script;
+  return { ...params, date: Date.now().toString() } as Script;
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgWallet } from '@blockframes/ethers';
 
 @Component({
   selector: 'script-home',
@@ -7,13 +6,8 @@ import { NgWallet } from '@blockframes/ethers';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  constructor(private wallet: NgWallet) {}
+  constructor() {}
 
   ngOnInit() {}
 
-  public async create() {
-    const mnemonic = await this.wallet.randomMnemonic('fr');
-    this.wallet.fromMnemonic(mnemonic);
-    this.wallet.save('password');
-  }
 }

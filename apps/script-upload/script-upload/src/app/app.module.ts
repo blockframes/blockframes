@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -22,6 +23,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
+  // Forms
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 
 // Libraries
 import { AuthModule } from '@blockframes/auth';
@@ -40,6 +46,7 @@ import { HomeComponent } from './home/home.component';
   declarations: [AppComponent, FormComponent, ListComponent, ViewComponent, HomeComponent],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AuthModule,
     UploadModule,
     FlexLayoutModule,
@@ -58,6 +65,10 @@ import { HomeComponent } from './home/home.component';
     MatButtonModule,
     MatListModule,
     MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatChipsModule,
     // Akita
     environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()],
     // Service Worker

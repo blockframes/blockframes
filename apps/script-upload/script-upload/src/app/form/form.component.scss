@@ -3,3 +3,15 @@
   display: block;
   padding: 20px;
 }
+
+mat-form-field {
+  width: 100%;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: rgb(240, 240, 240);
+}
