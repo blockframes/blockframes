@@ -30,7 +30,7 @@ export class FormComponent implements OnInit {
     this.form = this.builder.group({
       'title': ['', [Validators.required]],
       'synopsis': [''],
-      'version': ['', [Validators.required]],
+      'version': ['0.0.0', [Validators.required]],
       'genres': this.builder.array([]),
       'type': [''],
       'authors': this.builder.array([]),
@@ -78,7 +78,6 @@ export class FormComponent implements OnInit {
   }
 
   public submit() {
-    console.log(this.form);
     if (!this.form.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');

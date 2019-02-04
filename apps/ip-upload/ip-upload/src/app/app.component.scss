@@ -17,5 +17,6 @@ mat-sidenav-content {
 }
 
 main {
+  height: calc(100% - 64px);
   overflow: auto;
 }
