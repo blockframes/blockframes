@@ -1,4 +1,18 @@
 <mat-card>
+  <file-upload
+    accept=".pdf"
+    [path]="user.email"
+    [types]="['application/pdf']"
+    (uploaded)="uploaded($event)"
+  ></file-upload>
+</mat-card>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Create your IP</mat-card-title>
+    <mat-card-subtitle>Describe it</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
   <form [formGroup]="form">
     <mat-form-field>
       <input matInput placeholder="Title" aria-label="title" formControlName="title" />
@@ -7,40 +21,23 @@
       <label>Write a small Synopsis</label>
       <textarea matInput formControlName="synopsis"></textarea>
     </mat-form-field>
-    <div fxLayout="row">
-      <!--
-      <mat-form-field>
-
-          <mat-chip-list #chipList>
-              <mat-chip *ngFor="let genre of genres" [selectable]="selectable"
-                       [removable]="removable" (removed)="remove(fruit)">
-                {{fruit.name}}
-                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-              </mat-chip>
-              <input placeholder="New fruit..."
-                     [matChipInputFor]="chipList"
-                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                     [matChipInputAddOnBlur]="addOnBlur"
-                     (matChipInputTokenEnd)="add($event)">
-            </mat-chip-list>
-      </mat-form-field>
-      -->
-      <mat-form-field>
-        <mat-select aria-label="type" placeholder="Type">
-          <mat-option *ngFor="let type of types" [value]="type">
-            {{type}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <mat-form-field>
+      <mat-select aria-label="type" placeholder="Type" formControlName="type">
+        <mat-option *ngFor="let type of TYPES" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <chips-autocomplete
+      placeholder="Add a genre"
+      (added)="genres.push(createGenre($event))"
+      (removed)="genres.removeAt($event)"
+      [keys]="genres.valueChanges | async"
+      [items]="GENRES"
+    >
+    </chips-autocomplete>
 
   </form>
-  <file-upload
-    accept=".pdf"
-    [path]="user.email"
-    [types]="['application/pdf']"
-    (uploaded)="uploaded($event)"
-  ></file-upload>
 </mat-card>
 
 <footer>

@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IpHashContract, IP_TYPES, IpService } from '@blockframes/ip';
-import { utils } from 'ethers';
 import { User, AuthQuery } from '@blockframes/auth';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { utils } from 'ethers';
 
 @Component({
   selector: 'ip-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  styleUrls: ['./form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent implements OnInit {
   public user: User;
   public form: FormGroup;
-  public types = IP_TYPES;
+  public TYPES = IP_TYPES;
+  public GENRES = ['horror'];
 
   constructor(
     private service: IpService,
@@ -31,7 +33,7 @@ export class FormComponent implements OnInit {
       'version': ['', [Validators.required]],
       'genres': this.builder.array([]),
       'type': [''],
-      'authors': this.builder.array([ this.createAuthor() ]),
+      'authors': this.builder.array([]),
       'fileUrl': [''],
       'ipHash': [''],
       'txHash': [''],
@@ -41,10 +43,25 @@ export class FormComponent implements OnInit {
     });
   }
 
-  public createAuthor() {
+  ///////////
+  // GENRE //
+  ///////////
+  public get genres() {
+    return this.form.get('genres') as FormArray;
+  }
+
+  public createGenre(genre: string) {
+    return this.builder.control(genre);
+  }
+
+  get authors() {
+    return this.form.get('authors') as FormArray;
+  }
+
+  public createAuthor({firstName, lastName}) {
     return this.builder.group({
-      'firstName': ['', [Validators.required]],
-      'lastName': ['', [Validators.required]]
+      'firstName': [firstName, [Validators.required]],
+      'lastName': [lastName, [Validators.required]]
     })
   }
 
@@ -58,10 +75,10 @@ export class FormComponent implements OnInit {
     } catch(err) {
       throw new Error('Could not upload the hash on Ethereum')
     }
-
   }
 
   public submit() {
+    console.log(this.form);
     if (!this.form.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');

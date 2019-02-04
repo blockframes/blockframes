@@ -23,7 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
-  // Forms
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -31,7 +31,7 @@ import { MatChipsModule } from '@angular/material/chips';
 
 // Libraries
 import { AuthModule } from '@blockframes/auth';
-import { UploadModule } from '@blockframes/ui';
+import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 
 // Components
@@ -47,12 +47,13 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    AuthModule,
-    UploadModule,
     FlexLayoutModule,
     BrowserAnimationsModule,
-    WalletModule,
     AppRoutingModule,
+    AuthModule,
+    UploadModule,
+    UiFormModule,
+    WalletModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
@@ -65,6 +66,7 @@ import { HomeComponent } from './home/home.component';
     MatButtonModule,
     MatListModule,
     MatRippleModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
