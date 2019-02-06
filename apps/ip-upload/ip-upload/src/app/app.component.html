@@ -5,7 +5,7 @@
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
-    <mat-toolbar fxLayout="row-reverse" fxLayoutAlign="space-between center">
+    <mat-toolbar class="mat-elevation-z2" fxLayout="row-reverse" fxLayoutAlign="space-between center">
       <auth-logger (loggedOut)="logout()"></auth-logger>
       <button *ngIf="!!(user$ | async)" mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>

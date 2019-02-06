@@ -19,3 +19,8 @@ mat-form-field {
 chips-autocomplete {
   width: 100%;
 }
+
+mat-toolbar {
+  position: absolute;
+  z-index: 1;
+}

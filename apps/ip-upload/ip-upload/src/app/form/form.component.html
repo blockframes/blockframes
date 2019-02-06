@@ -4,7 +4,7 @@
       accept=".pdf"
       [path]="user.email"
       [types]="['application/pdf']"
-      (uploaded)="uploaded($event)"
+      (uploaded)="hashFile($event)"
     ></file-upload>
     <form [formGroup]="form">
       <mat-form-field>
@@ -49,6 +49,6 @@
 
 
 
-<mat-toolbar>
+<mat-toolbar class="mat-elevation-z8">
   <button mat-button (click)="submit()">Save</button>
 </mat-toolbar>

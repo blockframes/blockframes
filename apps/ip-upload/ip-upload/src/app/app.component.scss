@@ -16,7 +16,13 @@ mat-sidenav-content {
   overflow: hidden;
 }
 
+mat-toolbar {
+  position: absolute;
+  z-index: 1;
+}
+
 main {
+  margin-top: 64px;
   height: calc(100% - 64px);
   overflow: auto;
 }

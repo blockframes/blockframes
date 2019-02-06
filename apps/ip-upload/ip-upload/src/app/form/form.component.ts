@@ -54,7 +54,10 @@ export class FormComponent implements OnInit {
     return this.builder.control(genre);
   }
 
-  get authors() {
+  ////////////
+  // AUTHOR //
+  ////////////
+  public get authors() {
     return this.form.get('authors') as FormArray;
   }
 
@@ -62,19 +65,22 @@ export class FormComponent implements OnInit {
     return this.builder.group({
       'firstName': [firstName, [Validators.required]],
       'lastName': [lastName, [Validators.required]]
-    })
+    });
   }
 
-  public async uploaded(content: Uint8Array) {
-    try {
-      const ipHash = utils.keccak256(content);
-      this.snackBar.open(`Your hash: ${ipHash}`, 'close');
-      const { hash: txHash } = await this.contract.functions.addIp(ipHash);
-      this.snackBar.open(`Your TX hash: ${txHash}`, 'close');
-      this.form.setValue({ ipHash, txHash });
-    } catch(err) {
-      throw new Error('Could not upload the hash on Ethereum')
-    }
+  ////////////
+  // HASHES //
+  ////////////
+  /** Hash the file */
+  public hashFile(content: Uint8Array) {
+    const ipHash = utils.keccak256(content);
+    this.form.setValue({ ipHash });
+  }
+
+  /** Save the hash on Ethereum */
+  public async saveHash(hash: string) {
+    const { hash: txHash } = await this.contract.functions.addIp(hash);
+    this.form.setValue({ txHash });
   }
 
   public submit() {
