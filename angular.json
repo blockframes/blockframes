@@ -236,19 +236,19 @@
         }
       }
     },
-    "eth-events-service": {
-      "root": "apps/eth-events-service",
-      "sourceRoot": "apps/eth-events-service/src",
+    "eth-events-server": {
+      "root": "apps/eth-events-server",
+      "sourceRoot": "apps/eth-events-server/src",
       "projectType": "application",
-      "prefix": "eth-events-service",
+      "prefix": "eth-events-server",
       "schematics": {},
       "architect": {
         "build": {
           "builder": "@nrwl/builders:node-build",
           "options": {
-            "outputPath": "dist/apps/eth-events-service",
-            "main": "apps/eth-events-service/src/main.ts",
-            "tsConfig": "apps/eth-events-service/tsconfig.app.json"
+            "outputPath": "dist/apps/eth-events-server",
+            "main": "apps/eth-events-server/src/main.ts",
+            "tsConfig": "apps/eth-events-server/tsconfig.app.json"
           },
           "configurations": {
             "production": {
@@ -256,8 +256,8 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "apps/eth-events-service/src/environments/environment.ts",
-                  "with": "apps/eth-events-service/src/environments/environment.prod.ts"
+                  "replace": "apps/eth-events-server/src/environments/environment.ts",
+                  "with": "apps/eth-events-server/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -266,15 +266,15 @@
         "serve": {
           "builder": "@nrwl/builders:node-execute",
           "options": {
-            "buildTarget": "eth-events-service:build"
+            "buildTarget": "eth-events-server:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/eth-events-service/tsconfig.app.json",
-              "apps/eth-events-service/tsconfig.spec.json"
+              "apps/eth-events-server/tsconfig.app.json",
+              "apps/eth-events-server/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -284,8 +284,8 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "apps/eth-events-service/jest.config.js",
-            "tsConfig": "apps/eth-events-service/tsconfig.spec.json"
+            "jestConfig": "apps/eth-events-server/jest.config.js",
+            "tsConfig": "apps/eth-events-server/tsconfig.spec.json"
           }
         }
       }

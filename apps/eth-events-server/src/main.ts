@@ -61,7 +61,7 @@ const ethEventsService = async () => {
 
   await Promise.all(subs);
 
-  console.info('eth-events-service started with contracts:', contracts);
+  console.info('eth-events-server started with contracts:', contracts);
 };
 
 ethEventsService();

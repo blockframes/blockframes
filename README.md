@@ -5,12 +5,12 @@
 
 ```
 # nvm use v9.10
-ng generate @nrwl/schematics:node-application eth-events-service
+ng generate @nrwl/schematics:node-application eth-events-server
 # directory: leave empty
 # tags: leave empty
 ```
 
-## eth-events-service
+## eth-events-server
 
 ### Notes
 
@@ -18,7 +18,7 @@ For each `{contractName: addresse}` in the environment,
 the service will listen to every events and push their content
 to a pubsub topic named: `{topicRootName}.{contractName}`.
 
-Something like: `eth-events-service.ScriptHash`
+Something like: `eth-events-server.ScriptHash`
 
 ### Setup
 

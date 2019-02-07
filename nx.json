@@ -40,7 +40,7 @@
         "smart-contract"
       ]
     },
-    "eth-events-service": {
+    "eth-events-server": {
       "tags": []
     }
   }
