@@ -1,0 +1,83 @@
+# Javascript Node CircleCI 2.0 configuration file
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+version: 2.1
+executors:
+  node-simple:
+    docker:
+      - image: circleci/node:9
+    working_directory: ~/repo
+jobs:
+  build:
+    executor: node-simple
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm run build
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - node_modules/
+            - dist/
+  lint:
+    executor: node-simple
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: cp -R ~/build/* ./
+      - run: npm run lint
+  test:
+    executor: node-simple
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: cp -R ~/build/* ./
+      - run: npm run test
+## For future reference, how to deploy to docker:
+##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
+#  deploy:
+#    executor: node-simple
+#    steps:
+#      - checkout
+#      - attach_workspace:
+#          at: ~/build
+#      - run: cp -R ~/build/* ./
+#      - setup_remote_docker:
+#          docker_layer_caching: true
+#      - run:
+#          name: Build and push the eth-events Server
+#          command: |
+#            ./node_modules/.bin/ng build eth-events-server
+#            docker build -t lsenta/eth-events-server:$CIRCLE_BRANCH .
+#            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+#            docker push lsenta/eth-events-server:$CIRCLE_BRANCH
+workflows:
+  version: 2.1
+  build-test-deploy:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+#      - request-deploy:
+#          type: approval
+#          requires:
+#            - lint
+#            - test
+#      - deploy:
+#          requires:
+#            - request-deploy
