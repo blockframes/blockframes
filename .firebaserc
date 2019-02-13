@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "blockframes-test",
-    "laurent": "blockframes-laurent"
+    "laurent": "blockframes-laurent",
+    "staging": "blockframes-staging"
   }
 }
