@@ -58,6 +58,31 @@
                 }
               ],
               "serviceWorker": true
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ip-upload/ip-upload/src/environments/environment.ts",
+                  "with": "apps/ip-upload/ip-upload/src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "serviceWorker": true
             }
           }
         },
@@ -68,6 +93,9 @@
           },
           "configurations": {
             "production": {
+              "browserTarget": "ip-upload:build:production"
+            },
+            "staging": {
               "browserTarget": "ip-upload:build:production"
             }
           }
@@ -85,7 +113,9 @@
               "apps/ip-upload/ip-upload/tsconfig.app.json",
               "apps/ip-upload/ip-upload/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -120,7 +150,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/ip-upload/ip-upload-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -141,8 +173,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/ip/tsconfig.lib.json", "libs/ip/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "libs/ip/tsconfig.lib.json",
+              "libs/ip/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -171,8 +208,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/auth/tsconfig.lib.json", "libs/auth/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "libs/auth/tsconfig.lib.json",
+              "libs/auth/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -194,8 +236,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/ui/tsconfig.lib.json", "libs/ui/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "libs/ui/tsconfig.lib.json",
+              "libs/ui/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -223,8 +270,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/ethers/tsconfig.lib.json", "libs/ethers/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "libs/ethers/tsconfig.lib.json",
+              "libs/ethers/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -258,6 +310,16 @@
                 {
                   "replace": "apps/eth-events-server/src/environments/environment.ts",
                   "with": "apps/eth-events-server/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/eth-events-server/src/environments/environment.ts",
+                  "with": "apps/eth-events-server/src/environments/environment.staging.ts"
                 }
               ]
             }
