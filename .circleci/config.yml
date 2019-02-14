@@ -45,6 +45,17 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: npm run test
+  test-functions:
+    executor: node-simple
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: cp -R ~/build/* ./
+      - run: cd functions/ && npm install
+      - run: cd functions/ && npm run lint
+      - run: cd functions/ && npm run build
+      - run: cd functions/ && npm run test
 ## For future reference, how to deploy to docker:
 ##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
 #  deploy:
@@ -72,6 +83,9 @@ workflows:
           requires:
             - build
       - test:
+          requires:
+            - build
+      - test-functions:
           requires:
             - build
 #      - request-deploy:
