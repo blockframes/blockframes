@@ -34,7 +34,12 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testRegex": "(.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testRegex": "((\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/lib",
+      "<rootDir>/coverage"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
