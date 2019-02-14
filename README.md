@@ -18,6 +18,27 @@ cp ./env/env.template.ts ./env/env.ts
 # Then edit it with your values.
 ```
 
+## Data
+
+### Cloud Storage:
+
+We upload IP documents to the default bucket at path:
+`/ip/{ipID}/version/{versionID}`
+
+
+### Firestore:
+
+We store ip documents version in:
+
+`/ip/{ipID}/version/{versionID}`
+
+We de-normalize the hash at:
+`/hash/{documentHash}`
+
+This lets us find the original document (`{ipID, versionID}`)
+when a Timestamp event is received from the blockchain.
+
+
 ## eth-events-server
 
 ### Notes
