@@ -10,6 +10,14 @@ ng generate @nrwl/schematics:node-application eth-events-server
 # tags: leave empty
 ```
 
+## Setup
+
+```
+# Copy the template into your env local dev env:
+cp ./env/env.template.ts ./env/env.ts
+# Then edit it with your values.
+```
+
 ## eth-events-server
 
 ### Notes
