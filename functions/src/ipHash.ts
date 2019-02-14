@@ -1,4 +1,4 @@
-import { admin, db } from './firebase';
+import { db } from './firebase';
 import { Message } from 'firebase-functions/lib/providers/pubsub';
 
 const { ethers } = require('ethers');
@@ -16,35 +16,35 @@ const i = new ethers.utils.Interface(abi);
 export const onIpHash = (message: Message) => {
   const { json } = message;
   const l = i.parseLog(json);
+  const txHash = json.transactionHash;
 
   switch (l.name) {
     case 'Timestamp': {
       const hash = l.values[0];
-      const owner = l.values[1];
+      // const owner = l.values[1];
 
       return db.runTransaction(async tx => {
-        const account = db.collection('accounts').doc(owner);
-        const timestampLog = db.collection('timestamps').doc();
+        const hashRef = db.collection('hash').doc(hash);
 
-        // Get / Create account value
-        const current = await tx.get(account);
-        let d: any = { value: 10, created: admin.firestore.FieldValue.serverTimestamp() };
-        if (current.exists) {
-          d = current.data();
+        const x = await tx.get(hashRef);
+
+        if (!x.exists) {
+          console.error('Unknown hash:', hash);
+          return;
         }
 
-        // Update account value
-        d.updated = admin.firestore.FieldValue.serverTimestamp();
-        d.value -= 1;
+        const { versionID, ipID }: any = x.data();
 
-        if (current.exists) {
-          tx.update(account, d);
-        } else {
-          tx.set(account, d);
-        }
+        const versionRef = db.collection('ip').doc(ipID).collection('version').doc(versionID);
 
-        // Log timestamp (maphash <-> users)
-        tx.set(timestampLog, { hash, owner, created: admin.firestore.FieldValue.serverTimestamp() });
+        const y = {
+          timestamp: {
+            txHash
+          }
+        };
+
+        console.info('Updating version:', ipID, versionID, 'with:', y);
+        tx.update(versionRef, y);
       });
     }
     default: {

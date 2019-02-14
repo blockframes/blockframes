@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import { ObjectMetadata } from 'firebase-functions/lib/providers/storage';
 import { db } from './firebase';
 
-const RE_IP_UPLOAD = /ip\/(\.+)\/version\/(\.+)/;
+export const RE_IP_UPLOAD = /^ip\/(.+)\/version\/(.+)$/;
 
 function readFile(p: string, encoding: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -61,24 +61,33 @@ export const hashToFirestore = async (object: ObjectMetadata) => {
   const x = {
     storage: {
       path: filePath,
-      bucket: object.bucket
+      bucket: object.bucket,
+      created: admin.firestore.FieldValue.serverTimestamp()
     },
     hash: {
       version: 'keccak256',
-      value: ipHash
+      value: ipHash,
+      created: admin.firestore.FieldValue.serverTimestamp()
+    },
+    timestamp: {
+      txHash: null
     }
+
   };
 
   console.info('Updating our IP document', ipID, versionID, 'with:', x);
 
   return db.runTransaction(async tx => {
-    const ref = db.collection('ip').doc(ipID).collection('version').doc(versionID);
+    const versionRef = db.collection('ip').doc(ipID).collection('version').doc(versionID);
 
-    const current = await tx.get(ref);
+    const current = await tx.get(versionRef);
     if (!current.exists) {
-      tx.set(ref, x);
+      tx.set(versionRef, x);
     } else {
-      tx.update(ref, x);
+      tx.update(versionRef, x);
     }
+
+    const hashRef = db.collection('hash').doc(ipHash);
+    tx.set(hashRef, { versionID, ipID });
   });
 };
