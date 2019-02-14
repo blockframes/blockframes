@@ -1,10 +1,11 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+// import * as gcs from '@google-cloud/storage';
+import { hashToFirestore } from './generateHash';
+import { admin, db, functions } from './firebase';
 
 const { ethers } = require('ethers');
 
-admin.initializeApp(functions.config().firebase);
-const db = admin.firestore();
+// const GCS = gcs();
+
 
 const abi = [
   'function scriptsOwner(bytes32) public returns(address)',
@@ -12,6 +13,7 @@ const abi = [
   'function scriptsFrom(address _owner) public returns (bytes32[])',
   'event Timestamp(bytes32 indexed scriptHash, address indexed owner)'
 ];
+
 
 const i = new ethers.utils.Interface(abi);
 
@@ -49,7 +51,6 @@ export const onIpHashEvent = functions.pubsub
 
           // Log timestamp (maphash <-> users)
           tx.set(timestampLog, { hash, owner, created: admin.firestore.FieldValue.serverTimestamp() });
-
         });
       }
       default: {
@@ -59,3 +60,5 @@ export const onIpHashEvent = functions.pubsub
 
     return null;
   });
+
+export const generateHash = functions.storage.object().onFinalize(hashToFirestore);
