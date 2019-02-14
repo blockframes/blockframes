@@ -40,6 +40,7 @@ Thumbs.db
 
 # Firebase
 .firebase/*
+firebase-debug.log
 
 # ENV
 env/env.ts
