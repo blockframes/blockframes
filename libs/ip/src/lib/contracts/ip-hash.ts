@@ -19,7 +19,7 @@ export const abi = [
 @Injectable({ providedIn: 'root' })
 export class IpHashContract extends NgContract<IpHash> {
   constructor(wallet: NgWallet) {
-    super('scriptHash', abi, wallet)
+    super('ipHash', abi, wallet)
   }
 }
 
