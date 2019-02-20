@@ -29,6 +29,7 @@ jobs:
           paths:
             - node_modules/
             - dist/
+            - env/
   lint:
     executor: node-simple
     steps:
