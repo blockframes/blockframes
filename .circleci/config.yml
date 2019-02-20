@@ -2,13 +2,13 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 version: 2.1
 executors:
-  node-simple:
+  blockframes-ci:
     docker:
-      - image: circleci/node:9
+      - image: blockframes/ci:latest
     working_directory: ~/repo
 jobs:
   build:
-    executor: node-simple
+    executor: blockframes-ci
     steps:
       - checkout
       # Download and cache dependencies
@@ -18,9 +18,11 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run: npm install
+      - run: ./node_modules/.bin/cypress install
       - save_cache:
           paths:
             - node_modules
+            - ~/.cache/Cypress
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: cp env/env.template.ts env/env.ts
       - run: npm run build
@@ -30,8 +32,12 @@ jobs:
             - node_modules/
             - dist/
             - env/
+      - persist_to_workspace:
+          root: ~/.cache
+          paths:
+            - Cypress
   lint:
-    executor: node-simple
+    executor: blockframes-ci
     steps:
       - checkout
       - attach_workspace:
@@ -39,7 +45,7 @@ jobs:
       - run: cp -R ~/build/* ./
       - run: npm run lint
   test:
-    executor: node-simple
+    executor: blockframes-ci
     steps:
       - checkout
       - attach_workspace:
@@ -47,7 +53,7 @@ jobs:
       - run: cp -R ~/build/* ./
       - run: npm run test
   test-functions:
-    executor: node-simple
+    executor: blockframes-ci
     steps:
       - checkout
       - attach_workspace:
@@ -57,10 +63,19 @@ jobs:
       - run: cd functions/ && npm run lint
       - run: cd functions/ && npm run build
       - run: cd functions/ && npm run test
+  test-e2e:
+    executor: blockframes-ci
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: cp -R ~/build/* ./
+      - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
+      - run: npm run e2e --headless
 ## For future reference, how to deploy to docker:
 ##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
 #  deploy:
-#    executor: node-simple
+#    executor: blockframes-ci
 #    steps:
 #      - checkout
 #      - attach_workspace:
@@ -89,6 +104,11 @@ workflows:
       - test-functions:
           requires:
             - build
+      - test-e2e:
+          requires:
+            - lint
+            - test
+            - test-functions
 #      - request-deploy:
 #          type: approval
 #          requires:

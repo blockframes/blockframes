@@ -1,3 +1,3 @@
 /// <reference types="cypress" />
 
-export const getGreeting = () => cy.get('h1');
+export const getTitle = () => cy.get('h1');
