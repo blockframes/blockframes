@@ -1,6 +1,6 @@
 export const production = false;
 
-export const hmr = true;
+export const hmr = false; // hot-reloading: use true for local dev
 
 export const firebase = {
   apiKey: "AIzaSyD1qjU9feHzxAFg96L4VouE9_nt9nFGg0s",
