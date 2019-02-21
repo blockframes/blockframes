@@ -10,3 +10,6 @@ FROM circleci/node:9
 
 # Required cypress packages
 RUN sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+
+# Add vim for debugging purposes
+RUN sudo apt-get -y install vim
