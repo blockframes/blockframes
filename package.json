@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "npx ng serve",
+    "start": "npx ng serve --hmr",
     "build": "npx ng build --aot --prod",
     "test": "npx ng test",
     "lint": "npx ng lint && npx ng lint",
