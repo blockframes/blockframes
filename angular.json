@@ -490,6 +490,40 @@
           }
         }
       }
+    },
+    "movie": {
+      "root": "libs/movie",
+      "sourceRoot": "libs/movie/src",
+      "projectType": "library",
+      "prefix": "movie",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/movie/tsconfig.lib.json",
+            "project": "libs/movie/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/movie/tsconfig.lib.json",
+              "libs/movie/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/movie/jest.config.js",
+            "tsConfig": "libs/movie/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -7,16 +7,37 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@env": ["env/env.ts"],
-      "@blockframes/ip": ["libs/ip/src/index.ts"],
-      "@blockframes/auth": ["libs/auth/src/index.ts"],
-      "@blockframes/ui": ["libs/ui/src/index.ts"],
-      "@blockframes/ethers": ["libs/ethers/src/index.ts"]
+      "@env": [
+        "env/env.ts"
+      ],
+      "@blockframes/ip": [
+        "libs/ip/src/index.ts"
+      ],
+      "@blockframes/auth": [
+        "libs/auth/src/index.ts"
+      ],
+      "@blockframes/ui": [
+        "libs/ui/src/index.ts"
+      ],
+      "@blockframes/ethers": [
+        "libs/ethers/src/index.ts"
+      ],
+      "@blockframes/movie": [
+        "libs/movie/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

@@ -48,6 +48,11 @@
     },
     "movie-financing-e2e": {
       "tags": []
+    },
+    "movie": {
+      "tags": [
+        "movie"
+      ]
     }
   }
 }
