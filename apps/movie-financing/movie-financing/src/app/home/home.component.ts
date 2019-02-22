@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
+// tslint:disable-next-line: component-selector
   selector: 'movie-financing-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],

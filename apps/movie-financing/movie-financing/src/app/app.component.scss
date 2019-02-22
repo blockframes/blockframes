@@ -1,0 +1,28 @@
+:host {
+  height: 100%;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  height: 100%;
+  width: 250px;
+}
+
+mat-sidenav-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+mat-toolbar {
+  position: absolute;
+  z-index: 1;
+}
+
+main {
+  margin-top: 64px;
+  height: calc(100% - 64px);
+  overflow: auto;
+}
