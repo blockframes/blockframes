@@ -42,6 +42,12 @@
     },
     "eth-events-server": {
       "tags": []
+    },
+    "movie-financing": {
+      "tags": []
+    },
+    "movie-financing-e2e": {
+      "tags": []
     }
   }
 }

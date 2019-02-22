@@ -367,6 +367,129 @@
           }
         }
       }
+    },
+    "movie-financing": {
+      "root": "apps/movie-financing/movie-financing/",
+      "sourceRoot": "apps/movie-financing/movie-financing/src",
+      "projectType": "application",
+      "prefix": "blockframes",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/movie-financing/movie-financing",
+            "index": "apps/movie-financing/movie-financing/src/index.html",
+            "main": "apps/movie-financing/movie-financing/src/main.ts",
+            "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
+            "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
+            "assets": [
+              "apps/movie-financing/movie-financing/src/favicon.ico",
+              "apps/movie-financing/movie-financing/src/assets"
+            ],
+            "styles": [
+              "apps/movie-financing/movie-financing/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
+                  "with": "apps/movie-financing/movie-financing/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "movie-financing:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "movie-financing:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "movie-financing:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/movie-financing/movie-financing/tsconfig.app.json",
+              "apps/movie-financing/movie-financing/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/movie-financing/movie-financing/jest.config.js",
+            "tsConfig": "apps/movie-financing/movie-financing/tsconfig.spec.json",
+            "setupFile": "apps/movie-financing/movie-financing/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "movie-financing-e2e": {
+      "root": "apps/movie-financing/movie-financing-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/movie-financing/movie-financing-e2e/cypress.json",
+            "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
+            "devServerTarget": "movie-financing:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "movie-financing:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
