@@ -3,7 +3,7 @@
 import { getGreeting } from '../support/app.po';
 import { Landing } from '../support/app.po';
 
-describe('Hello Nx', () => {
+describe('Hello Movie Financing', () => {
   beforeEach(() => cy.visit('/'));
 
   it.skip('should display welcome message', () => {
