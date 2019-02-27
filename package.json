@@ -10,6 +10,7 @@
     "lint": "npx ng lint && npx ng lint",
     "e2e": "./node_modules/.bin/ng e2e",
     "e2e:dev": "npx ng e2e --base-url http://localhost:4200 --watch",
+    "e2e:dev:movie-financing": "npx ng e2e movie-financing-e2e --base-url http://localhost:4200 --watch",
     "affected:apps": "./node_modules/.bin/nx affected:apps",
     "affected:libs": "./node_modules/.bin/nx affected:libs",
     "affected:build": "./node_modules/.bin/nx affected:build",

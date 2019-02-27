@@ -11,7 +11,7 @@ describe('Hello Nx', () => {
   });
 });
 
-describe('story 1: je peux me connecter et créer une IP', () => {
+describe('story 1: je peux me connecter', () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.visit('/');
@@ -21,15 +21,13 @@ describe('story 1: je peux me connecter et créer une IP', () => {
   it('', () => {
     let p: any = new Landing();
     p = p.clickConnection();
-    p.fillEmail('laurent+test@singulargarden.com');
+    p.fillEmail('vincent@laposte.net');
     p.fillPassword('helloworld');
     p = p.login();
-    p = p.clickNewIp();
-    p.fillTitle('This is my title');
   });
 });
 
-describe('story 1: Je peux me connecter et créer un Film', () => {
+describe('story 2: Je peux me connecter et créer un Film', () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.visit('/');
