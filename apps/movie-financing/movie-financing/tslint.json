@@ -4,13 +4,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "blockframes",
+      "movie-financing",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "blockframes",
+      "movie-financing",
       "kebab-case"
     ]
   }

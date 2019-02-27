@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { User, AuthQuery } from '@blockframes/auth';
 
 @Component({
-  selector: 'blockframes-root',
+  selector: 'movie-financing-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

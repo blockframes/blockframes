@@ -6,7 +6,7 @@ import { Landing } from '../support/app.po';
 describe('Hello Nx', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
+  it.skip('should display welcome message', () => {
     getGreeting().contains('Welcome to movie-financing!');
   });
 });
@@ -36,7 +36,7 @@ describe('story 1: Je peux me connecter et créer un Film', () => {
     cy.viewport('macbook-15');
   });
 
-  it('', () => {
+  it.skip('', () => {
     let p: any = new Landing();
     // User Story authentication
     p = p.clickConnection();
