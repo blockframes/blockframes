@@ -72,6 +72,9 @@ jobs:
       - run: cp -R ~/build/* ./
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
       - run: npm run e2e --headless
+      - store_artifacts:
+          name: Uploading screenshots
+          path: ~/repo/dist/out-tsc/apps/
 ## For future reference, how to deploy to docker:
 ##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
 #  deploy:
