@@ -53,7 +53,15 @@ export class FileUploadComponent {
       this.state = 'waiting';
       return;
     }
+
     const file = files.item(0);
+
+    // Hack around cypress issue with Files and events,
+    // See https://github.com/cypress-io/cypress/issues/3613
+    if (!(file instanceof File)) {
+      // @ts-ignore
+      file.__proto__ = new File([], file.type);
+    }
 
     if (this.types && !this.types.includes(file.type)) {
       this.snackBar.open('unsupported file type :( ', 'close', { duration: 1000 });
