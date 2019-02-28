@@ -2,6 +2,8 @@
 
 export const getTitle = () => cy.get('h1');
 
+const LONG_TIMEOUT = 60 * 1000;
+
 export class NewIPPage {
   constructor() {
     // TODO: assert it's the right page
@@ -43,7 +45,7 @@ export class NewIPPage {
   }
 
   hasUploadStatus(content) {
-    return cy.get('file-upload section h3').contains(content)
+    return cy.get('file-upload section h3', { timeout: LONG_TIMEOUT }).contains(content);
   }
 
   save(): any {
