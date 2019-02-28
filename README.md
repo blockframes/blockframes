@@ -3,7 +3,7 @@
 
 ## Working with nx
 
-```
+```bash
 # nvm use v9.10
 ng generate @nrwl/schematics:node-application eth-events-server
 # directory: leave empty
@@ -12,10 +12,18 @@ ng generate @nrwl/schematics:node-application eth-events-server
 
 ## Setup
 
-```
+```bash
 # Copy the template into your env local dev env:
 cp ./env/env.template.ts ./env/env.ts
 # Then edit it with your values.
+```
+
+## Running and testing
+
+```bash
+npm run start # starts your server in dev mode, hmr, etc
+npm run e2e:dev # starts cypress when your server is already running
+npm run lint, npm run test, etc. # check this in your package.json
 ```
 
 ## Data
@@ -60,13 +68,13 @@ Create a service account, with roles:
 
 Download the keys and export an `env` variable that points to your json key
 
-```
+```bash
 export GOOGLE_APPLICATION_CREDENTIALS=./blockframes-laurent-230215-ccf4f1949393.json
 ```
 
 ### Build & Run with Docker
 
-```
+```bash
 ng build eth-events-server
 docker build . --tag=eth-events-server:0.0.1
 docker run -v ${PWD}/blockframes-laurent-702feef93c99.json:/app/creds.json \
