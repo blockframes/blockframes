@@ -57,6 +57,31 @@ export class NewIPPage {
   }
 }
 
+export class NewOrgPage {
+  constructor() {
+    // TODO: assert this is the right page
+  }
+
+  fillName(name: string) {
+    cy.get('input[formcontrolname="name"]').type(name);
+  }
+
+  addMember(mail: string) {
+    cy.get('.addMember input[formcontrolname="email"]').type(mail);
+    cy.get('.addMember button').contains('Add').click();
+    return this;
+  }
+
+  hasMember(mail: string) {
+    return cy.get('.member .email').contains(mail);
+  }
+
+  save(): any {
+    cy.get('button').contains('Save').click();
+    return this;
+  }
+}
+
 export class HomePage {
   constructor() {
     // TODO: assert it's the right page
@@ -69,7 +94,12 @@ export class HomePage {
     return new NewIPPage();
   }
 
+  clickNewOrganization(): any {
+    cy.get('a').contains('New Org').click();
+    return new NewOrgPage();
+  }
 }
+
 
 export class LandingWithModal {
   constructor() {

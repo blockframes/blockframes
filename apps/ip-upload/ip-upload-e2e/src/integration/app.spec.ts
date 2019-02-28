@@ -43,3 +43,27 @@ describe('story #24: I am a user, I want to timestamp a document at the source o
     // TODO: implement feedback check
   });
 });
+
+describe('Organization Management', () => {
+  beforeEach(() => {
+    cy.clearCookies();
+    cy.visit('/');
+    cy.viewport('macbook-15');
+  });
+
+  it('story #43: As a User I want to be able to create an organisation and add members to it.', () => {
+    let p: any = new Landing();
+    p = p.clickConnection();
+    p.fillEmail('laurent+test@singulargarden.com');
+    p.fillPassword('helloworld');
+    p = p.login();
+
+    p = p.clickNewOrganization();
+    p.fillName('Organization 42');
+    p = p.save();
+    const memberMail = `laurent+${randomID()}@cascade8.com`;
+
+    p = p.addMember(memberMail);
+    p.hasMember(memberMail);
+  });
+});
