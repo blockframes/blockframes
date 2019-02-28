@@ -8,12 +8,12 @@ import { first, takeWhile } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'ip-org-form',
-  templateUrl: './form-organization.component.html',
-  styleUrls: ['./form-organization.component.scss'],
+  selector: 'org-form',
+  templateUrl: './org-form.component.html',
+  styleUrls: ['./org-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormOrganizationComponent implements OnInit, OnDestroy {
+export class OrgFormComponent implements OnInit, OnDestroy {
   public persistForm: PersistNgFormPlugin<IpState>;
   public user: User;
   public form: FormGroup;

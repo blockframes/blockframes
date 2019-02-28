@@ -16,24 +16,13 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@env": [
-        "env/env.ts"
-      ],
-      "@blockframes/ip": [
-        "libs/ip/src/index.ts"
-      ],
-      "@blockframes/auth": [
-        "libs/auth/src/index.ts"
-      ],
-      "@blockframes/ui": [
-        "libs/ui/src/index.ts"
-      ],
-      "@blockframes/ethers": [
-        "libs/ethers/src/index.ts"
-      ],
-      "@blockframes/movie": [
-        "libs/movie/src/index.ts"
-      ]
+      "@env": ["env/env.ts"],
+      "@blockframes/ip": ["libs/ip/src/index.ts"],
+      "@blockframes/auth": ["libs/auth/src/index.ts"],
+      "@blockframes/ui": ["libs/ui/src/index.ts"],
+      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+      "@blockframes/movie": ["libs/movie/src/index.ts"],
+      "@blockframes/organization": ["libs/organization/src/index.ts"]
     }
   },
   "exclude": [

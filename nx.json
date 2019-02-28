@@ -50,9 +50,10 @@
       "tags": []
     },
     "movie": {
-      "tags": [
-        "movie"
-      ]
+      "tags": ["movie"]
+    },
+    "organization": {
+      "tags": []
     }
   }
 }

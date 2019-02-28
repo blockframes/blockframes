@@ -35,7 +35,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthModule } from '@blockframes/auth';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
-
+import { OrganizationModule, OrgFormModule } from '@blockframes/organization';
 // Components
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -43,10 +43,10 @@ import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { ViewComponent } from './view/view.component';
 import { HomeComponent } from './home/home.component';
-import { FormOrganizationComponent } from './form-organization/form-organization.component';
+import { OrgComponent } from './org/org.component';
 
 @NgModule({
-  declarations: [AppComponent, FormComponent, ListComponent, ViewComponent, HomeComponent, FormOrganizationComponent],
+  declarations: [AppComponent, FormComponent, ListComponent, ViewComponent, HomeComponent, OrgComponent],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
@@ -57,6 +57,7 @@ import { FormOrganizationComponent } from './form-organization/form-organization
     UploadModule,
     UiFormModule,
     WalletModule,
+    OrgFormModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,

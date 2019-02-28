@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 // Component
 import { FormComponent } from './form/form.component';
 import { HomeComponent } from './home/home.component';
+import { OrgComponent } from './org/org.component';
 // Guard
 import { AuthGuard } from '@blockframes/auth';
 import { IpResolver } from '@blockframes/ip';
-import { FormOrganizationComponent } from './form-organization/form-organization.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,7 +27,7 @@ export const routes: Routes = [
   },
   {
     path: 'organization/_new',
-    component: FormOrganizationComponent,
+    component: OrgComponent,
     canActivate: [AuthGuard],
     data: { fallback: '', org: null }
   }
