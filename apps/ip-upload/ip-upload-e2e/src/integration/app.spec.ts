@@ -37,6 +37,9 @@ describe('story #24: I am a user, I want to timestamp a document at the source o
 
     createFakeScript(`My Script: ${randomID()}`)
       .then(path => p.uploadDocument(path))
+      .then(() => p.hasUploadStatus('Success'))
       .then(() => p = p.save());
+
+    // TODO: implement feedback check
   });
 });
