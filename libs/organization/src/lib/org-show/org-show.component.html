@@ -1,0 +1,9 @@
+<section>
+  <mat-card *ngIf="org$ | async as org">
+    <mat-card-header>
+      <mat-card-title>{{org.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <org-members-show orgID="{{org.id}}"></org-members-show>
+  </mat-card>
+</section>

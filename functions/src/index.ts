@@ -3,7 +3,6 @@ import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { functions } from './firebase';
 
-
 /**
  * Trigger: when eth-events-server pushes contract events.
  */

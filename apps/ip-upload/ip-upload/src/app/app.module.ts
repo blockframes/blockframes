@@ -4,17 +4,14 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
-
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
-
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
@@ -30,12 +27,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
 // Libraries
 import { AuthModule } from '@blockframes/auth';
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { UiFormModule, UploadModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
-import { OrganizationModule, OrgFormModule } from '@blockframes/organization';
+import { OrganizationModule } from '@blockframes/organization';
 // Components
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -57,7 +53,7 @@ import { OrgComponent } from './org/org.component';
     UploadModule,
     UiFormModule,
     WalletModule,
-    OrgFormModule,
+    OrganizationModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
@@ -85,4 +81,5 @@ import { OrgComponent } from './org/org.component';
   providers: [{ provide: FirestoreSettingsToken, useValue: {} }], // TODO: Remove when @angular/fire is updated
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

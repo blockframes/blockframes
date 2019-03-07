@@ -12,13 +12,20 @@ export class OrganizationService {
     private store: OrganizationStore,
     private firestore: AngularFirestore
   ) {
-    console.error(this.firestore.firestore);
     this.collection = this.firestore.collection('orgs');
   }
 
-  public add(org: Organization): string {
+  public subscribeUserOrgs(): void {
+    this.collection.valueChanges()
+      .subscribe(xs => this.store.set(xs));
+  }
+
+  public async add(org: Organization, userID: string): Promise<string> {
     const id: string = this.firestore.createId();
-    this.store.add(createOrganization({ ...org, id }));
+    const o: Organization = createOrganization({ ...org, id });
+    // TODO: add member!
+    await this.collection.doc(id).set(o);
+    this.store.add(o);
     return id;
   }
 

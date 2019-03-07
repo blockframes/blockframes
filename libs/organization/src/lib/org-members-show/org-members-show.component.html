@@ -1,0 +1,18 @@
+<section>
+  <mat-card *ngIf="members$ | async as members">
+    <ul *ngFor="let member of (members)">
+      <li>{{member.id}}, {{member.role}}</li>
+    </ul>
+    <mat-divider></mat-divider>
+    <h3>Add Member</h3>
+    <form [formGroup]="addMemberForm">
+      <mat-form-field>
+        <input matInput placeholder="id" aria-label="id" formControlName="id"/>
+        <input matInput placeholder="role" aria-label="role" formControlName="role"/>
+        <button mat-raised-button color="primary" (click)="submit()">Add</button>
+      </mat-form-field>
+    </form>
+  </mat-card>
+  <mat-toolbar fxLayout="row" fxLayoutAlign="end center" class="mat-elevation-z8">
+  </mat-toolbar>
+</section>

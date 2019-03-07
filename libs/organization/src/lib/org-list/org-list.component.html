@@ -1,0 +1,13 @@
+<section>
+  <h1>List Of Organizations</h1>
+  <div *ngFor="let org of (orgList$ | async); let i = index">
+    <mat-card [routerLink]="['../', org.id]">
+      <mat-card-header>
+        <mat-card-title>{{ org.name }}</mat-card-title>
+        <mat-card-subtitle>
+          {{org.id}}
+        </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</section>

@@ -6,7 +6,7 @@ import { AuthQuery, User } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { first, takeWhile } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { createOrganization, OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { createOrganization, OrganizationQuery, OrganizationService } from '../+state';
 
 @Component({
   selector: 'org-form',
@@ -59,7 +59,7 @@ export class OrgFormComponent implements OnInit, OnDestroy {
       throw new Error('Invalid form');
     }
 
-    const id = await this.service.add(this.form.value);
+    const id = await this.service.add(this.form.value, this.user.uid);
     console.log(id);
 
     this.snackBar.open(`Created ${this.form.get('name').value}`, 'close', { duration: 1000 });
