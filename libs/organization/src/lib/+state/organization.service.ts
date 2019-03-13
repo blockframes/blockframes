@@ -10,7 +10,8 @@ export class OrganizationService {
 
   constructor(
     private store: OrganizationStore,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private db: AngularFirestore,
   ) {
     this.collection = this.firestore.collection('orgs');
   }
@@ -22,10 +23,26 @@ export class OrganizationService {
 
   public async add(org: Organization, userID: string): Promise<string> {
     const id: string = this.firestore.createId();
-    const o: Organization = createOrganization({ ...org, id });
-    // TODO: add member!
-    await this.collection.doc(id).set(o);
-    this.store.add(o);
+    const o: Organization = createOrganization({ ...org, id, userIds: [userID] });
+
+    const orgDoc = this.collection.doc(id);
+    const userDoc = this.firestore.collection('users').doc(userID)
+    const orgRightsDoc = userDoc.collection('orgRights').doc(id);
+
+    // @todo admin slug comes from json
+    orgRightsDoc.ref.set({ orgId: id, rightNameSlug: ['admin']});
+
+    this.db.firestore.runTransaction((transaction) => {
+      return Promise.all([
+        transaction.set(orgDoc.ref, o),
+        transaction.set(orgRightsDoc.ref, {})
+      ]);
+    }).then(() => {
+        console.log("Transaction successfully committed!");
+    }).catch((error) => {
+        console.log("Transaction failed: ", error);
+    });
+
     return id;
   }
 

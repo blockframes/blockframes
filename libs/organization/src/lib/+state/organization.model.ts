@@ -4,10 +4,11 @@ export interface OrgMember {
 }
 
 export interface Organization {
-  id: string;
+  id: string,
   name: string,
-  created: number;
-  updated: number;
+  created: number,
+  updated: number,
+  userIds: string[],
 }
 
 /**
@@ -18,6 +19,7 @@ export function createOrganization(params?: Partial<Organization>): Organization
     id: params.id || '',
     name: params.name,
     created: params.created || Date.now(),
-    updated: params.updated || Date.now()
+    updated: params.updated || Date.now(),
+    userIds: params.userIds
   } : {} as Organization;
 }

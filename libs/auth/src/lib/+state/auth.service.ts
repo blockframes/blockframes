@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthStore, createUser } from './auth.store';
-import { map } from 'rxjs/operators';
+import { AuthStore, User, createUser } from './auth.store';
+import { filter, switchMap, map } from 'rxjs/operators';
 import { NgWallet } from '@blockframes/ethers';
 import { Router } from '@angular/router';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  public authCollection: AngularFirestoreCollection<User>;
+
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
     private wallet: NgWallet,
-    private router: Router,
+    private db: AngularFirestore,
   ) {
-    this.afAuth.authState
-      .pipe(map(user => (user ? createUser(user) : null)))
-      .subscribe(user => this.store.update({ user }));
+    this.authCollection = this.db.collection<User>("users");
+    this.subscribeOnUser();
   }
 
   public signin(mail: string, pwd: string) {
@@ -29,6 +31,16 @@ export class AuthService {
     } catch (err) {
       throw new Error(err);
     }
+  }
+
+  private subscribeOnUser() {
+    this.afAuth.authState
+      .pipe(
+        filter(user => !!user),
+        switchMap(({ uid }) => this.authCollection.doc(uid).valueChanges())
+      )
+      .pipe(map(user => (user ? createUser(user) : null)))
+      .subscribe((user: User) => this.store.update({ user }));
   }
 
   public logout() {

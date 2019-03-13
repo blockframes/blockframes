@@ -16,8 +16,8 @@ export interface AuthState {
   form: UserForm;
 }
 
-export function createUser({ uid, email }: firebase.User) {
-  return { uid, email } as User;
+export function createUser(user: Partial<User>) {
+  return { uid: user.uid, email: user.email } as User;
 }
 
 export function createInitialState(): AuthState {
