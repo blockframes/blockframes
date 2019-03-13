@@ -27,7 +27,7 @@ import { OrgMembersShowComponent } from './org-members-show/org-members-show.com
     MatToolbarModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule
+    RouterModule.forChild([])
   ],
   declarations: [
     OrgListComponent,
@@ -36,8 +36,8 @@ import { OrgMembersShowComponent } from './org-members-show/org-members-show.com
     OrgMembersShowComponent
   ],
   exports: [
-    OrgFormComponent,
     OrgListComponent,
+    OrgFormComponent,
     OrgShowComponent,
     OrgMembersShowComponent
   ]

@@ -8,8 +8,7 @@ import { Observable } from 'rxjs';
   selector: 'org-members-show',
   templateUrl: './org-members-show.component.html',
   styleUrls: ['./org-members-show.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [OrgMembersService]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgMembersShowComponent implements OnInit, OnDestroy {
   public members$: Observable<OrgMember[]>;
