@@ -22,12 +22,16 @@ export class OrgMembersService {
     // TODO: handle id changes
     this.collection(orgID)
       .valueChanges()
-      .subscribe(xs => this.store.set(xs));
+      .subscribe(xs => {
+        const ids = xs.userIds;
+        const items = ids.map(id => ({ id, role: 'ROLE: TBD' }));
+        this.store.set(items);
+      });
   }
 
   private collection(orgID: string) {
     return this.firestore
-      .collection('orgs').doc(orgID)
-      .collection<OrgMember>('members');
+      .collection('orgs')
+      .doc(orgID);
   }
 }
