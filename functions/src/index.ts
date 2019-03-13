@@ -1,7 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
-import { functions } from './firebase';
+import { db, functions } from './firebase';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -20,3 +20,15 @@ export const onIpHashEvent = functions.pubsub
 export const generateHash = functions.storage
   .object()
   .onFinalize(hashToFirestore);
+
+/**
+ * Trigger: when user creates an account.
+ *
+ * We create a corresponding document in `users/userID`.
+ */
+export const onUserCreate = functions.auth
+  .user()
+  .onCreate((user) => {
+    const { email, uid } = user;
+    return db.collection('users').doc(user.uid).set({ email, uid });
+  });
