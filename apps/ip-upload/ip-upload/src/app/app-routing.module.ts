@@ -6,7 +6,6 @@ import { HomeComponent } from './home/home.component';
 // Guard
 import { AuthGuard } from '@blockframes/auth';
 import { IpResolver } from '@blockframes/ip';
-import { organizationRoutes } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'organization',
-    children: organizationRoutes
+    loadChildren: '@blockframes/organization#OrganizationModule'
   }
 ];
 
