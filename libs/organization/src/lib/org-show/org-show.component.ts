@@ -14,7 +14,6 @@ import { switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgShowComponent implements OnInit, OnDestroy {
-  public user: User;
   public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   private orgID: string;
@@ -30,8 +29,12 @@ export class OrgShowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.service.subscribeUserOrgs();
-    this.user = this.auth.user;
+    
+    this.auth.user$().subscribe((user: User) => {
+      // @todo remove observable on ngDestroy
+      this.service.subscribeUserOrgs(user.uid);
+    });
+
     this.org$ = this.route.params.pipe(switchMap(({ id }) => {
       this.orgID = id;
       return this.query.selectEntity(id);

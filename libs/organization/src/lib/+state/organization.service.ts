@@ -7,18 +7,21 @@ import { OrganizationStore } from './organization.store';
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   private collection: AngularFirestoreCollection<Organization>;
+  private collectionName = 'orgs';
 
   constructor(
     private store: OrganizationStore,
     private firestore: AngularFirestore,
     private db: AngularFirestore,
   ) {
-    this.collection = this.firestore.collection('orgs');
+    this.collection = this.firestore.collection(this.collectionName);
   }
 
-  public subscribeUserOrgs(): void {
-    this.collection.valueChanges()
-      .subscribe(xs => this.store.set(xs));
+  public subscribeUserOrgs(uid): void {
+    this.firestore
+    .collection<Organization>(this.collectionName,ref => ref.where('userIds', 'array-contains', uid) )
+    .valueChanges()
+    .subscribe(xs => this.store.set(xs));
   }
 
   public async add(org: Organization, userID: string): Promise<string> {
@@ -29,13 +32,11 @@ export class OrganizationService {
     const userDoc = this.firestore.collection('users').doc(userID)
     const orgRightsDoc = userDoc.collection('orgRights').doc(id);
 
-    // @todo admin slug comes from json
-    orgRightsDoc.ref.set({ orgId: id, rightNameSlug: ['admin']});
-
     this.db.firestore.runTransaction((transaction) => {
       return Promise.all([
         transaction.set(orgDoc.ref, o),
-        transaction.set(orgRightsDoc.ref, {})
+        // @todo admin slug comes from json
+        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: ['admin']})
       ]);
     }).then(() => {
         console.log("Transaction successfully committed!");

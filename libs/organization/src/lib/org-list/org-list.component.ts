@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { AuthQuery, User } from '@blockframes/auth';
 import { Organization, OrganizationQuery, OrganizationService } from '../+state';
 import { Observable } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'org-list',
@@ -10,7 +11,6 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgListComponent implements OnInit, OnDestroy {
-  public user: User;
   public orgList$: Observable<Organization[]>;
   private alive = true;
 
@@ -22,8 +22,12 @@ export class OrgListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.service.subscribeUserOrgs();
-    this.user = this.auth.user;
+    
+    this.auth.user$().subscribe((user: User) => {
+      // @todo remove observable on ngDestroy
+      this.service.subscribeUserOrgs(user.uid);
+    });
+
     this.orgList$ = this.query.selectAll();
   }
 
