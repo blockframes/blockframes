@@ -10,11 +10,34 @@ import {
   MatInputModule,
   MatToolbarModule
 } from '@angular/material';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, AuthModule } from '@blockframes/auth';
 import { OrgFormComponent } from './org-form/org-form.component';
 import { OrgListComponent } from './org-list/org-list.component';
 import { OrgShowComponent } from './org-show/org-show.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
+
+export const organizationRoutes: Routes = [
+  {
+    path: '_new',
+    component: OrgFormComponent,
+    canActivate: [AuthGuard],
+    data: { fallback: '', org: null }
+  },
+  {
+    path: '_list',
+    component: OrgListComponent,
+    canActivate: [AuthGuard],
+    data: { fallback: '' }
+  },
+  {
+    path: ':id',
+    component: OrgShowComponent,
+    canActivate: [AuthGuard],
+    data: { fallback: '' }
+  }
+];
+
 
 @NgModule({
   imports: [
@@ -27,7 +50,8 @@ import { OrgMembersShowComponent } from './org-members-show/org-members-show.com
     MatToolbarModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule.forChild([])
+    AuthModule,
+    RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
     OrgListComponent,
@@ -39,7 +63,8 @@ import { OrgMembersShowComponent } from './org-members-show/org-members-show.com
     OrgListComponent,
     OrgFormComponent,
     OrgShowComponent,
-    OrgMembersShowComponent
+    OrgMembersShowComponent,
+    RouterModule
   ]
 })
 export class OrganizationModule {
