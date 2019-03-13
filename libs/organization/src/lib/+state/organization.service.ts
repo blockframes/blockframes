@@ -12,16 +12,16 @@ export class OrganizationService {
   constructor(
     private store: OrganizationStore,
     private firestore: AngularFirestore,
-    private db: AngularFirestore,
+    private db: AngularFirestore
   ) {
     this.collection = this.firestore.collection(this.collectionName);
   }
 
   public subscribeUserOrgs(uid): void {
     this.firestore
-    .collection<Organization>(this.collectionName,ref => ref.where('userIds', 'array-contains', uid) )
-    .valueChanges()
-    .subscribe(xs => this.store.set(xs));
+      .collection<Organization>(this.collectionName, ref => ref.where('userIds', 'array-contains', uid))
+      .valueChanges()
+      .subscribe(xs => this.store.set(xs));
   }
 
   public async add(org: Organization, userID: string): Promise<string> {
@@ -29,19 +29,19 @@ export class OrganizationService {
     const o: Organization = createOrganization({ ...org, id, userIds: [userID] });
 
     const orgDoc = this.collection.doc(id);
-    const userDoc = this.firestore.collection('users').doc(userID)
+    const userDoc = this.firestore.collection('users').doc(userID);
     const orgRightsDoc = userDoc.collection('orgRights').doc(id);
 
     this.db.firestore.runTransaction((transaction) => {
       return Promise.all([
         transaction.set(orgDoc.ref, o),
         // @todo admin slug comes from json
-        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: ['admin']})
+        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: ['admin'] })
       ]);
     }).then(() => {
-        console.log("Transaction successfully committed!");
+      console.log('Transaction successfully committed!');
     }).catch((error) => {
-        console.log("Transaction failed: ", error);
+      console.log('Transaction failed: ', error);
     });
 
     return id;

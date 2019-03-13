@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatDividerModule,
@@ -50,6 +51,7 @@ export const organizationRoutes: Routes = [
     MatToolbarModule,
     MatInputModule,
     MatButtonModule,
+    MatAutocompleteModule,
     AuthModule,
     RouterModule.forChild(organizationRoutes)
   ],

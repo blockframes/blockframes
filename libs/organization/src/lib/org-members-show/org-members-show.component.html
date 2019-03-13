@@ -7,12 +7,30 @@
     <h3>Add Member</h3>
     <form [formGroup]="addMemberForm">
       <mat-form-field>
-        <input matInput placeholder="id" aria-label="id" formControlName="id"/>
-        <input matInput placeholder="role" aria-label="role" formControlName="role"/>
-        <button mat-raised-button color="primary" (click)="submit()">Add</button>
+        <input matInput
+               type="email" placeholder="email" aria-label="email"
+               formControlName="email"
+               [matAutocomplete]="autoEmail"/>
       </mat-form-field>
+      <mat-autocomplete #autoEmail="matAutocomplete">
+        <mat-option *ngFor="let option of mailsOptions" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-form-field>
+        <input matInput placeholder="role" aria-label="role" formControlName="role"
+               [matAutocomplete]="autoRoles"
+        />
+      </mat-form-field>
+      <mat-autocomplete #autoRoles="matAutocomplete">
+        <mat-option *ngFor="let option of rolesOptions" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <button mat-raised-button color="primary" (click)="submit()">Add</button>
     </form>
   </mat-card>
   <mat-toolbar fxLayout="row" fxLayoutAlign="end center" class="mat-elevation-z8">
   </mat-toolbar>
 </section>
+

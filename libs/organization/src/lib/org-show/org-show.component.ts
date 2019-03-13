@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery, User } from '@blockframes/auth';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,6 @@ import { switchMap } from 'rxjs/operators';
 })
 export class OrgShowComponent implements OnInit, OnDestroy {
   public org$: Observable<Organization>;
-  public addMemberForm: FormGroup;
   private orgID: string;
 
   constructor(
@@ -39,10 +38,6 @@ export class OrgShowComponent implements OnInit, OnDestroy {
       this.orgID = id;
       return this.query.selectEntity(id);
     }));
-    this.addMemberForm = this.builder.group({
-      id: '',
-      role: ''
-    });
   }
 
   ngOnDestroy() {

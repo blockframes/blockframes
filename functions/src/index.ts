@@ -37,14 +37,12 @@ export const onUserCreate = functions.auth
  * Trigger: REST call to find a list of users by email.
  */
 export const findUserByMail = functions.https
-  .onRequest((req, resp) => {
-    const r = (data: any) => resp.send(JSON.stringify(data));
-
-    const prefix: string = decodeURIComponent(req.query.prefix);
+  .onCall((data, context) => {
+    const prefix: string = decodeURIComponent(data.prefix);
 
     // Leave if the prefix is too short (do not search every users in the universe).
     if (prefix.length < 2) {
-      return r({ result: [] });
+      return [];
     }
 
     // String magic to figure out a prefixEnd
@@ -60,10 +58,9 @@ export const findUserByMail = functions.https
       .then(q => {
         // leave if there are too many results.
         if (q.size > 10) {
-          return r({ result: [] });
+          return [];
         }
 
-        const result = q.docs.map(d => ({ id: d.id, email: d.data().email }));
-        return r({ result });
+        return q.docs.map(d => ({ id: d.id, email: d.data().email }));
       });
   });
