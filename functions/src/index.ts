@@ -1,7 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
-import { db, functions } from './firebase';
+import { auth, db, functions } from './firebase';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -63,4 +63,27 @@ export const findUserByMail = functions.https
 
         return q.docs.map(d => ({ id: d.id, email: d.data().email }));
       });
+  });
+
+/**
+ * Trigger: REST call to get or create a user.
+ */
+export const getOrCreateUserByMail = functions.https
+  .onCall(async (data, context) => {
+    const { email } = data;
+
+    try {
+      const u = await auth.getUserByEmail(email);
+      return { id: u.uid, email };
+    } catch {
+      const u = await auth.createUser({
+        email,
+        emailVerified: false,
+        disabled: false
+      });
+
+      // TODO: trigger API to send a mail.
+
+      return { id: u.uid, email };
+    }
   });

@@ -39,10 +39,9 @@ import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { ViewComponent } from './view/view.component';
 import { HomeComponent } from './home/home.component';
-import { OrgComponent } from './org/org.component';
 
 @NgModule({
-  declarations: [AppComponent, FormComponent, ListComponent, ViewComponent, HomeComponent, OrgComponent],
+  declarations: [AppComponent, FormComponent, ListComponent, ViewComponent, HomeComponent],
   imports: [
     BrowserModule,
     ReactiveFormsModule,

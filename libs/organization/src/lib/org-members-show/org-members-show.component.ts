@@ -7,6 +7,7 @@ import * as firebase from 'firebase';
 
 const ROLES = ['ADMIN', 'READ', 'WRITE'];
 
+
 interface User {
   id: string;
   email?: string;
@@ -54,24 +55,44 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
       throw new Error('Invalid form');
     }
 
-    await this.service.addMember(this.orgID, this.addMemberForm.value);
-    this.snackBar.open(`added user`, 'close', { duration: 1000 });
+    const { user, role } = this.addMemberForm.value;
+    let email = user; // on user input, user = raw email string
+
+    // on auto-complete, user = {id, email}
+    if (typeof user !== typeof '') {
+      email = user.email;
+    }
+
+    // Query a get or create user, to make ghost users when needed
+    const { id } = await this.getOrCreateUserByMail(email);
+    console.debug('Created with=', { id, email, role, orgID: this.orgID });
+    await this.service.addMember(this.orgID, { id, role });
+    this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
   }
 
   ngOnDestroy() {
   }
 
+  private async getOrCreateUserByMail(email: string): Promise<User> {
+    const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
+    return f({ email }).then(x => x.data);
+  }
+
+  private async listUserByMail(prefix: string): Promise<User[]> {
+    const f = firebase.functions().httpsCallable('findUserByMail');
+    return f({ prefix }).then(x => x.data);
+  }
+
   private async onChange() {
     this.addMemberForm.valueChanges.subscribe(x => {
       console.debug('form=', x);
       // TODO: debounce
-      const findUser = firebase.functions().httpsCallable('findUserByMail');
-      findUser({ prefix: x.user })
+      this.listUserByMail(x.user)
         .then(xs => {
-          console.debug('got autocomplete=', xs.data);
+          console.debug('got autocomplete=', xs);
           // TODO: use an observable
-          this.mailsOptions = xs.data;
+          this.mailsOptions = xs;
         });
     });
   }
