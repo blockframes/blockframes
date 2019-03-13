@@ -7,6 +7,11 @@ import * as firebase from 'firebase';
 
 const ROLES = ['ADMIN', 'READ', 'WRITE'];
 
+interface User {
+  id: string;
+  email?: string;
+}
+
 @Component({
   selector: 'org-members-show',
   templateUrl: './org-members-show.component.html',
@@ -16,7 +21,7 @@ const ROLES = ['ADMIN', 'READ', 'WRITE'];
 export class OrgMembersShowComponent implements OnInit, OnDestroy {
   public members$: Observable<OrgMember[]>;
   public addMemberForm: FormGroup;
-  public mailsOptions: string[] = [];
+  public mailsOptions: User[];
   public rolesOptions: string[] = ROLES;
   @Input() orgID: string;
 
@@ -29,13 +34,18 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.mailsOptions = [];
     this.service.subscribe(this.orgID);
     this.members$ = this.query.selectAll();
     this.addMemberForm = this.builder.group({
-      email: '',
+      user: null,
       role: ''
     });
     this.onChange();
+  }
+
+  displayFn(user?: User): string | undefined {
+    return user ? user.email : undefined;
   }
 
   public async submit() {
@@ -54,12 +64,15 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
 
   private async onChange() {
     this.addMemberForm.valueChanges.subscribe(x => {
-      console.error(x);
+      console.debug('form=', x);
+      // TODO: debounce
       const findUser = firebase.functions().httpsCallable('findUserByMail');
-      findUser({ prefix: x.email })
-        .then(xs => this.mailsOptions = xs.data.map(x => x.email))
-        .then(() => console.error(this.mailsOptions));
-
+      findUser({ prefix: x.user })
+        .then(xs => {
+          console.debug('got autocomplete=', xs.data);
+          // TODO: use an observable
+          this.mailsOptions = xs.data;
+        });
     });
   }
 }
