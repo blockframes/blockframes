@@ -18,7 +18,7 @@ export class LoggerComponent implements OnInit {
   constructor(private service: AuthService, private query: AuthQuery, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.user$ = this.query.select(state => state.user);
+    this.user$ = this.query.user$();
   }
 
   public openLogin() {

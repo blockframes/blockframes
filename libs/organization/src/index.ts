@@ -4,3 +4,4 @@ export * from './lib/guards/org.resolver';
 export { OrgListComponent } from './lib/org-list/org-list.component';
 export { OrgFormComponent } from './lib/org-form/org-form.component';
 export { OrgShowComponent } from './lib/org-show/org-show.component';
+export { OrgWidgetComponent } from './lib/org-widget/org-widget.component';

@@ -1,0 +1,9 @@
+<ng-container *ngIf="(user$ | async) as user;">
+  <button mat-icon-button [matMenuTriggerFor]="organizationMenu">
+    <mat-icon>domain</mat-icon>
+  </button>
+</ng-container>
+
+<mat-menu #organizationMenu="matMenu">
+  <button mat-menu-item *ngFor="let organization of (orgList$ | async)">{{ organization.name }}</button>
+</mat-menu>

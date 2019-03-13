@@ -9,6 +9,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatMenuModule,
   MatToolbarModule
 } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
@@ -16,6 +17,7 @@ import { AuthGuard, AuthModule } from '@blockframes/auth';
 import { OrgFormComponent } from './org-form/org-form.component';
 import { OrgListComponent } from './org-list/org-list.component';
 import { OrgShowComponent } from './org-show/org-show.component';
+import { OrgWidgetComponent } from './org-widget/org-widget.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
 
 export const organizationRoutes: Routes = [
@@ -46,6 +48,7 @@ export const organizationRoutes: Routes = [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
+    MatMenuModule,
     MatCardModule,
     MatDividerModule,
     MatToolbarModule,
@@ -59,6 +62,7 @@ export const organizationRoutes: Routes = [
     OrgListComponent,
     OrgFormComponent,
     OrgShowComponent,
+    OrgWidgetComponent,
     OrgMembersShowComponent
   ],
   exports: [
@@ -66,6 +70,7 @@ export const organizationRoutes: Routes = [
     OrgFormComponent,
     OrgShowComponent,
     OrgMembersShowComponent,
+    OrgWidgetComponent,
     RouterModule
   ]
 })
