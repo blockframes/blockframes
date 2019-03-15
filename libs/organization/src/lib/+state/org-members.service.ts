@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { OrgMembersStore } from './org-members.store';
-import { OrgMember } from './organization.model';
+import { Organization, OrgMember } from './organization.model';
 import { OrganizationService } from './organization.service';
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +29,7 @@ export class OrgMembersService {
       });
   }
 
-  private collection(orgID: string) {
+  private collection(orgID: string): AngularFirestoreDocument<Organization> {
     return this.firestore
       .collection('orgs')
       .doc(orgID);
