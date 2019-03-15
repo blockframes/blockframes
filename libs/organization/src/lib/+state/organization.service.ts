@@ -37,7 +37,7 @@ export class OrganizationService {
       const p1 = tx.update(orgDoc.ref, { userIds: nextUserIds });
 
       // update the user
-      const p2 = tx.set(orgRightsDoc.ref, { orgId, rightNameSlug: [member.role] });
+      const p2 = tx.set(orgRightsDoc.ref, { orgId, rightNameSlug: member.roles });
 
       return Promise.all([p1, p2]);
     }).then(() => {

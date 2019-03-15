@@ -3,6 +3,9 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { OrgMembersStore } from './org-members.store';
 import { Organization, OrgMember } from './organization.model';
 import { OrganizationService } from './organization.service';
+import { combineLatest, zip } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
 
 @Injectable({ providedIn: 'root' })
 export class OrgMembersService {
@@ -19,13 +22,30 @@ export class OrgMembersService {
   }
 
   public subscribe(orgID: string): void {
+    const pullUserAndOrgRights = (orgID, userID) => (
+      zip(
+        this.firestore.collection('users').doc(userID)
+          .get()
+          .pipe(map(x => x.data())),
+        this.firestore.collection('users').doc(userID).collection('orgRights').doc(orgID)
+          .get()
+          .pipe(map(x => x.data()))
+      ).pipe(map(([user, rights]): OrgMember => ({
+        id: user.uid,
+        email: user.email,
+        roles: rights.rightNameSlug
+      })))
+    );
+
     // TODO: handle id changes
     this.collection(orgID)
       .valueChanges()
+      .pipe(
+        pluck('userIds'),
+        switchMap(ids => combineLatest(...ids.map(id => pullUserAndOrgRights(orgID, id))))
+      )
       .subscribe(xs => {
-        const ids = xs.userIds;
-        const items = ids.map(id => ({ id, role: 'ROLE: TBD' }));
-        this.store.set(items);
+        this.store.set(xs);
       });
   }
 

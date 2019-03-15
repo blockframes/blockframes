@@ -3,13 +3,15 @@
     <mat-list *ngFor="let member of (members)">
       <mat-card>
         <mat-card-title>
-          Jean Claude Flim
+          {{member.email}}
         </mat-card-title>
         <mat-card-subtitle>
           {{member.id}}
         </mat-card-subtitle>
         <mat-card-content>
-          {{member.role}}
+          <ul *ngFor="let role of (member.roles)">
+            <li>{{ role }}</li>
+          </ul>
         </mat-card-content>
         <mat-card-actions align="end">
           <button mat-stroked-button color="primary">✏️</button>

@@ -1,6 +1,7 @@
 export interface OrgMember {
   id: string;
-  role: string;
+  email: string;
+  roles: string[];
 }
 
 export interface Organization {
