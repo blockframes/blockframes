@@ -9,6 +9,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatMenuModule,
   MatToolbarModule
 } from '@angular/material';
@@ -22,13 +23,13 @@ import { OrgMembersShowComponent } from './org-members-show/org-members-show.com
 
 export const organizationRoutes: Routes = [
   {
-    path: '_new',
+    path: 'new',
     component: OrgFormComponent,
     canActivate: [AuthGuard],
     data: { fallback: '', org: null }
   },
   {
-    path: '_list',
+    path: 'list',
     component: OrgListComponent,
     canActivate: [AuthGuard],
     data: { fallback: '' }
@@ -50,6 +51,7 @@ export const organizationRoutes: Routes = [
     MatIconModule,
     MatMenuModule,
     MatCardModule,
+    MatListModule,
     MatDividerModule,
     MatToolbarModule,
     MatInputModule,

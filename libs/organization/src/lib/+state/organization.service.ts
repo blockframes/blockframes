@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ID } from '@datorama/akita';
-import { createOrganization, Organization, OrgMember } from './organization.model';
+import { createOrganization, Organization, OrgMember, ROLES } from './organization.model';
 import { OrganizationStore } from './organization.store';
 
 @Injectable({ providedIn: 'root' })
@@ -61,7 +61,7 @@ export class OrganizationService {
       return Promise.all([
         transaction.set(orgDoc.ref, o),
         // @todo admin slug comes from json
-        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: ['admin'] })
+        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: [ROLES.ADMIN] })
       ]);
     }).then(() => {
       console.log('Transaction successfully committed!');

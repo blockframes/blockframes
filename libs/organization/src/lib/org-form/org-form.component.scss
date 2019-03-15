@@ -1,5 +1,37 @@
 :host {
   display: block;
   height: 100%;
+  padding: 2rem;
+
+  h3 {
+    font-size: 0.8rem;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-card-title {
+    font-size: 2.3rem;
+  }
+
+  .mat-toolbar {
+    background: transparent;
+  }
+
+  .mat-toolbar-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > div {
+      width: 55%;
+    }
+
+    button {
+      margin: 0.5rem;
+      width: 50%;
+    }
+  }
 }
 

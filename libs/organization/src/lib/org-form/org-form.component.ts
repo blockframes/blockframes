@@ -5,7 +5,7 @@ import { IpState } from '@blockframes/ip';
 import { AuthQuery, User } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { first, takeWhile } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { createOrganization, OrganizationQuery, OrganizationService } from '../+state';
 
 @Component({
@@ -26,7 +26,8 @@ export class OrgFormComponent implements OnInit, OnDestroy {
     private auth: AuthQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
   }
 
@@ -34,8 +35,10 @@ export class OrgFormComponent implements OnInit, OnDestroy {
     this.user = this.auth.user;
     this.form = this.builder.group({
       'id': [''],
-      'name': ['', [Validators.required]]
+      'name': ['', [Validators.required]],
+      'address': ['', [Validators.required]]
     });
+
     this.persistForm = new PersistNgFormPlugin(this.query, 'form');
     this.persistForm.setForm(this.form);
     this.route.data
@@ -60,7 +63,7 @@ export class OrgFormComponent implements OnInit, OnDestroy {
     }
 
     const id = await this.service.add(this.form.value, this.user.uid);
-    console.log(id);
+    this.router.navigate(['../', id], { relativeTo: this.route });
 
     this.snackBar.open(`Created ${this.form.get('name').value}`, 'close', { duration: 1000 });
     this.form.reset();

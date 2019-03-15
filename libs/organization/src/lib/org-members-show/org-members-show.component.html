@@ -1,36 +1,62 @@
 <section>
-  <mat-card *ngIf="members$ | async as members">
-    <ul *ngFor="let member of (members)">
-      <li>{{member.id}}, {{member.role}}</li>
-    </ul>
-    <mat-divider></mat-divider>
-    <h3>Add Member</h3>
-    <form [formGroup]="addMemberForm">
-      <mat-form-field>
-        <input matInput
-               type="email" placeholder="email" aria-label="email"
-               formControlName="user"
-               [matAutocomplete]="autoEmail"/>
-      </mat-form-field>
-      <mat-autocomplete #autoEmail="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let option of mailsOptions" [value]="option">
-          {{ option.email }}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-form-field>
-        <input matInput placeholder="role" aria-label="role" formControlName="role"
-               [matAutocomplete]="autoRoles"
-        />
-      </mat-form-field>
-      <mat-autocomplete #autoRoles="matAutocomplete">
-        <mat-option *ngFor="let option of rolesOptions" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-      <button mat-raised-button color="primary" (click)="submit()">Add</button>
-    </form>
-  </mat-card>
-  <mat-toolbar fxLayout="row" fxLayoutAlign="end center" class="mat-elevation-z8">
+  <div *ngIf="members$ | async as members">
+    <mat-list *ngFor="let member of (members)">
+      <mat-card>
+        <mat-card-title>
+          Jean Claude Flim
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{member.id}}
+        </mat-card-subtitle>
+        <mat-card-content>
+          {{member.role}}
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-stroked-button color="primary">✏️</button>
+          <button mat-stroked-button color="basic">🗑</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-list>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Add Member</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="addMemberForm">
+          <mat-form-field>
+            <input matInput
+                   type="email" placeholder="email" aria-label="email"
+                   formControlName="user"
+                   [matAutocomplete]="autoEmail"/>
+          </mat-form-field>
+          <mat-autocomplete #autoEmail="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of mailsOptions" [value]="option">
+              {{ option.email }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-form-field>
+            <input matInput placeholder="role" aria-label="role" formControlName="role"
+                   [matAutocomplete]="autoRoles"
+            />
+          </mat-form-field>
+          <mat-autocomplete #autoRoles="matAutocomplete">
+            <mat-option *ngFor="let option of rolesOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+          <button mat-raised-button color="primary" (click)="submit()">Add</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <div>
+        <button mat-button>Back</button>
+        <button mat-raised-button color="primary">Done</button>
+      </div>
+    </mat-toolbar-row>
   </mat-toolbar>
 </section>
 

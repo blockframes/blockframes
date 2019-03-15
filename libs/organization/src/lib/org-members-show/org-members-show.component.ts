@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrgMember, OrgMembersQuery, OrgMembersService } from '../+state';
+import { OrgMember, OrgMembersQuery, OrgMembersService, ROLES } from '../+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
-
-const ROLES = ['ADMIN', 'READ', 'WRITE'];
 
 
 interface User {
@@ -23,7 +21,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   public members$: Observable<OrgMember[]>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public rolesOptions: string[] = ROLES;
+  public rolesOptions: string[] = Object.values(ROLES);
   @Input() orgID: string;
 
   constructor(

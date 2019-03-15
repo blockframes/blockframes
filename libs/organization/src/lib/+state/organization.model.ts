@@ -4,11 +4,12 @@ export interface OrgMember {
 }
 
 export interface Organization {
-  id: string,
-  name: string,
-  created: number,
-  updated: number,
-  userIds: string[],
+  id: string;
+  name: string;
+  address: string;
+  created: number;
+  updated: number;
+  userIds: string[];
 }
 
 /**
@@ -18,8 +19,15 @@ export function createOrganization(params?: Partial<Organization>): Organization
   return params ? {
     id: params.id || '',
     name: params.name,
+    address: params.address,
+    userIds: params.userIds,
     created: params.created || Date.now(),
-    updated: params.updated || Date.now(),
-    userIds: params.userIds
+    updated: params.updated || Date.now()
   } : {} as Organization;
 }
+
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  READ: 'READ',
+  WRITE: 'WRITE'
+};
