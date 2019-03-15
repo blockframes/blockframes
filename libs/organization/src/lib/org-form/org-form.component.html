@@ -6,12 +6,14 @@
     <mat-card-content>
       <form [formGroup]="form">
         <h3>Organization Name</h3>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
           <input matInput placeholder="Name" aria-label="name" formControlName="name"/>
         </mat-form-field>
 
         <h3>Organization Address</h3>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
           <textarea matInput placeholder="" aria-label="address" formControlName="address"></textarea>
         </mat-form-field>
       </form>

@@ -17,20 +17,20 @@
 
   .mat-toolbar {
     background: transparent;
-  }
 
-  .mat-toolbar-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .mat-toolbar-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    > div {
-      width: 55%;
-    }
+      > div {
+        width: 55%;
+      }
 
-    button {
-      margin: 0.5rem;
-      width: 50%;
+      button {
+        margin: 0.5rem;
+        width: 50%;
+      }
     }
   }
 }

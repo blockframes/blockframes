@@ -1,9 +1,6 @@
 <section>
-  <mat-card *ngIf="org$ | async as org">
-    <mat-card-header>
-      <mat-card-title>{{org.name}}</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
+  <div *ngIf="org$ | async as org">
+    <h2>{{ org.name }}</h2>
     <org-members-show [orgID]="org.id"></org-members-show>
-  </mat-card>
+  </div>
 </section>
