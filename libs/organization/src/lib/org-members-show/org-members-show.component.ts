@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrgMember, OrgMembersQuery, OrgMembersService, ROLES } from '../+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
+import { takeWhile } from 'rxjs/operators';
 
 
 interface User {
@@ -23,6 +24,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   public mailsOptions: User[];
   public rolesOptions: string[] = Object.values(ROLES);
   @Input() orgID: string;
+  private alive: boolean = true;
 
   constructor(
     private service: OrgMembersService,
@@ -34,7 +36,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.mailsOptions = [];
-    this.service.subscribe(this.orgID);
+    this.service.subscribe(this.orgID).pipe(takeWhile(() => this.alive)).subscribe();
     this.members$ = this.query.selectAll();
     this.addMemberForm = this.builder.group({
       user: null,
@@ -70,6 +72,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.alive = false;
   }
 
   private async getOrCreateUserByMail(email: string): Promise<User> {
