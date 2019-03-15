@@ -24,7 +24,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   public mailsOptions: User[];
   public rolesOptions: string[] = Object.values(ROLES);
   @Input() orgID: string;
-  private alive: boolean = true;
+  private alive: boolean;
 
   constructor(
     private service: OrgMembersService,
@@ -35,6 +35,7 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.alive = true;
     this.mailsOptions = [];
     this.service.subscribe(this.orgID).pipe(takeWhile(() => this.alive)).subscribe();
     this.members$ = this.query.selectAll();
