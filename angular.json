@@ -570,11 +570,11 @@
       "prefix": "blockframes",
       "architect": {
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@nrwl/builders:jest",
           "options": {
-            "main": "libs/account/src/test.ts",
+            "jestConfig": "libs/account/jest.config.js",
             "tsConfig": "libs/account/tsconfig.spec.json",
-            "karmaConfig": "libs/account/karma.conf.js"
+            "setupFile": "libs/account/src/test-setup.ts"
           }
         },
         "lint": {
