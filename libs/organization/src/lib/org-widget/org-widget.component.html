@@ -1,2 +1,2 @@
-<h3 matSubheader>Organizations</h3>
-<button mat-menu-item *ngFor="let organization of (orgList$ | async)">{{ organization.name }}</button>
+<button matSubheader mat-menu-item routerLink="/organization/list">Organizations</button>
+<button [routerLink]="['/organization/',organization.id]" mat-menu-item *ngFor="let organization of (orgList$ | async)">{{ organization.name }}</button>
