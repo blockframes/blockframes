@@ -4,6 +4,9 @@ import { Store, StoreConfig } from '@datorama/akita';
 export interface User {
   uid: string;
   email: string;
+  lastName: string;
+  firstName: string;
+  biography: string;
 }
 
 export interface UserForm {
@@ -11,13 +14,26 @@ export interface UserForm {
   pwd: string;
 }
 
+export interface AccountForm {
+  lastName: string;
+  firstName: string;
+  biography: string;
+}
+
 export interface AuthState {
   user: User;
   form: UserForm;
+  accountForm: AccountForm;
 }
 
 export function createUser(user: Partial<User>) {
-  return { uid: user.uid, email: user.email } as User;
+  return { 
+    uid: user.uid, 
+    email: user.email,
+    lastName: user.lastName,
+    firstName: user.firstName,
+    biography: user.biography,
+  } as User;
 }
 
 export function createInitialState(): AuthState {
@@ -26,6 +42,11 @@ export function createInitialState(): AuthState {
     form: {
       email: '',
       pwd: ''
+    },
+    accountForm: {
+      lastName: '',
+      firstName: '',
+      biography: '',
     }
   };
 }

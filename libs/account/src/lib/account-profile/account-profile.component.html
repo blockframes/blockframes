@@ -1,5 +1,28 @@
 <section>
-  <div *ngIf="user$ | async as user">
-    <p>{{ user.email }}</p>
-  </div>
+  <mat-card *ngIf="user$ | async as user">
+    <mat-card-header>
+      <mat-card-title>Edit account</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="accountForm" fxLayout="column">
+        <mat-form-field>
+          <input matInput type="uid" placeholder="Id" formControlName="uid" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="email" placeholder="Email" formControlName="email" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="firstName" placeholder="First Name" formControlName="firstName" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="lastName" placeholder="Last Name" formControlName="lastName" />
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Biography" formControlName="biography"></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="updateProfile()">Save</button>
+        <button mat-raised-button color="secondary" routerLink="/account">View profile</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </section>
