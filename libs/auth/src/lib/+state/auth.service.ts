@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthStore, User, createUser, AccountForm } from './auth.store';
+import { AuthStore, User, createUser } from './auth.store';
 import { filter, switchMap, map } from 'rxjs/operators';
 import { NgWallet } from '@blockframes/ethers';
-import { Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -50,5 +49,13 @@ export class AuthService {
   public logout() {
     this.afAuth.auth.signOut();
     this.store.update({ user: null })
+  }
+
+  public delete() {
+    const uid = this.afAuth.auth.currentUser.uid;
+    return this.authCollection.doc(uid).delete()
+    //@todo delete subcollections
+    .then(() =>  this.store.update({ user: null }))
+    .then(() => this.afAuth.auth.currentUser.delete())
   }
 }

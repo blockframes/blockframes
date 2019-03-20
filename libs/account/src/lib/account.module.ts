@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccountWidgetComponent } from './account-widget/account-widget.component';
 import { AccountProfileComponent } from './account-profile/account-profile.component';
 import { AccountViewComponent } from './account-view/account-view.component';
+import { AccountDeleteComponent } from './account-delete/account-delete.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@blockframes/auth';
 
@@ -16,7 +17,8 @@ import {
   MatIconModule,
   MatFormFieldModule,
   MatCardModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatDialogModule,
 } from '@angular/material';
 
 export const accountRoutes: Routes = [
@@ -46,10 +48,12 @@ export const accountRoutes: Routes = [
     MatFormFieldModule,
     ReactiveFormsModule,
     MatExpansionModule,
+    MatDialogModule,
+    FormsModule,
     RouterModule.forChild(accountRoutes)
   ],
-  entryComponents: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent],
-  declarations: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent],
-  exports: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent]
+  entryComponents: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
+  declarations: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
+  exports: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent]
 })
 export class AccountModule {}

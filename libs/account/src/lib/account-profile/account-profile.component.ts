@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, EventEmitter, Output } from '@angular/core';
 import { AuthQuery, User, AccountForm, AuthService } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { PersistNgFormPlugin } from '@datorama/akita';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { AccountDeleteComponent } from './../account-delete/account-delete.component'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'account-profile',
@@ -12,6 +14,8 @@ import { MatSnackBar } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountProfileComponent implements OnInit, OnDestroy {
+  @Output() loggedOut = new EventEmitter();
+
   public accountForm: FormGroup;
   public persistForm: PersistNgFormPlugin<AccountForm>;
   public user$: Observable<User>;
@@ -20,7 +24,9 @@ export class AccountProfileComponent implements OnInit, OnDestroy {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private builder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog
   ) {
   }
 
@@ -38,7 +44,7 @@ export class AccountProfileComponent implements OnInit, OnDestroy {
     this.persistForm.setForm(this.accountForm);
   }
 
-  public  updateProfile() {
+  public updateProfile() {
     if (!this.accountForm.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');
@@ -55,6 +61,22 @@ export class AccountProfileComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  public deleteAccount() {
+    const dialogRef = this.dialog.open(AccountDeleteComponent, {
+      width: '450px',
+      data: {email: ''}
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if(result === this.authQuery.user.email) {
+        this.snackBar.open(`account deleted`, 'close', { duration: 5000 });
+        this.loggedOut.emit();
+        this.router.navigate(['']);
+        await this.authService.delete();
+      }
+    });
   }
 
   ngOnDestroy() {
