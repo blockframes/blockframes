@@ -27,6 +27,10 @@ export const routes: Routes = [
   {
     path: 'organization',
     loadChildren: '@blockframes/organization#OrganizationModule'
+  },
+  {
+    path: 'account',
+    loadChildren: '@blockframes/account#AccountModule'
   }
 ];
 
