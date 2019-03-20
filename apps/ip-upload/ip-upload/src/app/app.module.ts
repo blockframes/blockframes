@@ -31,6 +31,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
+// TODO: find the correct way to pass lint'ing when we import OrganizationModule
+// tslint:disable-next-line
 import { OrganizationModule } from '@blockframes/organization';
 // Components
 import { AppComponent } from './app.component';

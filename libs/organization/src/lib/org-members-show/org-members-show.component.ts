@@ -66,7 +66,6 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
 
     // Query a get or create user, to make ghost users when needed
     const { id } = await this.getOrCreateUserByMail(email);
-    console.debug('Created with=', { id, email, role, orgID: this.orgID });
     await this.service.addMember(this.orgID, { id, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
@@ -88,11 +87,9 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
 
   private async onChange() {
     this.addMemberForm.valueChanges.subscribe(x => {
-      console.debug('form=', x);
       // TODO: debounce
       this.listUserByMail(x.user)
         .then(xs => {
-          console.debug('got autocomplete=', xs);
           // TODO: use an observable
           this.mailsOptions = xs;
         });

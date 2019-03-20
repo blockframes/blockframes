@@ -23,7 +23,7 @@ export class OrgMembersService {
   }
 
   public subscribe(orgID: string): Observable<OrgMember[]> {
-    const pullUserAndOrgRights = (orgID, userID): Observable<OrgMember> => (
+    const pullUserAndOrgRights = (userID): Observable<OrgMember> => (
       combineLatest([
         this.firestore.collection('users').doc(userID)
           .get()
@@ -43,7 +43,7 @@ export class OrgMembersService {
       .valueChanges()
       .pipe(
         pluck('userIds'),
-        switchMap(ids => combineLatest(...ids.map(id => pullUserAndOrgRights(orgID, id)))),
+        switchMap(ids => combineLatest(...ids.map(id => pullUserAndOrgRights(id)))),
         tap(xs => this.store.set(xs))
       );
   }
