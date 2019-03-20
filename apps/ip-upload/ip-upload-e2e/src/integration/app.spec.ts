@@ -51,7 +51,7 @@ describe('Organization Management', () => {
     cy.viewport('macbook-15');
   });
 
-  it('story #43: As a User I want to be able to create an organisation and add members to it.', () => {
+  it.skip('story #43: As a User I want to be able to create an organisation and add members to it.', () => {
     let p: any = new Landing();
     p = p.clickConnection();
     p.fillEmail('laurent+test@singulargarden.com');
