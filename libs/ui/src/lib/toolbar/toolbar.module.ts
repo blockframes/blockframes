@@ -4,6 +4,7 @@ import { HeaderComponent } from './header/header.component';
 
 import { OrganizationModule} from '@blockframes/organization';
 import { AuthModule} from '@blockframes/auth';
+import { AccountModule } from '@blockframes/account';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +21,7 @@ import { MatListModule } from '@angular/material/list';
     MatToolbarModule,
     OrganizationModule,
     AuthModule,
+    AccountModule,
     MatMenuModule,
     MatButtonModule,
     MatDividerModule,
