@@ -1,0 +1,22 @@
+mat-list mat-card-title {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+mat-list mat-card-subtitle{
+  display: block;
+  margin-bottom: 16px;
+  color: rgba(0,0,0,.54);
+  font-size: 14px;
+}
+
+mat-panel-description a mat-icon{
+  color: rgba(0,0,0,.54);
+}
+
+.mat-expansion-panel-header-description {
+  flex-grow: 0;
+}

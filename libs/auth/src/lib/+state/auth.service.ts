@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthStore, User, createUser } from './auth.store';
+import { AuthStore, User, createUser, AccountForm } from './auth.store';
 import { filter, switchMap, map } from 'rxjs/operators';
 import { NgWallet } from '@blockframes/ethers';
 import { Router } from '@angular/router';
@@ -31,6 +31,10 @@ export class AuthService {
     } catch (err) {
       throw new Error(err);
     }
+  }
+
+  public updateUser(uid: string, account: any) {
+    return this.db.collection('users').doc(uid).update(account);
   }
 
   private subscribeOnUser() {

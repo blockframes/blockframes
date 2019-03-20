@@ -1,0 +1,74 @@
+<section>
+  <mat-card>
+    <mat-accordion *ngIf="user$ | async as user">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+           
+            <span>Personal data</span>
+          </mat-panel-title>
+          <mat-panel-description>
+              <a routerLink="/account/profile">
+                <mat-icon>settings</mat-icon>
+              </a>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-list>
+            <mat-list-item>
+              <mat-card-header>
+                <mat-card-title>Id</mat-card-title>
+                <mat-card-subtitle>{{ user.uid }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-card-header>
+                <mat-card-title>First Name</mat-card-title>
+                <mat-card-subtitle>{{ user.firstName }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-card-header>
+                <mat-card-title>Last Name</mat-card-title>
+                <mat-card-subtitle>{{ user.lastName }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-card-header>
+                <mat-card-title>Email</mat-card-title>
+                <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-card-header>
+                <mat-card-title>Biography</mat-card-title>
+                <mat-card-subtitle><p>{{ user.biography }}</p></mat-card-subtitle>
+              </mat-card-header>
+            </mat-list-item>
+        </mat-list>
+          
+      </mat-expansion-panel>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Billing
+          </mat-panel-title>
+          <mat-panel-description>
+            Currently I am {{panelOpenState ? 'open' : 'closed'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>Todo</p>
+      </mat-expansion-panel>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Wallet
+          </mat-panel-title>
+          <mat-panel-description>
+            Currently I am {{panelOpenState ? 'open' : 'closed'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>Todo</p>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+</section>
