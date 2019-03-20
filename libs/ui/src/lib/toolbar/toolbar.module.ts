@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 
-import { OrganizationModule} from '@blockframes/organization'
-import { AuthModule} from '@blockframes/auth'
+import { OrganizationModule} from '@blockframes/organization';
+import { AuthModule} from '@blockframes/auth';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
