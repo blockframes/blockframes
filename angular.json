@@ -562,6 +562,30 @@
           "styleext": "scss"
         }
       }
+    },
+    "account": {
+      "root": "libs/account",
+      "sourceRoot": "libs/account/src",
+      "projectType": "library",
+      "prefix": "blockframes",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/account/src/test.ts",
+            "tsConfig": "libs/account/tsconfig.spec.json",
+            "karmaConfig": "libs/account/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/account/tsconfig.lib.json", "libs/account/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
