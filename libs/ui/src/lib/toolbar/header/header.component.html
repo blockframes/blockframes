@@ -3,6 +3,20 @@
 
     <span class="example-fill-remaining-space"></span>
 
+    <button mat-icon-button [matMenuTriggerFor]="apps">
+        <mat-icon>dialpad</mat-icon>
+    </button>
+    <mat-menu #apps="matMenu">
+        <button mat-menu-item>
+            <mat-icon>cloud_upload</mat-icon>
+            <span>Ip upload</span>
+        </button>
+        <button mat-menu-item>
+            <mat-icon>local_post_office</mat-icon>
+            <span>Delivery app</span>
+        </button>
+    </mat-menu>
+
     <ng-container *ngIf="(user$ | async) as user; else connexion">
         <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>account_circle</mat-icon>
@@ -15,9 +29,9 @@
 
     <mat-menu #menu="matMenu">
         <mat-list>
-            <org-widget></org-widget>
-            <mat-divider></mat-divider>
             <account-widget></account-widget>
+            <mat-divider></mat-divider>
+            <org-widget></org-widget>
             <mat-divider></mat-divider>
             <ng-container (loggedOut)="logout()"><button mat-menu-item (click)="logout()">Logout</button></ng-container>
         </mat-list>

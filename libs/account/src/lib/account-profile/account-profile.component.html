@@ -1,0 +1,5 @@
+<section>
+  <div *ngIf="user$ | async as user">
+    <p>{{ user.email }}</p>
+  </div>
+</section>
