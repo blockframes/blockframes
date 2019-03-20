@@ -29,7 +29,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 // Libraries
 import { AuthModule } from '@blockframes/auth';
-import { UiFormModule, UploadModule } from '@blockframes/ui';
+import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 // TODO: find the correct way to pass lint'ing when we import OrganizationModule
 // tslint:disable-next-line
@@ -55,6 +55,7 @@ import { HomeComponent } from './home/home.component';
     UiFormModule,
     WalletModule,
     OrganizationModule,
+    ToolbarModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,

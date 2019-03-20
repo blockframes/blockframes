@@ -18,8 +18,8 @@ import { AuthGuard, AuthModule } from '@blockframes/auth';
 import { OrgFormComponent } from './org-form/org-form.component';
 import { OrgListComponent } from './org-list/org-list.component';
 import { OrgShowComponent } from './org-show/org-show.component';
-import { OrgWidgetComponent } from './org-widget/org-widget.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
+import { OrgWidgetComponent } from './org-widget/org-widget.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -64,8 +64,8 @@ export const organizationRoutes: Routes = [
     OrgListComponent,
     OrgFormComponent,
     OrgShowComponent,
-    OrgWidgetComponent,
-    OrgMembersShowComponent
+    OrgMembersShowComponent,
+    OrgWidgetComponent
   ],
   exports: [
     OrgListComponent,
