@@ -16,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
 // Component
-import { LoggerComponent } from './logger/logger.component';
 import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
@@ -35,7 +34,7 @@ import { SignupComponent } from './signup/signup.component';
     MatMenuModule
   ],
   entryComponents: [SignupComponent],
-  declarations: [LoggerComponent, SignupComponent],
-  exports: [LoggerComponent, SignupComponent]
+  declarations: [SignupComponent],
+  exports: [SignupComponent]
 })
 export class AuthModule {}

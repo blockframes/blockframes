@@ -45,5 +45,6 @@ export class AuthService {
 
   public logout() {
     this.afAuth.auth.signOut();
+    this.store.update({ user: null })
   }
 }

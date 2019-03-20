@@ -16,19 +16,10 @@ mat-sidenav-content {
   overflow: hidden;
 }
 
-mat-toolbar {
-  position: absolute;
-  z-index: 1;
-}
-
 main {
   margin-top: 64px;
   height: calc(100% - 64px);
   overflow: auto;
 }
 
-.example-fill-remaining-space {
-  /* This fills the remaining space, by using flexbox. 
-     Every toolbar row uses a flexbox row layout. */
-  flex: 1 1 auto;
-}
+

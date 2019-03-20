@@ -24,8 +24,10 @@ export class OrgWidgetComponent implements OnInit, OnDestroy {
     this.user$ = this.auth.user$();
 
     this.user$.subscribe((user: User) => {
-      // @todo remove observable on ngDestroy bruce
-      this.service.subscribeUserOrgs(user.uid);
+      // @todo remove observable on ngDestroy
+      if(user !== null) {
+        this.service.subscribeUserOrgs(user.uid);
+      }
     });
 
     this.orgList$ = this.query.selectAll();

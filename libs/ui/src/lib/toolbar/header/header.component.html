@@ -1,0 +1,24 @@
+<mat-toolbar class="mat-elevation-z2" fxLayout="row-reverse" fxLayoutAlign="space-between center">
+    <span>Blockframes</span>
+
+    <span class="example-fill-remaining-space"></span>
+
+    <ng-container *ngIf="(user$ | async) as user; else connexion">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+    </ng-container>
+        
+    <ng-template #connexion>
+        <button mat-button (click)="openLogin()">Connexion</button>
+    </ng-template>
+
+    <mat-menu #menu="matMenu">
+        <mat-list>
+            <org-widget></org-widget>
+            <mat-divider></mat-divider>
+            <ng-container (loggedOut)="logout()"><button mat-menu-item (click)="logout()">Logout</button></ng-container>
+        </mat-list>
+    </mat-menu>
+
+</mat-toolbar>
