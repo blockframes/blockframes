@@ -7,6 +7,8 @@ import { environment } from './environments/environment';
 import { persistState, enableAkitaProdMode } from '@datorama/akita';
 import { hmrBootstrap } from './hmr';
 
+import { persistState } from '@datorama/akita';
+
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
 // Akita Persite State in LocalStorage
@@ -19,6 +21,12 @@ if (environment.production) {
   enableProdMode();
   enableAkitaProdMode();
 }
+
+persistState();
+
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch(err => console.error(err));
 
 // Hot Module Reload Envionment
 if (environment.hmr) {
