@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
+// tslint:disable-next-line
 import { AuthGuard } from '@blockframes/auth';
 import { LayoutComponent } from './layout/layout.component';
+//import { AuthGuard } from '@blockframes/auth';
 
 export const routes: Routes = [
   {
-    path:'',
+    path: '',
     redirectTo: 'layout',
-    pathMatch:'full'
+    pathMatch: 'full'
   },
   {
     path: 'auth',
@@ -21,14 +22,8 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'explorer', pathMatch: 'full' },
       { path: 'explorer', loadChildren: 'libs/movie/src/lib/movie.module#MovieModule' }, // loadChildren should lead to the Movie Module
-      {
-        path: 'organization',
-        loadChildren: '@blockframes/organization#OrganizationModule'
-      },
-      {
-        path: 'account',
-        loadChildren: '@blockframes/account#AccountModule'
-      },
+      { path: 'organization', loadChildren: '@blockframes/organization#OrganizationModule' }, // loadChildren should lead to the Organization Module
+      { path: 'account', loadChildren: '@blockframes/account#AccountModule' }, // loadChildren should lead to the Account Module
       { path: ':id', loadChildren: './financing/financing.module#FinancingModule' } // should lead to the specific App
     ]
   }
@@ -38,8 +33,9 @@ export const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

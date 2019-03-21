@@ -1,11 +1,12 @@
 {
   "projects": {
     "default": "blockframes-test",
+    "staging": "blockframes-staging",
     "laurent": "blockframes-laurent",
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
-    "staging": "blockframes-staging",
     "hugo": "blockframes-hugo",
     "yohann": "blockframes-hugo"
+    "vincent": "blockframes-vincent",
   }
 }

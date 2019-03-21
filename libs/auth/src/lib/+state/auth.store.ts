@@ -27,8 +27,8 @@ export interface AuthState {
 }
 
 export function createUser(user: Partial<User>) {
-  return { 
-    uid: user.uid, 
+  return {
+    uid: user.uid,
     email: user.email,
     lastName: user.lastName,
     firstName: user.firstName,
