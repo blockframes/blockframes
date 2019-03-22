@@ -3,7 +3,7 @@ export interface Movie {
   title: string[],
   ipId: string,
   credits: {firstName: string, lastName: string, creditRole: string}[],
-  stakholders: {orgName: string, stakeholderRole:string}[],
+  stakholders: {orgId:string, orgName: string, orgMovieRole: string, stakeholderRole:string, stakeholderAuthorization: string}[],
   genres: string[],
   isan: number,
   status: string,

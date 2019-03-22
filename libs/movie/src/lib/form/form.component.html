@@ -60,8 +60,14 @@
       <div formArrayName="stakeholders"
       *ngFor="let stakholder of movieStakeholders.controls; let i = index;">
         <div [formGroupName]="i" class="full-width small-margin">
+        <mat-form-field class="small-width small-margin">
+            <input matInput formControlName="orgId" placeholder="Company ID">
+          </mat-form-field>
           <mat-form-field class="small-width small-margin">
             <input matInput formControlName="orgName" placeholder="Company Name">
+          </mat-form-field>
+          <mat-form-field class="small-width small-margin">
+            <input matInput formControlName="orgMovieRole" placeholder="Org access on this movie">
           </mat-form-field>
           <mat-form-field class="small-width small-margin">
             <mat-select formControlName="stakeholderRole" placeholder="Position">
@@ -70,7 +76,10 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-icon-button color="primary" (click)="addStakeholder()">
+          <mat-form-field class="small-width small-margin">
+            <input matInput formControlName="stakeholderAuthorization" placeholder="Org authorizations on this movie">
+          </mat-form-field>
+          <button mat-icon-button color="primary" (click)="addStakeholder('','','','','')">
             <mat-icon>add_circle</mat-icon>
           </button>
           <button mat-icon-button color="primary" (click)="removeStakeholder(i)">
@@ -79,7 +88,7 @@
         </div>
       </div>
       <div *ngIf="movieStakeholders.controls.length == 0">
-        <button mat-icon-button color="primary" (click)="addStakeholder()">
+        <button mat-icon-button color="primary" (click)="addStakeholder('','','','','')">
           <mat-icon>add_circle</mat-icon>
         </button>
       </div>

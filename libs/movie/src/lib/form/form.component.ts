@@ -7,6 +7,7 @@ import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
 import { AuthQuery, User } from '@blockframes/auth';
 import staticModels from '../staticModels.json';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 
 @Component({
   selector: 'movie-financing-form',
@@ -25,6 +26,7 @@ export class FormComponent implements OnInit, OnDestroy {
   private isModifying = false;
   private activeId: string;
   public user: User;
+  public org: Organization;
 
   constructor(
     private query: MovieQuery,
@@ -34,17 +36,19 @@ export class FormComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: MovieStore,
     private auth: AuthQuery,
+    public orgQuery: OrganizationQuery,
   ) {}
 
   ngOnInit() {
     this.user = this.auth.user;
     this.staticModels = staticModels;
+    this.org = this.orgQuery.getActive();
 
     this.movieForm = this.builder.group({
       title: ['', Validators.required],
       ipId: [''],
       credits: this.builder.array([ this.createCredit() ]),
-      stakeholders: this.builder.array([ this.createStakeholder() ]),
+      stakeholders: this.builder.array([ this.createStakeholder(this.org.id, this.org.name, 'ADMIN', 'Producer', 'canActivateDelivery') ]),
       genres: [''],
       isan: [null],
       status: [''],
@@ -79,6 +83,8 @@ export class FormComponent implements OnInit, OnDestroy {
       this.activeId = this.query.getActiveId();
       this.movieForm.patchValue(createMovie(this.query.getActive()));
     }
+
+    console.log(this.movieStakeholders.getRawValue());
   }
 
   /*
@@ -165,15 +171,19 @@ export class FormComponent implements OnInit, OnDestroy {
     return this.movieForm.get('stakeholders') as FormArray;
   }
 
-  public createStakeholder(): FormGroup {
+
+  public createStakeholder(orgId: string, orgName: string, orgMovieRole: string, stakeholderRole: string, stakeholderAuthorization: string): FormGroup {
     return this.builder.group({
-      orgName: '',
-      stakeholderRole: '',
+      orgId: orgId,
+      orgName: orgName,
+      orgMovieRole: orgMovieRole,
+      stakeholderRole: stakeholderRole,
+      stakeholderAuthorization: stakeholderAuthorization,
     });
   }
 
-  public addStakeholder(): void {
-    this.movieStakeholders.push(this.createStakeholder());
+  public addStakeholder(orgId: string, orgName: string, orgMovieRole: string, stakeholderRole: string, stakeholderAuthorization: string): void {
+    this.movieStakeholders.push(this.createStakeholder(orgId, orgName, orgMovieRole, stakeholderRole, stakeholderAuthorization));
   }
 
   public removeStakeholder(index: number): void {
