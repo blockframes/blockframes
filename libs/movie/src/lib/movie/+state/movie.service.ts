@@ -4,8 +4,9 @@ import { MovieStore } from './movie.store';
 import { Movie, createMovie } from './movie.model';
 import { takeWhile } from 'rxjs/operators';
 import { Stakeholder, createStakeholder } from '../../stakeholder/+state/stakeholder.model';
+import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { OrganizationQuery } from '@blockframes/organization';
-import { StakeholderService } from '@blockframes/movie';
+
 
 
 @Injectable({ providedIn: 'root' })

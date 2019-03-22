@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Add a new film</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="titleForm" (ngSubmit)="newMovie()">
+      <mat-form-field>
+        <input matInput type="string" placeholder="Film Title" formControlName="title" />
+      </mat-form-field>
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Create</button>
+    </form>
+  </mat-card-content>
+</mat-card>

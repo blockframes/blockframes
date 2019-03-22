@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormComponent } from './form/form.component';
 import { HomeComponent } from './home/home.component';
 import { ViewComponent } from './view/view.component';
+import { TitleFormComponent } from './title-form/title-form.component';
 
 // Guards
 import { MovieGuard } from './guards/movie.guard';
@@ -27,6 +28,10 @@ export const routes: Routes = [
     path: 'movie/:id',
     component: ViewComponent,
     canActivate: [MovieGuard],
+  },
+  {
+    path: 'dev',
+    component: TitleFormComponent,
   },
 ]
 

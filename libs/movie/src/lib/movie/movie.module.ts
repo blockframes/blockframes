@@ -34,9 +34,10 @@ import { ListComponent } from './list/list.component';
 import { ViewComponent } from './view/view.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
+import { TitleFormComponent } from '../movie/title-form/title-form.component';
 
 @NgModule({
-  declarations: [HomeComponent, FormComponent, ListComponent, ViewComponent],
+  declarations: [HomeComponent, FormComponent, ListComponent, ViewComponent, TitleFormComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -66,6 +67,7 @@ import { AngularFireModule } from '@angular/fire';
     UploadModule,
     UiFormModule,
   ],
-  providers: [{ provide: FirestoreSettingsToken, useValue: {} }], // TODO: Remove when @angular/fire is updated
+  providers: [{ provide: FirestoreSettingsToken, useValue: {} }],// TODO: Remove when @angular/fire is updated
+  entryComponents: [TitleFormComponent],
 })
 export class MovieModule {}
