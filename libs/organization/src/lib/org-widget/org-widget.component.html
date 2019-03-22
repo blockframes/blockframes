@@ -7,4 +7,4 @@
   <mat-icon>add_circle</mat-icon>
   <span>Create</span>
 </button>
-<button [routerLink]="['organization/',organization.id]" mat-menu-item *ngFor="let organization of (orgList$ | async)">{{ organization.name }}</button>
+<button (click)="setActive(organization.id)" [routerLink]="['organization/',organization.id]" mat-menu-item *ngFor="let organization of (orgList$ | async)">{{ organization.name }}</button>
