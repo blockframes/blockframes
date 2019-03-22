@@ -3,7 +3,9 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { MovieStore } from './movie.store';
 import { Movie, createMovie } from './movie.model';
 import { takeWhile } from 'rxjs/operators';
-import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
+import { Stakeholder, createStakeholder } from '../../stakeholder/+state/stakeholder.model';
+import { OrganizationQuery } from '@blockframes/organization';
+import { StakeholderService } from '@blockframes/movie';
 
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +16,8 @@ export class MovieService {
   constructor(
   private store: MovieStore,
   private firestore: AngularFirestore,
+  private orgQuery: OrganizationQuery,
+  private shService: StakeholderService,
   ) {
     this.collection = this.firestore.collection('movies');
   }
@@ -40,66 +44,14 @@ export class MovieService {
      ).subscribe(movies => this.store.set(movies));
   }
 
-  public async addStakeholder(movieId: string, stakeholder: Stakeholder): Promise<string> {
-    const movieDoc = this.collection.doc(movieId);
-    const orgDoc = this.firestore.collection('orgs').doc(stakeholder.orgId);
-    const stakeholderDoc = movieDoc.collection('stakeholders').doc(stakeholder.id);
+  public async add(title: string): Promise<string> {
+    const orgId = this.orgQuery.getActiveId();
+    const id = this.firestore.createId();
+    const owner: Stakeholder = createStakeholder({orgId, role: 'ADMIN'});
 
-    this.firestore.firestore.runTransaction(async (tx) => {
-      // Update the movie
-      const movie = await tx.get(movieDoc.ref);
-      const { stakeholderIds } = movie.data();
-      const nextStakeholderIds = [...stakeholderIds, stakeholder.id];
-      const p1 = tx.update(movieDoc.ref, { stakeholderIds: nextStakeholderIds});
-
-      // Update the org
-      const org = await tx.get(orgDoc.ref);
-      const { movieIds } = org.data();
-      const nextMovieIds = [...movieIds, movieId];
-      const p2 = tx.update(orgDoc.ref, { movieIds: nextMovieIds });
-
-      // Set the stakeholder
-      const p3 = tx.set(stakeholderDoc.ref, {...stakeholder});
-
-      return Promise.all([p1, p2, p3]);
-    }).then(() => {
-        console.log('Transaction successfully committed!');
-    }).catch((error) => {
-        console.log('Transaction failed: ', error);
-    });
-
-    return stakeholder.id;
-  }
-
-  public async add(title: string, orgId: string): Promise<string> {
-    const movieId = this.firestore.createId();
-    const movie: Movie = createMovie({ id: movieId, title: [title], stakeholderIds: [orgId] });
-    const stakeholderId = this.firestore.createId();
-
-    const movieDoc = this.collection.doc(movieId);
-    const orgDoc = this.firestore.collection('orgs').doc(orgId);
-    const stakeholderDoc = movieDoc.collection('stakeholders').doc(stakeholderId);
-
-    this.firestore.firestore.runTransaction(async (tx) => {
-    // Update the org
-    const org = await tx.get(orgDoc.ref);
-    const { movieIds } = org.data();
-    const nextMovieIds = [...movieIds, movieId];
-
-      return Promise.all([
-        tx.set(movieDoc.ref, movie),
-        tx.update(orgDoc.ref, { movieIds: [...movieIds, nextMovieIds] }),
-        // @todo admin string comes from json
-        tx.set(stakeholderDoc.ref, {id: stakeholderId, role: 'ADMIN'})
-      ]);
-    }).then(() => {
-      console.log('Transaction successfully committed!');
-    }).catch((error) => {
-      console.log('Transaction failed: ', error);
-    });
-
-    return movieId;
-
+    this.collection.doc(id).set((createMovie({ id, title: [title] })));
+    await this.shService.add(id, owner);
+    return id;
   }
 
   public update(id: string, movie: Partial<Movie>) {
