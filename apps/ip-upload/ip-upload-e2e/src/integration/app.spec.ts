@@ -16,12 +16,6 @@ const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
 
 describe('story #24: I am a user, I want to timestamp a document at the source of a new Intellectual Property', () => {
-  beforeEach(() => {
-    cy.clearCookies();
-    cy.visit('/');
-    cy.viewport('macbook-15');
-  });
-
   it('', () => {
     let p: any = new Landing();
     p = p.clickConnection();

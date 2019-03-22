@@ -1,5 +1,6 @@
 module.exports = {
   testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
+  setupFilesAfterEnv: "<rootDir>/jest.setup.js",
   transform: {
     '^.+\\.(ts|js|html)$': 'jest-preset-angular/preprocessor.js'
   },
