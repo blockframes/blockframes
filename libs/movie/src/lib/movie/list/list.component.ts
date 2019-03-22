@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, Movie, MovieService } from '../+state';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Movie, MovieQuery, MovieService } from '../+state';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'movie-financing-list',
@@ -17,11 +18,17 @@ export class ListComponent implements OnInit {
     private query: MovieQuery,
     private service: MovieService,
     private router: Router,
-  ) {}
+    private orgQuery: OrganizationQuery
+  ) {
+  }
 
   // Initiate the Movies in Akita
   ngOnInit() {
-    this.service.fetch();
+    this.orgQuery.selectActive().subscribe((org: Organization) => {
+      // @todo remove observable on ngDestroy
+      this.service.subscribeOrgMovies(org.id);
+    });
+
     this.movies$ = this.query.selectAll();
   }
 

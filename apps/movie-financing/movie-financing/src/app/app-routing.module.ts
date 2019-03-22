@@ -21,7 +21,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'explorer', pathMatch: 'full' },
-      { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' }, // loadChildren should lead to the Movie Module
+      { path: 'explorer', loadChildren: 'libs/movie/src/lib/movie/movie.module#MovieModule' }, // loadChildren should lead to the Movie Module
       { path: 'organization', loadChildren: '@blockframes/organization#OrganizationModule' }, // loadChildren should lead to the Organization Module
       { path: 'account', loadChildren: '@blockframes/account#AccountModule' }, // loadChildren should lead to the Account Module
       { path: ':id', loadChildren: './financing/financing.module#FinancingModule' } // should lead to the specific App
