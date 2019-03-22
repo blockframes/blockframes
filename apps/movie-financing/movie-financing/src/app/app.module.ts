@@ -11,15 +11,11 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 // Librairies
-import { AuthModule } from '@blockframes/auth';
 import { ToolbarModule } from '@blockframes/ui';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { OrganizationModule } from '@blockframes/organization';
-// tslint:disable-next-line: nx-enforce-module-boundaries
 import { MovieModule } from '@blockframes/movie';
-
-// Libraries
 // tslint:disable-next-line: nx-enforce-module-boundaries
+import { AuthModule } from '@blockframes/auth';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -32,8 +28,7 @@ import { MovieModule } from '@blockframes/movie';
     AuthModule,
     ToolbarModule,
     ToolbarModule,
-    // Librairies
-    OrganizationModule,
+
     // Akita
     environment.production ? [] : [AkitaNgDevtools.forRoot()]
   ],
