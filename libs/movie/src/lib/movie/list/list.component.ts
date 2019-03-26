@@ -3,6 +3,8 @@ import { Movie, MovieQuery, MovieService } from '../+state';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { MatDialog } from '@angular/material/dialog';
+import { TitleFormComponent } from '../title-form/title-form.component';
 
 @Component({
   selector: 'movie-financing-list',
@@ -18,7 +20,8 @@ export class ListComponent implements OnInit {
     private query: MovieQuery,
     private service: MovieService,
     private router: Router,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private dialog: MatDialog
   ) {
   }
 
@@ -30,6 +33,10 @@ export class ListComponent implements OnInit {
     });
 
     this.movies$ = this.query.selectAll();
+  }
+
+  public addNewMovie() {
+    this.dialog.open(TitleFormComponent);
   }
 
   public delete(id: string) {
