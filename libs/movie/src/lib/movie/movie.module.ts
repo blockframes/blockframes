@@ -67,7 +67,10 @@ import { TitleFormComponent } from '../movie/title-form/title-form.component';
     UploadModule,
     UiFormModule,
   ],
-  providers: [{ provide: FirestoreSettingsToken, useValue: {} }],// TODO: Remove when @angular/fire is updated
+  providers: [
+    { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
+  ],
   entryComponents: [TitleFormComponent],
+  exports: [TitleFormComponent],
 })
 export class MovieModule {}

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MovieService } from '../+state';
+import { MovieService, MovieStore, MovieQuery } from '../+state';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,6 +18,8 @@ export class TitleFormComponent implements OnInit {
     private builder: FormBuilder,
     private service: MovieService,
     private router: Router,
+    private store: MovieStore,
+    private query: MovieQuery,
   ) { }
 
   ngOnInit() {
@@ -29,12 +31,14 @@ export class TitleFormComponent implements OnInit {
   public async newMovie() {
     try {
       const { title } = this.titleForm.value;
-      await this.service.add(title).then(
-        id =>  this.router.navigateByUrl(`form/${id}`)
-      );
+      const id = await this.service.add(title);
+      this.store.setActive(id);
+      console.log(this.query.getActive());
+      this.router.navigateByUrl(`form/${id}`);
       this.dialogRef.close();
-    } catch (err) {
-      console.error(err);
+    }
+    catch (err) {
+      console.log('erreur dans le form')
     }
   }
 
