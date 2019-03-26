@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { MovieStore, MovieQuery, MovieService, createMovie } from '../+state';
+import { MovieStore, MovieQuery, MovieService, createMovie, Movie } from '../+state';
 import { MatChipInputEvent, MatSnackBar } from '@angular/material';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class FormComponent implements OnInit, OnDestroy {
   private activeId: string;
   public user: User;
   public org: Organization;
+  public movie: Movie;
 
   constructor(
     private query: MovieQuery,
@@ -43,9 +44,11 @@ export class FormComponent implements OnInit, OnDestroy {
     this.user = this.auth.user;
     this.staticModels = staticModels;
     this.org = this.orgQuery.getActive();
+    this.movie = this.query.getActive();
+    console.log(this.movie);
 
     this.movieForm = this.builder.group({
-      title: ['', Validators.required],
+      title: [''],
       ipId: [''],
       credits: this.builder.array([ this.createCredit() ]),
       stakeholders: this.builder.array([ this.createStakeholder(this.org.id, this.org.name, 'ADMIN', 'Producer', 'canActivateDelivery') ]),
