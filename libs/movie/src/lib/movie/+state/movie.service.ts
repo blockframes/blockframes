@@ -7,9 +7,8 @@ import { Stakeholder, createStakeholder } from '../../stakeholder/+state/stakeho
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { OrganizationQuery } from '@blockframes/organization';
 
-
-
 @Injectable({ providedIn: 'root' })
+
 export class MovieService {
   private collection: AngularFirestoreCollection<Movie>;
   public initiated = false;
@@ -50,8 +49,15 @@ export class MovieService {
     const id = this.firestore.createId();
     const owner: Stakeholder = createStakeholder({orgId, role: 'ADMIN'});
 
-    this.collection.doc(id).set((createMovie({ id, title: [title] })));
+    const movie: Partial<Movie> = createMovie({
+      id: id,
+      title: [title]
+    });
+
+    await this.collection.doc(id).set(movie);
     await this.shService.add(id, owner);
+
+
     return id;
   }
 
