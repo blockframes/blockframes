@@ -51,11 +51,17 @@ export class AuthService {
     this.store.update({ user: null })
   }
 
-  public delete() {
+  public async delete() {
     const uid = this.afAuth.auth.currentUser.uid;
-    return this.authCollection.doc(uid).delete()
-    //@todo delete subcollections
-    .then(() =>  this.store.update({ user: null }))
-    .then(() => this.afAuth.auth.currentUser.delete())
+    try {
+      await Promise.all([
+        this.authCollection.doc(uid).delete(),
+        this.afAuth.auth.currentUser.delete()
+        // @todo create function to delete user sub collections
+      ])
+      this.store.update({ user: null })
+    } catch (e) {
+      throw new Error('Error while deleting account.');
+    }
   }
 }

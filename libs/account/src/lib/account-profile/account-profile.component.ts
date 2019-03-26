@@ -69,12 +69,12 @@ export class AccountProfileComponent implements OnInit, OnDestroy {
       data: {email: ''}
     });
 
-    dialogRef.afterClosed().subscribe(async result => {
+    dialogRef.afterClosed().subscribe(result => {
       if(result === this.authQuery.user.email) {
         this.snackBar.open(`account deleted`, 'close', { duration: 5000 });
         this.loggedOut.emit();
         this.router.navigate(['']);
-        await this.authService.delete();
+        this.authService.delete();
       }
     });
   }

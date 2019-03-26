@@ -11,20 +11,12 @@ export interface DialogData {
   styleUrls: ['./account-delete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountDeleteComponent implements OnInit, OnDestroy {
+export class AccountDeleteComponent  {
 
   constructor(
     private dialogRef: MatDialogRef<AccountDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
-
-  ngOnInit() {
-
-  }
-
-  ngOnDestroy() {
-
-  }
 
   onNoClick(): void {
     this.dialogRef.close();
