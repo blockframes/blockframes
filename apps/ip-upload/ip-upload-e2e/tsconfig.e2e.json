@@ -3,11 +3,17 @@
   "compilerOptions": {
     "sourceMap": false,
     "outDir": "../../../dist/out-tsc/apps/ip-upload/ip-upload-e2e/src",
-    "lib": ["es2015", "dom"],
-    "types": ["cypress", "node"]
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "types": [
+      "cypress",
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts",
-    "../../node_modules/cypress"
+    "../../../node_modules/cypress"
   ]
 }

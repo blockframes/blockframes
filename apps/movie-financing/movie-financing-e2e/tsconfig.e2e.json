@@ -2,9 +2,15 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "sourceMap": false,
-    "outDir": "../../../dist/out-tsc/apps/movie-financing-e2e/src",
-    "lib": ["es2015", "dom"],
-    "types": ["cypress", "node"]
+    "outDir": "../../../dist/out-tsc/apps/movie-financing/movie-financing-e2e/src",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "types": [
+      "cypress",
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts",

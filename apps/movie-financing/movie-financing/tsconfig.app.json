@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/apps/movie-financing",
+    "outDir": "../../../dist/out-tsc/apps/movie-financing/movie-financing",
     "types": ["node"]
   },
   "exclude": [

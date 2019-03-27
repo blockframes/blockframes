@@ -21,7 +21,7 @@
       "@blockframes/movie": ["libs/movie/src/index.ts"],
       "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/account": ["libs/account/src/index.ts"],
-      "@blockframes/delivery": ["libs/delivery/src/index.ts"],
+      "@blockframes/delivery": ["libs/delivery/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
