@@ -1,7 +1,7 @@
 export * from './lib/movie/+state';
 export * from './lib/movie/guards/movie.guard';
 export * from './lib/movie/movie.module';
-export const staticModels = require('./lib/movie/staticModels.json');
+export { default as staticModels } from './lib/movie/staticModels';
 export { ViewComponent } from './lib/movie/view/view.component';
 export { FormComponent } from './lib/movie/form/form.component';
 export { ListComponent } from './lib/movie/list/list.component';

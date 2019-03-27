@@ -1,13 +1,13 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { MovieStore, MovieQuery, MovieService, createMovie, Movie } from '../+state';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { createMovie, Movie, MovieQuery, MovieService, MovieStore } from '../+state';
 import { MatChipInputEvent, MatSnackBar } from '@angular/material';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
 import { AuthQuery, User } from '@blockframes/auth';
-import staticModels from '../staticModels.json';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { default as staticModels } from '../staticModels';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'movie-financing-form',
@@ -23,11 +23,11 @@ export class FormComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   public persistForm: PersistNgFormPlugin;
   public movieForm: FormGroup;
-  private isModifying = false;
-  private activeId: string;
   public user: User;
   public org: Organization;
   public movie: Movie;
+  private isModifying = false;
+  private activeId: string;
 
   constructor(
     private query: MovieQuery,
@@ -37,8 +37,23 @@ export class FormComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: MovieStore,
     private auth: AuthQuery,
-    public orgQuery: OrganizationQuery,
-  ) {}
+    public orgQuery: OrganizationQuery
+  ) {
+  }
+
+  public get movieCredits() {
+    return this.movieForm.get('credits') as FormArray;
+  }
+
+  public get movieStakeholders() {
+    return this.movieForm.get('stakeholders') as FormArray;
+  }
+
+// ACTIONS
+
+  public get keywords() {
+    return this.movieForm.get('keywords') as FormArray;
+  }
 
   ngOnInit() {
     this.user = this.auth.user;
@@ -50,21 +65,21 @@ export class FormComponent implements OnInit, OnDestroy {
     this.movieForm = this.builder.group({
       title: [''],
       ipId: [''],
-      credits: this.builder.array([ this.createCredit() ]),
-      stakeholders: this.builder.array([ this.createStakeholder(this.org.id, this.org.name, 'ADMIN', 'Producer', 'canActivateDelivery') ]),
+      credits: this.builder.array([this.createCredit()]),
+      stakeholders: this.builder.array([this.createStakeholder(this.org.id, this.org.name, 'ADMIN', 'Producer', 'canActivateDelivery')]),
       genres: [''],
       isan: [null],
       status: [''],
       poster: [''],
       types: [''],
-      keywords: this.builder.array([ this.createKeyword('') ]),
+      keywords: this.builder.array([this.createKeyword('')]),
       logline: ['', Validators.maxLength(180)],
       synopsis: ['', Validators.maxLength(500)],
       directorNote: ['', Validators.maxLength(1000)],
       producerNote: ['', Validators.maxLength(1000)],
       originCountry: [''],
       languages: [''],
-      promotionalElements: this.builder.array([ this.createPromotionalElement() ]),
+      promotionalElements: this.builder.array([this.createPromotionalElement()]),
       goalBudget: [null],
       movieCurrency: [''],
       fundedBudget: [null],
@@ -81,7 +96,7 @@ export class FormComponent implements OnInit, OnDestroy {
     In case of modification of an existing movie,
     load the form with current data stored in the active Movie.
     */
-    if(this.query.hasActive()) {
+    if (this.query.hasActive()) {
       this.isModifying = true;
       this.activeId = this.query.getActiveId();
       this.movieForm.patchValue(createMovie(this.query.getActive()));
@@ -101,7 +116,7 @@ export class FormComponent implements OnInit, OnDestroy {
     this.isModifying = false;
   }
 
-// ACTIONS
+// POSTER
 
   /*
   SAVING THE FORM
@@ -109,21 +124,30 @@ export class FormComponent implements OnInit, OnDestroy {
   Case 2 = modification of a Movie.
   Case 3 = new Movie.
   */
-  public onSubmit(){
-    if(!this.movieForm.valid) {
+  public onSubmit() {
+    if (!this.movieForm.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
     }
-    if(this.isModifying){
-      this.snackBar.open(`Modified ${this.movieForm.get('title').value}`, 'close', {duration: 2000});
+    if (this.isModifying) {
+      this.snackBar.open(`Modified ${this.movieForm.get('title').value}`, 'close', { duration: 2000 });
       this.service.update(this.activeId, this.movieForm.value);
     } else {
-      this.snackBar.open(`Created ${this.movieForm.get('title').value}`, 'close', {duration: 2000});
+      this.snackBar.open(`Created ${this.movieForm.get('title').value}`, 'close', { duration: 2000 });
       this.service.add(this.movieForm.value);
     }
     this.router.navigateByUrl('');
     this.clear();
   }
+
+  // TODO: rezise and rename
+
+
+  /*
+  FormArray parts of the FormGroup with same methods
+  */
+
+// CREDITS
 
   public clear() {
     this.persistForm.reset();
@@ -135,30 +159,19 @@ export class FormComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('');
   }
 
-// POSTER
-
   public addPoster(poster: string) {
-    this.movieForm.patchValue({poster});
-  }
-  // TODO: rezise and rename
-
-
-  /*
-  FormArray parts of the FormGroup with same methods
-  */
-// CREDITS
-
-  public get movieCredits() {
-    return this.movieForm.get('credits') as FormArray;
+    this.movieForm.patchValue({ poster });
   }
 
   public createCredit(): FormGroup {
     return this.builder.group({
       firstName: '',
       lastName: '',
-      creditRole: '',
+      creditRole: ''
     });
   }
+
+// STAKEHOLDERS
 
   public addCredit(): void {
     this.movieCredits.push(this.createCredit());
@@ -168,20 +181,13 @@ export class FormComponent implements OnInit, OnDestroy {
     this.movieCredits.removeAt(index);
   }
 
-// STAKEHOLDERS
-
-  public get movieStakeholders() {
-    return this.movieForm.get('stakeholders') as FormArray;
-  }
-
-
   public createStakeholder(orgId: string, orgName: string, orgMovieRole: string, stakeholderRole: string, stakeholderAuthorization: string): FormGroup {
     return this.builder.group({
       orgId: orgId,
       orgName: orgName,
       orgMovieRole: orgMovieRole,
       stakeholderRole: stakeholderRole,
-      stakeholderAuthorization: stakeholderAuthorization,
+      stakeholderAuthorization: stakeholderAuthorization
     });
   }
 
@@ -189,18 +195,14 @@ export class FormComponent implements OnInit, OnDestroy {
     this.movieStakeholders.push(this.createStakeholder(orgId, orgName, orgMovieRole, stakeholderRole, stakeholderAuthorization));
   }
 
+// KEYWORDS
+
   public removeStakeholder(index: number): void {
     this.movieStakeholders.removeAt(index);
   }
 
-// KEYWORDS
-
-  public get keywords() {
-    return this.movieForm.get('keywords') as FormArray;
-  }
-
   public createKeyword(keywordName: string): FormGroup {
-    return this.builder.group({name: keywordName});
+    return this.builder.group({ name: keywordName });
   }
 
   public addKeyword(keywordName: string): void {
@@ -231,7 +233,7 @@ export class FormComponent implements OnInit, OnDestroy {
   public createPromotionalElement(): FormGroup {
     return this.builder.group({
       promotionalElementName: '',
-      url: '',
+      url: ''
     });
   }
 
@@ -239,7 +241,6 @@ export class FormComponent implements OnInit, OnDestroy {
     this.promotionalElements = this.movieForm.get('promotionalElements') as FormArray;
     this.promotionalElements.push(this.createPromotionalElement());
   }
-
 
 
 }
