@@ -10,6 +10,7 @@
       *ngFor="let materials of (template$ | async | keyvalue)"
       [materials]="materials.value"
       [category]="materials.key"
+      id="{{materials.key}}"
     ></template-form>
   </mat-sidenav-content>
 </mat-sidenav-container>
