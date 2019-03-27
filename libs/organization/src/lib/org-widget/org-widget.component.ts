@@ -17,7 +17,7 @@ export class OrgWidgetComponent implements OnInit, OnDestroy {
     private service: OrganizationService,
     private query: OrganizationQuery,
     private auth: AuthQuery,
-    private store: OrganizationStore,
+    private store: OrganizationStore
   ) {
   }
 
@@ -26,7 +26,7 @@ export class OrgWidgetComponent implements OnInit, OnDestroy {
 
     this.user$.subscribe((user: User) => {
       // @todo remove observable on ngDestroy
-      if(user !== null) {
+      if (user !== null) {
         this.service.subscribeUserOrgs(user.uid);
       }
     });
@@ -39,9 +39,5 @@ export class OrgWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-  }
-  
-  setActive(id: string) {
-    this.store.setActive(id);
   }
 }
