@@ -91,7 +91,7 @@
     "directive-class-suffix": true,
 
     "nx-enforce-module-boundaries": [
-      true,
+      false,
       {
         "allow": [],
         "depConstraints": [
