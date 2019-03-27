@@ -1,8 +1,42 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { TemplateService, Template, TemplateQuery } from '../+state';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Template, TemplateQuery, TemplateService } from '../+state';
 import { Observable } from 'rxjs';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { MaterialService } from '../../material/+state';
+
+@Component({
+  selector: 'add-template-dialog',
+  template: `
+    <div mat-dialog-content>
+      <h2>Add a new template</h2>
+      <mat-form-field appearance="outline" fxLayoutAlign="center">
+        <mat-label>File name</mat-label>
+        <input #templateName matInput placeholder="New template name"/>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions fxLayoutAlign="center">
+      <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="addTemplate(templateName.value)">Create</button>
+    </div>
+  `
+})
+export class AddTemplateDialogComponent {
+  constructor(
+    public dialogRef: MatDialogRef<AddTemplateDialogComponent>,
+    private service: TemplateService
+  ) {
+  }
+
+  public addTemplate(templateName: string) {
+    this.service.addTemplate(templateName);
+    this.close();
+  }
+
+  public close(): void {
+    this.dialogRef.close();
+  }
+}
+
 
 @Component({
   selector: 'template-list',
@@ -17,8 +51,9 @@ export class TemplateListComponent implements OnInit {
     private service: TemplateService,
     private query: TemplateQuery,
     public dialog: MatDialog,
-    private materialService: MaterialService,
-  ) {}
+    private materialService: MaterialService
+  ) {
+  }
 
   ngOnInit() {
     this.service.subscribeOnOrganizationTemplates$.subscribe(); //todo unsubscribe
@@ -28,7 +63,7 @@ export class TemplateListComponent implements OnInit {
   }
 
   public addTemplateDialog(): void {
-    this.dialog.open(AddTemplateDialog, {
+    this.dialog.open(AddTemplateDialogComponent, {
       width: '400px'
     });
   }
@@ -38,34 +73,3 @@ export class TemplateListComponent implements OnInit {
   }
 }
 
-@Component({
-  selector: 'add-template-dialog',
-  template: `
-    <div mat-dialog-content>
-      <h2>Add a new template</h2>
-      <mat-form-field appearance="outline" fxLayoutAlign="center">
-        <mat-label>File name</mat-label>
-        <input #templateName matInput placeholder="New template name" />
-      </mat-form-field>
-    </div>
-    <div mat-dialog-actions fxLayoutAlign="center">
-      <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
-      <button mat-raised-button color="primary" (click)="addTemplate(templateName.value)">Create</button>
-    </div>
-  `
-})
-export class AddTemplateDialog {
-  constructor(
-    public dialogRef: MatDialogRef<AddTemplateDialog>,
-    private service: TemplateService,
-    ) {}
-
-  public addTemplate(templateName: string) {
-    this.service.addTemplate(templateName);
-    this.close();
-  }
-
-  public close(): void {
-    this.dialogRef.close();
-  }
-}
