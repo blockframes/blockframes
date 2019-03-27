@@ -51,14 +51,10 @@ export class MovieService {
     const id = this.firestore.createId();
     const owner: Stakeholder = createStakeholder({orgId, role: 'ADMIN'});
 
-    const movie: Partial<Movie> = createMovie({
-      id: id,
-      title: [title]
-    });
-
+    const movie: Partial<Movie> = createMovie({ id: id, title: [title] });
+    // TODO: correct race condition
     await this.collection.doc(id).set(movie);
     await this.shService.add(id, owner);
-
 
     return id;
   }
