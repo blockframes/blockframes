@@ -4,10 +4,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { persistState, enableAkitaProdMode } from '@datorama/akita';
+import { enableAkitaProdMode, persistState } from '@datorama/akita';
 import { hmrBootstrap } from './hmr';
-
-import { persistState } from '@datorama/akita';
 
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
@@ -30,7 +28,7 @@ platformBrowserDynamic()
 
 // Hot Module Reload Envionment
 if (environment.hmr) {
-  if (module[ 'hot' ]) {
+  if (module['hot']) {
     hmrBootstrap(module, bootstrap);
   } else {
     console.error('HMR is not enabled for webpack-dev-server!');
