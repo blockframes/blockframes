@@ -6,7 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 // Guards
-import { MovieGuard } from '@blockframes/movie';
 import { AuthGuard } from '@blockframes/auth';
 
 export const routes: Routes = [
@@ -18,7 +17,7 @@ export const routes: Routes = [
   {
     path: 'delivery',
     component: LayoutComponent,
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'explorer', pathMatch: 'full' },
       {
@@ -32,7 +31,7 @@ export const routes: Routes = [
       { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' },
       { path: 'template', loadChildren: './template/template.module#TemplateModule' },
       {
-        path: ':id', canActivate: [MovieGuard], loadChildren: './delivery/delivery.module#DeliveryModule' },
+        path: ':id', loadChildren: './delivery/delivery.module#DeliveryModule' },
     ]
   }
 ];
