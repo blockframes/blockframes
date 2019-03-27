@@ -26,17 +26,19 @@ export class MovieService {
   Initiate Movies
   this.initiated turns false when user logout
   */
-  public fetch() {
-    if(this.initiated) return;
-    this.initiated = true;
+  public fetch_() {
+    //if(this.initiated) return;
+    //this.initiated = true;
     this.collection.valueChanges().pipe(
-      takeWhile(_ => this.initiated)
+      //takeWhile(_ => this.initiated)
     ).subscribe(movies => this.store.set(movies));
   }
 
   public subscribeOrgMovies(orgId): void {
-    if(this.initiated) return;
-    this.initiated = true;
+    //if (this.initiated) return;
+    // TODO: if you try to suscribe with another orgId, the function will ignore you
+    //this.initiated = true;
+    return this.fetch_();
     this.firestore
      .collection<Movie>('movies', ref => ref.where('stakeholderIds', 'array-contains', orgId))
      .valueChanges().pipe(

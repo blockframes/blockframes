@@ -29,7 +29,8 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     this.orgQuery.selectActive().subscribe((org: Organization) => {
       // @todo remove observable on ngDestroy
-      this.service.subscribeOrgMovies(org.id);
+      const orgID = org ? org.id : undefined; // TODO: fix this org retrieval; this is temporary
+      this.service.subscribeOrgMovies(orgID);
     });
 
     this.movies$ = this.query.selectAll();
