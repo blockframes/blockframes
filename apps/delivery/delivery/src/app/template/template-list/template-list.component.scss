@@ -1,11 +1,3 @@
-.example-card {
-  max-width: 400px;
-}
-
-.example-card {
-  max-width: 400px;
-}
-
 mat-card {
   margin: 5% 5%;
 }
@@ -14,14 +6,12 @@ mat-card-title {
   text-align: center;
 }
 
-.icon-add {
-  font-size: 20vh;
-}
-
 .trigger {
-  margin-left: 90%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
-.card-add {
+mat-card {
   min-height: 100px;
 }
 
