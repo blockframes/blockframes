@@ -6,7 +6,6 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { TemplateQuery } from '../../template/+state/template.query';
-import { Template } from '../../template/+state/template.model';
 import { TemplateStore } from '../../template/+state/template.store';
 
 @Injectable({

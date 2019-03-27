@@ -32,7 +32,6 @@ export class TemplateService {
   }
 
   public deleteTemplate(id: string) {
-    console.log(id);
     const idOrg = this.organizationQuery.getActiveId();
     this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
   }
