@@ -6,3 +6,9 @@
 mat-card {
   margin-top: 0.5em;
 }
+
+.mat-icons {
+  visibility: hidden;
+}
+
+mat-card:hover > .mat-icons { visibility: visible; }
