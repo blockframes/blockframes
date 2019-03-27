@@ -45,4 +45,15 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   }
 
 
+  public unsortedMaterialsByTemplate() {
+    const template = this.getActive();
+
+    const ids = template ? template.materialsId : [];
+    return ids.map(materialId => this.materialQuery.getAll().find(material => material.id === materialId));
+  }
+
+
+
+
+
 }

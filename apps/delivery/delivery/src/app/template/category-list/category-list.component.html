@@ -4,8 +4,11 @@
   </button>
   <h2 mat-subheader>Categories :</h2>
   <div *ngFor="let template of (template | keyvalue)">
-  <mat-list-item>
-    {{ template.key }}
-  </mat-list-item>
-</div>
+    <mat-list-item>
+      {{ template.key }}
+    </mat-list-item>
+  </div>
+  <button mat-raised-button color="primary" (click)="saveTemplate()">
+    Save Template
+  </button>
 </mat-nav-list>

@@ -5,7 +5,9 @@ import { createMaterial, Material } from './material.model';
 import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
-import { Template, TemplateQuery } from '../../template/+state';
+import { TemplateQuery } from '../../template/+state/template.query';
+import { Template } from '../../template/+state/template.model';
+import { TemplateStore } from '../../template/+state/template.store';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +23,9 @@ export class MaterialService {
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: MaterialStore,
-    private templateQuery: TemplateQuery
-  ) {
-  }
+    private templateQuery: TemplateQuery,
+    private templateStore: TemplateStore,
+  ) {}
 
   public deleteMaterial(id: string) {
     const idOrg = this.organizationQuery.getActiveId();
@@ -33,16 +35,19 @@ export class MaterialService {
     const materialsId = [...template.materialsId];
     const index = materialsId.indexOf(id);
     materialsId.splice(index, 1);
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
 
-    this.db.doc<Material>(`orgs/${idOrg}/materials/${id}`).delete();
+    this.templateStore.update(template.id, { materialsId })
+    this.store.remove(id)
+    // this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
+    // this.db.doc<Material>(`orgs/${idOrg}/materials/${id}`).delete();
   }
 
   public updateMaterial(material: Material, form: Material) {
     const idOrg = this.organizationQuery.getActiveId();
-    this.db
-      .doc<Material>(`orgs/${idOrg}/materials/${material.id}`)
-      .update({ ...material, ...form });
+    this.store.update(material.id, { ...material, ...form })
+    // this.db
+    //   .doc<Material>(`orgs/${idOrg}/materials/${material.id}`)
+    //   .update({ ...material, ...form });
   }
 
   public addMaterial(category: string) {
@@ -50,12 +55,14 @@ export class MaterialService {
     const idOrg = this.organizationQuery.getActiveId();
     const idMaterial = this.db.createId();
     const material = createMaterial({ id: idMaterial, category });
-    this.db.doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`).set(material);
+    this.store.add(material);
+    //this.db.doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`).set(material);
 
     // Add materialId of materialsId of sub-collection template
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
     materialsId.push(material.id);
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
+    this.templateStore.update(template.id, { materialsId })
+    //this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
   }
 }

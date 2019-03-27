@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Material, MaterialService, MaterialStore } from '../../material/+state';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MaterialStore, MaterialService, Material } from '../../material/+state';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { TemplateService } from '../+state';
 
 @Component({
   selector: 'add-category-dialog',
@@ -47,9 +48,9 @@ export class CategoryListComponent {
 
   constructor(
     private materialStore: MaterialStore,
-    public dialog: MatDialog
-  ) {
-  }
+    public dialog: MatDialog,
+    private service: TemplateService,
+  ) { }
 
   public selectCategory(materials: Material[]) {
     const materialsIds = [];
@@ -59,11 +60,15 @@ export class CategoryListComponent {
     this.materialStore.setActive(materialsIds);
   }
 
-
   public addCategory(): void {
     this.dialog.open(AddCategoryDialogComponent, {
       width: '400px'
     });
   }
+
+  public saveTemplate() {
+    this.service.saveTemplate();
+  }
+
 }
 
