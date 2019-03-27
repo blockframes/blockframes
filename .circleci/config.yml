@@ -107,11 +107,11 @@ workflows:
       - test-functions:
           requires:
             - build
-      - test-e2e:
-          requires:
-            - lint
-            - test
-            - test-functions
+#      - test-e2e:
+#          requires:
+#            - lint
+#            - test
+#            - test-functions
 #      - request-deploy:
 #          type: approval
 #          requires:
