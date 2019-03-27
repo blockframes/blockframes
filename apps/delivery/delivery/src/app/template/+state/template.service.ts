@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery, OrganizationStore } from '@blockframes/organization';
-import { switchMap, tap, map, filter } from 'rxjs/operators';
+// tslint:disable-next-line
+import { OrganizationQuery } from '@blockframes/organization';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
-import { Template, createTemplate } from './template.model';
-import { Material, MaterialStore, MaterialService } from '../../material/+state';
+import { createTemplate, Template } from './template.model';
+import { Material, MaterialService } from '../../material/+state';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
@@ -18,8 +19,9 @@ export class TemplateService {
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: TemplateStore,
-    private materialService: MaterialService,
-  ) {}
+    private materialService: MaterialService
+  ) {
+  }
 
   public addTemplate(templateName: string) {
     const idOrg = this.organizationQuery.getActiveId();
@@ -29,20 +31,20 @@ export class TemplateService {
   }
 
   public deleteTemplate(id: string) {
-    console.log(id)
+    console.log(id);
     const idOrg = this.organizationQuery.getActiveId();
     this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
   }
 
   public updateCategory(newCategory: string, materials: Material[]) {
-    for(const material of materials) {
-      this.materialService.updateMaterial(material, {category: newCategory} as Material)
+    for (const material of materials) {
+      this.materialService.updateMaterial(material, { category: newCategory } as Material);
     }
   }
 
   public deleteCategory(materials: Material[]) {
-    for(const material of materials) {
-      this.materialService.deleteMaterial(material.id)
+    for (const material of materials) {
+      this.materialService.deleteMaterial(material.id);
     }
   }
 

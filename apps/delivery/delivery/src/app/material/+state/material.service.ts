@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { switchMap, filter, tap } from 'rxjs/operators';
-import { Material, createMaterial } from './material.model';
+import { filter, switchMap, tap } from 'rxjs/operators';
+import { createMaterial, Material } from './material.model';
+// tslint:disable-next-line
 import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
-import { TemplateQuery } from '../../template/+state/template.query';
-import { Template } from '../../template/+state/template.model';
+import { Template, TemplateQuery } from '../../template/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,8 @@ export class MaterialService {
     private db: AngularFirestore,
     private store: MaterialStore,
     private templateQuery: TemplateQuery
-  ) {}
+  ) {
+  }
 
   public deleteMaterial(id: string) {
     const idOrg = this.organizationQuery.getActiveId();

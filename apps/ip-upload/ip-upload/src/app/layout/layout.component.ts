@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+// tslint:disable-next-line
 import { AuthQuery, User } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 
