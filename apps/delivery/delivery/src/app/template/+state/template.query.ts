@@ -4,13 +4,12 @@ import { TemplateStore, TemplateState } from './template.store';
 import { Template } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { map } from 'rxjs/operators';
-import { combineLatest, } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-
   public materialsByTemplate$ = combineLatest([
     this.selectActive(),
     this.materialQuery.selectAll()
@@ -18,32 +17,18 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     map(([template, materials]) => {
       const ids = template ? template.materialsId : [];
       return ids.map(materialId => materials.find(material => material.id === materialId));
-    }),
-    )
+    })
+  );
 
-  constructor
-  (
-    protected store: TemplateStore,
-    private materialQuery: MaterialQuery,
-    ) {
+  constructor(protected store: TemplateStore, private materialQuery: MaterialQuery) {
     super(store);
   }
 
   public unsortedMaterialsByTemplate() {
     const template = this.getActive();
-
     const ids = template ? template.materialsId : [];
-    return ids.map(materialId => this.materialQuery.getAll().find(material => material.id === materialId));
+    return ids.map(materialId =>
+      this.materialQuery.getAll().find(material => material.id === materialId)
+    );
   }
-
-  public unsortedMaterialsByTemplate() {
-    const template = this.getActive();
-    const ids = template ? template.materialsId : [];
-    return ids.map(materialId => this.materialQuery.getAll().find(material => material.id === materialId));
-  }
-
-
-
-
-
 }
