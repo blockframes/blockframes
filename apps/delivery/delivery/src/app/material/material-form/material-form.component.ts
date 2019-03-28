@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Material, MaterialQuery, createMaterial } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
 import { PersistNgFormPlugin } from '@datorama/akita';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'material-form',
@@ -9,8 +10,10 @@ import { PersistNgFormPlugin } from '@datorama/akita';
   styleUrls: ['./material-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialFormComponent implements OnInit {
+export class MaterialFormComponent implements OnInit, OnDestroy {
   @Output() material = new EventEmitter<Material>();
+
+  private isAlive = true;
 
   public form = new FormGroup({
     value: new FormControl(),
@@ -25,11 +28,19 @@ export class MaterialFormComponent implements OnInit {
   ngOnInit() {
     this.form.setValue({ value: '', description: '', category: '' });
 
-    this.persistForm = new PersistNgFormPlugin(this.query, createMaterial).setForm(this.form);
+    this.query.select(state => state.form).pipe(takeWhile(() => this.isAlive)).subscribe(form =>
+      this.form.setValue(form)
+    )
+
+    //this.persistForm = new PersistNgFormPlugin(this.query, createMaterial).setForm(this.form);
   }
 
   public addMaterial() {
     this.material.emit(this.form.value);
-    this.persistForm.reset();
+    //this.persistForm.reset();
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }

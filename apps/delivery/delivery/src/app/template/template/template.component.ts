@@ -13,13 +13,15 @@ import { Material, MaterialService, MaterialStore, MaterialQuery } from '../../m
 })
 export class TemplateComponent implements OnInit {
   public template$: Observable<any>;
-  public hasForm = false;
+  public form$ : Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
     private store: TemplateStore,
     private query: TemplateQuery,
     private materialService: MaterialService,
+    private materialStore: MaterialStore,
+    private materialQuery: MaterialQuery,
   ) {}
 
   ngOnInit() {
@@ -29,14 +31,16 @@ export class TemplateComponent implements OnInit {
         return this.query.materialsByTemplate$;
       })
     );
+
+    this.form$ = this.materialQuery.select(state => state.form)
   }
 
   public addMaterial(material: Material) {
     this.materialService.addMaterial(material);
   }
 
-  public addForm() {
-    this.hasForm = true;
+  public addForm(category: string) {
+    this.materialStore.updateRoot({form: {value: "", description: "", category}})
   }
 
 }
