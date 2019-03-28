@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TemplateQuery } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
+import { DeliveryService } from '@blockframes/delivery';
 import { NewTemplateComponent } from './new-template.component';
 
 @Component({
@@ -15,6 +16,7 @@ export class FormComponent implements OnInit {
 
   constructor(
     private templateQuery: TemplateQuery,
+    private deliveryService: DeliveryService,
     private dialog: MatDialog
   ) {}
 
@@ -24,5 +26,9 @@ export class FormComponent implements OnInit {
 
   public openDialog() {
     this.dialog.open(NewTemplateComponent);
+  }
+
+  public createDelivery() {
+    this.deliveryService.createDelivery();
   }
 }

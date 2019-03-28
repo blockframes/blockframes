@@ -7,7 +7,7 @@
   </div>
   <article class="buttons" fxLayout="column">
     <button mat-raised-button color="primary" (click)="save.emit()">Save as new template</button>
-    <button *ngIf="name === 'Delivery'" mat-raised-button color="accent" (click)="save.emit()">
+    <button *ngIf="name === 'Delivery'" mat-raised-button color="accent" (click)="create.emit()">
       Submit {{ name }}
     </button>
   </article>
