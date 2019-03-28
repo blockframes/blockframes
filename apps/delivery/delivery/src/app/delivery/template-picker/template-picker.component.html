@@ -1,34 +1,30 @@
-<section
-  *ngIf="(movie$ | async) as movie"
-  mat-dialog-content
-  fxLayout="row wrap"
-  fxLayoutAlign="space-around"
->
-  <article fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
-    <mat-card class="card-add" mat-card>
+<section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
+  <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
+    <mat-card (click)="selectTemplate()" fxLayout="row" fxLayoutAlign="center center">
       <mat-card-actions>
-        <button color="primary" mat-icon-button matRipple>
-          <mat-icon>add_circle</mat-icon>
-          Add Template
-        </button>
+          <mat-icon class="icon-add">add_circle</mat-icon>
+          <span>Add Template</span>
       </mat-card-actions>
     </mat-card>
   </article>
+
   <article
+    class="card-ngFor"
     fxFlex.gt-md="25"
     fxFlex.gt-sm="50"
     fxFlex="100"
     *ngFor="let template of (templates$ | async)"
   >
-    <mat-card (click)="selectTemplate(template.id)">
-      <img mat-card-image src="https://via.placeholder.com/150.png" alt="Preview of template" />
-      <mat-card-content>
-        <mat-card-title>
-          {{ template.name }}
-        </mat-card-title>
-      </mat-card-content>
+    <mat-card (click)="selectTemplate(template.id)" fxLayout="row" fxLayoutAlign="center center">
+      <mat-icon fxFlex="10" class="folder">folder</mat-icon>
+
+      <mat-card-title fxFlex="80">
+        {{ template.name }}
+      </mat-card-title>
+      <mat-card-content> </mat-card-content>
     </mat-card>
   </article>
-  <button mat-raised-button color="warn" (click)="close()">CANCEL</button>
-  <button mat-raised-button color="primaty" (click)="goToForm(movie)">OK !</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+  <button *ngIf="!!activeTemplateName" mat-raised-button color="primary" (click)="goToForm()">Create delivery using {{ activeTemplateName }} template</button>
+  <button *ngIf="!activeTemplateName" mat-raised-button color="primary" (click)="goToForm()">Create new delivery</button>
 </section>
