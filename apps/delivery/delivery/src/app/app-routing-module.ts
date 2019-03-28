@@ -17,7 +17,7 @@ export const routes: Routes = [
   {
     path: 'delivery',
     component: LayoutComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'explorer', pathMatch: 'full' },
       {

@@ -2,3 +2,5 @@
 test('smoke', () => {
   expect(true).toBeTruthy();
 });
+
+// TODO implements ERC1077 tests here
