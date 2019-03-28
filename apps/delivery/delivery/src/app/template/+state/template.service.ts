@@ -63,10 +63,16 @@ export class TemplateService {
 
     if (!!templateName) {
       const newTemplateId = this.db.createId();
-      const newTemplate = createTemplate({ id: newTemplateId, name: templateName, materialsId: template.materialsId });
+      const newTemplate = createTemplate({
+        id: newTemplateId,
+        name: templateName,
+        materialsId: template.materialsId
+      });
       this.db.doc<Template>(`orgs/${idOrg}/templates/${newTemplateId}`).set(newTemplate);
     } else {
-      this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId: template.materialsId });
+      this.db
+        .doc<Template>(`orgs/${idOrg}/templates/${template.id}`)
+        .update({ materialsId: template.materialsId });
     }
   }
 }

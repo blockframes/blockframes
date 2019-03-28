@@ -4,7 +4,7 @@ import {
   Material,
   MaterialStore
 } from '../../../../../apps/delivery/delivery/src/app/material/+state';
-import { Movie, MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { Delivery } from '@blockframes/delivery';
@@ -16,7 +16,7 @@ function materialsByCategory(materials: Material[]) {
       ...acc,
       [item.category.toUpperCase()]: [...(acc[item.category.toUpperCase()] || []), item]
     };
-  }, {})
+  }, {});
 }
 
 @Injectable({
@@ -33,7 +33,8 @@ export class DeliveryService {
 
   public deliveredToggle(material: Material, movieId: string) {
     // Change material 'delivered' property value to true or false when triggered
-    return this.firestore.doc<Material>(`movies/${movieId}/materials/${material.id}`)
+    return this.firestore
+      .doc<Material>(`movies/${movieId}/materials/${material.id}`)
       .update({ delivered: !material.delivered });
   }
 
@@ -44,8 +45,7 @@ export class DeliveryService {
       switchMap(movie =>
         this.firestore.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
-      map(materials => materialsByCategory(materials)
-      )
+      map(materials => materialsByCategory(materials))
     );
   }
 
@@ -86,10 +86,7 @@ export class DeliveryService {
 
   public get sortedDeliveryMaterials$() {
     // Sort the active delivery's materials by category
-    return this.materialsByActiveDelivery$.pipe(
-      map(materials => materialsByCategory(materials)
-      )
-    );
+    return this.materialsByActiveDelivery$.pipe(map(materials => materialsByCategory(materials)));
   }
 
   public get deliveryProgression$() {
