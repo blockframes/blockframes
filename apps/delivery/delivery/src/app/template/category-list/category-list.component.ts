@@ -27,10 +27,10 @@ export class AddCategoryDialogComponent {
   ) {
   }
 
-  public addCategory(category: string) {
-    this.service.addMaterial(category);
-    this.close();
-  }
+  // public addCategory(category: string) {
+  //   this.service.addMaterial(category);
+  //   this.close();
+  // }
 
   public close(): void {
     this.dialogRef.close();

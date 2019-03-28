@@ -5,9 +5,8 @@ import { switchMap, tap, filter, map } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
-import { Material} from '../../material/+state/material.model';
+import { Material, MaterialService, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { MaterialService } from '../../material/+state/material.service';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
@@ -22,7 +21,8 @@ export class TemplateService {
     private db: AngularFirestore,
     private store: TemplateStore,
     private materialService: MaterialService,
-    private query: TemplateQuery
+    private query: TemplateQuery,
+    private materialQuery: MaterialQuery,
   ) {}
 
   public addTemplate(templateName: string) {
@@ -50,11 +50,9 @@ export class TemplateService {
   }
 
   public async saveTemplate(templateName?: string) {
-
-  public async saveTemplate() {
     const idOrg = this.organizationQuery.getActiveId();
     const template = this.query.getActive();
-    const materials = this.query.unsortedMaterialsByTemplate();
+    const materials = this.materialQuery.getAll({filterBy: material => template.materialsId.includes(material.id)});
     const promises: Promise<any>[] = [];
 
     for (const material of materials) {
@@ -62,6 +60,7 @@ export class TemplateService {
       promises.push(promise);
     }
     await Promise.all(promises);
+
     if (!!templateName) {
       const newTemplateId = this.db.createId();
       const newTemplate = createTemplate({ id: newTemplateId, name: templateName, materialsId: template.materialsId });
@@ -71,3 +70,4 @@ export class TemplateService {
     }
   }
 }
+

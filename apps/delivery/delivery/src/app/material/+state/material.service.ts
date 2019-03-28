@@ -49,18 +49,17 @@ export class MaterialService {
     //   .update({ ...material, ...form });
   }
 
-  public addMaterial(category: string) {
+  public addMaterial(material: Material) {
     // Add material to sub-collection materials of organization
     const idOrg = this.organizationQuery.getActiveId();
     const idMaterial = this.db.createId();
-    const material = createMaterial({ id: idMaterial, category });
-    this.store.add(material);
+    this.store.add({...material, ...{id: idMaterial}});
     //this.db.doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`).set(material);
 
     // Add materialId of materialsId of sub-collection template
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
-    materialsId.push(material.id);
+    materialsId.push(idMaterial);
     this.templateStore.update(template.id, { materialsId })
     //this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
   }

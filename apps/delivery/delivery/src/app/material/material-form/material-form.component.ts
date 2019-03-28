@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Material, MaterialService } from '../+state';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Material, MaterialService, MaterialQuery, createMaterial } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
+import { PersistNgFormPlugin } from '@datorama/akita';
 
 @Component({
   selector: 'material-form',
@@ -10,32 +11,42 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class MaterialFormComponent implements OnInit {
 
-  @Input() material: Material;
+  @Output() material = new EventEmitter<Material>();
 
   public form = new FormGroup({
     value: new FormControl(),
-    description: new FormControl()
+    description: new FormControl(),
+    category: new FormControl(),
   });
 
+  public persistForm: PersistNgFormPlugin<Material>;
+
   constructor(
-    private service: MaterialService,
+    private query: MaterialQuery,
   ) { }
 
   ngOnInit() {
-    this.form.setValue({value: this.material.value, description: this.material.description});
+    this.form.setValue({value: "", description: "", category: ""});
+
+    this.persistForm = new PersistNgFormPlugin(this.query, createMaterial).setForm(this.form);
   }
 
-  public deleteMaterial() {
-    this.service.deleteMaterial(this.material.id);
-  }
+  addMaterial() {
+    this.material.emit(this.form.value);
+    this.persistForm.reset();
+}
 
-  public updateMaterial() {
-    this.service.updateMaterial(this.material, this.form.value);
-  }
+  // public deleteMaterial() {
+  //   this.service.deleteMaterial(this.material.id);
+  // }
 
-  public addMaterial() {
-    this.service.addMaterial(this.material.category);
-  }
+  // public updateMaterial() {
+  //   this.service.updateMaterial(this.material, this.form.value);
+  // }
+
+  // public addMaterial() {
+  //   this.service.addMaterial(this.material.category);
+  // }
 
 
 }

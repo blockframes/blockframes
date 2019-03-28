@@ -1,0 +1,9 @@
+mat-card {
+  margin-top: 0.5vh;
+}
+
+mat-card-actions {
+  visibility: hidden;
+}
+
+mat-card:hover > mat-card-actions { visibility: visible; }

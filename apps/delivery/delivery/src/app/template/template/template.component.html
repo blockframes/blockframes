@@ -1,6 +1,5 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
-  <!-- <mat-sidenav #sidenav [opened]="!!(user$ | async)" mode="side"> -->
   <mat-sidenav [opened]="true" mode="side">
     <category-list *ngIf="(template$ | async) as template" [template]="template" name="Template" (save)="onSave()"></category-list>
   </mat-sidenav>
@@ -10,7 +9,23 @@
       *ngFor="let materials of (template$ | async | keyvalue)"
       [materials]="materials.value"
       [category]="materials.key"
-      id="{{materials.key}}"
+      id="{{ materials.key }}"
     ></template-form>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!-- <ul>
+  <li *ngFor="let item of materialByCategory$ | async | keyvalue">
+    <h4>{{ item.key }}</h4>
+    <ul>
+      <material-view *ngFor="let material of item.value" [material]="material"></material-view>
+    </ul>
+    <div *ngIf="(form$ | async) as form && form.category === item.keyvalue">
+      <material-form [material]="form"></material-form>
+    </div>
+  </li>
+</ul>
+
+<div *ngIf="form$ | async as form && !form.category">
+  <material-form [material]="form"></material-form>
+</div> -->
