@@ -4,13 +4,12 @@ import { TemplateStore, TemplateState } from './template.store';
 import { Template, TemplateView } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { map } from 'rxjs/operators';
-import { combineLatest, } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-
   public materialsByTemplate$ = combineLatest([
     this.selectActive(),
     this.materialQuery.selectAll()
@@ -19,15 +18,10 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
       const ids = template ? template.materialsId : [];
       return ids.map(materialId => materials.find(material => material.id === materialId));
     }),
-    map(materials => materialsByCategory(materials) as TemplateView
-    )
+    map(materials => materialsByCategory(materials) as TemplateView)
   );
 
-  constructor
-  (
-    protected store: TemplateStore,
-    private materialQuery: MaterialQuery,
-    ) {
+  constructor(protected store: TemplateStore, private materialQuery: MaterialQuery) {
     super(store);
   }
 }

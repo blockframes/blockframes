@@ -21,7 +21,8 @@ export class FormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.template$ = this.templateQuery.materialsByTemplate$;
+    this.template$ = this.templateQuery.selectActive()
+    this.template$.subscribe(x => console.log(x))
   }
 
   public openDialog() {
