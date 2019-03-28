@@ -9,9 +9,8 @@
       (save)="openDialog()"
       (create)="createDelivery()"
     ></category-list>
-    <ng-template>
+    <ng-template #empty>
       <category-list
-        #empty
         name="Delivery"
         (save)="openDialog()"
         (create)="createDelivery()"
