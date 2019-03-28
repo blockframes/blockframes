@@ -5,12 +5,23 @@
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
-    <template-form
-      *ngFor="let materials of (template$ | async | keyvalue)"
-      [materials]="materials.value"
-      [category]="materials.key"
-      id="{{ materials.key }}"
-    ></template-form>
+    <mat-card *ngFor="let materials of (template$ | async | keyvalue)" id="{{ materials.key }}">
+      <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
+        <h4>Category : {{ materials.key }}</h4>
+        <button (click)="addForm()" color="primary" mat-icon-button matRipple>
+          <mat-icon class="icon-add">add_circle</mat-icon>
+          Add new material with this category
+        </button>
+      </mat-card-title>
+      <mat-card-content>
+        <div cdkDrag *ngFor="let material of materials.value">
+          <material-view [material]="material"></material-view>
+        </div>
+        <div *ngIf="hasForm">
+          <material-form (material)="addMaterial($event)"></material-form>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </mat-sidenav-content>
 </mat-sidenav-container>
 

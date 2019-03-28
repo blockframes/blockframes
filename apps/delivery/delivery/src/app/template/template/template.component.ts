@@ -3,6 +3,7 @@ import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TemplateQuery, TemplateStore } from '../+state';
+import { Material, MaterialService, MaterialStore, MaterialQuery } from '../../material/+state';
 
 @Component({
   selector: 'delivery-template',
@@ -11,13 +12,14 @@ import { TemplateQuery, TemplateStore } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateComponent implements OnInit {
-
   public template$: Observable<any>;
+  public hasForm = false;
 
   constructor(
     private route: ActivatedRoute,
     private store: TemplateStore,
-    private query: TemplateQuery
+    private query: TemplateQuery,
+    private materialService: MaterialService,
   ) {}
 
   ngOnInit() {
@@ -29,7 +31,12 @@ export class TemplateComponent implements OnInit {
     );
   }
 
-  public onSave() {
-    alert("Coucou c'est template");
+  public addMaterial(material: Material) {
+    this.materialService.addMaterial(material);
   }
+
+  public addForm() {
+    this.hasForm = true;
+  }
+
 }

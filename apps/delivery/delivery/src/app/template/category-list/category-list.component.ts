@@ -16,7 +16,7 @@ import { EventEmitter } from '@angular/core';
     </div>
     <div mat-dialog-actions fxLayoutAlign="center">
       <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
-      <button mat-raised-button color="primary" (click)="addCategory(category.value)">Create</button>
+      <button mat-raised-button color="primary">Create</button>
     </div>
   `
 })

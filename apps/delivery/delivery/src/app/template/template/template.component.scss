@@ -5,10 +5,8 @@ mat-sidenav-container {
 }
 
 mat-sidenav {
-
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
+  position: fixed;
+  top: 0;
   left: 0;
   height: 100%;
   width: 250px;
@@ -17,4 +15,12 @@ mat-sidenav {
 mat-sidenav-content {
   height: 100%;
   overflow: hidden;
+}
+
+mat-card {
+  margin: 5% 5%;
+}
+
+mat-card-title {
+  border-bottom: 1px solid black;
 }

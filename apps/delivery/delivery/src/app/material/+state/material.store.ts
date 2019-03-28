@@ -2,10 +2,8 @@ import { EntityState, EntityStore, StoreConfig, MultiActiveState } from '@datora
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 
-
 export interface State extends EntityState<Material> {
 }
-
 
 @Injectable({
   providedIn: 'root'

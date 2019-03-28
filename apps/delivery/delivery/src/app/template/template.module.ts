@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 // Components
 import { TemplateComponent } from './template/template.component';
-import { AddTemplateDialogComponent, TemplateListComponent } from './template-list/template-list.component';
+import {
+  AddTemplateDialogComponent,
+  TemplateListComponent
+} from './template-list/template-list.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,17 +21,23 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TemplateFormComponent } from './template-form/template-form.component';
 import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AddCategoryDialogComponent, CategoryListComponent } from './category-list/category-list.component';
+import {
+  AddCategoryDialogComponent,
+  CategoryListComponent
+} from './category-list/category-list.component';
 import { MaterialViewComponent } from '../material/material-view/material-view.component';
-
 
 @NgModule({
   declarations: [
-    TemplateComponent, TemplateListComponent, AddTemplateDialogComponent,
-    TemplateFormComponent, MaterialFormComponent, CategoryListComponent, AddCategoryDialogComponent, MaterialViewComponent,
+    TemplateComponent,
+    TemplateListComponent,
+    AddTemplateDialogComponent,
+    MaterialFormComponent,
+    CategoryListComponent,
+    AddCategoryDialogComponent,
+    MaterialViewComponent
   ],
   imports: [
     CommonModule,
@@ -51,5 +60,4 @@ import { MaterialViewComponent } from '../material/material-view/material-view.c
   ],
   entryComponents: [AddTemplateDialogComponent, AddCategoryDialogComponent]
 })
-export class TemplateModule {
-}
+export class TemplateModule {}
