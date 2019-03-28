@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import {
-  Material,
-  MaterialStore
-} from '../../../../../apps/delivery/delivery/src/app/material/+state';
+import { Material, MaterialStore } from 'apps/delivery/delivery/src/app/material/+state';
 import { MovieQuery } from '@blockframes/movie';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { Delivery } from '@blockframes/delivery';
 import { DeliveryQuery } from './delivery.query';
+import { TemplateQuery } from 'apps/delivery/delivery/src/app/template/+state/template.query';
+import { OrganizationQuery } from '@blockframes/organization';
 
 function materialsByCategory(materials: Material[]) {
   return materials.reduce((acc, item) => {
@@ -26,6 +25,8 @@ export class DeliveryService {
   constructor(
     private firestore: AngularFirestore,
     private movieQuery: MovieQuery,
+    private organizationQuery: OrganizationQuery,
+    private templateQuery: TemplateQuery,
     private deliveryQuery: DeliveryQuery,
     private deliveryStore: DeliveryStore,
     private materialStore: MaterialStore
@@ -136,5 +137,31 @@ export class DeliveryService {
         return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
       })
     );
+  }
+
+  public async createDelivery() {
+    const activeMovieId = this.movieQuery.getActiveId();
+    const activeOrgId = this.organizationQuery.getActiveId();
+    const deliveryId = this.firestore.createId();
+    this.firestore
+      .doc<Delivery>(`deliveries/${deliveryId}`)
+      .set({
+        id: deliveryId,
+        movieId: activeMovieId,
+        stakeholders: [activeOrgId],
+        validated: [],
+        delivered: false
+      });
+
+    const materials = this.templateQuery.unsortedMaterialsByTemplate();
+    const promises: Promise<any>[] = [];
+
+    for (const material of materials) {
+      const promise = this.firestore
+        .doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
+        .set(material);
+      promises.push(promise);
+    }
+    await Promise.all(promises);
   }
 }

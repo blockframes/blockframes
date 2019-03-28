@@ -2,7 +2,7 @@
   <!-- Sidenav -->
   <!-- <mat-sidenav #sidenav [opened]="!!(user$ | async)" mode="side"> -->
   <mat-sidenav [opened]="true" mode="side">
-    <category-list *ngIf="(template$ | async) as template" [template]="template" name="Delivery" (save)="openDialog()"></category-list>
+    <category-list *ngIf="(template$ | async) as template" [template]="template" name="Delivery" (save)="openDialog()" (create)="createDelivery()"></category-list>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
