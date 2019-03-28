@@ -17,7 +17,9 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     map(([template, materials]) => {
       const ids = template ? template.materialsId : [];
       return ids.map(materialId => materials.find(material => material.id === materialId));
-    })
+    }),
+    map(materials => materialsByCategory(materials)
+    )
   );
 
   constructor(protected store: TemplateStore, private materialQuery: MaterialQuery) {

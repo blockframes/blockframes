@@ -10,6 +10,8 @@ import { ViewComponent } from './view/view.component';
 import { HomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
 import { CategoryListComponent } from '../template/category-list/category-list.component';
+import { TemplateFormComponent } from '../template/template-form/template-form.component';
+import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { DeliveryGuard } from './delivery.guard';
 
 // Material
@@ -23,8 +25,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { TemplateFormComponent } from '../template/template-form/template-form.component';
-import { MaterialFormComponent } from '../material/material-form/material-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,9 +32,9 @@ export const routes: Routes = [
     path: 'movie-materials',
     component: MovieMaterialsComponent
   },
-  { path: 'delivery-form', component: FormComponent },
+  { path: 'form', component: FormComponent },
   {
-    path: 'delivery-list',
+    path: 'list',
     children: [
       { path: '', component: ListComponent },
       { path: ':id', canActivate: [DeliveryGuard], component: ViewComponent }

@@ -7,6 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
+import { MovieGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'delivery', pathMatch: 'full' },
@@ -31,7 +32,7 @@ export const routes: Routes = [
       { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' },
       { path: 'template', loadChildren: './template/template.module#TemplateModule' },
       {
-        path: ':id', loadChildren: './delivery/delivery.module#DeliveryModule' },
+        path: ':id', canActivate: [MovieGuard], loadChildren: './delivery/delivery.module#DeliveryModule' },
     ]
   }
 ];

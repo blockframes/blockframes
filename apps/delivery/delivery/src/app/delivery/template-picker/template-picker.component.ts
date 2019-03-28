@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../../template/+state/template.model';
-import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MatDialogRef } from '@angular/material';
 import { TemplateService} from '../../template/+state/template.service';
 import { TemplateQuery } from '../../template/+state/template.query';
@@ -19,7 +18,7 @@ import { Router } from '@angular/router';
 export class TemplatePickerComponent implements OnInit {
 
   public templates$: Observable<Template[]>;
-  public movie$: Observable<Movie>;
+  public activeTemplateName: string;
 
   constructor(
     public dialogRef: MatDialogRef<TemplatePickerComponent>,
@@ -36,19 +35,25 @@ export class TemplatePickerComponent implements OnInit {
     this.materialService.subscribeOnOrganizationMaterials$.subscribe(); //todo unsubscribe
 
     this.templates$ = this.templateQuery.selectAll();
-    this.movie$ = this.movieQuery.selectActive();
   }
 
-  public selectTemplate(templateId) {
+  public selectTemplate(templateId?) {
+    if (!!templateId) {
     this.templateStore.setActive(templateId);
+    this.activeTemplateName = this.templateQuery.getActive().name;
+    } else {
+      this.templateStore.setActive(null);
+      this.activeTemplateName = null;
+    }
   }
 
   public close() {
     this.dialogRef.close();
   }
 
-  public goToForm(movie) {
-    this.router.navigate([`delivery/${movie.id}/delivery-form`]);
+  public goToForm() {
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`delivery/${movieId}/form`]);
     this.dialogRef.close();
   }
 }

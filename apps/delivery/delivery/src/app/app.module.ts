@@ -13,6 +13,8 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
+import { TemplatePickerComponent } from './delivery/template-picker/template-picker.component';
+import { NewTemplateComponent } from './delivery/form/new-template.component';
 
 // Firebase
 import { AngularFireModule } from '@angular/fire';
@@ -44,8 +46,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TemplatePickerComponent } from './delivery/template-picker/template-picker.component';
-import { NewTemplateComponent } from './delivery/form/new-template.component';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent, TemplatePickerComponent, NewTemplateComponent],
