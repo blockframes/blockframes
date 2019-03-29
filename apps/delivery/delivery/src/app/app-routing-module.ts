@@ -15,7 +15,7 @@ export const routes: Routes = [
     loadChildren: '@blockframes/auth#AuthModule'
   },
   {
-    path: 'delivery',
+    path: 'layout',
     component: LayoutComponent,
     //canActivate: [AuthGuard],
     children: [
