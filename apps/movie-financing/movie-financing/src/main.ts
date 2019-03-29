@@ -9,7 +9,6 @@ import { hmrBootstrap } from './hmr';
 
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
-// Akita Persite State in LocalStorage
 persistState({
   exclude: ['router']
 });
@@ -19,10 +18,6 @@ if (environment.production) {
   enableProdMode();
   enableAkitaProdMode();
 }
-
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch(err => console.error(err));
 
 // Hot Module Reload Envionment
 if (environment.hmr) {

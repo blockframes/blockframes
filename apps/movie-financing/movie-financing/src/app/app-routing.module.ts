@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 // tslint:disable-next-line
 import { AuthGuard } from '@blockframes/auth';
 import { LayoutComponent } from './layout/layout.component';
-//import { AuthGuard } from '@blockframes/auth';
+
 
 export const routes: Routes = [
   {
