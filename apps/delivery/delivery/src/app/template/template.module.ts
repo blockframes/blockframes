@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 // Components
-import { TemplateComponent } from './template/template.component';
-import {
-  AddTemplateDialogComponent,
-  TemplateListComponent
-} from './template-list/template-list.component';
+import { TemplateViewComponent } from './template-view/template-view.component';
+import { TemplateListComponent } from './template-list/template-list.component';
+import { AddTemplateComponent } from './template-list/add-template';
+import { MaterialViewComponent } from '../material/material-view/material-view.component';
+import { CategoryListComponent } from './category-list/category-list.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,20 +23,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  AddCategoryDialogComponent,
-  CategoryListComponent
-} from './category-list/category-list.component';
-import { MaterialViewComponent } from '../material/material-view/material-view.component';
+
 
 @NgModule({
   declarations: [
-    TemplateComponent,
+    TemplateViewComponent,
     TemplateListComponent,
-    AddTemplateDialogComponent,
+    AddTemplateComponent,
     MaterialFormComponent,
     CategoryListComponent,
-    AddCategoryDialogComponent,
     MaterialViewComponent
   ],
   imports: [
@@ -55,9 +50,9 @@ import { MaterialViewComponent } from '../material/material-view/material-view.c
     RouterModule.forChild([
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: TemplateListComponent },
-      { path: ':templateId', component: TemplateComponent }
+      { path: ':templateId', component: TemplateViewComponent }
     ])
   ],
-  entryComponents: [AddTemplateDialogComponent, AddCategoryDialogComponent]
+  entryComponents: [AddTemplateComponent]
 })
 export class TemplateModule {}

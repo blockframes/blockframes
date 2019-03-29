@@ -7,11 +7,11 @@ import { Material, MaterialService, MaterialStore, MaterialQuery } from '../../m
 
 @Component({
   selector: 'delivery-template',
-  templateUrl: './template.component.html',
-  styleUrls: ['./template.component.scss'],
+  templateUrl: './template-view.component.html',
+  styleUrls: ['./template-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateComponent implements OnInit {
+export class TemplateViewComponent implements OnInit {
   public template$: Observable<any>;
   public form$ : Observable<any>;
 
@@ -37,6 +37,7 @@ export class TemplateComponent implements OnInit {
 
   public addMaterial(material: Material) {
     this.materialService.addMaterial(material);
+    this.materialStore.updateRoot({form: null})
   }
 
   public addForm(category: string) {

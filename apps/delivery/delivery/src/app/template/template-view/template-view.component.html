@@ -14,8 +14,8 @@
     </div>
     <mat-card *ngFor="let materials of (template$ | async | keyvalue)" id="{{ materials.key }}">
       <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
-        <h4>Category : {{ materials.key }}</h4>
-        <button (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
+        <h4 fxFlex="80">Category : {{ materials.key }}</h4>
+        <button fxFlex="20" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
           <mat-icon class="icon-add">add_circle</mat-icon>
           Add new material with this category
         </button>
@@ -34,19 +34,3 @@
     </mat-card>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<!-- <ul>
-  <li *ngFor="let item of materialByCategory$ | async | keyvalue">
-    <h4>{{ item.key }}</h4>
-    <ul>
-      <material-view *ngFor="let material of item.value" [material]="material"></material-view>
-    </ul>
-    <div *ngIf="(form$ | async) as form && form.category === item.keyvalue">
-      <material-form [material]="form"></material-form>
-    </div>
-  </li>
-</ul>
-
-<div *ngIf="form$ | async as form && !form.category">
-  <material-form [material]="form"></material-form>
-</div> -->

@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Material, MaterialQuery, createMaterial } from '../+state';
+import { Material, MaterialQuery } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
-import { PersistNgFormPlugin } from '@datorama/akita';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -21,8 +20,6 @@ export class MaterialFormComponent implements OnInit, OnDestroy {
     category: new FormControl()
   });
 
-  public persistForm: PersistNgFormPlugin<Material>;
-
   constructor(private query: MaterialQuery) {}
 
   ngOnInit() {
@@ -31,13 +28,10 @@ export class MaterialFormComponent implements OnInit, OnDestroy {
     this.query.select(state => state.form).pipe(takeWhile(() => this.isAlive)).subscribe(form =>
       this.form.setValue(form)
     )
-
-    //this.persistForm = new PersistNgFormPlugin(this.query, createMaterial).setForm(this.form);
   }
 
   public addMaterial() {
     this.material.emit(this.form.value);
-    //this.persistForm.reset();
   }
 
   ngOnDestroy() {
