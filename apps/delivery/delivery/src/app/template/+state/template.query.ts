@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
-import { Template } from './template.model';
+import { Template, TemplateView } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { map } from 'rxjs/operators';
 import { combineLatest, } from 'rxjs';
@@ -19,7 +19,7 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
       const ids = template ? template.materialsId : [];
       return ids.map(materialId => materials.find(material => material.id === materialId));
     }),
-    map(materials => materialsByCategory(materials)
+    map(materials => materialsByCategory(materials) as TemplateView
     )
   );
 

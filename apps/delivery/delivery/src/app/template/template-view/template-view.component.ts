@@ -1,19 +1,19 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TemplateQuery, TemplateStore } from '../+state';
-import { Material, MaterialService, MaterialStore, MaterialQuery } from '../../material/+state';
+import { TemplateQuery, TemplateStore, TemplateView } from '../+state';
+import { Material, MaterialService, MaterialStore, MaterialQuery, MaterialForm } from '../../material/+state';
 
 @Component({
-  selector: 'delivery-template',
+  selector: 'template-view',
   templateUrl: './template-view.component.html',
   styleUrls: ['./template-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateViewComponent implements OnInit {
-  public template$: Observable<any>;
-  public form$ : Observable<any>;
+  public template$: Observable<TemplateView>;
+  public form$ : Observable<MaterialForm>;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,12 +25,7 @@ export class TemplateViewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.template$ = this.route.params.pipe(
-      switchMap(params => {
-        this.store.setActive(params.templateId);
-        return this.query.materialsByTemplate$;
-      })
-    );
+    this.template$ = this.query.materialsByTemplate$;
 
     this.form$ = this.materialQuery.select(state => state.form)
   }

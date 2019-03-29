@@ -8,6 +8,13 @@ export type Material = {
   deliveriesIds: string[];
 };
 
+// tslint:disable-next-line: interface-over-type-literal
+export type MaterialForm = {
+  value: string;
+  description: string;
+  category: string;
+}
+
 export function createMaterial(material: Partial<Material>) {
   return material ? {
     category: '',

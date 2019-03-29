@@ -8,6 +8,7 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { AddTemplateComponent } from './template-list/add-template';
 import { MaterialViewComponent } from '../material/material-view/material-view.component';
 import { CategoryListComponent } from './category-list/category-list.component';
+import { TemplateGuard } from './guards/template.guard';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+
 
 
 @NgModule({
@@ -50,7 +52,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RouterModule.forChild([
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: TemplateListComponent },
-      { path: ':templateId', component: TemplateViewComponent }
+      { path: ':templateId', component: TemplateViewComponent, canActivate: [TemplateGuard] }
     ])
   ],
   entryComponents: [AddTemplateComponent]
