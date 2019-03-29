@@ -1,15 +1,13 @@
-// tslint:disable-next-line: interface-over-type-literal
-export type Material = {
+export interface Material {
   id: string;
   category: string;
   value: string;
   description: string;
   delivered: boolean;
   deliveriesIds: string[];
-};
+}
 
-// tslint:disable-next-line: interface-over-type-literal
-export type MaterialForm = {
+export interface MaterialForm {
   value: string;
   description: string;
   category: string;
