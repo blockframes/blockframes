@@ -46,9 +46,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ConfirmComponent } from './delivery/form/confirm.component';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, TemplatePickerComponent, NewTemplateComponent],
+  declarations: [AppComponent, LayoutComponent, TemplatePickerComponent, NewTemplateComponent, ConfirmComponent],
   imports: [
     // Angular
     BrowserModule,
@@ -92,7 +93,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()]
   ],
   providers: [],
-  entryComponents: [TemplatePickerComponent, NewTemplateComponent],
+  entryComponents: [TemplatePickerComponent, NewTemplateComponent, ConfirmComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

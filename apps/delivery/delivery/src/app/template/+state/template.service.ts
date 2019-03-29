@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // tslint:disable-next-line
 import { OrganizationQuery } from '@blockframes/organization';
-import { switchMap, tap, filter, map } from 'rxjs/operators';
+import { switchMap, tap, filter } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
@@ -49,7 +49,7 @@ export class TemplateService {
     }
   }
 
-  public async saveTemplate(templateName?: string) {
+  public async saveTemplate(name?: string) {
     const idOrg = this.organizationQuery.getActiveId();
     const template = this.query.getActive();
     const materials = this.materialQuery.getAll({filterBy: material => template.materialsId.includes(material.id)});
@@ -60,20 +60,26 @@ export class TemplateService {
       promises.push(promise);
     }
     await Promise.all(promises);
-
-    if (!!templateName) {
-      const newTemplateId = this.db.createId();
+    if (!!name) {
+      const id = this.db.createId();
       const newTemplate = createTemplate({
-        id: newTemplateId,
-        name: templateName,
+        id,
+        name,
         materialsId: template.materialsId
       });
-      this.db.doc<Template>(`orgs/${idOrg}/templates/${newTemplateId}`).set(newTemplate);
+      this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).set(newTemplate);
     } else {
       this.db
         .doc<Template>(`orgs/${idOrg}/templates/${template.id}`)
         .update({ materialsId: template.materialsId });
     }
+  }
+
+  public async nameExists(name: string) {
+    const orgId = this.organizationQuery.getActiveId();
+    const querySnapshot = await this.db.collection<Template>(`orgs/${orgId}/templates`).get().toPromise();
+    const templateNames = querySnapshot.docs.map(doc => doc.data().name)
+    return templateNames.includes(name)
   }
 }
 

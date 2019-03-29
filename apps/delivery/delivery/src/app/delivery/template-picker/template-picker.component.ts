@@ -18,7 +18,6 @@ import { Router } from '@angular/router';
 export class TemplatePickerComponent implements OnInit {
 
   public templates$: Observable<Template[]>;
-  public activeTemplateName: string;
 
   constructor(
     public dialogRef: MatDialogRef<TemplatePickerComponent>,
@@ -37,23 +36,20 @@ export class TemplatePickerComponent implements OnInit {
     this.templates$ = this.templateQuery.selectAll();
   }
 
-  public selectTemplate(templateId?) {
+  public selectTemplate(templateId? : string) {
+    const movieId = this.movieQuery.getActiveId();
     if (!!templateId) {
     this.templateStore.setActive(templateId);
-    this.activeTemplateName = this.templateQuery.getActive().name;
+    this.router.navigate([`delivery/${movieId}/form`]);
+    this.dialogRef.close();
     } else {
       this.templateStore.setActive(null);
-      this.activeTemplateName = null;
+      this.router.navigate([`delivery/${movieId}/form`]);
+      this.dialogRef.close();
     }
   }
 
   public close() {
-    this.dialogRef.close();
-  }
-
-  public goToForm() {
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate([`delivery/${movieId}/form`]);
     this.dialogRef.close();
   }
 }

@@ -6,6 +6,7 @@ import { takeWhile } from 'rxjs/operators';
 import { Stakeholder, createStakeholder } from '../../stakeholder/+state/stakeholder.model';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { OrganizationQuery } from '@blockframes/organization';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 
@@ -18,6 +19,7 @@ export class MovieService {
   private firestore: AngularFirestore,
   private orgQuery: OrganizationQuery,
   private shService: StakeholderService,
+  private authQuery: AuthQuery,
   ) {
     this.collection = this.firestore.collection('movies');
   }

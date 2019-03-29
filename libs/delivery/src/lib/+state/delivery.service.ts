@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Material, MaterialStore } from 'apps/delivery/delivery/src/app/material/+state';
+import { Material} from '../../../../../apps/delivery/delivery/src/app/material/+state/material.model';
+import { MaterialStore } from '../../../../../apps/delivery/delivery/src/app/material/+state/material.store';
 import { MovieQuery } from '@blockframes/movie';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { Delivery } from '@blockframes/delivery';
 import { DeliveryQuery } from './delivery.query';
-import { TemplateQuery } from 'apps/delivery/delivery/src/app/template/+state/template.query';
+import { TemplateQuery } from '../../../../../apps/delivery/delivery/src/app/template/+state/template.query';
 import { OrganizationQuery } from '@blockframes/organization';
 
 function materialsByCategory(materials: Material[]) {

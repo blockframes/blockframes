@@ -14,8 +14,8 @@ export class CategoryListComponent {
 
   @Input() template;
   @Input() name;
-  @Output() save = new EventEmitter<any>();
-  @Output() create = new EventEmitter<any>();
+  @Output() save = new EventEmitter<string>();
+  @Output() create = new EventEmitter<string>();
 
   constructor(
     private materialStore: MaterialStore,

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDialogRef } from "@angular/material";
-import { TemplateService } from "../../template/+state/template.service";
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { TemplateService } from '../../template/+state/template.service';
+import { ConfirmComponent } from './confirm.component';
 
 @Component({
   selector: 'new-template-dialog',
@@ -25,11 +26,21 @@ export class NewTemplateComponent {
   constructor(
     public dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
+    private dialog: MatDialog
   ) {}
 
-  public saveTemplate(templateName) {
-    this.templateService.saveTemplate(templateName);
-    this.dialogRef.close();
+  public async saveTemplate(name) {
+    console.log(name);
+    if (await this.templateService.nameExists(name)) {
+      this.dialog.open(ConfirmComponent, {
+        data: {
+          name
+        }
+      });
+    } else {
+      this.templateService.saveTemplate(name);
+      this.dialogRef.close();
+    }
   }
 
   public close() {

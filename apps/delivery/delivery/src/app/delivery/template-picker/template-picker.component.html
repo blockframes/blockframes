@@ -24,7 +24,5 @@
       <mat-card-content> </mat-card-content>
     </mat-card>
   </article>
-  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
-  <button *ngIf="!!activeTemplateName" mat-raised-button color="primary" (click)="goToForm()">Create delivery using {{ activeTemplateName }} template</button>
-  <button *ngIf="!activeTemplateName" mat-raised-button color="primary" (click)="goToForm()">Create new delivery</button>
 </section>
+<button mat-raised-button color="warn" (click)="close()">Cancel</button>
