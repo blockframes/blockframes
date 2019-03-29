@@ -1,15 +1,16 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Add a new film</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form [formGroup]="titleForm" (ngSubmit)="newMovie()">
-      <mat-form-field>
-        <input matInput type="string" placeholder="Film Title" formControlName="title"/>
-      </mat-form-field>
+<section fxLayout="column">
+  <h2>Add a new film</h2>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a laoreet ex.
+  </p>
+  <form [formGroup]="titleForm" (ngSubmit)="newMovie()">
+    <mat-form-field appearance="outline">
+      <mat-label>Film title</mat-label>
+      <input matInput type="string" placeholder="Lorem ipsum" formControlName="title"/>
+    </mat-form-field>
+    <div class="margin-top">
       <button mat-button type="button" (click)="cancel()">Cancel</button>
       <button mat-raised-button color="primary" type="submit">Create</button>
-    </form>
-
-  </mat-card-content>
-</mat-card>
+    </div>
+  </form>
+</section>
