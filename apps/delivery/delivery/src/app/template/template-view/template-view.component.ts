@@ -40,6 +40,10 @@ export class TemplateViewComponent implements OnInit {
     this.materialStore.updateRoot({form: null})
   }
 
+  public deleteMaterial(material: Material) {
+    this.materialService.deleteMaterial(material.id);
+  }
+
   public addForm(category: string) {
     this.materialStore.updateRoot({form: {value: "", description: "", category}})
   }

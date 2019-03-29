@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Material, MaterialService } from '../+state';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Material } from '../+state';
 
 @Component({
   selector: 'material-view',
@@ -7,19 +7,16 @@ import { Material, MaterialService } from '../+state';
   styleUrls: ['./material-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialViewComponent implements OnInit {
+export class MaterialViewComponent {
 
   @Input() material: Material;
+  @Output() isDeleted = new EventEmitter<boolean>();
 
   constructor(
-    private service: MaterialService,
   ) { }
 
-  ngOnInit() {
-  }
-
   public deleteMaterial() {
-    this.service.deleteMaterial(this.material.id);
+    this.isDeleted.emit(true);
   }
 
 }

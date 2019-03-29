@@ -29,7 +29,7 @@ export class MaterialService {
   public deleteMaterial(id: string) {
     const idOrg = this.organizationQuery.getActiveId();
 
-    // delete materialId of materialsId of sub-collection template
+    // delete materialId of materialsId of sub-collection template in akita
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
     const index = materialsId.indexOf(id);
@@ -50,13 +50,13 @@ export class MaterialService {
   }
 
   public addMaterial(material: Material) {
-    // Add material to sub-collection materials of organization
+    // Add material to sub-collection materials of organization in akita
     const idOrg = this.organizationQuery.getActiveId();
     const idMaterial = this.db.createId();
     this.store.add({...material, ...{id: idMaterial}});
     //this.db.doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`).set(material);
 
-    // Add materialId of materialsId of sub-collection template
+    // Add materialId of materialsId of sub-collection template in akita
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
     materialsId.push(idMaterial);

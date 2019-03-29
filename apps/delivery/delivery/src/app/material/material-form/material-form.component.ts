@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Material, MaterialQuery } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'material-form',
@@ -25,7 +25,7 @@ export class MaterialFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form.setValue({ value: '', description: '', category: '' });
 
-    this.query.select(state => state.form).pipe(takeWhile(() => this.isAlive)).subscribe(form =>
+    this.query.select(state => state.form).pipe(takeWhile(() => this.isAlive), filter(form => !!form)).subscribe(form =>
       this.form.setValue(form)
     )
   }

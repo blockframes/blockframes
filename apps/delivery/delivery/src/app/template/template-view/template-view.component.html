@@ -14,15 +14,15 @@
     </div>
     <mat-card *ngFor="let materials of (template$ | async | keyvalue)" id="{{ materials.key }}">
       <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
-        <h4 fxFlex="80">Category : {{ materials.key }}</h4>
-        <button fxFlex="20" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
+        <h4 fxFlex="60">Category : {{ materials.key }}</h4>
+        <button fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
           <mat-icon class="icon-add">add_circle</mat-icon>
           Add new material with this category
         </button>
       </mat-card-title>
       <mat-card-content>
         <div cdkDrag *ngFor="let material of materials.value">
-          <material-view [material]="material"></material-view>
+          <material-view [material]="material" (isDeleted)="deleteMaterial(material)"></material-view>
         </div>
         <div *ngIf="(form$ | async) as form">
           <material-form
