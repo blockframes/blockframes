@@ -23,7 +23,7 @@ export function createOrganization(params?: Partial<Organization>): Organization
     name: params.name,
     address: params.address,
     userIds: params.userIds,
-    movieIds: params.movieIds,
+    movieIds: params.movieIds || [],
     created: params.created || Date.now(),
     updated: params.updated || Date.now()
   } : {} as Organization;
