@@ -60,7 +60,6 @@ export class FormComponent implements OnInit, OnDestroy {
     this.staticModels = staticModels;
     this.org = this.orgQuery.getActive();
     this.movie = this.query.getActive();
-    console.log(this.movie);
 
     this.movieForm = this.builder.group({
       title: [''],
@@ -97,12 +96,10 @@ export class FormComponent implements OnInit, OnDestroy {
     load the form with current data stored in the active Movie.
     */
     if (this.query.hasActive()) {
-      this.isModifying = true;
       this.activeId = this.query.getActiveId();
       this.movieForm.patchValue(createMovie(this.query.getActive()));
     }
 
-    console.log(this.movieStakeholders.getRawValue());
   }
 
   /*
@@ -129,12 +126,9 @@ export class FormComponent implements OnInit, OnDestroy {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
     }
-    if (this.isModifying) {
-      this.snackBar.open(`Modified ${this.movieForm.get('title').value}`, 'close', { duration: 2000 });
+    else {
+      this.snackBar.open(`${this.movieForm.get('title').value} saved.`, 'close', { duration: 2000 });
       this.service.update(this.activeId, this.movieForm.value);
-    } else {
-      this.snackBar.open(`Created ${this.movieForm.get('title').value}`, 'close', { duration: 2000 });
-      this.service.add(this.movieForm.value);
     }
     this.router.navigateByUrl('');
     this.clear();
