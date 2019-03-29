@@ -33,7 +33,6 @@ export class TitleFormComponent implements OnInit {
       const { title } = this.titleForm.value;
       const id = await this.service.add(title);
       this.store.setActive(id);
-      console.log(this.query.getActive());
       this.router.navigateByUrl(`form/${id}`);
       this.dialogRef.close();
     }
