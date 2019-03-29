@@ -46,8 +46,7 @@ export class MovieService {
      ).subscribe(movies => this.store.set(movies));
   }
 
-  public async add(title: string): Promise<string> {
-    const orgId = this.orgQuery.getActiveId();
+  public async add(title: string, orgId: string): Promise<string> {
     const id = this.firestore.createId();
     const owner: Stakeholder = createStakeholder({orgId, role: 'ADMIN'});
 

@@ -3,6 +3,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MovieService, MovieStore, MovieQuery } from '../+state';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'movie-title-form',
@@ -12,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class TitleFormComponent implements OnInit {
   public titleForm: FormGroup;
+  public orgList$: Observable<Organization[]>;
 
   constructor(
     private dialogRef: MatDialogRef<TitleFormComponent>,
@@ -19,19 +22,23 @@ export class TitleFormComponent implements OnInit {
     private service: MovieService,
     private router: Router,
     private store: MovieStore,
-    private query: MovieQuery,
+    private orgQuery: OrganizationQuery,
   ) { }
 
   ngOnInit() {
     this.titleForm = this.builder.group({
-      title: ['', Validators.required]
+      title: ['', Validators.required],
+      owner: ['', Validators.required],
     });
+    this.orgList$ = this.orgQuery.selectAll();
   }
 
   public async newMovie() {
     try {
       const { title } = this.titleForm.value;
-      const id = await this.service.add(title);
+      // TODO: make owner by default if only one org
+      const { owner } = this.titleForm.value;
+      const id = await this.service.add(title, owner);
       this.store.setActive(id);
       this.router.navigateByUrl(`form/${id}`);
       this.dialogRef.close();

@@ -8,6 +8,13 @@
       <mat-label>Film title</mat-label>
       <input matInput type="string" placeholder="Lorem ipsum" formControlName="title"/>
     </mat-form-field>
+    <!-- TODO: length > 1 when owner by default set on the ts file-->
+    <mat-form-field *ngIf="(orgList$ | async)?.length>0">
+        <mat-select placeholder="Choose a Company" formControlName="owner">
+          <mat-option *ngFor="let org of (orgList$ | async) as orgs;" [value]="org.id">{{ org.name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
     <div class="margin-top">
       <button mat-button type="button" (click)="cancel()">Cancel</button>
       <button mat-raised-button color="primary" type="submit">Create</button>
