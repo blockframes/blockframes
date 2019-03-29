@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
-    <category-list *ngIf="(template$ | async) as template" [template]="template" name="Template" (save)="onSave()"></category-list>
+    <category-list *ngIf="(template$ | async) as template" [template]="template" name="Template" (save)="saveTemplate()"></category-list>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>

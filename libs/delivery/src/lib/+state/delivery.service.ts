@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Material} from '../../../../../apps/delivery/delivery/src/app/material/+state/material.model';
+import { Material } from '../../../../../apps/delivery/delivery/src/app/material/+state/material.model';
 import { MaterialStore } from '../../../../../apps/delivery/delivery/src/app/material/+state/material.store';
 import { MovieQuery } from '@blockframes/movie';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
@@ -9,15 +9,10 @@ import { Delivery } from '@blockframes/delivery';
 import { DeliveryQuery } from './delivery.query';
 import { TemplateQuery } from '../../../../../apps/delivery/delivery/src/app/template/+state/template.query';
 import { OrganizationQuery } from '@blockframes/organization';
-
-function materialsByCategory(materials: Material[]) {
-  return materials.reduce((acc, item) => {
-    return {
-      ...acc,
-      [item.category.toUpperCase()]: [...(acc[item.category.toUpperCase()] || []), item]
-    };
-  }, {});
-}
+import {
+  MaterialQuery,
+  materialsByCategory
+} from '../../../../../apps/delivery/delivery/src/app/material/+state/material.query';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +22,7 @@ export class DeliveryService {
     private firestore: AngularFirestore,
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
+    private materialQuery: MaterialQuery,
     private templateQuery: TemplateQuery,
     private deliveryQuery: DeliveryQuery,
     private deliveryStore: DeliveryStore,
@@ -144,17 +140,17 @@ export class DeliveryService {
     const activeMovieId = this.movieQuery.getActiveId();
     const activeOrgId = this.organizationQuery.getActiveId();
     const deliveryId = this.firestore.createId();
-    this.firestore
-      .doc<Delivery>(`deliveries/${deliveryId}`)
-      .set({
-        id: deliveryId,
-        movieId: activeMovieId,
-        stakeholders: [activeOrgId],
-        validated: [],
-        delivered: false
-      });
-
-    const materials = this.templateQuery.unsortedMaterialsByTemplate();
+    this.firestore.doc<Delivery>(`deliveries/${deliveryId}`).set({
+      id: deliveryId,
+      movieId: activeMovieId,
+      stakeholders: [activeOrgId],
+      validated: [],
+      delivered: false
+    });
+    const template = this.templateQuery.getActive();
+    const materials = this.materialQuery.getAll({
+      filterBy: material => template.materialsId.includes(material.id)
+    });
     const promises: Promise<any>[] = [];
 
     for (const material of materials) {

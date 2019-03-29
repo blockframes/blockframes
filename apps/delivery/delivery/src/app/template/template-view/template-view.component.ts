@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TemplateQuery, TemplateStore, TemplateView } from '../+state';
+import { TemplateQuery, TemplateStore, TemplateView, TemplateService } from '../+state';
 import { Material, MaterialService, MaterialStore, MaterialQuery, MaterialForm } from '../../material/+state';
 
 @Component({
@@ -19,6 +19,7 @@ export class TemplateViewComponent implements OnInit {
     private route: ActivatedRoute,
     private store: TemplateStore,
     private query: TemplateQuery,
+    private service: TemplateService,
     private materialService: MaterialService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
@@ -41,6 +42,10 @@ export class TemplateViewComponent implements OnInit {
 
   public addForm(category: string) {
     this.materialStore.updateRoot({form: {value: "", description: "", category}})
+  }
+
+  public saveTemplate() {
+    this.service.saveTemplate();
   }
 
 }

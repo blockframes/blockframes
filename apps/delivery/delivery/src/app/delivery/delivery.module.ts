@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+import { MaterialViewComponent } from '../material/material-view/material-view.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -50,6 +51,7 @@ export const routes: Routes = [
     FormComponent,
     CategoryListComponent,
     MaterialFormComponent,
+    MaterialViewComponent,
   ],
   imports: [
     CommonModule,

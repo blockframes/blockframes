@@ -1,7 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
-import { Material, MaterialStore } from '../../material/+state';
-import { TemplateService } from '../+state';
-import { MatDialog } from '@angular/material';
 import { EventEmitter } from '@angular/core';
 
 @Component({
@@ -17,21 +14,4 @@ export class CategoryListComponent {
   @Output() save = new EventEmitter<string>();
   @Output() create = new EventEmitter<string>();
 
-  constructor(
-    private materialStore: MaterialStore,
-    public dialog: MatDialog,
-    private service: TemplateService,
-  ) { }
-
-  public selectCategory(materials: Material[]) {
-    const materialsIds = [];
-    for (const material of materials) {
-      materialsIds.push(material.id);
-    }
-    this.materialStore.setActive(materialsIds);
-  }
-
-  public saveTemplate() {
-    this.service.saveTemplate();
-  }
 }
