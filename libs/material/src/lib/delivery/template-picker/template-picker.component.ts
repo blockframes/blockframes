@@ -40,13 +40,11 @@ export class TemplatePickerComponent implements OnInit {
     const movieId = this.movieQuery.getActiveId();
     if (!!templateId) {
     this.templateStore.setActive(templateId);
+    } else {
+      this.templateService.addUnamedTemplate();
+    }
     this.router.navigate([`layout/${movieId}/form`]);
     this.dialogRef.close();
-    } else {
-      this.templateStore.setActive(null);
-      this.router.navigate([`layout/${movieId}/form`]);
-      this.dialogRef.close();
-    }
   }
 
   public close() {

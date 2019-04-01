@@ -8,12 +8,10 @@ export type Delivery = {
 };
 
 
-export function createDelivery(delivery: Partial<Delivery>) {
+export function createDelivery(params: Partial<Delivery>) {
   return {
-    id: delivery.id,
-    movieId: delivery.movieId,
-    stakeholders: delivery.stakeholders,
-    validated: delivery.validated || [],
-    delivered: delivery.delivered || false,
+    validated: [],
+    delivered: false,
+    ...params
   } as Delivery;
 }

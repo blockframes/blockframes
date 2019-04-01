@@ -32,6 +32,12 @@ export class TemplateService {
     this.db.doc<Template>(`orgs/${idOrg}/templates/${idTemplate}`).set(template);
   }
 
+  public addUnamedTemplate() {
+    const template = createTemplate({ id: this.db.createId()})
+    this.store.add(template);
+    this.store.setActive(template.id);
+  }
+
   public deleteTemplate(id: string) {
     const idOrg = this.organizationQuery.getActiveId();
     this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
@@ -63,7 +69,7 @@ export class TemplateService {
 
     // if parameter 'name' is present, we create a new template with this name
     if (!!name) {
-      const id = this.db.createId();
+      const id = this.query.getActiveId();
       const newTemplate = createTemplate({
         id,
         name,
