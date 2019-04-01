@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { TemplateStore, TemplateQuery } from '../+state';
 
 @Injectable({
@@ -9,15 +9,16 @@ export class TemplateGuard implements CanActivate {
   constructor(
     private store: TemplateStore,
     private query: TemplateQuery,
-    private router: Router,
+    private router: Router
     ) {}
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
+  canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree {
     if (!!this.query.getEntity(route.params.templateId)) {
       this.store.setActive(route.params.templateId);
       return true;
     } else {
-      this.router.navigate(['layout/template/list']);
-      return false;}
+      const redirectTo: UrlTree = this.router.parseUrl('layout/template');
+      return redirectTo;
+    }
   }
 }
