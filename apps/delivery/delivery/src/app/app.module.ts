@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
+import { DeliveryQuery} from '@blockframes/material'; // TODO: find better way to load material lib
 
 // Firebase
 import { AngularFireModule } from '@angular/fire';
@@ -23,8 +24,6 @@ import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 import { MovieModule } from '@blockframes/movie';
-// TODO: find the correct way to pass lint'ing when we import OrganizationModule
-// tslint:disable-next-line
 import { OrganizationModule } from '@blockframes/organization';
 
 // Material

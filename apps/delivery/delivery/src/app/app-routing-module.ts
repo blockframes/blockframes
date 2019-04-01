@@ -30,9 +30,12 @@ export const routes: Routes = [
         loadChildren: '@blockframes/account#AccountModule'
       },
       { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' },
-      { path: 'template', loadChildren: '@blockframes/delivery#TemplateModule' },
+      { path: 'template', loadChildren: '@blockframes/material#TemplateModule' },
       {
-        path: ':id', canActivate: [MovieGuard], loadChildren: '@blockframes/delivery#DeliveryModule' },
+        path: ':id',
+        canActivate: [MovieGuard],
+        loadChildren: '@blockframes/material#DeliveryModule'
+      },
     ]
   }
 ];
