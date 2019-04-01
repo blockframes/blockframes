@@ -13,7 +13,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   constructor(
     protected store: DeliveryStore,
-    private db: AngularFirestore
   ) {
     super(store);
   }

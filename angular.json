@@ -734,8 +734,7 @@
           "builder": "@nrwl/builders:jest",
           "options": {
             "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
+            "tsConfig": "libs/material/tsconfig.spec.json"
           }
         }
       },
