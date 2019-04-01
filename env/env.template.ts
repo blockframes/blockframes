@@ -13,6 +13,8 @@ export const firebase = {
 
 export const network = 'kovan';
 
+export const baseEnsDomain = 'blockframe.test'
+
 // TODO : change the address
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185'
