@@ -48,7 +48,7 @@ export class MovieService {
 
   public async add(title: string, orgId: string): Promise<string> {
     const id = this.firestore.createId();
-    const owner: Stakeholder = createStakeholder({orgId, role: 'ADMIN'});
+    const owner = createStakeholder({orgId, role: 'ADMIN'});
 
     const movie: Partial<Movie> = createMovie({ id: id, title: [title] });
     // TODO: correct race condition
