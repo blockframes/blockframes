@@ -10,4 +10,4 @@ import { StakeholderListComponent } from './list/list.component';
   ],
   declarations: [StakeholderListComponent]
 })
-export class StakholderModule {}
+export class StakeholderModule {}

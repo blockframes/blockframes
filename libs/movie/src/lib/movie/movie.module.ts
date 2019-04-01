@@ -26,6 +26,7 @@ import { MatMenuModule} from '@angular/material/menu';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { StakeholderModule } from '../stakeholder/stakeholder.module';
 
 // Components
 import { HomeComponent } from './home/home.component';
@@ -66,6 +67,7 @@ import { TitleFormComponent } from '../movie/title-form/title-form.component';
     // Librairies
     UploadModule,
     UiFormModule,
+    StakeholderModule,
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
