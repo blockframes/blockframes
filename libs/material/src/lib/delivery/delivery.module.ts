@@ -41,7 +41,8 @@ export const routes: Routes = [
     path: 'list',
     children: [
       { path: '', component: ListComponent },
-      { path: ':id', canActivate: [DeliveryGuard], component: ViewComponent }
+      { path: ':id', canActivate: [DeliveryGuard], component: ViewComponent },
+      { path: '/delivery/:id', canActivate: [DeliveryGuard], component: ViewComponent },
     ]
   }
 ];

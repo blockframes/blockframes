@@ -7,7 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { TemplateStore } from '../../template/+state/template.store';
 import { TemplateQuery } from '../../template/+state/template.query';
-import { DeliveryQuery } from 'libs/delivery/src/lib/+state/delivery.query';
+import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class MaterialService {
     private store: MaterialStore,
     private templateQuery: TemplateQuery,
     private templateStore: TemplateStore,
-    private deliveryQuery: DeliveryQuery
+    private deliveryQuery: DeliveryQuery,
   ) {}
 
   public deleteMaterial(id: string) {
