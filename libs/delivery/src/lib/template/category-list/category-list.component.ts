@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core
 import { EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'category-list',
+  selector: 'template-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

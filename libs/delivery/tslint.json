@@ -4,13 +4,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "delivery",
+      ["delivery", "template", "material"],
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "delivery",
+      ["delivery", "template", "material"],
       "kebab-case"
     ]
   }

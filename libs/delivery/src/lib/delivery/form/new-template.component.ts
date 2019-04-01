@@ -4,7 +4,7 @@ import { TemplateService } from '../../template/+state/template.service';
 import { ConfirmComponent } from './confirm.component';
 
 @Component({
-  selector: 'new-template-dialog',
+  selector: 'delivery-new-template',
   template: `
     <div mat-dialog-content>
       <h2>Save as a new template</h2>
