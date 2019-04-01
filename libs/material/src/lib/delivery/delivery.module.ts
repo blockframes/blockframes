@@ -24,7 +24,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { MatInputModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import { MatInputModule, MatMenuModule, MatSidenavModule, MatDialogModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { CategoryListComponent } from '../template/category-list/category-list.component';
 import { MaterialFormComponent } from '../material/material-form/material-form.component';
@@ -79,6 +79,7 @@ export const routes: Routes = [
     MatMenuModule,
     MatSidenavModule,
     MatFormFieldModule,
+    MatDialogModule,
 
     RouterModule.forChild(routes)
   ],

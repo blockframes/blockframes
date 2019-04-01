@@ -1,0 +1,26 @@
+
+mat-sidenav-container {
+  height: 100%;
+  min-height: 400px;
+}
+
+mat-sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+}
+
+mat-sidenav-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+mat-card {
+  margin: 5% 5%;
+}
+
+mat-card-title {
+  border-bottom: 1px solid black;
+}

@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { MovieStore } from '../+state';
+import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
+import { MovieStore, MovieQuery } from '../+state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieGuard implements CanActivate {
 
-  constructor(private store: MovieStore) {}
+  constructor(private store: MovieStore, private query: MovieQuery, private router: Router,) {}
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
-    this.store.setActive(route.params.id);
-    return true;
+  canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree {
+    if (!!this.query.getEntity(route.params.id)) {
+      this.store.setActive(route.params.id);
+      return true;
+    } else {
+      const redirectTo: UrlTree = this.router.parseUrl('layout/explorer');
+      return redirectTo;
+    }
   }
-
 }
