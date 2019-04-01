@@ -1,0 +1,36 @@
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav [opened]="true" mode="side">
+    <category-list *ngIf="(delivery$ | async) as delivery" [template]="delivery" name="Delivery"></category-list>
+  </mat-sidenav>
+  <!-- Content -->
+  <mat-sidenav-content>
+    <button (click)="addForm('')" color="primary" mat-icon-button matRipple>
+      <mat-icon class="icon-add">add_circle</mat-icon>
+      Add new material
+    </button>
+    <div *ngIf="(form$ | async) as form">
+      <material-form *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
+    </div>
+    <mat-card *ngFor="let materials of (delivery$ | async | keyvalue)" id="{{ materials.key }}">
+      <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
+        <h4 fxFlex="60">Category : {{ materials.key }}</h4>
+        <button fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
+          <mat-icon class="icon-add">add_circle</mat-icon>
+          Add new material with this category
+        </button>
+      </mat-card-title>
+      <mat-card-content>
+        <div cdkDrag *ngFor="let material of materials.value">
+          <material-view [material]="material" (isDeleted)="deleteMaterial(material)"></material-view>
+        </div>
+        <div *ngIf="(form$ | async) as form">
+          <material-form
+            *ngIf="form.category === materials.key"
+            (material)="addMaterial($event)"
+          ></material-form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-sidenav-content>
+</mat-sidenav-container>
