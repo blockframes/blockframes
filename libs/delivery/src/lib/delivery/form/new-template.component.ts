@@ -30,7 +30,6 @@ export class NewTemplateComponent {
   ) {}
 
   public async saveTemplate(name) {
-    console.log(name);
     if (await this.templateService.nameExists(name)) {
       this.dialog.open(ConfirmComponent, {
         data: {

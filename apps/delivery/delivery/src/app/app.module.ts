@@ -13,8 +13,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
-import { TemplatePickerComponent } from './delivery/template-picker/template-picker.component';
-import { NewTemplateComponent } from './delivery/form/new-template.component';
 
 // Firebase
 import { AngularFireModule } from '@angular/fire';
@@ -25,7 +23,6 @@ import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 import { MovieModule } from '@blockframes/movie';
-import { DeliveryModule } from '@blockframes/delivery';
 // TODO: find the correct way to pass lint'ing when we import OrganizationModule
 // tslint:disable-next-line
 import { OrganizationModule } from '@blockframes/organization';
@@ -46,10 +43,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ConfirmComponent } from './delivery/form/confirm.component';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, TemplatePickerComponent, NewTemplateComponent, ConfirmComponent],
+  declarations: [AppComponent, LayoutComponent],
   imports: [
     // Angular
     BrowserModule,
@@ -83,7 +79,6 @@ import { ConfirmComponent } from './delivery/form/confirm.component';
     OrganizationModule,
     ToolbarModule,
     MovieModule,
-    DeliveryModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
@@ -93,7 +88,6 @@ import { ConfirmComponent } from './delivery/form/confirm.component';
     environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()]
   ],
   providers: [],
-  entryComponents: [TemplatePickerComponent, NewTemplateComponent, ConfirmComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

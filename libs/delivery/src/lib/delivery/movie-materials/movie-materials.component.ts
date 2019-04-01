@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Movie, MovieQuery } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { Material } from '../../material/+state';
-import { DeliveryService } from '@blockframes/delivery';
+import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
+import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
+import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
   selector: 'delivery-movie-materials',

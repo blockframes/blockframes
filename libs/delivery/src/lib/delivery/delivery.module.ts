@@ -4,13 +4,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Components
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { ListComponent } from './list/list.component';
 import { ViewComponent } from './view/view.component';
 import { HomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
-import { CategoryListComponent } from '../template/category-list/category-list.component';
-import { MaterialFormComponent } from '../material/material-form/material-form.component';
+import { ConfirmComponent } from './form/confirm.component';
+import { NewTemplateComponent } from './form/new-template.component';
+import { TemplatePickerComponent } from './template-picker/template-picker.component';
 import { DeliveryGuard } from './delivery.guard';
 
 // Material
@@ -24,6 +26,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+import { CategoryListComponent } from '../template/category-list/category-list.component';
+import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { MaterialViewComponent } from '../material/material-view/material-view.component';
 
 export const routes: Routes = [
@@ -52,6 +56,9 @@ export const routes: Routes = [
     CategoryListComponent,
     MaterialFormComponent,
     MaterialViewComponent,
+    TemplatePickerComponent,
+    NewTemplateComponent,
+    ConfirmComponent
   ],
   imports: [
     CommonModule,
@@ -75,5 +82,6 @@ export const routes: Routes = [
 
     RouterModule.forChild(routes)
   ],
+  entryComponents: [TemplatePickerComponent, NewTemplateComponent, ConfirmComponent]
 })
 export class DeliveryModule {}

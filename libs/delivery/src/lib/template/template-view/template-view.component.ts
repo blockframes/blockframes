@@ -1,9 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TemplateQuery, TemplateStore, TemplateView, TemplateService } from '../+state';
-import { Material, MaterialService, MaterialStore, MaterialQuery, MaterialForm } from '../../material/+state';
+import { TemplateView } from '../+state/template.model';
+import { TemplateQuery } from '../+state/template.query';
+import { TemplateService } from '../+state/template.service';
+import { MaterialService } from '../../material/+state/material.service';
+import { MaterialStore } from '../../material/+state/material.store';
+import { MaterialQuery } from '../../material/+state/material.query';
+import { MaterialForm, Material } from '../../material/+state/material.model';
 
 @Component({
   selector: 'template-view',
@@ -16,8 +19,6 @@ export class TemplateViewComponent implements OnInit {
   public form$ : Observable<MaterialForm>;
 
   constructor(
-    private route: ActivatedRoute,
-    private store: TemplateStore,
     private query: TemplateQuery,
     private service: TemplateService,
     private materialService: MaterialService,

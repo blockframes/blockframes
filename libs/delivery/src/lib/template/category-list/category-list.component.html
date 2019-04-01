@@ -1,0 +1,24 @@
+<mat-nav-list>
+  <h2 mat-subheader>Categories :</h2>
+  <div *ngFor="let template of (template | keyvalue)">
+    <mat-list-item>
+      {{ template.key }}
+    </mat-list-item>
+  </div>
+  <div [ngSwitch]="name" class="buttons" fxLayout="column">
+    <button
+      *ngSwitchCase="'Template'"
+      mat-raised-button
+      color="primary"
+      (click)="save.emit()"
+    >
+      Save template
+    </button>
+    <article *ngSwitchCase="'Delivery'" fxLayout="column">
+      <button mat-raised-button color="primary" (click)="save.emit()">Save as new template</button>
+      <button mat-raised-button color="accent" (click)="create.emit()">
+        Submit Delivery
+      </button>
+    </article>
+  </div>
+</mat-nav-list>

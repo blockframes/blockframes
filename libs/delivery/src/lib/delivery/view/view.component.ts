@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DeliveryService } from '@blockframes/delivery';
 import { Location } from '@angular/common';
+import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
   selector: 'delivery-view',

@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { TemplateService } from "../../template/+state/template.service";
 
 @Component({
-  selector: 'new-template-dialog',
+  selector: 'confirm-dialog',
   template: `
     <div mat-dialog-content>
       <h2>Template with name "{{data.name}}" already exists, do you want to replace it with this one ?</h2>

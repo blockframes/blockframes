@@ -6,8 +6,8 @@ import { TemplateService} from '../../template/+state/template.service';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { TemplateStore } from '../../template/+state/template.store';
 import { MaterialService } from '../../material/+state/material.service';
-import { MovieQuery } from '@blockframes/movie';
 import { Router } from '@angular/router';
+import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 
 @Component({
   selector: 'delivery-template-picker',

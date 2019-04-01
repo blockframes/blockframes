@@ -6,8 +6,6 @@ import { RouterModule } from '@angular/router';
 import { TemplateViewComponent } from './template-view/template-view.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { AddTemplateComponent } from './template-list/add-template';
-import { MaterialViewComponent } from '../material/material-view/material-view.component';
-import { CategoryListComponent } from './category-list/category-list.component';
 import { TemplateGuard } from './guards/template.guard';
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -22,9 +20,7 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MaterialFormComponent } from '../material/material-form/material-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
 
 
 @NgModule({
@@ -32,9 +28,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     TemplateViewComponent,
     TemplateListComponent,
     AddTemplateComponent,
-    MaterialFormComponent,
-    CategoryListComponent,
-    MaterialViewComponent
   ],
   imports: [
     CommonModule,

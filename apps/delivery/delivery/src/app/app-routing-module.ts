@@ -10,7 +10,7 @@ import { AuthGuard } from '@blockframes/auth';
 import { MovieGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'delivery', pathMatch: 'full' },
+  { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: '@blockframes/auth#AuthModule'
@@ -30,9 +30,9 @@ export const routes: Routes = [
         loadChildren: '@blockframes/account#AccountModule'
       },
       { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' },
-      { path: 'template', loadChildren: './template/template.module#TemplateModule' },
+      { path: 'template', loadChildren: '@blockframes/delivery#TemplateModule' },
       {
-        path: ':id', canActivate: [MovieGuard], loadChildren: './delivery/delivery.module#DeliveryModule' },
+        path: ':id', canActivate: [MovieGuard], loadChildren: '@blockframes/delivery#DeliveryModule' },
     ]
   }
 ];

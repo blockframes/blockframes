@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TemplateQuery, TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
-import { DeliveryService } from '@blockframes/delivery';
 import { NewTemplateComponent } from './new-template.component';
 import { Material, MaterialForm } from '../../material/+state/material.model';
 import { MaterialStore, MaterialService, MaterialQuery } from '../../material/+state';
+import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
   selector: 'delivery-form',

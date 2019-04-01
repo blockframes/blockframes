@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Material } from '../../../../../apps/delivery/delivery/src/app/material/+state/material.model';
-import { MaterialStore } from '../../../../../apps/delivery/delivery/src/app/material/+state/material.store';
-import { MovieQuery } from '@blockframes/movie';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
-import { Delivery } from '@blockframes/delivery';
 import { DeliveryQuery } from './delivery.query';
-import { TemplateQuery } from '../../../../../apps/delivery/delivery/src/app/template/+state/template.query';
-import { OrganizationQuery } from '@blockframes/organization';
-import {
-  MaterialQuery,
-  materialsByCategory
-} from '../../../../../apps/delivery/delivery/src/app/material/+state/material.query';
+import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
+import { MaterialStore } from '../../material/+state/material.store';
+import { Material } from '../../material/+state/material.model';
+import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
+import { TemplateQuery } from '../../template/+state/template.query';
+import { OrganizationQuery } from 'libs/organization/src/lib/+state/organization.query';
+import { Delivery } from './delivery.model';
 
 @Injectable({
   providedIn: 'root'
@@ -137,13 +134,11 @@ export class DeliveryService {
   }
 
   public async createDelivery() {
-    const activeMovieId = this.movieQuery.getActiveId();
-    const activeOrgId = this.organizationQuery.getActiveId();
     const deliveryId = this.firestore.createId();
     this.firestore.doc<Delivery>(`deliveries/${deliveryId}`).set({
       id: deliveryId,
-      movieId: activeMovieId,
-      stakeholders: [activeOrgId],
+      movieId: this.movieQuery.getActiveId(),
+      stakeholders: [this.organizationQuery.getActiveId()],
       validated: [],
       delivered: false
     });
@@ -151,14 +146,13 @@ export class DeliveryService {
     const materials = this.materialQuery.getAll({
       filterBy: material => template.materialsId.includes(material.id)
     });
-    const promises: Promise<any>[] = [];
 
-    for (const material of materials) {
-      const promise = this.firestore
-        .doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
-        .set(material);
-      promises.push(promise);
-    }
-    await Promise.all(promises);
+    return Promise.all(
+      materials.map(material =>
+        this.firestore
+          .doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
+          .set(material)
+      )
+    );
   }
 }

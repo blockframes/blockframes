@@ -11,7 +11,7 @@ export class CategoryListComponent {
 
   @Input() template;
   @Input() name;
-  @Output() save = new EventEmitter<string>();
-  @Output() create = new EventEmitter<string>();
+  @Output() save = new EventEmitter<void>();
+  @Output() create = new EventEmitter<void>();
 
 }

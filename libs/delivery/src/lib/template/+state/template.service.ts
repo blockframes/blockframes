@@ -60,6 +60,8 @@ export class TemplateService {
       promises.push(promise);
     }
     await Promise.all(promises);
+
+    // if parameter 'name' is present, we create a new template with this name
     if (!!name) {
       const id = this.db.createId();
       const newTemplate = createTemplate({
@@ -68,6 +70,8 @@ export class TemplateService {
         materialsId: template.materialsId
       });
       this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).set(newTemplate);
+      this.store.setActive(id);
+    // if no parameter, we update the active template
     } else {
       this.db
         .doc<Template>(`orgs/${idOrg}/templates/${template.id}`)
@@ -76,10 +80,12 @@ export class TemplateService {
   }
 
   public async nameExists(name: string) {
-    const orgId = this.organizationQuery.getActiveId();
-    const querySnapshot = await this.db.collection<Template>(`orgs/${orgId}/templates`).get().toPromise();
-    const templateNames = querySnapshot.docs.map(doc => doc.data().name)
-    return templateNames.includes(name)
+    // check if name is already used in an already template
+    return this.query.hasEntity(entity => entity.name === name)
+    // const orgId = this.organizationQuery.getActiveId();
+    // const querySnapshot = await this.db.collection<Template>(`orgs/${orgId}/templates`).get().toPromise();
+    // const templateNames = querySnapshot.docs.map(doc => doc.data().name)
+    // return templateNames.includes(name)
   }
 }
 

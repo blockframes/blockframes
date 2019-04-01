@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { DeliveryStore } from '@blockframes/delivery';
+import { DeliveryStore } from './+state/delivery.store';
 
 @Injectable({
   providedIn: 'root'
