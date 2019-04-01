@@ -20,7 +20,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'explorer', pathMatch: 'full' },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'organization',
         loadChildren: '@blockframes/organization#OrganizationModule'
@@ -29,7 +29,7 @@ export const routes: Routes = [
         path: 'account',
         loadChildren: '@blockframes/account#AccountModule'
       },
-      { path: 'explorer', loadChildren: '@blockframes/movie#MovieModule' },
+      { path: 'home', loadChildren: '@blockframes/movie#MovieModule' },
       { path: 'template', loadChildren: '@blockframes/material#TemplateModule' },
       {
         path: ':id',

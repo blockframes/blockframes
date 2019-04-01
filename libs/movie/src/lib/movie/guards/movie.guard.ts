@@ -14,7 +14,7 @@ export class MovieGuard implements CanActivate {
       this.store.setActive(route.params.id);
       return true;
     } else {
-      const redirectTo: UrlTree = this.router.parseUrl('layout/explorer');
+      const redirectTo: UrlTree = this.router.parseUrl('layout/home');
       return redirectTo;
     }
   }
