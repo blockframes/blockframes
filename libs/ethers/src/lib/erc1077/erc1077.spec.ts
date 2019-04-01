@@ -28,16 +28,16 @@ describe('ERC1077', () => {
     expect(result).toBeTruthy();
   });
 
-  test('send() should be ok', async () => {
-    const tx: Partial<MetaTransaction> = {
-      to: '0x89dadaa545e089a40e90d1d4921adc719f998a8b',
-      value: ethers.utils.bigNumberify(0),
-      data:
-        '0x368b87720000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a66726f6d2072656d697800000000000000000000000000000000000000000000'
-    };
-    const res = await erc1077.send(tx);
-    expect(res).toMatchObject({ message: 'hello' });
-  });
+  // test('send() should be ok', async () => {
+  //   const tx: Partial<MetaTransaction> = {
+  //     to: '0x89dadaa545e089a40e90d1d4921adc719f998a8b',
+  //     value: ethers.utils.bigNumberify(0),
+  //     data:
+  //       '0x368b87720000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a66726f6d2072656d697800000000000000000000000000000000000000000000'
+  //   };
+  //   const res = await erc1077.send(tx);
+  //   expect(res).toMatchObject({ message: 'hello' });
+  // });
   test('send() should throw (at the ethers level)', async () => {
     const tx: Partial<MetaTransaction> = {
       to: '0x89dadaa545e089a40e90d1d4921adc719f998a8', // missing last char of the address

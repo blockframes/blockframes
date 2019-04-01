@@ -50,9 +50,11 @@ export class ERC1077 extends Contract {
   }
 
   public async send(transaction: Partial<MetaTransaction>) {
+
+    const {to, from, data, value} = transaction;
     try {
       const [gasLimit, gasPrice, nonce] = await Promise.all([
-        this.provider.estimateGas(getMockTx(transaction)),
+        this.provider.estimateGas({to, from, data, value}),
         this.provider.getGasPrice(),
         this.functions.lastNonce()
       ]);
