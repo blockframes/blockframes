@@ -7,25 +7,25 @@ import { IRelayer } from '../relayer/relayer';
 @Injectable({ providedIn: 'root' })
 export class RelayerWallet extends ethers.Signer {
   private signingKey: utils.SigningKey;
-  public name: string;
+  public username: string;
 
   constructor(public provider: Provider, private relayer: IRelayer) {
     super();
   }
 
-  async loginFromEncryptedJSON(name: string, encryptedJSON: string, password: string) {
+  async loginFromEncryptedJSON(username: string, encryptedJSON: string, password: string) {
     if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
-    this.name = name;
+    this.username = username;
     const wallet = await Wallet.fromEncryptedJson(encryptedJSON, password);
     this.signingKey = new utils.SigningKey(wallet.privateKey);
   }
-  async loginFromMnemonic(name: string, mnemonic: string) {
-    this.name = name;
+  async loginFromMnemonic(username: string, mnemonic: string) {
+    this.username = username;
     const wallet = Wallet.fromMnemonic(mnemonic);
     this.signingKey = new utils.SigningKey(wallet.privateKey);
   }
   logout() {
-    this.name = undefined;
+    this.username = undefined;
     this.signingKey = undefined;
   }
 
@@ -36,7 +36,7 @@ export class RelayerWallet extends ethers.Signer {
   async signMessage(message: utils.Arrayish | string): Promise<string> {
     // Here ask permission
     const msg =
-      typeof message === 'string' && message.slice(0, 2) === '0x'
+      (typeof message === 'string') && (message.slice(0, 2) === '0x')
         ? utils.arrayify(message)
         : message;
     const hash = utils.hashMessage(msg);
@@ -47,6 +47,6 @@ export class RelayerWallet extends ethers.Signer {
   async sendTransaction(
     transaction: providers.TransactionRequest
   ): Promise<providers.TransactionResponse> {
-    return await this.relayer.send(this.name, transaction);
+    return this.relayer.send(this.username, transaction);
   }
 }
