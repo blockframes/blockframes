@@ -10,7 +10,7 @@
   </button>
 
   <mat-menu #actions="matMenu">
-    <button mat-menu-item routerLink="../{{ template.id }}">
+    <button mat-menu-item [routerLink]="['../', template.id]">
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </button>
