@@ -10,6 +10,9 @@ import { combineLatest } from 'rxjs';
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
+
+  public form$ = this.select(state => state.form);
+
   public materialsByTemplate$ = combineLatest([
     this.selectActive(),
     this.materialQuery.selectAll()

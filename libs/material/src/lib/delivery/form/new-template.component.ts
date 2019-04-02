@@ -24,12 +24,12 @@ import { ConfirmComponent } from './confirm.component';
 })
 export class NewTemplateComponent {
   constructor(
-    public dialogRef: MatDialogRef<NewTemplateComponent>,
+    private dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
     private dialog: MatDialog
   ) {}
 
-  public async saveTemplate(name) {
+  public async saveTemplate(name: string) {
     if (await this.templateService.nameExists(name)) {
       this.dialog.open(ConfirmComponent, {
         data: {

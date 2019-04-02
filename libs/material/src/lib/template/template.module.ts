@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 // Components
 import { TemplateViewComponent } from './template-view/template-view.component';
 import { TemplateListComponent } from './template-list/template-list.component';
@@ -25,6 +25,12 @@ import { CategoryListComponent } from './category-list/category-list.component';
 import { MaterialModule } from '../material/material.module';
 
 
+export const templateRoutes: Routes = [
+  { path: '', redirectTo: 'list', pathMatch: 'full' },
+  { path: 'list', component: TemplateListComponent },
+  { path: ':templateId', component: TemplateViewComponent, canActivate: [TemplateGuard] }
+]
+
 @NgModule({
   declarations: [
     CategoryListComponent,
@@ -46,11 +52,7 @@ import { MaterialModule } from '../material/material.module';
     MatButtonModule,
     MatMenuModule,
     MaterialModule,
-    RouterModule.forChild([
-      { path: '', redirectTo: 'list', pathMatch: 'full' },
-      { path: 'list', component: TemplateListComponent },
-      { path: ':templateId', component: TemplateViewComponent, canActivate: [TemplateGuard] }
-    ])
+    RouterModule.forChild(templateRoutes)
   ],
   entryComponents: [AddTemplateComponent]
 })

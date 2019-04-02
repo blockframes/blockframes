@@ -3,6 +3,11 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 import { Template } from './template.model';
 
 export interface TemplateState extends EntityState<Template>, ActiveState<string> {
+  form : Template;
+}
+
+const initialState = {
+  form: null
 }
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +15,7 @@ export interface TemplateState extends EntityState<Template>, ActiveState<string
 export class TemplateStore extends EntityStore<TemplateState, Template> {
 
   constructor() {
-    super();
+    super(initialState);
   }
 
 }
