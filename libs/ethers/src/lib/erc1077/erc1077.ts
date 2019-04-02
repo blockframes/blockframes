@@ -6,18 +6,10 @@ import { TransactionRequest } from 'ethers/providers';
 import { MetaTransaction } from './meta-transaction';
 import { ERC1077_ABI } from './constants';
 import { baseEnsDomain } from '@env';
-
-function getMockTx(tx: Partial<MetaTransaction>): TransactionRequest {
-  return {
-    to: tx.to,
-    from: tx.from,
-    data: tx.data,
-    value: tx.value
-  };
-}
+import { RelayerWallet } from '../relayer-wallet/relayer-wallet';
 
 export class ERC1077 extends Contract {
-  constructor(public username: string, wallet: Wallet) {
+  constructor(public username: string, wallet: RelayerWallet) {
     super(`${username}.${baseEnsDomain}`, ERC1077_ABI, wallet);
   }
 
@@ -50,11 +42,10 @@ export class ERC1077 extends Contract {
   }
 
   public async send(transaction: Partial<MetaTransaction>) {
-
-    const {to, from, data, value} = transaction;
+    const { to, from, data, value } = transaction;
     try {
       const [gasLimit, gasPrice, nonce] = await Promise.all([
-        this.provider.estimateGas({to, from, data, value}),
+        this.provider.estimateGas({ to, from, data, value }),
         this.provider.getGasPrice(),
         this.functions.lastNonce()
       ]);
@@ -77,7 +68,7 @@ export class ERC1077 extends Contract {
           'The execution of the meta-transaction will fail ! This is probably a problem with the signature, or the within transaction.'
         );
       }
-
+      
       return this.functions.executeSigned(
         signedTx.to,
         signedTx.value,
