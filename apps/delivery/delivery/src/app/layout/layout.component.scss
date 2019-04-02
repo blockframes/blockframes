@@ -1,3 +1,8 @@
 toolbar-header .mat-nav-list .mat-list-item {
   display: inline-block;
 }
+
+main {
+  height: calc(100% - 64px);
+  overflow: hidden;
+}

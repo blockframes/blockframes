@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
-    <category-list *ngIf="(template$ | async) as template" [template]="template" name="Template" (save)="saveTemplate()"></category-list>
+    <material-list *ngIf="(template$ | async) as template" [template]="template"></material-list>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
@@ -22,7 +22,7 @@
       </mat-card-title>
       <mat-card-content>
         <div cdkDrag *ngFor="let material of materials.value">
-          <material-view [material]="material" (isDeleted)="deleteMaterial(material)"></material-view>
+          <material-item [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
         </div>
         <div *ngIf="(form$ | async) as form">
           <material-form

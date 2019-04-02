@@ -1,22 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatFormFieldModule, MatCardModule, MatIconModule, MatListModule } from '@angular/material';
-import { MaterialViewComponent } from './material-view/material-view.component';
+import { MatFormFieldModule, MatCardModule, MatIconModule, MatListModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { MaterialItemComponent } from './material-item/material-item.component';
 import { MaterialFormComponent } from './material-form/material-form.component';
+import { MaterialListComponent } from './material-list/material-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CategoryListComponent } from '../template/category-list/category-list.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [MaterialViewComponent, MaterialFormComponent, CategoryListComponent],
-  exports: [MaterialViewComponent, MaterialFormComponent, CategoryListComponent],
+  declarations: [MaterialItemComponent, MaterialFormComponent, MaterialListComponent,],
+  exports: [MaterialItemComponent, MaterialFormComponent, MaterialListComponent,],
   imports: [
     CommonModule,
-    MatFormFieldModule,
     MatCardModule,
+    FlexLayoutModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatListModule,
     MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
+    MatButtonModule,
   ],
 })
 export class MaterialModule { }

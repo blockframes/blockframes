@@ -3,10 +3,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 // Components
-import { TemplateViewComponent } from './template-view/template-view.component';
+import { TemplateFormComponent } from './template-form/template-form.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { AddTemplateComponent } from './template-list/add-template';
 import { TemplateGuard } from './guards/template.guard';
+import { TemplateItemComponent } from './template-item/template-item.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -27,14 +28,15 @@ import { MaterialModule } from '../material/material.module';
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
   { path: 'list', component: TemplateListComponent },
-  { path: ':templateId', component: TemplateViewComponent, canActivate: [TemplateGuard] }
+  { path: ':templateId', component: TemplateFormComponent, canActivate: [TemplateGuard] }
 ]
 
 @NgModule({
   declarations: [
-    TemplateViewComponent,
+    TemplateFormComponent,
     TemplateListComponent,
     AddTemplateComponent,
+    TemplateItemComponent,
   ],
   imports: [
     CommonModule,

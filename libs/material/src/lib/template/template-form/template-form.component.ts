@@ -9,12 +9,12 @@ import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialForm, Material } from '../../material/+state/material.model';
 
 @Component({
-  selector: 'template-view',
-  templateUrl: './template-view.component.html',
-  styleUrls: ['./template-view.component.scss'],
+  selector: 'template-form',
+  templateUrl: './template-form.component.html',
+  styleUrls: ['./template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateViewComponent implements OnInit {
+export class TemplateFormComponent implements OnInit {
   public template$: Observable<TemplateView>;
   public form$ : Observable<MaterialForm>;
 

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'blockframes-root',
+  selector: 'delivery-root',
   template: `<router-outlet></router-outlet>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

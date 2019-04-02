@@ -1,6 +1,6 @@
 <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
   <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
-    <mat-card fxLayout="row" fxLayoutAlign="center center">
+    <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
       <mat-card-actions>
         <button (click)="addTemplateDialog()" color="primary" mat-icon-button matRipple>
           <mat-icon class="icon-add">add_circle</mat-icon>
@@ -17,29 +17,6 @@
     fxFlex="100"
     *ngFor="let template of (templates$ | async)"
   >
-    <mat-card fxLayout="row" fxLayoutAlign="center center">
-      <mat-icon fxFlex="10" class="folder">folder</mat-icon>
-
-      <mat-card-title fxFlex="80">
-        {{ template.name }}
-      </mat-card-title>
-
-      <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-
-      <mat-menu #actions="matMenu">
-        <button mat-menu-item routerLink="../{{ template.id }}">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
-        <button mat-menu-item (click)="deleteTemplate(template.id)">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-      </mat-menu>
-
-      <mat-card-content> </mat-card-content>
-    </mat-card>
+    <template-item class="mat-cards" [template]="template"></template-item>
   </article>
 </section>

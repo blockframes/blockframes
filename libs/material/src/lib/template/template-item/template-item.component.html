@@ -1,0 +1,24 @@
+<mat-card fxLayout="row" fxLayoutAlign="center center">
+  <mat-icon fxFlex="10" class="folder">folder</mat-icon>
+
+  <mat-card-title fxFlex="80">
+    {{ template.name }}
+  </mat-card-title>
+
+  <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #actions="matMenu">
+    <button mat-menu-item routerLink="../{{ template.id }}">
+      <mat-icon>edit</mat-icon>
+      <span>Edit</span>
+    </button>
+    <button mat-menu-item (click)="deleteTemplate(template.id)">
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </mat-menu>
+
+  <mat-card-content> </mat-card-content>
+</mat-card>

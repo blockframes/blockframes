@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 import { Material } from '../+state';
 
 @Component({
-  selector: 'material-view',
-  templateUrl: './material-view.component.html',
-  styleUrls: ['./material-view.component.scss'],
+  selector: 'material-item',
+  templateUrl: './material-item.component.html',
+  styleUrls: ['./material-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialViewComponent {
+export class MaterialItemComponent {
 
   @Input() material: Material;
   @Output() isDeleted = new EventEmitter<boolean>();
