@@ -28,7 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule, MatMenuModule, MatSidenavModule, MatDialogModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', component: DeliveryListComponent },
   {
     path: 'movie-materials',

@@ -24,7 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 
 
-export const templateRoutes: Routes = [
+const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
   { path: 'list', component: TemplateListComponent },
   { path: ':templateId', component: TemplateViewComponent, canActivate: [TemplateGuard] }
@@ -50,7 +50,7 @@ export const templateRoutes: Routes = [
     MatButtonModule,
     MatMenuModule,
     MaterialModule,
-    RouterModule.forChild(templateRoutes)
+    RouterModule.forChild(routes)
   ],
   entryComponents: [AddTemplateComponent]
 })

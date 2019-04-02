@@ -17,16 +17,13 @@
     <section class="top-toolbar-context-menu">
       <mat-nav-list>
         <mat-list-item>
-          <a [routerLink]="['/layout/home']">Explorer</a>
-          <mat-divider [vertical]="true"></mat-divider>
+          <a routerLink="/layout/home">Home</a>
         </mat-list-item>
         <mat-list-item>
-          <a [routerLink]="['/layout/template']">Template</a>
-          <mat-divider [vertical]="true"></mat-divider>
+          <a routerLink="/layout/template">Template</a>
         </mat-list-item>
         <mat-list-item *ngIf="(movie$ | async) as movie">
           <a [routerLink]="['/layout', movie.id, 'movie-materials']">Movie materials</a>
-          <mat-divider [vertical]="true"></mat-divider>
         </mat-list-item>
       </mat-nav-list>
     </section>
