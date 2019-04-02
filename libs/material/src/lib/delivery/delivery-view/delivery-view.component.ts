@@ -24,7 +24,7 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.delivery$ = this.materialQuery.materialsByDelivery$;
 
-    this.form$ = this.materialQuery.select(state => state.form);
+    this.form$ = this.materialQuery.form$;
 
     this.materialService.subscribeOnDeliveryMaterials$.pipe(takeWhile(() => this.isAlive)).subscribe();
   }
@@ -39,7 +39,7 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   }
 
   public addForm(category: string) {
-    this.materialStore.updateRoot({form: {value: "", description: "", category}})
+    this.materialStore.updateEmptyForm(category);
   }
 
   ngOnDestroy() {
