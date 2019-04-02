@@ -38,14 +38,9 @@ export const routes: Routes = [
     component: MovieMaterialsComponent
   },
   { path: 'form', component: FormComponent },
-  {
-    path: 'list',
-    children: [
-      { path: '', component: DeliveryListComponent },
-      //{ path: ':id', canActivate: [DeliveryGuard], component: DeliveryMaterialsComponent },
-      { path: ':id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
-    ]
-  }
+  { path: 'list', component: DeliveryListComponent },
+  { path: 'delivery-materials/:id', canActivate: [DeliveryGuard], component: DeliveryMaterialsComponent },
+  { path: 'delivery/:id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
 ];
 
 @NgModule({
