@@ -4,12 +4,12 @@ import { Location } from '@angular/common';
 import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
-  selector: 'delivery-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss'],
+  selector: 'delivery-materials',
+  templateUrl: './delivery-materials.component.html',
+  styleUrls: ['./delivery-materials.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit {
+export class DeliveryMaterialsComponent implements OnInit {
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
 

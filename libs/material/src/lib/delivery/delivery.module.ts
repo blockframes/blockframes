@@ -6,14 +6,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
-import { ListComponent } from './list/list.component';
-import { ViewComponent } from './view/view.component';
+import { DeliveryListComponent } from './delivery-list/delivery-list.component';
+import { DeliveryMaterialsComponent } from './delivery-materials/delivery-materials.component';
 import { DeliveryHomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
 import { ConfirmComponent } from './form/confirm.component';
 import { NewTemplateComponent } from './form/new-template.component';
 import { TemplatePickerComponent } from './template-picker/template-picker.component';
 import { DeliveryGuard } from './delivery.guard';
+import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -40,9 +41,9 @@ export const routes: Routes = [
   {
     path: 'list',
     children: [
-      { path: '', component: ListComponent },
-      { path: ':id', canActivate: [DeliveryGuard], component: ViewComponent },
-      { path: '/delivery/:id', canActivate: [DeliveryGuard], component: ViewComponent },
+      { path: '', component: DeliveryListComponent },
+      //{ path: ':id', canActivate: [DeliveryGuard], component: DeliveryMaterialsComponent },
+      { path: ':id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
     ]
   }
 ];
@@ -50,8 +51,8 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     MovieMaterialsComponent,
-    ListComponent,
-    ViewComponent,
+    DeliveryListComponent,
+    DeliveryMaterialsComponent,
     DeliveryHomeComponent,
     FormComponent,
     CategoryListComponent,
@@ -59,7 +60,8 @@ export const routes: Routes = [
     MaterialViewComponent,
     TemplatePickerComponent,
     NewTemplateComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    DeliveryViewComponent,
   ],
   imports: [
     CommonModule,

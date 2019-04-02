@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TemplateView } from '../../../template/+state';
-import { MaterialForm, Material, MaterialStore, MaterialService, MaterialQuery } from '../../../material/+state';
+import { TemplateView } from './../../template/+state';
+import { MaterialForm, Material, MaterialStore, MaterialService, MaterialQuery } from './../../material/+state';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({

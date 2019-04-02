@@ -10,11 +10,11 @@ import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 
 @Component({
   selector: 'delivery-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  templateUrl: './delivery-list.component.html',
+  styleUrls: ['./delivery-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class DeliveryListComponent implements OnInit {
 
   public movie$: Observable<Movie>;
   public deliveries$: Observable<Delivery[]>;

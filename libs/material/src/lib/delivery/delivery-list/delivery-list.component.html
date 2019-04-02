@@ -5,7 +5,7 @@
 
     <ng-container matColumnDef="icon">
       <th mat-header-cell *matHeaderCellDef><h2 mat-subheader>{{ movie.title }}</h2></th>
-      <td [routerLink]="delivery.id" style="cursor:pointer;" mat-cell *matCellDef="let delivery"> <h4>{{delivery.id}}</h4> </td>
+      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="delivery.id"> <h4>{{delivery.id}}</h4> </td>
     </ng-container>
 
     <ng-container matColumnDef="stakeholder1">
