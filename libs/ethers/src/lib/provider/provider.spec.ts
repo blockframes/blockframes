@@ -1,3 +1,4 @@
+import { network } from '@env';
 import { Provider } from './provider';
 
 describe('Provider', () => {
@@ -13,8 +14,8 @@ describe('Provider', () => {
 
   test('should be connected to Ropsten', async () => {
     const blockNum = await provider.getBlockNumber();
-    const network = await provider.getNetwork();
-    expect(network.name).toBe('ropsten');
+    const ethNetwork = await provider.getNetwork();
+    expect(ethNetwork.name).toBe(network);
     expect(blockNum).toBeGreaterThan(5000000);
   });
 });
