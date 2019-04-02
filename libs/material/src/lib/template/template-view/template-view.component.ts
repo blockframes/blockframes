@@ -29,7 +29,7 @@ export class TemplateViewComponent implements OnInit {
   ngOnInit() {
     this.template$ = this.query.materialsByTemplate$;
 
-    this.form$ = this.materialQuery.select(state => state.form)
+    this.form$ = this.materialQuery.form$;
   }
 
   public addMaterial(material: Material) {
@@ -42,7 +42,7 @@ export class TemplateViewComponent implements OnInit {
   }
 
   public addForm(category: string) {
-    this.materialStore.updateRoot({form: {value: "", description: "", category}})
+    this.materialStore.updateEmptyForm(category);
   }
 
   public saveTemplate() {
