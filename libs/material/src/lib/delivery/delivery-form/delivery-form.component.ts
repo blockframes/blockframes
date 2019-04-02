@@ -9,11 +9,11 @@ import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
   selector: 'delivery-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss'],
+  templateUrl: './delivery-form.component.html',
+  styleUrls: ['./delivery-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormComponent implements OnInit {
+export class DeliveryFormComponent implements OnInit {
   public delivery$: Observable<TemplateView>;
   public form$: Observable<MaterialForm>;
 

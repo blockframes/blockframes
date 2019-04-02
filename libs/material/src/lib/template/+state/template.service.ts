@@ -34,8 +34,9 @@ export class TemplateService {
 
   public addUnamedTemplate() {
     const template = createTemplate({ id: this.db.createId() });
-    this.store.add(template);
-    this.store.setActive(template.id);
+    this.store.update({ form: template })
+    // this.store.add(template);
+    // this.store.setActive(template.id);
   }
 
   public deleteTemplate(id: string) {

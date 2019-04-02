@@ -8,6 +8,8 @@ import { TemplateStore } from '../../template/+state/template.store';
 import { MaterialService } from '../../material/+state/material.service';
 import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { DeliveryService } from '../+state';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -20,13 +22,15 @@ export class TemplatePickerComponent implements OnInit {
   public templates$: Observable<Template[]>;
 
   constructor(
-    public dialogRef: MatDialogRef<TemplatePickerComponent>,
-    public templateService: TemplateService,
-    public materialService: MaterialService,
-    public templateQuery: TemplateQuery,
-    public templateStore: TemplateStore,
-    public movieQuery: MovieQuery,
-    public router: Router,
+    private dialogRef: MatDialogRef<TemplatePickerComponent>,
+    private templateService: TemplateService,
+    private deliveryService: DeliveryService,
+    private materialService: MaterialService,
+    private templateQuery: TemplateQuery,
+    private templateStore: TemplateStore,
+    private movieQuery: MovieQuery,
+    private db: AngularFirestore,
+    private router: Router,
     ) {}
 
   ngOnInit() {
@@ -38,13 +42,15 @@ export class TemplatePickerComponent implements OnInit {
 
   public selectTemplate(templateId? : string) {
     const movieId = this.movieQuery.getActiveId();
+    const deliveryId = this.db.createId();
     if (!!templateId) {
     this.templateStore.setActive(templateId);
+    this.deliveryService.addDelivery(deliveryId);
     } else {
       this.templateService.addUnamedTemplate();
     }
-    this.router.navigate([`layout/${movieId}/form`]);
-    this.dialogRef.close();
+    this.router.navigate([`layout/${movieId}/delivery/${deliveryId}`]);
+    this.close();
   }
 
   public close() {

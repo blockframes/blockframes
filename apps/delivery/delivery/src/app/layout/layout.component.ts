@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Movie, MovieQuery } from '@blockframes/movie';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'delivery-layout',
@@ -6,8 +8,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
 
-  constructor() {}
+  public movie$: Observable<Movie>;
 
+  constructor(private movieQuery: MovieQuery) {}
+
+  ngOnInit() {
+    this.movie$ = this.movieQuery.selectActive();
+  }
 }

@@ -8,7 +8,7 @@ import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { Delivery, createDelivery } from './delivery.model';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({
@@ -131,6 +131,16 @@ export class DeliveryService {
         return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
       })
     );
+  }
+
+  public addDelivery(id: string) {
+    const orgId = this.organizationQuery.getActiveId();
+    const stakeholderId = this.firestore.createId();
+    const delivery = createDelivery({ id });
+    const stakeholder = createStakeholder({ id: stakeholderId, orgId })
+    this.firestore.doc<Delivery>(`deliveries/${id}`).set(delivery);
+    this.firestore.doc<Stakeholder>(`stakeholders/${stakeholderId}`).set(stakeholder);
+    this.deliveryStore.setActive(id);
   }
 
   public async createDelivery() {

@@ -21,7 +21,6 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CategoryListComponent } from './category-list/category-list.component';
 import { MaterialModule } from '../material/material.module';
 
 
@@ -33,7 +32,6 @@ export const templateRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    CategoryListComponent,
     TemplateViewComponent,
     TemplateListComponent,
     AddTemplateComponent,

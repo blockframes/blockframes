@@ -10,17 +10,6 @@
       <mat-card-title>
         {{ movie.title }}
       </mat-card-title>
-      <mat-card-content>
-        <button mat-icon-button color="primary" [matMenuTriggerFor]="apps">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #apps="matMenu">
-          <button mat-menu-item [routerLink]="['/layout', movie.id]">
-            <mat-icon>camera</mat-icon>
-            <span>Open with Delivery App</span>
-          </button>
-        </mat-menu>
-      </mat-card-content>
     </mat-card-header>
     <mat-card-content>
       <p>
@@ -28,6 +17,7 @@
       </p>
     </mat-card-content>
     <mat-card-actions>
+      <button color="primary" mat-button [routerLink]="['/layout', movie.id]">Open with app</button>
       <button color="primary" mat-button routerLink="movie/{{movie.id}}">ACCESS</button>
       <button color="primary" mat-icon-button routerLink="form/{{ movie.id }}">
         <mat-icon>edit</mat-icon>

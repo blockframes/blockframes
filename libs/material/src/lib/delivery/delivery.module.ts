@@ -8,13 +8,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryMaterialsComponent } from './delivery-materials/delivery-materials.component';
-import { DeliveryHomeComponent } from './home/home.component';
-import { FormComponent } from './form/form.component';
-import { ConfirmComponent } from './form/confirm.component';
-import { NewTemplateComponent } from './form/new-template.component';
+import { DeliveryFormComponent} from './delivery-form/delivery-form.component';
+import { ConfirmComponent } from './delivery-form/confirm.component';
+import { NewTemplateComponent } from './delivery-form/new-template.component';
 import { TemplatePickerComponent } from './template-picker/template-picker.component';
 import { DeliveryGuard } from './delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
+import { MaterialModule } from '../material/material.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -27,17 +27,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule, MatMenuModule, MatSidenavModule, MatDialogModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { CategoryListComponent } from '../template/category-list/category-list.component';
-import { MaterialFormComponent } from '../material/material-form/material-form.component';
-import { MaterialViewComponent } from '../material/material-view/material-view.component';
 
 export const routes: Routes = [
-  { path: '', component: DeliveryHomeComponent },
+  { path: '', component: DeliveryListComponent },
   {
     path: 'movie-materials',
     component: MovieMaterialsComponent
   },
-  { path: 'form', component: FormComponent },
+  { path: 'form', component: DeliveryFormComponent },
   { path: 'list', component: DeliveryListComponent },
   { path: 'delivery-materials/:id', canActivate: [DeliveryGuard], component: DeliveryMaterialsComponent },
   { path: 'delivery/:id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
@@ -48,11 +45,7 @@ export const routes: Routes = [
     MovieMaterialsComponent,
     DeliveryListComponent,
     DeliveryMaterialsComponent,
-    DeliveryHomeComponent,
-    FormComponent,
-    CategoryListComponent,
-    MaterialFormComponent,
-    MaterialViewComponent,
+    DeliveryFormComponent,
     TemplatePickerComponent,
     NewTemplateComponent,
     ConfirmComponent,
@@ -63,6 +56,7 @@ export const routes: Routes = [
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    MaterialModule,
 
     // Material
     MatCardModule,
