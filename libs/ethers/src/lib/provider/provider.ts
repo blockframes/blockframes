@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { providers } from "ethers";
-
+import { Injectable } from '@angular/core';
 import { network } from '@env';
 
-@Injectable({ providedIn: 'root'})
-export class Provider extends providers.BaseProvider {
+import { providers } from 'ethers';
+
+@Injectable({ providedIn: 'root' })
+export class Provider extends providers.InfuraProvider {
   constructor() {
-    super(network)
+    super(network);
   }
 }
