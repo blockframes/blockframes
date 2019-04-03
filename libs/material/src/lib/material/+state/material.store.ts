@@ -24,4 +24,7 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
     this.updateRoot({ form: {value: "", description: "", category} })
   }
 
+  public clearForm() {
+    this.updateRoot({ form: null })
+  }
 }

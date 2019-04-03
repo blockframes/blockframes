@@ -62,12 +62,11 @@ export class TemplateService {
     const idMaterial = this.db.createId();
     this.db
       .doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`)
-      .set({ ...material, ...{ id: idMaterial } });
+      .set({ ...material, id: idMaterial });
 
     // Add materialId of materialsId of sub-collection template in firebase
     const template = this.query.getActive();
-    const materialsId = [...template.materialsId];
-    materialsId.push(idMaterial);
+    const materialsId = [...template.materialsId, idMaterial];
     this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
   }
 

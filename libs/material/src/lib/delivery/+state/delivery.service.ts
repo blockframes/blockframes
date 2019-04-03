@@ -33,7 +33,7 @@ export class DeliveryService {
     const idMaterial = this.db.createId();
     this.db
       .doc<Material>(`deliveries/${idDelivery}/materials/${idMaterial}`)
-      .set({ ...material, ...{ id: idMaterial } });
+      .set({ ...material, id: idMaterial });
   }
 
   public deleteMaterial(id: string) {
@@ -82,8 +82,7 @@ export class DeliveryService {
       ),
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
-        let id: string;
-        this.query.selectActiveId().subscribe(data => (id = data));
+        const id = this.query.getActiveId();
         const deliveryMaterials = [];
         materials.forEach(material => {
           if (!!material && material.deliveriesIds.includes(id)) {
@@ -109,8 +108,7 @@ export class DeliveryService {
       ),
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
-        let id: string;
-        this.query.selectActiveId().subscribe(data => (id = data));
+        const id = this.query.getActiveId();
         const deliveredMaterials = [];
         const totalMaterials = [];
         materials.forEach(material => {
