@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TemplateQuery, TemplateView } from '../../template/+state';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { NewTemplateComponent } from './new-template.component';
 import { Material, MaterialForm } from '../../material/+state/material.model';
-import { MaterialStore, MaterialQuery } from '../../material/+state';
+import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-form',
@@ -13,26 +14,29 @@ import { DeliveryService } from '../+state/delivery.service';
   styleUrls: ['./delivery-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryFormComponent implements OnInit {
+export class DeliveryFormComponent implements OnInit, OnDestroy {
   public delivery$: Observable<TemplateView>;
   public form$: Observable<MaterialForm>;
+  public isAlive = true;
 
   constructor(
-    private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
     private deliveryService: DeliveryService,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
     private service: DeliveryService,
+    private materialService: MaterialService,
   ) {}
 
   ngOnInit() {
-    this.delivery$ = this.templateQuery.materialsByTemplate$;
+    this.delivery$ = this.materialQuery.materialsByDelivery$;
 
-    this.form$ = this.materialQuery.select(state => state.form);
+    this.form$ = this.materialQuery.form$;
+
+    this.materialService.subscribeOnDeliveryMaterials$.pipe(takeWhile(() => this.isAlive)).subscribe();
   }
 
-  public openDialog() {
+  public saveAsTemplate() {
     this.dialog.open(NewTemplateComponent);
   }
 
@@ -50,6 +54,10 @@ export class DeliveryFormComponent implements OnInit {
   }
 
   public addForm(category: string) {
-    this.materialStore.updateRoot({form: {value: "", description: "", category}})
+    this.materialStore.updateEmptyForm(category);
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }

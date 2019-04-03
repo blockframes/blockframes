@@ -153,7 +153,7 @@ export class DeliveryService {
     const delivery = createDelivery({ id });
     const stakeholder = createStakeholder({ id: stakeholderId, orgId })
     this.firestore.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.firestore.doc<Stakeholder>(`stakeholders/${stakeholderId}`).set(stakeholder);
+    this.firestore.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
     this.store.setActive(id);
   }
 

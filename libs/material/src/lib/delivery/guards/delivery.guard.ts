@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, UrlTree, Router } from '@angular/router';
-import { DeliveryStore } from './+state/delivery.store';
-import { DeliveryQuery } from './+state';
+import { DeliveryStore } from '../+state/delivery.store';
+import { DeliveryQuery } from '../+state/delivery.query';
 
 @Injectable({
   providedIn: 'root'

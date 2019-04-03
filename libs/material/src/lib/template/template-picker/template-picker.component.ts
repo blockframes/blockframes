@@ -9,7 +9,7 @@ import { MaterialService } from '../../material/+state/material.service';
 import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { DeliveryService } from '../+state';
+import { DeliveryService } from '../../delivery/+state/delivery.service';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -49,7 +49,7 @@ export class TemplatePickerComponent implements OnInit {
     } else {
       this.templateService.addUnamedTemplate();
     }
-    this.router.navigate([`layout/${movieId}/delivery/${deliveryId}`]);
+    this.router.navigate([`layout/${movieId}/delivery`]);
     this.close();
   }
 

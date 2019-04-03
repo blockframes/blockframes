@@ -8,11 +8,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryMaterialsComponent } from './delivery-materials/delivery-materials.component';
-import { DeliveryFormComponent} from './delivery-form/delivery-form.component';
+import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
 import { ConfirmComponent } from './delivery-form/confirm.component';
 import { NewTemplateComponent } from './delivery-form/new-template.component';
-import { TemplatePickerComponent } from './template-picker/template-picker.component';
-import { DeliveryGuard } from './delivery.guard';
+import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
+import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 import { MaterialModule } from '../material/material.module';
 
@@ -25,7 +25,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { MatInputModule, MatMenuModule, MatSidenavModule, MatDialogModule } from '@angular/material';
+import {
+  MatInputModule,
+  MatMenuModule,
+  MatSidenavModule,
+  MatDialogModule
+} from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 
 const routes: Routes = [
@@ -34,10 +39,18 @@ const routes: Routes = [
     path: 'movie-materials',
     component: MovieMaterialsComponent
   },
-  { path: 'form', component: DeliveryFormComponent },
   { path: 'list', component: DeliveryListComponent },
-  { path: 'delivery-materials/:id', canActivate: [DeliveryGuard], component: DeliveryMaterialsComponent },
+  {
+    path: 'delivery-materials/:id',
+    canActivate: [DeliveryGuard],
+    component: DeliveryMaterialsComponent
+  },
   { path: 'delivery/:id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
+  {
+    path: 'delivery',
+    //canActivate: [DeliveryGuard],
+    component: DeliveryFormComponent
+  }
 ];
 
 @NgModule({
@@ -49,7 +62,7 @@ const routes: Routes = [
     TemplatePickerComponent,
     NewTemplateComponent,
     ConfirmComponent,
-    DeliveryViewComponent,
+    DeliveryViewComponent
   ],
   imports: [
     CommonModule,
