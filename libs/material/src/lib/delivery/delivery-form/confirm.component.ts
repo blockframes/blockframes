@@ -27,7 +27,7 @@ export class ConfirmComponent {
   ) {}
 
   public saveConfirm() {
-    this.templateService.saveTemplate()
+    //this.templateService.saveTemplate()
     this.dialogRef.close(); // TODO: navigate somewhere else and don't care anymore for closing dialogs
   }
 

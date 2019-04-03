@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateView } from '../+state/template.model';
 import { TemplateQuery } from '../+state/template.query';
 import { TemplateService } from '../+state/template.service';
-import { MaterialService } from '../../material/+state/material.service';
 import { MaterialStore } from '../../material/+state/material.store';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialForm, Material } from '../../material/+state/material.model';
@@ -24,7 +23,6 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   constructor(
     private query: TemplateQuery,
     private service: TemplateService,
-    private materialService: MaterialService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
     private router: Router

@@ -150,32 +150,11 @@ export class DeliveryService {
   public addDelivery(id: string) {
     const orgId = this.organizationQuery.getActiveId();
     const stakeholderId = this.firestore.createId();
-    const delivery = createDelivery({ id });
+    const delivery = createDelivery({ id, movieId: this.movieQuery.getActiveId() });
     const stakeholder = createStakeholder({ id: stakeholderId, orgId })
     this.firestore.doc<Delivery>(`deliveries/${id}`).set(delivery);
     this.firestore.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
     this.store.setActive(id);
   }
 
-  public async createDelivery() {
-    const deliveryId = this.firestore.createId();
-    const delivery = createDelivery({
-      id: deliveryId,
-      movieId: this.movieQuery.getActiveId(),
-      stakeholders: [this.organizationQuery.getActiveId()]
-    });
-    this.firestore.doc<Delivery>(`deliveries/${deliveryId}`).set(delivery);
-    const template = this.templateQuery.getActive();
-    const materials = this.materialQuery.getAll({
-      filterBy: material => template.materialsId.includes(material.id)
-    });
-
-    return Promise.all(
-      materials.map(material =>
-        this.firestore
-          .doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
-          .set(material)
-      )
-    );
-  }
 }

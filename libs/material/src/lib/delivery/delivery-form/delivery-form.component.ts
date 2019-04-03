@@ -21,7 +21,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private materialQuery: MaterialQuery,
-    private deliveryService: DeliveryService,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
     private service: DeliveryService,
@@ -38,10 +37,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   public saveAsTemplate() {
     this.dialog.open(NewTemplateComponent);
-  }
-
-  public createDelivery() {
-    this.deliveryService.createDelivery();
   }
 
   public addMaterial(material: Material) {

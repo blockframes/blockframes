@@ -70,41 +70,25 @@ export class TemplateService {
     this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
   }
 
-  public async saveTemplate(name?: string) {
+  public async saveTemplate(name: string) {
     const idOrg = this.organizationQuery.getActiveId();
-    const template = this.query.getActive();
-    const materials = this.materialQuery.getAll({
-      filterBy: material => template.materialsId.includes(material.id)
-    });
-    const promises: Promise<any>[] = [];
-
-    for (const material of materials) {
-      const promise = this.db.doc<Material>(`orgs/${idOrg}/materials/${material.id}`).set(material);
-      promises.push(promise);
-    }
-    await Promise.all(promises);
-
-    // if parameter 'name' is present, we create a new template with this name
-    if (!!name) {
-      const id = this.query.getActiveId();
-      const { materialsId } = template;
-      const newTemplate = createTemplate({ id, name, materialsId });
-      this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).set(newTemplate);
-      this.store.setActive(id);
-      // if no parameter, we update the active template
+    const materials = this.materialQuery.getAll();
+    if (materials.length > 0) {
+      const template = createTemplate({id: this.db.createId(), name})
+      materials.forEach(material => template.materialsId.push(material.id))
+      this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).set(template);
+      return Promise.all(
+        materials.map(material =>
+          this.db.doc<Material>(`orgs/${idOrg}/materials/${material.id}`).set(material)
+        )
+      );
     } else {
-      this.db
-        .doc<Template>(`orgs/${idOrg}/templates/${template.id}`)
-        .update({ materialsId: template.materialsId });
+      console.error('No materials')
     }
   }
 
   public async nameExists(name: string) {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name);
-    // const orgId = this.organizationQuery.getActiveId();
-    // const querySnapshot = await this.db.collection<Template>(`orgs/${orgId}/templates`).get().toPromise();
-    // const templateNames = querySnapshot.docs.map(doc => doc.data().name)
-    // return templateNames.includes(name)
   }
 }
