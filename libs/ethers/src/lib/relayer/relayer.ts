@@ -18,12 +18,19 @@ export class Relayer implements IRelayer {
 
   constructor(private functions: AngularFireFunctions) {}
 
-  public create(name: string, key: string): Promise<Object> {
+  /**
+   * Create a ERC1077 for one account
+   * @param username ENS username of the account
+   * @param key first address of the user (management key)
+   */
+  public create(username: string, key: string): Promise<Object> {
     const call = this.functions.httpsCallable('relayerCreate');
-    return call({ name, key }).toPromise();
+    return call({ username, key }).toPromise();
   }
-  public async prepare(name: string): Promise<EventFilter> {
-    const namehash = utils.namehash(`${name}.${contracts.testErc1077.baseEnsDomain[network]}`);
+
+  /** Listen when the ENS name changed -> End of process */
+  public async prepare(username: string): Promise<EventFilter> {
+    const namehash = utils.namehash(`${username}.${contracts.testErc1077.baseEnsDomain[network]}`);
     return <EventFilter>{
       address: contracts.testErc1077.resolver[network],
       topics: [
@@ -32,16 +39,22 @@ export class Relayer implements IRelayer {
       ]
     };
   }
-  send(name: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse> {
+
+  /** Send a transaction to the relayer  */
+  send(username: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse> {
     const call = this.functions.httpsCallable('relayerSend');
-    return call({ name, tx }).toPromise();
+    return call({ username, tx }).toPromise();
   }
-  addKey(name: string, key: string): Promise<Object> {
+
+  /** Add an address to the ERC1077 */
+  addKey(username: string, key: string): Promise<Object> {
     const call = this.functions.httpsCallable('relayerAddKey');
-    return call({ name, key }).toPromise();
+    return call({ username, key }).toPromise();
   }
-  removeKey(name: string, key: string): Promise<Object> {
+
+  /** Remove an address of the ERC1077 */
+  removeKey(username: string, key: string): Promise<Object> {
     const call = this.functions.httpsCallable('relayerRemoveKey');
-    return call({ name, key }).toPromise();
+    return call({ username, key }).toPromise();
   }
 }

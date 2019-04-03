@@ -43,7 +43,7 @@ export class ERC1077 extends Contract {
     );
   }
 
-  /** Send the tx to the relayer */
+  /** Build and forward the tx to the relayer wallet */
   public async send(transaction: Partial<MetaTransaction>) {
     const { to, from, data, value } = transaction;
     try {
