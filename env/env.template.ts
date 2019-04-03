@@ -25,5 +25,9 @@ export const contracts = {
       goerli: 'blockframes.test',
       ropsten: 'blockframe.test'
     },
+    resolver: {
+      goerli: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
+      ropsten: '0xde469c7106a9FBC3fb98912bB00be983a89bDDca',
+    }
   }
 };
