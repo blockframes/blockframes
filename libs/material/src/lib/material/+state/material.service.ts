@@ -8,6 +8,7 @@ import { MaterialStore } from './material.store';
 import { TemplateStore } from '../../template/+state/template.store';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { Template } from '../../template/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -31,48 +32,38 @@ export class MaterialService {
     private store: MaterialStore,
     private templateQuery: TemplateQuery,
     private templateStore: TemplateStore,
-    private deliveryQuery: DeliveryQuery,
+    private deliveryQuery: DeliveryQuery
   ) {}
 
-  public deleteMaterial(id: string) {
+  public deleteMaterialInTemplate(id: string) {
     const idOrg = this.organizationQuery.getActiveId();
 
-    // delete materialId of materialsId of sub-collection template in akita
+    // delete material and materialId of materialsId of sub-collection template in firebase
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
     const index = materialsId.indexOf(id);
     materialsId.splice(index, 1);
 
-    this.templateStore.update(template.id, { materialsId });
-    this.store.remove(id);
-    // this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
-    // this.db.doc<Material>(`orgs/${idOrg}/materials/${id}`).delete();
+    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
+    this.db.doc<Material>(`orgs/${idOrg}/materials/${id}`).delete();
   }
 
-  public updateMaterial(material: Material, form: Material) {
-    const idOrg = this.organizationQuery.getActiveId();
-    this.store.update(material.id, { ...material, ...form });
-    // this.db
-    //   .doc<Material>(`orgs/${idOrg}/materials/${material.id}`)
-    //   .update({ ...material, ...form });
-  }
-
-  public addMaterial(material: Material) {
-    // Add material to sub-collection materials of organization in akita
+  public saveMaterialInTemplate(material: Material) {
+    // Add material to sub-collection materials of organization in firebase
     const idOrg = this.organizationQuery.getActiveId();
     const idMaterial = this.db.createId();
-    this.store.add({ ...material, ...{ id: idMaterial } });
-    //this.db.doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`).set(material);
+    this.db
+      .doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`)
+      .set({ ...material, ...{ id: idMaterial } });
 
-    // Add materialId of materialsId of sub-collection template in akita
+    // Add materialId of materialsId of sub-collection template in firebase
     const template = this.templateQuery.getActive();
     const materialsId = [...template.materialsId];
     materialsId.push(idMaterial);
-    this.templateStore.update(template.id, { materialsId });
-    //this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
+    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
   }
 
-  public addMaterialForDelivery(material: Material) {
+  public saveMaterialInDelivery(material: Material) {
     // Add material to sub-collection materials of delivery in firebase
     const idDelivery = this.deliveryQuery.getActiveId();
     const idMaterial = this.db.createId();
@@ -81,11 +72,9 @@ export class MaterialService {
       .set({ ...material, ...{ id: idMaterial } });
   }
 
-  public deleteMaterialForDelivery(id: string) {
+  public deleteMaterialInDelivery(id: string) {
     // Delete material of sub-collection materials of delivery in firebase
     const idDelivery = this.deliveryQuery.getActiveId();
-    this.db
-      .doc<Material>(`deliveries/${idDelivery}/materials/${id}`)
-      .delete();
+    this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
   }
 }

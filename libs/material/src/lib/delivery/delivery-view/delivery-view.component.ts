@@ -30,12 +30,12 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.addMaterialForDelivery(material);
+    this.materialService.saveMaterialInDelivery(material);
     this.materialStore.updateRoot({form: null})
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterialForDelivery(material.id);
+    this.materialService.deleteMaterialInDelivery(material.id);
   }
 
   public addForm(category: string) {

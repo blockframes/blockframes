@@ -41,12 +41,12 @@ export class DeliveryFormComponent implements OnInit {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.addMaterial(material);
+    this.materialService.saveMaterialInDelivery(material);
     this.materialStore.updateRoot({form: null})
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterial(material.id);
+    this.materialService.deleteMaterialInDelivery(material.id);
   }
 
   public addForm(category: string) {

@@ -44,18 +44,6 @@ export class TemplateService {
     this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
   }
 
-  public updateCategory(newCategory: string, materials: Material[]) {
-    for (const material of materials) {
-      this.materialService.updateMaterial(material, { category: newCategory } as Material);
-    }
-  }
-
-  public deleteCategory(materials: Material[]) {
-    for (const material of materials) {
-      this.materialService.deleteMaterial(material.id);
-    }
-  }
-
   public async saveTemplate(name?: string) {
     const idOrg = this.organizationQuery.getActiveId();
     const template = this.query.getActive();

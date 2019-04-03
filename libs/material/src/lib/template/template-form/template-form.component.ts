@@ -33,20 +33,15 @@ export class TemplateFormComponent implements OnInit {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.addMaterial(material);
+    this.materialService.saveMaterialInTemplate(material);
     this.materialStore.updateRoot({form: null})
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterial(material.id);
+    this.materialService.deleteMaterialInTemplate(material.id);
   }
 
   public addForm(category: string) {
     this.materialStore.updateEmptyForm(category);
   }
-
-  public saveTemplate() {
-    this.service.saveTemplate();
-  }
-
 }
