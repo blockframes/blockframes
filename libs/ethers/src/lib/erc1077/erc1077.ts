@@ -5,12 +5,12 @@ import { TransactionRequest } from 'ethers/providers';
 // Internal
 import { MetaTransaction } from './meta-transaction';
 import { ERC1077_ABI } from './constants';
-import { baseEnsDomain } from '@env';
+import { network, contracts } from '@env';
 import { RelayerWallet } from '../relayer-wallet/relayer-wallet';
 
 export class ERC1077 extends Contract {
   constructor(public username: string, wallet: RelayerWallet) {
-    super(`${username}.${baseEnsDomain}`, ERC1077_ABI, wallet);
+    super(`${username}.${contracts.testErc1077.baseEnsDomain[network]}`, ERC1077_ABI, wallet);
   }
 
   private async calculateHash(tx: Partial<MetaTransaction>): Promise<string> {

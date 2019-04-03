@@ -12,10 +12,8 @@ describe('Provider', () => {
     expect(provider).toBeDefined();
   });
 
-  test('should be connected to Ropsten', async () => {
-    const blockNum = await provider.getBlockNumber();
+  test('should be connected to testnet defined in env', async () => {
     const ethNetwork = await provider.getNetwork();
     expect(ethNetwork.name).toBe(network);
-    expect(blockNum).toBeGreaterThan(5000000);
   });
 });
