@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateView } from './../../template/+state';
-import { MaterialForm, Material, MaterialStore, MaterialService, MaterialQuery } from './../../material/+state';
+import { MaterialForm, Material, MaterialStore, MaterialQuery, MaterialService } from './../../material/+state';
 import { takeWhile } from 'rxjs/operators';
+import { DeliveryService } from '../+state';
 
 @Component({
   selector: 'delivery-view',
@@ -17,6 +18,7 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private materialStore: MaterialStore,
+    private service: DeliveryService,
     private materialService: MaterialService,
     private materialQuery: MaterialQuery,
   ) { }
@@ -30,12 +32,12 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.saveMaterialInDelivery(material);
+    this.service.saveMaterial(material);
     this.materialStore.updateRoot({form: null})
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterialInDelivery(material.id);
+    this.service.deleteMaterial(material.id);
   }
 
   public addForm(category: string) {

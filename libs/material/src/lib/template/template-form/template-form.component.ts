@@ -46,12 +46,12 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.saveMaterialInTemplate(material);
+    this.service.saveMaterial(material);
     this.materialStore.updateRoot({ form: null });
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterialInTemplate(material.id);
+    this.service.deleteMaterial(material.id);
   }
 
   public addForm(category: string) {

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { NewTemplateComponent } from './new-template.component';
 import { Material, MaterialForm } from '../../material/+state/material.model';
-import { MaterialStore, MaterialService, MaterialQuery } from '../../material/+state';
+import { MaterialStore, MaterialQuery } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class DeliveryFormComponent implements OnInit {
     private deliveryService: DeliveryService,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
-    private materialService: MaterialService,
+    private service: DeliveryService,
   ) {}
 
   ngOnInit() {
@@ -41,12 +41,12 @@ export class DeliveryFormComponent implements OnInit {
   }
 
   public addMaterial(material: Material) {
-    this.materialService.saveMaterialInDelivery(material);
+    this.service.saveMaterial(material);
     this.materialStore.updateRoot({form: null})
   }
 
   public deleteMaterial(material: Material) {
-    this.materialService.deleteMaterialInDelivery(material.id);
+    this.service.deleteMaterial(material.id);
   }
 
   public addForm(category: string) {

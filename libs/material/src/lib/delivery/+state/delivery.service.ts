@@ -21,10 +21,26 @@ export class DeliveryService {
     private organizationQuery: OrganizationQuery,
     private materialQuery: MaterialQuery,
     private templateQuery: TemplateQuery,
-    private deliveryQuery: DeliveryQuery,
-    private deliveryStore: DeliveryStore,
-    private materialStore: MaterialStore
+    private query: DeliveryQuery,
+    private store: DeliveryStore,
+    private materialStore: MaterialStore,
+    private db: AngularFirestore,
   ) {}
+
+  public saveMaterial(material: Material) {
+    // Add material to sub-collection materials of delivery in firebase
+    const idDelivery = this.query.getActiveId();
+    const idMaterial = this.db.createId();
+    this.db
+      .doc<Material>(`deliveries/${idDelivery}/materials/${idMaterial}`)
+      .set({ ...material, ...{ id: idMaterial } });
+  }
+
+  public deleteMaterial(id: string) {
+    // Delete material of sub-collection materials of delivery in firebase
+    const idDelivery = this.query.getActiveId();
+    this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
+  }
 
   public deliveredToggle(material: Material, movieId: string) {
     // Change material 'delivered' property value to true or false when triggered
@@ -53,7 +69,7 @@ export class DeliveryService {
           .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
           .valueChanges()
       ),
-      tap(deliveries => this.deliveryStore.set(deliveries))
+      tap(deliveries => this.store.set(deliveries))
     );
   }
 
@@ -67,7 +83,7 @@ export class DeliveryService {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         let id: string;
-        this.deliveryQuery.selectActiveId().subscribe(data => (id = data));
+        this.query.selectActiveId().subscribe(data => (id = data));
         const deliveryMaterials = [];
         materials.forEach(material => {
           if (!!material && material.deliveriesIds.includes(id)) {
@@ -94,7 +110,7 @@ export class DeliveryService {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         let id: string;
-        this.deliveryQuery.selectActiveId().subscribe(data => (id = data));
+        this.query.selectActiveId().subscribe(data => (id = data));
         const deliveredMaterials = [];
         const totalMaterials = [];
         materials.forEach(material => {
@@ -140,7 +156,7 @@ export class DeliveryService {
     const stakeholder = createStakeholder({ id: stakeholderId, orgId })
     this.firestore.doc<Delivery>(`deliveries/${id}`).set(delivery);
     this.firestore.doc<Stakeholder>(`stakeholders/${stakeholderId}`).set(stakeholder);
-    this.deliveryStore.setActive(id);
+    this.store.setActive(id);
   }
 
   public async createDelivery() {
