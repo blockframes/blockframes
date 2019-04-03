@@ -20,7 +20,7 @@ export class DeliveryListComponent implements OnInit {
   public deliveries$: Observable<Delivery[]>;
 
   // Material table
-  public displayedColumns: string[] = ['icon', 'stakeholder1', 'stakeholder2', 'status'];
+  public displayedColumns: string[] = ['view', 'form', 'stakeholder1', 'stakeholder2', 'status'];
 
   constructor(
     private movieQuery: MovieQuery,

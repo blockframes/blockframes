@@ -6,6 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { MovieQuery } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'

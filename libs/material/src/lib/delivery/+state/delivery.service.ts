@@ -3,10 +3,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
-import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
+import { materialsByCategory } from '../../material/+state/material.query';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
-import { TemplateQuery } from '../../template/+state/template.query';
 import { Delivery, createDelivery } from './delivery.model';
 import { MovieQuery, Stakeholder, createStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
@@ -19,8 +18,6 @@ export class DeliveryService {
     private firestore: AngularFirestore,
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
-    private materialQuery: MaterialQuery,
-    private templateQuery: TemplateQuery,
     private query: DeliveryQuery,
     private store: DeliveryStore,
     private materialStore: MaterialStore,

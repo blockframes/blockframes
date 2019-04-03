@@ -49,7 +49,7 @@ export class TemplatePickerComponent implements OnInit {
     } else {
       this.templateService.addUnamedTemplate();
     }
-    this.router.navigate([`layout/${movieId}/delivery`]);
+    this.router.navigate([`layout/${movieId}/form/${deliveryId}`]);
     this.close();
   }
 

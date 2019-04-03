@@ -3,9 +3,14 @@
 <section *ngIf="(movie$ | async) as movie">
   <table mat-table [dataSource]="deliveries$" class="mat-elevation-z8">
 
-    <ng-container matColumnDef="icon">
+    <ng-container matColumnDef="view">
       <th mat-header-cell *matHeaderCellDef><h2 mat-subheader>{{ movie.title }}</h2></th>
-      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="['../delivery', delivery.id]"> <h4>{{delivery.id}}</h4> </td>
+      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="['../view', delivery.id]"> <h4>View {{delivery.id}}</h4> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="form">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="['../form', delivery.id]"> <h4>Form {{delivery.id}}</h4> </td>
     </ng-container>
 
     <ng-container matColumnDef="stakeholder1">
@@ -21,10 +26,10 @@
     <ng-container matColumnDef="status">
       <th class="add-delivery" mat-header-cell *matHeaderCellDef (click)="openDialog()"><mat-icon>add</mat-icon>ADD A DELIVERY</th>
       <td mat-cell *matCellDef="let delivery"><mat-icon
-        [class.green-dot]="delivery.delivered == true && delivery.validated.length == 2"
-        [class.grey-dot]="delivery.validated.length == 2 && delivery.delivered == false"
-        [class.blue-dot]="delivery.validated.length == 1"
-        [class.orange-dot]="delivery.validated.length == 0"
+        [class.green-dot]="delivery.delivered === true && delivery.validated.length === 2"
+        [class.grey-dot]="delivery.validated.length === 2 && delivery.delivered === false"
+        [class.blue-dot]="delivery.validated.length === 1"
+        [class.orange-dot]="delivery.validated.length === 0"
         >fiber_manual_record</mat-icon
       ></td>
     </ng-container>

@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TemplateView } from './../../template/+state';
-import { MaterialForm, Material, MaterialStore, MaterialQuery, MaterialService } from './../../material/+state';
-import { takeWhile } from 'rxjs/operators';
-import { DeliveryService } from '../+state';
+import { Location } from '@angular/common';
+import { DeliveryService } from '../+state/delivery.service';
 
 @Component({
   selector: 'delivery-view',
@@ -11,41 +9,18 @@ import { DeliveryService } from '../+state';
   styleUrls: ['./delivery-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewComponent implements OnInit, OnDestroy {
-  public delivery$: Observable<TemplateView>;
-  public form$ : Observable<MaterialForm>;
-  private isAlive = true;
+export class DeliveryViewComponent implements OnInit {
+  public materials$: Observable<Object>;
+  public progressionValue$: Observable<number>;
 
-  constructor(
-    private materialStore: MaterialStore,
-    private service: DeliveryService,
-    private materialService: MaterialService,
-    private materialQuery: MaterialQuery,
-  ) { }
+  constructor(private deliveryService: DeliveryService, private location: Location) {}
 
   ngOnInit() {
-    this.delivery$ = this.materialQuery.materialsByDelivery$;
-
-    this.form$ = this.materialQuery.form$;
-
-    this.materialService.subscribeOnDeliveryMaterials$.pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.materials$ = this.deliveryService.sortedDeliveryMaterials$;
+    this.progressionValue$ = this.deliveryService.deliveryProgression$;
   }
 
-  public addMaterial(material: Material) {
-    this.service.saveMaterial(material);
-    this.materialStore.clearForm();
+  public goBack() {
+    this.location.back();
   }
-
-  public deleteMaterial(material: Material) {
-    this.service.deleteMaterial(material.id);
-  }
-
-  public addForm(category: string) {
-    this.materialStore.updateEmptyForm(category);
-  }
-
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
-
 }

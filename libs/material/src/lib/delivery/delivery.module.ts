@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
-import { DeliveryMaterialsComponent } from './delivery-materials/delivery-materials.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
 import { ConfirmComponent } from './delivery-form/confirm.component';
 import { NewTemplateComponent } from './delivery-form/new-template.component';
@@ -41,13 +40,12 @@ const routes: Routes = [
   },
   { path: 'list', component: DeliveryListComponent },
   {
-    path: 'delivery-materials/:id',
+    path: 'view/:id',
     canActivate: [DeliveryGuard],
-    component: DeliveryMaterialsComponent
+    component: DeliveryViewComponent
   },
-  { path: 'delivery/:id', canActivate: [DeliveryGuard], component: DeliveryViewComponent },
   {
-    path: 'delivery',
+    path: 'form/:id',
     //canActivate: [DeliveryGuard],
     component: DeliveryFormComponent
   }
@@ -57,7 +55,7 @@ const routes: Routes = [
   declarations: [
     MovieMaterialsComponent,
     DeliveryListComponent,
-    DeliveryMaterialsComponent,
+    DeliveryViewComponent,
     DeliveryFormComponent,
     TemplatePickerComponent,
     NewTemplateComponent,
