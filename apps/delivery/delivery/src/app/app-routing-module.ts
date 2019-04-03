@@ -30,7 +30,7 @@ export const routes: Routes = [
         loadChildren: '@blockframes/account#AccountModule'
       },
       { path: 'home', loadChildren: '@blockframes/movie#MovieModule' },
-      { path: 'template', loadChildren: 'libs/material/src/lib/template/template.module#TemplateModule' },
+      { path: 'template', loadChildren: 'libs/material/src/lib/template/template.module#TemplateModule' }, //ToDo find why @blockframes doesn't work
       {
         path: ':id',
         canActivate: [MovieGuard],

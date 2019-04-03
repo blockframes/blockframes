@@ -6,12 +6,14 @@ import { MaterialFormComponent } from './material-form/material-form.component';
 import { MaterialListComponent } from './material-list/material-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [MaterialItemComponent, MaterialFormComponent, MaterialListComponent,],
   exports: [MaterialItemComponent, MaterialFormComponent, MaterialListComponent,],
   imports: [
     CommonModule,
+    RouterModule,
     MatCardModule,
     FlexLayoutModule,
     MatIconModule,

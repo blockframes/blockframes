@@ -12,21 +12,21 @@
     <div *ngIf="(form$ | async) as form">
       <material-form *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
     </div>
-    <mat-card *ngFor="let materials of (template$ | async | keyvalue)" id="{{ materials.key }}">
+    <mat-card *ngFor="let category of (template$ | async | keyvalue)" [id]="category.key">
       <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
-        <h4 fxFlex="60">Category : {{ materials.key }}</h4>
-        <button fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
+        <h4 fxFlex="60">Category : {{ category.key }}</h4>
+        <button fxFlex="40" (click)="addForm(category.key)" color="primary" mat-icon-button matRipple>
           <mat-icon class="icon-add">add_circle</mat-icon>
           Add new material with this category
         </button>
       </mat-card-title>
       <mat-card-content>
-        <div cdkDrag *ngFor="let material of materials.value">
+        <div cdkDrag *ngFor="let material of category.value">
           <material-item [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
         </div>
         <div *ngIf="(form$ | async) as form">
           <material-form
-            *ngIf="form.category === materials.key"
+            *ngIf="form.category === category.key"
             (material)="addMaterial($event)"
           ></material-form>
         </div>
