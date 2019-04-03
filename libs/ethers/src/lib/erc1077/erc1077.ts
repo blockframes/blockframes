@@ -13,6 +13,7 @@ export class ERC1077 extends Contract {
     super(`${username}.${contracts.testErc1077.baseEnsDomain[network]}`, ERC1077_ABI, wallet);
   }
 
+  /** Calculate the hash of a MetaTransaction */
   private async calculateHash(tx: Partial<MetaTransaction>): Promise<string> {
     return this.functions.calculateMessageHash(
       tx.from,
@@ -27,6 +28,7 @@ export class ERC1077 extends Contract {
     );
   }
 
+  /** Check if the relayer can send this tx */
   private async check(tx: Partial<MetaTransaction>): Promise<boolean> {
     return this.functions.canExecute(
       tx.to,
@@ -41,6 +43,7 @@ export class ERC1077 extends Contract {
     );
   }
 
+  /** Send the tx to the relayer */
   public async send(transaction: Partial<MetaTransaction>) {
     const { to, from, data, value } = transaction;
     try {
@@ -68,7 +71,7 @@ export class ERC1077 extends Contract {
           'The execution of the meta-transaction will fail ! This is probably a problem with the signature, or the within transaction.'
         );
       }
-      
+
       return this.functions.executeSigned(
         signedTx.to,
         signedTx.value,
