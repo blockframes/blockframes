@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthStore, User, createUser } from './auth.store';
 import { switchMap, takeWhile } from 'rxjs/operators';
+import { RelayerWallet } from '@blockframes/ethers';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,21 +11,26 @@ export class AuthService {
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private wallet: RelayerWallet
   ) {}
 
   //////////
   // AUTH //
   //////////
-  public async signin(mail: string, pwd: string) {
-    await this.afAuth.auth.signInWithEmailAndPassword(mail, pwd);
+  public async signin(mail: string, password: string) {
+    await this.afAuth.auth.signInWithEmailAndPassword(mail, password);
     this.subscribeOnUser();
+    const username = mail.split('@')[0];
+    this.wallet.login(username, password);  // no await -> do the job in background
   }
 
-  public async signup(mail: string, pwd: string) {
-    const user = await this.afAuth.auth.createUserWithEmailAndPassword(mail, pwd);
+  public async signup(mail: string, password: string) {
+    const user = await this.afAuth.auth.createUserWithEmailAndPassword(mail, password);
     await this.create(user.user);
     this.subscribeOnUser();
+    const username = mail.split('@')[0];
+    this.wallet.signup(username, password);  // no await -> do the job in background
   }
 
   public async logout() {
