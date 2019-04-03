@@ -5,10 +5,7 @@ import { Material } from './material.model';
 import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
-import { TemplateStore } from '../../template/+state/template.store';
-import { TemplateQuery } from '../../template/+state/template.query';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
-import { Template } from '../../template/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +27,6 @@ export class MaterialService {
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: MaterialStore,
-    private templateQuery: TemplateQuery,
-    private templateStore: TemplateStore,
     private deliveryQuery: DeliveryQuery
   ) {}
 

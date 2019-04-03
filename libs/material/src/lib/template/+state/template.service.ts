@@ -5,7 +5,7 @@ import { switchMap, tap, filter } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
-import { Material, MaterialService, MaterialQuery } from '../../material/+state';
+import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 
 @Injectable({ providedIn: 'root' })
@@ -20,7 +20,6 @@ export class TemplateService {
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: TemplateStore,
-    private materialService: MaterialService,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery
   ) {}
