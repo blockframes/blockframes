@@ -2,7 +2,7 @@ import { utils } from 'ethers';
 
 import { Provider } from '../provider/provider';
 import { RelayerWallet } from './relayer-wallet';
-import { MockRelayer } from '../relayer/relayer';
+import { MockRelayer } from '../relayer/mock-relayer.spec';
 
 describe('RelayerWallet', () => {
   // test('smoke', () => {expect(true).toBeTruthy()});

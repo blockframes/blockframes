@@ -1,12 +1,13 @@
 import { IRelayer } from './relayer';
-import { providers, utils } from 'ethers';
+import { providers, utils, EventFilter } from 'ethers';
 
 export class MockRelayer implements IRelayer {
   async create(name: string, key: string) {
     return { message: 'mock erc1077 created' };
   }
   async prepare(name: string) {
-    return { message: 'mock erc1077 prepare' };
+    const filter: EventFilter = {};
+    return filter;
   }
   async send(
     name: string,
