@@ -14,7 +14,7 @@ export interface IRelayer {
 }
 
 @Injectable({ providedIn: 'root' })
-export class FirebaseRelayer implements IRelayer {
+export class Relayer implements IRelayer {
 
   constructor(private functions: AngularFireFunctions) {}
 

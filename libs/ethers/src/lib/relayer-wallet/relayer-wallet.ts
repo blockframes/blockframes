@@ -2,14 +2,14 @@ import { Injectable, Inject } from '@angular/core';
 import { ethers, utils, Wallet, providers } from 'ethers';
 
 import { Provider } from '../provider/provider';
-import { IRelayer } from '../relayer/relayer';
+import { Relayer } from '../relayer/relayer';
 
 @Injectable({ providedIn: 'root' })
 export class RelayerWallet extends ethers.Signer {
   private signingKey: utils.SigningKey;
   public username: string;
 
-  constructor(public provider: Provider, private relayer: IRelayer) {
+  constructor(public provider: Provider, private relayer: Relayer) {
     super();
   }
 

@@ -28,23 +28,23 @@ describe('ERC1077', () => {
     erc1077 = new ERC1077(name, wallet);
   });
 
-  test('should exist', () => {
+  test.skip('should exist', () => {
     expect(erc1077).toBeDefined();
   });
 
-  test('address should be the same as defined in env', async () => {
+  test.skip('address should be the same as defined in env', async () => {
     const address = await erc1077.addressPromise;
     expect(address).toBe(contracts.testErc1077.address[network]);
   });
 
-  test('wallet should be the management key of erc1077', async () => {
+  test.skip('wallet should be the management key of erc1077', async () => {
     const keyExist = await erc1077.functions.keyExist(await wallet.getAddress());
     const hasPurpose = await erc1077.functions.keyHasPurpose(await wallet.getAddress(), 1);
     expect(keyExist).toBeTruthy();
     expect(hasPurpose).toBeTruthy();
   });
 
-  test('send() should be ok', async () => {
+  test.skip('send() should be ok', async () => {
     const tx: Partial<MetaTransaction> = {
       to: '0x89dadaa545e089a40e90d1d4921adc719f998a8b',
       value: ethers.utils.bigNumberify(0),
@@ -55,7 +55,7 @@ describe('ERC1077', () => {
     expect(res).toMatchObject({ data: '0x0' });
   });
 
-  test('send() should throw (at the ethers level)', async () => {
+  test.skip('send() should throw (at the ethers level)', async () => {
     const tx: Partial<MetaTransaction> = {
       to: '0x89dadaa545e089a40e90d1d4921adc719f998a8', // missing last char of the address
       value: ethers.utils.bigNumberify(0),
@@ -65,7 +65,7 @@ describe('ERC1077', () => {
     erc1077.send(tx).catch(error => expect(error.message).toMatch('Error:'));
   });
 
-  test('send() should throw (invalid signature)', async () => {
+  test.skip('send() should throw (invalid signature)', async () => {
     const tx: Partial<MetaTransaction> = {
       to: '0x89dadaa545e089a40e90d1d4921adc719f998a8b',
       value: ethers.utils.bigNumberify(0),

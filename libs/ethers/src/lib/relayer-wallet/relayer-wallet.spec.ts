@@ -1,14 +1,49 @@
-import { utils } from 'ethers';
+import { utils, EventFilter, providers } from 'ethers';
 
 import { Provider } from '../provider/provider';
 import { RelayerWallet } from './relayer-wallet';
-import { MockRelayer } from '../relayer/mock-relayer.spec';
+import { Relayer, IRelayer } from '../relayer/relayer';
+export class MockRelayer implements IRelayer {
+  constructor(){}
+  async create(name: string, key: string) {
+    return { message: 'mock erc1077 created' };
+  }
+  async prepare(name: string) {
+    const filter: EventFilter = {};
+    return filter;
+  }
+  async send(
+    name: string,
+    tx: providers.TransactionRequest
+  ): Promise<providers.TransactionResponse> {
+    const receipt: providers.TransactionReceipt = {
+      byzantium: false
+    };
+    return {
+      confirmations: 0,
+      from: '0x0',
+      wait: async () => receipt,
+      nonce: 0,
+      gasLimit: new utils.BigNumber(0),
+      gasPrice: new utils.BigNumber(0),
+      data: '0x0',
+      value: new utils.BigNumber(0),
+      chainId: 0
+    };
+  }
+  async addKey(name: string, key: string) {
+    return { message: 'mock erc1077 addKey' };
+  }
+  async removeKey(name: string, key: string) {
+    return { message: 'mock erc1077 removeKey' };
+  }
+}
 
 describe('RelayerWallet', () => {
   // test('smoke', () => {expect(true).toBeTruthy()});
   //*
   let name: string;
-  let relayer: MockRelayer;
+  let relayer: Relayer;
   let provider: Provider;
   let keystore: string;
   let password: string;
@@ -17,7 +52,7 @@ describe('RelayerWallet', () => {
 
   beforeAll(() => {
     name = 'harrypotter';
-    relayer = new MockRelayer();
+    relayer = new MockRelayer() as any;
     provider = new Provider();
     keystore =
       '{"address":"ba2b47917c4ece6d6eb7606a54228bf278614a00","id":"1b6ba023-e09a-48ca-beb4-a5a7dd74aaeb","version":3,"Crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"15ee2d42316e8b6ded2ed2f55509a779"},"ciphertext":"0cbed153a38e7259b62668eb7fba4dee6eb5ddadbcbd1b7ea0096b8fbfb5d963","kdf":"scrypt","kdfparams":{"salt":"36418bac9d2c87bd3da5885062950f1a6712c0fee2ce962239a8de1d09bc531e","n":131072,"dklen":32,"p":1,"r":8},"mac":"48ba5859a1699e86c22abb7d126ae55a5441fca5c520cd9bb13d6fd2bc6d072b"},"x-ethers":{"client":"ethers.js","gethFilename":"UTC--2019-04-02T09-19-37.0Z--ba2b47917c4ece6d6eb7606a54228bf278614a00","mnemonicCounter":"f3eee205849942fb5dea9c7433c238d0","mnemonicCiphertext":"2c828aec4703b4058e58f569a40b38ff","version":"0.1"}}';
