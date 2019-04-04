@@ -26,6 +26,7 @@ export class TitleFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.store.setActive(null);
     this.titleForm = this.builder.group({
       title: ['', Validators.required],
       owner: ['', Validators.required],
@@ -38,7 +39,10 @@ export class TitleFormComponent implements OnInit {
       const { title } = this.titleForm.value;
       // TODO: make owner by default if only one org
       const { owner } = this.titleForm.value;
+      console.log(title);
+      console.log(owner);
       const id = await this.service.add(title, owner);
+      console.log(id);
       this.store.setActive(id);
       this.router.navigateByUrl(`form/${id}`);
       this.dialogRef.close();
