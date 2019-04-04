@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { MovieStore } from './movie.store';
 import { Movie, createMovie } from './movie.model';
 import { takeWhile } from 'rxjs/operators';
-import { Stakeholder, createStakeholder } from '../../stakeholder/+state/stakeholder.model';
+import { createStakeholder } from '../../stakeholder/+state/stakeholder.model';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { OrganizationQuery } from '@blockframes/organization';
 
@@ -48,7 +48,7 @@ export class MovieService {
 
   public async add(title: string, orgId: string): Promise<string> {
     const id = this.firestore.createId();
-    const owner = createStakeholder({orgId, role: 'ADMIN'});
+    const owner = createStakeholder({orgId, orgMovieRole: 'ADMIN'});
 
     const movie: Partial<Movie> = createMovie({ id: id, title: [title] });
     // TODO: correct race condition
