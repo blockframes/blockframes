@@ -9,13 +9,15 @@ type txRequest = providers.TransactionRequest;
 type txResponse = providers.TransactionResponse;
 
 @Injectable({ providedIn: 'root' })
-export class RelayerWallet extends ethers.Signer {
+export class RelayerWallet implements ethers.Signer {
   private signingKey: utils.SigningKey;
   public username: string;
 
-  constructor(private vault: Vault, private relayer: Relayer, public provider: Provider) {
-    super();
-  }
+  constructor(
+    private vault: Vault,
+    private relayer: Relayer,
+    public provider: Provider
+  ) {}
 
   /** Set into process memory */
   private loginWithEncryptedJSON(wallet: Wallet, username: string) {
@@ -30,7 +32,7 @@ export class RelayerWallet extends ethers.Signer {
   }
 
   /** Get the signing key from an encrypted JSON */
-  async login(username: string, password: string) {
+  public async login(username: string, password: string) {
     if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
     const encryptedJSON = await this.vault.get(`${username}:web`);
     const wallet = await Wallet.fromEncryptedJson(encryptedJSON, password);
@@ -38,30 +40,30 @@ export class RelayerWallet extends ethers.Signer {
   }
 
   /** Get the signing key from a mnemonic */
-  async importMnemonic(mnemonic: string, username: string, password: string) {
+  public async importMnemonic(mnemonic: string, username: string, password: string) {
     const wallet = Wallet.fromMnemonic(mnemonic);
     this.loginWithEncryptedJSON(wallet, username);
     this.saveIntoVault(wallet, username, password);
   }
 
   /** Create a wallet and store it into the vault */
-  async signup(username: string, password: string) {
+  public async signup(username: string, password: string) {
     const wallet = Wallet.createRandom();
     this.loginWithEncryptedJSON(wallet, username);
     this.saveIntoVault(wallet, username, password);
   }
 
   /** Forget the signing key in the process memory */
-  logout() {
+  public logout() {
     delete this.username;
     delete this.signingKey;
   }
 
-  async getAddress(): Promise<string> {
+  public async getAddress(): Promise<string> {
     return this.signingKey.address;
   }
 
-  async signMessage(message: utils.Arrayish | string): Promise<string> {
+  public async signMessage(message: utils.Arrayish | string): Promise<string> {
     // Here ask permission
     const msg =
       typeof message === 'string' && message.slice(0, 2) === '0x'
@@ -72,7 +74,7 @@ export class RelayerWallet extends ethers.Signer {
     return utils.joinSignature(signature);
   }
 
-  async sendTransaction(transaction: txRequest): Promise<txResponse> {
+  public async sendTransaction(transaction: txRequest): Promise<txResponse> {
     return this.relayer.send(this.username, transaction);
   }
 }
