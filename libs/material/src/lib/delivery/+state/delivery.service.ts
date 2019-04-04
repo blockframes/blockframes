@@ -59,8 +59,8 @@ export class DeliveryService {
     this.db.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
     this.store.setActive(id);
     if (!!templateId) {
-      const filterBy = material => this.templateQuery.getActive().materialsId.includes(material.id);
-      const materials = this.materialQuery.getAll({ filterBy });
+      const filterByMaterialId = material => this.templateQuery.getActive().materialsId.includes(material.id);
+      const materials = this.materialQuery.getAll({ filterBy: filterByMaterialId });
       return Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)

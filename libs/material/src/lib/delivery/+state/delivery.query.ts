@@ -56,8 +56,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
-        const deliveryMaterials = materials.filter(material => material.deliveriesIds.includes(id))
-        return deliveryMaterials;
+        return materials.filter(material => material.deliveriesIds.includes(id));
       }),
       map(materials => materialsByCategory(materials))
     );
