@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
-import { DeliveryService } from '../+state/delivery.service';
+import { DeliveryQuery } from '../+state';
 
 @Component({
   selector: 'delivery-view',
@@ -13,11 +13,11 @@ export class DeliveryViewComponent implements OnInit {
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
 
-  constructor(private deliveryService: DeliveryService, private location: Location) {}
+  constructor(private query: DeliveryQuery, private location: Location) {}
 
   ngOnInit() {
-    this.materials$ = this.deliveryService.sortedDeliveryMaterials$;
-    this.progressionValue$ = this.deliveryService.deliveryProgression$;
+    this.materials$ = this.query.sortedDeliveryMaterials$;
+    this.progressionValue$ = this.query.deliveryProgression$;
   }
 
   public goBack() {

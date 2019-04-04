@@ -85,7 +85,6 @@ export class TemplateService {
     }
   }
 
-
   public async nameExists(name: string) {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name);

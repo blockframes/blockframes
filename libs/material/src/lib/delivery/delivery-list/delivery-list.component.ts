@@ -3,10 +3,10 @@ import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Delivery } from '../+state/delivery.model';
-import { DeliveryService } from '../+state/delivery.service';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
+import { DeliveryQuery } from '../+state';
 
 @Component({
   selector: 'delivery-list',
@@ -24,14 +24,14 @@ export class DeliveryListComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private deliveryService: DeliveryService,
+    private query: DeliveryQuery,
     private location: Location,
     private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
-    this.deliveries$ = this.deliveryService.deliveriesByActiveMovie$;
+    this.deliveries$ = this.query.deliveriesByActiveMovie$;
   }
 
   public openDialog() {

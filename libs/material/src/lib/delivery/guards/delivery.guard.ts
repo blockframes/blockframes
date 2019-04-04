@@ -7,7 +7,7 @@ import { DeliveryQuery } from '../+state/delivery.query';
   providedIn: 'root'
 })
 export class DeliveryGuard implements CanActivate {
-  constructor(private store: DeliveryStore, private query: DeliveryQuery, private router: Router,) {}
+  constructor(private store: DeliveryStore, private query: DeliveryQuery, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree {
     if (!!this.query.getEntity(route.params.id)) {

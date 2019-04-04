@@ -5,6 +5,7 @@ import { Material } from '../../material/+state';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../+state/delivery.service';
+import { DeliveryQuery } from '../+state';
 
 @Component({
   selector: 'delivery-movie-materials',
@@ -22,12 +23,13 @@ export class MovieMaterialsComponent implements OnInit {
     private movieQuery: MovieQuery,
     private location: Location,
     private deliveryService: DeliveryService,
+    private deliveryQuery: DeliveryQuery,
     ) { }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
-    this.materials$ = this.deliveryService.deliveryMaterialsByActiveMovie$;
-    this.progressionValue$ = this.deliveryService.movieProgression$;
+    this.materials$ = this.deliveryQuery.materialsByActiveMovie$;
+    this.progressionValue$ = this.deliveryQuery.movieProgression$;
   }
 
   public deliveredToggle(material: Material, movieId: string) {
