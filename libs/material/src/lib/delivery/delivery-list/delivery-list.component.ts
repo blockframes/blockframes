@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit  } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryListComponent implements OnInit {
-
   public movie$: Observable<Movie>;
   public deliveries$: Observable<Delivery[]>;
 
@@ -29,8 +28,8 @@ export class DeliveryListComponent implements OnInit {
     private store: DeliveryStore,
     private router: Router,
     private location: Location,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
@@ -39,17 +38,16 @@ export class DeliveryListComponent implements OnInit {
 
   public selectDelivery(delivery: Delivery, movieId: string) {
     this.store.setActive(delivery.id);
-    delivery.validated.length === 2 ?
-    this.router.navigate([`layout/${movieId}/view/${delivery.id}`]) :
-    this.router.navigate([`layout/${movieId}/form/${delivery.id}`])
+    delivery.validated.length === 2
+      ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
+      : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]);
   }
 
   public openDialog() {
-    this.dialog.open(TemplatePickerComponent, {width: "80%", height: "80%"});
+    this.dialog.open(TemplatePickerComponent, { width: '80%', height: '80%' });
   }
 
   public goBack() {
     this.location.back();
   }
-
 }

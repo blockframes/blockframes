@@ -16,7 +16,7 @@ export class DeliveryViewComponent implements OnInit {
   constructor(private query: DeliveryQuery, private location: Location) {}
 
   ngOnInit() {
-    this.materials$ = this.query.sortedDeliveryMaterials$;
+    this.materials$ = this.query.materialsByActiveDelivery$;
     this.progressionValue$ = this.query.deliveryProgression$;
   }
 

@@ -22,8 +22,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     super(store);
   }
 
+  /** Return the active movie materials sorted by category */
   public get materialsByActiveMovie$() {
-    // Get and sort the active movie's delivery's materials by category
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
       switchMap(movie =>
@@ -33,8 +33,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
+  /** Return a list of deliveries for the active movie */
   public get deliveriesByActiveMovie$() {
-    // Get a list of deliveries for the active movie
     return this.movieQuery.selectActiveId().pipe(
       filter(id => !!id),
       switchMap(id =>
@@ -46,8 +46,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
+  /** Return the active delivery materials sorted by category */
   public get materialsByActiveDelivery$() {
-    // Get the movie materials for the active delivery (with 'delivered' property)
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
       switchMap(movie =>
@@ -56,24 +56,15 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
-        const deliveryMaterials = [];
-        materials.forEach(material => {
-          if (!!material && material.deliveriesIds.includes(id)) {
-            deliveryMaterials.push(material);
-          }
-        });
+        const deliveryMaterials = materials.filter(material => material.deliveriesIds.includes(id))
         return deliveryMaterials;
-      })
+      }),
+      map(materials => materialsByCategory(materials))
     );
   }
 
-  public get sortedDeliveryMaterials$() {
-    // Sort the active delivery's materials by category
-    return this.materialsByActiveDelivery$.pipe(map(materials => materialsByCategory(materials)));
-  }
-
+  /** Return the progression % of the delivery */
   public get deliveryProgression$() {
-    // Get the progression % of the delivery
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
       switchMap(movie =>
@@ -82,40 +73,23 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
-        const deliveredMaterials = [];
-        const totalMaterials = [];
-        materials.forEach(material => {
-          if (!!material && material.deliveriesIds.includes(id)) {
-            totalMaterials.push(material);
-            if (material.delivered === true) {
-              deliveredMaterials.push(material);
-            }
-          }
-        });
+        const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
+        const deliveredMaterials = totalMaterials.filter(material => !!material.delivered);
         return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
       })
     );
   }
 
+  /** Return the progression % of the movie's deliveries */
   public get movieProgression$() {
-    // Get the progression % of the movie's deliveries
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
       map(materials => {
-        const deliveredMaterials = [];
-        const totalMaterials = [];
-        materials.forEach(material => {
-          if (!!material) {
-            totalMaterials.push(material);
-            if (material.delivered === true) {
-              deliveredMaterials.push(material);
-            }
-          }
-        });
-        return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+        const deliveredMaterials = materials.filter(material => !!material.delivered);
+        return Math.round((deliveredMaterials.length / (materials.length / 100)) * 10) / 10;
       })
     );
   }
