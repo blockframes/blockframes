@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 // tslint:disable-next-line
-import { OrganizationQuery } from '@blockframes/organization';
-import { switchMap, tap, filter } from 'rxjs/operators';
+import { OrganizationQuery, Organization, OrganizationStore } from '@blockframes/organization';
+import { switchMap, tap, filter, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
@@ -16,12 +18,104 @@ export class TemplateService {
     tap(templates => this.store.set(templates))
   );
 
+  // public get subscribeOnUserTemplates$() {
+  //   const templatesByOrgs =  this.organizationQuery.getAll().map((org) =>
+  //       this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges());
+
+  //   return combineLatest(templatesByOrgs).pipe(
+  //     tap(templates => templates.map(template => this.store.add(template)))
+  //   );
+  // }
+
+  public get subscribeOnUserTemplates$() {
+    const templatesByOrgs = this.organizationQuery.selectAll().pipe(
+      switchMap(orgs =>
+        combineLatest(
+          orgs.map(org =>
+            this.db
+              .collection<Template>(`orgs/${org.id}/templates`)
+              .valueChanges()
+              .pipe(map(templates => ({ ...org, templates } as Organization)))
+          )
+        )
+      )
+    );
+
+    return templatesByOrgs.pipe(
+      switchMap(orgs => orgs.map(org => tap(this.organizationStore.update(org.id, org))))
+    );
+  }
+
+  // public subscribeUserTemplates2() {
+  //   return combineLatest(this.db
+  //     .collection<Organization>('orgs', ref =>
+  //       ref.where('userIds', 'array-contains', this.authQuery.user.uid)
+  //     )
+  //     .valueChanges()
+  //     .pipe(
+
+  //       switchMap(orgs => orgs),
+  //       switchMap(org => this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges(),
+
+  //       ),
+  //       tap(templates => console.log(templates))
+  //     )
+  // }
+
+  // public deliveriesInfoByMovie() {
+  //   return combineLatest([
+  //     this.selectAll(),
+  //     this.movieQuery.selectActive()
+  //   ]).pipe(
+  //     map(([deliveries, movie]) => {
+  //       return deliveries.map(delivery =>
+  //         delivery = {...delivery,
+  //                     ...{producer: this.userQuery.getUserEmail(delivery.productorId)},
+  //                     ...{distributor: this.userQuery.getUserEmail(delivery.distributorId)},
+  //                     ...{movieTitle: this.movieQuery.movieTitle(delivery.movieId)}
+  //                    }
+  //         ).filter(delivery => delivery.movieId === movie.id);
+  //     })
+  //   );
+  // }
+
+  // public subscribe(orgID: string): Observable<OrgMember[]> {
+  //   const pullUserAndOrgRights = (userID): Observable<OrgMember> => (
+  //     combineLatest([
+  //       this.firestore.collection('users').doc(userID)
+  //         .get()
+  //         .pipe(map(x => x.data())),
+  //       this.firestore.collection('users').doc(userID).collection('orgRights').doc(orgID)
+  //         .get()
+  //         .pipe(map(x => x.data()))
+  //     ]).pipe(map(([user, rights]): OrgMember => ({
+  //       id: user.uid,
+  //       email: user.email,
+  //       roles: rights.rightNameSlug
+  //     })))
+  //   );
+
+  // public subscribeUserTemplates2() {
+  //   return this.db
+  //     .collection<Organization>('orgs', ref =>
+  //       ref.where('userIds', 'array-contains', this.authQuery.user.uid)
+  //     )
+  //     .valueChanges()
+  //     .pipe(
+  //       switchMap(orgs => orgs),
+  //       switchMap(org => this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges()),
+  //       tap(templates => console.log(templates))
+  //     );
+  // }
+
   constructor(
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: TemplateStore,
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery
+    private materialQuery: MaterialQuery,
+    private authQuery: AuthQuery,
+    private organizationStore: OrganizationStore
   ) {}
 
   public addTemplate(templateName: string) {
@@ -33,7 +127,7 @@ export class TemplateService {
 
   public addUnamedTemplate() {
     const template = createTemplate({ id: this.db.createId() });
-    this.store.update({ form: template })
+    this.store.update({ form: template });
     // this.store.add(template);
     // this.store.setActive(template.id);
   }

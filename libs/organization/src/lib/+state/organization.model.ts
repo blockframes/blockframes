@@ -1,3 +1,5 @@
+import { Template } from "@blockframes/material";
+
 export interface OrgMember {
   id: string;
   email: string;
@@ -12,6 +14,7 @@ export interface Organization {
   updated: number;
   userIds: string[];
   movieIds: string[];
+  templates: Template[];
 }
 
 /**
@@ -25,7 +28,8 @@ export function createOrganization(params?: Partial<Organization>): Organization
     userIds: params.userIds,
     movieIds: params.movieIds || [],
     created: params.created || Date.now(),
-    updated: params.updated || Date.now()
+    updated: params.updated || Date.now(),
+    templates: [],
   } : {} as Organization;
 }
 

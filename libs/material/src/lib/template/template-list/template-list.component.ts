@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
+import { OrganizationQuery } from '@blockframes/organization';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'template-list',
@@ -12,21 +14,25 @@ import { AddTemplateComponent } from './add-template';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit {
-  public templates$: Observable<Template[]>;
+  public templates$: Observable<any>;
+
 
   constructor(
     private service: TemplateService,
     private query: TemplateQuery,
     public dialog: MatDialog,
-    private materialService: MaterialService
+    private materialService: MaterialService,
+    private organizationQuery: OrganizationQuery,
   ) {
   }
 
   ngOnInit() {
-    this.service.subscribeOnOrganizationTemplates$.subscribe(); //todo unsubscribe
+    this.service.subscribeOnUserTemplates$.subscribe(); //todo unsubscribe
     this.materialService.subscribeOnOrganizationMaterials$.subscribe(); //todo unsubscribe
 
-    this.templates$ = this.query.selectAll();
+    this.templates$ = this.organizationQuery.templates$;
+
+
   }
 
   public addTemplateDialog(): void {
