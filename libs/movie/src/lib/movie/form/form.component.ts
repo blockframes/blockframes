@@ -65,7 +65,7 @@ export class FormComponent implements OnInit, OnDestroy {
       title: [''],
       ipId: [''],
       credits: this.builder.array([this.createCredit()]),
-      stakeholders: this.builder.array([this.createStakeholder('', '', '', '', '')]),
+      stakeholders: this.builder.array([this.createStakeholder()]),
       genres: [''],
       isan: [null],
       status: [''],
@@ -174,13 +174,13 @@ export class FormComponent implements OnInit, OnDestroy {
     this.movieCredits.removeAt(index);
   }
 
-  public createStakeholder(orgId: string, orgName: string, orgMovieRole: string, stakeholderRole: string, stakeholderAuthorization: string): FormGroup {
+  public createStakeholder(orgId?: string, orgName?: string, orgMovieRole?: string, stakeholderRole?: string, stakeholderAuthorization?: string): FormGroup {
     return this.builder.group({
-      orgId: orgId,
-      orgName: orgName,
-      orgMovieRole: orgMovieRole,
-      stakeholderRole: stakeholderRole,
-      stakeholderAuthorization: stakeholderAuthorization
+      orgId: orgId || '',
+      orgName: orgName || '',
+      orgMovieRole: orgMovieRole || '',
+      stakeholderRole: stakeholderRole || '',
+      stakeholderAuthorization: stakeholderAuthorization || ''
     });
   }
 

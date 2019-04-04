@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { StakeholderService } from '../+state/stakeholder.service';
+import { Stakeholder, StakeholderService } from '../+state';
 import { Observable } from 'rxjs';
-import { Stakeholder } from '../+state/stakeholder.model';
-
 
 @Component({
   selector: 'stakeholder-list',

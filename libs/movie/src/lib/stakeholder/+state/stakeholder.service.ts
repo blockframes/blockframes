@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Stakeholder, createStakeholder } from './stakeholder.model';
-import { Observable, combineLatest, forkJoin } from 'rxjs';
-import { map, filter, first } from 'rxjs/operators';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { tap } from 'rxjs/internal/operators/tap';
+import { map, filter, switchMap, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { StakeholderStore } from './stakeholder.store';
 import { MovieQuery } from '../../movie/+state/movie.query';
 import { Organization } from '@blockframes/organization';
@@ -22,38 +20,22 @@ export class StakeholderService {
   public get stakeholdersByActiveMovie$(){
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
-      switchMap( ({stakeholderIds}) =>
-        combineLatest(...stakeholderIds.map(id =>
-          this.getStakeholderFilledWithOrganization(this.movieQuery.getActiveId(), id)
-        ))
-      ),
+      switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
+      switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
       tap(stakeholders => this.store.set(stakeholders))
     );
   }
 
-  public getStakeholderByMovieAndId(movieId: string, id: string): Observable<Stakeholder> {
-    const ref = this.firestore.doc<Stakeholder>(`movies/${movieId}/stakeholders/${id}`);
-    return ref.valueChanges();
-  }
-
-  public getStakeholderOrganizationByMovieAndId(movieId: string, id: string): Observable<Organization>{
-    return this.getStakeholderByMovieAndId(movieId, id).pipe(
-      switchMap(({orgId}) => this.firestore.collection('orgs').doc<Organization>(orgId).valueChanges())
-    );
-  }
-
-  public getStakeholderFilledWithOrganization(movieId: string, id: string): Observable<Stakeholder> {
-    const stakeholder$ = this.getStakeholderByMovieAndId(movieId, id).pipe(first());
-    const organization$ = this.getStakeholderOrganizationByMovieAndId(movieId, id).pipe(first());
-
-    return forkJoin(stakeholder$, organization$).pipe(
-      map(([stakeholder, org]): Stakeholder => {
-        return ({
-          ...stakeholder,
-          organization: org,
-        })
-      })
-    );
+  public getAllStakeholdersWithOrg(stakeholders: Stakeholder[]) {
+    const shWithOrgs = (sh: Stakeholder) => {
+      return this.firestore.doc<Organization>(`orgs/${sh.orgId}`)
+      .valueChanges()
+      .pipe(
+        map(organization => ({ ...sh, organization }))
+      )
+    };
+    const allShWithOrgs = stakeholders.map((sh) => shWithOrgs(sh));
+    return combineLatest(allShWithOrgs);
   }
 
   public async add(movieId: string, stakeholder: Partial<Stakeholder>): Promise<string> {
