@@ -4,8 +4,10 @@ import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieQuery } from '@blockframes/movie';
-import { MaterialStore, Material, materialsByCategory } from '../../material/+state';
+import { MaterialStore } from '../../material/+state/material.store';
+import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
+import { materialsByCategory } from '../../material/+state/material.query';
 
 @Injectable({
   providedIn: 'root'

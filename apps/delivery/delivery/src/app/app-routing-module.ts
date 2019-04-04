@@ -38,7 +38,7 @@ export const routes: Routes = [
       },
     ]
   },
-  { 
+  {
     path: 'not-found',
     loadChildren: '@blockframes/ui#ErrorNotFoundModule'
   },

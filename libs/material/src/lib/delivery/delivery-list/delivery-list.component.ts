@@ -6,7 +6,8 @@ import { Delivery } from '../+state/delivery.model';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
-import { DeliveryQuery } from '../+state';
+import { DeliveryQuery, DeliveryStore } from '../+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'delivery-list',
@@ -20,11 +21,13 @@ export class DeliveryListComponent implements OnInit {
   public deliveries$: Observable<Delivery[]>;
 
   // Material table
-  public displayedColumns: string[] = ['view', 'form', 'stakeholder1', 'stakeholder2', 'status'];
+  public displayedColumns: string[] = ['id', 'stakeholder1', 'stakeholder2', 'status'];
 
   constructor(
     private movieQuery: MovieQuery,
     private query: DeliveryQuery,
+    private store: DeliveryStore,
+    private router: Router,
     private location: Location,
     private dialog: MatDialog,
   ) { }
@@ -32,6 +35,13 @@ export class DeliveryListComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
     this.deliveries$ = this.query.deliveriesByActiveMovie$;
+  }
+
+  public selectDelivery(delivery: Delivery, movieId: string) {
+    this.store.setActive(delivery.id);
+    delivery.validated.length === 2 ?
+    this.router.navigate([`layout/${movieId}/view/${delivery.id}`]) :
+    this.router.navigate([`layout/${movieId}/form/${delivery.id}`])
   }
 
   public openDialog() {

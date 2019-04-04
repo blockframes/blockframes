@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
-import { materialsByCategory, MaterialQuery } from '../../material/+state/material.query';
-import { MaterialStore } from '../../material/+state/material.store';
+import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { Delivery, createDelivery } from './delivery.model';
 import { MovieQuery, Stakeholder, createStakeholder } from '@blockframes/movie';

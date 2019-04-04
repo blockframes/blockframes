@@ -3,14 +3,9 @@
 <section *ngIf="(movie$ | async) as movie">
   <table mat-table [dataSource]="deliveries$" class="mat-elevation-z8">
 
-    <ng-container matColumnDef="view">
+    <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef><h2 mat-subheader>{{ movie.title }}</h2></th>
-      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="['../view', delivery.id]"> <h4>View {{delivery.id}}</h4> </td>
-    </ng-container>
-
-    <ng-container matColumnDef="form">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" [routerLink]="['../form', delivery.id]"> <h4>Form {{delivery.id}}</h4> </td>
+      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" (click)="selectDelivery(delivery, movie.id)"> <h4>{{delivery.id}}</h4> </td>
     </ng-container>
 
     <ng-container matColumnDef="stakeholder1">

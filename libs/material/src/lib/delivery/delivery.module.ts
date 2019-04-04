@@ -46,7 +46,7 @@ const routes: Routes = [
   },
   {
     path: 'form/:id',
-    //canActivate: [DeliveryGuard],
+    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
     component: DeliveryFormComponent
   }
 ];
