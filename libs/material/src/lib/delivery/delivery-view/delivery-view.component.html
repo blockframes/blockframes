@@ -2,7 +2,10 @@
 <section fxLayout="row" fxLayoutGap="5%">
   <article class="progress-card" fxFlex="30">
     <mat-card>
-      <mat-card-content *ngIf="(progressionValue$ | async) as value else empty" fxLayout="column" fxLayoutAlign="center center">
+      <mat-card-content
+        *ngIf="(progressionValue$ | async) as value; else empty"
+        fxLayout="column"
+        fxLayoutAlign="center center">
         <h2 class="example-h2">PROGRESSION</h2>
         <mat-progress-spinner
           class="example-margin"
@@ -10,12 +13,9 @@
           mode="determinate"
           [value]="value"
           diameter="200"
-          strokeWidth="13"
-        >
+          strokeWidth="13">
         </mat-progress-spinner>
-        <div class ="progress-value">
-            {{value}} %
-        </div>
+        <div class="progress-value">{{ value }} %</div>
         <p><i>La progression en %age des deliveries de la movie</i></p>
       </mat-card-content>
       <ng-template #empty>
@@ -27,11 +27,10 @@
             mode="determinate"
             value="0"
             diameter="200"
-            strokeWidth="15"
-          >
+            strokeWidth="13">
           </mat-progress-spinner>
-          <div class ="progress-value">
-              0 %
+          <div class="progress-value">
+            0 %
           </div>
           <p><i>La progression en %age des deliveries de la movie</i></p>
         </mat-card-content>
@@ -42,13 +41,11 @@
     <mat-card *ngFor="let category of (materials$ | async | keyvalue)">
       <mat-card-title>{{ category.key | uppercase }}</mat-card-title>
       <mat-card-content *ngFor="let material of category.value">
-        <span
-          ><h4 mat-line>
-            <mat-checkbox [(ngModel)]="material.delivered" [disabled]="true"
-              ><b>{{ material.value }}</b></mat-checkbox
-            >
-          </h4></span
-        >
+        <span>
+          <h4 mat-line>
+            <mat-checkbox [(ngModel)]="material.delivered" [disabled]="true"><b>{{ material.value }}</b></mat-checkbox>
+          </h4>
+        </span>
         <p mat-line class="description-text">
           <i>{{ material.description }}</i>
         </p>

@@ -75,17 +75,16 @@ export class TemplateService {
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
       const template = createTemplate({id: this.db.createId(), name})
-      materials.forEach(material => template.materialsId.push(material.id))
+      template.materialsId = materials.map(({ id }) => id)
       this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).set(template);
       return Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`orgs/${idOrg}/materials/${material.id}`).set(material)
         )
       );
-    } else {
-      console.error('No materials')
     }
   }
+
 
   public async nameExists(name: string) {
     // check if name is already used in an already template
