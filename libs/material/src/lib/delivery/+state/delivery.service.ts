@@ -3,12 +3,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
-import { materialsByCategory } from '../../material/+state/material.query';
+import { materialsByCategory, MaterialQuery } from '../../material/+state/material.query';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { Delivery, createDelivery } from './delivery.model';
 import { MovieQuery, Stakeholder, createStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
+import { TemplateQuery } from '../../template/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,12 @@ export class DeliveryService {
     private firestore: AngularFirestore,
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
+    private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
     private store: DeliveryStore,
+    private templateQuery: TemplateQuery,
     private materialStore: MaterialStore,
-    private db: AngularFirestore,
+    private db: AngularFirestore
   ) {}
 
   public saveMaterial(material: Material) {
@@ -144,14 +147,33 @@ export class DeliveryService {
     );
   }
 
-  public addDelivery(id: string) {
+  public addDelivery(id: string, templateId?: string) {
     const orgId = this.organizationQuery.getActiveId();
     const stakeholderId = this.firestore.createId();
     const delivery = createDelivery({ id, movieId: this.movieQuery.getActiveId() });
-    const stakeholder = createStakeholder({ id: stakeholderId, orgId })
+    const stakeholder = createStakeholder({ id: stakeholderId, orgId });
+
     this.firestore.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.firestore.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
+    this.firestore
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`)
+      .set(stakeholder);
     this.store.setActive(id);
+    if (!!templateId) {
+      // if function got templateId as an argument, we populate materials subcollection with materials from active template
+      const materials = this.materialQuery.getAll({
+        filterBy: material => this.templateQuery.getActive().materialsId.includes(material.id)
+      });
+      return Promise.all(
+        materials.map(material =>
+          this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
+        )
+      );
+    }
   }
 
+  public deleteDelivery() {
+    const id = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${id}`).delete();
+    this.store.setActive(null);
+  }
 }

@@ -40,15 +40,15 @@ export class TemplatePickerComponent implements OnInit {
     this.templates$ = this.templateQuery.selectAll();
   }
 
-  public selectTemplate(templateId? : string) {
+  public createDelivery(templateId?: string) {
     const movieId = this.movieQuery.getActiveId();
     const deliveryId = this.db.createId();
+
     if (!!templateId) {
-    this.templateStore.setActive(templateId);
-    this.deliveryService.addDelivery(deliveryId);
-    } else {
-      this.templateService.addUnamedTemplate();
+      this.templateStore.setActive(templateId);
     }
+
+    this.deliveryService.addDelivery(deliveryId, templateId);
     this.router.navigate([`layout/${movieId}/form/${deliveryId}`]);
     this.close();
   }
