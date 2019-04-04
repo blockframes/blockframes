@@ -17,7 +17,8 @@ import { AuthRootComponent } from './root/root.component';
 
 
 export const AuthRoutes: Routes = [
-  { path: '', component: AuthRootComponent }
+  { path: '', redirectTo: 'connection', pathMatch: 'full' },
+  { path: 'connection', component: AuthRootComponent }
 ];
 
 @NgModule({
