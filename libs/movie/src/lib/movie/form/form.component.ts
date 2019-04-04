@@ -65,7 +65,7 @@ export class FormComponent implements OnInit, OnDestroy {
       title: [''],
       ipId: [''],
       credits: this.builder.array([this.createCredit()]),
-      stakeholders: this.builder.array([this.createStakeholder(this.org.id, this.org.name, 'ADMIN', 'Producer', 'canActivateDelivery')]),
+      stakeholders: this.builder.array([this.createStakeholder('', '', '', '', '')]),
       genres: [''],
       isan: [null],
       status: [''],
@@ -107,7 +107,6 @@ export class FormComponent implements OnInit, OnDestroy {
   Kill the active Movie to reset the modification process.
   */
   ngOnDestroy() {
-    this.store.setActive(null);
     this.clear();
     this.persistForm.destroy();
     this.isModifying = false;
