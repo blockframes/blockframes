@@ -31,30 +31,7 @@ export interface Movie {
  */
 export function createMovie(params?: Partial<Movie>) {
   return params ? {
-    id: params.id || '',
-    title: params.title || [''],
-    ipId: params.ipId|| '',
-    credits: params.credits || [ {firstName: '',lastName: '',creditRole: ''} ],
-    stakeholderIds: params.stakeholderIds || [''],
-    genres: params.genres || [''],
-    isan: params.isan || null,
-    status: params.status || '',
-    poster: params.poster || '',
-    types: params.types || [''],
-    keywords: params.keywords || [''],
-    logline: params.logline || '',
-    synopsis: params.synopsis || '',
-    directorNote: params.directorNote || '',
-    producerNote: params.producerNote || '',
-    originCountry: params.originCountry || '',
-    languages: params.languages || [''],
-    promotionalElements: params.promotionalElements || [{promotionalElementName:'',url: ''}],
-    goalBudget: params.goalBudget || null,
-    movieCurrency: params.movieCurrency || '',
-    fundedBudget: params.fundedBudget || null,
-    breakeven: params.breakeven || null,
-    backendProfit: params.backendProfit || null,
-    potentialRevenues: params.potentialRevenues || null,
-    selectionCategories: params.selectionCategories || '',
+    stakeholderIds: [],
+    ...params,
   } : {} as Movie;
 }
