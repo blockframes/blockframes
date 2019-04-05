@@ -46,7 +46,6 @@ export class DeliveryListComponent implements OnInit {
   }
 
   public openDialog() {
-    this.store.setActive(this.db.createId());
     this.dialog.open(TemplatePickerComponent, { width: '70%' });
   }
 
