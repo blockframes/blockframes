@@ -36,8 +36,8 @@ export class TemplatePickerComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-    this.templateService.subscribeOnOrganizationTemplates$.subscribe(); //todo unsubscribe
-    this.materialService.subscribeOnOrganizationMaterials$.subscribe(); //todo unsubscribe
+    //this.templateService.subscribeOnOrganizationTemplates$.subscribe(); //todo unsubscribe
+    //this.materialService.subscribeOnOrganizationMaterials$.subscribe(); //todo unsubscribe
 
     this.templates$ = this.templateQuery.selectAll();
   }

@@ -29,6 +29,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    //this.materialService.subscribeOnOrganizationMaterials$().subscribe();
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.form$;
 

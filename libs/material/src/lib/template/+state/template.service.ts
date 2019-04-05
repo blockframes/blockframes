@@ -12,100 +12,42 @@ import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
-  public subscribeOnOrganizationTemplates$ = this.organizationQuery.selectActiveId().pipe(
-    filter(id => !!id),
-    switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
+  public subscribeOnAllOrgsTemplates$ = this.organizationQuery.selectAll().pipe(
+    switchMap(orgs =>
+      combineLatest(
+        orgs.map(org =>
+          this.db
+            .collection<Template>(`orgs/${org.id}/templates`)
+            .valueChanges()
+            .pipe(map(templates => templates.map(template => ({ ...template, orgId: org.id }))))
+        )
+      )
+    ),
+    // for each org, we have an array of templates.
+    // This flattens the array of array into a single array of templates:
+    map(templatesPerOrgs => [].concat.apply([], templatesPerOrgs) as Template[]),
     tap(templates => this.store.set(templates))
   );
 
+  // public subscribeOnOrganizationTemplates$ = this.organizationQuery.selectActiveId().pipe(
+  //   filter(id => !!id),
+  //   switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
+  //   tap(templates => this.store.set(templates))
+  // );
+
   // public get subscribeOnUserTemplates$() {
-  //   const templatesByOrgs =  this.organizationQuery.getAll().map((org) =>
-  //       this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges());
-
-  //   return combineLatest(templatesByOrgs).pipe(
-  //     tap(templates => templates.map(template => this.store.add(template)))
-  //   );
-  // }
-
-  public get subscribeOnUserTemplates$() {
-    const templatesByOrgs = this.organizationQuery.selectAll().pipe(
-      switchMap(orgs =>
-        combineLatest(
-          orgs.map(org =>
-            this.db
-              .collection<Template>(`orgs/${org.id}/templates`)
-              .valueChanges()
-              .pipe(map(templates => ({ ...org, templates } as Organization)))
-          )
-        )
-      )
-    );
-
-    return templatesByOrgs.pipe(
-      switchMap(orgs => orgs.map(org => tap(this.organizationStore.update(org.id, org))))
-    );
-  }
-
-  // public subscribeUserTemplates2() {
-  //   return combineLatest(this.db
-  //     .collection<Organization>('orgs', ref =>
-  //       ref.where('userIds', 'array-contains', this.authQuery.user.uid)
+  //   return this.organizationQuery.selectAll().pipe(
+  //     switchMap(orgs =>
+  //       combineLatest(
+  //         orgs.map(org =>
+  //           this.db
+  //             .collection<Template>(`orgs/${org.id}/templates`)
+  //             .valueChanges()
+  //             .pipe(map(templates => ({ ...org, templates } as Organization)))
+  //         )
+  //       )
   //     )
-  //     .valueChanges()
-  //     .pipe(
-
-  //       switchMap(orgs => orgs),
-  //       switchMap(org => this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges(),
-
-  //       ),
-  //       tap(templates => console.log(templates))
-  //     )
-  // }
-
-  // public deliveriesInfoByMovie() {
-  //   return combineLatest([
-  //     this.selectAll(),
-  //     this.movieQuery.selectActive()
-  //   ]).pipe(
-  //     map(([deliveries, movie]) => {
-  //       return deliveries.map(delivery =>
-  //         delivery = {...delivery,
-  //                     ...{producer: this.userQuery.getUserEmail(delivery.productorId)},
-  //                     ...{distributor: this.userQuery.getUserEmail(delivery.distributorId)},
-  //                     ...{movieTitle: this.movieQuery.movieTitle(delivery.movieId)}
-  //                    }
-  //         ).filter(delivery => delivery.movieId === movie.id);
-  //     })
   //   );
-  // }
-
-  // public subscribe(orgID: string): Observable<OrgMember[]> {
-  //   const pullUserAndOrgRights = (userID): Observable<OrgMember> => (
-  //     combineLatest([
-  //       this.firestore.collection('users').doc(userID)
-  //         .get()
-  //         .pipe(map(x => x.data())),
-  //       this.firestore.collection('users').doc(userID).collection('orgRights').doc(orgID)
-  //         .get()
-  //         .pipe(map(x => x.data()))
-  //     ]).pipe(map(([user, rights]): OrgMember => ({
-  //       id: user.uid,
-  //       email: user.email,
-  //       roles: rights.rightNameSlug
-  //     })))
-  //   );
-
-  // public subscribeUserTemplates2() {
-  //   return this.db
-  //     .collection<Organization>('orgs', ref =>
-  //       ref.where('userIds', 'array-contains', this.authQuery.user.uid)
-  //     )
-  //     .valueChanges()
-  //     .pipe(
-  //       switchMap(orgs => orgs),
-  //       switchMap(org => this.db.collection<Template>(`orgs/${org.id}/templates`).valueChanges()),
-  //       tap(templates => console.log(templates))
-  //     );
   // }
 
   constructor(
@@ -115,7 +57,8 @@ export class TemplateService {
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
     private authQuery: AuthQuery,
-    private organizationStore: OrganizationStore
+    private organizationStore: OrganizationStore,
+    private templateQuery: TemplateQuery,
   ) {}
 
   public addTemplate(templateName: string) {
@@ -138,7 +81,7 @@ export class TemplateService {
   }
 
   public deleteMaterial(id: string) {
-    const idOrg = this.organizationQuery.getActiveId();
+    const idOrg = this.templateQuery.getActive().orgId;
 
     // delete material and materialId of materialsId of sub-collection template in firebase
     const template = this.query.getActive();
@@ -152,7 +95,7 @@ export class TemplateService {
 
   public saveMaterial(material: Material) {
     // Add material to sub-collection materials of organization in firebase
-    const idOrg = this.organizationQuery.getActiveId();
+    const idOrg = this.templateQuery.getActive().orgId;
     const idMaterial = this.db.createId();
     this.db
       .doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`)

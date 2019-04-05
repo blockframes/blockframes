@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -22,17 +22,14 @@ export class TemplateListComponent implements OnInit {
     private query: TemplateQuery,
     public dialog: MatDialog,
     private materialService: MaterialService,
-    private organizationQuery: OrganizationQuery,
   ) {
   }
 
   ngOnInit() {
-    this.service.subscribeOnUserTemplates$.subscribe(); //todo unsubscribe
-    this.materialService.subscribeOnOrganizationMaterials$.subscribe(); //todo unsubscribe
+    this.service.subscribeOnAllOrgsTemplates$.subscribe(); //todo unsubscribe
+    this.materialService.subscribeOnAllOrgsMaterials$.subscribe(); //todo unsubscribe
 
-    this.templates$ = this.organizationQuery.templates$;
-
-
+    this.templates$ = this.query.templatesByOrgs$
   }
 
   public addTemplateDialog(): void {

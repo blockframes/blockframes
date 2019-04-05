@@ -23,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 const routes: Routes = [
@@ -51,6 +52,7 @@ const routes: Routes = [
     MatListModule,
     MatButtonModule,
     MatMenuModule,
+    MatExpansionModule,
     MaterialModule,
     RouterModule.forChild(routes)
   ],

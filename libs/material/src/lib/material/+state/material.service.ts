@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { Material } from './material.model';
 import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -10,11 +11,23 @@ import { DeliveryQuery } from '../../delivery/+state/delivery.query';
   providedIn: 'root'
 })
 export class MaterialService {
-  public subscribeOnOrganizationMaterials$ = this.organizationQuery.selectActiveId().pipe(
-    filter(id => !!id),
-    switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
+  public subscribeOnAllOrgsMaterials$ = this.organizationQuery.selectAll().pipe(
+    switchMap(orgs =>
+      combineLatest(
+        orgs.map(org => this.db.collection<Material>(`orgs/${org.id}/materials`).valueChanges())
+      )
+    ),
+    // for each org, we have an array of materials.
+    // This flattens the array of array into a single array of materials:
+    map(materials => [].concat.apply([], materials) as Material[]),
     tap(materials => this.store.set(materials))
   );
+
+  // public subscribeOnOrganizationMaterials$ = this.organizationQuery.selectActiveId().pipe(
+  //   filter(id => !!id),
+  //   switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
+  //   tap(materials => this.store.set(materials))
+  // );
 
   public subscribeOnDeliveryMaterials$ = this.deliveryQuery.selectActiveId().pipe(
     filter(id => !!id),
@@ -29,4 +42,11 @@ export class MaterialService {
     private deliveryQuery: DeliveryQuery
   ) {}
 
+  public subscribeOnOrganizationMaterials$(orgId: string) {
+    return this.organizationQuery.selectEntity(orgId).pipe(
+      filter(id => !!id),
+      switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
+      tap(materials => this.store.set(materials))
+    );
+  }
 }

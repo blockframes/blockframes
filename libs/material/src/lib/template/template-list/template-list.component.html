@@ -1,24 +1,31 @@
-<section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
-  <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
-    <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
-      <mat-card-actions>
-        <button (click)="addTemplateDialog()" color="primary" mat-icon-button matRipple>
-          <mat-icon class="icon-add">add_circle</mat-icon>
-          Add Template
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </article>
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let templatePerOrg of (templates$ | async | keyvalue)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ organizationQuery.getEntity(templatePerOrg.key).name }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
+      <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
+        <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
+          <mat-card-actions>
+            <button (click)="addTemplateDialog()" color="primary" mat-icon-button matRipple>
+              <mat-icon class="icon-add">add_circle</mat-icon>
+              Add Template
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </article>
 
-  <article
-    class="card-ngFor"
-    fxFlex.gt-md="25"
-    fxFlex.gt-sm="50"
-    fxFlex="100"
-    *ngFor="let template of (templates$ | async)"
-  >
-    <template-item class="mat-cards" [template]="template"></template-item>
-  </article>
-</section>
-
-
+      <article
+        class="card-ngFor"
+        fxFlex.gt-md="25"
+        fxFlex.gt-sm="50"
+        fxFlex="100"
+        *ngFor="let template of templatePerOrg.value"
+      >
+        <template-item class="mat-cards" [template]="template"></template-item>
+      </article>
+    </section>
+  </mat-expansion-panel>
+</mat-accordion>

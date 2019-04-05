@@ -4,6 +4,7 @@ export interface Template {
   id: string;
   name: string;
   materialsId: string[];
+  orgId?: string;
 }
 
 export interface TemplateView {
