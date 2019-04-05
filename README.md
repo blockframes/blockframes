@@ -26,6 +26,14 @@ npm run e2e:dev # starts cypress when your server is already running
 npm run lint, npm run test, etc. # check this in your package.json
 ```
 
+
+## Deploy
+
+```bash
+npm run build:all
+firebase deploy
+```
+
 ## Data
 
 ### Cloud Storage:
