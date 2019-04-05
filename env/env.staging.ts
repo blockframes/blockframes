@@ -9,7 +9,7 @@ export const firebase = {
   projectId: 'blockframes-staging',
   storageBucket: 'blockframes-staging.appspot.com',
   messagingSenderId: '176629403574'
-}
+};
 
 export const network = 'ropsten';
 

@@ -5,7 +5,10 @@
   "scripts": {
     "ng": "ng",
     "start": "npx ng serve --hmr --disable-host-check",
-    "build": "npx ng build --aot --prod",
+    "build:delivery": "npx ng build delivery --aot --prod",
+    "build:movie-financing": "npx ng build movie-financing --aot --prod",
+    "build:ip-upload": "npx ng build ip-upload --aot --prod",
+    "build:all": "npm run build:delivery && npm run build:movie-financing && npm run build:ip-upload",
     "test": "npx ng test",
     "lint": "npx ng lint && npx ng lint",
     "e2e": "./node_modules/.bin/ng e2e ip-upload-e2e && ./node_modules/.bin/ng e2e movie-financing-e2e && ./node_modules/.bin/ng e2e delivery-e2e",
