@@ -10,9 +10,16 @@ import { Template } from '@blockframes/material';
   providedIn: 'root'
 })
 export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
-
   constructor(protected store: OrganizationStore) {
     super(store);
+  }
+
+  public getOrgId(name: string) {
+    const orgs = this.getAll({
+      filterBy: org => org.name === name,
+      limitTo: 0
+    })
+    return orgs[0].id;
   }
 
   get form$() {

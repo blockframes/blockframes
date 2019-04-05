@@ -6,23 +6,26 @@ import { MaterialQuery, materialsByCategory } from '../../material/+state/materi
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
+export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
+  return templates.reduce(
+    (acc, template) => {
+      return {
+        ...acc,
+        [template.orgName]: [...(acc[template.orgName] || []), template]
+      };
+    },
+    {} as TemplatesByOrgs
+  );
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-
-  public templatesByOrgs$ = this.selectAll().pipe(map(templates => {
-    const r = {} as TemplatesByOrgs;
-    templates.forEach(template => {
-      if (!r[template.orgName]) {
-        r[template.orgName] = [template];
-      }
-      else {
-        r[template.orgName].push(template);
-      }
-    })
-    return r;
-  }));
+  public templatesByOrgs$ = this.selectAll().pipe(
+    map(templates =>
+      templatesByOrgName(templates)
+  ));
 
   public form$ = this.select(state => state.form);
 
@@ -37,10 +40,7 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     map(materials => materialsByCategory(materials))
   );
 
-  constructor(
-    protected store: TemplateStore,
-    private materialQuery: MaterialQuery,
-  ) {
+  constructor(protected store: TemplateStore, private materialQuery: MaterialQuery) {
     super(store);
   }
 }

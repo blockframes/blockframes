@@ -9,7 +9,7 @@
       <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
         <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
           <mat-card-actions>
-            <button (click)="addTemplateDialog(templateByOrg.value[0].orgId)" color="primary" mat-icon-button matRipple>
+            <button (click)="addTemplateDialog(templateByOrg.key)" color="primary" mat-icon-button>
               <mat-icon class="icon-add">add_circle</mat-icon>
               Add Template
             </button>

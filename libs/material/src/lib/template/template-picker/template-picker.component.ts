@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../../template/+state/template.model';
 import { MatDialogRef } from '@angular/material';
@@ -11,6 +11,7 @@ import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
 import { DeliveryQuery } from '../../delivery/+state';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -18,8 +19,8 @@ import { DeliveryQuery } from '../../delivery/+state';
   styleUrls: ['./template-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplatePickerComponent implements OnInit {
-
+export class TemplatePickerComponent implements OnInit, OnDestroy {
+  private isAlive = true;
   public templates$: Observable<Template[]>;
 
   constructor(
@@ -36,8 +37,8 @@ export class TemplatePickerComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-    this.templateService.subscribeOnOrganizationTemplates$.subscribe(); //todo unsubscribe
-    this.materialService.subscribeOnActiveOrganizationMaterials$.subscribe(); //todo unsubscribe
+    this.templateService.subscribeOnOrganizationTemplates$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.materialService.subscribeOnActiveOrganizationMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
 
     this.templates$ = this.templateQuery.selectAll();
   }
@@ -56,5 +57,9 @@ export class TemplatePickerComponent implements OnInit {
 
   public close() {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }

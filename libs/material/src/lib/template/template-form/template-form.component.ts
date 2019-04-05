@@ -31,8 +31,8 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.service.subscribeOnAllOrgsTemplates$.pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.materialService.subscribeOnAllOrgsMaterials$
+    this.service.subscribeOnAllOrgsTemplates$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.materialService.subscribeOnAllOrgsMaterials$()
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 

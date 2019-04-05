@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
 import { takeWhile } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'template-list',
@@ -21,25 +22,24 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     private query: TemplateQuery,
     public dialog: MatDialog,
     private materialService: MaterialService,
+    private organizationQuery: OrganizationQuery,
   ) {}
 
   ngOnInit() {
-    this.service.subscribeOnAllOrgsTemplates$.pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.materialService.subscribeOnAllOrgsMaterials$
+    this.service.subscribeOnAllOrgsTemplates$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.materialService.subscribeOnAllOrgsMaterials$()
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
     this.templatesByOrgs$ = this.query.templatesByOrgs$;
   }
 
-  public addTemplateDialog(orgId: string): void {
-    this.dialog.open(
-      AddTemplateComponent,
-      {
-        width: '400px',
-        data: { orgId }
-      }
-    );
+  public addTemplateDialog(orgName: string): void {
+    const orgId = this.organizationQuery.getOrgId(orgName);
+    this.dialog.open(AddTemplateComponent, {
+      width: '400px',
+      data: { orgId }
+    });
   }
 
   ngOnDestroy() {

@@ -10,42 +10,19 @@ import { TemplateQuery } from './template.query';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
-  public subscribeOnOrganizationTemplates$ = this.organizationQuery.selectActiveId().pipe(
-    filter(id => !!id),
-    switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
-    tap(templates => this.store.set(templates))
-  );
-
-  public subscribeOnAllOrgsTemplates$ = this.organizationQuery.selectAll().pipe(
-    switchMap(orgs =>
-      combineLatest(
-        orgs.map(org =>
-          this.db
-            .collection<Template>(`orgs/${org.id}/templates`)
-            .valueChanges()
-            .pipe(map(templates => templates.map(template => ({ ...template, orgId: org.id, orgName: org.name }))))
-        )
-      )
-    ),
-    // for each org, we have an array of templates.
-    // This flattens the array of array into a single array of templates:
-    map(templatesPerOrgs => [].concat.apply([], templatesPerOrgs) as Template[]),
-    tap(templates => this.store.set(templates))
-  );
-
   constructor(
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: TemplateStore,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private templateQuery: TemplateQuery,
+    private templateQuery: TemplateQuery
   ) {}
 
-  public addTemplate(templateName: string, idOrg: string) {
+  public addTemplate(templateName: string, orgId: string) {
     const idTemplate = this.db.createId();
     const template = createTemplate({ id: idTemplate, name: templateName });
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${idTemplate}`).set(template);
+    this.db.doc<Template>(`orgs/${orgId}/templates/${idTemplate}`).set(template);
   }
 
   public addUnamedTemplate() {
@@ -56,13 +33,12 @@ export class TemplateService {
   }
 
   public deleteTemplate(id: string) {
-    console.log(id)
-    const idOrg = this.templateQuery.getEntity(id).orgId;
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
+    const orgId = this.templateQuery.getEntity(id).orgId;
+    this.db.doc<Template>(`orgs/${orgId}/templates/${id}`).delete();
   }
 
   public deleteMaterial(id: string) {
-    const idOrg = this.templateQuery.getActive().orgId;
+    const orgId = this.templateQuery.getActive().orgId;
 
     // delete material and materialId of materialsId of sub-collection template in firebase
     const template = this.query.getActive();
@@ -70,34 +46,34 @@ export class TemplateService {
     const index = materialsId.indexOf(id);
     materialsId.splice(index, 1);
 
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
-    this.db.doc<Material>(`orgs/${idOrg}/materials/${id}`).delete();
+    this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({ materialsId });
+    this.db.doc<Material>(`orgs/${orgId}/materials/${id}`).delete();
   }
 
   public saveMaterial(material: Material) {
     // Add material to sub-collection materials of organization in firebase
-    const idOrg = this.templateQuery.getActive().orgId;
+    const orgId = this.templateQuery.getActive().orgId;
     const idMaterial = this.db.createId();
     this.db
-      .doc<Material>(`orgs/${idOrg}/materials/${idMaterial}`)
+      .doc<Material>(`orgs/${orgId}/materials/${idMaterial}`)
       .set({ ...material, id: idMaterial });
 
     // Add materialId of materialsId of sub-collection template in firebase
     const template = this.query.getActive();
     const materialsId = [...template.materialsId, idMaterial];
-    this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).update({ materialsId });
+    this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({ materialsId });
   }
 
   public async saveTemplate(name: string) {
-    const idOrg = this.organizationQuery.getActiveId();
+    const orgId = this.organizationQuery.getActiveId();
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
-      const template = createTemplate({id: this.db.createId(), name})
-      template.materialsId = materials.map(({ id }) => id)
-      this.db.doc<Template>(`orgs/${idOrg}/templates/${template.id}`).set(template);
+      const template = createTemplate({ id: this.db.createId(), name });
+      template.materialsId = materials.map(({ id }) => id);
+      this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).set(template);
       return Promise.all(
         materials.map(material =>
-          this.db.doc<Material>(`orgs/${idOrg}/materials/${material.id}`).set(material)
+          this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).set(material)
         )
       );
     }
@@ -106,5 +82,36 @@ export class TemplateService {
   public async nameExists(name: string) {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name);
+  }
+
+  public subscribeOnAllOrgsTemplates$() {
+    return this.organizationQuery.selectAll().pipe(
+      switchMap(orgs =>
+        combineLatest(
+          orgs.map(org =>
+            this.db
+              .collection<Template>(`orgs/${org.id}/templates`)
+              .valueChanges()
+              .pipe(
+                map(templates =>
+                  templates.map(template => ({ ...template, orgId: org.id, orgName: org.name }))
+                )
+              )
+          )
+        )
+      ),
+      // for each org, we have an array of templates.
+      // This flattens the array of array into a single array of templates:
+      map(templatesPerOrgs => [].concat.apply([], templatesPerOrgs) as Template[]),
+      tap(templates => this.store.set(templates))
+    );
+  }
+
+  public subscribeOnOrganizationTemplates$() {
+    return this.organizationQuery.selectActiveId().pipe(
+      filter(id => !!id),
+      switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
+      tap(templates => this.store.set(templates))
+    );
   }
 }
