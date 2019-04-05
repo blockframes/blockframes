@@ -14,7 +14,6 @@ export interface Organization {
   updated: number;
   userIds: string[];
   movieIds: string[];
-  templates: Template[];
 }
 
 /**
@@ -29,7 +28,6 @@ export function createOrganization(params?: Partial<Organization>): Organization
     movieIds: params.movieIds || [],
     created: params.created || Date.now(),
     updated: params.updated || Date.now(),
-    templates: [],
   } : {} as Organization;
 }
 

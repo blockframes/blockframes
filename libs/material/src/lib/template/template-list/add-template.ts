@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { Component, Input, Inject } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { TemplateService } from "../+state";
 
 @Component({
@@ -19,14 +19,16 @@ import { TemplateService } from "../+state";
   `
 })
 export class AddTemplateComponent {
+
   constructor(
     public dialogRef: MatDialogRef<AddTemplateComponent>,
-    private service: TemplateService
+    private service: TemplateService,
+    @Inject(MAT_DIALOG_DATA) public data: {orgId: string},
   ) {
   }
 
   public addTemplate(templateName: string) {
-    this.service.addTemplate(templateName);
+    this.service.addTemplate(templateName, this.data.orgId);
     this.close();
   }
 

@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
-// tslint:disable-next-line
-import { OrganizationQuery, Organization, OrganizationStore } from '@blockframes/organization';
-import { switchMap, tap, filter, map } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization';
+import { switchMap, tap, map, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
+  public subscribeOnOrganizationTemplates$ = this.organizationQuery.selectActiveId().pipe(
+    filter(id => !!id),
+    switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
+    tap(templates => this.store.set(templates))
+  );
+
   public subscribeOnAllOrgsTemplates$ = this.organizationQuery.selectAll().pipe(
     switchMap(orgs =>
       combineLatest(
@@ -19,7 +23,7 @@ export class TemplateService {
           this.db
             .collection<Template>(`orgs/${org.id}/templates`)
             .valueChanges()
-            .pipe(map(templates => templates.map(template => ({ ...template, orgId: org.id }))))
+            .pipe(map(templates => templates.map(template => ({ ...template, orgId: org.id, orgName: org.name }))))
         )
       )
     ),
@@ -29,40 +33,16 @@ export class TemplateService {
     tap(templates => this.store.set(templates))
   );
 
-  // public subscribeOnOrganizationTemplates$ = this.organizationQuery.selectActiveId().pipe(
-  //   filter(id => !!id),
-  //   switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
-  //   tap(templates => this.store.set(templates))
-  // );
-
-  // public get subscribeOnUserTemplates$() {
-  //   return this.organizationQuery.selectAll().pipe(
-  //     switchMap(orgs =>
-  //       combineLatest(
-  //         orgs.map(org =>
-  //           this.db
-  //             .collection<Template>(`orgs/${org.id}/templates`)
-  //             .valueChanges()
-  //             .pipe(map(templates => ({ ...org, templates } as Organization)))
-  //         )
-  //       )
-  //     )
-  //   );
-  // }
-
   constructor(
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: TemplateStore,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private authQuery: AuthQuery,
-    private organizationStore: OrganizationStore,
     private templateQuery: TemplateQuery,
   ) {}
 
-  public addTemplate(templateName: string) {
-    const idOrg = this.organizationQuery.getActiveId();
+  public addTemplate(templateName: string, idOrg: string) {
     const idTemplate = this.db.createId();
     const template = createTemplate({ id: idTemplate, name: templateName });
     this.db.doc<Template>(`orgs/${idOrg}/templates/${idTemplate}`).set(template);
@@ -76,7 +56,8 @@ export class TemplateService {
   }
 
   public deleteTemplate(id: string) {
-    const idOrg = this.organizationQuery.getActiveId();
+    console.log(id)
+    const idOrg = this.templateQuery.getEntity(id).orgId;
     this.db.doc<Template>(`orgs/${idOrg}/templates/${id}`).delete();
   }
 

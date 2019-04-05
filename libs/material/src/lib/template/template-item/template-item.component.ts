@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { TemplateService } from '../+state';
 
 @Component({
   selector: 'template-item',
@@ -10,10 +11,11 @@ export class TemplateItemComponent {
 
   @Input() template;
 
-  constructor() {
-  }
+  constructor(
+    private service: TemplateService,
+  ) { }
 
   public deleteTemplate(id: string) {
-    // pass
+    this.service.deleteTemplate(id);
   }
 }

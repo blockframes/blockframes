@@ -4,7 +4,8 @@ export interface Template {
   id: string;
   name: string;
   materialsId: string[];
-  orgId?: string;
+  orgId?: string; // only storage in akita store
+  orgName?: string; // only storage in akita store
 }
 
 export interface TemplateView {

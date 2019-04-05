@@ -23,11 +23,11 @@ export class MaterialService {
     tap(materials => this.store.set(materials))
   );
 
-  // public subscribeOnOrganizationMaterials$ = this.organizationQuery.selectActiveId().pipe(
-  //   filter(id => !!id),
-  //   switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
-  //   tap(materials => this.store.set(materials))
-  // );
+  public subscribeOnActiveOrganizationMaterials$ = this.organizationQuery.selectActiveId().pipe(
+    filter(id => !!id),
+    switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
+    tap(materials => this.store.set(materials))
+  );
 
   public subscribeOnDeliveryMaterials$ = this.deliveryQuery.selectActiveId().pipe(
     filter(id => !!id),

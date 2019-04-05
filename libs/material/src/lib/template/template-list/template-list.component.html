@@ -2,14 +2,14 @@
   <mat-expansion-panel *ngFor="let templatePerOrg of (templates$ | async | keyvalue)">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ organizationQuery.getEntity(templatePerOrg.key).name }}
+        {{ templatePerOrg.key }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
       <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
         <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
           <mat-card-actions>
-            <button (click)="addTemplateDialog()" color="primary" mat-icon-button matRipple>
+            <button (click)="addTemplateDialog(templatePerOrg.value[0].orgId)" color="primary" mat-icon-button matRipple>
               <mat-icon class="icon-add">add_circle</mat-icon>
               Add Template
             </button>
