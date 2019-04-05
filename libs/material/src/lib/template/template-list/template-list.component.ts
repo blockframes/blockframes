@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Template, TemplateQuery, TemplateService } from '../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
-import { map } from 'rxjs/operators';
+import { map, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'template-list',
@@ -13,23 +13,24 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./template-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateListComponent implements OnInit {
+export class TemplateListComponent implements OnInit, OnDestroy {
   public templates$: Observable<any>;
-
+  private isAlive = true;
 
   constructor(
     private service: TemplateService,
     private query: TemplateQuery,
     public dialog: MatDialog,
     private materialService: MaterialService,
+    private organizationQuery: OrganizationQuery,
   ) {
   }
 
   ngOnInit() {
-    this.service.subscribeOnAllOrgsTemplates$.subscribe(); //todo unsubscribe
-    this.materialService.subscribeOnAllOrgsMaterials$.subscribe(); //todo unsubscribe
+    this.service.subscribeOnAllOrgsTemplates$.pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.materialService.subscribeOnAllOrgsMaterials$.pipe(takeWhile(() => this.isAlive)).subscribe();
 
-    this.templates$ = this.query.templatesByOrgs$
+    this.templates$ = this.query.templatesByOrgs$;
   }
 
   public addTemplateDialog(): void {
@@ -40,6 +41,10 @@ export class TemplateListComponent implements OnInit {
 
   public deleteTemplate(id: string) {
     this.service.deleteTemplate(id);
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 
 }
