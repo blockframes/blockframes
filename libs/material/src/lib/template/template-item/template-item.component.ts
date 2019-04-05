@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { TemplateService } from '../+state';
+import { TemplateService, Template } from '../+state';
 
 @Component({
   selector: 'template-item',
@@ -9,7 +9,7 @@ import { TemplateService } from '../+state';
 })
 export class TemplateItemComponent {
 
-  @Input() template;
+  @Input() template: Template;
 
   constructor(
     private service: TemplateService,

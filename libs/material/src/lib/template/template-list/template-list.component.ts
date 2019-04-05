@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { TemplateQuery, TemplateService } from '../+state';
+import { TemplateQuery, TemplateService, TemplatesByOrgs } from '../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
-import { OrganizationQuery } from '@blockframes/organization';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -14,7 +13,7 @@ import { takeWhile } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit, OnDestroy {
-  public templates$: Observable<any>;
+  public templatesByOrgs$: Observable<TemplatesByOrgs>;
   private isAlive = true;
 
   constructor(
@@ -22,7 +21,6 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     private query: TemplateQuery,
     public dialog: MatDialog,
     private materialService: MaterialService,
-    private organizationQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
@@ -31,7 +29,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templates$ = this.query.templatesByOrgs$;
+    this.templatesByOrgs$ = this.query.templatesByOrgs$;
   }
 
   public addTemplateDialog(orgId: string): void {

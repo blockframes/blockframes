@@ -13,6 +13,11 @@ export interface TemplateView {
   materials: Material[]
 }
 
+export interface TemplatesByOrgs {
+  orgName: string,
+  templates: Template[]
+}
+
 
 /**
  * A factory function that creates Template

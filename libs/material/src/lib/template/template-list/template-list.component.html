@@ -1,15 +1,15 @@
 <mat-accordion>
-  <mat-expansion-panel *ngFor="let templatePerOrg of (templates$ | async | keyvalue)">
+  <mat-expansion-panel *ngFor="let templateByOrg of (templatesByOrgs$ | async | keyvalue)">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ templatePerOrg.key }}
+        {{ templateByOrg.key }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
       <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
         <mat-card class="mat-cards" fxLayout="row" fxLayoutAlign="center center">
           <mat-card-actions>
-            <button (click)="addTemplateDialog(templatePerOrg.value[0].orgId)" color="primary" mat-icon-button matRipple>
+            <button (click)="addTemplateDialog(templateByOrg.value[0].orgId)" color="primary" mat-icon-button matRipple>
               <mat-icon class="icon-add">add_circle</mat-icon>
               Add Template
             </button>
@@ -22,7 +22,7 @@
         fxFlex.gt-md="25"
         fxFlex.gt-sm="50"
         fxFlex="100"
-        *ngFor="let template of templatePerOrg.value"
+        *ngFor="let template of templateByOrg.value"
       >
         <template-item class="mat-cards" [template]="template"></template-item>
       </article>

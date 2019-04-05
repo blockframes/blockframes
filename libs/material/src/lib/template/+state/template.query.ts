@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
-import { Template } from './template.model';
+import { Template, TemplatesByOrgs } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -12,7 +12,7 @@ import { combineLatest } from 'rxjs';
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
 
   public templatesByOrgs$ = this.selectAll().pipe(map(templates => {
-    const r = {};
+    const r = {} as TemplatesByOrgs;
     templates.forEach(template => {
       if (!r[template.orgName]) {
         r[template.orgName] = [template];
