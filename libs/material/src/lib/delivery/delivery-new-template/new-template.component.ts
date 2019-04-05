@@ -5,21 +5,8 @@ import { ConfirmComponent } from './confirm.component';
 
 @Component({
   selector: 'delivery-new-template',
-  template: `
-    <div mat-dialog-content>
-      <h2>Save as a new template</h2>
-      <mat-form-field appearance="outline" fxLayoutAlign="center">
-        <mat-label>File name</mat-label>
-        <input #templateName matInput placeholder="New template name" required/>
-      </mat-form-field>
-    </div>
-    <div mat-dialog-actions fxLayoutAlign="center">
-      <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
-      <button mat-raised-button color="primary" (click)="saveTemplate(templateName.value)" [disabled]="!templateName.value">
-        Save Template
-      </button>
-    </div>
-  `,
+  templateUrl: './new-template.component.html',
+  styleUrls: ['./new-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTemplateComponent {

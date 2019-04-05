@@ -8,6 +8,7 @@ import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
 import { DeliveryQuery, DeliveryStore } from '../+state';
 import { Router } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'delivery-list',
@@ -28,7 +29,8 @@ export class DeliveryListComponent implements OnInit {
     private store: DeliveryStore,
     private router: Router,
     private location: Location,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private db: AngularFirestore,
   ) {}
 
   ngOnInit() {
@@ -44,7 +46,8 @@ export class DeliveryListComponent implements OnInit {
   }
 
   public openDialog() {
-    this.dialog.open(TemplatePickerComponent, { width: '80%', height: '80%' });
+    this.store.setActive(this.db.createId());
+    this.dialog.open(TemplatePickerComponent, { width: '70%' });
   }
 
   public goBack() {

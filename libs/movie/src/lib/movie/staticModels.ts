@@ -83,6 +83,16 @@ const models = {
       'label': 'Financier'
     }
   ],
+  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
+    {
+      'slug': 'can-view',
+      'label': 'Can view delivery'
+    },
+    {
+      'slug': 'can-edit',
+      'label': 'Can add, remove and edit materials'
+    },
+  ],
   'CREDIT_ROLES': [
     {
       'slug': 'writer',

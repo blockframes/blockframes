@@ -1,14 +1,14 @@
 <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
-  <article class="card-add" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
+  <article class="template-card" fxFlex.gt-md="25" fxFlex.gt-sm="50" fxFlex="100">
     <mat-card (click)="createDelivery()" fxLayout="row" fxLayoutAlign="center center">
       <mat-card-actions>
-          <mat-icon class="icon-add">add_circle</mat-icon>
-          <span>Create delivery from scratch</span>
+        <mat-icon class="icon-add">add_circle</mat-icon>
+        <span>Create delivery from scratch</span>
       </mat-card-actions>
     </mat-card>
   </article>
 
-  <article
+  <article class="template-card"
     fxFlex.gt-md="25"
     fxFlex.gt-sm="50"
     fxFlex="100"
@@ -24,4 +24,6 @@
     </mat-card>
   </article>
 </section>
-<button mat-raised-button color="warn" (click)="close()">Cancel</button>
+<div fxLayoutAlign="center">
+  <button mat-raised-button color="warn" (click)="close()" fxLayoutAlign="center">Cancel</button>
+</div>

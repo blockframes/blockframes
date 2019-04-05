@@ -4,16 +4,13 @@ mat-sidenav-container {
 }
 
 mat-sidenav {
-  position: fixed;
-  top: 0;
-  left: 0;
   height: 100%;
   width: 250px;
 }
 
 mat-sidenav-content {
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 mat-card {

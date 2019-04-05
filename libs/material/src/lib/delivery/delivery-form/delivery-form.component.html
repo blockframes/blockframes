@@ -4,6 +4,7 @@
     <material-list *ngIf="(delivery$ | async) as delivery" [template]="delivery"></material-list>
     <button mat-raised-button color="primary" (click)="saveAsTemplate()">Save as new template</button>
     <button mat-raised-button color="warn" (click)="deleteDelivery()">Delete delivery</button>
+    <button (click)="goToSettings()">SETTINGS</button>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>

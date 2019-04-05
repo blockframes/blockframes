@@ -1,0 +1,39 @@
+<section>
+  <h2 fxLayoutAlign="center">Select stakeholders for this delivery</h2>
+
+  <article fxLayout="row" fxLayoutGap="5%" fxLayoutAlign="center center">
+
+    <mat-form-field>
+      <mat-label>Stakeholder</mat-label>
+      <mat-select #selectedStakeholder>
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let stakeholder of (movieStakeholders$ | async)" [value]="stakeholder">{{
+          stakeholder.organization.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Authorization</mat-label>
+      <mat-select [disabled]="!selectedStakeholder.value" #selectedAuthorization>
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let authorization of authorizations" [value]="authorization">
+          {{ authorization.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      [disabled]="!selectedStakeholder.value || !selectedAuthorization.value"
+      mat-mini-fab
+      color="primary"
+      (click)="addStakeholder(selectedStakeholder.value, selectedAuthorization.value.slug)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </article>
+
+  <ul *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
+    <li>
+      name : {{ deliveryStakeholder.organization.name }} | authorizations : {{ deliveryStakeholder.authorizations }}
+    </li>
+  </ul>
+</section>

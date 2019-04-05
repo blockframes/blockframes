@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { NewTemplateComponent } from './new-template.component';
+import { NewTemplateComponent } from '../delivery-new-template/new-template.component';
 import { Material, MaterialForm } from '../../material/+state/material.model';
 import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie';
+import { DeliveryQuery } from '../+state';
 
 @Component({
   selector: 'delivery-form',
@@ -23,6 +24,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private materialQuery: MaterialQuery,
+    private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
@@ -63,6 +65,12 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.router.navigate([`/layout/${movieId}`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
     // TODO: fix behavior => user can still go back and land on the delivery page (without active delivery)
+  }
+
+  public goToSettings(){
+    const deliveryId = this.query.getActiveId();
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`/layout/${movieId}/form/${deliveryId}/settings`]);
   }
 
   ngOnDestroy() {

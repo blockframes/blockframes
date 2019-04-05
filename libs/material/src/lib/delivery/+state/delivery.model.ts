@@ -7,6 +7,10 @@ export type Delivery = {
   delivered: boolean;
 };
 
+export enum Authorizations {
+  canView = 'Can view delivery',
+  canEdit = 'Can add, remove and edit materials',
+}
 
 export function createDelivery(params: Partial<Delivery>) {
   return {

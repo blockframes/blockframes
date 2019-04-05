@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
+import { DeliveryQuery } from '../../delivery/+state';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -29,6 +30,7 @@ export class TemplatePickerComponent implements OnInit {
     private templateQuery: TemplateQuery,
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
+    private query: DeliveryQuery,
     private db: AngularFirestore,
     private router: Router,
     ) {}
@@ -42,14 +44,13 @@ export class TemplatePickerComponent implements OnInit {
 
   public createDelivery(templateId?: string) {
     const movieId = this.movieQuery.getActiveId();
-    const deliveryId = this.db.createId();
 
     if (!!templateId) {
       this.templateStore.setActive(templateId);
     }
 
-    this.deliveryService.addDelivery(deliveryId, templateId);
-    this.router.navigate([`layout/${movieId}/form/${deliveryId}`]);
+    this.deliveryService.addDelivery(templateId);
+    this.router.navigate([`layout/${movieId}/form/${this.query.getActiveId()}`]);
     this.close();
   }
 

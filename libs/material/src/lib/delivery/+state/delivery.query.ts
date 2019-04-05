@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, StakeholderStore, StakeholderService } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
@@ -17,6 +17,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialStore: MaterialStore,
+    private stakeholderStore: StakeholderStore,
+    private stakeholderService: StakeholderService,
     private db: AngularFirestore
   ) {
     super(store);
@@ -59,6 +61,14 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         return materials.filter(material => material.deliveriesIds.includes(id));
       }),
       map(materials => materialsByCategory(materials))
+    );
+  }
+
+  public get stakeholdersByActiveDelivery$(){
+    return this.selectActive().pipe(
+      filter(delivery => !!delivery),
+      switchMap(delivery => this.db.collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`).valueChanges()),
+      tap(stakeholders => this.stakeholderStore.set(stakeholders))
     );
   }
 

@@ -8,8 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
-import { ConfirmComponent } from './delivery-form/confirm.component';
-import { NewTemplateComponent } from './delivery-form/new-template.component';
+import { ConfirmComponent } from './delivery-new-template/confirm.component';
+import { NewTemplateComponent } from './delivery-new-template/new-template.component';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
 import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
@@ -28,9 +28,12 @@ import {
   MatInputModule,
   MatMenuModule,
   MatSidenavModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSelectModule,
+  MatOptionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -48,6 +51,11 @@ const routes: Routes = [
     path: 'form/:id',
     // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
     component: DeliveryFormComponent
+  },
+  {
+    path: 'form/:id/settings',
+    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
+    component: DeliverySettingsComponent
   }
 ];
 
@@ -60,7 +68,8 @@ const routes: Routes = [
     TemplatePickerComponent,
     NewTemplateComponent,
     ConfirmComponent,
-    DeliveryViewComponent
+    DeliveryViewComponent,
+    DeliverySettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -83,6 +92,8 @@ const routes: Routes = [
     MatSidenavModule,
     MatFormFieldModule,
     MatDialogModule,
+    MatSelectModule,
+    MatOptionModule,
 
     RouterModule.forChild(routes)
   ],
