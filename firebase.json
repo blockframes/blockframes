@@ -18,6 +18,10 @@
       {
         "source": "/movie-financing{,/**}",
         "destination": "/movie-financing/movie-financing/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/root.html"
       }
     ]
   },
