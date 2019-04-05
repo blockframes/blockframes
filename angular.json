@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/ip-upload/ip-upload",
+            "outputPath": "dist/apps/ip-upload",
             "index": "apps/ip-upload/ip-upload/src/index.html",
             "main": "apps/ip-upload/ip-upload/src/main.ts",
             "polyfills": "apps/ip-upload/ip-upload/src/polyfills.ts",
@@ -356,7 +356,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/movie-financing/movie-financing",
+            "outputPath": "dist/apps/movie-financing",
             "index": "apps/movie-financing/movie-financing/src/index.html",
             "main": "apps/movie-financing/movie-financing/src/main.ts",
             "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
@@ -564,7 +564,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/delivery/delivery",
+            "outputPath": "dist/apps/delivery",
             "index": "apps/delivery/delivery/src/index.html",
             "main": "apps/delivery/delivery/src/main.ts",
             "polyfills": "apps/delivery/delivery/src/polyfills.ts",

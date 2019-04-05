@@ -9,19 +9,19 @@
     "rewrites": [
       {
         "source": "/ip-upload{,/**}",
-        "destination": "/ip-upload/ip-upload/index.html"
+        "destination": "/ip-upload/index.html"
       },
       {
         "source": "/delivery{,/**}",
-        "destination": "/delivery/delivery/index.html"
+        "destination": "/delivery/index.html"
       },
       {
         "source": "/movie-financing{,/**}",
-        "destination": "/movie-financing/movie-financing/index.html"
+        "destination": "/movie-financing/index.html"
       },
       {
         "source": "**",
-        "destination": "/root.html"
+        "destination": "/index.html"
       }
     ]
   },
