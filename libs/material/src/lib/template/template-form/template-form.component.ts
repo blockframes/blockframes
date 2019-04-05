@@ -8,6 +8,7 @@ import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialForm, Material } from '../../material/+state/material.model';
 import { Router, Scroll } from '@angular/router';
 import { filter, takeWhile } from 'rxjs/operators';
+import { MaterialService } from '../../material/+state';
 
 @Component({
   selector: 'template-form',
@@ -25,6 +26,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     private service: TemplateService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
+    private materialService: MaterialService,
     private router: Router
   ) {}
 
