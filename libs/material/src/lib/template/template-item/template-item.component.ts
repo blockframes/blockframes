@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { template } from '@angular/core/src/render3';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'template-item',
@@ -11,5 +10,10 @@ export class TemplateItemComponent {
 
   @Input() template;
 
-  constructor() { }
+  constructor() {
+  }
+
+  public deleteTemplate(id: string) {
+    // pass
+  }
 }

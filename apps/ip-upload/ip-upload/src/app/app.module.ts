@@ -13,7 +13,6 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 // Material
-
 import { MatToolbarModule, MatListModule, MatIconModule } from '@angular/material';
 // Libraries
 import { AuthModule } from '@blockframes/auth';

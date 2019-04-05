@@ -4,8 +4,8 @@ import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
-import { Delivery, createDelivery } from './delivery.model';
-import { MovieQuery, Stakeholder, createStakeholder } from '@blockframes/movie';
+import { createDelivery, Delivery } from './delivery.model';
+import { createStakeholder, MovieQuery, Stakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 
@@ -21,7 +21,8 @@ export class DeliveryService {
     private store: DeliveryStore,
     private templateQuery: TemplateQuery,
     private db: AngularFirestore
-  ) {}
+  ) {
+  }
 
   /** Add material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
@@ -56,6 +57,7 @@ export class DeliveryService {
     const stakeholder = createStakeholder({ id: stakeholderId, orgId });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
+    // @ts-ignore: TODO: fix this error
     this.db.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
     this.store.setActive(id);
     if (!!templateId) {

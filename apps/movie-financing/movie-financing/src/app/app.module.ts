@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-// Material
-import { MatIconModule } from '@angular/material/icon';
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -17,6 +15,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
+// Material
+import { MatIconModule, MatListModule, MatToolbarModule } from '@angular/material';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -29,6 +29,10 @@ import { AuthModule } from '@blockframes/auth';
     RouterModule,
     AuthModule,
     ToolbarModule,
+    // Material
+    MatToolbarModule,
+    MatListModule,
+    MatIconModule,
     // Akita
     environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()]
   ],
