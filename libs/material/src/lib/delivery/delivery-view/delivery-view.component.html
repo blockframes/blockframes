@@ -1,6 +1,6 @@
 <button mat-raised-button color="warn" (click)="goBack()">Back</button>
 <section fxLayout="row" fxLayoutGap="5%">
-  <article class="progress-card" fxFlex="30">
+  <article class="progress-card" fxFlex="30" fxLayout="column">
     <mat-card>
       <mat-card-content
         *ngIf="(progressionValue$ | async) as value; else empty"
@@ -36,6 +36,7 @@
         </mat-card-content>
       </ng-template>
     </mat-card>
+    <button mat-raised-button color="accent" (click)="editDelivery()">Edit delivery (freeze it)</button>
   </article>
   <article fxFlex="70" fxLayout="column">
     <mat-card *ngFor="let category of (materials$ | async | keyvalue)">

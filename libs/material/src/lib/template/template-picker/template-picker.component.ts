@@ -8,7 +8,6 @@ import { TemplateStore } from '../../template/+state/template.store';
 import { MaterialService } from '../../material/+state/material.service';
 import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
 import { DeliveryQuery } from '../../delivery/+state';
 import { takeWhile } from 'rxjs/operators';
@@ -32,7 +31,6 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
     private query: DeliveryQuery,
-    private db: AngularFirestore,
     private router: Router,
     ) {}
 

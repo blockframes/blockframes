@@ -85,13 +85,25 @@ const models = {
   ],
   'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
     {
-      'slug': 'can-view',
-      'label': 'Can view delivery'
+      'slug': 'canValidateDelivery',
+      'label': 'Can validate delivery'
     },
     {
-      'slug': 'can-edit',
+      'slug': 'canModifyDelivery',
       'label': 'Can add, remove and edit materials'
     },
+    {
+      'slug': 'canDeliverMaterial',
+      'label': 'Can deliver materials'
+    },
+    {
+      'slug': 'canAcceptMaterial',
+      'label': 'Can accept materials'
+    },
+    {
+      'slug': 'canRefuseMaterial',
+      'label': 'Can refuse materials'
+    }
   ],
   'CREDIT_ROLES': [
     {

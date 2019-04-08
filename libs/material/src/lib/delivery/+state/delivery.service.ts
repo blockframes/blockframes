@@ -51,14 +51,13 @@ export class DeliveryService {
    * @param templateId if templateId is present, the materials sub-collection is populated with materials from this template
    */
   public addDelivery(templateId?: string) {
-    const id = this.query.getActiveId();
-    const orgId = this.organizationQuery.getActiveId();
+    const id = this.db.createId();
     const stakeholderId = this.db.createId();
+    const orgId = this.organizationQuery.getActiveId();
     const delivery = createDelivery({ id, movieId: this.movieQuery.getActiveId() });
     const stakeholder = createStakeholder({ id: stakeholderId, orgId });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    // @ts-ignore: TODO: fix this error
     this.db.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
     this.store.setActive(id);
     if (!!templateId) {
