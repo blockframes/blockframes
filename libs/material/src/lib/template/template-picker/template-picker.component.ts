@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Template } from '../../template/+state/template.model';
+import { Template, TemplatesByOrgs } from '../../template/+state/template.model';
 import { MatDialogRef } from '@angular/material';
-import { TemplateService} from '../../template/+state/template.service';
+import { TemplateService } from '../../template/+state/template.service';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { TemplateStore } from '../../template/+state/template.store';
 import { MaterialService } from '../../material/+state/material.service';
@@ -11,6 +11,7 @@ import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
 import { DeliveryQuery } from '../../delivery/+state';
 import { takeWhile } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -24,24 +25,31 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialogRef: MatDialogRef<TemplatePickerComponent>,
-    private templateService: TemplateService,
+    private service: TemplateService,
     private deliveryService: DeliveryService,
     private materialService: MaterialService,
-    private templateQuery: TemplateQuery,
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
-    private query: DeliveryQuery,
+    private query: TemplateQuery,
+    private db: AngularFirestore,
     private router: Router,
-    ) {}
+    private organizationQuery: OrganizationQuery,
+  ) {}
 
   ngOnInit() {
-    this.templateService.subscribeOnOrganizationTemplates$().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.materialService.subscribeOnActiveOrganizationMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.service
+      .subscribeOnAllOrgsTemplates$()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe();
+    this.materialService
+      .subscribeOnAllOrgsMaterials$()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe();
 
-    this.templates$ = this.templateQuery.selectAll();
+    this.templates$ = this.query.selectAll();
   }
 
-  public createDelivery(templateId?: string) {
+  public createDelivery(templateId?: string, ) {
     const movieId = this.movieQuery.getActiveId();
 
     if (!!templateId) {

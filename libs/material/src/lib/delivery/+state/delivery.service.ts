@@ -57,6 +57,7 @@ export class DeliveryService {
     const id = this.db.createId();
     const stakeholderId = this.db.createId();
     const movieId = this.movieQuery.getActiveId();
+    // TODO: const orgId = this.movieQuery.getActive().orgId
     const orgId = this.organizationQuery.getActiveId();
     const delivery = createDelivery({ id, movieId });
     const stakeholder = createStakeholder({ id: stakeholderId, orgId });

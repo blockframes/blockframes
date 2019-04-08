@@ -10,10 +10,10 @@ import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
 import { ConfirmComponent } from './delivery-new-template/confirm.component';
 import { NewTemplateComponent } from './delivery-new-template/new-template.component';
-import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
 import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 import { MaterialModule } from '../material/material.module';
+import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -30,10 +30,13 @@ import {
   MatSidenavModule,
   MatDialogModule,
   MatSelectModule,
-  MatOptionModule
+  MatOptionModule,
+  MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
+
+
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -65,17 +68,18 @@ const routes: Routes = [
     DeliveryListComponent,
     DeliveryViewComponent,
     DeliveryFormComponent,
-    TemplatePickerComponent,
     NewTemplateComponent,
     ConfirmComponent,
     DeliveryViewComponent,
     DeliverySettingsComponent,
+    TemplatePickerComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    MatExpansionModule,
     MaterialModule,
 
     // Material

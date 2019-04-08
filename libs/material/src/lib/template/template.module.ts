@@ -56,6 +56,6 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forChild(routes)
   ],
-  entryComponents: [AddTemplateComponent]
+  entryComponents: [AddTemplateComponent,]
 })
 export class TemplateModule {}

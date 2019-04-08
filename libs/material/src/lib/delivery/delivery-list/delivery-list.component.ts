@@ -47,7 +47,7 @@ export class DeliveryListComponent implements OnInit {
   }
 
   public openDialog() {
-    this.dialog.open(TemplatePickerComponent, { width: '70%' });
+    this.dialog.open(TemplatePickerComponent, { width: '80%' });
   }
 
   public goBack() {
