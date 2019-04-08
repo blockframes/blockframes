@@ -8,7 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
-import { ConfirmComponent } from './delivery-new-template/confirm.component';
 import { NewTemplateComponent } from './delivery-new-template/new-template.component';
 import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
@@ -69,7 +68,6 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryFormComponent,
     NewTemplateComponent,
-    ConfirmComponent,
     DeliveryViewComponent,
     DeliverySettingsComponent,
     TemplatePickerComponent,
@@ -101,6 +99,6 @@ const routes: Routes = [
 
     RouterModule.forChild(routes)
   ],
-  entryComponents: [TemplatePickerComponent, NewTemplateComponent, ConfirmComponent]
+  entryComponents: [TemplatePickerComponent, NewTemplateComponent,]
 })
 export class DeliveryModule {}

@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { TemplateService } from '../../template/+state/template.service';
-import { ConfirmComponent } from './confirm.component';
+import { Observable } from 'rxjs';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'delivery-new-template',
@@ -9,24 +11,42 @@ import { ConfirmComponent } from './confirm.component';
   styleUrls: ['./new-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewTemplateComponent {
+export class NewTemplateComponent implements OnInit {
+  public orgs$: Observable<Organization[]>;
+  public isUpdateTemplate = false;
+
+  public form = new FormGroup({
+    name: new FormControl(),
+    organization: new FormControl()
+  });
+
   constructor(
     private dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
-    private dialog: MatDialog
+    private organizationQuery: OrganizationQuery,
   ) {}
 
-  public async saveTemplate(name: string) {
-    if (await this.templateService.nameExists(name)) {
-      this.dialog.open(ConfirmComponent, {
-        data: {
-          name
-        }
-      });
-    } else {
-      this.templateService.saveTemplate(name);
-      this.dialogRef.close();
-    }
+  ngOnInit() {
+    this.orgs$ = this.organizationQuery.selectAll();
+
+    // Check if the name already exists in the selected organization
+    this.form.valueChanges.subscribe(values => {
+      if (this.templateService.nameExists(values.name, values.organization)) {
+        this.isUpdateTemplate = true;
+      } else {
+        this.isUpdateTemplate = false;
+      }
+    });
+  }
+
+  public async saveTemplate(name: string, orgId: string) {
+    this.templateService.saveTemplate(name, orgId);
+    this.dialogRef.close();
+  }
+
+  public async updateTemplate(name: string, orgId: string) {
+    this.templateService.updateTemplate(name, orgId);
+    this.dialogRef.close();
   }
 
   public close() {

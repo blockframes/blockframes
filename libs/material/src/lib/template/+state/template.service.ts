@@ -64,8 +64,7 @@ export class TemplateService {
     this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({ materialsId });
   }
 
-  public async saveTemplate(name: string) {
-    const orgId = this.organizationQuery.getActiveId();
+  public async saveTemplate(name: string, orgId: string) {
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
       const template = createTemplate({ id: this.db.createId(), name });
@@ -79,9 +78,23 @@ export class TemplateService {
     }
   }
 
-  public async nameExists(name: string) {
+  public async updateTemplate(name: string, orgId: string) {
+    const template = this.query.getAll().find(entity => entity.name === name && entity.orgId === orgId);
+    const materials = this.materialQuery.getAll();
+    if (materials.length > 0) {
+      const materialsId = materials.map(({ id }) => id);
+      this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({materialsId});
+      return Promise.all(
+        materials.map(material =>
+          this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).set(material)
+        )
+      );
+    }
+  }
+
+  public nameExists(name: string, orgId: string) {
     // check if name is already used in an already template
-    return this.query.hasEntity(entity => entity.name === name);
+    return this.query.hasEntity(entity => entity.name === name && entity.orgId === orgId);
   }
 
   public subscribeOnAllOrgsTemplates$() {
