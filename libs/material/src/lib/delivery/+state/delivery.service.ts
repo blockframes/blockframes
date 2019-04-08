@@ -56,8 +56,9 @@ export class DeliveryService {
   public addDelivery(templateId?: string) {
     const id = this.db.createId();
     const stakeholderId = this.db.createId();
+    const movieId = this.movieQuery.getActiveId();
     const orgId = this.organizationQuery.getActiveId();
-    const delivery = createDelivery({ id, movieId: this.movieQuery.getActiveId() });
+    const delivery = createDelivery({ id, movieId });
     const stakeholder = createStakeholder({ id: stakeholderId, orgId });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
@@ -117,8 +118,6 @@ export class DeliveryService {
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
   public isDeliveryValidated() : boolean {
-    return this.query.getActive().validated.length === this.stakeholderQuery.getCount()
-      ? true
-      : false;
+    return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
   }
 }
