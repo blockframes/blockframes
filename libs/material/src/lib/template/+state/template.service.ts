@@ -70,25 +70,29 @@ export class TemplateService {
       const template = createTemplate({ id: this.db.createId(), name });
       template.materialsId = materials.map(({ id }) => id);
       this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).set(template);
-      return Promise.all(
-        materials.map(material =>
-          this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).set(material)
-        )
-      );
+
+      const batch = this.db.firestore.batch();
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).ref;
+        return batch.set(materialRef, material);
+      });
     }
   }
 
   public async updateTemplate(name: string, orgId: string) {
-    const template = this.query.getAll().find(entity => entity.name === name && entity.orgId === orgId);
+    const template = this.query
+      .getAll()
+      .find(entity => entity.name === name && entity.orgId === orgId);
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
       const materialsId = materials.map(({ id }) => id);
-      this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({materialsId});
-      return Promise.all(
-        materials.map(material =>
-          this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).set(material)
-        )
-      );
+      this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({ materialsId });
+
+      const batch = this.db.firestore.batch();
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).ref;
+        return batch.set(materialRef, material);
+      });
     }
   }
 

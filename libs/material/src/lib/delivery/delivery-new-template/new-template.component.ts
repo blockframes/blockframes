@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { TemplateService } from '../../template/+state/template.service';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
 import { FormGroup, FormControl } from '@angular/forms';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-new-template',
@@ -11,9 +12,10 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./new-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewTemplateComponent implements OnInit {
+export class NewTemplateComponent implements OnInit, OnDestroy {
   public orgs$: Observable<Organization[]>;
   public isUpdateTemplate = false;
+  private isAlive = true;
 
   public form = new FormGroup({
     name: new FormControl(),
@@ -23,20 +25,18 @@ export class NewTemplateComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
-    private organizationQuery: OrganizationQuery,
+    private organizationQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
     this.orgs$ = this.organizationQuery.selectAll();
 
     // Check if the name already exists in the selected organization
-    this.form.valueChanges.subscribe(values => {
-      if (this.templateService.nameExists(values.name, values.organization)) {
-        this.isUpdateTemplate = true;
-      } else {
-        this.isUpdateTemplate = false;
-      }
-    });
+    this.form.valueChanges.pipe(takeWhile(() => this.isAlive)).subscribe(values =>
+      this.templateService.nameExists(values.name, values.organization)
+        ? (this.isUpdateTemplate = true)
+        : (this.isUpdateTemplate = false)
+    );
   }
 
   public saveTemplate(name: string, orgId: string) {
@@ -51,5 +51,9 @@ export class NewTemplateComponent implements OnInit {
 
   public close() {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }
