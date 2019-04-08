@@ -126,12 +126,11 @@ export const onDeliveryUpdate = functions.firestore
 
       const promises: Promise<any>[] = [];
 
-      materialsDelivery.forEach(function(materialDelivery, index) {
-        const materialExist = materialsMovie.find(
-          materialMovie =>
-            materialDelivery.value === materialMovie.value &&
-            materialDelivery.category === materialMovie.category &&
-            materialDelivery.description === materialMovie.description
+      materialsDelivery.forEach(materialDelivery => {
+        const materialExist = materialsMovie.find(materialMovie =>
+          materialDelivery.value === materialMovie.value
+          && materialDelivery.category === materialMovie.category
+          && materialDelivery.description === materialMovie.description
         );
 
         if (materialExist) {
