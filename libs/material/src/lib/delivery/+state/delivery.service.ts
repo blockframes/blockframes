@@ -27,7 +27,7 @@ export class DeliveryService {
   ) {
   }
 
-  /** Add material to the delivery sub-collection in firebase */
+  /** Adds material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
     const idDelivery = this.query.getActiveId();
     const idMaterial = this.db.createId();
@@ -36,20 +36,20 @@ export class DeliveryService {
       .set({ ...material, id: idMaterial });
   }
 
-  /** Delete material of the delivery sub-collection in firebase */
+  /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(id: string) {
     const idDelivery = this.query.getActiveId();
     this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
   }
 
-  /** Change material 'delivered' property value to true or false when triggered */
+  /** Changes material 'delivered' property value to true or false when triggered */
   public deliveredToggle(material: Material, movieId: string) {
     return this.db
       .doc<Material>(`movies/${movieId}/materials/${material.id}`)
       .update({ delivered: !material.delivered });
   }
 
-  /** Initialize a new delivery in firebase
+  /** Initializes a new delivery in firebase
    *
    * @param templateId if templateId is present, the materials sub-collection is populated with materials from this template
    */
@@ -76,15 +76,17 @@ export class DeliveryService {
   }
 
   /**
-   * Navigate to delivery form and delete all signatures in `validated[]`
+   * Navigates to delivery form and delete all signatures in `validated[]`
    */
   public editDelivery() {
     const delivery = this.query.getActive();
     this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({...delivery, validated: []})
     this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${delivery.id}`]);
+    //TODO: ask all stakeholders for permission to re-open the delivery form
+    //TODO: secure this so we can't get there with raw url
   }
 
-  /** Delete delivery and all the sub-collections in firebase */
+  /** Deletes delivery and all the sub-collections in firebase */
   public async deleteDelivery() {
     const id = this.query.getActiveId();
 
@@ -106,12 +108,14 @@ export class DeliveryService {
     this.store.setActive(null);
   }
 
+  /** Adds a stakeholder with specific authorization to the delivery */
   public addStakeholder(stakeholder: Stakeholder, authorization: string) {
     this.db
       .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
       .set({ ...stakeholder, authorizations: [authorization] });
   }
 
+  /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
   public isDeliveryValidated() : boolean {
     return this.query.getActive().validated.length === this.stakeholderQuery.getCount()
       ? true
