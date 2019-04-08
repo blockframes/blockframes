@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
-import { DeliveryQuery } from '../+state';
-import { Router } from '@angular/router';
-import { MovieQuery } from '@blockframes/movie';
+import { DeliveryQuery, DeliveryService } from '../+state';
+
 
 @Component({
   selector: 'delivery-view',
@@ -17,9 +16,8 @@ export class DeliveryViewComponent implements OnInit {
 
   constructor(
     private query: DeliveryQuery,
-    private movieQuery: MovieQuery,
+    private service: DeliveryService,
     private location: Location,
-    private router: Router
   ) {}
 
   ngOnInit() {
@@ -28,9 +26,7 @@ export class DeliveryViewComponent implements OnInit {
   }
 
   public editDelivery() { //TODO: secure this with guard so we can't access with raw url
-    const movieId = this.movieQuery.getActiveId();
-    const deliveryId = this.query.getActiveId();
-    this.router.navigate([`layout/${movieId}/form/${deliveryId}`]);
+    this.service.editDelivery();
   }
 
   public goBack() {

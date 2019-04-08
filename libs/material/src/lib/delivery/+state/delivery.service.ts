@@ -5,9 +5,10 @@ import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery } from './delivery.model';
-import { createStakeholder, MovieQuery, Stakeholder } from '@blockframes/movie';
+import { createStakeholder, MovieQuery, Stakeholder, StakeholderQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,8 @@ export class DeliveryService {
     private query: DeliveryQuery,
     private store: DeliveryStore,
     private templateQuery: TemplateQuery,
+    private stakeholderQuery: StakeholderQuery,
+    private router: Router,
     private db: AngularFirestore
   ) {
   }
@@ -72,6 +75,15 @@ export class DeliveryService {
     }
   }
 
+  /**
+   * Navigate to delivery form and delete all signatures in `validated[]`
+   */
+  public editDelivery() {
+    const delivery = this.query.getActive();
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({...delivery, validated: []})
+    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${delivery.id}`]);
+  }
+
   /** Delete delivery and all the sub-collections in firebase */
   public async deleteDelivery() {
     const id = this.query.getActiveId();
@@ -98,5 +110,11 @@ export class DeliveryService {
     this.db
       .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
       .set({ ...stakeholder, authorizations: [authorization] });
+  }
+
+  public isDeliveryValidated() : boolean {
+    return this.query.getActive().validated.length === this.stakeholderQuery.getCount()
+      ? true
+      : false;
   }
 }

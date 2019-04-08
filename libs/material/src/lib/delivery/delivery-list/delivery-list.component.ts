@@ -6,7 +6,7 @@ import { Delivery } from '../+state/delivery.model';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
-import { DeliveryQuery, DeliveryStore } from '../+state';
+import { DeliveryQuery, DeliveryStore, DeliveryService } from '../+state';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -27,6 +27,7 @@ export class DeliveryListComponent implements OnInit {
     private movieQuery: MovieQuery,
     private query: DeliveryQuery,
     private store: DeliveryStore,
+    private service: DeliveryService,
     private router: Router,
     private location: Location,
     private dialog: MatDialog,
@@ -40,7 +41,7 @@ export class DeliveryListComponent implements OnInit {
 
   public selectDelivery(delivery: Delivery, movieId: string) {
     this.store.setActive(delivery.id);
-    delivery.validated.length === 2
+    this.service.isDeliveryValidated()
       ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
       : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]);
   }
