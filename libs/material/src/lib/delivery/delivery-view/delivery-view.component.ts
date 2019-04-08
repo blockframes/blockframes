@@ -27,7 +27,7 @@ export class DeliveryViewComponent implements OnInit {
     this.progressionValue$ = this.query.deliveryProgression$;
   }
 
-  public editDelivery() {
+  public editDelivery() { //TODO: secure this with guard so we can't access with raw url
     const movieId = this.movieQuery.getActiveId();
     const deliveryId = this.query.getActiveId();
     this.router.navigate([`layout/${movieId}/form/${deliveryId}`]);
