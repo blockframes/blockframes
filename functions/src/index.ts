@@ -93,58 +93,6 @@ export const getOrCreateUserByMail = functions.https.onCall(async (data, context
   }
 });
 
-//--------------------------------
-//            RELAYER           //
-//--------------------------------
-
-// firebase functions:congig:set relayer.KEY=VALUE / set config
-// firebase functions:config:get  / display current config
-// firebase functions:config:get | ac .runtimeconfig.json / export current config for local test (delete previous .runtimeconfig.json)
-// firebase deploy --only functions:relayerCreate / deploy
-// firebase functions:shell / start shell for local test
-// relayerCreate.post().form({name: 'toto', key: '0x1234'}) / send request
-
-// RELAYER INIT
-let wallet = Wallet.fromMnemonic(functions.config().relayer.mnemonic);
-const provider = getDefaultProvider(functions.config().relayer.network);
-wallet = wallet.connect(provider);
-// const erc1077Factory = new ContractFactory(ERC1077_ABI, ERC1077_BYTECODE, wallet);
-const namehash = utils.namehash(functions.config().relayer.basedomain);
-const registry = new Contract(functions.config().relayer.registryaddress, ENS_REGISTRY_ABI, wallet);
-// const resolver = new Contract(functions.config().relayer.resolveraddress, ENS_RESOLVER_ABI, wallet);
-
-export const relayerCreate = functions.https.onRequest(async (req, res) => {
-  const name = req.body.name;
-  const key = req.body.key;
-  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-
-  const rawBalance = await wallet.getBalance();
-  const balance = utils.formatEther(rawBalance);
-  
-  const registryAddress = await registry.addressPromise
-  // const sample = erc1077Factory.bytecode.slice(0, 10);
-
-  //THIS IS THE NEW CODE
-
-  return res.json({params: `${name}, ${key}`, domain: namehash, eth: balance, registry: registryAddress});
-});
-
-export const relayerSend = functions.https.onRequest((req, res) => {
-  const receipt: providers.TransactionReceipt = {
-    byzantium: false
-  };
-  return res.json({
-    confirmations: 0,
-    from: '0x0',
-    wait: async () => receipt,
-    nonce: 0,
-    gasLimit: new utils.BigNumber(0),
-    gasPrice: new utils.BigNumber(0),
-    data: '0x0',
-    value: new utils.BigNumber(0),
-    chainId: 0
-  });
-
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
  */
@@ -209,6 +157,58 @@ export const onDeliveryUpdate = functions.firestore
     }
 
     return true;
+  });
+
+//--------------------------------
+//            RELAYER           //
+//--------------------------------
+
+// firebase functions:congig:set relayer.KEY=VALUE / set config
+// firebase functions:config:get  / display current config
+// firebase functions:config:get | ac .runtimeconfig.json / export current config for local test (delete previous .runtimeconfig.json)
+// firebase deploy --only functions:relayerCreate / deploy
+// firebase functions:shell / start shell for local test
+// relayerCreate.post().form({name: 'toto', key: '0x1234'}) / send request
+
+// RELAYER INIT
+let wallet = Wallet.fromMnemonic(functions.config().relayer.mnemonic);
+const provider = getDefaultProvider(functions.config().relayer.network);
+wallet = wallet.connect(provider);
+// const erc1077Factory = new ContractFactory(ERC1077_ABI, ERC1077_BYTECODE, wallet);
+const namehash = utils.namehash(functions.config().relayer.basedomain);
+const registry = new Contract(functions.config().relayer.registryaddress, ENS_REGISTRY_ABI, wallet);
+// const resolver = new Contract(functions.config().relayer.resolveraddress, ENS_RESOLVER_ABI, wallet);
+
+export const relayerCreate = functions.https.onRequest(async (req, res) => {
+  const name = req.body.name;
+  const key = req.body.key;
+  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
+
+  const rawBalance = await wallet.getBalance();
+  const balance = utils.formatEther(rawBalance);
+  
+  const registryAddress = await registry.addressPromise
+  // const sample = erc1077Factory.bytecode.slice(0, 10);
+
+  //THIS IS THE NEW CODE
+
+  return res.json({params: `${name}, ${key}`, domain: namehash, eth: balance, registry: registryAddress});
+});
+
+export const relayerSend = functions.https.onRequest((req, res) => {
+  const receipt: providers.TransactionReceipt = {
+    byzantium: false
+  };
+  return res.json({
+    confirmations: 0,
+    from: '0x0',
+    wait: async () => receipt,
+    nonce: 0,
+    gasLimit: new utils.BigNumber(0),
+    gasPrice: new utils.BigNumber(0),
+    data: '0x0',
+    value: new utils.BigNumber(0),
+    chainId: 0
   });
 });
 
