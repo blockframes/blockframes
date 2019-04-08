@@ -31,7 +31,7 @@ export class DeliveryListComponent implements OnInit {
     private router: Router,
     private location: Location,
     private dialog: MatDialog,
-    private db: AngularFirestore,
+    private db: AngularFirestore
   ) {}
 
   ngOnInit() {

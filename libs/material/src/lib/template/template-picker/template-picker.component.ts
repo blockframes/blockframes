@@ -9,9 +9,7 @@ import { MaterialService } from '../../material/+state/material.service';
 import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
-import { DeliveryQuery } from '../../delivery/+state';
 import { takeWhile } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -31,9 +29,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
     private query: TemplateQuery,
-    private db: AngularFirestore,
     private router: Router,
-    private organizationQuery: OrganizationQuery,
   ) {}
 
   ngOnInit() {
