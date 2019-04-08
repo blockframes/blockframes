@@ -39,12 +39,12 @@ export class NewTemplateComponent implements OnInit {
     });
   }
 
-  public async saveTemplate(name: string, orgId: string) {
+  public saveTemplate(name: string, orgId: string) {
     this.templateService.saveTemplate(name, orgId);
     this.dialogRef.close();
   }
 
-  public async updateTemplate(name: string, orgId: string) {
+  public updateTemplate(name: string, orgId: string) {
     this.templateService.updateTemplate(name, orgId);
     this.dialogRef.close();
   }
