@@ -2,8 +2,15 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { auth, db, functions } from './firebase';
-import { providers, utils, Wallet, getDefaultProvider, ContractFactory, Contract } from 'ethers';
-import { ERC1077_ABI, ERC1077_BYTECODE, ENS_REGISTRY_ABI, ENS_RESOLVER_ABI } from '../../libs/ethers/src/lib/erc1077/constants'
+import { providers, utils, Wallet, getDefaultProvider,
+  Contract,
+  // ContractFactory
+} from 'ethers';
+import { 
+  ENS_REGISTRY_ABI,
+  // ERC1077_ABI, ERC1077_BYTECODE, ENS_RESOLVER_ABI,
+  // ENS_RESOLVER_ABI
+ } from '../../libs/ethers/src/lib/erc1077/constants'
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -101,17 +108,25 @@ export const getOrCreateUserByMail = functions.https.onCall(async (data, context
 let wallet = Wallet.fromMnemonic(functions.config().relayer.mnemonic);
 const provider = getDefaultProvider(functions.config().relayer.network);
 wallet = wallet.connect(provider);
-const erc1077Factory = new ContractFactory(ERC1077_ABI, ERC1077_BYTECODE, wallet);
+// const erc1077Factory = new ContractFactory(ERC1077_ABI, ERC1077_BYTECODE, wallet);
 const namehash = utils.namehash(functions.config().relayer.basedomain);
 const registry = new Contract(functions.config().relayer.registryaddress, ENS_REGISTRY_ABI, wallet);
-const resolver = new Contract(functions.config().relayer.resolveraddress, ENS_RESOLVER_ABI, wallet);
+// const resolver = new Contract(functions.config().relayer.resolveraddress, ENS_RESOLVER_ABI, wallet);
 
 export const relayerCreate = functions.https.onRequest(async (req, res) => {
   const name = req.body.name;
   const key = req.body.key;
   if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
 
-  return res.json({params: `${name}, ${key}`, namehash, factory: erc1077Factory.bytecode.slice(0, 10), registry: registry.address, resolver: resolver.address});
+  const rawBalance = await wallet.getBalance();
+  const balance = utils.formatEther(rawBalance);
+  
+  const registryAddress = await registry.addressPromise
+  // const sample = erc1077Factory.bytecode.slice(0, 10);
+
+  //THIS IS THE NEW CODE
+
+  return res.json({params: `${name}, ${key}`, domain: namehash, eth: balance, registry: registryAddress});
 });
 
 export const relayerSend = functions.https.onRequest((req, res) => {
@@ -198,9 +213,15 @@ export const onDeliveryUpdate = functions.firestore
 });
 
 export const relayerAddKey = functions.https.onRequest((req, res) => {
-  return res.json(`relayerAddKey: ${functions.config().relayer.msg}`);
+  const name = req.body.name;
+  const key = req.body.key;
+  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
+  return res.json({params: `${name}, ${key}`});
 });
 
 export const relayerRemoveKey = functions.https.onRequest((req, res) => {
-  return res.json(`relayerRemoveKey: ${functions.config().relayer.msg}`);
+  const name = req.body.name;
+  const key = req.body.key;
+  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
+  return res.json({params: `${name}, ${key}`});
 });
