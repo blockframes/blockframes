@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="stakeholder$ | async as stakeholder">
   <mat-card-content>
     <h2>Signee:</h2>
     <p>{{ stakeholder.organization.name }}</p>

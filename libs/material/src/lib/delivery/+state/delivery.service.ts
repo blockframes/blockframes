@@ -137,7 +137,7 @@ export class DeliveryService {
         switchMap(stakeholders =>
           combineLatest(
             stakeholders.map(stakeholder => {
-              return this.stakeholderQuery.selectEntity(stakeholder.id);
+              return {...stakeholder, ...this.stakeholderQuery.selectEntity(stakeholder.id) };
             })
           )
         ),
@@ -147,7 +147,6 @@ export class DeliveryService {
 
   public subscribeOnActiveDelivery() {
     return this.query.selectActiveId().pipe(
-      filter(id => !!id),
       switchMap(id => this.db.doc<Delivery>(`deliveries/${id}`).valueChanges()),
       tap(delivery => this.store.update(delivery.id, delivery))
     );

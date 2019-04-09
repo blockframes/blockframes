@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { switchMap, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-stakeholder-item',
@@ -10,16 +11,20 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StakeholderItemComponent implements OnInit {
-  @Input() stakeholder: Stakeholder;
+  @Input() set stakeholder(sh: Stakeholder) {
+    this._stakeholder.next(sh);
+  }
+  private _stakeholder = new BehaviorSubject<Stakeholder>(null);
+  public stakeholder$ = this._stakeholder.asObservable();
   public hasStakeholderSigned$ : Observable<boolean>;
 
-  constructor(
-    private query: DeliveryQuery,
-  ) {}
+  constructor(private query: DeliveryQuery) {}
 
   ngOnInit() {
-    this.hasStakeholderSigned$ = this.query.hasStakeholderSigned$(this.stakeholder.id);
+    this.hasStakeholderSigned$ = this.stakeholder$.pipe(
+      // filter(sh => !!sh),
+      switchMap(({ id }) => this.query.hasStakeholderSigned$(id))
+    );
   }
-
 
 }

@@ -65,14 +65,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  // public get stakeholdersByActiveDelivery$(){
-  //   return this.selectActive().pipe(
-  //     filter(delivery => !!delivery),
-  //     switchMap(delivery => this.db.collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`).valueChanges()),
-  //     tap(stakeholders => this.stakeholderStore.set(stakeholders))
-  //   );
-  // }
-
   public get stakeholdersByActiveDelivery$() {
     return this.db
       .collection<Stakeholder>(`deliveries/${this.getActiveId()}/stakeholders`)
@@ -112,7 +104,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public hasStakeholderSigned$(id: string) {
     return this.selectActive().pipe(
-      filter(delivery => !!delivery),
       map(delivery => delivery.validated.includes(id))
     )
   }
