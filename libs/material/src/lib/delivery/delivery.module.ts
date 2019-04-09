@@ -76,6 +76,8 @@ const routes: Routes = [
     StakeholderListComponent,
     StakeholderItemComponent,
     DeliveryItemComponent,
+    TemplatePickerComponent,
+
   ],
   imports: [
     CommonModule,
