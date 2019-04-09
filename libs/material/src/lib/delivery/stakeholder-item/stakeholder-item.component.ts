@@ -15,10 +15,9 @@ export class StakeholderItemComponent implements OnInit {
 
   constructor(
     private query: DeliveryQuery,
-  ) { }
+  ) {}
 
   ngOnInit() {
-    console.log(this.stakeholder)
     this.hasStakeholderSigned$ = this.query.hasStakeholderSigned$(this.stakeholder.id);
   }
 

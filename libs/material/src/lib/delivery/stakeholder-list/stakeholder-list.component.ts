@@ -22,7 +22,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.service.subscribeOnDeliveryStakeholders().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.stakeholders$ = this.query.selectActive(entity => entity.stakeholders);
+    this.stakeholders$ = this.query.selectActive(delivery => delivery.stakeholders);
   }
 
   public signDelivery() {
