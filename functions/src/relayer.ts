@@ -4,7 +4,7 @@ import * as ERC1077 from './contracts/ERC1077.json'
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json'
 import * as ENS_RESOLVER from './contracts/PublicResolver.json'
 
-type Request = functions.https.Request;
+// type Request = functions.https.Request;
 type Response = functions.Response;
 type TxResponse = providers.TransactionResponse;
 type TxReceipt = providers.TransactionReceipt;
@@ -35,7 +35,7 @@ export const initRelayer = (): Relayer => {
   }
 };
 
-export const relayerCreateLogic = async(req: Request, res: Response, relayer: Relayer = initRelayer()) => {
+export const relayerCreateLogic = async(req: any, res: Response, relayer: Relayer = initRelayer()) => {
 
   // check required params
   const name = req.body.name;
@@ -71,7 +71,7 @@ export const relayerCreateLogic = async(req: Request, res: Response, relayer: Re
   });
 }
 
-export const relayerSendLogic = async(req: Request, res: Response, relayer: Relayer = initRelayer()) => {
+export const relayerSendLogic = async(req: any, res: Response, relayer: Relayer = initRelayer()) => {
   
   // check required params
   const name = req.body.name;
