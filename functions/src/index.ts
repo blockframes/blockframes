@@ -2,15 +2,8 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { auth, db, functions } from './firebase';
-import { providers, utils, Wallet, getDefaultProvider,
-  Contract,
-  // ContractFactory
-} from 'ethers';
-import { 
-  ENS_REGISTRY_ABI,
-  // ERC1077_ABI, ERC1077_BYTECODE, ENS_RESOLVER_ABI,
-  // ENS_RESOLVER_ABI
- } from '../../libs/ethers/src/lib/erc1077/constants'
+import { providers, utils } from 'ethers';
+import { Relayer, relayerCreateLogic } from './relayer';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -162,37 +155,20 @@ export const onDeliveryUpdate = functions.firestore
 //--------------------------------
 //            RELAYER           //
 //--------------------------------
-
+// RUN THOSE COMMAND IN THE ROOT FOLDER
+// 
 // firebase functions:congig:set relayer.KEY=VALUE / set config
 // firebase functions:config:get  / display current config
-// firebase functions:config:get | ac .runtimeconfig.json / export current config for local test (delete previous .runtimeconfig.json)
+// firebase functions:config:get | ac ./functions/.runtimeconfig.json / export current config for local test (delete previous .runtimeconfig.json)
 // firebase deploy --only functions:relayerCreate / deploy
 // firebase functions:shell / start shell for local test
-// relayerCreate.post().form({name: 'toto', key: '0x1234'}) / send request
+// relayerCreate.post().form({name: 'harrypotter', key: '0xbA2b47917c4ecE6d6Eb7606A54228Bf278614a00'}) / send request
 
 // RELAYER INIT
-let wallet = Wallet.fromMnemonic(functions.config().relayer.mnemonic);
-const provider = getDefaultProvider(functions.config().relayer.network);
-wallet = wallet.connect(provider);
-// const erc1077Factory = new ContractFactory(ERC1077_ABI, ERC1077_BYTECODE, wallet);
-const namehash = utils.namehash(functions.config().relayer.basedomain);
-const registry = new Contract(functions.config().relayer.registryaddress, ENS_REGISTRY_ABI, wallet);
-// const resolver = new Contract(functions.config().relayer.resolveraddress, ENS_RESOLVER_ABI, wallet);
+let relayer: Relayer
 
 export const relayerCreate = functions.https.onRequest(async (req, res) => {
-  const name = req.body.name;
-  const key = req.body.key;
-  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-
-  const rawBalance = await wallet.getBalance();
-  const balance = utils.formatEther(rawBalance);
-  
-  const registryAddress = await registry.addressPromise
-  // const sample = erc1077Factory.bytecode.slice(0, 10);
-
-  //THIS IS THE NEW CODE
-
-  return res.json({params: `${name}, ${key}`, domain: namehash, eth: balance, registry: registryAddress});
+  return relayerCreateLogic(req, res, relayer);
 });
 
 export const relayerSend = functions.https.onRequest((req, res) => {
