@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class StakeholderItemComponent implements OnInit {
   @Input() stakeholder: Stakeholder;
-  public isStakerholderHasSigned$ : Observable<boolean>;
+  public hasStakeholderSigned$ : Observable<boolean>;
 
   constructor(
     private query: DeliveryQuery,
@@ -19,7 +19,7 @@ export class StakeholderItemComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.stakeholder)
-    this.isStakerholderHasSigned$ = this.query.isStakerholderHasSigned$(this.stakeholder.id);
+    this.hasStakeholderSigned$ = this.query.hasStakeholderSigned$(this.stakeholder.id);
   }
 
 

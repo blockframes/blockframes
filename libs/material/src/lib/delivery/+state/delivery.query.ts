@@ -110,7 +110,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  public isStakerholderHasSigned$(id: string) {
+  public hasStakeholderSigned$(id: string) {
     return this.selectActive().pipe(
       filter(delivery => !!delivery),
       map(delivery => delivery.validated.includes(id))

@@ -148,12 +148,26 @@ export class DeliveryService {
   public subscribeOnActiveDelivery() {
     return this.query.selectActiveId().pipe(
       filter(id => !!id),
-      switchMap(id =>
-        this.db
-          .doc<Delivery>(`deliveries/${id}`)
-          .valueChanges()
-      ),
+      switchMap(id => this.db.doc<Delivery>(`deliveries/${id}`).valueChanges()),
       tap(delivery => this.store.update(delivery.id, delivery))
     );
+  }
+
+  public signDelivery() {
+    const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
+    const stakeholders = this.query.getActive().stakeholders;
+    const validated = [...this.query.getActive().validated];
+
+    let stakeholderSignee: Stakeholder;
+    stakeholders.map(stakeholder =>
+      orgIdsOfUser.includes(stakeholder.orgId) ? (stakeholderSignee = stakeholder) : false
+    );
+
+    if (!validated.includes(stakeholderSignee.id)) {
+      validated.push(stakeholderSignee.id);
+      this.db
+      .doc<Delivery>(`deliveries/${this.query.getActiveId()}`)
+      .update({ validated });
+    }
   }
 }

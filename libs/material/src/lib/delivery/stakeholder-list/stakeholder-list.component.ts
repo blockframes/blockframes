@@ -26,7 +26,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   }
 
   public signDelivery() {
-
+    this.service.signDelivery();
   }
 
   ngOnDestroy() {
