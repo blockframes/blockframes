@@ -77,13 +77,18 @@ export class DeliveryService {
     const id = this.db.createId();
     const stakeholderId = this.db.createId();
     const movieId = this.movieQuery.getActiveId();
-    // TODO: const orgId = this.movieQuery.getActive().orgId
-    const orgId = this.organizationQuery.getActiveId();
+    const organization = this.organizationQuery.getActive();
     const delivery = createDelivery({ id, movieId });
-    const stakeholder = createStakeholder({ id: stakeholderId, orgId });
+    const stakeholder = createStakeholder({
+      id: stakeholderId,
+      orgId: organization.id,
+      authorizations: ['canValidateDelivery']
+    });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.db.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
+    this.db
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`)
+      .set({ ...stakeholder, organization });
     this.store.setActive(id);
     if (!!templateId) {
       const filterByMaterialId = material =>
@@ -132,9 +137,20 @@ export class DeliveryService {
 
   /** Adds a stakeholder with specific authorization to the delivery */
   public addStakeholder(stakeholder: Stakeholder, authorization: string) {
-    this.db
-      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
-      .set({ ...stakeholder, authorizations: [authorization] });
+    // TODO: Improve this function so we can add multiple authorizations in the array
+    if (stakeholder.authorizations === undefined) {
+      const authorizations = [];
+      authorizations.push(authorization);
+      this.db
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .set({ ...stakeholder, authorizations });
+    } else {
+      const authorizations = [...stakeholder.authorizations];
+      authorizations.push(authorization);
+      this.db
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .update({ authorizations });
+    }
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */

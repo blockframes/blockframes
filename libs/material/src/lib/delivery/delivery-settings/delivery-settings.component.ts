@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeliveryQuery, DeliveryService } from '../+state';
-import { Stakeholder, StakeholderService, StakeholderQuery } from '@blockframes/movie';
+import { Stakeholder, StakeholderService } from '@blockframes/movie';
 import { staticModels } from '@blockframes/movie';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-settings',
@@ -27,7 +26,6 @@ export class DeliverySettingsComponent implements OnInit, OnDestroy {
     this.deliveryStakeholders$ = this.query.stakeholdersByActiveDelivery$;
     this.movieStakeholders$ = this.stakeholderService.stakeholdersByActiveMovie$;
     this.authorizations = staticModels.STAKEHOLDER_DELIVERY_AUTHORIZATIONS;
-
   }
 
   public addStakeholder(stakeholder: Stakeholder, authorization: string) {

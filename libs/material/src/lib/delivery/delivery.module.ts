@@ -15,6 +15,8 @@ import { MaterialModule } from '../material/material.module';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
 import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
+import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
+import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -35,7 +37,8 @@ import {
   MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
+
+
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -68,11 +71,11 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryFormComponent,
     NewTemplateComponent,
-    DeliveryViewComponent,
     DeliverySettingsComponent,
     TemplatePickerComponent,
     StakeholderListComponent,
     StakeholderItemComponent,
+    DeliveryItemComponent,
   ],
   imports: [
     CommonModule,

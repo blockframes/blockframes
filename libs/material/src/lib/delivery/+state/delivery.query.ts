@@ -3,12 +3,11 @@ import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MovieQuery, Stakeholder, StakeholderStore, StakeholderService } from '@blockframes/movie';
+import { MovieQuery, Stakeholder } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
-import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +17,12 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialStore: MaterialStore,
-    private stakeholderStore: StakeholderStore,
-    private stakeholderService: StakeholderService,
     private db: AngularFirestore
   ) {
     super(store);
   }
 
-  /** Return the active movie materials sorted by category */
+  /** Returns the active movie materials sorted by category */
   public get materialsByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
@@ -36,7 +33,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Return a list of deliveries for the active movie */
+  /** Returns a list of deliveries for the active movie */
   public get deliveriesByActiveMovie$() {
     return this.movieQuery.selectActiveId().pipe(
       filter(id => !!id),
@@ -49,7 +46,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Return the active delivery materials sorted by category */
+  /** Returns the active delivery materials sorted by category */
   public get materialsByActiveDelivery$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
@@ -65,13 +62,12 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  public get stakeholdersByActiveDelivery$() {
-    return this.db
-      .collection<Stakeholder>(`deliveries/${this.getActiveId()}/stakeholders`)
-      .valueChanges();
+  /** Returns the active delivery stakeholders */
+  public get stakeholdersByActiveDelivery$(){
+    return this.db.collection<Stakeholder>(`deliveries/${this.getActiveId()}/stakeholders`).valueChanges();
   }
 
-  /** Return the progression % of the delivery */
+  /** Returns the progression % of the delivery */
   public get deliveryProgression$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
@@ -88,7 +84,22 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Return the progression % of the movie's deliveries */
+  public deliveryProgressionById(id: string) {
+    return this.movieQuery.selectActive().pipe(
+      filter(movie => !!movie),
+      switchMap(movie =>
+        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
+      ),
+      tap(materials => this.materialStore.set(materials)),
+      map(materials => {
+        const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
+        const deliveredMaterials = totalMaterials.filter(material => !!material.delivered);
+        return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+      })
+    );
+  }
+
+  /** Returns the progression % of the movie's deliveries */
   public get movieProgression$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),

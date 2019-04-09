@@ -1,36 +1,9 @@
-<button mat-raised-button color="warn" (click)="goBack()">Back</button>
-
-<section *ngIf="(movie$ | async) as movie">
-  <table mat-table [dataSource]="deliveries$" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef><h2 mat-subheader>{{ movie.title }}</h2></th>
-      <td style="cursor:pointer;" mat-cell *matCellDef="let delivery" (click)="selectDelivery(delivery, movie.id)"> <h4>{{delivery.id}}</h4> </td>
-    </ng-container>
-
-    <ng-container matColumnDef="stakeholder1">
-      <th mat-header-cell *matHeaderCellDef> Stakeholder 1 </th>
-      <td mat-cell *matCellDef="let delivery"> Jean-Michel </td>
-    </ng-container>
-
-    <ng-container matColumnDef="stakeholder2">
-      <th mat-header-cell *matHeaderCellDef> Stakeholder 2 </th>
-      <td mat-cell *matCellDef="let delivery"> Charle-Henri </td>
-    </ng-container>
-
-    <ng-container matColumnDef="status">
-      <th class="add-delivery" mat-header-cell *matHeaderCellDef (click)="openDialog()"><mat-icon>add</mat-icon>ADD A DELIVERY</th>
-      <td mat-cell *matCellDef="let delivery"><mat-icon
-        [class.green-dot]="delivery.delivered === true && delivery.validated.length === 2"
-        [class.grey-dot]="delivery.validated.length === 2 && delivery.delivered === false"
-        [class.blue-dot]="delivery.validated.length === 1"
-        [class.orange-dot]="delivery.validated.length === 0"
-        >fiber_manual_record</mat-icon
-      ></td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
+<section *ngIf="(movie$ | async) as movie" class="delivery-list">
+  <article fxLayout="row" fxLayoutAlign="space-around">
+    <h2>{{ movie.title }}</h2>
+    <button class="add-delivery" mat-raised-button (click)="openDialog()">Add a new delivery <mat-icon>add</mat-icon></button>
+  </article>
+  <article *ngFor="let delivery of (deliveries$ | async)" fxLayout="column" fxLayoutAlign="space-evenly center">
+    <delivery-item class="delivery-card" [delivery]="delivery" (isSelected)="selectDelivery(delivery, movie.id)"></delivery-item>
+  </article>
 </section>

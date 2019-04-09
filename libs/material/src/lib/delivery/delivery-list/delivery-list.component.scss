@@ -1,16 +1,25 @@
-table {
-  width: 100%;
+.delivery-list {
   margin-top: 1rem;
+}
+
+.delivery-card {
+  margin: 1rem auto;
+  padding-left: 1rem;
+  width: 80%;
+  height: 5rem;
+  box-shadow: -10px 11px 32px 0 #00000023;
 }
 
 .add-delivery {
   font-weight: bolder;
   color: #6100ED;
+  border: solid 0.1rem #6100ED;
   cursor: pointer;
 }
 
-.mat-row:hover {
-  background-color: #EAEAEA;
+.delivery-card:hover {
+  background-color: #F5F5F5;
+  cursor: pointer;
 }
 
 .blue-dot {
