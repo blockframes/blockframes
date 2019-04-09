@@ -143,5 +143,6 @@ export const relayerSendLogic = async (
     tx.signatures
   );
 
-  return res.json(await sendTx.wait());
+  const txReceipt = await sendTx.wait()
+  return res.json(txReceipt);
 };
