@@ -1,7 +1,7 @@
 ## Compiled JavaScript files
 **/*.js
 **/*.js.map
-**/*.json
+lib/contracts/*
 
 # Typescript v1 declaration files
 typings/
