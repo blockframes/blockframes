@@ -173,17 +173,3 @@ export const relayerCreate = functions.https.onRequest(async (req, res) => {
 export const relayerSend = functions.https.onRequest((req, res) => {
   return relayerSendLogic(req, res, relayer);
 });
-
-export const relayerAddKey = functions.https.onRequest((req, res) => {
-  const name = req.body.name;
-  const key = req.body.key;
-  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-  return res.json({params: `${name}, ${key}`, msg: 'WIP : this functions is not implemented'});
-});
-
-export const relayerRemoveKey = functions.https.onRequest((req, res) => {
-  const name = req.body.name;
-  const key = req.body.key;
-  if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-  return res.json({params: `${name}, ${key}`, msg: 'WIP : this functions is not implemented'});
-});
