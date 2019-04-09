@@ -34,6 +34,7 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
+import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
 
 
 
@@ -70,7 +71,7 @@ const routes: Routes = [
     NewTemplateComponent,
     DeliveryViewComponent,
     DeliverySettingsComponent,
-    TemplatePickerComponent,
+    DeliveryItemComponent,
   ],
   imports: [
     CommonModule,

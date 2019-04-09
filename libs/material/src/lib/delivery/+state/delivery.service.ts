@@ -5,10 +5,17 @@ import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery } from './delivery.model';
-import { createStakeholder, MovieQuery, Stakeholder, StakeholderQuery } from '@blockframes/movie';
+import {
+  createStakeholder,
+  MovieQuery,
+  Stakeholder,
+  StakeholderQuery,
+  StakeholderStore
+} from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +29,10 @@ export class DeliveryService {
     private store: DeliveryStore,
     private templateQuery: TemplateQuery,
     private stakeholderQuery: StakeholderQuery,
+    private stakeholderStore: StakeholderStore,
     private router: Router,
     private db: AngularFirestore
-  ) {
-  }
+  ) {}
 
   /** Adds material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
@@ -57,13 +64,18 @@ export class DeliveryService {
     const id = this.db.createId();
     const stakeholderId = this.db.createId();
     const movieId = this.movieQuery.getActiveId();
-    // TODO: const orgId = this.movieQuery.getActive().orgId
-    const orgId = this.organizationQuery.getActiveId();
+    const organization = this.organizationQuery.getActive();
     const delivery = createDelivery({ id, movieId });
-    const stakeholder = createStakeholder({ id: stakeholderId, orgId });
+    const stakeholder = createStakeholder({
+      id: stakeholderId,
+      orgId: organization.id,
+      authorizations: ['canValidateDelivery']
+    });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.db.doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`).set(stakeholder);
+    this.db
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`)
+      .set({ ...stakeholder, organization });
     this.store.setActive(id);
     if (!!templateId) {
       const filterByMaterialId = material =>
@@ -82,7 +94,7 @@ export class DeliveryService {
    */
   public editDelivery() {
     const delivery = this.query.getActive();
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({...delivery, validated: []})
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({ ...delivery, validated: [] });
     this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${delivery.id}`]);
     //TODO: ask all stakeholders for permission to re-open the delivery form
     //TODO: secure this so we can't get there with raw url
@@ -112,13 +124,29 @@ export class DeliveryService {
 
   /** Adds a stakeholder with specific authorization to the delivery */
   public addStakeholder(stakeholder: Stakeholder, authorization: string) {
-    this.db
-      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
-      .set({ ...stakeholder, authorizations: [authorization] });
+    // TODO: Improve this function so we can add multiple authorizations in the array
+    if (stakeholder.authorizations === undefined) {
+      const authorizations = [];
+      authorizations.push(authorization);
+      this.db
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .set({ ...stakeholder, authorizations });
+    } else {
+      const authorizations = [...stakeholder.authorizations];
+      authorizations.push(authorization);
+      this.db
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .update({ authorizations });
+    }
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public isDeliveryValidated() : boolean {
-    return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
+  public isDeliveryValidated(): boolean {
+    const delivery = this.query.getActive();
+    this.db
+      .collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`)
+      .valueChanges()
+      .pipe(tap(stakeholders => this.stakeholderStore.addActive(stakeholders)));
+    return delivery.validated.length === this.stakeholderQuery.getCount();
   }
 }
