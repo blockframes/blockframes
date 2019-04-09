@@ -1,0 +1,12 @@
+<h1>Sign delivery</h1>
+<section fxLayout="row" fxLayoutAlign="space-evenly center">
+  <delivery-stakeholder-item
+    *ngFor="let stakeholder of (stakeholders$ | async)"
+    [stakeholder]="stakeholder"
+  ></delivery-stakeholder-item>
+  <button mat-icon-button>
+    <mat-icon>add_circle_outline</mat-icon>
+    Add a new signee
+  </button>
+</section>
+<button (click)="signDelivery()">Verify to sign</button>

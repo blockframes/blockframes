@@ -1,0 +1,40 @@
+
+.footerLocked {
+  width: 359px;
+  height: 106px;
+  border: solid 0.5px #818181;
+  background-color: rgba(129, 129, 129, 0.1);
+}
+.footerLocked > span {
+  font-family: Roboto;
+  font-size: 9px;
+  font-weight: bold;
+  color: #818181;
+}
+.footerLocked > mat-icon {
+  font-size: 48px;
+  color:  #818181;
+}
+.footerSigned {
+  width: 359px;
+  height: 106px;
+  border: solid 0.5px #30d19f;
+  background-color: rgba(48, 209, 159, 0.1);
+}
+.footerSigned > span {
+  font-family: Roboto;
+  font-size: 9px;
+  font-weight: bold;
+  color: #30d19f;
+}
+.footerSigned > mat-icon {
+  font-size: 48px;
+  color: #30d19f;
+}
+
+h2 {
+  font-size: 16px;
+}
+p {
+  font-size: 12px;
+}

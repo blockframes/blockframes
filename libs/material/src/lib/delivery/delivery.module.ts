@@ -13,6 +13,8 @@ import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 import { MaterialModule } from '../material/material.module';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
+import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
+import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -33,9 +35,7 @@ import {
   MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
-
-
+import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -71,6 +71,8 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliverySettingsComponent,
     TemplatePickerComponent,
+    StakeholderListComponent,
+    StakeholderItemComponent,
   ],
   imports: [
     CommonModule,

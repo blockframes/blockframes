@@ -8,6 +8,7 @@ import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -64,12 +65,18 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  public get stakeholdersByActiveDelivery$(){
-    return this.selectActive().pipe(
-      filter(delivery => !!delivery),
-      switchMap(delivery => this.db.collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`).valueChanges()),
-      tap(stakeholders => this.stakeholderStore.set(stakeholders))
-    );
+  // public get stakeholdersByActiveDelivery$(){
+  //   return this.selectActive().pipe(
+  //     filter(delivery => !!delivery),
+  //     switchMap(delivery => this.db.collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`).valueChanges()),
+  //     tap(stakeholders => this.stakeholderStore.set(stakeholders))
+  //   );
+  // }
+
+  public get stakeholdersByActiveDelivery$() {
+    return this.db
+      .collection<Stakeholder>(`deliveries/${this.getActiveId()}/stakeholders`)
+      .valueChanges();
   }
 
   /** Return the progression % of the delivery */
@@ -101,5 +108,12 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         return Math.round((deliveredMaterials.length / (materials.length / 100)) * 10) / 10;
       })
     );
+  }
+
+  public isStakerholderHasSigned$(id: string) {
+    return this.selectActive().pipe(
+      filter(delivery => !!delivery),
+      map(delivery => delivery.validated.includes(id))
+    )
   }
 }

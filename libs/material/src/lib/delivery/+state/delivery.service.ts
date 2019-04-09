@@ -5,10 +5,18 @@ import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery } from './delivery.model';
-import { createStakeholder, MovieQuery, Stakeholder, StakeholderQuery } from '@blockframes/movie';
+import {
+  createStakeholder,
+  MovieQuery,
+  Stakeholder,
+  StakeholderQuery,
+  StakeholderService
+} from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
+import { switchMap, tap, filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +32,7 @@ export class DeliveryService {
     private stakeholderQuery: StakeholderQuery,
     private router: Router,
     private db: AngularFirestore
-  ) {
-  }
+  ) {}
 
   /** Adds material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
@@ -82,7 +89,7 @@ export class DeliveryService {
    */
   public editDelivery() {
     const delivery = this.query.getActive();
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({...delivery, validated: []})
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).set({ ...delivery, validated: [] });
     this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${delivery.id}`]);
     //TODO: ask all stakeholders for permission to re-open the delivery form
     //TODO: secure this so we can't get there with raw url
@@ -118,7 +125,35 @@ export class DeliveryService {
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public isDeliveryValidated() : boolean {
+  public isDeliveryValidated(): boolean {
     return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
+  }
+
+  public subscribeOnDeliveryStakeholders() {
+    return this.db
+      .collection<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders`)
+      .valueChanges()
+      .pipe(
+        switchMap(stakeholders =>
+          combineLatest(
+            stakeholders.map(stakeholder => {
+              return this.stakeholderQuery.selectEntity(stakeholder.id);
+            })
+          )
+        ),
+        tap(stakeholders => this.store.update(this.query.getActiveId(), { stakeholders }))
+      );
+  }
+
+  public subscribeOnActiveDelivery() {
+    return this.query.selectActiveId().pipe(
+      filter(id => !!id),
+      switchMap(id =>
+        this.db
+          .doc<Delivery>(`deliveries/${id}`)
+          .valueChanges()
+      ),
+      tap(delivery => this.store.update(delivery.id, delivery))
+    );
   }
 }

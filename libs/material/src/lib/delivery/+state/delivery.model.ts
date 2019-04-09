@@ -1,10 +1,12 @@
+import { Stakeholder } from "@blockframes/movie";
+
 // tslint:disable-next-line: interface-over-type-literal
 export type Delivery = {
   id: string;
   movieId: string;
-  stakeholders: string[];
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
+  stakeholders?: Stakeholder[];
 };
 
 export enum Authorizations {
