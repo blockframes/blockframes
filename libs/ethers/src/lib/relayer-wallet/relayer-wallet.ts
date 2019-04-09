@@ -51,6 +51,8 @@ export class RelayerWallet implements ethers.Signer {
     const wallet = Wallet.createRandom();
     this.loginWithEncryptedJSON(wallet, username);
     this.saveIntoVault(wallet, username, password);
+    // this.relayer.create(username, wallet.address); // TODO uncomment when relayer CORS bug is fixed
+    // TODO track the state of the creation process, prevent the user to close his tab before the process has ended, flag somwhere in the state when process has ended
   }
 
   /** Forget the signing key in the process memory */
