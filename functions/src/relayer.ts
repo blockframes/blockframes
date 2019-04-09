@@ -70,3 +70,46 @@ export const relayerCreateLogic = async(req: Request, res: Response, relayer: Re
     , deploy: erc1077.deployTransaction.hash, resolve: resolverTx.hash, link: linkTx.hash
   });
 }
+
+export const relayerSendLogic = async(req: Request, res: Response, relayer: Relayer = initRelayer()) => {
+  
+  // check required params
+  const name = req.body.name;
+  const tx = req.body.tx;
+  if (!name || !tx) return res.status(400).json({error: '"name" and "tx" are mandatory parameters !'});
+
+  // compute needed values
+  const fullName = `${name}.${functions.config().relayer.basedomain}`;
+  const erc1077 = new Contract(fullName, ERC1077.abi, relayer.wallet);
+
+  // check if tx will be accepted by erc1077
+  const canExecute: boolean = await erc1077.functions.canExecute(
+    tx.to,
+    tx.value,
+    tx.data,
+    tx.nonce,
+    tx.gasPrice,
+    tx.gasToken,
+    tx.gasLimit,
+    tx.operationType,
+    tx.signatures
+  );
+
+  if(!canExecute) {
+    res.status(400).json({error: 'The transaction has not been sent beacause it will be be rejected by the ERC1077, this is probably a nonce or signatures problem.'});
+  }
+
+  const sendTx = await erc1077.functions.executeSigned(
+    tx.to,
+    tx.value,
+    tx.data,
+    tx.nonce,
+    tx.gasPrice,
+    tx.gasToken,
+    tx.gasLimit,
+    tx.operationType,
+    tx.signatures
+  );
+
+  return res.json(await sendTx.wait());
+}

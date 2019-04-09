@@ -2,8 +2,7 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { auth, db, functions } from './firebase';
-import { providers, utils } from 'ethers';
-import { Relayer, relayerCreateLogic } from './relayer';
+import { Relayer, relayerCreateLogic, relayerSendLogic } from './relayer';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -172,32 +171,19 @@ export const relayerCreate = functions.https.onRequest(async (req, res) => {
 });
 
 export const relayerSend = functions.https.onRequest((req, res) => {
-  const receipt: providers.TransactionReceipt = {
-    byzantium: false
-  };
-  return res.json({
-    confirmations: 0,
-    from: '0x0',
-    wait: async () => receipt,
-    nonce: 0,
-    gasLimit: new utils.BigNumber(0),
-    gasPrice: new utils.BigNumber(0),
-    data: '0x0',
-    value: new utils.BigNumber(0),
-    chainId: 0
-  });
+  return relayerSendLogic(req, res, relayer);
 });
 
 export const relayerAddKey = functions.https.onRequest((req, res) => {
   const name = req.body.name;
   const key = req.body.key;
   if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-  return res.json({params: `${name}, ${key}`});
+  return res.json({params: `${name}, ${key}`, msg: 'WIP : this functions is not implemented'});
 });
 
 export const relayerRemoveKey = functions.https.onRequest((req, res) => {
   const name = req.body.name;
   const key = req.body.key;
   if (!name || !key) return res.status(400).json({error: '"name" and "key" are mandatory parameters !'});
-  return res.json({params: `${name}, ${key}`});
+  return res.json({params: `${name}, ${key}`, msg: 'WIP : this functions is not implemented'});
 });
