@@ -49,8 +49,7 @@ export const relayerCreateLogic = async (
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
-  const name = req.body.name;
-  const key = req.body.key;
+  const {name, key} = req.body;
   if (!name || !key)
     return res.status(400).json({ error: '"name" and "key" are mandatory parameters !' });
 
@@ -104,8 +103,7 @@ export const relayerSendLogic = async (
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
-  const name = req.body.name;
-  const tx = req.body.tx;
+  const {name, tx} = req.body;
   if (!name || !tx)
     return res.status(400).json({ error: '"name" and "tx" are mandatory parameters !' });
 
