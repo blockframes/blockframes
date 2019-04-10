@@ -10,7 +10,6 @@ import {
   MovieQuery,
   Stakeholder,
   StakeholderQuery,
-  StakeholderService
 } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
@@ -34,6 +33,12 @@ export class DeliveryService {
     private db: AngularFirestore
   ) {}
 
+        ///////////////////
+        // CRUD MATERIAL //
+        ///////////////////
+
+
+
   /** Adds material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
     const idDelivery = this.query.getActiveId();
@@ -49,12 +54,20 @@ export class DeliveryService {
     this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
   }
 
+
   /** Changes material 'delivered' property value to true or false when triggered */
   public deliveredToggle(material: Material, movieId: string) {
     return this.db
       .doc<Material>(`movies/${movieId}/materials/${material.id}`)
       .update({ delivered: !material.delivered });
   }
+
+
+        ///////////////////
+        // CRUD DELIVERY //
+        ///////////////////
+
+
 
   /** Initializes a new delivery in firebase
    *
@@ -139,10 +152,12 @@ export class DeliveryService {
     return combineLatest(updatedSh$);
   }
 
-  /** Update stakeholders in delivery store with stakeholders saved in firebase (in sub-collection stakeholders of deliveries)
-   * and stokeholders saved in store stakeholders of movie-lib.
-   * We need informations from the stakeholders of the delivery and the movie
-    */
+
+        ////////////////////////
+        // START SUBSCRIPTION //
+        ////////////////////////
+
+  /** Merge stakeholders of delivery with stakeholders of movie */
   public subscribeOnDeliveryStakeholders() {
     return this.db
       .collection<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders`)
