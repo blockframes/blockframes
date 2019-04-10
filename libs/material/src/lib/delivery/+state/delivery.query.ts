@@ -8,6 +8,7 @@ import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     this.selectActive(delivery => delivery.validated),
     this.selectActive(delivery => delivery.stakeholders)
   ]).pipe(
+    filter(([validated, stakeholders]) => !!validated && !!stakeholders),
     map(([validated, stakeholders]) => validated.length === stakeholders.length)
     )
 

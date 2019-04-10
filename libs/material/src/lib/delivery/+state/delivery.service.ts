@@ -46,12 +46,18 @@ export class DeliveryService {
     this.db
       .doc<Material>(`deliveries/${idDelivery}/materials/${idMaterial}`)
       .set({ ...material, id: idMaterial });
+    this.db
+      .doc<Delivery>(`deliveries/${idDelivery}`)
+      .update({validated: []});
   }
 
   /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(id: string) {
     const idDelivery = this.query.getActiveId();
     this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
+    this.db
+    .doc<Delivery>(`deliveries/${idDelivery}`)
+    .update({validated: []});
   }
 
 
