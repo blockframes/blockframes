@@ -3,12 +3,12 @@
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(delivery$ | async) as delivery" [template]="delivery"></material-list>
     <button mat-raised-button color="primary" (click)="saveAsTemplate()">Save as new template</button>
-    <button mat-raised-button color="warn" (click)="deleteDelivery()">Delete delivery</button>
+    <button mat-raised-button color="warn" [disabled]="isDeliveryValidated$ | async" (click)="deleteDelivery()">Delete delivery</button>
     <button (click)="goToSettings()">SETTINGS</button>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
-    <button (click)="addForm('')" color="primary" mat-icon-button matRipple>
+    <button [disabled]="isDeliveryValidated$ | async" (click)="addForm('')" color="primary" mat-icon-button matRipple>
       <mat-icon class="icon-add">add_circle</mat-icon>
       Add new material
     </button>
@@ -18,7 +18,7 @@
     <mat-card *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
       <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
         <h4 fxFlex="60">Category : {{ materials.key }}</h4>
-        <button fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
+        <button [disabled]="isDeliveryValidated$ | async" fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
           <mat-icon class="icon-add">add_circle</mat-icon>
           Add new material with this category
         </button>

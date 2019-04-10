@@ -20,6 +20,7 @@ import { DeliveryQuery } from '../+state';
 export class DeliveryFormComponent implements OnInit, OnDestroy {
   public delivery$: Observable<TemplateView>;
   public form$: Observable<MaterialForm>;
+  public isDeliveryValidated$: Observable<boolean>;
   public isAlive = true;
 
   constructor(
@@ -36,6 +37,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.delivery$ = this.materialQuery.materialsByDelivery$;
+    this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
 
     this.form$ = this.materialQuery.form$;
 

@@ -13,6 +13,13 @@ import { materialsByCategory } from '../../material/+state/material.query';
   providedIn: 'root'
 })
 export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
+  public isDeliveryValidated$ = combineLatest([
+    this.selectActive(delivery => delivery.validated),
+    this.selectActive(delivery => delivery.stakeholders)
+  ]).pipe(
+    map(([validated, stakeholders]) => validated.length === stakeholders.length)
+    )
+
   constructor(
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
