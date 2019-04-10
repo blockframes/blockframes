@@ -35,7 +35,8 @@ import { AuthModule } from '@blockframes/auth';
     MatListModule,
     MatIconModule,
     // Akita
-    environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()]
+    AkitaNgRouterStoreModule.forRoot(),
+    environment.production ? [] : [AkitaNgDevtools.forRoot()]
   ],
   providers: [],
   bootstrap: [AppComponent]

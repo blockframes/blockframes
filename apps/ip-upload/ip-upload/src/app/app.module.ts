@@ -49,7 +49,8 @@ import { LayoutComponent } from './layout/layout.component';
     MatListModule,
     MatIconModule,
     // Akita
-    environment.production ? [] : [AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot()],
+    AkitaNgRouterStoreModule.forRoot(),
+    environment.production ? [] : [AkitaNgDevtools.forRoot()],
     // Service Worker
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
