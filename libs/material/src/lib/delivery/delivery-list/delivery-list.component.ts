@@ -32,12 +32,12 @@ export class DeliveryListComponent implements OnInit {
     this.deliveries$ = this.query.deliveriesByActiveMovie$;
   }
 
-  public selectDelivery(delivery: Delivery, movieId: string) {
+  public async selectDelivery(delivery: Delivery, movieId: string) {
     this.store.setActive(delivery.id);
-    this.service.isDeliveryValidated().then(validated =>
-      validated
-        ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
-        : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]))
+    const validated = await this.service.isDeliveryValidated();
+    validated
+      ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
+      : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]);
   }
 
   public openDialog() {

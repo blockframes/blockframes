@@ -1,12 +1,14 @@
-<button mat-raised-button color="warn" (click)="goBack()">Back</button>
-<h2 *ngIf="(movie$ | async) as movie" mat-subheader>{{movie.title}}</h2>
-<section *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutGap="5%">
-  <article class="progress-card" fxFlex="30">
-    <mat-card>
-      <mat-card-content *ngIf="(progressionValue$ | async) as value else empty" fxLayout="column" fxLayoutAlign="center center">
-        <h2 class="example-h2">PROGRESSION</h2>
+<div *ngIf="(movie$ | async) as movie" class="container">
+  <h2 mat-subheader>{{ movie.title }}</h2>
+  <section fxLayout="row" fxLayoutGap="5%">
+    <article class="progress-spinner" fxFlex="30">
+      <div
+        *ngIf="(progressionValue$ | async) as value; else empty"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+      >
+        <h3 mat-subheader>Progression</h3>
         <mat-progress-spinner
-          class="example-margin"
           color="warn"
           mode="determinate"
           [value]="value"
@@ -14,16 +16,13 @@
           strokeWidth="13"
         >
         </mat-progress-spinner>
-        <div class ="progress-value">
-            {{value}} %
-        </div>
+        <div class="progress-value">{{ value }} %</div>
         <p><i>La progression en %age des deliveries de la movie</i></p>
-      </mat-card-content>
+      </div>
       <ng-template #empty>
-        <mat-card-content fxLayout="column" fxLayoutAlign="center center">
-          <h2 class="example-h2">PROGRESSION</h2>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <h2 mat-subheader>PROGRESSION</h2>
           <mat-progress-spinner
-            class="example-margin"
             color="warn"
             mode="determinate"
             value="0"
@@ -31,32 +30,32 @@
             strokeWidth="15"
           >
           </mat-progress-spinner>
-          <div class ="progress-value">
-              0 %
+          <div class="progress-value">
+            0 %
           </div>
           <p><i>La progression en %age des deliveries de la movie</i></p>
-        </mat-card-content>
+        </div>
       </ng-template>
-    </mat-card>
-  </article>
-  <article fxFlex="70" fxLayout="column">
-    <mat-card *ngFor="let category of (materials$ | async | keyvalue)">
-      <mat-card-title>{{ category.key | uppercase }}</mat-card-title>
-      <mat-card-content *ngFor="let material of category.value">
-        <span
-          ><h4 mat-line>
-            <mat-checkbox
-              [(ngModel)]="material.delivered"
-              (click)="deliveredToggle(material, movie.id)"
-              ><b>{{ material.value }}</b></mat-checkbox
-            >
-          </h4></span
-        >
-        <p mat-line class="description-text">
-          <i>{{ material.description }}</i>
-        </p>
-        <mat-divider></mat-divider>
-      </mat-card-content>
-    </mat-card>
-  </article>
-</section>
+    </article>
+    <article fxFlex="70" fxLayout="column">
+      <mat-card *ngFor="let category of (materials$ | async | keyvalue)">
+        <mat-card-title>{{ category.key | uppercase }}</mat-card-title>
+        <mat-card-content *ngFor="let material of category.value">
+          <span
+            ><h4 mat-line>
+              <mat-checkbox
+                [(ngModel)]="material.delivered"
+                (click)="deliveredToggle(material, movie.id)"
+                ><b>{{ material.value }}</b></mat-checkbox
+              >
+            </h4></span
+          >
+          <p mat-line class="description-text">
+            <i>{{ material.description }}</i>
+          </p>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+      </mat-card>
+    </article>
+  </section>
+</div>

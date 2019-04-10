@@ -1,5 +1,11 @@
-.mat-card {
+.container {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.progress-spinner {
   margin-bottom: 2rem;
+  box-shadow: -10px 11px 32px 0 #00000023;
 }
 
 mat-card-title {

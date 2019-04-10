@@ -144,8 +144,7 @@ export class DeliveryService {
         .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
         .set({ ...stakeholder, authorizations });
     } else {
-      const authorizations = [...stakeholder.authorizations];
-      authorizations.push(authorization);
+      const authorizations = [ ...stakeholder.authorizations, authorization ];
       this.db
         .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
         .update({ authorizations });
@@ -153,12 +152,11 @@ export class DeliveryService {
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public isDeliveryValidated(): Promise<boolean> {
+  public async isDeliveryValidated(): Promise<boolean> {
     const delivery = this.query.getActive();
-    return this.db
-      .collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`)
-      .get().toPromise().then( stakeholders => delivery.validated.length === stakeholders.size);
-  }
+    const stakeholders = await this.db.collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`).get().toPromise();
+    return delivery.validated.length === stakeholders.size;
+}
 
   /** Returns stakeholders updated with stakeholders of the store stakeholders (movie-lib) */
   private updateDeliveryShWithMovieSh(stakeholders) {
