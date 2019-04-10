@@ -146,7 +146,7 @@ export class DeliveryService {
         switchMap(deliverySh =>
           this.updateDeliveryShWithMovieSh(deliverySh)
         ),
-        tap(updatedSh => this.store.update(this.query.getActiveId(), { updatedSh }))
+        tap(updatedSh => this.store.update(this.query.getActiveId(), { stakeholders: updatedSh }))
       );
   }
 
@@ -159,17 +159,13 @@ export class DeliveryService {
 
   public signDelivery() {
     const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
-    const stakeholders = this.query.getActive().stakeholders;
-    const validated = [...this.query.getActive().validated];
+    const { stakeholders, validated } = this.query.getActive();
 
-    let stakeholderSignee: Stakeholder;
-    stakeholders.map(stakeholder =>
-      orgIdsOfUser.includes(stakeholder.orgId) ? (stakeholderSignee = stakeholder) : false
-    );
+    const stakeholderSignee = stakeholders.find(({orgId}) => orgIdsOfUser.includes(orgId));
 
     if (!validated.includes(stakeholderSignee.id)) {
-      validated.push(stakeholderSignee.id);
-      this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ validated });
+      const updatedValidated = [ ...validated, stakeholderSignee.id ];
+      this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ validated: updatedValidated });
     }
   }
 }
