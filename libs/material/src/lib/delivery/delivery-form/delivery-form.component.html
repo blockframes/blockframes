@@ -13,7 +13,7 @@
       Add new material
     </button>
     <div *ngIf="(form$ | async) as form">
-      <material-form *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
+      <material-form [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
     </div>
     <mat-card *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
       <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
@@ -25,10 +25,11 @@
       </mat-card-title>
       <mat-card-content>
         <div cdkDrag *ngFor="let material of materials.value">
-          <material-item [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
+          <material-item [isDeliveryValidated]="isDeliveryValidated$ | async" [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
         </div>
         <div *ngIf="(form$ | async) as form">
           <material-form
+            [isDeliveryValidated]="isDeliveryValidated$ | async"
             *ngIf="form.category === materials.key"
             (material)="addMaterial($event)"
           ></material-form>

@@ -43,6 +43,8 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
     this.materialService.subscribeOnDeliveryMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.service.subscribeOnActiveDelivery().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.isDeliveryValidated$.pipe(takeWhile(() => this.isAlive))
+      .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)
   }
 
   public saveAsTemplate() {

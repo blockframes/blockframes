@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy} from '@angular/core';
-import { Material, MaterialQuery } from '../+state';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy, Input} from '@angular/core';
+import { Material, MaterialQuery, MaterialStore } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ import { takeWhile, filter } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MaterialFormComponent implements OnInit, OnDestroy {
+  @Input() isDeliveryValidated: boolean;
   @Output() material = new EventEmitter<Material>();
 
   private isAlive = true;
@@ -20,7 +21,9 @@ export class MaterialFormComponent implements OnInit, OnDestroy {
     category: new FormControl()
   });
 
-  constructor(private query: MaterialQuery) {}
+  constructor(
+    private query: MaterialQuery,
+    ) {}
 
   ngOnInit() {
     this.form.setValue({ value: '', description: '', category: '' });

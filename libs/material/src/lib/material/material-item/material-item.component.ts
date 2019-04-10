@@ -10,6 +10,7 @@ import { Material } from '../+state';
 export class MaterialItemComponent {
 
   @Input() material: Material;
+  @Input() isDeliveryValidated: boolean;
   @Output() isDeleted = new EventEmitter<boolean>();
 
   constructor(

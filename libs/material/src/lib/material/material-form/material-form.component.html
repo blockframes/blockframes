@@ -13,6 +13,6 @@
     </mat-form-field>
   </form>
   <span class="mat-icons" fxFlex="20">
-    <button mat-icon-button (click)="addMaterial()"><mat-icon>add</mat-icon></button>
+    <button [disabled]="isDeliveryValidated" mat-icon-button (click)="addMaterial()"><mat-icon>add</mat-icon></button>
   </span>
 </mat-card>
