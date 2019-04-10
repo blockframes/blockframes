@@ -1,18 +1,18 @@
 <mat-card class="container" fxLayout="row" fxLayoutAlign="start center">
   <form fxFlex="80" [formGroup]="form" class="container" fxLayout="column" fxLayoutAlign="center">
     <mat-form-field>
-      <input class="value" formControlName="value" matInput />
+      <input class="value" formControlName="value" matInput placeholder="Value"/>
     </mat-form-field>
 
     <mat-form-field>
-      <input formControlName="description" matInput />
+      <input formControlName="description" matInput placeholder="Description" />
     </mat-form-field>
 
     <mat-form-field>
-      <input formControlName="category" matInput />
+      <input formControlName="category" matInput placeholder="Category"/>
     </mat-form-field>
   </form>
   <span class="mat-icons" fxFlex="20">
-    <button [disabled]="isDeliveryValidated" mat-icon-button (click)="addMaterial()"><mat-icon>add</mat-icon></button>
+    <button [disabled]="isDeliveryValidated" mat-mini-fab color="primary" (click)="addMaterial()"><mat-icon>add</mat-icon></button>
   </span>
 </mat-card>

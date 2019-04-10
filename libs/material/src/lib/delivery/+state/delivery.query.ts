@@ -6,7 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieQuery, Stakeholder } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
-import { filter, switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest } from 'rxjs';
 
@@ -34,7 +34,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   /** Returns the active movie materials sorted by category */
   public get materialsByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
@@ -45,7 +44,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   /** Returns a list of deliveries for the active movie */
   public get deliveriesByActiveMovie$() {
     return this.movieQuery.selectActiveId().pipe(
-      filter(id => !!id),
       switchMap(id =>
         this.db
           .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
@@ -58,7 +56,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   /** Returns the active delivery materials sorted by category */
   public get materialsByActiveDelivery$() {
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
@@ -79,7 +76,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   /** Returns the progression % of the delivery */
   public get deliveryProgression$() {
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
@@ -95,7 +91,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public deliveryProgressionById(id: string) {
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
@@ -111,7 +106,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   /** Returns the progression % of the movie's deliveries */
   public get movieProgression$() {
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
