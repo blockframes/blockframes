@@ -192,5 +192,5 @@ export const onDeliveryUpdate = functions.firestore
 
 let relayer: Relayer
 
-export const relayerCreate = functions.https.onRequest((req, res) => relayerCreateLogic(req, res, relayer));
-export const relayerSend = functions.https.onRequest((req, res) => relayerSendLogic(req, res, relayer));
+export const relayerCreate = functions.https.onCall((data, context) => relayerCreateLogic(data.username, data.key, relayer));
+export const relayerSend = functions.https.onCall((data, context) => relayerSendLogic(data.username, data.tx, relayer));

@@ -5,7 +5,7 @@ import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
 
 // type Request = functions.https.Request;
-type Response = functions.Response;
+// type Response = functions.Response;
 type TxResponse = providers.TransactionResponse;
 type TxReceipt = providers.TransactionReceipt;
 
@@ -44,26 +44,26 @@ export const initRelayer = (): Relayer => {
 };
 
 export const relayerCreateLogic = async (
-  req: any,
-  res: Response,
+  username: string,
+  key: string,
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
-  const {name, key} = req.body;
-  if (!name || !key)
-    return res.status(400).json({ error: '"name" and "key" are mandatory parameters !' });
+  if (!username || !key) {
+    throw new Error('"username" and "key" are mandatory parameters !');
+  }
 
   try {
     utils.getAddress(key);
   } catch (error) {
-    return res.status(400).json({ error: '"key" should be a valid ethereum address !' });
+    throw new Error('"key" should be a valid ethereum address !');
   }
 
   // compute needed values
-  const fullName = `${name}.${functions.config().relayer.basedomain}`;
-  const hash = utils.keccak256(utils.toUtf8Bytes(name));
+  const fullName = `${username}.${functions.config().relayer.basedomain}`;
+  const hash = utils.keccak256(utils.toUtf8Bytes(username));
 
-  // register the user ens name & deploy his erc1077 contract
+  // register the user ens username & deploy his erc1077 contract
   const registerTx: TxResponse = await relayer.registry.functions.setSubnodeOwner(
     relayer.namehash,
     hash,
@@ -74,41 +74,42 @@ export const relayerCreateLogic = async (
   const waitForDeploy: Promise<Contract> = erc1077.deployed();
   const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
 
-  // set a resolver to the ens name
+  // set a resolver to the ens username
   const resolverTx: TxResponse = await relayer.registry.functions.setResolver(
     utils.namehash(fullName),
     relayer.resolver.address
   );
   await resolverTx.wait();
 
-  // link the erc1077 to the ens name
+  // link the erc1077 to the ens username
   const linkTx = await relayer.resolver.functions.setAddr(
     utils.namehash(fullName),
     deployedErc1077.address
   );
 
-  return res.json({
-    name,
+  return {
+    username,
     key,
     register: registerTx.hash,
     deploy: erc1077.deployTransaction.hash,
     resolve: resolverTx.hash,
     link: linkTx.hash
-  });
+  };
 };
 
 export const relayerSendLogic = async (
-  req: any,
-  res: Response,
+  username: string,
+  tx: any,
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
-  const {name, tx} = req.body;
-  if (!name || !tx)
-    return res.status(400).json({ error: '"name" and "tx" are mandatory parameters !' });
+  // const {username, tx} = req.body;
+  if (!username || !tx) {
+    throw new Error('"username" and "tx" are mandatory parameters !');
+  }
 
   // compute needed values
-  const fullName = `${name}.${functions.config().relayer.basedomain}`;
+  const fullName = `${username}.${functions.config().relayer.basedomain}`;
   const erc1077 = new Contract(fullName, ERC1077.abi, relayer.wallet);
 
   // check if tx will be accepted by erc1077
@@ -125,10 +126,7 @@ export const relayerSendLogic = async (
   );
 
   if (!canExecute) {
-    res.status(400).json({
-      error:
-        'The transaction has not been sent beacause it will be be rejected by the ERC1077, this is probably a nonce or signatures problem.'
-    });
+    throw new Error('The transaction has not been sent beacause it will be be rejected by the ERC1077, this is probably a nonce or signatures problem.');
   }
 
   const sendTx = await erc1077.functions.executeSigned(
@@ -144,5 +142,5 @@ export const relayerSendLogic = async (
   );
 
   const txReceipt = await sendTx.wait()
-  return res.json(txReceipt);
+  return txReceipt;
 };
