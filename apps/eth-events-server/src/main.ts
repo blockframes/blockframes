@@ -1,8 +1,8 @@
-import * as express from 'express';
+import express from 'express';
 import { Contract, ethers } from 'ethers';
 import { PubSub } from '@google-cloud/pubsub';
 import { environment } from './environments/environment';
-import { network, contracts, firebase } from '@env';
+import { contracts, firebase, network } from '@env';
 
 const PUBSUB_ERROR_CODE_ALREADY_EXISTS = 6;
 
