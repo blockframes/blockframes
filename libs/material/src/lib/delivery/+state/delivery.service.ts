@@ -15,7 +15,7 @@ import {
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
-import { switchMap, tap, filter } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
 @Injectable({
@@ -129,19 +129,24 @@ export class DeliveryService {
     return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
   }
 
+  private updateDeliveryShWithMovieSh(stakeholders) {
+    const updatedSh$ = stakeholders.map(stakeholder =>
+      this.stakeholderQuery
+        .selectEntity(stakeholder.id)
+        .pipe(map(movieSh => ({ ...movieSh, ...stakeholder })))
+    );
+    return combineLatest(updatedSh$);
+  }
+
   public subscribeOnDeliveryStakeholders() {
     return this.db
       .collection<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders`)
       .valueChanges()
       .pipe(
-        switchMap(stakeholders =>
-          combineLatest(
-            stakeholders.map(stakeholder => {
-              return {...stakeholder, ...this.stakeholderQuery.selectEntity(stakeholder.id) };
-            })
-          )
+        switchMap(deliverySh =>
+          this.updateDeliveryShWithMovieSh(deliverySh)
         ),
-        tap(stakeholders => this.store.update(this.query.getActiveId(), { stakeholders }))
+        tap(updatedSh => this.store.update(this.query.getActiveId(), { updatedSh }))
       );
   }
 
@@ -164,9 +169,7 @@ export class DeliveryService {
 
     if (!validated.includes(stakeholderSignee.id)) {
       validated.push(stakeholderSignee.id);
-      this.db
-      .doc<Delivery>(`deliveries/${this.query.getActiveId()}`)
-      .update({ validated });
+      this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ validated });
     }
   }
 }

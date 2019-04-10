@@ -22,7 +22,7 @@ export class StakeholderItemComponent implements OnInit {
 
   ngOnInit() {
     this.hasStakeholderSigned$ = this.stakeholder$.pipe(
-      // filter(sh => !!sh),
+      filter(sh => !!sh),
       switchMap(({ id }) => this.query.hasStakeholderSigned$(id))
     );
   }
