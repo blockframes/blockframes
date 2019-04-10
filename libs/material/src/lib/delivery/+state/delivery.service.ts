@@ -129,6 +129,7 @@ export class DeliveryService {
     return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
   }
 
+  /** Returns stakeholders updated with stakeholders of the store stakeholders (movie-lib) */
   private updateDeliveryShWithMovieSh(stakeholders) {
     const updatedSh$ = stakeholders.map(stakeholder =>
       this.stakeholderQuery
@@ -138,14 +139,16 @@ export class DeliveryService {
     return combineLatest(updatedSh$);
   }
 
+  /** Update stakeholders in delivery store with stakeholders saved in firebase (in sub-collection stakeholders of deliveries)
+   * and stokeholders saved in store stakeholders of movie-lib.
+   * We need informations from the stakeholders of the delivery and the movie
+    */
   public subscribeOnDeliveryStakeholders() {
     return this.db
       .collection<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders`)
       .valueChanges()
       .pipe(
-        switchMap(deliverySh =>
-          this.updateDeliveryShWithMovieSh(deliverySh)
-        ),
+        switchMap(deliverySh => this.updateDeliveryShWithMovieSh(deliverySh)),
         tap(updatedSh => this.store.update(this.query.getActiveId(), { stakeholders: updatedSh }))
       );
   }
