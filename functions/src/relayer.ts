@@ -44,8 +44,7 @@ export const initRelayer = (): Relayer => {
 };
 
 export const relayerCreateLogic = async (
-  username: string,
-  key: string,
+  {username, key}: {username: string, key: string},
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
@@ -98,8 +97,7 @@ export const relayerCreateLogic = async (
 };
 
 export const relayerSendLogic = async (
-  username: string,
-  tx: any,
+  {username, tx}: {username: string, tx: any},
   relayer: Relayer = initRelayer()
 ) => {
   // check required params
