@@ -34,9 +34,10 @@ export class DeliveryListComponent implements OnInit {
 
   public selectDelivery(delivery: Delivery, movieId: string) {
     this.store.setActive(delivery.id);
-    this.service.isDeliveryValidated()
-      ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
-      : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]);
+    this.service.isDeliveryValidated().then(validated =>
+      validated
+        ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
+        : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]))
   }
 
   public openDialog() {

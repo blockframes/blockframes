@@ -25,4 +25,15 @@ export class DeliveryItemComponent implements OnInit {
   public selectDelivery() {
     this.isSelected.emit(true);
   }
+
+  public getStage(value: number) {
+    // TODO: find a way to return a dynamic value to change the color property
+    if (value > 0 && value <= 9) return 'red-number';
+    if (value > 9 && value <= 29) return 'orange-number';
+    if (value > 29 && value <= 49) return 'yellow-number';
+    if (value > 49 && value <= 69) return 'green-number';
+    if (value > 69 && value <= 89) return 'teal-number';
+    if (value > 89 && value <= 100) return 'blue-number';
+  }
 }
+

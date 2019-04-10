@@ -1,18 +1,10 @@
-<div (click)="selectDelivery()" fxLayout="row" fxLayoutAlign="space-between">
-  <span>
+<section (click)="selectDelivery()" fxLayoutAlign="space-between">
+  <article>
     <h4>Delivery ID : {{ delivery.id }}</h4>
+  </article>
+  <span *ngIf="(progression$ | async) as value" class="progression-value" fxLayout="row">
+    <h5>State of delivery : </h5>
+    <span class="spacer"></span>
+    <h4 [ngClass]="getStage(value)"> {{ value }}%</h4>
   </span>
-  <span *ngIf="(progression$ | async) as value; else empty" class="progression-value" fxLayout="column">
-    <p mat-subtitle>State of delivery :</p>
-    <h4
-    [class.red-number]="value > 0 && value < 9"
-    [class.orange-number]="value > 9 && value < 29"
-    [class.yellow-number]="value > 29 && value < 49"
-    [class.green-number]="value > 49 && value < 69"
-    [class.teal-number]="value > 69 && value < 89"
-    [class.blue-number]="value > 89 && value <= 100"
-      >{{ value }}%</h4>
-  </span>
-  <ng-template #empty>
-  </ng-template>
-</div>
+</section>

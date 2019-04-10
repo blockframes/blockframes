@@ -138,9 +138,8 @@ export class DeliveryService {
   /** Adds a stakeholder with specific authorization to the delivery */
   public addStakeholder(stakeholder: Stakeholder, authorization: string) {
     // TODO: Improve this function so we can add multiple authorizations in the array
-    if (stakeholder.authorizations === undefined) {
-      const authorizations = [];
-      authorizations.push(authorization);
+    if (!stakeholder.authorizations) {
+      const authorizations = [ authorization ];
       this.db
         .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
         .set({ ...stakeholder, authorizations });
@@ -154,8 +153,11 @@ export class DeliveryService {
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public isDeliveryValidated(): boolean {
-    return this.query.getActive().validated.length === this.stakeholderQuery.getCount();
+  public isDeliveryValidated(): Promise<boolean> {
+    const delivery = this.query.getActive();
+    return this.db
+      .collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`)
+      .get().toPromise().then( stakeholders => delivery.validated.length === stakeholders.size);
   }
 
   /** Returns stakeholders updated with stakeholders of the store stakeholders (movie-lib) */
