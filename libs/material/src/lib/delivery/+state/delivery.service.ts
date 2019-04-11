@@ -6,10 +6,10 @@ import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery } from './delivery.model';
 import {
-  createStakeholder,
   MovieQuery,
   Stakeholder,
   StakeholderQuery,
+  createDeliveryStakeholder,
 } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
@@ -142,18 +142,27 @@ export class DeliveryService {
     this.store.setActive(null);
   }
 
-  /** Adds a stakeholder with specific authorization to the delivery */
-  public addStakeholder(stakeholder: Stakeholder, authorization: string) {
-    // TODO: Improve this function so we can add multiple authorizations in the array
-    if (!stakeholder.authorizations) {
-      const authorizations = [ authorization ];
+  private makeDeliveryStakeholder(id: string, orgId: string, authorizations: string[]) {
+    return createDeliveryStakeholder({id, orgId, authorizations})
+  }
+
+  /** Update or Add a stakeholder with specific authorization to the delivery */
+  public addStakeholder(movieStakeholder: Stakeholder, authorization: string) {
+    const deliveryStakeholder = this.query.getActive().stakeholders.find(stakeholder => stakeholder.id === movieStakeholder.id);
+    // If deliveryStakeholder doesn't exist yet, we need to create him
+    if (!deliveryStakeholder) {
+      const newDeliveryStakeholder = this.makeDeliveryStakeholder(movieStakeholder.id, movieStakeholder.orgId, [authorization])
       this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
-        .set({ ...stakeholder, authorizations });
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`)
+        .set(newDeliveryStakeholder);
+    // If deliveryStakeholder exists, we update his authorizations
     } else {
-      const authorizations = [ ...stakeholder.authorizations, authorization ];
+      let authorizations = [];
+      deliveryStakeholder.authorizations.includes(authorization)
+      ? authorizations = deliveryStakeholder.authorizations
+      : authorizations = [ ...deliveryStakeholder.authorizations, authorization ]
       this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`)
         .update({ authorizations });
     }
   }

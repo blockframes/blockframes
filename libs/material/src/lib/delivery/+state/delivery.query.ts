@@ -74,11 +74,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Returns the active delivery stakeholders */
-  public get stakeholdersByActiveDelivery$(){
-    return this.db.collection<Stakeholder>(`deliveries/${this.getActiveId()}/stakeholders`).valueChanges();
-  }
-
   /** Returns the progression % of the delivery */
   public get deliveryProgression$() {
     return this.movieQuery.selectActive().pipe(

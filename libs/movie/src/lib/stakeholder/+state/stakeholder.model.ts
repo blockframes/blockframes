@@ -18,3 +18,9 @@ export function createStakeholder(params?: Partial<Stakeholder>) {
     ...params,
   } as Stakeholder;
 }
+
+export function createDeliveryStakeholder(params?: Partial<Stakeholder>) {
+  return {
+    ...params,
+  } as Stakeholder;
+}
