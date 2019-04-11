@@ -6,7 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieQuery, Stakeholder } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap, filter } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest } from 'rxjs';
 
