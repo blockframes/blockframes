@@ -1,4 +1,4 @@
-<div class="container">
+<main class="container">
   <section *ngIf="(movie$ | async) as movie" class="delivery-list">
     <article fxLayout="row" fxLayoutAlign="space-between">
       <h2>{{ movie.title }}</h2>
@@ -18,4 +18,4 @@
       ></delivery-item>
     </article>
   </section>
-</div>
+</main>
