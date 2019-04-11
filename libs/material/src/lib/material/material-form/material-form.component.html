@@ -5,14 +5,14 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input formControlName="description" matInput placeholder="Description" />
+      <input class="description" formControlName="description" matInput placeholder="Description" />
     </mat-form-field>
 
     <mat-form-field>
-      <input formControlName="category" matInput placeholder="Category"/>
+      <input class="category" formControlName="category" matInput placeholder="Category"/>
     </mat-form-field>
   </form>
-  <span class="mat-icons" fxFlex="20">
+  <span class="mat-icon" fxFlex="20">
     <button [disabled]="isDeliveryValidated" mat-mini-fab color="primary" (click)="addMaterial()"><mat-icon>add</mat-icon></button>
   </span>
 </mat-card>

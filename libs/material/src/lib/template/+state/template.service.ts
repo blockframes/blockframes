@@ -76,6 +76,7 @@ export class TemplateService {
         const materialRef = this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).ref;
         return batch.set(materialRef, material);
       });
+      batch.commit();
     }
   }
 
