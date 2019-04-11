@@ -2,7 +2,7 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { auth, db, functions } from './firebase';
-import { Relayer, relayerCreateLogic, relayerSendLogic } from './relayer';
+import { relayerCreateLogic, relayerSendLogic } from './relayer';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -190,7 +190,5 @@ export const onDeliveryUpdate = functions.firestore
 //            RELAYER           //
 //--------------------------------
 
-let relayer: Relayer
-
-export const relayerCreate = functions.https.onCall((data, context) => relayerCreateLogic(data, relayer));
-export const relayerSend = functions.https.onCall((data, context) => relayerSendLogic(data, relayer));
+export const relayerCreate = functions.https.onCall((data, context) => relayerCreateLogic(data, functions.config()));
+export const relayerSend = functions.https.onCall((data, context) => relayerSendLogic(data, functions.config()));

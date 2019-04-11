@@ -1,11 +1,8 @@
 import { Wallet, ContractFactory, Contract, utils, getDefaultProvider, providers } from 'ethers';
-import { functions } from './firebase';
 import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
 
-// type Request = functions.https.Request;
-// type Response = functions.Response;
 type TxResponse = providers.TransactionResponse;
 type TxReceipt = providers.TransactionReceipt;
 
@@ -17,22 +14,14 @@ export interface Relayer {
   resolver: Contract;
 }
 
-export const initRelayer = (): Relayer => {
-  let wallet = Wallet.fromMnemonic(functions.config().relayer.mnemonic);
-  const provider = getDefaultProvider(functions.config().relayer.network);
+export const initRelayer = (config: any): Relayer => {
+  let wallet = Wallet.fromMnemonic(config.relayer.mnemonic);
+  const provider = getDefaultProvider(config.relayer.network);
   wallet = wallet.connect(provider);
   const erc1077Factory = new ContractFactory(ERC1077.abi, ERC1077.bytecode, wallet);
-  const namehash = utils.namehash(functions.config().relayer.basedomain);
-  const registry = new Contract(
-    functions.config().relayer.registryaddress,
-    ENS_REGISTRY.abi,
-    wallet
-  );
-  const resolver = new Contract(
-    functions.config().relayer.resolveraddress,
-    ENS_RESOLVER.abi,
-    wallet
-  );
+  const namehash = utils.namehash(config.relayer.basedomain);
+  const registry = new Contract(config.relayer.registryaddress, ENS_REGISTRY.abi, wallet);
+  const resolver = new Contract(config.relayer.resolveraddress, ENS_RESOLVER.abi, wallet);
 
   return <Relayer>{
     wallet,
@@ -44,9 +33,11 @@ export const initRelayer = (): Relayer => {
 };
 
 export const relayerCreateLogic = async (
-  {username, key}: {username: string, key: string},
-  relayer: Relayer = initRelayer()
+  { username, key }: { username: string; key: string },
+  config: any
 ) => {
+  const relayer: Relayer = initRelayer(config);
+
   // check required params
   if (!username || !key) {
     throw new Error('"username" and "key" are mandatory parameters !');
@@ -59,7 +50,7 @@ export const relayerCreateLogic = async (
   }
 
   // compute needed values
-  const fullName = `${username}.${functions.config().relayer.basedomain}`;
+  const fullName = `${username}.${config.relayer.basedomain}`;
   const hash = utils.keccak256(utils.toUtf8Bytes(username));
 
   // register the user ens username & deploy his erc1077 contract
@@ -68,7 +59,9 @@ export const relayerCreateLogic = async (
     hash,
     relayer.wallet.address
   );
+  console.log(`tx sent (register) : ${registerTx.hash}`); // display tx to firebase logging
   const erc1077 = await relayer.erc1077Factory.deploy(key);
+  console.log(`tx sent (deploy) : ${erc1077.deployTransaction.hash}`); // display tx to firebase logging
   const waitForRegister: Promise<TxReceipt> = registerTx.wait();
   const waitForDeploy: Promise<Contract> = erc1077.deployed();
   const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
@@ -78,6 +71,7 @@ export const relayerCreateLogic = async (
     utils.namehash(fullName),
     relayer.resolver.address
   );
+  console.log(`tx sent (setResolver) : ${resolverTx.hash}`); // display tx to firebase logging
   await resolverTx.wait();
 
   // link the erc1077 to the ens username
@@ -85,6 +79,7 @@ export const relayerCreateLogic = async (
     utils.namehash(fullName),
     deployedErc1077.address
   );
+  console.log(`tx sent (setAddress) : ${linkTx.hash}`); // display tx to firebase logging
 
   return {
     username,
@@ -97,17 +92,17 @@ export const relayerCreateLogic = async (
 };
 
 export const relayerSendLogic = async (
-  {username, tx}: {username: string, tx: any},
-  relayer: Relayer = initRelayer()
+  { username, tx }: { username: string; tx: any },
+  config: any
 ) => {
+  const relayer: Relayer = initRelayer(config);
   // check required params
-  // const {username, tx} = req.body;
   if (!username || !tx) {
     throw new Error('"username" and "tx" are mandatory parameters !');
   }
 
   // compute needed values
-  const fullName = `${username}.${functions.config().relayer.basedomain}`;
+  const fullName = `${username}.${config.relayer.basedomain}`;
   const erc1077 = new Contract(fullName, ERC1077.abi, relayer.wallet);
 
   // check if tx will be accepted by erc1077
@@ -124,7 +119,9 @@ export const relayerSendLogic = async (
   );
 
   if (!canExecute) {
-    throw new Error('The transaction has not been sent beacause it will be be rejected by the ERC1077, this is probably a nonce or signatures problem.');
+    throw new Error(
+      'The transaction has not been sent beacause it will be be rejected by the ERC1077, this is probably a nonce or signatures problem.'
+    );
   }
 
   const sendTx = await erc1077.functions.executeSigned(
@@ -138,7 +135,8 @@ export const relayerSendLogic = async (
     tx.operationType,
     tx.signatures
   );
+  console.log(`tx sent (executeSigned) : ${sendTx.hash}`); // display tx to firebase logging
 
-  const txReceipt = await sendTx.wait()
+  const txReceipt = await sendTx.wait();
   return txReceipt;
 };
