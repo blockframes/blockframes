@@ -1,57 +1,61 @@
-<button mat-raised-button color="warn" (click)="goBack()">Back</button>
-<section fxLayout="row" fxLayoutGap="5%">
-  <article class="progress-card" fxFlex="30" fxLayout="column">
-    <mat-card>
-      <mat-card-content
-        *ngIf="(progressionValue$ | async) as value; else empty"
-        fxLayout="column"
-        fxLayoutAlign="center center">
-        <h2 class="example-h2">PROGRESSION</h2>
-        <mat-progress-spinner
-          class="example-margin"
-          color="primary"
-          mode="determinate"
-          [value]="value"
-          diameter="200"
-          strokeWidth="13">
-        </mat-progress-spinner>
-        <div class="progress-value">{{ value }} %</div>
-        <p><i>La progression en %age des deliveries de la movie</i></p>
-      </mat-card-content>
-      <ng-template #empty>
-        <mat-card-content fxLayout="column" fxLayoutAlign="center center">
-          <h2 class="example-h2">PROGRESSION</h2>
+<div class="container">
+    <section fxLayout="row" fxLayoutGap="5%">
+      <article class="progress-spinner-block" fxFlex="20" fxLayoutAlign="center start">
+        <div
+          *ngIf="(progressionValue$ | async) as value; else empty"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+        >
           <mat-progress-spinner
-            class="example-margin"
+            class="spinner"
             color="primary"
             mode="determinate"
-            value="0"
+            [value]="value"
             diameter="200"
-            strokeWidth="13">
+            strokeWidth="13"
+          >
           </mat-progress-spinner>
-          <div class="progress-value">
-            0 %
+          <div class="progress-value">{{ value }} %</div>
+          <h5>Global progression</h5>
+          <p><i>La progression en %age dela delivery</i></p>
+        </div>
+        <ng-template #empty>
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <mat-progress-spinner
+              class="spinner"
+              color="warn"
+              mode="determinate"
+              value="0"
+              diameter="200"
+              strokeWidth="15"
+            >
+            </mat-progress-spinner>
+            <div class="progress-value">
+              0 %
+            </div>
+            <h5>Global progression</h5>
+            <p><i>La progression en %age dela delivery</i></p>
           </div>
-          <p><i>La progression en %age des deliveries de la movie</i></p>
-        </mat-card-content>
-      </ng-template>
-    </mat-card>
-    <button mat-raised-button color="accent" (click)="editDelivery()">Edit delivery (freeze it)</button>
-  </article>
-  <article fxFlex="70" fxLayout="column">
-    <mat-card *ngFor="let category of (materials$ | async | keyvalue)">
-      <mat-card-title>{{ category.key | uppercase }}</mat-card-title>
-      <mat-card-content *ngFor="let material of category.value">
-        <span>
-          <h4 mat-line>
-            <mat-checkbox [(ngModel)]="material.delivered" [disabled]="true"><b>{{ material.value }}</b></mat-checkbox>
-          </h4>
-        </span>
-        <p mat-line class="description-text">
-          <i>{{ material.description }}</i>
-        </p>
-        <mat-divider></mat-divider>
-      </mat-card-content>
-    </mat-card>
-  </article>
-</section>
+        </ng-template>
+      </article>
+      <article fxFlex="80" fxLayout="column">
+        <div *ngFor="let category of (materials$ | async | keyvalue)">
+          <h3>{{ category.key | uppercase }}</h3>
+          <div *ngFor="let material of category.value" class="materials-block">
+            <span
+              ><h4 mat-line>
+                <mat-checkbox
+                  [ngModel]="material.delivered"
+                  [disabled]="true"
+                  ><b>{{ material.value }}</b></mat-checkbox
+                >
+              </h4></span
+            >
+            <p mat-line class="description-text">
+              <i>{{ material.description }}</i>
+            </p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>

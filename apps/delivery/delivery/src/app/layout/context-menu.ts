@@ -26,8 +26,7 @@ export const CONTEXT_MENU = [
       { name: 'home', path: '/layout/home'},
       { name: 'deliveries', path: '/layout/:movieId', exact: true},
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
-      { name: 'delivery', path: '/layout/:movieId/view/:deliveryId'},
-      { name: 'settings', path: '/layout/:movieId/view/:deliveryId/settings'}
+      { name: 'delivery', path: '/layout/:movieId/view/:deliveryId'}
     ]
   },
   {

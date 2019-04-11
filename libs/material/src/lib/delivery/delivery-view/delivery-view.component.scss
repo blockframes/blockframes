@@ -1,29 +1,43 @@
-::ng-deep .mat-list .mat-list-item .mat-line{
-  word-wrap: break-word;
-  white-space: pre-wrap;
+.container {
+  margin-top: 3%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
-.mat-card {
-  margin-bottom: 2rem;
+.progress-spinner-block {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  margin: auto;
+  margin-top: 0;
+  padding: 1rem;
   box-shadow: -10px 11px 32px 0 #00000023;
 }
 
-mat-card-title {
-  font-weight: bolder;
+mat-progress-spinner{
+  border-radius: 50%;
+  box-shadow: -11px 10px 12px 0 rgba(63, 81, 180, 0.178);
 }
 
-.mat-divider {
-  width: 80%;
-  text-align: center;
+.materials-block {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: -10px 11px 32px 0 #00000023;
 }
 
-h4 {
+h3 {
   color: #5E5E5E;
 }
 
 p {
   font-size: 90%;
   margin-bottom: 1rem;
+}
+
+.progress-card {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
 }
 
 .progress-value {
