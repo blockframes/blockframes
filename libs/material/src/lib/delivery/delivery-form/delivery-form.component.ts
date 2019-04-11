@@ -72,12 +72,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     // TODO: fix behavior => user can still go back and land on the delivery page (without active delivery)
   }
 
-  public goToSettings(){
-    const deliveryId = this.query.getActiveId();
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate([`/layout/${movieId}/form/${deliveryId}/settings`]);
-  }
-
   ngOnDestroy() {
     this.isAlive = false;
   }
