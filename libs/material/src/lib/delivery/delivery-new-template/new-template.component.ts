@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatSnackBar } from '@angular/material';
 import { TemplateService } from '../../template/+state/template.service';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
@@ -25,7 +25,8 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
-    private organizationQuery: OrganizationQuery
+    private organizationQuery: OrganizationQuery,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -42,11 +43,13 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
   public saveTemplate(name: string, orgId: string) {
     this.templateService.saveTemplate(name, orgId);
     this.dialogRef.close();
+    this.snackBar.open('Saved template : ' + name + ' !', 'close', { duration: 2000 });
   }
 
   public updateTemplate(name: string, orgId: string) {
     this.templateService.updateTemplate(name, orgId);
     this.dialogRef.close();
+    this.snackBar.open('Updated template : ' + name + ' !', 'close', { duration: 2000 });
   }
 
   public close() {
