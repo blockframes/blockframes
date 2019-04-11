@@ -84,13 +84,7 @@ export class DeliveryService {
     const stakeholder = this.query.findActiveStakeholder();
     const movieId = this.movieQuery.getActiveId();
     const delivery = createDelivery({ id, movieId });
-
-    const authorizations = ['canValidateDelivery'];
-    const deliveryStakeholder = createStakeholder({
-      id: stakeholder.id,
-      orgId: stakeholder.orgId,
-      authorizations
-    });
+    const deliveryStakeholder = this.makeDeliveryStakeholder(stakeholder.id, stakeholder.orgId, ['canValidateDelivery']);
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
     this.db
