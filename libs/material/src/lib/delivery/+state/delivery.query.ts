@@ -135,7 +135,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   public findActiveStakeholder() {
     const stakeholders = this.stakeholderQuery.getAll();
     const orgIds = this.organizationQuery.getAll().map(org => org.id);
-    const activeStakeholder= stakeholders.find(({orgId}) => orgIds.includes(orgId));
-    return activeStakeholder;
+    return stakeholders.find(({orgId}) => orgIds.includes(orgId));
   }
 }
