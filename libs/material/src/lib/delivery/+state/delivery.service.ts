@@ -14,7 +14,7 @@ import {
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
-import { switchMap, tap, map } from 'rxjs/operators';
+import { switchMap, tap, map, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
 @Injectable({
@@ -81,20 +81,19 @@ export class DeliveryService {
    */
   public addDelivery(templateId?: string) {
     const id = this.db.createId();
-    const stakeholderId = this.db.createId();
+    const stakeholder = this.query.findActiveStakeholder();
     const movieId = this.movieQuery.getActiveId();
-    const organization = this.organizationQuery.getActive();
     const delivery = createDelivery({ id, movieId });
-    const stakeholder = createStakeholder({
-      id: stakeholderId,
-      orgId: organization.id,
+    const deliveryStakeholder = createStakeholder({
+      id: stakeholder.id,
+      orgId: stakeholder.orgId,
       authorizations: ['canValidateDelivery']
     });
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
     this.db
-      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${stakeholderId}`)
-      .set({ ...stakeholder, organization });
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
+      .set( deliveryStakeholder );
     this.store.setActive(id);
     if (!!templateId) {
       const filterByMaterialId = material =>
@@ -193,7 +192,9 @@ export class DeliveryService {
   public subscribeOnActiveDelivery() {
     return this.query.selectActiveId().pipe(
       switchMap(id => this.db.doc<Delivery>(`deliveries/${id}`).valueChanges()),
-      tap(delivery => this.store.update(delivery.id, delivery))
+      tap(delivery =>
+        this.query.hasEntity(delivery.id) ? this.store.update(delivery.id, delivery) : this.store.add(delivery)
+        )
     );
   }
 

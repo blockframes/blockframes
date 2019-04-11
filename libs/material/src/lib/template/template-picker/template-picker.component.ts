@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
+import { DeliveryQuery } from '../../delivery/+state';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -28,6 +29,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
+    private deliveryQuery: DeliveryQuery,
     private query: TemplateQuery,
     private router: Router,
   ) {}
@@ -53,7 +55,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     }
 
     this.deliveryService.addDelivery(templateId);
-    this.router.navigate([`layout/${movieId}/form/${this.query.getActiveId()}`]);
+    this.router.navigate([`layout/${movieId}/form/${this.deliveryQuery.getActiveId()}`]);
     this.close();
   }
 

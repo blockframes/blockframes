@@ -3,12 +3,13 @@ import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MovieQuery, Stakeholder } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, StakeholderQuery } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest } from 'rxjs';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,9 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialStore: MaterialStore,
-    private db: AngularFirestore
+    private stakeholderQuery : StakeholderQuery,
+    private organizationQuery: OrganizationQuery,
+    private db: AngularFirestore,
   ) {
     super(store);
   }
@@ -126,5 +129,13 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     return this.selectActive().pipe(
       map(delivery => delivery.validated.includes(id))
     )
+  }
+
+  /** Find the stakeholder from the movie and logged user organizations */
+  public findActiveStakeholder() {
+    const stakeholders = this.stakeholderQuery.getAll();
+    const orgIds = this.organizationQuery.getAll().map(org => org.id);
+    const activeStakeholder= stakeholders.find(({orgId}) => orgIds.includes(orgId));
+    return activeStakeholder;
   }
 }
