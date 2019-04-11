@@ -197,6 +197,7 @@ export class DeliveryService {
   public subscribeOnActiveDelivery() {
     return this.query.selectActiveId().pipe(
       switchMap(id => this.db.doc<Delivery>(`deliveries/${id}`).valueChanges()),
+      filter(delivery => !!delivery),
       tap(delivery =>
         this.query.hasEntity(delivery.id) ? this.store.update(delivery.id, delivery) : this.store.add(delivery)
         )

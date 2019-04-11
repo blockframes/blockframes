@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Delivery } from '../+state/delivery.model';
@@ -7,6 +7,9 @@ import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
 import { DeliveryQuery, DeliveryStore, DeliveryService } from '../+state';
 import { Router } from '@angular/router';
+import { StakeholderService } from '@blockframes/movie';
+import { pipe } from '@angular/core/src/render3';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-list',
@@ -14,9 +17,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./delivery-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryListComponent implements OnInit {
+export class DeliveryListComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
   public deliveries$: Observable<Delivery[]>;
+  private isAlive = true;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -25,11 +29,13 @@ export class DeliveryListComponent implements OnInit {
     private service: DeliveryService,
     private router: Router,
     private dialog: MatDialog,
+    private stakeholderService: StakeholderService,
   ) {}
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
     this.deliveries$ = this.query.deliveriesByActiveMovie$;
+    this.stakeholderService.subscribeOnStakeholdersByActiveMovie$().pipe(takeWhile(() => this.isAlive)).subscribe();
   }
 
   public async selectDelivery(delivery: Delivery, movieId: string) {
@@ -42,5 +48,9 @@ export class DeliveryListComponent implements OnInit {
 
   public openDialog() {
     this.dialog.open(TemplatePickerComponent, { width: '80%' });
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }
