@@ -14,6 +14,7 @@ export interface Organization {
   updated: number;
   userIds: string[];
   movieIds: string[];
+  templates?: Template[];
 }
 
 /**

@@ -3,8 +3,9 @@ import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
 import { Template, TemplatesByOrgs } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { OrganizationQuery } from '@blockframes/organization';
 
 export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
   return templates.reduce(
@@ -22,10 +23,21 @@ export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-  public templatesByOrgs$ = this.selectAll().pipe(
-    map(templates =>
-      templatesByOrgName(templates)
-  ));
+  public templatesByOrgs$ = this.selectAll().pipe(map(templates => templatesByOrgName(templates)));
+
+  public orgsWithTemplates$ = this.organizationQuery
+    .selectAll()
+    .pipe(
+      switchMap(orgs =>
+        combineLatest(
+          orgs.map(org =>
+            this.selectAll({ filterBy: template => template.orgId === org.id }).pipe(
+              map(templates => ({ ...org, templates }))
+            )
+          )
+        )
+      )
+    );
 
   public form$ = this.select(state => state.form);
 
@@ -40,7 +52,11 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     map(materials => materialsByCategory(materials))
   );
 
-  constructor(protected store: TemplateStore, private materialQuery: MaterialQuery) {
+  constructor(
+    protected store: TemplateStore,
+    private materialQuery: MaterialQuery,
+    private organizationQuery: OrganizationQuery
+  ) {
     super(store);
   }
 }
