@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { TemplateQuery, TemplateService, TemplatesByOrgs } from '../+state';
+import { TemplateQuery, TemplateService } from '../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
 import { AddTemplateComponent } from './add-template';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 
 @Component({
