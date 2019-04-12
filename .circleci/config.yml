@@ -25,6 +25,7 @@ jobs:
             - ~/.cache/Cypress
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: cp env/env.template.ts env/env.prod.ts
+      - run: cp env/env.template.ts env/env.ts
       - run: npm run build:all
       - persist_to_workspace:
           root: ~/repo
