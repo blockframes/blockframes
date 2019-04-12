@@ -31,28 +31,3 @@
     </section>
   </mat-expansion-panel>
 </div>
-
-<mat-accordion>
-    <mat-expansion-panel *ngFor="let org of (orgs$ | async)">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ org.name }}
-        </mat-panel-title>
-        <button (click)="addTemplateDialog(org.name)" color="primary" mat-icon-button>
-          Create a template
-          <mat-icon class="icon-add">add_circle</mat-icon>
-        </button>
-      </mat-expansion-panel-header>
-      <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
-        <article
-          class="card-ngFor"
-          fxFlex.gt-md="25"
-          fxFlex.gt-sm="50"
-          fxFlex="100"
-          *ngFor="let template of org.templates"
-        >
-          <template-item class="mat-cards" [template]="template"></template-item>
-        </article>
-      </section>
-    </mat-expansion-panel>
-  </mat-accordion>

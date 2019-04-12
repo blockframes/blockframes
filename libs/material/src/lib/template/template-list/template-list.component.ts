@@ -14,8 +14,7 @@ import { OrganizationQuery, Organization } from '@blockframes/organization';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit, OnDestroy {
-  public templatesByOrgs$: Observable<TemplatesByOrgs>;
-  public orgs$: Observable<Organization[]>;
+  public orgsWithTemplates$: Observable<Organization[]>;
   private isAlive = true;
 
   constructor(
@@ -32,8 +31,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templatesByOrgs$ = this.query.templatesByOrgs$;
-    this.orgs$ = this.query.orgsWithTemplates$;
+    this.orgsWithTemplates$ = this.query.orgsWithTemplates$;
   }
 
   public addTemplateDialog(event: MouseEvent, orgName: string): void {
