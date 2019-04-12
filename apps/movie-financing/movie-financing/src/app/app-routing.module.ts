@@ -3,6 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 // tslint:disable-next-line
 import { AuthGuard } from '@blockframes/auth';
 import { LayoutComponent } from './layout/layout.component';
+import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
+import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
+import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
 
 
 export const routes: Routes = [
@@ -26,6 +29,21 @@ export const routes: Routes = [
       { path: 'account', loadChildren: '@blockframes/account#AccountModule' }, // loadChildren should lead to the Account Module
       { path: ':id', loadChildren: './financing/financing.module#FinancingModule' } // should lead to the specific App
     ]
+  },
+  {
+    path: 'explorer',
+    component: FinancingExplorerHomeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'explorer/search',
+    component: FinancingExplorerSearchComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'explorer/movie/:id',
+    component: FinancingExplorerDetailsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'not-found',

@@ -13,6 +13,9 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutComponent } from './layout/layout.component';
+import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
+import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
+import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
@@ -20,7 +23,13 @@ import { AuthModule } from '@blockframes/auth';
 
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent],
+  declarations: [
+    AppComponent,
+    LayoutComponent,
+    FinancingExplorerHomeComponent,
+    FinancingExplorerDetailsComponent,
+    FinancingExplorerSearchComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
