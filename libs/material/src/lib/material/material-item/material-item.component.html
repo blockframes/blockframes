@@ -6,6 +6,6 @@
     {{ material.description }}
   </mat-card-content>
   <mat-card-actions>
-    <button [disabled]="isDeliveryValidated" mat-icon-button (click)="deleteMaterial()"><mat-icon>delete</mat-icon></button>
+    <button class="delete-material-button" [disabled]="isDeliveryValidated" mat-icon-button (click)="deleteMaterial()"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>
 </mat-card>

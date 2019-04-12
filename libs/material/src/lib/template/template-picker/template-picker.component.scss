@@ -12,11 +12,5 @@ mat-card {
   margin: 5% 5%;
   cursor: pointer;
   min-height: 100px;
-  border: none;
-  transition: border-width 0.1s linear;
 }
 
-mat-card:hover {
-  border: solid #6000ED;
-  border-width: 5px;
-}

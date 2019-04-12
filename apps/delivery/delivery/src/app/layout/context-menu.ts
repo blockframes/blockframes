@@ -7,6 +7,7 @@ export const CONTEXT_MENU = [
     route: '/layout/:movieId',
     items: [
       { name: 'home', path: '/layout/home'},
+      { name: 'templates', path: '/layout/template/list'},
       { name: 'deliveries', path: '/layout/:movieId'},
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
     ]
@@ -16,6 +17,7 @@ export const CONTEXT_MENU = [
     route: '/layout/:movieId/movie-materials',
     items: [
       { name: 'home', path: '/layout/home'},
+      { name: 'templates', path: '/layout/template/list'},
       { name: 'deliveries', path: '/layout/:movieId'},
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
     ]
@@ -24,6 +26,7 @@ export const CONTEXT_MENU = [
     route: '/layout/:movieId/view/:deliveryId',
     items: [
       { name: 'home', path: '/layout/home'},
+      { name: 'templates', path: '/layout/template/list'},
       { name: 'deliveries', path: '/layout/:movieId', exact: true},
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
       { name: 'delivery', path: '/layout/:movieId/view/:deliveryId'}
@@ -33,6 +36,7 @@ export const CONTEXT_MENU = [
     route: '/layout/:movieId/form/:deliveryId',
     items: [
       { name: 'home', path: '/layout/home'},
+      { name: 'templates', path: '/layout/template/list'},
       { name: 'deliveries', path: '/layout/:movieId', exact: true},
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
       { name: 'delivery', path: '/layout/:movieId/form/:deliveryId'},

@@ -3,13 +3,40 @@ export const getGreeting = () => cy.get('h1');
 
 export const getTitle = () => cy.get('section h1');
 
+export class NewTemplatePage {
+  constructor() {
+    cy.contains('Save as a new template');
+  }
+
+  public clickSelect() {
+    cy.get('mat-select').click();
+  }
+
+  public pickOrganization(orgName: string) {
+    cy.get('mat-option').contains(orgName).click();
+  }
+
+  public fillName(templateName: string) {
+    cy.get('input').type(templateName);
+  }
+
+  public clickSave() {
+    cy.get('button').contains('Save Template').click();
+    return new DeliveryFormPage();
+  }
+}
+
 export class DeliveryFormPage {
   constructor() {
-    //cy.contains('Sign delivery');
+    cy.get('.delivery-form').should('contain', 'Sign delivery');
   }
 
   public clickAdd() {
-    cy.get('mat.icon.icon-add').click();
+    cy.get('button.add-material-button').click();
+  }
+
+  public clickAddCategory() {
+    cy.get('button').contains('Add new material with this category').first().click();
   }
 
   public fillValue(materialValue: string) {
@@ -25,18 +52,42 @@ export class DeliveryFormPage {
   }
 
   public clickAddMaterial() {
-    cy.get('span.mat-icon').click();
+    cy.get('button.save-material').click();
+  }
+
+  public clickSaveAsTemplate() {
+    cy.get('button').contains('Save as new template').click();
+    return new NewTemplatePage();
+  }
+
+  public selectDeliveries() {
+    cy.get('.mat-tab-links').get('a').contains('deliveries').click();
+    return new DeliveryListPage();
+  }
+
+  public assertMaterialsExist(materialsLength: number) {
+    cy.get('mat-card mat-card').should('have.length', materialsLength);
+  }
+
+  public deleteDelivery() {
+    cy.get('button').contains('Delete delivery').click();
+    return new DeliveryListPage();
   }
 }
 
 export class TemplatePickerPage{
   constructor() {
-    cy.contains('Cancel');
+    cy.contains('Create delivery from scratch');
   }
 
   public clickCreateNewDelivery() {
-    cy.get('mat-card.create-card').click();
+    cy.get('section.container').should('contain', 'Template #1');
+    cy.get('mat-card.create-card', {timeout: 500}).click();
     return new DeliveryFormPage();
+  }
+
+  public clickTemplateDelivery(templateName: string) {
+    cy.get('.ng-star-inserted > .mat-card > .mat-card-title').contains(templateName).click();
   }
 }
 
@@ -48,6 +99,24 @@ export class DeliveryListPage {
   public clickAddDelivery() {
     cy.get('button.add-delivery').click();
     return new TemplatePickerPage();
+  }
+
+  public assertDeliveryExists() {
+    cy.get('.delivery-card').should('have.length', 1);
+  }
+
+  public clickDelivery() {
+    cy.get('.delivery-card').first().click();
+    return new DeliveryFormPage();
+  }
+
+  public assertDeliveryIsDeleted() {
+    cy.get('.delivery-card').should('have.length', 0);
+  }
+
+  public selectTemplate() {
+    cy.get('.mat-tab-links').get('a').contains('templates').click();
+    return new TemplateListPage();
   }
 }
 
@@ -77,23 +146,22 @@ export class TemplateListPage {
     return new AddTemplateModal();
   }
 
-  public assertTemplateExists(name: string) {
-    cy.get('template-item').contains(name).should('have.length', 1);
+  public assertTemplateExists(templateName: string) {
+    cy.get('mat-card-title').contains(templateName).should('have.length', 1);
   }
 
-  public clickMenu(name: string) {
-    cy.get('mat-card').should('contain', name).contains(name).get('mat-icon').contains('more_vert')
-    .click();
+  public clickMenu(templateName: string) {
+    cy.get('mat-card').find('button.trigger').contains(templateName).click();
+  }
+
+  public openAccordeon(orgName: string) {
+    cy.get('mat-panel-title').contains(orgName).click();
   }
 }
 
 export class HomePage {
   constructor() {
     //TODO: verify that we are in the correct page
-  }
-
-  public displayUserMenu() {
-    cy.get('mat-icon').contains('account_circle').click();
   }
 
   public displayMovieMenu() {
@@ -109,12 +177,8 @@ export class HomePage {
     return new DeliveryListPage();
   }
 
-  public selectOrganization(name: string) {
-    cy.get('button').should('contain', name).contains(name).click();
-  }
-
   public selectTemplate() {
-    cy.get('.top-toolbar-context-menu').get('a').contains('Template').click();
+    cy.get('.mat-tab-links').get('a').contains('template').click();
     return new TemplateListPage();
   }
 }

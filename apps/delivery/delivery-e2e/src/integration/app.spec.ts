@@ -6,24 +6,22 @@ let currentID = 0;
 const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
 const materials = [
   {
-    value: 'Paire de ProRes HQ 422 1080 24p 16/9 3D (Œil gauche/Œil droit)',
-    description:
-      'cadence à 24pfs, ratio image original (logo animé Bac Films en ouverture du film ; textes en Français, fonds neutres en fin de programme. Répartition des pistes audio : mix VF 5.1 en pistes 1 à 6 (L/R/C/SW/LS/RS) ‐ Mix VF LTRTenpistes 7&8–M&ELTRTenpistes9&10',
-    category: 'FILM – Masters vidéo'
+    value: 'First Material Value',
+    description: 'First Material Description',
+    category: 'Category #1'
   },
   {
-    value: 'Un (1) master ProRes HQ 422 1080 25p 16/9 2D ‐ varispeedé et harmonisé',
-    description:
-      'cadence à 25pfs, ratio image original (logo animé Bac Films en ouverture du film, textes en Français ; fonds neutres en fin de programme. Répartition des pistes audio : mix VF 5.1 en pistes 1 à 6 (L/R/C/SW/LS/RS) ‐ MixVFLTRTenpistes 7&8‐M&ELTRTenpistes9&10',
-    category: 'FILM – Masters vidéo'
+    value: 'Second Material Value',
+    description: 'Second Material Description',
+    category: 'Category #2'
   },
   {
-    value: 'D/M/E stems Version Anglaise 5.1+LTRT 24 i/s en continu',
-    description:
-      '(dialogues, musiques et effets non mixés et sur pistes séparées). En parfaite synchronisation avec le master vidéo 24 i/s du film. (Répartition des pistes audio : 1/left – 2/Center ‐ 3/right ‐ 4/Left surround ‐ 5/Right surround – 6/subwoofer ‐ 7/Extra ou additionnel)',
-    category: 'FILM – Eléments son'
+    value: 'Third Material Value',
+    description: 'Third Material Description',
   }
 ];
+const orgName = 'Organization #1'
+const templateName = 'Template #2'
 
 
 beforeEach(() => {
@@ -40,22 +38,54 @@ describe('Hello Delivery', () => {
 
 describe('I m a user and i can save a delivery as template', () => {
   it('', () => {
+    // Connexion
     let p: any = new LandingPage();
     p.fillEmail('delivery-test-e2e@cascade8.com');
     p.fillPassword('blockframes4tw');
     p = p.login();
+    // Go to app
     p.displayMovieMenu();
     p.clickOpenIn();
     p = p.selectApp();
+    // Create new delivery from scratch
     p = p.clickAddDelivery();
     p = p.clickCreateNewDelivery();
-    p.clickAdd();
-    for (let i = 0; i < materials.length; i++) {
+    // Add materials
+    for (let i = 0; i < materials.length - 1; i++) {
+      p.clickAdd();
       p.fillValue(materials[i].value);
       p.fillDescription(materials[i].description);
       p.fillCategory(materials[i].category);
       p.clickAddMaterial();
     }
+    p.clickAddCategory();
+    p.fillValue(materials[materials.length - 1].value);
+    p.fillDescription(materials[materials.length - 1].description);
+    p.clickAddMaterial();
+    // Save delivery as new template
+    p = p.clickSaveAsTemplate();
+    p.clickSelect();
+    p.pickOrganization(orgName);
+    p.fillName(templateName);
+    p = p.clickSave();
+    p = p.selectDeliveries();
+    // Check if delivery exists
+    p.assertDeliveryExists();
+    p = p.clickDelivery();
+    // Check if all materials exists
+    p.assertMaterialsExist(materials.length);
+    // Delete delivery
+    p = p.deleteDelivery();
+    p.assertDeliveryIsDeleted();
+    // Check if template exists
+    p = p.selectTemplate();
+    p.openAccordeon(orgName);
+    p.assertTemplateExists(templateName);
+    // Delete template
+    // Create delivery from existing template
+    // Add materials
+    // Delete delivery
+
   });
 });
 

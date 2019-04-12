@@ -10,8 +10,8 @@
     </article>
   </mat-sidenav>
   <!-- Content -->
-  <mat-sidenav-content>
-    <button [disabled]="isDeliveryValidated$ | async" (click)="addForm('')" color="primary" mat-icon-button matRipple>
+  <mat-sidenav-content class="delivery-form">
+    <button class="add-material-button" [disabled]="isDeliveryValidated$ | async" (click)="addForm('')" color="primary" mat-icon-button matRipple>
       <mat-icon class="icon-add">add_circle</mat-icon>
       Add new material
     </button>

@@ -8,7 +8,7 @@ import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+s
 import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MovieQuery, StakeholderService } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
 
 @Component({
@@ -33,19 +33,19 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private stakeholderService: StakeholderService,
   ) {}
 
   ngOnInit() {
+    this.materialService.subscribeOnDeliveryMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.service.subscribeOnActiveDelivery().pipe(takeWhile(() => this.isAlive)).subscribe();
+
     this.delivery$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
 
-    this.form$ = this.materialQuery.form$;
-
-    this.materialService.subscribeOnDeliveryMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.service.subscribeOnActiveDelivery().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.isDeliveryValidated$.pipe(takeWhile(() => this.isAlive))
       .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)
+
+    this.form$ = this.materialQuery.form$;
   }
 
   public saveAsTemplate() {
