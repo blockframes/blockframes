@@ -83,7 +83,6 @@ export class StakeholderService {
 
   public subscribeOnStakeholdersByActiveMovie$(){
     return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
       switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
       switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
       tap(stakeholders => this.store.set(stakeholders))

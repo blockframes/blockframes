@@ -5,7 +5,7 @@ import { Template, TemplatesByOrgs } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { map, switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 
 export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
   return templates.reduce(
@@ -25,19 +25,18 @@ export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   public templatesByOrgs$ = this.selectAll().pipe(map(templates => templatesByOrgName(templates)));
 
-  public orgsWithTemplates$ = this.organizationQuery
-    .selectAll()
-    .pipe(
-      switchMap(orgs =>
-        combineLatest(
-          orgs.map(org =>
-            this.selectAll({ filterBy: template => template.orgId === org.id }).pipe(
-              map(templates => ({ ...org, templates }))
-            )
+  public get orgsWithTemplates$() {
+    return this.organizationQuery.selectAll().pipe(
+      switchMap(orgs => {
+        const orgsWithTemplates = orgs.map(org =>
+          this.selectAll({ filterBy: template => template.orgId === org.id }).pipe(
+            map(templates => ({ ...org, templates } as Organization))
           )
-        )
-      )
+        );
+        return combineLatest(orgsWithTemplates);
+      })
     );
+  }
 
   public form$ = this.select(state => state.form);
 
