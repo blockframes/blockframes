@@ -19,6 +19,7 @@ import { TemplateModule} from '@blockframes/material'; // TODO: find better way 
 // Firebase
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 // Libraries
 import { AuthModule } from '@blockframes/auth';
