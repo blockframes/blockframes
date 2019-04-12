@@ -2,17 +2,21 @@ import { ethers } from 'ethers';
 
 import { ERC1077 } from './erc1077';
 import { MetaTransaction } from './meta-transaction';
-import { MockRelayer } from '../relayer/relayer';
+import { MockRelayer } from '../relayer-wallet/relayer-wallet.spec';
 import { Provider } from '../provider/provider';
 import { RelayerWallet } from '../relayer-wallet/relayer-wallet';
 
-import { network, contracts } from '@env';
+import { contracts } from '@env';
+import { Vault } from '../vault/vault';
+import { Relayer } from '../relayer/relayer';
 
 describe('ERC1077', () => {
   // test('smoke', () => {expect(true).toBeTruthy()});
   //*
   let name: string;
-  let relayer: MockRelayer;
+  let password: string;
+  let vault: Vault;
+  let relayer: Relayer;
   let provider: Provider;
   let mnemonic: string;
   let wallet: RelayerWallet;
@@ -20,11 +24,13 @@ describe('ERC1077', () => {
 
   beforeAll(async () => {
     name = 'harrypotter';
+    password = 'superPassword';
     mnemonic = 'library upon horse concert horse crunch copy dice flash design drastic cushion';
-    relayer = new MockRelayer();
+    relayer = new MockRelayer() as any;
     provider = new Provider();
-    wallet = new RelayerWallet(provider, relayer);
-    wallet.loginFromMnemonic(name, mnemonic);
+    vault = new Vault();
+    wallet = new RelayerWallet(vault, relayer, provider);
+    wallet.importMnemonic(name, mnemonic, password);
     erc1077 = new ERC1077(name, wallet);
   });
 
@@ -34,7 +40,7 @@ describe('ERC1077', () => {
 
   test.skip('address should be the same as defined in env', async () => {
     const address = await erc1077.addressPromise;
-    expect(address).toBe(contracts.testErc1077.address[network]);
+    expect(address).toBe(contracts.testErc1077);
   });
 
   test.skip('wallet should be the management key of erc1077', async () => {
@@ -72,10 +78,11 @@ describe('ERC1077', () => {
       data:
         '0x368b87720000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a66726f6d2072656d697800000000000000000000000000000000000000000000'
     };
-    const otherWallet = new RelayerWallet(provider, relayer);
-    otherWallet.loginFromMnemonic(
+    const otherWallet = new RelayerWallet(vault, relayer, provider);
+    otherWallet.importMnemonic(
       name,
-      'forget farm deal attitude shine cup glove coil lazy pass shoot pond'
+      'forget farm deal attitude shine cup glove coil lazy pass shoot pond',
+      password
     );
     const otherErc1077 = new ERC1077(name, otherWallet);
     otherErc1077
