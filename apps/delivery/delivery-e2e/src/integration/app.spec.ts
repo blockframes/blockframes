@@ -3,7 +3,7 @@ import { getTitle, LandingPage } from '../support/app.po';
 
 let currentID = 0;
 
-const RANDOM_ID = (): string => `${new Date().toISOString()}-${currentID++}`;
+const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
 const MATERIALS = [
   {
     value: 'First Material Value',
@@ -25,6 +25,7 @@ const TEMPLATE_NAME_1 = 'Template #2';
 
 beforeEach(() => {
   cy.clearCookies();
+  cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
 });
@@ -72,7 +73,7 @@ describe('I m a user and i can save a delivery as template', () => {
     p.assertDeliveryExists();
     p = p.clickDelivery();
     // Check if all materials exists
-    p.assertMaterialsExist(MATERIALS.length);
+    p.assertMaterialsExist(MATERIALS.length + 1);
     // Delete delivery
     p = p.deleteDelivery();
     p.assertDeliveryIsDeleted();
@@ -80,5 +81,6 @@ describe('I m a user and i can save a delivery as template', () => {
     p = p.selectTemplate();
     p.openExpansionPanel(ORG_NAME_1);
     p.assertTemplateExists(TEMPLATE_NAME_1);
+    p.clickMenu(TEMPLATE_NAME_1);
   });
 });

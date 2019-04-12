@@ -152,11 +152,11 @@ export class TemplateListPage {
   }
 
   public clickMenu(templateName: string) {
-    cy.get('mat-card').find('button.trigger').contains(templateName).click();
+    cy.get('mat-card').contains(templateName).parent('mat-card').find('button.trigger').click({force: true});
   }
 
   public openExpansionPanel(orgName: string) {
-    cy.get('mat-panel-title').contains(orgName).click();
+    cy.get('mat-expansion-panel-header').contains(orgName).click();
   }
 }
 
