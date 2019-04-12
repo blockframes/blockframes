@@ -19,6 +19,7 @@ export const routes: Routes = [
     path: 'layout',
     component: LayoutComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: '@blockframes/movie#MovieModule' }, // loadChildren should lead to the Movie Module
