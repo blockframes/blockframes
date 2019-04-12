@@ -3,7 +3,7 @@ import { providers, EventFilter, utils } from 'ethers';
 import firebase from 'firebase';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
-import { contracts, network } from '@env';
+import { contracts, baseEnsDomain } from '@env';
 
 export interface IRelayer {
   create(name: string, key: string): Promise<Object>;
@@ -30,9 +30,9 @@ export class Relayer implements IRelayer {
 
   /** Listen when the ENS name changed -> End of process */
   public async prepare(username: string): Promise<EventFilter> {
-    const namehash = utils.namehash(`${username}.${contracts.testErc1077.baseEnsDomain[network]}`);
+    const namehash = utils.namehash(`${username}.${baseEnsDomain}`);
     return <EventFilter>{
-      address: contracts.testErc1077.resolver[network],
+      address: contracts.ensResolver,
       topics: [
         '0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2', // this is the topic of the event NameChanged(bytes32,string)
         namehash
