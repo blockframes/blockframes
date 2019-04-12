@@ -1,5 +1,50 @@
-<p>
-  Home
-  <a routerLink="./movie/42">Movie 42</a>
-  <a routerLink="./search">Search</a>
-</p>
+<header>
+  <mat-toolbar class="explorer-toolbar">
+    <span class="spacer"></span>
+
+    <a routerLink="/explorer">Home</a>
+    <a routerLink="/explorer">All Projects</a>
+    <a routerLink="/explorer">About</a>
+    <a routerLink="/explorer">Contact</a>
+    <a routerLink="/explorer">Face</a>
+  </mat-toolbar>
+
+  <div class="hero">
+    <div class="content">
+      <h3>Surtitre</h3>
+      <h2>Mise en Avant</h2>
+
+      <h4>Sous Titre</h4>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus. Integer
+        pulvinar blandit nulla sagittis mattis.
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="content">
+  <div class="movie-group">
+    <mat-toolbar>
+      <h3>Prestige Directors</h3>
+      <button>See all category</button>
+    </mat-toolbar>
+    <div class="financing-movie-list">
+      <financing-movie-card movieID="42"></financing-movie-card>
+      <financing-movie-card movieID="42"></financing-movie-card>
+      <financing-movie-card movieID="42"></financing-movie-card>
+      <financing-movie-card movieID="42"></financing-movie-card>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>
+    <a>
+      Home | About | Contact | Recherche | Mentions Légales
+    </a>
+  </p>
+  <p>
+    Movie Financing © tous droits reservés
+  </p>
+</footer>

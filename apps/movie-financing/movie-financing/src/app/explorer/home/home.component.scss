@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+header {
+  background-color: #ECFBFF;
+}
+
+.explorer-toolbar {
+  background: none;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  a {
+    font-family: 'Roboto', sans-serif;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    font-style: normal;
+    font-weight: 500;
+    color: #58666D;
+    text-decoration: none;
+    font-size: 0.8rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.hero {
+  min-height: 55vh;
+  display: flex;
+  justify-content: flex-end;
+  //position: relative;
+
+  .content {
+    width: 40%;
+    margin-right: 10%;
+    //position: absolute;
+    //right: 10%;
+    //top: 10%;
+
+    h2 {
+      font-size: 6rem;
+      color: #004876;
+      margin-top: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: #008BD2;
+      margin-bottom: 0.4rem;
+      font-weight: 100;
+    }
+
+    h4 {
+      color: #394348;
+      margin-bottom: 0.6rem;
+    }
+
+    p {
+      color: #394348;
+    }
+  }
+}
+
+.content {
+  width: 80%;
+  margin: 2rem auto auto;
+}
+
+.movie-group {
+  mat-toolbar {
+    background: none;
+  }
+}
+
+.financing-movie-list {
+  display: flex;
+}
+
+footer {
+  margin: 4rem;
+  background: white;
+  color: #58666D;
+  text-align: center;
+
+  a {
+    color: rgba(0, 139, 210, 0.51);
+  }
+}

@@ -4,7 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 // Material
-import { MatIconModule, MatListModule, MatToolbarModule } from '@angular/material';
+import { MatCardModule, MatIconModule, MatListModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -16,6 +17,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
 import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
 import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
+import { FinancingMovieCard } from './explorer/movie-card/movie-card.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
@@ -28,7 +30,8 @@ import { AuthModule } from '@blockframes/auth';
     LayoutComponent,
     FinancingExplorerHomeComponent,
     FinancingExplorerDetailsComponent,
-    FinancingExplorerSearchComponent
+    FinancingExplorerSearchComponent,
+    FinancingMovieCard
   ],
   imports: [
     BrowserModule,
@@ -43,9 +46,11 @@ import { AuthModule } from '@blockframes/auth';
     MatToolbarModule,
     MatListModule,
     MatIconModule,
+    MatButtonModule,
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()]
+    environment.production ? [] : [AkitaNgDevtools.forRoot()],
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
