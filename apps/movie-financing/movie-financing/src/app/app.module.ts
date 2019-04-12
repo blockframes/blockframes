@@ -18,6 +18,8 @@ import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
 import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
 import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
 import { FinancingMovieCard } from './explorer/movie-card/movie-card.component';
+import { FinancingExplorerFooterComponent } from './explorer/footer/footer.component';
+import { FinancingExplorerHeaderComponent } from './explorer/header/header.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
@@ -31,7 +33,9 @@ import { AuthModule } from '@blockframes/auth';
     FinancingExplorerHomeComponent,
     FinancingExplorerDetailsComponent,
     FinancingExplorerSearchComponent,
-    FinancingMovieCard
+    FinancingMovieCard,
+    FinancingExplorerFooterComponent,
+    FinancingExplorerHeaderComponent
   ],
   imports: [
     BrowserModule,
