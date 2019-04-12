@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthStore, User, createUser } from './auth.store';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import { RelayerWallet } from '@blockframes/ethers';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,7 +13,8 @@ export class AuthService {
     private store: AuthStore,
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
-    private wallet: RelayerWallet
+    private wallet: RelayerWallet,
+    private snackBar: MatSnackBar
   ) {}
 
   //////////
@@ -26,11 +28,17 @@ export class AuthService {
   }
 
   public async signup(mail: string, password: string) {
+    this.store.update({isEncrypting: true});
     const user = await this.afAuth.auth.createUserWithEmailAndPassword(mail, password);
     await this.create(user.user);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.signup(username, password);  // no await -> do the job in background
+    this.wallet.signup(username, password).then(() => {  // no await -> do the job in background
+      this.store.update({isEncrypting: false});
+      this.snackBar.open('Your key pair has been successfully stored', 'OK', {
+        duration: 2000,
+      });
+    });
   }
 
   public async logout() {
