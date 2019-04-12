@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, UrlTree, RouterStateSnapshot } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthQuery, AuthStore, AuthService } from '../+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CloseProtection } from './close-protection';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanDeactivate<CloseProtection> {
   constructor(
     private afAuth: AngularFireAuth,
     private store: AuthStore,
@@ -33,5 +34,14 @@ export class AuthGuard implements CanActivate {
         }
       })
     );
+  }
+
+  canDeactivate(
+    component: CloseProtection,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
+  ): boolean | Observable<boolean> | Promise<boolean> {
+    return component.isFlaged();
   }
 }
