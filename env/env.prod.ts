@@ -13,9 +13,9 @@ export const firebase = {
 export const network = 'homestead';
 export const baseEnsDomain = 'blockframes.eth';
 
-// TODO : change the address
+// TODO : add when ready
 export const contracts = {
-  ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
-  testErc1077: undefined,
-  ensResolver: undefined,
+  // ipHash: undefined,
+  // testErc1077: undefined,
+  // ensResolver: undefined,
 };
