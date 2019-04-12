@@ -12,7 +12,11 @@ export const firebase = {
 };
 
 export const network = 'ropsten';
+export const baseEnsDomain = 'blockframe.test';
 
+// TODO : change the address
 export const contracts = {
-  ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185'
+  ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
+  testErc1077: '0x01f1FB103ebc213D9f0dBBfaF9AC3a43D0f496E3',
+  ensResolver: '0xde469c7106a9FBC3fb98912bB00be983a89bDDca',
 };
