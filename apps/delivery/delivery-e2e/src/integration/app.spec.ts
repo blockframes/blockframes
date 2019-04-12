@@ -3,8 +3,8 @@ import { getTitle, LandingPage } from '../support/app.po';
 
 let currentID = 0;
 
-const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
-const materials = [
+const RANDOM_ID = (): string => `${new Date().toISOString()}-${currentID++}`;
+const MATERIALS = [
   {
     value: 'First Material Value',
     description: 'First Material Description',
@@ -14,24 +14,23 @@ const materials = [
     value: 'Second Material Value',
     description: 'Second Material Description',
     category: 'Category #2'
-  },
-  {
-    value: 'Third Material Value',
-    description: 'Third Material Description',
   }
 ];
-const orgName = 'Organization #1'
-const templateName = 'Template #2'
-
+const NO_CATEGORY_MATERIAL = {
+  value: 'Third Material Value',
+  description: 'Third Material Description'
+};
+const ORG_NAME_1 = 'Organization #1';
+const TEMPLATE_NAME_1 = 'Template #2';
 
 beforeEach(() => {
   cy.clearCookies();
-  cy.visit('http://localhost:4200/auth');
+  cy.visit('/auth');
   cy.viewport('macbook-15');
 });
 
 describe('Hello Delivery', () => {
-  it('should display SIGN IN / SIGN UP component', () => {
+  it('should display h1 with "Sign in" in it', () => {
     getTitle().contains('Sign in');
   });
 });
@@ -51,59 +50,35 @@ describe('I m a user and i can save a delivery as template', () => {
     p = p.clickAddDelivery();
     p = p.clickCreateNewDelivery();
     // Add materials
-    for (let i = 0; i < materials.length - 1; i++) {
+    MATERIALS.forEach(material => {
       p.clickAdd();
-      p.fillValue(materials[i].value);
-      p.fillDescription(materials[i].description);
-      p.fillCategory(materials[i].category);
+      p.fillValue(material.value);
+      p.fillDescription(material.description);
+      p.fillCategory(material.category);
       p.clickAddMaterial();
-    }
+    });
     p.clickAddCategory();
-    p.fillValue(materials[materials.length - 1].value);
-    p.fillDescription(materials[materials.length - 1].description);
+    p.fillValue(NO_CATEGORY_MATERIAL.value);
+    p.fillDescription(NO_CATEGORY_MATERIAL.description);
     p.clickAddMaterial();
     // Save delivery as new template
     p = p.clickSaveAsTemplate();
     p.clickSelect();
-    p.pickOrganization(orgName);
-    p.fillName(templateName);
+    p.pickOrganization(ORG_NAME_1);
+    p.fillName(TEMPLATE_NAME_1);
     p = p.clickSave();
     p = p.selectDeliveries();
     // Check if delivery exists
     p.assertDeliveryExists();
     p = p.clickDelivery();
     // Check if all materials exists
-    p.assertMaterialsExist(materials.length);
+    p.assertMaterialsExist(MATERIALS.length);
     // Delete delivery
     p = p.deleteDelivery();
     p.assertDeliveryIsDeleted();
     // Check if template exists
     p = p.selectTemplate();
-    p.openAccordeon(orgName);
-    p.assertTemplateExists(templateName);
-    // Delete template
-    // Create delivery from existing template
-    // Add materials
-    // Delete delivery
-
+    p.openExpansionPanel(ORG_NAME_1);
+    p.assertTemplateExists(TEMPLATE_NAME_1);
   });
 });
-
-// describe('i m a user and i can create an empty template', () => {
-//   it('', () => {
-//     let p: any = new LandingPage();
-//     p.fillEmail('delivery-test-e2e@cascade8.com');
-//     p.fillPassword('blockframes4tw');
-//     p = p.login();
-//     p.displayUserMenu();
-//     p.selectOrganization('Org1');
-//     cy.visit('/');
-//     p = p.selectTemplate();
-//     p = p.createTemplate();
-//     const templateName= randomID();
-//     p.fillTemplateName(templateName);
-//     p = p.clickCreate();
-//     p.assertTemplateExists(templateName);
-//     //p.clickMenu(templateName);
-//   })
-// })

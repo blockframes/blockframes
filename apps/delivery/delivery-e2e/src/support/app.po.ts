@@ -1,5 +1,7 @@
-export const getGreeting = () => cy.get('h1');
 /// <reference types="cypress" />
+/* tslint:disable:no-use-before-declare */
+
+export const getGreeting = () => cy.get('h1');
 
 export const getTitle = () => cy.get('section h1');
 
@@ -122,7 +124,7 @@ export class DeliveryListPage {
 
 export class AddTemplateModal {
   constructor() {
-    //TODO: verify that we are in the correct page
+    cy.contains('Add a new template');
   }
 
   public fillTemplateName(name: string) {
@@ -131,7 +133,6 @@ export class AddTemplateModal {
 
   public clickCreate() {
     cy.get('button').contains('Create').click();
-// tslint:disable-next-line: no-use-before-declare
     return new TemplateListPage();
   }
 }
@@ -154,14 +155,14 @@ export class TemplateListPage {
     cy.get('mat-card').find('button.trigger').contains(templateName).click();
   }
 
-  public openAccordeon(orgName: string) {
+  public openExpansionPanel(orgName: string) {
     cy.get('mat-panel-title').contains(orgName).click();
   }
 }
 
 export class HomePage {
   constructor() {
-    //TODO: verify that we are in the correct page
+    cy.contains('ADD A MOVIE');
   }
 
   public displayMovieMenu() {
