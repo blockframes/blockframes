@@ -3,6 +3,7 @@ import { utils, EventFilter, providers } from 'ethers';
 import { Provider } from '../provider/provider';
 import { RelayerWallet } from './relayer-wallet';
 import { Relayer, IRelayer } from '../relayer/relayer';
+import { Vault } from '../vault/vault';
 export class MockRelayer implements IRelayer {
   constructor(){}
   async create(name: string, key: string) {
@@ -48,6 +49,7 @@ describe('RelayerWallet', () => {
   let keystore: string;
   let password: string;
   let mnemonic: string;
+  let vault: Vault;
   let relayerWallet: RelayerWallet;
 
   beforeAll(() => {
@@ -58,22 +60,28 @@ describe('RelayerWallet', () => {
       '{"address":"ba2b47917c4ece6d6eb7606a54228bf278614a00","id":"1b6ba023-e09a-48ca-beb4-a5a7dd74aaeb","version":3,"Crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"15ee2d42316e8b6ded2ed2f55509a779"},"ciphertext":"0cbed153a38e7259b62668eb7fba4dee6eb5ddadbcbd1b7ea0096b8fbfb5d963","kdf":"scrypt","kdfparams":{"salt":"36418bac9d2c87bd3da5885062950f1a6712c0fee2ce962239a8de1d09bc531e","n":131072,"dklen":32,"p":1,"r":8},"mac":"48ba5859a1699e86c22abb7d126ae55a5441fca5c520cd9bb13d6fd2bc6d072b"},"x-ethers":{"client":"ethers.js","gethFilename":"UTC--2019-04-02T09-19-37.0Z--ba2b47917c4ece6d6eb7606a54228bf278614a00","mnemonicCounter":"f3eee205849942fb5dea9c7433c238d0","mnemonicCiphertext":"2c828aec4703b4058e58f569a40b38ff","version":"0.1"}}';
     password = 'superPassword';
     mnemonic = 'library upon horse concert horse crunch copy dice flash design drastic cushion';
-    relayerWallet = new RelayerWallet(provider, relayer);
+    vault = new Vault();
+    relayerWallet = new RelayerWallet(vault, relayer, provider);
   });
 
-  describe('login', () => {
-    test('from mnemonic', async () => {
-      await relayerWallet.loginFromMnemonic(name, mnemonic);
+  describe('create account', () => {
+    test('import mnemonic', async () => {
+      await relayerWallet.importMnemonic(mnemonic, name, password);
       const address = await relayerWallet.getAddress();
       expect(relayerWallet).toBeDefined();
       expect(address).toBe('0xbA2b47917c4ecE6d6Eb7606A54228Bf278614a00');
     });
-    test('from encrypted keystore', async () => {
-      const relayerWalletK = new RelayerWallet(provider, relayer);
-      await relayerWalletK.loginFromEncryptedJSON(name, keystore, password);
-      const address = await relayerWalletK.getAddress();
+    test('signup', async () => {
+      const relayerWalletK = new RelayerWallet(vault, relayer, provider);
+      await relayerWalletK.signup(name, password);
+      const username = relayerWalletK.username;
       expect(relayerWalletK).toBeDefined();
-      expect(address).toBe('0xbA2b47917c4ecE6d6Eb7606A54228Bf278614a00');
+      expect(username).toBe(name);
+    });
+  });
+  describe('login', () => {
+    test('login', async () => {
+      expect(true).toBeTruthy();
     });
   });
 
