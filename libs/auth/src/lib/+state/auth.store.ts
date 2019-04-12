@@ -25,6 +25,7 @@ export interface AuthState {
   form: UserForm;
   accountForm: AccountForm;
   requestedRoute?: string;
+  isKeyStored: boolean;
 }
 
 export function createUser(user: Partial<User>) {
@@ -41,7 +42,8 @@ const initialState: AuthState = {
     lastName: '',
     firstName: '',
     biography: '',
-  }
+  },
+  isKeyStored: false
 }
 
 @Injectable({ providedIn: 'root' })
