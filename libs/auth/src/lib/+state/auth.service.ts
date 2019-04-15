@@ -29,11 +29,11 @@ export class AuthService {
 
   public async signup(mail: string, password: string) {
     this.store.update({isEncrypting: true});
-    const user = await this.afAuth.auth.createUserWithEmailAndPassword(mail, password);
-    await this.create(user.user);
+    const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(mail, password);
+    await this.create(userCredentials.user);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.signup(user.user.uid, username, password).then(() => {  // no await -> do the job in background
+    this.wallet.signup(userCredentials.user.uid, username, password).then(() => {  // no await -> do the job in background
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,

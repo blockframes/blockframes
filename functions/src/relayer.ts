@@ -33,8 +33,10 @@ export const initRelayer = (config: any): Relayer => {
   };
 };
 
+interface UserInfos { uid:string, username: string; key: string };
+
 export const relayerCreateLogic = async (
-  { uid, username, key }: { uid:string, username: string; key: string },
+  { uid, username, key }: UserInfos,
   config: any
 ) => {
   const relayer: Relayer = initRelayer(config);
@@ -54,44 +56,48 @@ export const relayerCreateLogic = async (
   const fullName = `${username}.${config.relayer.basedomain}`;
   const hash = utils.keccak256(utils.toUtf8Bytes(username));
 
-  // register the user ens username & deploy his erc1077 contract
-  const registerTx: TxResponse = await relayer.registry.functions.setSubnodeOwner(
-    relayer.namehash,
-    hash,
-    relayer.wallet.address
-  );
-  console.log(`tx sent (register) : ${registerTx.hash}`); // display tx to firebase logging
-  const erc1077 = await relayer.erc1077Factory.deploy(key);
-  console.log(`tx sent (deploy) : ${erc1077.deployTransaction.hash}`); // display tx to firebase logging
-  const waitForRegister: Promise<TxReceipt> = registerTx.wait();
-  const waitForDeploy: Promise<Contract> = erc1077.deployed();
-  const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
+  try {
+    // register the user ens username & deploy his erc1077 contract
+    const registerTx: TxResponse = await relayer.registry.functions.setSubnodeOwner(
+      relayer.namehash,
+      hash,
+      relayer.wallet.address
+    );
+    console.log(`tx sent (register) : ${registerTx.hash}`); // display tx to firebase logging
+    const erc1077 = await relayer.erc1077Factory.deploy(key);
+    console.log(`tx sent (deploy) : ${erc1077.deployTransaction.hash}`); // display tx to firebase logging
+    const waitForRegister: Promise<TxReceipt> = registerTx.wait();
+    const waitForDeploy: Promise<Contract> = erc1077.deployed();
+    const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
 
-  db.collection('users').doc(uid).update({identity: deployedErc1077.address}).catch(err => console.error(err)); // store contract address in firestore
+    db.collection('users').doc(uid).update({identity: deployedErc1077.address}); // store contract address in firestore
 
-  // set a resolver to the ens username
-  const resolverTx: TxResponse = await relayer.registry.functions.setResolver(
-    utils.namehash(fullName),
-    relayer.resolver.address
-  );
-  console.log(`tx sent (setResolver) : ${resolverTx.hash}`); // display tx to firebase logging
-  await resolverTx.wait();
+    // set a resolver to the ens username
+    const resolverTx: TxResponse = await relayer.registry.functions.setResolver(
+      utils.namehash(fullName),
+      relayer.resolver.address
+    );
+    console.log(`tx sent (setResolver) : ${resolverTx.hash}`); // display tx to firebase logging
+    await resolverTx.wait();
 
-  // link the erc1077 to the ens username
-  const linkTx = await relayer.resolver.functions.setAddr(
-    utils.namehash(fullName),
-    deployedErc1077.address
-  );
-  console.log(`tx sent (setAddress) : ${linkTx.hash}`); // display tx to firebase logging
+    // link the erc1077 to the ens username
+    const linkTx = await relayer.resolver.functions.setAddr(
+      utils.namehash(fullName),
+      deployedErc1077.address
+    );
+    console.log(`tx sent (setAddress) : ${linkTx.hash}`); // display tx to firebase logging
 
-  return {
-    username,
-    key,
-    register: registerTx.hash,
-    deploy: erc1077.deployTransaction.hash,
-    resolve: resolverTx.hash,
-    link: linkTx.hash
-  };
+    return {
+      username,
+      key,
+      register: registerTx.hash,
+      deploy: erc1077.deployTransaction.hash,
+      resolve: resolverTx.hash,
+      link: linkTx.hash
+    };
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const relayerSendLogic = async (

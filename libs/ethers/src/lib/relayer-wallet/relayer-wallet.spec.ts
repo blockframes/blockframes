@@ -73,7 +73,7 @@ describe('RelayerWallet', () => {
     });
     test('signup', async () => {
       const relayerWalletK = new RelayerWallet(vault, relayer, provider);
-      await relayerWalletK.signup('', name, password);
+      await relayerWalletK.signup('UID', name, password);
       const username = relayerWalletK.username;
       expect(relayerWalletK).toBeDefined();
       expect(username).toBe(name);
