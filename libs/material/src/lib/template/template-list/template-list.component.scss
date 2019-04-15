@@ -4,8 +4,28 @@ mat-card {
 }
 
 mat-panel-title {
-  font-size: 35px;
+  font-size: 2rem;
+  font-weight: bolder;
 }
+
+.add-template {
+  font-weight: bolder;
+  color: #6100ED;
+  border: solid 0.09rem #6100ED;
+  cursor: pointer;
+}
+
 button {
   margin-right: 10%;
 }
+
+.inline-block {
+  display: inline-block;
+ }
+
+ .divider {
+  margin-top: 1rem;
+  margin-right:30px;
+  height: 2px;
+  border: solid 1px #e5e5e5;
+ }

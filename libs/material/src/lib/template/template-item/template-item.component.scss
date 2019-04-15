@@ -1,11 +1,25 @@
 mat-card-title {
   text-align: center;
+  font-weight: bolder;
+}
+
+.modification-text {
+  color: #5D5D5D;
 }
 
 .trigger {
   position: absolute;
   top: 0px;
   right: 0px;
+  color: #6100ED;
+}
+
+.icons {
+  color: #6100ED;
+}
+
+.delete-icon {
+  color: #F23C5C;
 }
 
 mat-card {

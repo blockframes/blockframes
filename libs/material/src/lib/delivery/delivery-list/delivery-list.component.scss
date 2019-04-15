@@ -9,21 +9,14 @@
 
 .delivery-card {
   margin: 1rem auto;
-  padding-left: 1rem;
   width: 100%;
   height: 5rem;
-  box-shadow: -10px 11px 32px 0 #00000023;
 }
 
 .add-delivery {
   font-weight: bolder;
   color: #6100ED;
-  border: solid 0.1rem #6100ED;
-  cursor: pointer;
-}
-
-.delivery-card:hover {
-  background-color: #F5F5F5;
+  border: solid 0.09rem #6100ED;
   cursor: pointer;
 }
 

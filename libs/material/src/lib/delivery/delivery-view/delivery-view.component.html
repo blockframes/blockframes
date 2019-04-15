@@ -1,61 +1,60 @@
 <main class="container">
-    <section fxLayout="row" fxLayoutGap="5%">
-      <article class="progress-spinner-block" fxFlex="20" fxLayoutAlign="center start">
-        <div
-          *ngIf="(progressionValue$ | async) as value; else empty"
-          fxLayout="column"
-          fxLayoutAlign="center center"
+  <section fxLayout="row" fxLayoutGap="5%">
+    <article class="progress-spinner-block" fxFlex="20" fxLayoutAlign="center start">
+      <mat-card
+        *ngIf="(progressionValue$ | async) as value; else empty"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        class="mat-elevation-z8"
+      >
+        <mat-progress-spinner
+          class="spinner"
+          color="primary"
+          mode="determinate"
+          [value]="value"
+          diameter="200"
+          strokeWidth="13"
         >
+        </mat-progress-spinner>
+        <div class="progress-value">{{ value }} %</div>
+        <h5>Global progression</h5>
+        <p class="spinner-text"><i>La progression en %age dela delivery</i></p>
+      </mat-card>
+      <ng-template #empty>
+        <mat-card fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
-            color="primary"
+            color="warn"
             mode="determinate"
-            [value]="value"
+            value="0"
             diameter="200"
-            strokeWidth="13"
+            strokeWidth="15"
           >
           </mat-progress-spinner>
-          <div class="progress-value">{{ value }} %</div>
+          <div class="progress-value">
+            0 %
+          </div>
           <h5>Global progression</h5>
-          <p><i>La progression en %age dela delivery</i></p>
-        </div>
-        <ng-template #empty>
-          <div fxLayout="column" fxLayoutAlign="center center">
-            <mat-progress-spinner
-              class="spinner"
-              color="warn"
-              mode="determinate"
-              value="0"
-              diameter="200"
-              strokeWidth="15"
-            >
-            </mat-progress-spinner>
-            <div class="progress-value">
-              0 %
-            </div>
-            <h5>Global progression</h5>
-            <p><i>La progression en %age dela delivery</i></p>
-          </div>
-        </ng-template>
-      </article>
-      <article fxFlex="80" fxLayout="column">
-        <div *ngFor="let category of (materials$ | async | keyvalue)">
-          <h3>{{ category.key | uppercase }}</h3>
-          <div *ngFor="let material of category.value" class="materials-block">
-            <span
-              ><h4 mat-line>
-                <mat-checkbox
-                  [ngModel]="material.delivered"
-                  [disabled]="true"
-                  ><b>{{ material.value }}</b></mat-checkbox
-                >
-              </h4></span
-            >
-            <p mat-line class="description-text">
-              <i>{{ material.description }}</i>
-            </p>
-          </div>
-        </div>
-      </article>
-    </section>
-  </main>
+          <p class="spinner-text"><i>La progression en %age dela delivery</i></p>
+        </mat-card>
+      </ng-template>
+    </article>
+    <article fxFlex="80" fxLayout="column">
+      <div *ngFor="let category of (materials$ | async | keyvalue)">
+        <h3>{{ category.key | uppercase }}</h3>
+        <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z8">
+          <span
+            ><h4 mat-line>
+              <mat-checkbox [ngModel]="material.delivered" [disabled]="true"
+                ><b>{{ material.value }}</b></mat-checkbox
+              >
+            </h4></span
+          >
+          <p mat-line class="description-text">
+            <i>{{ material.description }}</i>
+          </p>
+        </mat-card>
+      </div>
+    </article>
+  </section>
+</main>

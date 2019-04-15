@@ -1,10 +1,11 @@
 <div *ngIf="(movie$ | async) as movie" class="container">
   <section fxLayout="row" fxLayoutGap="5%">
     <article class="progress-spinner-block" fxFlex="20" fxLayoutAlign="center start">
-      <div
+      <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
         fxLayout="column"
         fxLayoutAlign="center center"
+        class="mat-elevation-z8"
       >
         <mat-progress-spinner
           class="spinner"
@@ -17,10 +18,10 @@
         </mat-progress-spinner>
         <div class="progress-value">{{ value }} %</div>
         <h5>Global progression</h5>
-        <p><i>La progression en %age des deliveries de la movie</i></p>
-      </div>
+        <p class="spinner-text"><i>La progression en %age des deliveries de la movie</i></p>
+      </mat-card>
       <ng-template #empty>
-        <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-card fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
             color="warn"
@@ -34,15 +35,15 @@
             0 %
           </div>
           <h5>Global progression</h5>
-          <p><i>La progression en %age des deliveries de la movie</i></p>
-        </div>
+          <p class="spinner-text"><i>La progression en %age des deliveries de la movie</i></p>
+        </mat-card>
       </ng-template>
     </article>
     <article fxFlex="80" fxLayout="column">
       <h2>{{ movie.title }}</h2>
       <div *ngFor="let category of (materials$ | async | keyvalue)">
         <h3>{{ category.key | uppercase }}</h3>
-        <div *ngFor="let material of category.value" class="materials-block">
+        <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z8">
           <span
             ><h4 mat-line>
               <mat-checkbox
@@ -55,7 +56,7 @@
           <p mat-line class="description-text">
             <i>{{ material.description }}</i>
           </p>
-        </div>
+        </mat-card>
       </div>
     </article>
   </section>

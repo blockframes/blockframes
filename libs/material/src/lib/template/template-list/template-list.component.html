@@ -1,15 +1,12 @@
-<div *ngIf="(templatesByOrgs$ | async) as lala">
-  <p *ngIf="lala === {}">lala</p>
-</div>
 <mat-accordion>
   <mat-expansion-panel *ngFor="let templateByOrg of (templatesByOrgs$ | async | keyvalue)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
+    <mat-expansion-panel-header fxLayout="row wrap">
+      <mat-panel-title class="inline-block" fxFlex="none">
         {{ templateByOrg.key }}
       </mat-panel-title>
-      <button (click)="addTemplateDialog(templateByOrg.key)" color="primary" mat-icon-button>
-        Create a template
-        <mat-icon class="icon-add">add_circle</mat-icon>
+      <div fxFlex class="inline-block divider"></div>
+      <button fxFlex="nogrow" mat-raised-button (click)="addTemplateDialog(templateByOrg.key)" class="add-template">
+        Create a template <mat-icon>add</mat-icon>
       </button>
     </mat-expansion-panel-header>
     <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">

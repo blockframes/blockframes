@@ -1,4 +1,4 @@
-<section (click)="selectDelivery()" fxLayoutAlign="space-between">
+<mat-card (click)="selectDelivery()" fxLayoutAlign="space-between" class="mat-elevation-z8">
   <article>
     <h4>Delivery ID : {{ delivery.id }}</h4>
   </article>
@@ -7,4 +7,4 @@
     <span class="spacer"></span>
     <h4 [ngClass]="getStage(value)"> {{ value }}%</h4>
   </span>
-</section>
+</mat-card>
