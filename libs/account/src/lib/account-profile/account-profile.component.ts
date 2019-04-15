@@ -39,7 +39,7 @@ export class AccountProfileComponent implements OnInit, OnDestroy {
     .subscribe(user => {
       if (user !== null ) {
         this.accountForm = this.builder.group({
-          uid: { value: user.uid, disabled: true },
+          uid: { value: user.identity, disabled: true },
           email: { value: user.email, disabled: true },
           firstName: [user.firstName, Validators.required],
           lastName: [user.lastName, Validators.required],
