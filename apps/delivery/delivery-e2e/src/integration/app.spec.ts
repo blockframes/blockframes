@@ -37,7 +37,7 @@ describe('Hello Delivery', () => {
 });
 
 describe('I m a user and i can save a delivery as template', () => {
-  it('', () => {
+  it('should login, create delivery from scratch, save it as a new template, then delete this template', () => {
     // Connexion
     let p: any = new LandingPage();
     p.fillEmail('delivery-test-e2e@cascade8.com');
@@ -81,6 +81,15 @@ describe('I m a user and i can save a delivery as template', () => {
     p = p.selectTemplate();
     p.openExpansionPanel(ORG_NAME_1);
     p.assertTemplateExists(TEMPLATE_NAME_1);
-    p.clickMenu(TEMPLATE_NAME_1);
+    p.displayTemplateMenu(TEMPLATE_NAME_1);
+    p = p.clickEdit();
+    cy.reload(); /// Have to reload to make the materials visible ///
+    p.assertMaterialsExist(MATERIALS.length + 1);
+    p = p.selectTemplate();
+    p.openExpansionPanel(ORG_NAME_1);
+    p.displayTemplateMenu(TEMPLATE_NAME_1);
+    p.deleteTemplate();
+    // TODO: Find a way to assert that template is deleted
+    // => Expansion Panel still buggy
   });
 });

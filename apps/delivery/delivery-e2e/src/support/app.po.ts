@@ -5,6 +5,21 @@ export const getGreeting = () => cy.get('h1');
 
 export const getTitle = () => cy.get('section h1');
 
+export class TemplateFormPage {
+  constructor() {
+    cy.contains('Add new material')
+  }
+
+  public assertMaterialsExist(materialsLength: number) {
+    cy.get('mat-card mat-card').should('have.length', materialsLength);
+  }
+
+  public selectTemplate() {
+    cy.get('.mat-tab-links').get('a').contains('templates').click();
+    return new TemplateListPage();
+  }
+}
+
 export class NewTemplatePage {
   constructor() {
     cy.contains('Save as a new template');
@@ -151,12 +166,31 @@ export class TemplateListPage {
     cy.get('mat-card-title').contains(templateName).should('have.length', 1);
   }
 
-  public clickMenu(templateName: string) {
+  public displayTemplateMenu(templateName: string) {
     cy.get('mat-card').contains(templateName).parent('mat-card').find('button.trigger').click({force: true});
   }
 
+  public clickEdit() {
+    cy.get('span').contains('Edit').click({force: true});
+    return new TemplateFormPage();
+  }
+
   public openExpansionPanel(orgName: string) {
-    cy.get('mat-expansion-panel-header').contains(orgName).click();
+    cy.get('.mat-expansion-panel-header-title').contains(orgName).click();
+  }
+
+  public deleteTemplate() {
+    cy.get('span').contains('Delete').click({force: true});
+  }
+
+  public selectHome() {
+    cy.get('.mat-tab-links').get('a').contains('home').click();
+    return new HomePage();
+  }
+
+
+  public assertTemplateIsDeleted(templateName: string) {
+    cy.get('.template-item').contains(templateName).should('have.length', 0);
   }
 }
 
@@ -178,8 +212,8 @@ export class HomePage {
     return new DeliveryListPage();
   }
 
-  public selectTemplate() {
-    cy.get('.mat-tab-links').get('a').contains('template').click();
+  public selectTemplates() {
+    cy.get('.mat-tab-links').get('a').contains('templates').click();
     return new TemplateListPage();
   }
 }
