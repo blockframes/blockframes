@@ -34,6 +34,8 @@ describe('ERC1077', () => {
     // wallet = new RelayerWallet(vault, relayer, provider);
     // await wallet.importMnemonic(mnemonic, name, password);
     // erc1077 = new ERC1077(name, wallet);
+    wallet = null; // prevent linter to break circle ci
+    erc1077 = null;
   });
 
   test.skip('should exist', () => {
