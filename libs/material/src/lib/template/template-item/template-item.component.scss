@@ -1,25 +1,31 @@
 mat-card-title {
-  text-align: center;
-  font-weight: bolder;
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
 }
 
 .modification-text {
-  color: #5D5D5D;
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 20px;
+  letter-spacing: 0.196429px;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .trigger {
   position: absolute;
   top: 0px;
   right: 0px;
-  color: #6100ED;
+  color: #6100ed;
 }
 
 .icons {
-  color: #6100ED;
+  color: #6100ed;
 }
 
 .delete-icon {
-  color: #F23C5C;
+  color: #f23c5c;
 }
 
 mat-card {

@@ -1,24 +1,36 @@
-<mat-accordion>
-  <mat-expansion-panel *ngFor="let templateByOrg of (templatesByOrgs$ | async | keyvalue)">
-    <mat-expansion-panel-header fxLayout="row wrap">
-      <mat-panel-title class="inline-block" fxFlex="none">
-        {{ templateByOrg.key }}
-      </mat-panel-title>
-      <div fxFlex class="inline-block divider"></div>
-      <button fxFlex="nogrow" mat-raised-button (click)="addTemplateDialog(templateByOrg.key)" class="add-template">
-        Create a template <mat-icon>add</mat-icon>
-      </button>
-    </mat-expansion-panel-header>
-    <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
-      <article
-        class="card-ngFor"
-        fxFlex.gt-md="25"
-        fxFlex.gt-sm="50"
-        fxFlex="100"
-        *ngFor="let template of templateByOrg.value"
-      >
-        <template-item class="mat-cards" [template]="template"></template-item>
-      </article>
-    </section>
-  </mat-expansion-panel>
-</mat-accordion>
+<div class="container">
+  <mat-accordion>
+    <mat-expansion-panel
+      *ngFor="let templateByOrg of (templatesByOrgs$ | async | keyvalue); first as isFirst"
+      [expanded]="isFirst"
+      class="mat-elevation-z0"
+    >
+      <mat-expansion-panel-header fxLayout="row wrap">
+        <mat-panel-title class="inline-block" fxFlex="none">
+          {{ templateByOrg.key }}
+        </mat-panel-title>
+        <div fxFlex class="inline-block divider"></div>
+        <button
+          fxFlex="nogrow"
+          fxFlexAlign="end"
+          mat-raised-button
+          (click)="addTemplateDialog(templateByOrg.key)"
+          class="add-template"
+        >
+          Create a template <mat-icon>add</mat-icon>
+        </button>
+      </mat-expansion-panel-header>
+      <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
+        <article
+          class="card-ngFor"
+          fxFlex.gt-md="25"
+          fxFlex.gt-sm="50"
+          fxFlex="100"
+          *ngFor="let template of templateByOrg.value"
+        >
+          <template-item class="mat-cards" [template]="template"></template-item>
+        </article>
+      </section>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

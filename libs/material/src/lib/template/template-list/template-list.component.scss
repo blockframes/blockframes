@@ -1,11 +1,23 @@
+.container {
+  margin-top: 1rem;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+mat-expansion-panel {
+  margin-bottom: 1rem;
+}
+
 mat-card {
   margin: 5% 5%;
   min-height: 100px;
 }
 
 mat-panel-title {
-  font-size: 2rem;
-  font-weight: bolder;
+  font-weight: 900;
+  font-size: 35px;
+  letter-spacing: 0.4375px;
+  line-height: 41px;
 }
 
 .add-template {
