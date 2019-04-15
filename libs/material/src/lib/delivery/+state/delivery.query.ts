@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MovieQuery, Stakeholder, StakeholderQuery } from '@blockframes/movie';
+import { MovieQuery, StakeholderQuery } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   public isDeliveryValidated$ = combineLatest([
     this.selectActive(delivery => delivery.validated),
-    this.selectActive(delivery => delivery.stakeholders)
+    this.stakeholderQuery.selectAll()
   ]).pipe(
     filter(([validated, stakeholders]) => !!validated && !!stakeholders),
     map(([validated, stakeholders]) => validated.length === stakeholders.length)
@@ -116,6 +116,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public hasStakeholderSigned$(id: string) {
     return this.selectActive().pipe(
+      filter(delivery => !!delivery),
       map(delivery => delivery.validated.includes(id))
     )
   }

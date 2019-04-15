@@ -11,6 +11,11 @@ import { Organization } from '@blockframes/organization';
 
 export class StakeholderService {
 
+  public stakeholdersByMovie$ = this.movieQuery.selectActive().pipe(
+    switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
+    switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders))
+  )
+
   constructor(
     private firestore: AngularFirestore,
     private store: StakeholderStore,
@@ -31,7 +36,7 @@ export class StakeholderService {
       return this.firestore.doc<Organization>(`orgs/${sh.orgId}`)
       .valueChanges()
       .pipe(
-        map(organization => ({ ...sh, organization }))
+        map(organization => ({ ...sh, organization } as Stakeholder))
       )
     };
     const allShWithOrgs = stakeholders.map(sh => shWithOrgs(sh));
@@ -88,5 +93,4 @@ export class StakeholderService {
       tap(stakeholders => this.store.set(stakeholders))
     );
   }
-
 }

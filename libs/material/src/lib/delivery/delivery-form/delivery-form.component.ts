@@ -37,16 +37,15 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.materialService.subscribeOnDeliveryMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.service.subscribeOnActiveDelivery().pipe(takeWhile(() => this.isAlive)).subscribe();
 
     this.delivery$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
+    this.form$ = this.materialQuery.form$;
 
     this.isDeliveryValidated$.pipe(takeWhile(() => this.isAlive))
-      .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)
-
-    this.form$ = this.materialQuery.form$;
+    .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)
   }
 
   public saveAsTemplate() {

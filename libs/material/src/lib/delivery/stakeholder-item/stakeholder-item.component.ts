@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 import { Stakeholder } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-stakeholder-item',

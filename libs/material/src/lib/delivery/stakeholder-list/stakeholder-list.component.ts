@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Stakeholder, StakeholderService } from '@blockframes/movie';
-import { DeliveryQuery, DeliveryService } from '../+state';
+import { Stakeholder, StakeholderQuery } from '@blockframes/movie';
+import { DeliveryService } from '../+state';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -16,15 +16,13 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   constructor(
-    private query: DeliveryQuery,
     private service : DeliveryService,
-    private stakeholderService: StakeholderService,
+    private stakeholderQuery: StakeholderQuery,
   ) { }
 
   ngOnInit() {
-    this.stakeholderService.subscribeOnStakeholdersByActiveMovie$().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.service.subscribeOnDeliveryStakeholders().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.stakeholders$ = this.query.selectActive(delivery => delivery.stakeholders);
+    this.stakeholders$ = this.stakeholderQuery.selectAll();
   }
 
   public signDelivery() {

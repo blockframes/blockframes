@@ -8,7 +8,6 @@ import { TemplatePickerComponent } from '../../template/template-picker/template
 import { DeliveryQuery, DeliveryStore, DeliveryService } from '../+state';
 import { Router } from '@angular/router';
 import { StakeholderService } from '@blockframes/movie';
-import { pipe } from '@angular/core/src/render3';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
