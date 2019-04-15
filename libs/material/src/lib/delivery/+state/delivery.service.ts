@@ -170,14 +170,11 @@ export class DeliveryService {
         .set(newDeliveryStakeholder);
       // If deliveryStakeholder exists, we update his authorizations
     } else {
-      let authorizations = [];
-      deliveryStakeholder.authorizations.includes(authorization)
-        ? (authorizations = deliveryStakeholder.authorizations)
-        : (authorizations = [...deliveryStakeholder.authorizations, authorization]);
+      const authorizations = deliveryStakeholder.authorizations.includes(authorization)
+        ? deliveryStakeholder.authorizations
+        : [...deliveryStakeholder.authorizations, authorization];
       this.db
-        .doc<Stakeholder>(
-          `deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`
-        )
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`)
         .update({ authorizations });
     }
   }
