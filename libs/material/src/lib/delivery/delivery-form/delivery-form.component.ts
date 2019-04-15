@@ -8,7 +8,7 @@ import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+s
 import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MovieQuery, StakeholderService } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
 
 @Component({
@@ -33,7 +33,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private stakeholderService: StakeholderService,
   ) {}
 
   ngOnInit() {
