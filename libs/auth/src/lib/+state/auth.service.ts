@@ -33,7 +33,7 @@ export class AuthService {
     await this.create(user.user);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.signup(username, password).then(() => {  // no await -> do the job in background
+    this.wallet.signup(user.user.uid, username, password).then(() => {  // no await -> do the job in background
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,

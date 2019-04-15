@@ -1,4 +1,5 @@
 import { Wallet, ContractFactory, Contract, utils, getDefaultProvider, providers } from 'ethers';
+import { db } from './firebase';
 import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
@@ -33,7 +34,7 @@ export const initRelayer = (config: any): Relayer => {
 };
 
 export const relayerCreateLogic = async (
-  { username, key }: { username: string; key: string },
+  { uid, username, key }: { uid:string, username: string; key: string },
   config: any
 ) => {
   const relayer: Relayer = initRelayer(config);
@@ -65,6 +66,8 @@ export const relayerCreateLogic = async (
   const waitForRegister: Promise<TxReceipt> = registerTx.wait();
   const waitForDeploy: Promise<Contract> = erc1077.deployed();
   const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
+
+  db.collection('users').doc(uid).update({identity: deployedErc1077.address}).catch(err => console.error(err)); // store contract address in firestore
 
   // set a resolver to the ens username
   const resolverTx: TxResponse = await relayer.registry.functions.setResolver(

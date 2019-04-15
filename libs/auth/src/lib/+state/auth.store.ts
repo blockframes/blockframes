@@ -3,6 +3,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 export interface User {
   uid: string;
+  identity: string;
   email: string;
   lastName: string;
   firstName: string;

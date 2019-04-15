@@ -6,7 +6,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { contracts, baseEnsDomain } from '@env';
 
 export interface IRelayer {
-  create(name: string, key: string): Promise<Object>;
+  create(uid:string, name: string, key: string): Promise<Object>;
   prepare(name: string): Promise<EventFilter>;
   send(name: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse>;
   addKey(name: string, key: string): Promise<Object>;
@@ -23,9 +23,9 @@ export class Relayer implements IRelayer {
    * @param username ENS username of the account
    * @param key first address of the user (management key)
    */
-  public create(username: string, key: string): Promise<Object> {
+  public create(uid:string, username: string, key: string): Promise<Object> {
     const call = this.functions.httpsCallable('relayerCreate');
-    return call({ username, key }).toPromise();
+    return call({ uid, username, key }).toPromise();
   }
 
   /** Listen when the ENS name changed -> End of process */
