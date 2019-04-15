@@ -5,9 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { TemplateFormComponent } from './template-form/template-form.component';
 import { TemplateListComponent } from './template-list/template-list.component';
-import { AddTemplateComponent } from './template-list/add-template';
 import { TemplateGuard } from './guards/template.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
+import { TemplateAddComponent } from './template-add/template-add.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -36,8 +36,8 @@ const routes: Routes = [
   declarations: [
     TemplateFormComponent,
     TemplateListComponent,
-    AddTemplateComponent,
     TemplateItemComponent,
+    TemplateAddComponent,
   ],
   imports: [
     CommonModule,
@@ -56,6 +56,6 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forChild(routes)
   ],
-  entryComponents: [AddTemplateComponent]
+  entryComponents: [TemplateAddComponent]
 })
 export class TemplateModule {}

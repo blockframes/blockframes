@@ -12,7 +12,6 @@
         <div fxFlex class="inline-block divider"></div>
         <button
           fxFlex="nogrow"
-          fxFlexAlign="end"
           mat-raised-button
           (click)="addTemplateDialog(templateByOrg.key)"
           class="add-template"
@@ -20,7 +19,7 @@
           Create a template <mat-icon>add</mat-icon>
         </button>
       </mat-expansion-panel-header>
-      <section class="container" fxLayout="row wrap" fxLayoutAlign="space-around">
+      <section fxLayout="row wrap" fxLayoutAlign="start space-between">
         <article
           class="card-ngFor"
           fxFlex.gt-md="25"

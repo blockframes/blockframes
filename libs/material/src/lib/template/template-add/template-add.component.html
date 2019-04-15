@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+  <h2>Add a new template</h2>
+  <p>Choose a name for this new template (example: Films d'auteur français)</p>
+  <mat-form-field appearance="outline" fxLayoutAlign="center">
+    <mat-label>File name</mat-label>
+    <input #templateName matInput placeholder="Name" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions fxLayoutAlign="center">
+  <button mat-stroked-button class="cancel-button" (click)="close()">Cancel</button>
+  <button mat-stroked-button class="add-button" (click)="addTemplate(templateName.value)">
+    Create
+  </button>
+</div>

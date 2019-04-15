@@ -21,10 +21,13 @@ mat-panel-title {
 }
 
 .add-template {
+  display: inline-block;
   font-weight: bolder;
   color: #6100ED;
   border: solid 0.09rem #6100ED;
   cursor: pointer;
+  border-radius: 0px;
+  margin-right: 24px;
 }
 
 button {
