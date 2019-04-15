@@ -9,6 +9,7 @@ import { MaterialForm, Material } from '../../material/+state/material.model';
 import { Router, Scroll } from '@angular/router';
 import { filter, takeWhile } from 'rxjs/operators';
 import { MaterialService } from '../../material/+state';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'template-form',
@@ -27,6 +28,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
     private materialService: MaterialService,
+    private snackBar: MatSnackBar,
     private router: Router
   ) {}
 
@@ -54,6 +56,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   public deleteMaterial(material: Material) {
     this.service.deleteMaterial(material.id);
+    this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
   }
 
   public addForm(category: string) {

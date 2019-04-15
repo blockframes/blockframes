@@ -1,38 +1,11 @@
-// border
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: #6100ed!important;
-}
-
-// label
-::ng-deep .mat-form-field-label {
-  color: #6100ed!important;
-}
-
-// label focused
-::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
-  color: #6100ed!important;
-}
-
-// input right borders
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-end {
-  border-radius: 0px !important;
-}
-
-// input left borders
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-start {
-  border-radius: 0px !important;
-}
-
 .cancel-button {
   color: #6100ed;
   border: none;
-  border-radius: 0px;
 }
 
 .add-button {
   color: white;
   background-color: #6100ed;
-  border-radius: 0px;
 }
 
 p {

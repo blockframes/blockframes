@@ -59,6 +59,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   public deleteMaterial(material: Material) {
     this.service.deleteMaterial(material.id);
+    this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
   }
 
   public addForm(category: string) {
