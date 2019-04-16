@@ -1,7 +1,5 @@
 .container {
-  margin-top: 1rem;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin: 1rem 10%
 }
 
 mat-expansion-panel {
@@ -20,26 +18,41 @@ mat-panel-title {
   line-height: 41px;
 }
 
+.card-ngFor {
+  width: 20%;
+}
+
 .add-template {
-  display: inline-block;
-  font-weight: bolder;
-  color: #6100ED;
-  border: solid 0.09rem #6100ED;
+  font-weight: bold;
+  font-size: 13px;
+  color: #6100ed;
+  border: solid 0.09rem #6100ed;
   cursor: pointer;
   margin-right: 24px;
 }
 
-button {
-  margin-right: 10%;
+.icon {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 6px;
 }
 
-.inline-block {
-  display: inline-block;
- }
-
- .divider {
-  margin-top: 1rem;
-  margin-right:30px;
+.divider {
   height: 2px;
   border: solid 1px #e5e5e5;
- }
+  flex: 1;
+  margin: 0 20px;
+}
+
+.view-button {
+  margin-right: 15px;
+  height: 15px;
+  width: 15px;
+  border: solid 0.09rem #6100ed;
+}
+
+.view-icon {
+  margin-top: -18px;
+  margin-left: -6.5px;
+  font-size: 13px;
+}

@@ -1,11 +1,11 @@
 <div *ngIf="(movie$ | async) as movie" class="container">
   <section fxLayout="row" fxLayoutGap="5%">
-    <article class="progress-spinner-block" fxFlex="20" fxLayoutAlign="center start">
+    <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
         fxLayout="column"
         fxLayoutAlign="center center"
-        class="mat-elevation-z8"
+        class="mat-elevation-z6"
       >
         <mat-progress-spinner
           class="spinner"
@@ -39,11 +39,11 @@
         </mat-card>
       </ng-template>
     </article>
-    <article fxFlex="80" fxLayout="column">
+    <article class="materials" fxLayout="column">
       <h2>{{ movie.title }}</h2>
       <div *ngFor="let category of (materials$ | async | keyvalue)">
         <h3>{{ category.key | uppercase }}</h3>
-        <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z8">
+        <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z6">
           <span
             ><h4 mat-line>
               <mat-checkbox

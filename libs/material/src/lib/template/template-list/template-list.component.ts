@@ -34,7 +34,8 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     this.templatesByOrgs$ = this.query.templatesByOrgs$;
   }
 
-  public addTemplateDialog(orgName: string): void {
+  public addTemplateDialog(event: MouseEvent, orgName: string): void {
+    event.stopPropagation();
     const orgId = this.organizationQuery.getOrgId(orgName);
     this.dialog.open(TemplateAddComponent, {
       width: '400px',

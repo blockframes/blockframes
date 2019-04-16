@@ -1,13 +1,17 @@
 .cancel-button {
+  font-weight: bold;
   color: #6100ed;
   border: none;
 }
 
 .add-button {
-  color: white;
-  background-color: #6100ed;
+  font-weight: bold;
 }
 
 p {
   color: rgba(0, 0, 0, 0.514);
+}
+
+h2 {
+  font-weight: bold;
 }

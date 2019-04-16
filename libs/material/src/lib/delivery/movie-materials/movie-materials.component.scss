@@ -11,6 +11,7 @@
   margin: auto;
   margin-top: 0;
   padding: 1rem;
+  width: 20%;
 }
 
 mat-progress-spinner{
@@ -20,6 +21,10 @@ mat-progress-spinner{
 
 .spinner-text {
   text-align: center;
+}
+
+.materials {
+  width: 80%;
 }
 
 .materials-block {
@@ -45,7 +50,7 @@ p {
 .progress-value {
   position: relative;
   top: -120px;
-  color: #F44336;
+  color: #f23c5c;
   font-weight: bolder;
   font-size: 2.5rem;
 }

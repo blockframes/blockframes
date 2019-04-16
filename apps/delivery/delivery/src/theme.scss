@@ -1,0 +1,11 @@
+@import '~@angular/material/theming';
+
+$blockframes-theme-primary: mat-palette($mat-bf-purple);
+$blockframes-theme-accent: mat-palette($mat-amber);
+$blockframes-theme-warn: mat-palette($mat-bf-crimson);
+
+$blockframes-theme: mat-light-theme(
+  $blockframes-theme-primary,
+  $blockframes-theme-accent,
+  $blockframes-theme-warn
+);

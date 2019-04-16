@@ -1,28 +1,28 @@
-<mat-card class="mat-elevation-z8" fxLayout="row" fxLayoutAlign="start center">
+<mat-card class="mat-elevation-z6" fxLayout="row" fxLayoutAlign="start center">
   <div class="text-block" fxLayout="column" fxLayoutAlign="center start">
-    <mat-card-title fxFlex="50">
+    <mat-card-title>
       {{ template.name }}
     </mat-card-title>
     <mat-card-content>
-      <p class="modification-text">Last modification : 2 days ago</p>
+      <p class="modification">Last modification : 2 days ago</p>
     </mat-card-content>
   </div>
   <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions">
-    <mat-icon>more_vert</mat-icon>
+    <mat-icon color="primary">more_vert</mat-icon>
   </button>
 
   <mat-menu #actions="matMenu">
     <button mat-menu-item [routerLink]="['../', template.id]">
-      <mat-icon class="icons">edit</mat-icon>
+      <mat-icon color="primary">edit</mat-icon>
       <span>Edit</span>
     </button>
     <button mat-menu-item href="#">
-      <mat-icon class="icons">file_copy</mat-icon>
+      <mat-icon color="primary">library_books</mat-icon>
       <span>Duplicate</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="deleteTemplate(template.id)">
-      <mat-icon class="delete-icon">delete</mat-icon>
+      <mat-icon color="warn">delete</mat-icon>
       <span>Delete</span>
     </button>
   </mat-menu>

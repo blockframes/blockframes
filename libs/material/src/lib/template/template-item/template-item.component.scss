@@ -7,10 +7,10 @@ mat-card-title {
 }
 
 .text-block {
-  margin-bottom: -5px;
+  margin-bottom: -15px;
 }
 
-.modification-text {
+.modification {
   font-weight: 300;
   font-size: 11px;
   line-height: 20px;
@@ -22,15 +22,6 @@ mat-card-title {
   position: absolute;
   top: 0px;
   right: 0px;
-  color: #6100ed;
-}
-
-.icons {
-  color: #6100ed;
-}
-
-.delete-icon {
-  color: #f23c5c;
 }
 
 mat-card {
