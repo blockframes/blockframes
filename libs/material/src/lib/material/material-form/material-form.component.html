@@ -1,18 +1,23 @@
-<mat-card class="container" fxLayout="row" fxLayoutAlign="start center">
-  <form fxFlex="80" [formGroup]="form" class="container" fxLayout="column" fxLayoutAlign="center">
-    <mat-form-field>
+<mat-card class="container mat-elevation-z6" fxLayout="row" fxLayoutAlign="space-between center">
+  <form fxFlex="60" [formGroup]="form" class="container" fxLayout="column" fxLayoutAlign="center">
+    <mat-form-field appearance="outline">
+      <mat-label>Value</mat-label>
       <input class="value" formControlName="value" matInput placeholder="Value"/>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
       <input class="description" formControlName="description" matInput placeholder="Description" />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
       <input class="category" formControlName="category" matInput placeholder="Category"/>
     </mat-form-field>
   </form>
-  <span class="mat-icon" fxFlex="20" fxLayoutAlign="center">
-    <button class="save-material" [disabled]="isDeliveryValidated" mat-mini-fab color="primary" (click)="addMaterial()"><mat-icon>add</mat-icon></button>
-  </span>
+  <div fxFlex="20" fxLayoutAlign="center">
+    <button mat-raised-button color="basic" class="cancel-button mat-elevation-z0" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" class="add-button mat-elevation-z0" [disabled]="isDeliveryValidated" (click)="addMaterial()">Save</button>
+  </div>
 </mat-card>
+

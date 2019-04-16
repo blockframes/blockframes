@@ -1,10 +1,15 @@
 mat-card {
   margin-top: 4%;
+  padding-top: 4%;
 }
 
 mat-card-title {
  font-size: 14px;
  color: #3B3B3B;
+}
+
+div {
+  margin-left: 5%;
 }
 
 mat-card-content {
@@ -22,6 +27,11 @@ button {
 
 button:hover {
   color: #6200EE;
+}
+
+button:focus{
+  color: #6200EE;
+  outline: none;
 }
 
 .border-left {

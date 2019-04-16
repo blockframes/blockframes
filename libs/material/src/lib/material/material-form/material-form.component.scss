@@ -2,6 +2,18 @@ mat-card {
   margin: 5% 5%;
 }
 
-.save-material {
-  border-radius: 50%!important;
+.cancel-button {
+  font-weight: bold;
+  color: #6100ed;
+  border: none;
 }
+
+.add-button {
+  font-weight: bold;
+}
+
+mat-form-field {
+  font-size: 12px;
+}
+
+
