@@ -1,4 +1,5 @@
-<mat-card>
+<mat-card class="mat-elevation-z4">
+  <mat-icon>drag_indicator</mat-icon>
   <mat-card-title>
     {{ material.value }}
   </mat-card-title>
@@ -6,6 +7,8 @@
     {{ material.description }}
   </mat-card-content>
   <mat-card-actions>
-    <button class="delete-material-button" [disabled]="isDeliveryValidated" mat-icon-button (click)="deleteMaterial()"><mat-icon>delete</mat-icon></button>
+    <button [disabled]="isDeliveryValidated">EDIT</button>
+    <button class="border-left" [disabled]="isDeliveryValidated">DUPLICATE</button>
+    <button class="border-left" [disabled]="isDeliveryValidated" (click)="deleteMaterial()">DELETE</button>
   </mat-card-actions>
 </mat-card>

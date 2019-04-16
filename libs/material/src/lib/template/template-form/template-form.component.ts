@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material';
 export class TemplateFormComponent implements OnInit, OnDestroy {
   public template$: Observable<TemplateView>;
   public form$: Observable<MaterialForm>;
+  public templateName$ : Observable<string>;
   private isAlive = true;
 
   constructor(
@@ -38,6 +39,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
+    this.templateName$ = this.query.templateName$;
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.form$;
 
