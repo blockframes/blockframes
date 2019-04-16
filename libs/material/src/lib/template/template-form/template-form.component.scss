@@ -6,12 +6,18 @@ mat-sidenav-container {
 mat-sidenav {
   height: 100%;
   width: 250px;
+  margin-top: 64px;
+  position: fixed;
+  border: 1px solid #D3D3D3;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
 }
 
 mat-sidenav-content {
   height: 100%;
   overflow: auto;
-  background-color: #F2F2F2;
+  background-color: white;
+  padding-bottom: 5%;
 }
 
 section {
@@ -23,6 +29,15 @@ section {
   font-size: 13px;
   color: #6100ed;
   border: solid 0.09rem #6100ed;
+  cursor: pointer;
+  margin-right: 24px;
+}
+
+.delete-template {
+  font-weight: bold;
+  font-size: 13px;
+  color: #F23C5C;
+  border: solid 0.09rem #F23C5C;
   cursor: pointer;
   margin-right: 24px;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TemplateView } from '../+state/template.model';
+import { TemplateView, Template } from '../+state/template.model';
 import { TemplateQuery } from '../+state/template.query';
 import { TemplateService } from '../+state/template.service';
 import { MaterialStore } from '../../material/+state/material.store';
@@ -20,7 +20,7 @@ import { MatSnackBar } from '@angular/material';
 export class TemplateFormComponent implements OnInit, OnDestroy {
   public template$: Observable<TemplateView>;
   public form$: Observable<MaterialForm>;
-  public templateName$ : Observable<string>;
+  public templateActive$ : Observable<Template>;
   private isAlive = true;
 
   constructor(
@@ -39,7 +39,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templateName$ = this.query.templateName$;
+    this.templateActive$ = this.query.templateActive$;
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.form$;
 
@@ -63,6 +63,12 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   public addForm(category: string) {
     this.materialStore.updateEmptyForm(category);
+  }
+
+  public deleteTemplate(id: string, name: string) {
+    this.service.deleteTemplate(id);
+    this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
+    this.router.navigate(['layout/template/list']);
   }
 
   ngOnDestroy() {

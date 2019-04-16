@@ -2,15 +2,18 @@
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(template$ | async) as template" [template]="template"></material-list>
+    <button
+      *ngIf="templateActive$ | async as templateActive"
+      class="delete-template mat-elevation-z0"
+      mat-raised-button (click)="deleteTemplate(templateActive.id, templateActive.name)">
+        Delete template
+        <mat-icon class="icon">delete</mat-icon>
+    </button>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
     <section>
-    <h3 *ngIf="templateName$ | async as templateName">{{ templateName }}</h3>
-    <button class="create-material mat-elevation-z0"  mat-raised-button (click)="addForm('')">
-      Add a material
-      <mat-icon class="icon">add</mat-icon>
-    </button>
+    <h3 *ngIf="templateActive$ | async as templateActive">{{ templateActive.name }}</h3>
     <div *ngIf="(form$ | async) as form">
       <material-form *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
     </div>
