@@ -1,3 +1,4 @@
+@import '../../../../../../styles/style.scss';
 
 .mat-tab-nav-bar {
   margin-left: 10px;
@@ -6,4 +7,9 @@
 .mat-tab-link {
   text-transform: uppercase;
   margin-top: 19px;
+}
+
+.mat-tab-label-active {
+  color: map-get($mat-bf-purple, 500);
+  opacity: 1;
 }
