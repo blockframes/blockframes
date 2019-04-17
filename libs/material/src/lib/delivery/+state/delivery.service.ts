@@ -132,6 +132,7 @@ export class DeliveryService {
     this.store.setActive(null);
   }
 
+  /** Sign array validated of delivery with stakeholder logged */
   public signDelivery() {
     const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
     const { validated } = this.query.getActive();
