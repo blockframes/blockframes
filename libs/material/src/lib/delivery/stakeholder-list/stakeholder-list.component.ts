@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Stakeholder, StakeholderQuery } from '@blockframes/movie';
-import { DeliveryService } from '../+state';
+import { Stakeholder, StakeholderQuery, MovieQuery } from '@blockframes/movie';
+import { DeliveryService, DeliveryQuery } from '../+state';
 import { takeWhile } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'delivery-stakeholder-list',
@@ -18,6 +19,9 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   constructor(
     private service : DeliveryService,
     private stakeholderQuery: StakeholderQuery,
+    private router: Router,
+    private movieQuery: MovieQuery,
+    private query: DeliveryQuery,
   ) { }
 
   ngOnInit() {
@@ -27,6 +31,10 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
 
   public signDelivery() {
     this.service.signDelivery();
+  }
+
+  public navigateToSettings() {
+    this.router.navigate([`${this.router.url}/settings`])
   }
 
   ngOnDestroy() {

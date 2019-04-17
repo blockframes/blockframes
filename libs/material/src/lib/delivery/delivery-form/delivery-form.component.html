@@ -18,7 +18,7 @@
   <!-- Content -->
   <mat-sidenav-content class="delivery-form">
     <section>
-    <h3 *ngIf="movie$ | async as movie">{{ movie.title.orignal }}</h3>
+    <h3 *ngIf="movie$ | async as movie">{{ movie.title.original }}</h3>
     <div *ngIf="(form$ | async) as form">
       <material-form [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
     </div>
