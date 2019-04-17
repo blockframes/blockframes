@@ -27,7 +27,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialStore: MaterialStore,
-    private stakeholderQuery : StakeholderQuery,
+    private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
   ) {
