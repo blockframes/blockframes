@@ -3,9 +3,9 @@
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(delivery$ | async) as delivery" [template]="delivery"></material-list>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
-      <button class="save-template mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
+      <button class="sign mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
         Add signature
-        <mat-icon class="icon">save</mat-icon>
+        <mat-icon class="icon">create</mat-icon>
       </button>
     </div>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
