@@ -25,6 +25,7 @@ import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
 import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
     environment.production ? [] : [AkitaNgDevtools.forRoot()],
-    MatCardModule
+    MatCardModule,
+    AngularFireFunctionsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
