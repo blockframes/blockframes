@@ -39,7 +39,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templateActive$ = this.query.templateActive$;
+    this.templateActive$ = this.query.selectActive();
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.form$;
 

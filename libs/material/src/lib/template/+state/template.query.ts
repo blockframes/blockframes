@@ -40,8 +40,6 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
 
   public form$ = this.select(state => state.form);
 
-  public templateActive$ = this.selectActive(template => template)
-
   public materialsByTemplate$ = combineLatest([
     this.selectActive(),
     this.materialQuery.selectAll()

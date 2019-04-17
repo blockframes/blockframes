@@ -2,13 +2,15 @@
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(template$ | async) as template" [template]="template"></material-list>
-    <button
-      *ngIf="templateActive$ | async as templateActive"
-      class="delete-template mat-elevation-z0"
-      mat-raised-button (click)="deleteTemplate(templateActive.id, templateActive.name)">
-        Delete template
-        <mat-icon class="icon">delete</mat-icon>
-    </button>
+    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button
+        *ngIf="templateActive$ | async as templateActive"
+        class="delete-template mat-elevation-z0"
+        mat-raised-button (click)="deleteTemplate(templateActive.id, templateActive.name)">
+          Delete template
+          <mat-icon class="icon">delete</mat-icon>
+      </button>
+    </div>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
