@@ -2,31 +2,35 @@
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(delivery$ | async) as delivery" [template]="delivery"></material-list>
-    <article fxLayout="column" fxLayoutAlign="end none" fxLayoutGap="1rem">
-      <button mat-raised-button color="primary" (click)="saveAsTemplate()">
+    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button class="save-template mat-elevation-z0" mat-raised-button (click)="saveAsTemplate()">
         Save as new template
+        <mat-icon class="icon">save</mat-icon>
       </button>
-      <button mat-raised-button color="warn" (click)="deleteDelivery()">Delete delivery</button>
-    </article>
+    </div>
+    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button class="delete-delivery mat-elevation-z0" mat-raised-button (click)="deleteDelivery()">
+        Delete delivery
+        <mat-icon class="icon">delete</mat-icon>
+      </button>
+    </div>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content class="delivery-form">
-    <button class="add-material-button" [disabled]="isDeliveryValidated$ | async" (click)="addForm('')" color="primary" mat-icon-button matRipple>
-      <mat-icon class="icon-add">add_circle</mat-icon>
-      Add new material
-    </button>
+    <section>
+    <h3 *ngIf="movie$ | async as movie">{{ movie.title.orignal }}</h3>
     <div *ngIf="(form$ | async) as form">
       <material-form [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form>
     </div>
-    <mat-card *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
-      <mat-card-title class="container" fxLayout="row" fxLayoutAlign="start center">
-        <h4 fxFlex="60">Category : {{ materials.key }}</h4>
-        <button [disabled]="isDeliveryValidated$ | async" fxFlex="40" (click)="addForm(materials.key)" color="primary" mat-icon-button matRipple>
-          <mat-icon class="icon-add">add_circle</mat-icon>
-          Add new material with this category
+    <article *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
+      <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
+        <h4>{{ materials.key }}</h4>
+        <button class="create-material mat-elevation-z0" [disabled]="isDeliveryValidated$ | async" (click)="addForm(materials.key)" mat-raised-button>
+          <mat-icon class="icon">add</mat-icon>
+          Add a material
         </button>
-      </mat-card-title>
-      <mat-card-content>
+      </div>
+      <div>
         <div cdkDrag *ngFor="let material of materials.value">
           <material-item [isDeliveryValidated]="isDeliveryValidated$ | async" [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
         </div>
@@ -36,9 +40,10 @@
             *ngIf="form.category === materials.key"
             (material)="addMaterial($event)"
           ></material-form>
+          </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </article>
     <delivery-stakeholder-list></delivery-stakeholder-list>
+  </section>
   </mat-sidenav-content>
 </mat-sidenav-container>
