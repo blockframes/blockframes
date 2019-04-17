@@ -28,7 +28,7 @@
         </button>
       </div>
       <div>
-        <div cdkDrag *ngFor="let material of category.value">
+        <div *ngFor="let material of category.value">
           <material-item [material]="material" (isDeleted)="deleteMaterial(material)"></material-item>
         </div>
         <div *ngIf="(form$ | async) as form">
