@@ -3,9 +3,10 @@ import { TemplateQuery, TemplateService } from '../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
-import { AddTemplateComponent } from './add-template';
+
 import { takeWhile } from 'rxjs/operators';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { TemplateAddComponent } from '../template-add/template-add.component';
 
 @Component({
   selector: 'template-list',

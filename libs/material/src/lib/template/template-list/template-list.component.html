@@ -1,18 +1,18 @@
 <div class="container">
   <mat-expansion-panel
-    *ngFor="let templateByOrg of (templatesByOrgs$ | async | keyvalue); first as isFirst"
+    *ngFor="let org of (orgsWithTemplates$ | async); first as isFirst"
     [expanded]="isFirst"
     class="mat-elevation-z0"
   >
     <mat-expansion-panel-header>
       <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        <span>{{ templateByOrg.key }}</span>
+        <span>{{ org.name }}</span>
       <div class="divider"></div>
       <button mat-mini-fab color="basic" class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></button>
       <button mat-mini-fab color="basic" class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_module</mat-icon></button>
       <button
       mat-raised-button
-      (click)="addTemplateDialog($event, templateByOrg.key)"
+      (click)="addTemplateDialog($event, org.name)"
       class="add-template mat-elevation-z0"
     >
       Create a template <mat-icon class="icon">add</mat-icon>
@@ -24,7 +24,7 @@
     <section fxLayout="row wrap" fxLayoutAlign="start space-between">
       <article
         class="card-ngFor"
-        *ngFor="let template of templateByOrg.value"
+        *ngFor="let template of org.templates"
       >
         <template-item class="mat-cards" [template]="template"></template-item>
       </article>
