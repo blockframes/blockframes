@@ -6,10 +6,10 @@ import { TemplateService } from '../+state/template.service';
 import { MaterialStore } from '../../material/+state/material.store';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialForm, Material } from '../../material/+state/material.model';
-import { Router, Scroll } from '@angular/router';
-import { filter, takeWhile } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 import { MaterialService } from '../../material/+state';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'template-form',
@@ -30,7 +30,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     private materialQuery: MaterialQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -42,13 +42,6 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     this.templateActive$ = this.query.selectActive();
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.form$;
-
-    this.router.events
-      .pipe(
-        takeWhile(() => this.isAlive),
-        filter(e => e instanceof Scroll && !!e.anchor)
-      )
-      .subscribe((e: Scroll) => document.getElementById(e.anchor).scrollIntoView());
   }
 
   public addMaterial(material: Material) {
