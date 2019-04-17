@@ -24,6 +24,7 @@ import { FinancingExplorerHeaderComponent } from './explorer/header/header.compo
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
+import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { AuthModule } from '@blockframes/auth';
     FinancingExplorerSearchComponent,
     FinancingMovieCard,
     FinancingExplorerFooterComponent,
-    FinancingExplorerHeaderComponent
+    FinancingExplorerHeaderComponent,
+    FinancingExplorerFinancingDetailsComponent
   ],
   imports: [
     BrowserModule,

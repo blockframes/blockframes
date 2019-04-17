@@ -1,0 +1,27 @@
+:host {
+  text-transform: uppercase;
+
+  table {
+    border-collapse: collapse;
+  }
+
+  .bordered {
+    border: 1px solid black;
+  }
+
+  td {
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  span.key {
+    color: rgba(57, 67, 72, 0.5);
+    font-weight: 100;
+  }
+
+  span.value {
+    color: #008BD2;
+    font-weight: bold;
+  }
+}
