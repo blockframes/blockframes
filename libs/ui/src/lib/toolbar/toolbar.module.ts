@@ -3,17 +3,16 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 
-import { OrganizationModule} from '@blockframes/organization';
-import { AuthModule} from '@blockframes/auth';
+import { OrganizationModule } from '@blockframes/organization';
+import { AuthModule } from '@blockframes/auth';
 import { AccountModule } from '@blockframes/account';
-
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTabsModule, MatListModule } from '@angular/material';
+import { MatGridListModule, MatListModule, MatTabsModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
@@ -30,6 +29,7 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatTabsModule,
     RouterModule,
+    MatGridListModule
   ],
   declarations: [HeaderComponent, ContextMenuComponent],
   exports: [HeaderComponent]
