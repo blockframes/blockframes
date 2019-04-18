@@ -39,6 +39,7 @@ import {
   MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+import { ConfirmModule } from '@blockframes/ui';
 
 
 
@@ -90,6 +91,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatExpansionModule,
     MaterialModule,
+    ConfirmModule,
 
     // Material
     MatCardModule,

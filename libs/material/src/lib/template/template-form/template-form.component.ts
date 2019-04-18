@@ -8,8 +8,8 @@ import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialForm, Material } from '../../material/+state/material.model';
 import { takeWhile } from 'rxjs/operators';
 import { MaterialService } from '../../material/+state';
-import { MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { ConfirmComponent } from '@blockframes/ui';
 
 @Component({
   selector: 'template-form',
@@ -30,6 +30,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     private materialQuery: MaterialQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private router: Router,
   ) {}
 
@@ -59,9 +60,19 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   }
 
   public deleteTemplate(id: string, name: string) {
-    this.service.deleteTemplate(id);
-    this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
-    this.router.navigate(['layout/template/list']);
+    const dialog = this.dialog.open(ConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete template',
+        question: 'Are you sure to delete this template ?',
+        buttonName: 'Delete'
+      }
+    });
+    dialog.componentInstance.confirmEmitter.subscribe(() => {
+      this.service.deleteTemplate(id);
+      this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
+      this.router.navigate(['layout/template/list']);
+      dialog.componentInstance.confirmEmitter.unsubscribe()});
   }
 
   ngOnDestroy() {

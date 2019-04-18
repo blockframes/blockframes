@@ -10,6 +10,8 @@ import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
+import { ConfirmComponent } from '@blockframes/ui';
+
 
 @Component({
   selector: 'delivery-form',
@@ -68,11 +70,35 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   }
 
   public deleteDelivery() {
-    const movieId = this.movieQuery.getActiveId();
-    this.service.deleteDelivery();
-    this.router.navigate([`/layout/${movieId}`]);
-    this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
-    // TODO: fix behavior => user can still go back and land on the delivery page (without active delivery)
+    const dialog = this.dialog.open(ConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete delivery',
+        question: 'Are you sure to delete this delivery ?',
+        buttonName: 'Delete'
+      }
+    });
+    dialog.componentInstance.confirmEmitter.subscribe(() => {
+      this.service.deleteDelivery();
+      this.router.navigate([`/layout/${this.movieQuery.getActiveId()}`]);
+      this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+      dialog.componentInstance.confirmEmitter.unsubscribe()});
+      //TODO: fix behavior => user can still go back and land on the delivery page (without active delivery);
+  }
+
+  public unsealDelivery() {
+    const dialog = this.dialog.open(ConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Unseal delivery',
+        question: 'Are you sure to unseal this delivery ?',
+        buttonName: 'Unseal'
+      }
+    });
+    dialog.componentInstance.confirmEmitter.subscribe(() => {
+      this.service.unsealDelivery();
+      this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
+      dialog.componentInstance.confirmEmitter.unsubscribe()});
   }
 
   ngOnDestroy() {

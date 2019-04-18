@@ -20,10 +20,16 @@
         <mat-icon class="icon">save</mat-icon>
       </button>
     </div>
-    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+    <div *ngIf="!(isDeliveryValidated$ | async)" class="container-button" fxLayout="row" fxLayoutAlign="center center">
       <button class="delete-delivery mat-elevation-z0" mat-raised-button (click)="deleteDelivery()">
         Delete delivery
         <mat-icon class="icon">delete</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="isDeliveryValidated$ | async" class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button class="unseal-delivery mat-elevation-z0" color="warn" mat-raised-button (click)="unsealDelivery()">
+        Unseal delivery
+        <mat-icon class="icon">lock_open</mat-icon>
       </button>
     </div>
   </mat-sidenav>

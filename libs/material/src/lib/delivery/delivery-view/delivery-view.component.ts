@@ -25,10 +25,6 @@ export class DeliveryViewComponent implements OnInit {
     this.progressionValue$ = this.query.deliveryProgression$;
   }
 
-  public editDelivery() { //TODO: secure this with guard so we can't access with raw url
-    this.service.editDelivery();
-  }
-
   public goBack() {
     this.location.back();
   }

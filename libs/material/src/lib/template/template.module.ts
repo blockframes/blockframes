@@ -8,6 +8,7 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateGuard } from './guards/template.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
+import { ConfirmModule } from '@blockframes/ui';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -24,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
+
 
 
 const routes: Routes = [
@@ -54,6 +56,7 @@ const routes: Routes = [
     MatMenuModule,
     MatExpansionModule,
     MaterialModule,
+    ConfirmModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]

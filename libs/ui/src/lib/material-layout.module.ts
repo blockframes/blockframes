@@ -7,6 +7,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
-  exports: [MatToolbarModule, MatCardModule, MatListModule, MatSidenavModule, MatTabsModule]
+  exports: [MatToolbarModule, MatCardModule, MatListModule, MatSidenavModule, MatTabsModule],
 })
 export class MaterialLayoutModule {}
