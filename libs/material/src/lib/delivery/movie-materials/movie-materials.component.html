@@ -12,13 +12,37 @@
           color="warn"
           mode="determinate"
           [value]="value"
-          diameter="200"
-          strokeWidth="13"
+          diameter="180"
+          strokeWidth="12"
         >
         </mat-progress-spinner>
         <div class="progress-value">{{ value }} %</div>
         <h5>Global progression</h5>
-        <p class="spinner-text"><i>La progression en %age des deliveries de la movie</i></p>
+        <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+        <div>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 1</p>
+            <mat-icon svgIcon="accepted" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider class="divider"></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 2</p>
+            <span class="step-informations">
+              <small class="period-text">Acceptance period :</small>
+              <p class="period-days">12 days</p>
+            </span>
+            <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider class="divider"></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 3</p>
+            <span class="step-informations">
+              <small class="period-text">Delivery time :</small>
+              <p class="period-days">23 days</p>
+            </span>
+            <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
+          </span>
+        </div>
       </mat-card>
       <ng-template #empty>
         <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
@@ -42,30 +66,169 @@
     <article class="materials">
       <div class="materials" fxLayoutAlign="space-between">
         <h2>{{ movie.title.original }}</h2>
-        <span fxLayoutAlign="space-around">
-        <button class="filter mat-elevation-z0" mat-raised-button>
-          Filters <mat-icon class="icon">add</mat-icon>
-        </button>
-        <button class="filter mat-elevation-z0" mat-raised-button>
-          Actions <mat-icon class="icon">add</mat-icon>
-        </button>
-      </span>
+        <span fxLayoutAlign="end">
+          <button class="filter mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="filters">
+            Filters <mat-icon svgIcon="filter" class="filter-icon"></mat-icon>
+          </button>
+          <mat-menu #filters="matMenu" xPosition="before">
+            <button mat-menu-item>
+              <mat-icon svgIcon="order"></mat-icon>
+              <span>Order</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="pending"></mat-icon>
+              <span>Pending</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon svgIcon="available"></mat-icon>
+              <span>Available</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="delivered"></mat-icon>
+              <span>Delivered</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="accepted"></mat-icon>
+              <span>Accepted</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="refused"></mat-icon>
+              <span>Refused</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon svgIcon="payed"></mat-icon>
+              <span>Payed</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="not_payed"></mat-icon>
+              <span>Not payed</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon svgIcon="disabled"></mat-icon>
+              <span>Disable</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="enabled"></mat-icon>
+              <span>Enable</span>
+            </button>
+          </mat-menu>
+          <button class="action mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="actions">
+            Actions <mat-icon class="action-icon">expand_more</mat-icon>
+          </button>
+          <mat-menu #actions="matMenu" xPosition="before">
+            <button mat-menu-item [matMenuTriggerFor]="steps">
+              <span>Change step</span>
+            </button>
+            <mat-menu #steps="matMenu" xPosition="before">
+              <button mat-menu-item>Step 1</button>
+              <button mat-menu-item>Step 2</button>
+              <button mat-menu-item>Step 3</button>
+              <button mat-menu-item>Step 4</button>
+              <button mat-menu-item>Finish</button>
+            </mat-menu>
+            <mat-divider></mat-divider>
+            <button mat-menu-item [matMenuTriggerFor]="exports">
+              <span>Export in</span>
+            </button>
+            <mat-menu #exports="matMenu" xPosition="before">
+              <button mat-menu-item>
+                <mat-icon svgIcon="library_books"></mat-icon>
+                <span>Excel</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon svgIcon="picture_as_pdf"></mat-icon>
+                <span>PDF</span>
+              </button>
+            </mat-menu>
+            <mat-divider></mat-divider>
+            <button mat-menu-item [matMenuTriggerFor]="status">
+              <span>Status</span>
+            </button>
+            <mat-menu #status="matMenu" xPosition="before">
+              <button mat-menu-item>
+                <mat-icon svgIcon="pending"></mat-icon>
+                <span>Pending</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item>
+                <mat-icon svgIcon="available"></mat-icon>
+                <span>Available</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon svgIcon="delivered"></mat-icon>
+                <span>Delivered</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon svgIcon="accepted"></mat-icon>
+                <span>Accepted</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon svgIcon="refused"></mat-icon>
+                <span>Refused</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item>
+                <mat-icon svgIcon="payed"></mat-icon>
+                <span>Payed</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon svgIcon="not_payed"></mat-icon>
+                <span>Not payed</span>
+              </button>
+            </mat-menu>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon svgIcon="disabled"></mat-icon>
+              <span>Disable</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon svgIcon="enabled"></mat-icon>
+              <span>Enable</span>
+            </button>
+          </mat-menu>
+        </span>
       </div>
+
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
+
         <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z6">
-          <span
-            ><h4 mat-line>
-              <mat-checkbox
-                [(ngModel)]="material.delivered"
-                (click)="deliveredToggle(material, movie.id)"
-                ><b>{{ material.value }}</b></mat-checkbox
-              >
-            </h4></span
-          >
-          <p mat-line class="description-text">
-            <i>{{ material.description }}</i>
-          </p>
+          <div class="material" fxLayout="row" fxLayoutAlign="none center">
+            <span>
+              <h4 mat-line>
+                <mat-checkbox
+                  [(ngModel)]="material.delivered"
+                  (click)="deliveredToggle(material, movie.id)"
+                >
+                  <b>{{ material.value }}</b>
+                </mat-checkbox>
+              </h4>
+            </span>
+            <p mat-line class="description-text">
+              <i>{{ material.description }}</i>
+            </p>
+          </div>
+          <div class="informations" fxLayout="row" fxLayoutAlign="space-between none">
+            <span class="step">
+              <h5>Step :</h5>
+              <p class="step-text">step {{ randomNumberPicker(5) }}</p>
+            </span>
+            <span class="state">
+              <h5>State :</h5>
+              <mat-icon class="icons" svgIcon="{{ stateIcon }}"></mat-icon>
+            </span>
+            <span class="time">
+              <h5>Delivery time :</h5>
+              <p class="time-text">{{ randomNumberPicker(30) }} days</p>
+            </span>
+            <span class="payment">
+              <h5>Payment :</h5>
+              <mat-icon class="icons" svgIcon="{{ paymentIcon }}"></mat-icon>
+            </span>
+          </div>
         </mat-card>
       </div>
     </article>

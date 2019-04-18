@@ -110,24 +110,24 @@ export class FireQuery {
     return subQuery.length > 0;
   }
 
-  // See example below
+  /** See example below
 
-  // public get deliveryList() {
-  //   return this.movieQuery.selectActiveId().pipe(
-  //     switchMap(id => this.fromQuery(this.getDeliveryListWithStakeholders(id)))
-  //   );
-  // }
+  public get deliveryList() {
+    return this.movieQuery.selectActiveId().pipe(
+      switchMap(id => this.fromQuery(this.getDeliveryListWithStakeholders(id)))
+    );
+  }
 
-  // private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
-  //   return {
-  //     path: `deliveries`,
-  //     queryFn: (ref) => ref.where('movieId', '==', movieId),
-  //     stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
-  //       path: `deliveries/${delivery.id}/stakeholders`,
-  //       organization: (stakeholder: Stakeholder): Query<Organization> => ({
-  //         path: `orgs/${stakeholder.orgId}`
-  //       })
-  //     })
-  //   }
-  // }
+  private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
+    return {
+      path: `deliveries`,
+      queryFn: (ref) => ref.where('movieId', '==', movieId),
+      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+        path: `deliveries/${delivery.id}/stakeholders`,
+        organization: (stakeholder: Stakeholder): Query<Organization> => ({
+          path: `orgs/${stakeholder.orgId}`
+        })
+      })
+    }
+  } */
 }

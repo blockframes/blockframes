@@ -10,7 +10,6 @@ import { switchMap, map, tap, filter } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery} from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +30,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
-    private fireQuery: FireQuery
   ) {
     super(store);
   }

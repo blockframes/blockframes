@@ -19,7 +19,6 @@
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon color="primary">more_vert</mat-icon>
         </button>
-
         <mat-menu #menu="matMenu" xPosition="before">
           <button mat-menu-item [matMenuTriggerFor]="subMenu">
             <mat-icon color="primary">control_camera</mat-icon>
@@ -36,9 +35,9 @@
         </mat-menu>
 
         <mat-menu #subMenu="matMenu">
-          <button mat-menu-item [routerLink]="['/layout', movie.id]">Current app</button>
+          <button mat-menu-item [routerLink]="['/layout', movie.id, 'list']">Current app</button>
         </mat-menu>
-        
+
       </div>
 
       <mat-card-header>
