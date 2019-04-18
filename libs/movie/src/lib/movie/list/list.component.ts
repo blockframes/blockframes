@@ -41,6 +41,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   public trackOrgs(index: number, org: Organization) {
-    return org ? org.id : undefined;
+    return org.id;
   }
 }

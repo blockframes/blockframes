@@ -29,11 +29,7 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   }
 
   public getOrgId(name: string) {
-    const orgs = this.getAll({
-      filterBy: org => org.name === name,
-      limitTo: 0
-    });
-    return orgs[0].id;
+    return this.getAll().find(org => org.name === name).id;
   }
 
   get form$() {
