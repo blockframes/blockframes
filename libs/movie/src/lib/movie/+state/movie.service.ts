@@ -41,7 +41,7 @@ export class MovieService {
     this.collection.doc(id).update(movie);
   }
 
-  public async remove(id: string) {
+  public remove(id: string) {
     this.collection.doc(id).delete();
   }
 

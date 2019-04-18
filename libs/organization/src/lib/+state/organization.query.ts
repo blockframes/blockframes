@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization, OrganizationWithMovies } from './organization.model';
-import { map, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable, of } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { Movie } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'
