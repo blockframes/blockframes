@@ -55,7 +55,7 @@ export class StakeholderService {
       const org = await tx.get(orgDoc.ref);
       
       // Update the org
-      const movieIds = org.data().movieIds;
+      const movieIds = org.data().movieIds || [];
       const nextMovieIds = [...movieIds, movieId];
       const p1 = tx.update(orgDoc.ref, { movieIds: nextMovieIds });
 
@@ -63,11 +63,9 @@ export class StakeholderService {
       const p2 = tx.set(stakeholderDoc.ref, sh);
 
       return Promise.all([p1, p2]);
-    }).then(() => {
-        console.log('Transaction successfully committed!');
-    }).catch((error) => {
-        console.log('Transaction failed: ', error);
-    });
+    })
+    .then(() => console.log('Transaction successfully committed!'))
+    .catch((error) => console.log('Transaction failed: ', error));
 
     return sh.id;
   }

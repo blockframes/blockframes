@@ -41,33 +41,18 @@ export class MovieService {
     this.collection.doc(id).update(movie);
   }
 
-  public remove(id: string) {
-    // TODO: make a firebase function
+  public async remove(id: string) {
     this.collection.doc(id).delete();
-  }
-
-  public moviesByOrganisation$(org: Organization): Observable<Movie[]> {
-    const moviesByOrg$: Observable<Movie>[] =
-      org.movieIds.map(movieId => {
-        return this.firestore.doc<Movie>(`movies/${movieId}`)
-          .valueChanges()
-          .pipe(
-            map(movie => ({ ...movie, organization: org}))
-          );
-      });
-    return combineLatest(moviesByOrg$);
   }
 
   public get moviesOfOrganizations$(): Observable<Movie[]>{
     return this.orgQuery.selectAll().pipe(
-      switchMap((orgs: Organization[]) => {
-        const movies$ = orgs.map(org => this.moviesByOrganisation$(org))
+      map(orgs => orgs.reduce((movieIds, org) => [...(org.movieIds || []), ...movieIds], [])),
+      switchMap((movieIds: string[]) => {
+        const movies$ = movieIds.map(id => this.firestore.doc<Movie>(`movies/${id}`).valueChanges())
         return combineLatest(movies$)
       }),
-      map((moviesPerOrgs: Movie[][]) => [].concat.apply([], moviesPerOrgs) as Movie[]),
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
       tap((movies: Movie[]) => this.store.set(movies))
     );
   }
 }
-

@@ -3,8 +3,9 @@ import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization, OrganizationWithMovies } from './organization.model';
 import { map, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,8 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   public orgsWithMovies$: Observable<OrganizationWithMovies[]> = this.selectAll().pipe(
     switchMap(orgs => {
       const orgsWithMovies$ = orgs.map(org => {
-       return this.movieQuery.selectLoading().pipe(
-          filter(isLoading => !isLoading),
-          switchMap(_ => this.movieQuery.selectMany(org.movieIds)),
+        return this.movieQuery.selectMany(org.movieIds).pipe(
+          map(movies => movies.filter(movie => !!movie)),
           map(movies => ({ ...org, movies }))
         )
       })
