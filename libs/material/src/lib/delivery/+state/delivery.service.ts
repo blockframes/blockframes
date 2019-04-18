@@ -13,11 +13,12 @@ import {
   StakeholderService,
   StakeholderStore
 } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
 import { switchMap, tap, map, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { Query, FireQuery } from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class DeliveryService {
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
+    private fireQuery: FireQuery,
   ) {}
 
   ///////////////////
@@ -175,7 +177,9 @@ export class DeliveryService {
         ? deliveryStakeholder.authorizations
         : [...deliveryStakeholder.authorizations, authorization];
       this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`)
+        .doc<Stakeholder>(
+          `deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`
+        )
         .update({ authorizations });
     }
   }
@@ -190,16 +194,35 @@ export class DeliveryService {
     return delivery.validated.length === stakeholders.size;
   }
 
-
   /** Returns stakeholders updated with stakeholders of the store stakeholders (movie-lib) */
   private updateDeliveryShWithMovieSh(stakeholders: Stakeholder[]) {
     const updatedSh$ = stakeholders.map(stakeholder =>
-      this.db.doc<Stakeholder>(`movies/${this.movieQuery.getActiveId()}/stakeholders/${stakeholder.id}`).valueChanges()
+      this.db
+        .doc<Stakeholder>(`movies/${this.movieQuery.getActiveId()}/stakeholders/${stakeholder.id}`)
+        .valueChanges()
         .pipe(map(movieSh => ({ ...movieSh, ...stakeholder } as Stakeholder)))
     );
     return combineLatest(updatedSh$);
-}
+  }
 
+  public get deliveryList() {
+    return this.movieQuery.selectActiveId().pipe(
+      switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id)))
+    );
+  }
+
+  private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
+    return {
+      path: `deliveries`,
+      queryFn: ref => ref.where('movieId', '==', movieId),
+      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+        path: `deliveries/${delivery.id}/stakeholders`,
+        organization: (stakeholder: Stakeholder): Query<Organization> => ({
+          path: `orgs/${stakeholder.orgId}`
+        })
+      })
+    };
+  }
 
   ////////////////////////
   // START SUBSCRIPTION //

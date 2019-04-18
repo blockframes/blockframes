@@ -18,12 +18,11 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class DeliveryListComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
-  public deliveries$: Observable<Delivery[]>;
+  public deliveries$: any;
   private isAlive = true;
 
   constructor(
     private movieQuery: MovieQuery,
-    private query: DeliveryQuery,
     private store: DeliveryStore,
     private service: DeliveryService,
     private router: Router,
@@ -33,7 +32,7 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
-    this.deliveries$ = this.query.deliveriesByActiveMovie$;
+    this.deliveries$ = this.service.deliveryList;
     this.stakeholderService.subscribeOnStakeholdersByActiveMovie$().pipe(takeWhile(() => this.isAlive)).subscribe();
   }
 

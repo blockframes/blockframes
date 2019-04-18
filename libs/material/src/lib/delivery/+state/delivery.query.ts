@@ -10,6 +10,7 @@ import { switchMap, map, tap, filter } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
+import { FireQuery} from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   ]).pipe(
     filter(([validated, stakeholders]) => !!validated && !!stakeholders),
     map(([validated, stakeholders]) => validated.length === stakeholders.length)
-    )
+  );
 
   constructor(
     protected store: DeliveryStore,
@@ -30,6 +31,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
+    private fireQuery: FireQuery
   ) {
     super(store);
   }
@@ -118,13 +120,13 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     return this.selectActive().pipe(
       filter(delivery => !!delivery),
       map(delivery => delivery.validated.includes(id))
-    )
+    );
   }
 
   /** Find the stakeholder from the movie and logged user organizations */
   public findActiveStakeholder() {
     const stakeholders = this.stakeholderQuery.getAll();
     const orgIds = this.organizationQuery.getAll().map(org => org.id);
-    return stakeholders.find(({orgId}) => orgIds.includes(orgId));
+    return stakeholders.find(({ orgId }) => orgIds.includes(orgId));
   }
 }

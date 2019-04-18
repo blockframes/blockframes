@@ -1,14 +1,15 @@
-<mat-card (click)="selectDelivery()" fxLayoutAlign="space-between" class="mat-elevation-z6">
-  <section fxLayout="row" fxLayoutAlign="none center" class="stakeholders">
+<mat-card (click)="selectDelivery()" class="mat-elevation-z6" fxLayoutAlign="space-between">
+  <section class="stakeholders" fxLayout="row" fxLayoutAlign="none center">
     <span class="first-dot mat-elevation-z4" [ngStyle]="{ 'background-color': getRandomColor() }">
     </span>
     <span class="second-dot mat-elevation-z4" [ngStyle]="{ 'background-color': getRandomColor() }">
     </span>
-    <span class="names">
-      <h4>Delivery ID : {{ delivery.id }}</h4>
+    <span *ngFor="let stakeholder of delivery.stakeholders; last as isLast" class="names" fxLayout="row">
+      <h4>{{stakeholder.organization.name}}</h4>
+      <h4 *ngIf="!isLast" class="divider">|</h4>
     </span>
   </section>
-  <section fxLayout="row" fxLayoutAlign="space-between none" class="informations">
+  <section class="informations" fxLayout="row" fxLayoutAlign="space-between none">
     <article class="step">
       <h5>Step :</h5>
       <p class="step-text">step {{randomNumberPicker(5)}}</p>
