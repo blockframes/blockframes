@@ -6,6 +6,8 @@ import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../+state/delivery.service';
 import { DeliveryQuery } from '../+state';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'delivery-movie-materials',
@@ -24,7 +26,26 @@ export class MovieMaterialsComponent implements OnInit {
     private location: Location,
     private deliveryService: DeliveryService,
     private deliveryQuery: DeliveryQuery,
-    ) { }
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+    ) {
+      this.matIconRegistry.addSvgIcon(
+        'accepted',
+        this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/accepted.svg')
+      );
+      this.matIconRegistry.addSvgIcon(
+        'delivered',
+        this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/delivered.svg')
+      );
+      this.matIconRegistry.addSvgIcon(
+        'pending',
+        this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/pending.svg')
+      );
+      this.matIconRegistry.addSvgIcon(
+        'filter',
+        this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/filter.svg')
+      );
+     }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();

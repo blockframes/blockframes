@@ -36,7 +36,7 @@ export class DeliveryService {
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
-    private fireQuery: FireQuery,
+    private fireQuery: FireQuery
   ) {}
 
   ///////////////////
@@ -167,9 +167,7 @@ export class DeliveryService {
         [authorization]
       );
       this.db
-        .doc<Stakeholder>(
-          `deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`
-        )
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`)
         .set(newDeliveryStakeholder);
       // If deliveryStakeholder exists, we update his authorizations
     } else {
@@ -177,9 +175,7 @@ export class DeliveryService {
         ? deliveryStakeholder.authorizations
         : [...deliveryStakeholder.authorizations, authorization];
       this.db
-        .doc<Stakeholder>(
-          `deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`
-        )
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`)
         .update({ authorizations });
     }
   }
@@ -206,9 +202,9 @@ export class DeliveryService {
   }
 
   public get deliveryList() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id)))
-    );
+    return this.movieQuery
+      .selectActiveId()
+      .pipe(switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))));
   }
 
   private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {

@@ -12,13 +12,37 @@
           color="warn"
           mode="determinate"
           [value]="value"
-          diameter="200"
-          strokeWidth="13"
+          diameter="180"
+          strokeWidth="12"
         >
         </mat-progress-spinner>
         <div class="progress-value">{{ value }} %</div>
         <h5>Global progression</h5>
-        <p class="spinner-text"><i>La progression en %age des deliveries de la movie</i></p>
+        <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+        <div>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 1</p>
+            <mat-icon svgIcon="accepted" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 2</p>
+            <span class="step-informations">
+              <small class="period-text">Acceptance period :</small>
+              <p class="period-days">12 days</p>
+            </span>
+            <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 3</p>
+            <span class="step-informations">
+              <small class="period-text">Delivery time :</small>
+              <p class="period-days">23 days</p>
+            </span>
+            <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
+          </span>
+        </div>
       </mat-card>
       <ng-template #empty>
         <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
@@ -42,12 +66,12 @@
     <article class="materials">
       <div class="materials" fxLayoutAlign="space-between">
         <h2>{{ movie.title.original }}</h2>
-        <span fxLayoutAlign="space-around">
+        <span fxLayoutAlign="end">
         <button class="filter mat-elevation-z0" mat-raised-button>
-          Filters <mat-icon class="icon">add</mat-icon>
+          Filters <mat-icon svgIcon="filter" class="filter-icon"></mat-icon>
         </button>
-        <button class="filter mat-elevation-z0" mat-raised-button>
-          Actions <mat-icon class="icon">add</mat-icon>
+        <button class="action mat-elevation-z0" mat-raised-button>
+          Actions <mat-icon class="action-icon">expand_more</mat-icon>
         </button>
       </span>
       </div>
