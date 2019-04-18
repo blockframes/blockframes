@@ -1,3 +1,4 @@
+import { Movie } from "@blockframes/movie";
 import { Template } from "@blockframes/material";
 
 export interface OrgMember {
@@ -15,6 +16,10 @@ export interface Organization {
   userIds: string[];
   movieIds: string[];
   templates?: Template[];
+}
+
+export interface OrganizationWithMovies extends Organization {
+  movies: Movie[];
 }
 
 /**

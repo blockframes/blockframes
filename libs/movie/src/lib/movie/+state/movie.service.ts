@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { MovieStore } from './movie.store';
-import { Movie, createMovie } from './movie.model';
-import { switchMap, tap, map } from 'rxjs/operators';
 import { createStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { MovieStore } from './movie.store';
+import { Movie, createMovie } from './movie.model';
 import { combineLatest, Observable } from 'rxjs';
+import { switchMap, tap, map, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 
@@ -65,6 +65,7 @@ export class MovieService {
         return combineLatest(movies$)
       }),
       map((moviesPerOrgs: Movie[][]) => [].concat.apply([], moviesPerOrgs) as Movie[]),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
       tap((movies: Movie[]) => this.store.set(movies))
     );
   }
