@@ -40,7 +40,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.service.remove(id);
   }
 
-  private trackOrgs(index: number, org: Organization) {
+  public trackOrgs(index: number, org: Organization) {
     return org ? org.id : undefined;
   }
 }
