@@ -9,11 +9,6 @@ export type Delivery = {
   stakeholders?: Stakeholder[];
 };
 
-export enum Authorizations {
-  canView = 'Can view delivery',
-  canEdit = 'Can add, remove and edit materials',
-}
-
 export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],

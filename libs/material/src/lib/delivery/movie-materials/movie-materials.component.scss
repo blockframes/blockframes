@@ -7,7 +7,7 @@
 .progress-spinner-block {
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
+  top: 64px;
   margin: auto;
   margin-top: 0;
   padding: 1rem;
@@ -49,8 +49,17 @@ p {
 
 .progress-value {
   position: relative;
-  top: -120px;
+  top: -125px;
   color: #f23c5c;
   font-weight: bolder;
   font-size: 2.5rem;
+}
+
+.filter {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 50px;
+  color: #008bd2;
+  border: solid 0.09rem #008bd2;
+  cursor: pointer;
 }
