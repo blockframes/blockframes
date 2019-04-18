@@ -7,14 +7,16 @@ export type Query<T> = {
   path: string;
   queryFn?: QueryFn;
 } & {
-  [K in keyof T]: (...entity: T[]) => Query<T[K]> | Query<T[K]>[]
+  [K in keyof Partial<T>]: (...entity: T[]) => Query<TypeofArray<T[K]>> | Query<TypeofArray<T[K]>>[]
 };
+
+type TypeofArray<T> = T extends (infer X)[] ? X : T
 
 
 
 @Injectable({ providedIn: 'root' })
 export class FireQuery {
-  private keysToRemove = ['path', 'query'];
+  private keysToRemove = ['path', 'queryFn'];
 
   constructor(private db: AngularFirestore) {}
 
@@ -107,4 +109,25 @@ export class FireQuery {
     const subQuery = keys.filter(key => !this.keysToRemove.includes(key));
     return subQuery.length > 0;
   }
+
+  // See example below
+
+  // public get deliveryList() {
+  //   return this.movieQuery.selectActiveId().pipe(
+  //     switchMap(id => this.fromQuery(this.getDeliveryListWithStakeholders(id)))
+  //   );
+  // }
+
+  // private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
+  //   return {
+  //     path: `deliveries`,
+  //     queryFn: (ref) => ref.where('movieId', '==', movieId),
+  //     stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+  //       path: `deliveries/${delivery.id}/stakeholders`,
+  //       organization: (stakeholder: Stakeholder): Query<Organization> => ({
+  //         path: `orgs/${stakeholder.orgId}`
+  //       })
+  //     })
+  //   }
+  // }
 }
