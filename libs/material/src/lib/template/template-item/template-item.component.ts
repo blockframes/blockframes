@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material';
   selector: 'template-item',
   templateUrl: './template-item.component.html',
   styleUrls: ['./template-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateItemComponent {
 

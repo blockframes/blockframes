@@ -1,5 +1,5 @@
 <div *ngIf="(movie$ | async) as movie" class="container">
-  <section fxLayout="row" fxLayoutGap="5%">
+  <section fxLayout="row" fxLayoutGap="15px">
     <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
@@ -21,7 +21,7 @@
         <p class="spinner-text"><i>La progression en %age des deliveries de la movie</i></p>
       </mat-card>
       <ng-template #empty>
-        <mat-card fxLayout="column" fxLayoutAlign="center center">
+        <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
             color="warn"
@@ -39,9 +39,19 @@
         </mat-card>
       </ng-template>
     </article>
-    <article class="materials" fxLayout="column">
-      <h2>{{ movie.title.original }}</h2>
-      <div *ngFor="let category of (materials$ | async | keyvalue)">
+    <article class="materials">
+      <div class="materials" fxLayoutAlign="space-between">
+        <h2>{{ movie.title.original }}</h2>
+        <span fxLayoutAlign="space-around">
+        <button class="filter mat-elevation-z0" mat-raised-button>
+          Filters <mat-icon class="icon">add</mat-icon>
+        </button>
+        <button class="filter mat-elevation-z0" mat-raised-button>
+          Actions <mat-icon class="icon">add</mat-icon>
+        </button>
+      </span>
+      </div>
+      <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
         <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z6">
           <span

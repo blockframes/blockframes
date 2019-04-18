@@ -1,25 +1,25 @@
 @import '~@angular/material/theming';
 
-$mat-bf-purple: (
-  50: #ece0fd,
-  100: #d0b3fa,
-  200: #b080f6,
-  300: #904df2,
-  400: #7926f0,
-  500: #6100ed,
-  600: #5900eb,
-  700: #4f00e8,
-  800: #4500e5,
-  900: #3300e0,
-  A100: #ffffff,
-  A200: #dbd4ff,
-  A400: #b1a1ff,
-  A700: #9b88ff,
+$mat-bf-blue: (
+  50: #e0f1fa,
+  100: #b3dcf2,
+  200: #80c5e9,
+  300: #4daee0,
+  400: #269cd9,
+  500: #008bd2,
+  600: #0083cd,
+  700: #0078c7,
+  800: #006ec1,
+  900: #005bb6,
+  A100: #dfedff,
+  A200: #acd0ff,
+  A400: #79b3ff,
+  A700: #5fa5ff,
   contrast: (
     50: #000000,
     100: #000000,
     200: #000000,
-    300: #ffffff,
+    300: #000000,
     400: #ffffff,
     500: #ffffff,
     600: #ffffff,
@@ -66,8 +66,41 @@ $mat-bf-crimson: (
   )
 );
 
-$blockframes-theme-primary: mat-palette($mat-bf-purple);
-$blockframes-theme-accent: mat-palette($mat-amber);
+$mat-bf-purple: (
+  50: #ece0fd,
+  100: #d0b3fa,
+  200: #b080f6,
+  300: #904df2,
+  400: #7926f0,
+  500: #008bd2,
+  600: #5900eb,
+  700: #4f00e8,
+  800: #4500e5,
+  900: #3300e0,
+  A100: #ffffff,
+  A200: #dbd4ff,
+  A400: #b1a1ff,
+  A700: #9b88ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000
+  )
+);
+
+$blockframes-theme-primary: mat-palette($mat-bf-blue);
+$blockframes-theme-accent: mat-palette($mat-bf-purple);
 $blockframes-theme-warn: mat-palette($mat-bf-crimson);
 
 $blockframes-theme: mat-light-theme(

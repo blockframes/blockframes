@@ -17,7 +17,7 @@ import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { Router } from '@angular/router';
 import { switchMap, tap, map, filter } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Query, FireQuery } from '@blockframes/utils';
 
 @Injectable({
