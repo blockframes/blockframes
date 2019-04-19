@@ -200,7 +200,9 @@ export class DeliveryService {
   public get deliveryList() {
     return this.movieQuery
       .selectActiveId()
-      .pipe(switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))));
+      .pipe(switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
+      tap((deliveries: any) => this.store.set(deliveries))
+      );
   }
 
   private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
