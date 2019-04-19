@@ -1,13 +1,18 @@
-import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
+import { IconComponent } from '@blockframes/ui';
 
 @Component({
   selector: 'delivery-root',
-  template: `<router-outlet></router-outlet>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <router-outlet></router-outlet>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  constructor(private query: AuthQuery) {}
+  constructor(private query: AuthQuery,
+              private icons: IconComponent
+  ) {
+  }
 
   @HostListener('window:beforeunload', ['$event'])
   closeProtection($event: any) {

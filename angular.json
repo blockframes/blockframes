@@ -25,7 +25,12 @@
             "assets": [
               "apps/ip-upload/ip-upload/src/favicon.ico",
               "apps/ip-upload/ip-upload/src/assets",
-              "apps/ip-upload/ip-upload/src/manifest.json"
+              "apps/ip-upload/ip-upload/src/manifest.json",
+              {
+                "glob": "**/*",
+                "input": "./libs/shared-assets/",
+                "output": "./assets"
+              }
             ],
             "styles": [
               "apps/ip-upload/ip-upload/src/styles.scss"
@@ -362,7 +367,12 @@
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
             "assets": [
               "apps/movie-financing/movie-financing/src/favicon.ico",
-              "apps/movie-financing/movie-financing/src/assets"
+              "apps/movie-financing/movie-financing/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/shared-assets/",
+                "output": "./assets"
+              }
             ],
             "styles": [
               "apps/movie-financing/movie-financing/src/styles.scss"
@@ -572,7 +582,12 @@
             "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
             "assets": [
               "apps/delivery/delivery/src/favicon.ico",
-              "apps/delivery/delivery/src/assets"
+              "apps/delivery/delivery/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/shared-assets/",
+                "output": "./assets"
+              }
             ],
             "styles": [
               "apps/delivery/delivery/src/styles.scss"
