@@ -5,9 +5,9 @@
   z-index: 1000;
 }
 
-// ::ng-deep.mat-menu-content {
-//   display: flex;
-// }
+::ng-deep .appMenu .mat-menu-content {
+  display: flex;
+}
 
 .fill-remaining-space {
   flex: 1 1 auto;

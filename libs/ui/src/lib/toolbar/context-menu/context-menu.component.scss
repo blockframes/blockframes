@@ -10,6 +10,6 @@
 }
 
 .mat-tab-label-active {
-  color: map-get($mat-bf-purple, 500);
+  color: $primary;
   opacity: 1;
 }
