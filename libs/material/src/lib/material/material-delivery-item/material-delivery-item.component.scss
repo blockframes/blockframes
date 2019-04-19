@@ -1,0 +1,45 @@
+mat-card {
+  margin-bottom: 4%;
+  padding-top: 4%;
+}
+
+mat-card-title {
+ font-size: 14px;
+ color: #3B3B3B;
+}
+
+div {
+  margin-left: 5%;
+}
+
+mat-card-content {
+  font-size: 12px;
+  color: #3B3B3B;
+}
+
+button {
+  color: #9C9C9C;
+  background-color: Transparent;
+  border: none;
+  font-size: 8px;
+  text-align: center;
+}
+
+button:hover {
+  color: #6200EE;
+  cursor:pointer;
+}
+
+button:focus{
+  color: #6200EE;
+  outline: none;
+}
+
+.border-left {
+  border-left: 1px solid #ECECEC;
+}
+
+mat-icon {
+  color:#C1C1C1;
+  float: left;
+}
