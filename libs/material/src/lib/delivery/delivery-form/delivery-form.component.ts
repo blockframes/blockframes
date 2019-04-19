@@ -3,7 +3,7 @@ import { TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { NewTemplateComponent } from '../delivery-new-template/new-template.component';
-import { Material, MaterialForm } from '../../material/+state/material.model';
+import { Material, MaterialDeliveryForm } from '../../material/+state/material.model';
 import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
@@ -21,7 +21,7 @@ import { ConfirmComponent } from '@blockframes/ui';
 export class DeliveryFormComponent implements OnInit, OnDestroy {
   public delivery$: Observable<TemplateView>;
   public movie$: Observable<Movie>;
-  public form$: Observable<MaterialForm>;
+  public form$: Observable<MaterialDeliveryForm>;
   public isDeliveryValidated$: Observable<boolean>;
   public isAlive = true;
 
@@ -44,7 +44,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
-    this.form$ = this.materialQuery.form$;
+    this.form$ = this.materialQuery.deliveryForm$;
 
     this.isDeliveryValidated$.pipe(takeWhile(() => this.isAlive))
     .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)

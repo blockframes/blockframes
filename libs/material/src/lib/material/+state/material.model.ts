@@ -8,7 +8,7 @@ export interface Material {
   deliveriesIds: string[];
 }
 
-export interface MaterialForm {
+export interface MaterialTemplateForm {
   value: string;
   description: string;
   category: string;

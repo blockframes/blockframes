@@ -21,7 +21,8 @@ export function materialsByCategory(materials: Material[]): TemplateView {
   providedIn: 'root'
 })
 export class MaterialQuery extends QueryEntity<MaterialState, Material> {
-  public form$ = this.select(state => state.form);
+  public deliveryForm$ = this.select(state => state.materialDeliveryForm);
+  public templateForm$ = this.select(state => state.materialTemplateForm);
 
   public materialsByDelivery$ = this.selectAll().pipe(
     map(materials => materialsByCategory(materials) as TemplateView)

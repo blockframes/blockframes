@@ -1,7 +1,7 @@
 <mat-card class="container mat-elevation-z6">
   <mat-card-title>Edit your material</mat-card-title>
   <form [formGroup]="form" class="container" fxLayout="row">
-    <div fxFlex="60" fxLayout="column" fxLayoutAlign="center">
+    <div class="inputs" fxLayout="column" fxLayoutAlign="center">
       <mat-form-field appearance="outline">
         <mat-label>Value</mat-label>
         <input class="value" formControlName="value" matInput placeholder="Value" />
@@ -23,7 +23,7 @@
       </mat-form-field>
     </div>
 
-    <div fxFlex="40" fxLayout="column" fxLayoutAlign="space-around center">
+    <div class="step" fxLayout="column" fxLayoutAlign="space-around center">
       <mat-form-field appearance="outline">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="step">

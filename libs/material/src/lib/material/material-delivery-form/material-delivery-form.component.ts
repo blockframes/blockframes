@@ -13,7 +13,7 @@ export class MaterialDeliveryFormComponent implements OnInit, OnDestroy {
   @Input() isDeliveryValidated: boolean;
   @Output() material = new EventEmitter<Material>();
 
-  steps = [ 'Step 1', 'Step 2', 'Step 3' ];
+  public steps = [ 'Step 1', 'Step 2', 'Step 3' ];
 
   private isAlive = true;
 
@@ -30,12 +30,12 @@ export class MaterialDeliveryFormComponent implements OnInit, OnDestroy {
     this.form.setValue({ value: '', description: '', category: '', step: '' });
 
     this.query
-      .select(state => state.form)
+      .select(state => state.materialDeliveryForm)
       .pipe(
         takeWhile(() => this.isAlive),
-        filter(form => !!form)
+        filter(materialDeliveryForm => !!materialDeliveryForm)
       )
-      .subscribe(form => this.form.setValue(form));
+      .subscribe(materialDeliveryForm => this.form.setValue(materialDeliveryForm));
   }
 
   public addMaterial() {

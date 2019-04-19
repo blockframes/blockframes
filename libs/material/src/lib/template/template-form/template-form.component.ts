@@ -5,7 +5,7 @@ import { TemplateQuery } from '../+state/template.query';
 import { TemplateService } from '../+state/template.service';
 import { MaterialStore } from '../../material/+state/material.store';
 import { MaterialQuery } from '../../material/+state/material.query';
-import { MaterialForm, Material } from '../../material/+state/material.model';
+import { MaterialTemplateForm, Material } from '../../material/+state/material.model';
 import { takeWhile } from 'rxjs/operators';
 import { MaterialService } from '../../material/+state';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class TemplateFormComponent implements OnInit, OnDestroy {
   public template$: Observable<TemplateView>;
-  public form$: Observable<MaterialForm>;
+  public form$: Observable<MaterialTemplateForm>;
   public templateActive$ : Observable<Template>;
   private isAlive = true;
 
@@ -43,7 +43,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
     this.templateActive$ = this.query.selectActive();
     this.template$ = this.query.materialsByTemplate$;
-    this.form$ = this.materialQuery.form$;
+    this.form$ = this.materialQuery.templateForm$;
   }
 
   public addMaterial(material: Material) {

@@ -27,12 +27,12 @@ export class MaterialTemplateFormComponent implements OnInit, OnDestroy {
     this.form.setValue({ value: '', description: '', category: '' });
 
     this.query
-      .select(state => state.form)
+      .select(state => state.materialTemplateForm)
       .pipe(
         takeWhile(() => this.isAlive),
-        filter(form => !!form)
+        filter(materialTemplateForm => !!materialTemplateForm)
       )
-      .subscribe(form => this.form.setValue(form));
+      .subscribe(materialTemplateForm => this.form.setValue(materialTemplateForm));
   }
 
   public addMaterial() {
