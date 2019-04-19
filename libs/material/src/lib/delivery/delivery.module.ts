@@ -17,6 +17,8 @@ import { DeliverySettingsComponent } from './delivery-settings/delivery-settings
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
 import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
 import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
+import { FiltersComponent } from './movie-materials/filters/filters.component';
+import { ActionsComponent } from './movie-materials/actions/actions.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -37,6 +39,7 @@ import {
   MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+
 
 
 
@@ -76,6 +79,8 @@ const routes: Routes = [
     StakeholderListComponent,
     StakeholderItemComponent,
     DeliveryItemComponent,
+    FiltersComponent,
+    ActionsComponent,
 
   ],
   imports: [

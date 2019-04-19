@@ -1,0 +1,74 @@
+<button class="action mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="actions">
+  Actions <mat-icon class="action-icon">expand_more</mat-icon>
+</button>
+<mat-menu #actions="matMenu" xPosition="before">
+  <button mat-menu-item [matMenuTriggerFor]="steps">
+    <span>Change step</span>
+  </button>
+  <mat-menu #steps="matMenu" xPosition="before">
+    <button mat-menu-item>Step 1</button>
+    <button mat-menu-item>Step 2</button>
+    <button mat-menu-item>Step 3</button>
+    <button mat-menu-item>Step 4</button>
+    <button mat-menu-item>Finish</button>
+  </mat-menu>
+  <mat-divider></mat-divider>
+  <button mat-menu-item [matMenuTriggerFor]="exports">
+    <span>Export in</span>
+  </button>
+  <mat-menu #exports="matMenu" xPosition="before">
+    <button mat-menu-item>
+      <mat-icon svgIcon="library_books"></mat-icon>
+      <span>Excel</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon svgIcon="picture_as_pdf"></mat-icon>
+      <span>PDF</span>
+    </button>
+  </mat-menu>
+  <mat-divider></mat-divider>
+  <button mat-menu-item [matMenuTriggerFor]="status">
+    <span>Status</span>
+  </button>
+  <mat-menu #status="matMenu" xPosition="before">
+    <button mat-menu-item>
+      <mat-icon svgIcon="pending"></mat-icon>
+      <span>Pending</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon svgIcon="available"></mat-icon>
+      <span>Available</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon svgIcon="delivered"></mat-icon>
+      <span>Delivered</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon svgIcon="accepted"></mat-icon>
+      <span>Accepted</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon svgIcon="refused"></mat-icon>
+      <span>Refused</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon svgIcon="payed"></mat-icon>
+      <span>Payed</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon svgIcon="not_payed"></mat-icon>
+      <span>Not payed</span>
+    </button>
+  </mat-menu>
+  <mat-divider></mat-divider>
+  <button mat-menu-item>
+    <mat-icon svgIcon="disabled"></mat-icon>
+    <span>Disable</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon svgIcon="enabled"></mat-icon>
+    <span>Enable</span>
+  </button>
+</mat-menu>
