@@ -4,12 +4,18 @@ import { Material } from './material.model';
 
 export interface MaterialState extends EntityState<Material> {
 
-  form: {
+  materialTemplateForm: {
     value: string;
     description: string;
     category: string;
-    step?: string;
-  }
+  };
+
+  materialDeliveryForm: {
+    value: string;
+    description: string;
+    category: string;
+    step: string;
+  };
 }
 
 @Injectable({
@@ -18,15 +24,15 @@ export interface MaterialState extends EntityState<Material> {
 @StoreConfig({ name: 'materials', idKey: 'id' })
 export class MaterialStore extends EntityStore<MaterialState, Material> {
   constructor() {
-    super({form: null});
+    super({materialTemplateForm: null, materialDeliveryForm: null});
   }
 
   public updateEmptyDeliveryForm(category: string) {
-    this.updateRoot({ form: {value: "", description: "", category, step: "Step 1"} })
+    this.updateRoot({ materialDeliveryForm: {value: "", description: "", category, step: "Step 1"} })
   }
 
   public updateEmptyTemplateForm(category: string) {
-    this.updateRoot({ form: {value: "", description: "", category} })
+    this.updateRoot({ materialTemplateForm: {value: "", description: "", category} })
   }
 
   public clearForm() {
