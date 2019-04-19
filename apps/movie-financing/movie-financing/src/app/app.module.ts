@@ -4,7 +4,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 // Material
-import { MatCardModule, MatIconModule, MatListModule, MatToolbarModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatChipsModule, MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatListModule, MatProgressSpinnerModule, MatTabsModule,
+  MatToolbarModule
+} from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -58,7 +65,12 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     AkitaNgRouterStoreModule.forRoot(),
     environment.production ? [] : [AkitaNgDevtools.forRoot()],
     MatCardModule,
-    AngularFireFunctionsModule
+    AngularFireFunctionsModule,
+    MatGridListModule,
+    MatChipsModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

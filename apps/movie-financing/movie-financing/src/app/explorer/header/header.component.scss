@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 header {
-  background-color: #ECFBFF;
+  background-color: #222;
 }
 
 .explorer-toolbar {
   background: none;
+  border-bottom: 1px solid white;
 
   .spacer {
     flex: 1 1 auto;
@@ -18,7 +19,7 @@ header {
 
     font-style: normal;
     font-weight: 500;
-    color: #58666D;
+    color: #FFF;
     text-decoration: none;
     font-size: 0.8rem;
     text-align: center;
@@ -27,40 +28,39 @@ header {
 }
 
 .hero {
+  padding-top: 9vh;
+  padding-bottom: 9vh;
+
   min-height: 55vh;
   display: flex;
   justify-content: flex-end;
   //position: relative;
 
   .content {
-    width: 40%;
-    margin-right: 10%;
+    color: #FFF;
+    margin: auto;
+    text-align: center;
+    // margin-right: 10%;
     //position: absolute;
     //right: 10%;
     //top: 10%;
 
-    h2 {
+    label {
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    h1 {
       font-size: 6rem;
-      color: #004876;
-      margin-top: 0.4rem;
-      margin-bottom: 1rem;
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      color: #008BD2;
-      margin-bottom: 0.4rem;
-      font-weight: 100;
-    }
-
-    h4 {
-      color: #394348;
-      margin-bottom: 0.6rem;
+      margin-top: 0;
+      text-transform: uppercase;
+      margin-bottom: 7vh;
     }
 
     p {
-      color: #394348;
+      margin: 1rem auto auto;
+      width: 60%;
+      text-align: center;
     }
   }
 }
-

@@ -1,7 +1,10 @@
 :host {
+  width: 100%;
   text-transform: uppercase;
+  font-size: 0.7rem;
 
   table {
+    width: 100%;
     border-collapse: collapse;
   }
 
@@ -11,17 +14,19 @@
 
   td {
     text-align: center;
-    padding: 1rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
     margin: 0;
   }
 
   span.key {
-    color: rgba(57, 67, 72, 0.5);
+    color: #394348;
+    opacity: 0.5;
     font-weight: 100;
   }
 
   span.value {
-    color: #008BD2;
+    color: #394348;
     font-weight: bold;
   }
 }

@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
+
+// LAYOUT
+
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.col-1 {
+  width: 30%;
+  padding: 1rem;
+}
+
+.col-2 {
+  width: 60%;
+  padding: 1rem;
+}
+
+// COMPONENTS
+
+.key {
+  color: #394348;
+  opacity: 0.5;
+  margin-right: 0.3rem;
+  font-weight: 300;
+}
+
+.value {
+}
+
+.col-1 img {
+  width: 100%;
+}
+
+h2 {
+  text-transform: uppercase;
+  font-weight: 200;
+}
+
+h3 {
+  font-weight: 700;
+  margin-bottom: 0;
+
+  + p {
+    margin-top: 0.5rem;
+  }
+
+  + ul {
+    margin-top: 0.5rem;
+  }
+}
+
+mat-chip-list {
+  margin: 1rem;
+
+  mat-basic-chip {
+    padding: 0.4rem;
+    border: 1px solid black;
+    font-weight: 600;
+    margin: 0.3rem 0.15rem;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+ul.kv-list {
+  list-style-type: none;
+  padding-left: 0;
+  text-transform: uppercase;
+}
+
+.assets ul {
+  list-style: circle;
+  font-size: 18px;
+
+  li {
+    margin-bottom: 1.3rem;
+  }
+}
+
+.data {
+  margin-top: 1rem;
+
+  ::ng-deep {
+
+    h3 + .key {
+      margin-top: 0.7rem;
+    }
+
+    .key {
+      margin-top: 0;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin-top: 0;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+
+    hr.large-hidden {
+      opacity: 0;
+      height: 2rem;
+    }
+  }
+
+  ::ng-deep {
+    mat-expansion-panel {
+      box-shadow: none;
+      font-weight: 700;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    .mat-accordion {
+      border-radius: 0 !important;
+    }
+  }
+}
+
+::ng-deep {
+  mat-tab-group {
+    border: 1px solid black;
+  }
+
+  mat-tab-header {
+    border-bottom: 1px solid black !important;
+
+    .mat-tab-label {
+      color: black;
+      font-weight: 500;
+      opacity: 0.3;
+
+      &.mat-tab-label-active {
+        color: black;
+        font-weight: 700;
+        opacity: 1;
+      }
+    }
+
+    mat-ink-bar {
+      border-bottom: 2px solid black !important;
+    }
+  }
+
+  mat-tab-body {
+    padding: 2rem 3rem;
+  }
+}
+
+.funding-status {
+  display: flex;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  .left-budget {
+    width: 50%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    text-transform: uppercase;
+
+    h3 {
+      font-weight: 300;
+    }
+
+    h4 {
+      font-weight: 900;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    h5 {
+      opacity: 0.3;
+      margin: 0;
+
+      .key {
+        opacity: 0.8;
+
+      }
+    }
+  }
+
+  .right-percent {
+    width: 50%;
+    position: relative;
+
+    mat-progress-spinner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .progress-value {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.call-to-action {
+  > div {
+    border-top: 1px solid #E5E5E5;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  > div:last-of-type {
+    border-bottom: 1px solid #E5E5E5;
+  }
+
+  .action {
+    font-weight: 800;
+    padding-left: 2rem;
+
+    &:after {
+      content: "→";
+    }
+  }
+}
+
+.owner {
+  display: flex;
+  justify-content: center;
+
+  .pic {
+    width: 30%;
+    margin: 10%;
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  .details {
+    width: 50%;
+  }
+}
+
+.contributions {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  h5 {
+    font-weight: 300;
+  }
+}
+
+.producer-history {
+  padding: 1rem;
+
+  ::ng-deep {
+    .mat-expansion-indicator:after {
+      color: black !important;
+    }
+  }
+}
