@@ -60,20 +60,22 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     this.materialStore.updateEmptyForm(category);
   }
 
-  public deleteTemplate(id: string, name: string) {
-    const dialog = this.dialog.open(ConfirmComponent, {
+  public openDeleteTemplate(id: string, name: string) {
+    this.dialog.open(ConfirmComponent, {
       width: '400px',
       data: {
         title: 'Delete template',
         question: 'Are you sure to delete this template ?',
-        buttonName: 'Delete'
+        buttonName: 'Delete',
+        onConfirm: () => this.deleteDelivery(id, name)
       }
     });
-    dialog.componentInstance.confirmEmitter.subscribe(() => {
-      this.service.deleteTemplate(id);
-      this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
-      this.router.navigate(['layout/template/list']);
-      dialog.componentInstance.confirmEmitter.unsubscribe()});
+  }
+
+  private deleteDelivery(id: string, name: string) {
+    this.service.deleteTemplate(id);
+    this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
+    this.router.navigate(['layout/template/list']);
   }
 
   ngOnDestroy() {

@@ -12,7 +12,7 @@
       <button
         *ngIf="templateActive$ | async as templateActive"
         class="delete-template mat-elevation-z0"
-        mat-raised-button (click)="deleteTemplate(templateActive.id, templateActive.name)">
+        mat-raised-button (click)="openDeleteTemplate(templateActive.id, templateActive.name)">
           Delete template
           <mat-icon class="icon">delete</mat-icon>
       </button>

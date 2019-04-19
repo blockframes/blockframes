@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
@@ -8,21 +8,21 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmComponent {
-
-    public confirmEmitter= new EventEmitter();
-
     constructor(
       @Inject(MAT_DIALOG_DATA) public data:
         {
           title: string,
           question: string,
-          button: string
+          buttonName: string,
+          onConfirm: () => void
         },
       public dialogRef: MatDialogRef<ConfirmComponent>,
-      ) { }
+      ) {
+
+      }
 
     public confirm() {
-      this.confirmEmitter.emit();
+      this.data.onConfirm();
       this.close();
     }
 

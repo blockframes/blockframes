@@ -36,7 +36,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private router: Router,
-  ) {}
+  ) {  }
 
   ngOnInit() {
     this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
@@ -69,36 +69,39 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.materialStore.updateEmptyForm(category);
   }
 
-  public deleteDelivery() {
-    const dialog = this.dialog.open(ConfirmComponent, {
+  public openDeleteDelivery() {
+    this.dialog.open(ConfirmComponent, {
       width: '400px',
       data: {
         title: 'Delete delivery',
         question: 'Are you sure to delete this delivery ?',
-        buttonName: 'Delete'
+        buttonName: 'Delete',
+        onConfirm: () => this.deleteDelivery()
       }
     });
-    dialog.componentInstance.confirmEmitter.subscribe(() => {
-      this.service.deleteDelivery();
-      this.router.navigate([`/layout/${this.movieQuery.getActiveId()}`]);
-      this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
-      dialog.componentInstance.confirmEmitter.unsubscribe()});
-      //TODO: fix behavior => user can still go back and land on the delivery page (without active delivery);
   }
 
-  public unsealDelivery() {
-    const dialog = this.dialog.open(ConfirmComponent, {
+  private deleteDelivery() {
+    this.service.deleteDelivery();
+    this.router.navigate([`/layout/${this.movieQuery.getActiveId()}`]);
+    this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+  }
+
+  public openUnsealDelivery() {
+    this.dialog.open(ConfirmComponent, {
       width: '400px',
       data: {
         title: 'Unseal delivery',
         question: 'Are you sure to unseal this delivery ?',
-        buttonName: 'Unseal'
+        buttonName: 'Unseal',
+        onConfirm: () => this.unsealDelivery()
       }
     });
-    dialog.componentInstance.confirmEmitter.subscribe(() => {
-      this.service.unsealDelivery();
-      this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
-      dialog.componentInstance.confirmEmitter.unsubscribe()});
+  }
+
+  private unsealDelivery() {
+    this.service.unsealDelivery();
+    this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
   }
 
   ngOnDestroy() {

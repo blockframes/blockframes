@@ -1,15 +1,10 @@
 <div mat-dialog-content>
-  <h2 *ngIf="data.title">{{ data.title }}</h2>
-  <h2 *ngIf="!data.title">Confirm</h2>
-  <p *ngIf="data.question">{{ data.question }}</p>
-  <p *ngIf="!data.question">Do you confirm ?</p>
+  <h2>{{ data.title || "Confirm" }}</h2>
+  <p>{{ data.question || "Do you confirm ?" }}</p>
 </div>
 <div mat-dialog-actions fxLayoutAlign="center">
   <button class="white-button" mat-raised-button color="basic" class="mat-elevation-z0" (click)="close()">Cancel</button>
-  <button *ngIf="data.buttonName" mat-raised-button color="warn" class="mat-elevation-z0" (click)="confirm()">
-    {{ data.buttonName }}
-  </button>
-  <button *ngIf="!data.buttonName" mat-raised-button color="warn" class="mat-elevation-z0" (click)="confirm()">
-    Confirm
+  <button mat-raised-button color="warn" class="mat-elevation-z0" (click)="confirm()">
+    {{ data.buttonName || "Confirm" }}
   </button>
 </div>
