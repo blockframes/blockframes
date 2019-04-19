@@ -3,8 +3,12 @@
   font-size: 13px;
   height: 45px;
   width: 120px;
-  color: #008bd2;
-  border: solid 0.09rem #008bd2;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
   cursor: pointer;
 }
 
+.action-icon {
+  margin-left: 15px;
+  font-size: 18px;
+}

@@ -4,6 +4,13 @@
 @include mat-core();
 @include angular-material-theme($blockframes-theme);
 
+// css color variables
+:root {
+  --primary: #{$primary};
+  --warn: #{$warn};
+  --accent: #{$accent};
+}
+
 * {
   box-sizing: border-box;
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif;

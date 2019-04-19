@@ -199,16 +199,16 @@ export class DeliveryService {
   public get deliveryList() {
     return this.movieQuery
       .selectActiveId()
-      .pipe(switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
-      tap((deliveries: any) => this.store.set(deliveries))
-      );
+      .pipe(
+        switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
+        tap( (delivery : any) => this.store.set(delivery)));
   }
 
   private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
     return {
       path: `deliveries`,
       queryFn: ref => ref.where('movieId', '==', movieId),
-      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({ //? TODO : Why error on stakeholders and still working?
+      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
         path: `deliveries/${delivery.id}/stakeholders`,
         organization: (stakeholder: Stakeholder): Query<Organization> => ({
           path: `orgs/${stakeholder.orgId}`

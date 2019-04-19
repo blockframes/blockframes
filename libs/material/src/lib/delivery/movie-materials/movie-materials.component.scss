@@ -20,6 +20,11 @@ mat-progress-spinner{
   box-shadow: -11px 10px 12px 0 rgba(242, 60, 93, 0.137);
 }
 
+.global-progression {
+  margin-bottom: 0;
+  font-weight: bolder;
+}
+
 .spinner-text {
   text-align: center;
 }
@@ -30,15 +35,22 @@ mat-progress-spinner{
 
 .materials-block {
   margin-bottom: 1rem;
-  padding: 1rem;
+  padding: 30px 30px 30px 20px;
 }
 
 h3 {
   color: #5E5E5E;
 }
 
+h4 {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 h5 {
-  margin-bottom: 0;
+  color: rgba(0, 0, 0, 0.418);
+  margin: 5px 0;
 }
 
 p {
@@ -94,16 +106,6 @@ p {
   font-weight: bolder;
 }
 
-.action-icon {
-  margin-left: 15px;
-  font-size: 18px;
-}
-
-.filter-icon {
-  margin-left: 15px;
-  width: 18px;
-}
-
 .material {
   width: 50%;
 }
@@ -112,22 +114,19 @@ p {
   width: 50%;
 }
 
-.step,
-.state,
-.time,
-.payment {
-  height: 50px;
-  margin-top: -15px;
-}
-
-.step-text, .time-text {
-  font-weight: bolder;
-  font-size: 15px;
-  margin-top: -15px;
+.description-text {
+  margin: 0;
+  font-style: italic;
+  font-size: 12px;
 }
 
 .icons {
-  position: absolute;
-  top: 45px;
+  margin-top: 10px;
   width: 20px;
+}
+
+.time-text, .material-step-text {
+  margin-top: 5px;
+  font-weight: bolder;
+  font-size: 15px;
 }

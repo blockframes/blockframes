@@ -3,11 +3,13 @@
   font-size: 13px;
   height: 45px;
   width: 120px;
-  color: #008bd2;
-  border: solid 0.09rem #008bd2;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
   cursor: pointer;
+  margin-right: 30px;
 }
 
-.filter {
-  margin-right: 30px;
+.filter-icon {
+  margin-left: 15px;
+  width: 18px;
 }

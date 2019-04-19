@@ -13,8 +13,8 @@ mat-nav-list {
   margin-bottom: 7%;
   font-weight: bold;
   font-size: 13px;
-  color: #008bd2;
-  border: solid 0.09rem #008bd2;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
 }
 
 .icon {

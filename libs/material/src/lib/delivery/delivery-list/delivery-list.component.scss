@@ -20,14 +20,14 @@ h2 {
   font-weight: bolder;
   font-size: 13px;
   height: 50px;
-  color: #008bd2;
-  border: solid 0.09rem #008bd2;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
   cursor: pointer;
 }
 
 .add-delivery:hover {
   color: white;
-  background-color: #008bd2;
+  background-color: var(--primary);
 }
 
 .icon {

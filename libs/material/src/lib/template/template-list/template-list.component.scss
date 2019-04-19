@@ -25,15 +25,15 @@ mat-panel-title {
 .add-template {
   font-weight: bolder;
   font-size: 13px;
-  color: #008bd2;
-  border: solid 0.09rem #008bd2;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
   cursor: pointer;
   margin-right: 24px;
 }
 
 .add-template:hover {
   color: white;
-  background-color: #008bd2;
+  background-color: var(--primary);
 }
 
 .icon {
@@ -53,7 +53,7 @@ mat-panel-title {
   margin-right: 15px;
   height: 15px;
   width: 15px;
-  border: solid 0.09rem #008bd2;
+  border: solid 0.09rem var(--primary);
 }
 
 .view-icon {

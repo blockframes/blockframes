@@ -1,5 +1,3 @@
-@import '../../../../../../styles/style.scss';
-
 .mat-tab-nav-bar {
   margin-left: 10px;
 }
@@ -10,6 +8,6 @@
 }
 
 .mat-tab-label-active {
-  color: $primary;
+  color: var(--primary);
   opacity: 1;
 }
