@@ -1,6 +1,6 @@
-<mat-card class="mat-elevation-z2" fxLayout="row" fxLayoutAlign="space-around">
+<mat-card class="mat-elevation-z2" fxLayout="row">
     <mat-icon>drag_indicator</mat-icon>
-    <mat-card-content>
+    <mat-card-content fxFlex="60" fxFlexOffset="10" fxLayout="column">
       <mat-card-title>
         {{ material.value }}
       </mat-card-title>
@@ -13,11 +13,11 @@
         <button class="border-left" [disabled]="isDeliveryValidated" (click)="deleteMaterial()">DELETE</button>
       </mat-card-actions>
     </mat-card-content>
-    <mat-card-content>
-      <mat-card-subtitle>
+    <mat-card-content fxFlex="30">
+      <mat-card-subtitle class="step">
         Step:
       </mat-card-subtitle>
-      <mat-card-title>
+      <mat-card-title class="step-value">
         {{ material.step }}
       </mat-card-title>
     </mat-card-content>

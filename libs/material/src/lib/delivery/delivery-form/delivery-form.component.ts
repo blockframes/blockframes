@@ -65,7 +65,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   }
 
   public addForm(category: string) {
-    this.materialStore.updateEmptyForm(category);
+    this.materialStore.updateEmptyDeliveryForm(category);
   }
 
   public openDeleteDelivery() {

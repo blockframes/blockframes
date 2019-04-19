@@ -4,12 +4,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'material-form-delivery',
-  templateUrl: './material-form-delivery.component.html',
-  styleUrls: ['./material-form-delivery.component.scss'],
+  selector: 'material-delivery-form',
+  templateUrl: './material-delivery-form.component.html',
+  styleUrls: ['./material-delivery-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialFormDeliveryComponent implements OnInit, OnDestroy {
+export class MaterialDeliveryFormComponent implements OnInit, OnDestroy {
   @Input() isDeliveryValidated: boolean;
   @Output() material = new EventEmitter<Material>();
 
@@ -27,7 +27,7 @@ export class MaterialFormDeliveryComponent implements OnInit, OnDestroy {
   constructor(private query: MaterialQuery, private store: MaterialStore,) {}
 
   ngOnInit() {
-    this.form.setValue({ value: '', description: '', category: '' });
+    this.form.setValue({ value: '', description: '', category: '', step: '' });
 
     this.query
       .select(state => state.form)

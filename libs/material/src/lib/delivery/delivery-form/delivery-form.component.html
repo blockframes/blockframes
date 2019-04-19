@@ -38,7 +38,7 @@
     <section>
     <h3 *ngIf="movie$ | async as movie">{{ movie.title.original }}</h3>
     <div *ngIf="(form$ | async) as form">
-      <material-form-delivery [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-form-delivery>
+      <material-delivery-form [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-delivery-form>
     </div>
     <article *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
       <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
@@ -53,11 +53,11 @@
           <material-delivery-item [isDeliveryValidated]="isDeliveryValidated$ | async" [material]="material" (isDeleted)="deleteMaterial(material)"></material-delivery-item>
         </div>
         <div *ngIf="(form$ | async) as form">
-          <material-form-delivery
+          <material-delivery-form
             [isDeliveryValidated]="isDeliveryValidated$ | async"
             *ngIf="form.category === materials.key"
             (material)="addMaterial($event)"
-          ></material-form-delivery>
+          ></material-delivery-form>
           </div>
         </div>
       </article>
