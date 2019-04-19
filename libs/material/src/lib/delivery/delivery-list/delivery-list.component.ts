@@ -5,7 +5,7 @@ import { Delivery } from '../+state/delivery.model';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
-import { DeliveryStore, DeliveryService } from '../+state';
+import { DeliveryStore, DeliveryService, DeliveryQuery } from '../+state';
 import { Router } from '@angular/router';
 import { StakeholderService } from '@blockframes/movie';
 import { takeWhile } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class DeliveryListComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
-  public deliveries$: Observable<Delivery>; //TODO: Find a way to get the correct return type. Here, correct type is Observable<Delivery[]>.
+  public deliveries$: Observable<Delivery[]>;
   private isAlive = true;
 
   constructor(

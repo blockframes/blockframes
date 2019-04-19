@@ -91,6 +91,24 @@
               <i>{{ material.description }}</i>
             </p>
           </div>
+          <div class="informations" fxLayout="row" fxLayoutAlign="space-between none">
+            <span class="step">
+              <h5>Step :</h5>
+              <p class="step-text">step {{ randomNumberPicker(5) }}</p>
+            </span>
+            <span class="state">
+              <h5>State :</h5>
+              <mat-icon class="icons" svgIcon="{{ stateIcon }}"></mat-icon>
+            </span>
+            <span class="time">
+              <h5>Delivery time :</h5>
+              <p class="time-text">{{ randomNumberPicker(30) }} days</p>
+            </span>
+            <span class="payment">
+              <h5>Payment :</h5>
+              <mat-icon class="icons" svgIcon="{{ paymentIcon }}"></mat-icon>
+            </span>
+          </div>
         </mat-card>
       </div>
     </article>

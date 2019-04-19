@@ -208,7 +208,7 @@ export class DeliveryService {
     return {
       path: `deliveries`,
       queryFn: ref => ref.where('movieId', '==', movieId),
-      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({ //? TODO : Why error on stakeholders and still working?
         path: `deliveries/${delivery.id}/stakeholders`,
         organization: (stakeholder: Stakeholder): Query<Organization> => ({
           path: `orgs/${stakeholder.orgId}`
