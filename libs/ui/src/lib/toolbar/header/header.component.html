@@ -15,16 +15,13 @@
   </button>
   <mat-menu #apps="matMenu" class="appMenu">
     <a mat-menu-item href="/delivery">
-      <mat-icon>local_post_office</mat-icon>
-      <span>Delivery</span>
+      <img src="/assets/apps/delivery.svg" alt="Delivery">
     </a>
     <a mat-menu-item href="/movie-financing">
-      <mat-icon>movie</mat-icon>
-      <span>Movie Financing</span>
+      <img src="/assets/apps/moviefinancing.svg" alt="Delivery">
     </a>
     <a mat-menu-item href="/ip-upload">
-      <mat-icon>cloud_upload</mat-icon>
-      <span>IP Center</span>
+      <img src="/assets/apps/ipupload.svg" alt="Delivery">
     </a>
   </mat-menu>
 
@@ -40,7 +37,9 @@
       <mat-divider></mat-divider>
       <org-widget></org-widget>
       <mat-divider></mat-divider>
-      <ng-container (loggedOut)="logout()"><button mat-menu-item (click)="logout()">Logout</button></ng-container>
+      <ng-container (loggedOut)="logout()">
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </ng-container>
     </mat-list>
   </mat-menu>
 </mat-toolbar>

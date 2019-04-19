@@ -7,6 +7,15 @@
 
 ::ng-deep .appMenu .mat-menu-content {
   display: flex;
+
+  .mat-menu-item {
+    padding: 10px;
+    min-height: 82px;
+
+    img {
+      margin: 10px;
+    }
+  }
 }
 
 .fill-remaining-space {
