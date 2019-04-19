@@ -12,7 +12,6 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 
-
 @Component({
   selector: 'delivery-form',
   templateUrl: './delivery-form.component.html',
@@ -36,7 +35,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private router: Router,
-  ) {  }
+  ) {}
 
   ngOnInit() {
     this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
@@ -74,7 +73,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
       width: '400px',
       data: {
         title: 'Delete delivery',
-        question: 'Are you sure to delete this delivery ?',
+        question: 'Are you sure you want to delete this delivery ?',
         buttonName: 'Delete',
         onConfirm: () => this.deleteDelivery()
       }
@@ -92,7 +91,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
       width: '400px',
       data: {
         title: 'Unseal delivery',
-        question: 'Are you sure to unseal this delivery ?',
+        question: 'Are you sure you want to unseal this delivery ?',
         buttonName: 'Unseal',
         onConfirm: () => this.unsealDelivery()
       }

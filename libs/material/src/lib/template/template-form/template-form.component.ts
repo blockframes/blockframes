@@ -65,7 +65,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
       width: '400px',
       data: {
         title: 'Delete template',
-        question: 'Are you sure to delete this template ?',
+        question: 'Are you sure you want to delete this template ?',
         buttonName: 'Delete',
         onConfirm: () => this.deleteDelivery(id, name)
       }

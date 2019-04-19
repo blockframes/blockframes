@@ -26,8 +26,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
 
-
-
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
   { path: 'list', component: TemplateListComponent },

@@ -103,9 +103,8 @@ export class DeliveryService {
 
   /** Remove signatures in array validated of delivery */
   public unsealDelivery() {
-    const delivery = this.query.getActive();
-    //this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
     this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ validated: [] });
+    //TODO: ask all stakeholders for permission to re-open the delivery form
   }
 
   /** Deletes delivery and all the sub-collections in firebase */
