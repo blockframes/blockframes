@@ -8,6 +8,7 @@ export interface MaterialState extends EntityState<Material> {
     value: string;
     description: string;
     category: string;
+    step?: string;
   }
 }
 
@@ -21,7 +22,7 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
   }
 
   public updateEmptyForm(category: string) {
-    this.updateRoot({ form: {value: "", description: "", category} })
+    this.updateRoot({ form: {value: "", description: "", category, step: "Step 1"} })
   }
 
   public clearForm() {
