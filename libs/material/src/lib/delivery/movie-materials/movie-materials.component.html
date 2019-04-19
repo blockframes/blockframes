@@ -29,7 +29,7 @@
             <p class="step-text">STEP 2</p>
             <span class="step-informations">
               <small class="period-text">Acceptance period :</small>
-              <p class="period-days">12 days</p>
+              <p class="period-days">{{randomNumberPicker(30)}} days</p>
             </span>
             <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
           </span>
@@ -38,7 +38,7 @@
             <p class="step-text">STEP 3</p>
             <span class="step-informations">
               <small class="period-text">Delivery time :</small>
-              <p class="period-days">23 days</p>
+              <p class="period-days">{{randomNumberPicker(30)}} days</p>
             </span>
             <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
           </span>
@@ -85,6 +85,7 @@
           fxLayoutGap="20px"
         >
           <mat-checkbox fxLayoutAlign="center center"
+            color="primary"
             [(ngModel)]="material.delivered"
             (click)="deliveredToggle(material, movie.id)"
           >
@@ -98,19 +99,19 @@
           <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
             <span class="material-step">
               <h5>Step :</h5>
-              <p class="material-step-text">step 5</p>
+              <p class="material-step-text">Step 5</p>
             </span>
             <span class="state">
               <h5>State :</h5>
-              <mat-icon class="icons" svgIcon="delivered"></mat-icon>
+              <mat-icon class="icons" svgIcon="{{stateIcon}}"></mat-icon>
             </span>
             <span class="time">
               <h5>Delivery time :</h5>
-              <p class="time-text">30 days</p>
+              <p class="time-text">{{randomNumberPicker(30)}} days</p>
             </span>
             <span class="payment">
               <h5>Payment :</h5>
-              <mat-icon class="icons" svgIcon="payed"></mat-icon>
+              <mat-icon class="icons" svgIcon="{{paymentIcon}}"></mat-icon>
             </span>
           </div>
         </mat-card>
