@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 import { Material } from '../+state';
 
 @Component({
-  selector: 'material-item',
-  templateUrl: './material-item.component.html',
-  styleUrls: ['./material-item.component.scss'],
+  selector: 'material-template-item',
+  templateUrl: './material-template-item.component.html',
+  styleUrls: ['./material-template-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialItemComponent {
+export class MaterialTemplateItemComponent {
 
   @Input() material: Material;
   @Input() isDeliveryValidated: boolean;

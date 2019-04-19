@@ -4,12 +4,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'material-form',
-  templateUrl: './material-form.component.html',
-  styleUrls: ['./material-form.component.scss'],
+  selector: 'material-template-form',
+  templateUrl: './material-template-form.component.html',
+  styleUrls: ['./material-template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialFormComponent implements OnInit, OnDestroy {
+export class MaterialTemplateFormComponent implements OnInit, OnDestroy {
   @Input() isDeliveryValidated: boolean;
   @Output() material = new EventEmitter<Material>();
 
