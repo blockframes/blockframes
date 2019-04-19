@@ -3,6 +3,12 @@
   <mat-sidenav [opened]="true" mode="side">
     <material-list *ngIf="(template$ | async) as template" [template]="template"></material-list>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button class="create-material mat-elevation-z0"  mat-raised-button (click)="addForm('')">
+        Add a material
+        <mat-icon class="icon">add</mat-icon>
+      </button>
+    </div>
+    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
       <button
         *ngIf="templateActive$ | async as templateActive"
         class="delete-template mat-elevation-z0"

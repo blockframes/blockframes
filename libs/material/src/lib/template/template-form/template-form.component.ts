@@ -10,6 +10,7 @@ import { takeWhile } from 'rxjs/operators';
 import { MaterialService } from '../../material/+state';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ConfirmComponent } from '@blockframes/ui';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'template-form',
