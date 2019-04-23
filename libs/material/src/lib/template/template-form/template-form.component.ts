@@ -63,7 +63,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   public addForm(category: string) {
     this.materialStore.updateEmptyTemplateForm(category);
-    this.materialId = "";
+    delete this.materialId;
   }
 
   public openDeleteTemplate(id: string, name: string) {
@@ -90,7 +90,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   }
 
   cancelUpdateForm() {
-    this.materialId = "";
+    delete this.materialId;
   }
 
   ngOnDestroy() {

@@ -44,22 +44,22 @@
         </div>
         <div>
           <div *ngFor="let material of category.value">
-            <editable [material]="material" [materialId]="materialId">
-              <ng-template viewMode>
+            <material-editable [material]="material" [materialId]="materialId">
+              <ng-template materialViewMode>
                 <material-template-item
                   [material]="material"
                   (isDeleted)="deleteMaterial(material)"
                   (update)="openUpdateForm(material)"
                 ></material-template-item>
               </ng-template>
-              <ng-template editMode>
+              <ng-template materialEditMode>
                 <material-template-form
                 [material]="material"
                 (update)="updateMaterial($event)"
                 (cancelForm)="cancelUpdateForm()"
                 ></material-template-form>
               </ng-template>
-            </editable>
+            </material-editable>
           </div>
           <div *ngIf="(form$ | async) as form">
             <material-template-add-form

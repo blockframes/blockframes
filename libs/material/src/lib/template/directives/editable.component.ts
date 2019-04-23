@@ -13,7 +13,7 @@ import { takeWhile } from 'rxjs/operators';
 import { Material } from '../../material/+state';
 
 @Component({
-  selector: 'editable',
+  selector: 'material-editable',
   template: `
     <ng-container *ngTemplateOutlet="currentView"></ng-container>
   `,

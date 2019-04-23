@@ -1,7 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 @Directive({
-  selector: '[viewMode]'
+  selector: '[materialViewMode]'
 })
 export class ViewModeDirective {
 
