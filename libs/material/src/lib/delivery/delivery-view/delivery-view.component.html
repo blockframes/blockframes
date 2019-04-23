@@ -42,6 +42,12 @@
             </span>
             <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
           </span>
+          <mat-divider></mat-divider>
+          <span fxLayoutAlign="center center">
+            <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
+              <mat-icon color="primary">create</mat-icon> Edit delivery
+            </button>
+          </span>
         </div>
       </mat-card>
       <ng-template #empty>
@@ -63,6 +69,12 @@
           <div>
             <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
               <p class="step-text">STEP 1</p>
+            </span>
+            <mat-divider></mat-divider>
+            <span fxLayoutAlign="center center">
+              <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery(delivery.id)">
+                <mat-icon color="primary">create</mat-icon> Edit delivery
+              </button>
             </span>
           </div>
         </mat-card>

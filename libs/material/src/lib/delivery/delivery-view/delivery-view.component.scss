@@ -14,7 +14,7 @@
   width: 30%;
 }
 
-mat-progress-spinner{
+mat-progress-spinner {
   top: 45px;
   border-radius: 50%;
   box-shadow: -11px 10px 12px 0 rgba(242, 60, 93, 0.137);
@@ -34,7 +34,7 @@ mat-progress-spinner{
 }
 
 h3 {
-  color: #5E5E5E;
+  color: #5e5e5e;
 }
 
 h4 {
@@ -64,7 +64,7 @@ p {
 
 .divider {
   max-width: 80%;
-  left: 10%!important;
+  left: 10% !important;
 }
 
 .step {
@@ -94,4 +94,11 @@ p {
   font-size: 12px;
   margin: 0;
   font-weight: bolder;
+}
+
+.edit {
+  color: var(--primary);
+  background-color: transparent;
+  font-weight: bolder;
+  margin-top: 20px;
 }

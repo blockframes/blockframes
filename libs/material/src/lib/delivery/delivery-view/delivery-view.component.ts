@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { DeliveryQuery, DeliveryService } from '../+state';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { Material } from '../../material/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'delivery-view',
@@ -16,9 +17,11 @@ export class DeliveryViewComponent implements OnInit {
   public progressionValue$: Observable<number>;
 
   constructor(
+    private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private service: DeliveryService,
-    private deliveryQuery: DeliveryQuery
+    private deliveryQuery: DeliveryQuery,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -33,5 +36,9 @@ export class DeliveryViewComponent implements OnInit {
 
   public randomNumberPicker(scale: number) {
     return Math.floor(Math.random() * scale) + 1;
+  }
+
+  public editDelivery(deliveryId: string) {
+    this.router.navigate([`layout/${this.movie.id}/form/${this.query.getActiveId()}`])
   }
 }
