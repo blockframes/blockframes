@@ -18,12 +18,6 @@ export class MovieMaterialsComponent implements OnInit {
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
 
-  // Visual bullshit for WoW effect
-  public stateIcons = ['dummy', 'accepted', 'available', 'delivered', 'pending', 'refused'];
-  public paymentIcons = ['dummy', 'payed', 'not_payed'];
-  public stateIcon: string;
-  public paymentIcon: string;
-
   constructor(
     private movieQuery: MovieQuery,
     private deliveryService: DeliveryService,
@@ -34,8 +28,6 @@ export class MovieMaterialsComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
     this.materials$ = this.deliveryQuery.materialsByActiveMovie$;
     this.progressionValue$ = this.deliveryQuery.movieProgression$;
-    this.stateIcon = this.stateIcons[this.randomNumberPicker(5)];
-    this.paymentIcon = this.paymentIcons[this.randomNumberPicker(2)];
   }
 
   public deliveredToggle(material: Material, movieId: string) {

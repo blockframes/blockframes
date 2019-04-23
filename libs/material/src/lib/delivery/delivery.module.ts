@@ -20,6 +20,7 @@ import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
 import { FiltersComponent } from './movie-materials/filters/filters.component';
 import { ActionsComponent } from './movie-materials/actions/actions.component';
 import { MovieMaterialItemComponent } from './movie-material-item/movie-material-item.component';
+import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-item.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -81,6 +82,7 @@ const routes: Routes = [
     FiltersComponent,
     ActionsComponent,
     MovieMaterialItemComponent,
+    DeliveryViewItemComponent,
 
   ],
   imports: [

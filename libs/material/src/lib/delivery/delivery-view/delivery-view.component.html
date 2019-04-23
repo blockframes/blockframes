@@ -1,60 +1,58 @@
-<main class="container">
-  <section fxLayout="row" fxLayoutGap="5%">
-    <article class="progress-spinner-block" fxLayoutAlign="center start">
-      <mat-card
-        *ngIf="(progressionValue$ | async) as value; else empty"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        class="mat-elevation-z6"
-      >
-        <mat-progress-spinner
-          class="spinner"
-          color="primary"
-          mode="determinate"
-          [value]="value"
-          diameter="200"
-          strokeWidth="13"
+<div *ngIf="(movie$ | async) as movie" class="container">
+    <section fxLayout="row" fxLayoutGap="15px">
+      <article class="progress-spinner-block" fxLayoutAlign="center start">
+        <mat-card
+          *ngIf="(progressionValue$ | async) as value; else empty"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          class="mat-elevation-z6"
         >
-        </mat-progress-spinner>
-        <div class="progress-value">{{ value }} %</div>
-        <h5>Global progression</h5>
-        <p class="spinner-text"><i>La progression en %age dela delivery</i></p>
-      </mat-card>
-      <ng-template #empty>
-        <mat-card fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
-            color="warn"
+            color="primary"
             mode="determinate"
-            value="0"
-            diameter="200"
-            strokeWidth="15"
+            [value]="value"
+            diameter="180"
+            strokeWidth="12"
           >
           </mat-progress-spinner>
-          <div class="progress-value">
-            0 %
+          <div class="progress-value">{{ value }} %</div>
+          <p class="global-progression">Global progression</p>
+          <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+        </mat-card>
+        <ng-template #empty>
+          <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
+            <mat-progress-spinner
+              class="spinner"
+              color="primary"
+              mode="determinate"
+              [value]="0"
+              diameter="180"
+              strokeWidth="12"
+            >
+            </mat-progress-spinner>
+            <div class="progress-value">0 %</div>
+            <p class="global-progression">Global progression</p>
+            <p class="spinner-text">
+              <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
+            </p>
+          </mat-card>
+        </ng-template>
+      </article>
+      <article class="materials">
+        <div class="materials" fxLayoutAlign="space-between">
+          <h2>{{ movie.title.original }}</h2>
+          <span fxLayoutAlign="end">
+            <material-filters class="filters"></material-filters>
+          </span>
+        </div>
+
+        <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
+          <h3>{{ category.key | uppercase }}</h3>
+          <div *ngFor="let material of category.value">
+            <delivery-view-item *ngIf="(stakeholders$ | async) as stakeholders" [material]="material" [stakeholders]="stakeholders"></delivery-view-item>
           </div>
-          <h5>Global progression</h5>
-          <p class="spinner-text"><i>La progression en %age dela delivery</i></p>
-        </mat-card>
-      </ng-template>
-    </article>
-    <article class="materials" fxLayout="column">
-      <div *ngFor="let category of (materials$ | async | keyvalue)">
-        <h3>{{ category.key | uppercase }}</h3>
-        <mat-card *ngFor="let material of category.value" class="materials-block mat-elevation-z6">
-          <span
-            ><h4 mat-line>
-              <mat-checkbox [ngModel]="material.delivered" [disabled]="true"
-                ><b>{{ material.value }}</b></mat-checkbox
-              >
-            </h4></span
-          >
-          <p mat-line class="description-text">
-            <i>{{ material.description }}</i>
-          </p>
-        </mat-card>
-      </div>
-    </article>
-  </section>
-</main>
+        </div>
+      </article>
+    </section>
+  </div>

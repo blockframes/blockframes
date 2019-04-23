@@ -5,18 +5,24 @@
 }
 
 .progress-spinner-block {
-  width: 20%;
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
+  top: 64px;
   margin: auto;
   margin-top: 0;
   padding: 1rem;
+  width: 30%;
 }
 
 mat-progress-spinner{
+  top: 45px;
   border-radius: 50%;
-  box-shadow: -11px 10px 12px 0 rgba(63, 81, 180, 0.178);
+  box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
+}
+
+.global-progression {
+  margin-bottom: 0;
+  font-weight: bolder;
 }
 
 .spinner-text {
@@ -24,16 +30,17 @@ mat-progress-spinner{
 }
 
 .materials {
-  width: 80%;
-}
-
-.materials-block {
-  margin-bottom: 1rem;
-  padding: 1rem;
+  width: 100%;
 }
 
 h3 {
   color: #5E5E5E;
+}
+
+h4 {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 p {
@@ -49,8 +56,46 @@ p {
 
 .progress-value {
   position: relative;
-  top: -125px;
+  top: -70px;
   color: var(--primary);
   font-weight: bolder;
   font-size: 2.5rem;
+}
+
+.divider {
+  max-width: 80%;
+  left: 10%!important;
+}
+
+.step {
+  font-size: 12px;
+  font-weight: 1000;
+  width: 250px;
+}
+
+.step-text {
+  width: 20%;
+}
+
+.step-informations {
+  width: 50%;
+}
+
+.step-icon {
+  width: 15px;
+}
+
+.period-text {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.322);
+}
+
+.period-days {
+  font-size: 12px;
+  margin: 0;
+  font-weight: bolder;
+}
+
+.filters {
+  margin-right: -30px;
 }

@@ -1,5 +1,6 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
+import { Stakeholder } from "./../../stakeholder/+state";
 
 export interface Movie {
   id: string,

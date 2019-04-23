@@ -1,0 +1,46 @@
+.materials-block {
+  margin-bottom: 1rem;
+  padding: 30px 30px 15px 20px;
+}
+
+.material {
+  width: 50%;
+}
+
+.informations {
+  width: 50%;
+}
+
+h5 {
+  color: rgba(0, 0, 0, 0.418);
+  margin: 5px 0;
+}
+
+p {
+  font-size: 90%;
+  margin-bottom: 1rem;
+}
+
+.description-text {
+  margin: 0;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.icons {
+  width: 20px;
+}
+
+.time-text, .material-step-text {
+  margin-top: 5px;
+  font-weight: bolder;
+  font-size: 15px;
+}
+
+.toggle {
+  font-size: 10px;
+  border: none;
+  background-color: transparent;
+  color: var(--primary);
+  font-weight: bolder;
+}

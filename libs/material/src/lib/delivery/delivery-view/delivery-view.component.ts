@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Location } from '@angular/common';
 import { DeliveryQuery, DeliveryService } from '../+state';
+import { Movie, MovieQuery, MovieService, Stakeholder } from '@blockframes/movie';
 
 
 @Component({
@@ -11,21 +11,26 @@ import { DeliveryQuery, DeliveryService } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryViewComponent implements OnInit {
+  public movie$: Observable<Movie>;
+  public stakeholders$: Observable<Stakeholder[]>;
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
 
   constructor(
+    private movieService: MovieService,
+    private movieQuery: MovieQuery,
     private query: DeliveryQuery,
-    private service: DeliveryService,
-    private location: Location,
-  ) {}
+    ) {}
 
   ngOnInit() {
+    this.movie$ = this.movieQuery.selectActive();
+    this.stakeholders$ = this.movieService.activeMovieStakeholders;
     this.materials$ = this.query.materialsByActiveDelivery$;
     this.progressionValue$ = this.query.deliveryProgression$;
   }
 
-  public goBack() {
-    this.location.back();
+  public randomNumberPicker(scale: number) {
+    return Math.floor(Math.random() * scale) + 1;
   }
+
 }
