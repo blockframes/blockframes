@@ -18,6 +18,11 @@ export class MovieMaterialItemComponent implements OnInit {
   public stateIcon: string;
   public paymentIcon: string;
 
+  public isOpen = true;
+  public disableMaterial = false;
+  public panelButtonLabel = 'LESS'
+  public disableButtonLabel = 'DISABLE'
+
   constructor(
     private service: DeliveryService,
     private movieQuery: MovieQuery,
@@ -36,5 +41,21 @@ export class MovieMaterialItemComponent implements OnInit {
 
   public randomNumberPicker(scale: number) {
     return Math.floor(Math.random() * scale) + 1;
+  }
+
+  public panelToggle() {
+    this.isOpen = !this.isOpen;
+    !!this.isOpen
+      ? this.panelButtonLabel = 'LESS'
+      : this.panelButtonLabel = 'MORE';
+  }
+
+  public disableToggle() {
+    this.disableMaterial = !this.disableMaterial;
+    this.isOpen = false;
+    this.panelButtonLabel = 'MORE'
+    !!this.disableMaterial
+      ? this.disableButtonLabel = 'ENABLE'
+      : this.disableButtonLabel = 'DISABLE';
   }
 }

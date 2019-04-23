@@ -79,7 +79,7 @@
 
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
-        <div *ngFor="let material of category.value" fxLayoutGap="20px">
+        <div *ngFor="let material of category.value">
           <delivery-movie-material-item [material]="material"></delivery-movie-material-item>
         </div>
       </div>

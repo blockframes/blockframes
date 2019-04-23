@@ -1,23 +1,35 @@
 <mat-card
-  class="materials-block mat-elevation-z6"
-  fxLayout="row"
-  fxLayoutGap="20px"
->
+[ngClass]="{'materials-disabled': !!disableMaterial}"
+class="materials-block mat-elevation-z6"
+fxLayout="row"
+fxLayoutGap="20px">
   <mat-checkbox
     fxLayoutAlign="center center"
     color="primary"
     [(ngModel)]="material.delivered"
-    (click)="deliveredToggle(material)"
+    [disabled]="!!disableMaterial"
+    (click)="!disableMaterial && deliveredToggle(material)"
   >
   </mat-checkbox>
   <div class="material" fxLayout="column" fxLayoutAlign="center start">
     <span>
       <h4 mat-line>{{ material.value }}</h4>
     </span>
-    <p mat-line class="description-text">{{ material.description }}</p>
+    <mat-expansion-panel [ngClass]="{'expansion-panel-disabled': !!disableMaterial}" [expanded]="isOpen" class="mat-elevation-z0">
+      <p mat-line class="description-text">{{ material.description }}</p>
+    </mat-expansion-panel>
+    <span fxLayout="row" fxLayoutAlign="start center">
+      <button [ngClass]="{'toggle-disabled': !!disableMaterial}" class="toggle mat-elevation-z0" mat-raised-button (click)="!disableMaterial && panelToggle()">
+        {{ panelButtonLabel }}
+      </button>
+      <span class="divider">|</span>
+      <button [ngClass]="{'disable-disabled': !!disableMaterial}" class="disable mat-elevation-z0" mat-raised-button (click)="disableToggle()">
+        {{ disableButtonLabel }}
+      </button>
+    </span>
   </div>
   <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
-    <span class="material-step">
+    <span *ngIf="!disableMaterial" class="material-step">
       <h5>Step :</h5>
       <p class="material-step-text">Step 5</p>
     </span>
@@ -25,7 +37,7 @@
       <h5>State :</h5>
       <mat-icon class="icons" svgIcon="{{ stateIcon }}"></mat-icon>
     </span>
-    <span class="time">
+    <span *ngIf="!disableMaterial" class="time">
       <h5>Delivery time :</h5>
       <p class="time-text">{{ randomNumberPicker(30) }} days</p>
     </span>
