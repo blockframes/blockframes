@@ -17,7 +17,7 @@
 mat-progress-spinner{
   top: 45px;
   border-radius: 50%;
-  box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
+  box-shadow: -11px 10px 12px 0 rgba(242, 60, 93, 0.137);
 }
 
 .global-progression {
@@ -57,7 +57,7 @@ p {
 .progress-value {
   position: relative;
   top: -70px;
-  color: var(--primary);
+  color: #f23c5c;
   font-weight: bolder;
   font-size: 2.5rem;
 }
@@ -94,8 +94,4 @@ p {
   font-size: 12px;
   margin: 0;
   font-weight: bolder;
-}
-
-.filters {
-  margin-right: -30px;
 }

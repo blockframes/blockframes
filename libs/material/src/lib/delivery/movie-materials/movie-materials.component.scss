@@ -17,7 +17,7 @@
 mat-progress-spinner{
   top: 45px;
   border-radius: 50%;
-  box-shadow: -11px 10px 12px 0 rgba(242, 60, 93, 0.137);
+  box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
 }
 
 .global-progression {
@@ -34,7 +34,7 @@ mat-progress-spinner{
 }
 
 h3 {
-  color: #5E5E5E;
+  color: var(--disabled);
 }
 
 h4 {
@@ -57,41 +57,11 @@ p {
 .progress-value {
   position: relative;
   top: -70px;
-  color: #f23c5c;
+  color: var(--primary);
   font-weight: bolder;
   font-size: 2.5rem;
 }
 
-.divider {
-  max-width: 80%;
-  left: 10%!important;
-}
-
-.step {
-  font-size: 12px;
-  font-weight: 1000;
-  width: 250px;
-}
-
-.step-text {
-  width: 20%;
-}
-
-.step-informations {
-  width: 50%;
-}
-
-.step-icon {
-  width: 15px;
-}
-
-.period-text {
-  font-size: 10px;
-  color: rgba(0, 0, 0, 0.322);
-}
-
-.period-days {
-  font-size: 12px;
-  margin: 0;
-  font-weight: bolder;
+.filters {
+  margin-right: -30px;
 }

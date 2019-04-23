@@ -44,18 +44,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Returns a list of deliveries for the active movie */
-  public get deliveriesByActiveMovie$() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(id =>
-        this.db
-          .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
-          .valueChanges()
-      ),
-      tap(deliveries => this.store.set(deliveries))
-    );
-  }
-
   /** Returns the active delivery materials sorted by category */
   public get materialsByActiveDelivery$() {
     return this.movieQuery.selectActive().pipe(
@@ -71,6 +59,18 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
+  /** Returns a list of deliveries for the active movie */
+  public get deliveriesByActiveMovie$() {
+    return this.movieQuery.selectActiveId().pipe(
+      switchMap(id =>
+        this.db
+          .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
+          .valueChanges()
+      ),
+      tap(deliveries => this.store.set(deliveries))
+    );
+  }
+
   /** Returns the progression % of the delivery */
   public get deliveryProgression$() {
     return this.movieQuery.selectActive().pipe(
@@ -80,20 +80,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
-        const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
-        const deliveredMaterials = totalMaterials.filter(material => !!material.delivered);
-        return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
-      })
-    );
-  }
-
-  public deliveryProgressionById(id: string) {
-    return this.movieQuery.selectActive().pipe(
-      switchMap(movie =>
-        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
-      ),
-      tap(materials => this.materialStore.set(materials)),
-      map(materials => {
         const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
         const deliveredMaterials = totalMaterials.filter(material => !!material.delivered);
         return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { createStakeholder, StakeholderService, Stakeholder, StakeholderStore } from '../../stakeholder/+state';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { createStakeholder, StakeholderService } from '../../stakeholder/+state';
+import { OrganizationQuery } from '@blockframes/organization';
 import { MovieStore } from './movie.store';
 import { Movie, createMovie } from './movie.model';
 import { combineLatest, Observable } from 'rxjs';
 import { switchMap, tap, map } from 'rxjs/operators';
-import { MovieQuery } from './movie.query';
-import { FireQuery, Query } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
@@ -16,12 +14,9 @@ export class MovieService {
 
   constructor(
   private store: MovieStore,
-  private shStore: StakeholderStore,
   private firestore: AngularFirestore,
   private orgQuery: OrganizationQuery,
-  private query: MovieQuery,
   private shService: StakeholderService,
-  private fireQuery: FireQuery,
   ) {
     this.collection = this.firestore.collection<Movie>('movies');
   }
@@ -59,23 +54,5 @@ export class MovieService {
       }),
       tap((movies: Movie[]) => this.store.set(movies))
     );
-  }
-
-  public get activeMovieStakeholders() {
-    return this.query
-      .selectActiveId()
-      .pipe(
-        switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
-        tap((stakeholders: any) => this.shStore.set(stakeholders))
-      );
-  }
-
-  private getStakeholderList(movieId: string): Query<Stakeholder> {
-    return {
-      path: `movies/${movieId}/stakeholders`,
-      organization: (stakeholder: Stakeholder): Query<Organization> => ({
-        path: `orgs/${stakeholder.orgId}`
-      })
-    }
   }
 }

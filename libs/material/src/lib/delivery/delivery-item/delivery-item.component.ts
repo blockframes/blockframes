@@ -33,7 +33,6 @@ export class DeliveryItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.progression$ = this.query.deliveryProgressionById(this.delivery.id);
     this.stateIcon = this.stateIcons[this.randomNumberPicker(5)];
     this.paymentIcon = this.paymentIcons[this.randomNumberPicker(2)];
   }

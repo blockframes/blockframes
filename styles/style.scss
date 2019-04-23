@@ -9,6 +9,8 @@
   --primary: #{$primary};
   --warn: #{$warn};
   --accent: #{$accent};
+  --disabled: #a0a0a0;
+  //TODO : put more custom colors we often (ex. for texts or disabled content)
 }
 
 * {

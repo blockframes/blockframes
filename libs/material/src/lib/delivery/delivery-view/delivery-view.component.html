@@ -1,58 +1,88 @@
-<div *ngIf="(movie$ | async) as movie" class="container">
-    <section fxLayout="row" fxLayoutGap="15px">
-      <article class="progress-spinner-block" fxLayoutAlign="center start">
-        <mat-card
-          *ngIf="(progressionValue$ | async) as value; else empty"
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          class="mat-elevation-z6"
+<div class="container">
+  <section fxLayout="row" fxLayoutGap="15px">
+    <article class="progress-spinner-block" fxLayoutAlign="center start">
+      <mat-card
+        *ngIf="(progressionValue$ | async) as value; else empty"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        class="mat-elevation-z6"
+      >
+        <mat-progress-spinner
+          class="spinner"
+          color="warn"
+          mode="determinate"
+          [value]="value"
+          diameter="180"
+          strokeWidth="12"
         >
+        </mat-progress-spinner>
+        <div class="progress-value">{{ value }} %</div>
+        <p class="global-progression">Global progression</p>
+        <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+        <div>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 1</p>
+            <mat-icon svgIcon="accepted" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider class="divider"></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 2</p>
+            <span class="step-informations">
+              <small class="period-text">Acceptance period :</small>
+              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
+            </span>
+            <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
+          </span>
+          <mat-divider class="divider"></mat-divider>
+          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="step-text">STEP 3</p>
+            <span class="step-informations">
+              <small class="period-text">Delivery time :</small>
+              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
+            </span>
+            <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
+          </span>
+        </div>
+      </mat-card>
+      <ng-template #empty>
+        <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
-            color="primary"
+            color="warn"
             mode="determinate"
-            [value]="value"
+            [value]="0"
             diameter="180"
             strokeWidth="12"
           >
           </mat-progress-spinner>
-          <div class="progress-value">{{ value }} %</div>
+          <div class="progress-value">0 %</div>
           <p class="global-progression">Global progression</p>
-          <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
-        </mat-card>
-        <ng-template #empty>
-          <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
-            <mat-progress-spinner
-              class="spinner"
-              color="primary"
-              mode="determinate"
-              [value]="0"
-              diameter="180"
-              strokeWidth="12"
-            >
-            </mat-progress-spinner>
-            <div class="progress-value">0 %</div>
-            <p class="global-progression">Global progression</p>
-            <p class="spinner-text">
-              <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
-            </p>
-          </mat-card>
-        </ng-template>
-      </article>
-      <article class="materials">
-        <div class="materials" fxLayoutAlign="space-between">
-          <h2>{{ movie.title.original }}</h2>
-          <span fxLayoutAlign="end">
-            <material-filters class="filters"></material-filters>
-          </span>
-        </div>
-
-        <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
-          <h3>{{ category.key | uppercase }}</h3>
-          <div *ngFor="let material of category.value">
-            <delivery-view-item *ngIf="(stakeholders$ | async) as stakeholders" [material]="material" [stakeholders]="stakeholders"></delivery-view-item>
+          <p class="spinner-text">
+            <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
+          </p>
+          <div>
+            <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
+              <p class="step-text">STEP 1</p>
+            </span>
           </div>
+        </mat-card>
+      </ng-template>
+    </article>
+    <article class="materials">
+      <div class="materials" fxLayoutAlign="space-between">
+        <h2>{{ movie.title.original }}</h2>
+        <span fxLayoutAlign="end">
+          <material-filters></material-filters>
+          <material-actions></material-actions>
+        </span>
+      </div>
+
+      <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
+        <h3>{{ category.key | uppercase }}</h3>
+        <div *ngFor="let material of category.value">
+          <delivery-view-item [material]="material"></delivery-view-item>
         </div>
-      </article>
-    </section>
-  </div>
+      </div>
+    </article>
+  </section>
+</div>

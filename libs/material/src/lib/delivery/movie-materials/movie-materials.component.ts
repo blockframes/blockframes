@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Material } from '../../material/+state';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
-import { DeliveryService } from '../+state/delivery.service';
 import { DeliveryQuery } from '../+state';
+import { Stakeholder, StakeholderService } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-movie-materials',
@@ -13,31 +12,27 @@ import { DeliveryQuery } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieMaterialsComponent implements OnInit {
-
-  public movie$: Observable<Movie>;
+  public movie: Movie;
+  public stakeholders$: Observable<Stakeholder[]>;
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
 
+  public isAlive = true;
+
   constructor(
+    private shService: StakeholderService,
     private movieQuery: MovieQuery,
-    private deliveryService: DeliveryService,
-    private deliveryQuery: DeliveryQuery,
-    ) {}
+    private query: DeliveryQuery
+  ) {}
 
   ngOnInit() {
-    this.movie$ = this.movieQuery.selectActive();
-    this.materials$ = this.deliveryQuery.materialsByActiveMovie$;
-    this.progressionValue$ = this.deliveryQuery.movieProgression$;
-  }
-
-  public deliveredToggle(material: Material, movieId: string) {
-    this.deliveryService
-      .deliveredToggle(material, movieId)
-      .catch(err => console.log(err));
+    this.movie = this.movieQuery.getActive();
+    this.stakeholders$ = this.shService.activeMovieStakeholders;
+    this.materials$ = this.query.materialsByActiveMovie$;
+    this.progressionValue$ = this.query.movieProgression$;
   }
 
   public randomNumberPicker(scale: number) {
     return Math.floor(Math.random() * scale) + 1;
   }
-
 }

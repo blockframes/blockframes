@@ -218,23 +218,6 @@ export class DeliveryService {
     };
   }
 
-  public get materialsList() {
-    return this.movieQuery
-      .selectActiveId()
-      .pipe(
-        switchMap(id => this.fireQuery.fromQuery(this.getMovieMaterialsList(id))),
-        tap((movie : any) => this.movieStore.set(movie)));
-  }
-
-  private getMovieMaterialsList(movieId: string): Query<Movie> {
-    return {
-      path: `movies`,
-      materials: (): Query<Material> => ({
-        path: `movies/${movieId}/materials`
-      })
-    }
-  }
-
   ////////////////////////
   // START SUBSCRIPTION //
   ////////////////////////

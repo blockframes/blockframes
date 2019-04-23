@@ -3,14 +3,6 @@
   padding: 30px 30px 15px 20px;
 }
 
-.materials-disabled {
-  margin-bottom: 1rem;
-  padding: 30px 30px 15px 20px;
-  background-color: rgba(0, 0, 0, 0.041);
-  color: rgba(0, 0, 0, 0.212);
-  filter: grayscale(100%)
-}
-
 .material {
   width: 50%;
 }
@@ -19,13 +11,17 @@
   width: 50%;
 }
 
+.mat-expansion-panel {
+  margin-left: -24px;
+}
+
 h5 {
   color: rgba(0, 0, 0, 0.418);
   margin: 5px 0;
 }
 
 p {
-  font-size: 90%;
+  font-size: 13px;
   margin-bottom: 1rem;
 }
 
@@ -33,11 +29,6 @@ p {
   margin: 0;
   font-style: italic;
   font-size: 12px;
-}
-
-.expansion-panel-disabled {
-  background-color: transparent;
-  filter: grayscale(100%)
 }
 
 .icons {
@@ -56,25 +47,4 @@ p {
   background-color: transparent;
   color: var(--primary);
   font-weight: bolder;
-}
-
-.toggle-disabled {
-  color: #C4C4C3;
-  cursor: initial;
-}
-
-.disable {
-  font-size: 10px;
-  border: none;
-  background-color: transparent;
-  color: #C4C4C3;
-  font-weight: bolder;
-}
-
-.disable-disabled {
-  color: var(--primary)!important;
-}
-
-.divider {
-  color: rgba(0, 0, 0, 0.5);
 }

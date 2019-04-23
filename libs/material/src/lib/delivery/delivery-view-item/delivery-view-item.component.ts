@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Material } from '../../material/+state';
 import { DeliveryService } from '../+state';
-import { MovieQuery, Stakeholder } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { MovieQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-view-item',
@@ -12,29 +11,23 @@ import { OrganizationQuery } from '@blockframes/organization';
 })
 export class DeliveryViewItemComponent implements OnInit {
   @Input() material: Material;
-  @Input() stakeholders: Stakeholder[];
 
   // Visual bullshit for WoW effect
-  public stateIcons = ['accepted', 'available', 'delivered', 'pending', 'refused'];
-  public paymentIcons = ['payed', 'not_payed'];
+  public stateIcons = ['dummy', 'accepted', 'available', 'delivered', 'pending', 'refused'];
+  public paymentIcons = ['dummy', 'payed', 'not_payed'];
   public stateIcon: string;
   public paymentIcon: string;
-  public stakeholder: string;
 
   public isOpen = true;
+  public disableMaterial = false;
   public panelButtonLabel = 'LESS';
+  public disableButtonLabel = 'DISABLE';
 
-  constructor(
-    private service: DeliveryService,
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery
-  ) {}
+  constructor(private service: DeliveryService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.stateIcon = this.stateIcons[this.randomNumberPicker(5)];
-    this.stakeholder = this.orgQuery.getEntity(
-      this.stakeholders[this.randomNumberPicker(this.stakeholders.length)].orgId
-    ).name;
+    this.paymentIcon = this.paymentIcons[this.randomNumberPicker(2)];
   }
 
   public deliveredToggle(material: Material) {
@@ -44,11 +37,20 @@ export class DeliveryViewItemComponent implements OnInit {
   }
 
   public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale);
+    return Math.floor(Math.random() * scale) + 1;
   }
 
   public panelToggle() {
     this.isOpen = !this.isOpen;
     !!this.isOpen ? (this.panelButtonLabel = 'LESS') : (this.panelButtonLabel = 'MORE');
+  }
+
+  public disableToggle() {
+    this.disableMaterial = !this.disableMaterial;
+    this.isOpen = false;
+    this.panelButtonLabel = 'MORE';
+    !!this.disableMaterial
+      ? (this.disableButtonLabel = 'ENABLE')
+      : (this.disableButtonLabel = 'DISABLE');
   }
 }
