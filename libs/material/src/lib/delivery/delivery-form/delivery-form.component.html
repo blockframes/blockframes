@@ -9,7 +9,7 @@
       </button>
     </div>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
-      <button class="create-material mat-elevation-z0"  mat-raised-button (click)="addForm('')">
+      <button class="create-material mat-elevation-z0" mat-raised-button (click)="addForm('')">
         Add a material
         <mat-icon class="icon">add</mat-icon>
       </button>
@@ -20,14 +20,33 @@
         <mat-icon class="icon">save</mat-icon>
       </button>
     </div>
-    <div *ngIf="!(isDeliveryValidated$ | async)" class="container-button" fxLayout="row" fxLayoutAlign="center center">
-      <button class="delete-delivery mat-elevation-z0" mat-raised-button (click)="openDeleteDelivery()">
+    <div
+      *ngIf="!(isDeliveryValidated$ | async)"
+      class="container-button"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <button
+        class="delete-delivery mat-elevation-z0"
+        mat-raised-button
+        (click)="openDeleteDelivery()"
+      >
         Delete delivery
         <mat-icon class="icon">delete</mat-icon>
       </button>
     </div>
-    <div *ngIf="isDeliveryValidated$ | async" class="container-button" fxLayout="row" fxLayoutAlign="center center">
-      <button class="unseal-delivery mat-elevation-z0" color="warn" mat-raised-button (click)="openUnsealDelivery()">
+    <div
+      *ngIf="(isDeliveryValidated$ | async)"
+      class="container-button"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <button
+        class="unseal-delivery mat-elevation-z0"
+        color="warn"
+        mat-raised-button
+        (click)="openUnsealDelivery()"
+      >
         Unseal delivery
         <mat-icon class="icon">lock_open</mat-icon>
       </button>
@@ -36,32 +55,58 @@
   <!-- Content -->
   <mat-sidenav-content class="delivery-form">
     <section>
-    <h3 *ngIf="movie$ | async as movie">{{ movie.title.original }}</h3>
-    <div *ngIf="(form$ | async) as form">
-      <material-delivery-form [isDeliveryValidated]="isDeliveryValidated$ | async" *ngIf="form.category === ''" (material)="addMaterial($event)"></material-delivery-form>
-    </div>
-    <article *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
-      <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
-        <h4>{{ materials.key }}</h4>
-        <button class="create-material mat-elevation-z0" [disabled]="isDeliveryValidated$ | async" (click)="addForm(materials.key)" mat-raised-button>
-          <mat-icon class="icon">add</mat-icon>
-          Add a material
-        </button>
+      <h3 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h3>
+      <div *ngIf="(form$ | async) as form">
+        <material-delivery-add-form
+          [isDeliveryValidated]="isDeliveryValidated$ | async"
+          *ngIf="form.category === ''"
+          (material)="addMaterial($event)"
+        ></material-delivery-add-form>
       </div>
-      <div>
-        <div *ngFor="let material of materials.value">
-          <material-delivery-item [isDeliveryValidated]="isDeliveryValidated$ | async" [material]="material" (isDeleted)="deleteMaterial(material)"></material-delivery-item>
+      <article *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
+        <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
+          <h4>{{ materials.key }}</h4>
+          <button
+            class="create-material mat-elevation-z0"
+            [disabled]="isDeliveryValidated$ | async"
+            (click)="addForm(materials.key)"
+            mat-raised-button
+          >
+            <mat-icon class="icon">add</mat-icon>
+            Add a material
+          </button>
         </div>
-        <div *ngIf="(form$ | async) as form">
-          <material-delivery-form
-            [isDeliveryValidated]="isDeliveryValidated$ | async"
-            *ngIf="form.category === materials.key"
-            (material)="addMaterial($event)"
-          ></material-delivery-form>
+        <div>
+          <div *ngFor="let material of materials.value">
+            <material-editable [material]="material" [materialId]="materialId">
+              <ng-template materialViewMode>
+                <material-delivery-item
+                  [isDeliveryValidated]="isDeliveryValidated$ | async"
+                  [material]="material"
+                  (isDeleted)="deleteMaterial(material)"
+                  (update)="openUpdateForm(material)"
+                ></material-delivery-item>
+              </ng-template>
+              <ng-template materialEditMode>
+                <material-delivery-form
+                  [isDeliveryValidated]="isDeliveryValidated$ | async"
+                  [material]="material"
+                  (update)="updateMaterial($event)"
+                  (cancelForm)="cancelUpdateForm()"
+                ></material-delivery-form>
+              </ng-template>
+            </material-editable>
+          </div>
+          <div *ngIf="(form$ | async) as form">
+            <material-delivery-add-form
+              [isDeliveryValidated]="isDeliveryValidated$ | async"
+              *ngIf="form.category === materials.key"
+              (material)="addMaterial($event)"
+            ></material-delivery-add-form>
           </div>
         </div>
       </article>
-    <delivery-stakeholder-list id="sign"></delivery-stakeholder-list>
-  </section>
+      <delivery-stakeholder-list id="sign"></delivery-stakeholder-list>
+    </section>
   </mat-sidenav-content>
 </mat-sidenav-container>

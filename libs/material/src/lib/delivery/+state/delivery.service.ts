@@ -54,6 +54,15 @@ export class DeliveryService {
     this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
   }
 
+  /** Update material to the delivery sub-collection in firebase */
+  public updateMaterial(material: Material) {
+    const idDelivery = this.query.getActiveId();
+    this.db
+      .doc<Material>(`deliveries/${idDelivery}/materials/${material.id}`)
+      .update(material);
+    this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
+  }
+
   /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(id: string) {
     const idDelivery = this.query.getActiveId();

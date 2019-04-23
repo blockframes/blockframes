@@ -1,5 +1,11 @@
 mat-card {
-  margin: 5% 0;
+  margin-bottom: 4%;
+  padding-left: 5%;
+  padding-top: 2%;
+}
+
+mat-card-title {
+  margin-bottom: 2%;
 }
 
 .form {
@@ -22,6 +28,11 @@ mat-card {
 
 mat-form-field {
   font-size: 12px;
+}
+
+mat-card-title {
+  font-weight: bold;
+  font-size: 18px;
 }
 
 

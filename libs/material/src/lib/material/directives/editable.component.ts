@@ -10,7 +10,7 @@ import { ViewModeDirective } from './view-mode-directive';
 import { EditModeDirective } from './edit-mode-directive';
 import { BehaviorSubject } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { Material } from '../../material/+state';
+import { Material } from '../+state';
 
 @Component({
   selector: 'material-editable',

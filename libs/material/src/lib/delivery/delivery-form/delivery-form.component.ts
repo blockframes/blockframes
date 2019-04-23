@@ -24,6 +24,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   public form$: Observable<MaterialDeliveryForm>;
   public isDeliveryValidated$: Observable<boolean>;
   public isAlive = true;
+  public materialId: string;
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -64,8 +65,13 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
   }
 
+  public updateMaterial(material: Material) {
+    this.service.updateMaterial(material);
+  }
+
   public addForm(category: string) {
     this.materialStore.updateEmptyDeliveryForm(category);
+    delete this.materialId;
   }
 
   public openDeleteDelivery() {
@@ -101,6 +107,15 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   private unsealDelivery() {
     this.service.unsealDelivery();
     this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
+  }
+
+  openUpdateForm(material) {
+    this.materialId = material.id;
+    this.materialStore.clearForm();
+  }
+
+  cancelUpdateForm() {
+    delete this.materialId;
   }
 
   ngOnDestroy() {
