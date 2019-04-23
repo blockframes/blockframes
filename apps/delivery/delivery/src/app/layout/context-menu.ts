@@ -13,7 +13,6 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    // TODO: Resolve bug on movie materials tab
     route: '/layout/:movieId/movie-materials',
     items: [
       { name: 'home', path: '/layout/home'},

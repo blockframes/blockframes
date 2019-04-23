@@ -11,13 +11,14 @@ import {
   StakeholderQuery,
   createDeliveryStakeholder,
   StakeholderService,
-  StakeholderStore
+  StakeholderStore,
+  MovieStore,
+  Movie
 } from '@blockframes/movie';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
-import { Router } from '@angular/router';
-import { switchMap, tap, map, filter } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { switchMap, tap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { Query, FireQuery } from '@blockframes/utils';
 
 @Injectable({
@@ -26,13 +27,13 @@ import { Query, FireQuery } from '@blockframes/utils';
 export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
+    private movieStore: MovieStore,
     private organizationQuery: OrganizationQuery,
     private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
     private store: DeliveryStore,
     private templateQuery: TemplateQuery,
     private stakeholderQuery: StakeholderQuery,
-    private router: Router,
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
@@ -201,7 +202,7 @@ export class DeliveryService {
       .selectActiveId()
       .pipe(
         switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
-        tap( (delivery : any) => this.store.set(delivery)));
+        tap((deliveries : any) => this.store.set(deliveries)));
   }
 
   private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {
@@ -215,6 +216,23 @@ export class DeliveryService {
         })
       })
     };
+  }
+
+  public get materialsList() {
+    return this.movieQuery
+      .selectActiveId()
+      .pipe(
+        switchMap(id => this.fireQuery.fromQuery(this.getMovieMaterialsList(id))),
+        tap((movie : any) => this.movieStore.set(movie)));
+  }
+
+  private getMovieMaterialsList(movieId: string): Query<Movie> {
+    return {
+      path: `movies`,
+      materials: (): Query<Material> => ({
+        path: `movies/${movieId}/materials`
+      })
+    }
   }
 
   ////////////////////////

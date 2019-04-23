@@ -1,8 +1,9 @@
 import { Organization } from "@blockframes/organization";
+import { Material } from "@blockframes/material";
 
 export interface Movie {
   id: string,
-  title: any, // will contain all titles: original, international, suiss, etc 
+  title: any, // will contain all titles: original, international, suiss, etc
   directorName: string,
   productionYear: number,
   org?: Organization,
@@ -28,6 +29,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
+  materials?: Material[];
 }
 
 /**

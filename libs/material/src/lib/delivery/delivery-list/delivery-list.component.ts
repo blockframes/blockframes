@@ -18,7 +18,7 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class DeliveryListComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
-  public deliveries$: Observable<Delivery>;
+  public deliveries$: Observable<Delivery[]>;
   private isAlive = true;
 
   constructor(
