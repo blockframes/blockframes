@@ -15,17 +15,29 @@
   </button>
   <mat-menu #apps="matMenu" class="appMenu">
     <a mat-menu-item href="/delivery">
-      <img src="/assets/apps/delivery.svg" alt="Delivery">
+      <img src="/assets/apps/delivery.svg" alt="Delivery" />
     </a>
     <a mat-menu-item href="/movie-financing">
-      <img src="/assets/apps/moviefinancing.svg" alt="Delivery">
+      <img src="/assets/apps/moviefinancing.svg" alt="Delivery" />
     </a>
     <a mat-menu-item href="/ip-upload">
-      <img src="/assets/apps/ipupload.svg" alt="Delivery">
+      <img src="/assets/apps/ipupload.svg" alt="Delivery" />
     </a>
   </mat-menu>
 
-  <ng-container *ngIf="(user$ | async) as user;">
+  <ng-container *ngIf="(user$ | async) as user">
+    <button mat-icon-button [matMenuTriggerFor]="notifications">
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </ng-container>
+
+  <mat-menu #notifications="matMenu">
+    <mat-list>
+      <blockframes-notification-list></blockframes-notification-list>
+    </mat-list>
+  </mat-menu>
+
+  <ng-container *ngIf="(user$ | async) as user">
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>account_circle</mat-icon>
     </button>

@@ -3,9 +3,12 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 
+//Modules
 import { OrganizationModule } from '@blockframes/organization';
 import { AuthModule } from '@blockframes/auth';
 import { AccountModule } from '@blockframes/account';
+import { NotificationModule } from '../notification/notification.module';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -23,6 +26,7 @@ import { RouterModule } from '@angular/router';
     OrganizationModule,
     AuthModule,
     AccountModule,
+    NotificationModule,
     MatMenuModule,
     MatButtonModule,
     MatDividerModule,
