@@ -1,5 +1,5 @@
 <mat-card class="container mat-elevation-z6" fxLayout="row" fxLayoutAlign="space-between center">
-    <form fxFlex="60" [formGroup]="form" class="container" fxLayout="column" fxLayoutAlign="center">
+    <form [formGroup]="form" class="form" fxLayout="column" fxLayoutAlign="center">
       <mat-form-field appearance="outline">
         <mat-label>Value</mat-label>
         <input class="value" formControlName="value" matInput placeholder="Value"/>
@@ -15,7 +15,7 @@
         <input class="category" formControlName="category" matInput placeholder="Category"/>
       </mat-form-field>
     </form>
-    <div fxFlex="20" fxLayoutAlign="center">
+    <div class="buttons" fxLayoutAlign="center">
       <button mat-raised-button color="basic" class="cancel-button mat-elevation-z0" (click)="cancel()">Cancel</button>
       <button mat-raised-button color="primary" class="add-button mat-elevation-z0" (click)="addMaterial()">Save</button>
     </div>
