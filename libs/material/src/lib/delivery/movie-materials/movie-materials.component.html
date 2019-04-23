@@ -29,7 +29,7 @@
             <p class="step-text">STEP 2</p>
             <span class="step-informations">
               <small class="period-text">Acceptance period :</small>
-              <p class="period-days">{{randomNumberPicker(30)}} days</p>
+              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
             </span>
             <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
           </span>
@@ -38,7 +38,7 @@
             <p class="step-text">STEP 3</p>
             <span class="step-informations">
               <small class="period-text">Delivery time :</small>
-              <p class="period-days">{{randomNumberPicker(30)}} days</p>
+              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
             </span>
             <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
           </span>
@@ -46,7 +46,7 @@
       </mat-card>
       <ng-template #empty>
         <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
-            <mat-progress-spinner
+          <mat-progress-spinner
             class="spinner"
             color="warn"
             mode="determinate"
@@ -57,7 +57,9 @@
           </mat-progress-spinner>
           <div class="progress-value">0 %</div>
           <p class="global-progression">Global progression</p>
-          <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+          <p class="spinner-text">
+            <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
+          </p>
           <div>
             <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
               <p class="step-text">STEP 1</p>
@@ -77,44 +79,9 @@
 
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
-
-        <mat-card
-          *ngFor="let material of category.value"
-          class="materials-block mat-elevation-z6"
-          fxLayout="row"
-          fxLayoutGap="20px"
-        >
-          <mat-checkbox fxLayoutAlign="center center"
-            color="primary"
-            [(ngModel)]="material.delivered"
-            (click)="deliveredToggle(material, movie.id)"
-          >
-          </mat-checkbox>
-          <div class="material" fxLayout="column" fxLayoutAlign="center start">
-            <span>
-              <h4 mat-line> {{ material.value }}</h4>
-            </span>
-            <p mat-line class="description-text">{{ material.description }}</p>
-          </div>
-          <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
-            <span class="material-step">
-              <h5>Step :</h5>
-              <p class="material-step-text">Step 5</p>
-            </span>
-            <span class="state">
-              <h5>State :</h5>
-              <mat-icon class="icons" svgIcon="{{stateIcon}}"></mat-icon>
-            </span>
-            <span class="time">
-              <h5>Delivery time :</h5>
-              <p class="time-text">{{randomNumberPicker(30)}} days</p>
-            </span>
-            <span class="payment">
-              <h5>Payment :</h5>
-              <mat-icon class="icons" svgIcon="{{paymentIcon}}"></mat-icon>
-            </span>
-          </div>
-        </mat-card>
+        <div *ngFor="let material of category.value" fxLayoutGap="20px">
+          <delivery-movie-material-item [material]="material"></delivery-movie-material-item>
+        </div>
       </div>
     </article>
   </section>

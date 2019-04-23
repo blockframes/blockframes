@@ -19,6 +19,7 @@ import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.co
 import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
 import { FiltersComponent } from './movie-materials/filters/filters.component';
 import { ActionsComponent } from './movie-materials/actions/actions.component';
+import { MovieMaterialItemComponent } from './movie-material-item/movie-material-item.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -40,9 +41,6 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule } from '@blockframes/ui';
-
-
-
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -82,6 +80,7 @@ const routes: Routes = [
     DeliveryItemComponent,
     FiltersComponent,
     ActionsComponent,
+    MovieMaterialItemComponent,
 
   ],
   imports: [

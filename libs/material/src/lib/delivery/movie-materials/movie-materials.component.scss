@@ -33,11 +33,6 @@ mat-progress-spinner{
   width: 100%;
 }
 
-.materials-block {
-  margin-bottom: 1rem;
-  padding: 30px 30px 30px 20px;
-}
-
 h3 {
   color: #5E5E5E;
 }
@@ -104,28 +99,4 @@ p {
   font-size: 12px;
   margin: 0;
   font-weight: bolder;
-}
-
-.material {
-  width: 50%;
-}
-
-.informations {
-  width: 50%;
-}
-
-.description-text {
-  margin: 0;
-  font-style: italic;
-  font-size: 12px;
-}
-
-.icons {
-  width: 20px;
-}
-
-.time-text, .material-step-text {
-  margin-top: 5px;
-  font-weight: bolder;
-  font-size: 15px;
 }
