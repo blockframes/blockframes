@@ -109,35 +109,4 @@ export class TemplateService {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name && entity.orgId === orgId);
   }
-
-  public subscribeOnAllOrgsTemplates$() {
-    return this.organizationQuery.selectAll().pipe(
-      switchMap(orgs =>
-        combineLatest(
-          orgs.map(org =>
-            this.db
-              .collection<Template>(`orgs/${org.id}/templates`)
-              .valueChanges()
-              .pipe(
-                map(templates =>
-                  templates.map(template => ({ ...template, orgId: org.id, orgName: org.name }))
-                )
-              )
-          )
-        )
-      ),
-      // for each org, we have an array of templates.
-      // This flattens the array of array into a single array of templates:
-      map(templatesPerOrgs => [].concat.apply([], templatesPerOrgs) as Template[]),
-      tap(templates => this.store.set(templates))
-    );
-  }
-
-  public subscribeOnOrganizationTemplates$() {
-    return this.organizationQuery.selectActiveId().pipe(
-      filter(id => !!id),
-      switchMap(id => this.db.collection<Template>(`orgs/${id}/templates`).valueChanges()),
-      tap(templates => this.store.set(templates))
-    );
-  }
 }

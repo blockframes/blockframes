@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { TemplateFormComponent } from './template-form/template-form.component';
 import { TemplateListComponent } from './template-list/template-list.component';
-import { TemplateGuard } from './guards/template.guard';
+import { TemplateActiveGuard } from './guards/template-active.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
 import { ConfirmModule } from '@blockframes/ui';
@@ -25,11 +25,22 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { TemplateListGuard } from './guards/template-list.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
-  { path: 'list', component: TemplateListComponent },
-  { path: ':templateId', component: TemplateFormComponent, canActivate: [TemplateGuard] }
+  { 
+    path: 'list', 
+    component: TemplateListComponent,
+    canActivate: [TemplateListGuard],
+    canDeactivate: [TemplateListGuard],
+  },
+  { 
+    path: ':templateId',
+    component: TemplateFormComponent, // TODO rename in TemplateActiveForm
+    canActivate: [TemplateActiveGuard],
+    canDeactivate: [TemplateActiveGuard],
+  }
 ]
 
 @NgModule({

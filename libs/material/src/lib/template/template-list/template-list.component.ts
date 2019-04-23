@@ -27,7 +27,6 @@ export class TemplateListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.service.subscribeOnAllOrgsTemplates$().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.materialService.subscribeOnAllOrgsMaterials$()
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
