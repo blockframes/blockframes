@@ -8,6 +8,7 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateGuard } from './guards/template.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
+import { MaterialTemplateAddFormComponent } from '../material/material-template-add-form/material-template-add-form.component';
 import { ConfirmModule } from '@blockframes/ui';
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +26,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { EditableComponent } from './directives/editable.component';
+import { ViewModeDirective } from './directives/view-mode-directive';
+import { EditModeDirective } from './directives/edit-mode-directive';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -38,6 +42,10 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
+    EditableComponent,
+    ViewModeDirective,
+    EditModeDirective,
+    MaterialTemplateAddFormComponent,
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy, Input} from '@angular/core';
-import { Material, MaterialQuery, MaterialStore } from '../+state';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import { Material } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'material-template-form',
@@ -9,11 +8,10 @@ import { takeWhile, filter } from 'rxjs/operators';
   styleUrls: ['./material-template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialTemplateFormComponent implements OnInit, OnDestroy {
-  @Input() isDeliveryValidated: boolean;
-  @Output() material = new EventEmitter<Material>();
-
-  private isAlive = true;
+export class MaterialTemplateFormComponent implements OnInit {
+  @Input() material: Material;
+  @Output() update = new EventEmitter<Material>();
+  @Output() cancelForm = new EventEmitter();
 
   public form = new FormGroup({
     value: new FormControl(),
@@ -21,29 +19,22 @@ export class MaterialTemplateFormComponent implements OnInit, OnDestroy {
     category: new FormControl()
   });
 
-  constructor(private query: MaterialQuery, private store: MaterialStore,) {}
+  constructor() {}
 
   ngOnInit() {
-    this.form.setValue({ value: '', description: '', category: '' });
-
-    this.query
-      .select(state => state.materialTemplateForm)
-      .pipe(
-        takeWhile(() => this.isAlive),
-        filter(materialTemplateForm => !!materialTemplateForm)
-      )
-      .subscribe(materialTemplateForm => this.form.setValue(materialTemplateForm));
+    this.form.setValue({
+      value: this.material.value,
+      description: this.material.description,
+      category: this.material.category
+    });
   }
 
-  public addMaterial() {
-    this.material.emit(this.form.value);
+  public updateMaterial() {
+    this.update.emit({...this.material, ...this.form.value});
+    this.cancel();
   }
 
   public cancel() {
-    this.store.clearForm();
-  }
-
-  ngOnDestroy() {
-    this.isAlive = false;
+    this.cancelForm.emit();
   }
 }

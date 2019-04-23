@@ -36,6 +36,6 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
   }
 
   public clearForm() {
-    this.updateRoot({ form: null })
+    this.updateRoot({ materialTemplateForm: null, materialDeliveryForm: null })
   }
 }

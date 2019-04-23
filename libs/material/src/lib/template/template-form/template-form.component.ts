@@ -23,6 +23,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   public form$: Observable<MaterialTemplateForm>;
   public templateActive$ : Observable<Template>;
   private isAlive = true;
+  public materialId: string;
 
   constructor(
     private query: TemplateQuery,
@@ -51,6 +52,10 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     this.materialStore.clearForm();
   }
 
+  public updateMaterial(material: Material) {
+    this.service.updateMaterial(material);
+  }
+
   public deleteMaterial(material: Material) {
     this.service.deleteMaterial(material.id);
     this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
@@ -58,6 +63,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   public addForm(category: string) {
     this.materialStore.updateEmptyTemplateForm(category);
+    this.materialId = "";
   }
 
   public openDeleteTemplate(id: string, name: string) {
@@ -76,6 +82,15 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     this.service.deleteTemplate(id);
     this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
     this.router.navigate(['layout/template/list']);
+  }
+
+  openUpdateForm(material) {
+    this.materialId = material.id;
+    this.materialStore.clearForm();
+  }
+
+  cancelUpdateForm() {
+    this.materialId = "";
   }
 
   ngOnDestroy() {

@@ -64,6 +64,14 @@ export class TemplateService {
     this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).update({ materialsId });
   }
 
+  public updateMaterial(material: Material) {
+    // Update material to sub-collection materials of organization in firebase
+    const orgId = this.templateQuery.getActive().orgId;
+    this.db
+      .doc<Material>(`orgs/${orgId}/materials/${material.id}`)
+      .update(material);
+  }
+
   public async saveTemplate(name: string, orgId: string) {
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {

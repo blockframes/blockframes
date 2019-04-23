@@ -9,9 +9,9 @@
         {{ material.description }}
       </mat-card-content>
       <mat-card-actions>
-        <button [disabled]="isDeliveryValidated">EDIT</button>
-        <button class="border-left" [disabled]="isDeliveryValidated">DUPLICATE</button>
-        <button class="border-left" [disabled]="isDeliveryValidated" (click)="deleteMaterial()">DELETE</button>
+        <button (click)="editMaterial()">EDIT</button>
+        <button class="border-left">DUPLICATE</button>
+        <button class="border-left" (click)="deleteMaterial()">DELETE</button>
       </mat-card-actions>
     </div>
 </mat-card>
