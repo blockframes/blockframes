@@ -3,7 +3,7 @@ import { db, serverTimestamp } from './firebase';
 interface PartialNotification {
   app: string;
   message: string;
-  orgId: string;
+  userId: string;
 }
 
 interface Notification extends PartialNotification {
@@ -23,12 +23,12 @@ export async function triggerNotification(notifications: Notification[]): Promis
   return notificationBatch.commit();
 }
 
-export function prepareNotification({ app, message, orgId }: PartialNotification): Notification {
+export function prepareNotification({ app, message, userId }: PartialNotification): Notification {
   return {
     id: db.collection('notifications').doc().id,
     app,
     message,
-    orgId,
+    userId,
     isRead: false,
     date: serverTimestamp()
   };
