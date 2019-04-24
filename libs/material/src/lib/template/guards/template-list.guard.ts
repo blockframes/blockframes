@@ -43,10 +43,10 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
           templates.forEach(template => this.store.upsert(template.id, template));
         })),
         takeWhile(_ => !!this.listenOnList),
-      ).subscribe(
-        templates => res(!!templates),
-        _ => res(this.router.parseUrl('layout'))
-      );
+      ).subscribe({
+        next: templates => res(!!templates),
+        error: _ => res(this.router.parseUrl('layout'))
+      });
     });
     
   }

@@ -33,10 +33,10 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
         takeWhile(_ => this.listenOnActive),
         tap(template => this.store.upsert(template.id, template)),
         tap(template => this.store.setActive(template.id)),
-      ).subscribe(
-        template => res(!!template),
-        _ => res(this.router.parseUrl('layout'))
-      );
+      ).subscribe({
+        next: template => res(!!template),
+        error: _ => res(this.router.parseUrl('layout'))
+      });
     })
   }
   
