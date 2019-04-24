@@ -18,4 +18,9 @@ export class TemplateStore extends EntityStore<TemplateState, Template> {
     super(initialState);
   }
 
+  public upsert(id: string, entity: Template) {
+    !!this.entities[id]
+      ? this.update(id, entity)
+      : this.add(entity);
+  }
 }

@@ -3,6 +3,7 @@ import { Material } from "../../material/+state/material.model";
 export interface Template {
   id: string;
   name: string;
+  materials?: Material[];
   materialsId: string[];
   orgId?: string; // only storage in akita store
   orgName?: string; // only storage in akita store
