@@ -13,7 +13,7 @@ export abstract class StateListGuard {
 export abstract class StateActiveGuard {
   protected listenOnActive = false;
 
-  abstract startListeningOnActive(): void;
+  abstract startListeningOnActive(...params: any[]): void;
 
   public stopListeningOnActive() {
     this.listenOnActive = false;
