@@ -1,6 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
+import { onDeliveryUpdate } from './delivery';
 import { auth, db, functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 
@@ -123,68 +124,9 @@ export const getOrCreateUserByMail = functions.https
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
  */
-export const onDeliveryUpdate = functions.firestore
+export const onDeliveryUpdateEvent = functions.firestore
   .document('deliveries/{deliveryID}')
-  .onUpdate(async (change, context) => {
-    if (!change.after || !change.before) {
-      return true;
-    }
-
-    const delivery = change.after.data();
-    const deliveryBefore = change.before.data();
-
-    if (!delivery || !deliveryBefore) {
-      return true;
-    }
-
-    const queryStakeholdersCount = await db
-    .collection(`deliveries/${delivery.id}/stakeholders`)
-    .get();
-    const stakeholderCount = queryStakeholdersCount.docs.map(doc => doc.data());
-    // when validated.length reaches stakeholderCount.length
-    if (
-      deliveryBefore.validated.length === (stakeholderCount.length - 1) &&
-      delivery.validated.length === stakeholderCount.length
-    ) {
-      const queryMovie = await db
-        .collection(`movies/${delivery.movieId}/materials`)
-        .get();
-      const materialsMovie = queryMovie.docs.map(doc => doc.data());
-
-      const queryDelivery = await db
-        .collection(`deliveries/${delivery.id}/materials`)
-        .get();
-      const materialsDelivery = queryDelivery.docs.map(doc => doc.data());
-
-      const promises: Promise<any>[] = [];
-
-      materialsDelivery.forEach(materialDelivery => {
-        const materialExist = materialsMovie.find(materialMovie =>
-          materialDelivery.value === materialMovie.value
-          && materialDelivery.category === materialMovie.category
-          && materialDelivery.description === materialMovie.description
-        );
-
-        if (materialExist) {
-          // when material exists in movie, we update the existing material 'deliveriesIds' property
-          materialExist.deliveriesIds.push(delivery.id);
-          const promise = db
-            .doc(`movies/${delivery.movieId}/materials/${materialExist.id}`)
-            .set(materialExist);
-          promises.push(promise);
-        } else {
-          // when material does not exist in movie, we make a copy of that material in the movie subcollection
-          const promise = db
-            .doc(`movies/${delivery.movieId}/materials/${materialDelivery.id}`)
-            .set({ ...materialDelivery, deliveriesIds: [delivery.id] });
-          promises.push(promise);
-        }
-      });
-      await Promise.all(promises);
-    }
-
-    return true;
-  });
+  .onUpdate(onDeliveryUpdate);
 
 //--------------------------------
 //            RELAYER           //
