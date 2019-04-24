@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree, CanDeactivate } from '@angular/router';
-import { TemplateStore, TemplateQuery, Template } from '../+state';
+import { TemplateStore, Template } from '../+state';
 import { StateActiveGuard } from 'libs/utils/src/lib/state-guard';
 import { Query, FireQuery } from '@blockframes/utils';
-import { takeWhile, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { takeWhile, map, tap, catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
-export function templateActiveQuery(orgId: string, activeId: string): Query<Template> {
-  return <Query<Template>> {
-    path: `orgs/${orgId}/templates/${activeId}`
-  };
-}
+export const templateActiveQuery = (orgId: string, templateId: string): Query<Template> => ({
+  path: `orgs/${orgId}/templates/${templateId}`,
+  materials: (template) => template.materialsId.map(id => ({ // ! WARNING THIS WILL CRASH IF "orgId" OR "templateId" DOESN'T EXIST
+    path: `orgs/${orgId}/materials/${id}`
+  }))
+});
 
 @Injectable({
   providedIn: 'root'
@@ -18,30 +20,30 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
   
   constructor(
     private store: TemplateStore,
-    private query: TemplateQuery,
     private router: Router,
     private fireQuery: FireQuery
     ) {
       super()
   }
 
-  startListeningOnActive(): void {
+  startListeningOnActive(orgId: string, templateId: string): Observable<Template> {
     this.listenOnActive = true;
-    this.query.selectActive().pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)), // this prevent infinite loop
-      switchMap(templ => this.fireQuery.fromQuery(templateActiveQuery(templ.orgId, templ.id))),
-      takeWhile(_ => !!this.listenOnActive),
-    )
-    .subscribe(activeTemplate => {
-      this.store.update(activeTemplate.id, activeTemplate);
-    });
+    const query = templateActiveQuery(orgId, templateId);
+    return this.fireQuery.fromQuery(query).pipe(
+      takeWhile(_ => this.listenOnActive),
+      tap(template => this.store.upsert(template.id, template)),
+      tap(template => this.store.setActive(template.id)),
+    );
   }
   
-  canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree {
-    // TODO what happen if user copy/paste url and Template state wasn't set previously ? Find a falback mechanism
-    this.store.setActive(route.params.templateId);
-    this.startListeningOnActive();
-    return true;
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> | UrlTree {
+    const { orgId, templateId } = route.params;
+    if (!orgId || !templateId) return this.router.parseUrl('layout/template');
+    return this.startListeningOnActive(orgId, templateId).pipe(
+      map(template => !!template),
+      catchError(_ => of(this.router.parseUrl('layout/template')))
+      // catchError() // TODO afeter fireQuery update
+    )
   }
 
   canDeactivate() {

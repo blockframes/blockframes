@@ -32,7 +32,6 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
   startListeningOnList(): void {
     this.listenOnList = true;
     
-    // TODO what happen if user copy/paste url and Org state wasn't set previously ? Find a falback mechanism
     this.orgQuery.selectAll().pipe(
       switchMap(orgs => {
         const templates$ = orgs.map(org => {
