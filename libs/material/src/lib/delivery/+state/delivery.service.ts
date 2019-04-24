@@ -57,9 +57,7 @@ export class DeliveryService {
   /** Update material to the delivery sub-collection in firebase */
   public updateMaterial(material: Material) {
     const idDelivery = this.query.getActiveId();
-    this.db
-      .doc<Material>(`deliveries/${idDelivery}/materials/${material.id}`)
-      .update(material);
+    this.db.doc<Material>(`deliveries/${idDelivery}/materials/${material.id}`).update(material);
     this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
   }
 
@@ -159,7 +157,9 @@ export class DeliveryService {
         [authorization]
       );
       this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`)
+        .doc<Stakeholder>(
+          `deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`
+        )
         .set(newDeliveryStakeholder);
       // If deliveryStakeholder exists, we update his authorizations
     } else {
@@ -167,9 +167,18 @@ export class DeliveryService {
         ? deliveryStakeholder.authorizations
         : [...deliveryStakeholder.authorizations, authorization];
       this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`)
+        .doc<Stakeholder>(
+          `deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`
+        )
         .update({ authorizations });
     }
+  }
+
+  /** Update authorizations of stakeholder delivery */
+  public updateStakeholderAuthorizations(stakeholderId: string, authorizations: string[]) {
+    this.db
+      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
+      .update({ authorizations });
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
@@ -194,11 +203,10 @@ export class DeliveryService {
   }
 
   public get deliveryList() {
-    return this.movieQuery
-      .selectActiveId()
-      .pipe(
-        switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
-        tap((deliveries : any) => this.store.set(deliveries)));
+    return this.movieQuery.selectActiveId().pipe(
+      switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
+      tap((deliveries: any) => this.store.set(deliveries))
+    );
   }
 
   private getDeliveryListWithStakeholders(movieId: string): Query<Delivery> {

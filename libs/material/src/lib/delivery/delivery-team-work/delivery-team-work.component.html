@@ -29,11 +29,14 @@
       (click)="addStakeholder(selectedStakeholder.value, selectedAuthorization.value.slug)">
       <mat-icon>add</mat-icon>
     </button>
+
+
   </article>
 
-  <ul *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
-    <li>
-      name : {{ deliveryStakeholder.organization.name }} | authorizations : {{ deliveryStakeholder.authorizations }}
-    </li>
-  </ul>
+  <delivery-team-work-list *ngIf="(movieStakeholders$ | async) as movieStakeholders" [stakeholders]="movieStakeholders"></delivery-team-work-list>
+
+  <div *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
+    <delivery-team-work-item [stakeholder]="deliveryStakeholder"></delivery-team-work-item>
+    <delivery-team-work-form [stakeholder]="deliveryStakeholder"></delivery-team-work-form>
+  </div>
 </section>

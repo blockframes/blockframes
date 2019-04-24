@@ -1,0 +1,27 @@
+<mat-card class="mat-elevation-z6">
+  <mat-card-content>
+    <mat-card-title>Edit {{ stakeholder.organization.name }}</mat-card-title>
+    <mat-form-field>
+      <mat-label>Stakeholder role</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let role of roles" [value]="role">
+          {{ role }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <h4>Authorizations</h4>
+    <chips-autocomplete
+      [items]="authorizations"
+      [keys]="stakeholderAuthorizations"
+      [placeholder]="Authorization"
+      (added)="addAuthorization($event)"
+      (removed)="removeAuthorization($event)"
+    ></chips-autocomplete>
+    <mat-card-actions>
+      <button (click)="cancel()">
+        Cancel
+      </button>
+      <button (click)="updateStakeholderAuthorizations()">Save</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>

@@ -39,7 +39,7 @@ export const CONTEXT_MENU = [
       { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
       { name: 'deliveries', path: '/layout/:movieId/list'},
       { name: 'delivery', path: '/layout/:movieId/form/:deliveryId', exact:true},
-      { name: 'settings', path: '/layout/:movieId/form/:deliveryId/settings'},
+      { name: 'Team-Work', path: '/layout/:movieId/form/:deliveryId/teamwork'},
     ]
   },
   {

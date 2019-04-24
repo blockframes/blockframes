@@ -13,7 +13,7 @@ import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 import { MaterialModule } from '../material/material.module';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
-import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
+import { DeliveryTeamWorkComponent } from './delivery-team-work/delivery-team-work.component';
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
 import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
 import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
@@ -21,6 +21,9 @@ import { FiltersComponent } from './movie-materials/filters/filters.component';
 import { ActionsComponent } from './movie-materials/actions/actions.component';
 import { MovieMaterialItemComponent } from './movie-material-item/movie-material-item.component';
 import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-item.component';
+import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
+import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
+import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -41,7 +44,7 @@ import {
   MatExpansionModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { ConfirmModule } from '@blockframes/ui';
+import { ConfirmModule, UiFormModule } from '@blockframes/ui';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -61,9 +64,9 @@ const routes: Routes = [
     component: DeliveryFormComponent
   },
   {
-    path: 'form/:deliveryId/settings',
+    path: 'form/:deliveryId/teamwork',
     // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliverySettingsComponent
+    component: DeliveryTeamWorkComponent
   }
 ];
 
@@ -74,7 +77,7 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryFormComponent,
     NewTemplateComponent,
-    DeliverySettingsComponent,
+    DeliveryTeamWorkComponent,
     TemplatePickerComponent,
     StakeholderListComponent,
     StakeholderItemComponent,
@@ -83,6 +86,9 @@ const routes: Routes = [
     ActionsComponent,
     MovieMaterialItemComponent,
     DeliveryViewItemComponent,
+    DeliveryTeamWorkFormComponent,
+    DeliveryTeamWorkItemComponent,
+    DeliveryTeamWorkListComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +98,7 @@ const routes: Routes = [
     MatExpansionModule,
     MaterialModule,
     ConfirmModule,
+    UiFormModule,
 
     // Material
     MatCardModule,

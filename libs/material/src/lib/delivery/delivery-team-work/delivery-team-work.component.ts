@@ -6,12 +6,12 @@ import { staticModels } from '@blockframes/movie';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
-  selector: 'delivery-settings',
-  templateUrl: './delivery-settings.component.html',
-  styleUrls: ['./delivery-settings.component.scss'],
+  selector: 'delivery-team-work',
+  templateUrl: './delivery-team-work.component.html',
+  styleUrls: ['./delivery-team-work.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliverySettingsComponent implements OnInit, OnDestroy {
+export class DeliveryTeamWorkComponent implements OnInit, OnDestroy {
   public movieStakeholders$: Observable<Stakeholder[]>;
   public authorizations: Object;
   public deliveryStakeholders$: Observable<Stakeholder[]>;
