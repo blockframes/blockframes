@@ -3,12 +3,11 @@ import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree, CanDeactivate } f
 import { TemplateStore, Template } from '../+state';
 import { StateActiveGuard } from 'libs/utils/src/lib/state-guard';
 import { Query, FireQuery } from '@blockframes/utils';
-import { takeWhile, map, tap, catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { takeWhile, tap } from 'rxjs/operators';
 
 export const templateActiveQuery = (orgId: string, templateId: string): Query<Template> => ({
   path: `orgs/${orgId}/templates/${templateId}`,
-  materials: (template) => template.materialsId.map(id => ({ // ! WARNING THIS WILL CRASH IF "orgId" OR "templateId" DOESN'T EXIST
+  materials: (template) => template.materialsId.map(id => ({
     path: `orgs/${orgId}/materials/${id}`
   }))
 });
@@ -22,28 +21,29 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
     private store: TemplateStore,
     private router: Router,
     private fireQuery: FireQuery
-    ) {
-      super()
+  ) {
+    super()
   }
 
-  startListeningOnActive(orgId: string, templateId: string): Observable<Template> {
-    this.listenOnActive = true;
-    const query = templateActiveQuery(orgId, templateId);
-    return this.fireQuery.fromQuery(query).pipe(
-      takeWhile(_ => this.listenOnActive),
-      tap(template => this.store.upsert(template.id, template)),
-      tap(template => this.store.setActive(template.id)),
-    );
+  startListeningOnActive(orgId: string, templateId: string): Promise<boolean | UrlTree> {
+    return new Promise((res, rej) => {
+      this.listenOnActive = true;
+      const query = templateActiveQuery(orgId, templateId);
+      this.fireQuery.fromQuery<Template>(query).pipe(
+        takeWhile(_ => this.listenOnActive),
+        tap(template => this.store.upsert(template.id, template)),
+        tap(template => this.store.setActive(template.id)),
+      ).subscribe(
+        template => res(!!template),
+        _ => res(this.router.parseUrl('layout'))
+      );
+    })
   }
   
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> | UrlTree {
+  canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> | UrlTree {
     const { orgId, templateId } = route.params;
     if (!orgId || !templateId) return this.router.parseUrl('layout/template');
-    return this.startListeningOnActive(orgId, templateId).pipe(
-      map(template => !!template),
-      catchError(_ => of(this.router.parseUrl('layout/template')))
-      // catchError() // TODO afeter fireQuery update
-    )
+    return this.startListeningOnActive(orgId, templateId);
   }
 
   canDeactivate() {

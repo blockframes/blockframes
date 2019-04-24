@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
 import { Template, TemplatesByOrgs } from './template.model';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, filter, pluck } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 
@@ -40,14 +40,9 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
 
   public form$ = this.select(state => state.form);
 
-  public materialsByTemplate$ = combineLatest([
-    this.selectActive(),
-    this.materialQuery.selectAll()
-  ]).pipe(
-    map(([template, materials]) => {
-      const ids = template ? template.materialsId : [];
-      return ids.map(materialId => materials.find(material => material.id === materialId));
-    }),
+  public materialsByTemplate$ = this.selectActive().pipe(
+    filter(template => !!template),
+    pluck('materials'),
     map(materials => materialsByCategory(materials))
   );
 

@@ -53,22 +53,21 @@ export class FireQuery {
       .valueChanges()
       .pipe(
         switchMap((entities) => {
-          if (!entities) return throwError(`Nothing found at path : ${query.path}`)
-          if (!this.hasSubqueries(query)) {
-            return of(entities);
-          } else {
-            // For Each entity populate with the subqueries
-            const populatedEntities$ = entities.map(entity => {
-              return this.getAllSubQueries(query, entity);
-            });
-            return combineLatest(populatedEntities$);
-          }
+          if (!entities) return throwError(`Nothing found at path : ${query.path}`);
+          if (!entities.length) return of([]);
+          if (!this.hasSubqueries(query)) return of(entities);
+          // For Each entity populate with the subqueries
+          const populatedEntities$ = entities.map(entity => {
+            return this.getAllSubQueries(query, entity);
+          });
+          return combineLatest(populatedEntities$);
         })
       );
   }
 
   /** Query a list of document */
   private fromDocList<T>(listOfDocQueries: Query<T>[]) {
+    if (!listOfDocQueries.length) return of([]);
     const allDocs$ = listOfDocQueries.map(query => this.fromDoc(query));
     return combineLatest(allDocs$);
   }

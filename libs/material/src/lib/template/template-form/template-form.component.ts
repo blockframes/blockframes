@@ -23,6 +23,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
   public form$: Observable<MaterialTemplateForm>;
   public templateActive$ : Observable<Template>;
   private isAlive = true;
+  public categories: string[];
   public materialId: string;
 
   constructor(
