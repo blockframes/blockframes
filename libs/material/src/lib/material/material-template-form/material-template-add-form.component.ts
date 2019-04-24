@@ -5,8 +5,8 @@ import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'material-template-add-form',
-  templateUrl: './material-template-add-form.component.html',
-  styleUrls: ['./material-template-add-form.component.scss'],
+  templateUrl: './material-template-form.component.html',
+  styleUrls: ['./material-template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MaterialTemplateAddFormComponent implements OnInit, OnDestroy {
@@ -34,7 +34,7 @@ export class MaterialTemplateAddFormComponent implements OnInit, OnDestroy {
       .subscribe(materialTemplateForm => this.form.setValue(materialTemplateForm));
   }
 
-  public addMaterial() {
+  public updateMaterial() {
     this.material.emit(this.form.value);
   }
 

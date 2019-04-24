@@ -83,7 +83,6 @@ const routes: Routes = [
     ActionsComponent,
     MovieMaterialItemComponent,
     DeliveryViewItemComponent,
-
   ],
   imports: [
     CommonModule,

@@ -8,7 +8,6 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateGuard } from './guards/template.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
-import { MaterialTemplateAddFormComponent } from '../material/material-template-add-form/material-template-add-form.component';
 import { ConfirmModule } from '@blockframes/ui';
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -39,7 +38,6 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
-    MaterialTemplateAddFormComponent,
   ],
   imports: [
     CommonModule,
