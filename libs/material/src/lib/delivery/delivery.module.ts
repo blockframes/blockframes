@@ -13,7 +13,7 @@ import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
 import { MaterialModule } from '../material/material.module';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
-import { DeliveryTeamWorkComponent } from './delivery-team-work/delivery-team-work.component';
+import { DeliveryTeamWorkViewComponent } from './delivery-team-work-view/delivery-team-work-view.component';
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
 import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
 import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
@@ -45,8 +45,8 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
-import { TeamWorkActionsComponent } from './delivery-team-work/team-work-actions/team-work-actions.component';
-import { TeamWorkFiltersComponent } from './delivery-team-work/team-work-filters/team-work-filters.component';
+import { TeamWorkActionsComponent } from './delivery-team-work-view/team-work-actions/team-work-actions.component';
+import { TeamWorkFiltersComponent } from './delivery-team-work-view/team-work-filters/team-work-filters.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -68,7 +68,7 @@ const routes: Routes = [
   {
     path: 'form/:deliveryId/teamwork',
     // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliveryTeamWorkComponent
+    component: DeliveryTeamWorkViewComponent
   }
 ];
 
@@ -79,7 +79,7 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryFormComponent,
     NewTemplateComponent,
-    DeliveryTeamWorkComponent,
+    DeliveryTeamWorkViewComponent,
     TemplatePickerComponent,
     StakeholderListComponent,
     StakeholderItemComponent,

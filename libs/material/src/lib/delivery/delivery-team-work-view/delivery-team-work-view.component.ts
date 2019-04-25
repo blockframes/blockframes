@@ -2,16 +2,15 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { Observable } from 'rxjs';
 import { DeliveryService } from '../+state';
 import { Stakeholder, StakeholderService, StakeholderQuery } from '@blockframes/movie';
-import { staticModels } from '@blockframes/movie';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
-  selector: 'delivery-team-work',
-  templateUrl: './delivery-team-work.component.html',
-  styleUrls: ['./delivery-team-work.component.scss'],
+  selector: 'delivery-team-work-view',
+  templateUrl: './delivery-team-work-view.component.html',
+  styleUrls: ['./delivery-team-work-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTeamWorkComponent implements OnInit, OnDestroy {
+export class DeliveryTeamWorkViewComponent implements OnInit, OnDestroy {
   public movieStakeholders$: Observable<Stakeholder[]>;
   public deliveryStakeholders$: Observable<Stakeholder[]>;
   public isAlive = true;

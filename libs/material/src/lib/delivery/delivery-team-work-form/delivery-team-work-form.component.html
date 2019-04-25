@@ -14,7 +14,7 @@
       <chips-autocomplete
         [items]="authorizations"
         [keys]="stakeholderAuthorizations"
-        [placeholder]="Authorization"
+        [placeholder]="'Authorization'"
         (added)="addAuthorization($event)"
         (removed)="removeAuthorization($event)"
       ></chips-autocomplete>
@@ -34,7 +34,6 @@
         mat-raised-button
         color="primary"
         class="add-button mat-elevation-z0"
-        [disabled]="isDeliveryValidated"
         (click)="updateStakeholderAuthorizations()"
       >
         Save
