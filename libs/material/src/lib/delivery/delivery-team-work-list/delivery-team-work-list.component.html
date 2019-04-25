@@ -1,13 +1,14 @@
+<h4>Add stakeholders</h4>
 <mat-list>
-  <mat-list-item  *ngFor="let stakeholder of stakeholders">{{ stakeholder.organization.name }}
-    <button
-    mat-mini-fab
-    color="primary">
-
-    <mat-icon>add</mat-icon>
-  </button>
-
+  <mat-list-item
+    *ngFor="let stakeholder of stakeholders"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+  >
+    <span class="dot mat-elevation-z4" [ngStyle]="{ 'background-color': getRandomColor() }"></span>
+    <p>{{ stakeholder.organization.name }}</p>
+    <button mat-icon-button color="primary" (click)="addStakeholder(stakeholder)">
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
   </mat-list-item>
-
 </mat-list>
-

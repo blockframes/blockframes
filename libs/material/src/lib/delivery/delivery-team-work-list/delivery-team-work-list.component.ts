@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
+import { DeliveryService } from '../+state';
 
 @Component({
   selector: 'delivery-team-work-list',
@@ -10,9 +11,18 @@ import { Stakeholder } from '@blockframes/movie';
 export class DeliveryTeamWorkListComponent implements OnInit {
   @Input() stakeholders: Stakeholder[];
 
-  constructor() { }
+  constructor(private service: DeliveryService) {}
 
-  ngOnInit() {
+  public addStakeholder(stakeholder: Stakeholder) {
+    this.service.addStakeholder(stakeholder);
   }
 
+  public getRandomColor() {
+    return '#000000'.replace(/0/g, function() {
+      // tslint:disable-next-line: no-bitwise
+      return (~~(Math.random() * 16)).toString(16);
+    });
+  }
+
+  ngOnInit() {}
 }

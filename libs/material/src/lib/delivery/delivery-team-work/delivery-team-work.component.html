@@ -1,42 +1,22 @@
-<section>
-  <h2 fxLayoutAlign="center">Select stakeholders for this delivery</h2>
-
-  <article fxLayout="row" fxLayoutGap="5%" fxLayoutAlign="center center">
-
-    <mat-form-field>
-      <mat-label>Stakeholder</mat-label>
-      <mat-select #selectedStakeholder>
-        <mat-option>None</mat-option>
-        <mat-option *ngFor="let movieStakeholder of (movieStakeholders$ | async)" [value]="movieStakeholder">{{
-          movieStakeholder.organization.name
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Authorization</mat-label>
-      <mat-select [disabled]="!selectedStakeholder.value" #selectedAuthorization>
-        <mat-option>None</mat-option>
-        <mat-option *ngFor="let authorization of authorizations" [value]="authorization">
-          {{ authorization.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button
-      [disabled]="!selectedStakeholder.value || !selectedAuthorization.value"
-      mat-mini-fab
-      color="primary"
-      (click)="addStakeholder(selectedStakeholder.value, selectedAuthorization.value.slug)">
-      <mat-icon>add</mat-icon>
-    </button>
-
-
-  </article>
-
-  <delivery-team-work-list *ngIf="(movieStakeholders$ | async) as movieStakeholders" [stakeholders]="movieStakeholders"></delivery-team-work-list>
-
-  <div *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
-    <delivery-team-work-item [stakeholder]="deliveryStakeholder"></delivery-team-work-item>
-    <delivery-team-work-form [stakeholder]="deliveryStakeholder"></delivery-team-work-form>
-  </div>
-</section>
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav [opened]="true" mode="side">
+    <delivery-team-work-list
+      *ngIf="(movieStakeholders$ | async) as movieStakeholders"
+      [stakeholders]="movieStakeholders"
+    ></delivery-team-work-list>
+  </mat-sidenav>
+  <!-- Content -->
+  <mat-sidenav-content>
+    <div class="item-form" *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
+      <material-editable [material]="deliveryStakeholder" [materialId]="stakeholderId">
+        <ng-template materialViewMode>
+          <delivery-team-work-item (update)="openForm(deliveryStakeholder)" [stakeholder]="deliveryStakeholder"></delivery-team-work-item>
+        </ng-template>
+        <ng-template materialEditMode>
+          <delivery-team-work-form [stakeholder]="deliveryStakeholder"></delivery-team-work-form>
+        </ng-template>
+      </material-editable>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,6 +1,6 @@
 <mat-card class="mat-elevation-z6">
-  <mat-card-content>
-    <mat-card-title>Edit {{ stakeholder.organization.name }}</mat-card-title>
+  <mat-card-title>Edit {{ stakeholder.organization.name }}</mat-card-title>
+  <mat-card-content fxLayout="row" fxLayoutAlign="space-between">
     <mat-form-field>
       <mat-label>Stakeholder role</mat-label>
       <mat-select>
@@ -9,19 +9,36 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <h4>Authorizations</h4>
-    <chips-autocomplete
-      [items]="authorizations"
-      [keys]="stakeholderAuthorizations"
-      [placeholder]="Authorization"
-      (added)="addAuthorization($event)"
-      (removed)="removeAuthorization($event)"
-    ></chips-autocomplete>
+    <div fxLayout="row">
+      <h4>Authorizations</h4>
+      <chips-autocomplete
+        [items]="authorizations"
+        [keys]="stakeholderAuthorizations"
+        [placeholder]="Authorization"
+        (added)="addAuthorization($event)"
+        (removed)="removeAuthorization($event)"
+      ></chips-autocomplete>
+    </div>
+  </mat-card-content>
+  <mat-card-content fxLayoutAlign="end">
     <mat-card-actions>
-      <button (click)="cancel()">
+      <button
+        mat-raised-button
+        color="basic"
+        class="cancel-button mat-elevation-z0"
+        (click)="cancel()"
+      >
         Cancel
       </button>
-      <button (click)="updateStakeholderAuthorizations()">Save</button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button mat-elevation-z0"
+        [disabled]="isDeliveryValidated"
+        (click)="updateStakeholderAuthorizations()"
+      >
+        Save
+      </button>
     </mat-card-actions>
   </mat-card-content>
 </mat-card>

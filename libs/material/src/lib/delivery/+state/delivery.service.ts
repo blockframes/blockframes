@@ -144,33 +144,24 @@ export class DeliveryService {
     return createDeliveryStakeholder({ id, orgId, authorizations });
   }
 
-  /** Update or Add a stakeholder with specific authorization to the delivery */
-  public addStakeholder(movieStakeholder: Stakeholder, authorization: string) {
+  /** Add a stakeholder to the delivery */
+  public addStakeholder(movieStakeholder: Stakeholder) {
     const deliveryStakeholder = this.stakeholderQuery
       .getAll()
       .find(stakeholder => stakeholder.id === movieStakeholder.id);
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
+      const authorizations = [];
       const newDeliveryStakeholder = this.makeDeliveryStakeholder(
         movieStakeholder.id,
         movieStakeholder.orgId,
-        [authorization]
+        authorizations
       );
       this.db
         .doc<Stakeholder>(
           `deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`
         )
         .set(newDeliveryStakeholder);
-      // If deliveryStakeholder exists, we update his authorizations
-    } else {
-      const authorizations = deliveryStakeholder.authorizations.includes(authorization)
-        ? deliveryStakeholder.authorizations
-        : [...deliveryStakeholder.authorizations, authorization];
-      this.db
-        .doc<Stakeholder>(
-          `deliveries/${this.query.getActiveId()}/stakeholders/${deliveryStakeholder.id}`
-        )
-        .update({ authorizations });
     }
   }
 
@@ -180,6 +171,13 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
       .update({ authorizations });
   }
+
+    /** Delete stakeholder delivery */
+    public deleteStakeholder(stakeholderId: string) {
+      this.db
+        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
+        .delete();
+    }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
   public async isDeliveryValidated(): Promise<boolean> {
