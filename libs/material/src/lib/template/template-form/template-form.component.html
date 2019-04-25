@@ -44,7 +44,7 @@
         </div>
         <div>
           <div *ngFor="let material of category.value">
-            <material-editable [material]="material" [materialId]="materialId">
+            <editable [item]="material" [itemId]="materialId">
               <ng-template materialViewMode>
                 <material-template-item
                   [material]="material"
@@ -59,7 +59,7 @@
                 (cancelForm)="cancelUpdateForm()"
                 ></material-template-form>
               </ng-template>
-            </material-editable>
+            </editable>
           </div>
           <div *ngIf="(form$ | async) as form">
             <material-template-add-form

@@ -34,6 +34,10 @@ export class DeliveryTeamWorkComponent implements OnInit, OnDestroy {
     this.stakeholderId = stakeholder.id;
   }
 
+  public cancelForm() {
+    delete this.stakeholderId;
+  }
+
   ngOnDestroy() {
     this.isAlive = false;
   }

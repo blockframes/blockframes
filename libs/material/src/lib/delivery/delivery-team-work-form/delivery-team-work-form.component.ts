@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
 import { DeliveryService } from '../+state';
 
@@ -10,6 +10,7 @@ import { DeliveryService } from '../+state';
 })
 export class DeliveryTeamWorkFormComponent implements OnInit {
   @Input() stakeholder: Stakeholder;
+  @Output() cancelForm = new EventEmitter();
   public roles = ['Producer', 'International Seller', 'Distributor', 'Laboratory'];
   public authorizations = ['canValidateDelivery', 'canModifyDelivery', 'canDeliverMaterial', 'canAcceptMaterial', 'canRefuseMaterial'];
   public stakeholderAuthorizations: string[];
@@ -31,9 +32,11 @@ export class DeliveryTeamWorkFormComponent implements OnInit {
 
   public updateStakeholderAuthorizations() {
     this.service.updateStakeholderAuthorizations(this.stakeholder.id, this.stakeholderAuthorizations);
+    this.cancel();
   }
 
   public cancel() {
+    this.cancelForm.emit();
   }
 
 }

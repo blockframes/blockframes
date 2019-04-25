@@ -10,10 +10,10 @@ import { ViewModeDirective } from './view-mode-directive';
 import { EditModeDirective } from './edit-mode-directive';
 import { BehaviorSubject } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { Material } from '../+state';
 
 @Component({
-  selector: 'material-editable',
+// tslint:disable-next-line: component-selector
+  selector: 'editable',
   template: `
     <ng-container *ngTemplateOutlet="currentView"></ng-container>
   `,
@@ -23,12 +23,12 @@ export class EditableComponent implements OnInit, OnDestroy {
   @ContentChild(ViewModeDirective) viewModeTpl: ViewModeDirective;
   @ContentChild(EditModeDirective) editModeTpl: EditModeDirective;
 
-  @Input() material: Material;
-  @Input() set materialId(id: string) {
-    this._materialId.next(id);
+  @Input() item: any;
+  @Input() set itemId(id: string) {
+    this._itemId.next(id);
   }
-  private _materialId = new BehaviorSubject<any>(null);
-  private materialId$ = this._materialId.asObservable();
+  private _itemId = new BehaviorSubject<any>(null);
+  private itemId$ = this._itemId.asObservable();
 
   private isAlive = true;
 
@@ -37,9 +37,9 @@ export class EditableComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
-    this.materialId$
+    this.itemId$
       .pipe(takeWhile(() => this.isAlive))
-      .subscribe(id => (id === this.material.id ? (this.mode = 'edit') : (this.mode = 'view')));
+      .subscribe(id => (id === this.item.id ? (this.mode = 'edit') : (this.mode = 'view')));
   }
 
   get currentView() {
