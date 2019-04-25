@@ -76,9 +76,13 @@ export const onDeliveryUpdate = async (
           materialDelivery.category === materialMovie.category &&
           materialDelivery.description === materialMovie.description
       );
-      const material = materialExist
-        ? { ...materialExist, deliveriesIds: [...(materialExist.delivery || []), delivery.id] }
-        : { ...materialDelivery, deliveriesIds: [delivery.id] };
+      if (!!materialExist) {
+        materialExist.deliveriesIds.push(delivery.id);
+        return db
+          .doc(`movies/${delivery.movieId}/materials/${materialExist.id}`)
+          .set(materialExist);
+      }
+      const material = { ...materialDelivery, deliveriesIds: [delivery.id] };
       return db.doc(`movies/${delivery.movieId}/materials/${materialDelivery.id}`).set(material);
     });
 
@@ -102,3 +106,27 @@ export const onDeliveryUpdate = async (
   }
   return true;
 };
+
+export const onDeliveryDelete = async (
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  const deletedDelivery = snapshot.data()!;
+  console.error(deletedDelivery)
+  const orgs = await getOrgs(deletedDelivery.id);
+  console.error(orgs)
+  const promises = [];
+
+  const notifications = orgs
+    .filter(org => !!org && !!org.userIds)
+    .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
+    .map((userId: string) => prepareNotification({
+      app: APP_DELIVERY,
+      message: `Delivery with id ${deletedDelivery.id} has been deleted.`,
+      userId
+      })
+    );
+  promises.push(triggerNotification(notifications));
+  await Promise.all(promises);
+  return true;
+}

@@ -4,7 +4,7 @@ interface PartialNotification {
   app: string;
   message: string;
   userId: string;
-  path: string;
+  path?: string;
 }
 
 interface Notification extends PartialNotification {

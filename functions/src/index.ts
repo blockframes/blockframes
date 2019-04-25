@@ -1,7 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
-import { onDeliveryUpdate } from './delivery';
+import { onDeliveryUpdate, onDeliveryDelete } from './delivery';
 import { auth, db, functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 import { deleteFirestoreMovie, deleteFirestoreDelivery } from './delete';
@@ -128,6 +128,13 @@ export const getOrCreateUserByMail = functions.https
 export const onDeliveryUpdateEvent = functions.firestore
   .document('deliveries/{deliveryID}')
   .onUpdate(onDeliveryUpdate);
+
+/**
+ * Trigger: when a delivery is deleted
+ */
+export const onDeliveryDeleteEvent = functions.firestore
+  .document('deliveries/{deliveryID}')
+  .onDelete(onDeliveryDelete);
 
 //--------------------------------
 //            RELAYER           //
