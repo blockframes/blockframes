@@ -1,0 +1,15 @@
+.filter {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  width: 120px;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
+  cursor: pointer;
+  margin-right: 30px;
+}
+
+.filter-icon {
+  margin-left: 15px;
+  width: 18px;
+}

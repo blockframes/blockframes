@@ -45,6 +45,8 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
+import { TeamWorkActionsComponent } from './delivery-team-work/team-work-actions/team-work-actions.component';
+import { TeamWorkFiltersComponent } from './delivery-team-work/team-work-filters/team-work-filters.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -89,6 +91,8 @@ const routes: Routes = [
     DeliveryTeamWorkFormComponent,
     DeliveryTeamWorkItemComponent,
     DeliveryTeamWorkListComponent,
+    TeamWorkActionsComponent,
+    TeamWorkFiltersComponent,
   ],
   imports: [
     CommonModule,

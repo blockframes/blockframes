@@ -1,6 +1,8 @@
 .orgName {
   font-weight: bold;
   font-size: 16px;
+  margin-top: 0;
+  margin-left: 3%;
 }
 
 mat-card-subtitle {
@@ -14,11 +16,11 @@ mat-card-subtitle {
 }
 
 .border-left {
-  border-left: 1px solid #ECECEC;
+  border-left: 1px solid #ececec;
 }
 
 button {
-  color: #9C9C9C;
+  color: #9c9c9c;
   background-color: Transparent;
   border: none;
   font-size: 8px;
@@ -26,7 +28,48 @@ button {
 }
 
 button:hover {
-  color: #6200EE;
-  cursor:pointer;
+  color: #6200ee;
+  cursor: pointer;
 }
+
+mat-card-content {
+  margin: 0;
+}
+
+mat-card-actions {
+  float: bottom;
+  visibility: hidden;
+}
+
+mat-card:hover mat-card-actions {
+  visibility: visible;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-left: 3%;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-right: 2%;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.content-authorizations {
+  width: 40%;
+}
+
+.content-orgName {
+  width: 20%;
+}
+
+
 

@@ -23,5 +23,12 @@ export class DeliveryTeamWorkItemComponent implements OnInit {
     this.update.emit();
   }
 
+  public getRandomColor() {
+    return '#000000'.replace(/0/g, function() {
+      // tslint:disable-next-line: no-bitwise
+      return (~~(Math.random() * 16)).toString(16);
+    });
+  }
+
   ngOnInit() {}
 }

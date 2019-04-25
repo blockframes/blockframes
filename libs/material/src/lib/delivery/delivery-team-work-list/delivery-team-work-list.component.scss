@@ -1,7 +1,7 @@
 h4 {
   font-weight: bold;
   font-size: 19px;
-  border-bottom: 1px solid #E1E1E1;
+  text-align: center;
 }
 
 p {
@@ -13,4 +13,17 @@ p {
   height: 20px;
   width: 20px;
   border-radius: 50%;
+}
+
+.left {
+  margin-left: 10px;
+}
+
+.label {
+  font-style: italic !important;
+  font-size: 10px !important;
+}
+
+mat-card {
+  padding: 0;
 }

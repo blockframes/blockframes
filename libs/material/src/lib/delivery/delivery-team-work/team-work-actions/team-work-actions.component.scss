@@ -1,0 +1,19 @@
+.action {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  width: 120px;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
+  cursor: pointer;
+}
+
+.action-icon {
+  margin-left: 15px;
+  font-size: 18px;
+}
+
+.delete {
+  color: var(--warn);
+}
+

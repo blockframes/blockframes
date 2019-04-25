@@ -1,20 +1,28 @@
-<mat-card class="mat-elevation-z2" fxLayout="row" fxLayoutAlign="space-between">
-  <mat-card-content fxLayout="row" fxLayoutAlign="space-around center">
+<mat-card class="mat-elevation-z2" fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-card-content class="content-orgName" fxLayout="row" fxLayoutAlign="start center">
     <mat-checkbox></mat-checkbox>
+    <span
+      class="dot items mat-elevation-z4"
+      [ngStyle]="{ 'background-color': getRandomColor() }"
+    ></span>
     <mat-card-title class="orgName">{{ stakeholder.organization.name }}</mat-card-title>
-    <mat-card-actions>
-      <button (click)="editStakeholder()">EDIT</button>
-      <button class="border-left" (click)="deleteStakeholder()">
-        DELETE
-      </button>
-    </mat-card-actions>
   </mat-card-content>
+  <mat-card-actions class="actions">
+    <button (click)="editStakeholder()">EDIT</button>
+    <button class="border-left" (click)="deleteStakeholder()">
+      DELETE
+    </button>
+  </mat-card-actions>
   <mat-card-content>
     <mat-card-subtitle>Role:</mat-card-subtitle>
     <mat-card-title class="title">Distributor</mat-card-title>
   </mat-card-content>
-  <mat-card-content>
+  <mat-card-content class="content-authorizations">
     <mat-card-subtitle>Authorizations:</mat-card-subtitle>
-    <mat-card-title class="title">{{ stakeholder.authorizations }}</mat-card-title>
+    <ul fxLayout="row wrap">
+      <li *ngFor="let authorization of stakeholder.authorizations">
+        {{ authorization }}
+      </li>
+    </ul>
   </mat-card-content>
 </mat-card>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'material-actions',
@@ -6,11 +6,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsComponent implements OnInit {
+export class ActionsComponent {
 
   constructor() { }
-
-  ngOnInit() {
-  }
-
 }

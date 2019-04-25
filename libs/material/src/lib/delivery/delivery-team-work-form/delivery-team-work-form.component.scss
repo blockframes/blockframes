@@ -1,6 +1,19 @@
 mat-card-title {
   font-weight: bold;
   font-size: 16px;
+  margin-left: 4%;
+}
+
+mat-card-content {
+  margin-left: 4%;
+}
+
+mat-form-field {
+  margin-left: 0 !important;
+}
+
+mat-label {
+  color: black !important;
 }
 
 h4 {
@@ -15,4 +28,8 @@ h4 {
 
 .add-button {
   font-weight: bold;
+}
+
+.chips {
+  width: 60%;
 }
