@@ -4,6 +4,7 @@ interface PartialNotification {
   app: string;
   message: string;
   userId: string;
+  path: string;
 }
 
 interface Notification extends PartialNotification {
@@ -23,12 +24,13 @@ export async function triggerNotification(notifications: Notification[]): Promis
   return notificationBatch.commit();
 }
 
-export function prepareNotification({ app, message, userId }: PartialNotification): Notification {
+export function prepareNotification({ app, message, userId, path }: PartialNotification): Notification {
   return {
     id: db.collection('notifications').doc().id,
     app,
     message,
     userId,
+    path,
     isRead: false,
     date: serverTimestamp()
   };

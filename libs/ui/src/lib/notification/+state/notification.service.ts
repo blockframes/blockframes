@@ -4,6 +4,7 @@ import { FireQuery, Query } from '@blockframes/utils';
 import { switchMap, combineLatest, map, takeWhile, tap, filter } from 'rxjs/operators';
 import { NotificationStore } from './notification.store';
 import { AuthQuery } from '@blockframes/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class NotificationService {
   constructor(
     private authQuery: AuthQuery,
     private fireQuery: FireQuery,
-    private store: NotificationStore
+    private store: NotificationStore,
+    private db: AngularFirestore
   ) {}
 
   public get userNotifications() {

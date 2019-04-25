@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'
 
 //Components
 import { NotificationListComponent } from './notification-list/notification-list.component';
@@ -15,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [NotificationListComponent, NotificationItemComponent],
   imports: [
     CommonModule,
+    RouterModule,
 
     //Material
     MatIconModule,

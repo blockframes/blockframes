@@ -1,7 +1,7 @@
 import { db, functions } from './firebase';
 import { triggerNotification, prepareNotification } from './notify';
 
-const APP_DELIVERY = 'DELIVERY';
+const APP_DELIVERY = 'delivery'; // This string refers to svg icon name
 
 interface Organization {
   userIds: string[];
@@ -90,7 +90,8 @@ export const onDeliveryUpdate = async (
       .map((userId: string) => prepareNotification({
         app: APP_DELIVERY,
         message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
-        userId
+        userId,
+        path: `/layout/${delivery.movieId}/view/${delivery.id}`
       }))
 
     promises.push(triggerNotification(notifications));

@@ -1,4 +1,7 @@
 <div *ngIf="!notification.isRead" class="container">
-  <div class="message"><mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon> {{ notification.message }}</div>
-  <p class="date">{{ notification.date.toDate() }}</p>
+    <div class="message" routerLink="{{ notification.path }}">
+      <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
+      {{ notification.message }}
+    </div>
+    <p class="date">{{ notification.date.toDate() }}</p>
 </div>
