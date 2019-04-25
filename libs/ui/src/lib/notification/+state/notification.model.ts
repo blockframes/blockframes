@@ -3,7 +3,7 @@ export type Notification = {
   id: string;
   app: string;
   message: string;
-  orgId: string[];
+  userId: string[];
   isRead: boolean;
   date: number;
 };
@@ -14,10 +14,10 @@ export type Notification = {
 export function createNotification(params?: Partial<Notification>): Notification {
   return params ? {
     id: params.id || '',
-    app: params.app || 'Delivery', //! Delivery only here to mock the data
+    app: params.app,
     message: params.message,
-    orgId: params.orgId,
+    userId: params.userId,
     isRead: params.isRead || false,
-    date: params.date || Date.now(),
+    date: params.date,
   } : {} as Notification;
 }

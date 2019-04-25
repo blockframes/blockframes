@@ -21,7 +21,6 @@ export class HeaderComponent implements OnInit {
     private service: AuthService,
     private auth: AuthQuery,
     private router: Router,
-    private snackBar: MatSnackBar,
   ) {}
 
 

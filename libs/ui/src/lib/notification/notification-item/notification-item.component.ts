@@ -4,7 +4,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
   selector: 'blockframes-notification-item',
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationItemComponent implements OnInit {
 

@@ -27,7 +27,7 @@
 
   <ng-container *ngIf="(user$ | async) as user">
     <button mat-icon-button [matMenuTriggerFor]="notifications">
-      <mat-icon>notifications</mat-icon>
+      <mat-icon matBadge="15" matBadgeColor="warn">notifications</mat-icon>
     </button>
   </ng-container>
 

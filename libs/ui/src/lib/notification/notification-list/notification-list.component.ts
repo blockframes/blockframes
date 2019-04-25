@@ -1,4 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { NotificationQuery, NotificationService } from '../+state';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'blockframes-notification-list',
@@ -6,29 +8,19 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./notification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationListComponent implements OnInit {
+export class NotificationListComponent implements OnInit, OnDestroy {
+  public notifications$: any; //TODO: Find a way to make it work with correct type (Observable<Notification[]>)
 
-  public notifications = [
-    {
-      id: '1',
-      content: 'This is my first notification',
-      app: 'Delivery'
-    },
-    {
-      id: '2',
-      content: 'This is my second notification',
-      app: 'Delivery'
-    },
-    {
-      id: '3',
-      content: 'This is my third notification',
-      app: 'Delivery'
-    }
-  ]
+  public isAlive = true;
 
-  constructor() { }
+  constructor(private service: NotificationService, private query: NotificationQuery) {}
 
   ngOnInit() {
+    this.notifications$ = this.query.selectAll();
+    this.service.userNotifications.pipe(takeWhile(_ => (this.isAlive = true))).subscribe();
   }
 
+  ngOnDestroy() {
+    this.isAlive = false;
+  }
 }

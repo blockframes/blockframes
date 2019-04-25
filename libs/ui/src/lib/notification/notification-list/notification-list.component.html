@@ -1,4 +1,4 @@
-<div *ngFor="let notification of notifications; let isLast = last">
+<div *ngFor="let notification of (notifications$ | async); let isLast = last">
   <blockframes-notification-item [notification]="notification"></blockframes-notification-item>
   <mat-divider *ngIf="!isLast"></mat-divider>
 </div>

@@ -27,6 +27,10 @@ export class IconComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/delivered.svg')
     );
     this.matIconRegistry.addSvgIcon(
+      'delivery',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/apps/delivery.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
       'disabled',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/disabled.svg')
     );

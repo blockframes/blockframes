@@ -1,35 +1,32 @@
 import { Injectable } from '@angular/core';
 import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery, Query } from '@blockframes/utils';
-import { switchMap, combineLatest, map, takeWhile, tap } from 'rxjs/operators';
+import { switchMap, combineLatest, map, takeWhile, tap, filter } from 'rxjs/operators';
 import { NotificationStore } from './notification.store';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryService {
+export class NotificationService {
   constructor(
-    private orgQuery: OrganizationQuery,
+    private authQuery: AuthQuery,
     private fireQuery: FireQuery,
-    private store: NotificationStore,
-    ) {}
+    private store: NotificationStore
+  ) {}
 
-  public get orgNotificationList() {
-    return this.orgQuery.selectAll().pipe(
-      switchMap(orgs => {
-        const notifications$ = orgs.map(org => {
-          return this.fireQuery.fromQuery(this.getNotificationsByOrgIds(org.id))
-        });
-        return notifications$;
-      }),
-      tap((notifications: Notification[]) => this.store.set(notifications))
-    )
+  public get userNotifications() {
+    return this.authQuery.user$.pipe(
+      filter(user => !!user),
+      switchMap(user => this.fireQuery.fromQuery(this.getNotificationsByUserId(user.uid))),
+      tap((notifications: any) => this.store.set(notifications)) //TODO: Find a way to cast notifications as Notification[];
+    );
   }
 
-  private getNotificationsByOrgIds(orgId: string): Query<Notification[]> {
-    return <Query<Notification[]>> {
+  private getNotificationsByUserId(userId: string): Query<Notification> {
+    return {
       path: `notifications`,
-      queryFn: ref => ref.where('orgId', '==', orgId),
+      queryFn: ref => ref.where('userId', '==', userId)
     };
   }
 }

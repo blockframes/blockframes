@@ -15,6 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule, MatListModule, MatTabsModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 
@@ -33,7 +34,8 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatTabsModule,
     RouterModule,
-    MatGridListModule
+    MatGridListModule,
+    MatBadgeModule
   ],
   declarations: [HeaderComponent, ContextMenuComponent],
   exports: [HeaderComponent]
