@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AuthQuery, User, AuthService} from '@blockframes/auth';
 import { Observable } from 'rxjs';
 import { NotificationQuery } from '../../notification/+state';
-import { shareReplay, publishReplay } from 'rxjs/operators';
 
 
 @Component({
@@ -31,7 +30,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.auth.user$;
     this.encryting$ = this.auth.encrytping$;
-    this.notificationsLength$ = this.notificationQuery.selectCount();
+    this.notificationsLength$ = this.notificationQuery.selectCount(entity => !entity.isRead);
   }
 
   public async logout() {

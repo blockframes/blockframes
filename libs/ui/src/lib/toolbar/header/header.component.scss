@@ -22,6 +22,10 @@
   padding: 0!important;
 }
 
+::ng-deep .mat-list-base {
+  padding: 0!important;
+}
+
 .fill-remaining-space {
   flex: 1 1 auto;
 }
