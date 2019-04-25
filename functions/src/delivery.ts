@@ -17,15 +17,9 @@ function getCollection(path: string) {
 
 async function getOrgs(deliveryId: string): Promise<Organization[]> {
   const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
-  const organizationsIds = stakeholders.map(x => x.orgId);
-  const queryOrgsPromises = organizationsIds.map(id =>
-    db
-      .collection('orgs')
-      .doc(id)
-      .get()
-  );
-  const orgsDoc = await Promise.all(queryOrgsPromises);
-  return orgsDoc.map(doc => doc.data() as Organization);
+  const promises = stakeholders.map(({orgId})=> db.doc(`orgs/${orgId}`).get());
+  const orgs = await Promise.all(promises);
+  return orgs.map(doc => doc.data() as Organization);
 }
 
 export const onDeliveryUpdate = async (
@@ -90,16 +84,14 @@ export const onDeliveryUpdate = async (
 
     // when delivery is signed, we create notifications for each stakeholder
     const orgs = await getOrgs(delivery.id);
-    const userIds: string[] = [];
-    orgs.forEach(org => org && org.userIds && userIds.push(...org.userIds));
-
-    const notifications = userIds.map(userId =>
-      prepareNotification({
+    const notifications = orgs
+      .filter(org => !!org && !!org.userIds)
+      .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
+      .map((userId: string) => prepareNotification({
         app: APP_DELIVERY,
         message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
         userId
-      })
-    );
+      }))
 
     promises.push(triggerNotification(notifications));
     await Promise.all(promises);
