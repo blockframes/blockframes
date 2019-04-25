@@ -18,6 +18,10 @@
   }
 }
 
+::ng-deep .notifMenu .mat-menu-content {
+  padding: 0!important;
+}
+
 .fill-remaining-space {
   flex: 1 1 auto;
 }

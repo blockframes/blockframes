@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { NotificationQuery, NotificationService } from '../+state';
+import { NotificationQuery, NotificationService, Notification } from '../+state';
 import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'blockframes-notification-list',
@@ -9,7 +10,7 @@ import { takeWhile } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationListComponent implements OnInit, OnDestroy {
-  public notifications$: any; //TODO: Find a way to make it work with correct type (Observable<Notification[]>)
+  public notifications$: Observable<Notification[]>
 
   public isAlive = true;
 

@@ -13,10 +13,17 @@
 
 .message {
   font-size: 12px;
+  cursor: pointer;
 }
 
 .date {
   font-weight: bold;
   font-size: 10px;
   color: var(--disabled);
+}
+
+.already-read {
+  background-color: rgba(0, 0, 0, 0.020);
+  color: var(--disabled);
+  filter: grayscale(100%);
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'
+import { ArraySortPipe } from '@blockframes/utils';
 
 //Components
 import { NotificationListComponent } from './notification-list/notification-list.component';
@@ -13,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationItemComponent],
+  declarations: [ArraySortPipe, NotificationListComponent, NotificationItemComponent],
   imports: [
     CommonModule,
     RouterModule,

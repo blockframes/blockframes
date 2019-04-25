@@ -1,4 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { NotificationService } from '../+state';
 
 @Component({
   selector: 'blockframes-notification-item',
@@ -6,13 +8,14 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
   styleUrls: ['./notification-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationItemComponent implements OnInit {
+export class NotificationItemComponent {
 
   @Input() notification : any;
 
-  constructor() { }
+  constructor(private router: Router, private service: NotificationService) { }
 
-  ngOnInit() {
+  public goToPath() {
+    this.router.navigate([this.notification.path]);
+    this.service.readNotification(this.notification.id);
   }
-
 }

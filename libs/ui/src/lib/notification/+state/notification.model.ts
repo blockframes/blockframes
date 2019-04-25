@@ -4,6 +4,7 @@ export type Notification = {
   app: string;
   message: string;
   userId: string[];
+  path: string;
   isRead: boolean;
   date: number;
 };
@@ -12,12 +13,13 @@ export type Notification = {
  * A factory function that creates a Notification
  */
 export function createNotification(params?: Partial<Notification>): Notification {
-  return params ? {
+  return {
     id: params.id || '',
     app: params.app,
     message: params.message,
     userId: params.userId,
-    isRead: params.isRead || false,
+    path: params.path,
+    isRead: params.isRead,
     date: params.date,
-  } : {} as Notification;
+  } as Notification;
 }

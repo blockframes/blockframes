@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery, Query } from '@blockframes/utils';
-import { switchMap, combineLatest, map, takeWhile, tap, filter } from 'rxjs/operators';
+import { switchMap, tap, filter } from 'rxjs/operators';
 import { NotificationStore } from './notification.store';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Notification } from './notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,11 @@ export class NotificationService {
       path: `notifications`,
       queryFn: ref => ref.where('userId', '==', userId)
     };
+  }
+
+  public readNotification(id: string) {
+    return this.db
+      .doc<Notification>(`notifications/${id}`)
+      .update({ isRead: true });
   }
 }
