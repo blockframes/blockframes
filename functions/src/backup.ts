@@ -93,7 +93,7 @@ const freeze = async (req: any, resp: any) => {
       const content: any = doc.data();
       const stored: StoredDocument = { docPath, content };
 
-      console.error('Storing document:', docPath);
+      console.info('Storing document:', docPath);
       stream.write(JSON.stringify(stored));
       stream.write('\n');
 
@@ -106,12 +106,12 @@ const freeze = async (req: any, resp: any) => {
     await Promise.all(promises);
   }
 
-  console.error('Done, closing our stream');
+  console.info('Done, closing our stream');
   await new Promise(resolve => {
     stream.end(resolve);
   });
 
-  console.error('Finally');
+  console.info('Finally');
   return resp.status(200).send('success');
 };
 
