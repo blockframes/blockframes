@@ -54,6 +54,9 @@ We de-normalize the hash at:
 This lets us find the original document (`{ipID, versionID}`)
 when a Timestamp event is received from the blockchain.
 
+*Setup:* in your firebase console, hosting section,
+create a bucket called `blockframes-backups` for the backup functions.
+
 
 ## eth-events-server
 
