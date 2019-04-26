@@ -175,7 +175,7 @@ const restore = async (req: any, resp: any) => {
   });
 
   const readerDone = new Promise(resolve => {
-    lineReader.on('end', resolve);
+    lineReader.on('finish', resolve);
   });
 
   promises.push(readerDone);
