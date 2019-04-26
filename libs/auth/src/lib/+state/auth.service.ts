@@ -24,7 +24,7 @@ export class AuthService {
     await this.afAuth.auth.signInWithEmailAndPassword(mail, password);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.login(username, password);  // no await -> do the job in background
+    this.wallet.login(this._sanitizeUsername(username), password);  // no await -> do the job in background
   }
 
   public async signup(mail: string, password: string) {
@@ -36,7 +36,7 @@ export class AuthService {
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });
-    this.wallet.signup(userCredentials.user.uid, username, password).then(() => {  // no await -> do the job in background
+    this.wallet.signup(userCredentials.user.uid, this._sanitizeUsername(username), password).then(() => {  // no await -> do the job in background
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,
@@ -100,5 +100,11 @@ export class AuthService {
       .get()
       .toPromise();
     return items.docs;
+  }
+
+  /** Apply toLowerCase() and replace all forbiden chars by `-` */
+  private _sanitizeUsername(username: string): string {
+    const authorizedChars = 'abcdefghijklmnopqrstuvwxyz0123456789-.'.split('');
+    return username.toLowerCase().split('').map(char => authorizedChars.includes(char) ? char : '-').join('');
   }
 }
