@@ -16,11 +16,7 @@ interface StoredDocument {
 }
 
 class Queue {
-  content: string[];
-
-  constructor() {
-    this.content = [];
-  }
+  content: string[] = [];
 
   push(x: string) {
     this.content.push(x);
