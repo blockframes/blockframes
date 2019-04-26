@@ -6,6 +6,7 @@ import { functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 import { deleteFirestoreMovie, deleteFirestoreDelivery } from './delete';
 import * as users from './users';
+import * as backup from './backup';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -51,6 +52,19 @@ export const findOrgByName = functions.https
  */
 export const getOrCreateUserByMail = functions.https
   .onCall(users.getOrCreateUserByMail);
+
+/**
+ * Trigger: REST call to backup firestore
+ */
+export const backupFirestore = functions.https
+  .onCall(backup.freeze);
+
+/**
+ * Trigger: REST call to restore firestore
+ */
+export const restoreFirestore = functions.https
+  .onCall(backup.restore);
+
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
