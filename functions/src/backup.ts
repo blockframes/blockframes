@@ -159,9 +159,20 @@ const restore = async (req: any, resp: any) => {
 
   console.info('restoring file:', lastFile.name);
   const stream = lastFile.createReadStream();
-  const lineReader = readline.createInterface({ input: stream });
+  const lineReader = readline.createInterface({
+    input: stream,
+    terminal: false
+  });
 
   const promises: Promise<any>[] = [];
+
+  const readerDone = new Promise(resolve => {
+    lineReader.on('close', resolve);
+  });
+
+  stream.on('end', () => {
+    lineReader.close();
+  });
 
   // TODO: make this part scalable too, we're going to load the file
   // and create promises "as fast as possible", we should backpressure the
@@ -174,14 +185,10 @@ const restore = async (req: any, resp: any) => {
     promises.push(db.doc(stored.docPath).set(stored.content));
   });
 
-  const readerDone = new Promise(resolve => {
-    lineReader.on('finish', resolve);
-  });
-
   promises.push(readerDone);
   await Promise.all(promises);
 
-  console.info('Done');
+  console.info(`Done processing: ${promises.length - 1} lines loaded`);
   return resp.status(200).send('success');
 };
 
