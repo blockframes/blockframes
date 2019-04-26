@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   @Output() loggedOut = new EventEmitter();
 
   public user$: Observable<User>;
+  public encryting$: Observable<boolean>;
   public notificationsLength$: Observable<number>;
 
   constructor(
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.auth.user$;
+    this.encryting$ = this.auth.encrytping$;
     this.notificationsLength$ = this.notificationQuery.selectCount();
   }
 

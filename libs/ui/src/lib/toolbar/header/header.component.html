@@ -10,6 +10,14 @@
   <context-menu></context-menu>
 
   <span class="fill-remaining-space"></span>
+
+  <mat-chip-list *ngIf="encryting$ | async">
+    <mat-chip color="primary" matTooltip="We are currently encryting your key pair, this process can take several minutes. DO NOT CLOSE THIS PAGE BEFORE THE END OF ENCRYPTION !">
+      ENCRYPTING
+      <mat-spinner [diameter]="20" [strokeWidth]="2" class="encrypting-spinner"></mat-spinner>
+    </mat-chip>
+  </mat-chip-list>
+
   <button mat-icon-button [matMenuTriggerFor]="apps">
     <mat-icon>dialpad</mat-icon>
   </button>

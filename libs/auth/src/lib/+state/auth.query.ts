@@ -10,6 +10,7 @@ export class AuthQuery extends Query<AuthState> {
 
   public isLogged$ = this.select(state => state.user).pipe(map(user => !!user));
   public user$ = this.select(state => state.user);
+  public encrytping$ = this.select(state => state.isEncrypting);
 
   constructor(private afAuth: AngularFireAuth, protected store: AuthStore) {
     super(store);

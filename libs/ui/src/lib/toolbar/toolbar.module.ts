@@ -10,6 +10,9 @@ import { AccountModule } from '@blockframes/account';
 import { NotificationModule } from '../notification/notification.module';
 
 // Material
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -35,7 +38,10 @@ import { RouterModule } from '@angular/router';
     MatTabsModule,
     RouterModule,
     MatGridListModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   declarations: [HeaderComponent, ContextMenuComponent],
   exports: [HeaderComponent]
