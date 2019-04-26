@@ -22,9 +22,33 @@ function getDocument(path: string) {
     .then(doc => doc.data());
 }
 
+async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<void> {
+  const newStakeholderId = delivery.validated[delivery.validated.length - 1];
+  const newStakeholder = await getDocument(
+    `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
+  );
+  const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
+
+  const newSigneeNotifications = orgs
+    .filter(org => !!org && !!org.userIds)
+    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+    .map((userId: string) =>
+      prepareNotification({
+        app: APP_DELIVERY,
+        message: `Stakeholder ${newStakeholderOrg!.name} with id ${
+          newStakeholder!.id
+        } signed delivery ${delivery.id}`,
+        userId,
+        path: `/layout/${delivery.movieId}/form/${delivery.id}`
+      })
+    );
+
+  await triggerNotifications(newSigneeNotifications);
+}
+
 export async function getOrgs(deliveryId: string): Promise<Organization[]> {
   const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
-  const promises = stakeholders.map(({orgId})=> db.doc(`orgs/${orgId}`).get());
+  const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);
 }
@@ -44,7 +68,7 @@ export const onDeliveryUpdate = async (
     return true;
   }
 
-    /**
+  /**
    * Note: Google Cloud Function enforces "at least once" delivery for events.
    * This means that an event may processed twice by this function, with the same Before and After data.
    * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
@@ -56,23 +80,8 @@ export const onDeliveryUpdate = async (
   const orgs = await getOrgs(delivery.id);
 
   // Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
-  if (
-    delivery.validated.length === deliveryBefore.validated.length +1
-  ) {
-    const newStakeholder = await getDocument(`deliveries/${delivery.id}/stakeholders/${delivery.validated[delivery.validated.length - 1]}`);
-    const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
-
-    const newSigneeNotifications = orgs
-      .filter(org => !!org && !!org.userIds)
-      .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
-      .map((userId: string) => prepareNotification({
-        app: APP_DELIVERY,
-        message: `Stakeholder ${newStakeholderOrg!.name} with id ${newStakeholder!.id} signed delivery ${delivery.id}`,
-        userId,
-        path: `/layout/${delivery.movieId}/form/${delivery.id}`
-      }))
-
-    await triggerNotifications(newSigneeNotifications);
+  if (delivery.validated.length === deliveryBefore.validated.length + 1) {
+    await notifyOnNewSignee(delivery, orgs);
   }
 
   const stakeholderCount = await db
@@ -92,7 +101,7 @@ export const onDeliveryUpdate = async (
   }
 
   try {
-    await db.doc(`deliveries/${delivery.id}`).update({processedId: context.eventId});
+    await db.doc(`deliveries/${delivery.id}`).update({ processedId: context.eventId });
     const [materialsMovie, materialsDelivery] = await Promise.all([
       getCollection(`movies/${delivery.movieId}/materials`),
       getCollection(`deliveries/${delivery.id}/materials`)
@@ -118,19 +127,21 @@ export const onDeliveryUpdate = async (
     // when delivery is signed, we create notifications for each stakeholder
     const approvedDeliveryNotifications = orgs
       .filter(org => !!org && !!org.userIds)
-      .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
-      .map((userId: string) => prepareNotification({
-        app: APP_DELIVERY,
-        message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
-        userId,
-        path: `/layout/${delivery.movieId}/view/${delivery.id}`
-      }))
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map((userId: string) =>
+        prepareNotification({
+          app: APP_DELIVERY,
+          message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
+          userId,
+          path: `/layout/${delivery.movieId}/view/${delivery.id}`
+        })
+      );
 
     promises.push(triggerNotifications(approvedDeliveryNotifications));
     await Promise.all(promises);
   } catch (e) {
-    await db.doc(`deliveries/${delivery.id}`).update({processedId: null});
+    await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });
     throw e;
   }
   return true;
-}
+};
