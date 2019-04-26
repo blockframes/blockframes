@@ -63,7 +63,7 @@ export const backupFirestore = functions.https
  * Trigger: REST call to restore firestore
  */
 export const restoreFirestore = functions.https
-  .onCall(backup.restore);
+  .onRequest(backup.restore);
 
 
 /**

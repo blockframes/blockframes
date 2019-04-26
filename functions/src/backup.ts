@@ -1,14 +1,16 @@
 import { Writable } from 'stream';
 // @ts-ignore: @types/jsonlines does not exist yet.
 import * as admin from 'firebase-admin';
-import { Bucket } from '@google-cloud/storage';
+import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db } from './firebase';
+import sortBy from 'lodash.sortby';
 
 const BACKUP_BUCKET = 'blockframes-backups'; // TODO: secure access to this bucket.
 
 type CollectionReference = admin.firestore.CollectionReference;
 type QuerySnapshot = admin.firestore.QuerySnapshot;
 type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
+type DocumentReference = admin.firestore.DocumentReference;
 
 interface StoredDocument {
   docPath: string;
@@ -111,7 +113,50 @@ const freeze = async (req: any, resp: any) => {
   return resp.status(200).send('success');
 };
 
+const clear = async () => {
+  const processingQueue = new Queue();
+
+  // Note: this code is heavily inspired by the backup function,
+  // TODO: implement a generalized way to go through all docs & collections
+  // and use it in both functions.
+
+  // retrieve all the collections at the root.
+  const collections: CollectionReference[] = await db.listCollections();
+  collections.forEach(x => processingQueue.push(x.path));
+
+  while (!processingQueue.isEmpty()) {
+    const currentPath: string = processingQueue.pop();
+    const docs: DocumentReference[] = await db.collection(currentPath).listDocuments();
+
+    // keep all docs subcollection to be deleted to,
+    // delete every doc content.
+    const promises = docs.map(async doc => {
+      // Adding the current path to the subcollections to backup
+      const subCollections = await doc.listCollections();
+      subCollections.forEach(x => processingQueue.push(x.path));
+
+      // Delete the document
+      return doc.delete();
+    });
+
+    await Promise.all(promises);
+  }
+
+  return true;
+};
+
 const restore = async () => {
+  // We get the backup file before clearing the db, just in case.
+  const bucket = await getBackupBucket();
+  const files: GFile[] = (await bucket.getFiles())[0];
+  const sortedFiles: GFile[] = sortBy(files, ['name']);
+  const lastFile: GFile = sortedFiles[sortedFiles.length - 1];
+
+  console.info('Clearing the database');
+  await clear();
+
+  console.info('restoring file:', lastFile.name);
+
   return true;
 };
 
