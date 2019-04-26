@@ -33,6 +33,7 @@ import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
 import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { FlexModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     MatChipsModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    FlexModule
   ],
   providers: [],
   bootstrap: [AppComponent]

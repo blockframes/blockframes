@@ -2,9 +2,8 @@
 
 // LAYOUT
 
-.content {
-  display: flex;
-  justify-content: center;
+main {
+  max-height: none !important;
 }
 
 .col-1 {
