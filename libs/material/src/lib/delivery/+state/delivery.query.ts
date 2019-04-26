@@ -23,6 +23,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     map(([validated, stakeholders]) => validated.length === stakeholders.length)
   );
 
+  public steps$ = this.selectActive(delivery => delivery.steps);
+
   constructor(
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,

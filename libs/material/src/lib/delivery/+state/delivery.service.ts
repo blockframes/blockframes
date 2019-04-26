@@ -4,7 +4,7 @@ import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery } from './delivery.model';
+import { createDelivery, Delivery, Step } from './delivery.model';
 import {
   MovieQuery,
   Stakeholder,
@@ -107,6 +107,21 @@ export class DeliveryService {
         )
       );
     }
+  }
+
+  /** Add step in array steps of delivery */
+  public addStep(step: Step) {
+    step.id = this.db.createId();
+    const steps = [...this.query.getActive().steps, step];
+    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+  }
+
+  /** Remove step in array steps of delivery */
+  public removeStep(step: Step) {
+    const steps = [...this.query.getActive().steps];
+    const index = steps.indexOf(step);
+    steps.splice(index, 1);
+    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
   }
 
   /** Remove signatures in array validated of delivery */
@@ -225,12 +240,23 @@ export class DeliveryService {
   ////////////////////////
 
   public suscribeOnDeliveriesByActiveMovie() {
+    function mungeFirestoreDelivery(delivery: Delivery) {
+      return {
+        ...delivery,
+        steps: delivery.steps.map(step => ({
+          ...step,
+          // @ts-ignore
+          date: step.date.toDate()
+        }))
+      }
+    }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>
         this.db
           .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
           .valueChanges()
       ),
+      map(deliveries => deliveries.map(mungeFirestoreDelivery)),
       tap(deliveries => this.store.set(deliveries))
     );
   }

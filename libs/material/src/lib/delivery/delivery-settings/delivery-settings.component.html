@@ -1,4 +1,29 @@
-<button class="create-step mat-elevation-z0" mat-raised-button>
+<button class="create-step mat-elevation-z0" mat-raised-button (click)="openForm()">
   Add a step
   <mat-icon class="icon">add</mat-icon>
 </button>
+<delivery-settings-form (cancelForm)="cancel()" *ngIf="hasForm"></delivery-settings-form>
+
+<ui-editable *ngFor="let step of (steps$ | async)" [item]="step" [itemId]="stepId">
+  <ng-template materialViewMode>
+    <delivery-settings-item (update)="openEdit(step)" [step]="step"></delivery-settings-item>
+  </ng-template>
+  <ng-template materialEditMode>
+    <delivery-settings-form [step]="step" (cancelForm)="cancel()"></delivery-settings-form>
+  </ng-template>
+</ui-editable>
+
+<!-- <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
+    <ng-template materialViewMode>
+      <delivery-team-work-item
+        (update)="openForm(deliveryStakeholder)"
+        [stakeholder]="deliveryStakeholder"
+      ></delivery-team-work-item>
+    </ng-template>
+    <ng-template materialEditMode>
+      <delivery-team-work-form
+        (cancelForm)="cancelForm()"
+        [stakeholder]="deliveryStakeholder"
+      ></delivery-team-work-form>
+    </ng-template>
+  </ui-editable> -->

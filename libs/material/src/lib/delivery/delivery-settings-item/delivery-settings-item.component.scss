@@ -1,6 +1,18 @@
+@import '~@angular/material/theming';
+
 mat-card {
   margin-bottom: 4%;
   padding-top: 4%;
+  &:hover {
+    @include mat-elevation(6);
+  }
+  &:hover mat-card-actions {
+    visibility: visible;
+  }
+}
+
+mat-card-actions {
+  visibility: hidden;
 }
 
 mat-card-title {
@@ -43,3 +55,4 @@ mat-icon {
   color:#C1C1C1;
   float: left;
 }
+

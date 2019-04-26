@@ -43,7 +43,9 @@ import {
   MatDialogModule,
   MatSelectModule,
   MatOptionModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
@@ -51,6 +53,7 @@ import { TeamWorkActionsComponent } from './delivery-team-work-view/team-work-ac
 import { TeamWorkFiltersComponent } from './delivery-team-work-view/team-work-filters/team-work-filters.component';
 import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
+import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -73,6 +76,11 @@ const routes: Routes = [
     path: 'form/:deliveryId/teamwork',
     // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
     component: DeliveryTeamWorkViewComponent
+  },
+  {
+    path: 'form/:deliveryId/settings',
+    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
+    component: DeliverySettingsComponent
   }
 ];
 
@@ -100,6 +108,7 @@ const routes: Routes = [
     DotColorDirective,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
+    DeliverySettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -128,6 +137,8 @@ const routes: Routes = [
     MatDialogModule,
     MatSelectModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
 
     RouterModule.forChild(routes)
   ],
