@@ -1,6 +1,6 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
-  <mat-sidenav [opened]="true" mode="side">
+  <mat-sidenav class="mat-elevation-z2" [opened]="true" mode="side">
     <delivery-team-work-list
       *ngIf="(movieStakeholders$ | async) as movieStakeholders"
       [stakeholders]="movieStakeholders"

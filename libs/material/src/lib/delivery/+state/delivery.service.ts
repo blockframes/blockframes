@@ -173,7 +173,7 @@ export class DeliveryService {
   }
 
     /** Delete stakeholder delivery */
-    public deleteStakeholder(stakeholderId: string) {
+    public removeStakeholder(stakeholderId: string) {
       this.db
         .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
         .delete();

@@ -15,8 +15,8 @@ export class DeliveryTeamWorkItemComponent implements OnInit {
 
   constructor(private service: DeliveryService) {}
 
-  public deleteStakeholder() {
-    this.service.deleteStakeholder(this.stakeholder.id);
+  public removeStakeholder() {
+    this.service.removeStakeholder(this.stakeholder.id);
   }
 
   public editStakeholder() {
