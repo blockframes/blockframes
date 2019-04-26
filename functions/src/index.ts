@@ -5,6 +5,7 @@ import { onDeliveryUpdate } from './delivery';
 import { functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 import { deleteFirestoreMovie, deleteFirestoreDelivery } from './delete';
+import { onStakeholderCreate, onStakeholderDelete } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
 
@@ -72,6 +73,20 @@ export const restoreFirestore = functions.https
 export const onDeliveryUpdateEvent = functions.firestore
   .document('deliveries/{deliveryID}')
   .onUpdate(onDeliveryUpdate);
+
+/**
+ * Trigger: when a stakeholder is added to a delivery
+ */
+export const onStakeholderCreateEvent = functions.firestore
+  .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
+  .onCreate(onStakeholderCreate);
+
+/**
+ * Trigger: when a stakeholder is removed from a delivery
+ */
+export const onStakeholderDeleteEvent = functions.firestore
+.document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
+.onDelete(onStakeholderDelete);
 
 //--------------------------------
 //            RELAYER           //
