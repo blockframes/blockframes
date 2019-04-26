@@ -5,7 +5,7 @@ import { AuthStore, User, createUser } from './auth.store';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import { RelayerWallet } from '@blockframes/ethers';
 import { MatSnackBar } from '@angular/material';
-import * as punycode from 'punycode';
+import { toASCII } from 'punycode';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
     await this.afAuth.auth.signInWithEmailAndPassword(mail, password);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.login(punycode.encode(username), password);  // no await -> do the job in background
+    this.wallet.login(toASCII(username), password);  // no await -> do the job in background
   }
 
   public async signup(mail: string, password: string) {
@@ -37,7 +37,7 @@ export class AuthService {
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });
-    this.wallet.signup(userCredentials.user.uid, punycode.encode(username), password).then(() => {  // no await -> do the job in background
+    this.wallet.signup(userCredentials.user.uid, toASCII(username), password).then(() => {  // no await -> do the job in background
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,
