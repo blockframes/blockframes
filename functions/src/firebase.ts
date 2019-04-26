@@ -7,4 +7,6 @@ export const auth = admin.auth();
 
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
+export const getBackupBucketName = (): string => functions.config().backup.bucket; // TODO: secure bucket
+
 export { admin, functions };

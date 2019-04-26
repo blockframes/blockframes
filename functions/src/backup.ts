@@ -1,11 +1,9 @@
+import sortBy from 'lodash.sortby';
+import readline from 'readline';
 import { Writable } from 'stream';
-// @ts-ignore: @types/jsonlines does not exist yet.
 import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
-import { db } from './firebase';
-import sortBy from 'lodash.sortby';
-
-const BACKUP_BUCKET = 'blockframes-backups'; // TODO: secure access to this bucket.
+import { db, getBackupBucketName } from './firebase';
 
 type CollectionReference = admin.firestore.CollectionReference;
 type QuerySnapshot = admin.firestore.QuerySnapshot;
@@ -41,7 +39,7 @@ class Queue {
 }
 
 const getBackupBucket = async (): Promise<Bucket> => {
-  const bucket: Bucket = admin.storage().bucket(BACKUP_BUCKET);
+  const bucket: Bucket = admin.storage().bucket(getBackupBucketName());
   const exists = await bucket.exists();
 
   // The api returns an array.
@@ -149,7 +147,7 @@ const clear = async () => {
   return true;
 };
 
-const restore = async () => {
+const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
   const files: GFile[] = (await bucket.getFiles())[0];
@@ -160,8 +158,25 @@ const restore = async () => {
   await clear();
 
   console.info('restoring file:', lastFile.name);
+  const stream = lastFile.createReadStream();
+  const lineReader = readline.createInterface({ input: stream });
 
-  return true;
+  const promises: Promise<any>[] = [];
+  lineReader.on('line', line => {
+    console.info('processing line=', line);
+    const stored: StoredDocument = JSON.parse(line);
+    promises.push(db.doc(stored.docPath).set(stored.content));
+  });
+
+  const readerDone = new Promise(resolve => {
+    lineReader.on('end', resolve);
+  });
+
+  promises.push(readerDone);
+  await Promise.all(promises);
+
+  console.info('Done');
+  return resp.status(200).send('success');
 };
 
 export { freeze, restore };
