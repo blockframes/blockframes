@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
-import { update } from '@datorama/akita';
 import { DeliveryService } from '../+state';
 
 @Component({
@@ -9,8 +8,9 @@ import { DeliveryService } from '../+state';
   styleUrls: ['./delivery-team-work-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTeamWorkItemComponent implements OnInit {
+export class DeliveryTeamWorkItemComponent {
   @Input() stakeholder: Stakeholder;
+  @Input() color: string;
   @Output() update = new EventEmitter();
 
   constructor(private service: DeliveryService) {}
@@ -22,13 +22,4 @@ export class DeliveryTeamWorkItemComponent implements OnInit {
   public editStakeholder() {
     this.update.emit();
   }
-
-  public getRandomColor() {
-    return '#000000'.replace(/0/g, function() {
-      // tslint:disable-next-line: no-bitwise
-      return (~~(Math.random() * 16)).toString(16);
-    });
-  }
-
-  ngOnInit() {}
 }

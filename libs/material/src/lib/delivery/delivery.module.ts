@@ -24,6 +24,7 @@ import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-it
 import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
 import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
 import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
+import { EditableModule } from '@blockframes/ui';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -103,6 +104,7 @@ const routes: Routes = [
     MaterialModule,
     ConfirmModule,
     UiFormModule,
+    EditableModule,
 
     // Material
     MatCardModule,

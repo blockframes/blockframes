@@ -8,6 +8,7 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateActiveGuard } from './guards/template-active.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
+import { EditableModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -29,13 +30,13 @@ import { TemplateListGuard } from './guards/template-list.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
-  { 
-    path: 'list', 
+  {
+    path: 'list',
     component: TemplateListComponent,
     canActivate: [TemplateListGuard],
     canDeactivate: [TemplateListGuard],
   },
-  { 
+  {
     path: ':orgId/:templateId',
     component: TemplateFormComponent, // TODO rename in TemplateActiveForm
     canActivate: [TemplateActiveGuard],
@@ -66,6 +67,7 @@ const routes: Routes = [
     MatExpansionModule,
     MaterialModule,
     ConfirmModule,
+    EditableModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]

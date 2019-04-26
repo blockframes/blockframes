@@ -13,11 +13,12 @@
       <delivery-team-work-actions class="actions"></delivery-team-work-actions>
     </div>
     <div class="item-form" *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
-      <editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
+      <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
         <ng-template materialViewMode>
           <delivery-team-work-item
             (update)="openForm(deliveryStakeholder)"
             [stakeholder]="deliveryStakeholder"
+            [color]="getColor(deliveryStakeholder.id)"
           ></delivery-team-work-item>
         </ng-template>
         <ng-template materialEditMode>
@@ -26,7 +27,7 @@
             [stakeholder]="deliveryStakeholder"
           ></delivery-team-work-form>
         </ng-template>
-      </editable>
+      </ui-editable>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

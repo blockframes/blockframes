@@ -9,3 +9,4 @@ export * from './lib/toolbar/+state';
 export * from './lib/confirm/confirm.module';
 export * from './lib/confirm/confirm.component';
 export * from './lib/icon-component';
+export * from './lib/editable/editable.module';

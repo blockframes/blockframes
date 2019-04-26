@@ -78,7 +78,7 @@
         </div>
         <div>
           <div *ngFor="let material of materials.value">
-            <editable [item]="material" [itemId]="materialId">
+            <ui-editable [item]="material" [itemId]="materialId">
               <ng-template materialViewMode>
                 <material-delivery-item
                   [isDeliveryValidated]="isDeliveryValidated$ | async"
@@ -95,7 +95,7 @@
                   (cancelForm)="cancelUpdateForm()"
                 ></material-delivery-form>
               </ng-template>
-            </editable>
+            </ui-editable>
           </div>
           <div *ngIf="(form$ | async) as form">
             <material-delivery-add-form

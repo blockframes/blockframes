@@ -22,9 +22,6 @@ import { MaterialListComponent } from './material-list/material-list.component';
 import { MaterialDeliveryFormComponent } from './material-delivery-form/material-delivery-form.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialDeliveryItemComponent } from './material-delivery-item/material-delivery-item.component';
-import { EditableComponent } from './directives/editable.component';
-import { ViewModeDirective } from './directives/view-mode-directive';
-import { EditModeDirective } from './directives/edit-mode-directive';
 import { MaterialDeliveryAddFormComponent } from './material-delivery-form/material-delivery-add-form.component';
 import { MaterialTemplateAddFormComponent } from './material-template-form/material-template-add-form.component';
 
@@ -37,9 +34,6 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
     MaterialDeliveryFormComponent,
     MaterialDeliveryItemComponent,
     MaterialDeliveryAddFormComponent,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
   ],
   exports: [
     MaterialTemplateItemComponent,
@@ -49,9 +43,6 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
     MaterialDeliveryFormComponent,
     MaterialDeliveryItemComponent,
     MaterialDeliveryAddFormComponent,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
   ],
   imports: [
     CommonModule,
@@ -64,7 +55,7 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
     MatInputModule,
     MatListModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
   ]
 })
 export class MaterialModule {}
