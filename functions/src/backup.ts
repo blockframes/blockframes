@@ -74,6 +74,10 @@ const freeze = async (req: any, resp: any) => {
   collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
+    // Note: we could speed up the code by processing multiple collections at once,
+    // we push many promises to a "worker queue" and await them when it reaches a certain size
+    // instead of using a while that blocks over every item.
+
     const currentPath: string = processingQueue.pop();
     const q: QuerySnapshot = await db.collection(currentPath).get();
 
@@ -96,7 +100,7 @@ const freeze = async (req: any, resp: any) => {
       stream.write('\n');
 
       // Adding the current path to the subcollections to backup
-      const subCollections = await doc.ref.getCollections();
+      const subCollections = await doc.ref.listCollections();
       subCollections.forEach(x => processingQueue.push(x.path));
     });
 
