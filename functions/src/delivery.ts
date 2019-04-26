@@ -15,6 +15,13 @@ function getCollection(path: string) {
     .then(collection => collection.docs.map(doc => doc.data()));
 }
 
+function getDocument(path: string) {
+  return db
+    .doc(path)
+    .get()
+    .then(doc => doc.data());
+}
+
 export async function getOrgs(deliveryId: string): Promise<Organization[]> {
   const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
   const promises = stakeholders.map(({orgId})=> db.doc(`orgs/${orgId}`).get());
@@ -37,6 +44,37 @@ export const onDeliveryUpdate = async (
     return true;
   }
 
+    /**
+   * Note: Google Cloud Function enforces "at least once" delivery for events.
+   * This means that an event may processed twice by this function, with the same Before and After data.
+   * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
+   * betweeen two runs to enforce "only once delivery".
+   */
+  const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
+  const processedId = deliveryDoc.data()!.processedId;
+
+  const orgs = await getOrgs(delivery.id);
+
+  // Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
+  if (
+    delivery.validated.length === deliveryBefore.validated.length +1
+  ) {
+    const newStakeholder = await getDocument(`deliveries/${delivery.id}/stakeholders/${delivery.validated[delivery.validated.length - 1]}`);
+    const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
+
+    const newSigneeNotifications = orgs
+      .filter(org => !!org && !!org.userIds)
+      .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
+      .map((userId: string) => prepareNotification({
+        app: APP_DELIVERY,
+        message: `Stakeholder ${newStakeholderOrg!.name} with id ${newStakeholder!.id} signed delivery ${delivery.id}`,
+        userId,
+        path: `/layout/${delivery.movieId}/form/${delivery.id}`
+      }))
+
+    await triggerNotifications(newSigneeNotifications);
+  }
+
   const stakeholderCount = await db
     .collection(`deliveries/${delivery.id}/stakeholders`)
     .get()
@@ -48,15 +86,6 @@ export const onDeliveryUpdate = async (
   ) {
     return true;
   }
-
-  /**
-   * Note: Google Cloud Function enforces "at least once" delivery for events.
-   * This means that an event may processed twice by this function, with the same Before and After data.
-   * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
-   * betweeen two runs to enforce "only once delivery".
-   */
-  const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
-  const processedId = deliveryDoc.data()!.processedId;
 
   if (processedId === context.eventId) {
     return true;
@@ -87,8 +116,7 @@ export const onDeliveryUpdate = async (
     });
 
     // when delivery is signed, we create notifications for each stakeholder
-    const orgs = await getOrgs(delivery.id);
-    const notifications = orgs
+    const approvedDeliveryNotifications = orgs
       .filter(org => !!org && !!org.userIds)
       .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
       .map((userId: string) => prepareNotification({
@@ -98,7 +126,7 @@ export const onDeliveryUpdate = async (
         path: `/layout/${delivery.movieId}/view/${delivery.id}`
       }))
 
-    promises.push(triggerNotifications(notifications));
+    promises.push(triggerNotifications(approvedDeliveryNotifications));
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({processedId: null});
