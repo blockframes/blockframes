@@ -5,6 +5,7 @@ import { onDeliveryUpdate } from './delivery';
 import { auth, db, functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 import { deleteFirestoreMovie, deleteFirestoreDelivery } from './delete';
+import { onStakeholderCreate, onStakeholderDelete } from './stakeholder';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -128,6 +129,20 @@ export const getOrCreateUserByMail = functions.https
 export const onDeliveryUpdateEvent = functions.firestore
   .document('deliveries/{deliveryID}')
   .onUpdate(onDeliveryUpdate);
+
+/**
+ * Trigger: when a stakeholder is added to a delivery
+ */
+export const onStakeholderCreateEvent = functions.firestore
+  .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
+  .onCreate(onStakeholderCreate);
+
+/**
+ * Trigger: when a stakeholder is removed from a delivery
+ */
+export const onStakeholderDeleteEvent = functions.firestore
+.document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
+.onDelete(onStakeholderDelete);
 
 //--------------------------------
 //            RELAYER           //

@@ -8,14 +8,14 @@ interface Organization {
 }
 
 //Functions
-function getCollection(path: string) {
+export function getCollection(path: string) {
   return db
     .collection(path)
     .get()
     .then(collection => collection.docs.map(doc => doc.data()));
 }
 
-function getDocument(path: string) {
+export function getDocument(path: string) {
   return db
     .doc(path)
     .get()
