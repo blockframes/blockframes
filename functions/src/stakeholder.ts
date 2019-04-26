@@ -2,7 +2,9 @@ import { functions, db } from './firebase';
 import { getOrgs, APP_DELIVERY, getDocument } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
 
-export const onStakeholderCreate = async (
+const APP_MOVIE = 'moviefinancing';
+
+export const onDeliveryStakeholderCreate = async (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) => {
@@ -23,7 +25,7 @@ export const onStakeholderCreate = async (
     }
 
     try {
-      const orgs = await getOrgs(delivery.id);
+      const orgs = await getOrgs(delivery.id, 'deliveries');
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -48,13 +50,15 @@ export const onStakeholderCreate = async (
   return true;
 };
 
-export const onStakeholderDelete = async (
+export const onDeliveryStakeholderDelete = async (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) => {
   if (!snap.data()) {
     return true;
   }
+
+  // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
 
   const delivery = await getDocument(`deliveries/${context.params.deliveryID}`);
   const stakeholder = snap.data();
@@ -69,7 +73,7 @@ export const onStakeholderDelete = async (
     }
 
     try {
-      const orgs = await getOrgs(delivery.id);
+      const orgs = await getOrgs(delivery.id, 'deliveries');
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -87,6 +91,96 @@ export const onStakeholderDelete = async (
       await triggerNotifications(notifications);
     } catch (e) {
       await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });
+      throw e;
+    }
+    return true;
+  }
+  return true;
+};
+
+export const onMovieStakeholderCreate = async (
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  if (!snap.data()) {
+    return true;
+  }
+
+  const movie = await getDocument(`movies/${context.params.movieID}`);
+  const newStakeholder = snap.data();
+  const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
+
+  if (!!movie && !!newStakeholder && !!newStakeholderOrg) {
+    const movieDoc = await db.doc(`movies/${movie.id}`).get();
+    const processedId = movieDoc.data()!.processedId;
+
+    if (processedId === context.eventId) {
+      return true;
+    }
+
+    try {
+      const orgs = await getOrgs(movie.id, 'movies');
+      const notifications = orgs
+        .filter(org => !!org && !!org.userIds)
+        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+        .map((userId: string) =>
+          prepareNotification({
+            app: APP_MOVIE,
+            message: `Stakeholder ${newStakeholder.id} from ${newStakeholderOrg.name}
+            has been added to movie ${movie.title.original}`,
+            userId,
+            path: `/layout/home/form/${movie.id}/teamwork`
+          })
+        );
+
+      await triggerNotifications(notifications);
+    } catch (e) {
+      await db.doc(`movies/${movie.id}`).update({ processedId: null });
+      throw e;
+    }
+    return true;
+  }
+  return true;
+};
+
+export const onMovieStakeholderDelete = async (
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  if (!snap.data()) {
+    return true;
+  }
+
+  const movie = await getDocument(`movies/${context.params.movieID}`);
+  const stakeholder = snap.data();
+  const stakeholderOrg = await getDocument(`orgs/${stakeholder!.orgId}`);
+
+  if (!!movie && !!stakeholder && !!stakeholderOrg) {
+    const movieDoc = await db.doc(`movies/${movie.id}`).get();
+    const processedId = movieDoc.data()!.processedId;
+
+    if (processedId === context.eventId) {
+      return true;
+    }
+
+    try {
+      const orgs = await getOrgs(movie.id, 'movies');
+      const notifications = orgs
+        .filter(org => !!org && !!org.userIds)
+        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+        .map((userId: string) =>
+          prepareNotification({
+            app: APP_MOVIE,
+            message: `Stakeholder ${stakeholder.id} from ${stakeholderOrg.name}
+            has been removed from movie ${movie.title.original}`,
+            userId,
+            path: `/layout/home/form/${movie.id}/teamwork`
+          })
+        );
+
+      await triggerNotifications(notifications);
+    } catch (e) {
+      await db.doc(`movies/${movie.id}`).update({ processedId: null });
       throw e;
     }
     return true;

@@ -5,9 +5,13 @@ import { onDeliveryUpdate } from './delivery';
 import { functions } from './firebase';
 import { relayerCreateLogic, relayerSendLogic } from './relayer';
 import { deleteFirestoreMovie, deleteFirestoreDelivery } from './delete';
-import { onStakeholderCreate, onStakeholderDelete } from './stakeholder';
+import { onDeliveryStakeholderCreate,
+         onDeliveryStakeholderDelete,
+         onMovieStakeholderCreate,
+         onMovieStakeholderDelete } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
+
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -77,16 +81,30 @@ export const onDeliveryUpdateEvent = functions.firestore
 /**
  * Trigger: when a stakeholder is added to a delivery
  */
-export const onStakeholderCreateEvent = functions.firestore
+export const onDeliveryStakeholderCreateEvent = functions.firestore
   .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
-  .onCreate(onStakeholderCreate);
+  .onCreate(onDeliveryStakeholderCreate);
 
 /**
  * Trigger: when a stakeholder is removed from a delivery
  */
-export const onStakeholderDeleteEvent = functions.firestore
+export const onDeliveryStakeholderDeleteEvent = functions.firestore
 .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
-.onDelete(onStakeholderDelete);
+.onDelete(onDeliveryStakeholderDelete);
+
+/**
+ * Trigger: when a stakeholder is added to a movie
+ */
+export const onMovieStakeholderCreateEvent = functions.firestore
+.document('movies/{movieID}/stakeholders/{stakeholerID}')
+.onCreate(onMovieStakeholderCreate);
+
+/**
+ * Trigger: when a stakeholder is removed from a movie
+ */
+export const onMovieStakeholderDeleteEvent = functions.firestore
+.document('movies/{movieID}/stakeholders/{stakeholerID}')
+.onDelete(onMovieStakeholderDelete);
 
 //--------------------------------
 //            RELAYER           //

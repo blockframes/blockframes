@@ -47,6 +47,10 @@ export class IconComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/library_books.svg')
     );
     this.matIconRegistry.addSvgIcon(
+      'moviefinancing',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/apps/moviefinancing.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
       'order',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/order.svg')
     );

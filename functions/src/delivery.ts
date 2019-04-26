@@ -29,7 +29,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
   );
   const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
 
-  const newSigneeNotifications = orgs
+  const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) =>
@@ -43,11 +43,11 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
       })
     );
 
-  await triggerNotifications(newSigneeNotifications);
+  await triggerNotifications(notifications);
 }
 
-export async function getOrgs(deliveryId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
+export async function getOrgs(docId: string, collection: string): Promise<Organization[]> {
+  const stakeholders = await getCollection(`${collection}/${docId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);
@@ -77,7 +77,7 @@ export const onDeliveryUpdate = async (
   const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
   const processedId = deliveryDoc.data()!.processedId;
 
-  const orgs = await getOrgs(delivery.id);
+  const orgs = await getOrgs(delivery.id, 'deliveries');
 
   // Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
   if (delivery.validated.length === deliveryBefore.validated.length + 1) {
@@ -125,7 +125,7 @@ export const onDeliveryUpdate = async (
     });
 
     // when delivery is signed, we create notifications for each stakeholder
-    const approvedDeliveryNotifications = orgs
+    const notifications = orgs
       .filter(org => !!org && !!org.userIds)
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
       .map((userId: string) =>
@@ -137,7 +137,7 @@ export const onDeliveryUpdate = async (
         })
       );
 
-    promises.push(triggerNotifications(approvedDeliveryNotifications));
+    promises.push(triggerNotifications(notifications));
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });

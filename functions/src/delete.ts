@@ -47,7 +47,7 @@ export const deleteFirestoreDelivery = async (snap: FirebaseFirestore.DocumentSn
   }
 
   // we store the orgs before the delivery is deleted
-  const orgs = await getOrgs(delivery.id);
+  const orgs = await getOrgs(delivery.id, 'deliveries');
 
   const batch = db.batch();
   const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
