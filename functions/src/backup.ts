@@ -26,11 +26,15 @@ class Queue {
     this.content.push(x);
   }
 
-  pop(): null | string {
+  pop(): string {
     if (this.content.length === 0) {
-      return null;
+      throw new Error('popping from an empty queue');
     }
     return this.content.shift()!;
+  }
+
+  isEmpty(): boolean {
+    return this.content.length === 0;
   }
 }
 
@@ -57,19 +61,29 @@ const freeze = async (req: any, resp: any) => {
   const bucket: Bucket = await getBackupBucket();
   const stream = await getBackupOutput(bucket, now);
 
+  // Note: we use a Queue to store the collections to backup instead of doing a recursion,
+  // this will protect the stack. It will break when the size of keys to backup grows
+  // larger than our memory quota (memory is around 500mo => around 50GB of firestore data to backup)
+  // We'll have to store them in a collection at this point.
   const processingQueue = new Queue();
 
   // retrieve all the collections at the root.
   const collections: CollectionReference[] = await db.listCollections();
+  collections.forEach(x => processingQueue.push(x.path));
 
-  // We go through each collection and retrieve its documents.
-  const promises = collections.map(async collection => {
-    const q: QuerySnapshot = await collection.get();
+  while (!processingQueue.isEmpty()) {
+    const currentPath: string = processingQueue.pop();
+    const q: QuerySnapshot = await db.collection(currentPath).get();
 
-    console.error('Processing collection:', collection.path);
+    if (q.size > 0) {
+      console.info('Processing collection:', currentPath);
+    } else {
+      // Empty, move on
+      continue;
+    }
 
-    q.docs.forEach((doc: QueryDocumentSnapshot) => {
-
+    // Go through each document of the collection for backup
+    const promises = q.docs.map(async (doc: QueryDocumentSnapshot) => {
       // Store the data
       const docPath: string = doc.ref.path;
       const content: any = doc.data();
@@ -79,13 +93,14 @@ const freeze = async (req: any, resp: any) => {
       stream.write(JSON.stringify(stored));
       stream.write('\n');
 
-      processingQueue.push(docPath);
-      // TODO: recursive descent
+      // Adding the current path to the subcollections to backup
+      const subCollections = await doc.ref.getCollections();
+      subCollections.forEach(x => processingQueue.push(x.path));
     });
-  });
 
-  console.error('Waiting for all processings to complete');
-  await Promise.all(promises);
+    // Wait for this backup to complete
+    await Promise.all(promises);
+  }
 
   console.error('Done, closing our stream');
   await new Promise(resolve => {
