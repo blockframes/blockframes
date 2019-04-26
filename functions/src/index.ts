@@ -57,7 +57,7 @@ export const getOrCreateUserByMail = functions.https
  * Trigger: REST call to backup firestore
  */
 export const backupFirestore = functions.https
-  .onCall(backup.freeze);
+  .onRequest(backup.freeze);
 
 /**
  * Trigger: REST call to restore firestore
