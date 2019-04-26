@@ -15,7 +15,6 @@ export class DeliveryTeamWorkViewComponent implements OnInit, OnDestroy {
   public deliveryStakeholders$: Observable<Stakeholder[]>;
   public isAlive = true;
   public stakeholderId: string;
-  private colors = ['#ee4825', '#2577ee', '#d925ee', '#25ee53', '#7c857e', '#d375d8', '#75d2d8', '#d0c461'];
 
   constructor(
     private stakeholderService: StakeholderService,
@@ -28,11 +27,6 @@ export class DeliveryTeamWorkViewComponent implements OnInit, OnDestroy {
 
     this.deliveryStakeholders$ = this.stakeholderQuery.selectAll();
     this.movieStakeholders$ = this.stakeholderService.stakeholdersByMovie$;
-  }
-
-  public getColor(id: string) {
-    const index = id.charCodeAt(0) % this.colors.length;
-    return this.colors[index];
   }
 
   public openForm(stakeholder: Stakeholder) {

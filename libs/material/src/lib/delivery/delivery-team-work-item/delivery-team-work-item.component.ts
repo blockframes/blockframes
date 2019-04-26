@@ -10,7 +10,6 @@ import { DeliveryService } from '../+state';
 })
 export class DeliveryTeamWorkItemComponent {
   @Input() stakeholder: Stakeholder;
-  @Input() color: string;
   @Output() update = new EventEmitter();
 
   constructor(private service: DeliveryService) {}

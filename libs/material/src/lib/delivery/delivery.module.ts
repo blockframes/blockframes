@@ -25,6 +25,7 @@ import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/deliver
 import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
 import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
 import { EditableModule } from '@blockframes/ui';
+import { DotColorDirective } from '../directives/dot-color-directive';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -94,6 +95,7 @@ const routes: Routes = [
     DeliveryTeamWorkListComponent,
     TeamWorkActionsComponent,
     TeamWorkFiltersComponent,
+    DotColorDirective,
   ],
   imports: [
     CommonModule,

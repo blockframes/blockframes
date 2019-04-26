@@ -18,7 +18,7 @@
   <div fxLayoutAlign="start center">
     <span
       class="dot left mat-elevation-z4"
-      [ngStyle]="{ 'background-color': getColor(stakeholder.id) }"
+      [deliveryDotColor]="stakeholder.id"
     ></span>
     <p class="left">{{ stakeholder.organization.name }}</p>
   </div>
