@@ -1,7 +1,7 @@
 import { db, functions } from './firebase';
-import { triggerNotification, prepareNotification } from './notify';
+import { triggerNotifications, prepareNotification } from './notify';
 
-const APP_DELIVERY = 'delivery'; // This string refers to svg icon name
+export const APP_DELIVERY = 'delivery'; // This string refers to svg icon name
 
 interface Organization {
   userIds: string[];
@@ -15,7 +15,7 @@ function getCollection(path: string) {
     .then(collection => collection.docs.map(doc => doc.data()));
 }
 
-async function getOrgs(deliveryId: string): Promise<Organization[]> {
+export async function getOrgs(deliveryId: string): Promise<Organization[]> {
   const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
   const promises = stakeholders.map(({orgId})=> db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
@@ -98,35 +98,11 @@ export const onDeliveryUpdate = async (
         path: `/layout/${delivery.movieId}/view/${delivery.id}`
       }))
 
-    promises.push(triggerNotification(notifications));
+    promises.push(triggerNotifications(notifications));
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({processedId: null});
     throw e;
   }
-  return true;
-};
-
-export const onDeliveryDelete = async (
-  snapshot: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
-) => {
-  const deletedDelivery = snapshot.data()!;
-  console.error(deletedDelivery)
-  const orgs = await getOrgs(deletedDelivery.id);
-  console.error(orgs)
-  const promises = [];
-
-  const notifications = orgs
-    .filter(org => !!org && !!org.userIds)
-    .reduce((ids: string[], {userIds}) => [ ...ids, ...userIds ], [])
-    .map((userId: string) => prepareNotification({
-      app: APP_DELIVERY,
-      message: `Delivery with id ${deletedDelivery.id} has been deleted.`,
-      userId
-      })
-    );
-  promises.push(triggerNotification(notifications));
-  await Promise.all(promises);
   return true;
 }

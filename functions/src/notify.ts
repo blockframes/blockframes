@@ -4,7 +4,7 @@ interface PartialNotification {
   app: string;
   message: string;
   userId: string;
-  path?: string;
+  path: string | null;
 }
 
 interface Notification extends PartialNotification {
@@ -13,7 +13,7 @@ interface Notification extends PartialNotification {
   date: any;
 }
 
-export async function triggerNotification(notifications: Notification[]): Promise<any> {
+export async function triggerNotifications(notifications: Notification[]): Promise<any> {
   const notificationBatch = db.batch();
 
   notifications.forEach(notification => {
@@ -30,7 +30,7 @@ export function prepareNotification({ app, message, userId, path }: PartialNotif
     app,
     message,
     userId,
-    path,
+    path: path || null,
     isRead: false,
     date: serverTimestamp()
   };
