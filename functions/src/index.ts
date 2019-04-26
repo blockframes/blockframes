@@ -77,12 +77,20 @@ export const onDeliveryUpdateEvent = functions.firestore
 //            RELAYER           //
 //--------------------------------
 
-export const relayerCreate = functions.https.onCall((data, context) => relayerCreateLogic(data, functions.config()));
-export const relayerSend = functions.https.onCall((data, context) => relayerSendLogic(data, functions.config()));
+export const relayerCreate = functions.https
+  .onCall((data, context) => relayerCreateLogic(data, functions.config()));
+
+export const relayerSend = functions.https
+  .onCall((data, context) => relayerSendLogic(data, functions.config()));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
 //--------------------------------
 
-export const deleteMovie = functions.firestore.document('movies/{movieId}').onDelete((snap, context) => deleteFirestoreMovie(snap, context));
-export const deleteDelivery = functions.firestore.document('deliveries/{deliveryId}').onDelete((snap, context) => deleteFirestoreDelivery(snap, context));
+export const deleteMovie = functions.firestore
+  .document('movies/{movieId}')
+  .onDelete(deleteFirestoreMovie);
+
+export const deleteDelivery = functions.firestore
+  .document('deliveries/{deliveryId}')
+  .onDelete(deleteFirestoreDelivery);

@@ -42,7 +42,7 @@ export const deleteFirestoreDelivery = async (snap: FirebaseFirestore.DocumentSn
   const delivery = snap.data();
 
   if (!delivery) {
-    console.error(`This delivery doesn\'t exist !`);
+    console.error(`This delivery doesn't exist !`);
     return null;
   }
 
