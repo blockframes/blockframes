@@ -28,14 +28,14 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
   }
 
   public updateEmptyDeliveryForm(category: string) {
-    this.updateRoot({ materialDeliveryForm: {value: "", description: "", category, step: "Step 1"} })
+    this.update({ materialDeliveryForm: {value: "", description: "", category, step: "Step 1"} })
   }
 
   public updateEmptyTemplateForm(category: string) {
-    this.updateRoot({ materialTemplateForm: {value: "", description: "", category} })
+    this.update({ materialTemplateForm: {value: "", description: "", category} })
   }
 
   public clearForm() {
-    this.updateRoot({ materialTemplateForm: null, materialDeliveryForm: null })
+    this.update({ materialTemplateForm: null, materialDeliveryForm: null })
   }
 }
