@@ -162,6 +162,12 @@ const restore = async (req: any, resp: any) => {
   const lineReader = readline.createInterface({ input: stream });
 
   const promises: Promise<any>[] = [];
+
+  // TODO: make this part scalable too, we're going to load the file
+  // and create promises "as fast as possible", we should backpressure the
+  // callback somehow to make sure the X previous promises have been completed
+  // before adding more. This will protect us from memory overflow (similar
+  // to the note in the backup code).
   lineReader.on('line', line => {
     console.info('processing line=', line);
     const stored: StoredDocument = JSON.parse(line);
