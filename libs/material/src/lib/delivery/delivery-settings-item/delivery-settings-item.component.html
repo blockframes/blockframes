@@ -1,0 +1,23 @@
+<mat-card class="mat-elevation-z2">
+  <mat-icon>drag_indicator</mat-icon>
+  <div>
+    <mat-card-title>
+      {{ step.name }}
+    </mat-card-title>
+
+    <mat-card-content>
+      {{ material.description }}
+    </mat-card-content>
+    <mat-card-actions>
+      <button>EDIT</button>
+      <button class="border-left">DUPLICATE</button>
+      <button class="border-left">DELETE</button>
+    </mat-card-actions>
+  </div>
+  <div>
+    <mat-card-subtitle>
+      Delivery date:
+    </mat-card-subtitle>
+    <p>{{ step.date }}</p>
+  </div>
+</mat-card>

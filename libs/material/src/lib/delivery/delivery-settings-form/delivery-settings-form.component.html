@@ -1,0 +1,36 @@
+<mat-card class="mat-elevation-z6">
+  <mat-card-title>Edit your step</mat-card-title>
+  <mat-card-content fxLayout="row" fxLayoutAlign="space-between center">
+    <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center">
+      <mat-form-field appearance="outline">
+        <mat-label>Step name</mat-label>
+        <input formControlName="name" matInput placeholder="Step name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input
+          formControlName="date"
+          matInput
+          placeholder="Date"
+        />
+      </mat-form-field>
+    </form>
+    <div class="buttons" fxLayoutAlign="center">
+      <button
+        mat-raised-button
+        color="basic"
+        class="cancel-button mat-elevation-z0"
+      >
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button mat-elevation-z0"
+      >
+        Save
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

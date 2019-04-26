@@ -49,6 +49,8 @@ import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
 import { TeamWorkActionsComponent } from './delivery-team-work-view/team-work-actions/team-work-actions.component';
 import { TeamWorkFiltersComponent } from './delivery-team-work-view/team-work-filters/team-work-filters.component';
+import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
+import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -96,6 +98,8 @@ const routes: Routes = [
     TeamWorkActionsComponent,
     TeamWorkFiltersComponent,
     DotColorDirective,
+    DeliverySettingsItemComponent,
+    DeliverySettingsFormComponent,
   ],
   imports: [
     CommonModule,
