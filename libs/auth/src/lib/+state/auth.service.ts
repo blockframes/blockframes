@@ -26,6 +26,8 @@ export class AuthService {
     this.subscribeOnUser();
     const username = mail.split('@')[0];
     this.wallet.login(toASCII(username), password);  // no await -> do the job in background
+    const balance = await this.wallet.getBalance();
+    this.store.update(state => ({...state, user: ({...state.user, balance})}));
   }
 
   public async signup(mail: string, password: string) {
@@ -37,8 +39,9 @@ export class AuthService {
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });
-    this.wallet.signup(userCredentials.user.uid, toASCII(username), password).then(() => {  // no await -> do the job in background
-      this.store.update({isEncrypting: false});
+    this.wallet.signup(userCredentials.user.uid, toASCII(username), password).then(async () => {  // no await -> do the job in background
+      const balance = await this.wallet.getBalance();
+      this.store.update(state => ({...state, isEncrypting: false, user: ({...state.user, balance})}));
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,
       });

@@ -4,6 +4,7 @@ import { ethers, utils, Wallet, providers } from 'ethers';
 import { Provider } from '../provider/provider';
 import { Relayer } from '../relayer/relayer';
 import { Vault } from '../vault/vault';
+import { baseEnsDomain } from '@env';
 
 type txRequest = providers.TransactionRequest;
 type txResponse = providers.TransactionResponse;
@@ -19,9 +20,8 @@ export class RelayerWallet implements ethers.Signer {
     public provider: Provider
   ) {}
 
-  /** Set into process memory */
-  private loginWithEncryptedJSON(wallet: Wallet, username: string) {
-    this.username = username;
+  /** Set signing key into process memory */
+  private _setSigningKey(wallet: Wallet) {
     this.signingKey = new utils.SigningKey(wallet.privateKey);
   }
 
@@ -32,25 +32,28 @@ export class RelayerWallet implements ethers.Signer {
   }
 
   /** Get the signing key from an encrypted JSON */
-  public async login(username: string, password: string) {
+  public login(username: string, password: string) {
     if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
-    const encryptedJSON = await this.vault.get(`${username}:web`);
-    const wallet = await Wallet.fromEncryptedJson(encryptedJSON, password);
-    this.loginWithEncryptedJSON(wallet, username);
+    this.username = username;
+    this.vault.get(`${username}:web`)
+      .then(encryptedJSON => Wallet.fromEncryptedJson(encryptedJSON, password))
+      .then(wallet => this._setSigningKey(wallet));
   }
 
   /** Get the signing key from a mnemonic */
   public async importMnemonic(mnemonic: string, username: string, password: string) {
+    if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
+    this.username = username;
     const wallet = Wallet.fromMnemonic(mnemonic);
-    this.loginWithEncryptedJSON(wallet, username);
+    this._setSigningKey(wallet);
     this.saveIntoVault(wallet, username, password);
   }
 
   /** Create a wallet and store it into the vault */
   public async signup(uid: string, username: string, password: string) {
     const wallet = Wallet.createRandom();
-    this.loginWithEncryptedJSON(wallet, username);
-    const createResult = await this.relayer.create(uid, username, wallet.address);
+    this._setSigningKey(wallet);
+    await this.relayer.create(uid, username, wallet.address);
     await this.saveIntoVault(wallet, username, password);
   }
 
@@ -77,5 +80,11 @@ export class RelayerWallet implements ethers.Signer {
 
   public async sendTransaction(transaction: txRequest): Promise<txResponse> {
     return this.relayer.send(this.username, transaction);
+  }
+
+  /** Retreive balance of the ERC1077 contract */
+  public async getBalance(): Promise<string> {
+    const balance = await this.provider.getBalance(`${this.username}.${baseEnsDomain}`);
+    return utils.formatEther(balance);
   }
 }
