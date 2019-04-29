@@ -15,7 +15,6 @@ export class AccountViewComponent implements OnInit, OnDestroy {
   public user$: Observable<User>;
   public asciiUsername$: Observable<string>;
   public blockie$: Observable<string>;
-  public basedomain: string;
   public network: string;
 
   constructor( private authQuery: AuthQuery) {
@@ -27,7 +26,6 @@ export class AccountViewComponent implements OnInit, OnDestroy {
       filter(user => !!user),
       map(user => makeBlockie.default(user.identity.address))
     );
-    this.basedomain = baseEnsDomain;
     this.network = network ;
   }
 
