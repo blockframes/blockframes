@@ -15,7 +15,7 @@
     </button>
   </div>
 
-  <delivery-settings-form (cancelForm)="cancelAdd()" *ngIf="hasForm"></delivery-settings-form>
+  <delivery-settings-form (cancelled)="cancelAdd()" *ngIf="hasForm"></delivery-settings-form>
 
   <ui-editable *ngFor="let step of (steps$ | async)" [item]="step" [itemId]="stepId">
     <ng-template materialViewMode>
@@ -24,7 +24,7 @@
     <ng-template materialEditMode>
       <delivery-settings-form
         [step]="step"
-        (cancelForm)="cancelEdit()"
+        (cancelled)="cancelEdit()"
       ></delivery-settings-form>
     </ng-template>
   </ui-editable>

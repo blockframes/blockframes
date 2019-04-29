@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Step, DeliveryService } from '../+state';
 
 @Component({
@@ -7,14 +7,11 @@ import { Step, DeliveryService } from '../+state';
   styleUrls: ['./delivery-settings-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliverySettingsItemComponent implements OnInit {
+export class DeliverySettingsItemComponent {
   @Input() step: Step;
   @Output() update = new EventEmitter();
 
   constructor(private service: DeliveryService) { }
-
-  ngOnInit() {
-  }
 
   public edit() {
     this.update.emit();
@@ -23,5 +20,4 @@ export class DeliverySettingsItemComponent implements OnInit {
   public removeStep() {
     this.service.removeStep(this.step);
   }
-
 }

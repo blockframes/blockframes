@@ -16,7 +16,7 @@ import { DeliveryService, Step } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliverySettingsFormComponent implements OnInit {
-  @Output() cancelForm = new EventEmitter();
+  @Output() cancelled = new EventEmitter();
   @Input() step: Step;
 
   public form = new FormGroup({
@@ -36,16 +36,14 @@ export class DeliverySettingsFormComponent implements OnInit {
   }
 
   public cancel() {
-    this.cancelForm.emit();
+    this.cancelled.emit();
   }
 
-  public updateStep() {
+  public upsertStep() {
     // If step exists we update step, else we add a new step
-    if (this.step) {
-      this.service.updateStep(this.step, this.form.value);
-    } else {
-      this.service.addStep(this.form.value);
-    }
+    !!this.step
+      ? this.service.updateStep(this.step, this.form.value)
+      : this.service.createStep(this.form.value);
     this.cancel();
   }
 }

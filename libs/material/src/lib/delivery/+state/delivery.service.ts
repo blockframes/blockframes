@@ -110,7 +110,7 @@ export class DeliveryService {
   }
 
   /** Add step in array steps of delivery */
-  public addStep(step: Step) {
+  public createStep(step: Step) {
     step.id = this.db.createId();
     const steps = [...this.query.getActive().steps, step];
     this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
@@ -246,16 +246,10 @@ export class DeliveryService {
   ////////////////////////
   // START SUBSCRIPTION //
   ////////////////////////
-
   public suscribeOnDeliveriesByActiveMovie() {
-    function mungeFirestoreDelivery(delivery: Delivery) {
-      return {
-        ...delivery,
-        steps: delivery.steps.map(step => ({
-          ...step,
-          date: step.date.toDate()
-        }))
-      }
+    function modifyTimestampToDate(delivery: Delivery) {
+      delivery.steps.forEach(step => step.date = step.date.toDate())
+      return delivery
     }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>
@@ -263,7 +257,7 @@ export class DeliveryService {
           .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
           .valueChanges()
       ),
-      map(deliveries => deliveries.map(mungeFirestoreDelivery)),
+      map(deliveries => deliveries.map(modifyTimestampToDate)),
       tap(deliveries => this.store.set(deliveries))
     );
   }
