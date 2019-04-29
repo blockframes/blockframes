@@ -89,22 +89,22 @@ export const onDeliveryStakeholderCreateEvent = functions.firestore
  * Trigger: when a stakeholder is removed from a delivery
  */
 export const onDeliveryStakeholderDeleteEvent = functions.firestore
-.document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
-.onDelete(onDeliveryStakeholderDelete);
+  .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
+  .onDelete(onDeliveryStakeholderDelete);
 
 /**
  * Trigger: when a stakeholder is added to a movie
  */
 export const onMovieStakeholderCreateEvent = functions.firestore
-.document('movies/{movieID}/stakeholders/{stakeholerID}')
-.onCreate(onMovieStakeholderCreate);
+  .document('movies/{movieID}/stakeholders/{stakeholerID}')
+  .onCreate(onMovieStakeholderCreate);
 
 /**
  * Trigger: when a stakeholder is removed from a movie
  */
 export const onMovieStakeholderDeleteEvent = functions.firestore
-.document('movies/{movieID}/stakeholders/{stakeholerID}')
-.onDelete(onMovieStakeholderDelete);
+  .document('movies/{movieID}/stakeholders/{stakeholerID}')
+  .onDelete(onMovieStakeholderDelete);
 
 //--------------------------------
 //            RELAYER           //

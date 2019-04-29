@@ -1,8 +1,26 @@
 import { functions, db } from './firebase';
-import { getOrgs, APP_DELIVERY, getDocument } from './delivery';
+import { APP_DELIVERY, getDocument, getCollection } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
 
 const APP_MOVIE = 'moviefinancing';
+
+export interface Organization {
+  userIds: string[];
+}
+
+export async function getOrgsOfDelivery(deliveryId: string): Promise<Organization[]> {
+  const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
+  const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
+  const orgs = await Promise.all(promises);
+  return orgs.map(doc => doc.data() as Organization);
+}
+
+async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
+  const stakeholders = await getCollection(`deliveries/${movieId}/stakeholders`);
+  const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
+  const orgs = await Promise.all(promises);
+  return orgs.map(doc => doc.data() as Organization);
+}
 
 export const onDeliveryStakeholderCreate = async (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -25,7 +43,7 @@ export const onDeliveryStakeholderCreate = async (
     }
 
     try {
-      const orgs = await getOrgs(delivery.id, 'deliveries');
+      const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -73,7 +91,7 @@ export const onDeliveryStakeholderDelete = async (
     }
 
     try {
-      const orgs = await getOrgs(delivery.id, 'deliveries');
+      const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -106,6 +124,8 @@ export const onMovieStakeholderCreate = async (
     return true;
   }
 
+  // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
+
   const movie = await getDocument(`movies/${context.params.movieID}`);
   const newStakeholder = snap.data();
   const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
@@ -119,7 +139,7 @@ export const onMovieStakeholderCreate = async (
     }
 
     try {
-      const orgs = await getOrgs(movie.id, 'movies');
+      const orgs = await getOrgsOfMovie(movie.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -151,6 +171,8 @@ export const onMovieStakeholderDelete = async (
     return true;
   }
 
+  // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
+
   const movie = await getDocument(`movies/${context.params.movieID}`);
   const stakeholder = snap.data();
   const stakeholderOrg = await getDocument(`orgs/${stakeholder!.orgId}`);
@@ -164,7 +186,7 @@ export const onMovieStakeholderDelete = async (
     }
 
     try {
-      const orgs = await getOrgs(movie.id, 'movies');
+      const orgs = await getOrgsOfMovie(movie.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
