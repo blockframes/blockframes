@@ -1,4 +1,4 @@
-import sortBy from 'lodash.sortby';
+import { sortBy } from 'lodash';
 import readline from 'readline';
 import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
@@ -53,7 +53,7 @@ const getBackupOutput = async (bucket: Bucket, name: string): Promise<Writable> 
 
 const freeze = async (req: any, resp: any) => {
   // Prep ouput
-  const now = (new Date()).toISOString();
+  const now = new Date().toISOString();
   const bucket: Bucket = await getBackupBucket();
   const stream = await getBackupOutput(bucket, now);
 

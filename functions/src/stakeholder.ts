@@ -15,7 +15,7 @@ export async function getOrgsOfDelivery(deliveryId: string): Promise<Organizatio
   return orgs.map(doc => doc.data() as Organization);
 }
 
-async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
+export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   const stakeholders = await getCollection(`deliveries/${movieId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
@@ -57,6 +57,7 @@ export const onDeliveryStakeholderCreate = async (
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
           })
         );
+        // TODO: Make a custom notification for the stakeholder added to this delivery
 
       await triggerNotifications(notifications);
     } catch (e) {
