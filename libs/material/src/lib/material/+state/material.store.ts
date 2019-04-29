@@ -13,7 +13,7 @@ export interface MaterialState extends EntityState<Material>, MultiActiveState {
     value: string;
     description: string;
     category: string;
-    step: string;
+    stepId: string;
   };
 }
 
@@ -33,7 +33,7 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
   }
 
   public updateEmptyDeliveryForm(category: string) {
-    this.update({ materialDeliveryForm: { value: '', description: '', category, step: 'Step 1' } });
+    this.update({ materialDeliveryForm: { value: '', description: '', category, stepId: '' } });
   }
 
   public updateEmptyTemplateForm(category: string) {

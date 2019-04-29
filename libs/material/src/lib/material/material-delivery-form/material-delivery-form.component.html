@@ -26,7 +26,7 @@
     <div class="step" fxLayout="column" fxLayoutAlign="space-around center">
       <mat-form-field appearance="outline">
         <mat-label>Choose step</mat-label>
-        <mat-select formControlName="step">
+        <mat-select formControlName="stepId">
           <mat-option *ngFor="let step of (steps$ | async)" [value]="step.id">
             {{ step.name }}
           </mat-option>

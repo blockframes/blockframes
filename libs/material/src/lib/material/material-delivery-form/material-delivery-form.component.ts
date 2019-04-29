@@ -30,7 +30,7 @@ export class MaterialDeliveryFormComponent implements OnInit {
     value: new FormControl(),
     description: new FormControl(),
     category: new FormControl(),
-    step: new FormControl()
+    stepId: new FormControl()
   });
 
   constructor(private deliveryQuery: DeliveryQuery,) {}
@@ -41,7 +41,7 @@ export class MaterialDeliveryFormComponent implements OnInit {
       value: this.material.value,
       description: this.material.description,
       category: this.material.category,
-      step: this.material.step
+      stepId: this.material.step.id
     });
   }
 

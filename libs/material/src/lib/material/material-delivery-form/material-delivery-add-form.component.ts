@@ -23,14 +23,14 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
     value: new FormControl(),
     description: new FormControl(),
     category: new FormControl(),
-    step: new FormControl(),
+    stepId: new FormControl(),
   });
 
   constructor(private query: MaterialQuery, private store: MaterialStore, private deliveryQuery: DeliveryQuery,) {}
 
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
-    this.form.setValue({ value: '', description: '', category: '', step: '' });
+    this.form.setValue({ value: '', description: '', category: '', stepId: '' });
 
     this.query
       .select(state => state.materialDeliveryForm)

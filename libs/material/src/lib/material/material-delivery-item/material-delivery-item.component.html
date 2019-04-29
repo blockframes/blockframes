@@ -15,12 +15,12 @@
       </button>
     </mat-card-actions>
   </mat-card-content>
-  <mat-card-content *ngIf="(step$ | async) as step" class="content-step">
+  <mat-card-content class="content-step">
     <mat-card-subtitle class="step">
       Step:
     </mat-card-subtitle>
     <mat-card-title class="step-value">
-      {{ step.name }}
+      {{ material.step.name }}
     </mat-card-title>
   </mat-card-content>
 </mat-card>

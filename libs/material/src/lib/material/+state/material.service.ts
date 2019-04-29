@@ -27,9 +27,22 @@ export class MaterialService {
   }
 
   public subscribeOnDeliveryMaterials$() {
-    return this.deliveryQuery.selectActiveId().pipe(
-      filter(id => !!id),
-      switchMap(id => this.db.collection<Material>(`deliveries/${id}/materials`).valueChanges()),
+    // TODO : switch this to FireQuery
+    return this.deliveryQuery.selectActive().pipe(
+      filter(delivery => !!delivery),
+      switchMap(delivery =>
+        this.db
+          .collection<any>(`deliveries/${delivery.id}/materials`)
+          .valueChanges()
+          .pipe(
+            map(materials =>
+              materials.map(material => ({
+                ...material,
+                step: delivery.steps.find(step => step.id === material.stepId)
+              }))
+            )
+          )
+      ),
       tap(materials => this.store.set(materials))
     );
   }
