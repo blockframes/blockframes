@@ -15,7 +15,6 @@ export class MovieMaterialItemComponent implements OnInit {
   @Input() stakeholders: Stakeholder[];
 
   // Visual bullshit for WoW effect
-  public stateIcons = ['accepted', 'available', 'delivered', 'pending', 'refused'];
   public stateIcon: string;
   public stakeholder: string;
 
@@ -29,9 +28,8 @@ export class MovieMaterialItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.stateIcon = this.stateIcons[this.randomNumberPicker(5)];
     this.stakeholder = this.orgQuery.getEntity(
-      this.stakeholders[this.randomNumberPicker(this.stakeholders.length)].orgId
+      this.stakeholders[1].orgId
     ).name;
   }
 
@@ -40,10 +38,6 @@ export class MovieMaterialItemComponent implements OnInit {
       .deliveredToggle(material, this.movieQuery.getActiveId())
       .catch(err => console.log(err));
     //TODO: Ask why we put .catch ? And why we put it without "try" before
-  }
-
-  public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale);
   }
 
   public panelToggle() {

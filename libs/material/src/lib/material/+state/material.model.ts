@@ -4,6 +4,7 @@ export interface Material {
   value: string;
   description: string;
   step?: string,
+  state?: string,
   delivered: boolean;
   deliveriesIds: string[];
 }

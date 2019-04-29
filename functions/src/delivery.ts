@@ -35,9 +35,9 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
     .map((userId: string) =>
       prepareNotification({
         app: APP_DELIVERY,
-        message: `Stakeholder ${newStakeholderOrg!.name} with id ${
-          newStakeholder!.id
-        } signed delivery ${delivery.id}`,
+        message: `Stakeholder ${newStakeholder!.id}
+        from ${newStakeholderOrg!.name}
+        signed delivery ${delivery.id}`,
         userId,
         path: `/layout/${delivery.movieId}/form/${delivery.id}`
       })
@@ -116,11 +116,12 @@ export const onDeliveryUpdate = async (
       );
       if (!!materialExist) {
         materialExist.deliveriesIds.push(delivery.id);
+        const updatedMaterial = { ...materialExist, state: 'pending' };
         return db
           .doc(`movies/${delivery.movieId}/materials/${materialExist.id}`)
-          .set(materialExist);
+          .set(updatedMaterial);
       }
-      const material = { ...materialDelivery, deliveriesIds: [delivery.id] };
+      const material = { ...materialDelivery, deliveriesIds: [delivery.id], state: 'pending' };
       return db.doc(`movies/${delivery.movieId}/materials/${materialDelivery.id}`).set(material);
     });
 

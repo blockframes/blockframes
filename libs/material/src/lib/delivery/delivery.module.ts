@@ -45,7 +45,8 @@ import {
   MatOptionModule,
   MatExpansionModule,
   MatDatepickerModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatTooltipModule,
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
@@ -139,6 +140,7 @@ const routes: Routes = [
     MatOptionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTooltipModule,
 
     RouterModule.forChild(routes)
   ],

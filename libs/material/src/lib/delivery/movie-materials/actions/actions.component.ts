@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'material-actions',
@@ -7,6 +7,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsComponent {
+  @Output() newState : EventEmitter<string> = new EventEmitter();
 
   constructor() { }
+
+  public changeState(state: string) {
+    this.newState.emit(state)
+  }
 }

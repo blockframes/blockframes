@@ -85,14 +85,14 @@
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">
           <material-filters></material-filters>
-          <material-actions></material-actions>
+          <material-actions (newState)="changeState($event)"></material-actions>
         </span>
       </div>
 
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
         <div *ngFor="let material of category.value">
-          <delivery-view-item [material]="material"></delivery-view-item>
+          <delivery-view-item [material]="material" (isSelected)="selectMaterial($event, material.id)"></delivery-view-item>
         </div>
       </div>
     </article>

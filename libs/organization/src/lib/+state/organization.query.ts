@@ -34,4 +34,11 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   get form$() {
     return this.select(state => state.form);
   }
+
+  public getRandomOrg(id: string): Observable<Organization> {
+    const org = this.selectEntity(id)
+    if (!!org) {
+      return org;
+    }
+  }
 }

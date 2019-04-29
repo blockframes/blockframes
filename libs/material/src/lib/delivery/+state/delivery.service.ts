@@ -27,7 +27,6 @@ import { Query, FireQuery } from '@blockframes/utils';
 export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
-    private movieStore: MovieStore,
     private organizationQuery: OrganizationQuery,
     private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
@@ -73,6 +72,17 @@ export class DeliveryService {
     return this.db
       .doc<Material>(`movies/${movieId}/materials/${material.id}`)
       .update({ delivered: !material.delivered });
+  }
+
+  public updateMaterialState(materials: Material[], state: string) {
+    const batch = this.db.firestore.batch();
+    materials.forEach(material => {
+      const materialRef = this.db.doc<Material>(
+        `movies/${this.movieQuery.getActiveId()}/materials/${material.id}`
+      ).ref;
+      return batch.update(materialRef, { state });
+    });
+    batch.commit();
   }
 
   ///////////////////
@@ -195,12 +205,12 @@ export class DeliveryService {
       .update({ authorizations });
   }
 
-    /** Delete stakeholder delivery */
-    public removeStakeholder(stakeholderId: string) {
-      this.db
-        .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
-        .delete();
-    }
+  /** Delete stakeholder delivery */
+  public removeStakeholder(stakeholderId: string) {
+    this.db
+      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
+      .delete();
+  }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
   public async isDeliveryValidated(): Promise<boolean> {

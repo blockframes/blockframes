@@ -31,24 +31,24 @@
     <span>Status</span>
   </button>
   <mat-menu #status="matMenu" xPosition="after">
-    <button mat-menu-item>
+    <button mat-menu-item (click)="changeState('pending')">
       <mat-icon svgIcon="pending"></mat-icon>
       <span>Pending</span>
     </button>
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="changeState('available')">
       <mat-icon svgIcon="available"></mat-icon>
       <span>Available</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="changeState('delivered')">
       <mat-icon svgIcon="delivered"></mat-icon>
       <span>Delivered</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="changeState('accepted')">
       <mat-icon svgIcon="accepted"></mat-icon>
       <span>Accepted</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="changeState('refused')">
       <mat-icon svgIcon="refused"></mat-icon>
       <span>Refused</span>
     </button>
