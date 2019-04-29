@@ -11,7 +11,7 @@
     "build:root": "cp apps/index.html dist/apps/",
     "build:all": "npm run build:delivery && npm run build:movie-financing && npm run build:ip-upload && npm run build:root",
     "test": "npx ng test",
-    "lint": "npx ng lint && npx ng lint",
+    "lint": "npx ng lint",
     "e2e": "./node_modules/.bin/ng e2e ip-upload-e2e && ./node_modules/.bin/ng e2e movie-financing-e2e && ./node_modules/.bin/ng e2e delivery-e2e",
     "e2e:dev": "npx ng e2e --base-url http://localhost:4200 --watch",
     "e2e:dev:movie-financing": "npx ng e2e movie-financing-e2e --base-url http://localhost:4200 --watch",
