@@ -12,6 +12,13 @@ export const deleteFirestoreMovie = async (
     console.error(`This movie doesn\'t exist !`);
     return null;
   }
+
+  /**
+   *  When a movie is deleted, we also delete its sub-collections and references in other collections/documents.
+   *  As we delete all deliveries linked to a movie, deliveries sub-collections and references will also be
+   *  automatically deleted in the process.
+   */
+
   const batch = db.batch();
   const stakeholders = await db.collection(`movies/${movie.id}/stakeholders`).get();
   stakeholders.forEach(doc => {
@@ -54,7 +61,7 @@ export const deleteFirestoreDelivery = async (
     return null;
   }
 
-  // we store the orgs before the delivery is deleted
+  /** We store the orgs before the delivery is deleted */
   const orgs = await getOrgsOfDelivery(delivery.id);
 
   const batch = db.batch();
@@ -79,7 +86,7 @@ export const deleteFirestoreDelivery = async (
 
   await batch.commit();
 
-  // when delivery is deleted, notifications are created for each stakeholder of this delivery
+  /** When delivery is deleted, notifications are created for each stakeholder of this delivery */
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])

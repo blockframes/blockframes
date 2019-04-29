@@ -2,9 +2,8 @@ import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
 import { getOrgsOfDelivery, Organization } from './stakeholder';
 
-export const APP_DELIVERY = 'delivery'; // This string refers to svg icon name
+export const APP_DELIVERY = 'delivery'; /** This string refers to svg icon name */
 
-//Functions
 export async function getCollection(path: string) {
   return db
     .collection(path)
@@ -69,7 +68,7 @@ export const onDeliveryUpdate = async (
 
   const orgs = await getOrgsOfDelivery(delivery.id);
 
-  // Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
+  /** Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature */
   if (delivery.validated.length === deliveryBefore.validated.length + 1) {
     return notifyOnNewSignee(delivery, orgs);
   }
@@ -78,7 +77,7 @@ export const onDeliveryUpdate = async (
     .collection(`deliveries/${delivery.id}/stakeholders`)
     .get()
     .then(snap => snap.size);
-  // when validated.length reaches stakeholderCount.length
+  /** When validated.length reaches stakeholderCount.length */
   if (
     deliveryBefore.validated.length !== stakeholderCount - 1 ||
     delivery.validated.length !== stakeholderCount
@@ -115,7 +114,7 @@ export const onDeliveryUpdate = async (
       return db.doc(`movies/${delivery.movieId}/materials/${materialDelivery.id}`).set(material);
     });
 
-    // when delivery is signed, we create notifications for each stakeholder
+    /** When delivery is signed, we create notifications for each stakeholder */
     const notifications = orgs
       .filter(org => !!org && !!org.userIds)
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])

@@ -79,6 +79,13 @@ export const onDeliveryUpdateEvent = functions.firestore
   .onUpdate(onDeliveryUpdate);
 
 /**
+ * Trigger: when material state or step is modified
+ */
+export const onMaterialUpdateEvent = functions.firestore
+  .document('movies/{movieID}/materials/{materialID}')
+  .onUpdate(onMaterialUpdate);
+
+/**
  * Trigger: when a stakeholder is added to a delivery
  */
 export const onDeliveryStakeholderCreateEvent = functions.firestore
