@@ -70,7 +70,7 @@ export const relayerCreateLogic = async (
     const waitForDeploy: Promise<Contract> = erc1077.deployed();
     const [deployedErc1077] = await Promise.all([waitForDeploy, waitForRegister]);
 
-    await db.collection('users').doc(uid).update({identity: deployedErc1077.address}); // store contract address in firestore
+    await db.collection('users').doc(uid).update({'identity.domain': fullName, 'identity.address': deployedErc1077.address}); // store contract address in firestore
 
     // set a resolver to the ens username
     const resolverTx: TxResponse = await relayer.registry.functions.setResolver(
