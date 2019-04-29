@@ -6,7 +6,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./movie-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FinancingMovieCard implements OnInit {
+export class FinancingMovieCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {

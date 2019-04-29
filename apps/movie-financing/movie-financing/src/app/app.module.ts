@@ -24,7 +24,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
 import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
 import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
-import { FinancingMovieCard } from './explorer/movie-card/movie-card.component';
+import { FinancingMovieCardComponent } from './explorer/movie-card/movie-card.component';
 import { FinancingExplorerFooterComponent } from './explorer/footer/footer.component';
 import { FinancingExplorerHeaderComponent } from './explorer/header/header.component';
 // Librairies
@@ -43,7 +43,7 @@ import { FlexModule } from '@angular/flex-layout';
     FinancingExplorerHomeComponent,
     FinancingExplorerDetailsComponent,
     FinancingExplorerSearchComponent,
-    FinancingMovieCard,
+    FinancingMovieCardComponent,
     FinancingExplorerFooterComponent,
     FinancingExplorerHeaderComponent,
     FinancingExplorerFinancingDetailsComponent
