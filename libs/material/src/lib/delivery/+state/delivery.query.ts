@@ -36,6 +36,10 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     super(store);
   }
 
+  public getStep$(id: string) {
+    return this.selectActive(delivery => delivery.steps.find(step => step.id === id));
+  }
+
   /** Returns the active movie materials sorted by category */
   public get materialsByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(

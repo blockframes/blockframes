@@ -1,6 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+  Input
+} from '@angular/core';
 import { Material } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Step, DeliveryQuery } from '../../delivery/+state';
 
 @Component({
   selector: 'material-delivery-form',
@@ -15,28 +24,29 @@ export class MaterialDeliveryFormComponent implements OnInit {
   @Output() update = new EventEmitter<Material>();
   @Output() cancelForm = new EventEmitter();
 
-  public steps = [ 'Step 1', 'Step 2', 'Step 3' ];
+  public steps$: Observable<Step[]>;
 
   public form = new FormGroup({
     value: new FormControl(),
     description: new FormControl(),
     category: new FormControl(),
-    step: new FormControl(),
+    step: new FormControl()
   });
 
-  constructor() {}
+  constructor(private deliveryQuery: DeliveryQuery,) {}
 
   ngOnInit() {
+    this.steps$ = this.deliveryQuery.steps$;
     this.form.setValue({
       value: this.material.value,
       description: this.material.description,
       category: this.material.category,
-      step: this.material.step,
+      step: this.material.step
     });
   }
 
   public updateMaterial() {
-    this.update.emit({...this.material, ...this.form.value});
+    this.update.emit({ ...this.material, ...this.form.value });
     this.cancel();
   }
 

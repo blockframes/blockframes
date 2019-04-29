@@ -27,8 +27,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="step">
-          <mat-option *ngFor="let step of steps" [value]="step">
-            {{ step }}
+          <mat-option *ngFor="let step of (steps$ | async)" [value]="step.id">
+            {{ step.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>

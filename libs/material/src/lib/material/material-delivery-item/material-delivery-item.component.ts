@@ -1,5 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Material } from '../+state';
+import { Step, DeliveryQuery } from '../../delivery/+state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'material-delivery-item',
@@ -7,15 +9,20 @@ import { Material } from '../+state';
   styleUrls: ['./material-delivery-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialDeliveryItemComponent {
+export class MaterialDeliveryItemComponent implements OnInit {
 
   @Input() material: Material;
   @Input() isDeliveryValidated: boolean;
   @Output() isDeleted = new EventEmitter();
   @Output() update = new EventEmitter();
 
-  constructor(
-  ) { }
+  public step$: Observable<Step>;
+
+  constructor(private deliveryQuery: DeliveryQuery,) {}
+
+  ngOnInit() {
+    this.step$ = this.deliveryQuery.getStep$(this.material.step);
+  }
 
   public deleteMaterial() {
     this.isDeleted.emit();

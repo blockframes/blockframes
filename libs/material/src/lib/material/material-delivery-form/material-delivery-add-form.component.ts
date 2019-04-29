@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDes
 import { Material, MaterialQuery, MaterialStore } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Step, DeliveryQuery } from '../../delivery/+state';
 
 @Component({
   selector: 'material-delivery-add-form',
@@ -13,7 +15,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   @Input() isDeliveryValidated: boolean;
   @Output() material = new EventEmitter<Material>();
 
-  public steps = [ 'Step 1', 'Step 2', 'Step 3' ];
+  public steps$: Observable<Step[]>;
 
   private isAlive = true;
 
@@ -24,9 +26,10 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
     step: new FormControl(),
   });
 
-  constructor(private query: MaterialQuery, private store: MaterialStore,) {}
+  constructor(private query: MaterialQuery, private store: MaterialStore, private deliveryQuery: DeliveryQuery,) {}
 
   ngOnInit() {
+    this.steps$ = this.deliveryQuery.steps$;
     this.form.setValue({ value: '', description: '', category: '', step: '' });
 
     this.query

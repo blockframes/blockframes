@@ -1,24 +1,26 @@
 <mat-card class="mat-elevation-z2" fxLayout="row">
-    <mat-icon>drag_indicator</mat-icon>
-    <mat-card-content class="content"  fxLayout="column">
-      <mat-card-title>
-        {{ material.value }}
-      </mat-card-title>
-      <mat-card-subtitle>
-        {{ material.description }}
-      </mat-card-subtitle>
-      <mat-card-actions>
-        <button [disabled]="isDeliveryValidated" (click)="editMaterial()">EDIT</button>
-        <button class="border-left" [disabled]="isDeliveryValidated">DUPLICATE</button>
-        <button class="border-left" [disabled]="isDeliveryValidated" (click)="deleteMaterial()">DELETE</button>
-      </mat-card-actions>
-    </mat-card-content>
-    <mat-card-content class="content-step">
-      <mat-card-subtitle class="step">
-        Step:
-      </mat-card-subtitle>
-      <mat-card-title class="step-value">
-        {{ material.step }}
-      </mat-card-title>
-    </mat-card-content>
+  <mat-icon>drag_indicator</mat-icon>
+  <mat-card-content class="content" fxLayout="column">
+    <mat-card-title>
+      {{ material.value }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{ material.description }}
+    </mat-card-subtitle>
+    <mat-card-actions>
+      <button [disabled]="isDeliveryValidated" (click)="editMaterial()">EDIT</button>
+      <button class="border-left" [disabled]="isDeliveryValidated">DUPLICATE</button>
+      <button class="border-left" [disabled]="isDeliveryValidated" (click)="deleteMaterial()">
+        DELETE
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+  <mat-card-content *ngIf="(step$ | async) as step" class="content-step">
+    <mat-card-subtitle class="step">
+      Step:
+    </mat-card-subtitle>
+    <mat-card-title class="step-value">
+      {{ step.name }}
+    </mat-card-title>
+  </mat-card-content>
 </mat-card>
