@@ -57,4 +57,7 @@ export class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialState);
   }
+  updateUser(user: Partial<User>) {
+    this.update(state => ({...state, user: ({...state.user, user})}));
+  }
 }

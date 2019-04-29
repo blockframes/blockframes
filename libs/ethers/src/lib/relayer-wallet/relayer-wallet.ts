@@ -33,7 +33,6 @@ export class RelayerWallet implements ethers.Signer {
 
   /** Get the signing key from an encrypted JSON */
   public login(username: string, password: string) {
-    if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
     this.username = username;
     this.vault.get(`${username}:web`)
       .then(encryptedJSON => Wallet.fromEncryptedJson(encryptedJSON, password))
@@ -42,7 +41,6 @@ export class RelayerWallet implements ethers.Signer {
 
   /** Get the signing key from a mnemonic */
   public async importMnemonic(mnemonic: string, username: string, password: string) {
-    if (password.length < 5) throw new Error('Password must contains at least 6 charachters');
     this.username = username;
     const wallet = Wallet.fromMnemonic(mnemonic);
     this._setSigningKey(wallet);

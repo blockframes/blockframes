@@ -67,7 +67,7 @@
         <mat-list>
           <mat-list-item>
             <mat-card-header>
-              <img *ngIf="(blockie$ | async) as blockie" mat-card-avatar [src]="blockie">
+              <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address"></eth-blockie>
               <mat-card-title>{{user.identity.domain}}</mat-card-title>
               <mat-card-subtitle>
                 <a *ngIf="network === 'homestead'; else testNet" [href]="'https://etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>

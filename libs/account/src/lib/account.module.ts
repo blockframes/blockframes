@@ -6,6 +6,7 @@ import { AccountProfileComponent } from './account-profile/account-profile.compo
 import { AccountViewComponent } from './account-view/account-view.component';
 import { AccountDeleteComponent } from './account-delete/account-delete.component';
 import { RouterModule, Routes } from '@angular/router';
+import { BlockieModule } from '../../../ui/src/lib/blockie/blockie.module';
 
 // Material
 import { 
@@ -45,7 +46,8 @@ export const accountRoutes: Routes = [
     MatExpansionModule,
     MatDialogModule,
     FormsModule,
-    RouterModule.forChild(accountRoutes)
+    RouterModule.forChild(accountRoutes),
+    BlockieModule
   ],
   entryComponents: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
   declarations: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
