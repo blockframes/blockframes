@@ -17,7 +17,7 @@
             <mat-list-item>
               <mat-card-header>
                 <mat-card-title>Id</mat-card-title>
-                <mat-card-subtitle>{{ user.identity }}</mat-card-subtitle>
+                <mat-card-subtitle>{{ user.uid }}</mat-card-subtitle>
               </mat-card-header>
             </mat-list-item>
             <mat-list-item>
@@ -63,11 +63,27 @@
           <mat-panel-title>
             Wallet
           </mat-panel-title>
-          <mat-panel-description>
-            Currently I am {{panelOpenState ? 'open' : 'closed'}}
-          </mat-panel-description>
         </mat-expansion-panel-header>
-        <p>Todo</p>
+        <mat-list>
+          <mat-list-item>
+            <mat-card-header>
+              <img *ngIf="(blockie$ | async) as blockie" mat-card-avatar [src]="blockie">
+              <mat-card-title>{{user.identity.domain}}</mat-card-title>
+              <mat-card-subtitle>
+                <a *ngIf="network === 'homestead'; else testNet" [href]="'https://etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
+                <ng-template #testNet>
+                  <a [href]="'https://'+network+'.etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
+                </ng-template>
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content >
+              {{user.balance || '0.0'}} ETH
+            </mat-card-content>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-card-header></mat-card-header>
+          </mat-list-item>
+        </mat-list>
       </mat-expansion-panel>
     </mat-accordion>
   </mat-card>
