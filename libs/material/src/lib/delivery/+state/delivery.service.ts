@@ -116,6 +116,14 @@ export class DeliveryService {
     this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
   }
 
+    /** Update step in array steps of delivery */
+    public updateStep(step: Step, form: Step) {
+      const steps = [...this.query.getActive().steps];
+      const index = steps.indexOf(step);
+      steps.splice(index, 1, {...step, ...form});
+      this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+    }
+
   /** Remove step in array steps of delivery */
   public removeStep(step: Step) {
     const steps = [...this.query.getActive().steps];
@@ -245,7 +253,6 @@ export class DeliveryService {
         ...delivery,
         steps: delivery.steps.map(step => ({
           ...step,
-          // @ts-ignore
           date: step.date.toDate()
         }))
       }

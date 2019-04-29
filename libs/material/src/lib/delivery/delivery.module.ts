@@ -53,7 +53,7 @@ import { TeamWorkActionsComponent } from './delivery-team-work-view/team-work-ac
 import { TeamWorkFiltersComponent } from './delivery-team-work-view/team-work-filters/team-work-filters.component';
 import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
-import { DeliverySettingsComponent } from './delivery-settings/delivery-settings.component';
+import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -80,7 +80,7 @@ const routes: Routes = [
   {
     path: 'form/:deliveryId/settings',
     // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliverySettingsComponent
+    component: DeliverySettingsViewComponent
   }
 ];
 
@@ -108,7 +108,7 @@ const routes: Routes = [
     DotColorDirective,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
-    DeliverySettingsComponent,
+    DeliverySettingsViewComponent,
   ],
   imports: [
     CommonModule,

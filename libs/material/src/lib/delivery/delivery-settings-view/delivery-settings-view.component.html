@@ -1,0 +1,31 @@
+<section>
+  <h1 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h1>
+  <h2>Step acceptation deadline</h2>
+  <mat-form-field appearance="outline">
+    <mat-label>Days</mat-label>
+    <input matInput placeholder="Days" type="number" [value]="30" />
+  </mat-form-field>
+
+  <h2>Steps</h2>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <p>Add steps for your delivery.</p>
+    <button class="create-step mat-elevation-z0" mat-raised-button (click)="openForm()">
+      Add a step
+      <mat-icon class="icon">add</mat-icon>
+    </button>
+  </div>
+
+  <delivery-settings-form (cancelForm)="cancelAdd()" *ngIf="hasForm"></delivery-settings-form>
+
+  <ui-editable *ngFor="let step of (steps$ | async)" [item]="step" [itemId]="stepId">
+    <ng-template materialViewMode>
+      <delivery-settings-item (update)="openEdit(step)" [step]="step"></delivery-settings-item>
+    </ng-template>
+    <ng-template materialEditMode>
+      <delivery-settings-form
+        [step]="step"
+        (cancelForm)="cancelEdit()"
+      ></delivery-settings-form>
+    </ng-template>
+  </ui-editable>
+</section>

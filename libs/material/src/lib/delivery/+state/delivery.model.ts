@@ -1,4 +1,5 @@
 import { Stakeholder } from "@blockframes/movie";
+import { Timestamp } from "rxjs";
 
 export interface Delivery {
   id: string;
@@ -12,7 +13,7 @@ export interface Delivery {
 export interface Step {
   id: string;
   name: string;
-  date: Date;
+  date: Date | any;
 }
 
 export function createDelivery(params: Partial<Delivery>) {
