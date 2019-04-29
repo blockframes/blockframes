@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User, AuthQuery } from '@blockframes/auth';
-import { network, baseEnsDomain } from '@env';
+import { network } from '@env';
 import { map, filter } from 'rxjs/operators';
 import * as makeBlockie from 'ethereum-blockies-base64';
 
