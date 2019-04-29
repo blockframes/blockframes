@@ -19,6 +19,10 @@ export class IconComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/accepted.svg')
     );
     this.matIconRegistry.addSvgIcon(
+      'applications',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/apps/applications.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
       'available',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/available.svg')
     );
@@ -49,6 +53,10 @@ export class IconComponent {
     this.matIconRegistry.addSvgIcon(
       'moviefinancing',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/apps/moviefinancing.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'notifications',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/notifications.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'order',

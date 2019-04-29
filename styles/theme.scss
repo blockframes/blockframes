@@ -1,20 +1,20 @@
 @import '~@angular/material/theming';
 
 $mat-bf-blue: (
-  50: #e0f1fa,
-  100: #b3dcf2,
-  200: #80c5e9,
-  300: #4daee0,
-  400: #269cd9,
-  500: #008bd2,
-  600: #0083cd,
-  700: #0078c7,
-  800: #006ec1,
-  900: #005bb6,
-  A100: #dfedff,
-  A200: #acd0ff,
-  A400: #79b3ff,
-  A700: #5fa5ff,
+  50: #e4e9fe,
+  100: #bac8fc,
+  200: #8da4fa,
+  300: #5f7ff8,
+  400: #3c63f7,
+  500: #1a48f5,
+  600: #1741f4,
+  700: #1338f2,
+  800: #0f30f0,
+  900: #0821ee,
+  A100: #ffffff,
+  A200: #e3e5ff,
+  A400: #b0b6ff,
+  A700: #969fff,
   contrast: (
     50: #000000,
     100: #000000,
@@ -106,5 +106,5 @@ $blockframes-theme-warn: mat-palette($mat-bf-crimson);
 $blockframes-theme: mat-light-theme(
   $blockframes-theme-primary,
   $blockframes-theme-accent,
-  $blockframes-theme-warn,
+  $blockframes-theme-warn
 );

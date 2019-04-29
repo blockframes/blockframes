@@ -87,8 +87,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       map(materials => {
         const id = this.getActiveId();
         const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
-        const deliveredMaterials = totalMaterials.filter(material => !!material.delivered);
-        return Math.round((deliveredMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+        const acceptedMaterials = totalMaterials.filter(material => material.state === 'accepted');
+        return Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
       })
     );
   }
@@ -100,8 +100,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
       map(materials => {
-        const deliveredMaterials = materials.filter(material => !!material.delivered);
-        return Math.round((deliveredMaterials.length / (materials.length / 100)) * 10) / 10;
+        const acceptedMaterials = materials.filter(material => material.state === 'accepted');
+        return Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
       })
     );
   }

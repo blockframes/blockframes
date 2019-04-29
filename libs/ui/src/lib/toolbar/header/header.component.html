@@ -19,7 +19,7 @@
   </mat-chip-list>
 
   <button mat-icon-button [matMenuTriggerFor]="apps">
-    <mat-icon>dialpad</mat-icon>
+    <mat-icon svgIcon="applications"></mat-icon>
   </button>
   <mat-menu #apps="matMenu" class="appMenu">
     <a mat-menu-item href="/delivery">
@@ -35,9 +35,9 @@
 
   <ng-container *ngIf="(user$ | async) as user">
     <button mat-icon-button [matMenuTriggerFor]="notifications">
-      <mat-icon *ngIf="(notificationsLength$ | async) as length else empty" matBadge="{{length}}" matBadgeColor="primary">notifications</mat-icon>
+      <mat-icon *ngIf="(notificationsLength$ | async) as length else empty" svgIcon="notifications" matBadge="{{length}}" matBadgeColor="primary"></mat-icon>
       <ng-template #empty>
-        <mat-icon>notifications</mat-icon>
+        <mat-icon svgIcon="notifications"></mat-icon>
       </ng-template>
 
     </button>
@@ -51,7 +51,7 @@
 
   <ng-container *ngIf="(user$ | async) as user">
     <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
+      <mat-icon color="primary">account_circle</mat-icon>
     </button>
   </ng-container>
 
