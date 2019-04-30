@@ -25,7 +25,7 @@ export class AuthService {
     await this.afAuth.auth.signInWithEmailAndPassword(mail, password);
     this.subscribeOnUser();
     const username = mail.split('@')[0];
-    this.wallet.login(toASCII(username), password);  // no await -> do the job in background
+    this.wallet.login(this._sanitizeUSername(username), password);  // no await -> do the job in background
     const balance = await this.wallet.getBalance();
     this.store.updateUser({balance});
   }
@@ -39,7 +39,7 @@ export class AuthService {
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });
-    this.wallet.signup(userCredentials.user.uid, toASCII(username), password).then(async () => {  // no await -> do the job in background
+    this.wallet.signup(userCredentials.user.uid, this._sanitizeUSername(username), password).then(async () => {  // no await -> do the job in background
       const balance = await this.wallet.getBalance();
       this.store.updateUser({balance});
       this.store.update({isEncrypting: false});
@@ -105,5 +105,15 @@ export class AuthService {
       .get()
       .toPromise();
     return items.docs;
+  }
+
+  /** Sanitize username : convert to lowe rcase punycode and replace special chars by their ASCII code
+   * @example `漢micHel+9` -> `xn--michel439-2c2s`
+   */
+  private _sanitizeUSername(username: string) {
+    return toASCII(username).toLowerCase()
+      .split('')
+      .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
+      .join('');
   }
 }
