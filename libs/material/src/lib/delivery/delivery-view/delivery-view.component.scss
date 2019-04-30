@@ -27,6 +27,22 @@ mat-progress-spinner {
 
 .spinner-text {
   text-align: center;
+  font-weight: bold;
+  color: var(--disabled);
+}
+
+.select-button {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  color: var(--accent);
+  border: solid 0.09rem var(--accent);
+  margin-right: 30px;
+}
+
+.select-button-active {
+  color: white;
+  background-color: var(--accent);
 }
 
 .materials {

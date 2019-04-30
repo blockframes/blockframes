@@ -14,8 +14,8 @@
     <button class="mat-elevation-z0" (click)="read()" mat-raised-button color="warn">Decline</button>
   </div>
   <p class="date">
-    Received {{ notification.date.toDate() | date: 'dd MMM yyyy' }} at
-    {{ notification.date.toDate() | date: 'hh:mm' }}
+    Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
+    {{ notification.date.toDate() | date: 'hh:mm a' }}
   </p>
 </div>
 
@@ -26,8 +26,8 @@
       <p class="text">{{ notification.message }}</p>
     </span>
     <p class="date">
-      Received {{ notification.date.toDate() | date: 'dd MMM yyyy' }} at
-      {{ notification.date.toDate() | date: 'hh:mm' }}
+      Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
+      {{ notification.date.toDate() | date: 'hh:mm a' }}
     </p>
   </div>
 </ng-template>

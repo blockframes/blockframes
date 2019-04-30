@@ -1,7 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Material } from '../../material/+state';
-import { DeliveryService } from '../+state';
-import { MovieQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-view-item',
@@ -9,10 +7,10 @@ import { MovieQuery } from '@blockframes/movie';
   styleUrls: ['./delivery-view-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewItemComponent implements OnInit {
+export class DeliveryViewItemComponent implements OnInit, OnChanges {
   @Input() material: Material;
-  @Output() isSelected = new EventEmitter();
-  @Output() checkbox : EventEmitter<boolean> = new EventEmitter();
+  @Input() allChecked: boolean;
+  @Output() isSelected = new EventEmitter<boolean>();
 
   // Visual bullshit for WoW effect
   public paymentIcons = ['dummy', 'payed', 'not_payed'];
@@ -33,6 +31,7 @@ export class DeliveryViewItemComponent implements OnInit {
 
   public selectMaterial() {
     this.isSelected.emit(!this.isChecked);
+
   }
 
   public randomNumberPicker(scale: number) {
@@ -51,5 +50,9 @@ export class DeliveryViewItemComponent implements OnInit {
     !!this.disableMaterial
       ? (this.disableButtonLabel = 'ENABLE')
       : (this.disableButtonLabel = 'DISABLE');
+  }
+
+  ngOnChanges(){
+    this.isChecked = this.allChecked;
   }
 }

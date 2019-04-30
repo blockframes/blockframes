@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DeliveryQuery, DeliveryService } from '../+state';
+import { DeliveryQuery, DeliveryService, Delivery } from '../+state';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { Material, MaterialStore, MaterialQuery } from '../../material/+state';
+import { MaterialStore, MaterialQuery } from '../../material/+state';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,10 +11,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./delivery-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewComponent implements OnInit {
+export class DeliveryViewComponent implements OnInit, OnDestroy {
   public movie: Movie;
+  public delivery: Delivery;
   public materials$: Observable<Object>;
   public progressionValue$: Observable<number>;
+  public allChecked: boolean;
+  public buttonLabel = 'Select all materials';
+  private isAlive = true;
 
   constructor(
     private query: DeliveryQuery,
@@ -22,33 +26,58 @@ export class DeliveryViewComponent implements OnInit {
     private service: DeliveryService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.delivery = this.query.getActive();
     this.movie = this.movieQuery.getActive();
     this.materials$ = this.query.materialsByActiveDelivery$;
     this.progressionValue$ = this.query.deliveryProgression$;
+    this.allChecked = false;
   }
 
   public selectMaterial(isChecked: any, id: string) {
-    isChecked
-      ? this.materialStore.addActive(id)
-      : this.materialStore.removeActive(id)
-    console.log(this.materialQuery.getActive())
+    isChecked ? this.materialStore.addActive(id) : this.materialStore.removeActive(id);
+  }
+
+  public log(bool) {
+    console.log(bool)
+  }
+
+  public selectAllMaterials() {
+    this.allChecked = !this.allChecked;
+    if (this.allChecked === true) {
+      this.buttonLabel = 'Unselect materials';
+      this.materials$.subscribe(categories =>
+        Object.keys(categories).forEach(categoryKey =>
+          categories[categoryKey].map(material => this.materialStore.addActive(material.id))
+        )
+      );
+    }
+    if (this.allChecked === false) {
+      this.buttonLabel = 'Select all materials';
+      this.materials$.subscribe(categories =>
+        Object.keys(categories).forEach(categoryKey =>
+          categories[categoryKey].map(material => this.materialStore.removeActive(material.id))
+        )
+      );
+    }
   }
 
   public changeState(state: string) {
     const materials = this.materialQuery.getActive();
     this.service.updateMaterialState(materials, state);
     this.materialStore.returnToInitialState();
-  }
-
-  public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale) + 1;
+    this.allChecked = false;
+    this.buttonLabel = 'Select all materials';
   }
 
   public editDelivery() {
-    this.router.navigate([`layout/${this.movie.id}/form/${this.query.getActiveId()}`])
+    this.router.navigate([`layout/${this.movie.id}/form/${this.query.getActiveId()}`]);
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }

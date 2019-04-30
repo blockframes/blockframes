@@ -52,9 +52,13 @@
       <h5>State :</h5>
       <mat-icon class="icons" matTooltip="{{ material.state.toUpperCase() }}" svgIcon="{{ material.state }}"></mat-icon>
     </span>
-    <span *ngIf="!disableMaterial" class="time">
-      <h5>Delivery time :</h5>
-      <p class="time-text">{{ randomNumberPicker(30) }} days</p>
+    <span *ngIf="!disableMaterial && material.state === 'accepted'" class="time">
+      <h5>Accepted in :</h5>
+      <p class="time-text">45 days</p>
+    </span>
+    <span *ngIf="!disableMaterial && material.state === 'refused'" class="time">
+      <h5>Refused in :</h5>
+      <p class="time-text">30 days</p>
     </span>
     <span class="payment">
       <h5>Payment :</h5>

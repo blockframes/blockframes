@@ -17,8 +17,9 @@
         >
         </mat-progress-spinner>
         <div class="progress-value">{{ value }} %</div>
-        <p class="global-progression">Global progression</p>
-        <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
+        <p class="global-progression">Progression</p>
+        <span class="spinner-text"><h5>Global delivery date :</h5></span>
+        <p class="period-days">{{ delivery.dueDate }}</p>
         <div>
           <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
             <p class="step-text">STEP 1</p>
@@ -29,7 +30,7 @@
             <p class="step-text">STEP 2</p>
             <span class="step-informations">
               <small class="period-text">Acceptance period :</small>
-              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
+              <p class="period-days">30 days</p>
             </span>
             <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
           </span>
@@ -38,7 +39,7 @@
             <p class="step-text">STEP 3</p>
             <span class="step-informations">
               <small class="period-text">Delivery time :</small>
-              <p class="period-days">{{ randomNumberPicker(30) }} days</p>
+              <p class="period-days">30 days</p>
             </span>
             <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
           </span>
@@ -84,15 +85,26 @@
       <div class="materials" fxLayoutAlign="space-between">
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">
+          <button
+            [ngClass]="{ 'select-button-active': !!allChecked }"
+            mat-raised-button
+            (click)="selectAllMaterials()"
+            class="select-button mat-elevation-z0"
+          >
+            {{ buttonLabel }}
+          </button>
           <material-filters></material-filters>
           <material-actions (newState)="changeState($event)"></material-actions>
         </span>
       </div>
-
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
         <div *ngFor="let material of category.value">
-          <delivery-view-item [material]="material" (isSelected)="selectMaterial($event, material.id)"></delivery-view-item>
+          <delivery-view-item
+            [allChecked]="allChecked"
+            [material]="material"
+            (isSelected)="selectMaterial($event, material.id)"
+          ></delivery-view-item>
         </div>
       </div>
     </article>
