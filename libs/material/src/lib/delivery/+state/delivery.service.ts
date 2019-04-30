@@ -98,9 +98,12 @@ export class DeliveryService {
     const stakeholder = this.query.findActiveStakeholder();
     const movieId = this.movieQuery.getActiveId();
     const delivery = createDelivery({ id, movieId, validated: [] });
-    const deliveryStakeholder = this.makeDeliveryStakeholder(stakeholder.id, stakeholder.orgId, [
-      'canValidateDelivery'
-    ]);
+    const deliveryStakeholder = this.makeDeliveryStakeholder(
+      stakeholder.id,
+      stakeholder.orgId,
+      ['canValidateDelivery'],
+      true
+    );
 
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
     this.db
@@ -126,13 +129,13 @@ export class DeliveryService {
     this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
   }
 
-    /** Update step in array steps of delivery */
-    public updateStep(step: Step, form: Step) {
-      const steps = [...this.query.getActive().steps];
-      const index = steps.indexOf(step);
-      steps.splice(index, 1, {...step, ...form});
-      this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
-    }
+  /** Update step in array steps of delivery */
+  public updateStep(step: Step, form: Step) {
+    const steps = [...this.query.getActive().steps];
+    const index = steps.indexOf(step);
+    steps.splice(index, 1, { ...step, ...form });
+    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+  }
 
   /** Remove step in array steps of delivery */
   public removeStep(step: Step) {
@@ -173,8 +176,13 @@ export class DeliveryService {
     }
   }
 
-  private makeDeliveryStakeholder(id: string, orgId: string, authorizations: string[]) {
-    return createDeliveryStakeholder({ id, orgId, authorizations });
+  private makeDeliveryStakeholder(
+    id: string,
+    orgId: string,
+    authorizations: string[],
+    isAccepted: boolean
+  ) {
+    return createDeliveryStakeholder({ id, orgId, authorizations, isAccepted });
   }
 
   /** Add a stakeholder to the delivery */
@@ -188,7 +196,8 @@ export class DeliveryService {
       const newDeliveryStakeholder = this.makeDeliveryStakeholder(
         movieStakeholder.id,
         movieStakeholder.orgId,
-        authorizations
+        authorizations,
+        false
       );
       this.db
         .doc<Stakeholder>(
@@ -258,8 +267,8 @@ export class DeliveryService {
   ////////////////////////
   public suscribeOnDeliveriesByActiveMovie() {
     function modifyTimestampToDate(delivery: Delivery) {
-      delivery.steps.forEach(step => step.date = step.date.toDate())
-      return delivery
+      delivery.steps.forEach(step => (step.date = step.date.toDate()));
+      return delivery;
     }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>

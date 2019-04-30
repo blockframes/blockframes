@@ -1,3 +1,24 @@
+@import '~@angular/material/theming';
+
+.item-enabled {
+  &:hover {
+    @include mat-elevation(6);
+  }
+  &:hover mat-card-actions {
+    visibility: visible;
+  }
+}
+
+.item-disabled {
+  background-color: rgba(0, 0, 0, 0.041);
+  color: rgba(0, 0, 0, 0.212);
+  filter: grayscale(100%);
+  &:hover .border-left {
+    visibility: visible;
+    border-left: none;
+  }
+}
+
 .orgName {
   font-weight: bold;
   font-size: 16px;
@@ -39,10 +60,6 @@ mat-card-content {
 mat-card-actions {
   float: bottom;
   visibility: hidden;
-}
-
-mat-card:hover mat-card-actions {
-  visibility: visible;
 }
 
 .dot {

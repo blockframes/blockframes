@@ -7,6 +7,7 @@ export interface Stakeholder {
   orgMovieRole: string;
   role: string
   authorizations: string[];
+  isAccepted: boolean;
 }
 
 export function createStakeholder(params?: Partial<Stakeholder>) {
