@@ -8,6 +8,7 @@ export interface Delivery {
   delivered: boolean;
   stakeholders?: Stakeholder[];
   steps: Step[];
+  dueDate: Date | any;
 };
 
 export interface Step {

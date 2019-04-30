@@ -1,10 +1,10 @@
-<section>
+<section *ngIf="(delivery$ | async) as delivery">
   <h1 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h1>
   <form [formGroup]="form">
     <div>
       <h2>Delivery general date</h2>
       <mat-form-field appearance="outline">
-        <input formControlName="date" matInput [matDatepicker]="picker" placeholder="Date" />
+        <input [value]="delivery.dueDate" formControlName="dueDate" matInput [matDatepicker]="picker" placeholder="Date" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -38,7 +38,7 @@
 
   <delivery-settings-form (cancelled)="cancelAdd()" *ngIf="hasForm"></delivery-settings-form>
 
-  <ui-editable *ngFor="let step of (steps$ | async)" [item]="step" [itemId]="stepId">
+  <ui-editable *ngFor="let step of delivery.steps" [item]="step" [itemId]="stepId">
     <ng-template materialViewMode>
       <delivery-settings-item (update)="openEdit(step)" [step]="step"></delivery-settings-item>
     </ng-template>

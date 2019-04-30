@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DeliveryQuery, Step, DeliveryService } from '../+state';
+import { DeliveryQuery, Step, DeliveryService, Delivery } from '../+state';
 import { takeWhile } from 'rxjs/operators';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -13,13 +13,13 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
   public hasForm = false;
-  public steps$: Observable<Step[]>;
+  public delivery$: Observable<Delivery>;
   public movie$ : Observable<Movie>;
   public stepId: string;
   private isAlive = true;
 
   public form = new FormGroup({
-    date: new FormControl()
+    dueDate: new FormControl()
   });
 
   constructor(
@@ -30,10 +30,15 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.steps$ = this.query.steps$;
     this.movie$ = this.movieQuery.selectActive();
+    this.delivery$ = this.query.selectActive();
+    this.form.valueChanges.pipe(takeWhile(() => this.isAlive)).subscribe(value => {
+      this.saveDueDate(value.dueDate);
+    });
+  }
 
-    this.form.setValue({date: '2019-09-29T22:00:00.000Z'});
+  public saveDueDate(dueDate: Date) {
+    this.service.updateDueDate(dueDate);
   }
 
   public openForm() {

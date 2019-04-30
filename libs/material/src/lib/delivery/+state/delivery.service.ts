@@ -122,6 +122,10 @@ export class DeliveryService {
     }
   }
 
+  public updateDueDate(dueDate: Date) {
+    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ dueDate });
+  }
+
   /** Add step in array steps of delivery */
   public createStep(step: Step) {
     step.id = this.db.createId();
@@ -267,8 +271,9 @@ export class DeliveryService {
   ////////////////////////
   public suscribeOnDeliveriesByActiveMovie() {
     function modifyTimestampToDate(delivery: Delivery) {
-      delivery.steps.forEach(step => (step.date = step.date.toDate()));
-      return delivery;
+      delivery.steps.forEach(step => step.date = step.date.toDate());
+      if (delivery.dueDate) delivery.dueDate = delivery.dueDate.toDate();
+      return delivery
     }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>
