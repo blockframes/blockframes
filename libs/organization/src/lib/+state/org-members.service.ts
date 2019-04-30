@@ -4,9 +4,7 @@ import { OrgMembersStore } from './org-members.store';
 import { Organization, OrgMember } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { combineLatest, Observable } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { tap } from 'rxjs/internal/operators/tap';
+import { map, pluck, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class OrgMembersService {
