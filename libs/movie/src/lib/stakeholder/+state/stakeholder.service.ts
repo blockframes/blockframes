@@ -58,6 +58,14 @@ export class StakeholderService {
 
       // Update the org
       const movieIds = org.data().movieIds || [];
+
+      // DEMO: Prevent double add
+      // TODO: allow to add the org multiple time with different orgs.
+      // BEWARE: update the delete method accordingly when you do.
+      if (movieIds.indexOf(movieId) >= 0) {
+        return tx.update(orgDoc.ref, {}); // every document read in a transaction must be written.
+      }
+
       const nextMovieIds = [...movieIds, movieId];
       const p1 = tx.update(orgDoc.ref, { movieIds: nextMovieIds });
 
@@ -66,9 +74,11 @@ export class StakeholderService {
 
       return Promise.all([p1, p2]);
     })
-    .then(() => console.log('Transaction successfully committed!'))
-    .catch((error) => console.log('Transaction failed: ', error));
+      .then(() => console.log('Transaction successfully committed!'))
+      .catch((error) => console.log('Transaction failed: ', error));
 
+    // TODO: make this function truly async and wait for the tx to complete before returning the id.
+    // you might end up listening over an id that does not exists.
     return sh.id;
   }
 
@@ -76,8 +86,32 @@ export class StakeholderService {
     this.firestore.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`).update(stakeholder);
   }
 
-  public remove(movieId: string, stakeholderId: string) {
-    this.firestore.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholderId}`).delete();
+  public async remove(movieId: string, stakeholderId: string) {
+    const stkPath = `movies/${movieId}/stakeholders/${stakeholderId}`;
+    const stkDoc = this.firestore.doc(stkPath);
+
+
+    return this.firestore.firestore.runTransaction(async (tx) => {
+
+      // Delete the stakeholder:
+      const stk = await tx.get(stkDoc.ref);
+      const { orgId } = stk.data() as Stakeholder;
+
+      // Remove the movie from the org's movie list:
+      // BEWARE: we'll have to check whether the org is still a stakeholder
+      //         when we'll allow an org to have multiple stakeholder roles.
+      const orgPath = `orgs/${orgId}`;
+      const orgDoc = this.firestore.doc(orgPath);
+      const org = await tx.get(orgDoc.ref);
+      const { movieIds } = org.data() as Organization;
+
+      const newMovieIds = movieIds.filter(x => x !== movieId);
+
+      return Promise.all([
+        tx.delete(stkDoc.ref),
+        tx.update(orgDoc.ref, { movieIds: newMovieIds })
+      ]);
+    });
   }
 
   public subscribeOnStakeholdersByActiveMovie$(){
