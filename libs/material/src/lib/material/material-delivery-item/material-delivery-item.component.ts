@@ -1,7 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Material } from '../+state';
-import { Step, DeliveryQuery } from '../../delivery/+state';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'material-delivery-item',

@@ -35,12 +35,12 @@ export class MaterialService {
           .collection<any>(`deliveries/${delivery.id}/materials`)
           .valueChanges()
           .pipe(
-            map(materials =>
-              materials.map(material => ({
+            map(materials => {
+              return materials.map(material => ({
                 ...material,
-                step: delivery.steps.find(step => step.id === material.stepId)
-              }))
-            )
+                step: delivery.steps.find(step => step.id === material.stepId) ?  delivery.steps.find(step => step.id === material.stepId) : null
+              }));
+            })
           )
       ),
       tap(materials => this.store.set(materials))

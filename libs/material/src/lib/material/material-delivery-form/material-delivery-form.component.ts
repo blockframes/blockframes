@@ -7,7 +7,7 @@ import {
   Input
 } from '@angular/core';
 import { Material } from '../+state';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Step, DeliveryQuery } from '../../delivery/+state';
 
@@ -19,37 +19,80 @@ import { Step, DeliveryQuery } from '../../delivery/+state';
 })
 export class MaterialDeliveryFormComponent implements OnInit {
   @Input() isDeliveryValidated: boolean;
-
   @Input() material: Material;
   @Output() update = new EventEmitter<Material>();
   @Output() cancelForm = new EventEmitter();
 
   public steps$: Observable<Step[]>;
 
-  public form = new FormGroup({
-    value: new FormControl(),
-    description: new FormControl(),
-    category: new FormControl(),
-    stepId: new FormControl('', [Validators.required])
-  });
+  public form: FormGroup;
+  public hasStep: boolean;
 
   constructor(private deliveryQuery: DeliveryQuery) {}
 
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
-    this.form.setValue({
-      value: this.material.value,
-      description: this.material.description,
-      category: this.material.category,
-      stepId: this.material.step.id
+
+    if (this.deliveryQuery.getActive().steps.length > 0) {
+      this.form = this.createFormWithStep();
+      this.hasStep = true;
+      this.setForm(this.material);
+    } else {
+      this.form = this.createFormWithoutStep();
+      this.hasStep = false;
+      this.setForm();
+    }
+  }
+
+  private setForm(material?: Material) {
+    // If the delivery doesn't have steps : don't set stepId to form
+    if (!material) {
+      this.form.setValue({
+        value: this.material.value,
+        description: this.material.description,
+        category: this.material.category
+      });
+    } else {
+      // If the material has a step
+      if (material.step) {
+        this.form.setValue({
+          value: this.material.value,
+          description: this.material.description,
+          category: this.material.category,
+          stepId: this.material.step.id
+        });
+        // If the material doesn't have a step
+      } else {
+        this.form.setValue({
+          value: this.material.value,
+          description: this.material.description,
+          category: this.material.category,
+          stepId: ''
+        });
+      }
+    }
+  }
+
+  private createFormWithStep() {
+    return new FormGroup({
+      value: new FormControl(''),
+      description: new FormControl(''),
+      category: new FormControl(''),
+      stepId: new FormControl('')
+    });
+  }
+
+  private createFormWithoutStep() {
+    return new FormGroup({
+      value: new FormControl(''),
+      description: new FormControl(''),
+      category: new FormControl('')
     });
   }
 
   public updateMaterial() {
-    if (this.form.valid) {
-      this.update.emit({ ...this.material, ...this.form.value });
-      this.cancel();
-    }
+    this.update.emit({ ...this.form.value, id: this.material.id });
+    this.cancel();
   }
 
   public cancel() {

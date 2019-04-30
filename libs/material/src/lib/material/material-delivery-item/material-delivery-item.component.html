@@ -15,7 +15,7 @@
       </button>
     </mat-card-actions>
   </mat-card-content>
-  <mat-card-content class="content-step">
+  <mat-card-content *ngIf="material.step" class="content-step">
     <mat-card-subtitle class="step">
       Step:
     </mat-card-subtitle>
