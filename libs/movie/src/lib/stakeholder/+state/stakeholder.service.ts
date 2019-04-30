@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Stakeholder, createStakeholder } from './stakeholder.model';
-import { map, filter, switchMap, tap } from 'rxjs/operators';
+import { createStakeholder, Stakeholder } from './stakeholder.model';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { StakeholderStore } from './stakeholder.store';
 import { MovieQuery } from '../../movie/+state/movie.query';
 import { Organization } from '@blockframes/organization';
-import { Query, FireQuery } from '@blockframes/utils';
+import { FireQuery, Query } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
@@ -15,16 +15,17 @@ export class StakeholderService {
   public stakeholdersByMovie$ = this.movieQuery.selectActive().pipe(
     switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
     switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders))
-  )
+  );
 
   constructor(
     private firestore: AngularFirestore,
     private store: StakeholderStore,
     private movieQuery: MovieQuery,
-    private fireQuery: FireQuery,
-  ) {}
+    private fireQuery: FireQuery
+  ) {
+  }
 
-  public get stakeholdersByActiveMovie$(){
+  public get stakeholdersByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
       switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
@@ -33,20 +34,28 @@ export class StakeholderService {
     );
   }
 
+  public get activeMovieStakeholders() {
+    return this.movieQuery
+      .selectActiveId()
+      .pipe(
+        switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
+        tap((stakeholders: any) => this.store.set(stakeholders))
+      );
+  }
+
   public getAllStakeholdersWithOrg(stakeholders: Stakeholder[]) {
     const shWithOrgs = (sh: Stakeholder) => {
       return this.firestore.doc<Organization>(`orgs/${sh.orgId}`)
-      .valueChanges()
-      .pipe(
-        map(organization => ({ ...sh, organization } as Stakeholder))
-      )
+        .valueChanges()
+        .pipe(
+          map(organization => ({ ...sh, organization } as Stakeholder))
+        );
     };
     const allShWithOrgs = stakeholders.map(sh => shWithOrgs(sh));
     return combineLatest(allShWithOrgs);
   }
 
   public async add(movieId: string, stakeholder: Partial<Stakeholder>): Promise<string> {
-
     const id = this.firestore.createId();
     const sh = createStakeholder({ ...stakeholder, id });
     const movieDoc = this.firestore.collection('movies').doc(movieId);
@@ -114,21 +123,12 @@ export class StakeholderService {
     });
   }
 
-  public subscribeOnStakeholdersByActiveMovie$(){
+  public subscribeOnStakeholdersByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
       switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
       switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
       tap(stakeholders => this.store.set(stakeholders))
     );
-  }
-
-  public get activeMovieStakeholders() {
-    return this.movieQuery
-      .selectActiveId()
-      .pipe(
-        switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
-        tap((stakeholders: any) => this.store.set(stakeholders))
-      );
   }
 
   private getStakeholderList(movieId: string): Query<Stakeholder> {
@@ -137,6 +137,6 @@ export class StakeholderService {
       organization: (stakeholder: Stakeholder): Query<Organization> => ({
         path: `orgs/${stakeholder.orgId}`
       })
-    }
+    };
   }
 }

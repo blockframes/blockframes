@@ -8,11 +8,9 @@
         <input type="text" matInput placeholder="Company Name" formControlName="org" [matAutocomplete]="autoName"/>
       </mat-form-field>
       <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let option of orgOptions" [value]="option">
+        <mat-option *ngFor="let option of orgOptions" [value]="option" (click)="submit(option)">
           {{ option.name }}
-          <button mat-icon-button color="primary" (click)="submit(option)">
-            <mat-icon>add_circle</mat-icon>
-          </button>
+          <mat-icon>add_circle</mat-icon>
         </mat-option>
       </mat-autocomplete>
     </form>
@@ -20,7 +18,7 @@
   <mat-divider [vertical]="true"></mat-divider>
   <div class="sh-list" fxFlex="50">
     <mat-card *ngFor="let stakeholder of (stakeholders$ | async)" class="sh-card">
-      <mat-card-header >
+      <mat-card-header>
         <mat-card-title>
           {{ stakeholder.organization.name }}
         </mat-card-title>
