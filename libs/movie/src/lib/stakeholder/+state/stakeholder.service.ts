@@ -13,6 +13,7 @@ import { FireQuery, Query } from '@blockframes/utils';
 export class StakeholderService {
 
   public stakeholdersByMovie$ = this.movieQuery.selectActive().pipe(
+    // TODO: use FireQuery:
     switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
     switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders))
   );
@@ -28,6 +29,7 @@ export class StakeholderService {
   public get stakeholdersByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
       filter(movie => !!movie),
+      // TODO: use FireQuery:
       switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
       switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
       tap(stakeholders => this.store.set(stakeholders))
@@ -45,6 +47,7 @@ export class StakeholderService {
 
   public getAllStakeholdersWithOrg(stakeholders: Stakeholder[]) {
     const shWithOrgs = (sh: Stakeholder) => {
+      // TODO: use FireQuery:
       return this.firestore.doc<Organization>(`orgs/${sh.orgId}`)
         .valueChanges()
         .pipe(
@@ -92,10 +95,12 @@ export class StakeholderService {
   }
 
   public update(movieId: string, stakeholder: Partial<Stakeholder>) {
+    // TODO: use FireQuery:
     this.firestore.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`).update(stakeholder);
   }
 
   public async remove(movieId: string, stakeholderId: string) {
+    // TODO: use FireQuery:
     const stkPath = `movies/${movieId}/stakeholders/${stakeholderId}`;
     const stkDoc = this.firestore.doc(stkPath);
 
@@ -125,6 +130,7 @@ export class StakeholderService {
 
   public subscribeOnStakeholdersByActiveMovie$() {
     return this.movieQuery.selectActive().pipe(
+      // TODO: use FireQuery:
       switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
       switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
       tap(stakeholders => this.store.set(stakeholders))
