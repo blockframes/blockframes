@@ -6,8 +6,8 @@ set -e
 for i in {1..5}; do
     echo $i;
 
-    cp ./env/env.demo${i}.ts ./env/env.ts
-    cp ./env/env.demo${i}.ts ./env/env.prod.ts
+    cp ./env/demo/env.demo${i}.ts ./env/env.ts
+    cp ./env/demo/env.demo${i}.ts ./env/env.prod.ts
 
     npm run build:all
 
