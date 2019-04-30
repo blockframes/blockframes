@@ -15,8 +15,7 @@ export class NotificationItemComponent {
   constructor(private router: Router, private service: NotificationService) { }
 
   public goToPath() {
-    // re-enable navigation when store is set with guard
-    // this.router.navigate([this.notification.path]);
+    this.router.navigate([this.notification.path]);
     this.service.readNotification(this.notification.id);
   }
 

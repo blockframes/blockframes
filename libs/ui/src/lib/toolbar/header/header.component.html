@@ -21,7 +21,7 @@
   <button mat-icon-button [matMenuTriggerFor]="apps">
     <mat-icon svgIcon="applications"></mat-icon>
   </button>
-  <mat-menu #apps="matMenu" class="appMenu">
+  <mat-menu #apps="matMenu" class="appMenu mat-elevation-z6">
     <a mat-menu-item href="/delivery">
       <img src="/assets/apps/delivery.svg" alt="Delivery" />
     </a>
@@ -43,7 +43,7 @@
     </button>
   </ng-container>
 
-  <mat-menu #notifications="matMenu" class="notifMenu  mat-elevation-z6">
+  <mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
     <mat-list>
       <blockframes-notification-list></blockframes-notification-list>
     </mat-list>
@@ -55,7 +55,7 @@
     </button>
   </ng-container>
 
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" class="mat-elevation-z6">
     <mat-list>
       <account-widget></account-widget>
       <mat-divider></mat-divider>

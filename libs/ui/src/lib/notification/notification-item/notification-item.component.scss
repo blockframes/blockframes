@@ -2,13 +2,10 @@
   padding: 10px;
 }
 
-.box {
-  display: inline;
-}
-
 .app-icon {
-  height: 50px;
-  width: 50px;
+  float:left;
+  height: 40px;
+  width: 40px;
 }
 
 .message {
@@ -16,14 +13,31 @@
   cursor: pointer;
 }
 
+.no-click {
+  cursor: default;
+}
+
+.text {
+  margin: 0;
+}
+
 .date {
   font-weight: bold;
   font-size: 10px;
   color: var(--disabled);
+  margin-bottom: 0;
 }
 
 .already-read {
   background-color: rgba(0, 0, 0, 0.020);
   color: var(--disabled);
   filter: grayscale(100%);
+}
+
+button {
+  margin: 2.5%;
+  width: 45%;
+  height: 35px;
+  text-align: center;
+  font-weight: bold;
 }

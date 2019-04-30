@@ -1,17 +1,33 @@
-<div *ngIf="!!notification.path else noPath" [ngClass]="{ 'already-read': !!notification.isRead }" class="container">
-    <div class="message" (click)="goToPath()">
-      <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
-      {{ notification.message }}
-    </div>
-    <p class="date">Received {{ notification.date.toDate() | date :'dd MMM yyyy' }} at {{ notification.date.toDate() | date :'hh:mm' }}</p>
+<div
+  *ngIf="!!notification.path; else noPath"
+  [ngClass]="{ 'already-read': !!notification.isRead }"
+  class="container"
+>
+  <span [ngClass]="{ 'no-click': notification.message.includes('invited') }" class="message" (click)="!notification.message.includes('invited') && goToPath()">
+    <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
+    <p class="text">{{ notification.message }}</p>
+  </span>
+  <div *ngIf="notification.message.includes('invited') && !notification.isRead" fxLayoutAlign="space-around center">
+    <button class="mat-elevation-z0" (click)="goToPath()" mat-raised-button color="primary">
+      Accept
+    </button>
+    <button class="mat-elevation-z0" (click)="read()" mat-raised-button color="warn">Decline</button>
+  </div>
+  <p class="date">
+    Received {{ notification.date.toDate() | date: 'dd MMM yyyy' }} at
+    {{ notification.date.toDate() | date: 'hh:mm' }}
+  </p>
 </div>
 
 <ng-template #noPath>
   <div [ngClass]="{ 'already-read': !!notification.isRead }" class="container">
-    <div class="message" (click)="read()">
+    <span class="message" (click)="read()">
       <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
-      {{ notification.message }}
-    </div>
-    <p class="date">Received {{ notification.date.toDate() | date :'dd MMM yyyy' }} at {{ notification.date.toDate() | date :'hh:mm' }}</p>
-</div>
+      <p class="text">{{ notification.message }}</p>
+    </span>
+    <p class="date">
+      Received {{ notification.date.toDate() | date: 'dd MMM yyyy' }} at
+      {{ notification.date.toDate() | date: 'hh:mm' }}
+    </p>
+  </div>
 </ng-template>

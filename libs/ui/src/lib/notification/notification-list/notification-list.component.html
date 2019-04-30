@@ -9,4 +9,4 @@
   ></blockframes-notification-item>
   <mat-divider *ngIf="i < 5"></mat-divider>
 </div>
-<div>See all notifications <mat-icon>add</mat-icon></div>
+<div *ngIf="(notifications$ | async)" class="all-notifications" routerLink=""><p>See all notifications</p></div>
