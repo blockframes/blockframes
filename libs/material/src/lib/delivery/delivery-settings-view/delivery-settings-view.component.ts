@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { DeliveryQuery, Step, DeliveryService } from '../+state';
 import { takeWhile } from 'rxjs/operators';
 import { MovieQuery, Movie } from '@blockframes/movie';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'delivery-settings-view',
@@ -17,6 +18,10 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
   public stepId: string;
   private isAlive = true;
 
+  public form = new FormGroup({
+    date: new FormControl()
+  });
+
   constructor(
     private query: DeliveryQuery,
     private service: DeliveryService,
@@ -27,6 +32,8 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
     this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.steps$ = this.query.steps$;
     this.movie$ = this.movieQuery.selectActive();
+
+    this.form.setValue({date: '2019-09-29T22:00:00.000Z'});
   }
 
   public openForm() {
