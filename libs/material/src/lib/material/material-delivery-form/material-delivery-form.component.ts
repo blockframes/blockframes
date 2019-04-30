@@ -7,7 +7,7 @@ import {
   Input
 } from '@angular/core';
 import { Material } from '../+state';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Step, DeliveryQuery } from '../../delivery/+state';
 
@@ -30,10 +30,10 @@ export class MaterialDeliveryFormComponent implements OnInit {
     value: new FormControl(),
     description: new FormControl(),
     category: new FormControl(),
-    stepId: new FormControl()
+    stepId: new FormControl('', [Validators.required])
   });
 
-  constructor(private deliveryQuery: DeliveryQuery,) {}
+  constructor(private deliveryQuery: DeliveryQuery) {}
 
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
@@ -46,8 +46,10 @@ export class MaterialDeliveryFormComponent implements OnInit {
   }
 
   public updateMaterial() {
-    this.update.emit({ ...this.material, ...this.form.value });
-    this.cancel();
+    if (this.form.valid) {
+      this.update.emit({ ...this.material, ...this.form.value });
+      this.cancel();
+    }
   }
 
   public cancel() {

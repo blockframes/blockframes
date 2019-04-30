@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy, Input} from '@angular/core';
 import { Material, MaterialQuery, MaterialStore } from '../+state';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Step, DeliveryQuery } from '../../delivery/+state';
@@ -23,7 +23,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
     value: new FormControl(),
     description: new FormControl(),
     category: new FormControl(),
-    stepId: new FormControl(),
+    stepId: new FormControl('', [Validators.required]),
   });
 
   constructor(private query: MaterialQuery, private store: MaterialStore, private deliveryQuery: DeliveryQuery,) {}
@@ -42,7 +42,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   }
 
   public updateMaterial() {
-    this.material.emit(this.form.value);
+    if (this.form.valid) this.material.emit(this.form.value);
   }
 
   public cancel() {

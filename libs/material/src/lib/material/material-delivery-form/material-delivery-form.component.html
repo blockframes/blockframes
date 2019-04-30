@@ -1,6 +1,6 @@
 <mat-card class="container mat-elevation-z6">
   <mat-card-title>Edit your material</mat-card-title>
-  <form [formGroup]="form" class="container" fxLayout="row">
+  <form [formGroup]="form" (ngSubmit)="updateMaterial()" class="container" fxLayout="row">
     <div class="inputs" fxLayout="column" fxLayoutAlign="center">
       <mat-form-field appearance="outline">
         <mat-label>Value</mat-label>
@@ -42,11 +42,11 @@
           Cancel
         </button>
         <button
+          type="submit"
           mat-raised-button
           color="primary"
           class="add-button mat-elevation-z0"
-          [disabled]="isDeliveryValidated"
-          (click)="updateMaterial()"
+          [disabled]="isDeliveryValidated || !form.valid"
         >
           Save
         </button>
