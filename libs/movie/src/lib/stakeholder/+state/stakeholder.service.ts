@@ -74,7 +74,7 @@ export class StakeholderService {
       // DEMO: Prevent double add
       // TODO: allow to add the org multiple time with different orgs.
       // BEWARE: update the delete method accordingly when you do.
-      if (movieIds.indexOf(movieId) >= 0) {
+      if (movieIds.includes(movieId)) {
         return tx.update(orgDoc.ref, {}); // every document read in a transaction must be written.
       }
 
