@@ -88,7 +88,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         const id = this.getActiveId();
         const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
         const acceptedMaterials = totalMaterials.filter(material => material.state === 'accepted');
-        return Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+        const deliveryMaterialsProgress = Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+        return deliveryMaterialsProgress;
       })
     );
   }
@@ -101,7 +102,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       ),
       map(materials => {
         const acceptedMaterials = materials.filter(material => material.state === 'accepted');
-        return Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
+        const movieMaterialsProgress = Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
+        return movieMaterialsProgress;
       })
     );
   }
