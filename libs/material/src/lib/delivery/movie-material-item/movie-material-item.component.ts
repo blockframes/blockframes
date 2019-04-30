@@ -33,9 +33,9 @@ export class MovieMaterialItemComponent implements OnInit {
     ).name;
   }
 
-  public deliveredToggle(material: Material) {
+  public approvedToggle(material: Material) {
     this.service
-      .deliveredToggle(material, this.movieQuery.getActiveId())
+      .approvedToggle(material, this.movieQuery.getActiveId())
       .catch(err => console.log(err));
     //TODO: Ask why we put .catch ? And why we put it without "try" before
   }

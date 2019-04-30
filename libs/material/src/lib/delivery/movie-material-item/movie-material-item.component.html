@@ -2,8 +2,8 @@
   <mat-checkbox
     fxLayoutAlign="center center"
     color="primary"
-    [(ngModel)]="material.delivered"
-    (click)="deliveredToggle(material)"
+    [(ngModel)]="material.approved"
+    (click)="approvedToggle(material)"
   >
   </mat-checkbox>
   <div class="material" fxLayout="column" fxLayoutAlign="center start">
@@ -22,9 +22,14 @@
       <h5>Ordered by :</h5>
       <p class="material-step-text">{{ stakeholder }}</p>
     </span>
-    <span class="state">
-      <h5>State :</h5>
-      <mat-icon class="icons" svgIcon="{{ material.state }}"></mat-icon>
-    </span>
+    <div fxLayout="column" fxLayoutAlign="space-between end">
+      <span class="state">
+        <h5>State :</h5>
+        <mat-icon class="icons" svgIcon="{{ material.state }}"></mat-icon>
+      </span>
+      <span *ngIf="!!material.approved" >
+        <p><mat-icon color="primary">done</mat-icon> Approved by laboratory</p>
+      </span>
+    </div>
   </div>
 </mat-card>
