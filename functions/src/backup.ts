@@ -75,9 +75,7 @@ const freeze = async (req: any, resp: any) => {
     const currentPath: string = processingQueue.pop();
     const q: QuerySnapshot = await db.collection(currentPath).get();
 
-    if (q.size > 0) {
-      console.info('Processing collection:', currentPath);
-    } else {
+    if (q.size === 0) {
       // Empty, move on
       continue;
     }
@@ -89,7 +87,6 @@ const freeze = async (req: any, resp: any) => {
       const content: any = doc.data();
       const stored: StoredDocument = { docPath, content };
 
-      console.info('Storing document:', docPath);
       stream.write(JSON.stringify(stored));
       stream.write('\n');
 
@@ -148,6 +145,12 @@ const restore = async (req: any, resp: any) => {
   const bucket = await getBackupBucket();
   const files: GFile[] = (await bucket.getFiles())[0];
   const sortedFiles: GFile[] = sortBy(files, ['name']);
+
+  if (sortedFiles.length === 0) {
+    console.info('nothing to restore, leaving');
+    return resp.status(200).send('nothing-to-restore');
+  }
+
   const lastFile: GFile = sortedFiles[sortedFiles.length - 1];
 
   console.info('Clearing the database');
@@ -176,7 +179,6 @@ const restore = async (req: any, resp: any) => {
   // before adding more. This will protect us from memory overflow (similar
   // to the note in the backup code).
   lineReader.on('line', line => {
-    console.info('processing line=', line);
     const stored: StoredDocument = JSON.parse(line);
     promises.push(db.doc(stored.docPath).set(stored.content));
   });
