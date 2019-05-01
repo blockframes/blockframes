@@ -6,6 +6,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
 import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
 import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
+import { FinancingExplorerProfileComponent } from './explorer/profile/profile.component';
 
 
 export const routes: Routes = [
@@ -43,6 +44,11 @@ export const routes: Routes = [
   {
     path: 'explorer/movie/:id',
     component: FinancingExplorerDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile/:id',
+    component: FinancingExplorerProfileComponent,
     canActivate: [AuthGuard]
   },
   {

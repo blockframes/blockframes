@@ -14,9 +14,10 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatButtonModule
 } from '@angular/material';
-import { MatButtonModule } from '@angular/material/button';
+// import { MatButtonModule } from '@angular/material/button';
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -34,6 +35,7 @@ import { FinancingExplorerHeaderComponent } from './explorer/header/header.compo
 import { FinancingExplorerNavbarComponent } from './explorer/navbar/navbar.component';
 import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
 import { FinancingExplorerMovieHomeComponent } from './explorer/movie-home/movie-home.component';
+import { FinancingExplorerProfileComponent } from './explorer/profile/profile.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
@@ -55,7 +57,8 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     FinancingExplorerHeaderComponent,
     FinancingExplorerFinancingDetailsComponent,
     FinancingExplorerNavbarComponent,
-    FinancingExplorerMovieHomeComponent
+    FinancingExplorerMovieHomeComponent,
+    FinancingExplorerProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -80,6 +83,7 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     MatChipsModule,
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatExpansionModule,
     FlexModule,
     // Fullpage (homepage)

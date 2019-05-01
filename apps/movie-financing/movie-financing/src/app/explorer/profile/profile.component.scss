@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
+
+// LAYOUT
+
+main {
+  max-height: none !important;
+}
+
+.col-1 {
+  width: 30%;
+  padding: 1rem;
+}
+
+.col-2 {
+  width: 60%;
+  padding: 1rem;
+}
+
+// COMPONENTS
+
+.bordered {
+  border: 1px solid black;
+}
+
+.rank {
+  margin: -5px 0px 30px 0px;
+  height: 48px;
+  text-transform: uppercase;
+  .key {
+    text-align: end;
+  }
+  .value {
+    font-weight: bold;
+  }
+}
+
+.eth-address {
+  font-size: 18px;
+  word-wrap: break-word;
+  font-weight: bold;
+}
+
+mat-icon {
+  margin-left: 20px;
+  font-size: 18px;
+  vertical-align: sub;
+}
+
+.sold {
+  font-size: 30px;
+  font-weight: 900;
+  word-spacing: 5px;
+}
+
+.caption {
+  margin-top: 10px;
+  color: rgba(50, 50, 50, 0.5);
+  text-transform: uppercase;
+  font-weight: 300;
+  .price {
+    margin-left: 5px;
+    font-weight: 600;
+  }
+}
+
+button {
+  width: 177px;
+  height: 43px;
+  background-color: black;
+  border: none;
+  color: white;
+}
+
+label {
+  display: block;
+}
+input {
+  border: 1px solid rgba(25, 25, 25, 0.32);
+  height: 43px;
+  width: 100%;
+  padding-left: 15px;
+}
+input::placeholder {
+  font-size: 16px;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  padding-right: 15px;
+  border: none;
+  margin-top: -20px;
+  background: none;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  // box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  // border: 1px solid #000000;
+  height: 20px;
+  width: 20px;
+  // border-radius: 3px;
+  background: rgba(255, 0, 0, 0);
+  background-image: url("../../../../../../../libs/shared-assets/apps/movie-financing/range-thumb.svg");
+  background-position: center center;
+  // background-repeat: no-repeat;
+  background-size: auto;
+  cursor: pointer;
+  -webkit-appearance: none;
+  // margin-top: -14px;
+}
+
+.margin-t-60 {
+  margin-top: 60px;
+}
+
+.key {
+  color: #323232;
+  margin-right: 0.3rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.col-1 img {
+  width: 100%;
+}
+
+h1 {
+  font-weight: lighter;
+  color: #323232;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  margin-bottom: 60px;
+}

@@ -1,0 +1,86 @@
+<financing-explorer-header
+  [title]="'Michel Michelle'"
+  [subtitle]="'Welcome Home'"
+  [label]="''"
+></financing-explorer-header>
+
+<main fxLayout="row" fxLayoutAlign="center">
+  <div class="col-1">
+    <img src="https://fakeimg.pl/410x418/" alt="user avatar" />
+
+    <div class="rank bordered" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+      <span class="key" fxFlex>
+        Rank Position
+      </span>
+      <span class="value" fxFlex>
+        Platinium
+      </span>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="30px">
+      <div fxFlex>
+        <div class="key">Ethereum Address</div>
+        <div class="eth-address">0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3</div>
+      </div>
+      <div fxFlex>
+        <div><span class="key">Sold Address</span><mat-icon>info_outline</mat-icon></div>
+        <span class="sold">1 000</span>
+        <div class="caption">
+          <span>Correspond To</span>
+          <span class="price">$1M</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-2">
+    <section>
+      <h1>My Profile</h1>
+
+      <div fxLayout="column">
+        <div fxFlex fxLayout="row" fxLayoutGap="20px">
+          <span fxFlex>
+            <label for="first-name">First name</label>
+            <input type="text" name="first-name" placeholder="Input text"/>
+          </span>
+          <span fxFlex>
+            <label for="last-name">Last name</label>
+            <input type="text" name="last-name" placeholder="Input text"/>
+          </span>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutGap="20px" class="margin-t-60">
+          <span fxFlex>
+            <label for="society">Society</label>
+            <input type="text" name="society" placeholder="Input text"/>
+          </span>
+          <span fxFlex><!--spacer--></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="margin-t-60">
+      <h1>Buy Tokens</h1>
+
+      <label for="tokens">How much do you want to buy ?</label>
+      <div fxLayout="column">
+        <div fxFlex fxLayout="row" fxLayoutGap="20px">
+          <span fxFlex>
+            <input type="number" name="tokens" placeholder="$100"/>
+            <input type="range" class="tokens-slider">
+          </span>
+          <span fxFlex>
+            <button>Buy Tokens</button>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="margin-t-60">
+      <h1>Movie List</h1>
+      <financing-movie-card></financing-movie-card>
+      <financing-movie-card></financing-movie-card>
+    </section>
+  </div>
+</main>
+
+<financing-explorer-footer></financing-explorer-footer>
