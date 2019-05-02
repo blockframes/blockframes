@@ -2,6 +2,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Material
 import {
@@ -11,16 +13,15 @@ import {
   MatListModule,
   MatInputModule,
   MatButtonModule,
-  MatSelectModule
+  MatSelectModule,
+  MatCheckboxModule
 } from '@angular/material';
-import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
 import { MaterialTemplateItemComponent } from './material-template-item/material-template-item.component';
 import { MaterialTemplateFormComponent } from './material-template-form/material-template-form.component';
 import { MaterialListComponent } from './material-list/material-list.component';
 import { MaterialDeliveryFormComponent } from './material-delivery-form/material-delivery-form.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialDeliveryItemComponent } from './material-delivery-item/material-delivery-item.component';
 import { MaterialDeliveryAddFormComponent } from './material-delivery-form/material-delivery-add-form.component';
 import { MaterialTemplateAddFormComponent } from './material-template-form/material-template-add-form.component';
@@ -47,15 +48,19 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
   imports: [
     CommonModule,
     RouterModule,
-    MatCardModule,
-    FlexLayoutModule,
-    MatIconModule,
+    FormsModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
+
+    // Material
+    MatCardModule,
+    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
     MatButtonModule,
     MatSelectModule,
+    MatCheckboxModule,
   ]
 })
 export class MaterialModule {}

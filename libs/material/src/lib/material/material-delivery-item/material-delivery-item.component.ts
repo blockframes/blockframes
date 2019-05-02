@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Material } from '../+state';
 
 @Component({
@@ -7,14 +7,22 @@ import { Material } from '../+state';
   styleUrls: ['./material-delivery-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialDeliveryItemComponent {
+export class MaterialDeliveryItemComponent implements OnChanges {
 
   @Input() material: Material;
   @Input() isDeliveryValidated: boolean;
-  @Output() isDeleted = new EventEmitter();
-  @Output() update = new EventEmitter();
+  @Input() allChecked: boolean;
+  @Output() isSelected = new EventEmitter<boolean>();
+  @Output() isDeleted = new EventEmitter<void>();
+  @Output() update = new EventEmitter<void>();
+
+  public isChecked = false;
 
   constructor() {}
+
+  public selectMaterial() {
+    this.isSelected.emit(!this.isChecked);
+  }
 
   public deleteMaterial() {
     this.isDeleted.emit();
@@ -22,6 +30,10 @@ export class MaterialDeliveryItemComponent {
 
   public editMaterial() {
     this.update.emit();
+  }
+
+  ngOnChanges(){
+    this.isChecked = this.allChecked;
   }
 
 }

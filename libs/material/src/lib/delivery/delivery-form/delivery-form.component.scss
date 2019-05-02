@@ -8,7 +8,7 @@ mat-sidenav {
   width: 250px;
   margin-top: 64px;
   position: fixed;
-  border: 1px solid #D3D3D3;
+  border: 1px solid #d3d3d3;
   box-sizing: border-box;
   box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
 }
@@ -68,8 +68,8 @@ section {
 }
 
 .container-button {
-  border-top: 1px solid #E2E2E2;
-  border-bottom: 1px solid #E2E2E2;
+  border-top: 1px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .icon {
@@ -87,3 +87,31 @@ h4 {
   color: rgba(0, 0, 0, 0.6);
 }
 
+.select-button {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  color: var(--accent);
+  border: solid 0.09rem var(--accent);
+  margin-right: 30px;
+}
+
+.select-button-active {
+  color: white;
+  background-color: var(--accent);
+}
+
+.action {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  width: 120px;
+  color: var(--primary);
+  border: solid 0.09rem var(--primary);
+  cursor: pointer;
+}
+
+.action-icon {
+  margin-left: 15px;
+  font-size: 18px;
+}

@@ -1,5 +1,9 @@
 <mat-card class="mat-elevation-z2" fxLayout="row">
-  <mat-icon>drag_indicator</mat-icon>
+  <mat-checkbox
+    color="primary"
+    [(ngModel)]="isChecked"
+    (click)="selectMaterial()">
+  </mat-checkbox>
   <mat-card-content class="content" fxLayout="column">
     <mat-card-title>
       {{ material.value }}

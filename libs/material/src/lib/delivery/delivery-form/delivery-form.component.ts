@@ -9,7 +9,7 @@ import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery } from '../+state';
+import { DeliveryQuery, Delivery } from '../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 
 @Component({
@@ -19,12 +19,15 @@ import { ConfirmComponent } from '@blockframes/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryFormComponent implements OnInit, OnDestroy {
+  public realDelivery$: Observable<Delivery>; // temporary name. TODO: change delivery$ to materials$
   public delivery$: Observable<TemplateView>;
   public movie$: Observable<Movie>;
   public form$: Observable<MaterialDeliveryForm>;
   public isDeliveryValidated$: Observable<boolean>;
   public isAlive = true;
   public materialId: string;
+  public allChecked: boolean;
+  public buttonLabel = 'Select all materials';
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -35,20 +38,32 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private service: DeliveryService,
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.materialService.subscribeOnDeliveryMaterials$().pipe(takeWhile(() => this.isAlive)).subscribe();
+    this.service
+      .suscribeOnDeliveriesByActiveMovie()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe();
+    this.materialService
+      .subscribeOnDeliveryMaterials$()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe();
 
     this.movie$ = this.movieQuery.selectActive();
+    this.realDelivery$ = this.query.selectActive();
     this.delivery$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
     this.form$ = this.materialQuery.deliveryForm$;
 
-    this.isDeliveryValidated$.pipe(takeWhile(() => this.isAlive))
-    .subscribe(isDeliveryValidated => isDeliveryValidated? this.materialStore.clearForm() : false)
+    this.isDeliveryValidated$
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(isDeliveryValidated =>
+        isDeliveryValidated ? this.materialStore.clearForm() : false
+      );
+
+    this.allChecked = false;
   }
 
   public saveAsTemplate() {
@@ -116,6 +131,46 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   cancelUpdateForm() {
     delete this.materialId;
+  }
+
+  public selectMaterial(isChecked: any, id: string) {
+    isChecked ? this.materialStore.addActive(id) : this.materialStore.removeActive(id);
+  }
+
+  public selectAllMaterials() {
+    this.allChecked = !this.allChecked;
+    if (this.allChecked === true) {
+      this.buttonLabel = 'Unselect materials';
+      this.delivery$.subscribe(categories =>
+        Object.keys(categories).forEach(categoryKey =>
+          categories[categoryKey].map(material => this.materialStore.addActive(material.id))
+        )
+      );
+    }
+    if (this.allChecked === false) {
+      this.buttonLabel = 'Select all materials';
+      this.delivery$.subscribe(categories =>
+        Object.keys(categories).forEach(categoryKey =>
+          categories[categoryKey].map(material => this.materialStore.removeActive(material.id))
+        )
+      );
+    }
+  }
+
+  public deleteSelectedMaterials() {
+    const materials = this.materialQuery.getActive();
+    this.materialService.deleteMaterials(materials);
+    this.materialStore.returnToInitialState();
+    this.allChecked = false;
+    this.buttonLabel = 'Select all materials';
+  }
+
+  public changeStep(stepId: string) {
+    const materials = this.materialQuery.getActive();
+    this.materialService.changeStep(materials, stepId);
+    this.materialStore.returnToInitialState();
+    this.allChecked = false;
+    this.buttonLabel = 'Select all materials';
   }
 
   ngOnDestroy() {

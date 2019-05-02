@@ -55,7 +55,35 @@
   <!-- Content -->
   <mat-sidenav-content class="delivery-form">
     <section>
-      <h3 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h3>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <h3 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h3>
+        <span>
+          <button
+            [ngClass]="{ 'select-button-active': !!allChecked }"
+            mat-raised-button
+            (click)="selectAllMaterials()"
+            class="select-button mat-elevation-z0"
+          >
+            {{ buttonLabel }}
+          </button>
+          <button class="action mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="actions" [disabled]="isDeliveryValidated$ | async">
+            Actions <mat-icon class="action-icon">expand_more</mat-icon>
+          </button>
+          <mat-menu #actions="matMenu" xPosition="before">
+            <button mat-menu-item [matMenuTriggerFor]="steps">
+              <span>Change step</span>
+            </button>
+            <mat-menu #steps="matMenu" xPosition="after">
+              <button *ngFor="let step of (realDelivery$ | async).steps" (click)="changeStep(step.id)" mat-menu-item>{{step.name}}</button>
+            </mat-menu>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon color="warn">delete</mat-icon>
+              <span (click)="deleteSelectedMaterials()">Delete</span>
+            </button>
+          </mat-menu>
+        </span>
+      </div>
       <div *ngIf="(form$ | async) as form">
         <material-delivery-add-form
           [isDeliveryValidated]="isDeliveryValidated$ | async"
@@ -83,6 +111,8 @@
                 <material-delivery-item
                   [isDeliveryValidated]="isDeliveryValidated$ | async"
                   [material]="material"
+                  [allChecked]="allChecked"
+                  (isSelected)="selectMaterial($event, material.id)"
                   (isDeleted)="deleteMaterial(material)"
                   (update)="openUpdateForm(material)"
                 ></material-delivery-item>

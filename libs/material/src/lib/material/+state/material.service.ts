@@ -6,6 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { MovieQuery } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class MaterialService {
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore,
     private store: MaterialStore,
-    private deliveryQuery: DeliveryQuery
+    private deliveryQuery: DeliveryQuery,
+    private movieQuery: MovieQuery,
   ) {}
 
   public subscribeOnActiveOrganizationMaterials$() {
@@ -60,4 +62,33 @@ export class MaterialService {
       tap(materials => this.store.set(materials))
     );
   }
+
+  public deleteMaterials(materials: Material[]) {
+    const batch = this.db.firestore.batch();
+    materials.forEach(material => {
+      const materialRef = this.db.doc<Material>(
+        `deliveries/${this.deliveryQuery.getActiveId()}/materials/${material.id}`
+      ).ref;
+      return batch.delete(materialRef);
+    });
+    materials.forEach(material => {
+      const materialRef = this.db.doc<Material>(
+        `movies/${this.movieQuery.getActiveId()}/materials/${material.id}`
+      ).ref;
+      return batch.delete(materialRef);
+    });
+    batch.commit();
+  }
+
+  public changeStep(materials: Material[], stepId: string) {
+    const batch = this.db.firestore.batch();
+    materials.forEach(material => {
+      const materialRef = this.db.doc<Material>(
+        `deliveries/${this.deliveryQuery.getActiveId()}/materials/${material.id}`
+      ).ref;
+      return batch.update(materialRef, {stepId});
+    });
+    batch.commit();
+  }
+
 }
