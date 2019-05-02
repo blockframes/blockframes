@@ -36,10 +36,10 @@ export class MaterialService {
           .valueChanges()
           .pipe(
             map(materials => {
-              return materials.map(material => ({
-                ...material,
-                step: delivery.steps.find(step => step.id === material.stepId) ?  delivery.steps.find(step => step.id === material.stepId) : null
-              }));
+              return materials.map(material => {
+                const step = delivery.steps.find(deliveryStep => deliveryStep.id === material.stepId);
+                return { ...material, step }
+              });
             })
           )
       ),

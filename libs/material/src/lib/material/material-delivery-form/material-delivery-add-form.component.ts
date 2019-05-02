@@ -8,7 +8,7 @@ import {
   Input
 } from '@angular/core';
 import { Material, MaterialQuery, MaterialStore } from '../+state';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Step, DeliveryQuery } from '../../delivery/+state';
@@ -26,7 +26,12 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   public steps$: Observable<Step[]>;
   public hasStep: boolean;
   private isAlive = true;
-  public form: FormGroup;
+  public form = new FormGroup({
+    value: new FormControl(''),
+    description: new FormControl(''),
+    category: new FormControl(''),
+    stepId: new FormControl('')
+  });
 
   constructor(
     private query: MaterialQuery,
@@ -36,13 +41,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
-    if (this.deliveryQuery.getActive().steps.length > 0) {
-      this.form = this.createFormWithStep();
-      this.hasStep = true;
-    } else {
-      this.form = this.createFormWithoutStep();
-      this.hasStep = false;
-    }
+    this.hasStep = this.deliveryQuery.hasStep;
 
     this.query
       .select(state => state.materialDeliveryForm)
@@ -50,29 +49,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
         takeWhile(() => this.isAlive),
         filter(materialDeliveryForm => !!materialDeliveryForm)
       )
-      .subscribe(materialDeliveryForm => {
-        const form = {...materialDeliveryForm};
-        // If the delivery doesn't have steps : don't set stepId to form
-        if (!this.hasStep) delete form.stepId;
-        return this.form.setValue(form);
-      });
-  }
-
-  private createFormWithStep() {
-    return new FormGroup({
-      value: new FormControl(''),
-      description: new FormControl(''),
-      category: new FormControl(''),
-      stepId: new FormControl('')
-    });
-  }
-
-  private createFormWithoutStep() {
-    return new FormGroup({
-      value: new FormControl(''),
-      description: new FormControl(''),
-      category: new FormControl('')
-    });
+      .subscribe(materialDeliveryForm => this.form.setValue(materialDeliveryForm));
   }
 
   public updateMaterial() {

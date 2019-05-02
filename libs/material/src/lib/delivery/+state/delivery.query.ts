@@ -46,6 +46,10 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     return this.selectCount().pipe(map(count => count > 0));
   }
 
+  get hasStep(): boolean {
+    return this.getActive().steps.length > 0 ? true : false;
+  }
+
   public getStep$(id: string) {
     return this.selectActive(delivery => delivery.steps.find(step => step.id === id));
   }

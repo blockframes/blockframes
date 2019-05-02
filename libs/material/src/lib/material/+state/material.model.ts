@@ -5,6 +5,7 @@ export interface Material {
   category: string;
   value: string;
   description: string;
+  stepId: string;
   step?: Step,
   state?: string,
   approved: boolean;

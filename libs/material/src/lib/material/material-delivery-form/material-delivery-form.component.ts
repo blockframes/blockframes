@@ -25,68 +25,28 @@ export class MaterialDeliveryFormComponent implements OnInit {
 
   public steps$: Observable<Step[]>;
 
-  public form: FormGroup;
+  public form = new FormGroup({
+    value: new FormControl(''),
+    description: new FormControl(''),
+    category: new FormControl(''),
+    stepId: new FormControl('')
+  });
   public hasStep: boolean;
 
   constructor(private deliveryQuery: DeliveryQuery) {}
 
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
-
-    if (this.deliveryQuery.getActive().steps.length > 0) {
-      this.form = this.createFormWithStep();
-      this.hasStep = true;
-      this.setForm(this.material);
-    } else {
-      this.form = this.createFormWithoutStep();
-      this.hasStep = false;
-      this.setForm();
-    }
+    this.hasStep = this.deliveryQuery.hasStep;
+    this.setForm();
   }
 
-  private setForm(material?: Material) {
-    // If the delivery doesn't have steps : don't set stepId to form
-    if (!material) {
-      this.form.setValue({
-        value: this.material.value,
-        description: this.material.description,
-        category: this.material.category
-      });
-    } else {
-      // If the material has a step
-      if (material.step) {
-        this.form.setValue({
-          value: this.material.value,
-          description: this.material.description,
-          category: this.material.category,
-          stepId: this.material.step.id
-        });
-        // If the material doesn't have a step
-      } else {
-        this.form.setValue({
-          value: this.material.value,
-          description: this.material.description,
-          category: this.material.category,
-          stepId: ''
-        });
-      }
-    }
-  }
-
-  private createFormWithStep() {
-    return new FormGroup({
-      value: new FormControl(''),
-      description: new FormControl(''),
-      category: new FormControl(''),
-      stepId: new FormControl('')
-    });
-  }
-
-  private createFormWithoutStep() {
-    return new FormGroup({
-      value: new FormControl(''),
-      description: new FormControl(''),
-      category: new FormControl('')
+  private setForm() {
+    this.form.setValue({
+      value: this.material.value,
+      description: this.material.description,
+      category: this.material.category,
+      stepId: this.material.stepId
     });
   }
 
