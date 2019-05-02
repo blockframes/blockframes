@@ -17,10 +17,10 @@
       </span>
     </div>
 
-    <div fxLayout="column" fxLayoutGap="30px">
+    <div fxLayout="column" fxLayoutGap="30px" *ngIf="(user$ | async) as user">
       <div fxFlex>
         <div class="key">Ethereum Address</div>
-        <div class="eth-address">0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3</div>
+        <div class="eth-address">{{user.identity.address}}</div>
       </div>
       <div fxFlex>
         <div><span class="key">Sold Address</span><mat-icon>info_outline</mat-icon></div>

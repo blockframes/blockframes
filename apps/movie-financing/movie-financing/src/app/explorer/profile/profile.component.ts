@@ -1,4 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AuthQuery, User } from '@blockframes/auth';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'financing-explorer-profile',
@@ -7,9 +9,13 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerProfileComponent implements OnInit {
-  constructor() { }
+
+  public user$: Observable<User>;
+
+  constructor(private authQuery: AuthQuery) { }
 
   ngOnInit() {
+    this.user$ = this.authQuery.user$;
   }
 
 }

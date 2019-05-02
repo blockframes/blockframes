@@ -1,3 +1,121 @@
 :host {
   margin: 1rem;
 }
+.capitalize {
+  text-transform: capitalize;
+}
+mat-card {
+  padding: 0;
+}
+.poster-container {
+  position: relative;
+  .movie-poster {
+    width: 100%;
+  }
+  .movie-info {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: calc(50% - 36px);
+    .subtitle {
+      background-color: white;
+      width: 40%;
+      height: 32px;
+      padding-top: 10px;
+      padding-left: 20px;
+      text-transform: uppercase;
+      letter-spacing: 8px;
+    }
+  }
+  .title {
+    color: white;
+    background-color: black;
+    width: 50%;
+    height: 100%;
+    .stroke {
+      -webkit-text-stroke: rgba(255, 255, 255, 0.2) 0.7px;
+      color: transparent;
+      font-size: 35px;
+      text-transform: uppercase;
+      font-weight: 900;
+      position: relative;
+      top: -10px;
+      left: -5px;
+    }
+    .director-name {
+      margin-left: 20px;
+      text-transform: uppercase;
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 8px;
+    }
+    .movie-title {
+      margin-left: 20px;
+      padding-right: 20px;
+      text-transform: uppercase;
+      font-size: 40px;
+      font-weight: 900;
+    }
+  }
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 30px !important;
+  margin-bottom: 30px;
+  width: 60%;
+  line-height: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  th {
+    border: 1px solid black;
+    font-weight: 300;
+    .value {
+      font-weight: bold;
+    }
+  }
+}
+section {
+  margin-bottom: 30px;
+  width: 60%;
+  h3 {
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 7px;
+    color: #c6c6c6;
+  }
+}
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 60%;
+  border: 1px solid black;
+  height: 14px;
+}
+progress::-webkit-progress-bar {
+  background-color: white;
+}
+progress::-webkit-progress-value {
+  background-color: #1a48f5;
+}
+progress::-moz-progress-bar {
+  background-color: #1a48f5;
+}
+.completed {
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 8px;
+  margin-top: 20px;
+}
+a {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  font-size: 18px;
+  mat-icon {
+    vertical-align: middle;
+  }
+}
