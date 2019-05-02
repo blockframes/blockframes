@@ -27,6 +27,10 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
     super(store);
   }
 
+  public get hasOrgs$() {
+    return this.selectCount().pipe(map(count => count > 0));
+  }
+
   public getOrgId(name: string) {
     return this.getAll().find(org => org.name === name).id;
   }

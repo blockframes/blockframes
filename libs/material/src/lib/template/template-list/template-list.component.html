@@ -1,4 +1,5 @@
 <div class="container">
+  <template-empty *ngIf="!(hasTemplates$ |async)"></template-empty>
   <mat-expansion-panel
     *ngFor="let org of (orgsWithTemplates$ | async); first as isFirst"
     [expanded]="isFirst"

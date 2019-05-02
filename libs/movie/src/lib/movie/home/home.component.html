@@ -1,4 +1,4 @@
-
+<movie-home-empty *ngIf="!(hasOrgs$ | async)"></movie-home-empty>
   <movie-financing-list></movie-financing-list>
 
 <ng-template #disconnected>

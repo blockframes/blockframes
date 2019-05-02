@@ -56,6 +56,7 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
+import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -112,6 +113,7 @@ const routes: Routes = [
     DeliverySettingsFormComponent,
     DeliverySettingsViewComponent,
     DeliverySignComponent,
+    DeliveryEmptyComponent,
   ],
   imports: [
     CommonModule,

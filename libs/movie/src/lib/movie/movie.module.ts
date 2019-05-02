@@ -38,9 +38,10 @@ import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { TitleFormComponent } from '../movie/title-form/title-form.component';
 import { MatTabsModule, MatGridListModule } from '@angular/material';
+import { HomeEmptyComponent } from './home-empty/home-empty.component';
 
 @NgModule({
-  declarations: [HomeComponent, FormComponent, ListComponent, ViewComponent, TitleFormComponent],
+  declarations: [HomeComponent, FormComponent, ListComponent, ViewComponent, TitleFormComponent, HomeEmptyComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,

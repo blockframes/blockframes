@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { TemplateQuery, TemplateService } from '../+state';
+import { TemplateQuery } from '../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { MaterialService } from '../../material/+state';
@@ -16,10 +16,10 @@ import { TemplateAddComponent } from '../template-add/template-add.component';
 })
 export class TemplateListComponent implements OnInit, OnDestroy {
   public orgsWithTemplates$: Observable<Organization[]>;
+  public hasTemplates$: Observable<boolean>;
   private isAlive = true;
 
   constructor(
-    private service: TemplateService,
     private query: TemplateQuery,
     public dialog: MatDialog,
     private materialService: MaterialService,
@@ -31,6 +31,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
+    this.hasTemplates$ = this.query.hasTemplates$;
     this.orgsWithTemplates$ = this.query.orgsWithTemplates$;
   }
 

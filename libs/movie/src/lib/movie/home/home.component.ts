@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
 import { Observable } from 'rxjs';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
 // tslint:disable-next-line: component-selector
@@ -12,10 +13,12 @@ import { Observable } from 'rxjs';
 export class HomeComponent implements OnInit {
 
   isLogged$: Observable<boolean>;
+  public hasOrgs$: Observable<boolean>;
 
-  constructor(private auth: AuthQuery) {}
+  constructor(private auth: AuthQuery, private organizationQuery: OrganizationQuery) {}
 
   ngOnInit() {
+    this.hasOrgs$ = this.organizationQuery.hasOrgs$;
     this.isLogged$ = this.auth.isLogged$;
   }
 }

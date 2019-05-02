@@ -53,4 +53,8 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   ) {
     super(store);
   }
+
+  public get hasTemplates$() {
+    return this.selectCount().pipe(map(count => count > 0))
+  }
 }

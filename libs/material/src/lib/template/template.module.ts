@@ -10,6 +10,7 @@ import { TemplateItemComponent } from './template-item/template-item.component';
 import { TemplateAddComponent } from './template-add/template-add.component';
 import { EditableModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
+import { TemplateEmptyComponent } from './template-empty/template-empty.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -50,6 +51,7 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
+    TemplateEmptyComponent,
   ],
   imports: [
     CommonModule,
