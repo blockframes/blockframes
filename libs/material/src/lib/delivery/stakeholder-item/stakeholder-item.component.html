@@ -5,7 +5,7 @@
   </mat-card-content>
   <mat-card-footer *ngIf="!(hasStakeholderSigned$ | async)" fxLayout="row" fxLayoutAlign="space-evenly center" class="footerLocked">
     <mat-icon>lock_open</mat-icon>
-    <span>Your signature will appear here</span>
+    <span>The signature will appear here</span>
   </mat-card-footer>
   <mat-card-footer *ngIf="hasStakeholderSigned$ | async" fxLayout="row" fxLayoutAlign="space-evenly center" class="footerSigned">
       <mat-icon>note</mat-icon>

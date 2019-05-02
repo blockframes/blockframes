@@ -4,6 +4,8 @@ import { Stakeholder, StakeholderQuery, MovieQuery } from '@blockframes/movie';
 import { DeliveryService, DeliveryQuery } from '../+state';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component';
 
 @Component({
   selector: 'delivery-stakeholder-list',
@@ -20,6 +22,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
     private service : DeliveryService,
     private stakeholderQuery: StakeholderQuery,
     private router: Router,
+    private dialog: MatDialog,
     private movieQuery: MovieQuery,
     private query: DeliveryQuery,
   ) { }
@@ -29,12 +32,22 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
     this.stakeholders$ = this.stakeholderQuery.selectAll();
   }
 
+  public openSignDelivery() {
+    this.dialog.open(DeliverySignComponent, {
+      width: '600px',
+      data: {
+        onConfirm: () => this.signDelivery()
+      }
+    });
+  }
+
   public signDelivery() {
     this.service.signDelivery();
   }
 
+
   public navigateToSettings() {
-    this.router.navigate([`${this.router.url}/settings`])
+    this.router.navigate([`${this.router.url}/teamwork`])
   }
 
   ngOnDestroy() {
