@@ -37,6 +37,7 @@ import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing
 import { FinancingExplorerMovieHomeComponent } from './explorer/movie-home/movie-home.component';
 import { FinancingExplorerProfileComponent } from './explorer/profile/profile.component';
 // Librairies
+import { FinancingRangeSliderModule } from './explorer/ui/range-slider/range-slider.module';
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
@@ -88,7 +89,8 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     FlexModule,
     // Fullpage (homepage)
     AngularFullpageModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    FinancingRangeSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

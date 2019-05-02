@@ -1,0 +1,5 @@
+
+<span *ngIf="unitSide === 'left'" class="unit-left">{{unit}}</span>
+<input type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [placeholder]="placeholder" [ngStyle]="{'padding-left': valueOffset+'px'}"/>
+<span *ngIf="unitSide === 'right'" class="unit-right">{{unit}}</span>
+<input type="range" class="range-slider" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [ngStyle]="{'padding-left': valueOffset+'px'}">

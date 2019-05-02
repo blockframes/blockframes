@@ -61,12 +61,11 @@
     <section class="margin-t-60">
       <h1>Buy Tokens</h1>
 
-      <label for="tokens">How much do you want to buy ?</label>
+      <label>How much do you want to buy ?</label>
       <div fxLayout="column">
         <div fxFlex fxLayout="row" fxLayoutGap="20px">
           <span fxFlex>
-            <input type="number" name="tokens" placeholder="$100"/>
-            <input type="range" class="tokens-slider">
+            <financing-range-slider [min]="100" [max]="100000" step="100" [unit]="'$'" [unitSide]="'left'"></financing-range-slider>
           </span>
           <span fxFlex>
             <button>Buy Tokens</button>
@@ -76,10 +75,15 @@
     </section>
 
     <section class="margin-t-60">
-      <h1>Movie List</h1>
+      <h1>Favorites List</h1>
       <financing-movie-card></financing-movie-card>
       <financing-movie-card></financing-movie-card>
     </section>
+    <section>
+        <h1>Movie List</h1>
+        <financing-movie-card></financing-movie-card>
+        <financing-movie-card></financing-movie-card>
+      </section>
   </div>
 </main>
 

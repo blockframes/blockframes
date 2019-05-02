@@ -78,42 +78,10 @@ input {
   border: 1px solid rgba(25, 25, 25, 0.32);
   height: 43px;
   width: 100%;
-  padding-left: 15px;
+  padding-left: 20px;
 }
 input::placeholder {
   font-size: 16px;
-}
-input[type=range] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 15px;
-  border: none;
-  margin-top: -20px;
-  background: none;
-}
-input[type=range]:focus {
-  outline: none;
-}
-input[type=range]::-webkit-slider-thumb {
-  height: 20px;
-  width: 20px;
-  background: rgba(255, 0, 0, 0);
-  background-image: url("../../../../../../../libs/shared-assets/apps/movie-financing/range-thumb.svg");
-  background-position: center center;
-  background-size: auto;
-  cursor: pointer;
-  -webkit-appearance: none;
-}
-input[type=range]::-moz-range-thumb {
-  height: 20px;
-  width: 20px;
-  background: rgba(255, 0, 0, 0);
-  background-image: url("../../../../../../../libs/shared-assets/apps/movie-financing/range-thumb.svg");
-  background-position: center center;
-  background-size: auto;
-  cursor: pointer;
-  border-radius: 0;
-  border: none;
 }
 
 .margin-t-60 {
@@ -136,5 +104,4 @@ h1 {
   color: #323232;
   text-transform: uppercase;
   letter-spacing: 8px;
-  margin-bottom: 60px;
 }
