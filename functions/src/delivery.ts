@@ -69,7 +69,7 @@ export const onDeliveryUpdate = async (
 
   const orgs = await getOrgsOfDelivery(delivery.id);
   const stakeholderCount = await db
-    .collection(`deliveries/${delivery.id}/stakeholders`)
+    .collection(`deliveries/${delivery.id}/stakeholders`).where('isAccepted', '==', true)
     .get()
     .then(snap => snap.size);
 

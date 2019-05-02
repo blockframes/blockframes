@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Material } from './material.model';
 import { MaterialStore, MaterialState } from './material.store';
 import { TemplateView } from '../../template/+state';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 export function materialsByCategory(materials: Material[]): TemplateView {
   return materials.reduce(
@@ -27,6 +27,7 @@ export class MaterialQuery extends QueryEntity<MaterialState, Material> {
   public materialsByDelivery$ = this.selectAll().pipe(
     map(materials => materialsByCategory(materials) as TemplateView)
   );
+
   constructor(protected store: MaterialStore) {
     super(store);
   }

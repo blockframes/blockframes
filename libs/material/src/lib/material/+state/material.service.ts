@@ -20,14 +20,6 @@ export class MaterialService {
     private movieQuery: MovieQuery,
   ) {}
 
-  public subscribeOnActiveOrganizationMaterials$() {
-    return this.organizationQuery.selectActiveId().pipe(
-      filter(id => !!id),
-      switchMap(id => this.db.collection<Material>(`orgs/${id}/materials`).valueChanges()),
-      tap(materials => this.store.set(materials))
-    );
-  }
-
   public subscribeOnDeliveryMaterials$() {
     // TODO : switch this to FireQuery
     return this.deliveryQuery.selectActive().pipe(
@@ -43,6 +35,27 @@ export class MaterialService {
                 return { ...material, step }
               });
             })
+          )
+      ),
+      tap(materials => this.store.set(materials))
+    );
+  }
+
+  public subscribeOnMovieMaterials$() {
+    // TODO : switch this to FireQuery
+    return this.movieQuery.selectActive().pipe(
+      filter(movie => !!movie),
+      switchMap(movie =>
+        this.db
+          .collection<any>(`movies/${movie.id}/materials`)
+          .valueChanges()
+          .pipe(
+            map(materials =>
+              materials.map(material =>({
+                ...material,
+                step: this.deliveryQuery.getActive().steps.find(step => step.id === material.stepId)
+              }))
+            )
           )
       ),
       tap(materials => this.store.set(materials))
@@ -86,9 +99,8 @@ export class MaterialService {
       const materialRef = this.db.doc<Material>(
         `deliveries/${this.deliveryQuery.getActiveId()}/materials/${material.id}`
       ).ref;
-      return batch.update(materialRef, {stepId});
+      return batch.update(materialRef, { stepId });
     });
     batch.commit();
   }
-
 }

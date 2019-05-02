@@ -26,10 +26,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public steps$ = this.selectActive(delivery => delivery.steps);
   /** Returns the active delivery materials sorted by category */
-  public currentTemplateView : Observable<TemplateView> =
-   this.materialsByActiveDelivery().pipe(
-      map(materials => materialsByCategory(materials))
-    );
+  public currentTemplateView: Observable<TemplateView> = this.materialsByActiveDelivery()
+    .pipe(map(materials => materialsByCategory(materials)));
 
   constructor(
     protected store: DeliveryStore,
@@ -96,7 +94,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
-      tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
         const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));

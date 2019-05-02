@@ -1,8 +1,10 @@
 <mat-card class="mat-elevation-z2" fxLayout="row">
   <mat-checkbox
+    [disabled]="isDeliveryValidated"
     color="primary"
     [(ngModel)]="isChecked"
-    (click)="selectMaterial()">
+    (click)="selectMaterial()"
+  >
   </mat-checkbox>
   <mat-card-content class="content" fxLayout="column">
     <mat-card-title>

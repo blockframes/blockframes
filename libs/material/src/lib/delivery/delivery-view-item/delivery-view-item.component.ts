@@ -30,7 +30,6 @@ export class DeliveryViewItemComponent implements OnInit {
 
   public selectMaterial() {
     this.isSelected.emit(!this.isChecked);
-
   }
 
   public randomNumberPicker(scale: number) {

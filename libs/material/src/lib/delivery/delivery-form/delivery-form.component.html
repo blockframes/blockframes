@@ -60,6 +60,7 @@
         <span>
           <button
             [ngClass]="{ 'select-button-active': !!allChecked }"
+            [disabled]="isDeliveryValidated$ | async"
             mat-raised-button
             (click)="selectAllMaterials()"
             class="select-button mat-elevation-z0"
