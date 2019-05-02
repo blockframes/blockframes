@@ -27,7 +27,6 @@ export const onMaterialUpdate = async (
   );
   const orgsPerDelivery = await Promise.all(orgsPromises);
   const orgs : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
-  console.log(orgs);
 
   if (!material || !materialBefore) {
     return true;

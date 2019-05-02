@@ -2,7 +2,8 @@ import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
 import { getOrgsOfDelivery, Organization } from './stakeholder';
 
-export const APP_DELIVERY = 'delivery'; /** This string refers to svg icon name */
+// This string refers to svg icon name
+export const APP_DELIVERY = 'delivery';
 
 export async function getCollection(path: string) {
   return db
@@ -67,17 +68,19 @@ export const onDeliveryUpdate = async (
   const processedId = deliveryDoc.data()!.processedId;
 
   const orgs = await getOrgsOfDelivery(delivery.id);
-
-  /** Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature */
-  if (delivery.validated.length === deliveryBefore.validated.length + 1) {
-    return notifyOnNewSignee(delivery, orgs);
-  }
-
   const stakeholderCount = await db
     .collection(`deliveries/${delivery.id}/stakeholders`)
     .get()
     .then(snap => snap.size);
-  /** When validated.length reaches stakeholderCount.length */
+
+  /** Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
+   *  Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
+   *  that all stakeholders approved the delivery.
+   */
+  if (delivery.validated.length === deliveryBefore.validated.length + 1 && delivery.validated.length !== stakeholderCount) {
+    await notifyOnNewSignee(delivery, orgs);
+  }
+
   if (
     deliveryBefore.validated.length !== stakeholderCount - 1 ||
     delivery.validated.length !== stakeholderCount
@@ -89,6 +92,7 @@ export const onDeliveryUpdate = async (
     return true;
   }
 
+  // When validated.length reaches stakeholderCount.length
   try {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: context.eventId });
     const [materialsMovie, materialsDelivery] = await Promise.all([
@@ -114,7 +118,7 @@ export const onDeliveryUpdate = async (
       return db.doc(`movies/${delivery.movieId}/materials/${materialDelivery.id}`).set(material);
     });
 
-    /** When delivery is signed, we create notifications for each stakeholder */
+    // When delivery is signed, we create notifications for each stakeholder
     const notifications = orgs
       .filter(org => !!org && !!org.userIds)
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
