@@ -1,14 +1,6 @@
 <mat-card class="mat-elevation-z6">
   <mat-card-title>Edit {{ stakeholder.organization.name }}</mat-card-title>
-  <mat-card-content fxLayout="row" fxLayoutAlign="space-between">
-    <mat-form-field>
-      <mat-label>Stakeholder role</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let role of roles" [value]="role">
-          {{ role }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-card-content fxLayout="row" fxLayoutAlign="center">
     <div class="chips">
       <h4>Authorizations</h4>
       <chips-autocomplete

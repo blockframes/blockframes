@@ -24,6 +24,7 @@
   font-size: 16px;
   margin-top: 0;
   margin-left: 3%;
+  width: 100%;
 }
 
 mat-card-subtitle {
@@ -58,15 +59,20 @@ mat-card-content {
 }
 
 mat-card-actions {
-  float: bottom;
   visibility: hidden;
+  margin-left: 3%;
+  padding: 0;
 }
 
 .dot {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  margin-left: 3%;
+  margin-left: 40px;
+}
+
+.left {
+  margin-left: 40px;
 }
 
 ul {
@@ -81,11 +87,12 @@ li {
 }
 
 .content-authorizations {
-  width: 40%;
+  width: 50%;
+  margin-top: 30px;
 }
 
 .content-orgName {
-  width: 20%;
+  margin-top: 30px;
 }
 
 
