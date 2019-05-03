@@ -24,10 +24,7 @@ import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-it
 import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
 import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
 import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
-import { EditableModule } from '@blockframes/ui';
-import { DotColorDirective } from '../directives/dot-color-directive';
-import { TeamWorkActionsComponent } from './delivery-team-work-view/team-work-actions/team-work-actions.component';
-import { TeamWorkFiltersComponent } from './delivery-team-work-view/team-work-filters/team-work-filters.component';
+import { EditableModule, DirectivesModule } from '@blockframes/ui';
 import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
 import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
@@ -57,6 +54,7 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
+
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },
@@ -108,7 +106,6 @@ const routes: Routes = [
     DeliveryTeamWorkListComponent,
     TeamWorkActionsComponent,
     TeamWorkFiltersComponent,
-    DotColorDirective,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
     DeliverySettingsViewComponent,
@@ -125,6 +122,7 @@ const routes: Routes = [
     ConfirmModule,
     UiFormModule,
     EditableModule,
+    DirectivesModule,
 
     // Material
     MatCardModule,

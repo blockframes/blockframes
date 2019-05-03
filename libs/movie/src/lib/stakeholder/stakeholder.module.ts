@@ -13,6 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { StakeholderViewComponent } from './view/view.component';
 import { StakeholderItemComponent } from './item/item.component';
 import { MatSidenavModule, MatCheckboxModule } from '@angular/material';
+import { DirectivesModule } from '@blockframes/ui';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { MatSidenavModule, MatCheckboxModule } from '@angular/material';
     MatDividerModule,
     MatSidenavModule,
     MatCheckboxModule,
+    DirectivesModule,
   ],
   declarations: [StakeholderListComponent, StakeholderViewComponent, StakeholderItemComponent]
 })
