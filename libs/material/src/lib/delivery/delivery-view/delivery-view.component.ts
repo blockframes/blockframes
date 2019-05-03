@@ -5,6 +5,7 @@ import { Movie, MovieQuery } from '@blockframes/movie';
 import { MaterialStore, MaterialQuery } from '../../material/+state';
 import { Router } from '@angular/router';
 import { TemplateView } from '../../template/+state';
+import { applyTransaction } from '@datorama/akita';
 
 @Component({
   selector: 'delivery-view',
@@ -32,7 +33,7 @@ export class DeliveryViewComponent implements OnInit {
   ngOnInit() {
     this.delivery = this.query.getActive();
     this.movie = this.movieQuery.getActive();
-    this.materials$ = this.query.materialsByCategoryForActiveDelivery;
+    this.materials$ = this.query.currentTemplateView;
     this.progressionValue$ = this.query.deliveryProgression$;
     this.allChecked = false;
   }
@@ -43,10 +44,10 @@ export class DeliveryViewComponent implements OnInit {
 
   public selectAllMaterials() {
     this.allChecked = !this.allChecked;
-    const op = this.allChecked
+    const process = this.allChecked
       ? material => this.materialStore.addActive(material.id)
       : material => this.materialStore.removeActive(material.id);
-    this.materialQuery.getAll().forEach(op)
+      applyTransaction(() => this.materialQuery.getAll().forEach(process))
   }
 
   public changeState(state: 'pending' | 'available' | 'delivered' | 'accepted' | 'refused') {

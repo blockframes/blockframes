@@ -1,7 +1,4 @@
-<div *ngFor=
-    "let notification of (notifications$ | async | sort: 'date');
-     let isLast = last;
-     let i = index">
+<div *ngFor="let notification of (notifications$ | async | sort: 'date'); let i = index">
   <blockframes-notification-item
     *ngIf="i < 5"
     [notification]="notification"

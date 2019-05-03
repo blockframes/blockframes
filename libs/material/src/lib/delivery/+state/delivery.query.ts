@@ -25,6 +25,11 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   );
 
   public steps$ = this.selectActive(delivery => delivery.steps);
+  /** Returns the active delivery materials sorted by category */
+  public currentTemplateView : Observable<TemplateView> =
+   this.materialsByActiveDelivery().pipe(
+      map(materials => materialsByCategory(materials))
+    );
 
   constructor(
     protected store: DeliveryStore,
@@ -63,13 +68,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       }),
       tap(materials => this.materialStore.set(materials))
     );
-  }
-
-  /** Returns the active delivery materials sorted by category */
-  public get materialsByCategoryForActiveDelivery() {
-    return this.materialsByActiveDelivery().pipe(
-      map(materials => materialsByCategory(materials))
-    ) as Observable<TemplateView>;
   }
 
   /** Returns a list of deliveries for the active movie */
