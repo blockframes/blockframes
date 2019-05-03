@@ -17,16 +17,7 @@ main {
 }
 
 // COMPONENTS
-
-.key {
-  color: #394348;
-  opacity: 0.5;
-  margin-right: 0.3rem;
-  font-weight: 300;
-}
-
-.value {
-}
+@import '../components';
 
 .col-1 img {
   width: 100%;

@@ -1,7 +1,21 @@
 @import url(~fullpage.js/dist/fullpage.min.css);
+@import '../components';
+
+financing-explorer-navbar {
+  float: left;
+  width: 100%;
+}
 
 .content {
   background-color: pink;
+}
+
+.key {
+  color: white;
+}
+
+.value {
+  color: white;
 }
 
 .left-decoration {
@@ -35,7 +49,19 @@
   transform: translate(0, -50%);
   left: 0;
   width: 60vw;
-  padding: 5% 3% 2% 15%;
+  padding: 5% 10% 2% 15%;
+}
+
+table.data {
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  width: 80%;
+  text-align: center;
+
+  td {
+    padding: 0.5rem;
+    border: 1px solid white;
+  }
 }
 
 .status-block {
@@ -55,4 +81,38 @@
   text-align: center;
   font-size: 0.5rem;
   letter-spacing: 0.2rem;
+}
+
+.progress {
+  margin-top: 1rem;
+
+  .mat-progress-bar {
+    border: 1px solid white;
+    height: 0.4rem;
+  }
+
+  p {
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+.cta {
+  margin-top: 2rem;
+  border-top: 1px solid white;
+  height: 2rem;
+
+  a {
+    padding: 1rem;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-decoration: none;
+
+    &:after {
+      content: "→";
+    }
+  }
 }
