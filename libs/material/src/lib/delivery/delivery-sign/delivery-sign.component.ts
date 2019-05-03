@@ -26,7 +26,7 @@ export class DeliverySignComponent {
 
   public sign() {
     this.data.onConfirm();
-    this.snackBar.open('Validated delivery', 'close', { duration: 2000 });
+    this.snackBar.open('Delivery signed', 'close', { duration: 2000 });
     this.loading = false;
     this.close();
   }

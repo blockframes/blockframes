@@ -46,7 +46,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   }
 
 
-  public navigateToSettings() {
+  public navigateToTeamwork() {
     this.router.navigate([`${this.router.url}/teamwork`])
   }
 

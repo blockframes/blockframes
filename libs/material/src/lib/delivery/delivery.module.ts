@@ -32,6 +32,7 @@ import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
 import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
 import { DeliverySignComponent } from './delivery-sign/delivery-sign.component';
+import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -56,7 +57,6 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { ConfirmModule, UiFormModule } from '@blockframes/ui';
-import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
 
 const routes: Routes = [
   { path: '', component: DeliveryListComponent },

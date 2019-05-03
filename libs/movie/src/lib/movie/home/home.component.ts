@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
-// tslint:disable-next-line: component-selector
   selector: 'movie-financing-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
