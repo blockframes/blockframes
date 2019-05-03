@@ -13,8 +13,6 @@ export class FinancingExplorerHomeComponent implements OnInit {
   constructor() {
     // for more details on config options please visit fullPage.js docs
     this.config = {
-
-      // fullpage options
       licenseKey: 'YOUR LICENSE KEY HERE',
       anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage'],
       menu: '#menu',

@@ -32,11 +32,12 @@ import { FinancingMovieCardComponent } from './explorer/movie-card/movie-card.co
 import { FinancingExplorerFooterComponent } from './explorer/footer/footer.component';
 import { FinancingExplorerHeaderComponent } from './explorer/header/header.component';
 import { FinancingExplorerNavbarComponent } from './explorer/navbar/navbar.component';
+import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
+import { FinancingExplorerMovieHomeComponent } from './explorer/movie-home/movie-home.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { AuthModule } from '@blockframes/auth';
-import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FlexModule } from '@angular/flex-layout';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
@@ -53,7 +54,8 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     FinancingExplorerFooterComponent,
     FinancingExplorerHeaderComponent,
     FinancingExplorerFinancingDetailsComponent,
-    FinancingExplorerNavbarComponent
+    FinancingExplorerNavbarComponent,
+    FinancingExplorerMovieHomeComponent
   ],
   imports: [
     BrowserModule,

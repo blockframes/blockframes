@@ -3,102 +3,13 @@
 <div class="content">
   <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
     <div class="section" id="movie1">
-      <div class="movie-block">
-        <div class="status-block">
-          Almost Closed
-        </div>
-
-        <h3>Nom Réalisateur</h3>
-        <h1>Movie Name Sooooooooooo Long</h1>
-        <table class="data">
-          <tbody>
-          <tr>
-            <td>
-              <span class="key">Minimum&nbsp;Amount&nbsp;Request</span> <span class="value">$100&nbsp;K</span>
-            </td>
-            <td>
-              <span class="key">Director's&nbsp;Category</span> <span class="value">Confirm</span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus. Integer
-          pulvinar blandit nulla sagittis mattis.
-        </p>
-
-        <div class="progress">
-          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-          <p>64% Completed</p>
-        </div>
-
-        <div class="cta">
-          <a href="#">
-            See This Movie
-          </a>
-        </div>
-      </div>
-      <div class="left-decoration">
-        <p>
-          Prestige Director
-        </p>
-      </div>
+      <financing-explorer-movie-home></financing-explorer-movie-home>
     </div>
     <div class="section" id="movie2">
-      <div class="movie-block">
-        <div class="status-block">
-          Almost Closed
-        </div>
-
-        <h3>Nom Réalisateur</h3>
-        <h1>Movie Name Sooooooooooo Long</h1>
-        <table>
-          <tbody>
-          <tr>
-            <td>
-              Minimum Amount Request $100 K
-            </td>
-            <td>
-              Director's Category Confirm
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus. Integer
-          pulvinar blandit nulla sagittis mattis.
-        </p>
-
-        <div>
-          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-          <p>64% Completed</p>
-        </div>
-
-        <div>
-          <a href="#">
-            See This Movie
-          </a>
-        </div>
-      </div>
-      <div class="left-decoration">
-        <p>
-          Prestige Director
-        </p>
-      </div>
+      <financing-explorer-movie-home></financing-explorer-movie-home>
+    </div>
+    <div class="section" id="movie3">
+      <financing-explorer-movie-home></financing-explorer-movie-home>
     </div>
   </div>
-  <!--
-    <div class="movie-group">
-      <mat-toolbar>
-        <h3>Prestige Directors</h3>
-        <button>See all category</button>
-      </mat-toolbar>
-      <div class="financing-movie-list">
-        <financing-movie-card movieID="42"></financing-movie-card>
-        <financing-movie-card movieID="42"></financing-movie-card>
-        <financing-movie-card movieID="42"></financing-movie-card>
-        <financing-movie-card movieID="42"></financing-movie-card>
-      </div>
-    </div>
-  -->
 </div>

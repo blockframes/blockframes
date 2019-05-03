@@ -1,0 +1,108 @@
+@import '../components';
+
+.key {
+  color: white;
+}
+
+.value {
+  color: white;
+}
+
+.left-decoration {
+  position: absolute;
+  background-color: white;
+  color: black;
+
+  top: 27vh;
+  left: 0;
+  width: 6vw;
+  height: 60vh;
+  padding-left: 2rem;
+  padding-bottom: 1rem;
+
+  p {
+    text-orientation: mixed;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    height: 100%;
+    letter-spacing: 0.8rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+}
+
+.movie-block {
+  color: white;
+  background-color: black;
+  position: absolute;
+  top: 50vh;
+  transform: translate(0, -50%);
+  left: 0;
+  width: 60vw;
+  padding: 5% 10% 2% 15%;
+}
+
+table.data {
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  width: 80%;
+  text-align: center;
+
+  td {
+    padding: 0.5rem;
+    border: 1px solid white;
+  }
+}
+
+.status-block {
+  background-color: blue;
+  color: white;
+
+  position: absolute;
+
+  top: -5vh;
+  height: 5vh;
+  right: 0;
+  width: 12vw;
+
+  padding: 1rem;
+
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 0.5rem;
+  letter-spacing: 0.2rem;
+}
+
+.progress {
+  margin-top: 1rem;
+
+  .mat-progress-bar {
+    border: 1px solid white;
+    height: 0.4rem;
+  }
+
+  p {
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+.cta {
+  margin-top: 2rem;
+  border-top: 1px solid white;
+  height: 2rem;
+
+  a {
+    padding: 1rem;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-decoration: none;
+
+    &:after {
+      content: "→";
+    }
+  }
+}
