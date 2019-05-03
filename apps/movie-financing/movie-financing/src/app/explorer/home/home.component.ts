@@ -11,11 +11,6 @@ export class FinancingExplorerHomeComponent implements OnInit {
   fullpage_api: any;
 
   constructor() {
-    this.config = {
-      licenseKey: 'YOUR LICENSE KEY HERE',
-      anchors: ['1', '2', '3'],
-      menu: '#menu'
-    };
   }
 
   getRef(fullPageRef) {
@@ -23,5 +18,10 @@ export class FinancingExplorerHomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.config = {
+      licenseKey: 'YOUR LICENSE KEY HERE',
+      anchors: ['1', '2', '3'],
+      menu: '#menu'
+    };
   }
 }
