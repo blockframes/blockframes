@@ -16,6 +16,7 @@ export function createStakeholder(params?: Partial<Stakeholder>) {
     authorizations: [],
     orgMovieRole: '',
     role: '',
+    isAccepted: false,
     ...params,
   } as Stakeholder;
 }

@@ -10,6 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { StakeholderViewComponent } from './view/view.component';
+import { StakeholderItemComponent } from './item/item.component';
+import { MatSidenavModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -23,8 +26,10 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSidenavModule,
+    MatCheckboxModule,
   ],
-  declarations: [StakeholderListComponent]
+  declarations: [StakeholderListComponent, StakeholderViewComponent, StakeholderItemComponent]
 })
 export class StakeholderModule {}

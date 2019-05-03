@@ -10,6 +10,7 @@ import { StakeholderListComponent } from '../stakeholder/list/list.component';
 
 // Guards
 import { MovieGuard } from './guards/movie.guard';
+import { StakeholderViewComponent } from '../stakeholder/view/view.component';
 
 
 export const routes: Routes = [
@@ -28,7 +29,7 @@ export const routes: Routes = [
   },
   {
     path: 'form/:movieId/teamwork',
-    component: StakeholderListComponent,
+    component: StakeholderViewComponent,
     canActivate: [MovieGuard],
   },
   {

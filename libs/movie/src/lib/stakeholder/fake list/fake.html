@@ -1,0 +1,40 @@
+<div fxLayout="row" class="container">
+  <div class="add-sh" fxFlex="50">
+    <h1>Add a new Organization</h1>
+    <form [formGroup]="addStakeholderForm">
+      <mat-form-field appearance="outline" class="search-bar">
+        <mat-label>Company Name</mat-label>
+        <mat-icon matPrefix color="primary" style="margin-right: 10px;">search</mat-icon>
+        <input type="text" matInput placeholder="Company Name" formControlName="org" [matAutocomplete]="autoName"/>
+      </mat-form-field>
+      <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of orgOptions" [value]="option" (click)="submit(option)">
+          {{ option.name }}
+          <mat-icon>add_circle</mat-icon>
+        </mat-option>
+      </mat-autocomplete>
+    </form>
+  </div>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div class="sh-list" fxFlex="50">
+    <mat-card *ngFor="let stakeholder of (stakeholders$ | async)" class="sh-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{ stakeholder.organization.name }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p> {{ stakeholder.orgMovieRole }}</p>
+        <p> {{ stakeholder.role }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-icon-button color="primary" (click)="remove(stakeholder.id)">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+        <button mat-icon-button color="primary">
+          <mat-icon>edit_outline</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

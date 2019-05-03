@@ -1,0 +1,19 @@
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav class="mat-elevation-z2" [opened]="true" mode="side">
+    <stakeholder-list></stakeholder-list>
+  </mat-sidenav>
+  <!-- Content -->
+  <mat-sidenav-content>
+    <div class="menus" fxLayoutAlign="space-between">
+      <!-- <delivery-team-work-filters class="filters"></delivery-team-work-filters>
+      <delivery-team-work-actions class="actions"></delivery-team-work-actions> -->
+    </div>
+    <div class="item-form" *ngFor="let stakeholder of (stakeholders$ | async)">
+      <stakeholder-item
+        (update)="openForm(stakeholder)"
+        [stakeholder]="stakeholder"
+      ></stakeholder-item>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

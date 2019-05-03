@@ -1,0 +1,88 @@
+@import '~@angular/material/theming';
+
+mat-card {
+  &:hover {
+    @include mat-elevation(6);
+  }
+  &:hover mat-card-actions {
+    visibility: visible;
+  }
+}
+
+.item-disabled {
+  background-color: rgba(0, 0, 0, 0.041);
+  color: rgba(0, 0, 0, 0.212);
+  filter: grayscale(100%);
+}
+
+.orgName {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 0;
+  margin-left: 3%;
+  width: 100%;
+}
+
+mat-card-subtitle {
+  font-size: 9px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.title {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+button {
+  color: #9c9c9c;
+  background-color: Transparent;
+  border: none;
+  font-size: 8px;
+  text-align: center;
+}
+
+button:hover {
+  color: #6200ee;
+  cursor: pointer;
+}
+
+mat-card-content {
+  margin: 0;
+}
+
+mat-card-actions {
+  visibility: hidden;
+  margin-left: 3%;
+  padding: 0;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-left: 40px;
+}
+
+.left {
+  margin-left: 40px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-right: 2%;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.content-authorizations {
+  width: 50%;
+  margin-top: 30px;
+}
+
+.content-orgName {
+  margin-top: 30px;
+}

@@ -18,29 +18,34 @@ interface Organization {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StakeholderListComponent implements OnInit, OnDestroy {
+  public stakeholders$: Observable<Stakeholder[]>;
   public addStakeholderForm: FormGroup;
   public orgOptions: Organization[];
+  public activeMovieId: string;
   public isAlive = true;
 
   constructor(
     private service: StakeholderService,
     private builder: FormBuilder,
     private movieQuery: MovieQuery,
-  ) {}
+
+  ) { }
 
   ngOnInit() {
+    this.stakeholders$ = this.service.subscribeOnStakeholdersByActiveMovie$();
     this.orgOptions = [];
     this.addStakeholderForm = this.builder.group({
       org: null
     });
     this.onChange();
+    this.activeMovieId = this.movieQuery.getActiveId();
   }
 
   public submit(org: Organization) {
     const sh = createStakeholder({ orgId: org.id });
 
     // TODO: handle promises correctly (update loading status, send back error report, etc).
-    this.service.add(this.movieQuery.getActiveId(), sh);
+    this.service.add(this.activeMovieId, sh);
   }
 
   public displayFn(org?: Organization): string | undefined {
@@ -61,6 +66,10 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
           this.orgOptions = matchingOrgs;
         });
     });
+  }
+
+  public remove(stakeholderId: string) {
+    this.service.remove(this.activeMovieId, stakeholderId);
   }
 
   ngOnDestroy() {
