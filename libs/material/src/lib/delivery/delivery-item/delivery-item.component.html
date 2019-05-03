@@ -10,17 +10,17 @@
     </span>
   </section>
   <section class="informations" fxLayout="row" fxLayoutAlign="space-between none">
-    <article class="step">
+    <article *ngIf="delivery.steps.length > 0" class="step">
       <h5>Step :</h5>
-      <p class="step-text">step {{randomNumberPicker(5)}}</p>
+      <p class="step-text">{{delivery.steps[0].name}}</p>
     </article>
     <article class="state">
       <h5>State :</h5>
-      <mat-icon class="icons" svgIcon="{{stateIcon}}"></mat-icon>
+      <mat-icon class="icons" svgIcon="{{delivery.state}}"></mat-icon>
     </article>
     <article class="time">
       <h5>Delivery time :</h5>
-      <p class="time-text">{{randomNumberPicker(30)}} days</p>
+      <p class="time-text">{{delivery.dueDate}}</p>
     </article>
     <article class="payment">
       <h5>Payment :</h5>

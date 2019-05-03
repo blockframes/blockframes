@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Template, TemplatesByOrgs } from '../../template/+state/template.model';
+import { Template } from '../../template/+state/template.model';
 import { MatDialogRef } from '@angular/material';
 import { TemplateService } from '../../template/+state/template.service';
 import { TemplateQuery } from '../../template/+state/template.query';
@@ -40,7 +40,8 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templates$ = this.query.selectAll();
+    this.templates$ = this.query.allTemplates;
+    this.templates$.subscribe(x => console.log(x))
   }
 
   public createDelivery(templateId?: string, ) {

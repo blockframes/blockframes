@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
 import { Template, TemplatesByOrgs } from './template.model';
-import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
+import { materialsByCategory } from '../../material/+state/material.query';
 import { map, switchMap, filter, pluck } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { templateListQuery } from '../guards/template-list.guard';
 
 export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
   return templates.reduce(
@@ -38,6 +40,19 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     );
   }
 
+  public get allTemplates() : Observable<Template[]> {
+    return this.organizationQuery.selectAll().pipe(
+      switchMap(orgs => {
+        const templateList = [];
+        return orgs.map(org => {
+          const templates = this.db.collection<Template>(`orgs/${org.id}/templates`).get();
+          templateList.push(templates);
+          return templateList;
+        });
+      })
+    );
+  }
+
   public form$ = this.select(state => state.form);
 
   public materialsByTemplate$ = this.selectActive().pipe(
@@ -48,8 +63,8 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
 
   constructor(
     protected store: TemplateStore,
-    private materialQuery: MaterialQuery,
-    private organizationQuery: OrganizationQuery
+    private organizationQuery: OrganizationQuery,
+    private db: AngularFirestore
   ) {
     super(store);
   }

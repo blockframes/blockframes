@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Delivery } from '../+state/delivery.model';
 import { Observable } from 'rxjs';
-import { DeliveryQuery } from '../+state';
 
 @Component({
   selector: 'delivery-item',
@@ -21,20 +20,12 @@ export class DeliveryItemComponent implements OnInit {
   @Output() isSelected = new EventEmitter<boolean>();
 
   public progression$: Observable<number>;
-
-  // Visual bullshit for WoW effect
-  public stateIcons = ['dummy', 'accepted', 'available', 'delivered', 'pending', 'refused'];
-  public paymentIcons = ['dummy', 'payed', 'not_payed'];
-  public stateIcon: string;
   public paymentIcon: string;
 
-  constructor(
-    private query: DeliveryQuery,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
-    this.stateIcon = this.stateIcons[this.randomNumberPicker(5)];
-    this.paymentIcon = this.paymentIcons[this.randomNumberPicker(2)];
+    this.paymentIcon = this.delivery.isPaid ? 'payed' : 'not_payed';
   }
 
   public selectDelivery() {
