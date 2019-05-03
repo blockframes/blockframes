@@ -32,7 +32,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.stakeholders$ = this.service.stakeholdersByActiveMovie$;
+    this.stakeholders$ = this.service.subscribeOnStakeholdersByActiveMovie$();
     this.orgOptions = [];
     this.addStakeholderForm = this.builder.group({
       org: null
@@ -42,7 +42,9 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   }
 
   public submit(org: Organization) {
-    const sh = createStakeholder({orgId : org.id});
+    const sh = createStakeholder({ orgId: org.id });
+
+    // TODO: handle promises correctly (update loading status, send back error report, etc).
     this.service.add(this.activeMovieId, sh);
   }
 

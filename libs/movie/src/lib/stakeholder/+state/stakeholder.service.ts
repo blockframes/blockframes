@@ -26,16 +26,6 @@ export class StakeholderService {
   ) {
   }
 
-  public get stakeholdersByActiveMovie$() {
-    return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
-      // TODO: use FireQuery:
-      switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
-      switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
-      tap(stakeholders => this.store.set(stakeholders))
-    );
-  }
-
   public get activeMovieStakeholders() {
     return this.movieQuery
       .selectActiveId()
@@ -43,6 +33,16 @@ export class StakeholderService {
         switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
         tap((stakeholders: any) => this.store.set(stakeholders))
       );
+  }
+
+  public subscribeOnStakeholdersByActiveMovie$() {
+    // TODO: use FireQuery:
+    return this.movieQuery.selectActive().pipe(
+      filter(movie => !!movie),
+      switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
+      switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
+      tap(stakeholders => this.store.set(stakeholders))
+    );
   }
 
   public getAllStakeholdersWithOrg(stakeholders: Stakeholder[]) {
@@ -65,7 +65,7 @@ export class StakeholderService {
     const orgDoc = this.firestore.collection('orgs').doc(sh.orgId);
     const stakeholderDoc = movieDoc.collection('stakeholders').doc(sh.id);
 
-    this.firestore.firestore.runTransaction(async (tx) => {
+    await this.firestore.firestore.runTransaction(async (tx) => {
       const org = await tx.get(orgDoc.ref);
 
       // Update the org
@@ -85,12 +85,9 @@ export class StakeholderService {
       const p2 = tx.set(stakeholderDoc.ref, sh);
 
       return Promise.all([p1, p2]);
-    })
-      .then(() => console.log('Transaction successfully committed!'))
-      .catch((error) => console.log('Transaction failed: ', error));
+    });
+    console.log('Transaction successfully committed!');
 
-    // TODO: make this function truly async and wait for the tx to complete before returning the id.
-    // you might end up listening over an id that does not exists.
     return sh.id;
   }
 
@@ -128,14 +125,6 @@ export class StakeholderService {
     });
   }
 
-  public subscribeOnStakeholdersByActiveMovie$() {
-    return this.movieQuery.selectActive().pipe(
-      // TODO: use FireQuery:
-      switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
-      switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
-      tap(stakeholders => this.store.set(stakeholders))
-    );
-  }
 
   private getStakeholderList(movieId: string): Query<Stakeholder> {
     return {
