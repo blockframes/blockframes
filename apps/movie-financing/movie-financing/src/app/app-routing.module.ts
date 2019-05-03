@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 // tslint:disable-next-line
 import { AuthGuard } from '@blockframes/auth';
 import { LayoutComponent } from './layout/layout.component';
@@ -57,7 +58,8 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    HttpClientModule
   ],
   exports: [RouterModule]
 })
