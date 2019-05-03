@@ -262,6 +262,26 @@ export class DeliveryService {
     };
   }
 
+  public get materialList() {
+    return this.movieQuery.selectActiveId().pipe(
+      switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
+      tap(deliveries => this.store.set(deliveries))
+    );
+  }
+
+  private getDeliveryMovieMaterials(movieId: string): Query<Delivery[]> {
+    return {
+      path: `deliveries`,
+      queryFn: ref => ref.where('movieId', '==', movieId),
+      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+        path: `deliveries/${delivery.id}/stakeholders`,
+        organization: (stakeholder: Stakeholder): Query<Organization> => ({
+          path: `orgs/${stakeholder.orgId}`
+        })
+      })
+    };
+  }
+
   ////////////////////////
   // START SUBSCRIPTION //
   ////////////////////////

@@ -1,5 +1,5 @@
 import { functions, db } from './firebase';
-import { APP_DELIVERY, getDocument, getCollection } from './delivery';
+import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
 
 const APP_MOVIE = 'moviefinancing';
@@ -49,7 +49,7 @@ export const onDeliveryStakeholderCreate = async (
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) =>
           prepareNotification({
-            app: APP_DELIVERY,
+            app: APP_DELIVERY_ICON,
             message: `Stakeholder ${newStakeholder.id} from ${
               newStakeholderOrg.name
             } has been added to delivery ${delivery.id}`,
@@ -98,7 +98,7 @@ export const onDeliveryStakeholderDelete = async (
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) =>
           prepareNotification({
-            app: APP_DELIVERY,
+            app: APP_DELIVERY_ICON,
             message: `Stakeholder ${stakeholder.id} from ${
               stakeholderOrg.name
             } has been removed from delivery ${delivery.id}`,

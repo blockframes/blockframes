@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Material } from '../../material/+state';
 
 @Component({
@@ -7,9 +7,9 @@ import { Material } from '../../material/+state';
   styleUrls: ['./delivery-view-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewItemComponent implements OnInit, OnChanges {
+export class DeliveryViewItemComponent implements OnInit {
   @Input() material: Material;
-  @Input() allChecked: boolean;
+  @Input() isChecked: boolean;
   @Output() isSelected = new EventEmitter<boolean>();
 
   // Visual bullshit for WoW effect
@@ -17,7 +17,6 @@ export class DeliveryViewItemComponent implements OnInit, OnChanges {
   public stateIcon: string;
   public paymentIcon: string;
 
-  public isChecked = false;
   public isOpen = true;
   public disableMaterial = false;
   public panelButtonLabel = 'LESS';
@@ -52,7 +51,4 @@ export class DeliveryViewItemComponent implements OnInit, OnChanges {
       : (this.disableButtonLabel = 'DISABLE');
   }
 
-  ngOnChanges(){
-    this.isChecked = this.allChecked;
-  }
 }

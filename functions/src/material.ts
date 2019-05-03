@@ -1,7 +1,7 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
 import { getOrgsOfDelivery, Organization } from './stakeholder';
-import { getDocument, APP_DELIVERY } from './delivery';
+import { getDocument, APP_DELIVERY_ICON } from './delivery';
 import { triggerNotifications, prepareNotification } from './notify';
 
 interface Material {
@@ -58,7 +58,7 @@ export const onMaterialUpdate = async (
         }, [])
         .map((userId: string) =>
           prepareNotification({
-            app: APP_DELIVERY,
+            app: APP_DELIVERY_ICON,
             message: `Material : ${material.value} from movie : ${
               movie.title.original
             } is now in state : ${material.state}`,

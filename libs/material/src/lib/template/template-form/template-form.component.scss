@@ -30,7 +30,7 @@ section {
   font-weight: bold;
   font-size: 13px;
   color: var(--primary);
-  border: solid 0.09rem var(--primary);
+  border: solid 1px var(--primary);
 }
 
 .delete-template {
@@ -39,7 +39,7 @@ section {
   font-weight: bold;
   font-size: 13px;
   color: var(--warn);
-  border: solid 0.09rem var(--warn);
+  border: solid 1px var(--warn);
 }
 
 .container-button {

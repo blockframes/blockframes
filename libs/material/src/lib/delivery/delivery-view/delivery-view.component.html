@@ -91,7 +91,8 @@
             (click)="selectAllMaterials()"
             class="select-button mat-elevation-z0"
           >
-            {{ buttonLabel }}
+            <span *ngIf="!allChecked">Select all materials</span>
+            <span *ngIf="!!allChecked">Unselect materials</span>
           </button>
           <material-filters></material-filters>
           <material-actions (newState)="changeState($event)"></material-actions>
@@ -101,7 +102,7 @@
         <h3>{{ category.key | uppercase }}</h3>
         <div *ngFor="let material of category.value">
           <delivery-view-item
-            [allChecked]="allChecked"
+            [isChecked]="allChecked"
             [material]="material"
             (isSelected)="selectMaterial($event, material.id)"
           ></delivery-view-item>

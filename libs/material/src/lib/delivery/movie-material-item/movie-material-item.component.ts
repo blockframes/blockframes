@@ -14,10 +14,7 @@ export class MovieMaterialItemComponent implements OnInit {
   @Input() material: Material;
   @Input() stakeholders: Stakeholder[];
 
-  // Visual bullshit for WoW effect
-  public stateIcon: string;
   public stakeholder: string;
-
   public isOpen = true;
   public panelButtonLabel = 'LESS';
 
@@ -37,7 +34,6 @@ export class MovieMaterialItemComponent implements OnInit {
     this.service
       .approvedToggle(material, this.movieQuery.getActiveId())
       .catch(err => console.log(err));
-    //TODO: Ask why we put .catch ? And why we put it without "try" before
   }
 
   public panelToggle() {

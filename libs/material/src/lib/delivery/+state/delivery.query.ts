@@ -8,8 +8,9 @@ import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
 import { materialsByCategory } from '../../material/+state/material.query';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
+import { TemplateView } from '../../template/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     private materialStore: MaterialStore,
     private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
-    private db: AngularFirestore,
+    private db: AngularFirestore
   ) {
     super(store);
   }
@@ -50,19 +51,25 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  /** Returns the active delivery materials sorted by category */
-  public get materialsByActiveDelivery$() {
+  /** Set the store with movie materials from active delivery */
+  private materialsByActiveDelivery() {
     return this.movieQuery.selectActive().pipe(
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
-      tap(materials => this.materialStore.set(materials)),
       map(materials => {
         const id = this.getActiveId();
         return materials.filter(material => material.deliveriesIds.includes(id));
       }),
-      map(materials => materialsByCategory(materials))
+      tap(materials => this.materialStore.set(materials))
     );
+  }
+
+  /** Returns the active delivery materials sorted by category */
+  public get materialsByCategoryForActiveDelivery() {
+    return this.materialsByActiveDelivery().pipe(
+      map(materials => materialsByCategory(materials))
+    ) as Observable<TemplateView>;
   }
 
   /** Returns a list of deliveries for the active movie */
@@ -88,7 +95,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         const id = this.getActiveId();
         const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
         const acceptedMaterials = totalMaterials.filter(material => material.state === 'accepted');
-        const deliveryMaterialsProgress = Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
+        const deliveryMaterialsProgress =
+          Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
         return deliveryMaterialsProgress;
       })
     );
@@ -102,7 +110,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
       ),
       map(materials => {
         const acceptedMaterials = materials.filter(material => material.state === 'accepted');
-        const movieMaterialsProgress = Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
+        const movieMaterialsProgress =
+          Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
         return movieMaterialsProgress;
       })
     );

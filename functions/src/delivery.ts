@@ -3,7 +3,7 @@ import { triggerNotifications, prepareNotification } from './notify';
 import { getOrgsOfDelivery, Organization } from './stakeholder';
 
 // This string refers to svg icon name
-export const APP_DELIVERY = 'delivery';
+export const APP_DELIVERY_ICON = 'delivery';
 
 export async function getCollection(path: string) {
   return db
@@ -31,7 +31,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) =>
       prepareNotification({
-        app: APP_DELIVERY,
+        app: APP_DELIVERY_ICON,
         message: `Stakeholder ${newStakeholder!.id}
         from ${newStakeholderOrg!.name}
         signed delivery ${delivery.id}`,
@@ -77,14 +77,16 @@ export const onDeliveryUpdate = async (
    *  Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
    *  that all stakeholders approved the delivery.
    */
-  if (delivery.validated.length === deliveryBefore.validated.length + 1 && delivery.validated.length !== stakeholderCount) {
+
+  const isNewSignature = delivery.validated.length === deliveryBefore.validated.length;
+  const isFullSignatures = delivery.validated.length === stakeholderCount;
+  const isBeforeStateClean = deliveryBefore.validated.length === stakeholderCount - 1;
+
+  if (isNewSignature && !isFullSignatures) {
     await notifyOnNewSignee(delivery, orgs);
   }
 
-  if (
-    deliveryBefore.validated.length !== stakeholderCount - 1 ||
-    delivery.validated.length !== stakeholderCount
-  ) {
+  if (!isBeforeStateClean || !isFullSignatures) {
     return true;
   }
 
@@ -124,7 +126,7 @@ export const onDeliveryUpdate = async (
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
       .map((userId: string) =>
         prepareNotification({
-          app: APP_DELIVERY,
+          app: APP_DELIVERY_ICON,
           message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
           userId,
           path: `/layout/${delivery.movieId}/view/${delivery.id}`
