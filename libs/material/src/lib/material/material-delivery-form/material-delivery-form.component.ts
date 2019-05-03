@@ -25,12 +25,8 @@ export class MaterialDeliveryFormComponent implements OnInit {
 
   public steps$: Observable<Step[]>;
 
-  public form = new FormGroup({
-    value: new FormControl(''),
-    description: new FormControl(''),
-    category: new FormControl(''),
-    stepId: new FormControl('')
-  });
+  public form: FormGroup;
+
   public hasStep: boolean;
 
   constructor(private deliveryQuery: DeliveryQuery) {}
@@ -38,15 +34,11 @@ export class MaterialDeliveryFormComponent implements OnInit {
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
     this.hasStep = this.deliveryQuery.hasStep;
-    this.setForm();
-  }
-
-  private setForm() {
-    this.form.setValue({
-      value: this.material.value,
-      description: this.material.description,
-      category: this.material.category,
-      stepId: this.material.stepId
+    this.form = new FormGroup({
+      value: new FormControl(this.material.value),
+      description: new FormControl(this.material.description),
+      category: new FormControl(this.material.category),
+      stepId: new FormControl(this.material.stepId)
     });
   }
 

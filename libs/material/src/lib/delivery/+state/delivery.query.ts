@@ -47,7 +47,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   }
 
   get hasStep(): boolean {
-    return this.getActive().steps.length > 0 ? true : false;
+    return this.getActive().steps.length > 0;
   }
 
   public getStep$(id: string) {

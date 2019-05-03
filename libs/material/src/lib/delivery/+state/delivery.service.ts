@@ -4,7 +4,7 @@ import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, Step } from './delivery.model';
+import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import {
   MovieQuery,
   Stakeholder,
@@ -12,8 +12,6 @@ import {
   createDeliveryStakeholder,
   StakeholderService,
   StakeholderStore,
-  MovieStore,
-  Movie
 } from '@blockframes/movie';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
@@ -270,15 +268,17 @@ export class DeliveryService {
   // START SUBSCRIPTION //
   ////////////////////////
   public suscribeOnDeliveriesByActiveMovie() {
-    function modifyTimestampToDate(delivery: Delivery) {
-      delivery.steps.forEach(step => step.date = step.date.toDate());
-      if (delivery.dueDate) delivery.dueDate = delivery.dueDate.toDate();
-      return delivery
+    function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
+      return {
+        ...delivery,
+        dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
+        steps: delivery.steps.map(step => ({...step, date: step.date.toDate()}))
+       }
     }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>
         this.db
-          .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
+          .collection<DeliveryDB>('deliveries', ref => ref.where('movieId', '==', id))
           .valueChanges()
       ),
       map(deliveries => deliveries.map(modifyTimestampToDate)),

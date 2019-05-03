@@ -4,7 +4,7 @@
     <div>
       <h2>Delivery general date</h2>
       <mat-form-field appearance="outline">
-        <input [value]="delivery.dueDate" formControlName="dueDate" matInput [matDatepicker]="picker" placeholder="Date" />
+        <input (dateChange)="saveDueDate($event.target.value)" [value]="delivery.dueDate" formControlName="dueDate" matInput [matDatepicker]="picker" placeholder="Date" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>

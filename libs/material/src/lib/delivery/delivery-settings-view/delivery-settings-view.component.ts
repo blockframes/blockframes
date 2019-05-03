@@ -32,9 +32,6 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
     this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.form.valueChanges.pipe(takeWhile(() => this.isAlive)).subscribe(value => {
-      this.saveDueDate(value.dueDate);
-    });
   }
 
   public saveDueDate(dueDate: Date) {
