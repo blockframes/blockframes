@@ -1,91 +1,58 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
-header {
-  background-color: #ECFBFF;
-}
-
-.explorer-toolbar {
-  background: none;
-
-  .spacer {
-    flex: 1 1 auto;
-  }
-
-  a {
-    font-family: 'Roboto', sans-serif;
-    margin-left: 1rem;
-    margin-right: 1rem;
-
-    font-style: normal;
-    font-weight: 500;
-    color: #58666D;
-    text-decoration: none;
-    font-size: 0.8rem;
-    text-align: center;
-    text-transform: uppercase;
-  }
-}
-
-.hero {
-  min-height: 55vh;
-  display: flex;
-  justify-content: flex-end;
-  //position: relative;
-
-  .content {
-    width: 40%;
-    margin-right: 10%;
-    //position: absolute;
-    //right: 10%;
-    //top: 10%;
-
-    h2 {
-      font-size: 6rem;
-      color: #004876;
-      margin-top: 0.4rem;
-      margin-bottom: 1rem;
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      color: #008BD2;
-      margin-bottom: 0.4rem;
-      font-weight: 100;
-    }
-
-    h4 {
-      color: #394348;
-      margin-bottom: 0.6rem;
-    }
-
-    p {
-      color: #394348;
-    }
-  }
-}
+@import url(~fullpage.js/dist/fullpage.min.css);
 
 .content {
-  width: 80%;
-  margin: 2rem auto auto;
+  background-color: pink;
 }
 
-.movie-group {
-  mat-toolbar {
-    background: none;
+.left-decoration {
+  position: absolute;
+  background-color: white;
+  color: black;
+
+  top: 27vh;
+  left: 0;
+  width: 6vw;
+  height: 60vh;
+  padding-left: 2rem;
+  padding-bottom: 1rem;
+
+  p {
+    text-orientation: mixed;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    height: 100%;
+    letter-spacing: 0.8rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
   }
 }
 
-.financing-movie-list {
-  display: flex;
+.movie-block {
+  color: white;
+  background-color: black;
+  position: absolute;
+  top: 50vh;
+  transform: translate(0, -50%);
+  left: 0;
+  width: 60vw;
+  padding: 5% 3% 2% 15%;
 }
 
-footer {
-  margin: 4rem;
-  background: white;
-  color: #58666D;
+.status-block {
+  background-color: blue;
+  color: white;
+
+  position: absolute;
+
+  top: -5vh;
+  height: 5vh;
+  right: 0;
+  width: 12vw;
+
+  padding: 1rem;
+
+  text-transform: uppercase;
   text-align: center;
-
-  a {
-    color: rgba(0, 139, 210, 0.51);
-  }
+  font-size: 0.5rem;
+  letter-spacing: 0.2rem;
 }

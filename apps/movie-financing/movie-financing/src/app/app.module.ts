@@ -11,6 +11,7 @@ import {
   MatGridListModule,
   MatIconModule,
   MatListModule,
+  MatProgressBarModule,
   MatProgressSpinnerModule,
   MatTabsModule,
   MatToolbarModule
@@ -38,6 +39,7 @@ import { AuthModule } from '@blockframes/auth';
 import { FinancingExplorerFinancingDetailsComponent } from './explorer/financing-details/financing-details.component';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FlexModule } from '@angular/flex-layout';
+import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 
 
 @NgModule({
@@ -77,7 +79,10 @@ import { FlexModule } from '@angular/flex-layout';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
-    FlexModule
+    FlexModule,
+    // Fullpage (homepage)
+    AngularFullpageModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

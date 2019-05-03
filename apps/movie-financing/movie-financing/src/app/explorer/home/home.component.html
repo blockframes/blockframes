@@ -1,18 +1,69 @@
-<financing-explorer-header></financing-explorer-header>
+<financing-explorer-navbar></financing-explorer-navbar>
 
 <div class="content">
-  <div class="movie-group">
-    <mat-toolbar>
-      <h3>Prestige Directors</h3>
-      <button>See all category</button>
-    </mat-toolbar>
-    <div class="financing-movie-list">
-      <financing-movie-card movieID="42"></financing-movie-card>
-      <financing-movie-card movieID="42"></financing-movie-card>
-      <financing-movie-card movieID="42"></financing-movie-card>
-      <financing-movie-card movieID="42"></financing-movie-card>
-    </div>
-  </div>
-</div>
+  <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
+    <div class="section">
+      <div class="movie-block">
+        <div class="status-block">
+          Almost Closed
+        </div>
 
-<financing-explorer-footer></financing-explorer-footer>
+        <h3>Nom Réalisateur</h3>
+        <h1>Movie Name Sooooooooooo Long</h1>
+        <table>
+          <tbody>
+          <tr>
+            <td>
+              Minimum Amount Request $100 K
+            </td>
+            <td>
+              Director's Category Confirm
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus. Integer
+          pulvinar blandit nulla sagittis mattis.
+        </p>
+
+        <div>
+          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+          <p>64% Completed</p>
+        </div>
+
+        <div>
+          <a href="#">
+            See This Movie
+          </a>
+        </div>
+      </div>
+      <div class="left-decoration">
+        <p>
+          Prestige Director
+        </p>
+      </div>
+    </div>
+    <div class="section" (click)="fullpage_api.moveSectionDown()">Some section2</div>
+    <div class="section">
+      <div class="slide">Slide 2.1</div>
+      <div class="slide">Slide 2.2</div>
+      <div class="slide">Slide 2.3</div>
+    </div>
+    <div class="section" (click)="fullpage_api.moveTo('secondPage', 2)">Some section4</div>
+  </div>
+  <!--
+    <div class="movie-group">
+      <mat-toolbar>
+        <h3>Prestige Directors</h3>
+        <button>See all category</button>
+      </mat-toolbar>
+      <div class="financing-movie-list">
+        <financing-movie-card movieID="42"></financing-movie-card>
+        <financing-movie-card movieID="42"></financing-movie-card>
+        <financing-movie-card movieID="42"></financing-movie-card>
+        <financing-movie-card movieID="42"></financing-movie-card>
+      </div>
+    </div>
+  -->
+</div>
