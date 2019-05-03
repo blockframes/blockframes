@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { createStakeholder, Stakeholder } from './stakeholder.model';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { StakeholderStore } from './stakeholder.store';
 import { MovieQuery } from '../../movie/+state/movie.query';
 import { Organization } from '@blockframes/organization';
@@ -26,7 +26,8 @@ export class StakeholderService {
   ) {
   }
 
-  public get activeMovieStakeholders() {
+  public get activeMovieStakeholders(): Observable<Stakeholder[]> {
+    // TODO: looks like a duplicate of `subscribeOnStakeholdersByActiveMovie$'
     return this.movieQuery
       .selectActiveId()
       .pipe(
@@ -126,7 +127,7 @@ export class StakeholderService {
   }
 
 
-  private getStakeholderList(movieId: string): Query<Stakeholder> {
+  private getStakeholderList(movieId: string): Query<Stakeholder[]> {
     return {
       path: `movies/${movieId}/stakeholders`,
       organization: (stakeholder: Stakeholder): Query<Organization> => ({
