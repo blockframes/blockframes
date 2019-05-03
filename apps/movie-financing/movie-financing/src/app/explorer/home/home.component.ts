@@ -11,19 +11,10 @@ export class FinancingExplorerHomeComponent implements OnInit {
   fullpage_api: any;
 
   constructor() {
-    // for more details on config options please visit fullPage.js docs
     this.config = {
       licenseKey: 'YOUR LICENSE KEY HERE',
-      anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage'],
-      menu: '#menu',
-
-      // fullpage callbacks
-      afterResize: () => {
-        // console.log('After resize');
-      },
-      afterLoad: (origin, destination, direction) => {
-        // console.log(origin.index);
-      }
+      anchors: ['1', '2', '3'],
+      menu: '#menu'
     };
   }
 
