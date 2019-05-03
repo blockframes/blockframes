@@ -6,10 +6,13 @@ import { RouterModule } from '@angular/router';
 // Material
 import {
   MatCardModule,
-  MatChipsModule, MatExpansionModule,
+  MatChipsModule,
+  MatExpansionModule,
   MatGridListModule,
   MatIconModule,
-  MatListModule, MatProgressSpinnerModule, MatTabsModule,
+  MatListModule,
+  MatProgressSpinnerModule,
+  MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +30,7 @@ import { FinancingExplorerSearchComponent } from './explorer/search/search.compo
 import { FinancingMovieCardComponent } from './explorer/movie-card/movie-card.component';
 import { FinancingExplorerFooterComponent } from './explorer/footer/footer.component';
 import { FinancingExplorerHeaderComponent } from './explorer/header/header.component';
+import { FinancingExplorerNavbarComponent } from './explorer/navbar/navbar.component';
 // Librairies
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
@@ -46,7 +50,8 @@ import { FlexModule } from '@angular/flex-layout';
     FinancingMovieCardComponent,
     FinancingExplorerFooterComponent,
     FinancingExplorerHeaderComponent,
-    FinancingExplorerFinancingDetailsComponent
+    FinancingExplorerFinancingDetailsComponent,
+    FinancingExplorerNavbarComponent
   ],
   imports: [
     BrowserModule,

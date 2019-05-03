@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.explorer-navbar {
+  background: none;
+  border-bottom: 1px solid white;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  a {
+    font-family: 'Roboto', sans-serif;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    font-style: normal;
+    font-weight: 500;
+    color: #FFF;
+    text-decoration: none;
+    font-size: 0.8rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
