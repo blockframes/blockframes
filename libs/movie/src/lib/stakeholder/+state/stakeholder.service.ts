@@ -32,6 +32,7 @@ export class StakeholderService {
       .selectActiveId()
       .pipe(
         switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
+        // TODO: this type should be Stakeholder[], figure out why ts doesn't like it.
         tap((stakeholders: any) => this.store.set(stakeholders))
       );
   }
