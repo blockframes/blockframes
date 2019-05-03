@@ -1,6 +1,7 @@
 <financing-explorer-navbar></financing-explorer-navbar>
 
 <main class="content">
+  <!-- TODO: replace the fullpage extension with router-outlet, scss, and animations -->
   <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
     <section class="section" id="movie1">
       <financing-explorer-movie-home></financing-explorer-movie-home>
