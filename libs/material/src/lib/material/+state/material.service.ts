@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { MovieQuery } from '@blockframes/movie';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class MaterialService {
     private store: MaterialStore,
     private deliveryQuery: DeliveryQuery,
     private movieQuery: MovieQuery,
+    private storage: AngularFireStorage,
   ) {}
 
   public subscribeOnDeliveryMaterials$() {
@@ -104,3 +106,4 @@ export class MaterialService {
     batch.commit();
   }
 }
+

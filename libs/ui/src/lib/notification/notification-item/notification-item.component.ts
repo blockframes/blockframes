@@ -6,15 +6,23 @@ import { NotificationService } from '../+state';
   selector: 'blockframes-notification-item',
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationItemComponent {
+  @Input() notification: any;
 
-  @Input() notification : any;
-
-  constructor(private router: Router, private service: NotificationService) { }
+  constructor(
+    private router: Router,
+    private service: NotificationService,
+  ) {}
 
   public goToPath() {
+    this.router.navigate([this.notification.path]);
+    this.service.readNotification(this.notification.id);
+  }
+
+  public goToTeamwork() {
+    this.service.joinTeamwork(this.notification.stakeholderId, this.notification.deliveryId);
     this.router.navigate([this.notification.path]);
     this.service.readNotification(this.notification.id);
   }

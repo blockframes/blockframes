@@ -75,6 +75,7 @@
               <span>Change step</span>
             </button>
             <mat-menu #steps="matMenu" xPosition="after">
+              <button *ngIf="(realDelivery$ | async).steps.length === 0" mat-menu-item [disabled]="true"><i>(no steps)</i></button>
               <button *ngFor="let step of (realDelivery$ | async).steps" (click)="changeStep(step.id)" mat-menu-item>{{step.name}}</button>
             </mat-menu>
             <mat-divider></mat-divider>

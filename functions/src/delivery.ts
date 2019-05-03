@@ -36,7 +36,8 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
         from ${newStakeholderOrg!.name}
         signed delivery ${delivery.id}`,
         userId,
-        path: `/layout/${delivery.movieId}/form/${delivery.id}`
+        path: `/layout/${delivery.movieId}/form/${delivery.id}`,
+        deliveryId: delivery.id
       })
     );
 
@@ -129,7 +130,8 @@ export const onDeliveryUpdate = async (
           app: APP_DELIVERY_ICON,
           message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
           userId,
-          path: `/layout/${delivery.movieId}/view/${delivery.id}`
+          path: `/layout/${delivery.movieId}/view/${delivery.id}`,
+          deliveryId: delivery.id
         })
       );
 

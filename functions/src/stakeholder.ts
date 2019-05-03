@@ -43,21 +43,39 @@ export const onDeliveryStakeholderCreate = async (
     }
 
     try {
+      const stakeholderCount = await db
+        .collection(`deliveries/${delivery.id}/stakeholders`)
+        .get()
+        .then(col => col.size);
       const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-        .map((userId: string) =>
-          prepareNotification({
-            app: APP_DELIVERY_ICON,
-            message: `Stakeholder ${newStakeholder.id} from ${
-              newStakeholderOrg.name
-            } has been added to delivery ${delivery.id}`,
-            userId,
-            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
-          })
-        );
-        // TODO: Make a custom notification for the stakeholder added to this delivery
+        .map((userId: string) => {
+          if (newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1) {
+            return prepareNotification({
+              app: APP_DELIVERY_ICON,
+              message: `You have been invited to delivery : ${
+                delivery.id
+              }. Do you wish to work on it ?`,
+              userId,
+              path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
+              deliveryId: delivery.id,
+              stakeholderId: newStakeholder.id
+            });
+          } else {
+            return prepareNotification({
+              app: APP_DELIVERY_ICON,
+              message: `Stakeholder ${newStakeholder.id} from ${
+                newStakeholderOrg.name
+              } has been added to delivery ${delivery.id}`,
+              userId,
+              path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
+              deliveryId: delivery.id,
+              stakeholderId: newStakeholder.id
+            });
+          }
+        });
 
       await triggerNotifications(notifications);
     } catch (e) {
@@ -103,7 +121,8 @@ export const onDeliveryStakeholderDelete = async (
               stakeholderOrg.name
             } has been removed from delivery ${delivery.id}`,
             userId,
-            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
+            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
+            deliveryId: delivery.id
           })
         );
 

@@ -5,6 +5,7 @@ import { NotificationStore } from './notification.store';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Notification } from './notification.model';
+import { Stakeholder } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,12 @@ export class NotificationService {
   }
 
   public readNotification(id: string) {
+    return this.db.doc<Notification>(`notifications/${id}`).update({ isRead: true });
+  }
+
+  public joinTeamwork(stakeholderId: string, deliveryId: string) {
     return this.db
-      .doc<Notification>(`notifications/${id}`)
-      .update({ isRead: true });
+      .doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`)
+      .update({ isAccepted: true });
   }
 }

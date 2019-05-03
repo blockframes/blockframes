@@ -8,7 +8,7 @@
     <p class="text">{{ notification.message }}</p>
   </span>
   <div *ngIf="notification.message.includes('invited') && !notification.isRead" fxLayoutAlign="space-around center">
-    <button class="mat-elevation-z0" (click)="goToPath()" mat-raised-button color="primary">
+    <button class="mat-elevation-z0" (click)="goToTeamwork()" mat-raised-button color="primary">
       Accept
     </button>
     <button class="mat-elevation-z0" (click)="read()" mat-raised-button color="warn">Decline</button>
