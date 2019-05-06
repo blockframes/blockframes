@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MatCardModule, MatGridListModule, MatIconModule, MatListModule } from '@angular/material';
+import { MaterialCommonModule, MaterialLayoutModule } from '@blockframes/ui';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CardStatComponent } from './card-stat/card-stat.component';
-import { MaterialCommonModule, MaterialLayoutModule } from '@blockframes/ui';
 import { CardHistoryComponent } from './card-history/card-history.component';
 
 export const routes: Routes = [

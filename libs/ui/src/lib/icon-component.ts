@@ -76,7 +76,7 @@ const ICONS_SVG = [
     url: 'assets/circled-icons/message.svg'
   },
   {
-    name: 'circled_paymentOK',
+    name: 'circled_payment_ok',
     url: 'assets/circled-icons/paymentOK.svg'
   },
   {

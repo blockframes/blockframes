@@ -1,5 +1,3 @@
-@import "../../../../../../../styles/style";
-
 :host {
   margin: 1rem;
 
@@ -11,7 +9,8 @@
   }
 
   mat-card-content.icon {
-    width: 50px;
+    text-align: center;
+    width: 40px;
   }
 
   mat-card-content.datetime {
@@ -44,7 +43,6 @@
       a {
         text-decoration: none;
         font-size: 0.7rem;
-        color: $primary;
         margin-right: 0.5rem;
       }
 
