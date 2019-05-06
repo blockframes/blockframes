@@ -19,7 +19,7 @@ export class FinancingExplorerHomeComponent implements OnInit {
 
   ngOnInit() {
     this.config = {
-      licenseKey: 'YOUR LICENSE KEY HERE',
+      licenseKey: '03045E7F-CA954764-9F317FCC-443D52A5',
       anchors: ['1', '2', '3'],
       menu: '#menu'
     };
