@@ -43,7 +43,8 @@ export class MockRelayer implements IRelayer {
 describe('RelayerWallet', () => {
   // test('smoke', () => {expect(true).toBeTruthy()});
   //*
-  let name: string;
+  let email: string;
+  let keyName: string;
   let relayer: Relayer;
   let provider: Provider;
   let keystore: string;
@@ -53,7 +54,8 @@ describe('RelayerWallet', () => {
   let relayerWallet: RelayerWallet;
 
   beforeAll(() => {
-    name = 'harrypotter';
+    email = 'harrypotter@exemple.com';
+    keyName = 'web'
     relayer = new MockRelayer() as any;
     provider = new Provider();
     keystore =
@@ -62,18 +64,19 @@ describe('RelayerWallet', () => {
     mnemonic = 'library upon horse concert horse crunch copy dice flash design drastic cushion';
     vault = new Vault();
     relayerWallet = new RelayerWallet(vault, relayer, provider);
+    relayerWallet.setUsername(email);
   });
 
   describe('create account', () => {
     test('import mnemonic', async () => {
-      await relayerWallet.importMnemonic(mnemonic, name, password);
+      await relayerWallet.importKey(mnemonic, keyName, password);
       const address = await relayerWallet.getAddress();
       expect(relayerWallet).toBeDefined();
       expect(address).toBe('0xbA2b47917c4ecE6d6Eb7606A54228Bf278614a00');
     });
     test.skip('signup', async () => {
       const relayerWalletK = new RelayerWallet(vault, relayer, provider);
-      await relayerWalletK.signup('UID', name, password);
+      await relayerWalletK.loadKey(keyName, password);
       const username = relayerWalletK.username;
       expect(relayerWalletK).toBeDefined();
       expect(username).toBe(name);
@@ -89,7 +92,7 @@ describe('RelayerWallet', () => {
     test('string message', async () => {
       const signature = await relayerWallet.signMessage(name);
       expect(signature).toBe(
-        '0xbe82270cc1a16e1403a407a3e13a0b00616f6d83e0ef62261f06fbb6695d8ac372f08836b6d18428cece767bd33346b1d166d62431419ec3ee84e54a2e07d7701b'
+        '0x5b9fe293af5d9cfad3eb46b825687efd2af2a02e4ab233e1a54500ee72efcb4904ef646dd3f2458293d7c4a5bd69fbb0e3ba968227070b5c6a8ca22264fe8a231b'
       );
     });
     test('hex string message', async () => {
