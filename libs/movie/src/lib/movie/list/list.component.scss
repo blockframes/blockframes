@@ -1,7 +1,5 @@
 .container {
-  margin-top: 20px;
-  margin-left: 80px;
-  margin-right: 80px;
+  margin: 30px 240px;
 }
 
 .movie-card {
@@ -49,13 +47,6 @@
   -ms-transform: translate(-50%, -50%);
 }
 
-mat-panel-title {
-  font-weight: 900;
-  font-size: 35px;
-  letter-spacing: 0.4375px;
-  line-height: 41px;
-}
-
 .view-button {
   margin-right: 15px;
   height: 15px;
@@ -79,10 +70,17 @@ mat-panel-title {
 .add-movie {
   font-weight: bolder;
   font-size: 13px;
+  height: 45px;
   color: var(--primary);
   border: solid 0.09rem var(--primary);
   cursor: pointer;
   margin-right: 24px;
+}
+
+.add-icon {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 6px;
 }
 
 .add-movie:hover {

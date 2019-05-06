@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 
 $blockframes-theme-primary: mat-palette($mat-bf-blue);
-$blockframes-theme-accent: mat-palette($mat-bf-purple);
+$blockframes-theme-accent: mat-palette($mat-bf-lightblue);
 $blockframes-theme-warn: mat-palette($mat-bf-crimson);
 
 $primary: mat-color($blockframes-theme-primary);

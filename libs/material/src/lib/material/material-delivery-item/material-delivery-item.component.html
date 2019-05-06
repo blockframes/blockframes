@@ -10,7 +10,7 @@
     <mat-card-title>
       {{ material.value }}
     </mat-card-title>
-    <mat-card-subtitle>
+    <mat-card-subtitle class="description-text">
       {{ material.description }}
     </mat-card-subtitle>
     <mat-card-actions>
@@ -21,12 +21,19 @@
       </button>
     </mat-card-actions>
   </mat-card-content>
-  <mat-card-content *ngIf="material.step" class="content-step">
-    <mat-card-subtitle class="step">
-      Step:
-    </mat-card-subtitle>
-    <mat-card-title class="step-value">
-      {{ material.step.name }}
-    </mat-card-title>
+  <mat-card-content
+    *ngIf="material.step"
+    class="content-step"
+    fxLayout="column"
+    fxLayoutAlign="start end"
+  >
+    <div>
+      <mat-card-subtitle class="step">
+        Step:
+      </mat-card-subtitle>
+      <mat-card-title class="step-value">
+        {{ material.step.name }}
+      </mat-card-title>
+    </div>
   </mat-card-content>
 </mat-card>

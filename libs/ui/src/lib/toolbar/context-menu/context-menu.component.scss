@@ -4,10 +4,17 @@
 
 .mat-tab-link {
   text-transform: uppercase;
-  margin-top: 19px;
+  font-size: 13px;
+  height: 64px;
+}
+
+.mat-tab-link:hover {
+  color: var(--primary);
+  opacity: 1;
 }
 
 .mat-tab-label-active {
   color: var(--primary);
+  font-weight: 700;
   opacity: 1;
 }

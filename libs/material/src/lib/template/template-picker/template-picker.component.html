@@ -1,10 +1,12 @@
 <div mat-dialog-content>
-  <h2>Add a new delivery</h2>
-  <p>Choose an existing template to initialize delivery or create it from scratch</p>
-  <section fxLayout="row wrap" fxLayoutAlign="start space-between">
+  <section class="templates-block" fxLayout="row wrap" fxLayoutAlign="start space-between">
+    <div class="text">
+      <h3>Add a new delivery</h3>
+      <p>Choose an existing template to initialize delivery or create it from scratch</p>
+    </div>
     <article class="template-card">
       <mat-card
-        class="create-card"
+        class="create-card mat-elevation-z0"
         (click)="createDelivery()"
         fxLayout="row"
         fxLayoutAlign="center center"

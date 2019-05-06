@@ -1,8 +1,9 @@
 <mat-nav-list>
-  <h2 mat-subheader>Categories :</h2>
+  <h3>Categories</h3>
+  <mat-divider></mat-divider>
   <div *ngFor="let category of (template | keyvalue)">
     <mat-list-item routerLink="." [fragment]="category.key" >
-      {{ category.key }}
+      <span class="category-list">{{ category.key }}</span>
     </mat-list-item>
   </div>
 </mat-nav-list>

@@ -9,10 +9,16 @@ section {
 }
 
 .create-step {
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 13px;
+  height: 45px;
   color: var(--primary);
   border: solid 1px var(--primary);
+}
+
+.create-step:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 .icon {
@@ -26,12 +32,11 @@ h1 {
 }
 
 h2 {
-  font-size: 25px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--label);
 }
 
 p {
   font-style: italic;
   font-size: 12px;
-  color: #3B3B3B
+  color: var(--label);
 }

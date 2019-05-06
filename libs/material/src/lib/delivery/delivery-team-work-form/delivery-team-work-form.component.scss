@@ -20,14 +20,15 @@ h4 {
   font-size: 12px;
 }
 
-.cancel-button {
-  font-weight: bold;
-  color: var(--primary);
-  border: none;
+button {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
 }
 
-.add-button {
-  font-weight: bold;
+.cancel-button {
+  color: var(--primary);
+  border: none;
 }
 
 .chips {

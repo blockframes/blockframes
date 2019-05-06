@@ -1,16 +1,16 @@
 .container {
   margin-top: 3%;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 240px;
+  margin-right: 240px;
 }
 
 .progress-spinner-block {
-  position: -webkit-sticky;
   position: sticky;
   top: 64px;
   margin: auto;
   margin-top: 0;
-  padding: 1rem;
+  margin-left: -12px;
+  padding-top: 20px;
   width: 30%;
 }
 
@@ -50,24 +50,20 @@ mat-progress-spinner {
 }
 
 h3 {
-  color: #5e5e5e;
+  color: var(--disabled);
 }
 
 h4 {
   margin: 0 0 10px 0;
-  font-weight: bold;
-  font-size: 14px;
+}
+
+h5 {
+  margin-bottom: 5px;
 }
 
 p {
   font-size: 90%;
   margin-bottom: 1rem;
-}
-
-.progress-card {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
 }
 
 .progress-value {
@@ -103,13 +99,13 @@ p {
 
 .period-text {
   font-size: 10px;
-  color: rgba(0, 0, 0, 0.322);
+  color: var(--label)
 }
 
 .period-days {
-  font-size: 12px;
+  font-size: 10px;
   margin: 0;
-  font-weight: bolder;
+  font-weight: 700;
 }
 
 .edit {

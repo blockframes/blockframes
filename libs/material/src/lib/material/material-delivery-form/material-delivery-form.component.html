@@ -1,30 +1,30 @@
 <mat-card class="container mat-elevation-z6">
-  <mat-card-title>Edit your material</mat-card-title>
+  <mat-card-title><h4>Edit your material</h4></mat-card-title>
   <form [formGroup]="form" (ngSubmit)="updateMaterial()" class="container" fxLayout="row">
     <div class="inputs" fxLayout="column" fxLayoutAlign="center">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Value</mat-label>
         <input class="value" formControlName="value" matInput placeholder="Value" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Description</mat-label>
-        <input
+        <textarea
           class="description"
           formControlName="description"
           matInput
           placeholder="Description"
-        />
+        ></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Category</mat-label>
         <input class="category" formControlName="category" matInput placeholder="Category" />
       </mat-form-field>
     </div>
 
-    <div class="step" fxLayout="column" fxLayoutAlign="space-around center">
-      <mat-form-field *ngIf="hasStep" appearance="outline">
+    <div class="step" fxLayout="column" fxLayoutAlign="space-between end">
+      <mat-form-field *ngIf="hasStep else noStep" appearance="outline" class="mat-select-step">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="stepId">
           <mat-option value="">
@@ -35,6 +35,17 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <ng-template #noStep>
+        <mat-form-field appearance="outline" class="mat-select-step">
+          <mat-label>Choose step</mat-label>
+          <mat-select formControlName="stepId">
+            <mat-option value="">
+              (No steps yet)
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-template>
+
       <div fxLayoutAlign="center">
         <button
           mat-raised-button

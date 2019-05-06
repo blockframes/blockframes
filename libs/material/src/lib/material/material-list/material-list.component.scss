@@ -3,22 +3,10 @@ mat-nav-list {
   height: 60%;
 }
 
-.container-button {
-  border-top: 1px solid #E2E2E2;
-  border-bottom: 1px solid #E2E2E2;
+.category-list {
+  font-weight: 800;
 }
 
-.create-material {
-  margin-top: 7%;
-  margin-bottom: 7%;
-  font-weight: bold;
-  font-size: 13px;
-  color: var(--primary);
-  border: solid 1px var(--primary);
-}
-
-.icon {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 6px;
+h3 {
+  margin-left: 16px;
 }

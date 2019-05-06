@@ -1,11 +1,26 @@
 mat-card {
-  margin-bottom: 4%;
+  margin-bottom: 20px;
+  padding: 30px 50px 50px 50px;
+}
+
+h4 {
+  margin-top: 0;
+}
+
+button {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
 }
 
 .cancel-button {
-  font-weight: bold;
   color: var(--primary);
   border: none;
+  width: 120px;
+}
+
+.add-button {
+  width: 120px;
 }
 
 .step {
@@ -16,15 +31,22 @@ mat-card {
   width: 60%;
 }
 
-.add-button {
-  font-weight: bold;
-}
-
 mat-form-field {
   font-size: 12px;
 }
 
-mat-card-title {
-  font-weight: bold;
-  font-size: 18px;
+.mat-select-step {
+  width: 300px;
+}
+
+.inputs {
+  width: 85%;
+
+  ::ng-deep .mat-form-field-label {
+    color: var(--primary);
+  }
+}
+
+textarea {
+  height: 100px;
 }

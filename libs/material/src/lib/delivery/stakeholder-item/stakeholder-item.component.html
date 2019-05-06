@@ -1,14 +1,14 @@
-<mat-card *ngIf="stakeholder$ | async as stakeholder">
+<mat-card *ngIf="stakeholder$ | async as stakeholder" class="mat-elevation-z6">
   <mat-card-content>
-    <h2>Signee:</h2>
+    <h4>Signee</h4>
     <p>{{ stakeholder.organization.name }}</p>
   </mat-card-content>
-  <mat-card-footer *ngIf="!(hasStakeholderSigned$ | async)" fxLayout="row" fxLayoutAlign="space-evenly center" class="footerLocked">
-    <mat-icon>lock_open</mat-icon>
-    <span>The signature will appear here</span>
+  <mat-card-footer *ngIf="!(hasStakeholderSigned$ | async)" fxLayout="row" fxLayoutAlign="center center" class="footerLocked">
+      <span><mat-icon class="lock-icon">lock_open</mat-icon></span>
+    <span>Your signature will appear here</span>
   </mat-card-footer>
-  <mat-card-footer *ngIf="hasStakeholderSigned$ | async" fxLayout="row" fxLayoutAlign="space-evenly center" class="footerSigned">
-      <mat-icon>note</mat-icon>
-      <span>Signed digitaly</span>
-    </mat-card-footer>
+  <mat-card-footer *ngIf="hasStakeholderSigned$ | async" fxLayout="row" fxLayoutAlign="center center" class="footerSigned">
+    <span><mat-icon svgIcon="signed" class="sign-icon"></mat-icon></span>
+    <span>Signed digitaly</span>
+  </mat-card-footer>
 </mat-card>

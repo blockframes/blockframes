@@ -2,8 +2,26 @@
   margin-top: 40px;
 }
 
-h4 {
-  margin-top: 15%;
-  font-size: 25px;
-  color: rgba(0, 0, 0, 0.6);
+h3 {
+  color: var(--label);
+}
+
+button {
+  margin-top: 50px;
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  width: 210px;
+}
+
+.add-signee {
+  font-size: 11px;
+  font-weight: 900;
+  width: 360px;
+  cursor: pointer;
+}
+
+.sign-text {
+  margin-left: 12px;
+  width: 65px;
 }

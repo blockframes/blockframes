@@ -1,24 +1,41 @@
+@import '~@angular/material/theming';
+
 mat-card {
-  margin-bottom: 4%;
-  padding-top: 4%;
+  margin-bottom: 20px;
+  padding-top: 35px;
+  padding-left: 25px;
+  padding-bottom: 0;
+  &:hover {
+    @include mat-elevation(6);
+  }
+  &:hover mat-card-actions {
+    visibility: visible;
+  }
 }
 
 mat-card-title {
- font-size: 14px;
- color: #3B3B3B;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 div {
   margin-left: 5%;
 }
 
-mat-card-content {
-  font-size: 12px;
-  color: #3B3B3B;
+.description-text {
+  font-size: 11px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+mat-card-actions {
+  visibility: hidden;
+  margin: 0 0 0 -6px;
 }
 
 .content {
-  width: 60%;
+  width: 50%;
   margin-left: 2%;
 }
 
@@ -28,7 +45,8 @@ mat-card-content {
 
 .step {
   font-size: 9px;
-  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 6px;
+  color: var(--label);
 }
 
 .step-value {
@@ -37,28 +55,29 @@ mat-card-content {
 }
 
 button {
-  color: #9C9C9C;
-  background-color: Transparent;
+  color: var(--disable);
+  background-color: transparent;
   border: none;
-  font-size: 8px;
+  font-size: 9px;
   text-align: center;
 }
 
 button:hover {
   color: var(--primary);
-  cursor:pointer;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-button:focus{
+button:focus {
   color: var(--primary);
   outline: none;
 }
 
 .border-left {
-  border-left: 1px solid #ECECEC;
+  border-left: 1px solid #ececec;
 }
 
 mat-icon {
-  color:#C1C1C1;
+  color: #c1c1c1;
   float: left;
 }

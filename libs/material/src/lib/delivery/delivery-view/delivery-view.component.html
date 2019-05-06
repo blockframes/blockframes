@@ -19,7 +19,7 @@
         <div class="progress-value">{{ value }} %</div>
         <p class="global-progression">Progression</p>
         <span class="spinner-text"><h5>Global delivery date :</h5></span>
-        <p class="period-days">{{ delivery.dueDate }}</p>
+        <p class="period-days">{{ delivery.dueDate | date: 'dd MMM yyyy' }}</p>
         <div>
           <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
             <p class="step-text">STEP 1</p>

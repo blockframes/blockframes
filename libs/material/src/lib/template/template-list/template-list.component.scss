@@ -1,5 +1,5 @@
 .container {
-  margin: 70px 10%;
+  margin: 70px 240px;
 }
 
 mat-expansion-panel {
@@ -25,6 +25,7 @@ mat-panel-title {
 .add-template {
   font-weight: bolder;
   font-size: 13px;
+  height: 45px;
   color: var(--primary);
   border: solid 1px var(--primary);
   cursor: pointer;

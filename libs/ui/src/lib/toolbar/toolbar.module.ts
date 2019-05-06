@@ -8,6 +8,7 @@ import { OrganizationModule } from '@blockframes/organization';
 import { AuthModule } from '@blockframes/auth';
 import { AccountModule } from '@blockframes/account';
 import { NotificationModule } from '../notification/notification.module';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -19,29 +20,32 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatGridListModule, MatListModule, MatTabsModule } from '@angular/material';
-import { RouterModule } from '@angular/router';
+import { MatGridListModule, MatListModule, MatTabsModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatIconModule,
-    MatToolbarModule,
     OrganizationModule,
     AuthModule,
     AccountModule,
     NotificationModule,
+    RouterModule,
+
+    // Material
+    MatIconModule,
+    MatToolbarModule,
     MatMenuModule,
     MatButtonModule,
     MatDividerModule,
     MatListModule,
     MatTabsModule,
-    RouterModule,
     MatGridListModule,
     MatBadgeModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   declarations: [HeaderComponent, ContextMenuComponent],
   exports: [HeaderComponent]

@@ -5,6 +5,11 @@
   z-index: 1000;
 }
 
+mat-toolbar {
+  background-color: #F9F9F9;
+  padding: 0 240px;
+}
+
 ::ng-deep .appMenu .mat-menu-content {
   display: flex;
 
@@ -36,4 +41,35 @@
 
 .encrypting-spinner {
   margin-left: 10px;
+}
+
+.notification-icon {
+  height: 25px;
+  width: 25px;
+}
+
+.account-icon {
+  height: 50px;
+  width: 50px;
+  margin-top: -5px;
+}
+
+.profile-button,
+.notification-button,
+.apps-button {
+  margin-left: 15px;
+}
+
+mat-form-field {
+  color: var(--label);
+  font-size: 13px;
+  font-style: italic;
+  width: 150px;
+}
+
+.search-icon {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }

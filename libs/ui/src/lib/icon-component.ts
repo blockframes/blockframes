@@ -8,6 +8,10 @@ const ICONS_SVG = [
     url: 'assets/icons/accepted.svg'
   },
   {
+    name: 'add',
+    url: 'assets/icons/add.svg'
+  },
+  {
     name: 'applications',
     url: 'assets/apps/applications.svg'
   },
@@ -24,6 +28,10 @@ const ICONS_SVG = [
     url: 'assets/apps/delivery.svg'
   },
   {
+    name: 'delivery_white',
+    url: 'assets/apps/delivery_white.svg'
+  },
+  {
     name: 'disabled',
     url: 'assets/icons/disabled.svg'
   },
@@ -38,6 +46,10 @@ const ICONS_SVG = [
   {
     name: 'library_books',
     url: 'assets/icons/library_books.svg'
+  },
+  {
+    name: 'logical',
+    url: 'assets/icons/logical.svg'
   },
   {
     name: 'moviefinancing',
@@ -70,6 +82,10 @@ const ICONS_SVG = [
   {
     name: 'refused',
     url: 'assets/icons/refused.svg'
+  },
+  {
+    name: 'signed',
+    url: 'assets/icons/signed.svg'
   },
   {
     name: 'circled_message',

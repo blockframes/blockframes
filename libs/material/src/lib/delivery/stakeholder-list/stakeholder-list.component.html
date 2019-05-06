@@ -1,15 +1,15 @@
-<h4>Sign delivery</h4>
-<section fxLayout="row" fxLayoutAlign="space-evenly center">
+<h3>Sign delivery</h3>
+<section fxLayout="row" fxLayoutAlign="space-between stretch">
   <div *ngFor="let stakeholder of (stakeholders$ | async)">
     <delivery-stakeholder-item
       *ngIf="stakeholder.isAccepted"
       [stakeholder]="stakeholder"
     ></delivery-stakeholder-item>
   </div>
-  <button mat-icon-button (click)="navigateToTeamwork()">
-    <mat-icon>add_circle_outline</mat-icon>
-    Add a new signee
-  </button>
+  <div (click)="navigateToTeamwork()" class="add-signee mat-elevation-z6" fxLayout="row" fxLayoutAlign="center center">
+    <span><mat-icon svgIcon="add"></mat-icon></span>
+    <span class="sign-text">Add a new signataire</span>
+  </div>
 </section>
 <div class="signDelivery" fxLayoutAlign="center center">
   <button mat-raised-button color="primary" (click)="openSignDelivery()">Verify to sign</button>

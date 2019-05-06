@@ -73,6 +73,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
   public addMaterial(material: Material) {
     this.service.saveMaterial(material);
     this.materialStore.clearForm();
+    // TODO: Make it scroll to the form.
   }
 
   public deleteMaterial(material: Material) {
@@ -103,7 +104,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   private deleteDelivery() {
     this.service.deleteDelivery();
-    this.router.navigate([`/layout/${this.movieQuery.getActiveId()}`]);
+    this.router.navigate([`/layout/${this.movieQuery.getActiveId()}/list`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
 

@@ -33,8 +33,8 @@ export class ViewComponent implements OnInit, OnDestroy {
   public getStaticBySlug (scope: string, slug: string) {
     return getLabelBySlug (scope, slug) as string;
   }
-  
+
   ngOnDestroy() {
-    this.store.setActive(null);
+    // this.store.setActive(null);
   }
 }

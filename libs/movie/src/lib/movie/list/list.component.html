@@ -1,13 +1,13 @@
-<div class="container" *ngIf="(hasOrgs$ | async)">
+<main class="container" *ngIf="(hasOrgs$ | async)">
   <mat-expansion-panel *ngFor="let org of (orgs$ | async); first as isFirst" [expanded]="isFirst" class="mat-elevation-z0">
     <mat-expansion-panel-header>
       <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        <span>{{ org.name }}</span>
+        <h2>{{ org.name }}</h2>
         <div class="divider"></div>
         <button mat-mini-fab color="basic" class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></button>
         <button mat-mini-fab color="basic" class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_module</mat-icon></button>
         <button mat-raised-button (click)="addNewMovie($event, { id: org.id, name: org.name })" class="add-movie mat-elevation-z0">
-          Add a movie <mat-icon class="icon">add</mat-icon>
+          Import a movie <mat-icon class="add-icon">add</mat-icon>
         </button>
       </mat-panel-title>
     </mat-expansion-panel-header>
@@ -16,7 +16,7 @@
         <div class="img-container clickable-item">
           <img [routerLink]="['/layout', movie.id, 'list']" *ngIf="movie.poster; else defaultPoster" mat-card-image src={{movie.poster}}  alt="Movie poster"/>
           <ng-template #defaultPoster><img [routerLink]="['/layout', movie.id, 'list']" class="mat-card-image" src="/assets/images/default-movie-poster.png" alt="Movie poster"></ng-template>
-  
+
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon color="primary">more_vert</mat-icon>
           </button>
@@ -47,4 +47,4 @@
       </mat-card>
     </section>
   </mat-expansion-panel>
-</div>
+</main>

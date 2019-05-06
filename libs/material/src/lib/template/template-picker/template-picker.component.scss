@@ -1,17 +1,29 @@
+.templates-block {
+  margin-bottom: 22px;
+}
+
+h3 {
+  margin-top: 0;
+}
+
 .blank {
-  color: #B7B7B7;
-  font-weight: bolder;
+  color: var(--primary);
+  font-weight: bold;
   font-size: 12px;
   margin-top: 2px;
 }
 
 .create-icon {
-  color: #B7B7B7;
+  color: var(--primary);
+}
+
+.create-card {
+  border: solid 1px var(--primary);
 }
 
 mat-card-title {
   font-size: 12px;
-  font-weight: bolder;
+  font-weight: 600;
   margin-bottom: -10px;
 }
 
@@ -36,19 +48,18 @@ mat-card {
 }
 
 .cancel-button {
+  margin-top: 15px;
   font-weight: bold;
   color: var(--primary);
   border: none;
 }
 
-.add-button {
-  font-weight: bold;
+.text {
+  margin-left: 23px;
 }
 
 p {
-  color: rgba(0, 0, 0, 0.514);
-}
-
-h2 {
-  font-weight: bold;
+  font-size: 14px;
+  margin-top: -18px;
+  margin-bottom: 25px;
 }

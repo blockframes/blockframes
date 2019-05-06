@@ -10,20 +10,21 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" fxLayoutAlign="center">
-      <mat-label>File name</mat-label>
+      <mat-label>Template name</mat-label>
       <input formControlName="name" #templateName matInput placeholder="New template name" required />
     </mat-form-field>
   </form>
 </div>
 <p *ngIf="isUpdateTemplate">This template already exists, you will update it.</p>
 <div mat-dialog-actions fxLayoutAlign="center">
-  <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
+  <button mat-stroked-button color="basic" (click)="close()" class="cancel-button mat-elevation-z0">Cancel</button>
   <button
     *ngIf="!isUpdateTemplate"
     mat-raised-button
     color="primary"
     (click)="saveTemplate(templateName.value, organization.value)"
     [disabled]="!templateName.value || !organization.value"
+    class="mat-elevation-z0"
   >
     Save Template
   </button>
@@ -33,6 +34,7 @@
     color="primary"
     (click)="updateTemplate(templateName.value, organization.value)"
     [disabled]="!templateName.value || !organization.value"
+    class="mat-elevation-z0"
   >
     Update Template
   </button>
