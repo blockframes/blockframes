@@ -10,11 +10,11 @@
     align-items: center;
   }
 
-  section.icon {
+  mat-card-content.icon {
     width: 50px;
   }
 
-  section.datetime {
+  mat-card-content.datetime {
     width: 5%;
 
     .date {
@@ -32,7 +32,7 @@
     }
   }
 
-  section.summary {
+  mat-card-content.summary {
     width: 45%;
   }
 

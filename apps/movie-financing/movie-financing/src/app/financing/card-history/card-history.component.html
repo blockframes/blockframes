@@ -1,15 +1,15 @@
 <mat-card>
   <div class="flex-content">
-    <section class="icon">
+    <mat-card-content class="icon">
       <mat-icon>{{ icon }}</mat-icon>
-    </section>
-    <section class="datetime">
+    </mat-card-content>
+    <mat-card-content class="datetime">
       <p class="date">{{ date }}</p>
       <p class="time">{{ time }}</p>
-    </section>
-    <section class="summary">
+    </mat-card-content>
+    <mat-card-content class="summary">
       <ng-content></ng-content>
-    </section>
+    </mat-card-content>
     <mat-card-actions [ngSwitch]="action">
       <a href="#" *ngSwitchCase="'info'">Infos sur le contributeur</a>
       <div *ngSwitchCase="'accept'">
