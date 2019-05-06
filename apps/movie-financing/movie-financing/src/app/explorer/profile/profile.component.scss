@@ -63,8 +63,9 @@ main {
   section {
     margin-bottom: 60px;
     button {
+      margin-top: 4px;
       width: 177px;
-      height: 43px;
+      height: 59px;
       background-color: black;
       border: none;
       color: white;
@@ -74,8 +75,6 @@ main {
       display: block;
     }
     input {
-      // border: 1px solid rgba(25, 25, 25, 0.32);
-      // height: 43px;
       width: 100%;
       padding-left: 20px;
     }
