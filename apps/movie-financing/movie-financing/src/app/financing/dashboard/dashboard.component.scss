@@ -1,4 +1,61 @@
 
+main {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.dates {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  display: flex;
+
+  .launch {
+    width: 49%;
+    text-align: right;
+  }
+
+  .sep {
+    width: 2%;
+    text-align: center;
+  }
+
+  .end {
+    width: 49%;
+    text-align: left;
+  }
+}
+
+table.financing-data {
+  width: 70%;
+  margin: auto;
+
+  .keys td {
+    color: #323232;
+    opacity: 0.6;
+  }
+
+  .values td {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #323232;
+
+    &.goal {
+      color: #48BCF7;
+    }
+
+    &.engaged {
+      color: #1A48F5;
+    }
+  }
+}
+
 .stats {
   display: flex;
 
@@ -14,5 +71,20 @@
   .data {
     width: 33%;
     padding: 1rem;
+  }
+}
+
+.nationalities {
+  display: flex;
+
+  .col {
+    width: 50%;
+    padding: 1rem;
+  }
+
+  ::ng-deep {
+    img {
+      width: 100%;
+    }
   }
 }

@@ -1,43 +1,95 @@
-<h1>Annette</h1>
+<main>
+  <h1>Annette</h1>
 
-<div>
-  <p>Lancé le 02 Avril 2019</p>
-  <p>Date limite: 24 Jui. 2019</p>
-</div>
-
-<table>
-  <tbody>
-  <tr>
-    <td>Goal Budget</td>
-    <td>Engagé</td>
-    <td>Financé à</td>
-    <td>Contributeurs</td>
-    <td>Temps Restant</td>
-  </tr>
-  <tr>
-    <td>70&nbsp;000&nbsp;€</td>
-    <td>150&nbsp;000&nbsp;€</td>
-    <td>267%</td>
-    <td>3&nbsp;459</td>
-    <td>4&nbsp;days</td>
-  </tr>
-  </tbody>
-</table>
-
-<div class="stats">
-  <div class="diagram">
-    <h2>Evolution de financement</h2>
-    <img src="https://fakeimg.pl/779x411/" alt="stats"/>
+  <div class="dates">
+    <p class="launch">Lancé le 02 Avril 2019</p>
+    <p class="sep">|</p>
+    <p class="end">Date limite: 24 Jui. 2019</p>
   </div>
-  <div class="data">
-    <h2>Engagement</h2>
-    <financing-card-stat icon="visibility" name="View"
-                         subtitle="Depuis la création du média"
-                         value="86"
-    ></financing-card-stat>
-    <financing-card-stat icon="cloud_download" name="Scénario Downloads"
-                         subtitle="Dont 21 demandes"
-                         value="12"
-    ></financing-card-stat>
+
+  <table class="financing-data">
+    <tbody>
+    <tr class="keys">
+      <td>Goal Budget</td>
+      <td>Engagé</td>
+      <td>Financé à</td>
+      <td>Contributeurs</td>
+      <td>Temps Restant</td>
+    </tr>
+    <tr class="values">
+      <td class="goal">70&nbsp;000&nbsp;€</td>
+      <td class="engaged">150&nbsp;000&nbsp;€</td>
+      <td>267%</td>
+      <td>3&nbsp;459</td>
+      <td>4&nbsp;days</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="stats">
+    <div class="diagram">
+      <h2>Evolution de financement</h2>
+      <img src="https://fakeimg.pl/779x411/" alt="stats"/>
+    </div>
+    <div class="data">
+      <h2>Engagement</h2>
+      <financing-card-stat icon="visibility" name="View"
+                           subtitle="Depuis la création du média"
+                           value="86"
+      ></financing-card-stat>
+      <financing-card-stat icon="cloud_download" name="Scénario Downloads"
+                           subtitle="Dont 21 demandes"
+                           value="12"
+      ></financing-card-stat>
+    </div>
   </div>
-</div>
+
+  <div class="stats">
+    <div class="diagram">
+      <h2>Popularité des récompenses</h2>
+      <img src="https://fakeimg.pl/779x411/" alt="stats"/>
+    </div>
+    <div class="data">
+      <h2><!-- Empty for "consistent padding" -->&nbsp;</h2>
+      <financing-card-stat icon="album" name="Récompenses Envoyées"
+                           subtitle="Dont 2 sans récompenses"
+                           value="38"
+      ></financing-card-stat>
+      <financing-card-stat icon="attach_money" name="Engagement Moyen"
+                           subtitle="Exprimé en $"
+                           value="50K"
+      ></financing-card-stat>
+    </div>
+  </div>
+
+  <div class="nationalities">
+    <div class="col">
+      <h2>Nationalités visiteurs</h2>
+      <mat-tab-group>
+        <mat-tab label="Villes">
+          <img src="https://fakeimg.pl/562x411/" alt="stats"/>
+        </mat-tab>
+        <mat-tab label="Pays">
+          <img src="https://fakeimg.pl/562x411/" alt="stats"/>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div class="col">
+      <h2>Nationalités contributeurs</h2>
+      <mat-tab-group>
+        <mat-tab label="Villes">
+          <img src="https://fakeimg.pl/562x411/" alt="stats"/>
+        </mat-tab>
+        <mat-tab label="Pays">
+          <img src="https://fakeimg.pl/562x411/" alt="stats"/>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+
+
+  <div class="history">
+    <h2>Historique du projet</h2>
+
+  </div>
+</main>
