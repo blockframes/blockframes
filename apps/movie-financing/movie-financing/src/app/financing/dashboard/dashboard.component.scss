@@ -33,26 +33,28 @@ h1 {
   }
 }
 
-table.financing-data {
-  width: 70%;
-  margin: auto;
+.financing-data {
+  table {
+    width: 70%;
+    margin: auto;
 
-  .keys td {
-    color: #323232;
-    opacity: 0.6;
-  }
-
-  .values td {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #323232;
-
-    &.goal {
-      color: #48BCF7;
+    .keys td {
+      color: #323232;
+      opacity: 0.6;
     }
 
-    &.engaged {
-      color: #1A48F5;
+    .values td {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #323232;
+
+      &.goal {
+        color: #48BCF7;
+      }
+
+      &.engaged {
+        color: #1A48F5;
+      }
     }
   }
 }
