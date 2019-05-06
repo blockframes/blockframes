@@ -6,60 +6,63 @@
 }
 mat-card {
   padding: 0;
-  box-shadow: none !important;
   margin-bottom: 60px;
+  mat-card-header {
+    position: relative;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+    mat-card-title-group {
+      flex-direction: column;
+      height: 50%;
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      .subtitle {
+        background-color: white;
+        width: 40%;
+        height: 32px;
+        padding-top: 10px;
+        padding-left: 20px;
+        text-transform: uppercase;
+        letter-spacing: 8px;
+      }
+      .title {
+        color: white;
+        background-color: black;
+        width: 50%;
+        height: 100%;
+        text-transform: uppercase;
+        .stroke {
+          -webkit-text-stroke: rgba(255, 255, 255, 0.2) 0.7px;
+          color: transparent;
+          font-size: 35px;
+          font-weight: 900;
+          position: relative;
+          top: -10px;
+          left: -5px;
+        }
+        .director-name {
+          margin-left: 20px;
+          font-size: 16px;
+          font-weight: 300;
+          letter-spacing: 8px;
+        }
+        .movie-title {
+          margin-left: 20px;
+          padding-right: 20px;
+          font-size: 40px;
+          font-weight: 900;
+        }
+      }
+    }
+  }
 }
-.poster-container {
-  position: relative;
-  .movie-poster {
-    width: 100%;
-  }
-  .movie-info {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    height: calc(50% - 36px);
-    .subtitle {
-      background-color: white;
-      width: 40%;
-      height: 32px;
-      padding-top: 10px;
-      padding-left: 20px;
-      text-transform: uppercase;
-      letter-spacing: 8px;
-    }
-  }
-  .title {
-    color: white;
-    background-color: black;
-    width: 50%;
-    height: 100%;
-    .stroke {
-      -webkit-text-stroke: rgba(255, 255, 255, 0.2) 0.7px;
-      color: transparent;
-      font-size: 35px;
-      text-transform: uppercase;
-      font-weight: 900;
-      position: relative;
-      top: -10px;
-      left: -5px;
-    }
-    .director-name {
-      margin-left: 20px;
-      text-transform: uppercase;
-      font-size: 16px;
-      font-weight: 300;
-      letter-spacing: 8px;
-    }
-    .movie-title {
-      margin-left: 20px;
-      padding-right: 20px;
-      text-transform: uppercase;
-      font-size: 40px;
-      font-weight: 900;
-    }
-  }
+mat-card ::ng-deep .mat-card-header-text, .mat-card-subtitle {
+  margin: 0;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
