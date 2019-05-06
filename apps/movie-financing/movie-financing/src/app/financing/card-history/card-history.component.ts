@@ -8,9 +8,9 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 })
 export class CardHistoryComponent implements OnInit {
   @Input() icon: string;
-  @Input() name: string;
-  @Input() subtitle: string;
-  @Input() value: string;
+  @Input() date: string;
+  @Input() time: string;
+  @Input() action: string;
 
   constructor() {
   }

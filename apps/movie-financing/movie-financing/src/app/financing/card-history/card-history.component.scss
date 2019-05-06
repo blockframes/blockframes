@@ -1,5 +1,9 @@
+@import "../../../../../../../styles/style";
+
 ::ng-deep {
   financing-card-history {
+    margin: 1rem;
+
     mat-card {
     }
 
@@ -11,11 +15,11 @@
     }
 
     section.icon {
-      width: 100px;
+      width: 50px;
     }
 
     section.datetime {
-      width: 10%;
+      width: 5%;
 
       .date {
         font-size: 1.2rem;
@@ -33,11 +37,22 @@
     }
 
     section.summary {
-      width: 30%;
+      width: 45%;
     }
 
-    section.details {
+    section.action {
       width: 20%;
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        font-size: 0.7rem;
+        color: $primary;
+      }
+
+      button {
+        margin-right: 0.5rem;
+      }
     }
   }
 }

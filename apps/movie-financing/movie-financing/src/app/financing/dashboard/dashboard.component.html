@@ -91,9 +91,36 @@
   <div class="history">
     <h2>Historique du projet</h2>
 
-    <financing-card-history>
+    <div class="filters">
+      <button mat-flat-button color="primary">
+        Filters
+        <mat-icon>list</mat-icon>
+      </button>
+    </div>
+
+    <financing-card-history
+      icon="attach_money"
+      date="08/04/2019"
+      time="10:04:39"
+      action=""
+    >
+      <b>Michel Michelle</b> s'est engagé à hauteur de 100K$ et a choisi <i>Devenir co-producteur du film</i>
     </financing-card-history>
-
-
+    <financing-card-history
+      icon="visibility"
+      date="08/02/2019"
+      time="10:02:09"
+      action="info"
+    >
+      <b>Michel Michelle</b> demande à vous contacter
+    </financing-card-history>
+    <financing-card-history
+      icon="attach_money"
+      date="08/01/2019"
+      time="22:29:39"
+      action="accept"
+    >
+      <b>Michel Michelle</b> s'est engagé à hauteur de 100K$ et a choisi <i>Devenir co-producteur du film</i>
+    </financing-card-history>
   </div>
 </main>
