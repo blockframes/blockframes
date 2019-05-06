@@ -5,19 +5,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 // Material
 import {
+  MatButtonModule,
   MatCardModule,
   MatChipsModule,
   MatExpansionModule,
   MatGridListModule,
   MatIconModule,
+  MatInputModule,
   MatListModule,
+  MatMenuModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatTabsModule,
   MatToolbarModule,
-  MatButtonModule,
-  MatTooltipModule,
-  MatInputModule,
+  MatTooltipModule
 } from '@angular/material';
 // import { MatButtonModule } from '@angular/material/button';
 // Akita
@@ -93,7 +94,8 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     // Fullpage (homepage)
     AngularFullpageModule,
     MatProgressBarModule,
-    FinancingRangeSliderModule
+    FinancingRangeSliderModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
