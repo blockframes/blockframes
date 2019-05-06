@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MatCardModule, MatGridListModule } from '@angular/material';
 
 export const routes: Routes = [
   {
@@ -21,7 +22,9 @@ export const routes: Routes = [
   declarations: [HomeComponent, DashboardComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatGridListModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: []
