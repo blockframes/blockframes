@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
-    <material-list *ngIf="(delivery$ | async) as delivery" [template]="delivery"></material-list>
+    <material-list *ngIf="(materials$ | async) as materials" [template]="materials"></material-list>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
       <button class="sign mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
         Add signature
@@ -24,13 +24,11 @@
       *ngIf="!(isDeliveryValidated$ | async)"
       class="container-button"
       fxLayout="row"
-      fxLayoutAlign="center center"
-    >
+      fxLayoutAlign="center center">
       <button
         class="delete-delivery mat-elevation-z0"
         mat-raised-button
-        (click)="openDeleteDelivery()"
-      >
+        (click)="openDeleteDelivery()">
         Delete delivery
         <mat-icon class="icon">delete</mat-icon>
       </button>
@@ -39,14 +37,12 @@
       *ngIf="(isDeliveryValidated$ | async)"
       class="container-button"
       fxLayout="row"
-      fxLayoutAlign="center center"
-    >
+      fxLayoutAlign="center center">
       <button
         class="unseal-delivery mat-elevation-z0"
         color="warn"
         mat-raised-button
-        (click)="openUnsealDelivery()"
-      >
+        (click)="openUnsealDelivery()">
         Unseal delivery
         <mat-icon class="icon">lock_open</mat-icon>
       </button>
@@ -63,11 +59,15 @@
             [disabled]="isDeliveryValidated$ | async"
             mat-raised-button
             (click)="selectAllMaterials()"
-            class="select-button mat-elevation-z0"
-          >
-            {{ buttonLabel }}
+            class="select-button mat-elevation-z0">
+            <span *ngIf="!allChecked">Select all materials</span>
+            <span *ngIf="!!allChecked">Unselect materials</span>
           </button>
-          <button class="action mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="actions" [disabled]="isDeliveryValidated$ | async">
+          <button
+            class="action mat-elevation-z0"
+            mat-raised-button
+            [matMenuTriggerFor]="actions"
+            [disabled]="isDeliveryValidated$ | async">
             Actions <mat-icon class="action-icon">expand_more</mat-icon>
           </button>
           <mat-menu #actions="matMenu" xPosition="before">
@@ -75,8 +75,20 @@
               <span>Change step</span>
             </button>
             <mat-menu #steps="matMenu" xPosition="after">
-              <button *ngIf="(realDelivery$ | async).steps.length === 0" mat-menu-item [disabled]="true"><i>(no steps)</i></button>
-              <button *ngFor="let step of (realDelivery$ | async).steps" (click)="changeStep(step.id)" mat-menu-item>{{step.name}}</button>
+              <button
+                *ngIf="(delivery$ | async).steps.length === 0; else hasSteps"
+                mat-menu-item
+                [disabled]="true">
+                <i>(no steps)</i>
+              </button>
+              <ng-template #hasSteps>
+                <button
+                  *ngFor="let step of (delivery$ | async).steps"
+                  (click)="changeStep(step.id)"
+                  mat-menu-item>
+                  {{ step.name }}
+                </button>
+              </ng-template>
             </mat-menu>
             <mat-divider></mat-divider>
             <button mat-menu-item>
@@ -90,51 +102,50 @@
         <material-delivery-add-form
           [isDeliveryValidated]="isDeliveryValidated$ | async"
           *ngIf="form.category === ''"
-          (material)="addMaterial($event)"
-        ></material-delivery-add-form>
+          (material)="addMaterial($event)">
+        </material-delivery-add-form>
       </div>
-      <article *ngFor="let materials of (delivery$ | async | keyvalue)" [id]="materials.key">
+      <article *ngFor="let category of (materials$ | async | keyvalue)" [id]="category.key">
         <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
-          <h4>{{ materials.key }}</h4>
+          <h4>{{ category.key }}</h4>
           <button
             class="create-material mat-elevation-z0"
             [disabled]="isDeliveryValidated$ | async"
-            (click)="addForm(materials.key)"
-            mat-raised-button
-          >
+            (click)="addForm(category.key)"
+            mat-raised-button>
             <mat-icon class="icon">add</mat-icon>
             Add a material
           </button>
         </div>
         <div>
-          <div *ngFor="let material of materials.value">
+          <div *ngFor="let material of category.value">
             <ui-editable [item]="material" [itemId]="materialId">
               <ng-template materialViewMode>
                 <material-delivery-item
                   [isDeliveryValidated]="isDeliveryValidated$ | async"
                   [material]="material"
-                  [allChecked]="allChecked"
+                  [isChecked]="allChecked"
                   (isSelected)="selectMaterial($event, material.id)"
                   (isDeleted)="deleteMaterial(material)"
-                  (update)="openUpdateForm(material)"
-                ></material-delivery-item>
+                  (update)="openUpdateForm(material)">
+                </material-delivery-item>
               </ng-template>
               <ng-template materialEditMode>
                 <material-delivery-form
                   [isDeliveryValidated]="isDeliveryValidated$ | async"
                   [material]="material"
                   (update)="updateMaterial($event)"
-                  (cancelForm)="cancelUpdateForm()"
-                ></material-delivery-form>
+                  (cancelForm)="cancelUpdateForm()">
+                </material-delivery-form>
               </ng-template>
             </ui-editable>
           </div>
           <div *ngIf="(form$ | async) as form">
             <material-delivery-add-form
               [isDeliveryValidated]="isDeliveryValidated$ | async"
-              *ngIf="form.category === materials.key"
-              (material)="addMaterial($event)"
-            ></material-delivery-add-form>
+              *ngIf="form.category === category.key"
+              (material)="addMaterial($event)">
+            </material-delivery-add-form>
           </div>
         </div>
       </article>

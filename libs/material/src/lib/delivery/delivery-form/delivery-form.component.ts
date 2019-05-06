@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../+state';
 import { ConfirmComponent } from '@blockframes/ui';
+import { applyTransaction } from '@datorama/akita';
 
 @Component({
   selector: 'delivery-form',
@@ -19,15 +20,14 @@ import { ConfirmComponent } from '@blockframes/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryFormComponent implements OnInit, OnDestroy {
-  public realDelivery$: Observable<Delivery>; // temporary name. TODO: change delivery$ to materials$
-  public delivery$: Observable<TemplateView>;
+  public delivery$: Observable<Delivery>;
+  public materials$: Observable<TemplateView>;
   public movie$: Observable<Movie>;
   public form$: Observable<MaterialDeliveryForm>;
   public isDeliveryValidated$: Observable<boolean>;
   public isAlive = true;
   public materialId: string;
   public allChecked: boolean;
-  public buttonLabel = 'Select all materials';
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -52,8 +52,8 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.movie$ = this.movieQuery.selectActive();
-    this.realDelivery$ = this.query.selectActive();
-    this.delivery$ = this.materialQuery.materialsByDelivery$;
+    this.delivery$ = this.query.selectActive();
+    this.materials$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
     this.form$ = this.materialQuery.deliveryForm$;
 
@@ -139,22 +139,10 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   public selectAllMaterials() {
     this.allChecked = !this.allChecked;
-    if (this.allChecked === true) {
-      this.buttonLabel = 'Unselect materials';
-      this.delivery$.subscribe(categories =>
-        Object.keys(categories).forEach(categoryKey =>
-          categories[categoryKey].map(material => this.materialStore.addActive(material.id))
-        )
-      );
-    }
-    if (this.allChecked === false) {
-      this.buttonLabel = 'Select all materials';
-      this.delivery$.subscribe(categories =>
-        Object.keys(categories).forEach(categoryKey =>
-          categories[categoryKey].map(material => this.materialStore.removeActive(material.id))
-        )
-      );
-    }
+    const process = this.allChecked
+      ? material => this.materialStore.addActive(material.id)
+      : material => this.materialStore.removeActive(material.id);
+      applyTransaction(() => this.materialQuery.getAll().forEach(process))
   }
 
   public deleteSelectedMaterials() {
@@ -162,7 +150,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.materialService.deleteMaterials(materials);
     this.materialStore.returnToInitialState();
     this.allChecked = false;
-    this.buttonLabel = 'Select all materials';
   }
 
   public changeStep(stepId: string) {
@@ -170,7 +157,6 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.materialService.changeStep(materials, stepId);
     this.materialStore.returnToInitialState();
     this.allChecked = false;
-    this.buttonLabel = 'Select all materials';
   }
 
   ngOnDestroy() {
