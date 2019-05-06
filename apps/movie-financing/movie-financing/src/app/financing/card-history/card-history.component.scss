@@ -1,0 +1,43 @@
+::ng-deep {
+  financing-card-history {
+    mat-card {
+    }
+
+    .flex-content {
+      padding: 0.2rem;
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    section.icon {
+      width: 100px;
+    }
+
+    section.datetime {
+      width: 10%;
+
+      .date {
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 0;
+        margin: 0;
+      }
+
+      .time {
+        font-size: 0.8rem;
+        font-weight: 400;
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    section.summary {
+      width: 30%;
+    }
+
+    section.details {
+      width: 20%;
+    }
+  }
+}

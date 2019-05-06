@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CardStatComponent } from './card-stat/card-stat.component';
 import { MaterialLayoutModule } from '@blockframes/ui';
+import { CardHistoryComponent } from './card-history/card-history.component';
 
 export const routes: Routes = [
   {
@@ -20,7 +21,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, CardStatComponent],
+  declarations: [HomeComponent, DashboardComponent, CardStatComponent, CardHistoryComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
