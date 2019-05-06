@@ -36,18 +36,21 @@
     width: 45%;
   }
 
-  section.action {
-    width: 20%;
-    text-align: center;
+  ::ng-deep {
+    mat-card-actions {
+      width: 22%;
+      text-align: center;
 
-    a {
-      text-decoration: none;
-      font-size: 0.7rem;
-      color: $primary;
-    }
+      a {
+        text-decoration: none;
+        font-size: 0.7rem;
+        color: $primary;
+        margin-right: 0.5rem;
+      }
 
-    button {
-      margin-right: 0.5rem;
+      button {
+        margin-right: 0.5rem;
+      }
     }
   }
 }

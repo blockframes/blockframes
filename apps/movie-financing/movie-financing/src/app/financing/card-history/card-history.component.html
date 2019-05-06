@@ -10,12 +10,12 @@
     <section class="summary">
       <ng-content></ng-content>
     </section>
-    <section class="action" [ngSwitch]="action">
+    <mat-card-actions [ngSwitch]="action">
       <a href="#" *ngSwitchCase="'info'">Infos sur le contributeur</a>
       <div *ngSwitchCase="'accept'">
         <button mat-flat-button color="primary">Accepter</button>
         <button mat-stroked-button color="primary">Refuser</button>
       </div>
-    </section>
+    </mat-card-actions>
   </div>
 </mat-card>
