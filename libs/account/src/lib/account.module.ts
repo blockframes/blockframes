@@ -19,6 +19,9 @@ import {
   MatCardModule,
   MatExpansionModule,
   MatDialogModule,
+  MatTooltipModule,
+  MatProgressSpinnerModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 export const accountRoutes: Routes = [
@@ -45,6 +48,9 @@ export const accountRoutes: Routes = [
     ReactiveFormsModule,
     MatExpansionModule,
     MatDialogModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
     FormsModule,
     RouterModule.forChild(accountRoutes),
     BlockieModule

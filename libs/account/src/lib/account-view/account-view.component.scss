@@ -20,3 +20,12 @@ mat-panel-description a mat-icon{
 .mat-expansion-panel-header-description {
   flex-grow: 0;
 }
+
+mat-spinner {
+  margin: 6px 0 6px 12px;
+}
+
+.wallet-loading {
+  width: 100%;
+  text-align: center;
+}

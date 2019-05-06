@@ -20,6 +20,7 @@ export class Relayer implements IRelayer {
 
   /**
    * Create a ERC1077 for one account
+   * @param uid user id (needed to update user doc in the firestore)
    * @param username ENS username of the account
    * @param key first address of the user (management key)
    */

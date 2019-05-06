@@ -47,6 +47,7 @@ export class AuthRootComponent implements OnInit {
       const route = this.query.requestedRoute || 'layout';
       this.router.navigate([route]);
     } catch (err) {
+      console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
     }
   }
@@ -62,6 +63,7 @@ export class AuthRootComponent implements OnInit {
       const route = this.query.requestedRoute || 'layout';
       this.router.navigate([route]);
     } catch (err) {
+      console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
     }
   }

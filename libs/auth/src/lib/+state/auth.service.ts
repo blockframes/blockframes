@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthStore, User, createUser } from './auth.store';
-import { switchMap, takeWhile } from 'rxjs/operators';
+import { switchMap, takeWhile, filter, tap, pluck, first, distinctUntilChanged } from 'rxjs/operators';
 import { RelayerWallet } from '@blockframes/ethers';
 import { MatSnackBar } from '@angular/material';
-import { toASCII } from 'punycode';
+
+import { AuthQuery } from './auth.query';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,35 +22,43 @@ export class AuthService {
   //////////
   // AUTH //
   //////////
-  public async signin(mail: string, password: string) {
-    await this.afAuth.auth.signInWithEmailAndPassword(mail, password);
-    this.subscribeOnUser();
-    const username = mail.split('@')[0];
-    this.wallet.login(this._sanitizeUSername(username), password);  // no await -> do the job in background
+
+  public async initWallet(email: string) {
+    this.wallet.setUsername(email);
     const balance = await this.wallet.getBalance();
     this.store.updateUser({balance});
   }
 
-  public async signup(mail: string, password: string) {
-    this.store.update({isEncrypting: true});
-    const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(mail, password);
-    await this.create(userCredentials.user);
+  public async signin(email: string, password: string) {
+    await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     this.subscribeOnUser();
-    const username = mail.split('@')[0];
+    this.initWallet(email);
+    
+    this.wallet.loadKey('web', password);  // no await -> do the job in background
+  }
+
+  public async signup(email: string, password: string) {
+    this.store.update({isEncrypting: true});
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });
-    this.wallet.signup(userCredentials.user.uid, this._sanitizeUSername(username), password).then(async () => {  // no await -> do the job in background
-      const balance = await this.wallet.getBalance();
-      this.store.updateUser({balance});
+
+    const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    await this.create(userCredentials.user);
+    
+    this.wallet.createLocalKey('web', password, email)  // no await -> do the job in background
+    .then(() => this.wallet.createERC1077(userCredentials.user.uid))
+    .then((_) => {
+      this.subscribeOnUser();
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
         duration: 2000,
       });
-    });
+    }).catch(error => console.error(error));
   }
 
   public async logout() {
+    this.wallet.logout();
     await this.afAuth.auth.signOut();
     this.store.update({ user: null });
   }
@@ -61,8 +70,11 @@ export class AuthService {
   public subscribeOnUser() {
     this.afAuth.authState.pipe(
       takeWhile(user => !!user),
-      switchMap(({ uid }) => this.db.doc<User>(`users/${uid}`).valueChanges())
-    ).subscribe(user => this.store.update({ user }))
+      switchMap(({ uid }) => this.db.doc<User>(`users/${uid}`).valueChanges()),
+    ).subscribe(user => {
+      this.store.update({ user });
+      this.initWallet(user.email);
+    });
   }
 
   /** Create a user based on firebase user */
@@ -86,6 +98,11 @@ export class AuthService {
     await this.db.doc<User>(`users/${uid}`).delete();
   }
 
+  public async refreshBalance() {
+    const balance = await this.wallet.getBalance();
+    this.store.updateUser({balance});
+  }
+
   /** Deletes user subCollections */
   private async _deleteSubCollections (uid) {
     // @todo check if user is the only member of org (and the only ADMIN)
@@ -105,15 +122,5 @@ export class AuthService {
       .get()
       .toPromise();
     return items.docs;
-  }
-
-  /** Sanitize username : convert to lowe rcase punycode and replace special chars by their ASCII code
-   * @example `漢micHel+9` -> `xn--michel439-2c2s`
-   */
-  private _sanitizeUSername(username: string) {
-    return toASCII(username).toLowerCase()
-      .split('')
-      .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
-      .join('');
   }
 }

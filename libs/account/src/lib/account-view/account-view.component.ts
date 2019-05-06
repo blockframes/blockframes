@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User, AuthQuery } from '@blockframes/auth';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { User, AuthQuery, AuthService } from '@blockframes/auth';
 import { network } from '@env';
-import { map, filter } from 'rxjs/operators';
-import * as makeBlockie from 'ethereum-blockies-base64';
 
 @Component({
   selector: 'account-view',
@@ -11,24 +9,22 @@ import * as makeBlockie from 'ethereum-blockies-base64';
   styleUrls: ['./account-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountViewComponent implements OnInit, OnDestroy {
+export class AccountViewComponent implements OnInit {
   public user$: Observable<User>;
-  public asciiUsername$: Observable<string>;
-  public blockie$: Observable<string>;
   public network: string;
+  public notLoading$ = new BehaviorSubject<boolean>(true);
 
-  constructor( private authQuery: AuthQuery) {
+  constructor(private authService: AuthService, private authQuery: AuthQuery) {
   }
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.blockie$ = this.user$.pipe(
-      filter(user => !!user),
-      map(user => makeBlockie.default(user.identity.address))
-    );
     this.network = network ;
   }
 
-  ngOnDestroy() {
+  refreshBalance() {
+    this.notLoading$.next(false);
+    this.authService.refreshBalance();
+    setTimeout(() => this.notLoading$.next(true), 600);
   }
 }

@@ -66,22 +66,34 @@
         </mat-expansion-panel-header>
         <mat-list>
           <mat-list-item>
-            <mat-card-header>
-              <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address"></eth-blockie>
-              <mat-card-title>{{user.identity.domain}}</mat-card-title>
-              <mat-card-subtitle>
-                <a *ngIf="network === 'homestead'; else testNet" [href]="'https://etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
-                <ng-template #testNet>
-                  <a [href]="'https://'+network+'.etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
+            <ng-container *ngIf="user.identity; else walletLoading">
+              <mat-card-header>
+                <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address"></eth-blockie>
+                <mat-card-title>{{user.identity.domain}}</mat-card-title>
+                <mat-card-subtitle>
+                  <a *ngIf="network === 'homestead'; else testNet" [href]="'https://etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
+                  <ng-template #testNet>
+                    <a [href]="'https://'+network+'.etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
+                  </ng-template>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content >
+                <button *ngIf="(notLoading$ | async); else isLoading" mat-button matTooltip="Click to refresh" (click)="refreshBalance()">
+                  {{user.balance || '0.0'}} ETH
+                </button>
+                <ng-template #isLoading>
+                  <button mat-button [disabled]="true">
+                    <mat-spinner [diameter]="24" [strokeWidth]="2"></mat-spinner>
+                  </button>
                 </ng-template>
-              </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content >
-              {{user.balance || '0.0'}} ETH
-            </mat-card-content>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-card-header></mat-card-header>
+              </mat-card-content>
+            </ng-container>
+            <ng-template #walletLoading>
+              <div class="wallet-loading">
+                <p>Your Wallet is loading...</p>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+            </ng-template>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
