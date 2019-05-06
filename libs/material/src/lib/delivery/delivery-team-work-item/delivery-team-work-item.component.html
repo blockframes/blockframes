@@ -10,10 +10,10 @@
     <div class="left" fxLayout="column">
       <mat-card-title class="orgName">{{ stakeholder.organization.name }}</mat-card-title>
       <mat-card-actions>
-        <button [disabled]="!stakeholder.isAccepted" (click)="editStakeholder()">EDIT</button>
-        <button class="border-left" (click)="removeStakeholder()">
+        <a (click)="editStakeholder()">EDIT</a>
+        <a class="border-left" (click)="removeStakeholder()">
           DELETE
-        </button>
+        </a>
       </mat-card-actions>
     </div>
   </mat-card-content>

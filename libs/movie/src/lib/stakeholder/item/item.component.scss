@@ -30,15 +30,13 @@ mat-card-subtitle {
   color: rgba(0, 0, 0, 0.6);
 }
 
-button {
+a {
   color: #9c9c9c;
-  background-color: transparent;
-  border: none;
   font-size: 8px;
   text-align: center;
 }
 
-button:hover {
+a:hover {
   color: #6200ee;
   cursor: pointer;
 }

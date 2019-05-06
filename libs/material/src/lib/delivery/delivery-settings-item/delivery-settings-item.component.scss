@@ -30,15 +30,13 @@ mat-card-content {
   color: #3B3B3B;
 }
 
-button {
+a {
   color: #9C9C9C;
-  background-color: Transparent;
-  border: none;
   font-size: 8px;
   text-align: center;
 }
 
-button:hover {
+a:hover {
   color: #6200EE;
   cursor:pointer;
 }
@@ -50,6 +48,8 @@ button:focus{
 
 .border-left {
   border-left: 1px solid #ECECEC;
+  padding-left: 5px;
+  margin-left: 5px;
 }
 
 mat-icon {
