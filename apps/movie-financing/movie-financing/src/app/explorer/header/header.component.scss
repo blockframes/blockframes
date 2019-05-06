@@ -11,33 +11,33 @@ header {
   min-height: 55vh;
   display: flex;
   justify-content: flex-end;
-  //position: relative;
 
   .content {
     color: #FFF;
     margin: auto;
     text-align: center;
-    // margin-right: 10%;
-    //position: absolute;
-    //right: 10%;
-    //top: 10%;
-
-    label {
-      text-transform: uppercase;
-      font-weight: 300;
-    }
-
-    h1 {
-      font-size: 6rem;
-      margin-top: 0;
-      text-transform: uppercase;
-      margin-bottom: 7vh;
-    }
-
-    p {
-      margin: 1rem auto auto;
-      width: 60%;
-      text-align: center;
-    }
   }
+}
+
+:host ::ng-deep label {
+  text-transform: uppercase;
+  font-weight: 300;
+  letter-spacing: 5px;
+  color: white;
+}
+
+:host ::ng-deep h1 {
+  font-size: 6rem;
+  margin-top: 0;
+  text-transform: uppercase;
+  margin-bottom: 7vh;
+  font-weight: 900;
+  color: white;
+}
+
+:host ::ng-deep p {
+  margin: 1rem auto auto;
+  width: 60%;
+  text-align: center;
+  color: white;
 }
