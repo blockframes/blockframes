@@ -25,41 +25,19 @@
 </table>
 
 <div class="stats">
-  <mat-grid-list cols="2">
-    <mat-grid-tile>
-      <h2>Evolution de financement</h2>
-      <img src="https://fakeimg.pl/779x411/" alt="stats"/>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <h2>Engagement</h2>
-      <mat-card class="">
-        <mat-card-header>
-          <mat-card-title>
-            View
-          </mat-card-title>
-          <mat-card-subtitle>
-            Depuis la création du média
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>86</h2>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="">
-        <mat-card-header>
-          <mat-card-title>
-            Scénario Downloads
-          </mat-card-title>
-          <mat-card-subtitle>
-            Dont 21 demandes
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>12</h2>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
-
-
+  <div class="diagram">
+    <h2>Evolution de financement</h2>
+    <img src="https://fakeimg.pl/779x411/" alt="stats"/>
+  </div>
+  <div class="data">
+    <h2>Engagement</h2>
+    <financing-card-stat icon="visibility" name="View"
+                         subtitle="Depuis la création du média"
+                         value="86"
+    ></financing-card-stat>
+    <financing-card-stat icon="cloud_download" name="Scénario Downloads"
+                         subtitle="Dont 21 demandes"
+                         value="12"
+    ></financing-card-stat>
+  </div>
 </div>

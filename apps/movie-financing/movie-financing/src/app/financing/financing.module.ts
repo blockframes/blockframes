@@ -2,10 +2,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule, MatGridListModule, MatIconModule, MatListModule } from '@angular/material';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MatCardModule, MatGridListModule } from '@angular/material';
+import { CardStatComponent } from './card-stat/card-stat.component';
 
 export const routes: Routes = [
   {
@@ -19,12 +19,14 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent],
+  declarations: [HomeComponent, DashboardComponent, CardStatComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     MatGridListModule,
-    MatCardModule
+    MatCardModule,
+    MatIconModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: []
