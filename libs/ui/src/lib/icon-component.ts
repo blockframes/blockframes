@@ -70,6 +70,22 @@ const ICONS_SVG = [
   {
     name: 'refused',
     url: 'assets/icons/refused.svg'
+  },
+  {
+    name: 'circled_message',
+    url: 'assets/circled-icons/message.svg'
+  },
+  {
+    name: 'circled_paymentOK',
+    url: 'assets/circled-icons/paymentOK.svg'
+  },
+  {
+    name: 'circled_scenario',
+    url: 'assets/circled-icons/scenario.svg'
+  },
+  {
+    name: 'circled_view',
+    url: 'assets/circled-icons/view.svg'
   }
 ];
 
