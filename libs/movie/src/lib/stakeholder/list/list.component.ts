@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { Stakeholder, StakeholderService, createStakeholder } from '../+state';
-import { Observable } from 'rxjs';
+import { StakeholderService, createStakeholder } from '../+state';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as firebase from 'firebase';
-import { MovieQuery } from '../../movie/+state';
 import { takeWhile } from 'rxjs/operators';
+import { MovieQuery } from '@blockframes/movie/movie/+state';
 
 interface Organization {
   id: string;

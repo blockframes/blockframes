@@ -1,6 +1,8 @@
 @import '~@angular/material/theming';
 
 mat-card {
+  padding-top: 0;
+  padding-bottom: 0;
   &:hover {
     @include mat-elevation(6);
   }
@@ -26,11 +28,6 @@ mat-card {
 mat-card-subtitle {
   font-size: 9px;
   color: rgba(0, 0, 0, 0.6);
-}
-
-.title {
-  font-weight: bold;
-  font-size: 12px;
 }
 
 button {
@@ -65,22 +62,6 @@ mat-card-actions {
 
 .left {
   margin-left: 40px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin-right: 2%;
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.content-authorizations {
-  width: 50%;
-  margin-top: 30px;
 }
 
 .content-orgName {

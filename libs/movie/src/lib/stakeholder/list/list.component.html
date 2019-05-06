@@ -1,9 +1,8 @@
 <h4>Add stakeholders</h4>
 <mat-divider></mat-divider>
-<form [formGroup]="addStakeholderForm">
-  <mat-form-field appearance="outline" class="search-bar">
-    <mat-label>Company Name</mat-label>
-    <mat-icon matPrefix color="primary" style="margin-right: 10px;">search</mat-icon>
+<form [formGroup]="addStakeholderForm" fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field class="search-bar">
+    <mat-label>Search organization</mat-label>
     <input
       type="text"
       matInput
@@ -15,7 +14,8 @@
   <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
     <mat-option *ngFor="let option of orgOptions" [value]="option" (click)="submit(option)">
       {{ option.name }}
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon class="icon">add_circle</mat-icon>
     </mat-option>
   </mat-autocomplete>
+  <mat-icon class="icon" matPrefix>search</mat-icon>
 </form>

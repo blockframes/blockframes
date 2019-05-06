@@ -11,4 +11,5 @@ export * from './lib/confirm/confirm.component';
 export * from './lib/icon-component';
 export * from './lib/editable/editable.module';
 export * from './lib/blockie/blockie.module';
-export * from './lib/directives/directives.module'
+export * from './lib/directives/directives.module';
+export * from './lib/team-work/team-work.module';

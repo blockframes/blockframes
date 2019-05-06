@@ -24,7 +24,8 @@ import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-it
 import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
 import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
 import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
-import { EditableModule, DirectivesModule } from '@blockframes/ui';
+import { EditableModule, DirectivesModule, TeamWorkModule } from '@blockframes/ui';
+import { ConfirmModule, UiFormModule } from '@blockframes/ui';
 import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
 import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
@@ -53,7 +54,7 @@ import {
   MatTooltipModule,
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
-import { ConfirmModule, UiFormModule } from '@blockframes/ui';
+
 
 
 const routes: Routes = [
@@ -104,8 +105,6 @@ const routes: Routes = [
     DeliveryTeamWorkFormComponent,
     DeliveryTeamWorkItemComponent,
     DeliveryTeamWorkListComponent,
-    TeamWorkActionsComponent,
-    TeamWorkFiltersComponent,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
     DeliverySettingsViewComponent,
@@ -123,6 +122,7 @@ const routes: Routes = [
     UiFormModule,
     EditableModule,
     DirectivesModule,
+    TeamWorkModule,
 
     // Material
     MatCardModule,

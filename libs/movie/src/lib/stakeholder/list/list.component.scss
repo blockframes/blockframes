@@ -6,4 +6,18 @@ h4 {
 
 .search-bar {
   width: 100%;
+  font-style: italic !important;
+  font-size: 10px !important;
+  margin-top: 10px;
+  margin-left: 20px;
 }
+
+.icon {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+mat-option {
+  font-size: 12px;
+}
+
