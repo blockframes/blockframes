@@ -7,6 +7,13 @@ import { TemplateStore } from './template.store';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
+import { applyTransaction } from '@datorama/akita';
+import { FireQuery, Query } from '@blockframes/utils';
+
+const templateListQuery = (orgId: string): Query<Template[]> => ({
+  path: `orgs/${orgId}/templates`,
+  orgId
+})
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
@@ -16,7 +23,8 @@ export class TemplateService {
     private store: TemplateStore,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private templateQuery: TemplateQuery
+    private templateQuery: TemplateQuery,
+    private fireQuery: FireQuery
   ) {}
 
   public addTemplate(templateName: string, orgId: string) {
@@ -67,9 +75,7 @@ export class TemplateService {
   public updateMaterial(material: Material) {
     // Update material to sub-collection materials of organization in firebase
     const orgId = this.templateQuery.getActive().orgId;
-    this.db
-      .doc<Material>(`orgs/${orgId}/materials/${material.id}`)
-      .update(material);
+    this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).update(material);
   }
 
   public async saveTemplate(name: string, orgId: string) {
@@ -109,4 +115,23 @@ export class TemplateService {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name && entity.orgId === orgId);
   }
+
+  public allTemplates() {
+    return this.organizationQuery.selectAll().pipe(
+      switchMap(orgs => {
+        const templates$ = orgs.map(org => {
+          const query = templateListQuery(org.id);
+          return this.fireQuery.fromQuery(query);
+        });
+        return combineLatest(templates$);
+      }),
+      map(templates => [].concat(...templates)),
+      tap(templates =>
+        applyTransaction(() => {
+          templates.forEach(template => this.store.upsert(template.id, template));
+        })
+      )
+    );
+  }
+
 }

@@ -40,8 +40,10 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-    this.templates$ = this.query.allTemplates;
-    this.templates$.subscribe(x => console.log(x))
+    this.service.allTemplates().pipe(takeWhile(() => this.isAlive))
+    .subscribe();
+
+    this.templates$ = this.query.selectAll();
   }
 
   public createDelivery(templateId?: string, ) {
