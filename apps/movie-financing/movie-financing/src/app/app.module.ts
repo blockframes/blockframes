@@ -15,7 +15,9 @@ import {
   MatProgressSpinnerModule,
   MatTabsModule,
   MatToolbarModule,
-  MatButtonModule
+  MatButtonModule,
+  MatTooltipModule,
+  MatInputModule,
 } from '@angular/material';
 // import { MatButtonModule } from '@angular/material/button';
 // Akita
@@ -65,7 +67,6 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    MatIconModule,
     MovieModule,
     RouterModule,
     AuthModule,
@@ -75,17 +76,19 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    // Akita
-    AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()],
+    MatTooltipModule,
+    MatInputModule,
     MatCardModule,
-    AngularFireFunctionsModule,
     MatGridListModule,
     MatChipsModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatExpansionModule,
+    // Akita
+    AkitaNgRouterStoreModule.forRoot(),
+    environment.production ? [] : [AkitaNgDevtools.forRoot()],
+    AngularFireFunctionsModule,
     FlexModule,
     // Fullpage (homepage)
     AngularFullpageModule,

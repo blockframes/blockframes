@@ -4,104 +4,91 @@
 
 main {
   max-height: none !important;
-}
-
-.col-1 {
-  width: 30%;
-  padding: 1rem;
-}
-
-.col-2 {
-  width: 60%;
-  padding: 1rem;
-}
-
-// COMPONENTS
-
-.bordered {
-  border: 1px solid black;
-}
-
-.rank {
-  margin: -5px 0px 30px 0px;
-  height: 48px;
-  text-transform: uppercase;
-  .key {
-    text-align: end;
+  .col-1 {
+    width: 30%;
+    padding: 1rem;
+    img {
+      width: 100%;
+    }
+    .bordered {
+      border: 1px solid black;
+    }
+    .rank {
+      margin: -5px 0px 30px 0px;
+      height: 48px;
+      text-transform: uppercase;
+      .key {
+        text-align: end;
+      }
+      .value {
+        font-weight: bold;
+      }
+    }
+    .key {
+      color: #323232;
+      margin-right: 0.3rem;
+      font-weight: 300;
+      text-transform: uppercase;
+    }
+    .eth-address {
+      font-size: 18px;
+      word-wrap: break-word;
+      font-weight: bold;
+    }
+    mat-icon {
+      margin-left: 20px;
+      font-size: 18px;
+      vertical-align: sub;
+    }
+    .sold {
+      font-size: 30px;
+      font-weight: 900;
+      word-spacing: 5px;
+    }
+    .caption {
+      margin-top: 10px;
+      color: rgba(50, 50, 50, 0.5);
+      text-transform: uppercase;
+      font-weight: 300;
+      .price {
+        margin-left: 5px;
+        font-weight: 600;
+      }
+    }
   }
-  .value {
-    font-weight: bold;
+  .col-2 {
+    margin-top: -20px;
+    width: 60%;
+    padding: 1rem;
+  }
+  section {
+    margin-bottom: 60px;
+    button {
+      width: 177px;
+      height: 43px;
+      background-color: black;
+      border: none;
+      color: white;
+    }
+    
+    label {
+      display: block;
+    }
+    input {
+      // border: 1px solid rgba(25, 25, 25, 0.32);
+      // height: 43px;
+      width: 100%;
+      padding-left: 20px;
+    }
+    input::placeholder {
+      font-size: 16px;
+    }
+  }
+  h1 {
+    font-weight: lighter;
+    color: #323232;
+    text-transform: uppercase;
+    letter-spacing: 8px;
   }
 }
 
-.eth-address {
-  font-size: 18px;
-  word-wrap: break-word;
-  font-weight: bold;
-}
-
-mat-icon {
-  margin-left: 20px;
-  font-size: 18px;
-  vertical-align: sub;
-}
-
-.sold {
-  font-size: 30px;
-  font-weight: 900;
-  word-spacing: 5px;
-}
-
-.caption {
-  margin-top: 10px;
-  color: rgba(50, 50, 50, 0.5);
-  text-transform: uppercase;
-  font-weight: 300;
-  .price {
-    margin-left: 5px;
-    font-weight: 600;
-  }
-}
-
-button {
-  width: 177px;
-  height: 43px;
-  background-color: black;
-  border: none;
-  color: white;
-}
-
-label {
-  display: block;
-}
-input {
-  border: 1px solid rgba(25, 25, 25, 0.32);
-  height: 43px;
-  width: 100%;
-  padding-left: 20px;
-}
-input::placeholder {
-  font-size: 16px;
-}
-
-.margin-t-60 {
-  margin-top: 60px;
-}
-
-.key {
-  color: #323232;
-  margin-right: 0.3rem;
-  font-weight: 300;
-  text-transform: uppercase;
-}
-
-.col-1 img {
-  width: 100%;
-}
-
-h1 {
-  font-weight: lighter;
-  color: #323232;
-  text-transform: uppercase;
-  letter-spacing: 8px;
-}

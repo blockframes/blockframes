@@ -7,7 +7,7 @@
 
 <main fxLayout="row" fxLayoutAlign="center">
   <div class="col-1">
-    <img src="https://fakeimg.pl/410x418/" alt="user avatar" />
+    <img src="https://fakeimg.pl/410x418/" alt="user avatar"/>
 
     <div class="rank bordered" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
       <span class="key" fxFlex>
@@ -24,7 +24,10 @@
         <div class="eth-address">{{user.identity.address}}</div>
       </div>
       <div fxFlex>
-        <div><span class="key">Sold Address</span><mat-icon>info_outline</mat-icon></div>
+        <div>
+          <span class="key">Sold Address</span>
+          <mat-icon matTooltip="Info about the action" matTooltipPosition="right">info_outline</mat-icon>
+        </div>
         <span class="sold">1 000</span>
         <div class="caption">
           <span>Correspond To</span>
@@ -35,31 +38,28 @@
 
   </div>
   <div class="col-2">
-    <section>
-      <h1>My Profile</h1>
+    
+    <h1>My Profile</h1>
 
-      <div fxLayout="column">
-        <div fxFlex fxLayout="row" fxLayoutGap="20px">
-          <span fxFlex>
-            <label for="first-name">First name</label>
-            <input type="text" name="first-name" placeholder="Input text"/>
-          </span>
-          <span fxFlex>
-            <label for="last-name">Last name</label>
-            <input type="text" name="last-name" placeholder="Input text"/>
-          </span>
-        </div>
-        <div fxFlex fxLayout="row" fxLayoutGap="20px" class="margin-t-60">
-          <span fxFlex>
-            <label for="society">Society</label>
-            <input type="text" name="society" placeholder="Input text"/>
-          </span>
-          <span fxFlex><!--spacer--></span>
-        </div>
-      </div>
+    <section fxLayout="row" fxLayoutGap="20px">
+      <mat-form-field fxFlex appearance="outline" floatLabel="always">
+        <mat-label>First name</mat-label>
+        <input matInput type="text" placeholder="Input text"/>
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="outline" floatLabel="always">
+          <mat-label>Last name</mat-label>
+          <input matInput type="text" placeholder="Input text"/>
+        </mat-form-field>
+    </section>
+    <section fxLayout="row" fxLayoutGap="20px">
+        <mat-form-field fxFlex appearance="outline" floatLabel="always">
+          <mat-label>Society</mat-label>
+          <input matInput type="text" placeholder="Input text"/>
+        </mat-form-field>
+      <span fxFlex><!--spacer--></span>
     </section>
 
-    <section class="margin-t-60">
+    <section>
       <h1>Buy Tokens</h1>
 
       <label>How much do you want to buy ?</label>
@@ -69,22 +69,22 @@
             <financing-range-slider [min]="100" [max]="100000" step="100" [unit]="'$'" [unitSide]="'left'"></financing-range-slider>
           </span>
           <span fxFlex>
-            <button>Buy Tokens</button>
+            <button mat-button>Buy Tokens</button>
           </span>
         </div>
       </div>
     </section>
 
-    <section class="margin-t-60">
+    <section>
       <h1>Favorites List</h1>
       <financing-movie-card></financing-movie-card>
       <financing-movie-card></financing-movie-card>
     </section>
     <section>
-        <h1>Movie List</h1>
-        <financing-movie-card></financing-movie-card>
-        <financing-movie-card></financing-movie-card>
-      </section>
+      <h1>Movie List</h1>
+      <financing-movie-card></financing-movie-card>
+      <financing-movie-card></financing-movie-card>
+    </section>
   </div>
 </main>
 
