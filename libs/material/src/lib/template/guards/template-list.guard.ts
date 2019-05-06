@@ -39,9 +39,7 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
           return combineLatest(templates$);
         }),
         map(templates => [].concat(...templates)),
-        tap(templates => applyTransaction(() => {
-          templates.forEach(template => this.store.upsert(template.id, template));
-        })),
+        tap(templates => this.store.set(templates)),
         takeWhile(_ => !!this.listenOnList),
       ).subscribe({
         next: templates => res(!!templates),
