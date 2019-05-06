@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Stakeholder, StakeholderService } from '../+state';
 import { MovieQuery } from '../../movie/+state';
 

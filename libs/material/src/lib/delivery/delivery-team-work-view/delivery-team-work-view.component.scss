@@ -7,32 +7,30 @@ mat-sidenav-container {
 mat-sidenav {
   height: 50%;
   width: 250px;
-  margin-top: 191px;
-  position: fixed;
 }
 
 mat-sidenav-content {
-  margin-left: 5%;
+  margin-left: 50px;
   height: 100%;
   overflow: auto;
   background-color: white;
-  padding-bottom: 5%;
+  padding-bottom: 50px;
 }
 
 .item-form {
-  margin-left: 5%;
-  margin-right: 5%;
-  margin-bottom: 2%;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 20px;
 }
 
 .actions {
-  margin-right: 5%;
+  margin-right: 50px;
 }
 
 .filters {
-  margin-left: 5%;
+  margin-left: 50px;
 }
 
 .menus {
-  margin-bottom: 4%;
+  margin-bottom: 40px;
 }

@@ -29,7 +29,7 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
   startListeningOnList(): Promise<boolean | UrlTree> {
     return new Promise((res, rej) => {
       this.listenOnList = true;
-    
+
       this.orgQuery.selectAll().pipe(
         switchMap(orgs => {
           const templates$ = orgs.map(org => {
@@ -37,7 +37,7 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
             return this.fireQuery.fromQuery(query);
           });
           return combineLatest(templates$);
-        }), 
+        }),
         map(templates => [].concat(...templates)),
         tap(templates => applyTransaction(() => {
           templates.forEach(template => this.store.upsert(template.id, template));
@@ -48,7 +48,7 @@ export class TemplateListGuard extends StateListGuard implements CanActivate, Ca
         error: _ => res(this.router.parseUrl('layout'))
       });
     });
-    
+
   }
 
   canActivate(): Promise<boolean | UrlTree> {
