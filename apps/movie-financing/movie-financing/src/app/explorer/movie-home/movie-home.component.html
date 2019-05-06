@@ -27,10 +27,12 @@
     <p>64% Completed</p>
   </div>
 
+
   <div class="cta">
-    <a [routerLink]="['/explorer/movie/42']">
-      See This Movie
-    </a>
+    <button [routerLink]="['/explorer/movie/42']" class="full-width" mat-button>
+      <span>See This Movie</span>
+      <mat-icon>arrow_right_alt</mat-icon>
+    </button>
   </div>
 </article>
 <div class="left-decoration">
