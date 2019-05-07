@@ -22,9 +22,9 @@ export class AccountViewComponent implements OnInit {
     this.network = network ;
   }
 
-  refreshBalance() {
+  async refreshBalance() {
     this.notLoading$.next(false);
-    this.authService.refreshBalance();
-    setTimeout(() => this.notLoading$.next(true), 600);
+    await this.authService.refreshBalance();
+    this.notLoading$.next(true);
   }
 }

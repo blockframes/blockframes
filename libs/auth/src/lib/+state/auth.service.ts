@@ -48,7 +48,7 @@ export class AuthService {
     
     this.wallet.createLocalKey('web', password, email)  // no await -> do the job in background
     .then(() => this.wallet.createERC1077(userCredentials.user.uid))
-    .then((_) => {
+    .then(() => {
       this.subscribeOnUser();
       this.store.update({isEncrypting: false});
       this.snackBar.open('Your key pair has been successfully stored', 'OK', {
