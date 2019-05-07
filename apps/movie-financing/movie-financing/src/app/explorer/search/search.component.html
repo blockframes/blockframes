@@ -1,6 +1,6 @@
 <financing-explorer-header></financing-explorer-header>
 
-<section class="major-filters">
+<mat-card class="major-filters">
   <button mat-button [matMenuTriggerFor]="menu">Cast A</button>
   <button mat-button [matMenuTriggerFor]="menu">Genre</button>
   <button mat-button [matMenuTriggerFor]="menu">Types</button>
@@ -13,8 +13,17 @@
     <button mat-menu-item>Item 1</button>
     <button mat-menu-item>Item 2</button>
   </mat-menu>
-</section>
+</mat-card>
 
-<main fxLayoutAlign="center">
-  MOVIES
+<main>
+  <div class="filter-by-wrapper">
+    <button mat-stroked-button>Filter By</button>
+  </div>
+
+  <section class="results">
+    <h1>Results for</h1>
+    <p>Titre recherche | Filtre Recherche (23)</p>
+  </section>
 </main>
+
+<financing-explorer-footer></financing-explorer-footer>

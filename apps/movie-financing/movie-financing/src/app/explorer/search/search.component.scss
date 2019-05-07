@@ -1,5 +1,6 @@
 
-.major-filters {
+mat-card.major-filters {
+  padding: 0;
   display: flex;
   width: 80%;
   margin: auto;
@@ -12,7 +13,29 @@
     font-weight: 500;
   }
 
+  button[aria-expanded="true"] {
+    background-color: black;
+    color: white;
+  }
+
   button + button {
     border-left: 1px solid black;
   }
+}
+
+main {
+  padding-left: 5rem;
+  padding-right: 5rem;
+  padding-bottom: 10rem;
+
+  h1 {
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    margin-bottom: 0;
+  }
+}
+
+.filter-by-wrapper {
+  width: 100%;
+  text-align: right;
 }
