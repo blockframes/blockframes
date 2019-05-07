@@ -31,6 +31,7 @@ export interface AuthState {
   accountForm: AccountForm;
   requestedRoute?: string;
   isEncrypting: boolean;
+  isBalanceLoading: boolean;
 }
 
 export function createUser(user: Partial<User>) {
@@ -48,7 +49,8 @@ const initialState: AuthState = {
     firstName: '',
     biography: '',
   },
-  isEncrypting: false
+  isEncrypting: false,
+  isBalanceLoading: false,
 }
 
 @Injectable({ providedIn: 'root' })

@@ -12,19 +12,18 @@ import { network } from '@env';
 export class AccountViewComponent implements OnInit {
   public user$: Observable<User>;
   public network: string;
-  public notLoading$ = new BehaviorSubject<boolean>(true);
+  public isBalanceLoading$: Observable<boolean>;
 
   constructor(private authService: AuthService, private authQuery: AuthQuery) {
   }
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
+    this.isBalanceLoading$ = this.authQuery.isBalanceLoading$;
     this.network = network ;
   }
 
-  async refreshBalance() {
-    this.notLoading$.next(false);
-    await this.authService.refreshBalance();
-    this.notLoading$.next(true);
+  refreshBalance() {
+    this.authService.refreshBalance();
   }
 }

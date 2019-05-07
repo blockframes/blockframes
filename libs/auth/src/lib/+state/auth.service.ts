@@ -99,8 +99,10 @@ export class AuthService {
   }
 
   public async refreshBalance() {
+    this.store.update({isBalanceLoading: true});
     const balance = await this.wallet.getBalance();
     this.store.updateUser({balance});
+    this.store.update({isBalanceLoading: false});
   }
 
   /** Deletes user subCollections */
