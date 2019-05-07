@@ -71,10 +71,7 @@
                 <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address"></eth-blockie>
                 <mat-card-title>{{user.identity.domain}}</mat-card-title>
                 <mat-card-subtitle>
-                  <a *ngIf="network === 'homestead'; else testNet" [href]="'https://etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
-                  <ng-template #testNet>
-                    <a [href]="'https://'+network+'.etherscan.io/address/'+user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
-                  </ng-template>
+                  <a [href]="explorerUrl + user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
                 </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content >

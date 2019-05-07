@@ -11,7 +11,7 @@ import { network } from '@env';
 })
 export class AccountViewComponent implements OnInit {
   public user$: Observable<User>;
-  public network: string;
+  public explorerUrl: string;
   public isBalanceLoading$: Observable<boolean>;
 
   constructor(private authService: AuthService, private authQuery: AuthQuery) {
@@ -20,7 +20,7 @@ export class AccountViewComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.isBalanceLoading$ = this.authQuery.isBalanceLoading$;
-    this.network = network ;
+    this.explorerUrl = network === 'homestead' as string ? 'https://etherscan.io/address/' : `https://${network}.etherscan.io/address/`;
   }
 
   refreshBalance() {
