@@ -1,0 +1,25 @@
+@import '../movie-card/movie-card.component.scss';
+
+mat-card {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.swapVisual {
+  mat-card-header {
+    order: 2;
+  }
+
+  mat-card-content {
+    order: 1;
+  }
+}
+
+mat-card-header {
+  width: 60%;
+}
+
+mat-card-content {
+  width: 38%;
+}

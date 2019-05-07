@@ -47,6 +47,7 @@ import { AuthModule } from '@blockframes/auth';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FlexModule } from '@angular/flex-layout';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
+import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-horizontal/movie-card-horizontal.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
     FinancingExplorerDetailsComponent,
     FinancingExplorerSearchComponent,
     FinancingMovieCardComponent,
+    FinancingMovieCardHorizontalComponent,
     FinancingExplorerFooterComponent,
     FinancingExplorerHeaderComponent,
     FinancingExplorerFinancingDetailsComponent,
@@ -100,6 +102,5 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
   providers: [],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }
