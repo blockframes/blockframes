@@ -1,24 +1,30 @@
 :host {
   margin: 1rem;
 }
+
 .capitalize {
   text-transform: capitalize;
 }
+
 mat-card {
   padding: 0;
   margin-bottom: 60px;
+
   mat-card-header {
     position: relative;
+
     img {
       height: 100%;
       width: 100%;
     }
+
     mat-card-title-group {
       flex-direction: column;
       height: 50%;
       position: absolute;
       top: 50%;
       width: 100%;
+
       .subtitle {
         background-color: white;
         width: 40%;
@@ -28,12 +34,14 @@ mat-card {
         text-transform: uppercase;
         letter-spacing: 8px;
       }
+
       .title {
         color: white;
         background-color: black;
         width: 50%;
         height: 100%;
         text-transform: uppercase;
+
         .stroke {
           -webkit-text-stroke: rgba(255, 255, 255, 0.2) 0.7px;
           color: transparent;
@@ -43,12 +51,14 @@ mat-card {
           top: -10px;
           left: -5px;
         }
+
         .director-name {
           margin-left: 20px;
           font-size: 16px;
           font-weight: 300;
           letter-spacing: 8px;
         }
+
         .movie-title {
           margin-left: 20px;
           padding-right: 20px;
@@ -59,6 +69,7 @@ mat-card {
     }
   }
 }
+
 mat-card ::ng-deep .mat-card-header-text, .mat-card-subtitle {
   margin: 0;
 }
@@ -72,17 +83,21 @@ table {
   line-height: 30px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+
   th {
     border: 1px solid black;
     font-weight: 300;
+
     .value {
       font-weight: bold;
     }
   }
 }
+
 section {
   margin-bottom: 30px;
   width: 60%;
+
   h3 {
     font-weight: 300;
     text-transform: uppercase;
@@ -90,6 +105,7 @@ section {
     color: #c6c6c6;
   }
 }
+
 mat-progress-bar {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -97,21 +113,26 @@ mat-progress-bar {
   border: 1px solid black;
   height: 14px;
 }
+
 progress::-webkit-progress-bar {
   background-color: white;
 }
+
 progress::-webkit-progress-value {
   background-color: #1a48f5;
 }
+
 progress::-moz-progress-bar {
   background-color: #1a48f5;
 }
+
 .completed {
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 8px;
   margin-top: 20px;
 }
+
 a {
   color: black;
   text-decoration: none;
@@ -120,6 +141,7 @@ a {
   bottom: 0;
   right: 10px;
   font-size: 18px;
+
   mat-icon {
     vertical-align: middle;
   }
