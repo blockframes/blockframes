@@ -47,7 +47,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'profile/:id',
+    path: 'profile',
     component: FinancingExplorerProfileComponent,
     canActivate: [AuthGuard]
   },
