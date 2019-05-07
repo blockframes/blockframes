@@ -21,7 +21,7 @@ import { Step, DeliveryQuery } from '../../delivery/+state';
 })
 export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   @Input() isDeliveryValidated: boolean;
-  @Output() material = new EventEmitter<Material>();
+  @Output() add = new EventEmitter<Material>();
 
   public steps$: Observable<Step[]>;
   public hasStep: boolean;
@@ -53,7 +53,7 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   }
 
   public updateMaterial() {
-    this.material.emit(this.form.value);
+    this.add.emit(this.form.value);
   }
 
   public cancel() {

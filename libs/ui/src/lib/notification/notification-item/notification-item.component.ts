@@ -11,20 +11,29 @@ import { NotificationService } from '../+state';
 export class NotificationItemComponent {
   @Input() notification: any;
 
-  constructor(
-    private router: Router,
-    private service: NotificationService,
-  ) {}
+  private errorMessage = "This url doesn't exist."
+
+  constructor(private router: Router, private service: NotificationService) {}
 
   public goToPath() {
-    this.router.navigate([this.notification.path]);
-    this.service.readNotification(this.notification.id);
+    try {
+      this.router.navigate([this.notification.path]);
+      this.service.readNotification(this.notification.id);
+    } catch (error) {
+      console.error(error);
+      throw new Error(this.errorMessage);
+    }
   }
 
   public goToTeamwork() {
-    this.service.joinTeamwork(this.notification.stakeholderId, this.notification.deliveryId);
-    this.router.navigate([this.notification.path]);
-    this.service.readNotification(this.notification.id);
+    try {
+      this.service.joinTeamwork(this.notification.stakeholderId, this.notification.deliveryId);
+      this.router.navigate([this.notification.path]);
+      this.service.readNotification(this.notification.id);
+    } catch (error) {
+      console.error(error);
+      throw new Error(this.errorMessage);
+    }
   }
 
   public read() {

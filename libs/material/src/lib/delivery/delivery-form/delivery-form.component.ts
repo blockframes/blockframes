@@ -150,6 +150,7 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.materialService.deleteMaterials(materials);
     this.materialStore.returnToInitialState();
     this.allChecked = false;
+    // TODO: Notify which and how much materials have been deleted with snackbar
   }
 
   public changeStep(stepId: string) {

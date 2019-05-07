@@ -80,18 +80,21 @@ export class MaterialService {
 
   public deleteMaterials(materials: Material[]) {
     const batch = this.db.firestore.batch();
+    const deliveryId = this.deliveryQuery.getActiveId();
+    const movieId = this.movieQuery.getActiveId();
     materials.forEach(material => {
       const materialRef = this.db.doc<Material>(
-        `deliveries/${this.deliveryQuery.getActiveId()}/materials/${material.id}`
+        `deliveries/${deliveryId}/materials/${material.id}`
       ).ref;
       return batch.delete(materialRef);
     });
     materials.forEach(material => {
       const materialRef = this.db.doc<Material>(
-        `movies/${this.movieQuery.getActiveId()}/materials/${material.id}`
+        `movies/${movieId}/materials/${material.id}`
       ).ref;
       return batch.delete(materialRef);
     });
+    // TODO: Check if material.deliveriesIds length is > 1, as a material can also be part of another delivery
     batch.commit();
   }
 

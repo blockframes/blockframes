@@ -52,29 +52,20 @@ export const onDeliveryStakeholderCreate = async (
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) => {
-          if (newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1) {
-            return prepareNotification({
-              app: APP_DELIVERY_ICON,
-              message: `You have been invited to delivery : ${
-                delivery.id
-              }. Do you wish to work on it ?`,
-              userId,
-              path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-              deliveryId: delivery.id,
-              stakeholderId: newStakeholder.id
-            });
-          } else {
-            return prepareNotification({
-              app: APP_DELIVERY_ICON,
-              message: `Stakeholder ${newStakeholder.id} from ${
-                newStakeholderOrg.name
-              } has been added to delivery ${delivery.id}`,
-              userId,
-              path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-              deliveryId: delivery.id,
-              stakeholderId: newStakeholder.id
-            });
-          }
+          const message =
+            newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1
+              ? `You have been invited to delivery : ${delivery.id}. Do you wish to work on it ?`
+              : `Stakeholder ${newStakeholder.id} from ${
+                  newStakeholderOrg.name
+                } has been added to delivery ${delivery.id}`;
+          return prepareNotification({
+            app: APP_DELIVERY_ICON,
+            message,
+            userId,
+            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
+            deliveryId: delivery.id,
+            stakeholderId: newStakeholder.id
+          });
         });
 
       await triggerNotifications(notifications);
