@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 import { getTitle, LandingPage } from '../support/app.po';
+import { P } from '@angular/cdk/keycodes';
 
 let currentID = 0;
 
@@ -16,10 +17,7 @@ const MATERIALS = [
     category: 'Category #2'
   }
 ];
-const NO_CATEGORY_MATERIAL = {
-  value: 'Third Material Value',
-  description: 'Third Material Description'
-};
+
 const ORG_NAME_1 = 'Organization #1';
 const TEMPLATE_NAME_1 = 'Template #2';
 
@@ -43,8 +41,9 @@ describe('Hello Delivery', () => {
   });
 });
 
+// TODO: finish this test
 describe('I m a user and i can save a delivery as template', () => {
-  it('should login, create delivery from scratch, save it as a new template, then delete this template', () => {
+  it.skip('should login, create delivery from scratch, save it as a new template, then delete this template', () => {
     // Connexion
     let p: any = new LandingPage();
     p.fillSigninEmail(EMAIL);
@@ -63,12 +62,8 @@ describe('I m a user and i can save a delivery as template', () => {
       p.fillValue(material.value);
       p.fillDescription(material.description);
       p.fillCategory(material.category);
-      p.clickAddMaterial();
+      p.clickSaveMaterial();
     });
-    p.clickAddCategory();
-    p.fillValue(NO_CATEGORY_MATERIAL.value);
-    p.fillDescription(NO_CATEGORY_MATERIAL.description);
-    p.clickAddMaterial();
     // Save delivery as new template
     p = p.clickSaveAsTemplate();
     p.clickSelect();
@@ -102,7 +97,7 @@ describe('I m a user and i can save a delivery as template', () => {
 });
 
 describe('I\'m a paranoid user, I would like to create an account and verify that I own a contract on the blockchain', () => {
-  it('should type values in signup form', () => {
+  it.skip('should type values in signup form', () => {
     // Connexion
     let p: any = new LandingPage();
     p.fillSignupEmail(generateRandomEmail());
@@ -115,5 +110,45 @@ describe('I\'m a paranoid user, I would like to create an account and verify tha
 
     // Assert id
     p.assertIdIsAddress();
+  })
+});
+
+describe('Step 1: I\'m new user, I want accept a notification that add my org in a movie, create a delivery, add materials and sign', () => {
+  it('should create delivery with a template, add step, add step to materials and sign delivery', () => {
+    // TODO: reset database
+
+    // Connexion
+    let p: any = new LandingPage();
+    p.fillSigninEmail('demo@blockframes.com');
+    p.fillSigninPassword('blockframes');
+    p = p.login();
+
+    // TODO: accept the notification
+
+    // Go to app-delivery
+    p.displayMovieMenu();
+    p.clickOpenIn();
+    p = p.selectApp();
+
+    // Open template picker
+    p = p.clickAddDelivery();
+
+    // Select Jokers Delivery Schedule
+    p = p.clickTemplateDelivery('Jokers Delivery Schedule');
+    //p = p.clickCreateNewDelivery();
+
+    // Add general date and step to delivery
+    p.openGeneralDate();
+    p.clickGeneralDate('30');
+    p.clickCreateStep();
+    p.fillStepName('Marketing');
+    p.openStepDate();
+    p.clickStepDate('26');
+    p.clickSaveStep();
+
+    // Go to team-work page
+    p = p.clickTeamWork();
+    p.clickAddStakeholder('CJ Entertainment');
+
   })
 });

@@ -34,6 +34,53 @@ export class TemplateFormPage {
   }
 }
 
+export class TeamWorkPage {
+  constructor() {}
+
+    public clickAddStakeholder(name: string) {
+      cy.get('mat-card.mat-elevation-z0').should('contain', name).contains(name).parent().parent({timeout: 1000}).find('button', {timeout: 500}).click();
+    }
+  }
+
+
+export class DeliverySettingsFormPage {
+  constructor() {
+  }
+
+  public openGeneralDate() {
+    cy.get('mat-datepicker-toggle button.mat-icon-button').click();
+  }
+
+  public clickGeneralDate(date: string) {
+    cy.contains(date).click();
+  }
+
+  public clickCreateStep() {
+    cy.get('button.create-step').click();
+  }
+
+  public fillStepName(stepName: string) {
+    cy.get('input.stepName').type(stepName);
+  }
+
+  public openStepDate() {
+    cy.get('mat-form-field.stepDate button.mat-icon-button').click();
+  }
+
+  public clickStepDate(date: string) {
+    cy.contains(date).click();
+  }
+
+  public clickSaveStep() {
+    cy.get('button.add-button').click();
+  }
+
+  public clickTeamWork() {
+    cy.contains('team-work').click();
+    return new TeamWorkPage;
+  }
+}
+
 export class NewTemplatePage {
   constructor() {
     cy.contains('Save as a new template');
@@ -63,11 +110,7 @@ export class DeliveryFormPage {
   }
 
   public clickAdd() {
-    cy.get('button.add-material-button').click();
-  }
-
-  public clickAddCategory() {
-    cy.get('button').contains('Add new material with this category').first().click();
+    cy.get('mat-sidenav button.create-material').click();
   }
 
   public fillValue(materialValue: string) {
@@ -82,8 +125,8 @@ export class DeliveryFormPage {
     cy.get('input.category').type(materialCategory);
   }
 
-  public clickAddMaterial() {
-    cy.get('button.save-material').click();
+  public clickSaveMaterial() {
+    cy.get('button.add-button').click();
   }
 
   public clickSaveAsTemplate() {
@@ -106,19 +149,19 @@ export class DeliveryFormPage {
   }
 }
 
-export class TemplatePickerPage{
+export class TemplatePickerPage {
   constructor() {
-    cy.contains('Create delivery from scratch');
+    cy.contains('Blank');
   }
 
   public clickCreateNewDelivery() {
-    cy.get('section.container').should('contain', 'Template #1');
-    cy.get('mat-card.create-card', {timeout: 500}).click();
-    return new DeliveryFormPage();
+    cy.get('span.blank', {timeout: 500}).click();
+    return new DeliverySettingsFormPage();
   }
 
   public clickTemplateDelivery(templateName: string) {
-    cy.get('.ng-star-inserted > .mat-card > .mat-card-title').contains(templateName).click();
+    cy.get('.ng-star-inserted > .mat-card > .mat-card-title', {timeout: 500}).contains(templateName).click();
+    return new DeliverySettingsFormPage();
   }
 }
 
@@ -208,10 +251,10 @@ export class TemplateListPage {
   }
 }
 
-export class HomePage extends NavbarPage{
-  constructor(isEmpty: boolean) {
+export class HomePage extends NavbarPage {
+  constructor() {
     super();
-    if (!isEmpty) cy.contains('ADD A MOVIE');
+    // TODO: check if we are on a home page
   }
 
   public displayMovieMenu() {
@@ -266,7 +309,7 @@ export class LandingPage {
 
   public login(): any {
     cy.get('button').contains('Signin').click();
-    return new HomePage(false);
+    return new HomePage();
   }
 
   public fillSignupEmail(email: string) {
@@ -280,6 +323,6 @@ export class LandingPage {
 
   public signup(): any {
     cy.get('button').contains('Signup').click();
-    return new HomePage(true);
+    return new HomePage();
   }
 }
