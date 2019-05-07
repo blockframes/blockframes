@@ -33,6 +33,7 @@ export async function triggerNotifications(notifications: Notification[]): Promi
 
 export function prepareNotification(notif: PartialNotification): Notification {
   return {
+   ...notif,
     id: db.collection('notifications').doc().id,
     isRead: false,
     date: serverTimestamp(),
