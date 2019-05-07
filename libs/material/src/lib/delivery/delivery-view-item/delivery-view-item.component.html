@@ -41,10 +41,10 @@
       >
         {{ disableButtonLabel }}
       </button>
-    </div>
-  </article>
-  <article class="informations" fxLayout="row" fxLayoutAlign="space-around none">
-    <div *ngIf="!disableMaterial" class="material-step">
+    </span>
+  </div>
+  <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
+    <span *ngIf="!disableMaterial && !!material.step" class="material-step">
       <h5>Step :</h5>
       <p class="material-step-text">{{material.step.name}}</p>
     </div>

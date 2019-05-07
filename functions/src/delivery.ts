@@ -104,6 +104,7 @@ export const onDeliveryUpdate = async (
     ]);
 
     const promises = materialsDelivery.map(materialDelivery => {
+      console.log(materialDelivery)
       const materialExist = materialsMovie.find(
         materialMovie =>
           materialDelivery.value === materialMovie.value &&

@@ -10,7 +10,7 @@ export function materialsByCategory(materials: Material[]): TemplateView {
     (acc, item) => {
       return {
         ...acc,
-        [item.category.toUpperCase()]: [...(acc[item.category.toUpperCase()] || []), item]
+        [item.category]: [...(acc[item.category] || []), item]
       };
     },
     {} as TemplateView

@@ -63,7 +63,9 @@ export const onMaterialUpdate = async (
               movie.title.original
             } is now in state : ${material.state}`,
             userId,
-            path: `/layout/${movie.id}/movie-materials`
+            path: `/layout/${movie.id}/movie-materials`,
+            deliveryId: null,
+            stakeholderId: null,
           })
         );
 
