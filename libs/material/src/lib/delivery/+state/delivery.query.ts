@@ -26,8 +26,13 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public steps$ = this.selectActive(delivery => delivery.steps);
   /** Returns the active delivery materials sorted by category */
-  public currentTemplateView: Observable<TemplateView> = this.materialsByActiveDelivery()
-    .pipe(map(materials => materialsByCategory(materials)));
+  public currentTemplateView: Observable<TemplateView> = this.materialsByActiveDelivery().pipe(
+    map(materials => materialsByCategory(materials))
+  );
+
+  public currentMovieTemplateView: Observable<TemplateView> = this.materialsByActiveMovie().pipe(
+    map(materials => materialsByCategory(materials))
+  );
 
   constructor(
     protected store: DeliveryStore,
@@ -52,13 +57,13 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     return this.selectActive(delivery => delivery.steps.find(step => step.id === id));
   }
 
-  /** Returns the active movie materials sorted by category */
-  public get materialsByActiveMovie$() {
+  /** Set the store with materials from active movie */
+  public materialsByActiveMovie() {
     return this.movieQuery.selectActive().pipe(
       switchMap(movie =>
         this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
       ),
-      map(materials => materialsByCategory(materials))
+      tap(materials => this.materialStore.set(materials))
     );
   }
 
@@ -73,7 +78,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
         return materials.filter(material => material.deliveriesIds.includes(id));
       }),
       map(materials =>
-        materials.map(material =>({
+        materials.map(material => ({
           ...material,
           step: this.getActive().steps.find(step => step.id === material.stepId)
         }))

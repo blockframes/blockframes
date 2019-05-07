@@ -25,7 +25,20 @@
         <mat-card-title>
           {{ template.name }}
         </mat-card-title>
-        <mat-card-content> </mat-card-content>
+      </mat-card>
+    </article>
+
+    <article class="template-card">
+      <mat-card
+        class="mat-elevation-z6"
+        (click)="useMovieAsTemplate()"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+      <mat-icon class="icon" color="primary">description</mat-icon>
+      <mat-card-title>
+        Create from movie materials
+      </mat-card-title>
       </mat-card>
     </article>
   </section>

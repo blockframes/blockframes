@@ -28,7 +28,7 @@ export class MovieMaterialsComponent implements OnInit {
   ngOnInit() {
     this.movie = this.movieQuery.getActive();
     this.stakeholders$ = this.shService.activeMovieStakeholders;
-    this.materials$ = this.query.materialsByActiveMovie$;
+    this.materials$ = this.query.currentMovieTemplateView;
     this.progressionValue$ = this.query.movieProgression$;
   }
 

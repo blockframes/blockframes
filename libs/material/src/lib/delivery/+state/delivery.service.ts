@@ -11,13 +11,14 @@ import {
   StakeholderQuery,
   createDeliveryStakeholder,
   StakeholderService,
-  StakeholderStore,
+  StakeholderStore
 } from '@blockframes/movie';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
-import { switchMap, tap, map } from 'rxjs/operators';
+import { switchMap, tap, map, takeWhile } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Query, FireQuery } from '@blockframes/utils';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,7 @@ export class DeliveryService {
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
+    private router: Router,
     private fireQuery: FireQuery
   ) {}
 
@@ -118,6 +120,43 @@ export class DeliveryService {
         )
       );
     }
+  }
+
+  public async addMovieMaterialsDelivery() {
+    const snapshot = await this.db
+      .collection<Material>(`movies/${this.movieQuery.getActiveId()}/materials/`)
+      .ref.get();
+    const movieMaterials = snapshot.docs.map(doc => doc.data()) as Material[];
+
+    const id = this.db.createId();
+    const stakeholder = this.query.findActiveStakeholder();
+    const movieId = this.movieQuery.getActiveId();
+    const delivery = createDelivery({ id, movieId, validated: [] });
+    const deliveryStakeholder = this.makeDeliveryStakeholder(
+      stakeholder.id,
+      stakeholder.orgId,
+      ['canValidateDelivery'],
+      true
+    );
+
+    this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
+    this.db
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
+      .set(deliveryStakeholder);
+    this.store.setActive(id);
+    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${id}/settings`]);
+    return Promise.all(
+      movieMaterials.map(material =>
+        this.db
+          .doc<Material>(`deliveries/${id}/materials/${material.id}`)
+          .set({
+            id: material.id,
+            value: material.value,
+            description: material.description,
+            category: material.category
+          })
+      )
+    );
   }
 
   public updateDueDate(dueDate: Date) {
@@ -272,8 +311,8 @@ export class DeliveryService {
       return {
         ...delivery,
         dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
-        steps: delivery.steps.map(step => ({...step, date: step.date.toDate()}))
-       }
+        steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
+      };
     }
     return this.movieQuery.selectActiveId().pipe(
       switchMap(id =>

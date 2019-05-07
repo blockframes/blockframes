@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Material } from './material.model';
 import { MaterialStore, MaterialState } from './material.store';
 import { TemplateView } from '../../template/+state';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export function materialsByCategory(materials: Material[]): TemplateView {
   return materials.reduce(

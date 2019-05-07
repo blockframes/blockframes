@@ -5,11 +5,11 @@ export interface Material {
   category: string;
   value: string;
   description: string;
-  stepId: string;
+  stepId?: string;
   step?: Step,
   state?: string,
-  approved: boolean;
-  deliveriesIds: string[];
+  approved?: boolean;
+  deliveriesIds?: string[];
 }
 
 export interface MaterialTemplateForm {

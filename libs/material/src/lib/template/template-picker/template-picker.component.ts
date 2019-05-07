@@ -58,6 +58,11 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     this.close();
   }
 
+  public useMovieAsTemplate(){
+    this.deliveryService.addMovieMaterialsDelivery();
+    this.close();
+  }
+
   public close() {
     this.dialogRef.close();
   }
