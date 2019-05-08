@@ -4,6 +4,16 @@ header {
   background-color: #222;
 }
 
+::ng-deep {
+  .search-bar {
+    width: 70%;
+
+    .mat-form-field-underline {
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+  }
+}
+
 .hero {
   padding-top: 9vh;
   padding-bottom: 9vh;
