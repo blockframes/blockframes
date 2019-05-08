@@ -21,6 +21,16 @@ export class RelayerWallet implements ethers.Signer {
     public provider: Provider
   ) {}
 
+  get mnemonic(): string {
+    if (!this.signingKey) throw new Error('No user loadedIn');
+    return this.signingKey.mnemonic;
+  }
+
+  get privateKey(): string {
+    if (!this.signingKey) throw new Error('No user loadedIn');
+    return this.signingKey.privateKey;
+  }
+
   /** Set signing key into process memory */
   private _setSigningKey(wallet: Wallet) {
     this.signingKey = new utils.SigningKey(wallet.privateKey);
@@ -39,7 +49,9 @@ export class RelayerWallet implements ethers.Signer {
     if(!this.signingKey) throw new Error('this wallet has no key, please create/restore/import a key !');
   }
 
-  /** Convert email to username and sanitize it : convert to lower case punycode and replace special chars by their ASCII code
+  /**
+   * Convert email to username and sanitize it:
+   * convert to lower case punycode and replace special chars by their ASCII code
    * @example `漢micHel+9@exemple.com` -> `xn--michel439-2c2s`
    */
   public setUsername(email: string) {
