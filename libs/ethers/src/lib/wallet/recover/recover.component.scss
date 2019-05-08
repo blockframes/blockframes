@@ -1,0 +1,13 @@
+.loading {
+  width: 80%;
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
