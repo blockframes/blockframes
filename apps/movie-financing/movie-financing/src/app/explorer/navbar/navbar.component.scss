@@ -39,7 +39,10 @@
     }
 
     .account-icon {
+      background-color: white;
+
       mat-icon {
+        color: #323232;
         transform: translate(0, 25%);
       }
     }
