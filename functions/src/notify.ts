@@ -4,8 +4,8 @@ interface PartialNotification {
   app: string;
   message: string;
   userId: string;
-  path: string | null;
-  deliveryId?: string;
+  path?: string;
+  docId?: string;
   stakeholderId?: string;
 }
 
@@ -26,15 +26,10 @@ export async function triggerNotifications(notifications: Notification[]): Promi
   return notificationBatch.commit();
 }
 
-export function prepareNotification({ app, message, userId, path, deliveryId, stakeholderId }: PartialNotification): Notification {
+export function prepareNotification(notif: PartialNotification): Notification {
   return {
+    ...notif,
     id: db.collection('notifications').doc().id,
-    app,
-    message,
-    userId,
-    path: path || null,
-    deliveryId,
-    stakeholderId,
     isRead: false,
     date: serverTimestamp()
   };

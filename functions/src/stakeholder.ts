@@ -16,7 +16,7 @@ export async function getOrgsOfDelivery(deliveryId: string): Promise<Organizatio
 }
 
 export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`deliveries/${movieId}/stakeholders`);
+  const stakeholders = await getCollection(`movies/${movieId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);
@@ -63,7 +63,7 @@ export const onDeliveryStakeholderCreate = async (
             message,
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            deliveryId: delivery.id,
+            docId: delivery.id,
             stakeholderId: newStakeholder.id
           });
         });
@@ -113,7 +113,7 @@ export const onDeliveryStakeholderDelete = async (
             } has been removed from delivery ${delivery.id}`,
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            deliveryId: delivery.id
+            docId: delivery.id
           })
         );
 
@@ -150,19 +150,33 @@ export const onMovieStakeholderCreate = async (
     }
 
     try {
+      console.log('i m in the try !')
+      const stakeholderCount = await db
+        .collection(`movies/${movie.id}/stakeholders`)
+        .get()
+        .then(col => col.size);
       const orgs = await getOrgsOfMovie(movie.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-        .map((userId: string) =>
-          prepareNotification({
+        .map((userId: string) => {
+          const message =
+            newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1
+              ? `You have been invited to movie : ${movie.title.original}. Do you wish to work on it ?`
+              : `Stakeholder ${newStakeholder.id} from ${
+                  newStakeholderOrg.name
+                } has been added to movie ${movie.title.original}`;
+          return prepareNotification({
             app: APP_MOVIE,
-            message: `Stakeholder ${newStakeholder.id} from ${newStakeholderOrg.name}
-            has been added to movie ${movie.title.original}`,
+            message,
             userId,
-            path: `/layout/home/form/${movie.id}/teamwork`
-          })
-        );
+            path: `/layout/home/form/${movie.id}/teamwork`,
+            docId: movie.id,
+            stakeholderId: newStakeholder.id
+          });
+        });
+
+      console.log("notifications:", notifications)
 
       await triggerNotifications(notifications);
     } catch (e) {

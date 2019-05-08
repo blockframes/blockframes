@@ -39,9 +39,10 @@ export class NotificationService {
     return this.db.doc<Notification>(`notifications/${id}`).update({ isRead: true });
   }
 
-  public joinTeamwork(stakeholderId: string, deliveryId: string) {
+  public joinTeamwork(stakeholderId: string, id: string, app: string) {
+    const collectionName = (app === 'delivery') ? 'deliveries' : 'movies';
     return this.db
-      .doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`)
+      .doc<Stakeholder>(`${collectionName}/${id}/stakeholders/${stakeholderId}`)
       .update({ isAccepted: true });
   }
 }

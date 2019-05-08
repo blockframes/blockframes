@@ -94,8 +94,7 @@ export const deleteFirestoreDelivery = async (
       prepareNotification({
         app: APP_DELIVERY_ICON,
         message: `Delivery with id ${delivery.id} has been deleted.`,
-        userId,
-        path: null
+        userId
       })
     );
 
