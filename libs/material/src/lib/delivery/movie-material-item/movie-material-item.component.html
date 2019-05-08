@@ -1,3 +1,4 @@
+<section>
 <mat-card class="materials-block mat-elevation-z6" fxLayout="row" fxLayoutGap="20px">
   <mat-checkbox
     fxLayoutAlign="center center"
@@ -17,7 +18,7 @@
       {{ panelButtonLabel }}
     </button>
   </div>
-  <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
+  <div class="informations" fxLayoutAlign="space-around none">
     <span class="material-step">
       <h5>Ordered by :</h5>
       <p class="material-step-text">{{ stakeholder }}</p>
@@ -27,9 +28,10 @@
         <h5>State :</h5>
         <mat-icon class="icons" svgIcon="{{ material.state }}"></mat-icon>
       </span>
-      <span *ngIf="!!material.approved" >
-        <p><mat-icon color="primary">done</mat-icon> Approved by laboratory</p>
-      </span>
     </div>
   </div>
 </mat-card>
+<span *ngIf="!!material.approved" class="labo-approval">
+    <p><a href="assets/apps/delivery.svg" download><mat-icon color="primary" class="done-icon">done</mat-icon></a> Approved by laboratory</p>
+</span>
+</section>

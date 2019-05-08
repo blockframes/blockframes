@@ -150,7 +150,6 @@ export const onMovieStakeholderCreate = async (
     }
 
     try {
-      console.log('i m in the try !')
       const stakeholderCount = await db
         .collection(`movies/${movie.id}/stakeholders`)
         .get()
@@ -175,8 +174,6 @@ export const onMovieStakeholderCreate = async (
             stakeholderId: newStakeholder.id
           });
         });
-
-      console.log("notifications:", notifications)
 
       await triggerNotifications(notifications);
     } catch (e) {

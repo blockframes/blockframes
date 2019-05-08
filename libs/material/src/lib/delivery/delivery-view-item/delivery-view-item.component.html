@@ -48,11 +48,14 @@
       <h5>Step :</h5>
       <p class="material-step-text">{{material.step.name}}</p>
     </span>
-    <span class="state">
+    <span class="state" fxLayout="column">
       <h5>State :</h5>
       <mat-icon class="icons" matTooltip="{{ material.state.toUpperCase() }}" svgIcon="{{ material.state }}"></mat-icon>
+      <a *ngIf="material.state === 'available'" href="assets/apps/delivery.svg" download>
+        <mat-icon color="primary" class="download-icon">cloud_download</mat-icon>
+      </a>
     </span>
-    <span *ngIf="!disableMaterial && material.state === 'accepted'" class="time">
+    <span *ngIf="!disableMaterial && material.state === 'delivered'" class="time">
       <h5>Accepted in :</h5>
       <p class="time-text">45 days</p>
     </span>
