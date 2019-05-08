@@ -134,6 +134,10 @@ progress::-moz-progress-bar {
   margin-top: 20px;
 }
 
+mat-card-content {
+  position: relative; // set relative here so that the link below is positioned the mat-card-content.
+}
+
 a {
   color: black;
   text-decoration: none;

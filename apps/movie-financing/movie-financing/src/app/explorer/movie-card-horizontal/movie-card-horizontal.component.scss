@@ -18,8 +18,32 @@ mat-card {
 
 mat-card-header {
   width: 60%;
+  min-height: 300px;
 }
 
 mat-card-content {
   width: 38%;
+  font-size: 0.6rem;
+
+  h3 {
+    margin-bottom: 0.1rem;
+  }
+
+  section {
+    margin: 0;
+    width: 90%;
+  }
+}
+
+table {
+  width: 100%;
+  font-size: 0.4rem;
+}
+
+mat-progress-bar {
+  height: 10px;
+}
+
+mat-card-title {
+  font-size: 1.4rem !important;
 }
