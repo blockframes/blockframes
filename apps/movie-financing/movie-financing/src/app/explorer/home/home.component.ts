@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import CANNE_DATA from '../../canne-data';
 
 @Component({
   selector: 'financing-explorer-home',
@@ -9,6 +10,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 export class FinancingExplorerHomeComponent implements OnInit {
   config: any;
   fullpage_api: any;
+  movies: any[] = CANNE_DATA;
 
   constructor() {
   }

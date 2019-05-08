@@ -3,8 +3,8 @@
     Almost Closed
   </div>
 
-  <h3>Nom Réalisateur</h3>
-  <h1>Movie Name Sooooooooooo Long</h1>
+  <h3>{{ movie?.principalInformations?.director || "Director Name" }}</h3>
+  <h1>{{ movie?.title || "Movie Name" }}</h1>
   <table class="data">
     <tbody>
     <tr>
@@ -17,19 +17,19 @@
     </tr>
     </tbody>
   </table>
-  <p>
+  <p *ngIf="movie?.principalInformations?.synopsis as value else elseBlock">{{ value }}</p>
+  <ng-template #elseBlock>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus. Integer
     pulvinar blandit nulla sagittis mattis.
-  </p>
+  </ng-template>
 
   <div class="progress">
     <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
     <p>64% Completed</p>
   </div>
 
-
   <div class="cta">
-    <button [routerLink]="['/explorer/movie/42']" class="full-width" mat-button>
+    <button [routerLink]="['/explorer/movie/', movie?.id || '42']" class="full-width" mat-button>
       <span>See This Movie</span>
       <mat-icon>arrow_right_alt</mat-icon>
     </button>
