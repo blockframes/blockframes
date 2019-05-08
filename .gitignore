@@ -46,3 +46,6 @@ firebase-debug.log
 
 # ENV
 env/env.ts
+
+# Secrets
+secrets.sh
