@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthStore, User, createUser } from './auth.store';
-import { switchMap, takeWhile, filter, tap, pluck, first, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, takeWhile} from 'rxjs/operators';
 import { RelayerWallet } from '@blockframes/ethers';
 import { MatSnackBar } from '@angular/material';
-
-import { AuthQuery } from './auth.query';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -33,7 +31,7 @@ export class AuthService {
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     this.subscribeOnUser();
     this.initWallet(email);
-    
+
     this.wallet.loadKey('web', password);  // no await -> do the job in background
   }
 
@@ -45,7 +43,7 @@ export class AuthService {
 
     const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
     await this.create(userCredentials.user);
-    
+
     this.wallet.createLocalKey('web', password, email)  // no await -> do the job in background
     .then(() => this.wallet.createERC1077(userCredentials.user.uid))
     .then(() => {

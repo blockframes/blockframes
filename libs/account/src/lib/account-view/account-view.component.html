@@ -4,48 +4,50 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-           
+
             <span>Personal data</span>
           </mat-panel-title>
           <mat-panel-description>
-              <a routerLink="./profile">
-                <mat-icon>settings</mat-icon>
-              </a>
+            <a routerLink="./profile">
+              <mat-icon>settings</mat-icon>
+            </a>
           </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-list>
-            <mat-list-item>
-              <mat-card-header>
-                <mat-card-title>Id</mat-card-title>
-                <mat-card-subtitle>{{ user.uid }}</mat-card-subtitle>
-              </mat-card-header>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-card-header>
-                <mat-card-title>First Name</mat-card-title>
-                <mat-card-subtitle>{{ user.firstName }}</mat-card-subtitle>
-              </mat-card-header>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-card-header>
-                <mat-card-title>Last Name</mat-card-title>
-                <mat-card-subtitle>{{ user.lastName }}</mat-card-subtitle>
-              </mat-card-header>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-card-header>
-                <mat-card-title>Email</mat-card-title>
-                <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-              </mat-card-header>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-card-header>
-                <mat-card-title>Biography</mat-card-title>
-                <mat-card-subtitle><p>{{ user.biography }}</p></mat-card-subtitle>
-              </mat-card-header>
-            </mat-list-item>
+          <mat-list-item>
+            <mat-card-header>
+              <mat-card-title>Id</mat-card-title>
+              <mat-card-subtitle>{{ user.uid }}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-card-header>
+              <mat-card-title>First Name</mat-card-title>
+              <mat-card-subtitle>{{ user.firstName }}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-card-header>
+              <mat-card-title>Last Name</mat-card-title>
+              <mat-card-subtitle>{{ user.lastName }}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-card-header>
+              <mat-card-title>Email</mat-card-title>
+              <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-card-header>
+              <mat-card-title>Biography</mat-card-title>
+              <mat-card-subtitle>
+                <p>{{ user.biography }}</p>
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-list-item>
         </mat-list>
-          
+
       </mat-expansion-panel>
       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
@@ -58,25 +60,30 @@
         </mat-expansion-panel-header>
         <p>Todo</p>
       </mat-expansion-panel>
+
       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
           <mat-panel-title>
             Wallet
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-list>
-          <mat-list-item>
-            <ng-container *ngIf="user.identity; else walletLoading">
-              <mat-card-header>
-                <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address"></eth-blockie>
-                <mat-card-title>{{user.identity.domain}}</mat-card-title>
-                <mat-card-subtitle>
-                  <a [href]="explorerUrl + user.identity.address" target="_blank" rel="noopener">{{user.identity.address}}</a>
-                </mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content >
+        <section>
+          <!-- WALLET -->
+          <ng-container *ngIf="user.identity; else walletLoading">
+            <header fxLayout="row" fxLayoutAlign="space-between center">
+              <!-- Wallet Profile -->
+              <div class="wallet-profile">
+                <eth-blockie mat-card-avatar [round]="false" [height]="40" width="40" [address]="user.identity.address">
+                </eth-blockie>
+                <h4>{{user.identity.domain}}</h4>
+                <a [href]="explorerUrl + user.identity.address" target="_blank" rel="noopener">
+                  {{user.identity.address}}
+                </a>
+              </div>
+              <div class="wallet-balance">
+                <!-- Balance -->
                 <ng-container *ngIf="!(isBalanceLoading$ | async); else isLoading">
-                  <button mat-button matTooltip="Click to refresh" (click)="refreshBalance()">
+                  <button class="balance" mat-button matTooltip="Click to refresh" (click)="refreshBalance()">
                     {{user.balance || '0.0'}} ETH
                   </button>
                 </ng-container>
@@ -85,16 +92,41 @@
                     <mat-spinner [diameter]="24" [strokeWidth]="2"></mat-spinner>
                   </button>
                 </ng-template>
-              </mat-card-content>
-            </ng-container>
-            <ng-template #walletLoading>
-              <div class="wallet-loading">
-                <p>Your Wallet is loading...</p>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
               </div>
+            </header>
+
+            <ng-container *ngIf="hasKeystore$ | async; else recoverWallet">
+              <!-- Private Key -->
+              <article fxLayout="row" fxLayoutAlign="start center" class="private-key">
+                <ng-container *ngIf="!(loadingPrivateKey$ | async); else loadPrivateKey">
+                  <button mat-button (click)="getPrivateKey()">
+                    <mat-icon>vpn_key</mat-icon>
+                    <span>Show Private Key</span>
+                  </button>
+                </ng-container>
+                <ng-template #loadPrivateKey>
+                  <mat-icon class="loading">autorenew</mat-icon>
+                </ng-template>
+                <span *ngIf="privateKey$ | async as privKey">{{ privKey }}</span>
+              </article>
+            </ng-container>
+
+            <!-- Recover -->
+            <ng-template #recoverWallet class="recover">
+              <button mat-button (click)="recover()">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>Recover your wallet</span>
+              </button>
             </ng-template>
-          </mat-list-item>
-        </mat-list>
+          </ng-container>
+          <ng-template #walletLoading>
+            <div class="wallet-loading">
+              <p>Your Wallet is loading...</p>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+          </ng-template>
+          <!-- /WALLET -->
+        </section>
       </mat-expansion-panel>
     </mat-accordion>
   </mat-card>

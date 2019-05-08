@@ -7,9 +7,11 @@ import { AccountViewComponent } from './account-view/account-view.component';
 import { AccountDeleteComponent } from './account-delete/account-delete.component';
 import { RouterModule, Routes } from '@angular/router';
 import { BlockieModule } from '../../../ui/src/lib/blockie/blockie.module';
+import { WalletModule, AskPasswordComponent } from '@blockframes/ethers';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
-import { 
+import {
   MatButtonModule,
   MatInputModule,
   MatMenuModule,
@@ -27,17 +29,19 @@ import {
 export const accountRoutes: Routes = [
   {
     path: 'profile',
-    component: AccountProfileComponent,
+    component: AccountProfileComponent
   },
   {
     path: '',
-    component: AccountViewComponent,
+    component: AccountViewComponent
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    WalletModule,
+    FlexLayoutModule,
     MatInputModule,
     MatMenuModule,
     MatCardModule,
@@ -55,8 +59,24 @@ export const accountRoutes: Routes = [
     RouterModule.forChild(accountRoutes),
     BlockieModule
   ],
-  entryComponents: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
-  declarations: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent],
-  exports: [AccountWidgetComponent, AccountProfileComponent, AccountViewComponent, AccountDeleteComponent]
+  entryComponents: [
+    AccountWidgetComponent,
+    AccountProfileComponent,
+    AccountViewComponent,
+    AccountDeleteComponent,
+    AskPasswordComponent
+  ],
+  declarations: [
+    AccountWidgetComponent,
+    AccountProfileComponent,
+    AccountViewComponent,
+    AccountDeleteComponent
+  ],
+  exports: [
+    AccountWidgetComponent,
+    AccountProfileComponent,
+    AccountViewComponent,
+    AccountDeleteComponent
+  ]
 })
 export class AccountModule {}
