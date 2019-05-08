@@ -26,7 +26,6 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 // Libraries
 import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { WalletModule } from '@blockframes/ethers';
 import { MovieModule } from '@blockframes/movie';
 import { OrganizationModule } from '@blockframes/organization';
 
@@ -79,7 +78,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AuthModule,
     UploadModule,
     UiFormModule,
-    WalletModule,
     OrganizationModule,
     ToolbarModule,
     MovieModule,
