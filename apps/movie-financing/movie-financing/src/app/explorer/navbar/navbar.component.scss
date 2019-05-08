@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,500,800');
 
 .explorer-navbar {
   background: none;
@@ -20,5 +20,28 @@
     font-size: 0.8rem;
     text-align: center;
     text-transform: uppercase;
+  }
+
+  table.userInfos {
+    margin-left: 2rem;
+    border-collapse: collapse;
+
+    td {
+      border: 1px solid white;
+    }
+
+    .name a {
+      font-weight: 300;
+    }
+
+    .membership-level a {
+      font-weight: 800;
+    }
+
+    .account-icon {
+      mat-icon {
+        transform: translate(0, 25%);
+      }
+    }
   }
 }
