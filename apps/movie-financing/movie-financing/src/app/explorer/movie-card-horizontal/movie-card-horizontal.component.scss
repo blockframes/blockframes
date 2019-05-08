@@ -1,6 +1,7 @@
 @import '../movie-card/movie-card.component.scss';
 
 mat-card {
+  margin-bottom: 4rem;
   display: flex;
   justify-content: space-between;
   width: 95%;

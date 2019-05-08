@@ -9,7 +9,9 @@ mat-card.major-filters {
   background-color: white;
 
   button {
-    padding: 2rem;
+    flex-grow: 1;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     font-weight: 500;
   }
 
