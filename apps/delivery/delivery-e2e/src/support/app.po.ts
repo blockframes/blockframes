@@ -352,6 +352,11 @@ export class HomePage extends NavbarPage {
     return new TeamWorkPage;
   }
 
+  public clickOnMovie(movieName: string) {
+    cy.get('mat-card').contains(movieName).click();
+    return new DeliveryListPage();
+  }
+
   public displayMovieMenu(movieName: string) {
     cy.wait(2500);
     cy.get('mat-card-title').contains(movieName).parent().parent().parent().find('button mat-icon').should('contain', 'more_vert').contains('more_vert').click();

@@ -126,9 +126,7 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     // TODO: accept the notification
 
     // Go to app-delivery
-    p.displayMovieMenu('PARASITE');
-    p.clickOpenIn();
-    p = p.selectApp();
+    p = p.clickOnMovie('PARASITE');
 
     // Open template picker
     p = p.clickAddDelivery();
