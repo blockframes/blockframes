@@ -29,7 +29,7 @@ export const routes: Routes = [
       { path: 'home', loadChildren: '@blockframes/movie#MovieModule' }, // loadChildren should lead to the Movie Module
       { path: 'organization', loadChildren: '@blockframes/organization#OrganizationModule' }, // loadChildren should lead to the Organization Module
       { path: 'account', loadChildren: '@blockframes/account#AccountModule' }, // loadChildren should lead to the Account Module
-      { path: ':id', loadChildren: './financing/financing.module#FinancingModule' } // should lead to the specific App
+      { path: ':movieId', loadChildren: './financing/financing.module#FinancingModule' } // should lead to the specific App
     ]
   },
   {

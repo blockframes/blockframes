@@ -15,6 +15,11 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'list', //@todo this redirect is temporary till routes uniformization
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+  {
     path: 'dashboard',
     component: DashboardComponent
   }
