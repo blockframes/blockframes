@@ -1,6 +1,6 @@
 import { functions, db } from './firebase';
 import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
-import { prepareNotification, triggerNotifications } from './notify';
+import { prepareNotification, triggerNotifications, Doc } from './notify';
 
 const APP_MOVIE_ICON = 'moviefinancing';
 
@@ -9,6 +9,7 @@ export interface Organization {
 }
 
 interface snapObject {
+  doc: Doc,
   stakeholderId: string,
   orgName: string,
   count: number,
@@ -29,14 +30,16 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   return orgs.map(doc => doc.data() as Organization);
 }
 
-function customMessage(userId: string, snapInformations: snapObject, deliveryId?: string, movieId?: string) {
-  const documentType = (!!deliveryId) ? 'delivery' : 'movie';
-  const documentId = (!!deliveryId) ? deliveryId : movieId;
+function customMessage(userId: string, snapInformations: snapObject) {
   return snapInformations.userIds.includes(userId) && snapInformations.count > 1
-    ? `You have been invited to ${documentType} : ${documentId}. Do you wish to work on it ?`
+    ? `You have been invited to ${snapInformations.doc.type} : ${snapInformations.doc.id}. Do you wish to work on it ?`
     : `Stakeholder ${snapInformations.stakeholderId} from ${
       snapInformations.orgName
-    } has been added to delivery ${deliveryId}`;
+    } has been added to ${snapInformations.doc.type} : ${snapInformations.doc.id}`;
+}
+
+function getCount(collection: string) {
+  return db.collection(collection).get().then(col => col.size)
 }
 
 export async function onDeliveryStakeholderCreate (
@@ -60,15 +63,15 @@ export async function onDeliveryStakeholderCreate (
     }
 
     try {
+      const doc = {id: delivery.id, type: 'delivery'} as Doc;
+      const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`)
       const snapInformations = {
+        doc,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
-        count: await db
-        .collection(`deliveries/${delivery.id}/stakeholders`)
-        .get()
-        .then(col => col.size),
+        count: stakeholderCount,
         userIds: newStakeholderOrg.userIds
-      }
+      };
       const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
@@ -76,10 +79,10 @@ export async function onDeliveryStakeholderCreate (
         .map((userId: string) => {
           return prepareNotification({
             app: APP_DELIVERY_ICON,
-            message: customMessage(userId, snapInformations, delivery.id),
+            message: customMessage(userId, snapInformations),
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            doc: {id: delivery.id, type: 'delivery'},
+            doc,
             stakeholderId: newStakeholder.id
           });
         });
@@ -165,13 +168,13 @@ export async function onMovieStakeholderCreate (
     }
 
     try {
+      const doc = {id: movie.id, type: 'movie'} as Doc;
+      const stakeholderCount = await getCount(`movies/${movie.id}/stakeholders`)
       const snapInformations = {
+        doc,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
-        count: await db
-        .collection(`movies/${movie.id}/stakeholders`)
-        .get()
-        .then(col => col.size),
+        count: stakeholderCount,
         userIds: newStakeholderOrg.userIds
       }
       const orgs = await getOrgsOfMovie(movie.id);
@@ -181,10 +184,10 @@ export async function onMovieStakeholderCreate (
         .map((userId: string) => {
           return prepareNotification({
             app: APP_MOVIE_ICON,
-            message: customMessage(userId, snapInformations, movie.id),
+            message: customMessage(userId, snapInformations),
             userId,
             path: `/layout/home/form/${movie.id}/teamwork`,
-            doc: {id: movie.id, type: 'movie'},
+            doc,
             stakeholderId: newStakeholder.id
           });
         });

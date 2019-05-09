@@ -1,11 +1,16 @@
 import { db, serverTimestamp } from './firebase';
 
+export interface Doc {
+  id: string,
+  type : 'movie' | 'delivery'
+}
+
 interface PartialNotification {
   app: string;
   message: string;
   userId: string;
   path?: string;
-  doc?: { id: string, type: 'movie' | 'delivery' } ,
+  doc?: Doc;
   stakeholderId?: string;
 }
 
