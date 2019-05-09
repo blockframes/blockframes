@@ -191,7 +191,7 @@ const DATA = {
     'cast': [
       {
         'name': 'Adam Driver',
-        'urlPicture': 'https: //firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/adam_driver.png?alt=media&token=ec764f36-b807-44f2-a238-1be397953f5b',
+        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/adam_driver.png?alt=media&token=ec764f36-b807-44f2-a238-1be397953f5b',
         'characterName': 'Henry',
         'selectiveFilmoTitle1': 'BlacKkKlansman',
         'selectiveFilmoDate1': 2018,
@@ -205,7 +205,7 @@ const DATA = {
       },
       {
         'name': 'Michelle Williams',
-        'urlPicture': 'https: //firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/michelle_williams.png?alt=media&token=e206fbb3-fffa-49c6-ac1c-373f709483de',
+        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/michelle_williams.png?alt=media&token=e206fbb3-fffa-49c6-ac1c-373f709483de',
         'characterName': 'Ann',
         'selectiveFilmoTitle1': 'Venom',
         'selectiveFilmoDate1': 2018,
@@ -244,7 +244,7 @@ const DATA = {
       {
         'title': 'Mauvais Sang',
         'productionYear': 1986,
-        'posterUrl': 'https: //firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/mauvais_sang.png?alt=media&token=3defebab-802f-41c2-8e17-d42f26c8726a',
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/mauvais_sang.png?alt=media&token=3defebab-802f-41c2-8e17-d42f26c8726a',
         'logline': 'In Paris in the near future. Aging thieves Marc and Hans owe money to a tough American woman who gives them two weeks to pay. They scheme to steal and sell a new serum for a disease that\'s killing lovers, but they need someone with quick steady hands.',
         'imdbUrl': 'https://www.imdb.com/title/tt0091497',
         'bestDistinctions': [

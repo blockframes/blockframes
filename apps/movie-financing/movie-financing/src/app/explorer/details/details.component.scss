@@ -258,6 +258,7 @@ ul.kv-list {
       img {
         height: 144px;
         width: 108px;
+        box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
       }
     }
 
@@ -266,6 +267,7 @@ ul.kv-list {
       width: calc(100% - 108px);
       box-shadow: none;
       padding-top: 0px;
+      min-height: 120px;
 
       ::ng-deep {
         .mat-card-header-text {
@@ -305,5 +307,25 @@ ul.kv-list {
         }
       }
     }
+  }
+}
+
+.cast-sub-container { 
+  .picture-container {
+    width: 108px;
+    float: left;
+    img {
+      height: 108px;
+      width: 108px;
+      box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .cast-card {
+    float: left;
+    width: calc(100% - 108px);
+    box-shadow: none;
+    padding-top: 0px;
+    min-height: 120px;
   }
 }
