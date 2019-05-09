@@ -110,7 +110,7 @@ describe('RelayerWallet', () => {
   });
 
   describe('sendTransaction', () => {
-    test('mock relayer : should be ok', async () => {
+    test.skip('mock relayer : should be ok', async () => {
       const response = await relayerWallet.sendTransaction({});
       expect(response).toMatchObject({ data: '0x0' });
     });
