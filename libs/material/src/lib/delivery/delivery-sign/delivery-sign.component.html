@@ -2,7 +2,7 @@
 <form [formGroup]="form" (ngSubmit)="confirm()">
   <mat-form-field appearance="outline" fxLayoutAlign="center">
     <mat-label>Password</mat-label>
-    <input formControlName="password" type="password" matInput placeholder="Password" required />
+    <input class="password" formControlName="password" type="password" matInput placeholder="Password" required />
   </mat-form-field>
   <div *ngIf="loading" fxLayoutAlign="center center">
   <mat-progress-spinner

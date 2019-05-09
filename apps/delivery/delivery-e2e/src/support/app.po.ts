@@ -38,7 +38,16 @@ export class TeamWorkPage {
   constructor() {}
 
     public clickAddStakeholder(name: string) {
-      cy.get('mat-card.mat-elevation-z0').should('contain', name).contains(name).parent().parent({timeout: 1000}).find('button', {timeout: 500}).click();
+      cy.wait(500);
+      cy.get('mat-card.mat-elevation-z0')
+      .should('contain', name)
+      .contains(name).parent().parent()
+      .find('button').click();
+    }
+
+    public clickDelivery() {
+      cy.get('a').contains('delivery').click();
+      return new DeliveryFormPage;
     }
   }
 
@@ -46,7 +55,6 @@ export class TeamWorkPage {
 export class DeliverySettingsFormPage {
   constructor() {
   }
-
   public openGeneralDate() {
     cy.get('mat-datepicker-toggle button.mat-icon-button').click();
   }
@@ -109,6 +117,77 @@ export class DeliveryFormPage {
     cy.get('.delivery-form').should('contain', 'Sign delivery');
   }
 
+  public verifyDeletedMaterial(value: string) {
+    cy.get('mat-card').contains(value).should('have.length', 0);
+  }
+
+  public verifySignatures() {
+    cy.get('mat-card-footer.footerSigned').should((footers) => {
+      expect(footers).to.have.length(2) });
+  }
+
+  public clickSign() {
+    cy.get('button').contains('Sign').click();
+    cy.wait(3000);
+  }
+
+  public fillPassword(password: string) {
+    cy.get('input.password').type(password);
+  }
+
+  public clickVerifyToSign() {
+    cy.get('button').contains('Verify to sign').click();
+  }
+
+  public clickAddSignature() {
+    cy.get('button').contains('Add signature').click();
+  }
+
+  public clickDeleteMaterial(value: string) {
+    cy.wait(1000);
+    cy.get('mat-card')
+    .contains(value)
+    .parent().parent()
+    .find('button').contains('DELETE').click();
+  }
+
+  public openLogout() {
+    cy.get('button').contains('account_circle').click();
+  }
+
+  public clickLogout() {
+    cy.get('button').contains('Logout').click();
+    return new LandingPage;
+  }
+
+  public clickCheckBoxMaterial(name: string) {
+    cy.get('mat-card')
+      .contains(name)
+      .parent().parent()
+      .find('mat-checkbox [type="checkbox"]').check({force: true});
+  }
+
+  public clickCheckBoxMaterials(names: string[]) {
+    cy.wait(1000);
+    names.forEach(name => this.clickCheckBoxMaterial(name));
+  }
+
+  public scrollToAction() {
+    cy.get('button.action').scrollIntoView();
+  }
+
+  public clickButtonAction() {
+    cy.get('button.action').click();
+  }
+
+  public clickChangeStep() {
+    cy.get('button').contains('Change step').click();
+  }
+
+  public clickAddStep(stepName: string) {
+    cy.get('button').contains(stepName).click();
+  }
+
   public clickAdd() {
     cy.get('mat-sidenav button.create-material').click();
   }
@@ -160,7 +239,9 @@ export class TemplatePickerPage {
   }
 
   public clickTemplateDelivery(templateName: string) {
-    cy.get('.ng-star-inserted > .mat-card > .mat-card-title', {timeout: 500}).contains(templateName).click();
+    cy.wait(1500);
+    cy.get('.ng-star-inserted > .mat-card')
+      .contains(templateName).click();
     return new DeliverySettingsFormPage();
   }
 }
@@ -168,6 +249,10 @@ export class TemplatePickerPage {
 export class DeliveryListPage {
   constructor() {
     cy.contains('deliveries');
+  }
+
+  public clickDeliveries() {
+    cy.get('a').contains('deliveries').click();
   }
 
   public clickAddDelivery() {
@@ -257,8 +342,19 @@ export class HomePage extends NavbarPage {
     // TODO: check if we are on a home page
   }
 
-  public displayMovieMenu() {
-    cy.get('button mat-icon').should('contain', 'more_vert').contains('more_vert').click();
+  public openNotifications() {
+    cy.wait(2000);
+    cy.get('.notifications').click();
+  }
+
+  public clickAcceptInvitation() {
+    cy.get('button').contains('Accept').first().click();
+    return new TeamWorkPage;
+  }
+
+  public displayMovieMenu(movieName: string) {
+    cy.wait(2500);
+    cy.get('mat-card-title').contains(movieName).parent().parent().parent().find('button mat-icon').should('contain', 'more_vert').contains('more_vert').click();
   }
 
   public clickOpenIn() {

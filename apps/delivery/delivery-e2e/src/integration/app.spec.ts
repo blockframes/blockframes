@@ -126,7 +126,7 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     // TODO: accept the notification
 
     // Go to app-delivery
-    p.displayMovieMenu();
+    p.displayMovieMenu('PARASITE');
     p.clickOpenIn();
     p = p.selectApp();
 
@@ -134,8 +134,7 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     p = p.clickAddDelivery();
 
     // Select Jokers Delivery Schedule
-    p = p.clickTemplateDelivery('Jokers Delivery Schedule');
-    //p = p.clickCreateNewDelivery();
+    p = p.clickTemplateDelivery('THE JOKERS DELIVERY SCHEDULE');
 
     // Add general date and step to delivery
     p.openGeneralDate();
@@ -149,6 +148,54 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     // Go to team-work page
     p = p.clickTeamWork();
     p.clickAddStakeholder('CJ Entertainment');
+    p = p.clickDelivery();
 
+    // Add step to materials
+    p.clickCheckBoxMaterials(
+      ['Music of the Picture on CD protools or MP3 files',
+      'Any key artwork and all contractual logo materials']
+    );
+    p.scrollToAction();
+    p.clickButtonAction();
+    p.clickChangeStep();
+    p.clickAddStep('Marketing');
+    //TODO: verify if materials have the step
+    p.openLogout();
+    p = p.clickLogout();
+
+    // Sign in with cjentertainment@blockframes.com
+    p.fillSigninEmail('cjentertainment@blockframes.com');
+    p.fillSigninPassword('blockframes');
+    p = p.login();
+
+    // Accept invitation to delivery, delete one material and sign delivery
+    p.openNotifications();
+    p = p.clickAcceptInvitation();
+    p = p.clickDelivery();
+    p.clickDeleteMaterial('Music of the Picture on CD protools or MP3 files');
+    p.verifyDeletedMaterial('Music of the Picture on CD protools or MP3 files');
+    p.clickAddSignature();
+    p.clickVerifyToSign();
+    p.fillPassword('azerty');
+    p.clickSign();
+    p.openLogout();
+    p = p.clickLogout();
+
+    // Login with demo@blockframes.com and sign the delivery
+    p.fillSigninEmail('demo@blockframes.com');
+    p.fillSigninPassword('blockframes');
+    p = p.login();
+    p.displayMovieMenu('PARASITE');
+    p.clickOpenIn();
+    p = p.selectApp();
+    p.clickDeliveries();
+    p = p.clickDelivery();
+    p.clickAddSignature();
+    p.clickVerifyToSign();
+    p.fillPassword('azerty');
+    p.clickSign();
+
+    // Verify if we have 2 signatures
+    p.verifySignatures();
   })
 });
