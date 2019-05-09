@@ -2,10 +2,17 @@ import { functions, db } from './firebase';
 import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
 
-const APP_MOVIE = 'moviefinancing';
+const APP_MOVIE_ICON = 'moviefinancing';
 
 export interface Organization {
   userIds: string[];
+}
+
+interface snapObject {
+  stakeholderId: string,
+  orgName: string,
+  count: number,
+  userIds: string[]
 }
 
 export async function getOrgsOfDelivery(deliveryId: string): Promise<Organization[]> {
@@ -22,10 +29,20 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   return orgs.map(doc => doc.data() as Organization);
 }
 
-export const onDeliveryStakeholderCreate = async (
+function customMessage(userId: string, snapInformations: snapObject, deliveryId?: string, movieId?: string) {
+  const documentType = (!!deliveryId) ? 'delivery' : 'movie';
+  const documentId = (!!deliveryId) ? deliveryId : movieId;
+  return snapInformations.userIds.includes(userId) && snapInformations.count > 1
+    ? `You have been invited to ${documentType} : ${documentId}. Do you wish to work on it ?`
+    : `Stakeholder ${snapInformations.stakeholderId} from ${
+      snapInformations.orgName
+    } has been added to delivery ${deliveryId}`;
+}
+
+export async function onDeliveryStakeholderCreate (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
-) => {
+) {
   if (!snap.data()) {
     return true;
   }
@@ -43,27 +60,26 @@ export const onDeliveryStakeholderCreate = async (
     }
 
     try {
-      const stakeholderCount = await db
+      const snapInformations = {
+        stakeholderId: newStakeholder.id,
+        orgName: newStakeholderOrg.name,
+        count: await db
         .collection(`deliveries/${delivery.id}/stakeholders`)
         .get()
-        .then(col => col.size);
+        .then(col => col.size),
+        userIds: newStakeholderOrg.userIds
+      }
       const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) => {
-          const message =
-            newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1
-              ? `You have been invited to delivery : ${delivery.id}. Do you wish to work on it ?`
-              : `Stakeholder ${newStakeholder.id} from ${
-                  newStakeholderOrg.name
-                } has been added to delivery ${delivery.id}`;
           return prepareNotification({
             app: APP_DELIVERY_ICON,
-            message,
+            message: customMessage(userId, snapInformations, delivery.id),
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            docId: delivery.id,
+            doc: {id: delivery.id, type: 'delivery'},
             stakeholderId: newStakeholder.id
           });
         });
@@ -78,10 +94,10 @@ export const onDeliveryStakeholderCreate = async (
   return true;
 };
 
-export const onDeliveryStakeholderDelete = async (
+export async function onDeliveryStakeholderDelete (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
-) => {
+) {
   if (!snap.data()) {
     return true;
   }
@@ -112,8 +128,7 @@ export const onDeliveryStakeholderDelete = async (
               stakeholderOrg.name
             } has been removed from delivery ${delivery.id}`,
             userId,
-            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            docId: delivery.id
+            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
           })
         );
 
@@ -127,10 +142,10 @@ export const onDeliveryStakeholderDelete = async (
   return true;
 };
 
-export const onMovieStakeholderCreate = async (
+export async function onMovieStakeholderCreate (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
-) => {
+) {
   if (!snap.data()) {
     return true;
   }
@@ -150,27 +165,26 @@ export const onMovieStakeholderCreate = async (
     }
 
     try {
-      const stakeholderCount = await db
+      const snapInformations = {
+        stakeholderId: newStakeholder.id,
+        orgName: newStakeholderOrg.name,
+        count: await db
         .collection(`movies/${movie.id}/stakeholders`)
         .get()
-        .then(col => col.size);
+        .then(col => col.size),
+        userIds: newStakeholderOrg.userIds
+      }
       const orgs = await getOrgsOfMovie(movie.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) => {
-          const message =
-            newStakeholderOrg.userIds.includes(userId) && stakeholderCount > 1
-              ? `You have been invited to movie : ${movie.title.original}. Do you wish to work on it ?`
-              : `Stakeholder ${newStakeholder.id} from ${
-                  newStakeholderOrg.name
-                } has been added to movie ${movie.title.original}`;
           return prepareNotification({
-            app: APP_MOVIE,
-            message,
+            app: APP_MOVIE_ICON,
+            message: customMessage(userId, snapInformations, movie.id),
             userId,
             path: `/layout/home/form/${movie.id}/teamwork`,
-            docId: movie.id,
+            doc: {id: movie.id, type: 'movie'},
             stakeholderId: newStakeholder.id
           });
         });
@@ -185,10 +199,10 @@ export const onMovieStakeholderCreate = async (
   return true;
 };
 
-export const onMovieStakeholderDelete = async (
+export async function onMovieStakeholderDelete (
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
-) => {
+) {
   if (!snap.data()) {
     return true;
   }
@@ -214,7 +228,7 @@ export const onMovieStakeholderDelete = async (
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) =>
           prepareNotification({
-            app: APP_MOVIE,
+            app: APP_MOVIE_ICON,
             message: `Stakeholder ${stakeholder.id} from ${stakeholderOrg.name}
             has been removed from movie ${movie.title.original}`,
             userId,

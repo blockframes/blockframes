@@ -51,11 +51,14 @@ p {
 
 .labo-approval {
   position: relative;
+  font-size: 13px;
   bottom: 70px;
   left: 950px;
 }
 
 .done-icon {
-  position: relative;
-  top: 5px;
+  position: absolute;
+  left: -25px;
+  top: -5px;
 }
+

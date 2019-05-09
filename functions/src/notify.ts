@@ -5,7 +5,7 @@ interface PartialNotification {
   message: string;
   userId: string;
   path?: string;
-  docId?: string;
+  doc?: { id: string, type: 'movie' | 'delivery' } ,
   stakeholderId?: string;
 }
 
@@ -28,9 +28,9 @@ export async function triggerNotifications(notifications: Notification[]): Promi
 
 export function prepareNotification(notif: PartialNotification): Notification {
   return {
-    ...notif,
     id: db.collection('notifications').doc().id,
     isRead: false,
-    date: serverTimestamp()
-  };
+    date: serverTimestamp(),
+    ...notif
+  } as Notification;
 }

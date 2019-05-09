@@ -27,7 +27,7 @@ export class NotificationItemComponent {
 
   public goToTeamwork() {
     try {
-      this.service.joinTeamwork(this.notification.stakeholderId, this.notification.docId, this.notification.app);
+      this.service.joinTeamwork(this.notification.stakeholderId, this.notification.doc.id, this.notification.doc.type);
       this.router.navigate([this.notification.path]);
       this.service.readNotification(this.notification.id);
     } catch (error) {
