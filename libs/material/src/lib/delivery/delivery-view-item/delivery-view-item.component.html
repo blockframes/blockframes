@@ -41,31 +41,35 @@
       >
         {{ disableButtonLabel }}
       </button>
-    </span>
-  </div>
-  <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
-    <span *ngIf="!disableMaterial && !!material.step" class="material-step">
-      <h5>Step :</h5>
-      <p class="material-step-text">{{material.step.name}}</p>
     </div>
-    <div class="state" fxLayout="column">
-      <h5>State :</h5>
-      <mat-icon class="icons" matTooltip="{{ material.state.toUpperCase() }}" svgIcon="{{ material.state }}"></mat-icon>
-      <a *ngIf="material.state === 'available'" href="assets/apps/delivery.svg" download>
-        <mat-icon color="primary" class="download-icon">cloud_download</mat-icon>
-      </a>
-    </div>
-    <div *ngIf="!disableMaterial && material.state === 'delivered'" class="time">
-      <h5>Accepted in :</h5>
-      <p class="time-text">45 days</p>
-    </div>
-    <div *ngIf="!disableMaterial && material.state === 'refused'" class="time">
-      <h5>Refused in :</h5>
-      <p class="time-text">30 days</p>
-    </div>
-    <div class="payment">
-      <h5>Payment :</h5>
-      <mat-icon class="icons" svgIcon="{{ paymentIcon }}"></mat-icon>
+    <div class="informations" fxLayout="row" fxLayoutAlign="space-around none">
+      <div *ngIf="!disableMaterial && !!material.step" class="material-step">
+        <h5>Step :</h5>
+        <p class="material-step-text">{{ material.step.name }}</p>
+      </div>
+      <div class="state" fxLayout="column">
+        <h5>State :</h5>
+        <mat-icon
+          class="icons"
+          matTooltip="{{ material.state.toUpperCase() }}"
+          svgIcon="{{ material.state }}"
+        ></mat-icon>
+        <a *ngIf="material.state === 'available'" href="assets/apps/delivery.svg" download>
+          <mat-icon color="primary" class="download-icon">cloud_download</mat-icon>
+        </a>
+      </div>
+      <div *ngIf="!disableMaterial && material.state === 'delivered'" class="time">
+        <h5>Accepted in :</h5>
+        <p class="time-text">45 days</p>
+      </div>
+      <div *ngIf="!disableMaterial && material.state === 'refused'" class="time">
+        <h5>Refused in :</h5>
+        <p class="time-text">30 days</p>
+      </div>
+      <div class="payment">
+        <h5>Payment :</h5>
+        <mat-icon class="icons" svgIcon="{{ paymentIcon }}"></mat-icon>
+      </div>
     </div>
   </article>
 </mat-card>

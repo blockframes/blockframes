@@ -15,10 +15,9 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
-import { switchMap, tap, map, takeWhile } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Query, FireQuery } from '@blockframes/utils';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +34,6 @@ export class DeliveryService {
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
-    private router: Router,
     private fireQuery: FireQuery
   ) {}
 
@@ -144,7 +142,6 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
     this.store.setActive(id);
-    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${id}/settings`]);
     return Promise.all(
       movieMaterials.map(material =>
         this.db

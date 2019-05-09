@@ -58,8 +58,9 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     this.close();
   }
 
-  public useMovieAsTemplate(){
-    this.deliveryService.addMovieMaterialsDelivery();
+  public async useMovieAsTemplate(){
+    await this.deliveryService.addMovieMaterialsDelivery();
+    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${this.deliveryQuery.getActiveId()}/settings`]);
     this.close();
   }
 
