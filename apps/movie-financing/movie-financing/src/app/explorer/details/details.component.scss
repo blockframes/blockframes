@@ -250,4 +250,60 @@ ul.kv-list {
       color: black !important;
     }
   }
+
+  .producer-history-sub-container { 
+    .poster-container {
+      width: 108px;
+      float: left;
+      img {
+        height: 144px;
+        width: 108px;
+      }
+    }
+
+    .movie-card {
+      float: left;
+      width: calc(100% - 108px);
+      box-shadow: none;
+      padding-top: 0px;
+
+      ::ng-deep {
+        .mat-card-header-text {
+          margin-left: 0;
+
+          .mat-card-subtitle {
+            display: inline-block;
+            width: 40px;
+            margin-bottom: 0px;
+          }
+
+          .mat-card-title {
+            display: inline-block;
+            width: auto;
+            margin-bottom: 0px;
+          }
+        }
+
+        .mat-card-content {
+          margin-bottom: 0;
+          p{
+            margin: 0px;
+          }
+        }
+        
+        .mat-card-actions {
+          margin: 0px;
+          padding: 0px;
+          a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: bold;
+            .mat-icon {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
 }

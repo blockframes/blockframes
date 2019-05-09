@@ -16,11 +16,9 @@
         <h3>
           Funded Budget
         </h3>
-        <h4>
-          $7,9M
-        </h4>
+        <h4>{{ movie.principalInformations.fundedBudget }}</h4>
         <h5>
-          <span class="key">Goal Budget:</span> <span class="value">$14.9M</span>
+          <span class="key">Goal Budget:</span> <span class="value">{{ movie.principalInformations.goalBudget }}</span>
         </h5>
       </div>
       <div class="right-percent">
@@ -28,12 +26,12 @@
           class="spinner"
           color="primary"
           mode="determinate"
-          value="62"
+          [value]="(movie.principalInformations.percentage | number) * 100"
           diameter="120"
           strokeWidth="15"
         >
         </mat-progress-spinner>
-        <div class="progress-value">62 %</div>
+        <div class="progress-value">{{ (movie.principalInformations.percentage | number) * 100 }} %</div>
       </div>
     </div>
     <div class="call-to-action">
@@ -42,11 +40,8 @@
           <img src="https://fakeimg.pl/74x74/" alt="movie cover">
         </div>
         <div class="details">
-          <h3>Leos Carax</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et rutrum libero, at feugiat lectus.
-            Integer pulvinar blandit nulla sagittis mattis. Sed scelerisque eu leo maximus placerat.
-          </p>
+          <h3>{{ movie.principalInformations.director }}</h3>
+          <p>{{ movie.principalInformations.directorShortBio }}</p>
         </div>
       </div>
       <div class="action contact">
@@ -61,25 +56,13 @@
     </div>
     <div class="contributions">
       <h2>Contributions</h2>
-      <div class="contribution">
-        <h3>$100K and more</h3>
-        <h4 class="key">Contribution title</h4>
-        <p class="value">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consequat augue vel ante congue sodales eu ut
-          mi. Cras quis lacus sit amet dui vulputate blandit. Aliquam dignissim nibh felis, in pharetra libero tempus
-          nec.
-        </p>
-        <h5>5 contributors</h5>
-      </div>
-      <div class="contribution">
-        <h3>$500K and more</h3>
-        <h4 class="key">Contribution title</h4>
-        <p class="value">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consequat augue vel ante congue sodales eu ut
-          mi. Cras quis lacus sit amet dui vulputate blandit. Aliquam dignissim nibh felis, in pharetra libero tempus
-          nec.
-        </p>
-        <h5>5 contributors</h5>
+      <div class="contribution" *ngFor="let contribution of movie.contributions | keyvalue">
+        <h3>${{contribution.key}} and more</h3>
+        <ng-container *ngFor="let item of contribution.value">
+          <h4 class="key">{{ item.title }}</h4>
+          <p class="value">{{ item.content }}</p>
+        </ng-container>
+        <h5>{{ contribution.value.length }} contributors</h5>
       </div>
     </div>
   </div>
@@ -90,55 +73,40 @@
         <h3>About Film</h3>
         <ul class="kv-list">
           <li>
-            <span class="key">Directed By</span> <span class="value">Leos Carax</span>
+            <span class="key">Directed By</span> <span class="value">{{ movie.principalInformations.director }}</span>
           </li>
           <li>
-            <span class="key">Produced By</span> <span class="value">CG Cinéma, Scope Pictures, Delta, Kinology</span>
+            <span class="key">Produced By</span> <span class="value">{{ movie.principalInformations.producedBy }}</span>
           </li>
           <li>
-            <span class="key">Cast</span> <span class="value">Leos Carax</span>
+            <span class="key">Cast</span> <span class="value">
+              <span *ngFor="let item of movie.artistic.cast; let isLast=last">
+                {{ item.name }}{{ !isLast?',':'' }}
+              </span>
+            </span>
           </li>
           <li>
-            <span class="key">Product Stage</span> <span class="value">Leos Carax</span>
+            <span class="key">Product Stage</span> <span class="value">{{ movie.principalInformations.productionStage }}</span>
           </li>
           <li>
-            <span class="key">International Sales</span> <span class="value">Leos Carax</span>
+            <span class="key">International Sales</span> <span class="value">{{ movie.principalInformations.internationalSales }}</span>
           </li>
         </ul>
       </div>
       <div class="synopsis">
         <h3>Synopsis</h3>
-        <p>
-          Los Angeles, nowadays. Henry is a stand-up comedian who wants to make people laugh. Ann is a famous opera
-          singer, who performs to audiences across the United States. Together, they live a happy and glamorous life,
-          until the day an unexpected event disrupts their quiet life: the birth of their first child Annette. A
-          mysterious baby, the little girl’s arrival leads Henry towards a terrible spiral - a plunge that takes him
-          into
-          a melancholic world haunted by ghosts and memories of a dark past.
-        </p>
+        <p>{{ movie.principalInformations.synopsis }}</p>
       </div>
       <div class="assets">
         <h3>Key assets of the project</h3>
         <ul>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat sollicitudin ligula. Sed a
-            porta libero. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-          </li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat sollicitudin ligula. Sed a
-            porta libero. Orci
-          </li>
-          <li>Lorem ipsum dolo</li>
+          <li *ngFor="let item of movie.principalInformations.keyAssets">{{ item }}</li>
         </ul>
       </div>
       <div class="keywords">
         <h3>Keywords</h3>
         <mat-chip-list>
-          <mat-basic-chip>Leos Carax</mat-basic-chip>
-          <mat-basic-chip>Comédie Musicale</mat-basic-chip>
-          <mat-basic-chip>Chanteuse</mat-basic-chip>
-          <mat-basic-chip>Opéra</mat-basic-chip>
-          <mat-basic-chip>Adam Driver</mat-basic-chip>
-          <mat-basic-chip>Michelle Williams</mat-basic-chip>
+          <mat-basic-chip *ngFor="let item of movie.principalInformations.keywords">{{ item }}</mat-basic-chip>
         </mat-chip-list>
       </div>
     </div>
@@ -147,47 +115,47 @@
         <mat-tab label="Production">
           <h2>Production</h2>
           <h3>Informations</h3>
-          <p class="key">ISAN</p>
-          <p class="value">?</p>
-
-          <p class="key">Subvention / Partenaires officiels </p>
-          <p class="value">CNC avance sur recette (2017) <b>450K€</b></p>
-
+          <p class="key">Subvention</p>
+          <p class="value">{{ movie.production.subvention }}</p>
+          <p class="key">Shooting dates</p>
+          <p class="value">{{ movie.production.shootingDate }}</p>
+          <p class="key">Shooting locations</p>
+          <p class="value">{{ movie.production.shootingLocations }}</p>
+          <p class="key">Expected premiere</p>
+          <p class="value">{{ movie.production.expectedPremiere }}</p>
+          
           <hr class="large-hidden"/>
 
           <h3>Producer's History</h3>
           <div class="producer-history">
             <mat-accordion>
-              <mat-expansion-panel>
+              <mat-expansion-panel *ngFor="let producerHistory of movie.production.producersHistory | keyvalue">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    Kinology
+                    {{ producerHistory.key }}
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    CG Cinéma
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Scope Pictures
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Delta
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
+                <div class="producer-history-sub-container" *ngFor="let movie of producerHistory.value">
+                  <div class="poster-container">
+                    <img [src]="movie.posterUrl">
+                  </div>
+                  <mat-card class="movie-card">
+                    <mat-card-header>
+                      <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
+                      <mat-card-title>{{ movie.title }}</mat-card-title>
+                    </mat-card-header>
+                    
+                    <mat-card-content>
+                      <p class="key">Logline</p>
+                      <p>{{ movie.logline }}</p>
+                      <p class="key">Best distinctions</p>
+                      <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
               </mat-expansion-panel>
             </mat-accordion>
           </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { default as CANNE_DATA }  from '../../canne-data';
 
 @Component({
   selector: 'financing-explorer-details',
@@ -7,7 +8,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerDetailsComponent implements OnInit {
-  constructor() { }
+  public movie: any;
+
+  constructor() {
+    this.movie = CANNE_DATA[0]; //@todo use @input or router param to select good movie
+  }
 
   ngOnInit() {
   }

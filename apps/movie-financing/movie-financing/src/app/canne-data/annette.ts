@@ -43,7 +43,7 @@ const DATA = {
     'directorsCategory': 'Prestige',
     'fundedBudget': '$7,9M',
     'goalBudget': '$14,9M',
-    'percentage': '0,62',
+    'percentage': '0.62',
     'directorShortBio': 'Leos Carax is an acclaimed French film director, critic, and writer. Carax is noted for his poetic style and his tortured depictions of love. His first major work was Boy Meets Girl (1984), and his notable works include Les Amants du Pont-Neuf (1991) and Holy Motors (2012).'
   },
   'production': {
@@ -51,142 +51,138 @@ const DATA = {
     'shootingDate': 'August 19, 2019 - Late Nov 2019 (15 weeks)',
     'shootingLocations': 'Belgium, Germany, Los Angeles',
     'expectedPremiere': 'May 2020 (Cannes Film Festival)',
-    'producersHistory': [
-      {
-        'stakeholderName': 'Kinology',
-        'title': 'The Man Who Killed Don Quixote',
-        'productionYear': 2018,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/don_quixote.jpg?alt=media&token=577f7dd7-da61-4f93-911e-6efcf70e8a16',
-        'logline': 'Toby, a disillusioned film director, becomes pulled into a world of time-jumping fantasy when a Spanish cobbler believes him to be Sancho Panza. He gradually becomes unable to tell dreams from reality.',
-        'imdbUrl': 'https://www.imdb.com/title/tt1318517',
-        'bestDistinctions': [
-          'Goya Awards, Spain: Best Production Manager, Best Makeup and Hairstyles',
-          'Magritte Awards, Belgium: Best Foreign Film in Co-Production'
-        ]
-      },
-      {
-        'stakeholderName': 'Kinology',
-        'title': 'Ghostland',
-        'productionYear': 2017,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/ghostland.jpg?alt=media&token=0aa66617-2100-4299-977f-092d933ac8eb',
-        'logline': 'A mother of two who inherits a house is confronted with murderous intruders on the first night in their new home and fights for her daughters\' lives. Sixteen years later when the daughters reunite at the house, things get really strange.',
-        'imdbUrl': 'https://www.imdb.com/title/tt6195094/',
-        'bestDistinctions': [
-          'Gérardmer Film Festival: Audience Award, Grand Prize, Syfy Jury Prize'
-        ]
-      },
-      {
-        'stakeholderName': 'Kinology',
-        'title': 'Planetarium',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/planetarium.jpg?alt=media&token=3f4d8765-ba74-46f6-a779-72e3ce56d9ee',
-        'logline': 'Follows the journey of sisters who are believed to possess the supernatural ability to connect with ghosts. They cross paths with a visionary French producer while performing in Paris.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4680196',
-        'bestDistinctions': [
-          'César Awards, France: Nominee Best Production Design'
-        ]
-      },
-      {
-        'stakeholderName': 'CG Cinéma',
-        'title': 'Long Day\'s Journey Into Night',
-        'productionYear': 2018,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/long_day_journey.jpg?alt=media&token=00da051b-a974-4dc4-ad29-c19a6585ad16',
-        'logline': 'A man went back to Guizhou, found the tracks of a mysterious woman. He recalls the summer he spent with her twenty years ago.',
-        'imdbUrl': 'https://www.imdb.com/title/tt8185182',
-        'bestDistinctions': [
-          'Cannes Film Festival: Nominee Un Certain Regard',
-          'Golden Horse Film Festival: Best Cinematography, Best Original Film Score, Best Sound Effects'
-        ]
-      },
-      {
-        'stakeholderName': 'CG Cinéma',
-        'title': 'Personal Shopper',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/personal_shopper.jpg?alt=media&token=ffa65e27-8955-4a36-8e22-1e5b684b4ce9',
-        'logline': 'A personal shopper in Paris refuses to leave the city until she makes contact with her twin brother who previously died there. Her life becomes more complicated when a mysterious person contacts her via text message.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4714782',
-        'bestDistinctions': [
-          'Cannes Film Festival: Best Director, Nominee Palme d\'Or'
-        ]
-      },
-      {
-        'stakeholderName': 'CG Cinéma',
-        'title': 'Things to come',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/things_to_come.jpg?alt=media&token=787aedf5-e6e2-413b-b7b1-ef4d45cafa0a',
-        'logline': 'A philosophy teacher soldiers through the death of her mother, getting fired from her job, and dealing with a husband who is cheating on her.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4120176',
-        'bestDistinctions': [
-          'Berlin International Film Festival: Silver Berlin Bear Best Director'
-        ]
-      },
-      {
-        'stakeholderName': 'Scop Pictures',
-        'title': 'Golden Youth',
-        'productionYear': 2019,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/golden_youth.jpg?alt=media&token=bf588c40-42d7-4cc8-973c-1414e19e1545',
-        'logline': 'Rose, 16, is a young girl from the DDASS. With his fiancee Michel, 22, they live their first big and innocent love story in Paris in 1979, at the heart of the Palace years. ',
-        'imdbUrl': 'https://www.imdb.com/title/tt7893416',
-        'bestDistinctions': [
-          'Miami Film Festival: Nominee Best Film'
-        ]
-      },
-      {
-        'stakeholderName': 'Scop Pictures',
-        'title': 'No Filter',
-        'productionYear': 2019,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/no_filter.jpg?alt=media&token=a5970a78-1569-4bed-91da-9539dc056a70',
-        'logline': 'Beatrice celebrates with her family the release of her book: she tells about the accident of her husband Frederic. He became blind and without filter - always so funny and seductive, he is totally unpredictable.',
-        'imdbUrl': 'https://www.imdb.com/title/tt8538552',
-        'bestDistinctions': [
-          ''
-        ]
-      },
-      {
-        'stakeholderName': 'Scop Pictures',
-        'title': 'By The Grace of God ',
-        'productionYear': 2018,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/grace_god.jpg?alt=media&token=ab3081eb-bba2-46f7-a4c1-739da06678c3',
-        'logline': 'The three men, friends of childhood, will cross, compare their personal experiences and question their life of couple, family and professional.',
-        'imdbUrl': 'https://www.imdb.com/title/tt8095860',
-        'bestDistinctions': [
-          'Berlin International Film Festival: Grand Jury Prize, Nominee Best Film'
-        ]
-      },
-      {
-        'stakeholderName': 'Delta',
-        'title': 'The Wild Pear Tree',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/wild_pear_tree.jpg?alt=media&token=098a38c2-64bd-43ad-84b3-1e3088b52369',
-        'logline': 'An unpublished writer returns to his hometown after graduating, where he seeks sponsors to publish his book while dealing with his father\'s deteriorating indulgence into gambling.',
-        'imdbUrl': 'https://www.imdb.com/title/tt6628102',
-        'bestDistinctions': [
-          'Cannes Film Festival: Nominee Palme d\'Or'
-        ]
-      },
-      {
-        'stakeholderName': 'Delta',
-        'title': 'Personal Shopper',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/personal_shopper.jpg?alt=media&token=ffa65e27-8955-4a36-8e22-1e5b684b4ce9',
-        'logline': 'A personal shopper in Paris refuses to leave the city until she makes contact with her twin brother who previously died there. Her life becomes more complicated when a mysterious person contacts her via text message.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4714782',
-        'bestDistinctions': [
-          'Cannes Film Festival: Best Director, Nominee Palme d\'Or'
-        ]
-      },
-      {
-        'stakeholderName': 'Delta',
-        'title': 'Things to come',
-        'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/things_to_come.jpg?alt=media&token=787aedf5-e6e2-413b-b7b1-ef4d45cafa0a',
-        'logline': 'A philosophy teacher soldiers through the death of her mother, getting fired from her job, and dealing with a husband who is cheating on her.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4120176',
-        'bestDistinctions': [
-          'Berlin International Film Festival: Silver Berlin Bear Best Director'
-        ]
-      }
-    ]
+    'producersHistory': {
+      'Kinology': [
+        {
+          'title': 'The Man Who Killed Don Quixote',
+          'productionYear': 2018,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/don_quixote.jpg?alt=media&token=577f7dd7-da61-4f93-911e-6efcf70e8a16',
+          'logline': 'Toby, a disillusioned film director, becomes pulled into a world of time-jumping fantasy when a Spanish cobbler believes him to be Sancho Panza. He gradually becomes unable to tell dreams from reality.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1318517',
+          'bestDistinctions': [
+            'Goya Awards, Spain: Best Production Manager, Best Makeup and Hairstyles',
+            'Magritte Awards, Belgium: Best Foreign Film in Co-Production'
+          ]
+        },
+        {
+          'title': 'Ghostland',
+          'productionYear': 2017,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/ghostland.jpg?alt=media&token=0aa66617-2100-4299-977f-092d933ac8eb',
+          'logline': 'A mother of two who inherits a house is confronted with murderous intruders on the first night in their new home and fights for her daughters\' lives. Sixteen years later when the daughters reunite at the house, things get really strange.',
+          'imdbUrl': 'https://www.imdb.com/title/tt6195094/',
+          'bestDistinctions': [
+            'Gérardmer Film Festival: Audience Award, Grand Prize, Syfy Jury Prize'
+          ]
+        },
+        {
+          'title': 'Planetarium',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/planetarium.jpg?alt=media&token=3f4d8765-ba74-46f6-a779-72e3ce56d9ee',
+          'logline': 'Follows the journey of sisters who are believed to possess the supernatural ability to connect with ghosts. They cross paths with a visionary French producer while performing in Paris.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4680196',
+          'bestDistinctions': [
+            'César Awards, France: Nominee Best Production Design'
+          ]
+        },
+      ],
+      'CG Cinéma': [
+        {
+          'title': 'Long Day\'s Journey Into Night',
+          'productionYear': 2018,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/long_day_journey.jpg?alt=media&token=00da051b-a974-4dc4-ad29-c19a6585ad16',
+          'logline': 'A man went back to Guizhou, found the tracks of a mysterious woman. He recalls the summer he spent with her twenty years ago.',
+          'imdbUrl': 'https://www.imdb.com/title/tt8185182',
+          'bestDistinctions': [
+            'Cannes Film Festival: Nominee Un Certain Regard',
+            'Golden Horse Film Festival: Best Cinematography, Best Original Film Score, Best Sound Effects'
+          ]
+        },
+        {
+          'title': 'Personal Shopper',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/personal_shopper.jpg?alt=media&token=ffa65e27-8955-4a36-8e22-1e5b684b4ce9',
+          'logline': 'A personal shopper in Paris refuses to leave the city until she makes contact with her twin brother who previously died there. Her life becomes more complicated when a mysterious person contacts her via text message.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4714782',
+          'bestDistinctions': [
+            'Cannes Film Festival: Best Director, Nominee Palme d\'Or'
+          ]
+        },
+        {
+          'title': 'Things to come',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/things_to_come.jpg?alt=media&token=787aedf5-e6e2-413b-b7b1-ef4d45cafa0a',
+          'logline': 'A philosophy teacher soldiers through the death of her mother, getting fired from her job, and dealing with a husband who is cheating on her.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4120176',
+          'bestDistinctions': [
+            'Berlin International Film Festival: Silver Berlin Bear Best Director'
+          ]
+        }
+      ],
+      'Scop Pictures': [
+        {
+          'title': 'Golden Youth',
+          'productionYear': 2019,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/golden_youth.jpg?alt=media&token=bf588c40-42d7-4cc8-973c-1414e19e1545',
+          'logline': 'Rose, 16, is a young girl from the DDASS. With his fiancee Michel, 22, they live their first big and innocent love story in Paris in 1979, at the heart of the Palace years. ',
+          'imdbUrl': 'https://www.imdb.com/title/tt7893416',
+          'bestDistinctions': [
+            'Miami Film Festival: Nominee Best Film'
+          ]
+        },
+        {
+          'title': 'No Filter',
+          'productionYear': 2019,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/no_filter.jpg?alt=media&token=a5970a78-1569-4bed-91da-9539dc056a70',
+          'logline': 'Beatrice celebrates with her family the release of her book: she tells about the accident of her husband Frederic. He became blind and without filter - always so funny and seductive, he is totally unpredictable.',
+          'imdbUrl': 'https://www.imdb.com/title/tt8538552',
+          'bestDistinctions': [
+            ''
+          ]
+        },
+        {
+          'title': 'By The Grace of God ',
+          'productionYear': 2018,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/grace_god.jpg?alt=media&token=ab3081eb-bba2-46f7-a4c1-739da06678c3',
+          'logline': 'The three men, friends of childhood, will cross, compare their personal experiences and question their life of couple, family and professional.',
+          'imdbUrl': 'https://www.imdb.com/title/tt8095860',
+          'bestDistinctions': [
+            'Berlin International Film Festival: Grand Jury Prize, Nominee Best Film'
+          ]
+        },
+      ],
+      'Delta': [
+        {
+          'title': 'The Wild Pear Tree',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/wild_pear_tree.jpg?alt=media&token=098a38c2-64bd-43ad-84b3-1e3088b52369',
+          'logline': 'An unpublished writer returns to his hometown after graduating, where he seeks sponsors to publish his book while dealing with his father\'s deteriorating indulgence into gambling.',
+          'imdbUrl': 'https://www.imdb.com/title/tt6628102',
+          'bestDistinctions': [
+            'Cannes Film Festival: Nominee Palme d\'Or'
+          ]
+        },
+        {
+          'title': 'Personal Shopper',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/personal_shopper.jpg?alt=media&token=ffa65e27-8955-4a36-8e22-1e5b684b4ce9',
+          'logline': 'A personal shopper in Paris refuses to leave the city until she makes contact with her twin brother who previously died there. Her life becomes more complicated when a mysterious person contacts her via text message.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4714782',
+          'bestDistinctions': [
+            'Cannes Film Festival: Best Director, Nominee Palme d\'Or'
+          ]
+        },
+        {
+          'title': 'Things to come',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/things_to_come.jpg?alt=media&token=787aedf5-e6e2-413b-b7b1-ef4d45cafa0a',
+          'logline': 'A philosophy teacher soldiers through the death of her mother, getting fired from her job, and dealing with a husband who is cheating on her.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4120176',
+          'bestDistinctions': [
+            'Berlin International Film Festival: Silver Berlin Bear Best Director'
+          ]
+        }
+      ]
+    }
   },
   'artistic': {
     'scriptwriter': 'Sparks',
@@ -1027,6 +1023,25 @@ const DATA = {
       'bestCaseB': '0,648153292053664',
       'worstCaseB': '0,291368292053664'
     }
+  },
+  'contributions': {
+    '100K': [
+      {
+        'title': 'Contribution title',
+        'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consequat augue vel ante congue sodales eu ut mi. Cras quis lacus sit amet dui vulputate blandit. Aliquam dignissim nibh felis, in pharetra libero tempus nec.'
+      },
+      {
+        'title': 'Second contribution',
+        'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consequat augue vel ante congue sodales eu ut mi. Cras quis lacus sit amet dui vulputate blandit. Aliquam dignissim nibh felis, in pharetra libero tempus nec.'
+      }
+    ],
+    '500K': [
+      {
+        'title': 'Contribution title',
+        'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consequat augue vel ante congue sodales eu ut mi. Cras quis lacus sit amet dui vulputate blandit. Aliquam dignissim nibh felis, in pharetra libero tempus nec.'
+      }
+    ]
+
   }
 };
 
