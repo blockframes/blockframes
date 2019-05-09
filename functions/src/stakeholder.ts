@@ -1,6 +1,6 @@
 import { functions, db } from './firebase';
 import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
-import { prepareNotification, triggerNotifications, Doc } from './notify';
+import { prepareNotification, triggerNotifications, DocID } from './notify';
 
 const APP_MOVIE_ICON = 'moviefinancing';
 
@@ -9,7 +9,7 @@ export interface Organization {
 }
 
 interface snapObject {
-  doc: Doc,
+  docID: DocID,
   stakeholderId: string,
   orgName: string,
   count: number,
@@ -30,12 +30,12 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   return orgs.map(doc => doc.data() as Organization);
 }
 
-function customMessage(userId: string, snapInformations: snapObject) {
-  return snapInformations.userIds.includes(userId) && snapInformations.count > 1
-    ? `You have been invited to ${snapInformations.doc.type} : ${snapInformations.doc.id}. Do you wish to work on it ?`
-    : `Stakeholder ${snapInformations.stakeholderId} from ${
-      snapInformations.orgName
-    } has been added to ${snapInformations.doc.type} : ${snapInformations.doc.id}`;
+function customMessage(userId: string, snap: snapObject) {
+  return snap.userIds.includes(userId) && snap.count > 1
+    ? `You have been invited to ${snap.docID.type} : ${snap.docID.id}. Do you wish to work on it ?`
+    : `Stakeholder ${snap.stakeholderId} from ${
+      snap.orgName
+    } has been added to ${snap.docID.type} : ${snap.docID.id}`;
 }
 
 function getCount(collection: string) {
@@ -63,10 +63,10 @@ export async function onDeliveryStakeholderCreate (
     }
 
     try {
-      const doc = {id: delivery.id, type: 'delivery'} as Doc;
+      const docID = {id: delivery.id, type: 'delivery'} as DocID;
       const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`)
       const snapInformations = {
-        doc,
+        docID,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
         count: stakeholderCount,
@@ -82,7 +82,7 @@ export async function onDeliveryStakeholderCreate (
             message: customMessage(userId, snapInformations),
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
-            doc,
+            docID,
             stakeholderId: newStakeholder.id
           });
         });
@@ -168,10 +168,10 @@ export async function onMovieStakeholderCreate (
     }
 
     try {
-      const doc = {id: movie.id, type: 'movie'} as Doc;
+      const docID = {id: movie.id, type: 'movie'} as DocID;
       const stakeholderCount = await getCount(`movies/${movie.id}/stakeholders`)
       const snapInformations = {
-        doc,
+        docID,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
         count: stakeholderCount,
@@ -187,7 +187,7 @@ export async function onMovieStakeholderCreate (
             message: customMessage(userId, snapInformations),
             userId,
             path: `/layout/home/form/${movie.id}/teamwork`,
-            doc,
+            docID,
             stakeholderId: newStakeholder.id
           });
         });
