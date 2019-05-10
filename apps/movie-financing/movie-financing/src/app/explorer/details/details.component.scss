@@ -414,11 +414,6 @@ ul.kv-list {
 
       thead {
         font-weight: bold;
-        tr {
-          td {
-
-          }
-        }
       }
 
       tbody {
@@ -429,6 +424,41 @@ ul.kv-list {
           }
         }
       }
+    }
+  }
+
+  .budget-table {
+    width: 100%;
+    thead {
+      td {
+        border-bottom: 1px solid #E5E5E5;
+        padding-bottom: 30px;
+      }
+    }
+    .currency-display {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .category-display {
+      color: #394348;
+      opacity: 0.9;
+      text-transform: lowercase;
+      padding-top: 10px;
+    }
+  }
+
+  .btn-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    .export-btn {
+      color: #000;
+      box-shadow: none;
+      font-weight: bold;
+      font-size: 12px;
+      width: 200px;
+      border: 1px solid;
     }
   }
 }

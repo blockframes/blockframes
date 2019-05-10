@@ -26,12 +26,12 @@
           class="spinner"
           color="primary"
           mode="determinate"
-          [value]="(movie.principalInformations.percentage | number) * 100"
+          [value]="movie.principalInformations.percentage * 100"
           diameter="120"
           strokeWidth="15"
         >
         </mat-progress-spinner>
-        <div class="progress-value">{{ (movie.principalInformations.percentage | number) * 100 }} %</div>
+        <div class="progress-value">{{ movie.principalInformations.percentage * 100 }} %</div>
       </div>
     </div>
     <div class="call-to-action">
@@ -279,7 +279,7 @@
                     {{ financingCat.key }}
                   </mat-panel-title>
                   <mat-panel-description>
-                    {{ financingPlanTotal(financingCat.value) }}
+                    {{ sumItems(financingCat.value, 'amount') | currency:'EUR':true }}
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                 <table>
@@ -295,7 +295,7 @@
                     <tr *ngFor="let item of financingCat.value">
                       <td>{{ item.name }}</td>
                       <td>{{ item.financementType }}</td>
-                      <td>{{ item.amount }}</td>
+                      <td>{{ item.amount | currency:'EUR':true }}</td>
                       <td>{{ item.status }}</td>
                     </tr>
                   </tbody>
@@ -308,7 +308,25 @@
             <mat-basic-chip *ngFor="let item of movie.finance.spendingsCategories">{{ item }}</mat-basic-chip>
           </mat-chip-list>
 
-          <img src="https://fakeimg.pl/250x250/">
+          <img [src]="movie.finance.graphs.budget">
+
+          <table class="budget-table">
+            <thead>
+              <tr>
+                <td><span class="key">Artistic Rights</span></td>
+                <td class="currency-display"><span class="value">{{ sumItems(movie.finance.estimatedBudget, 'total') | currency:'EUR':true }}</span></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of movie.finance.estimatedBudget">
+                <td class="category-display">{{ item.category }}</td>
+                <td class="currency-display">{{ item.total | currency:'EUR':true}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn-container">
+              <button class="export-btn" mat-raised-button>Export all in Excel</button>
+          </div>
         </mat-tab>
       </mat-tab-group>
     </div>

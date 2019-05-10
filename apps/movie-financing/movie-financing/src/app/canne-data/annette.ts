@@ -45,7 +45,7 @@ const DATA = {
     'directorsCategory': 'Prestige',
     'fundedBudget': '$7,9M',
     'goalBudget': '$14,9M',
-    'percentage': '0.62',
+    'percentage': 0.62,
     'directorShortBio': 'Leos Carax is an acclaimed French film director, critic, and writer. Carax is noted for his poetic style and his tortured depictions of love. His first major work was Boy Meets Girl (1984), and his notable works include Les Amants du Pont-Neuf (1991) and Holy Motors (2012).'
   },
   'production': {
@@ -414,136 +414,139 @@ const DATA = {
       'Spending Germany',
       'Total'
     ],
+    'graphs': {
+      'budget': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph1.png?alt=media&token=745f8b28-c48f-4cf4-9cfa-4010034a43cb',
+    },
     'estimatedBudget': [
       {
         'category': '1. ARTISTIC RIGHTS',
-        'CgSpendings': '1449404,04 €',
-        'inclForeign': '452671,04 €',
-        'inclFrench': '996733 €',
-        'laSpendings': '13645,08 €',
-        'belgiumSpendings': '3000 €',
-        'germanSpendings': '93000 €',
-        'total': '1559049,12 €'
+        'CgSpendings': 1449404.04,
+        'inclForeign': 452671.04,
+        'inclFrench': 996733,
+        'laSpendings': 13645.08,
+        'belgiumSpendings': 3000,
+        'germanSpendings': 93000,
+        'total': 1559049.12
       },
       {
         'category': '2. STAFF',
-        'CgSpendings': '1093394,71 €',
-        'inclForeign': '31000 €',
-        'inclFrench': '1062394,71 €',
-        'laSpendings': '408395,62 €',
-        'belgiumSpendings': '1620318,54 €',
-        'germanSpendings': '301094,06 €',
-        'total': '3423202,93 €'
+        'CgSpendings': 1093394.71,
+        'inclForeign': 31000,
+        'inclFrench': 1062394.71,
+        'laSpendings': 408395.62,
+        'belgiumSpendings': 1620318.54,
+        'germanSpendings': 301094.06,
+        'total': 3423202.93
       },
       {
         'category': '3. ARTISTIC STAFF',
-        'CgSpendings': '1878978,56 €',
-        'inclForeign': '1748303,36 €',
-        'inclFrench': '130675,2 €',
-        'laSpendings': '122027,07 €',
-        'belgiumSpendings': '516245 €',
-        'germanSpendings': '94830 €',
-        'total': '2612080,63 €'
+        'CgSpendings': 1878978.56,
+        'inclForeign': 1748303.36,
+        'inclFrench': 130675.2,
+        'laSpendings': 122027.07,
+        'belgiumSpendings': 516245,
+        'germanSpendings': 94830,
+        'total': 2612080.63
       },
       {
         'category': '4. SALARY COSTS',
-        'CgSpendings': '1039578,12 €',
-        'inclForeign': '334693,81 €',
-        'inclFrench': '704884,31 €',
-        'laSpendings': '109830,98 €',
-        'belgiumSpendings': '1051154,76 €',
-        'germanSpendings': '115058,28 €',
-        'total': '2315622,14 €'
+        'CgSpendings': 1039578.12,
+        'inclForeign': 334693.81,
+        'inclFrench': 704884.31,
+        'laSpendings': 109830.98,
+        'belgiumSpendings': 1051154.76,
+        'germanSpendings': 115058.28,
+        'total': 2315622.14
       },
       {
         'category': '5. SETS, COSTUMES, MAKEUP AND HAIRSTYLE',
-        'CgSpendings': '90500 €',
-        'inclForeign': '0 €',
-        'inclFrench': '90500 €',
-        'laSpendings': '121168,31 €',
-        'belgiumSpendings': '1073650 €',
-        'germanSpendings': '153150 €',
-        'total': '1438468,31 €'
+        'CgSpendings': 90500,
+        'inclForeign': 0,
+        'inclFrench': 90500,
+        'laSpendings': 121168.31,
+        'belgiumSpendings': 1073650,
+        'germanSpendings': 153150,
+        'total': 1438468.31
       },
       {
         'category': '6. TRANSPORTATION, PRODUCTION FACILITIES',
-        'CgSpendings': '463205 €',
-        'inclForeign': '0 €',
-        'inclFrench': '463205 €',
-        'laSpendings': '177303,39 €',
-        'belgiumSpendings': '978500 €',
-        'germanSpendings': '169530 €',
-        'total': '1788538,39 €'
+        'CgSpendings': 463205,
+        'inclForeign': 0,
+        'inclFrench': 463205,
+        'laSpendings': 177303.39,
+        'belgiumSpendings': 978500,
+        'germanSpendings': 169530,
+        'total': 1788538.39
       },
       {
         'category': '7. TECHNICAL COSTS',
-        'CgSpendings': '40000 €',
-        'inclForeign': '0 €',
-        'inclFrench': '40000 €',
-        'laSpendings': '63875,55 €',
-        'belgiumSpendings': '444650 €',
-        'germanSpendings': '20300 €',
-        'total': '568825,55 €'
+        'CgSpendings': 40000,
+        'inclForeign': 0,
+        'inclFrench': 40000,
+        'laSpendings': 63875.55,
+        'belgiumSpendings': 444650,
+        'germanSpendings': 20300,
+        'total': 568825.55
       },
       {
         'category': '8. POST PRODUCTION COSTS',
-        'CgSpendings': '58800 €',
-        'inclForeign': '0 €',
-        'inclFrench': '58800 €',
-        'laSpendings': '0 €',
-        'belgiumSpendings': '668300 €',
-        'germanSpendings': '20000 €',
-        'total': '747100 €'
+        'CgSpendings': 58800,
+        'inclForeign': 0,
+        'inclFrench': 58800,
+        'laSpendings': 0,
+        'belgiumSpendings': 668300,
+        'germanSpendings': 20000,
+        'total': 747100
       },
       {
         'category': '9. ASSURANCES AND OTHERS',
-        'CgSpendings': '370000 €',
-        'inclForeign': '0 €',
-        'inclFrench': '370000 €',
-        'laSpendings': '36356,43 €',
-        'belgiumSpendings': '133000 €',
-        'germanSpendings': '13000 €',
-        'total': '552356,43 €'
+        'CgSpendings': 370000,
+        'inclForeign': 0,
+        'inclFrench': 370000,
+        'laSpendings': 36356.43,
+        'belgiumSpendings': 133000,
+        'germanSpendings': 13000,
+        'total': 552356.43
       },
       {
         'category': 'SUB-TOTAL',
-        'CgSpendings': '6483860,43 €',
-        'inclForeign': '2566668,21 €',
-        'inclFrench': '3917192,22 €',
-        'laSpendings': '1052602,43 €',
-        'belgiumSpendings': '6488818,3 €',
-        'germanSpendings': '979962,34 €',
-        'total': '15005243,5 €'
+        'CgSpendings': 6483860.43,
+        'inclForeign': 2566668.21,
+        'inclFrench': 3917192.22,
+        'laSpendings': 1052602.43,
+        'belgiumSpendings': 6488818.3,
+        'germanSpendings': 979962.34,
+        'total': 15005243.5
       },
       {
         'category': 'OVERAGES',
-        'CgSpendings': '122677,21 €',
-        'inclForeign': '0 €',
-        'inclFrench': '122677,21 €',
-        'laSpendings': '0 €',
-        'belgiumSpendings': '129776,37 €',
-        'germanSpendings': '19399,25 €',
-        'total': '271852,83 €'
+        'CgSpendings': 122677.21,
+        'inclForeign': 0,
+        'inclFrench': 122677.21,
+        'laSpendings': 0,
+        'belgiumSpendings': 129776.37,
+        'germanSpendings': 19399.25,
+        'total': 271852.83
       },
       {
         'category': 'UNPLANNED',
-        'CgSpendings': '306693,02 €',
-        'inclForeign': '0 €',
-        'inclFrench': '306693,02 €',
-        'laSpendings': '43500 €',
-        'belgiumSpendings': '324440,91 €',
-        'germanSpendings': '48498,12 €',
-        'total': '723132,05 €'
+        'CgSpendings': 306693.02,
+        'inclForeign': 0,
+        'inclFrench': 306693.02,
+        'laSpendings': 43500,
+        'belgiumSpendings': 324440.91,
+        'germanSpendings': 48498.12,
+        'total': 723132.05
       },
       {
         'category': 'TOTAL EXCL. VAT',
-        'CgSpendings': '6913230,66 €',
-        'inclForeign': '2566668,21 €',
-        'inclFrench': '4346562,45 €',
-        'laSpendings': '1096102,43 €',
-        'belgiumSpendings': '6943035,58 €',
-        'germanSpendings': '1047859,71 €',
-        'total': '16000228,38 €'
+        'CgSpendings': 6913230.66,
+        'inclForeign': 2566668.21,
+        'inclFrench': 4346562.45,
+        'laSpendings': 1096102.43,
+        'belgiumSpendings': 6943035.58,
+        'germanSpendings': 1047859.71,
+        'total': 16000228.38
       }
     ]
   },

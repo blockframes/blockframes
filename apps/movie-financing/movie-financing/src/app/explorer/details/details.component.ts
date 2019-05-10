@@ -17,10 +17,10 @@ export class FinancingExplorerDetailsComponent implements OnInit {
   ngOnInit() {
   }
 
-  public financingPlanTotal (items) {
+  public sumItems (items: Array<any>, attr: string) {
     let sum = 0;
     items.forEach((item: any) => {
-      sum += parseFloat(item.amount);
+      sum += parseFloat(item[attr]);
     })
     return sum;
   }
