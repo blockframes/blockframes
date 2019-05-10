@@ -9,17 +9,90 @@
 </financing-explorer-header>
 
 <mat-card class="major-filters">
-  <button mat-button [matMenuTriggerFor]="menu">Cast A</button>
-  <button mat-button [matMenuTriggerFor]="menu">Genre</button>
-  <button mat-button [matMenuTriggerFor]="menu">Types</button>
-  <button mat-button [matMenuTriggerFor]="menu">Waterfall Position</button>
-  <button mat-button [matMenuTriggerFor]="menu">Director's Category</button>
-  <button mat-button [matMenuTriggerFor]="menu">Language</button>
-  <button mat-button [matMenuTriggerFor]="menu">Nationality</button>
+  <button mat-button [matMenuTriggerFor]="menuCast">Cast A</button>
+  <button mat-button [matMenuTriggerFor]="menuGenre">Genre</button>
+  <button mat-button [matMenuTriggerFor]="menuTypes">Types</button>
+  <button mat-button [matMenuTriggerFor]="menuWaterfall">Waterfall Position</button>
+  <button mat-button [matMenuTriggerFor]="menuDirectorCategory">Director's Category</button>
+  <button mat-button [matMenuTriggerFor]="menuLanguage">Language</button>
+  <button mat-button [matMenuTriggerFor]="menuLanguage">Nationality</button>
 
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item>Item 1</button>
-    <button mat-menu-item>Item 2</button>
+  <mat-menu #menuWaterfall="matMenu">
+    <button mat-menu-item>A</button>
+    <button mat-menu-item>B</button>
+    <button mat-menu-item>C</button>
+  </mat-menu>
+
+  <mat-menu #menuCast="matMenu">
+    <button mat-menu-item>Cast A</button>
+    <button mat-menu-item>Cast B</button>
+    <button mat-menu-item>Cast C</button>
+  </mat-menu>
+
+  <mat-menu #menuGenre="matMenu">
+    <button mat-menu-item>Action</button>
+    <button mat-menu-item>Horror</button>
+    <button mat-menu-item>Science Fiction</button>
+    <button mat-menu-item>Thriller</button>
+    <button mat-menu-item>Drama</button>
+    <button mat-menu-item>Coming of Age</button>
+    <button mat-menu-item>Fantasy</button>
+    <button mat-menu-item>Comedy</button>
+    <button mat-menu-item>Romance</button>
+    <button mat-menu-item>Western</button>
+    <button mat-menu-item>Period Piece</button>
+    <button mat-menu-item>Adventure</button>
+    <button mat-menu-item>Biography</button>
+    <button mat-menu-item>War</button>
+  </mat-menu>
+
+
+  <mat-menu #menuTypes="matMenu">
+    <button mat-menu-item>Animation</button>
+    <button mat-menu-item>Fiction</button>
+    <button mat-menu-item>Documentaire</button>
+    <button mat-menu-item>Série</button>
+    <button mat-menu-item>TV</button>
+  </mat-menu>
+
+  <mat-menu #menuDirectorCategory="matMenu">
+    <button mat-menu-item>Prestige</button>
+    <button mat-menu-item>Confirmed</button>
+    <button mat-menu-item>Up & Coming</button>
+    <button mat-menu-item>First Feature</button>
+  </mat-menu>
+
+  <mat-menu #menuLanguage="matMenu">
+    <button mat-menu-item>Arabic</button>
+    <button mat-menu-item>Bengali</button>
+    <button mat-menu-item>Burmese</button>
+    <button mat-menu-item>English</button>
+    <button mat-menu-item>French</button>
+    <button mat-menu-item>German</button>
+    <button mat-menu-item>Gujarati</button>
+    <button mat-menu-item>Hindi</button>
+    <button mat-menu-item>Italian</button>
+    <button mat-menu-item>Japanese</button>
+    <button mat-menu-item>Javanese</button>
+    <button mat-menu-item>Kannada</button>
+    <button mat-menu-item>Korean</button>
+    <button mat-menu-item>Malayalam</button>
+    <button mat-menu-item>Mandarin Chinese</button>
+    <button mat-menu-item>Marathi</button>
+    <button mat-menu-item>Oriya</button>
+    <button mat-menu-item>Panjabi</button>
+    <button mat-menu-item>Persian</button>
+    <button mat-menu-item>Polish</button>
+    <button mat-menu-item>Portuguese</button>
+    <button mat-menu-item>Russian</button>
+    <button mat-menu-item>Spanish</button>
+    <button mat-menu-item>Tamil</button>
+    <button mat-menu-item>Telugu</button>
+    <button mat-menu-item>Thai</button>
+    <button mat-menu-item>Turkish</button>
+    <button mat-menu-item>Ukrainian</button>
+    <button mat-menu-item>Urdu</button>
+    <button mat-menu-item>Vietnamese</button>
   </mat-menu>
 </mat-card>
 
