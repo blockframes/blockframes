@@ -2,6 +2,7 @@ mat-sidenav-container {
   height: 100%;
   min-height: 400px;
   background-color: white;
+  margin: 80px 300px;
 }
 
 mat-sidenav {
@@ -32,5 +33,5 @@ mat-sidenav-content {
 }
 
 .menus {
-  margin-bottom: 40px;
+  margin: 0 50px 20px 50px;
 }

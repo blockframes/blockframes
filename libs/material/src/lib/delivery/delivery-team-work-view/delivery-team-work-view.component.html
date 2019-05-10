@@ -8,9 +8,9 @@
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
-    <div class="menus" fxLayoutAlign="space-between">
+    <div class="menus" fxLayoutAlign="space-between center">
+      <h2>Your team</h2>
       <delivery-team-work-filters class="filters"></delivery-team-work-filters>
-      <delivery-team-work-actions class="actions"></delivery-team-work-actions>
     </div>
     <div class="item-form" *ngFor="let deliveryStakeholder of (deliveryStakeholders$ | async)">
       <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">

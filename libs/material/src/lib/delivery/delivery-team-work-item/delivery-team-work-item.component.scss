@@ -1,5 +1,9 @@
 @import '~@angular/material/theming';
 
+mat-card {
+  height: 110px;
+}
+
 .item-enabled {
   &:hover {
     @include mat-elevation(6);
@@ -30,6 +34,7 @@
 mat-card-subtitle {
   font-size: 9px;
   color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 0;
 }
 
 .title {
@@ -65,8 +70,8 @@ mat-card-actions {
 }
 
 .dot {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
   margin-left: 40px;
 }
@@ -88,7 +93,6 @@ li {
 
 .content-authorizations {
   width: 50%;
-  margin-top: 30px;
 }
 
 .content-orgName {
