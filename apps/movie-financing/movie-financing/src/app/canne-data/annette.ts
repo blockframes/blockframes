@@ -194,32 +194,62 @@ const DATA = {
         'name': 'Adam Driver',
         'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/adam_driver.png?alt=media&token=ec764f36-b807-44f2-a238-1be397953f5b',
         'characterName': 'Henry',
-        'selectiveFilmoTitle1': 'BlacKkKlansman',
-        'selectiveFilmoDate1': 2018,
-        'selectiveFilmoCharacter1': 'Flip Zimmerman',
-        'selectiveFilmoTitle2': 'Star Wars: Episode VIII - The Last Jedi',
-        'selectiveFilmoDate2': 2017,
-        'selectiveFilmoCharacter2': 'Kylo Ren',
-        'selectiveFilmoTitle3': 'Paterson',
-        'selectiveFilmoDate3': 2016,
-        'selectiveFilmoCharacter3': 'Paterson'
+        'remarquableMovies': [
+          {
+            'title': 'BlacKkKlansman',
+            'year': 2018,
+            'character': 'Flip Zimmerman'
+          },
+          {
+            'title': 'Star Wars: Episode VIII - The Last Jedi',
+            'year': 2017,
+            'character': 'Kylo Ren'
+          },
+          {
+            'title': 'Paterson',
+            'year': 2016,
+            'character': 'Flip Paterson'
+          }
+        ]
       },
       {
         'name': 'Michelle Williams',
         'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/michelle_williams.png?alt=media&token=e206fbb3-fffa-49c6-ac1c-373f709483de',
         'characterName': 'Ann',
-        'selectiveFilmoTitle1': 'Venom',
-        'selectiveFilmoDate1': 2018,
-        'selectiveFilmoCharacter1': 'Anne Weying',
-        'selectiveFilmoTitle2': 'Manchester By The Sea',
-        'selectiveFilmoDate2': 2016,
-        'selectiveFilmoCharacter2': 'Randi Chandler',
-        'selectiveFilmoTitle3': 'Shutter Island',
-        'selectiveFilmoDate3': 2010,
-        'selectiveFilmoCharacter3': 'Dolores'
+        'remarquableMovies': [
+          {
+            'title': 'Venom',
+            'year': 2018,
+            'character': 'Anne Weying'
+          },
+          {
+            'title': 'Manchester By The Sea',
+            'year': 2016,
+            'character': 'Randi Chandler'
+          },
+          {
+            'title': 'Shutter Island',
+            'year': 2010,
+            'character': 'Dolores'
+          },
+        ]
       }
     ],
     'longSynopsis': 'Los Angeles, nowadays. Henry is a stand-up comedian who wants to make people laugh. Ann is a famous opera singer, who performs to audiences across the United States. Together, they live a happy and glamorous life, until the day an unexpected event disrupts their quiet life: the birth of their first child Annette. A mysterious baby, the little girl’s arrival leads Henry towards a terrible spiral - a plunge that takes him into a melancholic world haunted by ghosts and memories of a dark past.',
+    'downloads': [
+      {
+        'url': '#',
+        'anchor': 'Download Communication Pack'
+      },
+      {
+        'url': '#',
+        'anchor': 'Download Scenario'
+      },
+      {
+        'url': '#',
+        'anchor': 'Download Moodboard'
+      }
+    ],
     'directorName': 'LEOS CARAX',
     'directorBio': 'Leos Carax made several short films and also wrote film criticism, then at the age of 24 years made a very strong first feature Boy Meets Girl. The film played at the 1984 Cannes film festival and was a critical triumph. It paved the way for Carax\'s second feature Mauvais Sang (Bad Blood). That film was a giant step forward in the same direction that he was going in with his first film. Both films were visually stunning and focused on young love and also alienation. With his reputation and talent at its peak, he set out to make what seemed it seemed like would be another triumph. The Lovers on the Bridge (The Lovers on the Bridge) was the result of three long years of very difficult production; Carax spent a fortune building some of the sets and filming some mind-blowing sequences. Unfortunately, neither critics nor audiences favored what was a truly grand vision of the themes he dealt with in his first two films. Carax went into an a 8 year long exile, but finally returned with Pola X. It was a departure from his other films and another critical flop.',
     'directorSelectiveFilmo': [
@@ -228,7 +258,7 @@ const DATA = {
       'Mauvais sang (1986)'
     ],
     'directorNote': 'I have wanted to make a musical film since my very begennings in cinema.But, I never felt really ready for it.\nI always loved musical comedies : someAmerican of course, some French (or more precisely à la Jacques Demy) and indian ones (Guru Dutt).\nI remember, back when I was a child, watching Phantom of The Paradise by Brian de Palma when it was released I still feel the jubilation I felt back then : the music, the singing that would allow insane accelerations, and unique combinations - mixing groteste with love, love with horror, etc.\nIn my 1980s trilogy (Boy Meets Girl, Mauvais Sang, The Lovers on the Bridge), I used fragments of Bowie’s music to draw some discordant feelings, joy-mortification, melancholy-hope.\nIn my last movie (Holy Motors), I used an old song from the Sparks that I used to listen to when I was young (this is how I met the Sparks Brothers - they saw the movie and proposed to work jointly on a musical comedy).\nIt is aslo in this movie that for the first time, I shot a whole sequence in a large deserted shopping mail sung « live » by Kylie Minogue.\nNow, I feel ready to produce my musical film. I an confident that Annette (which is populated by ghosts) will be a bewitching dark, cruel but also humorous (y’a d’la joie) - worthy of the rich love story between cinema, music and singing voices/\nLeos Carax',
-    'producerNote': '',
+    'producerNote': 'Todo',
     'directorFilmography': [
       {
         'title': 'Boy Meets Girl',

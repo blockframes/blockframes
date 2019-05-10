@@ -110,7 +110,7 @@
         </mat-chip-list>
       </div>
     </div>
-    <div class="data">
+    <div class="data movie-tab-group">
       <mat-tab-group>
         <mat-tab label="Production">
           <h2>Production</h2>
@@ -152,7 +152,7 @@
                       <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
                     </mat-card-content>
                     <mat-card-actions>
-                        <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
+                      <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
                     </mat-card-actions>
                   </mat-card>
                 </div>
@@ -178,17 +178,17 @@
               <img [src]="cast.urlPicture">
             </div>
             <mat-card class="cast-card">
-              <mat-card-header>
+              <mat-card-header class="cast-card-header">
                 <mat-card-subtitle class="key">{{ cast.name }}</mat-card-subtitle>
                 <mat-card-title  class="value">{{ cast.characterName }}</mat-card-title>
               </mat-card-header>
               
-              <mat-card-content>
-               todo
+              <mat-card-content class="cast-card-content">
+                <span class="cast-section-title">Remarquable movies</span>
+                <ul class="kv-list">
+                  <li *ngFor="let movie of cast.remarquableMovies"><span class="key">{{ movie.title }} ({{ movie.year }})</span> - <span class="value">{{ movie.character }}</span></li>
+                </ul>
               </mat-card-content>
-              <mat-card-actions>
-                 
-              </mat-card-actions>
             </mat-card>
           </div>
           <hr class="large-hidden"/>
@@ -196,6 +196,77 @@
           <h3>Long synopsis</h3>
           <p>{{ movie.artistic.longSynopsis }}</p>
           
+          <mat-chip-list>
+            <mat-basic-chip *ngFor="let item of movie.artistic.downloads">
+              <a target="_blank" attr.href="{{ item.url }}">{{ item.anchor }}</a>
+            </mat-basic-chip>
+          </mat-chip-list>
+
+          <hr class="large-hidden"/>
+
+          <h3>Director's bio</h3>
+          <div class="cast-sub-container">
+            <div class="picture-container">
+              <img src="https://fakeimg.pl/108x108/">
+            </div>
+            <mat-card class="cast-card">
+              <mat-card-header class="cast-card-header">
+                <mat-card-subtitle class="key">{{ movie.artistic.directorName }}</mat-card-subtitle>
+              </mat-card-header>
+              
+              <mat-card-content class="cast-card-content">
+                <span class="cast-section-title">Remarquable movies</span>
+                <ul class="kv-list">
+                  <li *ngFor="let movie of movie.artistic.directorSelectiveFilmo"><span class="key">{{ movie }}</span></li>
+                </ul>
+              </mat-card-content>
+              <mat-card-actions>
+                <a target="_blank" attr.href="#">Watching project <mat-icon>arrow_right_alt</mat-icon></a>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <p>{{ movie.artistic.directorBio }}</p>
+
+          <h3>Director's note</h3>
+          <p>{{ movie.artistic.directorNote }}</p>
+
+          <h3>Producer's note</h3>
+          <p>{{ movie.artistic.producerNote }}</p>
+
+          <h3>Producer's history</h3>
+          <div class="producer-history">
+            <mat-accordion>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ movie.artistic.directorName }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="producer-history-sub-container" *ngFor="let movie of movie.artistic.directorFilmography">
+                  <div class="poster-container">
+                    <img [src]="movie.posterUrl">
+                  </div>
+                  <mat-card class="movie-card">
+                    <mat-card-header>
+                      <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
+                      <mat-card-title>{{ movie.title }}</mat-card-title>
+                    </mat-card-header>
+                    
+                    <mat-card-content>
+                      <p class="key">Logline</p>
+                      <p>{{ movie.logline }}</p>
+                      <p class="key">Best distinctions</p>
+                      <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
         </mat-tab>
         <mat-tab label="Finance">
           <h1>Finance</h1>

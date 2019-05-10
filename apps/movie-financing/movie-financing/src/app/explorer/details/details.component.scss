@@ -242,90 +242,147 @@ ul.kv-list {
   }
 }
 
-.producer-history {
-  padding: 1rem;
+.movie-tab-group {
+  .producer-history {
+    padding: 1rem;
 
-  ::ng-deep {
-    .mat-expansion-indicator:after {
-      color: black !important;
-    }
-  }
-
-  .producer-history-sub-container { 
-    .poster-container {
-      width: 108px;
-      float: left;
-      img {
-        height: 144px;
-        width: 108px;
-        box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+    ::ng-deep {
+      .mat-expansion-indicator:after {
+        color: black !important;
       }
     }
 
-    .movie-card {
-      float: left;
-      width: calc(100% - 108px);
-      box-shadow: none;
-      padding-top: 0px;
-      min-height: 120px;
-
-      ::ng-deep {
-        .mat-card-header-text {
-          margin-left: 0;
-
-          .mat-card-subtitle {
-            display: inline-block;
-            width: 40px;
-            margin-bottom: 0px;
-          }
-
-          .mat-card-title {
-            display: inline-block;
-            width: auto;
-            margin-bottom: 0px;
-          }
+    .producer-history-sub-container { 
+      .poster-container {
+        width: 108px;
+        float: left;
+        img {
+          height: 144px;
+          width: 108px;
+          box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
         }
+      }
 
-        .mat-card-content {
-          margin-bottom: 0;
-          p{
-            margin: 0px;
+      .movie-card {
+        float: left;
+        width: calc(100% - 108px);
+        box-shadow: none;
+        padding-top: 0px;
+        min-height: 120px;
+
+        ::ng-deep {
+          .mat-card-header-text {
+            margin-left: 0;
+
+            .mat-card-subtitle {
+              display: inline-block;
+              width: 40px;
+              margin-bottom: 0px;
+            }
+
+            .mat-card-title {
+              display: inline-block;
+              width: auto;
+              margin-bottom: 0px;
+            }
           }
-        }
-        
-        .mat-card-actions {
-          margin: 0px;
-          padding: 0px;
-          a {
-            color: inherit;
-            text-decoration: none;
-            font-weight: bold;
-            .mat-icon {
-              vertical-align: middle;
+
+          .mat-card-content {
+            margin-bottom: 0;
+            p{
+              margin: 0px;
             }
           }
         }
       }
     }
   }
-}
 
-.cast-sub-container { 
-  .picture-container {
-    width: 108px;
-    float: left;
-    img {
-      height: 108px;
-      width: 108px;
-      box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+  .movie-card, .cast-card {
+    ::ng-deep {
+      .mat-card-actions {
+        margin: 0px;
+        padding: 0px;
+        a {
+          color: inherit;
+          text-decoration: none;
+          font-weight: bold;
+          .mat-icon {
+            vertical-align: middle;
+          }
+        }
+      }
     }
   }
 
-  .cast-card {
-    float: left;
-    width: calc(100% - 108px);
-    box-shadow: none;
-    padding-top: 0px;
-    min-height: 120px;
+  .cast-sub-container { 
+    .picture-container {
+      width: 108px;
+      float: left;
+      img {
+        height: 108px;
+        width: 108px;
+        box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .cast-card {
+      float: left;
+      width: calc(100% - 108px);
+      box-shadow: none;
+      padding-top: 0px;
+      min-height: 120px;
+
+      .cast-card-header {
+        ::ng-deep .mat-card-header-text {
+          margin: 0;
+        }
+        .key {
+          font-size: 20px;
+        }
+      }
+      
+      .cast-card-content {
+        margin-top: 10px;
+
+        .kv-list {
+          margin-top: 0px;
+        }
+        .key {
+          text-transform: capitalize;
+          color: #000;
+          opacity: 1;
+          font-weight: 500;
+        }
+        
+        .value {
+          color: #394348;
+          opacity: 1;
+          text-transform: capitalize;
+        }
+
+        .cast-section-title {
+          text-transform: uppercase;
+          font-weight: 500;
+          letter-spacing: 0.15em;
+        }
+      }
+    }
   }
+
+  ::ng-deep {
+    .mat-tab-body-content {
+      overflow: initial;
+    }
+    
+    .mat-chip-list {
+      a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    }
+  } 
+
+  
 }
