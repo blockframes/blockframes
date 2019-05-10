@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash';
+import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import readline from 'readline';
 import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
@@ -33,6 +33,8 @@ class Queue {
     return this.content.length === 0;
   }
 }
+
+const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
 const getBackupBucket = async (): Promise<Bucket> => {
   const bucket: Bucket = admin.storage().bucket(getBackupBucketName());
@@ -141,14 +143,36 @@ const clear = async () => {
 };
 
 /**
- * Objects are serialized to json, this function loads the json objects
- * and replace the fields that are not "pure json", such as timestamps.
+ * Take a json object and re-encode its content to match our firebase storage.
  *
- * @param x
+ * For example: transform {_second, _nanoseconds} objects back to firestore timestamps
+ * objects.
+ *
+ * @param x the object to reencode
+ * @returns a new object
  */
-const reEncodeObject = (x: any) => {
-  return x;
-};
+function reEncodeObject(x: any): any {
+  if (isArray(x)) {
+    // array: recursive descent for each item (used in steps object for example)
+    return x.map(reEncodeObject);
+  } else if (isPlainObject(x)) {
+    const keys = Object.keys(x);
+
+    if (isEqual(sortBy(keys), KEYS_TIMESTAMP)) {
+      // We have a timestamp object, re-encode
+      return new admin.firestore.Timestamp(x._seconds, x._nanoseconds);
+    } else {
+      // else: recursive descent
+      const r: any = {};
+      keys.forEach(k => {
+        r[k] = reEncodeObject(x[k]);
+      });
+      return r;
+    }
+  } else {
+    return x;
+  }
+}
 
 const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
