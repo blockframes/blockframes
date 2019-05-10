@@ -5,9 +5,15 @@ export type Notification = {
   message: string;
   userId: string[];
   path: string;
+  docID: DocID;
   isRead: boolean;
   date: number;
 };
+
+interface DocID {
+  id: string,
+  type : 'movie' | 'delivery'
+}
 
 /**
  * A factory function that creates a Notification
