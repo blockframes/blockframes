@@ -114,6 +114,14 @@ export class AuthService {
     }
   }
 
+  public async signDelivery(deliveryId: string, stakeholderId: string) {
+    try {
+      return this.wallet.signDelivery(deliveryId, stakeholderId);
+    } catch (error) {
+      console.error('The relayer has failed to forward the signature to the blockchain');
+    }
+  }
+
   /** Deletes user subCollections */
   private async _deleteSubCollections (uid) {
     // @todo check if user is the only member of org (and the only ADMIN)

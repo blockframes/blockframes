@@ -63,4 +63,9 @@ export class Relayer implements IRelayer {
     const call = this.functions.httpsCallable('relayerRequestTokens');
     return call({username, amount}).toPromise();
   }
+
+  signDelivery(username: string, deliveryId: string, stakeholderId: string): Promise<providers.TransactionResponse> {
+    const call = this.functions.httpsCallable('relayerSignDelivery');
+    return call({username, deliveryId, stakeholderId}).toPromise();
+  }
 }

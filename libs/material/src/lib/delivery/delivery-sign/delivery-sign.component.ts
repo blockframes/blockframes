@@ -1,6 +1,10 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthService } from '@blockframes/auth';
+import { DeliveryQuery } from '../+state';
+import { OrganizationQuery } from '@blockframes/organization';
+import { StakeholderQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'material-delivery-sign',
@@ -22,6 +26,10 @@ export class DeliverySignComponent {
       },
     public dialogRef: MatDialogRef<DeliverySignComponent>,
     private snackBar: MatSnackBar,
+    public service: AuthService,
+    public deliveryQuey: DeliveryQuery,
+    public organizationQuery: OrganizationQuery,
+    public stakeholderQuery: StakeholderQuery,
     ) {}
 
   public sign() {
@@ -31,9 +39,15 @@ export class DeliverySignComponent {
     this.close();
   }
 
-  public confirm() {
+  public async confirm() {
     this.loading = true;
-    setTimeout(() => this.sign(), 3000);
+
+    const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
+    const stakeholders = this.stakeholderQuery.getAll();
+    const stakeholderId = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId)).id;
+    await this.service.signDelivery(this.deliveryQuey.getActive().id, stakeholderId);
+    
+    this.sign();
   }
 
   public close(): void {

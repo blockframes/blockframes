@@ -150,6 +150,11 @@ export class RelayerWallet implements ethers.Signer {
     await this.provider.waitForTransaction(tx.hash)
   }
 
+  public async signDelivery(deliveryId: string, stakeholderId: string) {
+    this._requireUsername();
+    return this.relayer.signDelivery(this.username, deliveryId, stakeholderId);
+  }
+
   public async getAddress(): Promise<string> {
     this._requireSigningKey();
     return this.signingKey.address;
