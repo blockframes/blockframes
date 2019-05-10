@@ -164,7 +164,8 @@ export class DeliveryFormPage {
     cy.get('mat-card')
       .contains(name)
       .parent().parent()
-      .find('mat-checkbox [type="checkbox"]').check({force: true});
+      .find('.mat-checkbox-inner-container')
+      .click();
   }
 
   public clickCheckBoxMaterials(names: string[]) {
@@ -336,6 +337,16 @@ export class TemplateListPage {
   }
 }
 
+export class MovieTeamWorkPage {
+  constructor() {
+  }
+
+  public clickHome() {
+    cy.get('a').contains('home').click();
+    return new HomePage;
+  }
+}
+
 export class HomePage extends NavbarPage {
   constructor() {
     super();
@@ -347,12 +358,18 @@ export class HomePage extends NavbarPage {
     cy.get('.notifications').click();
   }
 
+  public clickAcceptInvitationToMovie() {
+    cy.get('button').contains('Accept').first().click();
+    return new MovieTeamWorkPage;
+  }
+
   public clickAcceptInvitation() {
     cy.get('button').contains('Accept').first().click();
     return new TeamWorkPage;
   }
 
   public clickOnMovie(movieName: string) {
+    cy.wait(2000);
     cy.get('mat-card').contains(movieName).click();
     return new DeliveryListPage();
   }

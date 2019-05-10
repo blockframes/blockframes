@@ -183,9 +183,7 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     p.fillSigninEmail('demo@blockframes.com');
     p.fillSigninPassword('blockframes');
     p = p.login();
-    p.displayMovieMenu('PARASITE');
-    p.clickOpenIn();
-    p = p.selectApp();
+    p = p.clickOnMovie('PARASITE');
     p.clickDeliveries();
     p = p.clickDelivery();
     p.clickAddSignature();
