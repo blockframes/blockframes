@@ -3,6 +3,7 @@ import { Stakeholder } from '@blockframes/movie';
 import { DeliveryQuery } from '../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { network } from '@env';
 
 @Component({
   selector: 'delivery-stakeholder-item',
@@ -24,6 +25,12 @@ export class StakeholderItemComponent implements OnInit {
     this.hasStakeholderSigned$ = this.stakeholder$.pipe(
       switchMap(({ id }) => this.query.hasStakeholderSigned$(id))
     );
+  }
+
+  get explorerUrl() {
+    return network === 'homestead' as string
+      ? 'https://etherscan.io/tx/'
+      : `https://${network}.etherscan.io/tx/`;
   }
 
 }
