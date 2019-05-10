@@ -12,3 +12,17 @@
   margin-left: 15px;
   font-size: 18px;
 }
+
+.select-button {
+  font-weight: 700;
+}
+
+.select-button-active {
+  background-color: var(--primary);
+  color: #FFFFFF;
+}
+
+.select-button-active:hover {
+  background-color: var(--primary);
+  color: #FFFFFF;
+}

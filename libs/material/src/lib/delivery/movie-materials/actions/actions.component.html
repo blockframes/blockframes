@@ -2,15 +2,21 @@
   Actions <mat-icon class="action-icon">expand_more</mat-icon>
 </button>
 <mat-menu #actions="matMenu" xPosition="before">
+  <button [ngClass]="{ 'select-button-active': !!allChecked }" mat-menu-item (click)="selectAll()" class="select-button">
+    <span *ngIf="!allChecked">Select all materials</span>
+    <span *ngIf="!!allChecked">Unselect materials</span>
+  </button>
+  <mat-divider></mat-divider>
   <button mat-menu-item [matMenuTriggerFor]="steps">
     <span>Change step</span>
   </button>
   <mat-menu #steps="matMenu" xPosition="after">
-    <button mat-menu-item>Step 1</button>
-    <button mat-menu-item>Step 2</button>
-    <button mat-menu-item>Step 3</button>
-    <button mat-menu-item>Step 4</button>
-    <button mat-menu-item>Finish</button>
+    <ng-container *ngIf="deliverySteps.length > O; else noStep">
+      <button mat-menu-item *ngFor="let step of deliverySteps">{{step.name}}</button>
+    </ng-container>
+    <ng-template #noStep>
+      <button mat-menu-item>(No steps yet)</button>
+    </ng-template>
   </mat-menu>
   <mat-divider></mat-divider>
   <button mat-menu-item [matMenuTriggerFor]="exports">

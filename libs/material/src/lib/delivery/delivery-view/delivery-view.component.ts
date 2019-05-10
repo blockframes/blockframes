@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { Observable } from 'rxjs';
 import { DeliveryQuery, DeliveryService, Delivery } from '../+state';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
+import { MaterialStore, MaterialQuery } from '../../material/+state';
 import { Router } from '@angular/router';
 import { TemplateView } from '../../template/+state';
 import { applyTransaction } from '@datorama/akita';
@@ -27,7 +27,6 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
     private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private service: DeliveryService,
-    private materialService: MaterialService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
     private router: Router

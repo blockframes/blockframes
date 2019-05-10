@@ -1,3 +1,7 @@
+mat-card {
+  box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
 .templates-block {
   margin-bottom: 22px;
 }
@@ -19,6 +23,7 @@ h3 {
 
 .create-card {
   border: solid 1px var(--primary);
+  box-shadow: none;
 }
 
 mat-card-title {

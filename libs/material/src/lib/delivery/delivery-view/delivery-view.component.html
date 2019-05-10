@@ -1,5 +1,5 @@
 <div class="container">
-  <section fxLayout="row" fxLayoutGap="25px">
+  <section fxLayout="row" fxLayoutGap="35px">
     <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
@@ -85,17 +85,13 @@
       <div class="materials" fxLayoutAlign="space-between center">
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">
-          <button
-            [ngClass]="{ 'select-button-active': !!allChecked }"
-            mat-raised-button
-            (click)="selectAllMaterials()"
-            class="select-button mat-elevation-z0"
-          >
-            <span *ngIf="!allChecked">Select all materials</span>
-            <span *ngIf="!!allChecked">Unselect materials</span>
-          </button>
           <material-filters></material-filters>
-          <material-actions (newState)="changeState($event)"></material-actions>
+          <material-actions
+          [allChecked]="allChecked"
+          [steps]="delivery.steps"
+          (newState)="changeState($event)"
+          (selectAllMaterials)="selectAllMaterials()">
+          </material-actions>
         </span>
       </div>
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">

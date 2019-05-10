@@ -1,9 +1,9 @@
 <div mat-dialog-content>
+  <div class="text">
+    <h3>Add a new delivery</h3>
+    <p>Choose an existing template to initialize delivery or create it from scratch</p>
+  </div>
   <section class="templates-block" fxLayout="row wrap" fxLayoutAlign="start space-between">
-    <div class="text">
-      <h3>Add a new delivery</h3>
-      <p>Choose an existing template to initialize delivery or create it from scratch</p>
-    </div>
     <article class="template-card">
       <mat-card
         class="create-card mat-elevation-z0"
@@ -18,7 +18,7 @@
 
     <article class="template-card" *ngFor="let template of (templates$ | async)">
       <mat-card
-        class="mat-elevation-z6"
+        class="mat-elevation-z0"
         (click)="createDelivery(template.id)"
         fxLayout="row"
         fxLayoutAlign="start center"
@@ -32,15 +32,15 @@
 
     <article class="template-card">
       <mat-card
-        class="mat-elevation-z6"
+        class="mat-elevation-z0"
         (click)="useMovieAsTemplate()"
         fxLayout="row"
         fxLayoutAlign="start center"
       >
-      <mat-icon class="icon" color="primary">description</mat-icon>
-      <mat-card-title>
-        Create from movie materials
-      </mat-card-title>
+        <mat-icon class="icon" color="primary">description</mat-icon>
+        <mat-card-title>
+          Create from movie materials
+        </mat-card-title>
       </mat-card>
     </article>
   </section>
