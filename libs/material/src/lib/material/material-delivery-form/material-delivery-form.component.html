@@ -27,7 +27,7 @@
       <mat-form-field *ngIf="hasStep; else noStep" appearance="outline" class="mat-select-step">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="stepId">
-          <mat-option value="">
+          <mat-option>
             None
           </mat-option>
           <mat-option *ngFor="let step of (steps$ | async)" [value]="step.id">
@@ -39,7 +39,7 @@
         <mat-form-field appearance="outline" class="mat-select-step">
           <mat-label>Choose step</mat-label>
           <mat-select formControlName="stepId">
-            <mat-option value="">
+            <mat-option>
               (No steps yet)
             </mat-option>
           </mat-select>

@@ -80,12 +80,12 @@ mat-card {
   border-radius: 0px !important;
 }
 
-button {
+button { // TODO: Get rid of the !important and apply this on mat-raised-button
   border-radius: 0px !important;
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
 }
 
-button:disabled {
+button:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
   color: var(--disabled)!important;
   border: none!important;
 }
