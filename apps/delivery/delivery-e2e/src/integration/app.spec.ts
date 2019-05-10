@@ -18,7 +18,7 @@ const MATERIALS = [
   }
 ];
 
-const ORG_NAME_1 = 'Organization #1';
+const ORG_NAME_1 = 'cytest';
 const TEMPLATE_NAME_1 = 'Template #2';
 
 const EMAIL = 'delivery-test-e2e@cascade8.com';
@@ -43,19 +43,18 @@ describe('Hello Delivery', () => {
 
 // TODO: finish this test
 describe('I m a user and i can save a delivery as template', () => {
-  it.skip('should login, create delivery from scratch, save it as a new template, then delete this template', () => {
+  it('should login, create delivery from scratch, save it as a new template, then delete this template', () => {
     // Connexion
     let p: any = new LandingPage();
-    p.fillSigninEmail(EMAIL);
-    p.fillSigninPassword(PASSWORD);
+    p.fillSigninEmail('cytest@gmail.com');
+    p.fillSigninPassword('azerty');
     p = p.login();
     // Go to app
-    p.displayMovieMenu();
-    p.clickOpenIn();
-    p = p.selectApp();
+    p = p.clickOnMovie('CY ROBOT');
     // Create new delivery from scratch
     p = p.clickAddDelivery();
     p = p.clickCreateNewDelivery();
+    p = p.clickDelivery();
     // Add materials
     MATERIALS.forEach(material => {
       p.clickAdd();
@@ -72,45 +71,16 @@ describe('I m a user and i can save a delivery as template', () => {
     p = p.clickSave();
     p = p.selectDeliveries();
     // Check if delivery exists
-    p.assertDeliveryExists();
+    p.assertDeliveryExists('cytest');
     p = p.clickDelivery();
     // Check if all materials exists
-    p.assertMaterialsExist(MATERIALS.length + 1);
-    // Delete delivery
-    p = p.deleteDelivery();
-    p.assertDeliveryIsDeleted();
+    p.assertMaterialsExist(MATERIALS.length);
     // Check if template exists
     p = p.selectTemplate();
-    p.openExpansionPanel(ORG_NAME_1);
-    p.assertTemplateExists(TEMPLATE_NAME_1);
     p.displayTemplateMenu(TEMPLATE_NAME_1);
     p = p.clickEdit();
-    cy.reload(); /// Have to reload to make the materials visible ///
-    p.assertMaterialsExist(MATERIALS.length + 1);
-    p = p.selectTemplate();
-    p.openExpansionPanel(ORG_NAME_1);
-    p.displayTemplateMenu(TEMPLATE_NAME_1);
-    p.deleteTemplate();
-    // TODO: Find a way to assert that template is deleted
-    // => Expansion Panel still buggy
+    p.assertMaterialsExist(MATERIALS.length);
   });
-});
-
-describe('I\'m a paranoid user, I would like to create an account and verify that I own a contract on the blockchain', () => {
-  it.skip('should type values in signup form', () => {
-    // Connexion
-    let p: any = new LandingPage();
-    p.fillSignupEmail(generateRandomEmail());
-    p.fillSignupPassword(PASSWORD);
-    p = p.signup();
-
-    // Go to profile page
-    p.openUserMenu();
-    p = p.clickProfile();
-
-    // Assert id
-    p.assertIdIsAddress();
-  })
 });
 
 describe('Step 1: I\'m new user, I want accept a notification that add my org in a movie, create a delivery, add materials and sign', () => {
