@@ -140,6 +140,16 @@ const clear = async () => {
   return true;
 };
 
+/**
+ * Objects are serialized to json, this function loads the json objects
+ * and replace the fields that are not "pure json", such as timestamps.
+ *
+ * @param x
+ */
+const reEncodeObject = (x: any) => {
+  return x;
+};
+
 const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
@@ -180,7 +190,7 @@ const restore = async (req: any, resp: any) => {
   // to the note in the backup code).
   lineReader.on('line', line => {
     const stored: StoredDocument = JSON.parse(line);
-    promises.push(db.doc(stored.docPath).set(stored.content));
+    promises.push(db.doc(stored.docPath).set(reEncodeObject(stored.content)));
   });
 
   promises.push(readerDone);
