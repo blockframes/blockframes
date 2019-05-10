@@ -9,10 +9,12 @@
     <tbody>
     <tr>
       <td>
-        <span class="key">Minimum&nbsp;Amount&nbsp;Request</span> <span class="value">$100&nbsp;K</span>
+        <span class="key">Minimum&nbsp;Amount&nbsp;Request</span> <span
+        class="value">{{ movie?.principalInformations?.minAmountRequested || "100K$" }}</span>
       </td>
       <td>
-        <span class="key">Director's&nbsp;Category</span> <span class="value">Confirm</span>
+        <span class="key">Director's&nbsp;Category</span> <span
+        class="value">{{ movie?.principalInformations?.directorsCategory || "Confirm" }}</span>
       </td>
     </tr>
     </tbody>
@@ -24,8 +26,9 @@
   </ng-template>
 
   <div class="progress">
-    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-    <p>64% Completed</p>
+    <mat-progress-bar mode="determinate"
+                      [value]="((movie?.principalInformations?.percentage || 0.64) | number) * 100"></mat-progress-bar>
+    <p>{{ ((movie?.principalInformations?.percentage || 0.64) | number) * 100 }}% Completed</p>
   </div>
 
   <div class="cta">

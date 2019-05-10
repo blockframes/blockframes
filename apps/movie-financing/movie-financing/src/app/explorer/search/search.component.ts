@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import CANNE_DATA from '../../canne-data';
 
 export interface FinancingMovie {
   title: string;
@@ -12,19 +13,12 @@ export interface FinancingMovie {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerSearchComponent implements OnInit {
-
-  public movies: FinancingMovie[];
+  public movies: FinancingMovie[] = CANNE_DATA;
 
   constructor() {
   }
 
   ngOnInit() {
-    this.movies = [
-      {title: 'Interstellar', minTokensRequired: 0.01},
-      {title: 'Harry Potter', minTokensRequired: 0.02},
-      {title: 'The Lord of the Rings: The Fellowship of the Ring', minTokensRequired: 0.2},
-      {title: 'Rubber', minTokensRequired: 0.1},
-    ];
   }
 
 }

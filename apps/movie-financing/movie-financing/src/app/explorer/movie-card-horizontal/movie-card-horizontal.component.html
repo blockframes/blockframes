@@ -7,9 +7,13 @@
           <mat-card-title-group>
             <mat-card-subtitle class="subtitle">Prestige Directors</mat-card-subtitle>
             <div class="title">
-              <mat-card-subtitle class="stroke">Prestige Directors</mat-card-subtitle>
-              <mat-card-subtitle class="director-name">Director Name</mat-card-subtitle>
-              <mat-card-title class="movie-title">{{movie.title}}</mat-card-title>
+              <mat-card-subtitle class="stroke">Prestige Director's</mat-card-subtitle>
+              <mat-card-subtitle class="director-name">
+                {{ movie?.principalInformations?.director || "Director Name" }}
+              </mat-card-subtitle>
+              <mat-card-title class="movie-title">
+                {{ movie?.title || "Movie Name" }}
+              </mat-card-title>
             </div>
           </mat-card-title-group>
         </mat-card-header>
@@ -18,31 +22,43 @@
           <table>
             <thead>
             <tr>
-              <th>Minimum amount requested <span class="value">$100 K</span></th>
-              <th>Director's category <span class="value">Confirmed</span></th>
+              <th>Minimum amount requested
+                <span class="value">{{ movie?.principalInformations?.minAmountRequested || "100K$" }}</span>
+              </th>
+              <th>Director's category
+                <span class="value">
+            {{ movie?.principalInformations?.directorsCategory || "Confirmed" }}
+          </span>
+              </th>
             </tr>
             </thead>
           </table>
 
           <section>
             <h3>Cast</h3>
-            <p class="capitalize">adam driver, michelle williams</p>
+            <p class="capitalize">
+          <span *ngFor="let cast of movie?.artistic?.cast; let i = index">
+            <span *ngIf="i !== 0">, </span>
+            {{ cast.name }}
+          </span>
+            </p>
           </section>
 
           <section>
             <h3>Logline</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Donec et rutrum libero, at feugiat lectus.
-              Integer pulvinar blandit nulla sagittis mattis.
+              {{ movie?.logline }}
             </p>
           </section>
 
-          <!-- <progress max="100" value="64"></progress> -->
-          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-          <div class="completed">64% completed</div>
+          <mat-progress-bar mode="determinate"
+                            [value]="((movie?.principalInformations?.percentage || 0.64) | number) * 100">
+          </mat-progress-bar>
+          <div class="completed">{{ ((movie?.principalInformations?.percentage || 0.64) | number) * 100 }}% Completed
+          </div>
 
-          <a routerLink="/explorer/movie/42">See this movie
+          <a [routerLink]="['/explorer/movie/', movie?.id || '42']">
+            See this movie
             <mat-icon>arrow_right_alt</mat-icon>
           </a>
         </mat-card-content>

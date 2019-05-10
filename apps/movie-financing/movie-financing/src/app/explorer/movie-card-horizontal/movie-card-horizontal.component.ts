@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class FinancingMovieCardHorizontalComponent implements OnInit {
   @Input() swapVisual: boolean;
-  @Input() movie: FinancingMovie;
+  @Input() movie: FinancingMovie | any;
   public user$: Observable<User>;
 
   constructor(public query: AuthQuery) {}
@@ -19,5 +19,4 @@ export class FinancingMovieCardHorizontalComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.query.user$;
   }
-
 }

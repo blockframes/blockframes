@@ -1,5 +1,6 @@
 const DATA = {
-  'id': '37',
+  id: '37',
+  minTokensRequired: 0.0,
   'title': 'Annette',
   'logline': 'A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.',
   'principalInformations': {
@@ -83,7 +84,7 @@ const DATA = {
           'bestDistinctions': [
             'César Awards, France: Nominee Best Production Design'
           ]
-        },
+        }
       ],
       'CG Cinéma': [
         {
@@ -148,7 +149,7 @@ const DATA = {
           'bestDistinctions': [
             'Berlin International Film Festival: Grand Jury Prize, Nominee Best Film'
           ]
-        },
+        }
       ],
       'Delta': [
         {
