@@ -15,7 +15,33 @@ export interface Relayer {
   resolver: Contract;
 }
 
-export const initRelayer = (config: any): Relayer => {
+export interface Config {
+  relayer: {
+    mnemonic: string;
+    network: string;
+    basedomain: string;
+    registryaddress: string;
+    resolveraddress: string;
+  }
+}
+
+export interface SendParams {
+  username: string;
+  tx: any; // TODO META-TX INTERFACE
+}
+
+export interface RequestTokensParams {
+  username: string;
+  amount: number;
+}
+
+export interface SignDeliveryParams {
+  username: string;
+  deliveryId: string;
+  stakeholderId: string;
+}
+
+export const initRelayer = (config: Config): Relayer => {
   let wallet = Wallet.fromMnemonic(config.relayer.mnemonic);
   const provider = getDefaultProvider(config.relayer.network);
   wallet = wallet.connect(provider);
@@ -37,7 +63,7 @@ interface UserInfos { uid:string, username: string; key: string };
 
 export const relayerCreateLogic = async (
   { uid, username, key }: UserInfos,
-  config: any
+  config: Config
 ) => {
   const relayer: Relayer = initRelayer(config);
 
@@ -102,8 +128,8 @@ export const relayerCreateLogic = async (
 };
 
 export const relayerSendLogic = async (
-  { username, tx }: { username: string; tx: any },
-  config: any
+  { username, tx }: SendParams,
+  config: Config
 ) => {
   const relayer: Relayer = initRelayer(config);
   // check required params
@@ -156,8 +182,8 @@ export const relayerSendLogic = async (
 const MAX_AUTHORIZED_TOKEN_TRANSFER = 0.1;
 
 export const relayerRequestTokensLogic = async (
-  { username, amount }: { username: string; amount: number },
-  config: any
+  { username, amount }: RequestTokensParams,
+  config: Config
 ) => {
   const relayer: Relayer = initRelayer(config);
   // check required params
@@ -180,8 +206,8 @@ export const relayerRequestTokensLogic = async (
 
 
 export const relayerSignDeliveryLogic = async (
-  { username, deliveryId, stakeholderId }: { username: string; deliveryId: string, stakeholderId: string },
-  config: any
+  { username, deliveryId, stakeholderId }: SignDeliveryParams,
+  config: Config
 ) => {
   if (!username || !deliveryId || !stakeholderId) {
     throw new Error('"username", "deliveryId" and "stakeholderId" are mandatory parameters !');

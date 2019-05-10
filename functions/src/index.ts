@@ -8,6 +8,7 @@ import {
   relayerSendLogic,
   relayerRequestTokensLogic,
   relayerSignDeliveryLogic,
+  Config,
 } from './relayer';
 import {
   deleteFirestoreMovie,
@@ -129,16 +130,16 @@ export const onMovieStakeholderDeleteEvent = functions.firestore
 //--------------------------------
 
 export const relayerCreate = functions.https
-  .onCall((data, context) => relayerCreateLogic(data, functions.config()));
+  .onCall((data, context) => relayerCreateLogic(data, functions.config() as Config));
 
 export const relayerSend = functions.https
-  .onCall((data, context) => relayerSendLogic(data, functions.config()));
+  .onCall((data, context) => relayerSendLogic(data, functions.config() as Config));
 
 export const relayerRequestTokens = functions.https
-  .onCall((data, context) => relayerRequestTokensLogic(data, functions.config()));
+  .onCall((data, context) => relayerRequestTokensLogic(data, functions.config() as Config));
 
 export const relayerSignDelivery = functions.https
-  .onCall((data, context) => relayerSignDeliveryLogic(data, functions.config()));
+  .onCall((data, context) => relayerSignDeliveryLogic(data, functions.config() as Config));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
