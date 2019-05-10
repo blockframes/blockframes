@@ -165,7 +165,7 @@ export const relayerRequestTokensLogic = async (
     throw new Error('"username" and "amount" are mandatory parameters !');
   }
   // prevent user to empty the wallet
-  if (amount >= MAX_AUTHORIZED_TOKEN_TRANSFER) {
+  if (amount > MAX_AUTHORIZED_TOKEN_TRANSFER) {
     throw new Error(`"amount" (${amount}) must be less than ${MAX_AUTHORIZED_TOKEN_TRANSFER}`);
   }
   // compute needed values
