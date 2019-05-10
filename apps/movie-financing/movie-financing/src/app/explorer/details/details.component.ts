@@ -17,4 +17,11 @@ export class FinancingExplorerDetailsComponent implements OnInit {
   ngOnInit() {
   }
 
+  public financingPlanTotal (items) {
+    let sum = 0;
+    items.forEach((item: any) => {
+      sum += parseFloat(item.amount);
+    })
+    return sum;
+  }
 }

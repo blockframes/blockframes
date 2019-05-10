@@ -331,78 +331,78 @@ const DATA = {
     ]
   },
   'finance': {
-    'financingPlan': [
-      {
-        'category': 'FRANCE',
-        'name': 'CNC',
-        'financementType': 'Institution',
-        'amount': 500,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'FRANCE',
-        'name': 'ARTE',
-        'financementType': 'Free TV',
-        'amount': 800,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'FRANCE',
-        'name': 'CANAL+/OCS',
-        'financementType': 'Pay TV',
-        'amount': 1200,
-        'status': 'estimation'
-      },
-      {
-        'category': 'FRANCE',
-        'name': 'AD VITAM',
-        'financementType': 'Distribution',
-        'amount': 700,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'FRANCE',
-        'name': 'KINOLOGY',
-        'financementType': 'Sales',
-        'amount': 3600,
-        'status': 'estimation'
-      },
-      {
-        'category': 'JAPAN',
-        'name': 'EUROSPACE',
-        'financementType': 'Distribution',
-        'amount': 1500,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'BELGIUM',
-        'name': 'SCOPE PICTURES',
-        'financementType': 'Tax Shelter',
-        'amount': 2500,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'BELGIUM',
-        'name': 'SCOPE PICTURES',
-        'financementType': 'Regional Fund / Distribution',
-        'amount': 600,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'GERMANY',
-        'name': 'DETAIL FILM',
-        'financementType': 'Tax Credit / Regional Fund',
-        'amount': 1000,
-        'status': 'confirmed'
-      },
-      {
-        'category': 'USA',
-        'name': 'AMAZON STUDIO',
-        'financementType': 'Distribution',
-        'amount': 2500,
-        'status': 'estimation'
-      }
-    ],
+    'financingPlan': {
+      'France': [
+        {
+          'name': 'CNC',
+          'financementType': 'Institution',
+          'amount': 500,
+          'status': 'confirmed'
+        },
+        {
+          'name': 'ARTE',
+          'financementType': 'Free TV',
+          'amount': 800,
+          'status': 'confirmed'
+        },
+        {
+          'name': 'CANAL+/OCS',
+          'financementType': 'Pay TV',
+          'amount': 1200,
+          'status': 'estimation'
+        },
+        {
+          'name': 'AD VITAM',
+          'financementType': 'Distribution',
+          'amount': 700,
+          'status': 'confirmed'
+        },
+        {
+          'name': 'KINOLOGY',
+          'financementType': 'Sales',
+          'amount': 3600,
+          'status': 'estimation'
+        }
+      ],
+      'Japan': [
+        {
+          'name': 'EUROSPACE',
+          'financementType': 'Distribution',
+          'amount': 1500,
+          'status': 'confirmed'
+        }
+      ],
+      'Belgium': [
+        {
+          'name': 'SCOPE PICTURES',
+          'financementType': 'Tax Shelter',
+          'amount': 2500,
+          'status': 'confirmed'
+        },
+        {
+          'name': 'SCOPE PICTURES',
+          'financementType': 'Regional Fund / Distribution',
+          'amount': 600,
+          'status': 'confirmed'
+        }
+      ],
+      'Germany': [
+        {
+          'name': 'DETAIL FILM',
+          'financementType': 'Tax Credit / Regional Fund',
+          'amount': 1000,
+          'status': 'confirmed'
+        }
+      ],
+      'Usa': [
+        {
+          'name': 'AMAZON STUDIO',
+          'financementType': 'Distribution',
+          'amount': 2500,
+          'status': 'estimation'
+        }
+      ]
+    },
     'estimatedBudget': [
       {
         'category': '1. ARTISTIC RIGHTS',

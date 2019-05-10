@@ -382,7 +382,46 @@ ul.kv-list {
         font-weight: bold;
       }
     }
-  } 
+  }
 
-  
+  .financing-plan-panel {
+    ::ng-deep {
+      .mat-panel-title {
+        text-transform: capitalize;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .mat-panel-description, .mat-expansion-panel-header-description {
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    table {
+      margin-left: 100px;
+      tr {
+        td {
+          width: 30%;
+        }
+      }
+
+      thead {
+        font-weight: bold;
+        tr {
+          td {
+
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            height: 40px;
+          }
+        }
+      }
+    }
+  }
 }

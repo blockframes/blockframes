@@ -269,7 +269,41 @@
           </div>
         </mat-tab>
         <mat-tab label="Finance">
-          <h1>Finance</h1>
+          <h2>Finance</h2>
+          <h3>Financing plan</h3>
+          <div class="financing-plan-panel">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let financingCat of movie.finance.financingPlan | keyvalue">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ financingCat.key }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{ financingPlanTotal(financingCat.value) }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Finance. type</td>
+                      <td>Amount</td>
+                      <td>Statut</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of financingCat.value">
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.financementType }}</td>
+                      <td>{{ item.amount }}</td>
+                      <td>{{ item.status }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          
         </mat-tab>
       </mat-tab-group>
     </div>
