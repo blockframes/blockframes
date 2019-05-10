@@ -1,464 +1,533 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
 
-// LAYOUT
+.movie-financing-details {
 
-main {
-  max-height: none !important;
-}
 
-.col-1 {
-  width: 30%;
-  padding: 1rem;
-}
+  // LAYOUT
 
-.col-2 {
-  width: 60%;
-  padding: 1rem;
-}
-
-// COMPONENTS
-@import '../components';
-
-.col-1 img {
-  width: 100%;
-}
-
-h2 {
-  text-transform: uppercase;
-  font-weight: 200;
-}
-
-h3 {
-  font-weight: 700;
-  margin-bottom: 0;
-
-  + p {
-    margin-top: 0.5rem;
+  main {
+    max-height: none !important;
   }
 
-  + ul {
-    margin-top: 0.5rem;
+  .col-1 {
+    width: 30%;
+    padding: 1rem;
   }
-}
 
-mat-chip-list {
-  margin: 1rem;
+  .col-2 {
+    width: 60%;
+    padding: 1rem;
+  }
 
-  mat-basic-chip {
-    padding: 0.4rem;
-    border: 1px solid black;
-    font-weight: 600;
-    margin: 0.3rem 0.15rem;
+  // COMPONENTS
+  @import '../components';
 
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+  .col-1 img {
+    width: 100%;
+  }
+
+  h2 {
+    text-transform: uppercase;
+    font-weight: 200;
+  }
+
+  h3 {
+    font-weight: 700;
+    margin-bottom: 0;
+
+    + p {
+      margin-top: 0.5rem;
+    }
+
+    + ul {
+      margin-top: 0.5rem;
     }
   }
-}
 
-ul.kv-list {
-  list-style-type: none;
-  padding-left: 0;
-  text-transform: uppercase;
-}
+  mat-chip-list {
+    margin: 1rem;
 
-.assets ul {
-  list-style: circle;
-  font-size: 18px;
+    mat-basic-chip {
+      padding: 0.4rem;
+      border: 1px solid black;
+      font-weight: 600;
+      margin: 0.3rem 0.15rem;
 
-  li {
-    margin-bottom: 1.3rem;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
   }
-}
 
-.data {
-  margin-top: 1rem;
+  ul.kv-list {
+    list-style-type: none;
+    padding-left: 0;
+    text-transform: uppercase;
+  }
+
+  .assets ul {
+    list-style: circle;
+    font-size: 18px;
+
+    li {
+      margin-bottom: 1.3rem;
+    }
+  }
+
+  .data {
+    margin-top: 1rem;
+
+    ::ng-deep {
+
+      h3 + .key {
+        margin-top: 0.7rem;
+      }
+
+      .key {
+        margin-top: 0;
+        margin-bottom: 0;
+        text-transform: uppercase;
+      }
+
+      .value {
+        margin-top: 0;
+        margin-bottom: 0;
+        text-transform: uppercase;
+      }
+
+      hr.large-hidden {
+        opacity: 0;
+        height: 2rem;
+      }
+    }
+
+    ::ng-deep {
+      mat-expansion-panel {
+        box-shadow: none;
+        font-weight: 700;
+        border-bottom: 1px solid #E5E5E5;
+      }
+
+      .mat-accordion {
+        border-radius: 0 !important;
+      }
+    }
+  }
 
   ::ng-deep {
-
-    h3 + .key {
-      margin-top: 0.7rem;
+    mat-tab-group {
+      border: 1px solid black;
     }
 
-    .key {
-      margin-top: 0;
-      margin-bottom: 0;
-      text-transform: uppercase;
+    mat-tab-header {
+      border-bottom: 1px solid black !important;
+
+      .mat-tab-label {
+        color: black;
+        font-weight: 500;
+        opacity: 0.3;
+
+        &.mat-tab-label-active {
+          color: black;
+          font-weight: 700;
+          opacity: 1;
+        }
+      }
+
+      mat-ink-bar {
+        border-bottom: 2px solid black !important;
+      }
     }
 
-    .value {
-      margin-top: 0;
-      margin-bottom: 0;
-      text-transform: uppercase;
-    }
-
-    hr.large-hidden {
-      opacity: 0;
-      height: 2rem;
+    mat-tab-body {
+      padding: 2rem 3rem;
     }
   }
 
-  ::ng-deep {
-    mat-expansion-panel {
-      box-shadow: none;
-      font-weight: 700;
+  .funding-status {
+    display: flex;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    .left-budget {
+      width: 50%;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      padding-left: 1rem;
+      text-transform: uppercase;
+
+      h3 {
+        font-weight: 300;
+      }
+
+      h4 {
+        font-weight: 900;
+        font-size: 2rem;
+        margin: 0;
+      }
+
+      h5 {
+        opacity: 0.3;
+        margin: 0;
+
+        .key {
+          opacity: 0.8;
+
+        }
+      }
+    }
+
+    .right-percent {
+      width: 50%;
+      position: relative;
+
+      mat-progress-spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .progress-value {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  .call-to-action {
+    > div {
+      border-top: 1px solid #E5E5E5;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    > div:last-of-type {
       border-bottom: 1px solid #E5E5E5;
     }
 
-    .mat-accordion {
-      border-radius: 0 !important;
+    .action {
+      font-weight: 800;
+      padding-left: 2rem;
+
+      &:after {
+        content: "→";
+      }
     }
   }
-}
 
-::ng-deep {
-  mat-tab-group {
-    border: 1px solid black;
-  }
+  .owner {
+    display: flex;
+    justify-content: center;
 
-  mat-tab-header {
-    border-bottom: 1px solid black !important;
+    .pic {
+      width: 30%;
+      margin: 10%;
 
-    .mat-tab-label {
-      color: black;
-      font-weight: 500;
-      opacity: 0.3;
-
-      &.mat-tab-label-active {
-        color: black;
-        font-weight: 700;
-        opacity: 1;
+      img {
+        border-radius: 50%;
       }
     }
 
-    mat-ink-bar {
-      border-bottom: 2px solid black !important;
+    .details {
+      width: 50%;
     }
   }
 
-  mat-tab-body {
-    padding: 2rem 3rem;
-  }
-}
-
-.funding-status {
-  display: flex;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-
-  .left-budget {
-    width: 50%;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    padding-left: 1rem;
-    text-transform: uppercase;
-
-    h3 {
-      font-weight: 300;
-    }
-
-    h4 {
-      font-weight: 900;
-      font-size: 2rem;
-      margin: 0;
-    }
+  .contributions {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
     h5 {
-      opacity: 0.3;
-      margin: 0;
+      font-weight: 300;
+    }
+  }
 
-      .key {
-        opacity: 0.8;
+  .movie-tab-group {
+    .producer-history {
+      padding: 1rem;
 
+      ::ng-deep {
+        .mat-expansion-indicator:after {
+          color: black !important;
+        }
       }
-    }
-  }
 
-  .right-percent {
-    width: 50%;
-    position: relative;
+      .producer-history-sub-container { 
+        .poster-container {
+          width: 108px;
+          float: left;
+          img {
+            height: 144px;
+            width: 108px;
+            box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+          }
+        }
 
-    mat-progress-spinner {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
+        .movie-card {
+          float: left;
+          width: calc(100% - 108px);
+          box-shadow: none;
+          padding-top: 0px;
+          min-height: 120px;
 
-    .progress-value {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-}
+          ::ng-deep {
+            .mat-card-header-text {
+              margin-left: 0;
 
-.call-to-action {
-  > div {
-    border-top: 1px solid #E5E5E5;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
+              .mat-card-subtitle {
+                display: inline-block;
+                width: 40px;
+                margin-bottom: 0px;
+              }
 
-  > div:last-of-type {
-    border-bottom: 1px solid #E5E5E5;
-  }
+              .mat-card-title {
+                display: inline-block;
+                width: auto;
+                margin-bottom: 0px;
+              }
+            }
 
-  .action {
-    font-weight: 800;
-    padding-left: 2rem;
-
-    &:after {
-      content: "→";
-    }
-  }
-}
-
-.owner {
-  display: flex;
-  justify-content: center;
-
-  .pic {
-    width: 30%;
-    margin: 10%;
-
-    img {
-      border-radius: 50%;
-    }
-  }
-
-  .details {
-    width: 50%;
-  }
-}
-
-.contributions {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-
-  h5 {
-    font-weight: 300;
-  }
-}
-
-.movie-tab-group {
-  .producer-history {
-    padding: 1rem;
-
-    ::ng-deep {
-      .mat-expansion-indicator:after {
-        color: black !important;
+            .mat-card-content {
+              margin-bottom: 0;
+              p{
+                margin: 0px;
+              }
+            }
+          }
+        }
       }
     }
 
-    .producer-history-sub-container { 
-      .poster-container {
+    .movie-card, .cast-card {
+      ::ng-deep {
+        .mat-card-actions {
+          margin: 0px;
+          padding: 0px;
+          a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: bold;
+            .mat-icon {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+
+    .cast-sub-container { 
+      .picture-container {
         width: 108px;
         float: left;
         img {
-          height: 144px;
+          height: 108px;
           width: 108px;
           box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
         }
       }
 
-      .movie-card {
+      .cast-card {
         float: left;
         width: calc(100% - 108px);
         box-shadow: none;
         padding-top: 0px;
         min-height: 120px;
 
-        ::ng-deep {
-          .mat-card-header-text {
-            margin-left: 0;
+        .cast-card-header {
+          ::ng-deep .mat-card-header-text {
+            margin: 0;
+          }
+          .key {
+            font-size: 20px;
+          }
+        }
+        
+        .cast-card-content {
+          margin-top: 10px;
 
-            .mat-card-subtitle {
-              display: inline-block;
-              width: 40px;
-              margin-bottom: 0px;
-            }
-
-            .mat-card-title {
-              display: inline-block;
-              width: auto;
-              margin-bottom: 0px;
-            }
+          .kv-list {
+            margin-top: 0px;
+          }
+          .key {
+            text-transform: capitalize;
+            color: #000;
+            opacity: 1;
+            font-weight: 500;
+          }
+          
+          .value {
+            color: #394348;
+            opacity: 1;
+            text-transform: capitalize;
           }
 
-          .mat-card-content {
-            margin-bottom: 0;
-            p{
-              margin: 0px;
-            }
+          .cast-section-title {
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.15em;
           }
         }
       }
     }
-  }
 
-  .movie-card, .cast-card {
     ::ng-deep {
-      .mat-card-actions {
-        margin: 0px;
-        padding: 0px;
+      .mat-tab-body-content {
+        overflow: initial;
+      }
+      
+      .mat-chip-list {
         a {
           color: inherit;
           text-decoration: none;
           font-weight: bold;
-          .mat-icon {
-            vertical-align: middle;
+        }
+      }
+    }
+
+    .financing-plan-panel {
+      ::ng-deep {
+        .mat-panel-title {
+          text-transform: capitalize;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .mat-panel-description,
+        .mat-expansion-panel-header-description,
+        .mat-expansion-panel-header-description::after {
+          font-size: 14px;
+          font-weight: bold;
+          flex-grow: 0;
+          margin-right: 125px;
+          color: #000;
+        }
+      }
+
+      table {
+        margin-left: 100px;
+        tr {
+          td {
+            width: 30%;
+            text-align: center;
+          }
+        }
+
+        thead {
+          font-weight: bold;
+        }
+
+        tbody {
+          tr {
+            td {
+              height: 40px;
+              
+            }
           }
         }
       }
     }
-  }
 
-  .cast-sub-container { 
-    .picture-container {
-      width: 108px;
-      float: left;
-      img {
-        height: 108px;
-        width: 108px;
-        box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
-      }
-    }
-
-    .cast-card {
-      float: left;
-      width: calc(100% - 108px);
-      box-shadow: none;
-      padding-top: 0px;
-      min-height: 120px;
-
-      .cast-card-header {
-        ::ng-deep .mat-card-header-text {
-          margin: 0;
-        }
-        .key {
-          font-size: 20px;
-        }
-      }
-      
-      .cast-card-content {
-        margin-top: 10px;
-
-        .kv-list {
-          margin-top: 0px;
-        }
-        .key {
-          text-transform: capitalize;
-          color: #000;
-          opacity: 1;
-          font-weight: 500;
-        }
-        
-        .value {
-          color: #394348;
-          opacity: 1;
-          text-transform: capitalize;
-        }
-
-        .cast-section-title {
-          text-transform: uppercase;
-          font-weight: 500;
-          letter-spacing: 0.15em;
-        }
-      }
-    }
-  }
-
-  ::ng-deep {
-    .mat-tab-body-content {
-      overflow: initial;
-    }
-    
-    .mat-chip-list {
-      a {
-        color: inherit;
-        text-decoration: none;
-        font-weight: bold;
-      }
-    }
-  }
-
-  .financing-plan-panel {
-    ::ng-deep {
-      .mat-panel-title {
-        text-transform: capitalize;
-        font-size: 14px;
-        font-weight: bold;
-      }
-
-      .mat-panel-description,
-      .mat-expansion-panel-header-description,
-      .mat-expansion-panel-header-description::after {
-        font-size: 14px;
-        font-weight: bold;
-        flex-grow: 0;
-        margin-right: 125px;
-        color: #000;
-      }
-    }
-
-    table {
-      margin-left: 100px;
-      tr {
-        td {
-          width: 30%;
-          text-align: center;
-        }
-      }
-
+    .budget-table {
+      width: 100%;
       thead {
+        td {
+          border-bottom: 1px solid #E5E5E5;
+          padding-bottom: 30px;
+        }
+      }
+      .currency-display {
         font-weight: bold;
+        text-align: right;
+      }
+
+      .category-display {
+        color: #394348;
+        opacity: 0.9;
+        text-transform: lowercase;
+        padding-top: 10px;
+      }
+    }
+
+    .btn-container {
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+      .export-btn {
+        color: #000;
+        box-shadow: none;
+        font-weight: bold;
+        font-size: 12px;
+        width: 200px;
+        border: 1px solid;
+      }
+    }
+
+    .waterfall-table {
+      border: 2px solid;
+      border-collapse: collapse;
+      thead {
+        tr {
+          text-transform: uppercase;
+          font-weight: bold;
+          text-align: center;
+          letter-spacing: 0.3em;
+          td {
+            padding: 10px;
+            border-bottom: 1px solid;
+            border-right: 1px solid;
+          }
+        }
       }
 
       tbody {
         tr {
           td {
-            height: 40px;
-            
+            padding: 10px;
+            border: 1px solid;
+          }
+          .label {
+            text-transform: uppercase;
+            opacity: 0.5;
+          }
+          .amount {
+            text-align: center;
+            font-weight: bold;
           }
         }
       }
     }
-  }
 
-  .budget-table {
-    width: 100%;
-    thead {
-      td {
-        border-bottom: 1px solid #E5E5E5;
-        padding-bottom: 30px;
+    .sales-accordion {
+      ::ng-deep {
+        .mat-expansion-panel-body {
+          padding:0;
+        }
       }
-    }
-    .currency-display {
-      font-weight: bold;
-      text-align: right;
-    }
 
-    .category-display {
-      color: #394348;
-      opacity: 0.9;
-      text-transform: lowercase;
-      padding-top: 10px;
-    }
-  }
-
-  .btn-container {
-    width: 100%;
-    text-align: center;
-    margin-top: 20px;
-    .export-btn {
-      color: #000;
-      box-shadow: none;
-      font-weight: bold;
-      font-size: 12px;
-      width: 200px;
-      border: 1px solid;
+      .sales-table {
+        font-size: 12px;
+        thead {
+          tr {
+            font-weight: bold;
+            text-align: center;
+            td {
+              padding: 10px;
+            }
+          }
+        }
+  
+        tbody {
+          tr {
+            td {
+              text-transform: lowercase;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
   }
 }

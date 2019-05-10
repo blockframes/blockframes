@@ -1,5 +1,5 @@
 const DATA = {
-  id: '37',
+  id: 'MFOJ1qxwXR2hnsWAfrLB',
   minTokensRequired: 0.0,
   'title': 'Annette',
   'logline': 'A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.',
@@ -552,522 +552,452 @@ const DATA = {
   },
   'sales': {
     'territories': 'World excl. USA, Japan, France, Germany and Belgium',
-    'potentialRevenues': '10127675 €',
-    'bestCase': '11911600 €',
-    'worstCase': '8343750 €',
-    'exchangeRate': '0,87',
-    'salesEstimates': [
-      {
-        'region': 'EUROPE',
-        'country': 'THE NETHERLANDS',
-        'distributor': '',
-        'crash': '65000 €',
-        'low': '80000 €',
-        'mid': '100000 €',
-        'high': '120000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'SWITZERLAND',
-        'distributor': '',
-        'crash': '85000 €',
-        'low': '120000 €',
-        'mid': '142500 €',
-        'high': '165000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'GERMANY',
-        'distributor': '',
-        'crash': '475000 €',
-        'low': '600000 €',
-        'mid': '725000 €',
-        'high': '850000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'UK',
-        'distributor': '',
-        'crash': '350000 €',
-        'low': '500000 €',
-        'mid': '675000 €',
-        'high': '850000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'ITALY',
-        'distributor': '',
-        'crash': '300000 €',
-        'low': '450000 €',
-        'mid': '625000 €',
-        'high': '800000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'SPAIN',
-        'distributor': '',
-        'crash': '150000 €',
-        'low': '225000 €',
-        'mid': '275000 €',
-        'high': '325000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'PORTUGAL',
-        'distributor': 'NOS',
-        'crash': '35000 €',
-        'low': '60000 €',
-        'mid': '72500 €',
-        'high': '85000',
-        'done': '45000 €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'GREECE',
-        'distributor': 'SEVEN FILMS',
-        'crash': '25000 €',
-        'low': '37500 €',
-        'mid': '56250 €',
-        'high': '75000',
-        'done': '30000 €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'SCANDINAVIA',
-        'distributor': '',
-        'crash': '140000 €',
-        'low': '200000 €',
-        'mid': '225000 €',
-        'high': '250000',
-        'done': '175000 €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'EUROPE',
-        'country': 'ICELAND',
-        'distributor': '',
-        'crash': ' €',
-        'low': '0 €',
-        'mid': '0 €',
-        'high': '0',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': '',
-        'country': 'MIDDLE EAST',
-        'distributor': '',
-        'crash': '175000 €',
-        'low': '295000 €',
-        'mid': '345000 €',
-        'high': '395000',
-        'done': '40000 €',
-        'currency': ''
-      },
-      {
-        'region': 'MIDDLE EAST',
-        'country': 'MIDDLE EAST',
-        'distributor': '',
-        'crash': '125000 €',
-        'low': '200000 €',
-        'mid': '230000 €',
-        'high': '260000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'MIDDLE EAST',
-        'country': 'TURKEY',
-        'distributor': 'FILMARTI',
-        'crash': '25000 €',
-        'low': '60000 €',
-        'mid': '70000 €',
-        'high': '80000',
-        'done': '40000 €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'MIDDLE EAST',
-        'country': 'ISRAEL',
-        'distributor': '',
-        'crash': '25000 €',
-        'low': '35000 €',
-        'mid': '45000 €',
-        'high': '55000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': '',
-        'country': 'ASIA',
-        'distributor': '',
-        'crash': '2085000 €',
-        'low': '2895000 €',
-        'mid': '3445000 €',
-        'high': '3995000',
-        'done': '170000 €',
-        'currency': ''
-      },
-      {
-        'region': 'ASIA',
-        'country': 'JAPAN',
-        'distributor': '',
-        'crash': '750000 €',
-        'low': '1000000 €',
-        'mid': '1100000 €',
-        'high': '1200000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'SOUTH KOREA',
-        'distributor': '',
-        'crash': '300000 €',
-        'low': '350000 €',
-        'mid': '400000 €',
-        'high': '450000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'TAIWAN',
-        'distributor': '',
-        'crash': '125000 €',
-        'low': '200000 €',
-        'mid': '250000 €',
-        'high': '300000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'HONG KONG',
-        'distributor': 'GOLDEN SCENE',
-        'crash': '40000 €',
-        'low': '80000 €',
-        'mid': '110000 €',
-        'high': '140000',
-        'done': '50000 €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'CHINA',
-        'distributor': '',
-        'crash': '600000 €',
-        'low': '800000 €',
-        'mid': '1000000 €',
-        'high': '1200000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'SINGAPORE',
-        'distributor': '',
-        'crash': '30000 €',
-        'low': '50000 €',
-        'mid': '75000 €',
-        'high': '100000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'INDONESIA',
-        'distributor': '',
-        'crash': '40000 €',
-        'low': '60000 €',
-        'mid': '75000 €',
-        'high': '90000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'THAILAND',
-        'distributor': '',
-        'crash': '35000 €',
-        'low': '65000 €',
-        'mid': '72500 €',
-        'high': '80000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'MALAYSIA / VIETNAM',
-        'distributor': '',
-        'crash': '50000 €',
-        'low': '75000 €',
-        'mid': '97500 €',
-        'high': '120000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'PHILIPPINES',
-        'distributor': 'PIONEER FILMS',
-        'crash': '30000 €',
-        'low': '45000 €',
-        'mid': '50000 €',
-        'high': '55000',
-        'done': '35000 €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'INDIA / PAKISTAN',
-        'distributor': '',
-        'crash': '35000 €',
-        'low': '50000 €',
-        'mid': '75000 €',
-        'high': '100000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'ASIA',
-        'country': 'PAN TV ASIA',
-        'distributor': 'FOX NETWORKS',
-        'crash': '50000 €',
-        'low': '120000 €',
-        'mid': '140000 €',
-        'high': '160000',
-        'done': '85000 €',
-        'currency': 'USD'
-      },
-      {
-        'region': '',
-        'country': 'NORTH AMERICA',
-        'distributor': '',
-        'crash': '2725000 €',
-        'low': '3900000 €',
-        'mid': '4575000 €',
-        'high': '5250000',
-        'done': '800000 €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'NORTH AMERICA',
-        'country': 'USA',
-        'distributor': '',
-        'crash': '2500000 €',
-        'low': '3000000 €',
-        'mid': '3500000 €',
-        'high': '4000000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'NORTH AMERICA',
-        'country': 'CANADA / QUEBEC',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'NORTH AMERICA',
-        'country': 'AUSTRALIA / NEW ZEALAND',
-        'distributor': '',
-        'crash': '225000 €',
-        'low': '350000 €',
-        'mid': '400000 €',
-        'high': '450000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': '',
-        'country': 'SOUTH AMERICA',
-        'distributor': '',
-        'crash': '450000 €',
-        'low': '550000 €',
-        'mid': '675000 €',
-        'high': '800000',
-        'done': '800000 €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'ARGENTINA / PARAGUAY / URUGUAY',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'BOLIVIA / PERU / ECUADOR',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'BRAZIL',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'CHILE',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'COLOMBIA',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'MEXOCP',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'SOUTH AMERICA',
-        'country': 'VENEZUELA',
-        'distributor': '',
-        'crash': ' €',
-        'low': ' €',
-        'mid': ' €',
-        'high': '',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': '',
-        'country': 'EASTERN EUROPE',
-        'distributor': '',
-        'crash': '362500 €',
-        'low': '510000 €',
-        'mid': '620000 €',
-        'high': '730000',
-        'done': ' €',
-        'currency': ''
-      },
-      {
-        'region': 'EASTERN EUROPE',
-        'country': 'CIS',
-        'distributor': '',
-        'crash': '175000 €',
-        'low': '250000 €',
-        'mid': '300000 €',
-        'high': '350000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'EASTERN EUROPE',
-        'country': 'HUNGARY',
-        'distributor': '',
-        'crash': '15000 €',
-        'low': '20000 €',
-        'mid': '25000 €',
-        'high': '30000',
-        'done': ' €',
-        'currency': 'USD'
-      },
-      {
-        'region': 'EASTERN EUROPE',
-        'country': 'POLAND',
-        'distributor': '',
-        'crash': '80000 €',
-        'low': '100000 €',
-        'mid': '125000 €',
-        'high': '150000',
-        'done': ' €',
-        'currency': 'EUR'
-      },
-      {
-        'region': 'EASTERN EUROPE',
-        'country': 'CZECH & SLOVAK REP.',
-        'distributor': '',
-        'crash': '45000 €',
-        'low': '60000 €',
-        'mid': '72500 €',
-        'high': '85000',
-        'done': ' €',
-        'currency': 'USD'
-      }
-    ]
+    'potentialRevenues': 10127675,
+    'bestCase': 11911600,
+    'worstCase': 8343750,
+    'exchangeRate': 0.87,
+    'graphs': {
+      'map': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph3.png?alt=media&token=964e541d-ea7b-4cd9-ac64-c98d57975cfc',
+    },
+    'salesEstimates': {
+      'EUROPE': [
+        {
+          'country': 'THE NETHERLANDS',
+          'distributor': '',
+          'crash': 65000,
+          'low': 80000,
+          'mid': 100000,
+          'high': 120000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'SWITZERLAND',
+          'distributor': '',
+          'crash': 85000,
+          'low': 120000,
+          'mid': 142500,
+          'high': 165000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'GERMANY',
+          'distributor': '',
+          'crash': 475000,
+          'low': 600000,
+          'mid': 725000,
+          'high': 850000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'UK',
+          'distributor': '',
+          'crash': 350000,
+          'low': 500000,
+          'mid': 675000,
+          'high': 850000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'ITALY',
+          'distributor': '',
+          'crash': 300000,
+          'low': 450000,
+          'mid': 625000,
+          'high': 800000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'SPAIN',
+          'distributor': '',
+          'crash': 150000,
+          'low': 225000,
+          'mid': 275000,
+          'high': 325000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'PORTUGAL',
+          'distributor': 'NOS',
+          'crash': 35000,
+          'low': 60000,
+          'mid': 72500,
+          'high': 85000,
+          'done': 45000,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'GREECE',
+          'distributor': 'SEVEN FILMS',
+          'crash': 25000,
+          'low': 37500,
+          'mid': 56250,
+          'high': 75000,
+          'done': 30000,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'SCANDINAVIA',
+          'distributor': '',
+          'crash': 140000,
+          'low': 200000,
+          'mid': 225000,
+          'high': 250000,
+          'done': 175000,
+          'currency': 'USD'
+        },
+        {
+          'country': 'ICELAND',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+      ],
+      'MIDDLE EAST': [
+        {
+          'country': 'MIDDLE EAST',
+          'distributor': '',
+          'crash': 125000,
+          'low': 200000,
+          'mid': 230000,
+          'high': 260000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'TURKEY',
+          'distributor': 'FILMARTI',
+          'crash': 25000,
+          'low': 60000,
+          'mid': 70000,
+          'high': 80000,
+          'done': 40000,
+          'currency': 'USD'
+        },
+        {
+          'country': 'ISRAEL',
+          'distributor': '',
+          'crash': 25000,
+          'low': 35000,
+          'mid': 45000,
+          'high': 55000,
+          'done': 0,
+          'currency': 'USD'
+        },
+      ],
+      'ASIA': [
+        {
+          'country': 'JAPAN',
+          'distributor': '',
+          'crash': 750000,
+          'low': 1000000,
+          'mid': 1100000,
+          'high': 1200000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'SOUTH KOREA',
+          'distributor': '',
+          'crash': 300000,
+          'low': 350000,
+          'mid': 400000,
+          'high': 450000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'TAIWAN',
+          'distributor': '',
+          'crash': 125000,
+          'low': 200000,
+          'mid': 250000,
+          'high': 300000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'HONG KONG',
+          'distributor': 'GOLDEN SCENE',
+          'crash': 40000,
+          'low': 80000,
+          'mid': 110000,
+          'high': 140000,
+          'done': 50000,
+          'currency': 'USD'
+        },
+        {
+          'country': 'CHINA',
+          'distributor': '',
+          'crash': 600000,
+          'low': 800000,
+          'mid': 1000000,
+          'high': 1200000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'SINGAPORE',
+          'distributor': '',
+          'crash': 30000,
+          'low': 50000,
+          'mid': 75000,
+          'high': 100000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'INDONESIA',
+          'distributor': '',
+          'crash': 40000,
+          'low': 60000,
+          'mid': 75000,
+          'high': 90000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'THAILAND',
+          'distributor': '',
+          'crash': 35000,
+          'low': 65000,
+          'mid': 72500,
+          'high': 80000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'MALAYSIA / VIETNAM',
+          'distributor': '',
+          'crash': 50000,
+          'low': 75000,
+          'mid': 97500,
+          'high': 120000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'PHILIPPINES',
+          'distributor': 'PIONEER FILMS',
+          'crash': 30000,
+          'low': 45000,
+          'mid': 50000,
+          'high': 55000,
+          'done': 35000,
+          'currency': 'USD'
+        },
+        {
+          'country': 'INDIA / PAKISTAN',
+          'distributor': '',
+          'crash': 35000,
+          'low': 50000,
+          'mid': 75000,
+          'high': 100000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'PAN TV ASIA',
+          'distributor': 'FOX NETWORKS',
+          'crash': 50000,
+          'low': 120000,
+          'mid': 140000,
+          'high': 160000,
+          'done': 85000,
+          'currency': 'USD'
+        },
+      ],
+      'NORTH AMERICA': [
+        {
+          'country': 'USA',
+          'distributor': '',
+          'crash': 2500000,
+          'low': 3000000,
+          'mid': 3500000,
+          'high': 4000000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'CANADA / QUEBEC',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'AUSTRALIA / NEW ZEALAND',
+          'distributor': '',
+          'crash': 225000,
+          'low': 350000,
+          'mid': 400000,
+          'high': 450000,
+          'done': 0,
+          'currency': 'USD'
+        },
+      ],
+      'SOUTH AMERICA': [
+        {
+          'country': 'ARGENTINA / PARAGUAY / URUGUAY',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'BOLIVIA / PERU / ECUADOR',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'BRAZIL',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'CHILE',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': '',
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'COLOMBIA',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'MEXOCP',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+        {
+          'country': 'VENEZUELA',
+          'distributor': '',
+          'crash': 0,
+          'low': 0,
+          'mid': 0,
+          'high': 0,
+          'done': 0,
+          'currency': ''
+        },
+      ],
+      'EASTERN EUROPE': [
+        {
+          'country': 'CIS',
+          'distributor': '',
+          'crash': 175000,
+          'low': 250000,
+          'mid': 300000,
+          'high': 350000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'HUNGARY',
+          'distributor': '',
+          'crash': 15000,
+          'low': 20000,
+          'mid': 25000,
+          'high': 30000,
+          'done': 0,
+          'currency': 'USD'
+        },
+        {
+          'country': 'POLAND',
+          'distributor': '',
+          'crash': 80000,
+          'low': 100000,
+          'mid': 125000,
+          'high': 150000,
+          'done': 0,
+          'currency': 'EUR'
+        },
+        {
+          'country': 'CZECH & SLOVAK REP.',
+          'distributor': '',
+          'crash': 45000,
+          'low': 60000,
+          'mid': 72500,
+          'high': 85000,
+          'done': 0,
+          'currency': 'USD'
+        }
+      ]
+    },
   },
   'waterfall': {
-    'mg': '3600000',
-    'fees': '215000',
-    'commission': '0,25',
-    'territories': 'World excl. USA, Japan, France, Germany and Belgium',
-    'investmentProposals': {
-      'requestedA': '2000000',
-      'premiumA': '0,15',
-      'backendA': '0,05',
-      'minimumA': '250000',
-      'breakevenA': '5920263,15789474',
-      'salesNeededA': '3815000',
-      'potentialRevenuesA': '0,246851962719298',
-      'bestCaseA': '0,291450087719298',
-      'worstCaseA': '0,202253837719298',
-      'requestedB': '500000',
-      'premiumB': '0,15',
-      'backendB': '0,05',
-      'minimumB': '100000',
-      'breakevenB': '6841832',
-      'salesNeededB': '6253596',
-      'potentialRevenuesB': '0,469760792053664',
-      'bestCaseB': '0,648153292053664',
-      'worstCaseB': '0,291368292053664'
-    }
+    'mg': 3600000,
+    'fees': 215000,
+    'commission': 0.25,
+    'territories': ['World excl. USA, Japan, France, Germany and Belgium'],
+    'graphs': {
+      'waterfall': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph2.png?alt=media&token=e55c5b87-c0d2-4204-a6a9-72d0d456431b',
+    },
+    'investmentProposals': [
+      {
+        'investor': 'Investor A',
+        'requested': 2000000,
+        'premium': 0.15,
+        'backend': 0.05,
+        'minimum': 250000,
+        'breakeven': 5920263.15789474,
+        'salesNeeded': 3815000,
+        'potentialRevenues': 0.246851962719298,
+        'bestCase': 0.291450087719298,
+        'worstCase': 0.202253837719298,
+      },
+      {
+        'investor': 'Investor B',
+        'requested': 500000,
+        'premium': 0.15,
+        'backend': 0.05,
+        'minimum': 100000,
+        'breakeven': 6841832,
+        'salesNeeded': 6253596,
+        'potentialRevenues': 0.469760792053664,
+        'bestCase': 0.648153292053664,
+        'worstCase': 0.291368292053664
+      }
+    ]
   },
   'contributions': {
     '100K': [
