@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { default as CANNE_DATA }  from '../../canne-data';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { getMovie } from '../../canne-data';
 
 @Component({
   selector: 'financing-explorer-details',
@@ -7,21 +8,30 @@ import { default as CANNE_DATA }  from '../../canne-data';
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FinancingExplorerDetailsComponent implements OnInit {
+export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
   public movie: any;
+  private sub: any;
 
-  constructor() {
-    this.movie = CANNE_DATA[0]; //@todo use @input or router param to select good movie
+  constructor(
+    private router: ActivatedRoute
+  ) {
+    this.sub = router.params.subscribe(params => {
+      this.movie = getMovie(params['id']);
+    });
   }
 
   ngOnInit() {
   }
 
-  public sumItems (items: Array<any>, attr: string) {
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  public sumItems(items: Array<any>, attr: string) {
     let sum = 0;
     items.forEach((item: any) => {
       sum += parseFloat(item[attr]);
-    })
+    });
     return sum;
   }
 }

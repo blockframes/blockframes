@@ -1,336 +1,352 @@
-<financing-explorer-header poster="https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/annette_titrePageFilm.jpg?alt=media&token=5f93002f-089d-47a9-b7ff-2a845284700b">
-  <label>{{ movie.principalInformations.director }}</label>
-  <h1>{{ movie.title }}</h1>
+<div *ngIf="movie">
+  <financing-explorer-header
+    poster="https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/annette_titrePageFilm.jpg?alt=media&token=5f93002f-089d-47a9-b7ff-2a845284700b">
+    <label>{{ movie.principalInformations.director }}</label>
+    <h1>{{ movie.title }}</h1>
 
-  <label>Logline</label>
-  <p>{{ movie.logline }}</p>
-</financing-explorer-header>
+    <label>Logline</label>
+    <p>{{ movie.logline }}</p>
+  </financing-explorer-header>
 
-<main fxLayout="row" fxLayoutAlign="center">
-  <div class="col-1">
-    <img [src]="movie.principalInformations.moviePoster" alt="movie cover">
-    <financing-explorer-financing-details [movie]="movie"></financing-explorer-financing-details>
+  <main fxLayout="row" fxLayoutAlign="center">
+    <div class="col-1">
+      <img [src]="movie.principalInformations.moviePoster" alt="movie cover">
+      <financing-explorer-financing-details [movie]="movie"></financing-explorer-financing-details>
 
-    <div class="funding-status">
-      <div class="left-budget">
-        <h3>
-          Funded Budget
-        </h3>
-        <h4>{{ movie.principalInformations.fundedBudget }}</h4>
-        <h5>
-          <span class="key">Goal Budget:</span> <span class="value">{{ movie.principalInformations.goalBudget }}</span>
-        </h5>
-      </div>
-      <div class="right-percent">
-        <mat-progress-spinner
-          class="spinner"
-          color="primary"
-          mode="determinate"
-          [value]="movie.principalInformations.percentage * 100"
-          diameter="120"
-          strokeWidth="15"
-        >
-        </mat-progress-spinner>
-        <div class="progress-value">{{ movie.principalInformations.percentage * 100 }} %</div>
-      </div>
-    </div>
-    <div class="call-to-action">
-      <div class="owner">
-        <div class="pic">
-          <img [src]="movie.artistic.directorPic">
+      <div class="funding-status">
+        <div class="left-budget">
+          <h3>
+            Funded Budget
+          </h3>
+          <h4>{{ movie.principalInformations.fundedBudget }}</h4>
+          <h5>
+            <span class="key">Goal Budget:</span> <span
+            class="value">{{ movie.principalInformations.goalBudget }}</span>
+          </h5>
         </div>
-        <div class="details">
-          <h3>{{ movie.principalInformations.director }}</h3>
-          <p>{{ movie.principalInformations.directorShortBio }}</p>
+        <div class="right-percent">
+          <mat-progress-spinner
+            class="spinner"
+            color="primary"
+            mode="determinate"
+            [value]="movie.principalInformations.percentage * 100"
+            diameter="120"
+            strokeWidth="15"
+          >
+          </mat-progress-spinner>
+          <div class="progress-value">{{ movie.principalInformations.percentage * 100 }} %</div>
         </div>
       </div>
-      <div class="action contact">
-        Contact Producer's Team
+      <div class="call-to-action">
+        <div class="owner">
+          <div class="pic">
+            <img [src]="movie.artistic.directorPic">
+          </div>
+          <div class="details">
+            <h3>{{ movie.principalInformations.director }}</h3>
+            <p>{{ movie.principalInformations.directorShortBio }}</p>
+          </div>
+        </div>
+        <div class="action contact">
+          Contact Producer's Team
+        </div>
+        <div class="action invest">
+          Investment
+        </div>
+        <div class="action download">
+          Download scenario
+        </div>
       </div>
-      <div class="action invest">
-        Investment
-      </div>
-      <div class="action download">
-        Download scenario
+      <div class="contributions">
+        <h2>Contributions</h2>
+        <div class="contribution" *ngFor="let contribution of movie.contributions | keyvalue">
+          <h3>${{contribution.key}} and more</h3>
+          <ng-container *ngFor="let item of contribution.value">
+            <h4 class="key">{{ item.title }}</h4>
+            <p class="value">{{ item.content }}</p>
+          </ng-container>
+          <h5>{{ contribution.value.length }} contributors</h5>
+        </div>
       </div>
     </div>
-    <div class="contributions">
-      <h2>Contributions</h2>
-      <div class="contribution" *ngFor="let contribution of movie.contributions | keyvalue">
-        <h3>${{contribution.key}} and more</h3>
-        <ng-container *ngFor="let item of contribution.value">
-          <h4 class="key">{{ item.title }}</h4>
-          <p class="value">{{ item.content }}</p>
-        </ng-container>
-        <h5>{{ contribution.value.length }} contributors</h5>
-      </div>
-    </div>
-  </div>
-  <div class="col-2">
-    <div class="main-information">
-      <h2>Principales Informations</h2>
-      <div class="summary">
-        <h3>About Film</h3>
-        <ul class="kv-list">
-          <li>
-            <span class="key">Directed By</span> <span class="value">{{ movie.principalInformations.director }}</span>
-          </li>
-          <li>
-            <span class="key">Produced By</span> <span class="value">{{ movie.principalInformations.producedBy }}</span>
-          </li>
-          <li>
-            <span class="key">Cast</span> <span class="value">
+    <div class="col-2">
+      <div class="main-information">
+        <h2>Principales Informations</h2>
+        <div class="summary">
+          <h3>About Film</h3>
+          <ul class="kv-list">
+            <li>
+              <span class="key">Directed By</span> <span class="value">{{ movie.principalInformations.director }}</span>
+            </li>
+            <li>
+              <span class="key">Produced By</span> <span
+              class="value">{{ movie.principalInformations.producedBy }}</span>
+            </li>
+            <li>
+              <span class="key">Cast</span> <span class="value">
               <span *ngFor="let item of movie.artistic.cast; let isLast=last">
-                {{ item.name }}{{ !isLast?',':'' }}
+                {{ item.name }}{{ !isLast ? ',' : '' }}
               </span>
             </span>
-          </li>
-          <li>
-            <span class="key">Product Stage</span> <span class="value">{{ movie.principalInformations.productionStage }}</span>
-          </li>
-          <li>
-            <span class="key">International Sales</span> <span class="value">{{ movie.principalInformations.internationalSales }}</span>
-          </li>
-        </ul>
-      </div>
-      <div class="synopsis">
-        <h3>Synopsis</h3>
-        <p>{{ movie.principalInformations.synopsis }}</p>
-      </div>
-      <div class="assets">
-        <h3>Key assets of the project</h3>
-        <ul>
-          <li *ngFor="let item of movie.principalInformations.keyAssets">{{ item }}</li>
-        </ul>
-      </div>
-      <div class="keywords">
-        <h3>Keywords</h3>
-        <mat-chip-list>
-          <mat-basic-chip *ngFor="let item of movie.principalInformations.keywords">{{ item }}</mat-basic-chip>
-        </mat-chip-list>
-      </div>
-    </div>
-    <div class="data movie-tab-group">
-      <mat-tab-group>
-        <mat-tab label="Production">
-          <h2>Production</h2>
-          <h3>Informations</h3>
-          <p class="key">Subvention</p>
-          <p class="value">{{ movie.production.subvention }}</p>
-          <p class="key">Shooting dates</p>
-          <p class="value">{{ movie.production.shootingDate }}</p>
-          <p class="key">Shooting locations</p>
-          <p class="value">{{ movie.production.shootingLocations }}</p>
-          <p class="key">Expected premiere</p>
-          <p class="value">{{ movie.production.expectedPremiere }}</p>
-          
-          <hr class="large-hidden"/>
-
-          <h3>Producer's History</h3>
-          <div class="producer-history">
-            <mat-accordion>
-              <mat-expansion-panel *ngFor="let producerHistory of movie.production.producersHistory | keyvalue">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    {{ producerHistory.key }}
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="producer-history-sub-container" *ngFor="let movie of producerHistory.value">
-                  <div class="poster-container">
-                    <img [src]="movie.posterUrl">
-                  </div>
-                  <mat-card class="movie-card">
-                    <mat-card-header>
-                      <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
-                      <mat-card-title>{{ movie.title }}</mat-card-title>
-                    </mat-card-header>
-                    
-                    <mat-card-content>
-                      <p class="key">Logline</p>
-                      <p>{{ movie.logline }}</p>
-                      <p class="key">Best distinctions</p>
-                      <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                      <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
-                    </mat-card-actions>
-                  </mat-card>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
-        </mat-tab>
-        <mat-tab label="Artistic">
-          <h2>Artistic</h2>
-          <h3>Informations</h3>
-          <p class="key">Story</p>
-          <p class="value">{{ movie.artistic.scriptwriter }}</p>
-          <p class="key">Music composer</p>
-          <p class="value">{{ movie.artistic.musicComposer }}</p>
-          <p class="key">Director of photography</p>
-          <p class="value">{{ movie.artistic.directorOfPhotography }}</p>
-
-          <hr class="large-hidden"/>
-
-          <h3>Cast</h3>
-          <div class="cast-sub-container" *ngFor="let cast of movie.artistic.cast">
-            <div class="picture-container">
-              <img [src]="cast.urlPicture">
-            </div>
-            <mat-card class="cast-card">
-              <mat-card-header class="cast-card-header">
-                <mat-card-subtitle class="key">{{ cast.name }}</mat-card-subtitle>
-                <mat-card-title  class="value">{{ cast.characterName }}</mat-card-title>
-              </mat-card-header>
-              
-              <mat-card-content class="cast-card-content">
-                <span class="cast-section-title">Remarquable movies</span>
-                <ul class="kv-list">
-                  <li *ngFor="let movie of cast.remarquableMovies"><span class="key">{{ movie.title }} ({{ movie.year }})</span> - <span class="value">{{ movie.character }}</span></li>
-                </ul>
-              </mat-card-content>
-            </mat-card>
-          </div>
-          <hr class="large-hidden"/>
-
-          <h3>Long synopsis</h3>
-          <p>{{ movie.artistic.longSynopsis }}</p>
-          
+            </li>
+            <li>
+              <span class="key">Product Stage</span> <span
+              class="value">{{ movie.principalInformations.productionStage }}</span>
+            </li>
+            <li>
+              <span class="key">International Sales</span> <span
+              class="value">{{ movie.principalInformations.internationalSales }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="synopsis">
+          <h3>Synopsis</h3>
+          <p>{{ movie.principalInformations.synopsis }}</p>
+        </div>
+        <div class="assets">
+          <h3>Key assets of the project</h3>
+          <ul>
+            <li *ngFor="let item of movie.principalInformations.keyAssets">{{ item }}</li>
+          </ul>
+        </div>
+        <div class="keywords">
+          <h3>Keywords</h3>
           <mat-chip-list>
-            <mat-basic-chip *ngFor="let item of movie.artistic.downloads">
-              <a target="_blank" attr.href="{{ item.url }}">{{ item.anchor }}</a>
-            </mat-basic-chip>
+            <mat-basic-chip *ngFor="let item of movie.principalInformations.keywords">{{ item }}</mat-basic-chip>
           </mat-chip-list>
+        </div>
+      </div>
+      <div class="data movie-tab-group">
+        <mat-tab-group>
+          <mat-tab label="Production">
+            <h2>Production</h2>
+            <h3>Informations</h3>
+            <p class="key">Subvention</p>
+            <p class="value">{{ movie.production.subvention }}</p>
+            <p class="key">Shooting dates</p>
+            <p class="value">{{ movie.production.shootingDate }}</p>
+            <p class="key">Shooting locations</p>
+            <p class="value">{{ movie.production.shootingLocations }}</p>
+            <p class="key">Expected premiere</p>
+            <p class="value">{{ movie.production.expectedPremiere }}</p>
 
-          <hr class="large-hidden"/>
+            <hr class="large-hidden"/>
 
-          <h3>Director's bio</h3>
-          <div class="cast-sub-container">
-            <div class="picture-container">
-              <img [src]="movie.artistic.directorPic">
-            </div>
-            <mat-card class="cast-card">
-              <mat-card-header class="cast-card-header">
-                <mat-card-subtitle class="key">{{ movie.artistic.directorName }}</mat-card-subtitle>
-              </mat-card-header>
-              
-              <mat-card-content class="cast-card-content">
-                <span class="cast-section-title">Remarquable movies</span>
-                <ul class="kv-list">
-                  <li *ngFor="let movie of movie.artistic.directorSelectiveFilmo"><span class="key">{{ movie }}</span></li>
-                </ul>
-              </mat-card-content>
-              <mat-card-actions>
-                <a target="_blank" attr.href="#">Watching project <mat-icon>arrow_right_alt</mat-icon></a>
-              </mat-card-actions>
-            </mat-card>
-          </div>
+            <h3>Producer's History</h3>
+            <div class="producer-history">
+              <mat-accordion>
+                <mat-expansion-panel *ngFor="let producerHistory of movie.production.producersHistory | keyvalue">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{ producerHistory.key }}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="producer-history-sub-container" *ngFor="let movie of producerHistory.value">
+                    <div class="poster-container">
+                      <img [src]="movie.posterUrl">
+                    </div>
+                    <mat-card class="movie-card">
+                      <mat-card-header>
+                        <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
+                        <mat-card-title>{{ movie.title }}</mat-card-title>
+                      </mat-card-header>
 
-          <p>{{ movie.artistic.directorBio }}</p>
-
-          <h3>Director's note</h3>
-          <p>{{ movie.artistic.directorNote }}</p>
-
-          <h3>Producer's note</h3>
-          <p>{{ movie.artistic.producerNote }}</p>
-
-          <h3>Producer's history</h3>
-          <div class="producer-history">
-            <mat-accordion>
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    {{ movie.artistic.directorName }}
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="producer-history-sub-container" *ngFor="let movie of movie.artistic.directorFilmography">
-                  <div class="poster-container">
-                    <img [src]="movie.posterUrl">
+                      <mat-card-content>
+                        <p class="key">Logline</p>
+                        <p>{{ movie.logline }}</p>
+                        <p class="key">Best distinctions</p>
+                        <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB
+                          <mat-icon>arrow_right_alt</mat-icon>
+                        </a>
+                      </mat-card-actions>
+                    </mat-card>
                   </div>
-                  <mat-card class="movie-card">
-                    <mat-card-header>
-                      <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
-                      <mat-card-title>{{ movie.title }}</mat-card-title>
-                    </mat-card-header>
-                    
-                    <mat-card-content>
-                      <p class="key">Logline</p>
-                      <p>{{ movie.logline }}</p>
-                      <p class="key">Best distinctions</p>
-                      <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                      <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB <mat-icon>arrow_right_alt</mat-icon></a>
-                    </mat-card-actions>
-                  </mat-card>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
-        </mat-tab>
-        <mat-tab label="Finance">
-          <h2>Finance</h2>
-          <h3>Financing plan</h3>
-          <div class="financing-plan-panel">
-            <mat-accordion>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </mat-tab>
+          <mat-tab label="Artistic">
+            <h2>Artistic</h2>
+            <h3>Informations</h3>
+            <p class="key">Story</p>
+            <p class="value">{{ movie.artistic.scriptwriter }}</p>
+            <p class="key">Music composer</p>
+            <p class="value">{{ movie.artistic.musicComposer }}</p>
+            <p class="key">Director of photography</p>
+            <p class="value">{{ movie.artistic.directorOfPhotography }}</p>
+
+            <hr class="large-hidden"/>
+
+            <h3>Cast</h3>
+            <div class="cast-sub-container" *ngFor="let cast of movie.artistic.cast">
+              <div class="picture-container">
+                <img [src]="cast.urlPicture">
+              </div>
+              <mat-card class="cast-card">
+                <mat-card-header class="cast-card-header">
+                  <mat-card-subtitle class="key">{{ cast.name }}</mat-card-subtitle>
+                  <mat-card-title class="value">{{ cast.characterName }}</mat-card-title>
+                </mat-card-header>
+
+                <mat-card-content class="cast-card-content">
+                  <span class="cast-section-title">Remarquable movies</span>
+                  <ul class="kv-list">
+                    <li *ngFor="let movie of cast.remarquableMovies"><span class="key">{{ movie.title }}
+                      ({{ movie.year }})</span> - <span class="value">{{ movie.character }}</span></li>
+                  </ul>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <hr class="large-hidden"/>
+
+            <h3>Long synopsis</h3>
+            <p>{{ movie.artistic.longSynopsis }}</p>
+
+            <mat-chip-list>
+              <mat-basic-chip *ngFor="let item of movie.artistic.downloads">
+                <a target="_blank" attr.href="{{ item.url }}">{{ item.anchor }}</a>
+              </mat-basic-chip>
+            </mat-chip-list>
+
+            <hr class="large-hidden"/>
+
+            <h3>Director's bio</h3>
+            <div class="cast-sub-container">
+              <div class="picture-container">
+                <img [src]="movie.artistic.directorPic">
+              </div>
+              <mat-card class="cast-card">
+                <mat-card-header class="cast-card-header">
+                  <mat-card-subtitle class="key">{{ movie.artistic.directorName }}</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content class="cast-card-content">
+                  <span class="cast-section-title">Remarquable movies</span>
+                  <ul class="kv-list">
+                    <li *ngFor="let movie of movie.artistic.directorSelectiveFilmo"><span class="key">{{ movie }}</span>
+                    </li>
+                  </ul>
+                </mat-card-content>
+                <mat-card-actions>
+                  <a target="_blank" attr.href="#">Watching project
+                    <mat-icon>arrow_right_alt</mat-icon>
+                  </a>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+
+            <p>{{ movie.artistic.directorBio }}</p>
+
+            <h3>Director's note</h3>
+            <p>{{ movie.artistic.directorNote }}</p>
+
+            <h3>Producer's note</h3>
+            <p>{{ movie.artistic.producerNote }}</p>
+
+            <h3>Producer's history</h3>
+            <div class="producer-history">
+              <mat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{ movie.artistic.directorName }}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="producer-history-sub-container" *ngFor="let movie of movie.artistic.directorFilmography">
+                    <div class="poster-container">
+                      <img [src]="movie.posterUrl">
+                    </div>
+                    <mat-card class="movie-card">
+                      <mat-card-header>
+                        <mat-card-subtitle>{{ movie.productionYear }}</mat-card-subtitle>
+                        <mat-card-title>{{ movie.title }}</mat-card-title>
+                      </mat-card-header>
+
+                      <mat-card-content>
+                        <p class="key">Logline</p>
+                        <p>{{ movie.logline }}</p>
+                        <p class="key">Best distinctions</p>
+                        <p *ngFor="let distinction of movie.bestDistinctions">{{ distinction }}</p>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <a target="_blank" [attr.href]="movie.imdbUrl">More details on IMDB
+                          <mat-icon>arrow_right_alt</mat-icon>
+                        </a>
+                      </mat-card-actions>
+                    </mat-card>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </mat-tab>
+          <mat-tab label="Finance">
+            <h2>Finance</h2>
+            <h3>Financing plan</h3>
+            <div class="financing-plan-panel">
+              <mat-accordion>
                 <mat-expansion-panel *ngFor="let financingCat of movie.finance.financingPlan | keyvalue">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    {{ financingCat.key }}
-                  </mat-panel-title>
-                  <mat-panel-description>
-                    {{ sumItems(financingCat.value, 'amount') | currency:'EUR':true }}
-                  </mat-panel-description>
-                </mat-expansion-panel-header>
-                <table>
-                  <thead>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{ financingCat.key }}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      {{ sumItems(financingCat.value, 'amount') | currency:'EUR':true }}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <table>
+                    <thead>
                     <tr>
                       <td>Name</td>
                       <td>Finance. type</td>
                       <td>Amount</td>
                       <td>Statut</td>
                     </tr>
-                  </thead>
-                  <tbody>
+                    </thead>
+                    <tbody>
                     <tr *ngFor="let item of financingCat.value">
                       <td>{{ item.name }}</td>
                       <td>{{ item.financementType }}</td>
                       <td>{{ item.amount | currency:'EUR':true }}</td>
                       <td>{{ item.status }}</td>
                     </tr>
-                  </tbody>
-                </table>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
-          <h3>Estimate Budget</h3>
-          <mat-chip-list>
-            <mat-basic-chip *ngFor="let item of movie.finance.spendingsCategories">{{ item }}</mat-basic-chip>
-          </mat-chip-list>
+                    </tbody>
+                  </table>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+            <h3>Estimate Budget</h3>
+            <mat-chip-list>
+              <mat-basic-chip *ngFor="let item of movie.finance.spendingsCategories">{{ item }}</mat-basic-chip>
+            </mat-chip-list>
 
-          <img [src]="movie.finance.graphs.budget">
+            <img [src]="movie.finance.graphs.budget">
 
-          <table class="budget-table">
-            <thead>
+            <table class="budget-table">
+              <thead>
               <tr>
                 <td><span class="key">Artistic Rights</span></td>
-                <td class="currency-display"><span class="value">{{ sumItems(movie.finance.estimatedBudget, 'total') | currency:'EUR':true }}</span></td>
+                <td class="currency-display"><span
+                  class="value">{{ sumItems(movie.finance.estimatedBudget, 'total') | currency:'EUR':true }}</span></td>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               <tr *ngFor="let item of movie.finance.estimatedBudget">
                 <td class="category-display">{{ item.category }}</td>
                 <td class="currency-display">{{ item.total | currency:'EUR':true}}</td>
               </tr>
-            </tbody>
-          </table>
-          <div class="btn-container">
+              </tbody>
+            </table>
+            <div class="btn-container">
               <button class="export-btn" mat-raised-button>Export all in Excel</button>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
+</div>
 
 <financing-explorer-footer></financing-explorer-footer>
