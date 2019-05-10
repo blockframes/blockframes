@@ -1,7 +1,8 @@
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import localeFr from '@angular/common/locales/fr';
 import { RouterModule } from '@angular/router';
 // Material
 import {
@@ -48,7 +49,8 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FlexModule } from '@angular/flex-layout';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-horizontal/movie-card-horizontal.component';
-
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeFr)
 
 @NgModule({
   declarations: [
@@ -99,7 +101,11 @@ import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-hor
     FinancingRangeSliderModule,
     MatMenuModule
   ],
-  providers: [],
+  providers: [{
+      provide: LOCALE_ID,
+      useValue: 'fr-FR'
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
