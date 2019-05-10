@@ -26,7 +26,7 @@ export class MovieMaterialItemComponent implements OnInit {
 
   ngOnInit() {
     this.stakeholder = this.orgQuery.getEntity(
-      this.stakeholders[1].orgId
+      this.stakeholders[0].orgId
     ).name;
   }
 

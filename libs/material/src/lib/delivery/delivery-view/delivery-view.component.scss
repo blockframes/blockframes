@@ -1,3 +1,7 @@
+mat-card {
+  box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
 .container {
   margin-top: 3%;
   margin-left: 240px;
@@ -34,14 +38,14 @@ mat-progress-spinner {
   font-weight: bolder;
   font-size: 13px;
   height: 45px;
-  color: var(--accent);
-  border: solid 1px var(--accent);
+  color: var(--primary);
+  border: solid 1px var(--primary);
   margin-right: 30px;
 }
 
 .select-button-active {
   color: white;
-  background-color: var(--accent);
+  background-color: var(--primary);
 }
 
 .materials {

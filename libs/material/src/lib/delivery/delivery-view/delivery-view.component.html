@@ -1,11 +1,11 @@
 <div class="container">
-  <section fxLayout="row" fxLayoutGap="15px">
+  <section fxLayout="row" fxLayoutGap="25px">
     <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
         fxLayout="column"
         fxLayoutAlign="center center"
-        class="mat-elevation-z6"
+        class="mat-elevation-z0"
       >
         <mat-progress-spinner
           class="spinner"
@@ -52,7 +52,7 @@
         </div>
       </mat-card>
       <ng-template #empty>
-        <mat-card class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
+        <mat-card class="mat-elevation-z0" fxLayout="column" fxLayoutAlign="center center">
           <mat-progress-spinner
             class="spinner"
             color="warn"

@@ -9,7 +9,6 @@
 }
 
 .message {
-  font-size: 12px;
   cursor: pointer;
 }
 
@@ -18,11 +17,12 @@
 }
 
 .text {
+  font-size: 11px;
   margin: 0;
 }
 
 .date {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 10px;
   color: var(--disabled);
   margin-bottom: 0;
