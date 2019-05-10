@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { getMovie } from '../../canne-data';
+import { Observable } from 'rxjs';
+import { AuthQuery, User } from '@blockframes/auth';
 
 @Component({
   selector: 'financing-explorer-details',
@@ -9,15 +11,18 @@ import { getMovie } from '../../canne-data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
-  public movie: any;
+  public movie: any = null;
+  public user$: Observable<User>;
   private sub: any;
 
   constructor(
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    public query: AuthQuery
   ) {
     this.sub = router.params.subscribe(params => {
       this.movie = getMovie(params['id']);
     });
+    this.user$ = this.query.user$;
   }
 
   ngOnInit() {
