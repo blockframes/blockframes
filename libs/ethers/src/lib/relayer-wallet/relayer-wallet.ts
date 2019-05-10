@@ -176,7 +176,7 @@ export class RelayerWallet implements ethers.Signer {
   public async getBalance(): Promise<string> {
     this._requireUsername();
     const balance = await this.provider.getBalance(`${this.username}.${baseEnsDomain}`).catch(error => {
-      console.error('Ooops something bad happened when querying user balance :', error);
+      // console.warn('Ooops the app try to get the balance of a (yet) none existing ENS domain, don`t worry everything is fine');
       return utils.bigNumberify(0);
     });
     return utils.formatEther(balance);
