@@ -52,6 +52,10 @@ export class FormComponent implements OnInit, OnDestroy {
     this.persistForm = new PersistNgFormPlugin(this.query, createMovie).setForm(this.movieForm);
 
     this.populateForm();
+    
+    /* Do not be afraid great Smurf, this is a temporary hack ;)*/
+    this.movieForm.get('originalTitle').setValue('undefined');
+    this.movieForm.get('originalTitle').setValue(this.movie.title.original);
   }
 
   private populateForm() {
