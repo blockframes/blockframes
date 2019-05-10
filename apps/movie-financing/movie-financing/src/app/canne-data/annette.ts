@@ -4,6 +4,7 @@ const DATA = {
   'title': 'Annette',
   'logline': 'A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.',
   'principalInformations': {
+    'moviePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Annette_poster.jpg?alt=media&token=04d0792c-50fb-4572-bc74-107cffb34750',
     'director': 'Leos Carax',
     'producedBy': 'CG Cinéma, Scope Pictures, Delta, Kinology',
     'cinematographyBy': 'Caroline Champetier',
@@ -192,7 +193,7 @@ const DATA = {
     'cast': [
       {
         'name': 'Adam Driver',
-        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/adam_driver.png?alt=media&token=ec764f36-b807-44f2-a238-1be397953f5b',
+        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/adam_driver2.png?alt=media&token=7159e2ee-edd8-464a-8b15-0de81d533973',
         'characterName': 'Henry',
         'remarquableMovies': [
           {
@@ -214,7 +215,7 @@ const DATA = {
       },
       {
         'name': 'Michelle Williams',
-        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/michelle_williams.png?alt=media&token=e206fbb3-fffa-49c6-ac1c-373f709483de',
+        'urlPicture': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/michelle_williams2.png?alt=media&token=bc59193a-964b-49c7-9fa3-404ab0b3844b',
         'characterName': 'Ann',
         'remarquableMovies': [
           {
@@ -251,6 +252,7 @@ const DATA = {
       }
     ],
     'directorName': 'LEOS CARAX',
+    'directorPic': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/leos_carax.png?alt=media&token=2c010045-5fda-47fc-a825-29f4725eaa93',
     'directorBio': 'Leos Carax made several short films and also wrote film criticism, then at the age of 24 years made a very strong first feature Boy Meets Girl. The film played at the 1984 Cannes film festival and was a critical triumph. It paved the way for Carax\'s second feature Mauvais Sang (Bad Blood). That film was a giant step forward in the same direction that he was going in with his first film. Both films were visually stunning and focused on young love and also alienation. With his reputation and talent at its peak, he set out to make what seemed it seemed like would be another triumph. The Lovers on the Bridge (The Lovers on the Bridge) was the result of three long years of very difficult production; Carax spent a fortune building some of the sets and filming some mind-blowing sequences. Unfortunately, neither critics nor audiences favored what was a truly grand vision of the themes he dealt with in his first two films. Carax went into an a 8 year long exile, but finally returned with Pola X. It was a departure from his other films and another critical flop.',
     'directorSelectiveFilmo': [
       'Holy Motors (2012)',
@@ -403,6 +405,15 @@ const DATA = {
         }
       ]
     },
+    'spendingsCategories': [
+      'CG CInema Spendings',
+      'Including Foreign Spending',
+      'Including French Spending',
+      'Spending Shooting USA LA',
+      'Spending Belgium',
+      'Spending Germany',
+      'Total'
+    ],
     'estimatedBudget': [
       {
         'category': '1. ARTISTIC RIGHTS',

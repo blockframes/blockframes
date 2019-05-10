@@ -1,14 +1,14 @@
-<financing-explorer-header>
-  <label>Leos Carax</label>
-  <h1>Annette</h1>
+<financing-explorer-header poster="https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/annette_titrePageFilm.jpg?alt=media&token=5f93002f-089d-47a9-b7ff-2a845284700b">
+  <label>{{ movie.principalInformations.director }}</label>
+  <h1>{{ movie.title }}</h1>
 
   <label>Logline</label>
-  <p>A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.</p>
+  <p>{{ movie.logline }}</p>
 </financing-explorer-header>
 
 <main fxLayout="row" fxLayoutAlign="center">
   <div class="col-1">
-    <img src="https://fakeimg.pl/407x542/" alt="movie cover">
+    <img [src]="movie.principalInformations.moviePoster" alt="movie cover">
     <financing-explorer-financing-details></financing-explorer-financing-details>
 
     <div class="funding-status">
@@ -37,7 +37,7 @@
     <div class="call-to-action">
       <div class="owner">
         <div class="pic">
-          <img src="https://fakeimg.pl/74x74/" alt="movie cover">
+          <img [src]="movie.artistic.directorPic">
         </div>
         <div class="details">
           <h3>{{ movie.principalInformations.director }}</h3>
@@ -207,7 +207,7 @@
           <h3>Director's bio</h3>
           <div class="cast-sub-container">
             <div class="picture-container">
-              <img src="https://fakeimg.pl/108x108/">
+              <img [src]="movie.artistic.directorPic">
             </div>
             <mat-card class="cast-card">
               <mat-card-header class="cast-card-header">
@@ -303,7 +303,12 @@
               </mat-expansion-panel>
             </mat-accordion>
           </div>
-          
+          <h3>Estimate Budget</h3>
+          <mat-chip-list>
+            <mat-basic-chip *ngFor="let item of movie.finance.spendingsCategories">{{ item }}</mat-basic-chip>
+          </mat-chip-list>
+
+          <img src="https://fakeimg.pl/250x250/">
         </mat-tab>
       </mat-tab-group>
     </div>

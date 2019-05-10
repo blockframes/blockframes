@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerHeaderComponent implements OnInit {
+  @Input() poster : string;
   constructor() {}
   ngOnInit() {}
 }

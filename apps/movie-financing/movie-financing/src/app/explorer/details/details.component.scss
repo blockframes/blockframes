@@ -392,9 +392,14 @@ ul.kv-list {
         font-weight: bold;
       }
 
-      .mat-panel-description, .mat-expansion-panel-header-description {
+      .mat-panel-description,
+      .mat-expansion-panel-header-description,
+      .mat-expansion-panel-header-description::after {
         font-size: 14px;
         font-weight: bold;
+        flex-grow: 0;
+        margin-right: 125px;
+        color: #000;
       }
     }
 
@@ -403,6 +408,7 @@ ul.kv-list {
       tr {
         td {
           width: 30%;
+          text-align: center;
         }
       }
 
@@ -419,6 +425,7 @@ ul.kv-list {
         tr {
           td {
             height: 40px;
+            
           }
         }
       }
