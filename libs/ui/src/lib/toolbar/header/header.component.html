@@ -26,24 +26,22 @@
     </mat-form-field>
   </form>
 
-  <ng-container>
-    <button mat-icon-button [matMenuTriggerFor]="apps" class="apps-button">
-      <mat-icon svgIcon="applications"></mat-icon>
-    </button>
-    <mat-menu #apps="matMenu" class="appMenu mat-elevation-z6">
-      <a mat-menu-item href="/delivery">
-        <img src="/assets/apps/delivery.svg" alt="Delivery" />
-      </a>
-      <a mat-menu-item href="/movie-financing">
-        <img src="/assets/apps/moviefinancing.svg" alt="Delivery" />
-      </a>
-      <a mat-menu-item href="/ip-upload">
-        <img src="/assets/apps/ipupload.svg" alt="Delivery" />
-      </a>
-    </mat-menu>
-  </ng-container>
+  <button mat-icon-button [matMenuTriggerFor]="apps" class="apps-button">
+    <mat-icon svgIcon="applications"></mat-icon>
+  </button>
+  <mat-menu #apps="matMenu" class="appMenu mat-elevation-z6">
+    <a mat-menu-item href="/delivery">
+      <img src="/assets/apps/delivery.svg" alt="Delivery" />
+    </a>
+    <a mat-menu-item href="/movie-financing">
+      <img src="/assets/apps/moviefinancing.svg" alt="Delivery" />
+    </a>
+    <a mat-menu-item href="/ip-upload">
+      <img src="/assets/apps/ipupload.svg" alt="Delivery" />
+    </a>
+  </mat-menu>
 
-  <ng-container *ngIf="(user$ | async) as user">
+  <div *ngIf="(user$ | async) as user">
     <button mat-icon-button [matMenuTriggerFor]="notifications" class="notification-button">
       <mat-icon
         *ngIf="(notificationsLength$ | async) as length; else empty"
@@ -51,13 +49,13 @@
         matBadge="{{ length }}"
         matBadgeColor="primary"
         matBadgeSize="medium"
-        class="notification-icon"
-      ></mat-icon>
+        class="notification-icon">
+      </mat-icon>
       <ng-template #empty>
         <mat-icon svgIcon="notifications" class="notification-icon"></mat-icon>
       </ng-template>
     </button>
-  </ng-container>
+  </div>
 
   <mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
     <mat-list>

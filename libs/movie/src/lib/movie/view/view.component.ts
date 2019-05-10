@@ -10,7 +10,7 @@ import { FormGroupLike } from '@datorama/akita';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit, OnDestroy {
+export class ViewComponent implements OnInit {
   @Input() form$: Observable<FormGroupLike>;
   @Input() mode: string;
 
@@ -34,7 +34,4 @@ export class ViewComponent implements OnInit, OnDestroy {
     return getLabelBySlug (scope, slug) as string;
   }
 
-  ngOnDestroy() {
-    // this.store.setActive(null);
-  }
 }

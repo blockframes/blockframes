@@ -7,7 +7,7 @@ import { MovieQuery, StakeholderQuery } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
-import { materialsByCategory } from '../../material/+state/material.query';
+import { materialsByCategory, MaterialQuery } from '../../material/+state/material.query';
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateView } from '../../template/+state';
@@ -26,7 +26,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public steps$ = this.selectActive(delivery => delivery.steps);
   /** Returns the active delivery materials sorted by category */
-  public currentTemplateView: Observable<TemplateView> = this.materialsByActiveDelivery().pipe(
+  public currentTemplateView: Observable<TemplateView> = this.materialQuery.selectAll().pipe(
     map(materials => materialsByCategory(materials))
   );
 
@@ -37,6 +37,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   constructor(
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
+    private materialQuery: MaterialQuery,
     private materialStore: MaterialStore,
     private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
@@ -68,20 +69,24 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   }
 
   /** Set the store with movie materials from active delivery */
-  private materialsByActiveDelivery() {
+  public materialsByActiveDelivery() {
     return this.movieQuery.selectActive().pipe(
       switchMap(movie =>
-        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
-      ),
-      map(materials => {
-        const id = this.getActiveId();
-        return materials.filter(material => material.deliveriesIds.includes(id));
-      }),
-      map(materials =>
-        materials.map(material => ({
-          ...material,
-          step: this.getActive().steps.find(step => step.id === material.stepId)
-        }))
+        this.db
+          .collection<Material>(`movies/${movie.id}/materials`)
+          .valueChanges()
+          .pipe(
+            map(materials => {
+              const id = this.getActiveId();
+              return materials.filter(material => material.deliveriesIds.includes(id));
+            }),
+            map(materials =>
+              materials.map(material => ({
+                ...material,
+                step: this.getActive().steps.find(step => step.id === material.stepId)
+              }))
+            )
+          )
       ),
       tap(materials => this.materialStore.set(materials))
     );

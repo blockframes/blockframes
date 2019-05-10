@@ -1,14 +1,16 @@
 .app-icon {
-  position: relative;
   height: 50px;
   width: 50px;
-  margin-top: 10px;
-  left: 25px;
 }
 
 .icon-container {
   width: 100px;
   background-color: #8C8C8C;
-  margin-bottom: 5px;
-  cursor: pointer;
+  height: 64px;
+}
+
+button {
+  // Using margin to reposition icon into container as resizing svg icons change their position.
+  margin-right: 10px;
+  margin-bottom: 10px;
 }

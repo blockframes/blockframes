@@ -5,15 +5,18 @@
   border: solid 0.5px var(--disabled);
   background-color: #E1E1E1;
 }
+
 .footerLocked > span {
   font-size: 9px;
   font-weight: bold;
   color: var(--disabled);
 }
+
 .footerLocked > mat-icon {
   font-size: 48px;
   color:  var(--disabled);
 }
+
 .footerSigned {
   width: 359px;
   height: 106px;
@@ -40,9 +43,11 @@ p {
   height: 40px;
   width: 40px;
   margin-right: 20px;
+  margin-bottom: 30px;
 }
 
 .lock-icon {
   font-size: 40px;
-  margin-right: 20px;
+  margin-right: 40px;
+  margin-bottom: 40px;
 }

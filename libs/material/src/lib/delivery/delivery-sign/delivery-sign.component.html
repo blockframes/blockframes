@@ -1,21 +1,15 @@
-<div mat-dialog-content>
-  <h3>
-    Please enter your password to confirm
-  </h3>
-</div>
+<h3>Please enter your password to confirm</h3>
 <form [formGroup]="form" (ngSubmit)="confirm()">
   <mat-form-field appearance="outline" fxLayoutAlign="center">
     <mat-label>Password</mat-label>
     <input formControlName="password" type="password" matInput placeholder="Password" required />
   </mat-form-field>
-  <div fxLayoutAlign="center center">
+  <div *ngIf="loading" fxLayoutAlign="center center">
   <mat-progress-spinner
       class="spinner"
-      *ngIf="loading"
       color="primary"
       mode="indeterminate"
-      diameter="40"
-    >
+      diameter="40">
     </mat-progress-spinner>
   </div>
   <div mat-dialog-actions fxLayoutAlign="center center">
@@ -25,8 +19,7 @@
       [disabled]="loading"
       color="basic"
       class="mat-elevation-z0"
-      (click)="close()"
-    >
+      (click)="close()">
       Cancel
     </button>
     <button
@@ -34,8 +27,7 @@
       [disabled]="!form.valid"
       mat-raised-button
       color="primary"
-      class="mat-elevation-z0"
-    >
+      class="mat-elevation-z0">
       Sign
     </button>
   </div>

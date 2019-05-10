@@ -7,15 +7,13 @@ import { Material } from '../../material/+state';
   styleUrls: ['./delivery-view-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewItemComponent implements OnInit {
+export class DeliveryViewItemComponent {
   @Input() material: Material;
   @Input() isChecked: boolean;
   @Output() isSelected = new EventEmitter<boolean>();
 
   // Visual bullshit for WoW effect
-  public paymentIcons = ['dummy', 'payed', 'not_payed'];
-  public stateIcon: string;
-  public paymentIcon: string;
+  public paymentIcons = ['payed', 'not_payed'];
 
   public isOpen = true;
   public disableMaterial = false;
@@ -24,16 +22,8 @@ export class DeliveryViewItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    this.paymentIcon = this.paymentIcons[this.randomNumberPicker(2)];
-  }
-
   public selectMaterial() {
     this.isSelected.emit(!this.isChecked);
-  }
-
-  public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale) + 1;
   }
 
   public panelToggle() {

@@ -1,5 +1,5 @@
 <mat-card class="container mat-elevation-z6">
-  <mat-card-title><h4>Edit your material</h4></mat-card-title>
+  <mat-card-title>Edit your material</mat-card-title>
   <form [formGroup]="form" (ngSubmit)="updateMaterial()" class="container" fxLayout="row">
     <div class="inputs" fxLayout="column" fxLayoutAlign="center">
       <mat-form-field appearance="outline" class="inputs">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="step" fxLayout="column" fxLayoutAlign="space-between end">
-      <mat-form-field *ngIf="hasStep else noStep" appearance="outline" class="mat-select-step">
+      <mat-form-field *ngIf="hasStep; else noStep" appearance="outline" class="mat-select-step">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="stepId">
           <mat-option value="">

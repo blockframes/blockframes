@@ -34,8 +34,8 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.materialService
-      .subscribeOnMovieMaterials$()
+    this.query
+      .materialsByActiveDelivery()
       .pipe(takeWhile(() => this.isAlive))
       .subscribe(); // TODO : remove after Cannes in favor of routes.
     this.delivery = this.query.getActive();

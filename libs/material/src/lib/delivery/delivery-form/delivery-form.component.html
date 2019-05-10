@@ -24,13 +24,11 @@
       *ngIf="!(isDeliveryValidated$ | async)"
       class="container-button"
       fxLayout="row"
-      fxLayoutAlign="center center"
-    >
+      fxLayoutAlign="center center">
       <button
         class="delete-delivery mat-elevation-z0"
         mat-raised-button
-        (click)="openDeleteDelivery()"
-      >
+        (click)="openDeleteDelivery()">
         Delete delivery
         <mat-icon class="icon">delete</mat-icon>
       </button>
@@ -39,14 +37,12 @@
       *ngIf="(isDeliveryValidated$ | async)"
       class="container-button"
       fxLayout="row"
-      fxLayoutAlign="center center"
-    >
+      fxLayoutAlign="center center">
       <button
         class="unseal-delivery mat-elevation-z0"
         color="warn"
         mat-raised-button
-        (click)="openUnsealDelivery()"
-      >
+        (click)="openUnsealDelivery()">
         Unseal delivery
         <mat-icon class="icon">lock_open</mat-icon>
       </button>
@@ -63,8 +59,7 @@
             [disabled]="isDeliveryValidated$ | async"
             mat-raised-button
             (click)="selectAllMaterials()"
-            class="select-button mat-elevation-z0"
-          >
+            class="select-button mat-elevation-z0">
             <span *ngIf="!allChecked">Select all materials</span>
             <span *ngIf="!!allChecked">Unselect materials</span>
           </button>
@@ -72,8 +67,7 @@
             class="action mat-elevation-z0"
             mat-raised-button
             [matMenuTriggerFor]="actions"
-            [disabled]="isDeliveryValidated$ | async"
-          >
+            [disabled]="isDeliveryValidated$ | async">
             Actions <mat-icon class="action-icon">expand_more</mat-icon>
           </button>
           <mat-menu #actions="matMenu" xPosition="before">
@@ -90,8 +84,7 @@
                 <button
                   *ngFor="let step of (delivery$ | async).steps"
                   (click)="changeStep(step.id)"
-                  mat-menu-item
-                >
+                  mat-menu-item>
                   {{ step.name }}
                 </button>
               </ng-template>
@@ -108,26 +101,23 @@
         <material-delivery-add-form
           [isDeliveryValidated]="isDeliveryValidated$ | async"
           *ngIf="form.category === ''"
-          (add)="addMaterial($event)"
-        >
+          (add)="addMaterial($event)">
         </material-delivery-add-form>
       </article>
-      <article *ngFor="let category of (materials$ | async | keyvalue)" [id]="category.key" class="category-block">
+      <article
+        *ngFor="let category of (materials$ | async | keyvalue)"
+        [id]="category.key"
+        class="category-block">
         <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
-          <div>
-            <h3>{{ category.key }}</h3>
-          </div>
-          <div>
-            <button
-              class="category-material mat-elevation-z0"
-              [disabled]="isDeliveryValidated$ | async"
-              (click)="addForm(category.key)"
-              mat-raised-button
-            >
-              Add a material
-              <mat-icon class="icon">add</mat-icon>
-            </button>
-          </div>
+          <h3>{{ category.key }}</h3>
+          <button
+            class="category-material mat-elevation-z0"
+            [disabled]="isDeliveryValidated$ | async"
+            (click)="addForm(category.key)"
+            mat-raised-button>
+            Add a material
+            <mat-icon class="icon">add</mat-icon>
+          </button>
         </div>
         <div>
           <div *ngFor="let material of category.value">
@@ -139,8 +129,7 @@
                   [isChecked]="allChecked"
                   (isSelected)="selectMaterial($event, material.id)"
                   (isDeleted)="deleteMaterial(material)"
-                  (update)="openUpdateForm(material)"
-                >
+                  (update)="openUpdateForm(material)">
                 </material-delivery-item>
               </ng-template>
               <ng-template materialEditMode>
@@ -148,8 +137,7 @@
                   [isDeliveryValidated]="isDeliveryValidated$ | async"
                   [material]="material"
                   (update)="updateMaterial($event)"
-                  (cancelForm)="cancelUpdateForm()"
-                >
+                  (cancelForm)="cancelUpdateForm()">
                 </material-delivery-form>
               </ng-template>
             </ui-editable>
@@ -159,8 +147,7 @@
               #addForm
               [isDeliveryValidated]="isDeliveryValidated$ | async"
               *ngIf="form.category === category.key"
-              (add)="addMaterial($event)"
-            >
+              (add)="addMaterial($event)">
             </material-delivery-add-form>
           </div>
         </div>

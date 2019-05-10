@@ -21,11 +21,13 @@ export class DeliveryItemComponent implements OnInit {
 
   public progression$: Observable<number>;
   public paymentIcon: string;
+  public stakeholders: string;
 
   constructor() {}
 
   ngOnInit() {
     this.paymentIcon = this.delivery.isPaid ? 'payed' : 'not_payed';
+    this.stakeholders = this.delivery.stakeholders.map(({ organization }) => organization.name).join(' | ');
   }
 
   public selectDelivery() {

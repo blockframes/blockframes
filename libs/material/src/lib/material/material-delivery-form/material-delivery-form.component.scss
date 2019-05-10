@@ -1,6 +1,12 @@
 mat-card {
   margin-bottom: 20px;
-  padding: 30px 50px 50px 50px;
+  padding: 50px;
+  padding-top: 30px;
+}
+
+mat-card-title {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 h4 {

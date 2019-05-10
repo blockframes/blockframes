@@ -28,8 +28,10 @@
 }
 
 h5 {
-  color: rgba(0, 0, 0, 0.418);
-  margin: 5px 0;
+  margin-bottom: 5px;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--label);
 }
 
 p {
@@ -52,10 +54,17 @@ p {
   width: 20px;
 }
 
-.time-text, .material-step-text {
+.step,
+.time,
+.state,
+.payment {
+  width: 12%;
+}
+
+.time-text, .step-text {
   margin-top: 5px;
-  font-weight: bolder;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 12px;
 }
 
 .toggle {
