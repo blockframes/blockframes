@@ -177,3 +177,24 @@ export const relayerRequestTokensLogic = async (
   console.log(`tx sent (request tokens) : ${tx.hash}`); // display tx to firebase logging
   return tx;
 };
+
+
+export const relayerSignDeliveryLogic = async (
+  { username, deliveryId, stakeholderId }: { username: string; deliveryId: string, stakeholderId: string },
+  config: any
+) => {
+  if (!username || !deliveryId || !stakeholderId) {
+    throw new Error('"username", "deliveryId" and "stakeholderId" are mandatory parameters !');
+  }
+  const relayer: Relayer = initRelayer(config);
+  // compute needed values
+  const fullName = `${username}.${config.relayer.basedomain}`;
+  const hash = utils.keccak256(utils.toUtf8Bytes(deliveryId));
+  const tx = await relayer.wallet.sendTransaction({to: fullName, data: hash});
+
+  await db.collection('deliveries').doc(deliveryId).collection('stakeholders').doc(stakeholderId).update({tx: tx.hash});
+
+  console.log(`tx sent (sign delivery) : ${tx.hash}`); // display tx to firebase logging
+  return tx;
+  
+}

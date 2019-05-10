@@ -7,6 +7,7 @@ import {
   relayerCreateLogic,
   relayerSendLogic,
   relayerRequestTokensLogic,
+  relayerSignDeliveryLogic,
 } from './relayer';
 import {
   deleteFirestoreMovie,
@@ -135,6 +136,9 @@ export const relayerSend = functions.https
 
 export const relayerRequestTokens = functions.https
   .onCall((data, context) => relayerRequestTokensLogic(data, functions.config()));
+
+export const relayerSignDelivery = functions.https
+  .onCall((data, context) => relayerSignDeliveryLogic(data, functions.config()));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
