@@ -43,8 +43,10 @@ import { ViewComponent } from './view/view.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { TitleFormComponent } from '../movie/title-form/title-form.component';
-import { MatTabsModule, MatGridListModule, MatExpansionModule } from '@angular/material';
+import { MatTabsModule, MatGridListModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
+import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
+
 
 @NgModule({
   declarations: [
@@ -59,6 +61,7 @@ import { HomeEmptyComponent } from './home-empty/home-empty.component';
     FormTeamComponent,
     FormPromotionalComponent,
     HomeEmptyComponent,
+    DelayedWrapperComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +92,7 @@ import { HomeEmptyComponent } from './home-empty/home-empty.component';
     MatGridListModule,
     MatExpansionModule,
     NgxMatSelectSearchModule,
+    MatProgressSpinnerModule,
     // Librairies
     UploadModule,
     UiFormModule,

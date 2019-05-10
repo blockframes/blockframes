@@ -7,7 +7,7 @@ import { TitleFormComponent } from '../title-form/title-form.component';
 import { takeWhile, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'movie-financing-list',
+  selector: 'movie-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +20,7 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private service: MovieService,
     private orgQuery: OrganizationQuery,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   // Initiate the Movies in Akita

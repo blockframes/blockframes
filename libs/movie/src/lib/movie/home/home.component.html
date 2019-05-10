@@ -1,8 +1,3 @@
-<movie-home-empty *ngIf="!(hasOrgs$ | async)"></movie-home-empty>
-<movie-financing-list></movie-financing-list>
-
-<ng-template #disconnected>
-  <div fxLayoutAlign="center center">
-    <h1>Welcome!</h1>
-  </div>
-</ng-template>
+<movie-delayed-wrapper>
+  <movie-list></movie-list>
+</movie-delayed-wrapper>
