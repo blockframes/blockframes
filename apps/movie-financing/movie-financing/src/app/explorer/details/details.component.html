@@ -9,7 +9,7 @@
 <main fxLayout="row" fxLayoutAlign="center">
   <div class="col-1">
     <img [src]="movie.principalInformations.moviePoster" alt="movie cover">
-    <financing-explorer-financing-details></financing-explorer-financing-details>
+    <financing-explorer-financing-details [movie]="movie"></financing-explorer-financing-details>
 
     <div class="funding-status">
       <div class="left-budget">

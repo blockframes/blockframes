@@ -8,42 +8,37 @@
     </td>
     <td colSpan="2">
       <span class="value">
-      Position A
+        {{ movie?.principalInformations?.waterfallPosition }}
       </span>
     </td>
   </tr>
-  <tr>
-    <td class="bordered">
-      <span class="key">
-      Estimate Low<br/>
-      </span>
-      <span class="value">
-      $4M
-      </span>
+
+  <tr class="key">
+    <td>
+      Amount request for recovery
     </td>
-    <td class="bordered">
-      <span class="key">
-      Estimate Low<br/>
-      </span>
-      <span class="value">
-      $4M
-      </span>
+    <td>
+      Estimate High
     </td>
-    <td class="bordered">
-      <span class="key">
-      Estimate Low<br/>
-      </span>
-      <span class="value">
-      $4M
-      </span>
+    <td>
+      Minimum Amount Requested
     </td>
-    <td class="bordered">
-      <span class="key">
-      Estimate Low<br/>
-      </span>
-      <span class="value">
-      $4M
-      </span>
+    <td>
+      Director’s category
+    </td>
+  </tr>
+  <tr class="value">
+    <td>
+      {{ movie?.principalInformations?.salesNeededForFirstEuroRecuperation }}
+    </td>
+    <td>
+      {{ movie?.principalInformations?.estimatesHigh }}
+    </td>
+    <td>
+      {{ movie?.principalInformations?.minAmountRequested }}
+    </td>
+    <td>
+      {{ movie?.principalInformations?.directorsCategory }}
     </td>
   </tr>
   </tbody>

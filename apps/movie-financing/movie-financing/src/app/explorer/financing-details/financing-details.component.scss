@@ -19,14 +19,34 @@
     margin: 0;
   }
 
-  span.key {
+  .key {
     color: #394348;
     opacity: 0.5;
     font-weight: 100;
+    font-size: 0.5rem;
   }
 
-  span.value {
+  .value {
     color: #394348;
     font-weight: bold;
+    font-size: 0.5rem;
+  }
+
+  // the way we do borders is very specific to this current design,
+  // define separately
+  .key td {
+    padding-top: 1rem;
+    padding-bottom: 0;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    width: 25%;
+  }
+
+  .value td {
+    padding-top: 0.2rem;
+    padding-bottom: 1rem;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
   }
 }
