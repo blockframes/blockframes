@@ -8,7 +8,7 @@
         <mat-icon class="icon">add</mat-icon>
       </button>
     </div>
-    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="row" fxLayoutAlign="center center">
       <button
         *ngIf="(templateActive$ | async) as templateActive"
         class="delete-template mat-elevation-z0"
@@ -23,18 +23,18 @@
   <!-- Content -->
   <mat-sidenav-content>
     <section>
-      <h3 *ngIf="(templateActive$ | async) as templateActive">{{ templateActive.name }}</h3>
+      <h2 *ngIf="(templateActive$ | async) as templateActive">{{ templateActive.name }}</h2>
       <div *ngIf="(form$ | async) as form">
         <material-template-add-form
           *ngIf="form.category === ''"
           (material)="addMaterial($event)"
         ></material-template-add-form>
       </div>
-      <article *ngFor="let category of (template$ | async | keyvalue)" [id]="category.key">
+      <article *ngFor="let category of (template$ | async | keyvalue)" [id]="category.key" class="category-block">
         <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
-          <h4>{{ category.key }}</h4>
+          <h3>{{ category.key }}</h3>
           <button
-            class="create-material mat-elevation-z0"
+            class="category-material mat-elevation-z0"
             (click)="addForm(category.key)"
             mat-raised-button
           >
@@ -49,6 +49,7 @@
                 <material-template-item
                   [material]="material"
                   (isDeleted)="deleteMaterial(material)"
+                  (isSelected)="selectMaterial($event, material.id)"
                   (update)="openUpdateForm(material)"
                 ></material-template-item>
               </ng-template>

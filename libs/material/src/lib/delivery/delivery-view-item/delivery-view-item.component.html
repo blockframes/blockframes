@@ -55,6 +55,7 @@
       <div class="state" fxLayout="column">
         <h5>State</h5>
         <mat-icon
+          *ngIf="!!material.state"
           class="icons"
           matTooltip="{{ material.state.toUpperCase() }}"
           svgIcon="{{ material.state }}">

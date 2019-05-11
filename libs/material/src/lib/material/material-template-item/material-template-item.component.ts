@@ -10,11 +10,17 @@ import { Material } from '../+state';
 export class MaterialTemplateItemComponent {
 
   @Input() material: Material;
+  @Input() isChecked: boolean;
+  @Output() isSelected = new EventEmitter<boolean>();
   @Output() isDeleted = new EventEmitter();
   @Output() update = new EventEmitter();
 
   constructor(
   ) { }
+
+  public selectMaterial() {
+    this.isSelected.emit(!this.isChecked);
+  }
 
   public deleteMaterial() {
     this.isDeleted.emit();

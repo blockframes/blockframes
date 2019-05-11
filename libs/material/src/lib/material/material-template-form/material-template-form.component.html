@@ -1,44 +1,47 @@
-<mat-card class="mat-elevation-z6">
+<mat-card class="container mat-elevation-z6">
   <mat-card-title>Edit your material</mat-card-title>
-  <mat-card-content fxLayout="row" fxLayoutAlign="space-between center">
-    <form [formGroup]="form" class="form" fxLayout="column" fxLayoutAlign="center">
-      <mat-form-field appearance="outline">
+  <form [formGroup]="form" (ngSubmit)="updateMaterial()" class="container" fxLayout="row">
+    <div class="inputs" fxLayout="column" fxLayoutAlign="center">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Value</mat-label>
         <input class="value" formControlName="value" matInput placeholder="Value" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Description</mat-label>
-        <input
+        <textarea
           class="description"
           formControlName="description"
           matInput
           placeholder="Description"
-        />
+        ></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="inputs">
         <mat-label>Category</mat-label>
         <input class="category" formControlName="category" matInput placeholder="Category" />
       </mat-form-field>
-    </form>
-    <div class="buttons" fxLayoutAlign="center">
-      <button
-        mat-raised-button
-        color="basic"
-        class="cancel-button mat-elevation-z0"
-        (click)="cancel()"
-      >
-        Cancel
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        class="add-button mat-elevation-z0"
-        (click)="updateMaterial()"
-      >
-        Save
-      </button>
     </div>
-  </mat-card-content>
+
+    <div class="step" fxLayout="column" fxLayoutAlign="end end">
+      <div fxLayoutAlign="center">
+        <button
+          mat-raised-button
+          color="basic"
+          class="cancel-button mat-elevation-z0"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          class="add-button mat-elevation-z0"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
 </mat-card>

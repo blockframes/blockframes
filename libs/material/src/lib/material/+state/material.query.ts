@@ -28,6 +28,10 @@ export class MaterialQuery extends QueryEntity<MaterialState, Material> {
     map(materials => materialsByCategory(materials) as TemplateView)
   );
 
+  public materialsByTemplate$ = this.selectAll().pipe(
+    map(materials => materialsByCategory(materials) as TemplateView)
+  );
+
   constructor(protected store: MaterialStore) {
     super(store);
   }

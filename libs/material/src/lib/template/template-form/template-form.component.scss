@@ -1,36 +1,46 @@
 mat-sidenav-container {
   height: 100%;
   min-height: 400px;
+  margin-bottom: 20px;
 }
 
 mat-sidenav {
-  height: 100%;
-  width: 250px;
+  width: 300px;
   margin-top: 64px;
   position: fixed;
-  border: 1px solid #D3D3D3;
+  border: 1px solid #d3d3d3;
   box-sizing: border-box;
   box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+  padding-bottom: 40px;
 }
 
 mat-sidenav-content {
   height: 100%;
   overflow: auto;
-  background-color: white;
-  padding-bottom: 5%;
 }
 
 section {
-  margin: 0 10%;
+  margin-left: 220px;
+  margin-right: 240px;
+}
+
+.container-button {
+  border-top: 1px solid #e2e2e2;
 }
 
 .create-material {
   margin-top: 7%;
-  margin-bottom: 7%;
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 13px;
+  height: 45px;
+  width: 210px;
   color: var(--primary);
   border: solid 1px var(--primary);
+}
+
+.create-material:hover {
+  background-color: var(--primary);
+  color: #FFFFFF;
 }
 
 .delete-template {
@@ -38,13 +48,15 @@ section {
   margin-bottom: 7%;
   font-weight: bold;
   font-size: 13px;
+  height: 45px;
+  width: 210px;
   color: var(--warn);
   border: solid 1px var(--warn);
 }
 
-.container-button {
-  border-top: 1px solid #E2E2E2;
-  border-bottom: 1px solid #E2E2E2;
+.delete-template:hover {
+  background-color: var(--warn);
+  color: #FFFFFF;
 }
 
 .icon {
@@ -54,10 +66,22 @@ section {
 }
 
 h3 {
-  font-size: 35px;
+  color: var(--label);
 }
 
-h4 {
-  font-size: 25px;
-  color: rgba(0, 0, 0, 0.6);
+.category-material {
+  font-weight: bolder;
+  font-size: 13px;
+  height: 45px;
+  color: var(--primary);
+  border: solid 1px var(--primary);
+}
+
+.category-material:hover {
+  background-color: var(--primary);
+  color: #FFFFFF;
+}
+
+.category-block {
+  margin-bottom: 60px;
 }

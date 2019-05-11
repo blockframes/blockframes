@@ -11,7 +11,7 @@
     <span>Change step</span>
   </button>
   <mat-menu #steps="matMenu" xPosition="after">
-    <ng-container *ngIf="deliverySteps.length > O; else noStep">
+    <ng-container *ngIf="deliverySteps.length > 0; else noStep">
       <button mat-menu-item *ngFor="let step of deliverySteps">{{step.name}}</button>
     </ng-container>
     <ng-template #noStep>

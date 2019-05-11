@@ -1,22 +1,24 @@
 mat-card {
-  margin-bottom: 4%;
-  padding-left: 5%;
-  padding-top: 2%;
+  margin-bottom: 20px;
+  padding: 50px;
+  padding-top: 30px;
 }
 
 mat-card-title {
-  margin-bottom: 2%;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
-.form {
-  width: 60%;
+h4 {
+  margin-top: 0;
 }
 
-.buttons {
-  width: 20%;
+button {
   font-weight: bolder;
   font-size: 13px;
   height: 45px;
+  width: 110px;
 }
 
 .cancel-button {
@@ -24,13 +26,14 @@ mat-card-title {
   border: none;
 }
 
+.inputs {
+  width: 85%;
+}
+
 mat-form-field {
   font-size: 12px;
 }
 
-mat-card-title {
-  font-weight: bold;
-  font-size: 18px;
+textarea {
+  height: 100px;
 }
-
-
