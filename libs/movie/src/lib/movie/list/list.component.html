@@ -7,19 +7,11 @@
   >
     <mat-expansion-panel-header>
       <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        <h2>{{ org.name }}</h2>
+        {{ org.name }}
         <div class="divider"></div>
-        <button mat-mini-fab color="basic" class="view-button mat-elevation-z0">
-          <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
-        </button>
-        <button mat-mini-fab color="basic" class="view-button mat-elevation-z0">
-          <mat-icon class="view-icon" color="primary">view_module</mat-icon>
-        </button>
-        <button
-          mat-raised-button
-          (click)="addNewMovie($event, { id: org.id, name: org.name })"
-          class="add-movie mat-elevation-z0"
-        >
+        <button class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></button>
+        <button class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_module</mat-icon></button>
+        <button mat-raised-button (click)="addNewMovie($event, { id: org.id, name: org.name })" class="add-movie mat-elevation-z0">
           Import a movie <mat-icon class="add-icon">add</mat-icon>
         </button>
       </mat-panel-title>

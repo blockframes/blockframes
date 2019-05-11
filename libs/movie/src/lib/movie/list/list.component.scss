@@ -1,5 +1,10 @@
 .container {
-  margin: 30px 240px;
+  margin: 100px 240px;
+}
+
+mat-panel-title {
+  font-size: 30px;
+  font-weight: 800;
 }
 
 .movie-card {
@@ -49,15 +54,18 @@
 
 .view-button {
   margin-right: 15px;
+  padding: 0;
   height: 15px;
   width: 15px;
-  border: solid 0.09rem var(--primary);
+  background-color: transparent;
+  border: solid 1px var(--primary);
 }
 
 .view-icon {
-  margin-top: -18px;
-  margin-left: -6.5px;
   font-size: 13px;
+  position: relative;
+  font-size: 13px;
+  right: 6px;
 }
 
 .divider {
@@ -68,11 +76,11 @@
 }
 
 .add-movie {
-  font-weight: bolder;
+  font-weight: 700;
   font-size: 13px;
   height: 45px;
   color: var(--primary);
-  border: solid 0.09rem var(--primary);
+  border: solid 1px var(--primary);
   cursor: pointer;
   margin-right: 24px;
 }

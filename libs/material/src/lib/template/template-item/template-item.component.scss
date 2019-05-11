@@ -1,31 +1,30 @@
+mat-card {
+  margin: 5% 5%;
+  min-height: 102px;
+}
+
 mat-card-title {
   font-weight: 900;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: 0.25px;
+  font-size: 15px;
   margin-bottom: 0;
 }
 
-.text-block {
-  margin-bottom: -15px;
+mat-card-content {
+  margin: 0;
 }
 
 .modification {
-  font-weight: 300;
-  font-size: 11px;
-  line-height: 20px;
-  letter-spacing: 0.196429px;
-  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.05px;
+  color: var(--disabled);
 }
 
 .trigger {
   position: absolute;
   top: 0px;
   right: 0px;
-}
-
-mat-card {
-  margin: 5% 5%;
-  min-height: 90px;
-  border-radius: 0px;
 }

@@ -15,18 +15,18 @@
   .full-width {
     width: 100%;
   }
-  
+
   .small-margin {
     margin: 10px;
   }
-  
+
   .small-width {
     width: 20%;
     display: inline-block;
   }
 
   .mat-chip.mat-standard-chip {
-    background-color: #6200EE;
+    background-color: var(--primary);
     color: #FFF;
     font-weight: bold;
   }
@@ -57,11 +57,11 @@
     }
 
     .mat-tab-label:focus:not(.mat-tab-disabled) {
-      color: #6200EE;
+      color: var(--primary)E;
     }
 
     .mat-ink-bar {
-      background-color: #6200EE;
+      background-color: var(--primary);
     }
   }
 
@@ -76,18 +76,20 @@
     border-top: 1px solid rgba(0, 0, 0, 0.12);
 
     button {
-      color: #6200EE;
+      color: var(--primary);
       border: none;
       box-shadow: none;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 12px;
       width: 200px;
+      height: 45px;
     }
 
     .save-btn {
-      border: 1px solid;
+      color: #FFFFFF;
+      background-color: var(--primary);
       mat-icon {
-        margin-top: -3px;
+        margin-bottom: 3px;
       }
     }
   }

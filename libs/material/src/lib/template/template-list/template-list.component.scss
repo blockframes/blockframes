@@ -1,5 +1,5 @@
 .container {
-  margin: 70px 240px;
+  margin: 100px 240px;
 }
 
 mat-expansion-panel {
@@ -12,10 +12,8 @@ mat-card {
 }
 
 mat-panel-title {
-  font-weight: 900;
-  font-size: 35px;
-  letter-spacing: 0.4375px;
-  line-height: 41px;
+  font-size: 30px;
+  font-weight: 800;
 }
 
 .card-ngFor {
@@ -23,8 +21,8 @@ mat-panel-title {
 }
 
 .add-template {
-  font-weight: bolder;
   font-size: 13px;
+  font-weight: 700;
   height: 45px;
   color: var(--primary);
   border: solid 1px var(--primary);
@@ -52,13 +50,16 @@ mat-panel-title {
 
 .view-button {
   margin-right: 15px;
+  padding: 0;
   height: 15px;
   width: 15px;
+  background-color: transparent;
   border: solid 1px var(--primary);
 }
 
 .view-icon {
-  margin-top: -18px;
-  margin-left: -6.5px;
   font-size: 13px;
+  position: relative;
+  font-size: 13px;
+  right: 6px;
 }

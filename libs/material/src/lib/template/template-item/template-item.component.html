@@ -4,7 +4,7 @@
       {{ template.name }}
     </mat-card-title>
     <mat-card-content>
-      <p class="modification">Last modification : 2 days ago</p>
+      <p class="modification">Last modification : 2 days ago</p> <!--TODO: use real timestamp here -->
     </mat-card-content>
   </div>
   <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions">
@@ -12,11 +12,11 @@
   </button>
 
   <mat-menu #actions="matMenu">
-    <button mat-menu-item [routerLink]="['../', template.orgId, template.id]">
+    <button mat-menu-item ([routerLink]="['../', template.orgId, template.id]")>
       <mat-icon color="primary">edit</mat-icon>
       <span>Edit</span>
     </button>
-    <button mat-menu-item href="#">
+    <button mat-menu-item href="#"> <!--TODO: make a function to duplicate the template -->
       <mat-icon color="primary">library_books</mat-icon>
       <span>Duplicate</span>
     </button>

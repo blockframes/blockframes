@@ -81,7 +81,7 @@ export class TemplateService {
   public async saveTemplate(name: string, orgId: string) {
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
-      const template = createTemplate({ id: this.db.createId(), name });
+      const template = createTemplate({ id: this.db.createId(), name, orgId });
       template.materialsId = materials.map(({ id }) => id);
       this.db.doc<Template>(`orgs/${orgId}/templates/${template.id}`).set(template);
 
