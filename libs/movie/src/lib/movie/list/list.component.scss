@@ -53,6 +53,7 @@ mat-panel-title {
 }
 
 .view-button {
+  position: relative;
   margin-right: 15px;
   padding: 0;
   height: 15px;
@@ -62,10 +63,8 @@ mat-panel-title {
 }
 
 .view-icon {
+  position: absolute;
   font-size: 13px;
-  position: relative;
-  font-size: 13px;
-  right: 6px;
 }
 
 .divider {

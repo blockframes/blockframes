@@ -9,8 +9,8 @@
       <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
         {{ org.name }}
         <div class="divider"></div>
-        <button class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></button>
-        <button class="view-button mat-elevation-z0"><mat-icon class="view-icon" color="primary">view_module</mat-icon></button>
+        <div class="view-button"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></div>
+        <div class="view-button"><mat-icon class="view-icon" color="primary">view_module</mat-icon></div>
         <button mat-raised-button (click)="addNewMovie($event, { id: org.id, name: org.name })" class="add-movie mat-elevation-z0">
           Import a movie <mat-icon class="add-icon">add</mat-icon>
         </button>

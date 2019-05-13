@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input  } from '@angular/core';
 import { Step } from '../../+state';
 
 @Component({
@@ -7,19 +7,13 @@ import { Step } from '../../+state';
   styleUrls: ['./actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsComponent implements OnInit {
+export class ActionsComponent {
   @Output() newState : EventEmitter<string> = new EventEmitter();
   @Output() selectAllMaterials: EventEmitter<void> = new EventEmitter();
   @Input() allChecked: boolean;
   @Input() steps: Step[];
 
-  deliverySteps: Step[];
-
   constructor() { }
-
-  ngOnInit() {
-    this.deliverySteps = this.steps;
-  }
 
   public selectAll() {
     this.selectAllMaterials.emit();
