@@ -1,5 +1,10 @@
-.container {
+section {
   margin: 100px 240px;
+}
+
+.organization {
+  font-size: 30px;
+  font-weight: 800;
 }
 
 mat-expansion-panel {
@@ -9,11 +14,6 @@ mat-expansion-panel {
 mat-card {
   margin: 5% 5%;
   min-height: 100px;
-}
-
-mat-panel-title {
-  font-size: 30px;
-  font-weight: 800;
 }
 
 .card-ngFor {
@@ -48,17 +48,14 @@ mat-panel-title {
   margin: 0 20px;
 }
 
-.view-button {
-  position: relative;
-  margin-right: 15px;
-  padding: 0;
-  height: 15px;
-  width: 15px;
-  background-color: transparent;
+.icon-container {
   border: solid 1px var(--primary);
-}
+  margin-right: 15px;
+  padding: 0 2px;
 
-.view-icon {
-  position: absolute;
-  font-size: 13px;
+  mat-icon {
+    font-size: 13px;
+    height: 13px;
+    width: 13px;
+  }
 }

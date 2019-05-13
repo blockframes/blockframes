@@ -1,5 +1,5 @@
 <movie-home-empty *ngIf="!(hasOrgs$ | async)"></movie-home-empty>
-<div class="container" *ngIf="(hasOrgs$ | async)">
+<section *ngIf="(hasOrgs$ | async)">
   <mat-expansion-panel
     *ngFor="let org of (orgs$ | async); first as isFirst"
     [expanded]="isFirst"
@@ -7,16 +7,26 @@
   >
     <mat-expansion-panel-header>
       <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        {{ org.name }}
+        <span class="organization">
+          {{ org.name }}
+        </span>
         <div class="divider"></div>
-        <div class="view-button"><mat-icon class="view-icon" color="primary">view_quilt</mat-icon></div>
-        <div class="view-button"><mat-icon class="view-icon" color="primary">view_module</mat-icon></div>
-        <button mat-raised-button (click)="addNewMovie($event, { id: org.id, name: org.name })" class="add-movie mat-elevation-z0">
+        <div class="icon-container">
+          <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
+        </div>
+        <div class="icon-container">
+          <mat-icon class="view-icon" color="primary">view_module</mat-icon>
+        </div>
+        <button
+          mat-raised-button
+          (click)="addNewMovie($event, { id: org.id, name: org.name })"
+          class="add-movie mat-elevation-z0"
+        >
           Import a movie <mat-icon class="add-icon">add</mat-icon>
         </button>
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <section class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="space-around">
+    <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="space-around">
       <mat-card *ngFor="let movie of org.movies" class="movie-card">
         <div class="img-container clickable-item">
           <img
@@ -57,12 +67,12 @@
         </div>
         <mat-card-header [routerLink]="['/layout', movie.id, 'list']" class="clickable-item">
           <mat-card-title>
-            {{ movie.title.original
-            }}<span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
+            {{ movie.title.original}}
+            <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
           </mat-card-title>
           <mat-card-subtitle *ngIf="movie.directorName">{{ movie.directorName }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
-    </section>
+    </article>
   </mat-expansion-panel>
-</div>
+</section>

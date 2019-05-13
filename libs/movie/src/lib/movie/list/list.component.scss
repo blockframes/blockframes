@@ -1,8 +1,8 @@
-.container {
+section {
   margin: 100px 240px;
 }
 
-mat-panel-title {
+.organization {
   font-size: 30px;
   font-weight: 800;
 }
@@ -27,7 +27,6 @@ mat-panel-title {
     margin-bottom: 0px;
     text-transform: uppercase;
   }
-
 }
 
 .center {
@@ -52,19 +51,16 @@ mat-panel-title {
   -ms-transform: translate(-50%, -50%);
 }
 
-.view-button {
-  position: relative;
-  margin-right: 15px;
-  padding: 0;
-  height: 15px;
-  width: 15px;
-  background-color: transparent;
+.icon-container {
   border: solid 1px var(--primary);
-}
+  margin-right: 15px;
+  padding: 0 2px;
 
-.view-icon {
-  position: absolute;
-  font-size: 13px;
+  mat-icon {
+    font-size: 13px;
+    height: 13px;
+    width: 13px;
+  }
 }
 
 .divider {
