@@ -27,8 +27,8 @@
 
   <div class="progress">
     <mat-progress-bar mode="determinate"
-                      [value]="((movie?.principalInformations?.percentage || 0.64) | number) * 100"></mat-progress-bar>
-    <p>{{ ((movie?.principalInformations?.percentage || 0.64) | number) * 100 }}% Completed</p>
+                      [value]="progress"></mat-progress-bar>
+    <p>{{ movie.progress }}% Completed</p>
   </div>
 
   <div class="cta">

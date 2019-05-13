@@ -14,7 +14,13 @@ export class FinancingMovieCardHorizontalComponent implements OnInit {
   @Input() movie: FinancingMovie | any;
   public user$: Observable<User>;
 
-  constructor(public query: AuthQuery) {}
+  constructor(public query: AuthQuery) {
+  }
+
+  get progress() {
+    // TODO: should go in the movie type
+    return this.movie.principalInformations.percentage * 100;
+  }
 
   ngOnInit() {
     this.user$ = this.query.user$;

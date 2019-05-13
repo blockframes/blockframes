@@ -12,6 +12,11 @@ export class FinancingExplorerMovieHomeComponent implements OnInit {
   constructor() {
   }
 
+  get progress() {
+    // TODO: should go in the movie type
+    return this.movie.principalInformations.percentage * 100;
+  }
+
   ngOnInit() {
   }
 }
