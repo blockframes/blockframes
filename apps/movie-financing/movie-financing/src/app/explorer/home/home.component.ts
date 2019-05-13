@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import CANNE_DATA from '../../canne-data';
+import { CANNE_DATA } from '../../canne-data';
 
 @Component({
   selector: 'financing-explorer-home',
