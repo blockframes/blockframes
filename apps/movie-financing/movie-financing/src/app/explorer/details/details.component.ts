@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { getMovie } from '../../canne-data';
 import { Observable } from 'rxjs';
 import { AuthQuery, User } from '@blockframes/auth';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'financing-explorer-details',
@@ -11,7 +12,7 @@ import { AuthQuery, User } from '@blockframes/auth';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
-  public movie: any = null;
+  public movie$: any = null;
   public user$: Observable<User>;
   private sub: any;
 
@@ -19,9 +20,9 @@ export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
     private router: ActivatedRoute,
     public query: AuthQuery
   ) {
-    this.sub = router.params.subscribe(params => {
-      this.movie = getMovie(params['id']);
-    });
+    this.movie$ = router.params.pipe(
+      map(({id}) => getMovie(id))
+    )
     this.user$ = this.query.user$;
   }
 

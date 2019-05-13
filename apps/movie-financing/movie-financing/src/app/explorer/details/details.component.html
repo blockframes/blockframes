@@ -1,7 +1,7 @@
-<ng-container *ngIf="movie; else loading">
-    <ng-container *ngIf="(user$ | async) as user; else loading">
-      <ng-container *ngIf="user.balance >= movie.minTokensRequired; else notEnoughTokens">
-        <financing-explorer-header
+<ng-container *ngIf="movie$ | async as movie; else loading">
+  <ng-container *ngIf="(user$ | async) as user; else loading">
+    <ng-container *ngIf="user.balance >= movie.minTokensRequired; else notEnoughTokens">
+      <financing-explorer-header
         poster="https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/annette_titrePageFilm.jpg?alt=media&token=5f93002f-089d-47a9-b7ff-2a845284700b">
         <label>{{ movie.principalInformations.director }}</label>
         <h1>{{ movie.title }}</h1>
@@ -78,7 +78,8 @@
               <h3>About Film</h3>
               <ul class="kv-list">
                 <li>
-                  <span class="key">Directed By</span> <span class="value">{{ movie.principalInformations.director }}</span>
+                  <span class="key">Directed By</span> <span
+                  class="value">{{ movie.principalInformations.director }}</span>
                 </li>
                 <li>
                   <span class="key">Produced By</span> <span
@@ -228,7 +229,8 @@
                     <mat-card-content class="cast-card-content">
                       <span class="cast-section-title">Remarquable movies</span>
                       <ul class="kv-list">
-                        <li *ngFor="let movie of movie.artistic.directorSelectiveFilmo"><span class="key">{{ movie }}</span>
+                        <li *ngFor="let movie of movie.artistic.directorSelectiveFilmo"><span
+                          class="key">{{ movie }}</span>
                         </li>
                       </ul>
                     </mat-card-content>
@@ -257,7 +259,8 @@
                           {{ movie.artistic.directorName }}
                         </mat-panel-title>
                       </mat-expansion-panel-header>
-                      <div class="producer-history-sub-container" *ngFor="let movie of movie.artistic.directorFilmography">
+                      <div class="producer-history-sub-container"
+                           *ngFor="let movie of movie.artistic.directorFilmography">
                         <div class="poster-container">
                           <img [src]="movie.posterUrl">
                         </div>
@@ -331,7 +334,8 @@
                   <tr>
                     <td><span class="key">Artistic Rights</span></td>
                     <td class="currency-display"><span
-                      class="value">{{ sumItems(movie.finance.estimatedBudget, 'total') | currency:'EUR':true }}</span></td>
+                      class="value">{{ sumItems(movie.finance.estimatedBudget, 'total') | currency:'EUR':true }}</span>
+                    </td>
                   </tr>
                   </thead>
                   <tbody>
@@ -349,56 +353,60 @@
                 <h2>WATERFALL</h2>
                 <h3>Investment proposal</h3>
                 <mat-chip-list>
-                  <mat-basic-chip *ngFor="let item of movie.waterfall.investmentProposals">{{ item.investor }}</mat-basic-chip>
+                  <mat-basic-chip
+                    *ngFor="let item of movie.waterfall.investmentProposals">{{ item.investor }}</mat-basic-chip>
                 </mat-chip-list>
-      
+
                 <table class="waterfall-table">
                   <thead>
-                    <tr>
-                      <td>Label</td>
-                      <td>Investment</td>
-                    </tr>
+                  <tr>
+                    <td>Label</td>
+                    <td>Investment</td>
+                  </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="label">Amount Requested Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].requested | currency:'EUR':true }}</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Premium Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].premium | number : '1.2-2' }} %</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Backend Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].backend | number : '1.2-2' }} %</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Minimum Ticket Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].minimum | currency:'EUR':true }}</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Breakeven Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].breakeven | currency:'EUR':true }}</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Sales Needed For First Euro Recuperation Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].salesNeeded | currency:'EUR':true }}</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Potential Revenues Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].potentialRevenues | number : '1.2-2' }} %</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Best Case Scenario Profit Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].bestCase | number : '1.2-2' }} %</td>
-                    </tr>
-                    <tr>
-                      <td class="label">Worst Case Scenario Profit - Sales Pool Investor</td>
-                      <td class="amount">{{ movie.waterfall.investmentProposals[0].worstCase | number : '1.2-2' }} %</td>
-                    </tr>
+                  <tr>
+                    <td class="label">Amount Requested Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].requested | currency:'EUR':true }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Premium Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].premium | number : '1.2-2' }} %</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Backend Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].backend | number : '1.2-2' }} %</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Minimum Ticket Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].minimum | currency:'EUR':true }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Breakeven Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].breakeven | currency:'EUR':true }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Sales Needed For First Euro Recuperation Pool Investor</td>
+                    <td
+                      class="amount">{{ movie.waterfall.investmentProposals[0].salesNeeded | currency:'EUR':true }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Potential Revenues Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].potentialRevenues | number : '1.2-2' }}
+                      %
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">Best Case Scenario Profit Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].bestCase | number : '1.2-2' }} %</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Worst Case Scenario Profit - Sales Pool Investor</td>
+                    <td class="amount">{{ movie.waterfall.investmentProposals[0].worstCase | number : '1.2-2' }} %</td>
+                  </tr>
                   </tbody>
                 </table>
-      
+
                 <h3>Sales agent</h3>
                 <p>
                   <span class="key">Guaranteed minimum</span>
@@ -412,17 +420,17 @@
                   <span class="key">Commision</span>
                   <span class="value">{{ movie.waterfall.commission | number : '1.2-2' }} %</span>
                 </p>
-                
+
                 <h3>Schema</h3>
                 <mat-chip-list>
                   <mat-basic-chip *ngFor="let item of movie.waterfall.territories">{{ item }}</mat-basic-chip>
                 </mat-chip-list>
                 <img style="width: 100%;" [src]="movie.waterfall.graphs.waterfall">
-      
+
                 <!--<h3>Repartition</h3>
                   TODO
                 -->
-      
+
                 <div class="btn-container">
                   <button class="export-btn" mat-raised-button>Export all in Excel</button>
                 </div>
@@ -450,10 +458,10 @@
                   <span class="key">Exchange rate</span>
                   <span class="value">{{ movie.sales.exchangeRate }} %</span>
                 </p>
-      
+
                 <h3>Map</h3>
                 <img style="width: 100%;" [src]="movie.sales.graphs.map">
-      
+
                 <mat-accordion class="sales-accordion">
                   <mat-expansion-panel *ngFor="let region of movie.sales.salesEstimates | keyvalue">
                     <mat-expansion-panel-header>
@@ -463,38 +471,38 @@
                     </mat-expansion-panel-header>
                     <table class="sales-table">
                       <thead>
-                        <tr>
-                          <td>Country</td>
-                          <td>Distributor</td>
-                          <td>Low</td>
-                          <td>Mid</td>
-                          <td>High</td>
-                          <td>Done</td>
-                          <td>Currency</td>
-                        </tr>
-                        <tr>
-                          <td colspan="2">Total</td>
-                          <td>{{ sumItems(region.value, 'low') | currency:'EUR':true }}</td>
-                          <td>{{ sumItems(region.value, 'mid') | currency:'EUR':true }}</td>
-                          <td>{{ sumItems(region.value, 'high') | currency:'EUR':true }}</td>
-                          <td>{{ sumItems(region.value, 'done') | currency:'EUR':true }}</td>
-                        </tr>
+                      <tr>
+                        <td>Country</td>
+                        <td>Distributor</td>
+                        <td>Low</td>
+                        <td>Mid</td>
+                        <td>High</td>
+                        <td>Done</td>
+                        <td>Currency</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">Total</td>
+                        <td>{{ sumItems(region.value, 'low') | currency:'EUR':true }}</td>
+                        <td>{{ sumItems(region.value, 'mid') | currency:'EUR':true }}</td>
+                        <td>{{ sumItems(region.value, 'high') | currency:'EUR':true }}</td>
+                        <td>{{ sumItems(region.value, 'done') | currency:'EUR':true }}</td>
+                      </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let item of region.value">
-                          <td>{{ item.country }}</td>
-                          <td>{{ item.distributor }}</td>
-                          <td>{{ item.low | currency:item.currency:true }}</td>
-                          <td>{{ item.mid | currency:item.currency:true }}</td>
-                          <td>{{ item.high | currency:item.currency:true }}</td>
-                          <td>{{ item.done | currency:item.currency:true }}</td>
-                          <td>{{ item.currency }}</td>
-                        </tr>
+                      <tr *ngFor="let item of region.value">
+                        <td>{{ item.country }}</td>
+                        <td>{{ item.distributor }}</td>
+                        <td>{{ item.low | currency:item.currency:true }}</td>
+                        <td>{{ item.mid | currency:item.currency:true }}</td>
+                        <td>{{ item.high | currency:item.currency:true }}</td>
+                        <td>{{ item.done | currency:item.currency:true }}</td>
+                        <td>{{ item.currency }}</td>
+                      </tr>
                       </tbody>
                     </table>
                   </mat-expansion-panel>
                 </mat-accordion>
-      
+
                 <div class="btn-container">
                   <button class="export-btn" mat-raised-button>Export all in Excel</button>
                 </div>
@@ -508,11 +516,11 @@
 </ng-container>
 
 <ng-template #loading>
-Loading...
+  Loading...
 </ng-template>
 
 <ng-template #notEnoughTokens>
-Not Enough Tokens
+  Not Enough Tokens
 </ng-template>
 
 <financing-explorer-footer></financing-explorer-footer>
