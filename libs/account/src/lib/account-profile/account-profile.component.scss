@@ -1,6 +1,7 @@
 :host {
   display: block;
   height: 100%;
+  margin: 100px 300px;
 
   .mat-card {
     margin: 0.5rem;
@@ -8,10 +9,6 @@
 
   .mat-form-field {
     width: 100%;
-  }
-
-  button {
-    margin: auto;
   }
 }
 

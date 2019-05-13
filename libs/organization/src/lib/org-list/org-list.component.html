@@ -1,4 +1,4 @@
-<section>
+<section fxLayout="column" fxLayoutAlign="center center">
   <h1>List Of Organizations</h1>
   <div *ngFor="let org of (orgList$ | async); let i = index">
     <mat-card [routerLink]="['../', org.id]">

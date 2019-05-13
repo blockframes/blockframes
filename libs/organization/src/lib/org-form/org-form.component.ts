@@ -62,7 +62,7 @@ export class OrgFormComponent implements OnInit, OnDestroy {
       throw new Error('Invalid form');
     }
 
-    const id = await this.service.add(this.form.value, this.user.uid);
+    const id = await this.service.add(this.form.value, await this.user.uid);
     this.router.navigate(['../', id], { relativeTo: this.route });
 
     this.snackBar.open(`Created ${this.form.get('name').value}`, 'close', { duration: 1000 });

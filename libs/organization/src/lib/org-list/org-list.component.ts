@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { AuthQuery, User } from '@blockframes/auth';
 import { Organization, OrganizationQuery, OrganizationService } from '../+state';
 import { Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'org-list',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class OrgListComponent implements OnInit, OnDestroy {
   public orgList$: Observable<Organization[]>;
-  private alive = true;
+  private isAlive = true;
 
   constructor(
     private service: OrganizationService,
@@ -22,8 +23,7 @@ export class OrgListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.auth.user$.subscribe((user: User) => {
-      // @todo remove observable on ngDestroy
+    this.auth.user$.pipe(takeWhile(() => !!this.isAlive)).subscribe((user: User) => {
       this.service.subscribeUserOrgs(user.uid);
     });
 
@@ -31,6 +31,6 @@ export class OrgListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.isAlive = false;
   }
 }

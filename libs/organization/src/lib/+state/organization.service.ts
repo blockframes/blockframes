@@ -17,7 +17,7 @@ export class OrganizationService {
     this.collection = this.firestore.collection(this.collectionName);
   }
 
-  public subscribeUserOrgs(uid): void {
+  public subscribeUserOrgs(uid: string): void {
     this.firestore
       .collection<Organization>(this.collectionName, ref => ref.where('userIds', 'array-contains', uid))
       .valueChanges()
