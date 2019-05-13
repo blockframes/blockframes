@@ -60,6 +60,12 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
     this.store.clearForm();
   }
 
+  public get alignement() {
+    return this.hasStep
+      ? "space-between end"
+      : "end end"
+  }
+
   ngOnDestroy() {
     this.isAlive = false;
   }

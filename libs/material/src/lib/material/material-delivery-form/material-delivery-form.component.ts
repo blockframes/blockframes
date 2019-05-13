@@ -50,4 +50,10 @@ export class MaterialDeliveryFormComponent implements OnInit {
   public cancel() {
     this.cancelForm.emit();
   }
+
+  public get alignement() {
+    return this.hasStep
+      ? "space-between end"
+      : "end end"
+  }
 }

@@ -23,7 +23,7 @@
       </mat-form-field>
     </div>
 
-    <div class="step" fxLayout="column" fxLayoutAlign="space-between end">
+    <div class="step" fxLayout="column" [fxLayoutAlign]="alignement">
       <mat-form-field *ngIf="hasStep" appearance="outline" class="mat-select-step">
         <mat-label>Choose step</mat-label>
         <mat-select formControlName="stepId">
