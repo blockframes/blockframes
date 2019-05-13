@@ -1,9 +1,9 @@
 const DATA = {
   id: 'MFOJ1qxwXR2hnsWAfrLB',
   minTokensRequired: 0.0,
-  'title': 'Annette',
-  'logline': 'A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.',
-  'principalInformations': {
+  title: 'Annette',
+  logline: 'A stand-up comedian, and his opera singer wife, have a 2 year old daughter with a surprising gift.',
+  principalInformations: {
     'moviePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Annette_poster.jpg?alt=media&token=04d0792c-50fb-4572-bc74-107cffb34750',
     'director': 'Leos Carax',
     'producedBy': 'CG Cinéma, Scope Pictures, Delta, Kinology',
@@ -48,12 +48,12 @@ const DATA = {
     'percentage': 0.62,
     'directorShortBio': 'Leos Carax is an acclaimed French film director, critic, and writer. Carax is noted for his poetic style and his tortured depictions of love. His first major work was Boy Meets Girl (1984), and his notable works include Les Amants du Pont-Neuf (1991) and Holy Motors (2012).'
   },
-  'production': {
+  production: {
     'subvention': 'CNC (French National Center of Cinematography)',
     'shootingDate': 'August 19, 2019 - Late Nov 2019 (15 weeks)',
     'shootingLocations': 'Belgium, Germany, Los Angeles',
     'expectedPremiere': 'May 2020 (Cannes Film Festival)',
-    'producersHistory': {
+    producersHistory: {
       'Kinology': [
         {
           'title': 'The Man Who Killed Don Quixote',
@@ -186,7 +186,7 @@ const DATA = {
       ]
     }
   },
-  'artistic': {
+  artistic: {
     'scriptwriter': 'Sparks',
     'musicComposer': 'SPARKS (SONGS PERFORMED BY LEAD CAST)',
     'directorOfPhotography': 'CAROLINE CHAMPETIER',
@@ -232,7 +232,7 @@ const DATA = {
             'title': 'Shutter Island',
             'year': 2010,
             'character': 'Dolores'
-          },
+          }
         ]
       }
     ],
@@ -332,8 +332,8 @@ const DATA = {
       }
     ]
   },
-  'finance': {
-    'financingPlan': {
+  finance: {
+    financingPlan: {
       'France': [
         {
           'name': 'CNC',
@@ -414,8 +414,8 @@ const DATA = {
       'Spending Germany',
       'Total'
     ],
-    'graphs': {
-      'budget': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph1.png?alt=media&token=745f8b28-c48f-4cf4-9cfa-4010034a43cb',
+    graphs: {
+      'budget': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph1.png?alt=media&token=745f8b28-c48f-4cf4-9cfa-4010034a43cb'
     },
     'estimatedBudget': [
       {
@@ -550,16 +550,16 @@ const DATA = {
       }
     ]
   },
-  'sales': {
+  sales: {
     'territories': 'World excl. USA, Japan, France, Germany and Belgium',
     'potentialRevenues': 10127675,
     'bestCase': 11911600,
     'worstCase': 8343750,
     'exchangeRate': 0.87,
-    'graphs': {
-      'map': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph3.png?alt=media&token=964e541d-ea7b-4cd9-ac64-c98d57975cfc',
+    graphs: {
+      'map': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph3.png?alt=media&token=964e541d-ea7b-4cd9-ac64-c98d57975cfc'
     },
-    'salesEstimates': {
+    salesEstimates: {
       'EUROPE': [
         {
           'country': 'THE NETHERLANDS',
@@ -660,7 +660,7 @@ const DATA = {
           'high': 0,
           'done': 0,
           'currency': ''
-        },
+        }
       ],
       'MIDDLE EAST': [
         {
@@ -692,7 +692,7 @@ const DATA = {
           'high': 55000,
           'done': 0,
           'currency': 'USD'
-        },
+        }
       ],
       'ASIA': [
         {
@@ -814,7 +814,7 @@ const DATA = {
           'high': 160000,
           'done': 85000,
           'currency': 'USD'
-        },
+        }
       ],
       'NORTH AMERICA': [
         {
@@ -846,7 +846,7 @@ const DATA = {
           'high': 450000,
           'done': 0,
           'currency': 'USD'
-        },
+        }
       ],
       'SOUTH AMERICA': [
         {
@@ -918,7 +918,7 @@ const DATA = {
           'high': 0,
           'done': 0,
           'currency': ''
-        },
+        }
       ],
       'EASTERN EUROPE': [
         {
@@ -962,15 +962,15 @@ const DATA = {
           'currency': 'USD'
         }
       ]
-    },
+    }
   },
-  'waterfall': {
+  waterfall: {
     'mg': 3600000,
     'fees': 215000,
     'commission': 0.25,
     'territories': ['World excl. USA, Japan, France, Germany and Belgium'],
-    'graphs': {
-      'waterfall': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph2.png?alt=media&token=e55c5b87-c0d2-4204-a6a9-72d0d456431b',
+    graphs: {
+      'waterfall': 'https://firebasestorage.googleapis.com/v0/b/blockframes-bruce.appspot.com/o/canne-data%2Fgraph2.png?alt=media&token=e55c5b87-c0d2-4204-a6a9-72d0d456431b'
     },
     'investmentProposals': [
       {
@@ -983,7 +983,7 @@ const DATA = {
         'salesNeeded': 3815000,
         'potentialRevenues': 0.246851962719298,
         'bestCase': 0.291450087719298,
-        'worstCase': 0.202253837719298,
+        'worstCase': 0.202253837719298
       },
       {
         'investor': 'Investor B',
@@ -999,7 +999,7 @@ const DATA = {
       }
     ]
   },
-  'contributions': {
+  contributions: {
     '100K': [
       {
         'title': 'Contribution title',
