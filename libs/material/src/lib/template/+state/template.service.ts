@@ -27,10 +27,11 @@ export class TemplateService {
     private fireQuery: FireQuery
   ) {}
 
-  public addTemplate(templateName: string, orgId: string) {
+  public addTemplate(templateName: string, orgId: string): string {
     const idTemplate = this.db.createId();
     const template = createTemplate({ id: idTemplate, name: templateName });
     this.db.doc<Template>(`orgs/${orgId}/templates/${idTemplate}`).set(template);
+    return idTemplate;
   }
 
   public addUnamedTemplate() {
