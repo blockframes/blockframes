@@ -34,10 +34,6 @@ export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
   }
 
   public sumItems(items: Array<any>, attr: string) {
-    let sum = 0;
-    items.forEach((item: any) => {
-      sum += parseFloat(item[attr]);
-    });
-    return sum;
+    return items.reduce((sum, item) => sum + parseFloat(item[attr]), 0);
   }
 }
