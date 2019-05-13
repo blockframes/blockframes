@@ -21,8 +21,8 @@ export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
     public query: AuthQuery
   ) {
     this.movie$ = router.params.pipe(
-      map(({id}) => getMovie(id))
-    )
+      map(({ id }) => getMovie(id))
+    );
     this.user$ = this.query.user$;
   }
 

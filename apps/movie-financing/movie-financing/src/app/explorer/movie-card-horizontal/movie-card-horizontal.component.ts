@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FinancingMovie } from '../search/search.component';
-import { User, AuthService, AuthQuery } from '@blockframes/auth';
+import { AuthQuery, User } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 
 @Component({
