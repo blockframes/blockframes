@@ -9,14 +9,15 @@ export const templateActiveQuery = (orgId: string, templateId: string): Query<Te
   path: `orgs/${orgId}/templates/${templateId}`,
   materials: (template) => template.materialsId.map(id => ({
     path: `orgs/${orgId}/materials/${id}`
-  }))
+  })),
+  orgId
 });
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateActiveGuard extends StateActiveGuard implements CanActivate, CanDeactivate<any> {
-  
+
   constructor(
     private store: TemplateStore,
     private router: Router,
@@ -39,7 +40,7 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
       });
     })
   }
-  
+
   canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> | UrlTree {
     const { orgId, templateId } = route.params;
     if (!orgId || !templateId) return this.router.parseUrl('layout/template');
