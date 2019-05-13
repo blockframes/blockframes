@@ -218,7 +218,7 @@ export const relayerSignDeliveryLogic = async (
   const hash = utils.keccak256(utils.toUtf8Bytes(deliveryId));
   const tx = await relayer.wallet.sendTransaction({to: fullName, data: hash});
 
-  await db.collection('deliveries').doc(deliveryId).collection('stakeholders').doc(stakeholderId).update({tx: tx.hash});
+  await db.doc(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`).update({tx: tx.hash});
 
   console.log(`tx sent (sign delivery) : ${tx.hash}`); // display tx to firebase logging
   return tx;

@@ -152,7 +152,11 @@ export class RelayerWallet implements ethers.Signer {
 
   public async signDelivery(deliveryId: string, stakeholderId: string) {
     this._requireUsername();
-    return this.relayer.signDelivery(this.username, deliveryId, stakeholderId);
+    try {
+      return this.relayer.signDelivery(this.username, deliveryId, stakeholderId);
+    } catch (error) {
+      console.error('The relayer has failed to forward the signature to the blockchain');
+    }
   }
 
   public async getAddress(): Promise<string> {
