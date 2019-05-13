@@ -24,7 +24,7 @@ export class TemplateFormPage {
     cy.contains('Add a material')
   }
 
-  public assertMaterialsExist(materialsLength: number) {
+  public   assertMaterialsCount(materialsLength: number) {
     cy.get('mat-card').should('have.length', materialsLength);
   }
 
@@ -55,11 +55,8 @@ export class TeamWorkPage {
 export class DeliverySettingsFormPage {
   constructor() {
   }
-  public openGeneralDate() {
+  public pickGeneralDate(date: string) {
     cy.get('mat-datepicker-toggle button.mat-icon-button').click();
-  }
-
-  public clickGeneralDate(date: string) {
     cy.contains(date).click();
   }
 
@@ -71,11 +68,8 @@ export class DeliverySettingsFormPage {
     cy.get('input.stepName').type(stepName);
   }
 
-  public openStepDate() {
+  public pickStepDate(date: string) {
     cy.get('mat-form-field.stepDate button.mat-icon-button').click();
-  }
-
-  public clickStepDate(date: string) {
     cy.contains(date).click();
   }
 
@@ -126,9 +120,9 @@ export class DeliveryFormPage {
     cy.get('mat-card').contains(value).should('have.length', 0);
   }
 
-  public verifySignatures() {
+  public verifySignatures(count: number) {
     cy.get('mat-card-footer.footerSigned').should((footers) => {
-      expect(footers).to.have.length(2) });
+      expect(footers).to.have.length(count) });
   }
 
   public clickSign() {
@@ -137,7 +131,7 @@ export class DeliveryFormPage {
   }
 
   public fillPassword(password: string) {
-    cy.get('input.password').type(password);
+    cy.get('input[type="password"]').type(password);
   }
 
   public clickVerifyToSign() {
@@ -153,7 +147,8 @@ export class DeliveryFormPage {
     cy.get('mat-card')
     .contains(value)
     .parent().parent()
-    .find('button').contains('DELETE').click();
+    .trigger('mouseover')
+    .find('button').contains('DELETE').click({force: true});
   }
 
   public openLogout() {
@@ -224,7 +219,7 @@ export class DeliveryFormPage {
     return new HomePage();
   }
 
-  public assertMaterialsExist(materialsLength: number) {
+  public   assertMaterialsCount(materialsLength: number) {
     cy.get('mat-card').should('have.length', materialsLength + 1);
   }
 
@@ -300,7 +295,7 @@ export class TemplateListPage {
   constructor() {
   }
 
-  public assertTemplateDeleted(templateName: string) {
+  public assertTemplateDoesNotExists(templateName: string) {
     cy.get('mat-card').contains(templateName).should('have.length', 0);
   }
 
@@ -364,7 +359,7 @@ export class HomePage extends NavbarPage {
 
   public openNotifications() {
     cy.wait(2000);
-    cy.get('.notifications').click();
+    cy.get('.notification-button').click();
   }
 
   public clickAcceptInvitationToMovie() {
