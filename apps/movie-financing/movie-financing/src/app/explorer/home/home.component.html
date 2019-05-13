@@ -3,7 +3,8 @@
 <main class="content">
   <!-- TODO: replace the fullpage extension with router-outlet, scss, and animations -->
   <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
-    <section *ngFor="let movie of movies" class="section">
+    <section *ngFor="let movie of movies" class="section"
+             [style.backgroundImage]="'url(' + movie.principalInformations.homePoster + ')'">
       <financing-explorer-movie-home [movie]="movie"></financing-explorer-movie-home>
     </section>
   </div>

@@ -3,7 +3,7 @@
     <div [class.swapVisual]="swapVisual">
       <mat-card class="mat-elevation-z0">
         <mat-card-header class="poster-container mat-elevation-z1">
-          <img mat-card-lg-image src="https://fakeimg.pl/657x251/" alt="Movie Poster">
+          <img mat-card-lg-image src="{{ movie?.principalInformations?.cardPoster }}" alt="Card Poster">
           <mat-card-title-group>
             <mat-card-subtitle class="subtitle">Prestige Directors</mat-card-subtitle>
             <div class="title">
