@@ -69,17 +69,24 @@ describe('I m a user and i can save a delivery as template', () => {
     p.pickOrganization(ORG_NAME_1);
     p.fillName(TEMPLATE_NAME_1);
     p = p.clickSave();
-    p = p.selectDeliveries();
+    p = p.selectHome();
+    p = p.clickOnMovie('CY ROBOT');
     // Check if delivery exists
     p.assertDeliveryExists('cytest');
     p = p.clickDelivery();
     // Check if all materials exists
     p.assertMaterialsExist(MATERIALS.length);
     // Check if template exists
-    p = p.selectTemplate();
+    p = p.selectHome();
+    p= p.selectTemplates();
     p.displayTemplateMenu(TEMPLATE_NAME_1);
     p = p.clickEdit();
     p.assertMaterialsExist(MATERIALS.length);
+    p = p.selectTemplates();
+    p.displayTemplateMenu(TEMPLATE_NAME_1);
+    p.clickDelete();
+    p.assertTemplateDeleted(TEMPLATE_NAME_1);
+
   });
 });
 
@@ -154,7 +161,6 @@ describe('Step 1: I\'m new user, I want accept a notification that add my org in
     p.fillSigninPassword('blockframes');
     p = p.login();
     p = p.clickOnMovie('PARASITE');
-    p.clickDeliveries();
     p = p.clickDelivery();
     p.clickAddSignature();
     p.clickVerifyToSign();

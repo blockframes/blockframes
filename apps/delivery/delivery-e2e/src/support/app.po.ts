@@ -7,7 +7,7 @@ export const getTitle = () => cy.get('section h1');
 
 export class NavbarPage {
   constructor() {
-    cy.get('header', {timeout: 60000}).contains('Blockframes');
+    cy.get('header', {timeout: 60000}).contains('home');
   }
 
   public openUserMenu() {
@@ -28,9 +28,9 @@ export class TemplateFormPage {
     cy.get('mat-card').should('have.length', materialsLength);
   }
 
-  public selectTemplate() {
-    cy.get('.mat-tab-links').get('a').contains('templates').click();
-    return new TemplateListPage();
+  public selectTemplates() {
+    cy.get('a').contains('templates').click();
+    return new TemplateListPage;
   }
 }
 
@@ -46,7 +46,7 @@ export class TeamWorkPage {
     }
 
     public clickDelivery() {
-      cy.get('a').contains('delivery').click();
+      cy.get('a').contains('edit').click();
       return new DeliveryFormPage;
     }
   }
@@ -84,12 +84,12 @@ export class DeliverySettingsFormPage {
   }
 
   public clickTeamWork() {
-    cy.contains('team-work').click();
+    cy.get('a').contains('teamwork').click();
     return new TeamWorkPage;
   }
 
   public clickDelivery() {
-    cy.get('a').contains('delivery').click();
+    cy.get('a').contains('edit').click();
     return new DeliveryFormPage;
   }
 }
@@ -108,7 +108,7 @@ export class NewTemplatePage {
   }
 
   public fillName(templateName: string) {
-    cy.get('input.mat-input-element').type(templateName);
+    cy.get('input[formcontrolname=name]').type(templateName);
   }
 
   public clickSave() {
@@ -120,11 +120,6 @@ export class NewTemplatePage {
 export class DeliveryFormPage {
   constructor() {
     cy.get('.delivery-form').should('contain', 'Sign delivery');
-  }
-
-  public selectTemplate() {
-    cy.get('.mat-tab-links').get('a').contains('templates').click();
-    return new TemplateListPage();
   }
 
   public verifyDeletedMaterial(value: string) {
@@ -208,7 +203,7 @@ export class DeliveryFormPage {
   }
 
   public fillDescription(materialDescription: string) {
-    cy.get('input.description').type(materialDescription);
+    cy.get('textarea.description').type(materialDescription);
   }
 
   public fillCategory(materialCategory: string) {
@@ -224,9 +219,9 @@ export class DeliveryFormPage {
     return new NewTemplatePage();
   }
 
-  public selectDeliveries() {
-    cy.get('.mat-tab-links').get('a').contains('deliveries').click();
-    return new DeliveryListPage();
+  public selectHome() {
+    cy.get('mat-icon[svgicon=delivery_white]').click();
+    return new HomePage();
   }
 
   public assertMaterialsExist(materialsLength: number) {
@@ -260,11 +255,11 @@ export class TemplatePickerPage {
 
 export class DeliveryListPage {
   constructor() {
-    cy.contains('deliveries');
   }
 
-  public clickDeliveries() {
-    cy.get('a').contains('deliveries').click();
+  public clickHome() {
+    cy.get('mat-icon[svgicon=delivery_white]').click();
+    return new HomePage();
   }
 
   public clickAddDelivery() {
@@ -303,7 +298,14 @@ export class AddTemplateModal {
 
 export class TemplateListPage {
   constructor() {
-    cy.contains('templates');
+  }
+
+  public assertTemplateDeleted(templateName: string) {
+    cy.get('mat-card').contains(templateName).should('have.length', 0);
+  }
+
+  public clickDelete() {
+    cy.get('span').contains('Delete').click({force: true});
   }
 
   public createTemplate() {

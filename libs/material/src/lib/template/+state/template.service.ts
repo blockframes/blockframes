@@ -107,9 +107,12 @@ export class TemplateService {
 
       const batch = this.db.firestore.batch();
       materials.forEach(material => {
+        const materialWithoutStep = {...material, step: null}
+        delete materialWithoutStep.step;
         const materialRef = this.db.doc<Material>(`orgs/${orgId}/materials/${material.id}`).ref;
-        return batch.set(materialRef, material);
+        return batch.set(materialRef, materialWithoutStep);
       });
+      batch.commit();
     }
   }
 
