@@ -15,7 +15,6 @@ import { FinancingMovie } from '../search/search.component';
 export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
   public movie$: Observable<FinancingMovie> = null;
   public user$: Observable<User>;
-  private sub: any;
 
   constructor(
     private router: ActivatedRoute,
@@ -31,7 +30,6 @@ export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   public sumItems(items: Array<any>, attr: string) {
