@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { FinancingMovie } from '../search/search.component';
 
 @Component({
   selector: 'financing-explorer-financing-details',
@@ -7,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerFinancingDetailsComponent implements OnInit {
-  @Input() movie: any;
+  @Input() movie: FinancingMovie;
 
   constructor() {
   }

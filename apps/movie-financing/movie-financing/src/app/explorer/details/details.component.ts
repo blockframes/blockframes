@@ -4,6 +4,7 @@ import { getMovie } from '../../canne-data';
 import { Observable } from 'rxjs';
 import { AuthQuery, User } from '@blockframes/auth';
 import { map } from 'rxjs/operators';
+import { FinancingMovie } from '../search/search.component';
 
 @Component({
   selector: 'financing-explorer-details',
@@ -12,7 +13,7 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancingExplorerDetailsComponent implements OnInit, OnDestroy {
-  public movie$: any = null;
+  public movie$: Observable<FinancingMovie> = null;
   public user$: Observable<User>;
   private sub: any;
 
