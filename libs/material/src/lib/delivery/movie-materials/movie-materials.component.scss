@@ -1,13 +1,13 @@
-section {
-  margin-top: 100px;
-  margin-left: 240px;
-  margin-right: 240px;
-}
-
 mat-card {
   box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
   min-width: 282px;
   min-height: 390px;
+}
+
+section {
+  margin-top: 100px;
+  margin-left: 240px;
+  margin-right: 240px;
 }
 
 .progress-spinner-block {
@@ -21,6 +21,7 @@ mat-card {
 }
 
 mat-progress-spinner {
+  top: 45px;
   border-radius: 50%;
   box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
 }

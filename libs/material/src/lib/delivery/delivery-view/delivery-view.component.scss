@@ -1,8 +1,10 @@
 mat-card {
   box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
+  min-width: 282px;
+  min-height: 390px;
 }
 
-.container {
+section {
   margin-top: 100px;
   margin-left: 240px;
   margin-right: 240px;
@@ -65,42 +67,14 @@ p {
 
 .progress-value {
   position: relative;
-  top: -70px;
-  color: #f23c5c;
+  bottom: 70px;
+  color: var(--warn);
   font-weight: bolder;
   font-size: 2.5rem;
 }
 
 .filters {
   margin-right: 30px;
-}
-
-.divider {
-  max-width: 80%;
-  left: 10% !important;
-}
-
-.step {
-  font-size: 12px;
-  font-weight: 1000;
-  width: 250px;
-}
-
-.step-text {
-  width: 20%;
-}
-
-.step-informations {
-  width: 50%;
-}
-
-.step-icon {
-  width: 15px;
-}
-
-.period-text {
-  font-size: 10px;
-  color: var(--label)
 }
 
 .period-days {
@@ -113,5 +87,5 @@ p {
   color: var(--primary);
   background-color: transparent;
   font-weight: bolder;
-  margin-top: 20px;
+  margin-top: 60px;
 }

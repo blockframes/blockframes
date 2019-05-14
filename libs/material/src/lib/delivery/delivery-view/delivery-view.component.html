@@ -1,55 +1,29 @@
-<div class="container">
+
   <section fxLayout="row" fxLayoutGap="35px">
     <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
         fxLayout="column"
         fxLayoutAlign="center center"
-        class="mat-elevation-z0"
-      >
+        class="mat-elevation-z0">
         <mat-progress-spinner
           class="spinner"
           color="warn"
           mode="determinate"
           [value]="value"
           diameter="180"
-          strokeWidth="12"
-        >
+          strokeWidth="12">
         </mat-progress-spinner>
         <div class="progress-value">{{ value }} %</div>
         <p class="global-progression">Progression</p>
         <span class="spinner-text"><h5>Global delivery date :</h5></span>
         <p class="period-days">{{ delivery.dueDate | date: 'dd MMM yyyy' }}</p>
-        <div>
-          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
-            <p class="step-text">STEP 1</p>
-            <mat-icon svgIcon="accepted" class="step-icon"></mat-icon>
-          </span>
-          <mat-divider class="divider"></mat-divider>
-          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
-            <p class="step-text">STEP 2</p>
-            <span class="step-informations">
-              <small class="period-text">Acceptance period :</small>
-              <p class="period-days">30 days</p>
-            </span>
-            <mat-icon svgIcon="delivered" class="step-icon"></mat-icon>
-          </span>
-          <mat-divider class="divider"></mat-divider>
-          <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
-            <p class="step-text">STEP 3</p>
-            <span class="step-informations">
-              <small class="period-text">Delivery time :</small>
-              <p class="period-days">30 days</p>
-            </span>
-            <mat-icon svgIcon="pending" class="step-icon"></mat-icon>
-          </span>
+        <span fxLayoutAlign="center center">
           <mat-divider></mat-divider>
-          <span fxLayoutAlign="center center">
-            <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
-              <mat-icon color="primary">create</mat-icon> Edit delivery
-            </button>
-          </span>
-        </div>
+          <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
+            <mat-icon color="primary">create</mat-icon> Edit delivery
+          </button>
+        </span>
       </mat-card>
       <ng-template #empty>
         <mat-card class="mat-elevation-z0" fxLayout="column" fxLayoutAlign="center center">
@@ -63,18 +37,15 @@
           >
           </mat-progress-spinner>
           <div class="progress-value">0 %</div>
-          <p class="global-progression">Global progression</p>
-          <div>
-            <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
-              <p class="step-text">STEP 1</p>
-            </span>
-            <mat-divider></mat-divider>
-            <span fxLayoutAlign="center center">
-              <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
-                <mat-icon color="primary">create</mat-icon> Edit delivery
-              </button>
-            </span>
-          </div>
+          <p class="global-progression">Progression</p>
+          <span class="spinner-text"><h5>Global delivery date :</h5></span>
+          <p class="period-days">{{ delivery.dueDate | date: 'dd MMM yyyy' }}</p>
+          <span fxLayoutAlign="center center">
+              <mat-divider></mat-divider>
+            <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
+              <mat-icon color="primary">create</mat-icon> Edit delivery
+            </button>
+          </span>
         </mat-card>
       </ng-template>
     </article>
@@ -103,4 +74,3 @@
       </div>
     </article>
   </section>
-</div>
