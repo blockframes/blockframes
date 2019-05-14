@@ -1,8 +1,9 @@
 @import '~@angular/material/theming';
 
 mat-card {
-  margin-bottom: 15px;
-  padding-top: 35px;
+  padding: 0 20px;
+  margin: 20px 0;
+
   &:hover {
     @include mat-elevation(6);
   }
@@ -16,44 +17,50 @@ mat-card-actions {
   visibility: hidden;
 }
 
-mat-card-title {
- font-size: 14px;
- color: #3B3B3B;
-}
-
-div {
-  margin-left: 20px;
-}
-
-mat-card-content {
+mat-card-subtitle {
   font-size: 12px;
-  color: #3B3B3B;
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--label);
+  margin-bottom: 0;
+}
+
+.step-block {
+  margin-top: 35px;
+  margin-left: 30px;
 }
 
 a {
-  color: #9C9C9C;
-  font-size: 8px;
+  color: var(--lightGrey);
+  font-size: 9px;
   text-align: center;
 }
 
 a:hover {
-  color: #6200EE;
+  color: var(--primary);
   cursor:pointer;
-}
-
-button:focus{
-  color: #6200EE;
-  outline: none;
 }
 
 .border-left {
   border-left: 1px solid #ECECEC;
-  padding-left: 5px;
-  margin-left: 5px;
+  padding-left: 7px;
+  margin-left: 7px;
 }
 
 mat-icon {
-  color:#C1C1C1;
+  color: var(--lightGrey);
   float: left;
 }
 
+.date {
+  margin-right: 125px;
+}
+
+.date-text {
+  font-size: 14px;
+  font-weight: 700;
+}

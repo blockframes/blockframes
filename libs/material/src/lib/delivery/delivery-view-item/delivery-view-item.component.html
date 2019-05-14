@@ -60,7 +60,7 @@
           matTooltip="{{ material.state.toUpperCase() }}"
           svgIcon="{{ material.state }}">
         </mat-icon>
-        <a *ngIf="material.state === 'available'" href="assets/apps/delivery.svg" download>
+        <a *ngIf="material.state === 'delivered'" href="assets/fake-data/complete_delivery_materials.pdf" download>
           <mat-icon color="primary" class="download-icon">cloud_download</mat-icon>
         </a>
       </div>
@@ -78,7 +78,7 @@
       </ng-container>
       <div class="payment">
         <h5>Payment</h5>
-        <mat-icon *ngIf="material.state === 'available'; else notPayed" class="icons" svgIcon="{{ paymentIcons[0] }}"></mat-icon>
+        <mat-icon *ngIf="material.state === 'delivered' || material.state === 'accepted'; else notPayed" class="icons" svgIcon="{{ paymentIcons[0] }}"></mat-icon>
         <ng-template #notPayed>
             <mat-icon class="icons" svgIcon="{{ paymentIcons[1] }}"></mat-icon>
         </ng-template>

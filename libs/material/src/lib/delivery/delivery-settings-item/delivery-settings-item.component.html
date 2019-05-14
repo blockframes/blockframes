@@ -1,10 +1,8 @@
-<mat-card class="mat-elevation-z2" fxLayout="row" fxLayoutAlign="space-between">
-  <div fxLayout="row" fxLayoutAlign="start">
+<mat-card class="mat-elevation-z2" fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="row" fxLayoutAlign="start center">
     <mat-icon>drag_indicator</mat-icon>
-    <div>
-      <mat-card-title>
-        {{ step.name }}
-      </mat-card-title>
+    <div class="step-block">
+      <p>{{ step.name }}</p>
       <mat-card-actions>
         <a (click)="edit()">EDIT</a>
         <a class="border-left">DUPLICATE</a>
@@ -14,8 +12,8 @@
   </div>
   <div class="date">
     <mat-card-subtitle>
-      Delivery date:
+      Delivery date
     </mat-card-subtitle>
-    <p>{{ step.date | date: 'dd MMM yyyy' }}</p>
+    <span class="date-text">{{ step.date | date: 'dd MMM yyyy' }}</span>
   </div>
 </mat-card>

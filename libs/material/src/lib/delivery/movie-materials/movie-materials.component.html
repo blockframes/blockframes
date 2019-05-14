@@ -1,52 +1,46 @@
-<div class="container">
-  <section fxLayout="row" fxLayoutGap="15px">
-    <article class="progress-spinner-block" fxLayoutAlign="center start">
-      <mat-card
-        *ngIf="(progressionValue$ | async) as value; else empty"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        class="mat-elevation-z0"
+<section fxLayout="row" fxLayoutGap="15px">
+  <article class="progress-spinner-block" fxLayoutAlign="center start">
+    <mat-card
+      *ngIf="(progressionValue$ | async) as value; else empty"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      class="mat-elevation-z0"
+    >
+      <mat-progress-spinner
+        class="spinner"
+        color="accent"
+        mode="determinate"
+        [value]="value"
+        diameter="180"
+        strokeWidth="12"
       >
+      </mat-progress-spinner>
+      <div class="progress-value">{{ value }} %</div>
+      <p class="global-progression">Global progression</p>
+    </mat-card>
+    <ng-template #empty>
+      <mat-card class="mat-elevation-z0" fxLayout="column" fxLayoutAlign="center center">
         <mat-progress-spinner
           class="spinner"
           color="accent"
           mode="determinate"
-          [value]="value"
+          [value]="0"
           diameter="180"
           strokeWidth="12"
         >
         </mat-progress-spinner>
-        <div class="progress-value">{{ value }} %</div>
+        <div class="progress-value">0 %</div>
         <p class="global-progression">Global progression</p>
-        <p class="spinner-text"><i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i></p>
       </mat-card>
-      <ng-template #empty>
-        <mat-card class="mat-elevation-z0" fxLayout="column" fxLayoutAlign="center center">
-          <mat-progress-spinner
-            class="spinner"
-            color="accent"
-            mode="determinate"
-            [value]="0"
-            diameter="180"
-            strokeWidth="12"
-          >
-          </mat-progress-spinner>
-          <div class="progress-value">0 %</div>
-          <p class="global-progression">Global progression</p>
-          <p class="spinner-text">
-            <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
-          </p>
-        </mat-card>
-      </ng-template>
-    </article>
-    <article class="materials">
-      <div class="materials" fxLayoutAlign="space-between">
-        <h2>{{ movie.title.original }}</h2>
-        <span fxLayoutAlign="end">
-          <material-filters class="filters"></material-filters>
-        </span>
-      </div>
-
+    </ng-template>
+  </article>
+  <article class="materials">
+    <div class="materials" fxLayoutAlign="space-between center">
+      <h2>{{ movie.title.original }}</h2>
+      <span fxLayoutAlign="end" class="filters">
+        <material-filters></material-filters>
+      </span>
+    </div>
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
         <h3>{{ category.key | uppercase }}</h3>
         <div>
@@ -56,6 +50,6 @@
           ></delivery-movie-material-item>
         </div>
       </div>
-    </article>
-  </section>
-</div>
+    </div>
+  </article>
+</section>

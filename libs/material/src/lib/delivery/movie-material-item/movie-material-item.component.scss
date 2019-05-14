@@ -20,8 +20,10 @@ mat-card {
 }
 
 h5 {
-  color: rgba(0, 0, 0, 0.418);
-  margin: 5px 0;
+  margin-bottom: 5px;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--label);
 }
 
 p {
@@ -56,8 +58,8 @@ p {
 .labo-approval {
   position: relative;
   font-size: 13px;
-  bottom: 70px;
-  left: 950px;
+  bottom: 60px;
+  left: 830px;
 }
 
 .done-icon {

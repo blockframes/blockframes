@@ -1,11 +1,13 @@
-mat-card {
-  box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
+section {
+  margin-top: 100px;
+  margin-left: 240px;
+  margin-right: 240px;
 }
 
-.container {
-  margin-top: 3%;
-  margin-left: 10%;
-  margin-right: 10%;
+mat-card {
+  box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
+  min-width: 282px;
+  min-height: 390px;
 }
 
 .progress-spinner-block {
@@ -19,7 +21,6 @@ mat-card {
 }
 
 mat-progress-spinner {
-  top: 45px;
   border-radius: 50%;
   box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
 }
@@ -27,10 +28,6 @@ mat-progress-spinner {
 .global-progression {
   margin-bottom: 0;
   font-weight: bolder;
-}
-
-.spinner-text {
-  text-align: center;
 }
 
 .materials {
@@ -60,14 +57,10 @@ p {
 
 .progress-value {
   position: relative;
-  top: -70px;
+  bottom: 115px;
   color: var(--accent);
   font-weight: bolder;
   font-size: 2.5rem;
-}
-
-.filters {
-  margin-right: -30px;
 }
 
 .divider {

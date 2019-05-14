@@ -21,10 +21,10 @@
     <ng-template #noSteps>
       <div class="step"></div>
     </ng-template>
-    <article class="state">
+    <!-- <article class="state">
       <h5>State</h5>
       <mat-icon class="icons" svgIcon="{{ delivery.state }}"></mat-icon>
-    </article>
+    </article> -->
     <ng-container *ngIf="!!delivery.dueDate; else noDate">
       <article class="time">
         <h5>Delivery time</h5>

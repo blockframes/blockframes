@@ -30,7 +30,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     map(materials => materialsByCategory(materials))
   );
 
-  public currentMovieTemplateView: Observable<TemplateView> = this.materialsByActiveMovie().pipe(
+  public currentMovieTemplateView: Observable<TemplateView> = this.materialQuery.selectAll().pipe(
     map(materials => materialsByCategory(materials))
   );
 

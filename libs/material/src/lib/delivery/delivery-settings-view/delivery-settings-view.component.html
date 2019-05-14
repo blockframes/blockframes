@@ -1,35 +1,48 @@
 <section *ngIf="(delivery$ | async) as delivery">
   <h1 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h1>
   <form [formGroup]="form">
-    <div>
-      <h2>Delivery general date</h2>
-      <mat-form-field appearance="outline">
-        <input (dateChange)="saveDueDate($event.target.value)" [value]="delivery.dueDate" formControlName="dueDate" matInput [matDatepicker]="picker" placeholder="Date" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+    <h2>Delivery general date</h2>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-card class="mat-elevation-z0">
+        <mat-form-field appearance="outline">
+          <input
+            (dateChange)="saveDueDate($event.target.value)"
+            [value]="delivery.dueDate"
+            formControlName="dueDate"
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </mat-card>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center">
-      <div>
+      <div fxLayout="column">
         <h2>Material acceptation deadline</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Days</mat-label>
-          <input matInput placeholder="Days" type="number" [value]="45" />
-        </mat-form-field>
+        <mat-card class="mat-elevation-z0">
+          <mat-form-field appearance="outline">
+            <mat-label>Days</mat-label>
+            <input matInput placeholder="Days" type="number" [value]="45" />
+          </mat-form-field>
+        </mat-card>
       </div>
-      <div>
+      <div fxLayout="column">
         <h2>Material refusal deadline</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Days</mat-label>
-          <input matInput placeholder="Days" type="number" [value]="30" />
-        </mat-form-field>
+        <mat-card class="mat-elevation-z0">
+          <mat-form-field appearance="outline">
+            <mat-label>Days</mat-label>
+            <input matInput placeholder="Days" type="number" [value]="30" />
+          </mat-form-field>
+        </mat-card>
       </div>
     </div>
   </form>
 
   <h2>Steps</h2>
   <div class="add-step" fxLayout="row" fxLayoutAlign="space-between center">
-    <p>Add steps for your delivery.</p>
+    <p>Add steps for your delivery</p>
     <button class="create-step mat-elevation-z0" mat-raised-button (click)="openForm()">
       Add a step
       <mat-icon class="icon">add</mat-icon>
@@ -46,4 +59,9 @@
       <delivery-settings-form [step]="step" (cancelled)="cancelEdit()"></delivery-settings-form>
     </ng-template>
   </ui-editable>
+  <div fxLayout="row" fxLayoutAlign="end">
+    <button mat-raised-button color="primary" class="save-settings" (click)="saveSettings()">
+      Save settings
+    </button>
+  </div>
 </section>

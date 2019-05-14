@@ -64,9 +64,6 @@
           </mat-progress-spinner>
           <div class="progress-value">0 %</div>
           <p class="global-progression">Global progression</p>
-          <p class="spinner-text">
-            <i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</i>
-          </p>
           <div>
             <span class="step" fxLayout="row" fxLayoutAlign="space-between center">
               <p class="step-text">STEP 1</p>
@@ -85,7 +82,7 @@
       <div class="materials" fxLayoutAlign="space-between center">
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">
-          <material-filters></material-filters>
+          <material-filters class="filters"></material-filters>
           <material-actions
           [allChecked]="allChecked"
           [deliverySteps]="delivery.steps"
