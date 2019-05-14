@@ -2,7 +2,7 @@
   <mat-card-content>
     <h4>Signee</h4>
     <p>{{ stakeholder.organization.name }}</p>
-    <a [href]="explorerUrl + stakeholder.tx" target="_blank" rel="noopener">see the signature on Etherscan</a>
+    <a *ngIf="hasStakeholderSigned$ | async" [href]="explorerUrl + stakeholder.tx" target="_blank" rel="noopener">see the signature on Etherscan</a>
   </mat-card-content>
   <mat-card-footer *ngIf="!(hasStakeholderSigned$ | async)" fxLayout="row" fxLayoutAlign="center center" class="footerLocked">
     <mat-icon class="lock-icon">lock_open</mat-icon>

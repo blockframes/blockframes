@@ -15,7 +15,8 @@ export class ActionsComponent{
 
   constructor() { }
 
-  public selectAll() {
+  public selectAll(event: MouseEvent) {
+    event.stopPropagation();
     this.selectAllMaterials.emit();
   }
 

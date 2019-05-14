@@ -2,7 +2,7 @@
   Actions <mat-icon class="action-icon">expand_more</mat-icon>
 </button>
 <mat-menu #actions="matMenu" xPosition="before">
-  <button [ngClass]="{ 'select-button-active': !!allChecked }" mat-menu-item (click)="selectAll()" class="select-button">
+  <button [ngClass]="{ 'select-button-active': !!allChecked }" mat-menu-item (click)="selectAll($event)" class="select-button">
     <span *ngIf="!allChecked">Select all materials</span>
     <span *ngIf="!!allChecked">Unselect materials</span>
   </button>

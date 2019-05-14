@@ -22,7 +22,6 @@ import {
 } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
-import { onMaterialUpdate } from './material';
 
 
 /**

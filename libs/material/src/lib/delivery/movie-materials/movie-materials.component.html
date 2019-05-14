@@ -41,14 +41,13 @@
         <material-filters></material-filters>
       </span>
     </div>
-      <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
-        <h3>{{ category.key | uppercase }}</h3>
-        <div>
-          <delivery-movie-material-item
-            *ngFor="let material of category.value"
-            [material]="material"
-          ></delivery-movie-material-item>
-        </div>
+    <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">
+      <h3>{{ category.key | uppercase }}</h3>
+      <div>
+        <delivery-movie-material-item
+          *ngFor="let material of category.value"
+          [material]="material"
+        ></delivery-movie-material-item>
       </div>
     </div>
   </article>
