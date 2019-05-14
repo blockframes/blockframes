@@ -25,29 +25,27 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
   );
   const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
-
+  const movie = await getDocument(`movies/${delivery.movieId}`);
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) =>
       prepareNotification({
         app: APP_DELIVERY_ICON,
-        message: `Stakeholder ${newStakeholder!.id}
-        from ${newStakeholderOrg!.name}
-        signed delivery ${delivery.id}`,
+        message: `${newStakeholderOrg!.name} signed delivery ${movie!.title.original}'s delivery`,
         userId,
         path: `/layout/${delivery.movieId}/form/${delivery.id}`,
         docID: {id: delivery.id, type: 'delivery'}
       })
     );
 
-  return triggerNotifications(notifications);
+  await triggerNotifications(notifications);
 }
 
-export const onDeliveryUpdate = async (
+export async function onDeliveryUpdate (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
-) => {
+) {
   if (!change.after || !change.before) {
     return true;
   }
@@ -69,6 +67,7 @@ export const onDeliveryUpdate = async (
   const processedId = deliveryDoc.data()!.processedId;
 
   const orgs = await getOrgsOfDelivery(delivery.id);
+  const movie = await getDocument(`movies/${delivery.movieId}`);
   const stakeholderCount = await db
     .collection(`deliveries/${delivery.id}/stakeholders`).where('isAccepted', '==', true)
     .get()
@@ -83,7 +82,7 @@ export const onDeliveryUpdate = async (
   const isFullSignatures = delivery.validated.length === stakeholderCount;
   const isBeforeStateClean = deliveryBefore.validated.length === stakeholderCount - 1;
 
-  if (isNewSignature && !isFullSignatures) {
+  if (!isNewSignature && !isFullSignatures) {
     await notifyOnNewSignee(delivery, orgs);
   }
 
@@ -128,7 +127,7 @@ export const onDeliveryUpdate = async (
       .map((userId: string) =>
         prepareNotification({
           app: APP_DELIVERY_ICON,
-          message: `Delivery with id ${delivery.id} has been approved by all stakeholders.`,
+          message: `${movie!.title.original}'s delivery has been approved by all stakeholders.`,
           userId,
           path: `/layout/${delivery.movieId}/view/${delivery.id}`,
           docID: {id: delivery.id, type: 'delivery'}

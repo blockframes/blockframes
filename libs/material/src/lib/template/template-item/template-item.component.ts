@@ -17,8 +17,16 @@ export class TemplateItemComponent {
     private snackBar: MatSnackBar,
   ) { }
 
+  public stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
   public deleteTemplate(id: string) {
     this.service.deleteTemplate(id);
     this.snackBar.open( 'Template "' + this.template.name + '" has been deleted.', 'close', { duration: 2000 });
+  }
+
+  public randomNumberPicker(scale: number) {
+    return Math.floor(Math.random() * scale) + 2;
   }
 }

@@ -1,31 +1,24 @@
-<mat-card class="mat-elevation-z6" fxLayout="row" fxLayoutAlign="start center">
+<mat-card class="mat-elevation-z6" fxLayout="row" fxLayoutAlign="start center" [routerLink]="['../', template.orgId, template.id]">
   <div class="text-block" fxLayout="column" fxLayoutAlign="center start">
     <mat-card-title>
       {{ template.name }}
     </mat-card-title>
     <mat-card-content>
-      <p class="modification">Last modification : 2 days ago</p> <!--TODO: use real timestamp here -->
+      <p class="modification">Last modification : {{randomNumberPicker(7)}} days ago</p> <!--TODO: use real timestamp here -->
     </mat-card-content>
   </div>
-  <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions">
+  <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions" (click)="stopPropagation($event)">
     <mat-icon color="primary">more_vert</mat-icon>
   </button>
 
   <mat-menu #actions="matMenu">
-    <button mat-menu-item [routerLink]="['../', template.orgId, template.id]">
-      <mat-icon color="primary">edit</mat-icon>
-      <span>Edit</span>
-    </button>
     <button mat-menu-item href="#"> <!--TODO: make a function to duplicate the template -->
       <mat-icon color="primary">library_books</mat-icon>
       <span>Duplicate</span>
     </button>
-    <mat-divider></mat-divider>
     <button mat-menu-item (click)="deleteTemplate(template.id)">
       <mat-icon color="warn">delete</mat-icon>
       <span>Delete</span>
     </button>
   </mat-menu>
-
-  <mat-card-content></mat-card-content>
 </mat-card>

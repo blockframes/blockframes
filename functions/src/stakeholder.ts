@@ -9,6 +9,7 @@ export interface Organization {
 }
 
 interface snapObject {
+  movieTitle: string,
   docID: DocID,
   stakeholderId: string,
   orgName: string,
@@ -31,11 +32,18 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
 }
 
 function customMessage(userId: string, snap: snapObject) {
-  return snap.userIds.includes(userId) && snap.count > 1
-    ? `You have been invited to ${snap.docID.type} : ${snap.docID.id}. Do you wish to work on it ?`
-    : `Stakeholder ${snap.stakeholderId} from ${
-      snap.orgName
-    } has been added to ${snap.docID.type} : ${snap.docID.id}`;
+  if (snap.docID.type === 'delivery') {
+    return snap.userIds.includes(userId) && snap.count > 1
+      ? `You have been invited to work on ${snap.movieTitle}'s ${snap.docID.type}. Do you wish to work on it ?`
+      : `${snap.orgName} has been added to ${snap.movieTitle}'s ${snap.docID.type}`;
+    }
+  if (snap.docID.type === 'movie') {
+    return snap.userIds.includes(userId) && snap.count > 1
+      ? `You have been invited to work on ${snap.movieTitle}. Do you wish to work on it ?`
+      : `${snap.orgName} has been added to ${snap.movieTitle}`;
+  } else {
+    throw new Error('Message is not valid');
+  }
 }
 
 function getCount(collection: string) {
@@ -63,9 +71,11 @@ export async function onDeliveryStakeholderCreate (
     }
 
     try {
+      const movie = await getDocument(`movies/${delivery.movieId}`);
       const docID = {id: delivery.id, type: 'delivery'} as DocID;
-      const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`)
+      const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`);
       const snapInformations = {
+        movieTitle: movie!.title.original,
         docID,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
@@ -120,6 +130,7 @@ export async function onDeliveryStakeholderDelete (
     }
 
     try {
+      const movie = await getDocument(`movies/${delivery.movieId}`);
       const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
@@ -127,9 +138,8 @@ export async function onDeliveryStakeholderDelete (
         .map((userId: string) =>
           prepareNotification({
             app: APP_DELIVERY_ICON,
-            message: `Stakeholder ${stakeholder.id} from ${
-              stakeholderOrg.name
-            } has been removed from delivery ${delivery.id}`,
+            message: `${stakeholderOrg.name}
+            has been removed from ${movie!.title.original}'s delivery`,
             userId,
             path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
           })
@@ -169,8 +179,9 @@ export async function onMovieStakeholderCreate (
 
     try {
       const docID = {id: movie.id, type: 'movie'} as DocID;
-      const stakeholderCount = await getCount(`movies/${movie.id}/stakeholders`)
+      const stakeholderCount = await getCount(`movies/${movie.id}/stakeholders`);
       const snapInformations = {
+        movieTitle: movie.title.original,
         docID,
         stakeholderId: newStakeholder.id,
         orgName: newStakeholderOrg.name,
@@ -232,8 +243,8 @@ export async function onMovieStakeholderDelete (
         .map((userId: string) =>
           prepareNotification({
             app: APP_MOVIE_ICON,
-            message: `Stakeholder ${stakeholder.id} from ${stakeholderOrg.name}
-            has been removed from movie ${movie.title.original}`,
+            message: `${stakeholderOrg.name}
+            has been removed from ${movie.title.original}`,
             userId,
             path: `/layout/home/form/${movie.id}/teamwork`
           })

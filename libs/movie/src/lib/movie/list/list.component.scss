@@ -8,10 +8,10 @@ section {
 }
 
 .movie-card {
-  width: 20%;
-  min-width: 258px;
-  min-height: 314px;
-  margin-bottom: 40px;
+  width: 18%;
+  margin: 13px;
+  min-width: 150px;
+  min-height: 182px;
   box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
 
@@ -39,8 +39,8 @@ section {
 }
 
 .img-container img {
-  min-width: 258px;
-  min-height: 234px;
+  min-width: 150px;
+  min-height: 182px;
 }
 
 .img-container button {

@@ -63,7 +63,8 @@ export const onMaterialUpdate = async (
               movie.title.original
             } is now in state : ${material.state}`,
             userId,
-            path: `/layout/${movie.id}/movie-materials`
+            path: `/layout/${movie.id}/view/${material.deliveriesIds[0]}`
+            // mocked path using first delivery in array
           })
         );
 

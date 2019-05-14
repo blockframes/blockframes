@@ -12,8 +12,9 @@ mat-expansion-panel {
 }
 
 mat-card {
-  margin: 5% 5%;
+  margin: 15px;
   min-height: 100px;
+  min-width: 150px;
 }
 
 .card-ngFor {

@@ -55,7 +55,7 @@ a {
 }
 
 a:hover {
-  color: #6200ee;
+  color: var(--primary);
   cursor: pointer;
 }
 
