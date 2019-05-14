@@ -31,11 +31,24 @@
         <button mat-flat-button color="primary" class="send-invitation">Send Invitation</button>
       </div>
       <div fxFlex class="actions">
-        <button mat-button class="filters">Filters <mat-icon>tune</mat-icon></button>
-        <button mat-button class="action" color="primary" [matMenuTriggerFor]="menu">Action <mat-icon>keyboard_arrow_down</mat-icon></button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>Item 1</button>
-          <button mat-menu-item>Item 2</button>
+        <button mat-button class="filters" [matMenuTriggerFor]="menuFilters">Filters <mat-icon>tune</mat-icon></button>
+        <mat-menu #menuFilters="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="menuSub">Trié par </button>
+          <mat-menu #menuSub="matMenu">
+            <button mat-menu-item>Date</button>
+            <button mat-menu-item>Investissement</button>
+            <button mat-menu-item>Récompense</button>
+            <button mat-menu-item>Waterfall Position</button>
+          </mat-menu>
+          <button mat-menu-item>Investisseur</button>
+          <button mat-menu-item>Invité</button>
+        </mat-menu>
+
+        <button mat-button class="action" color="primary" [matMenuTriggerFor]="menuAction">Action <mat-icon>keyboard_arrow_down</mat-icon></button>
+        <mat-menu #menuAction="matMenu">
+            <button mat-menu-item><mat-icon svgIcon="circled_blacklist"></mat-icon>Blacklister</button>
+            <button mat-menu-item><mat-icon svgIcon="circled_delete"></mat-icon>Supprimer</button>
+            <button mat-menu-item><mat-icon svgIcon="circled_message"></mat-icon>Envoyer le script</button>
         </mat-menu>
       </div>
     </div>
@@ -62,8 +75,9 @@
       <div fxFlex class="actions">
         <button mat-button class="action" color="primary" [matMenuTriggerFor]="menu">Action <mat-icon>keyboard_arrow_down</mat-icon></button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>Item 1</button>
-          <button mat-menu-item>Item 2</button>
+            <button mat-menu-item><mat-icon svgIcon="circled_blacklist"></mat-icon>Blacklister</button>
+            <button mat-menu-item><mat-icon svgIcon="circled_delete"></mat-icon>Supprimer</button>
+            <button mat-menu-item><mat-icon svgIcon="circled_message"></mat-icon>Envoyer le script</button>
         </mat-menu>
       </div>
     </div>

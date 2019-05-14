@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>delete</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Movie-Financing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="sous-menus-delivery-list-copy-15" transform="translate(-1237.000000, -296.000000)" fill="#F23C5C" fill-rule="nonzero">
+            <g id="Group-11-Copy" transform="translate(1226.000000, 240.000000)">
+                <g id="delete" transform="translate(11.000000, 56.000000)">
+                    <path d="M7.5,0 C3.365625,0 0,3.365625 0,7.5 C0,11.634375 3.365625,15 7.5,15 C11.634375,15 15,11.634375 15,7.5 C15,3.365625 11.634375,0 7.5,0 Z" id="Shape" fill-opacity="0.15"></path>
+                    <path d="M8.79166667,4.36111111 L8.43055556,4 L6.625,4 L6.26388889,4.36111111 L5,4.36111111 L5,5.08333333 L10.0555556,5.08333333 L10.0555556,4.36111111 L8.79166667,4.36111111 Z M5.36111111,9.77777778 C5.36111111,10.175 5.68611111,10.5 6.08333333,10.5 L8.97222222,10.5 C9.36944444,10.5 9.69444444,10.175 9.69444444,9.77777778 L9.69444444,5.44444444 L5.36111111,5.44444444 L5.36111111,9.77777778 Z M6.08333333,6.16666667 L8.97222222,6.16666667 L8.97222222,9.77777778 L6.08333333,9.77777778 L6.08333333,6.16666667 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

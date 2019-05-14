@@ -104,8 +104,16 @@ const ICONS_SVG = [
     url: 'assets/circled-icons/view.svg'
   },
   {
-    name: 'circle_upload',
+    name: 'circled_upload',
     url: 'assets/circled-icons/upload.svg'
+  },
+  {
+    name: 'circled_blacklist',
+    url: 'assets/circled-icons/blacklist.svg'
+  },
+  {
+    name: 'circled_delete',
+    url: 'assets/circled-icons/delete.svg'
   },
 ];
 
