@@ -4,21 +4,18 @@ import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './firebase';
 import {
-  relayerCreateLogic,
-  relayerSendLogic,
-  relayerRequestTokensLogic,
-  relayerSignDeliveryLogic,
   Config,
+  relayerCreateLogic,
+  relayerRequestTokensLogic,
+  relayerSendLogic,
+  relayerSignDeliveryLogic
 } from './relayer';
-import {
-  deleteFirestoreMovie,
-  deleteFirestoreDelivery,
-} from './delete';
+import { deleteFirestoreDelivery, deleteFirestoreMovie } from './delete';
 import {
   onDeliveryStakeholderCreate,
   onDeliveryStakeholderDelete,
   onMovieStakeholderCreate,
-  onMovieStakeholderDelete,
+  onMovieStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
@@ -87,42 +84,42 @@ export const restoreFirestore = functions.https
  */
 export const onDeliveryUpdateEvent = functions.firestore
   .document('deliveries/{deliveryID}')
-  .onUpdate(onDeliveryUpdate);
+  .onUpdate(backup.skipWhenRestoring(onDeliveryUpdate));
 
 /**
  * Trigger: when material state or step is modified
  */
 // export const onMaterialUpdateEvent = functions.firestore
 //   .document('movies/{movieID}/materials/{materialID}')
-//   .onUpdate(onMaterialUpdate);
+//   .onUpdate(backup.skipWhenRestoring(onMaterialUpdate));
 
 /**
  * Trigger: when a stakeholder is added to a delivery
  */
 export const onDeliveryStakeholderCreateEvent = functions.firestore
   .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
-  .onCreate(onDeliveryStakeholderCreate);
+  .onCreate(backup.skipWhenRestoring(onDeliveryStakeholderCreate));
 
 /**
  * Trigger: when a stakeholder is removed from a delivery
  */
 export const onDeliveryStakeholderDeleteEvent = functions.firestore
   .document('deliveries/{deliveryID}/stakeholders/{stakeholerID}')
-  .onDelete(onDeliveryStakeholderDelete);
+  .onDelete(backup.skipWhenRestoring(onDeliveryStakeholderDelete));
 
 /**
  * Trigger: when a stakeholder is added to a movie
  */
 export const onMovieStakeholderCreateEvent = functions.firestore
   .document('movies/{movieID}/stakeholders/{stakeholerID}')
-  .onCreate(onMovieStakeholderCreate);
+  .onCreate(backup.skipWhenRestoring(onMovieStakeholderCreate));
 
 /**
  * Trigger: when a stakeholder is removed from a movie
  */
 export const onMovieStakeholderDeleteEvent = functions.firestore
   .document('movies/{movieID}/stakeholders/{stakeholerID}')
-  .onDelete(onMovieStakeholderDelete);
+  .onDelete(backup.skipWhenRestoring(onMovieStakeholderDelete));
 
 //--------------------------------
 //            RELAYER           //
@@ -146,8 +143,8 @@ export const relayerSignDelivery = functions.https
 
 export const deleteMovie = functions.firestore
   .document('movies/{movieId}')
-  .onDelete(deleteFirestoreMovie);
+  .onDelete(backup.skipWhenRestoring(deleteFirestoreMovie));
 
 export const deleteDelivery = functions.firestore
   .document('deliveries/{deliveryId}')
-  .onDelete(deleteFirestoreDelivery);
+  .onDelete(backup.skipWhenRestoring(deleteFirestoreDelivery));

@@ -5,10 +5,13 @@ import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './firebase';
 
+type Firestore = admin.firestore.Firestore
 type CollectionReference = admin.firestore.CollectionReference;
 type QuerySnapshot = admin.firestore.QuerySnapshot;
 type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
 type DocumentReference = admin.firestore.DocumentReference;
+
+const THIRTY_SECONDS_IN_MS = 30 * 1000;
 
 interface StoredDocument {
   docPath: string;
@@ -53,6 +56,18 @@ const getBackupOutput = async (bucket: Bucket, name: string): Promise<Writable> 
   return blob.createWriteStream({ resumable: false });
 };
 
+/**
+ * Return all collection in the firestore instance provided, skip the "meta" collection
+ * that should not be backup'd or restored.
+ *
+ * @param firestore
+ */
+const backupedCollections = async (firestore: Firestore): Promise<CollectionReference[]> => {
+  const collections: CollectionReference[] = await firestore.listCollections();
+  return collections
+    .filter(x => !x.path.startsWith('_restore'));
+};
+
 const freeze = async (req: any, resp: any) => {
   // Prep ouput
   const now = new Date().toISOString();
@@ -66,7 +81,7 @@ const freeze = async (req: any, resp: any) => {
   const processingQueue = new Queue();
 
   // retrieve all the collections at the root.
-  const collections: CollectionReference[] = await db.listCollections();
+  const collections: CollectionReference[] = await backupedCollections(db);
   collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
@@ -118,7 +133,7 @@ const clear = async () => {
   // and use it in both functions.
 
   // retrieve all the collections at the root.
-  const collections: CollectionReference[] = await db.listCollections();
+  const collections: CollectionReference[] = await backupedCollections(db);
   collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
@@ -174,6 +189,41 @@ function reEncodeObject(x: any): any {
   }
 }
 
+/**
+ * Set the restore timestamp to now.
+ */
+const setRestoreFlag = async () => {
+  return db.collection('_restore').doc('_DOC').set({ restoredAt: admin.firestore.FieldValue.serverTimestamp() });
+};
+
+const isRestoring = async () => {
+  const x = await db.collection('_restore').doc('_DOC').get();
+  if (x.exists && x.data() && x.data()!.restoredAt) {
+    // @ts-ignore: within this block, we know .data() and `restoredAt' are set
+    const { restoredAt } = x.data();
+
+    const now = admin.firestore.Timestamp.now();
+
+    // If we started the restoration less than twenty seconds ago, we are still in the restore process,
+    return restoredAt.toMillis() + THIRTY_SECONDS_IN_MS > now.toMillis();
+  }
+  return false;
+};
+
+export const skipWhenRestoring = (f: any) => {
+  // return a new function that is:
+  // the old function + a check that early exits when we are restoring.
+  return async (...args: any[]) => {
+    // early exit
+    if (await isRestoring()) {
+      return true;
+    }
+
+    return f(...args);
+  };
+};
+
+
 const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
@@ -186,6 +236,9 @@ const restore = async (req: any, resp: any) => {
   }
 
   const lastFile: GFile = sortedFiles[sortedFiles.length - 1];
+
+  console.info('Updating restore flag');
+  await setRestoreFlag();
 
   console.info('Clearing the database');
   await clear();
@@ -219,6 +272,8 @@ const restore = async (req: any, resp: any) => {
 
   promises.push(readerDone);
   await Promise.all(promises);
+
+  await setRestoreFlag();
 
   console.info(`Done processing: ${promises.length - 1} lines loaded`);
   return resp.status(200).send('success');
