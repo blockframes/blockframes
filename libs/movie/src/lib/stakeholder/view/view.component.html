@@ -5,9 +5,9 @@
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
-    <div class="menus" fxLayoutAlign="space-between">
-      <delivery-team-work-filters class="filters"></delivery-team-work-filters>
-      <delivery-team-work-actions class="actions"></delivery-team-work-actions>
+    <div class="menus" fxLayoutAlign="space-between center">
+      <h2>Your team</h2>
+      <delivery-team-work-filters class="filters"></delivery-team-work-filters> <!-- Change it for a movie stakeholder filter -->
     </div>
     <div class="item-form" *ngFor="let stakeholder of (stakeholders$ | async)">
       <stakeholder-item

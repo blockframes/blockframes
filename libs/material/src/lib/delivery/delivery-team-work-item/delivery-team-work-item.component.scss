@@ -37,11 +37,6 @@ mat-card-subtitle {
   margin-bottom: 0;
 }
 
-.title {
-  font-weight: bold;
-  font-size: 12px;
-}
-
 .border-left {
   border-left: 1px solid #ececec;
   margin-left: 5px;
@@ -49,7 +44,7 @@ mat-card-subtitle {
 }
 
 a {
-  color: #9c9c9c;
+  color: var(--lightGrey);
   font-size: 8px;
   text-align: center;
 }
@@ -76,7 +71,7 @@ mat-card-actions {
   margin-left: 40px;
 }
 
-.left {
+.stakeholder-infos {
   margin-left: 40px;
 }
 
