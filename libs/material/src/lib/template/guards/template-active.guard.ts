@@ -27,6 +27,7 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
   }
 
   startListeningOnActive(orgId: string, templateId: string): Promise<boolean | UrlTree> {
+    //TODO: load the template form page even if an error in the material happens
     return new Promise((res, rej) => {
       this.listenOnActive = true;
       const query = templateActiveQuery(orgId, templateId);
@@ -36,7 +37,10 @@ export class TemplateActiveGuard extends StateActiveGuard implements CanActivate
         tap(template => this.store.setActive(template.id)),
       ).subscribe({
         next: template => res(!!template),
-        error: _ => res(this.router.parseUrl('layout'))
+        error: _ => {
+          res(this.router.parseUrl('layout'));
+          console.error(_);
+        }
       });
     })
   }
