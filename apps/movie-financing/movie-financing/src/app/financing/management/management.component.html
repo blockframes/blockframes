@@ -1,0 +1,88 @@
+<main>
+  <h1>Annette</h1>
+
+  <h3>Gestion des accès à la fiche  et vue des contributeurs</h3>
+
+  <section>
+    <h2>Manage Film</h2>
+    <div fxLayout="row" fxLayoutAlign="space-between" class="permission">
+      <label>Mise en ligne de la fiche du film</label>
+      <span>Off<mat-slide-toggle></mat-slide-toggle>On</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between" class="permission">
+      <label>Laisse le scénario libre d’accès</label>
+      <span>Off<mat-slide-toggle></mat-slide-toggle>On</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between" class="permission">
+      <label>Films libres d’accès</label>
+      <span>Off<mat-slide-toggle></mat-slide-toggle>On</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Historique du projet</h2>
+    <div fxLayout="row">
+      <div fxFlex>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Add a member</mat-label>
+          <input matInput type="text" placeholder="Michel Michelle">
+          <mat-icon matPrefix color="primary">mail_outline</mat-icon>
+        </mat-form-field>
+        <button mat-flat-button color="primary" class="send-invitation">Send Invitation</button>
+      </div>
+      <div fxFlex class="actions">
+        <button mat-button class="filters">Filters <mat-icon>tune</mat-icon></button>
+        <button mat-button class="action" color="primary" [matMenuTriggerFor]="menu">Action <mat-icon>keyboard_arrow_down</mat-icon></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Item 1</button>
+          <button mat-menu-item>Item 2</button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <financing-card-investor [investor]="investors[0]"></financing-card-investor>
+    <financing-card-investor [investor]="investors[1]"></financing-card-investor>
+    <financing-card-investor [investor]="investors[0]"></financing-card-investor>
+    <financing-card-investor [investor]="investors[1]"></financing-card-investor>
+    <financing-card-investor [investor]="investors[0]"></financing-card-investor>
+   
+  </section>
+
+  <section>
+    <h2>Gérer l’accès</h2>
+    <div fxLayout="row">
+      <div fxFlex>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Add a user to the blacklist</mat-label>
+          <input matInput type="text" placeholder="Michel Michelle">
+          <mat-icon matPrefix color="primary">mail_outline</mat-icon>
+        </mat-form-field>
+        <button mat-flat-button color="primary" class="send-invitation">Blacklist</button>
+      </div>
+      <div fxFlex class="actions">
+        <button mat-button class="action" color="primary" [matMenuTriggerFor]="menu">Action <mat-icon>keyboard_arrow_down</mat-icon></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Item 1</button>
+          <button mat-menu-item>Item 2</button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <financing-card-blacklist [investor]="investors[2]"></financing-card-blacklist>
+    <financing-card-blacklist [investor]="investors[3]"></financing-card-blacklist>
+    <financing-card-blacklist [investor]="investors[3]"></financing-card-blacklist>
+    <financing-card-blacklist [investor]="investors[2]"></financing-card-blacklist>
+
+  </section>
+
+  <section>
+    <h2>Liste des vues</h2>
+
+    <financing-card-view [investor]="investors[4]"></financing-card-view>
+    <financing-card-view [investor]="investors[4]"></financing-card-view>
+    <financing-card-view [investor]="investors[5]"></financing-card-view>
+    <financing-card-view [investor]="investors[4]"></financing-card-view>
+    <financing-card-view [investor]="investors[5]"></financing-card-view>
+    
+  </section>
+</main>

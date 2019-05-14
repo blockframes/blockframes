@@ -1,0 +1,55 @@
+
+main {
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 10rem;
+  h1 {
+    text-align: center;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    text-align: center;
+    font-weight: normal;
+    font-size: 14px;
+  }
+  section {
+    margin-top: 100px;
+    h2 {
+      font-size: 25px;
+      font-weight: 800;
+      color: rgba(0, 0, 0, 0.6);
+    }
+    .permission {
+      padding-top: 33px; 
+      padding-bottom: 33px; 
+      border-bottom: solid 1px #EAEAEA;
+      mat-slide-toggle {
+        margin-left: 14px;
+        margin-right: 14px;
+      }
+    }
+    mat-form-field {
+      width: 330px;
+      mat-icon {
+        margin-right: 10px;
+      }
+    }
+    .send-invitation {
+      margin-left: 15px;
+    }
+    .actions {
+      padding-top: 22px;
+      text-align: right;
+      .filters {
+        color: #1A48F5;
+        background-color: rgba(26, 72, 245, 0.15);
+        border: solid 1px transparent;
+      }
+      .action {
+        margin-left: 44px;
+        border: solid 1px #1a48f5;
+      }
+    }
+  }
+}

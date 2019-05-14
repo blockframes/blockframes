@@ -1,0 +1,20 @@
+<mat-card fxLayout="row" fxLayoutAlign="start center"  class="mat-elevation-z5">
+  <mat-checkbox></mat-checkbox>
+  <div class="investor">
+    <div>
+      <div class="dot mat-elevation-z5"></div>
+      <span class="investor-name">{{investor.name}}</span>
+    </div>
+    <div [ngStyle]="{'visibility': investor.hasLink ? 'visible' : 'hidden'}" class="links">
+      <button mat-flat-button class="link">Unblock</button>
+    </div>
+  </div>
+  <div [ngStyle]="{'visibility': investor.hasUploaded ? 'visible' : 'hidden'}" class="upload"  fxFlex="grow">
+    <mat-icon svgIcon="circle_upload"></mat-icon>
+    <label>Script uploaded</label>
+  </div>
+  <div class="date">
+    <div class="key">View date :</div>
+    <div class="value">{{investor.contributionDate | date:'LLL. d y'}}</div>
+  </div>
+</mat-card>

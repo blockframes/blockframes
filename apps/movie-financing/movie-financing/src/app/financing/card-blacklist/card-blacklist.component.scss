@@ -1,0 +1,57 @@
+mat-card {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  .investor {
+    margin-left: 30px;
+    position: relative;
+    top: 5px;
+    .dot {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      display: inline-block;
+      background-color: #FFB90E;
+    }
+    .investor-name {
+      vertical-align: super;
+      font-weight: bold;
+      letter-spacing: 0.36914px;
+      margin-left: 14px;
+    }
+    .links {
+      margin-left: 44px;
+      .link {
+        text-transform: uppercase;
+        letter-spacing: 0.48px;
+        font-size: 10px;
+        min-width: 40px;
+        max-height: 25px;
+        padding: 0;
+        color: #9C9C9C;
+      }
+      .link.primary {
+        color: #1A48F5;
+      }
+      .sep {
+        color: #ECECEC;
+        margin-left: 4px;
+        margin-right: 4px;
+      }
+    }
+  }
+  .date {
+    margin-right: 30px;
+    width: 130px;
+    .primary {
+      color: #1A48F5;
+    }
+    .key {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .value {
+      font-weight: bold;
+    }
+  }
+}

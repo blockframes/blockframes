@@ -102,7 +102,11 @@ const ICONS_SVG = [
   {
     name: 'circled_view',
     url: 'assets/circled-icons/view.svg'
-  }
+  },
+  {
+    name: 'circle_upload',
+    url: 'assets/circled-icons/upload.svg'
+  },
 ];
 
 /**

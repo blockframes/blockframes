@@ -1,0 +1,40 @@
+<mat-card fxLayout="row" fxLayoutAlign="space-between baseline"  class="mat-elevation-z5">
+  <mat-checkbox></mat-checkbox>
+  <div class="investor">
+    <div>
+      <div class="dot mat-elevation-z5"></div>
+      <span class="investor-name">{{investor.name}}</span>
+    </div>
+    <div [ngStyle]="{'visibility': investor.hasLink ? 'visible' : 'hidden'}" class="links">
+      <button mat-flat-button class="link primary">Blacklist</button>
+      <span class="sep">|</span>
+      <button mat-flat-button class="link">Delete</button>
+      <span class="sep">|</span>
+      <button mat-flat-button class="link">Send Scenario</button>
+    </div>
+  </div>
+  <div [ngStyle]="{'visibility': investor.hasUploaded ? 'visible' : 'hidden'}" class="upload">
+    <mat-icon svgIcon="circle_upload"></mat-icon>
+    <label>Script uploaded</label>
+  </div>
+  <div>
+    <div class="key">Contribution date :</div>
+    <div class="value">{{investor.contributionDate | date:'LLL. d y'}}</div>
+  </div>
+  <div>
+    <div class="key">Status :</div>
+    <div class="value">{{investor.status}}</div>
+  </div>
+  <div>
+    <div class="key">Investment :</div>
+    <div class="value primary">{{investor.investment}}</div>
+  </div>
+  <div>
+    <div class="key">Reward :</div>
+    <div class="value">{{investor.reward || 'none'}}</div>
+  </div>
+  <div>
+    <div class="key">Waterfall Position :</div>
+    <div class="value">{{investor.waterfallPos || 'none'}}</div>
+  </div>
+</mat-card>

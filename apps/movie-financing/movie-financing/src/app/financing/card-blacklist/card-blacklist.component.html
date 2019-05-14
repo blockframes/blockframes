@@ -1,0 +1,18 @@
+<mat-card fxLayout="row" fxLayoutAlign="start center"  class="mat-elevation-z5">
+  <mat-checkbox></mat-checkbox>
+  <div class="investor" fxFlex="grow">
+    <div>
+      <div class="dot mat-elevation-z5"></div>
+      <span class="investor-name">{{investor.name}}</span>
+    </div>
+    <div [ngStyle]="{'visibility': investor.hasLink ? 'visible' : 'hidden'}" class="links">
+      <button mat-flat-button class="link primary">Blacklist</button>
+      <span class="sep">|</span>
+      <button mat-flat-button class="link">Unblock</button>
+    </div>
+  </div>
+  <div class="date">
+    <div class="key">Blacklist date :</div>
+    <div class="value">{{investor.contributionDate | date:'LLL. d y'}}</div>
+  </div>
+</mat-card>
