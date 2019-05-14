@@ -1,5 +1,4 @@
-<main class="container">
-  <delivery-empty *ngIf="!(hasDeliveries$ | async)"></delivery-empty>
+<main>
   <section *ngIf="(movie$ | async) as movie" class="delivery-list">
     <article fxLayoutAlign="space-between center">
       <h2>{{ movie.title.original }}</h2>
@@ -20,4 +19,5 @@
       ></delivery-item>
     </article>
   </section>
+  <delivery-empty *ngIf="!(hasDeliveries$ | async)"></delivery-empty>
 </main>

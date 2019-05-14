@@ -3,7 +3,7 @@ import { triggerNotifications, prepareNotification } from './notify';
 import { getOrgsOfDelivery, Organization } from './stakeholder';
 
 // This string refers to svg icon name
-export const APP_DELIVERY_ICON = 'delivery';
+export const APP_DELIVERY_ICON = 'media_delivering';
 
 export async function getCollection(path: string) {
   return db

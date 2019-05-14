@@ -89,3 +89,12 @@ p {
   font-weight: bolder;
   margin-top: 60px;
 }
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1200px)
+and (orientation : landscape) {
+  section {
+    margin: 50px;
+  }
+}

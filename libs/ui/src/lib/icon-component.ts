@@ -24,14 +24,6 @@ const ICONS_SVG = [
     url: 'assets/icons/delivered.svg'
   },
   {
-    name: 'delivery',
-    url: 'assets/apps/delivery.svg'
-  },
-  {
-    name: 'delivery_white',
-    url: 'assets/apps/delivery_white.svg'
-  },
-  {
     name: 'disabled',
     url: 'assets/icons/disabled.svg'
   },
@@ -44,12 +36,32 @@ const ICONS_SVG = [
     url: 'assets/icons/filter.svg'
   },
   {
+    name: 'home_of_scripts',
+    url: 'assets/apps/home_of_scripts.svg'
+  },
+  {
     name: 'library_books',
     url: 'assets/icons/library_books.svg'
   },
   {
     name: 'logical',
     url: 'assets/icons/logical.svg'
+  },
+  {
+    name: 'logoBF',
+    url: 'assets/logo/logoBF.svg'
+  },
+  {
+    name: 'logoBFblue',
+    url: 'assets/logo/logoBFblue.svg'
+  },
+  {
+    name: 'media_delivering',
+    url: 'assets/apps/media_delivering.svg'
+  },
+  {
+    name: 'media_financiers',
+    url: 'assets/apps/media_financiers.svg'
   },
   {
     name: 'moviefinancing',

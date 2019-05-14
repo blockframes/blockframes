@@ -59,10 +59,13 @@ p {
 }
 
 .step,
-.time,
 .state,
 .payment {
   width: 15%;
+}
+
+.time {
+  width: 30%;
 }
 
 .time-text, .step-text {

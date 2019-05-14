@@ -52,3 +52,13 @@ p {
   font-size: 12px;
   color: var(--label);
 }
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1200px)
+and (orientation : landscape) {
+  section {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+}

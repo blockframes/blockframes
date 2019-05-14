@@ -18,3 +18,20 @@
   font-weight: 700;
   opacity: 1;
 }
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1200px)
+and (orientation : landscape) {
+  .mat-tab-link {
+    text-transform: uppercase;
+    font-size: 10px;
+    height: 64px;
+    padding: 0;
+  }
+
+  .mat-tab-label {
+    width: 100px;
+  }
+
+}

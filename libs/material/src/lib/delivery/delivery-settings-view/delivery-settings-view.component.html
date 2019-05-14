@@ -1,7 +1,7 @@
 <section *ngIf="(delivery$ | async) as delivery">
   <h1 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h1>
   <form [formGroup]="form">
-    <h2>Delivery general date</h2>
+    <h2>Delivery due date</h2>
     <div fxLayout="row" fxLayoutAlign="start center">
       <mat-card class="mat-elevation-z0">
         <mat-form-field appearance="outline">
@@ -20,7 +20,7 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <div fxLayout="column">
-        <h2>Material acceptation deadline</h2>
+        <h2>Acceptation period</h2>
         <mat-card class="mat-elevation-z0">
           <mat-form-field appearance="outline">
             <mat-label>Days</mat-label>
@@ -29,7 +29,7 @@
         </mat-card>
       </div>
       <div fxLayout="column">
-        <h2>Material refusal deadline</h2>
+        <h2>Re-working period</h2>
         <mat-card class="mat-elevation-z0">
           <mat-form-field appearance="outline">
             <mat-label>Days</mat-label>
@@ -42,7 +42,7 @@
 
   <h2>Steps</h2>
   <div class="add-step" fxLayout="row" fxLayoutAlign="space-between center">
-    <p>Add steps for your delivery</p>
+    <p>Add steps for your delivery, if any.</p>
     <button class="create-step mat-elevation-z0" mat-raised-button (click)="openForm()">
       Add a step
       <mat-icon class="icon">add</mat-icon>

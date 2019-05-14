@@ -2,7 +2,7 @@ import { functions, db } from './firebase';
 import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
 import { prepareNotification, triggerNotifications, DocID } from './notify';
 
-const APP_MOVIE_ICON = 'moviefinancing';
+const APP_MOVIE_ICON = 'media_financiers';
 
 export interface Organization {
   userIds: string[];

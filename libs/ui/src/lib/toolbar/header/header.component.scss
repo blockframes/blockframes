@@ -5,9 +5,14 @@
   z-index: 1000;
 }
 
+.app-logo {
+  width: 100px;
+  height: 64px;
+}
+
 mat-toolbar {
   background-color: #F9F9F9;
-  padding: 0 240px;
+  padding: 0 50px;
 }
 
 ::ng-deep .appMenu .mat-menu-content {

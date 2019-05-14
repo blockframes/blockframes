@@ -11,7 +11,6 @@ section {
 }
 
 .progress-spinner-block {
-  position: -webkit-sticky;
   position: sticky;
   top: 64px;
   margin: auto;
@@ -21,7 +20,6 @@ section {
 }
 
 mat-progress-spinner {
-  top: 45px;
   border-radius: 50%;
   box-shadow: -11px 10px 12px 0 rgba(0, 140, 210, 0.267);
 }

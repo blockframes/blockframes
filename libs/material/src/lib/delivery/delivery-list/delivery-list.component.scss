@@ -1,4 +1,4 @@
-.container {
+.main {
   margin: 100px 300px;
 }
 
@@ -34,4 +34,13 @@
 
 .bottom-button {
   margin-top: 35px;
+}
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1200px)
+and (orientation : landscape) {
+  main {
+    margin: 50px;
+  }
 }

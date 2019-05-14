@@ -3,14 +3,8 @@
   width: 50px;
 }
 
-.icon-container {
-  width: 100px;
-  background-color: #8C8C8C;
-  height: 64px;
-}
-
 button {
-  // Using margin to reposition icon into container as resizing svg icons change their position.
+  margin-top: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
 }
