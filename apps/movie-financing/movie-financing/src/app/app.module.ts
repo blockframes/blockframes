@@ -19,7 +19,8 @@ import {
   MatProgressSpinnerModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatBadgeModule
 } from '@angular/material';
 // import { MatButtonModule } from '@angular/material/button';
 // Akita
@@ -50,6 +51,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-horizontal/movie-card-horizontal.component';
 import { registerLocaleData } from '@angular/common';
+import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
 registerLocaleData(localeFr)
 
 @NgModule({
@@ -66,7 +68,8 @@ registerLocaleData(localeFr)
     FinancingExplorerFinancingDetailsComponent,
     FinancingExplorerNavbarComponent,
     FinancingExplorerMovieHomeComponent,
-    FinancingExplorerProfileComponent
+    FinancingExplorerProfileComponent,
+    FinancingExplorerCompareComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ registerLocaleData(localeFr)
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatExpansionModule,
+    MatBadgeModule,
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
     environment.production ? [] : [AkitaNgDevtools.forRoot()],

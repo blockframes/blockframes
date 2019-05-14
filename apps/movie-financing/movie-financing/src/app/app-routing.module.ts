@@ -8,6 +8,7 @@ import { FinancingExplorerHomeComponent } from './explorer/home/home.component';
 import { FinancingExplorerSearchComponent } from './explorer/search/search.component';
 import { FinancingExplorerDetailsComponent } from './explorer/details/details.component';
 import { FinancingExplorerProfileComponent } from './explorer/profile/profile.component';
+import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
 
 
 export const routes: Routes = [
@@ -50,6 +51,11 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: FinancingExplorerProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'compare',
+    component: FinancingExplorerCompareComponent,
     canActivate: [AuthGuard]
   },
   {

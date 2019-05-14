@@ -1,0 +1,126 @@
+<financing-explorer-header>
+  <h3>Film Graphic</h3>
+  <h1>Compare</h1>
+  <p>
+    Quam quidem partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam.
+    Neque enim decebat neque aetas illa postulabat neque, id quod animadvertere poteratis,
+    pudor patiebatur optimi adulescentis in tali illum oratione versari.
+  </p>
+</financing-explorer-header>
+
+<main>
+  <section>
+    <h1>Compare Film</h1>
+    <mat-tab-group>
+      <mat-tab label="Director’s category">
+        <mat-toolbar>
+          <button mat-button color="primary" [matMenuTriggerFor]="menuCast">Cast <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuCast="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuGenre" matBadge="3">Genre <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuGenre="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuType">Type <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuType="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuLanguage">Language <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuLanguage="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuNationality">Nationality <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuNationality="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuFilter">Filter by <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuFilter="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+        </mat-toolbar>
+        <mat-card class="mat-elevation-z0">
+          <img mat-card-image src="/assets/fake-data/compare.png" alt="compare"/>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Estimate">
+        <mat-toolbar>
+          <button mat-button color="primary" [matMenuTriggerFor]="menuCast">Cast <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuCast="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuGenre" matBadge="3">Genre <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuGenre="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuType">Type <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuType="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuLanguage">Language <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuLanguage="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuNationality">Nationality <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuNationality="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+          <button mat-button color="primary" [matMenuTriggerFor]="menuFilter">Filter by <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuFilter="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+
+          <button mat-button color="primary" [matMenuTriggerFor]="menuDriector">Director's category <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuDriector="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+
+          <button mat-button color="primary" [matMenuTriggerFor]="menuWaterfall">Waterfall rating <mat-icon>keyboard_arrow_down</mat-icon></button>
+          <mat-menu #menuWaterfall="matMenu">
+            <button mat-menu-item>item 1</button>
+            <button mat-menu-item>item 2</button>
+          </mat-menu>
+    
+        </mat-toolbar>
+        <table>
+          <thead>
+            <tr>
+              <th>Low estimates</th>
+              <th>Mid estimates</th>
+              <th class="black">High estimates</th>
+            </tr>
+          </thead>
+        </table>
+        <mat-card class="mat-elevation-z0">
+          <img mat-card-image src="/assets/fake-data/estimate.png" alt="estimate"/>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </section>
+</main>
+
+<financing-explorer-footer></financing-explorer-footer>
