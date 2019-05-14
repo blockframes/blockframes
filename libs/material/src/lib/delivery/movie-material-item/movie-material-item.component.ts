@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Material } from '../../material/+state';
 import { DeliveryService } from '../+state';
-import { MovieQuery, Stakeholder } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { MovieQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-movie-material-item',
@@ -10,9 +9,8 @@ import { OrganizationQuery } from '@blockframes/organization';
   styleUrls: ['./movie-material-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieMaterialItemComponent implements OnInit {
+export class MovieMaterialItemComponent {
   @Input() material: Material;
-  @Input() stakeholders: Stakeholder[];
 
   public stakeholder: string;
   public isOpen = true;
@@ -21,14 +19,7 @@ export class MovieMaterialItemComponent implements OnInit {
   constructor(
     private service: DeliveryService,
     private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery
   ) {}
-
-  ngOnInit() {
-    this.stakeholder = this.orgQuery.getEntity(
-      this.stakeholders[0].orgId
-    ).name;
-  }
 
   public approvedToggle(material: Material) {
     this.service

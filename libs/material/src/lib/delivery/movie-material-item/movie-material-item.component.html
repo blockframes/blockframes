@@ -6,6 +6,7 @@
     (click)="approvedToggle(material)"
   >
   </mat-checkbox>
+  <!-- <button (click)="approvedToggle()">save</button> -->
   <article class="material" fxLayout="column" fxLayoutAlign="center start">
     <span>
       <h4 mat-line>{{ material.value }}</h4>
@@ -17,11 +18,12 @@
       {{ panelButtonLabel }}
     </button>
   </article>
-  <article class="informations" fxLayoutAlign="space-around none">
-    <span class="material-step">
+  <article class="informations" fxLayoutAlign="end none">
+    <!-- //TODO: Show the right organization name -->
+    <!-- <span class="material-step">
       <h5>Ordered by :</h5>
       <p class="material-step-text">{{ stakeholder }}</p>
-    </span>
+    </span> -->
     <div fxLayout="column" fxLayoutAlign="space-between end">
       <span class="state">
         <h5>State :</h5>
