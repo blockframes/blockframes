@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Investor } from '../model';
 
 @Component({
@@ -7,12 +7,8 @@ import { Investor } from '../model';
   styleUrls: ['./card-investor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardInvestorComponent implements OnInit {
+export class CardInvestorComponent {
   @Input() investor: Investor;
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
+  constructor() {}
 }

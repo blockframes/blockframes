@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Investor } from '../model';
 
 @Component({
@@ -7,13 +7,9 @@ import { Investor } from '../model';
   styleUrls: ['./card-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardViewComponent implements OnInit {
+export class CardViewComponent {
   @Input() investor: Investor;
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
+  constructor() {}
 }
 
