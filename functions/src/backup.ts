@@ -210,6 +210,8 @@ const isRestoring = async () => {
   return false;
 };
 
+// TODO: take the time to fix the types,
+// probably turn this into a generic (f: T) to and preserve types.
 export const skipWhenRestoring = (f: any) => {
   // return a new function that is:
   // the old function + a check that early exits when we are restoring.
