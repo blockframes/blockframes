@@ -197,10 +197,10 @@ const setRestoreFlag = async () => {
 };
 
 const isRestoring = async () => {
-  const x = await db.collection('_restore').doc('_DOC').get();
-  if (x.exists && x.data() && x.data()!.restoredAt) {
+  const docRestoreMeta = await db.collection('_restore').doc('_DOC').get();
+  if (docRestoreMeta.exists && docRestoreMeta.data() && docRestoreMeta.data()!.restoredAt) {
     // @ts-ignore: within this block, we know .data() and `restoredAt' are set
-    const { restoredAt } = x.data();
+    const { restoredAt } = docRestoreMeta.data();
 
     const now = admin.firestore.Timestamp.now();
 
