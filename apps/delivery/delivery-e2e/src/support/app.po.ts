@@ -7,7 +7,36 @@ export const getTitle = () => cy.get('section h1');
 
 export class NavbarPage {
   constructor() {
-    cy.get('header', {timeout: 60000}).contains('home');
+    cy.get('.account-icon', {timeout: 60000}).contains('account_circle');
+  }
+
+  public openLogout() {
+    cy.get('button').contains('account_circle').click();
+  }
+
+  public clickLogout() {
+    cy.get('button').contains('Logout').click();
+    return new LandingPage();
+  }
+
+  public clickHome() {
+    cy.get('mat-icon[svgicon=delivery_white]').click();
+    return new HomePage();
+  }
+
+  public clickAcceptInvitationToMovie() {
+    cy.get('button').contains('Accept').last().click();
+    return new MovieTeamWorkPage();
+  }
+
+  public clickAcceptInvitationToDelivery() {
+    cy.get('button').contains('Accept').first().click();
+    return new DeliveryTeamWorkPage();
+  }
+
+  public openNotifications() {
+    cy.wait(2000);
+    cy.get('.notification-button').click();
   }
 
   public openUserMenu() {
@@ -16,9 +45,10 @@ export class NavbarPage {
 
   public clickProfile() {
     cy.get('mat-list button').should('contain', 'Profile').contains('Profile').click();
-    return new EditProfilePage;
+    return new EditProfilePage();
   }
 }
+
 export class TemplateFormPage {
   constructor() {
     cy.contains('Add a material')
@@ -34,7 +64,7 @@ export class TemplateFormPage {
   }
 }
 
-export class TeamWorkPage {
+export class DeliveryTeamWorkPage {
   constructor() {}
 
     public clickAddStakeholder(name: string) {
@@ -79,7 +109,7 @@ export class DeliverySettingsFormPage {
 
   public clickTeamWork() {
     cy.get('a').contains('teamwork').click();
-    return new TeamWorkPage;
+    return new DeliveryTeamWorkPage;
   }
 
   public clickDelivery() {
@@ -111,8 +141,9 @@ export class NewTemplatePage {
   }
 }
 
-export class DeliveryFormPage {
+export class DeliveryFormPage extends NavbarPage {
   constructor() {
+    super();
     cy.get('.delivery-form').should('contain', 'Sign delivery');
   }
 
@@ -149,15 +180,6 @@ export class DeliveryFormPage {
     .parent().parent()
     .trigger('mouseover')
     .find('button').contains('DELETE').click({force: true});
-  }
-
-  public openLogout() {
-    cy.get('button').contains('account_circle').click();
-  }
-
-  public clickLogout() {
-    cy.get('button').contains('Logout').click();
-    return new LandingPage;
   }
 
   public clickCheckBoxMaterial(name: string) {
@@ -252,11 +274,6 @@ export class DeliveryListPage {
   constructor() {
   }
 
-  public clickHome() {
-    cy.get('mat-icon[svgicon=delivery_white]').click();
-    return new HomePage();
-  }
-
   public clickAddDelivery() {
     cy.get('button.add-delivery').click();
     return new TemplatePickerPage();
@@ -341,13 +358,9 @@ export class TemplateListPage {
   }
 }
 
-export class MovieTeamWorkPage {
+export class MovieTeamWorkPage extends NavbarPage {
   constructor() {
-  }
-
-  public clickHome() {
-    cy.get('a').contains('home').click();
-    return new HomePage;
+    super();
   }
 }
 
@@ -355,21 +368,6 @@ export class HomePage extends NavbarPage {
   constructor() {
     super();
     // TODO: check if we are on a home page
-  }
-
-  public openNotifications() {
-    cy.wait(2000);
-    cy.get('.notification-button').click();
-  }
-
-  public clickAcceptInvitationToMovie() {
-    cy.get('button').contains('Accept').first().click();
-    return new MovieTeamWorkPage;
-  }
-
-  public clickAcceptInvitation() {
-    cy.get('button').contains('Accept').first().click();
-    return new TeamWorkPage;
   }
 
   public clickOnMovie(movieName: string) {
