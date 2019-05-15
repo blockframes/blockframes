@@ -8,7 +8,7 @@
     "build:delivery": "npx ng build delivery --prod --base-href /delivery/",
     "build:movie-financing": "npx ng build movie-financing --prod --base-href /movie-financing/",
     "build:ip-upload": "npx ng build ip-upload --prod --base-href /ip-upload/",
-    "build:root": "cp apps/index.html dist/apps/",
+    "build:root": "cp apps/index.html dist/apps/ && rm -rf dist/apps/assets && cp -R libs/shared-assets dist/apps/assets",
     "build:all": "npm run build:delivery && npm run build:movie-financing && npm run build:ip-upload && npm run build:root",
     "test": "npx ng test",
     "lint": "npx ng lint",
