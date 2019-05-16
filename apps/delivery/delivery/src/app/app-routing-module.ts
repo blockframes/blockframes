@@ -8,6 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieGuard } from '@blockframes/movie';
+import { OrganizationListGuard } from 'libs/organization/src/lib/guards/organization-list.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -18,7 +19,8 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, OrganizationListGuard],
+    canDeactivate: [OrganizationListGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {

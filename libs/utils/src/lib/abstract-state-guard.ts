@@ -58,8 +58,8 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
           this.store.setActive(entity[this.store.idKey]);
         }))
       ).subscribe({
-        next: template => res(!!template),
-        error: _ => {
+        next: result => res(!!result),
+        error: err => {
           res(this.router.parseUrl(this.urlFallback))}
       });
     })

@@ -29,6 +29,10 @@ export const organizationRoutes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'form',
+    component: OrgFormComponent
+  },
+  {
     path: 'list',
     component: OrgListComponent,
   },
@@ -37,10 +41,6 @@ export const organizationRoutes: Routes = [
     component: OrgShowComponent,
     canActivate: [OrganizationActiveGuard],
     canDeactivate: [OrganizationActiveGuard],
-  },
-  {
-    path: 'new',
-    component: OrgFormComponent
   }
 ];
 
