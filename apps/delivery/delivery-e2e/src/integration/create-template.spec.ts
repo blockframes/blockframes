@@ -1,5 +1,14 @@
 /// <reference types="cypress" />
-import { LandingPage, HomePage, DeliveryListPage, TemplatePickerPage, DeliverySettingsFormPage, DeliveryFormPage, NewTemplatePage, TemplateListPage, TemplateFormPage } from '../support/app.po';
+
+import { LandingPage } from "../support/landing.po";
+import { HomePage } from "../support/home.po";
+import { DeliveryListPage } from "../support/delivery-list.po";
+import { TemplatePickerPage } from "../support/template-picker.po";
+import { DeliverySettingsFormPage } from "../support/delivery-settings-form.po";
+import { DeliveryFormPage } from "../support/delivery-form.po";
+import { NewTemplatePage } from "../support/new-template.po";
+import { TemplateListPage } from "../support/template-list.po";
+import { TemplateFormPage } from "../support/template-form.po";
 
 let currentID = 0;
 

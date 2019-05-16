@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, HomePage, MovieTeamWorkPage, DeliveryListPage, TemplatePickerPage, DeliverySettingsFormPage, DeliveryTeamWorkPage, DeliveryFormPage } from '../support/app.po';
+import { HomePage, LandingPage, MovieTeamWorkPage, DeliveryListPage, TemplatePickerPage, DeliverySettingsFormPage, DeliveryTeamWorkPage, DeliveryFormPage } from "../support/index";
 
 const EMAIL_USER1 = 'hello@thejokers.com';
 const PASSWORD_USER1 = 'blockframes';

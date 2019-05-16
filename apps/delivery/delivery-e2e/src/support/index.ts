@@ -15,3 +15,15 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+
+export { LandingPage } from './landing.po';
+export { HomePage } from './home.po';
+export { DeliveryListPage } from './delivery-list.po';
+export { TemplatePickerPage } from './template-picker.po';
+export { DeliverySettingsFormPage } from './delivery-settings-form.po';
+export { DeliveryTeamWorkPage } from './delivery-teamwork.po';
+export { DeliveryFormPage } from './delivery-form.po';
+export { MovieTeamWorkPage } from './movie-teamwork.po';
+export * from './';
+
+
