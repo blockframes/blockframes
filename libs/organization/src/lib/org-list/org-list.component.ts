@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthQuery, User } from '@blockframes/auth';
-import { Organization, OrganizationQuery, OrganizationService } from '../+state';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Organization, OrganizationQuery } from '../+state';
 import { Observable } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'org-list',
@@ -10,27 +8,15 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./org-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgListComponent implements OnInit, OnDestroy {
+export class OrgListComponent implements OnInit {
   public orgList$: Observable<Organization[]>;
-  private isAlive = true;
 
   constructor(
-    private service: OrganizationService,
     private query: OrganizationQuery,
-    private auth: AuthQuery
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-
-    this.auth.user$.pipe(takeWhile(() => !!this.isAlive)).subscribe((user: User) => {
-      this.service.subscribeUserOrgs(user.uid);
-    });
-
     this.orgList$ = this.query.selectAll();
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

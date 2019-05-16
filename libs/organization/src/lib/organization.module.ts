@@ -20,6 +20,7 @@ import { OrgListComponent } from './org-list/org-list.component';
 import { OrgShowComponent } from './org-show/org-show.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
 import { OrgWidgetComponent } from './org-widget/org-widget.component';
+import { OrganizationActiveGuard } from './guards/organization-active.guard';
 
 export const organizationRoutes: Routes = [
   {
@@ -32,13 +33,14 @@ export const organizationRoutes: Routes = [
     component: OrgListComponent,
   },
   {
-    path: 'new',
-    component: OrgFormComponent,
-    data: { org: null }
+    path: ':id',
+    component: OrgShowComponent,
+    canActivate: [OrganizationActiveGuard],
+    canDeactivate: [OrganizationActiveGuard],
   },
   {
-    path: ':id',
-    component: OrgShowComponent
+    path: 'new',
+    component: OrgFormComponent
   }
 ];
 

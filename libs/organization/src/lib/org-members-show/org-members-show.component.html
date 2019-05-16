@@ -1,12 +1,12 @@
 <section>
-  <div *ngIf="members$ | async as members">
+  <div *ngIf="(org$ | async).members as members">
     <mat-list *ngFor="let member of (members)">
       <mat-card>
         <mat-card-title>
           {{member.email}}
         </mat-card-title>
         <mat-card-subtitle>
-          {{member.id}}
+          {{member.uid}}
         </mat-card-subtitle>
         <mat-card-content>
           <ul *ngFor="let role of (member.roles)">

@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrgMember, OrgMembersQuery, OrgMembersService, ROLES } from '../+state';
+import { OrgMembersService, ROLES, OrganizationQuery, Organization } from '../+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
-import { takeWhile } from 'rxjs/operators';
 
 
 interface User {
@@ -18,27 +17,23 @@ interface User {
   styleUrls: ['./org-members-show.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgMembersShowComponent implements OnInit, OnDestroy {
-  public members$: Observable<OrgMember[]>;
+export class OrgMembersShowComponent implements OnInit {
+  public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
   public rolesOptions: string[] = Object.values(ROLES);
-  @Input() orgID: string;
-  private alive: boolean;
 
   constructor(
     private service: OrgMembersService,
-    private query: OrgMembersQuery,
+    private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
   ) {
   }
 
   ngOnInit() {
-    this.alive = true;
     this.mailsOptions = [];
-    this.service.subscribe(this.orgID).pipe(takeWhile(() => this.alive)).subscribe();
-    this.members$ = this.query.selectAll();
+    this.org$ = this.orgQuery.selectActive();
     this.addMemberForm = this.builder.group({
       user: null,
       role: ''
@@ -66,13 +61,9 @@ export class OrgMembersShowComponent implements OnInit, OnDestroy {
 
     // Query a get or create user, to make ghost users when needed
     const { id } = await this.getOrCreateUserByMail(email);
-    await this.service.addMember(this.orgID, { id, email, roles: [role] });
+    await this.service.addMember(this.orgQuery.getActiveId(), { id, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
-  }
-
-  ngOnDestroy() {
-    this.alive = false;
   }
 
   private async getOrCreateUserByMail(email: string): Promise<User> {

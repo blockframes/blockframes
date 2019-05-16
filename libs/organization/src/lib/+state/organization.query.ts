@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization, OrganizationWithMovies } from './organization.model';
 import { map, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Injectable({
@@ -39,10 +39,4 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
     return this.select(state => state.form);
   }
 
-  public getRandomOrg(id: string): Observable<Organization> {
-    const org = this.selectEntity(id)
-    if (!!org) {
-      return org;
-    }
-  }
 }

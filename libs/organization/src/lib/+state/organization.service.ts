@@ -17,13 +17,6 @@ export class OrganizationService {
     this.collection = this.firestore.collection(this.collectionName);
   }
 
-  public subscribeUserOrgs(uid: string): void {
-    this.firestore
-      .collection<Organization>(this.collectionName, ref => ref.where('userIds', 'array-contains', uid))
-      .valueChanges()
-      .subscribe(xs => this.store.set(xs));
-  }
-
   public async addMember(orgId: string, member: OrgMember): Promise<string> {
     const orgDoc = this.collection.doc(orgId);
     const userDoc = this.firestore.collection('users').doc(member.id);

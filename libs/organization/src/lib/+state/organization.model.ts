@@ -16,6 +16,7 @@ export interface Organization {
   userIds: string[];
   movieIds: string[];
   templates?: Template[];
+  members?: OrgMember[];
 }
 
 export interface OrganizationWithMovies extends Organization {

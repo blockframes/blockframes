@@ -41,8 +41,4 @@ export class ListComponent implements OnInit, OnDestroy {
   public delete(id: string) {
     this.service.remove(id);
   }
-
-  public trackOrgs(index: number, org: Organization) {
-    return org.id;
-  }
 }

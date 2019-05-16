@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthQuery, User } from '@blockframes/auth';
-import { Organization, OrganizationQuery, OrganizationService, OrganizationStore } from '../+state';
+import { Organization, OrganizationQuery } from '../+state';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,35 +9,19 @@ import { Observable } from 'rxjs';
   styleUrls: ['./org-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgWidgetComponent implements OnInit, OnDestroy {
+export class OrgWidgetComponent implements OnInit {
   public orgList$: Observable<Organization[]>;
   public user$: Observable<User>;
 
   constructor(
-    private service: OrganizationService,
     private query: OrganizationQuery,
     private auth: AuthQuery,
-    private store: OrganizationStore
   ) {
   }
 
   ngOnInit() {
     this.user$ = this.auth.user$;
 
-    this.user$.subscribe((user: User) => {
-      // @todo remove observable on ngDestroy
-      if (user !== null) {
-        this.service.subscribeUserOrgs(user.uid);
-      }
-    });
-
     this.orgList$ = this.query.selectAll();
-  }
-
-  public setActive(id: string) {
-    this.store.setActive(id);
-  }
-
-  ngOnDestroy() {
   }
 }
