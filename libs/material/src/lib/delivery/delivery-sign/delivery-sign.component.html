@@ -1,5 +1,5 @@
 <h3>Please enter your password to confirm</h3>
-<form [formGroup]="form" (ngSubmit)="confirm()">
+<form testId="modalSign" [formGroup]="form" (ngSubmit)="confirm()">
   <mat-form-field appearance="outline" fxLayoutAlign="center">
     <mat-label>Password</mat-label>
     <input formControlName="password" type="password" matInput placeholder="Password" required />

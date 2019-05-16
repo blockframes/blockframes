@@ -1,18 +1,19 @@
 /// <reference types="cypress" />
 
-import { HomePage, LandingPage, MovieTeamWorkPage, DeliveryListPage, TemplatePickerPage, DeliverySettingsFormPage, DeliveryTeamWorkPage, DeliveryFormPage } from "../support/index";
+import { LandingPage, HomePage, MovieTeamWorkPage, DeliveryListPage, TemplatePickerPage, DeliverySettingsFormPage, DeliveryTeamWorkPage, DeliveryFormPage } from "../support/app.po";
 
 const EMAIL_USER1 = 'hello@thejokers.com';
 const PASSWORD_USER1 = 'blockframes';
 const MOVIE_STEP1 = 'PARASITE';
-const TEMPLATE_USER1 = 'THE JOKERS DELIVERY SCHEDULE';
+const TEMPLATE_USER1 = 'JOKERS DELIVERY SCHEDULE';
+const ORG_USER1 = 'The jokers';
 
 const EMAIL_USER2 = 'cjentertainment@blockframes.com';
 const PASSWORD_USER2 = 'blockframes';
 const ORG_USER2 = 'CJ Entertainment';
 
-const VALUE_MAT1 = 'Music of the Picture on CD protools or MP3 files';
-const VALUE_MAT2 = 'Any key artwork and all contractual logo materials';
+const VALUE_MAT1 = 'WAV (24 fps and 25 fps) Stems 5.1 & 7.1';
+const VALUE_MAT2 = 'DCP w/ English subtitles mix OV 5.1 + 7.1 & DKDM';
 const STEP_NAME1 = 'Marketing';
 const STEP_DATE1 = '26';
 const GENERAL_DATE1 = '30';
@@ -32,10 +33,9 @@ describe('Step 1: I\'m a user, I want accept a notification that add my org in a
     const p1: LandingPage = new LandingPage();
     p1.fillSigninEmail(EMAIL_USER1);
     p1.fillSigninPassword(PASSWORD_USER1);
-
     const p2: HomePage = p1.login();
 
-    // TODO: accept the notification
+    // Accept the notification for a movie
     p2.openNotifications();
     const p3: MovieTeamWorkPage = p2.clickAcceptInvitationToMovie();
     const p4: HomePage = p3.clickHome();
@@ -96,7 +96,7 @@ describe('Step 1: I\'m a user, I want accept a notification that add my org in a
     p14.fillSigninPassword(PASSWORD_USER1);
     const p15: HomePage = p14.login();
     const p16: DeliveryListPage = p15.clickOnMovie(MOVIE_STEP1)
-    const p17: DeliveryFormPage = p16.clickDelivery();
+    const p17: DeliveryFormPage = p16.clickDelivery(ORG_USER1, ORG_USER2);
     p17.clickAddSignature();
     p17.clickVerifyToSign();
     p17.fillPassword(PASSWORD_USER1);

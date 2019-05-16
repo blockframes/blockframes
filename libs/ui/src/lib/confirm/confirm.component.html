@@ -4,7 +4,7 @@
 </div>
 <div mat-dialog-actions fxLayoutAlign="center">
   <button mat-raised-button color="basic" class="cancel-button mat-elevation-z0" (click)="close()">Cancel</button>
-  <button mat-raised-button color="warn" class="mat-elevation-z0" (click)="confirm()">
+  <button testId="confirm" mat-raised-button color="warn" class="mat-elevation-z0" (click)="confirm()">
     {{ data.buttonName || "Confirm" }}
   </button>
 </div>
