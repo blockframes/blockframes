@@ -23,6 +23,7 @@
     "firebase-functions": "^2.1.0",
     "line-reader": "^0.4.0",
     "lodash": "^4.17.11",
+    "request": "^2.88.0",
     "tmp": "0.0.33"
   },
   "devDependencies": {

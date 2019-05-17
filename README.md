@@ -12,11 +12,19 @@ ng generate @nrwl/schematics:node-application eth-events-server
 
 ## Setup
 
+
+### Prep your environment
+
 ```bash
 # Copy the template into your env local dev env:
 cp ./env/env.template.ts ./env/env.ts
 # Then edit it with your values.
 ```
+
+### Setup the authentication
+
+In the firebase console, authentication, enable the email / password auth.
+
 
 ## Running and testing
 
