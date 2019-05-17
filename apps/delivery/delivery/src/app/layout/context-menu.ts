@@ -40,13 +40,13 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/:movieId/:deliveryId',
+    route: '/layout/:movieId/:deliveryId/view',
     items: [
       { name: 'delivery schedules', path: '/layout/:movieId/list'},
       { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
       { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
       { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
-      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId/view'},
     ]
   },
   {
@@ -56,7 +56,7 @@ export const CONTEXT_MENU = [
       { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
       { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
       { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
-      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId/view'},
     ]
   },
   {
@@ -66,7 +66,7 @@ export const CONTEXT_MENU = [
       { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
       { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
       { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
-      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId/view'},
     ]
   },
   {
@@ -76,7 +76,7 @@ export const CONTEXT_MENU = [
       { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
       { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
       { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
-      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId/view'},
     ]
   }
 ];

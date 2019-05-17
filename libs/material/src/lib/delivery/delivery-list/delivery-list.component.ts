@@ -40,11 +40,10 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
   }
 
   public async selectDelivery(delivery: Delivery, movieId: string) {
-    this.store.setActive(delivery.id);
-    const validated = await this.service.isDeliveryValidated();
+    const validated = await this.service.isDeliveryValidated(delivery.id);
     validated
-      ? this.router.navigate([`layout/${movieId}/view/${delivery.id}`])
-      : this.router.navigate([`layout/${movieId}/form/${delivery.id}`]);
+      ? this.router.navigate([`layout/${movieId}/${delivery.id}/view`])
+      : this.router.navigate([`layout/${movieId}/${delivery.id}/edit`]);
   }
 
   public openDialog() {

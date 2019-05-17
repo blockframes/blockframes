@@ -61,7 +61,8 @@ import {
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 
-
+// Guards
+import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 
 const routes: Routes = [
   { path: '',
@@ -73,10 +74,20 @@ const routes: Routes = [
   },
   {
     path: ':deliveryId',
-    component: DeliveryViewComponent,
+    canActivate: [DeliveryActiveGuard],
+    canDeactivate: [DeliveryActiveGuard],
     children : [
       {
-        path: 'form',
+        path: '',
+        redirectTo: 'view',
+        pathMatch: 'full'
+      },
+      {
+        path: 'view',
+        component: DeliveryViewComponent
+      },
+      {
+        path: 'edit',
         component: DeliveryFormComponent
       },
       {

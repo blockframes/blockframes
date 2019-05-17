@@ -107,7 +107,6 @@ export class DeliveryService {
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
-    this.store.setActive(id);
     if (!!templateId) {
       const filterByMaterialId = material =>
         this.templateQuery.getActive().materialsId.includes(material.id);
@@ -141,7 +140,6 @@ export class DeliveryService {
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
-    this.store.setActive(id);
     return Promise.all(
       movieMaterials.map(material =>
         this.db
@@ -260,8 +258,8 @@ export class DeliveryService {
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public async isDeliveryValidated(): Promise<boolean> {
-    const delivery = this.query.getActive();
+  public async isDeliveryValidated(deliveryId: string): Promise<boolean> {
+    const delivery = this.query.getEntity(deliveryId);
     const stakeholders = await this.db
       .collection<Stakeholder>(`deliveries/${delivery.id}/stakeholders`)
       .get()
