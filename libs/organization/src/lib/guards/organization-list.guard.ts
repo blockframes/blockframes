@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { OrganizationStore, Organization } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 const organizationQuery = (uid: string): Query<Organization[]> => ({

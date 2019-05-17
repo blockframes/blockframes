@@ -1,6 +1,7 @@
 // Movie exports
 export * from './lib/movie/+state';
-export * from './lib/movie/guards/movie.guard';
+export * from './lib/movie/guards/movie-active.guard';
+export * from './lib/movie/guards/movie-list.guard';
 export * from './lib/movie/movie.module';
 export { ViewComponent } from './lib/movie/view/view.component';
 export { ContainerComponent } from './lib/movie/form/container.component';

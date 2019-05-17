@@ -14,10 +14,10 @@ export abstract class StateListGuard<T> implements CanActivate, CanDeactivate<an
   canActivate(): Promise<boolean | UrlTree> {
     return new Promise((res, rej) => {
       this.subscription = this.query.pipe(
-        tap(entities => this.store.set(entities)),
+        tap(entities => this.store.set(entities))
       ).subscribe({
         next: result => res(!!result),
-        error: err => res(this.router.parseUrl(this.urlFallback))
+        error: err => {res(this.router.parseUrl(this.urlFallback))}
       })
     })
   }

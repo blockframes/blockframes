@@ -15,8 +15,18 @@ type SubQueries<T> = {
   [K in keyof Partial<T>]: T[K] | ((entity: T) => QueryLike<T[K]>)
 }
 
+type QueryInput<T> = QueryLike<T> | string;
+type QueryOutput<Q, T> =
+  Q extends string ? Observable<T> :
+  Q extends Query<(infer U)>[] ? Observable<U[]> :
+  Q extends Query<(infer V)> ? Observable<V> :
+  never;
+
 function createQuery<T>(path: string): Query<T> {
   return { path } as Query<T>;
+}
+function isQueryLike<T>(query: QueryInput<T>): query is QueryLike<T> {
+  return typeof query !== 'string'
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,14 +36,16 @@ export class FireQuery {
   constructor(private db: AngularFirestore) {}
 
   /** Make a query to firebase */
-  public fromQuery<T>(query: Query<T> | string): Observable<T> {
-    return typeof query === 'string'
-      ? this.fromSubQuery(createQuery<T>(query)) as Observable<T>
-      : this.fromSubQuery(query) as Observable<T>;
+  public fromQuery<T>(query: Query<T>[]): Observable<T[]>
+  public fromQuery<T>(query: string | Query<T>): Observable<T>
+  public fromQuery<T, Q extends QueryInput<T>>(query: Q): QueryOutput<Q, T> {
+    return isQueryLike(query)
+      ? this.fromSubQuery(query as QueryLike<T>) as any
+      : this.fromSubQuery(createQuery<T>(query as string))
   }
 
   // Dispatch subquery to collection or list of doc
-  private fromSubQuery<T>(query: QueryLike<T>): Observable<T | T[]> {
+  private fromSubQuery<T>(query: QueryLike<T>): Observable<T> | Observable<T[]> {
     if (!query) return throwError(`Query failed`)
     if (Array.isArray(query)) {
       return this.fromDocList(query);

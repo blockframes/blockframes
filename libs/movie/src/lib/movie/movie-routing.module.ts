@@ -9,12 +9,13 @@ import { TitleFormComponent } from './title-form/title-form.component';
 import { StakeholderListComponent } from '../stakeholder/list/list.component';
 
 // Guards
-import { MovieGuard } from './guards/movie.guard';
 import { StakeholderViewComponent } from '../stakeholder/view/view.component';
+import { MovieActiveGuard } from './guards/movie-active.guard';
+import { MovieListGuard } from './guards/movie-list.guard';
 
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '',  component: HomeComponent },
 
   // MovieGuard: set active the Movie id in Akita
 
@@ -25,17 +26,17 @@ export const routes: Routes = [
   {
     path: 'form/:movieId',
     component: ContainerComponent,
-    canActivate: [MovieGuard],
+    canActivate: [MovieActiveGuard],
   },
   {
     path: 'form/:movieId/teamwork',
     component: StakeholderViewComponent,
-    canActivate: [MovieGuard],
+    canActivate: [MovieActiveGuard],
   },
   {
     path: 'movie/:movieId',
     component: ViewComponent,
-    canActivate: [MovieGuard],
+    canActivate: [MovieActiveGuard],
   },
   {
     path: 'dev',

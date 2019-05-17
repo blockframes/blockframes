@@ -7,8 +7,8 @@ import { LayoutComponent } from './layout/layout.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
-import { MovieGuard } from '@blockframes/movie';
-import { OrganizationListGuard } from '@blockframes/organization';
+import { MovieListGuard } from '@blockframes/movie';
+import { OrganizationListGuard } from 'libs/organization/src/lib/guards/organization-list.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -31,11 +31,17 @@ export const routes: Routes = [
         path: 'account',
         loadChildren: '@blockframes/account#AccountModule'
       },
-      { path: 'home', loadChildren: '@blockframes/movie#MovieModule' },
-      { path: 'template', loadChildren: 'libs/material/src/lib/template/template.module#TemplateModule' }, //ToDo find why @blockframes doesn't work
+      {
+        path: 'home',
+        canActivate: [MovieListGuard],
+        canDeactivate: [MovieListGuard],
+        loadChildren: '@blockframes/movie#MovieModule'
+      },
+      { path: 'template',
+        loadChildren: 'libs/material/src/lib/template/template.module#TemplateModule'
+      }, //ToDo find why @blockframes doesn't work
       {
         path: ':movieId',
-        canActivate: [MovieGuard],
         loadChildren: '@blockframes/material#DeliveryModule'
       },
     ]
