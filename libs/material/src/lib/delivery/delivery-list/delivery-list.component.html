@@ -1,11 +1,11 @@
-<main>
-  <section *ngIf="(movie$ | async) as movie" class="delivery-list">
-    <article fxLayoutAlign="space-between center">
-      <h2>{{ movie.title.original }}</h2>
-      <button class="add-delivery mat-elevation-z0" mat-raised-button (click)="openDialog()">
-        Add a new delivery <mat-icon class="icon">add</mat-icon>
-      </button>
-    </article>
+<main *ngIf="(movie$ | async) as movie">
+  <article fxLayoutAlign="space-between center">
+    <h2>{{ movie.title.original }}</h2>
+    <button class="add-delivery mat-elevation-z0" mat-raised-button (click)="openDialog()">
+      Add a new delivery <mat-icon class="icon">add</mat-icon>
+    </button>
+  </article>
+  <section *ngIf="!!(deliveries$ | async); else empty">
     <article
       *ngFor="let delivery of (deliveries$ | async)"
       fxLayout="column"
@@ -19,5 +19,7 @@
       ></delivery-item>
     </article>
   </section>
-  <delivery-empty *ngIf="!(hasDeliveries$ | async)"></delivery-empty>
+  <ng-template #empty>
+    <delivery-empty></delivery-empty>
+  </ng-template>
 </main>

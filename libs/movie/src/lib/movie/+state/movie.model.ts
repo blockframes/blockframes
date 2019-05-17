@@ -1,10 +1,11 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
+import { Stakeholder } from "@blockframes/movie/stakeholder/+state";
 
 export interface Movie {
   id: string,
   org?: Organization,
-  title: any, // will contain all titles: original, international, suiss, etc 
+  title: any, // will contain all titles: original, international, suiss, etc
   directorName: string,
   poster: string,
   productionYear: number,
@@ -34,6 +35,7 @@ export interface Movie {
   potentialRevenues: number,
   selectionCategories: string,
   materials?: Material[];
+  stakeholders?: Stakeholder[];
 }
 
 /**

@@ -13,11 +13,10 @@ import {
   StakeholderService,
   StakeholderStore
 } from '@blockframes/movie';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
 import { switchMap, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { Query, FireQuery } from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +33,6 @@ export class DeliveryService {
     private db: AngularFirestore,
     private stakeholderService: StakeholderService,
     private stakeholderStore: StakeholderStore,
-    private fireQuery: FireQuery
   ) {}
 
   ///////////////////
@@ -212,6 +210,10 @@ export class DeliveryService {
     }
   }
 
+  ////////////////////////
+  // CRUD STAKEHOLDERS //
+  //////////////////////
+
   private makeDeliveryStakeholder(
     id: string,
     orgId: string,
@@ -276,26 +278,6 @@ export class DeliveryService {
         .pipe(map(movieSh => ({ ...movieSh, ...stakeholder } as Stakeholder)))
     );
     return combineLatest(updatedSh$);
-  }
-
-  public get deliveryList() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(id => this.fireQuery.fromQuery(this.getDeliveryListWithStakeholders(id))),
-      tap(deliveries => this.store.set(deliveries))
-    );
-  }
-
-  private getDeliveryListWithStakeholders(movieId: string): Query<Delivery[]> {
-    return {
-      path: `deliveries`,
-      queryFn: ref => ref.where('movieId', '==', movieId),
-      stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
-        path: `deliveries/${delivery.id}/stakeholders`,
-        organization: (stakeholder: Stakeholder): Query<Organization> => ({
-          path: `orgs/${stakeholder.orgId}`
-        })
-      })
-    };
   }
 
   ////////////////////////

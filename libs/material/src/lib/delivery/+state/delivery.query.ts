@@ -46,10 +46,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     super(store);
   }
 
-  public get hasDeliveries$() {
-    return this.selectCount().pipe(map(count => count > 0));
-  }
-
   get hasStep(): boolean {
     return this.getActive().steps.length > 0;
   }
@@ -89,18 +85,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
           )
       ),
       tap(materials => this.materialStore.set(materials))
-    );
-  }
-
-  /** Returns a list of deliveries for the active movie */
-  public get deliveriesByActiveMovie$() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(id =>
-        this.db
-          .collection<Delivery>('deliveries', ref => ref.where('movieId', '==', id))
-          .valueChanges()
-      ),
-      tap(deliveries => this.store.set(deliveries))
     );
   }
 
