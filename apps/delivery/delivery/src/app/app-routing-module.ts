@@ -9,6 +9,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { AuthGuard } from '@blockframes/auth';
 import { MovieListGuard, MovieActiveGuard } from '@blockframes/movie';
 import { OrganizationListGuard } from '@blockframes/organization';
+import { DeliveryListGuard } from 'libs/material/src/lib/delivery/guards/delivery-list.guard';
+// TODO: Figure out why we got and error if we use @blockframes/material to import
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -42,7 +44,7 @@ export const routes: Routes = [
       }, //ToDo find why @blockframes doesn't work
       {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, DeliveryListGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: '@blockframes/material#DeliveryModule'
       },

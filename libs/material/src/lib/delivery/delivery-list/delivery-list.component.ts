@@ -24,7 +24,6 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
-    private store: DeliveryStore,
     private service: DeliveryService,
     private router: Router,
     private dialog: MatDialog,
@@ -35,7 +34,7 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.hasDeliveries$ = this.query.hasDeliveries$;
     this.movie$ = this.movieQuery.selectActive();
-    this.deliveries$ = this.service.deliveryList;
+    this.deliveries$ = this.query.selectAll();
     this.stakeholderService.subscribeOnStakeholdersByActiveMovie$().pipe(takeWhile(() => this.isAlive)).subscribe();
   }
 
