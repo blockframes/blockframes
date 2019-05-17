@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Stakeholder, StakeholderService } from '../+state';
+import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 
 @Component({
   selector: 'stakeholder-view',
@@ -9,11 +9,11 @@ import { Stakeholder, StakeholderService } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StakeholderViewComponent implements OnInit {
-  public stakeholders$: Observable<Stakeholder[]>;
+  public movie$: Observable<Movie>;
 
-  constructor(private service: StakeholderService) { }
+  constructor(private movieQuery: MovieQuery) { }
 
   ngOnInit() {
-    this.stakeholders$ = this.service.subscribeOnStakeholdersByActiveMovie$();
+    this.movie$ = this.movieQuery.selectActive();
   }
 }

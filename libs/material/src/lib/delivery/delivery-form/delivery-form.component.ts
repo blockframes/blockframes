@@ -7,9 +7,9 @@ import { Material, MaterialDeliveryForm } from '../../material/+state/material.m
 import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery, DeliveryStore } from '../+state';
+import { DeliveryQuery, Delivery } from '../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { applyTransaction } from '@datorama/akita';
 
@@ -39,21 +39,9 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private route: ActivatedRoute,
-    private store: DeliveryStore,
   ) {}
 
   ngOnInit() {
-    this.service
-      .suscribeOnDeliveriesByActiveMovie()
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe();
-
-    this.route.params
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(params => {
-        this.store.setActive(params.deliveryId);
-      });
 
     this.materialService
       .subscribeOnDeliveryMaterials$()

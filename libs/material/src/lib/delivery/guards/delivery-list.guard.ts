@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { DeliveryStore, Delivery } from '../+state';
-import { switchMap } from 'rxjs/operators';
+import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryDB } from '../+state';
+import { switchMap, map } from 'rxjs/operators';
 import { MovieQuery, Stakeholder } from '@blockframes/movie';
 import { Organization } from '@blockframes/organization';
 
-const deliveryQuery = (movieId: string): Query<Delivery[]> => ({
+const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
   path: `deliveries`,
   queryFn: ref => ref.where('movieId', '==', movieId),
-  stakeholders: (delivery: Delivery): Query<Stakeholder> => ({
+  stakeholders: (delivery: DeliveryDB): Query<Stakeholder> => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: (stakeholder: Stakeholder): Query<Organization> => ({
       path: `orgs/${stakeholder.orgId}`
@@ -34,8 +34,10 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
     return this.movieQuery.selectActiveId().pipe(
       switchMap(movieId => {
         const query = deliveryQuery(movieId);
-        return this.fireQuery.fromQuery<Delivery[]>(query);
-      })
+        return this.fireQuery.fromQuery<DeliveryDB[]>(query);
+      }),
+      map(deliveries => deliveries.map(delivery =>
+        modifyTimestampToDate(delivery)))
     );
   }
 }

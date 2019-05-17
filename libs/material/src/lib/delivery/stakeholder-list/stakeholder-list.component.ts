@@ -1,8 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Stakeholder, StakeholderQuery, MovieQuery } from '@blockframes/movie';
-import { DeliveryService, DeliveryQuery } from '../+state';
-import { takeWhile } from 'rxjs/operators';
+import { DeliveryService, DeliveryQuery, Delivery } from '../+state';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component';
@@ -13,23 +11,19 @@ import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component'
   styleUrls: ['./stakeholder-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StakeholderListComponent implements OnInit, OnDestroy {
+export class StakeholderListComponent implements OnInit {
 
-  public stakeholders$: Observable<Stakeholder[]>;
-  private isAlive = true;
+  public delivery$: Observable<Delivery>;
 
   constructor(
     private service : DeliveryService,
-    private stakeholderQuery: StakeholderQuery,
     private router: Router,
     private dialog: MatDialog,
-    private movieQuery: MovieQuery,
     private query: DeliveryQuery,
   ) { }
 
   ngOnInit() {
-    this.service.subscribeOnDeliveryStakeholders().pipe(takeWhile(() => this.isAlive)).subscribe();
-    this.stakeholders$ = this.stakeholderQuery.selectAll();
+    this.delivery$ = this.query.selectActive();
   }
 
   public openSignDelivery() {
@@ -45,13 +39,8 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
     this.service.signDelivery();
   }
 
-
   public navigateToTeamwork() {
     this.router.navigate([`${this.router.url}/teamwork`])
-  }
-
-  ngOnDestroy() {
-    this.isAlive = false;
   }
 
 }

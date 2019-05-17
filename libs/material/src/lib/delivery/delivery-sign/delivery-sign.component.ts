@@ -4,7 +4,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '@blockframes/auth';
 import { DeliveryQuery } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
-import { StakeholderQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'material-delivery-sign',
@@ -29,7 +28,7 @@ export class DeliverySignComponent {
     public service: AuthService,
     public deliveryQuey: DeliveryQuery,
     public organizationQuery: OrganizationQuery,
-    public stakeholderQuery: StakeholderQuery,
+    public deliveryQuery: DeliveryQuery,
     ) {}
 
   public sign() {
@@ -41,12 +40,11 @@ export class DeliverySignComponent {
 
   public async confirm() {
     this.loading = true;
-
+    const delivery = this.deliveryQuery.getActive();
     const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
-    const stakeholders = this.stakeholderQuery.getAll();
-    const stakeholderId = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId)).id;
-    await this.service.signDelivery(this.deliveryQuey.getActive().id, stakeholderId);
-    
+    const stakeholderId = delivery.stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId)).id;
+    await this.service.signDelivery(delivery.id, stakeholderId);
+
     this.sign();
   }
 

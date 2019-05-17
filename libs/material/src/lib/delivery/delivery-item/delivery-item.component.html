@@ -28,7 +28,7 @@
     <ng-container *ngIf="!!delivery.dueDate; else noDate">
       <article class="time">
         <h5>Delivery time</h5>
-        <p class="time-text">{{ delivery.dueDate.toDate() | date: 'dd MMM yyyy' }}</p>
+        <p class="time-text">{{ delivery.dueDate | date: 'dd MMM yyyy' }}</p>
       </article>
     </ng-container>
     <ng-template #noDate>

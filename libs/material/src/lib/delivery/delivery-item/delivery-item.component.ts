@@ -40,8 +40,4 @@ export class DeliveryItemComponent implements OnInit {
       return (~~(Math.random() * 16)).toString(16);
     });
   }
-
-  public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale) + 1;
-  }
 }

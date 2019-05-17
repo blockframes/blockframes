@@ -63,6 +63,7 @@ import { MatFormFieldModule } from '@angular/material';
 
 // Guards
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
+import { DeliveryListGuard } from './guards/delivery-list.guard';
 
 const routes: Routes = [
   { path: '',
@@ -70,7 +71,13 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: 'list',
+    canActivate: [DeliveryListGuard],
+    canDeactivate: [DeliveryListGuard],
     component: DeliveryListComponent
+  },
+  {
+    path: 'movie-materials',
+    component: MovieMaterialsComponent
   },
   {
     path: ':deliveryId',
@@ -99,10 +106,6 @@ const routes: Routes = [
         component: DeliverySettingsViewComponent
       }
     ]
-  },
-  {
-    path: 'movie-materials',
-    component: MovieMaterialsComponent
   }
 ];
 

@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DeliveryService } from '../+state';
-import { Stakeholder, StakeholderService, StakeholderQuery } from '@blockframes/movie';
-import { takeWhile } from 'rxjs/operators';
+import { DeliveryQuery, Delivery } from '../+state';
+import { Stakeholder, MovieQuery, Movie } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-team-work-view',
@@ -10,23 +9,19 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./delivery-team-work-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTeamWorkViewComponent implements OnInit, OnDestroy {
-  public movieStakeholders$: Observable<Stakeholder[]>;
-  public deliveryStakeholders$: Observable<Stakeholder[]>;
-  public isAlive = true;
+export class DeliveryTeamWorkViewComponent implements OnInit {
+  public delivery$: Observable<Delivery>;
+  public movie$: Observable<Movie>;
   public stakeholderId: string;
 
   constructor(
-    private stakeholderService: StakeholderService,
-    private service: DeliveryService,
-    private stakeholderQuery: StakeholderQuery,
+    private movieQuery: MovieQuery,
+    private deliveryQuery: DeliveryQuery,
   ) {}
 
   ngOnInit() {
-    this.service.subscribeOnDeliveryStakeholders().pipe(takeWhile(() => this.isAlive)).subscribe();
-
-    this.deliveryStakeholders$ = this.stakeholderQuery.selectAll();
-    this.movieStakeholders$ = this.stakeholderService.stakeholdersByMovie$;
+    this.delivery$ = this.deliveryQuery.selectActive();
+    this.movie$ = this.movieQuery.selectActive();
   }
 
   public openForm(stakeholder: Stakeholder) {
@@ -37,7 +32,4 @@ export class DeliveryTeamWorkViewComponent implements OnInit, OnDestroy {
     delete this.stakeholderId;
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

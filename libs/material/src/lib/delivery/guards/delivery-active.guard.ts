@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
-import { Delivery, DeliveryStore } from '../+state';
+import { Delivery, DeliveryStore, modifyTimestampToDate, DeliveryDB } from '../+state';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
-export const deliveryActiveQuery = (deliveryId: string): Query<Delivery> => ({
+export const deliveryActiveQuery = (deliveryId: string): Query<DeliveryDB> => ({
   path: `deliveries/${deliveryId}`
 });
 
@@ -18,6 +19,8 @@ export class DeliveryActiveGuard extends StateActiveGuard<Delivery> {
 
   query({ deliveryId }) {
     const query = deliveryActiveQuery(deliveryId);
-    return this.fireQuery.fromQuery<Delivery>(query);
+    return this.fireQuery
+      .fromQuery<DeliveryDB>(query)
+      .pipe(map(delivery => modifyTimestampToDate(delivery)));
   }
 }

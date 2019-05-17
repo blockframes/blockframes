@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeliveryQuery, Step, DeliveryService, Delivery } from '../+state';
-import { takeWhile } from 'rxjs/operators';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,12 +12,11 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./delivery-settings-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
+export class DeliverySettingsViewComponent implements OnInit {
   public hasForm = false;
   public delivery$: Observable<Delivery>;
   public movie$ : Observable<Movie>;
   public stepId: string;
-  private isAlive = true;
 
   public form = new FormGroup({
     dueDate: new FormControl()
@@ -33,7 +31,6 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit() {
-    this.service.suscribeOnDeliveriesByActiveMovie().pipe(takeWhile(() => this.isAlive)).subscribe();
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
   }
@@ -63,9 +60,5 @@ export class DeliverySettingsViewComponent implements OnInit, OnDestroy {
   public saveSettings() {
     this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${this.query.getActiveId()}`]);
     this.snackBar.open('Settings saved.', 'Close', {duration: 2000,});
-  }
-
-  ngOnDestroy() {
-    this.isAlive = false;
   }
 }

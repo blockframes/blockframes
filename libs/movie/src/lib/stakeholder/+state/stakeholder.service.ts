@@ -1,64 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { createStakeholder, Stakeholder } from './stakeholder.model';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
-import { StakeholderStore } from './stakeholder.store';
-import { MovieQuery } from '../../movie/+state/movie.query';
 import { Organization } from '@blockframes/organization';
-import { FireQuery, Query } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
 export class StakeholderService {
 
-  public stakeholdersByMovie$ = this.movieQuery.selectActive().pipe(
-    // TODO: use FireQuery:
-    switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
-    switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders))
-  );
-
-  constructor(
-    private firestore: AngularFirestore,
-    private store: StakeholderStore,
-    private movieQuery: MovieQuery,
-    private fireQuery: FireQuery
-  ) {
-  }
-
-  public get activeMovieStakeholders(): Observable<Stakeholder[]> {
-    // TODO: looks like a duplicate of `subscribeOnStakeholdersByActiveMovie$'
-    return this.movieQuery
-      .selectActiveId()
-      .pipe(
-        switchMap(id => this.fireQuery.fromQuery(this.getStakeholderList(id))),
-        // TODO: this type should be Stakeholder[], figure out why ts doesn't like it.
-        tap((stakeholders: any) => this.store.set(stakeholders))
-      );
-  }
-
-  public subscribeOnStakeholdersByActiveMovie$() {
-    // TODO: use FireQuery:
-    return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
-      switchMap(movie => this.firestore.collection<Stakeholder>(`movies/${movie.id}/stakeholders`).valueChanges()),
-      switchMap(stakeholders => this.getAllStakeholdersWithOrg(stakeholders)),
-      tap(stakeholders => this.store.set(stakeholders))
-    );
-  }
-
-  public getAllStakeholdersWithOrg(stakeholders: Stakeholder[]) {
-    const shWithOrgs = (sh: Stakeholder) => {
-      // TODO: use FireQuery:
-      return this.firestore.doc<Organization>(`orgs/${sh.orgId}`)
-        .valueChanges()
-        .pipe(
-          map(organization => ({ ...sh, organization } as Stakeholder))
-        );
-    };
-    const allShWithOrgs = stakeholders.map(sh => shWithOrgs(sh));
-    return combineLatest(allShWithOrgs);
-  }
+  constructor(private firestore: AngularFirestore,) {}
 
   public async add(movieId: string, stakeholder: Partial<Stakeholder>, firstAdd: boolean = false ): Promise<string> {
     const id = this.firestore.createId();
@@ -72,19 +21,19 @@ export class StakeholderService {
 
       // it true, add directly movie into org and bypasses notification approval
       // required when a movie is created
-      if( firstAdd ) { 
+      if( firstAdd ) {
         const org = await tx.get(orgDoc.ref);
 
         // Update the org
         const movieIds = org.data().movieIds || [];
-  
+
         // DEMO: Prevent double add
         // TODO: allow to add the org multiple time with different orgs.
         // BEWARE: update the delete method accordingly when you do.
         if (movieIds.includes(movieId)) {
           return tx.update(orgDoc.ref, {}); // every document read in a transaction must be written.
         }
-  
+
         const nextMovieIds = [...movieIds, movieId];
         promises.push(tx.update(orgDoc.ref, { movieIds: nextMovieIds }));
       }
@@ -133,13 +82,4 @@ export class StakeholderService {
     });
   }
 
-
-  private getStakeholderList(movieId: string): Query<Stakeholder[]> {
-    return {
-      path: `movies/${movieId}/stakeholders`,
-      organization: (stakeholder: Stakeholder): Query<Organization> => ({
-        path: `orgs/${stakeholder.orgId}`
-      })
-    };
-  }
 }

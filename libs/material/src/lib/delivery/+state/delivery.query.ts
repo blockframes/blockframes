@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MovieQuery, StakeholderQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { TemplateView } from '../../template/+state';
 export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   public isDeliveryValidated$ = combineLatest([
     this.selectActive(delivery => delivery.validated),
-    this.stakeholderQuery.selectAll()
+    this.selectActive(delivery => delivery.stakeholders)
   ]).pipe(
     filter(([validated, stakeholders]) => !!validated && !!stakeholders),
     map(([validated, stakeholders]) => validated.length === stakeholders.length)
@@ -39,7 +39,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     private movieQuery: MovieQuery,
     private materialQuery: MaterialQuery,
     private materialStore: MaterialStore,
-    private stakeholderQuery: StakeholderQuery,
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore
   ) {
@@ -48,10 +47,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   get hasStep(): boolean {
     return this.getActive().steps.length > 0;
-  }
-
-  public getStep$(id: string) {
-    return this.selectActive(delivery => delivery.steps.find(step => step.id === id));
   }
 
   /** Set the store with materials from active movie */
@@ -129,7 +124,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   /** Find the stakeholder from the movie and logged user organizations */
   public findActiveStakeholder() {
-    const stakeholders = this.stakeholderQuery.getAll();
+    const stakeholders = this.movieQuery.getActive().stakeholders;
     const orgIds = this.organizationQuery.getAll().map(org => org.id);
     return stakeholders.find(({ orgId }) => orgIds.includes(orgId));
   }

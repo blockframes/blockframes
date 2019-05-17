@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { DeliveryStore } from './delivery.store';
 import { DeliveryQuery } from './delivery.query';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
@@ -10,13 +9,17 @@ import {
   Stakeholder,
   StakeholderQuery,
   createDeliveryStakeholder,
-  StakeholderService,
-  StakeholderStore
 } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateQuery } from '../../template/+state';
-import { switchMap, tap, map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+
+export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
+  return {
+    ...delivery,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
+    steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
+  };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +30,9 @@ export class DeliveryService {
     private organizationQuery: OrganizationQuery,
     private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
-    private store: DeliveryStore,
     private templateQuery: TemplateQuery,
     private stakeholderQuery: StakeholderQuery,
     private db: AngularFirestore,
-    private stakeholderService: StakeholderService,
-    private stakeholderStore: StakeholderStore,
   ) {}
 
   ///////////////////
@@ -188,10 +188,7 @@ export class DeliveryService {
   /** Deletes delivery and all the sub-collections in firebase */
   public async deleteDelivery() {
     const id = this.query.getActiveId();
-
     this.db.doc<Delivery>(`deliveries/${id}`).delete();
-
-    this.store.setActive(null);
   }
 
   /** Sign array validated of delivery with stakeholder logged */
@@ -225,8 +222,8 @@ export class DeliveryService {
 
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
-    const deliveryStakeholder = this.stakeholderQuery
-      .getAll()
+    const deliveryStakeholder = this.query
+      .getActive().stakeholders
       .find(stakeholder => stakeholder.id === movieStakeholder.id);
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
@@ -267,50 +264,5 @@ export class DeliveryService {
       .get()
       .toPromise();
     return delivery.validated.length === stakeholders.size;
-  }
-
-  /** Returns stakeholders updated with stakeholders of the store stakeholders (movie-lib) */
-  private updateDeliveryShWithMovieSh(stakeholders: Stakeholder[]) {
-    const updatedSh$ = stakeholders.map(stakeholder =>
-      this.db
-        .doc<Stakeholder>(`movies/${this.movieQuery.getActiveId()}/stakeholders/${stakeholder.id}`)
-        .valueChanges()
-        .pipe(map(movieSh => ({ ...movieSh, ...stakeholder } as Stakeholder)))
-    );
-    return combineLatest(updatedSh$);
-  }
-
-  ////////////////////////
-  // START SUBSCRIPTION //
-  ////////////////////////
-  public suscribeOnDeliveriesByActiveMovie() {
-    function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
-      return {
-        ...delivery,
-        dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
-        steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
-      };
-    }
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(id =>
-        this.db
-          .collection<DeliveryDB>('deliveries', ref => ref.where('movieId', '==', id))
-          .valueChanges()
-      ),
-      map(deliveries => deliveries.map(modifyTimestampToDate)),
-      tap(deliveries => this.store.set(deliveries))
-    );
-  }
-
-  /** Merge stakeholders of delivery with stakeholders of movie */
-  public subscribeOnDeliveryStakeholders() {
-    return this.db
-      .collection<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders`)
-      .valueChanges()
-      .pipe(
-        switchMap(deliverySh => this.stakeholderService.getAllStakeholdersWithOrg(deliverySh)),
-        switchMap(deliveryShWithMovie => this.updateDeliveryShWithMovieSh(deliveryShWithMovie)),
-        tap(updatedSh => this.stakeholderStore.set(updatedSh))
-      );
   }
 }
