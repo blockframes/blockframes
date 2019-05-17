@@ -439,10 +439,60 @@ export class MovieTeamWorkPage extends NavbarPage {
   }
 }
 
+export class AddMovieModal {
+  constructor() {}
+
+  public fillMovieName(movieName: string) {
+    cy.get('mat-dialog-container').find('input').type(movieName);
+  }
+
+  public clickCreate() {
+    cy.get('mat-dialog-container').find('button.mat-primary').click();
+    return new MovieEditPage();
+  };
+}
+
+export class MovieEditPage {
+  public static FIELD_INTERNATIONAL_TITLE = 'internationalTitle'
+  public static FIELD_DIRECTOR_NAME = 'directorName';
+  public static FIELD_PRODUCTION_YEAR = 'productionYear';
+
+  constructor() {
+    cy.get('button[testId=saveMovie]');
+  }
+
+  public assertInputAndViewValueExists(controlName: string, value: string) {
+    cy.get('mat-card').contains(value);
+    cy.get(`input[formControlName=${controlName}]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public fillInputValue(controlName: string, value: string) {
+    cy.get(`input[formControlName=${controlName}]`).type(value);
+  }
+
+  public selectValue(controlName: string, values: string[]) {
+    cy.get(`mat-select[formControlName=${controlName}]`).click();
+    values.forEach(value => cy.get(`mat-option[ng-reflect-value=${value}]`).click());
+    //TODO: click next to
+  }
+}
+
 export class HomePage extends NavbarPage {
   constructor() {
     super();
     // TODO: check if we are on a home page
+  }
+
+  public clickAddMovie(orgName: string) {
+    cy.get('mat-expansion-panel').should('contain', orgName).find('button.add-movie').click();
+    return new AddMovieModal();
+  }
+
+  public assertOrgExists(orgName: string) {
+    cy.wait(2000);
+    cy.get('mat-expansion-panel').contains(orgName);
   }
 
   public clickOnMovie(movieName: string) {

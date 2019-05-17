@@ -7,10 +7,10 @@
             [movieForm]="movieForm"
             [movie]="movie"
             [currentFormValue]="currentFormValue"
-          ></movie-form-main-section>              
+          ></movie-form-main-section>
         </mat-tab>
         <mat-tab label="Story description">
-          <movie-form-story-section 
+          <movie-form-story-section
             [movieForm]="movieForm"
             [keywords]="keywords"
             [addFormControl]="addFormControl"
@@ -39,7 +39,7 @@
     </mat-card-content>
     <mat-card-actions class="movie-card-actions">
       <button mat-raised-button (click)="cancel()">Cancel</button>
-      <button class="save-btn" mat-raised-button  (click)="submit()" type="submit">Save movie <mat-icon>save</mat-icon></button>
+      <button testId="saveMovie" class="save-btn" mat-raised-button  (click)="submit()" type="submit">Save movie <mat-icon>save</mat-icon></button>
     </mat-card-actions>
   </mat-card>
 </form>
