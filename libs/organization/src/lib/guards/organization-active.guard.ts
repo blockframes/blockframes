@@ -13,14 +13,14 @@ export const orgActiveQuery = (orgId: string): Query<Organization> => ({
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationActiveGuard extends StateActiveGuard<Organization> {
-  readonly params = ['id'];
+  readonly params = ['orgId'];
   readonly urlFallback: 'layout';
 
   constructor(private fireQuery: FireQuery, store: OrganizationStore, router: Router) {
     super(store, router);
   }
 
-  query({ id }) {
-    return this.fireQuery.fromQuery<Organization>(orgActiveQuery(id));
+  query({ orgId }) {
+    return this.fireQuery.fromQuery<Organization>(orgActiveQuery(orgId));
   }
 }

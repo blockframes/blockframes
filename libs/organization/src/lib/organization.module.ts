@@ -37,7 +37,7 @@ export const organizationRoutes: Routes = [
     component: OrgListComponent,
   },
   {
-    path: ':id',
+    path: ':orgId',
     component: OrgShowComponent,
     canActivate: [OrganizationActiveGuard],
     canDeactivate: [OrganizationActiveGuard],

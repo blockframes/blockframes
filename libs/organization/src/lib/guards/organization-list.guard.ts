@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { OrganizationStore, Organization } from '../+state';
-import { AuthQuery } from '@blockframes/auth';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 const organizationQuery = (uid: string): Query<Organization[]> => ({
@@ -25,7 +24,11 @@ export class OrganizationListGuard extends StateListGuard<Organization> {
   }
 
   get query() {
-    return this.afAuth.authState
-      .pipe(switchMap(user => this.fireQuery.fromQuery<Organization[]>(organizationQuery(user.uid))));
+    return this.afAuth.authState.pipe(
+      switchMap(user => {
+        const query = organizationQuery(user.uid);
+        return this.fireQuery.fromQuery<Organization[]>(query);
+      })
+    );
   }
 }
