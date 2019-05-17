@@ -40,23 +40,43 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/:movieId/view/:deliveryId',
+    route: '/layout/:movieId/:deliveryId',
     items: [
       { name: 'delivery schedules', path: '/layout/:movieId/list'},
-      { name: 'settings', path: '/layout/:movieId/form/:deliveryId/settings'},
-      { name: 'teamwork', path: '/layout/:movieId/form/:deliveryId/teamwork'},
-      { name: 'edit', path: '/layout/:movieId/form/:deliveryId'},
-      { name: 'delivery list', path: '/layout/:movieId/view/:deliveryId'},
+      { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
+      { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
+      { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
     ]
   },
   {
-    route: '/layout/:movieId/form/:deliveryId',
+    route: '/layout/:movieId/:deliveryId/edit',
     items: [
       { name: 'delivery schedules', path: '/layout/:movieId/list'},
-      { name: 'settings', path: '/layout/:movieId/form/:deliveryId/settings'},
-      { name: 'teamwork', path: '/layout/:movieId/form/:deliveryId/teamwork'},
-      { name: 'edit', path: '/layout/:movieId/form/:deliveryId'},
-      { name: 'delivery list', path: '/layout/:movieId/view/:deliveryId'},
+      { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
+      { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
+      { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+    ]
+  },
+  {
+    route: '/layout/:movieId/:deliveryId/settings',
+    items: [
+      { name: 'delivery schedules', path: '/layout/:movieId/list'},
+      { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
+      { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
+      { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
+    ]
+  },
+  {
+    route: '/layout/:movieId/:deliveryId/teamwork',
+    items: [
+      { name: 'delivery schedules', path: '/layout/:movieId/list'},
+      { name: 'settings', path: '/layout/:movieId/:deliveryId/settings'},
+      { name: 'teamwork', path: '/layout/:movieId/:deliveryId/teamwork'},
+      { name: 'edit', path: '/layout/:movieId/:deliveryId/edit'},
+      { name: 'delivery list', path: '/layout/:movieId/:deliveryId'},
     ]
   }
 ];

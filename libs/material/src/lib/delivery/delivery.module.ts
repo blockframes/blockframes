@@ -9,9 +9,7 @@ import { MovieMaterialsComponent } from './movie-materials/movie-materials.compo
 import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
 import { NewTemplateComponent } from './delivery-new-template/new-template.component';
-import { DeliveryGuard } from './guards/delivery.guard';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
-import { MaterialModule } from '../material/material.module';
 import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
 import { DeliveryTeamWorkViewComponent } from './delivery-team-work-view/delivery-team-work-view.component';
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
@@ -24,13 +22,21 @@ import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-it
 import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
 import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
 import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
-import { EditableModule, DirectivesModule, TeamWorkModule } from '@blockframes/ui';
-import { ConfirmModule, UiFormModule } from '@blockframes/ui';
 import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
 import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
 import { DeliverySignComponent } from './delivery-sign/delivery-sign.component';
 import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
+
+// Modules
+import { MaterialModule } from '../material/material.module';
+import {
+  EditableModule,
+  DirectivesModule,
+  TeamWorkModule,
+  ConfirmModule,
+  UiFormModule
+} from '@blockframes/ui';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -66,28 +72,26 @@ const routes: Routes = [
     component: DeliveryListComponent
   },
   {
+    path: ':deliveryId',
+    component: DeliveryViewComponent,
+    children : [
+      {
+        path: 'form',
+        component: DeliveryFormComponent
+      },
+      {
+        path: 'teamwork',
+        component: DeliveryTeamWorkViewComponent
+      },
+      {
+        path: 'settings',
+        component: DeliverySettingsViewComponent
+      }
+    ]
+  },
+  {
     path: 'movie-materials',
     component: MovieMaterialsComponent
-  },
-  {
-    path: 'view/:deliveryId',
-    canActivate: [DeliveryGuard],
-    component: DeliveryViewComponent
-  },
-  {
-    path: 'form/:deliveryId',
-    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliveryFormComponent
-  },
-  {
-    path: 'form/:deliveryId/teamwork',
-    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliveryTeamWorkViewComponent
-  },
-  {
-    path: 'form/:deliveryId/settings',
-    // canActivate: [DeliveryGuard],   //TODO: make this path to not redirected to default path when guard is active
-    component: DeliverySettingsViewComponent
   }
 ];
 

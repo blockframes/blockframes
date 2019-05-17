@@ -64,7 +64,7 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   }
 
   public editDelivery() {
-    this.router.navigate([`layout/${this.movie.id}/form/${this.query.getActiveId()}`]);
+    this.router.navigate([`layout/${this.movie.id}/${this.query.getActiveId()}/edit`]);
   }
 
   ngOnDestroy() {
