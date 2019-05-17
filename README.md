@@ -23,7 +23,12 @@ cp ./env/env.template.ts ./env/env.ts
 
 ### Setup the authentication
 
-In the firebase console, authentication, enable the email / password auth.
+- In the firebase console, authentication, enable the email / password auth.
+- Create a service account to use the admin locally.
+
+```sh
+export GOOGLE_APPLICATION_CREDENTIALS=some/path/service-account-for-your-firebase.json
+```
 
 
 ## Running and testing
