@@ -84,7 +84,7 @@ describe('Test CRUD template', () => {
     p5.fillCategory(MATERIAL_CHANGED.category);
     p5.clickSaveMaterial();
     p5.assertMaterialsCount(MATERIALS.length - 1);
-    p5.assertMaterialChanged(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
+    p5.assertMaterialExists(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
 
     // Go to template list and delete the template
     const p6: TemplateListPage = p5.selectTemplates();

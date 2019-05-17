@@ -85,7 +85,7 @@ describe('I m a user and i can save a delivery as template', () => {
     p9.fillCategory(MATERIAL_CHANGED.category);
     p9.clickSaveMaterial();
     p9.assertMaterialsCount(MATERIALS.length);
-    p9.assertMaterialChanged(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
+    p9.assertMaterialExists(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
 
     // Delete template
     const p10: TemplateDeleteModal = p9.deleteTemplate();

@@ -76,7 +76,7 @@
       <org-widget></org-widget>
       <mat-divider></mat-divider>
       <ng-container (loggedOut)="logout()">
-        <button mat-menu-item (click)="logout()">Logout</button>
+        <button testId="logout" mat-menu-item (click)="logout()">Logout</button>
       </ng-container>
     </mat-list>
   </mat-menu>

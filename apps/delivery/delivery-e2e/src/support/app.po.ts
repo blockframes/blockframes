@@ -11,26 +11,26 @@ export class NavbarPage {
   }
 
   public openLogout() {
-    cy.get('button').contains('account_circle').click();
+    cy.get('mat-toolbar button.profile-button').click();
   }
 
   public clickLogout() {
-    cy.get('button').contains('Logout').click();
+    cy.get('button[testId=logout]').click();
     return new LandingPage();
   }
 
   public clickHome() {
-    cy.get('[testId=home]').click();
+    cy.get('button[testId=home]').click();
     return new HomePage();
   }
 
   public clickAcceptInvitationToMovie() {
-    cy.get('button').contains('Accept').last().click();
+    cy.get('div[testId=notifications] button.mat-primary').first().click();
     return new MovieTeamWorkPage();
   }
 
   public clickAcceptInvitationToDelivery() {
-    cy.get('button').contains('Accept').first().click();
+    cy.get('div[testId=notifications] button.mat-primary').first().click();
     return new DeliveryTeamWorkPage();
   }
 
@@ -53,7 +53,7 @@ export class TemplateDeleteModal {
   constructor() {}
 
   public clickConfirm() {
-    cy.get('[testId=confirm]').click();
+    cy.get('button[testId=confirm]').click();
     return new TemplateListPage();
   }
 }
@@ -84,10 +84,9 @@ export class TemplateFormPage {
     .find('button').contains('EDIT').click({force: true});
   }
 
-  public assertMaterialChanged(value: string, description: string, category: string) {
-    cy.get('h3').contains(category);
-    cy.get('mat-card').contains(value);
-    cy.get('mat-card').contains(description);
+  public assertMaterialExists(value: string, description: string, category: string) {
+    cy.get('mat-card').should((card) => expect(card).to.contain(value).to.contain(description));
+    cy.get('h3').contains(category).should('have.length', '1');
   }
 
   public clickAdd() {
@@ -177,12 +176,12 @@ export class DeliverySettingsFormPage {
 
   public clickTeamWork() {
     cy.get('a').contains('teamwork').click();
-    return new DeliveryTeamWorkPage;
+    return new DeliveryTeamWorkPage();
   }
 
   public clickDelivery() {
     cy.get('a').contains('edit').click();
-    return new DeliveryFormPage;
+    return new DeliveryFormPage();
   }
 }
 
@@ -467,6 +466,7 @@ export class HomePage extends NavbarPage {
   }
 
   public selectTemplates() {
+    cy.wait(500);
     cy.get('.mat-tab-links').get('a').contains('templates').click();
     return new TemplateListPage();
   }
