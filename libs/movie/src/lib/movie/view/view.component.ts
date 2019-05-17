@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MovieQuery, MovieStore, Movie } from '../+state';
+import { MovieQuery, Movie } from '../+state';
 import { getLabelBySlug } from '../staticModels';
 import { FormGroupLike } from '@datorama/akita';
 
@@ -18,7 +18,6 @@ export class ViewComponent implements OnInit {
 
   constructor(
     private query: MovieQuery,
-    private store: MovieStore,
   ) { }
 
   ngOnInit() {

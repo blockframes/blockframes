@@ -58,12 +58,17 @@ import { MatFormFieldModule } from '@angular/material';
 
 
 const routes: Routes = [
-  { path: '', component: DeliveryListComponent },
+  { path: '',
+    redirectTo: 'list',
+    pathMatch: 'full'
+  },
+  { path: 'list',
+    component: DeliveryListComponent
+  },
   {
     path: 'movie-materials',
     component: MovieMaterialsComponent
   },
-  { path: 'list', component: DeliveryListComponent },
   {
     path: 'view/:deliveryId',
     canActivate: [DeliveryGuard],

@@ -1,8 +1,7 @@
-<movie-home-empty *ngIf="!(hasOrgs$ | async)"></movie-home-empty>
-<section *ngIf="(hasOrgs$ | async)">
+<section *ngIf="(orgs$ | async); else empty">
   <mat-expansion-panel
-    *ngFor="let org of (orgs$ | async); first as isFirst"
-    [expanded]="isFirst"
+    *ngFor="let org of (orgs$ | async)"
+    [expanded]="true"
     class="mat-elevation-z0"
   >
     <mat-expansion-panel-header>
@@ -30,7 +29,7 @@
       <mat-card *ngFor="let movie of org.movies" class="movie-card">
         <div class="img-container clickable-item">
           <img
-            [routerLink]="['/layout', movie.id, 'list']"
+            [routerLink]="['/layout', movie.id]"
             *ngIf="movie.poster; else defaultPoster"
             mat-card-image
             src="{{ movie.poster }}"
@@ -38,7 +37,7 @@
           />
           <ng-template #defaultPoster
             ><img
-              [routerLink]="['/layout', movie.id, 'list']"
+              [routerLink]="['/layout', movie.id]"
               class="mat-card-image"
               src="/assets/images/default-movie-poster.png"
               alt="Movie poster"
@@ -76,3 +75,6 @@
     </article>
   </mat-expansion-panel>
 </section>
+<ng-template #empty>
+  <movie-home-empty></movie-home-empty>
+</ng-template>

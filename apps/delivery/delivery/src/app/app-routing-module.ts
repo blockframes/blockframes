@@ -7,7 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
-import { MovieListGuard } from '@blockframes/movie';
+import { MovieListGuard, MovieActiveGuard } from '@blockframes/movie';
 import { OrganizationListGuard } from 'libs/organization/src/lib/guards/organization-list.guard';
 
 export const routes: Routes = [
@@ -42,6 +42,8 @@ export const routes: Routes = [
       }, //ToDo find why @blockframes doesn't work
       {
         path: ':movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
         loadChildren: '@blockframes/material#DeliveryModule'
       },
     ]

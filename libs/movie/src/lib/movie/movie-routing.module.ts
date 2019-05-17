@@ -6,12 +6,10 @@ import { ContainerComponent } from './form/container.component';
 import { HomeComponent } from './home/home.component';
 import { ViewComponent } from './view/view.component';
 import { TitleFormComponent } from './title-form/title-form.component';
-import { StakeholderListComponent } from '../stakeholder/list/list.component';
 
 // Guards
 import { StakeholderViewComponent } from '../stakeholder/view/view.component';
 import { MovieActiveGuard } from './guards/movie-active.guard';
-import { MovieListGuard } from './guards/movie-list.guard';
 
 
 export const routes: Routes = [

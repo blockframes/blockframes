@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -7,20 +7,18 @@ import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
   styleUrls: ['./form.promotional.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormPromotionalComponent implements OnInit {
-  
+export class FormPromotionalComponent {
+
   @Input() movieForm: FormGroup;
   @Input() images: FormArray;
   @Input() promotionalElements: FormArray;
   @Input() removeFormControl: any;
   @Input() addFormControl: any;
   @Input() currentFormValue: any;
-  
+
   constructor(
     private builder: FormBuilder,
   ) {}
-
-  ngOnInit() {}
 
   public setImage(image: string, index: number): void {
     this.images.controls[index].setValue(image);
