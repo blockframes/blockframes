@@ -8,7 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieListGuard, MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationListGuard } from 'libs/organization/src/lib/guards/organization-list.guard';
+import { OrganizationListGuard } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },

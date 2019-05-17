@@ -17,7 +17,7 @@ export abstract class StateListGuard<T> implements CanActivate, CanDeactivate<an
         tap(entities => this.store.set(entities))
       ).subscribe({
         next: result => res(!!result),
-        error: err => {res(this.router.parseUrl(this.urlFallback))}
+        error: err => res(this.router.parseUrl(this.urlFallback))
       })
     })
   }
@@ -59,8 +59,7 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
         }))
       ).subscribe({
         next: result => res(!!result),
-        error: err => {
-          res(this.router.parseUrl(this.urlFallback))}
+        error: err => res(this.router.parseUrl(this.urlFallback))
       });
     })
   }
