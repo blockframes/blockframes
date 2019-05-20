@@ -110,7 +110,7 @@ export async function onDeliveryUpdate (
           materialDelivery.description === materialMovie.description
       );
       if (!!materialExist) {
-        materialExist.deliveriesIds.push(delivery.id);
+        materialExist.deliveriesIds.push(delivery.id); // TODO: Check if delivery.id already exists before pushing
         const updatedMaterial = { ...materialExist, state: 'pending' };
         return db
           .doc(`movies/${delivery.movieId}/materials/${materialExist.id}`)

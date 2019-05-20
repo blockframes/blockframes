@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
 import { MatDialog, MatSnackBar } from '@angular/material';
@@ -6,7 +6,6 @@ import { NewTemplateComponent } from '../delivery-new-template/new-template.comp
 import { Material, MaterialDeliveryForm } from '../../material/+state/material.model';
 import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';
 import { DeliveryService } from '../+state/delivery.service';
-import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../+state';
@@ -19,13 +18,12 @@ import { applyTransaction } from '@datorama/akita';
   styleUrls: ['./delivery-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryFormComponent implements OnInit, OnDestroy {
+export class DeliveryFormComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<TemplateView>;
   public movie$: Observable<Movie>;
   public form$: Observable<MaterialDeliveryForm>;
   public isDeliveryValidated$: Observable<boolean>;
-  public isAlive = true;
   public materialId: string;
   public allChecked: boolean;
 
@@ -43,22 +41,11 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.materialService
-      .subscribeOnDeliveryMaterials$()
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe();
-
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
     this.materials$ = this.materialQuery.materialsByDelivery$;
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
     this.form$ = this.materialQuery.deliveryForm$;
-
-    this.isDeliveryValidated$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(isDeliveryValidated =>
-        isDeliveryValidated ? this.materialStore.clearForm() : false
-      );
 
     this.allChecked = false;
   }
@@ -158,7 +145,4 @@ export class DeliveryFormComponent implements OnInit, OnDestroy {
     this.allChecked = false;
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

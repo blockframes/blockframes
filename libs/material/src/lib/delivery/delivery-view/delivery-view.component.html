@@ -1,5 +1,5 @@
 
-  <section fxLayout="row" fxLayoutGap="35px">
+  <section *ngIf="(delivery$ | async) as delivery" fxLayout="row" fxLayoutGap="35px">
     <article class="progress-spinner-block" fxLayoutAlign="center start">
       <mat-card
         *ngIf="(progressionValue$ | async) as value; else empty"
@@ -49,7 +49,7 @@
         </mat-card>
       </ng-template>
     </article>
-    <article class="materials">
+    <article *ngIf="(movie$ | async) as movie" class="materials">
       <div class="materials" fxLayoutAlign="space-between center">
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">

@@ -4,7 +4,6 @@ import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieQuery } from '@blockframes/movie';
-import { MaterialStore } from '../../material/+state/material.store';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
 import { materialsByCategory, MaterialQuery } from '../../material/+state/material.query';
@@ -16,21 +15,19 @@ import { TemplateView } from '../../template/+state';
   providedIn: 'root'
 })
 export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
+
   public isDeliveryValidated$ = combineLatest([
-    this.selectActive(delivery => delivery.validated),
-    this.selectActive(delivery => delivery.stakeholders)
-  ]).pipe(
-    filter(([validated, stakeholders]) => !!validated && !!stakeholders),
-    map(([validated, stakeholders]) => validated.length === stakeholders.length)
-  );
+      this.selectActive(delivery => delivery.validated),
+      this.selectActive(delivery => delivery.stakeholders)
+    ]).pipe(
+      filter(([validated, stakeholders]) => !!validated && !!stakeholders),
+      map(([validated, stakeholders]) => validated.length === stakeholders.length)
+    );
 
   public steps$ = this.selectActive(delivery => delivery.steps);
+
   /** Returns the active delivery materials sorted by category */
   public currentTemplateView: Observable<TemplateView> = this.materialQuery.selectAll().pipe(
-    map(materials => materialsByCategory(materials))
-  );
-
-  public currentMovieTemplateView: Observable<TemplateView> = this.materialQuery.selectAll().pipe(
     map(materials => materialsByCategory(materials))
   );
 
@@ -38,7 +35,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialQuery: MaterialQuery,
-    private materialStore: MaterialStore,
     private organizationQuery: OrganizationQuery,
     private db: AngularFirestore
   ) {
@@ -47,40 +43,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   get hasStep(): boolean {
     return this.getActive().steps.length > 0;
-  }
-
-  /** Set the store with materials from active movie */
-  public materialsByActiveMovie() {
-    return this.movieQuery.selectActive().pipe(
-      switchMap(movie =>
-        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
-      ),
-      tap(materials => this.materialStore.set(materials))
-    );
-  }
-
-  /** Set the store with movie materials from active delivery */
-  public materialsByActiveDelivery() {
-    return this.movieQuery.selectActive().pipe(
-      switchMap(movie =>
-        this.db
-          .collection<Material>(`movies/${movie.id}/materials`)
-          .valueChanges()
-          .pipe(
-            map(materials => {
-              const id = this.getActiveId();
-              return materials.filter(material => material.deliveriesIds.includes(id));
-            }),
-            map(materials =>
-              materials.map(material => ({
-                ...material,
-                step: this.getActive().steps.find(step => step.id === material.stepId)
-              }))
-            )
-          )
-      ),
-      tap(materials => this.materialStore.set(materials))
-    );
   }
 
   /** Returns the progression % of the delivery */

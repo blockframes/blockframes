@@ -14,8 +14,8 @@ import { takeWhile } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryViewComponent implements OnInit, OnDestroy {
-  public movie: Movie;
-  public delivery: Delivery;
+  public movie$: Observable<Movie>;
+  public delivery$: Observable<Delivery>;
   public materials$: Observable<TemplateView>;
   public materialsSnap: Object;
   public progressionValue$: Observable<number>;
@@ -31,12 +31,8 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.query
-      .materialsByActiveDelivery()
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(); // TODO : remove after Cannes in favor of routes.
-    this.delivery = this.query.getActive();
-    this.movie = this.movieQuery.getActive();
+    this.delivery$ = this.query.selectActive();
+    this.movie$ = this.movieQuery.selectActive();
     this.materials$ = this.query.currentTemplateView;
     this.progressionValue$ = this.query.deliveryProgression$;
     this.allChecked = false;
