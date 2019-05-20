@@ -5,7 +5,7 @@ import { Stakeholder } from "@blockframes/movie/stakeholder/+state";
 export interface Movie {
   id: string,
   org?: Organization,
-  title: any, // will contain all titles: original, international, suiss, etc
+  title: Title, // will contain all titles: original, international, suiss, etc
   directorName: string,
   poster: string,
   productionYear: number,
@@ -36,6 +36,11 @@ export interface Movie {
   selectionCategories: string,
   materials?: Material[];
   stakeholders?: Stakeholder[];
+}
+
+interface Title {
+  original: string;
+  international?: string;
 }
 
 /**

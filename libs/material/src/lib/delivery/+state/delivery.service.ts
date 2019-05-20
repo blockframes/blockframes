@@ -115,6 +115,7 @@ export class DeliveryService {
         )
       );
     }
+    return id;
   }
 
   public async addMovieMaterialsDelivery() {
@@ -138,7 +139,7 @@ export class DeliveryService {
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
-    return Promise.all(
+    await Promise.all(
       movieMaterials.map(material =>
         this.db
           .doc<Material>(`deliveries/${id}/materials/${material.id}`)
@@ -150,6 +151,7 @@ export class DeliveryService {
           })
       )
     );
+    return id;
   }
 
   public updateDueDate(dueDate: Date) {
@@ -195,7 +197,7 @@ export class DeliveryService {
   public signDelivery() {
     const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
     const { validated } = this.query.getActive();
-    const stakeholders = this.stakeholderQuery.getAll();
+    const { stakeholders } = this.query.getActive();
 
     const stakeholderSignee = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId));
 

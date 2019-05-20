@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { DeliveryQuery, DeliveryService, Delivery } from '../+state';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { MaterialStore, MaterialQuery } from '../../material/+state';
-import { Router } from '@angular/router';
 import { TemplateView } from '../../template/+state';
 import { applyTransaction } from '@datorama/akita';
 import { takeWhile } from 'rxjs/operators';
@@ -29,7 +28,6 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
     private service: DeliveryService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
-    private router: Router
   ) {}
 
   ngOnInit() {
@@ -61,10 +59,6 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
     this.service.updateMaterialState(materials, state);
     this.materialStore.returnToInitialState();
     this.allChecked = false;
-  }
-
-  public editDelivery() {
-    this.router.navigate([`layout/${this.movie.id}/${this.query.getActiveId()}/edit`]);
   }
 
   ngOnDestroy() {

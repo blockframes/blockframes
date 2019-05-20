@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService } from '../../delivery/+state/delivery.service';
 import { takeWhile } from 'rxjs/operators';
-import { DeliveryQuery } from '../../delivery/+state';
 
 @Component({
   selector: 'delivery-template-picker',
@@ -20,6 +19,7 @@ import { DeliveryQuery } from '../../delivery/+state';
 })
 export class TemplatePickerComponent implements OnInit, OnDestroy {
   private isAlive = true;
+  public movieId = this.movieQuery.getActiveId();
   public templates$: Observable<Template[]>;
 
   constructor(
@@ -29,7 +29,6 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
-    private deliveryQuery: DeliveryQuery,
     private query: TemplateQuery,
     private router: Router,
   ) {}
@@ -46,22 +45,20 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     this.templates$ = this.query.selectAll();
   }
 
-  public createDelivery(templateId?: string, ) {
-    const movieId = this.movieQuery.getActiveId();
-
+  public async createDelivery(templateId?: string, ) {
+    this.close();
     if (!!templateId) {
       this.templateStore.setActive(templateId);
     }
 
-    this.deliveryService.addDelivery(templateId);
-    this.router.navigate([`layout/${movieId}/${this.deliveryQuery.getActiveId()}/settings`]);
-    this.close();
+    const deliveryId = this.deliveryService.addDelivery(templateId);
+    this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
   }
 
   public async useMovieAsTemplate(){
     this.close();
-    await this.deliveryService.addMovieMaterialsDelivery();
-    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/${this.deliveryQuery.getActiveId()}/settings`]);
+    const deliveryId = await this.deliveryService.addMovieMaterialsDelivery();
+    this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
   }
 
   public close() {

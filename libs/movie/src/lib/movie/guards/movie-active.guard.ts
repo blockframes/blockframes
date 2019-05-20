@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
 import { Movie, MovieStore } from '../+state';
 import { Router } from '@angular/router';
-import { Stakeholder } from '@blockframes/movie/stakeholder/+state';
+import { Stakeholder } from '../../stakeholder/+state'
 import { Organization } from '@blockframes/organization';
 
 export const movieActiveQuery = (movieId: string): Query<Movie> => ({
