@@ -30,7 +30,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     private templateStore: TemplateStore,
     private movieQuery: MovieQuery,
     private query: TemplateQuery,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -39,7 +39,10 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe();
 
-
+    this.service
+      .allTemplates()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe();
     this.templates$ = this.query.selectAll();
   }
 
@@ -53,7 +56,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
   }
 
-  public async useMovieAsTemplate(){
+  public async useMovieAsTemplate() {
     this.close();
     const deliveryId = await this.deliveryService.addMovieMaterialsDelivery();
     this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
