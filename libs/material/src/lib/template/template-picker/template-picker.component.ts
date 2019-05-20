@@ -51,7 +51,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
       this.templateStore.setActive(templateId);
     }
 
-    const deliveryId = this.deliveryService.addDelivery(templateId);
+    const deliveryId = await this.deliveryService.addDelivery(templateId);
     this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
   }
 

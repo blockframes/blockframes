@@ -89,7 +89,7 @@ export class DeliveryService {
    *
    * @param templateId if templateId is present, the materials sub-collection is populated with materials from this template
    */
-  public addDelivery(templateId?: string) {
+  public async addDelivery(templateId?: string) {
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
     const movieId = this.movieQuery.getActiveId();
@@ -109,11 +109,12 @@ export class DeliveryService {
       const filterByMaterialId = material =>
         this.templateQuery.getActive().materialsId.includes(material.id);
       const materials = this.materialQuery.getAll({ filterBy: filterByMaterialId });
-      return Promise.all(
+      await Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
         )
       );
+      return id;
     }
     return id;
   }
