@@ -4,12 +4,10 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
-  OnDestroy,
   Input
 } from '@angular/core';
-import { Material, MaterialQuery, MaterialStore } from '../+state';
+import { Material, MaterialStore } from '../+state';
 import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Step, DeliveryQuery } from '../../delivery/+state';
 
@@ -19,13 +17,12 @@ import { Step, DeliveryQuery } from '../../delivery/+state';
   styleUrls: ['./material-delivery-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
+export class MaterialDeliveryAddFormComponent implements OnInit {
   @Input() isDeliveryValidated: boolean;
   @Output() add = new EventEmitter<Material>();
 
   public steps$: Observable<Step[]>;
   public hasStep: boolean;
-  private isAlive = true;
   public form = new FormGroup({
     value: new FormControl(''),
     description: new FormControl(''),
@@ -34,7 +31,6 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private query: MaterialQuery,
     private store: MaterialStore,
     private deliveryQuery: DeliveryQuery
   ) {}
@@ -42,14 +38,6 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.steps$ = this.deliveryQuery.steps$;
     this.hasStep = this.deliveryQuery.hasStep;
-
-    this.query
-      .select(state => state.materialDeliveryForm)
-      .pipe(
-        takeWhile(() => this.isAlive),
-        filter(materialDeliveryForm => !!materialDeliveryForm)
-      )
-      .subscribe(materialDeliveryForm => this.form.setValue(materialDeliveryForm));
   }
 
   public updateMaterial() {
@@ -66,7 +54,4 @@ export class MaterialDeliveryAddFormComponent implements OnInit, OnDestroy {
       : "end end"
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

@@ -1,11 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeliveryQuery, DeliveryService, Delivery } from '../+state';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { MaterialStore, MaterialQuery } from '../../material/+state';
 import { TemplateView } from '../../template/+state';
 import { applyTransaction } from '@datorama/akita';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-view',
@@ -13,14 +12,12 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./delivery-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryViewComponent implements OnInit, OnDestroy {
+export class DeliveryViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public delivery$: Observable<Delivery>;
   public materials$: Observable<TemplateView>;
-  public materialsSnap: Object;
   public progressionValue$: Observable<number>;
   public allChecked: boolean;
-  public isAlive = true;
 
   constructor(
     private query: DeliveryQuery,
@@ -57,7 +54,4 @@ export class DeliveryViewComponent implements OnInit, OnDestroy {
     this.allChecked = false;
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

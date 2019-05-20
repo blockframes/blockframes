@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Material } from './material.model';
 import { OrganizationQuery } from '@blockframes/organization';
@@ -19,48 +19,6 @@ export class MaterialService {
     private deliveryQuery: DeliveryQuery,
     private movieQuery: MovieQuery,
   ) {}
-
-  public subscribeOnDeliveryMaterials$() {
-    // TODO : switch this to FireQuery
-    return this.deliveryQuery.selectActive().pipe(
-      filter(delivery => !!delivery),
-      switchMap(delivery =>
-        this.db
-          .collection<any>(`deliveries/${delivery.id}/materials`)
-          .valueChanges()
-          .pipe(
-            map(materials => {
-              return materials.map(material => {
-                const step = delivery.steps.find(deliveryStep => deliveryStep.id === material.stepId);
-                return { ...material, step }
-              });
-            })
-          )
-      ),
-      tap(materials => this.store.set(materials))
-    );
-  }
-
-  public subscribeOnMovieMaterials$() {
-    // TODO : switch this to FireQuery
-    return this.movieQuery.selectActive().pipe(
-      filter(movie => !!movie),
-      switchMap(movie =>
-        this.db
-          .collection<any>(`movies/${movie.id}/materials`)
-          .valueChanges()
-          .pipe(
-            map(materials =>
-              materials.map(material =>({
-                ...material,
-                step: this.deliveryQuery.getActive().steps.find(step => step.id === material.stepId)
-              }))
-            )
-          )
-      ),
-      tap(materials => this.store.set(materials))
-    );
-  }
 
   public subscribeOnAllOrgsMaterials$() {
     return this.organizationQuery.selectAll().pipe(
