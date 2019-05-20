@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryDB } from '../+state';
 import { switchMap, map } from 'rxjs/operators';
-import { MovieQuery, Stakeholder } from '@blockframes/movie';
-import { Organization } from '@blockframes/organization';
+import { MovieQuery } from '@blockframes/movie';
+
 
 const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
   path: `deliveries`,
   queryFn: ref => ref.where('movieId', '==', movieId),
-  stakeholders: (delivery: DeliveryDB): Query<Stakeholder> => ({
+  stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
-    organization: (stakeholder: Stakeholder): Query<Organization> => ({
+    organization: stakeholder => ({
       path: `orgs/${stakeholder.orgId}`
     })
   })

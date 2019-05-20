@@ -3,14 +3,12 @@ import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
 import { Delivery, DeliveryStore, modifyTimestampToDate, DeliveryDB } from '../+state';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { Stakeholder } from '@blockframes/movie';
-import { Organization } from '@blockframes/organization';
 
 export const deliveryActiveQuery = (deliveryId: string): Query<DeliveryDB> => ({
   path: `deliveries/${deliveryId}`,
-  stakeholders: (delivery: DeliveryDB): Query<Stakeholder> => ({
+  stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
-    organization: (stakeholder: Stakeholder): Query<Organization> => ({
+    organization: stakeholder => ({
       path: `orgs/${stakeholder.orgId}`
     })
   })

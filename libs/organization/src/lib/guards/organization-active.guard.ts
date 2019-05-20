@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 export const orgActiveQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
-  members: (org: Organization) =>
+  members: org =>
     org.userIds.map(uid => ({
       path: `users/${uid}`
     }))

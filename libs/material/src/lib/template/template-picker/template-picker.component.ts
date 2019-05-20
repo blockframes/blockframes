@@ -45,7 +45,7 @@ export class TemplatePickerComponent implements OnInit, OnDestroy {
     this.templates$ = this.query.selectAll();
   }
 
-  public async createDelivery(templateId?: string, ) {
+  public async createDelivery(templateId?: string) {
     this.close();
     if (!!templateId) {
       this.templateStore.setActive(templateId);

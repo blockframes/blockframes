@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
 import { Movie, MovieStore } from '../+state';
 import { Router } from '@angular/router';
-import { Stakeholder } from '../../stakeholder/+state'
-import { Organization } from '@blockframes/organization';
 
 export const movieActiveQuery = (movieId: string): Query<Movie> => ({
   path: `movies/${movieId}`,
-  stakeholders: (movie: Movie): Query<Stakeholder> => ({
+  stakeholders: movie => ({
     path: `movies/${movie.id}/stakeholders`,
-    organization: (stakeholder: Stakeholder): Query<Organization> => ({
+    organization: stakeholder => ({
       path: `orgs/${stakeholder.orgId}`
     })
   })
