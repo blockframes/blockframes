@@ -10,6 +10,15 @@ export class NavbarPage {
     cy.get('.account-icon', {timeout: 60000}).contains('account_circle');
   }
 
+  public assertEncryptingExists() {
+    cy.get('mat-chip').contains('ENCRYPTING');
+  }
+
+  public clickOnOrganization(orgName: string) {
+    cy.get('button').contains(orgName).click();
+    return new OrganizationFormPage();
+  }
+
   public openLogout() {
     cy.get('mat-toolbar button.profile-button').click();
   }
@@ -55,6 +64,53 @@ export class TemplateDeleteModal {
   public clickConfirm() {
     cy.get('button[testId=confirm]').click();
     return new TemplateListPage();
+  }
+}
+
+
+export class OrganizationFormPage extends NavbarPage {
+  constructor() {
+    super();
+  }
+
+  public clickAdd() {
+    cy.get('button[testId=addMember]').click();
+  }
+
+  public selectRole(role: string) {
+    cy.get('input[formcontrolname=role]').click();
+    cy.get('mat-option').contains(role).click();
+  }
+
+  public assertEmailValidated(email: string) {
+    cy.get('input[formControlName=user]').should(input => {
+      expect(input.val()).to.contain(email);
+    })
+  }
+
+  public fillAndSelectEmail(partialEmail: string, email: string) {
+    cy.get('input[formcontrolname=user]').type(partialEmail);
+    cy.wait(1000);
+    cy.get('input[formcontrolname=user]').click();
+    cy.get('mat-option').contains(email).click();
+  }
+
+  public assertOrgNameExists(orgName: string) {
+    cy.wait(1500);
+    cy.get('mat-card-title').contains(orgName);
+  }
+
+  public fillOrgName(orgName: string) {
+    cy.get('input[formcontrolname=name]').type(orgName);
+  }
+
+  public fillOrgAddress(orgAddress: string) {
+    cy.get('textarea[formcontrolname=address]').type(orgAddress);
+  }
+
+  public clickNext() {
+    cy.get('button.mat-primary').click();
+    return new HomePage();
   }
 }
 
@@ -523,6 +579,11 @@ export class HomePage extends NavbarPage {
   public assertOrgExists(orgName: string) {
     cy.wait(2000);
     cy.get('mat-expansion-panel').contains(orgName);
+  }
+
+  public clickCreateAnOrganization() {
+    cy.get('[testId=home-empty]').find('button').click();
+    return new OrganizationFormPage();
   }
 
   public clickOnMovie(movieName: string) {
