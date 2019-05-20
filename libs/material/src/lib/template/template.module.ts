@@ -38,7 +38,7 @@ const routes: Routes = [
     canDeactivate: [TemplateListGuard],
   },
   {
-    path: ':orgId/:templateId',
+    path: ':templateId',
     component: TemplateFormComponent, // TODO rename in TemplateActiveForm
     canActivate: [TemplateActiveGuard],
     canDeactivate: [TemplateActiveGuard],

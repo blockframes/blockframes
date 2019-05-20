@@ -1,60 +1,38 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanDeactivate, UrlTree, Router } from '@angular/router';
-import { TemplateStore, Template } from '../+state';
-import { StateListGuard } from 'libs/utils/src/lib/state-guard';
-import { map, takeWhile, switchMap, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
+import { Template, TemplateStore } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery, Query } from '@blockframes/utils';
-import { combineLatest } from 'rxjs';
-import { applyTransaction } from '@datorama/akita';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-export const templateListQuery = (orgId: string): Query<Template[]> => ({
-  path: `orgs/${orgId}/templates`,
-  orgId
-})
+const templateListQuery = (orgId: string): Query<Template[]> => ({
+  path: `templates`,
+  queryFn: ref => ref.where('orgId', '==', orgId)
+});
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TemplateListGuard extends StateListGuard implements CanActivate, CanDeactivate<any> {
+@Injectable({ providedIn: 'root' })
+export class TemplateListGuard extends StateListGuard<Template> {
+  urlFallback = 'layout';
+
   constructor(
-    private store: TemplateStore,
-    private router: Router,
-    private orgQuery: OrganizationQuery,
     private fireQuery: FireQuery,
+    private orgQuery: OrganizationQuery,
+    store: TemplateStore,
+    router: Router
   ) {
-    super();
+    super(store, router);
   }
 
-  startListeningOnList(): Promise<boolean | UrlTree> {
-    return new Promise((res, rej) => {
-      this.listenOnList = true;
-
-      this.orgQuery.selectAll().pipe(
-        switchMap(orgs => {
-          const templates$ = orgs.map(org => {
-            const query = templateListQuery(org.id);
-            return this.fireQuery.fromQuery(query);
-          });
-          return combineLatest(templates$);
-        }),
-        map(templates => [].concat(...templates)),
-        tap(templates => this.store.set(templates)),
-        takeWhile(_ => !!this.listenOnList),
-      ).subscribe({
-        next: templates => res(!!templates),
-        error: _ => res(this.router.parseUrl('layout'))
-      });
-    });
-
-  }
-
-  canActivate(): Promise<boolean | UrlTree> {
-    return this.startListeningOnList()
-  }
-
-  canDeactivate() {
-    this.stopListeningOnList(); // this correctly unsubscribe when leaving the route !!!
-    return true;
+  get query(): Observable<Template[]> {
+    return this.orgQuery.selectAll().pipe(
+      switchMap(orgs => {
+        const templates$ = orgs.map(org => {
+          const query = templateListQuery(org.id);
+          return this.fireQuery.fromQuery<Template[]>(query);
+        });
+        return [].concat(templates$);
+      })
+    )
   }
 }

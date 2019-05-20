@@ -4,7 +4,7 @@
     <mat-form-field appearance="outline" fxLayoutAlign="center">
       <mat-label>Choose your organization</mat-label>
       <mat-select formControlName="organization" #organization>
-        <mat-option *ngFor="let org of (orgs$ | async)" [value]="org.id">
+        <mat-option *ngFor="let org of (orgs$ | async)" [value]="org">
           {{ org.name }}
         </mat-option>
       </mat-select>

@@ -106,12 +106,10 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
     if (!!templateId) {
-
-      const filterByMaterialId = (material: Material) => {
-        return this.templateQuery.getActive().materialsId.includes(material.id);
-      }
-
-      const materials = this.materialQuery.getAll({ filterBy: filterByMaterialId });
+      const snapshot = await this.db
+        .collection<Material>(`templates/${templateId}/materials/`)
+        .ref.get();
+      const materials = snapshot.docs.map(doc => doc.data()) as Material[];
       await Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)

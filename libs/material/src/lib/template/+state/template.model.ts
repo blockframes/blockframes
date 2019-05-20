@@ -4,7 +4,6 @@ export interface Template {
   id: string;
   name: string;
   materials?: Material[];
-  materialsId: string[];
   orgId?: string; // only storage in akita store
   orgName?: string; // only storage in akita store
 }
@@ -25,7 +24,6 @@ export interface TemplatesByOrgs {
  */
 export function createTemplate(template: Partial<Template>) {
   return template ? {
-    materialsId: [],
     ...template
   } as Template : {} as Template
 }

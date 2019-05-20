@@ -7,7 +7,6 @@ import { map, switchMap, filter, pluck, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { templateListQuery } from '../guards/template-list.guard';
 
 export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
   return templates.reduce(
