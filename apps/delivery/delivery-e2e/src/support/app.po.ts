@@ -457,8 +457,27 @@ export class MovieEditPage {
   public static FIELD_DIRECTOR_NAME = 'directorName';
   public static FIELD_PRODUCTION_YEAR = 'productionYear';
 
+  public static OPTION_TYPES = 'types';
+  public static OPTION_GENRES = 'genres';
+  public static OPTION_ORIGIN_COUNTRY = 'originCountry';
+  public static OPTION_PRODUCER_COUNTRY = 'coProducerCountries';
+  public static OPTION_LANGUAGES = 'languages';
+  public static OPTION_STATUS = 'status';
+
   constructor() {
-    cy.get('button[testId=saveMovie]');
+  }
+
+  public clickHome() {
+    cy.get('button[testId=home]').click({force: true});
+    return new HomePage();
+  }
+
+  public clickSaveMovie() {
+    cy.get('button[testId=saveMovie]').click({force: true});
+  }
+
+  public assertMovieTitleExists(movieName: string) {
+    cy.get('mat-card').contains(movieName);
   }
 
   public assertInputAndViewValueExists(controlName: string, value: string) {
@@ -472,10 +491,16 @@ export class MovieEditPage {
     cy.get(`input[formControlName=${controlName}]`).type(value);
   }
 
-  public selectValue(controlName: string, values: string[]) {
+  public selectOptions(controlName: string, values: string[]) {
     cy.get(`mat-select[formControlName=${controlName}]`).click();
-    values.forEach(value => cy.get(`mat-option[ng-reflect-value=${value}]`).click());
-    //TODO: click next to
+    values.forEach(value => cy.get(`mat-option[ng-reflect-value=${value}]`).scrollIntoView().click({force: true}));
+  }
+
+  public assertOptionsExist(values: string[]) {
+    values.forEach(value => {
+      value = value[0].toLocaleUpperCase() + value.substring(1);
+      cy.get('mat-card').contains(value);
+    });
   }
 }
 
@@ -489,6 +514,10 @@ export class HomePage extends NavbarPage {
     cy.get('mat-expansion-panel').should('contain', orgName).find('button.add-movie').click();
     return new AddMovieModal();
   }
+
+  public assertMovieNotExists(movieName: string) {
+    cy.contains(movieName).should('have.length', 0);
+}
 
   public assertOrgExists(orgName: string) {
     cy.wait(2000);
@@ -513,6 +542,16 @@ export class HomePage extends NavbarPage {
   public selectApp() {
     cy.get('button').should('contain', 'Current app').contains('Current app').click();
     return new DeliveryListPage();
+  }
+
+  public clickEdit() {
+    cy.get('button').should('contain', 'Edit').contains('Edit').click();
+    return new MovieEditPage();
+  }
+
+  public clickDelete() {
+    cy.get('button').should('contain', 'Delete').contains('Delete').click();
+    return new MovieEditPage();
   }
 
   public selectTemplates() {
