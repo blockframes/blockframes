@@ -40,6 +40,14 @@ export const CONTEXT_MENU = [
     ]
   },
   {
+    route: '/layout/:movieId/template-picker',
+    items: [
+      { name: 'delivery schedules', path: '/layout/:movieId/list'},
+      { name: 'movie materials', path: '/layout/:movieId/movie-materials'},
+      { name: 'template picker', path: '/layout/:movieId/template-picker'},
+    ]
+  },
+  {
     route: '/layout/:movieId/:deliveryId/view',
     items: [
       { name: 'delivery schedules', path: '/layout/:movieId/list'},

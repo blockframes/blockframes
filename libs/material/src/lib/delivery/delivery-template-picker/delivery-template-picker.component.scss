@@ -1,3 +1,7 @@
+main {
+  margin: 100px 300px;
+}
+
 mat-card {
   box-shadow: -10px 11px 32px 0 rgba(0, 0, 0, 0.2);
 }
@@ -10,32 +14,11 @@ h3 {
   margin: 0;
 }
 
-.blank {
-  color: var(--primary);
-  font-weight: bold;
-  font-size: 12px;
-  margin-top: 2px;
-}
-
-.create-icon {
-  color: var(--primary);
-  margin-right: 5px;
-}
-
-.create-card {
-  border: solid 1px var(--primary);
-  box-shadow: none;
-}
-
 mat-card-title {
   font-size: 12px;
   font-weight: 600;
   margin-bottom: -10px;
   text-align: center;
-}
-
-.icon {
-  width: 20%;
 }
 
 .trigger {
@@ -69,4 +52,16 @@ p {
   font-size: 14px;
   margin-bottom: 25px;
   margin-top: 5px;
+}
+
+.add-button,
+.movie-materials-button {
+  color: var(--primary);
+  padding: 5px;
+  height: 45px;
+  border: solid 1px var(--primary);
+}
+
+.add-button {
+  margin-right: 30px;
 }

@@ -10,7 +10,7 @@ import { DeliveryListComponent } from './delivery-list/delivery-list.component';
 import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
 import { NewTemplateComponent } from './delivery-new-template/new-template.component';
 import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
-import { TemplatePickerComponent } from '../template/template-picker/template-picker.component';
+import { DeliveryTemplatePickerComponent } from './delivery-template-picker/delivery-template-picker.component';
 import { DeliveryTeamWorkViewComponent } from './delivery-team-work-view/delivery-team-work-view.component';
 import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
 import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
@@ -69,16 +69,25 @@ import {
   MovieMaterialsGuard,
   SignedDeliveryMaterialsGuard,
  } from '../material';
+import { TemplateListGuard } from '../template/guards/template-list.guard';
 
 const routes: Routes = [
-  { path: '',
+  {
+    path: '',
     redirectTo: 'list',
     pathMatch: 'full'
   },
-  { path: 'list',
+  {
+    path: 'list',
     canActivate: [DeliveryListGuard],
     canDeactivate: [DeliveryListGuard],
     component: DeliveryListComponent
+  },
+  {
+    path: 'template-picker',
+    canActivate: [TemplateListGuard],
+    canDeactivate: [TemplateListGuard],
+    component: DeliveryTemplatePickerComponent
   },
   {
     path: 'movie-materials',
@@ -128,7 +137,7 @@ const routes: Routes = [
     DeliveryFormComponent,
     NewTemplateComponent,
     DeliveryTeamWorkViewComponent,
-    TemplatePickerComponent,
+    DeliveryTemplatePickerComponent,
     StakeholderListComponent,
     StakeholderItemComponent,
     DeliveryItemComponent,
@@ -180,6 +189,6 @@ const routes: Routes = [
 
     RouterModule.forChild(routes)
   ],
-  entryComponents: [TemplatePickerComponent, NewTemplateComponent, DeliverySignComponent,]
+  entryComponents: [NewTemplateComponent, DeliverySignComponent,]
 })
 export class DeliveryModule {}

@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Delivery } from '../+state/delivery.model';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
-import { TemplatePickerComponent } from '../../template/template-picker/template-picker.component';
 import { DeliveryService, DeliveryQuery } from '../+state';
 import { Router } from '@angular/router';
 
@@ -23,7 +21,6 @@ export class DeliveryListComponent implements OnInit {
     private movieQuery: MovieQuery,
     private service: DeliveryService,
     private router: Router,
-    private dialog: MatDialog,
     private query: DeliveryQuery,
   ) {}
 
@@ -37,10 +34,6 @@ export class DeliveryListComponent implements OnInit {
     validated
       ? this.router.navigate([`layout/${movieId}/${delivery.id}/view`])
       : this.router.navigate([`layout/${movieId}/${delivery.id}/edit`]);
-  }
-
-  public openDialog() {
-    this.dialog.open(TemplatePickerComponent, { width: '50%' });
   }
 
 }
