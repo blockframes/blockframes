@@ -38,7 +38,7 @@ describe('Test CRUD movie', () => {
     const p2: HomePage = p1.login();
     p2.assertOrgExists(ORG_CYTEST);
 
-    //Create a movie
+    // Create a movie
     const p3: AddMovieModal = p2.clickAddMovie(ORG_CYTEST);
     p3.fillMovieName(MOVIE_CYTEST);
     const p4: MovieEditPage = p3.clickCreate();
@@ -55,7 +55,7 @@ describe('Test CRUD movie', () => {
     })
     p4.clickSaveMovie();
 
-    //Go to home page and comeback to verify saved informations
+    // Go to home page and comeback to verify saved informations
     const p5: HomePage = p4.clickHome();
     p5.displayMovieMenu(MOVIE_CYTEST);
     const p6: MovieEditPage = p5.clickEdit();
@@ -66,7 +66,7 @@ describe('Test CRUD movie', () => {
       p6.assertOptionsExist(option[1]);
     })
 
-    //Go to home page and delete the movie
+    // Go to home page and delete the movie
     const p7: HomePage = p6.clickHome();
     p7.displayMovieMenu(MOVIE_CYTEST);
     p7.clickDelete();
