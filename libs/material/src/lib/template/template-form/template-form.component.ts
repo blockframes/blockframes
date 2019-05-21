@@ -73,15 +73,15 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
         title: 'Delete template',
         question: 'Are you sure you want to delete this template ?',
         buttonName: 'Delete',
-        onConfirm: () => this.deleteDelivery(id, name)
+        onConfirm: () => this.deleteTemplate(id, name)
       }
     });
   }
 
-  private deleteDelivery(id: string, name: string) {
+  private deleteTemplate(id: string, name: string) {
     this.service.deleteTemplate(id);
     this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
-    this.router.navigate(['layout/template/list']);
+    this.router.navigate(['layout/templates/list']);
   }
 
   openUpdateForm(material) {

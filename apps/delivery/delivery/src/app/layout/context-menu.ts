@@ -2,7 +2,7 @@ export const CONTEXT_MENU = [
   {
     route: 'default',
     items: [
-      { name: 'templates', path: '/layout/template/list' },
+      { name: 'templates', path: '/layout/templates/list' },
     ]
   },
   {
@@ -13,15 +13,15 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/template/list',
+    route: '/layout/templates/list',
     items: [
-      { name: 'templates', path: '/layout/template/list'},
+      { name: 'templates', path: '/layout/templates/list'},
     ]
   },
   {
     route: '/layout/template/:templateId',
     items: [
-      { name: 'templates', path: '/layout/template/list'},
+      { name: 'templates', path: '/layout/templates/list'},
       { name: 'edit', path: '/layout/template/:templateId'}
     ]
   },

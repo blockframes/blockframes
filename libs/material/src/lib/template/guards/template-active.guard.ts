@@ -21,6 +21,6 @@ export class TemplateActiveGuard extends StateActiveGuard<Template> {
 
   query({ templateId }) {
     const query = templateActiveQuery(templateId);
-    return this.fireQuery.fromQuery(query);
+    return this.fireQuery.fromQuery<Template>(query);
   }
 }

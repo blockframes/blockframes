@@ -19,9 +19,9 @@ export class TemplateAddComponent {
   ) {}
 
   public addTemplate(templateName: string) {
-    const idTemplate = this.service.addTemplate(templateName, this.data.org);
+    const templateId = this.service.addTemplate(templateName, this.data.org);
     this.close();
-    this.router.navigate([`layout/template/${this.data.org.id}/${idTemplate}`])
+    this.router.navigate([`layout/templates/${templateId}`])
   }
 
   public close(): void {

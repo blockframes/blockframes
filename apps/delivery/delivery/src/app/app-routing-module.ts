@@ -38,7 +38,7 @@ export const routes: Routes = [
         canDeactivate: [MovieListGuard],
         loadChildren: '@blockframes/movie#MovieModule'
       },
-      { path: 'template',
+      { path: 'templates',
         loadChildren: 'libs/material/src/lib/template/template.module#TemplateModule'
       }, //ToDo find why @blockframes doesn't work
       {

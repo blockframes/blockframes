@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { Template, TemplateStore } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { flatten } from 'lodash';
 
 const templateListQuery = (orgId: string): Query<Template[]> => ({
   path: `templates`,
@@ -24,15 +25,16 @@ export class TemplateListGuard extends StateListGuard<Template> {
     super(store, router);
   }
 
-  get query(): Observable<Template[]> {
+  get query() {
     return this.orgQuery.selectAll().pipe(
       switchMap(orgs => {
         const templates$ = orgs.map(org => {
           const query = templateListQuery(org.id);
           return this.fireQuery.fromQuery<Template[]>(query);
         });
-        return [].concat(templates$);
-      })
+        return combineLatest(templates$)
+      }),
+      map(templates => flatten(templates))
     )
   }
 }
