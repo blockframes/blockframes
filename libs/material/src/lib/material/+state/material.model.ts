@@ -1,4 +1,4 @@
-import { Step } from "../../delivery/+state";
+import { Step, Delivery } from "../../delivery/+state";
 
 export interface Material {
   id: string;
@@ -34,4 +34,10 @@ export function createMaterial(material: Partial<Material>) {
   } as Material : {} as Material
 }
 
+export function getMaterialStep(material: Material, delivery: Delivery) {
+  return ({
+    ...material,
+    step: delivery.steps.find(step => step.id === material.stepId)
+  })
+}
 

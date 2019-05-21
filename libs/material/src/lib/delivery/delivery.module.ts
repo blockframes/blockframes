@@ -67,7 +67,7 @@ import { DeliveryListGuard } from './guards/delivery-list.guard';
 import {
   DeliveryMaterialsGuard,
   MovieMaterialsGuard,
-  MovieMaterialsByDeliveryGuard,
+  SignedDeliveryMaterialsGuard,
  } from '../material';
 
 const routes: Routes = [
@@ -98,8 +98,8 @@ const routes: Routes = [
       },
       {
         path: 'view',
-        canActivate: [MovieMaterialsByDeliveryGuard],
-        canDeactivate: [MovieMaterialsByDeliveryGuard],
+        canActivate: [SignedDeliveryMaterialsGuard],
+        canDeactivate: [SignedDeliveryMaterialsGuard],
         component: DeliveryViewComponent
       },
       {

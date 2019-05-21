@@ -106,8 +106,11 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
     if (!!templateId) {
-      const filterByMaterialId = material =>
-        this.templateQuery.getActive().materialsId.includes(material.id);
+
+      const filterByMaterialId = (material: Material) => {
+        return this.templateQuery.getActive().materialsId.includes(material.id);
+      }
+
       const materials = this.materialQuery.getAll({ filterBy: filterByMaterialId });
       await Promise.all(
         materials.map(material =>
@@ -118,6 +121,7 @@ export class DeliveryService {
     }
     return id;
   }
+
 
   public async addMovieMaterialsDelivery() {
     const snapshot = await this.db

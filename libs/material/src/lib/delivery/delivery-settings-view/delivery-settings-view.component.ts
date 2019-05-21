@@ -57,8 +57,8 @@ export class DeliverySettingsViewComponent implements OnInit {
     delete this.stepId;
   }
 
-  public saveSettings() {
-    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/form/${this.query.getActiveId()}`]);
+  public saveSettings(deliveryId: string) {
+    this.router.navigate([`layout/${this.movieQuery.getActiveId()}/${deliveryId}/edit`]);
     this.snackBar.open('Settings saved.', 'Close', {duration: 2000,});
   }
 }

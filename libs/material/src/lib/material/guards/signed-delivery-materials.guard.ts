@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { MaterialStore, Material } from '../+state';
+import { MaterialStore, Material, getMaterialStep } from '../+state';
 import { switchMap, map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
 import { DeliveryQuery } from '../../delivery/+state';
@@ -12,7 +12,7 @@ const deliveryMovieMaterialsQuery = (movieId: string, deliveryId: string): Query
 });
 
 @Injectable({ providedIn: 'root' })
-export class MovieMaterialsByDeliveryGuard extends StateListGuard<Material> {
+export class SignedDeliveryMaterialsGuard extends StateListGuard<Material> {
   urlFallback = 'layout';
 
   constructor(
@@ -30,14 +30,9 @@ export class MovieMaterialsByDeliveryGuard extends StateListGuard<Material> {
     return this.movieQuery.selectActiveId().pipe(
       switchMap(movieId => {
         const query = deliveryMovieMaterialsQuery(movieId, delivery.id);
-        return this.fireQuery.fromQuery<Material[]>(query).pipe(
-          map(materials =>
-            materials.map(material => ({
-              ...material,
-              step: delivery.steps.find(step => step.id === material.stepId)
-            }))
-          )
-        );
+        return this.fireQuery
+          .fromQuery<Material[]>(query)
+          .pipe(map(materials => materials.map(material => getMaterialStep(material, delivery))));
       })
     );
   }

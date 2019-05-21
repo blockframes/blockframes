@@ -30,7 +30,7 @@ export class DeliveryViewComponent implements OnInit {
   ngOnInit() {
     this.delivery$ = this.query.selectActive();
     this.movie$ = this.movieQuery.selectActive();
-    this.materials$ = this.query.currentTemplateView;
+    this.materials$ = this.query.currentTemplate$;
     this.progressionValue$ = this.query.deliveryProgression$;
     this.allChecked = false;
   }

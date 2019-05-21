@@ -25,8 +25,9 @@ export class DeliveryActiveGuard extends StateActiveGuard<Delivery> {
 
   query({ deliveryId }) {
     const query = deliveryActiveQuery(deliveryId);
-    return this.fireQuery
-      .fromQuery<DeliveryDB>(query)
-      .pipe(map(delivery => modifyTimestampToDate(delivery)));
+    return this.fireQuery.fromQuery<DeliveryDB>(query).pipe(
+      map(delivery => modifyTimestampToDate(delivery))
+    );
   }
+
 }
