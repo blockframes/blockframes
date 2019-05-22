@@ -1,17 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { DeliveryQuery } from './delivery.query';
-import { MaterialQuery } from '../../material/+state/material.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import {
-  MovieQuery,
-  Stakeholder,
-  StakeholderQuery,
-  createDeliveryStakeholder,
-} from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { TemplateQuery } from '../../template/+state';
+import { FireQuery } from '@blockframes/utils';
 
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
@@ -21,6 +14,7 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   };
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,11 +22,8 @@ export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
-    private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
-    private templateQuery: TemplateQuery,
-    private stakeholderQuery: StakeholderQuery,
-    private db: AngularFirestore,
+    private db: FireQuery,
   ) {}
 
   ///////////////////
@@ -73,10 +64,9 @@ export class DeliveryService {
   public updateMaterialState(materials: Material[], state: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
-      const materialRef = this.db.doc<Material>(
-        `movies/${this.movieQuery.getActiveId()}/materials/${material.id}`
-      ).ref;
-      return batch.update(materialRef, { state });
+      const movieId = this.movieQuery.getActiveId();
+      const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
+      return batch.update(doc.ref, { state });
     });
     batch.commit();
   }
@@ -106,10 +96,7 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
     if (!!templateId) {
-      const snapshot = await this.db
-        .collection<Material>(`templates/${templateId}/materials/`)
-        .ref.get();
-      const materials = snapshot.docs.map(doc => doc.data()) as Material[];
+      const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials/`);
       await Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
@@ -120,13 +107,8 @@ export class DeliveryService {
     return id;
   }
 
-
   public async addMovieMaterialsDelivery() {
-    const snapshot = await this.db
-      .collection<Material>(`movies/${this.movieQuery.getActiveId()}/materials/`)
-      .ref.get();
-    const movieMaterials = snapshot.docs.map(doc => doc.data()) as Material[];
-
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${this.movieQuery.getActiveId()}/materials/`);
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
     const movieId = this.movieQuery.getActiveId();
@@ -144,14 +126,12 @@ export class DeliveryService {
       .set(deliveryStakeholder);
     await Promise.all(
       movieMaterials.map(material =>
-        this.db
-          .doc<Material>(`deliveries/${id}/materials/${material.id}`)
-          .set({
-            id: material.id,
-            value: material.value,
-            description: material.description,
-            category: material.category
-          })
+        this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set({
+          id: material.id,
+          value: material.value,
+          description: material.description,
+          category: material.category
+        })
       )
     );
     return id;
@@ -228,8 +208,8 @@ export class DeliveryService {
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
     const deliveryStakeholder = this.query
-      .getActive().stakeholders
-      .find(stakeholder => stakeholder.id === movieStakeholder.id);
+      .getActive()
+      .stakeholders.find(stakeholder => stakeholder.id === movieStakeholder.id);
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
       const authorizations = [];

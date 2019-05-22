@@ -1,39 +1,31 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-
-type TypeofArray<T> = T extends (infer X)[] ? X : T;
-
-export type Query<T> = {
-  path: string;
-  queryFn?: QueryFn;
-} & SubQueries<TypeofArray<T>>;
-
-type QueryLike<T> = Query<T> | Query<T>[];
-type SubQueries<T> = {
-  [K in keyof Partial<T>]: T[K] | ((entity: T) => QueryLike<T[K]>)
-}
-
-type QueryInput<T> = QueryLike<T> | string;
-type QueryOutput<Q, T> =
-  Q extends string ? Observable<T> :
-  Q extends Query<(infer U)>[] ? Observable<U[]> :
-  Q extends Query<(infer V)> ? Observable<V> :
-  never;
-
-function createQuery<T>(path: string): Query<T> {
-  return { path } as Query<T>;
-}
-function isQueryLike<T>(query: QueryInput<T>): query is QueryLike<T> {
-  return typeof query !== 'string'
-}
+import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery } from './types';
 
 @Injectable({ providedIn: 'root' })
-export class FireQuery {
+export class FireQuery extends AngularFirestore {
   private keysToRemove = ['path', 'queryFn'];
 
-  constructor(private db: AngularFirestore) {}
+  //////////////
+  // SNAPSHOT //
+  //////////////
+
+  /** Return the current value of the path from Firestore */
+  async snapshot<T>(path: string): Promise<T> {
+    if (path.split('/').length % 2 === 0) {
+      const snapshot = await this.collection(path).ref.get();
+      return snapshot.docs.map(doc => doc.data()) as any;
+    } else {
+      const snapshot = await this.doc(path).ref.get();
+      return snapshot.data() as any;
+    }
+  }
+
+  ////////////////
+  // OBSERVABLE //
+  ////////////////
 
   /** Make a query to firebase */
   public fromQuery<T>(query: Query<T>[]): Observable<T[]>
@@ -60,9 +52,7 @@ export class FireQuery {
   private fromCollection<T>(query: Query<T>): Observable<T[]> {
     const { path, queryFn } = query;
     // Select all entities
-    return this.db
-      .collection<T>(path, queryFn)
-      .valueChanges()
+    return this.collection<T>(path, queryFn).valueChanges()
       .pipe(
         switchMap((entities) => {
           if (!entities) return throwError(`Nothing found at path : ${query.path}`);
@@ -86,9 +76,7 @@ export class FireQuery {
 
   /** Query a unique document */
   private fromDoc<T>(query: Query<T>) {
-    return this.db
-      .doc<T>(query.path)
-      .valueChanges()
+    return this.doc<T>(query.path).valueChanges()
       .pipe(
         switchMap(entity => {
           if (!entity) return throwError(`Nothing found at path : ${query.path}`)
