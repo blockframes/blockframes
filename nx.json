@@ -48,12 +48,19 @@
       "tags": []
     },
     "delivery": {
-      "tags": ["delivery", "template", "material"]
+      "tags": [
+        "delivery",
+        "template",
+        "material"
+      ]
     },
     "delivery-e2e": {
       "tags": []
     },
     "libs-delivery": {
+      "tags": []
+    },
+    "backend-functions": {
       "tags": []
     }
   }
