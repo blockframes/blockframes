@@ -14,7 +14,6 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   };
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -32,26 +31,26 @@ export class DeliveryService {
 
   /** Adds material to the delivery sub-collection in firebase */
   public saveMaterial(material: Material) {
-    const idDelivery = this.query.getActiveId();
-    const idMaterial = this.db.createId();
+    const deliveryId = this.query.getActiveId();
+    const materialId = this.db.createId();
     this.db
-      .doc<Material>(`deliveries/${idDelivery}/materials/${idMaterial}`)
-      .set({ ...material, id: idMaterial });
-    this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
+      .doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`)
+      .set({ ...material, id: materialId });
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
   }
 
   /** Update material to the delivery sub-collection in firebase */
   public updateMaterial(material: Material) {
-    const idDelivery = this.query.getActiveId();
-    this.db.doc<Material>(`deliveries/${idDelivery}/materials/${material.id}`).update(material);
-    this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
+    const deliveryId = this.query.getActiveId();
+    this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).update(material);
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
   }
 
   /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(id: string) {
-    const idDelivery = this.query.getActiveId();
-    this.db.doc<Material>(`deliveries/${idDelivery}/materials/${id}`).delete();
-    this.db.doc<Delivery>(`deliveries/${idDelivery}`).update({ validated: [] });
+    const deliveryId = this.query.getActiveId();
+    this.db.doc<Material>(`deliveries/${deliveryId}/materials/${id}`).delete();
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */
@@ -108,10 +107,10 @@ export class DeliveryService {
   }
 
   public async addMovieMaterialsDelivery() {
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${this.movieQuery.getActiveId()}/materials/`);
+    const movieId = this.movieQuery.getActiveId();
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials/`);
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
-    const movieId = this.movieQuery.getActiveId();
     const delivery = createDelivery({ id, movieId, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
       stakeholder.id,
@@ -166,7 +165,8 @@ export class DeliveryService {
 
   /** Remove signatures in array validated of delivery */
   public unsealDelivery() {
-    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ validated: [] });
+    const id = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${id}`).update({ validated: [] });
     //TODO: ask all stakeholders for permission to re-open the delivery form
   }
 
@@ -178,16 +178,17 @@ export class DeliveryService {
 
   /** Sign array validated of delivery with stakeholder logged */
   public signDelivery() {
+    const delivery = this.query.getActive();
     const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
-    const { validated } = this.query.getActive();
-    const { stakeholders } = this.query.getActive();
+    const { validated } = delivery;
+    const { stakeholders } = delivery;
 
     const stakeholderSignee = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId));
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
       this.db
-        .doc<Delivery>(`deliveries/${this.query.getActiveId()}`)
+        .doc<Delivery>(`deliveries/${delivery.id}`)
         .update({ validated: updatedValidated });
     }
   }
@@ -207,9 +208,8 @@ export class DeliveryService {
 
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
-    const deliveryStakeholder = this.query
-      .getActive()
-      .stakeholders.find(stakeholder => stakeholder.id === movieStakeholder.id);
+    const delivery = this.query.getActive();
+    const deliveryStakeholder = delivery.stakeholders.find(stakeholder => stakeholder.id === movieStakeholder.id);
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
       const authorizations = [];
@@ -221,7 +221,7 @@ export class DeliveryService {
       );
       this.db
         .doc<Stakeholder>(
-          `deliveries/${this.query.getActiveId()}/stakeholders/${newDeliveryStakeholder.id}`
+          `deliveries/${delivery.id}/stakeholders/${newDeliveryStakeholder.id}`
         )
         .set(newDeliveryStakeholder);
     }
@@ -229,15 +229,17 @@ export class DeliveryService {
 
   /** Update authorizations of stakeholder delivery */
   public updateStakeholderAuthorizations(stakeholderId: string, authorizations: string[]) {
+    const deliveryId = this.query.getActiveId();
     this.db
-      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
+      .doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`)
       .update({ authorizations });
   }
 
   /** Delete stakeholder delivery */
   public removeStakeholder(stakeholderId: string) {
+    const deliveryId = this.query.getActiveId();
     this.db
-      .doc<Stakeholder>(`deliveries/${this.query.getActiveId()}/stakeholders/${stakeholderId}`)
+      .doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`)
       .delete();
   }
 
