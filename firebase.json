@@ -27,10 +27,10 @@
   },
   "functions": {
     "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint",
-      "npm --prefix \"$RESOURCE_DIR\" run build"
+      "npm --prefix \"$RESOURCE_DIR\" run lint backend-functions",
+      "npm --prefix \"$RESOURCE_DIR\" run build:functions --prod"
     ],
-    "source": "functions"
+    "source": "/"
   },
   "firestore": {
     "rules": "firestore.rules",
