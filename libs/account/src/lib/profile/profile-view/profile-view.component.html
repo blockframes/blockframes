@@ -1,28 +1,28 @@
 <main>
   <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-    <a mat-icon-button routerLink="/layout/account/profile/edit" color="primary">
+    <button mat-icon-button routerLink="/layout/account/profile/edit" color="primary">
       <mat-icon>edit</mat-icon>
-    </a>
-    <section fxLayout="column">
-      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex class="key">Email</span>
-        <span fxFlex="grow" class="value">{{ user.email }}</span>
+    </button>
+    <section>
+      <div>
+        <span class="key">Email</span>
+        <span class="value">{{ user.email }}</span>
       </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex class="key">First Name</span>
-        <span fxFlex="grow" class="value">{{ user.firstName }}</span>
+      <div>
+        <span class="key">First Name</span>
+        <span class="value">{{ user.firstName }}</span>
       </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex class="key">Last Name</span>
-        <span fxFlex="grow" class="value">{{ user.lastName }}</span>
+      <div>
+        <span class="key">Last Name</span>
+        <span class="value">{{ user.lastName }}</span>
       </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="start start">
-        <span fxFlex class="key">Biography</span>
-        <span fxFlex="grow">{{ user.biography }}</span>
+      <div>
+        <span class="key bio">Biography</span>
+        <p>{{ user.biography }}</p>
       </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex class="key">Id</span>
-        <span fxFlex="grow">{{ user.uid }}</span>
+      <div>
+        <span class="key">Id</span>
+        <em>{{ user.uid }}</em>
       </div>
     </section>
   </ng-container>

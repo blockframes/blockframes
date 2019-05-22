@@ -39,7 +39,7 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     .subscribe(user => {
       if (user !== null ) {
         this.accountForm = this.builder.group({
-          uid: { value: user.identity, disabled: true },
+          uid: { value: user.uid, disabled: true },
           email: { value: user.email, disabled: true },
           first_name: [user.firstName, Validators.required],
           last_name: [user.lastName, Validators.required],

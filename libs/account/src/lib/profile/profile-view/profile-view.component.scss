@@ -9,9 +9,18 @@ main {
       color: rgba(0, 0, 0, 0.3);
       margin-right: 20px;
       min-width: 100px;
+      display: inline-block;
     }
     .value {
       font-size: 24px;
+    }
+    .bio {
+      vertical-align: top;
+    }
+    p {
+      display: inline-block;
+      max-width: 60%;
+      margin: 0;
     }
   }
 }
