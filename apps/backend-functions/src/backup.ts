@@ -26,10 +26,13 @@ class Queue {
   }
 
   pop(): string {
-    if (this.content.length === 0) {
+    const x = this.content.shift();
+
+    if (x === undefined) {
       throw new Error('popping from an empty queue');
+    } else {
+      return x;
     }
-    return this.content.shift()!;
   }
 
   isEmpty(): boolean {

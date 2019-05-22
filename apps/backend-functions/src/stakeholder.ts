@@ -8,7 +8,7 @@ export interface Organization {
   userIds: string[];
 }
 
-interface snapObject {
+interface SnapObject {
   movieTitle: string,
   docID: DocID,
   stakeholderId: string,
@@ -31,7 +31,7 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   return orgs.map(doc => doc.data() as Organization);
 }
 
-function customMessage(userId: string, snap: snapObject) {
+function customMessage(userId: string, snap: SnapObject) {
   if (snap.docID.type === 'delivery') {
     return snap.userIds.includes(userId) && snap.count > 1
       ? `You have been invited to work on ${snap.movieTitle}'s ${snap.docID.type}. Do you wish to work on it ?`

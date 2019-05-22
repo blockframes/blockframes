@@ -4,6 +4,6 @@
     "outDir": "../../dist/out-tsc/apps/backend-functions",
     "types": ["node"]
   },
-  "exclude": ["**/*.spec.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"],
   "include": ["**/*.ts"]
 }
