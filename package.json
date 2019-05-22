@@ -77,7 +77,12 @@
     "npm": "^6.9.0",
     "punycode": "^2.1.1",
     "rxjs": "~6.4.0",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "@google-cloud/storage": "^2.4.2",
+    "line-reader": "^0.4.0",
+    "lodash": "^4.17.11",
+    "request": "^2.88.0",
+    "tmp": "0.0.33"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.1",
@@ -94,6 +99,9 @@
     "@types/jest": "^23.3.14",
     "@types/jquery": "3.3.29",
     "@types/node": "~10.12.23",
+    "@types/tmp": "0.0.34",
+    "@types/line-reader": "0.0.28",
+    "@types/lodash": "^4.14.123",
     "akita-schematics": "^2.0.0",
     "codelyzer": "~4.5.0",
     "concurrently": "^4.1.0",
