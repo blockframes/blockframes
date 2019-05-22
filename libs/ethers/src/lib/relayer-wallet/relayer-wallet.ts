@@ -122,7 +122,7 @@ export class RelayerWallet implements ethers.Signer {
     this.saveIntoVault(wallet, keyName, password);
   }
 
-  /** Create a wallet and store it into the vault */
+  /** Create a key and store it into the vault */
   public async createLocalKey(keyName: string, password: string, email?: string) {
     if(email) this.setUsername(email);
     this._requireUsername();

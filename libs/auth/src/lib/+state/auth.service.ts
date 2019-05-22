@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   public async signup(email: string, password: string) {
-    this.store.update({isEncrypting: true});
+    // this.store.update({isEncrypting: true});
     this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
       duration: 10000,
     });

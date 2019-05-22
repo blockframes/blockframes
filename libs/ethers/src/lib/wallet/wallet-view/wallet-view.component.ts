@@ -7,9 +7,9 @@ import {
 } from "@angular/material";
 
 import { network } from "@env";
-import { AuthQuery, User } from "@blockframes/auth";
 import { RelayerWallet } from "../../relayer-wallet/relayer-wallet";
 import { WalletRecoverComponent } from "../recover/recover.component";
+import { WalletQuery, Wallet } from "../+state";
 
 
 @Component({
@@ -20,7 +20,7 @@ import { WalletRecoverComponent } from "../recover/recover.component";
 })
 export class WalletViewComponent implements OnInit {
 
-  user$: Observable<User>;
+  wallet$: Observable<Wallet>;
   amount: number;
   isBalanceLoading$: Observable<boolean>;
   hasKeystore$: Observable<boolean>;
@@ -32,15 +32,15 @@ export class WalletViewComponent implements OnInit {
   loadingPrivateKey$ = this.loadingPrivateKey.asObservable();
 
   constructor(
-    public query: AuthQuery,
+    public query: WalletQuery,
     private wallet: RelayerWallet,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.user$ = this.query.user$;
-    this.isBalanceLoading$ = this.query.isBalanceLoading$;
+    this.wallet$ = this.query.select();
+    this.isBalanceLoading$ = this.query.selectLoading();
     this.hasKeystore$ = this.wallet.hasKeystore$; // TODO FIX THIS IN #315
   }
 

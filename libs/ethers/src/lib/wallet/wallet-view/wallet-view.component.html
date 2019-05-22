@@ -1,20 +1,20 @@
 <main>
-  <ng-container *ngIf="(user$ | async) as user; else userLoading">
-    <ng-container *ngIf="user.identity; else noWallet">
+  <ng-container *ngIf="(wallet$ | async) as wallet; else userLoading">
+    <ng-container *ngIf="wallet.exist; else noWallet">
       <header fxLayout="row" fxLayoutAlign="space-between center">
         <!-- Wallet Profile -->
         <div class="wallet-profile">
-          <eth-blockie mat-card-avatar size="40" [address]="user.identity.address">
+          <eth-blockie mat-card-avatar size="40" [address]="wallet.address">
           </eth-blockie>
-          <h4>{{user.identity.domain}}</h4>
-          <a [href]="explorerUrl + user.identity.address" target="_blank" rel="noopener">
-            {{user.identity.address}}
+          <h4>{{wallet.domain}}</h4>
+          <a [href]="explorerUrl + wallet.address" target="_blank" rel="noopener">
+            {{wallet.address}}
           </a>
         </div>
         <div class="wallet-balance">
           <!-- Balance -->
           <ng-container *ngIf="!(isBalanceLoading$ | async); else isLoading">
-            <span>{{user.balance || '0.0'}} ETH</span>
+            <span>{{wallet.balance || '0.0'}} ETH</span>
           </ng-container>
           <ng-template #isLoading>
             <mat-spinner diameter="24" strokeWidth="2"></mat-spinner>

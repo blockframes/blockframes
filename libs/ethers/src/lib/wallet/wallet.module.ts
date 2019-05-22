@@ -19,6 +19,7 @@ import {
 
 import { BlockieModule } from '@blockframes/ui';
 
+import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { AskPasswordComponent } from './ask-password/ask-password.component';
 import { WalletRecoverComponent } from './recover/recover.component';
 import { WalletViewComponent } from './wallet-view/wallet-view.component';
@@ -27,7 +28,12 @@ import { EncryptingChipsComponent } from './encrypting-chips/encrypting-chips.co
 
 
 export const walletRoutes: Routes = [
-  { path: '', component: WalletViewComponent },
+  { 
+    path: '',
+    component: WalletViewComponent,
+    canActivate: [WalletActiveGuard],
+    canDeactivate: [WalletActiveGuard],
+  },
 ];
 @NgModule({
   imports: [
