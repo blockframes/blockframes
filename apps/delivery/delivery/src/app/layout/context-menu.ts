@@ -19,10 +19,10 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/template/:templateId',
+    route: '/layout/templates/:templateId',
     items: [
       { name: 'templates', path: '/layout/templates/list'},
-      { name: 'edit', path: '/layout/template/:templateId'}
+      { name: 'edit', path: '/layout/templates/:templateId'}
     ]
   },
   {
