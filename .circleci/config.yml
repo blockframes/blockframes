@@ -53,17 +53,6 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: npm run test
-  test-functions:
-    executor: blockframes-ci
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
-      - run: cd functions/ && npm install
-      - run: cd functions/ && npm run lint
-      - run: cd functions/ && npm run build
-      - run: cd functions/ && npm run test
   test-e2e:
     executor: blockframes-ci
     steps:
@@ -105,14 +94,10 @@ workflows:
       - test:
           requires:
             - build
-      - test-functions:
-          requires:
-            - build
 #      - test-e2e:
 #          requires:
 #            - lint
 #            - test
-#            - test-functions
 #      - request-deploy:
 #          type: approval
 #          requires:
