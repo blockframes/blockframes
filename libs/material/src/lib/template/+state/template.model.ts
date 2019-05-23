@@ -10,7 +10,7 @@ export interface PartialTemplate {
 
 export interface Template extends PartialTemplate {
   materials?: Material[];
-  created: any; // TODO: switch to firestore.Timestamp as soon as possible
+  created: firestore.Timestamp;
 }
 
 export interface TemplateView {
@@ -30,7 +30,7 @@ export interface TemplatesByOrgs {
 export function createTemplate(template: PartialTemplate): Template {
   return {
     ...template,
-    created: new Date()
+    created: firestore.Timestamp.now()
   }
 }
 
