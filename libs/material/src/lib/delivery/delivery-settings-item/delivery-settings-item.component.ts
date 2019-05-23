@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Step, DeliveryService } from '../+state';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'delivery-settings-item',
@@ -11,7 +12,7 @@ export class DeliverySettingsItemComponent {
   @Input() step: Step;
   @Output() update = new EventEmitter();
 
-  constructor(private service: DeliveryService) { }
+  constructor(private service: DeliveryService, private snackbar: MatSnackBar) { }
 
   public edit() {
     this.update.emit();
@@ -19,5 +20,6 @@ export class DeliverySettingsItemComponent {
 
   public removeStep() {
     this.service.removeStep(this.step);
+    this.snackbar.open("'" + this.step.name + "' has been removed.", 'close', { duration: 2000 })
   }
 }

@@ -123,6 +123,8 @@ const routes: Routes = [
       },
       {
         path: 'settings',
+        canActivate: [DeliveryMaterialsGuard],
+        canDeactivate: [DeliveryMaterialsGuard],
         component: DeliverySettingsViewComponent
       }
     ]

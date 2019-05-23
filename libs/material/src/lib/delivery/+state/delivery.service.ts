@@ -5,6 +5,7 @@ import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
+import { MaterialQuery } from '../../material/+state';
 
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
@@ -20,6 +21,7 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
 export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
+    private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
     private db: FireQuery,
@@ -137,30 +139,43 @@ export class DeliveryService {
   }
 
   public updateDueDate(dueDate: Date) {
-    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ dueDate });
+    const id = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${id}`).update({ dueDate });
   }
 
   /** Add step in array steps of delivery */
   public createStep(step: Step) {
+    const delivery = this.query.getActive();
     step.id = this.db.createId();
-    const steps = [...this.query.getActive().steps, step];
-    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+    const steps = [...delivery.steps, step];
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
   }
 
   /** Update step in array steps of delivery */
   public updateStep(step: Step, form: Step) {
-    const steps = [...this.query.getActive().steps];
+    const delivery = this.query.getActive();
+    const steps = [...delivery.steps];
     const index = steps.indexOf(step);
     steps.splice(index, 1, { ...step, ...form });
-    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
   }
 
   /** Remove step in array steps of delivery */
   public removeStep(step: Step) {
-    const steps = [...this.query.getActive().steps];
+    const delivery = this.query.getActive();
+    const steps = [...delivery.steps];
     const index = steps.indexOf(step);
     steps.splice(index, 1);
-    this.db.doc<Delivery>(`deliveries/${this.query.getActiveId()}`).update({ steps });
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
+
+    // We also set the concerned materials .step to an empty string
+    const batch = this.db.firestore.batch();
+    const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+    materials.forEach(material => {
+      const doc = this.db.doc(`deliveries/${delivery.id}/materials/${material.id}`);
+      return batch.update(doc.ref, { step: "" });
+    });
+    batch.commit();
   }
 
   /** Remove signatures in array validated of delivery */
