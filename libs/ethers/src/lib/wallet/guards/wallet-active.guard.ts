@@ -39,7 +39,7 @@ export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {
       this.subscription = this.query().pipe(
         tap(user => applyTransaction(() => {
           if (user.identity) {
-            this.store.update({exist: true, domain: user.identity.domain, address: user.identity.address});
+            this.store.update({exist: true, ensDomain: user.identity.domain, address: user.identity.address});
           }
           this.store.setLoading(false);
         }))

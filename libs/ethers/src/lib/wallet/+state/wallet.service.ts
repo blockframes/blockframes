@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { WalletStore } from './wallet.store';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class WalletService {
 
   constructor(
     private store: WalletStore

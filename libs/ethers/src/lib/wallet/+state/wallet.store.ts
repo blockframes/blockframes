@@ -3,9 +3,9 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 export interface Wallet {
   exist: boolean,
-  domain: string,
-  address: string
-  balance: string;
+  ensDomain: string,
+  address: string,
+  balance: string,
 }
 
 export function createWallet(wallet: Partial<Wallet>) {
@@ -14,10 +14,10 @@ export function createWallet(wallet: Partial<Wallet>) {
 
 const initialState: Wallet = {
   exist: false,
-  domain: null,
+  ensDomain: null,
   address: null,
-  balance: '0.0',
-}
+  balance: null,
+};
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'wallet' })

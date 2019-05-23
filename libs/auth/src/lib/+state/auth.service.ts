@@ -35,9 +35,9 @@ export class AuthService {
 
   public async signup(email: string, password: string) {
     // this.store.update({isEncrypting: true});
-    this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
-      duration: 10000,
-    });
+    // this.snackBar.open('We are curently encrypting your key pair, DO NOT CLOSE THIS PAGE BEFORE THE ENCRYPTION HAS ENDED !', 'OK', {
+    //   duration: 10000,
+    // });
 
     const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
     await this.create(userCredentials.user);
@@ -47,7 +47,7 @@ export class AuthService {
     // .then(() => this.wallet.createERC1077(userCredentials.user.uid))
     // .then(() => {
     //   this.subscribeOnUser();
-    //   this.store.update({isEncrypting: false});
+      this.store.update({isEncrypting: false});
     //   this.snackBar.open('Your key pair has been successfully stored', 'OK', {
     //     duration: 2000,
     //   });
