@@ -4,7 +4,8 @@
       {{ template.name }}
     </mat-card-title>
     <mat-card-content>
-      <p class="modification">Last modification : {{randomNumberPicker(7)}} days ago</p> <!--TODO: use real timestamp here -->
+      <p class="date">Created : {{ template.created.toDate() | date: 'MMM dd yyyy' }} at
+        {{ template.created.toDate() | date: 'hh:mm a' }}</p> <!--TODO: use real timestamp here -->
     </mat-card-content>
   </div>
   <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions" (click)="stopPropagation($event)">

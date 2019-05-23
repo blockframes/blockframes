@@ -1,11 +1,16 @@
 import { Material } from "../../material/+state/material.model";
+import { firestore } from 'firebase/app';
 
-export interface Template {
+export interface PartialTemplate {
   id: string;
   name: string;
+  orgId: string;
+  orgName: string;
+}
+
+export interface Template extends PartialTemplate {
   materials?: Material[];
-  orgId?: string; // only storage in akita store
-  orgName?: string; // only storage in akita store
+  created: any; // TODO: switch to firestore.Timestamp as soon as possible
 }
 
 export interface TemplateView {
@@ -22,9 +27,10 @@ export interface TemplatesByOrgs {
 /**
  * A factory function that creates Template
  */
-export function createTemplate(template: Partial<Template>) {
-  return template ? {
-    ...template
-  } as Template : {} as Template
+export function createTemplate(template: PartialTemplate): Template {
+  return {
+    ...template,
+    created: new Date()
+  }
 }
 
