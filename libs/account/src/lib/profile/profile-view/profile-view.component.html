@@ -16,9 +16,9 @@
         <span class="key">Last Name</span>
         <span class="value">{{ user.lastName }}</span>
       </div>
-      <div>
-        <span class="key bio">Biography</span>
-        <p>{{ user.biography }}</p>
+      <div fxLayout="row" fxLayoutAlign="start">
+        <span fxFlex class="key">Biography</span>
+        <p fxFlex="grow">{{ user.biography }}</p>
       </div>
       <div>
         <span class="key">Id</span>
