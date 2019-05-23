@@ -1,10 +1,10 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
-import { getOrgsOfDelivery, Organization } from './stakeholder';
-import { getDocument, APP_DELIVERY_ICON } from './delivery';
+import { APP_DELIVERY_ICON } from './delivery';
 import { triggerNotifications, prepareNotification } from './notify';
+import { getDocument, getOrgsOfDelivery, Organization } from './utils';
 
-interface Material {
+export interface Material {
   id: string;
   value: string;
   deliveriesIds: string[];

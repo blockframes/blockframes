@@ -1,7 +1,7 @@
 import { db, functions } from './firebase';
 import { APP_DELIVERY_ICON } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
-import { getOrgsOfDelivery } from './stakeholder';
+import { getOrgsOfDelivery, getDocument } from './utils';
 
 export const deleteFirestoreMovie = async (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -99,6 +99,35 @@ export const deleteFirestoreDelivery = async (
     );
 
   await triggerNotifications(notifications);
+
+  return true;
+};
+
+export const deleteFirestoreMaterial = async (
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  const material = snap.data();
+  console.log(material)
+  const delivery = await getDocument(`deliveries/${context.params.deliveryId}`);
+
+  if (!material) {
+    console.error(`This material doesn't exist !`);
+    return null;
+  }
+
+  const movieMaterial = await getDocument(`movies/${delivery!.movieId}/materials/${material.id}`)
+
+  if (movieMaterial!.deliveriesIds.includes(delivery!.id)) {
+    if (movieMaterial!.deliveriesIds.length === 1) {
+      db.doc(`movies/${delivery!.movieId}/materials/${movieMaterial!.id}`).delete()
+    }
+    else {
+      const newdeliveriesIds: string[] = movieMaterial!.deliveriesIds.filter((id: string) => id !== delivery!.id);
+      db.doc(`movies/${delivery!.movieId}/materials/${movieMaterial!.id}`)
+        .update({ deliveriesIds: newdeliveriesIds });
+    }
+  }
 
   return true;
 };

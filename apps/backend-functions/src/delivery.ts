@@ -1,23 +1,11 @@
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getOrgsOfDelivery, Organization } from './stakeholder';
+import { Organization, getDocument, getOrgsOfDelivery, getCollection } from './utils';
 
 // This string refers to svg icon name
 export const APP_DELIVERY_ICON = 'media_delivering';
 
-export async function getCollection(path: string) {
-  return db
-    .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data()));
-}
 
-export async function getDocument(path: string) {
-  return db
-    .doc(path)
-    .get()
-    .then(doc => doc.data());
-}
 
 async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];

@@ -1,54 +1,9 @@
 import { functions, db } from './firebase';
-import { APP_DELIVERY_ICON, getDocument, getCollection } from './delivery';
-import { prepareNotification, triggerNotifications, DocID } from './notify';
+import { APP_DELIVERY_ICON } from './delivery';
+import { prepareNotification, triggerNotifications, DocID, customMessage } from './notify';
+import { getDocument, getCount, getOrgsOfDelivery, getOrgsOfMovie } from './utils';
 
 const APP_MOVIE_ICON = 'media_financiers';
-
-export interface Organization {
-  userIds: string[];
-}
-
-interface SnapObject {
-  movieTitle: string,
-  docID: DocID,
-  stakeholderId: string,
-  orgName: string,
-  count: number,
-  userIds: string[]
-}
-
-export async function getOrgsOfDelivery(deliveryId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
-  const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
-  const orgs = await Promise.all(promises);
-  return orgs.map(doc => doc.data() as Organization);
-}
-
-export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`movies/${movieId}/stakeholders`);
-  const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
-  const orgs = await Promise.all(promises);
-  return orgs.map(doc => doc.data() as Organization);
-}
-
-function customMessage(userId: string, snap: SnapObject) {
-  if (snap.docID.type === 'delivery') {
-    return snap.userIds.includes(userId) && snap.count > 1
-      ? `You have been invited to work on ${snap.movieTitle}'s ${snap.docID.type}. Do you wish to work on it ?`
-      : `${snap.orgName} has been added to ${snap.movieTitle}'s ${snap.docID.type}`;
-    }
-  if (snap.docID.type === 'movie') {
-    return snap.userIds.includes(userId) && snap.count > 1
-      ? `You have been invited to work on ${snap.movieTitle}. Do you wish to work on it ?`
-      : `${snap.orgName} has been added to ${snap.movieTitle}`;
-  } else {
-    throw new Error('Message is not valid');
-  }
-}
-
-function getCount(collection: string) {
-  return db.collection(collection).get().then(col => col.size)
-}
 
 export async function onDeliveryStakeholderCreate (
   snap: FirebaseFirestore.DocumentSnapshot,

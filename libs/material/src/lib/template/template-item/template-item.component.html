@@ -5,7 +5,7 @@
     </mat-card-title>
     <mat-card-content>
       <p class="date">Created : {{ template.created.toDate() | date: 'MMM dd yyyy' }} at
-        {{ template.created.toDate() | date: 'hh:mm a' }}</p> <!--TODO: use real timestamp here -->
+        {{ template.created.toDate() | date: 'hh:mm a' }}</p>
     </mat-card-content>
   </div>
   <button class="trigger" mat-icon-button [matMenuTriggerFor]="actions" (click)="stopPropagation($event)">
