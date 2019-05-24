@@ -1,7 +1,6 @@
-import { getCollection, getCount, Organization } from './utils';
+import { getCollection, getCount, Organization, Material } from './utils';
 import { db, serverTimestamp } from './firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
-import { Material } from './material';
 import { setRestoreFlag } from './backup';
 
 // TODO: Move this to shared library
@@ -45,7 +44,7 @@ function migrateTemplateToNewCollection(
   batch.set(templateRef, newTemplate);
 }
 
-async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promise<any> {
+async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promise<void> {
   const templates = await getCollection<Template>(`orgs/${org.id}/templates`);
   const materials = await getCollection<Material>(`orgs/${org.id}/materials`);
 

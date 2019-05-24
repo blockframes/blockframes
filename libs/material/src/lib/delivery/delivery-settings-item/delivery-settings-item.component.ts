@@ -20,6 +20,6 @@ export class DeliverySettingsItemComponent {
 
   public removeStep() {
     this.service.removeStep(this.step);
-    this.snackbar.open("'" + this.step.name + "' has been removed.", 'close', { duration: 2000 })
+    this.snackbar.open(`Step "${this.step}" has been removed`, 'close', { duration: 2000 })
   }
 }

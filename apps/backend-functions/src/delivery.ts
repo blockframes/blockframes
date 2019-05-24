@@ -1,20 +1,25 @@
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { Organization, getDocument, getOrgsOfDelivery, getCollection } from './utils';
-import { Material } from './material';
+import {
+  Organization,
+  getDocument,
+  getOrgsOfDelivery,
+  getCollection,
+  Stakeholder,
+  Movie,
+  Material
+} from './utils';
 
 // This string refers to svg icon name
 export const APP_DELIVERY_ICON = 'media_delivering';
 
-
-
 async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
-  const newStakeholder = await getDocument(
+  const newStakeholder = await getDocument<Stakeholder>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
   );
-  const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
-  const movie = await getDocument(`movies/${delivery.movieId}`);
+  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
+  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -24,14 +29,14 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
         message: `${newStakeholderOrg!.name} signed delivery ${movie!.title.original}'s delivery`,
         userId,
         path: `/layout/${delivery.movieId}/form/${delivery.id}`,
-        docID: {id: delivery.id, type: 'delivery'}
+        docID: { id: delivery.id, type: 'delivery' }
       })
     );
 
   await triggerNotifications(notifications);
 }
 
-export async function onDeliveryUpdate (
+export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ) {
@@ -56,9 +61,10 @@ export async function onDeliveryUpdate (
   const processedId = deliveryDoc.data()!.processedId;
 
   const orgs = await getOrgsOfDelivery(delivery.id);
-  const movie = await getDocument(`movies/${delivery.movieId}`);
+  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
   const stakeholderCount = await db
-    .collection(`deliveries/${delivery.id}/stakeholders`).where('isAccepted', '==', true)
+    .collection(`deliveries/${delivery.id}/stakeholders`)
+    .where('isAccepted', '==', true)
     .get()
     .then(snap => snap.size);
 
@@ -119,7 +125,7 @@ export async function onDeliveryUpdate (
           message: `${movie!.title.original}'s delivery has been approved by all stakeholders.`,
           userId,
           path: `/layout/${delivery.movieId}/view/${delivery.id}`,
-          docID: {id: delivery.id, type: 'delivery'}
+          docID: { id: delivery.id, type: 'delivery' }
         })
       );
 
@@ -130,4 +136,4 @@ export async function onDeliveryUpdate (
     throw e;
   }
   return true;
-};
+}

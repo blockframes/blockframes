@@ -60,10 +60,10 @@ export class TemplateService {
       materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialRef = this.db.doc<Material>(
+        const materialDoc = this.db.doc<Material>(
           `templates/${template.id}/materials/${material.id}`
-        ).ref;
-        return batch.set(materialRef, materialWithoutStep);
+        );
+        return batch.set(materialDoc.ref, materialWithoutStep);
       });
       batch.commit();
     }
@@ -79,10 +79,10 @@ export class TemplateService {
       materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialRef = this.db.doc<Material>(
+        const materialDoc = this.db.doc<Material>(
           `templates/${template.id}/materials/${material.id}`
-        ).ref;
-        return batch.set(materialRef, materialWithoutStep);
+        );
+        return batch.set(materialDoc.ref, materialWithoutStep);
       });
       batch.commit();
     }

@@ -2,16 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
 import { APP_DELIVERY_ICON } from './delivery';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, getOrgsOfDelivery, Organization } from './utils';
-
-export interface Material {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-  deliveriesIds: string[];
-  state: string;
-}
+import { getDocument, getOrgsOfDelivery, Organization, Material, Movie } from './utils';
 
 export const onMaterialUpdate = async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -21,7 +12,7 @@ export const onMaterialUpdate = async (
     return true;
   }
 
-  const movie = await getDocument(`movies/${context.params.movieID}`);
+  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const material: Material = change.after.data() as Material;
   const materialBefore = change.before.data();
   const orgsPromises = material.deliveriesIds.map((deliveryId: string) =>

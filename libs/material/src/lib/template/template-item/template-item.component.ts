@@ -19,7 +19,7 @@ export class TemplateItemComponent {
 
   public deleteTemplate(id: string) {
     this.service.deleteTemplate(id);
-    this.snackBar.open('Template "' + this.template.name + '" has been deleted.', 'close', {
+    this.snackBar.open(`Template "${this.template.name}" has been deleted.`, 'close', {
       duration: 2000
     });
   }

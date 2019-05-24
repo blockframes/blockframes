@@ -1,7 +1,7 @@
 import { functions, db } from './firebase';
 import { APP_DELIVERY_ICON } from './delivery';
 import { prepareNotification, triggerNotifications, DocID, customMessage } from './notify';
-import { getDocument, getCount, getOrgsOfDelivery, getOrgsOfMovie } from './utils';
+import { getDocument, getCount, getOrgsOfDelivery, getOrgsOfMovie, Delivery, Organization, Movie } from './utils';
 
 const APP_MOVIE_ICON = 'media_financiers';
 
@@ -13,9 +13,9 @@ export async function onDeliveryStakeholderCreate (
     return true;
   }
 
-  const delivery = await getDocument(`deliveries/${context.params.deliveryID}`);
+  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
   const newStakeholder = snap.data();
-  const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
+  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
 
   if (!!delivery && !!newStakeholder && !!newStakeholderOrg) {
     const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
@@ -26,7 +26,7 @@ export async function onDeliveryStakeholderCreate (
     }
 
     try {
-      const movie = await getDocument(`movies/${delivery.movieId}`);
+      const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
       const docID = {id: delivery.id, type: 'delivery'} as DocID;
       const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`);
       const snapInformations = {
@@ -72,9 +72,9 @@ export async function onDeliveryStakeholderDelete (
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
 
-  const delivery = await getDocument(`deliveries/${context.params.deliveryID}`);
+  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
   const stakeholder = snap.data();
-  const stakeholderOrg = await getDocument(`orgs/${stakeholder!.orgId}`);
+  const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder!.orgId}`);
 
   if (!!delivery && !!stakeholder && !!stakeholderOrg) {
     const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
@@ -85,7 +85,7 @@ export async function onDeliveryStakeholderDelete (
     }
 
     try {
-      const movie = await getDocument(`movies/${delivery.movieId}`);
+      const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
       const orgs = await getOrgsOfDelivery(delivery.id);
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
@@ -120,9 +120,9 @@ export async function onMovieStakeholderCreate (
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
 
-  const movie = await getDocument(`movies/${context.params.movieID}`);
+  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const newStakeholder = snap.data();
-  const newStakeholderOrg = await getDocument(`orgs/${newStakeholder!.orgId}`);
+  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
 
   if (!!movie && !!newStakeholder && !!newStakeholderOrg) {
     const movieDoc = await db.doc(`movies/${movie.id}`).get();
@@ -178,9 +178,9 @@ export async function onMovieStakeholderDelete (
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
 
-  const movie = await getDocument(`movies/${context.params.movieID}`);
+  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const stakeholder = snap.data();
-  const stakeholderOrg = await getDocument(`orgs/${stakeholder!.orgId}`);
+  const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder!.orgId}`);
 
   if (!!movie && !!stakeholder && !!stakeholderOrg) {
     const movieDoc = await db.doc(`movies/${movie.id}`).get();
