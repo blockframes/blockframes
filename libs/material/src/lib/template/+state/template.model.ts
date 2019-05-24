@@ -1,6 +1,6 @@
 import { Material } from "../../material/+state/material.model";
 import { firestore } from 'firebase/app';
-import { FieldValue } from "@google-cloud/firestore";
+
 
 export interface PartialTemplate {
   id: string;
@@ -11,7 +11,7 @@ export interface PartialTemplate {
 
 export interface Template extends PartialTemplate {
   materials?: Material[];
-  created: firestore.Timestamp | FieldValue;
+  created: firestore.Timestamp | firestore.FieldValue;
 }
 
 export interface TemplateView {

@@ -195,7 +195,7 @@ function reEncodeObject(x: any): any {
 /**
  * Set the restore timestamp to now.
  */
-const setRestoreFlag = async () => {
+export const setRestoreFlag = async () => {
   return db.collection('_restore').doc('_DOC').set({ restoredAt: admin.firestore.FieldValue.serverTimestamp() });
 };
 

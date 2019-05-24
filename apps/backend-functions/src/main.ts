@@ -19,6 +19,7 @@ import {
 } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
+import * as migrations from './migrations';
 
 
 /**
@@ -78,6 +79,11 @@ export const backupFirestore = functions.https
 export const restoreFirestore = functions.https
   .onRequest(backup.restore);
 
+/**
+ * Trigger: REST call to migrate the database to V2
+ */
+export const updateToV2 = functions.https
+.onRequest(migrations.updateToV2);
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`

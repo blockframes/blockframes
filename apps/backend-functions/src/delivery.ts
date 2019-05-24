@@ -1,6 +1,7 @@
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
 import { Organization, getDocument, getOrgsOfDelivery, getCollection } from './utils';
+import { Material } from './material';
 
 // This string refers to svg icon name
 export const APP_DELIVERY_ICON = 'media_delivering';
@@ -86,8 +87,8 @@ export async function onDeliveryUpdate (
   try {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: context.eventId });
     const [materialsMovie, materialsDelivery] = await Promise.all([
-      getCollection(`movies/${delivery.movieId}/materials`),
-      getCollection(`deliveries/${delivery.id}/materials`)
+      getCollection<Material>(`movies/${delivery.movieId}/materials`),
+      getCollection<Material>(`deliveries/${delivery.id}/materials`)
     ]);
 
     const promises = materialsDelivery.map(materialDelivery => {

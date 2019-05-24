@@ -5,6 +5,11 @@ export interface Organization {
   userIds: string[];
 }
 
+interface Stakeholder {
+  id: string;
+  orgId: string;
+}
+
 export async function getCollection<T>(path: string): Promise<T[]> {
   return db
     .collection(path)
@@ -20,14 +25,14 @@ export async function getDocument(path: string) {
 }
 
 export async function getOrgsOfDelivery(deliveryId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`deliveries/${deliveryId}/stakeholders`);
+  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);
 }
 
 export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection(`movies/${movieId}/stakeholders`);
+  const stakeholders = await getCollection<Stakeholder>(`movies/${movieId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => db.doc(`orgs/${orgId}`).get());
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);

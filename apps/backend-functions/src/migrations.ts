@@ -2,7 +2,9 @@ import { getCollection, getCount, Organization } from './utils';
 import { db, serverTimestamp } from './firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
 import { Material } from './material';
+import { setRestoreFlag } from './backup';
 
+// TODO: Move this to shared library
 interface Template {
   id: string;
   orgId: string;
@@ -10,41 +12,50 @@ interface Template {
   created: FieldValue | Timestamp;
 }
 
-async function migrateMaterialsToNewCollection(
+/*
+  UpdateToV2:
+  ===========
+
+  The following functions move Templates from Organizations (/orgs/orgID/templates)
+  to a root collection for Templates (/templates).
+
+  It also moves the Material collection from Organizations (/orgs/orgID/materials) to a
+  template sub-collection (/templates/templateID/materials)
+*/
+
+function migrateMaterialToNewCollection(
   batch: WriteBatch,
   template: Template,
-  materials: Material[]
+  material: Material
 ) {
-  const promises = materials.map(async material => {
-    if (template.materialsId.includes(material.id)) {
-      const materialDoc = await db.doc(`templates/${template.id}/materials/${material.id}`).get();
-      batch.set(materialDoc.ref, material);
-    }
-  });
-  return Promise.all(promises);
+  if (template.materialsId.includes(material.id)) {
+    const materialRef = db.doc(`templates/${template.id}/materials/${material.id}`)
+    batch.set(materialRef, material);
+  }
 }
 
-async function migrateTemplateToNewCollection(
+function migrateTemplateToNewCollection(
   batch: WriteBatch,
   org: Organization,
   template: Template
 ) {
-  delete template.materialsId;
-  template = { ...template, orgId: org.id, created: serverTimestamp() };
-  const templateDoc = await db.doc(`templates/${template.id}`).get();
-  batch.set(templateDoc.ref, template);
+  const newTemplate = { ...template, orgId: org.id, created: serverTimestamp() };
+  delete newTemplate.materialsId;
+  const templateRef = db.doc(`templates/${template.id}`);
+  batch.set(templateRef, newTemplate);
 }
 
 async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promise<any> {
   const templates = await getCollection<Template>(`orgs/${org.id}/templates`);
   const materials = await getCollection<Material>(`orgs/${org.id}/materials`);
 
-  const promises = templates.map(async template => {
-    await migrateTemplateToNewCollection(batch, org, template);
-    await migrateMaterialsToNewCollection(batch, template, materials);
-  });
+  templates.forEach(template => {
+    migrateTemplateToNewCollection(batch, org, template);
 
-  return Promise.all(promises);
+    materials.forEach(material => {
+      migrateMaterialToNewCollection(batch, template, material);
+    });
+  });
 }
 
 export async function copyTemplates() {
@@ -54,8 +65,6 @@ export async function copyTemplates() {
   await Promise.all(promises);
   return batch.commit();
 }
-
-
 
 export async function deleteTemplates() {
   const batch = db.batch();
@@ -76,4 +85,11 @@ export async function deleteTemplates() {
   });
   await Promise.all(promises);
   return batch.commit();
+}
+
+export async function updateToV2(req: any, resp: any) {
+  await setRestoreFlag();
+  await copyTemplates();
+  await deleteTemplates();
+  return resp.status(200).send('success');
 }

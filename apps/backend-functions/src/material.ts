@@ -7,6 +7,8 @@ import { getDocument, getOrgsOfDelivery, Organization } from './utils';
 export interface Material {
   id: string;
   value: string;
+  description: string;
+  category: string;
   deliveriesIds: string[];
   state: string;
 }
