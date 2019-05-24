@@ -4,7 +4,7 @@ import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './firebase';
 import {
-  Config,
+  RelayerConfig,
   relayerCreateLogic,
   relayerRequestTokensLogic,
   relayerSendLogic,
@@ -12,8 +12,8 @@ import {
 } from './relayer';
 import {
   deleteFirestoreDelivery,
-  deleteFirestoreMovie,
   deleteFirestoreMaterial,
+  deleteFirestoreMovie,
   deleteFirestoreTemplate
 } from './delete';
 import {
@@ -25,7 +25,8 @@ import {
 import * as users from './users';
 import * as backup from './backup';
 import * as migrations from './migrations';
-import { onDocumentDelete, onDocumentUpdate, onDocumentCreate } from './utils';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
+import { mnemonic, relayer } from './environments/environment';
 
 
 /**
@@ -89,7 +90,7 @@ export const restoreFirestore = functions.https
  * Trigger: REST call to migrate the database to V2
  */
 export const updateToV2 = functions.https
-.onRequest(migrations.updateToV2);
+  .onRequest(migrations.updateToV2);
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
@@ -132,17 +133,22 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 //            RELAYER           //
 //--------------------------------
 
+const RELAYER_CONFIG: RelayerConfig = {
+  ...relayer,
+  mnemonic
+};
+
 export const relayerCreate = functions.https
-  .onCall((data, context) => relayerCreateLogic(data, functions.config() as Config));
+  .onCall((data, context) => relayerCreateLogic(data, RELAYER_CONFIG));
 
 export const relayerSend = functions.https
-  .onCall((data, context) => relayerSendLogic(data, functions.config() as Config));
+  .onCall((data, context) => relayerSendLogic(data, RELAYER_CONFIG));
 
 export const relayerRequestTokens = functions.https
-  .onCall((data, context) => relayerRequestTokensLogic(data, functions.config() as Config));
+  .onCall((data, context) => relayerRequestTokensLogic(data, RELAYER_CONFIG));
 
 export const relayerSignDelivery = functions.https
-  .onCall((data, context) => relayerSignDeliveryLogic(data, functions.config() as Config));
+  .onCall((data, context) => relayerSignDeliveryLogic(data, RELAYER_CONFIG));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
@@ -152,6 +158,6 @@ export const deleteMovie = onDocumentDelete('movies/{movieId}', deleteFirestoreM
 
 export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', deleteFirestoreDelivery);
 
-export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}',deleteFirestoreMaterial);
+export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}', deleteFirestoreMaterial);
 
-export const deleteTemplate = onDocumentDelete('templates/{templateId}', deleteFirestoreTemplate)
+export const deleteTemplate = onDocumentDelete('templates/{templateId}', deleteFirestoreTemplate);

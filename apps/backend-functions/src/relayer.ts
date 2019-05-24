@@ -19,14 +19,12 @@ export interface Relayer {
   getNonce: () => Promise<number>;
 }
 
-export interface Config {
-  relayer: {
+export interface RelayerConfig {
     mnemonic: string;
     network: string;
-    basedomain: string;
-    registryaddress: string;
-    resolveraddress: string;
-  }
+    baseEnsDomain: string;
+    registryAddress: string;
+    resolverAddress: string;
 }
 
 export interface SendParams {
@@ -46,14 +44,14 @@ export interface SignDeliveryParams {
 }
 
 let nonceOffset = 0;
-export const initRelayer = (config: Config): Relayer => {
-  let wallet = Wallet.fromMnemonic(config.relayer.mnemonic);
-  const provider = getDefaultProvider(config.relayer.network);
+export const initRelayer = (config: RelayerConfig): Relayer => {
+  let wallet = Wallet.fromMnemonic(config.mnemonic);
+  const provider = getDefaultProvider(config.network);
   wallet = wallet.connect(provider);
   const contractFactory = new Contract(factoryContract, CREATE2_FACTORY.abi, wallet);
-  const namehash = utils.namehash(config.relayer.basedomain);
-  const registry = new Contract(config.relayer.registryaddress, ENS_REGISTRY.abi, wallet);
-  const resolver = new Contract(config.relayer.resolveraddress, ENS_RESOLVER.abi, wallet);
+  const namehash = utils.namehash(config.baseEnsDomain);
+  const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
+  const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
 
   const getNonce = async() => { // TODO Ethers v5 will handle the nonce automatically, remove this after migration to v5
     const nonce = await wallet.getTransactionCount();
@@ -79,7 +77,7 @@ interface UserInfos {
 
 export const relayerCreateLogic = async (
   { username, key, erc1077address }: UserInfos,
-  config: Config
+  config: RelayerConfig
 ) => {
   const relayer: Relayer = initRelayer(config);
 
@@ -96,7 +94,7 @@ export const relayerCreateLogic = async (
   }
 
   // compute needed values
-  const fullName = `${username}.${config.relayer.basedomain}`;
+  const fullName = `${username}.${config.baseEnsDomain}`;
   const hash = utils.keccak256(utils.toUtf8Bytes(username));
   const byteCode = getByteCode(key.toLocaleLowerCase(), '0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3'.toLocaleLowerCase()); // compute full contract byte code // TODO change hardcoded recover address
 
@@ -105,7 +103,7 @@ export const relayerCreateLogic = async (
     /*
     Deployement require 5 interdependent txs to happens :
     here are the order of the tx and their dependencies
-    
+
        (A) --> (B) --> (C)     // ENS workflow
         ||      ||
        (D) --> (E)             // Deploy workflow
@@ -193,7 +191,7 @@ export const relayerCreateLogic = async (
 
 export const relayerSendLogic = async (
   { username, tx }: SendParams,
-  config: Config
+  config: RelayerConfig
 ) => {
   const relayer: Relayer = initRelayer(config);
   // check required params
@@ -202,7 +200,7 @@ export const relayerSendLogic = async (
   }
 
   // compute needed values
-  const fullName = `${username}.${config.relayer.basedomain}`;
+  const fullName = `${username}.${config.baseEnsDomain}`;
   const erc1077 = new Contract(fullName, ERC1077.abi, relayer.wallet);
 
   // check if tx will be accepted by erc1077
@@ -247,7 +245,7 @@ const MAX_AUTHORIZED_TOKEN_TRANSFER = 0.1;
 
 export const relayerRequestTokensLogic = async (
   { username, amount }: RequestTokensParams,
-  config: Config
+  config: RelayerConfig
 ) => {
   const relayer: Relayer = initRelayer(config);
   // check required params
@@ -259,7 +257,7 @@ export const relayerRequestTokensLogic = async (
     throw new Error(`"amount" (${amount}) must be less than ${MAX_AUTHORIZED_TOKEN_TRANSFER}`);
   }
   // compute needed values
-  const fullName = `${username}.${config.relayer.basedomain}`;
+  const fullName = `${username}.${config.baseEnsDomain}`;
 
   const weiAmount = utils.parseEther(`${amount}`);
 
@@ -271,14 +269,14 @@ export const relayerRequestTokensLogic = async (
 
 export const relayerSignDeliveryLogic = async (
   { username, deliveryId, stakeholderId }: SignDeliveryParams,
-  config: Config
+  config: RelayerConfig
 ) => {
   if (!username || !deliveryId || !stakeholderId) {
     throw new Error('"username", "deliveryId" and "stakeholderId" are mandatory parameters !');
   }
   const relayer: Relayer = initRelayer(config);
   // compute needed values
-  const fullName = `${username}.${config.relayer.basedomain}`;
+  const fullName = `${username}.${config.baseEnsDomain}`;
   const hash = utils.keccak256(utils.toUtf8Bytes(deliveryId));
   const tx = await relayer.wallet.sendTransaction({to: fullName, data: hash});
 
@@ -286,5 +284,5 @@ export const relayerSignDeliveryLogic = async (
 
   console.log(`tx sent (sign delivery) : ${tx.hash}`); // display tx to firebase logging
   return tx;
-  
+
 }
