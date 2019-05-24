@@ -16,10 +16,10 @@ export class FireQuery extends AngularFirestore {
   async snapshot<T>(path: string): Promise<T> {
     if (path.split('/').length % 2 === 0) {
       const snapshot = await this.collection(path).ref.get();
-      return snapshot.docs.map(doc => doc.data()) as any;
+      return snapshot.docs.map(doc => doc.data()) as any; // TODO: fix typing (doc.data() as T)
     } else {
       const snapshot = await this.doc(path).ref.get();
-      return snapshot.data() as any;
+      return snapshot.data() as any; // TODO: fix typing (doc.data() as T)
     }
   }
 

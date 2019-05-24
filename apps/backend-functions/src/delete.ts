@@ -118,6 +118,11 @@ export const deleteFirestoreMaterial = async (
 
   const movieMaterial = await getDocument(`movies/${delivery!.movieId}/materials/${material.id}`)
 
+  if (!movieMaterial) {
+    console.info(`This material doesn't exist on this movie!`);
+    return null;
+  }
+
   if (movieMaterial!.deliveriesIds.includes(delivery!.id)) {
     if (movieMaterial!.deliveriesIds.length === 1) {
       db.doc(`movies/${delivery!.movieId}/materials/${movieMaterial!.id}`).delete()
@@ -128,6 +133,5 @@ export const deleteFirestoreMaterial = async (
         .update({ deliveriesIds: newdeliveriesIds });
     }
   }
-
   return true;
 };

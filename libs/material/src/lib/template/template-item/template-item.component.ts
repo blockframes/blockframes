@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { TemplateService, Template } from '../+state';
 import { MatSnackBar } from '@angular/material';
 
@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./template-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplateItemComponent implements OnInit{
+export class TemplateItemComponent{
 
   @Input() template: Template;
   public creationDate: any;
@@ -17,10 +17,6 @@ export class TemplateItemComponent implements OnInit{
     private service: TemplateService,
     private snackBar: MatSnackBar,
   ) { }
-
-  ngOnInit() {
-    this.creationDate = this.template.created.toDate();
-  }
 
   public stopPropagation(event: MouseEvent) {
     event.stopPropagation();

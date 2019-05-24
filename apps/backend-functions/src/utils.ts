@@ -1,14 +1,15 @@
 import { db } from "./firebase";
 
 export interface Organization {
+  id: string;
   userIds: string[];
 }
 
-export async function getCollection(path: string) {
+export async function getCollection<T>(path: string): Promise<T[]> {
   return db
     .collection(path)
     .get()
-    .then(collection => collection.docs.map(doc => doc.data()));
+    .then(collection => collection.docs.map(doc => doc.data() as T));
 }
 
 export async function getDocument(path: string) {
@@ -31,8 +32,6 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
   const orgs = await Promise.all(promises);
   return orgs.map(doc => doc.data() as Organization);
 }
-
-
 
 export function getCount(collection: string) {
   return db.collection(collection).get().then(col => col.size)
