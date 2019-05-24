@@ -10,7 +10,7 @@ export class TemplateService {
   constructor(
     private db: AngularFirestore,
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery,
+    private materialQuery: MaterialQuery
   ) {}
 
   public addTemplate(templateName: string, org: Organization): string {
@@ -18,8 +18,7 @@ export class TemplateService {
     const template = createTemplate({
       id: templateId,
       name: templateName,
-      orgId: org.id,
-      orgName: org.name
+      orgId: org.id
     });
     this.db.doc<Template>(`templates/${templateId}`).set(template);
     return templateId;
@@ -53,8 +52,7 @@ export class TemplateService {
       const template = createTemplate({
         id: this.db.createId(),
         name,
-        orgId: org.id,
-        orgName: org.name
+        orgId: org.id
       });
       this.db.doc<Template>(`templates/${template.id}`).set(template);
 
@@ -81,7 +79,9 @@ export class TemplateService {
       materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialRef = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`).ref;
+        const materialRef = this.db.doc<Material>(
+          `templates/${template.id}/materials/${material.id}`
+        ).ref;
         return batch.set(materialRef, materialWithoutStep);
       });
       batch.commit();
@@ -92,5 +92,4 @@ export class TemplateService {
     // check if name is already used in an already template
     return this.query.hasEntity(entity => entity.name === name && entity.orgId === org.id);
   }
-
 }

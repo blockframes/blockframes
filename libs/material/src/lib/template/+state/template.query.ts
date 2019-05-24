@@ -1,30 +1,18 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { TemplateStore, TemplateState } from './template.store';
-import { Template, TemplatesByOrgs } from './template.model';
+import { Template } from './template.model';
 import { materialsByCategory } from '../../material/+state/material.query';
-import { map, switchMap, filter, pluck, tap } from 'rxjs/operators';
+import { map, switchMap, filter, pluck } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-export function templatesByOrgName(templates: Template[]): TemplatesByOrgs {
-  return templates.reduce(
-    (acc, template) => {
-      return {
-        ...acc,
-        [template.orgName]: [...(acc[template.orgName] || []), template]
-      };
-    },
-    {} as TemplatesByOrgs
-  );
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-  public templatesByOrgs$ = this.selectAll().pipe(map(templates => templatesByOrgName(templates)));
 
   public get orgsWithTemplates$() {
     return this.organizationQuery.selectAll().pipe(

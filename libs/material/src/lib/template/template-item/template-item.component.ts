@@ -6,17 +6,12 @@ import { MatSnackBar } from '@angular/material';
   selector: 'template-item',
   templateUrl: './template-item.component.html',
   styleUrls: ['./template-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateItemComponent{
-
+export class TemplateItemComponent {
   @Input() template: Template;
-  public creationDate: any;
 
-  constructor(
-    private service: TemplateService,
-    private snackBar: MatSnackBar,
-  ) { }
+  constructor(private service: TemplateService, private snackBar: MatSnackBar) {}
 
   public stopPropagation(event: MouseEvent) {
     event.stopPropagation();
@@ -24,10 +19,8 @@ export class TemplateItemComponent{
 
   public deleteTemplate(id: string) {
     this.service.deleteTemplate(id);
-    this.snackBar.open( 'Template "' + this.template.name + '" has been deleted.', 'close', { duration: 2000 });
-  }
-
-  public randomNumberPicker(scale: number) {
-    return Math.floor(Math.random() * scale) + 2;
+    this.snackBar.open('Template "' + this.template.name + '" has been deleted.', 'close', {
+      duration: 2000
+    });
   }
 }

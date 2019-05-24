@@ -1,29 +1,21 @@
-import { Material } from "../../material/+state/material.model";
+import { Material } from '../../material/+state/material.model';
 import { firestore } from 'firebase/app';
-
 
 export interface PartialTemplate {
   id: string;
   name: string;
   orgId: string;
-  orgName: string;
 }
 
 export interface Template extends PartialTemplate {
   materials?: Material[];
-  created: firestore.Timestamp | firestore.FieldValue;
+  created: firestore.Timestamp;
 }
 
 export interface TemplateView {
-  category: string,
-  materials: Material[]
+  category: string;
+  materials: Material[];
 }
-
-export interface TemplatesByOrgs {
-  orgName: string,
-  templates: Template[]
-}
-
 
 /**
  * A factory function that creates Template
@@ -31,7 +23,6 @@ export interface TemplatesByOrgs {
 export function createTemplate(template: PartialTemplate): Template {
   return {
     ...template,
-    created: firestore.FieldValue.serverTimestamp()
-  }
+    created: firestore.Timestamp.now() // TODO: Figure out a way to use FieldValue to get a consistent date.
+  };
 }
-
