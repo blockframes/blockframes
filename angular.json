@@ -812,6 +812,10 @@
               "inspect": false,
               "fileReplacements": [
                 {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                },
+                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }

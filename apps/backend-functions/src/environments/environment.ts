@@ -1,9 +1,8 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-export { factoryContract } from '@env';
-
-export const environment = {
-  production: false
-};
+/**
+ * This environment uses all the configuration defined in the current @env setup,
+ * it assumes most secrets are defined in the process.env
+ *
+ * Use this setup (non-production) when the execution context is outside firebase
+ * functions.
+ */
+export { factoryContract, backupBucket, relayer, sendgridAPIKey, mnemonic } from '@env';

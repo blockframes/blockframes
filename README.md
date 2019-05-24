@@ -30,6 +30,12 @@ cp ./env/env.template.ts ./env/env.ts
 export GOOGLE_APPLICATION_CREDENTIALS=some/path/service-account-for-your-firebase.json
 ```
 
+### Setup your secrets
+
+```sh
+export SENDGRID_API_KEY=""
+export MNEMONIC=""
+```
 
 ## Running and testing
 
