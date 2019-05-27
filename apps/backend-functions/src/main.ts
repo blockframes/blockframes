@@ -10,7 +10,12 @@ import {
   relayerSendLogic,
   relayerSignDeliveryLogic
 } from './relayer';
-import { deleteFirestoreDelivery, deleteFirestoreMovie, deleteFirestoreMaterial } from './delete';
+import {
+  deleteFirestoreDelivery,
+  deleteFirestoreMovie,
+  deleteFirestoreMaterial,
+  deleteFirestoreTemplate
+} from './delete';
 import {
   onDeliveryStakeholderCreate,
   onDeliveryStakeholderDelete,
@@ -158,3 +163,7 @@ export const deleteDelivery = functions.firestore
 export const deleteMaterial = functions.firestore
   .document('deliveries/{deliveryId}/materials/{materialId}')
   .onDelete(backup.skipWhenRestoring(deleteFirestoreMaterial));
+
+export const deleteTemplate = functions.firestore
+  .document('templates/{templateId}')
+  .onDelete(backup.skipWhenRestoring(deleteFirestoreTemplate))

@@ -61,7 +61,7 @@ export async function deleteFirestoreDelivery (
     return null;
   }
 
-  /** We store the orgs before the delivery is deleted */
+  // We store the orgs before the delivery is deleted
   const orgs = await getOrgsOfDelivery(delivery.id);
 
   const batch = db.batch();
@@ -86,7 +86,7 @@ export async function deleteFirestoreDelivery (
 
   await batch.commit();
 
-  /** When delivery is deleted, notifications are created for each stakeholder of this delivery */
+  // When delivery is deleted, notifications are created for each stakeholder of this delivery
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -102,6 +102,25 @@ export async function deleteFirestoreDelivery (
 
   return true;
 };
+
+export async function deleteFirestoreTemplate (
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) {
+  const template = snap.data();
+
+  if (!template) {
+    console.error(`This template doesn't exist !`);
+    return null;
+  }
+
+  const batch = db.batch();
+  const templateMaterials = await db.collection(`templates/${template.id}/materials`).get();
+  templateMaterials.forEach(doc => batch.delete(doc.ref));
+
+  return batch.commit();
+
+}
 
 export async function deleteFirestoreMaterial (
   snap: FirebaseFirestore.DocumentSnapshot,
