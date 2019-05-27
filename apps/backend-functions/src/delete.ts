@@ -8,9 +8,9 @@ export async function deleteFirestoreMovie (
   context: functions.EventContext
 ) {
   const movie = snap.data();
+
   if (!movie) {
-    console.error(`This movie doesn\'t exist !`);
-    return null;
+    throw new Error(`This movie doesn\'t exist !`);
   }
 
   /**
@@ -57,8 +57,7 @@ export async function deleteFirestoreDelivery (
   const delivery = snap.data();
 
   if (!delivery) {
-    console.error(`This delivery doesn't exist !`);
-    return null;
+    throw new Error(`This delivery doesn't exist !`);
   }
 
   // We store the orgs before the delivery is deleted
@@ -110,8 +109,7 @@ export async function deleteFirestoreTemplate (
   const template = snap.data();
 
   if (!template) {
-    console.error(`This template doesn't exist !`);
-    return null;
+    throw new Error(`This template doesn't exist !`);
   }
 
   const batch = db.batch();

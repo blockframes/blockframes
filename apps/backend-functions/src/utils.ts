@@ -1,4 +1,9 @@
-import { db } from "./firebase";
+import { db, functions } from "./firebase";
+import * as backup from './backup';
+
+////////////////
+// INTERFACES //
+////////////////
 
 export interface Organization {
   id: string;
@@ -32,6 +37,10 @@ export interface Material {
   state: string;
 }
 
+////////////////////////////////////
+// COLLECTIONS & DOCUMENT GETTERS //
+////////////////////////////////////
+
 export async function getCollection<T>(path: string): Promise<T[]> {
   return db
     .collection(path)
@@ -60,4 +69,26 @@ export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
 
 export function getCount(collection: string) {
   return db.collection(collection).get().then(col => col.size)
+}
+
+///////////////////////////////////
+// DOCUMENT ON-CHANGES FUNCTIONS //
+///////////////////////////////////
+
+export function onDocumentDelete(docPath: string, fn: Function) {
+  return functions.firestore
+  .document(docPath)
+  .onDelete(backup.skipWhenRestoring(fn))
+}
+
+export function onDocumentUpdate(docPath: string, fn: Function) {
+  return functions.firestore
+  .document(docPath)
+  .onUpdate(backup.skipWhenRestoring(fn));
+}
+
+export function onDocumentCreate(docPath: string, fn: Function) {
+  return functions.firestore
+  .document(docPath)
+  .onCreate(backup.skipWhenRestoring(fn));
 }
