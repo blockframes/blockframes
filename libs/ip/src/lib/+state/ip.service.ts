@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ID } from '@datorama/akita';
 import { IpStore } from './ip.store';
 import { Ip, createIp } from './ip.model';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class IpService {
@@ -10,13 +11,13 @@ export class IpService {
 
   constructor(
     private store: IpStore,
-    private firestore: AngularFirestore,
+    private db: FireQuery,
   ) {
-    this.collection = this.firestore.collection('ip');
+    this.collection = this.db.collection('ip');
   }
 
   public async add(ip: Partial<Ip>) {
-    const id = this.firestore.createId();
+    const id = this.db.createId();
     await this.store.add(createIp({...ip, id}));
     return id;
   }

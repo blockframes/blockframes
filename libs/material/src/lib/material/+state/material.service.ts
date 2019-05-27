@@ -3,10 +3,10 @@ import { switchMap, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { Material } from './material.model';
 import { OrganizationQuery } from '@blockframes/organization';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { MovieQuery } from '@blockframes/movie';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ import { MovieQuery } from '@blockframes/movie';
 export class MaterialService {
   constructor(
     private organizationQuery: OrganizationQuery,
-    private db: AngularFirestore,
+    private db: FireQuery,
     private store: MaterialStore,
     private deliveryQuery: DeliveryQuery,
     private movieQuery: MovieQuery,

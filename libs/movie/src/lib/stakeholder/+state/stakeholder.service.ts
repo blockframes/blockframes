@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { createStakeholder, Stakeholder } from './stakeholder.model';
 import { Organization } from '@blockframes/organization';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
 export class StakeholderService {
 
-  constructor(private firestore: AngularFirestore,) {}
+  constructor(private db: FireQuery,) {}
 
   public async add(movieId: string, stakeholder: Partial<Stakeholder>, firstAdd: boolean = false ): Promise<string> {
-    const id = this.firestore.createId();
+    const id = this.db.createId();
     const sh = createStakeholder({ ...stakeholder, id });
-    const movieDoc = this.firestore.collection('movies').doc(movieId);
-    const orgDoc = this.firestore.collection('orgs').doc(sh.orgId);
+    const movieDoc = this.db.collection('movies').doc(movieId);
+    const orgDoc = this.db.collection('orgs').doc(sh.orgId);
     const stakeholderDoc = movieDoc.collection('stakeholders').doc(sh.id);
 
-    await this.firestore.firestore.runTransaction(async (tx) => {
+    await this.db.firestore.runTransaction(async (tx) => {
       const promises = [];
 
       // it true, add directly movie into org and bypasses notification approval
@@ -50,16 +50,16 @@ export class StakeholderService {
 
   public update(movieId: string, stakeholder: Partial<Stakeholder>) {
     // TODO: use FireQuery:
-    this.firestore.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`).update(stakeholder);
+    this.db.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`).update(stakeholder);
   }
 
   public async remove(movieId: string, stakeholderId: string) {
     // TODO: use FireQuery:
     const stkPath = `movies/${movieId}/stakeholders/${stakeholderId}`;
-    const stkDoc = this.firestore.doc(stkPath);
+    const stkDoc = this.db.doc(stkPath);
 
 
-    return this.firestore.firestore.runTransaction(async (tx) => {
+    return this.db.firestore.runTransaction(async (tx) => {
 
       // Delete the stakeholder:
       const stk = await tx.get(stkDoc.ref);
@@ -69,7 +69,7 @@ export class StakeholderService {
       // BEWARE: we'll have to check whether the org is still a stakeholder
       //         when we'll allow an org to have multiple stakeholder roles.
       const orgPath = `orgs/${orgId}`;
-      const orgDoc = this.firestore.doc(orgPath);
+      const orgDoc = this.db.doc(orgPath);
       const org = await tx.get(orgDoc.ref);
       const { movieIds } = org.data() as Organization;
 

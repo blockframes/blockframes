@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthStore, User, createUser } from './auth.store';
 import { switchMap, takeWhile} from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -11,8 +10,7 @@ export class AuthService {
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
-    private db: AngularFirestore,
-    private snackBar: MatSnackBar
+    private db: FireQuery
   ) {}
 
   //////////

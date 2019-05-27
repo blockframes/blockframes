@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Organization } from '@blockframes/organization';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
   constructor(
-    private db: AngularFirestore,
+    private db: FireQuery,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery
   ) {}

@@ -1,27 +1,24 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { createStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
 export class MovieService {
-  private collection: AngularFirestoreCollection<Movie>;
 
   constructor(
-  private firestore: AngularFirestore,
+  private db: FireQuery,
   private shService: StakeholderService,
-  ) {
-    this.collection = this.firestore.collection<Movie>('movies');
-  }
+  ) {}
 
   public async add(original: string, orgId: string, firstAdd: boolean = false ): Promise<Movie> {
-    const id = this.firestore.createId();
+    const id = this.db.createId();
     const owner = createStakeholder({orgId, orgMovieRole: 'ADMIN', isAccepted: true});
     const movie: Movie = createMovie({ id, title: { original }});
 
     // TODO: correct race condition
-    await this.collection.doc<Movie>(id).set(movie);
+    await this.db.doc<Movie>(`movies/${id}`).set(movie);
     await this.shService.add(id, owner, firstAdd);
 
     return movie;
@@ -32,11 +29,11 @@ export class MovieService {
     if (movie.org) delete movie.org;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    this.collection.doc(id).update(movie);
+    this.db.doc<Movie>(`movies/${id}`).update(movie);
   }
 
   public remove(id: string) {
-    this.collection.doc(id).delete();
+    this.db.doc<Movie>(`movies/${id}`).delete();
   }
 
 }

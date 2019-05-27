@@ -6,7 +6,7 @@ import { materialsByCategory } from '../../material/+state/material.query';
 import { map, switchMap, filter, pluck } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { FireQuery } from '@blockframes/utils';
 
 
 @Injectable({
@@ -51,7 +51,7 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   constructor(
     protected store: TemplateStore,
     private organizationQuery: OrganizationQuery,
-    private db: AngularFirestore
+    private db: FireQuery
   ) {
     super(store);
   }

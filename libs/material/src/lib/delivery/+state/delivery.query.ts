@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
 import { DeliveryState, DeliveryStore } from './delivery.store';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieQuery } from '@blockframes/movie';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, filter } from 'rxjs/operators';
@@ -10,6 +9,7 @@ import { materialsByCategory, MaterialQuery } from '../../material/+state/materi
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateView } from '../../template/+state';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     private movieQuery: MovieQuery,
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
-    private db: AngularFirestore
+    private db: FireQuery
   ) {
     super(store);
   }

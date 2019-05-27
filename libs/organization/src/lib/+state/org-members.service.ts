@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { OrgMembersStore } from './org-members.store';
 import { Organization, OrgMember } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class OrgMembersService {
@@ -12,7 +13,7 @@ export class OrgMembersService {
   constructor(
     private orgs: OrganizationService,
     private store: OrgMembersStore,
-    private firestore: AngularFirestore
+    private db: FireQuery
   ) {
   }
 
@@ -23,10 +24,10 @@ export class OrgMembersService {
   public subscribe(orgID: string): Observable<OrgMember[]> {
     const pullUserAndOrgRights = (userID): Observable<OrgMember> => (
       combineLatest([
-        this.firestore.collection('users').doc(userID)
+        this.db.collection('users').doc(userID)
           .get()
           .pipe(map(x => x.data())),
-        this.firestore.collection('users').doc(userID).collection('orgRights').doc(orgID)
+        this.db.collection('users').doc(userID).collection('orgRights').doc(orgID)
           .get()
           .pipe(map(x => x.data()))
       ]).pipe(map(([user, rights]): OrgMember => ({
@@ -47,8 +48,6 @@ export class OrgMembersService {
   }
 
   private collection(orgID: string): AngularFirestoreDocument<Organization> {
-    return this.firestore
-      .collection('orgs')
-      .doc(orgID);
+    return this.db.collection('orgs').doc(orgID);
   }
 }

@@ -1,26 +1,19 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ID } from '@datorama/akita';
 import { createOrganization, Organization, OrgMember, ROLES } from './organization.model';
 import { OrganizationStore } from './organization.store';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
-  private collection: AngularFirestoreCollection<Organization>;
-  private collectionName = 'orgs';
-
   constructor(
     private store: OrganizationStore,
-    private firestore: AngularFirestore,
-    private db: AngularFirestore
-  ) {
-    this.collection = this.firestore.collection(this.collectionName);
-  }
+    private db: FireQuery
+  ) {}
 
   public async addMember(orgId: string, member: OrgMember): Promise<string> {
-    const orgDoc = this.collection.doc(orgId);
-    const userDoc = this.firestore.collection('users').doc(member.id);
-    const orgRightsDoc = userDoc.collection('orgRights').doc(orgId);
+    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const orgRightsDoc = this.db.doc(`users/${member.id}/orgRights/${orgId}`)
 
     this.db.firestore.runTransaction(async (tx) => {
       // Update the org
@@ -42,19 +35,18 @@ export class OrganizationService {
     return member.id;
   }
 
-  public async add(org: Organization, userID: string): Promise<string> {
-    const id: string = this.firestore.createId();
-    const o: Organization = createOrganization({ ...org, id, userIds: [userID] });
+  public async add(org: Organization, userId: string): Promise<string> {
+    const orgId: string = this.db.createId();
+    const o: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
 
-    const orgDoc = this.collection.doc(id);
-    const userDoc = this.firestore.collection('users').doc(userID);
-    const orgRightsDoc = userDoc.collection('orgRights').doc(id);
+    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const orgRightsDoc = this.db.doc(`users/${userId}/orgRights/${orgId}`);
 
     this.db.firestore.runTransaction((transaction) => {
       return Promise.all([
         transaction.set(orgDoc.ref, o),
         // @todo admin slug comes from json
-        transaction.set(orgRightsDoc.ref, { orgId: id, rightNameSlug: [ROLES.ADMIN] })
+        transaction.set(orgRightsDoc.ref, { orgId, rightNameSlug: [ROLES.ADMIN] })
       ]);
     }).then(() => {
       console.log('Transaction successfully committed!');
@@ -62,7 +54,7 @@ export class OrganizationService {
       console.log('Transaction failed: ', error);
     });
 
-    return id;
+    return orgId;
   }
 
   public update(id, org: Partial<Organization>) {
