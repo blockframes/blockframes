@@ -56,7 +56,7 @@ export async function onDeliveryStakeholderCreate (
             app: APP_DELIVERY_ICON,
             message: customMessage(userId, snapInformations),
             userId,
-            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`,
+            path: `/layout/${delivery.movieId}/${delivery.id}/teamwork`,
             docID,
             stakeholderId: newStakeholder.id
           });
@@ -115,7 +115,7 @@ export async function onDeliveryStakeholderDelete (
             message: `${stakeholderOrg.name}
             has been removed from ${movie!.title.original}'s delivery`,
             userId,
-            path: `/layout/${delivery.movieId}/form/${delivery.id}/teamwork`
+            path: `/layout/${delivery.movieId}/${delivery.id}/teamwork`
           })
         );
 

@@ -41,8 +41,8 @@
           <span class="spinner-text"><h5>Global delivery date :</h5></span>
           <p class="period-days">{{ delivery.dueDate | date: 'dd MMM yyyy' }}</p>
           <span fxLayoutAlign="center center">
-              <mat-divider></mat-divider>
-            <button mat-raised-button class="edit mat-elevation-z0" (click)="editDelivery()">
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="edit mat-elevation-z0" routerLink="../edit">
               <mat-icon color="primary">create</mat-icon> Edit delivery
             </button>
           </span>

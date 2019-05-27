@@ -37,19 +37,17 @@ export class OrganizationService {
 
   public async add(org: Organization, userId: string): Promise<string> {
     const orgId: string = this.db.createId();
-    const o: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
+    const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const orgRightsDoc = this.db.doc(`users/${userId}/orgRights/${orgId}`);
 
     this.db.firestore.runTransaction((transaction) => {
       return Promise.all([
-        transaction.set(orgDoc.ref, o),
+        transaction.set(orgDoc.ref, newOrg),
         // @todo admin slug comes from json
         transaction.set(orgRightsDoc.ref, { orgId, rightNameSlug: [ROLES.ADMIN] })
       ]);
-    }).then(() => {
-      console.log('Transaction successfully committed!');
     }).catch((error) => {
       console.log('Transaction failed: ', error);
     });
