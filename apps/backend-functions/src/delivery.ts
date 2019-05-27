@@ -7,7 +7,8 @@ import {
   getCollection,
   Stakeholder,
   Movie,
-  Material
+  Material,
+  getCount
 } from './utils';
 
 // This string refers to svg icon name
@@ -18,15 +19,31 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[]): Promise<v
   const newStakeholder = await getDocument<Stakeholder>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
   );
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+
+  if(!newStakeholder) {
+    throw new Error(`This stakeholder doesn't exist !`);
+  }
+
+  const [newStakeholderOrg, movie] = await Promise.all([
+    getDocument<Organization>(`orgs/${newStakeholder!.orgId}`),
+    getDocument<Movie>(`movies/${delivery.movieId}`)
+  ]);
+
+  if(!movie) {
+    throw new Error(`This movie doesn't exist !`);
+  }
+
+  if (!newStakeholderOrg) {
+    throw new Error(`This organization doesn't exist !`);
+  }
+
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) =>
       prepareNotification({
         app: APP_DELIVERY_ICON,
-        message: `${newStakeholderOrg!.name} signed delivery ${movie!.title.original}'s delivery`,
+        message: `${newStakeholderOrg.name} signed delivery ${movie.title.original}'s delivery`,
         userId,
         path: `/layout/${delivery.movieId}/form/${delivery.id}`,
         docID: { id: delivery.id, type: 'delivery' }
@@ -60,24 +77,22 @@ export async function onDeliveryUpdate(
   const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
   const processedId = deliveryDoc.data()!.processedId;
 
-  const orgs = await getOrgsOfDelivery(delivery.id);
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
-  const stakeholderCount = await db
-    .collection(`deliveries/${delivery.id}/stakeholders`)
-    .where('isAccepted', '==', true)
-    .get()
-    .then(snap => snap.size);
+  const [orgs, movie, stakeholderCount] = await Promise.all([
+    getOrgsOfDelivery(delivery.id),
+    getDocument<Movie>(`movies/${delivery.movieId}`),
+    getCount(`deliveries/${delivery.id}/stakeholders`)
+  ]);
 
   /** Notifications are triggered when a new id is pushed into delivery.validated, which is considered as a signature
    *  Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
    *  that all stakeholders approved the delivery.
    */
 
-  const isNewSignature = delivery.validated.length === deliveryBefore.validated.length;
+  const isNewSignature = delivery.validated.length === deliveryBefore.validated.length + 1;
   const isFullSignatures = delivery.validated.length === stakeholderCount;
   const isBeforeStateClean = deliveryBefore.validated.length === stakeholderCount - 1;
 
-  if (!isNewSignature && !isFullSignatures) {
+  if (isNewSignature && !isFullSignatures) {
     await notifyOnNewSignee(delivery, orgs);
   }
 

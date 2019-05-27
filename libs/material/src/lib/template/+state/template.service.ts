@@ -79,9 +79,7 @@ export class TemplateService {
       materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialDoc = this.db.doc<Material>(
-          `templates/${template.id}/materials/${material.id}`
-        );
+        const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialWithoutStep);
       });
       batch.commit();

@@ -45,8 +45,11 @@ function migrateTemplateToNewCollection(
 }
 
 async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promise<void> {
-  const templates = await getCollection<Template>(`orgs/${org.id}/templates`);
-  const materials = await getCollection<Material>(`orgs/${org.id}/materials`);
+
+  const [templates, materials] = await Promise.all([
+    getCollection<Template>(`orgs/${org.id}/templates`),
+    getCollection<Material>(`orgs/${org.id}/materials`)
+  ]);
 
   templates.forEach(template => {
     migrateTemplateToNewCollection(batch, org, template);
@@ -69,8 +72,10 @@ export async function deleteTemplates() {
   const batch = db.batch();
   const orgs = await getCollection<Organization>(`orgs`);
   const promises = orgs.map(async org => {
-    const nbTemplates = await getCount(`orgs/${org.id}/templates`);
-    const nbMaterials = await getCount(`orgs/${org.id}/materials`);
+    const [nbTemplates, nbMaterials] = await Promise.all([
+      getCount(`orgs/${org.id}/templates`),
+      getCount(`orgs/${org.id}/materials`)
+    ]);
 
     if (nbTemplates > 0) {
       const templates = await db.collection(`orgs/${org.id}/templates`).get();

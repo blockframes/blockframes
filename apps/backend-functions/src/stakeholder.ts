@@ -13,9 +13,16 @@ export async function onDeliveryStakeholderCreate (
     return true;
   }
 
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
   const newStakeholder = snap.data();
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
+
+  if (!newStakeholder) {
+    throw new Error(`New stakeholder not found !`)
+  }
+
+  const [delivery, newStakeholderOrg] = await Promise.all([
+    getDocument<Delivery>(`deliveries/${context.params.deliveryID}`),
+    getDocument<Organization>(`orgs/${newStakeholder.orgId}`)
+  ]);
 
   if (!!delivery && !!newStakeholder && !!newStakeholderOrg) {
     const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
@@ -26,9 +33,12 @@ export async function onDeliveryStakeholderCreate (
     }
 
     try {
-      const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+      const [movie, orgs, stakeholderCount] = await Promise.all([
+        getDocument<Movie>(`movies/${delivery.movieId}`),
+        getOrgsOfDelivery(delivery.id),
+        getCount(`deliveries/${delivery.id}/stakeholders`)
+      ]);
       const docID = {id: delivery.id, type: 'delivery'} as DocID;
-      const stakeholderCount = await getCount(`deliveries/${delivery.id}/stakeholders`);
       const snapInformations = {
         movieTitle: movie!.title.original,
         docID,
@@ -37,7 +47,7 @@ export async function onDeliveryStakeholderCreate (
         count: stakeholderCount,
         userIds: newStakeholderOrg.userIds
       };
-      const orgs = await getOrgsOfDelivery(delivery.id);
+
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -71,10 +81,16 @@ export async function onDeliveryStakeholderDelete (
   }
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
-
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
   const stakeholder = snap.data();
-  const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder!.orgId}`);
+
+  if (!stakeholder) {
+    throw new Error(`Stakeholder not found !`)
+  }
+
+  const [delivery, stakeholderOrg] = await Promise.all([
+    getDocument<Delivery>(`deliveries/${context.params.deliveryID}`),
+    getDocument<Organization>(`orgs/${stakeholder.orgId}`)
+  ]);
 
   if (!!delivery && !!stakeholder && !!stakeholderOrg) {
     const deliveryDoc = await db.doc(`deliveries/${delivery.id}`).get();
@@ -85,8 +101,11 @@ export async function onDeliveryStakeholderDelete (
     }
 
     try {
-      const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
-      const orgs = await getOrgsOfDelivery(delivery.id);
+      const [movie, orgs] = await Promise.all([
+        getDocument<Movie>(`movies/${delivery.movieId}`),
+        getOrgsOfDelivery(delivery.id)
+      ])
+
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -119,10 +138,16 @@ export async function onMovieStakeholderCreate (
   }
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
-
-  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const newStakeholder = snap.data();
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
+
+  if (!newStakeholder) {
+    throw new Error(`New stakeholder not found !`)
+  }
+
+  const [movie, newStakeholderOrg] = await Promise.all([
+    getDocument<Movie>(`movies/${context.params.movieID}`),
+    getDocument<Organization>(`orgs/${newStakeholder.orgId}`)
+  ]);
 
   if (!!movie && !!newStakeholder && !!newStakeholderOrg) {
     const movieDoc = await db.doc(`movies/${movie.id}`).get();
@@ -133,8 +158,11 @@ export async function onMovieStakeholderCreate (
     }
 
     try {
+      const [orgs, stakeholderCount] = await Promise.all([
+        getOrgsOfMovie(movie.id),
+        getCount(`movies/${movie.id}/stakeholders`)
+      ]);
       const docID = {id: movie.id, type: 'movie'} as DocID;
-      const stakeholderCount = await getCount(`movies/${movie.id}/stakeholders`);
       const snapInformations = {
         movieTitle: movie.title.original,
         docID,
@@ -143,7 +171,7 @@ export async function onMovieStakeholderCreate (
         count: stakeholderCount,
         userIds: newStakeholderOrg.userIds
       }
-      const orgs = await getOrgsOfMovie(movie.id);
+
       const notifications = orgs
         .filter(org => !!org && !!org.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -177,10 +205,16 @@ export async function onMovieStakeholderDelete (
   }
 
   // TODO: Code is very similar to onStakeholderCreate. We should be able to factor some part of it.
-
-  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const stakeholder = snap.data();
-  const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder!.orgId}`);
+
+  if (!stakeholder) {
+    throw new Error(`Stakeholder not found !`)
+  }
+
+  const [movie, stakeholderOrg] = await Promise.all([
+    getDocument<Movie>(`movies/${context.params.movieID}`),
+    getDocument<Organization>(`orgs/${stakeholder.orgId}`)
+  ]);
 
   if (!!movie && !!stakeholder && !!stakeholderOrg) {
     const movieDoc = await db.doc(`movies/${movie.id}`).get();

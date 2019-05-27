@@ -108,27 +108,30 @@ export async function deleteFirestoreMaterial (
   context: functions.EventContext
 ) {
   const material = snap.data();
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryId}`);
 
   if (!material) {
-    console.error(`This material doesn't exist !`);
-    return null;
+    throw new Error(`This material doesn't exist !`);
   }
 
-  const movieMaterial = await getDocument<Material>(`movies/${delivery!.movieId}/materials/${material.id}`)
+  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryId}`);
 
-  if (!movieMaterial || !movieMaterial.deliveriesIds) {
-    console.info(`This material doesn't exist on this movie!`);
-    return null;
+  if (!delivery) {
+    throw new Error(`This delivery doesn't exist !`);
   }
 
-  if (movieMaterial.deliveriesIds.includes(delivery!.id)) {
+  const movieMaterial = await getDocument<Material>(`movies/${delivery.movieId}/materials/${material.id}`)
+
+  if (!movieMaterial) {
+    throw new Error(`This material doesn't exist on this movie`);
+  }
+
+  if (movieMaterial.deliveriesIds.includes(delivery.id)) {
     if (movieMaterial.deliveriesIds.length === 1) {
-      db.doc(`movies/${delivery!.movieId}/materials/${movieMaterial!.id}`).delete()
+      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).delete()
     }
     else {
-      const newdeliveriesIds = movieMaterial.deliveriesIds.filter((id: string) => id !== delivery!.id);
-      db.doc(`movies/${delivery!.movieId}/materials/${movieMaterial!.id}`)
+      const newdeliveriesIds = movieMaterial.deliveriesIds.filter((id: string) => id !== delivery.id);
+      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`)
         .update({ deliveriesIds: newdeliveriesIds });
     }
   }
