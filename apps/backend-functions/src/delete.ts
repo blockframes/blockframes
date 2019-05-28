@@ -1,7 +1,7 @@
 import { db, functions } from './firebase';
 import { APP_DELIVERY_ICON } from './delivery';
 import { prepareNotification, triggerNotifications } from './notify';
-import { getOrgsOfDelivery, getDocument, Delivery, Material } from './utils';
+import { getOrgsOfDelivery, getDocument, Delivery, Material, getCollection } from './utils';
 
 export async function deleteFirestoreMovie (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -136,7 +136,16 @@ export async function deleteFirestoreMaterial (
     throw new Error(`This delivery doesn't exist !`);
   }
 
-  const movieMaterial = await getDocument<Material>(`movies/${delivery.movieId}/materials/${material.id}`)
+  const movieMaterials = await getCollection<Material>(`movies/${delivery.movieId}/materials`);
+
+  // As material and movieMaterial don't share the same document ID, we have to look at
+  // some property values to find the matching one.
+  const movieMaterial = movieMaterials.find(
+    movieMat =>
+      material.value === movieMat.value &&
+      material.category === movieMat.category &&
+      material.description === movieMat.description
+  );
 
   if (!movieMaterial) {
     throw new Error(`This material doesn't exist on this movie`);
