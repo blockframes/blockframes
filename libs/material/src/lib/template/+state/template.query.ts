@@ -4,10 +4,8 @@ import { TemplateStore, TemplateState } from './template.store';
 import { Template } from './template.model';
 import { materialsByCategory } from '../../material/+state/material.query';
 import { map, switchMap, filter, pluck } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
-import { FireQuery } from '@blockframes/utils';
-
 
 @Injectable({
   providedIn: 'root'
@@ -27,19 +25,6 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
     );
   }
 
-  public get allTemplates() : Observable<Template[]> {
-    return this.organizationQuery.selectAll().pipe(
-      switchMap(orgs => {
-        const templateList = [];
-        return orgs.map(org => {
-          const templates = this.db.collection<Template>(`orgs/${org.id}/templates`).get();
-          templateList.push(templates);
-          return templateList;
-        });
-      })
-    );
-  }
-
   public form$ = this.select(state => state.form);
 
   public materialsByTemplate$ = this.selectActive().pipe(
@@ -51,7 +36,6 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   constructor(
     protected store: TemplateStore,
     private organizationQuery: OrganizationQuery,
-    private db: FireQuery
   ) {
     super(store);
   }

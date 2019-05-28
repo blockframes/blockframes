@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import { switchMap, tap, map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
 import { Material } from './material.model';
-import { OrganizationQuery } from '@blockframes/organization';
-import { MaterialStore } from './material.store';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { MovieQuery } from '@blockframes/movie';
 import { FireQuery } from '@blockframes/utils';
@@ -13,26 +9,10 @@ import { FireQuery } from '@blockframes/utils';
 })
 export class MaterialService {
   constructor(
-    private organizationQuery: OrganizationQuery,
     private db: FireQuery,
-    private store: MaterialStore,
     private deliveryQuery: DeliveryQuery,
     private movieQuery: MovieQuery,
   ) {}
-
-  public subscribeOnAllOrgsMaterials$() {
-    return this.organizationQuery.selectAll().pipe(
-      switchMap(orgs =>
-        combineLatest(
-          orgs.map(org => this.db.collection<Material>(`orgs/${org.id}/materials`).valueChanges())
-        )
-      ),
-      // for each org, we have an array of materials.
-      // This flattens the array of array into a single array of materials:
-      map(materials => [].concat.apply([], materials) as Material[]),
-      tap(materials => this.store.set(materials))
-    );
-  }
 
   public deleteMaterials(materials: Material[]) {
     const batch = this.db.firestore.batch();
@@ -50,7 +30,6 @@ export class MaterialService {
       ).ref;
       return batch.delete(materialRef);
     });
-    // TODO: Check if material.deliveriesIds length is > 1, as a material can also be part of another delivery
     batch.commit();
   }
 

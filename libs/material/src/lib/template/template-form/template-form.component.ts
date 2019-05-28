@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateView, Template } from '../+state/template.model';
 import { TemplateQuery } from '../+state/template.query';
@@ -6,8 +6,6 @@ import { TemplateService } from '../+state/template.service';
 import { MaterialStore } from '../../material/+state/material.store';
 import { MaterialQuery } from '../../material/+state/material.query';
 import { MaterialTemplateForm, Material } from '../../material/+state/material.model';
-import { takeWhile } from 'rxjs/operators';
-import { MaterialService } from '../../material/+state';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ConfirmComponent } from '@blockframes/ui';
 import { Router } from '@angular/router';
@@ -18,11 +16,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateFormComponent implements OnInit, OnDestroy {
+export class TemplateFormComponent implements OnInit {
   public template$: Observable<TemplateView>;
   public form$: Observable<MaterialTemplateForm>;
   public templateActive$ : Observable<Template>;
-  private isAlive = true;
   public categories: string[];
   public materialId: string;
 
@@ -31,16 +28,12 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     private service: TemplateService,
     private materialStore: MaterialStore,
     private materialQuery: MaterialQuery,
-    private materialService: MaterialService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
   ) {}
 
   ngOnInit() {
-    this.materialService.subscribeOnAllOrgsMaterials$()
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe();
 
     this.templateActive$ = this.query.selectActive();
     this.template$ = this.query.materialsByTemplate$;
@@ -58,7 +51,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   public deleteMaterial(material: Material) {
     this.service.deleteMaterial(material.id);
-    this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
+    this.snackBar.open(`Deleted material "${material.value}".`, 'close', { duration: 2000 });
   }
 
   public addForm(category: string) {
@@ -80,7 +73,7 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
 
   private deleteTemplate(id: string, name: string) {
     this.service.deleteTemplate(id);
-    this.snackBar.open( 'Template "' + name + '" has been deleted.', 'close', { duration: 2000 });
+    this.snackBar.open(`Template "${name}" has been deleted.`, 'close', { duration: 2000 });
     this.router.navigate(['layout/templates/list']);
   }
 
@@ -93,7 +86,4 @@ export class TemplateFormComponent implements OnInit, OnDestroy {
     delete this.materialId;
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }

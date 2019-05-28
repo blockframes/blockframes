@@ -121,6 +121,7 @@ export async function onDeliveryUpdate(
       );
 
       if (!!materialExist) {
+        // Check if delivery.id is already in material.deliveriesIds before pushing it in.
         if (!materialExist.deliveriesIds.includes(delivery.id)) {
           materialExist.deliveriesIds.push(delivery.id);
         }
