@@ -53,8 +53,8 @@ export class NavbarPage {
   }
 
   public clickProfile() {
-    cy.get('mat-list button').should('contain', 'Profile').contains('Profile').click();
-    return new EditProfilePage();
+    cy.get('button[testId=buttonProfile]').click();
+    return new ViewProfilePage();
   }
 }
 
@@ -623,13 +623,31 @@ export class HomePage extends NavbarPage {
   }
 }
 
-export class EditProfilePage {
+export class ViewProfilePage extends NavbarPage {
   constructor() {
-    cy.get('mat-card-header').contains('Edit account');
+    super();
+    cy.get('main[testId=profileView]');
   }
 
-  public wait(time: number) {
-    cy.wait(time);
+  public clickEdit() {
+    cy.get('main[testId=profileView]').find('button').click();
+    return new EditProfilePage();
+  }
+
+  public assertEmailExists(email: string) {
+    cy.get('div').contains('Email').parent().find('span').contains(email);
+  }
+
+  public assertFirstNameExists(value: string) {
+    cy.get('div').contains('First Name').parent().find('span').contains(value);
+  }
+
+  public assertLastNameExists(value: string) {
+    cy.get('div').contains('Last Name').parent().find('span').contains(value);
+  }
+
+  public assertBiographyExists(value: string) {
+    cy.get('div').contains('Biography').parent().find('p').contains(value);
   }
 
   public assertIdIsAddress() {
@@ -638,6 +656,58 @@ export class EditProfilePage {
     cy.get('#mat-input-5', {timeout: 60000}).should(($input) => {
       expect($input.val()).to.match(/0x[a-zA-Z\d]{40}/); // ethereum address regex
     });
+  }
+}
+
+export class EditProfilePage {
+  constructor() {
+    cy.get('[testId=profileEdit]');
+  }
+
+  public fillFirstName(value: string) {
+    cy.get(`input[formControlName=first_name]`).type(value);
+  }
+
+  public fillLastName(value: string) {
+    cy.get(`input[formControlName=last_name]`).type(value);
+  }
+
+  public fillBiography(value: string) {
+    cy.get(`textarea[formControlName=biography]`).type(value);
+    cy.wait(200);
+  }
+
+  public assertEmailExists(value: string) {
+    cy.get(`input[formControlName=email]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public assertFirstNameExists(value: string) {
+    cy.get(`input[formControlName=first_name]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public assertLastNameExists(value: string) {
+    cy.get(`input[formControlName=last_name]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public clickArrowBack() {
+    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('arrow_back').click();
+    return new ViewProfilePage();
+  }
+
+  public assertBiographyExists(value: string) {
+    cy.get(`textarea[formControlName=biography]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public clickSave() {
+    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('Save').click();
   }
 }
 

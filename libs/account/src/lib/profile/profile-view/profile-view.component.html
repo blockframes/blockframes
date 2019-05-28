@@ -1,4 +1,4 @@
-<main>
+<main testId="profileView">
   <ng-container *ngIf="(user$ | async) as user; else profileLoading">
     <button mat-icon-button routerLink="/layout/account/profile/edit" color="primary">
       <mat-icon>edit</mat-icon>
