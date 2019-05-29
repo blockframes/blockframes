@@ -1,0 +1,9 @@
+button { // TODO: Get rid of the !important and apply this on mat-raised-button
+  border-radius: 0px !important;
+  font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
+}
+
+button:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
+  color: var(--lightGrey)!important;
+  border: none!important;
+}

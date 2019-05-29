@@ -1,27 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
+
+// Theme with variables
 @import "./theme.scss";
 @import "./variables.scss";
-@include mat-core();
-@include angular-material-theme($blockframes-theme);
 
-// css color variables
-:root {
-  --primary: #{$primary};
-  --warn: #{$warn};
-  --accent: #{$accent};
-  --lightGrey: #818181;
-  --label: #666666;
-  //TODO : put more custom colors we often (ex. for texts or disabled content)
-}
+// Components style
+@import './components/mat-form-field';
+@import './components/mat-expansion-panel';
+@import './components/mat-card';
+@import './components/mat-dialog';
+@import './components/mat-menu';
+@import './components/mat-button';
 
 * {
   box-sizing: border-box;
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
 }
 
-html,
-body {
+html, body {
   height: 100%;
 }
 
@@ -44,52 +41,6 @@ h4 {
   font-weight: 700;
 }
 
-.mat-menu-panel {
-  border-radius: 0px !important;
-}
-
-.mat-dialog-container {
-  border-radius: 0px !important;
-  padding: 40px !important;
-}
-
-mat-card {
-  border-radius: 0px !important;
-}
-
-.mat-expansion-indicator:before {
-  color: $primary !important;
-}
-
-.mat-expansion-indicator:after {
-  color: $primary !important;
-}
-
-// input border
-.mat-form-field-appearance-outline .mat-form-field-outline {
-  color: $primary !important;
-}
-
-// input left borders
-.mat-form-field-appearance-outline .mat-form-field-outline-start {
-  border-radius: 0px !important;
-}
-
-// input right borders
-.mat-form-field-appearance-outline .mat-form-field-outline-end {
-  border-radius: 0px !important;
-}
-
-button { // TODO: Get rid of the !important and apply this on mat-raised-button
-  border-radius: 0px !important;
-  font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
-}
-
-button:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
-  color: var(--lightGrey)!important;
-  border: none!important;
-}
-
-main{
+main {
   margin-top: 66px;
 }
