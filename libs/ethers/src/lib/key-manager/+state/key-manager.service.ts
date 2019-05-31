@@ -4,6 +4,7 @@ import { utils, Wallet as EthersWallet } from 'ethers';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { AskPasswordComponent } from '../ask-password/ask-password.component';
 import { CreatePasswordComponent } from '../create-password/create-password.component';
+import { ExportComponent } from '../export-dialog/export-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {
@@ -90,8 +91,8 @@ export class KeyManagerService {
 
   /** delete key */
   async deleteKey(key: Key) {
-    const ref = this.dialog.open(AskPasswordComponent, { width: '250px' })
-    const password = await ref.afterClosed().toPromise()
+    const ref = this.dialog.open(AskPasswordComponent, { width: '250px' });
+    const password = await ref.afterClosed().toPromise();
     if (!password) {
       throw new Error('No password provided');
     }
@@ -102,7 +103,8 @@ export class KeyManagerService {
   async exportActiveKey() {
     this._requireSigningKey();
     const wallet = new EthersWallet(this.signingKey);
-    console.log(wallet);
+    const ref = this.dialog.open(ExportComponent, { width: '500px', data: {wallet} });
+    await ref.afterClosed().toPromise();
   }
 
 }

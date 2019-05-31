@@ -11,11 +11,12 @@
 
     <mat-card-actions>
       <ng-container *ngIf="active; else notActive">
-        <button mat-icon-button (click)="exportKey()"><mat-icon>cloud_download</mat-icon></button>
+        <button mat-icon-button (click)="exportKey()"><mat-icon>visibility</mat-icon></button>
         <button mat-icon-button (click)="lockKey()"><mat-icon>close</mat-icon></button>
       </ng-container>
       <ng-template #notActive>
         <button mat-icon-button (click)="unlockKey()"><mat-icon>lock</mat-icon></button>
+        <button mat-icon-button ><mat-icon>cloud_download</mat-icon></button>
         <button mat-icon-button (click)="deleteKey()"><mat-icon>delete</mat-icon></button>
       </ng-template>
     </mat-card-actions>

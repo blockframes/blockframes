@@ -1,0 +1,15 @@
+
+<mat-card-title>Export Key</mat-card-title>
+<mat-card-content>
+  <mat-tab-group>
+    <mat-tab label="Mnemonic">
+      {{mnemonic}}
+    </mat-tab>
+    <mat-tab label="Private Key">
+      <p class="privateKey">{{privateKey}}</p>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card-content>
+<mat-card-actions>
+  <button mat-button (click)="close()">Close</button>
+</mat-card-actions>
