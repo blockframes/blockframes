@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, HomePage, OrganizationFormPage, EditProfilePage, ViewProfilePage } from "../support/app.po";
+import { LandingPage, HomePage, ViewProfilePage, EditProfilePage, OrganizationFormPage } from "../support/pages";
 
 let currentID = 0;
 
@@ -35,7 +35,7 @@ describe('Test CRUD org', () => {
     p1.fillSignupEmail(EMAIL_USER);
     p1.fillSignupPassword(PASSWORD_USER);
     const p2: HomePage = p1.signup();
-    // TODO: p2.assertEncryptingExists();
+    p2.assertEncryptingExists();
 
     // Edit profile
     p2.openUserMenu();
