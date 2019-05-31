@@ -90,13 +90,13 @@ export class OrganizationFormPage extends NavbarPage {
 
   public fillAndSelectEmail(partialEmail: string, email: string) {
     cy.get('input[formcontrolname=user]').type(partialEmail);
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get('input[formcontrolname=user]').click();
     cy.get('mat-option').contains(email).click();
   }
 
   public assertOrgNameExists(orgName: string) {
-    cy.wait(1500);
+    cy.wait(2000);
     cy.get('mat-card-title').contains(orgName);
   }
 
@@ -457,6 +457,7 @@ export class TemplateListPage {
   }
 
   public assertTemplateExists(templateName: string) {
+    cy.wait(1000);
     cy.get('mat-card').contains(templateName).should('have.length', 1);
   }
 
@@ -534,6 +535,7 @@ export class MovieEditPage {
   }
 
   public assertMovieTitleExists(movieName: string) {
+    cy.wait(1000);
     cy.get('mat-card').contains(movieName);
   }
 
