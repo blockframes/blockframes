@@ -52,7 +52,7 @@ export class KeyManagerService {
   }
   /** create / encrypt / store / from mnemonic */
   importFromMnemonic(ensDomain: string, mnemonic: string, encryptionPassword: string) {
-    const wallet = EthersWallet.fromMnemonic(mnemonic);
+    const wallet = EthersWallet.fromMnemonic(mnemonic, '0'); // path '0'
     this._encryptAndStore(wallet, ensDomain, encryptionPassword);
   }
   /** create / encrypt / store / from private key */
