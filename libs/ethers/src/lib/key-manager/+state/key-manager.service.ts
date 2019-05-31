@@ -98,8 +98,11 @@ export class KeyManagerService {
     this.store.remove(key.address);
   }
 
-  // TODO get pub key (address)
-  // TODO get priv key (for export)
-  // TODO get mnemonic (for export)
+  /** export key */
+  async exportActiveKey() {
+    this._requireSigningKey();
+    const wallet = new EthersWallet(this.signingKey);
+    console.log(wallet);
+  }
 
 }

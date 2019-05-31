@@ -33,4 +33,8 @@ export class KeyManagerItemComponent implements OnInit {
   async deleteKey() {
     this.service.deleteKey(this.key);
   }
+
+  async exportKey() {
+    this.service.exportActiveKey();
+  }
 }
