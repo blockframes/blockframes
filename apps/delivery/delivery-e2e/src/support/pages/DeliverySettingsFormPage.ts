@@ -5,6 +5,7 @@ export default class DeliverySettingsFormPage {
   constructor() {
   }
   public pickGeneralDate(date: string) {
+    cy.wait(2000);
     cy.get('mat-datepicker-toggle button.mat-icon-button').click();
     cy.contains(date).click();
   }
