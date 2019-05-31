@@ -54,6 +54,7 @@ import { registerLocaleData } from '@angular/common';
 import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
 import { UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
+import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
 
 registerLocaleData(localeFr)
 
@@ -85,6 +86,8 @@ registerLocaleData(localeFr)
     AccountModule,
     ProfileModule,
     UtilsModule,
+    WalletModule,
+    KeyManagerModule,
     // Material
     MatToolbarModule,
     MatListModule,
