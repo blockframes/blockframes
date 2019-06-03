@@ -18,14 +18,14 @@ export async function onDeliveryUpdate(
   context: functions.EventContext
 ) {
   if (!change.after || !change.before) {
-    return true;
+    throw new Error(`Parameter 'change' not found`);
   }
 
   const deliveryDoc = change.after.data();
   const deliveryDocBefore = change.before.data();
 
   if (!deliveryDoc || !deliveryDocBefore) {
-    return true;
+    throw new Error(`No changes detected on this document`);
   }
 
   /**
@@ -52,11 +52,11 @@ export async function onDeliveryUpdate(
   }
 
   if (!isBeforeStateClean || !isFullSignatures) {
-    return true;
+    throw new Error(`There is no new signature on this document`);
   }
 
   if (processedId === context.eventId) {
-    return true;
+    throw new Error(`Document already processed with this context`);
   }
 
   // When validated.length reaches stakeholderCount.length

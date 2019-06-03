@@ -9,7 +9,7 @@ export async function deleteFirestoreMovie (
   const movie = snap.data();
 
   if (!movie) {
-    throw new Error(`This movie doesn\'t exist !`);
+    throw new Error(`This movie doesn't exist !`);
   }
 
   /**

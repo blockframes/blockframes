@@ -49,7 +49,7 @@ async function stakeholdersCollectionEvent(
   context: functions.EventContext
 ) {
   if (!snap.data()) {
-    return true;
+    throw new Error(`Snapshot not found`);
   }
 
   const newStakeholder = snap.data();
@@ -58,7 +58,7 @@ async function stakeholdersCollectionEvent(
     throw new Error(`New stakeholder not found !`);
   }
 
-  const collection = !!context.params.movieID ? 'movies' : 'deliveries';
+  const collection = !!context.params.movieID ? 'movies' : 'deliveries'; // TODO : Change to switch for 3 or more options.
   const document = !!context.params.movieID
     ? await getDocument<any>(`${collection}/${context.params.movieID}`)
     : await getDocument<any>(`${collection}/${context.params.deliveryID}`);
@@ -73,7 +73,7 @@ async function stakeholdersCollectionEvent(
     const processedId = documentSnapshot.data()!.processedId;
 
     if (processedId === context.eventId) {
-      return true;
+      throw new Error(`Document already processed with this context`);
     }
 
     try {
@@ -81,18 +81,20 @@ async function stakeholdersCollectionEvent(
         getOrgsOfDocument(document.id, collection),
         getCount(`${collection}/${document.id}/stakeholders`)
       ]);
+      const movie = (!!context.params.movieID)
+        ? document
+        : await getDocument<Movie>(`movies/${document.movieId}`);
+      const delivery = (!!context.params.deliveryID)
+        ? await getDocument<Delivery>(`deliveries/${document.id}`)
+        : null
       const snapInformations: SnapObject = {
-        movie: !!context.params.movieID
-          ? document
-          : await getDocument<Movie>(`movies/${document.movieId}`),
+        movie,
         docID,
         org: newStakeholderOrg,
         eventType: context.eventType,
         newStakeholderId: newStakeholder.id,
         count: stakeholderCount,
-        delivery: !!context.params.deliveryID
-          ? await getDocument<Delivery>(`deliveries/${document.id}`)
-          : null
+        delivery
       };
 
       const notifications = createStakeholderNotifications(orgs, snapInformations);
@@ -112,13 +114,13 @@ async function stakeholdersCollectionEvent(
  * working on the document, with custom path and message.
  */
 function createStakeholderNotifications(orgs: Organization[], snap: SnapObject) {
+  const path = !!snap.delivery
+    ? `/layout/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
+    : `/layout/home/form/${snap.movie.id}/teamwork`;
   return orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) => {
-      const path = !!snap.delivery
-        ? `/layout/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
-        : `/layout/home/form/${snap.movie.id}/teamwork`;
       return prepareNotification({
         message: customMessage(userId, snap),
         userId,

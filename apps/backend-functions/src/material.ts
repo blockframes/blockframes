@@ -8,7 +8,7 @@ export const onMaterialUpdate = async (
   context: functions.EventContext
 ) => {
   if (!change.after || !change.before) {
-    return true;
+    throw new Error(`Parameter 'change' not found`);
   }
 
   const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
@@ -21,11 +21,11 @@ export const onMaterialUpdate = async (
   const orgs : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
 
   if (!material || !materialBefore) {
-    return true;
+    throw new Error(`No changes detected on this document`);
   }
 
   if (material.state === materialBefore.state) {
-    return true;
+    throw new Error(`No changes detected on material.state property`);
   }
 
   /**
@@ -39,7 +39,7 @@ export const onMaterialUpdate = async (
     const processedId = materialDoc.data()!.processedId;
 
     if (processedId === context.eventId) {
-      return true;
+      throw new Error(`Document already processed with this context`);
     }
 
     try {

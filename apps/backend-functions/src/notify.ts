@@ -44,16 +44,14 @@ export function customMessage(userId: string, snap: SnapObject) {
   if (!!snap.count && snap.eventType === 'google.firestore.document.create') {
     if (snap.docID.type === 'delivery') {
       return snap.org.userIds.includes(userId) && snap.count > 1
-        ? `You have been invited to participate in ${snap.movie.title.original}'s ${
-            snap.docID.type
-          }. Do you wish to work on it ?`
+        ? `You have been invited to participate in ${snap.movie.title.original}'s
+          ${snap.docID.type}. Do you wish to work on it ?`
         : `${snap.org.name} has been added to ${snap.movie.title.original}'s ${snap.docID.type}`;
     }
     if (snap.docID.type === 'movie') {
       return snap.org.userIds.includes(userId) && snap.count > 1
-        ? `You have been invited to participate in ${
-            snap.movie.title.original
-          }. Do you wish to work on it ?`
+        ? `You have been invited to participate in ${snap.movie.title.original}.
+          Do you wish to work on it ?`
         : `${snap.org.name} has been added to ${snap.movie.title.original}`;
     }
   }
