@@ -39,18 +39,28 @@ export function prepareNotification(notif: BaseNotification): Notification {
   } as Notification;
 }
 
-/** Create a custom message base on what is inside the SnapObject (mostly docID.type, userId, and count) */
+/** Create a custom message relying on what is inside the SnapObject (mostly docID.type, userId, and count) */
 export function customMessage(userId: string, snap: SnapObject) {
-  if (snap.docID.type === 'delivery') {
-    return snap.org.userIds.includes(userId) && snap.count > 1
-      ? `You have been invited to participate in ${snap.movieTitle}'s ${snap.docID.type}. Do you wish to work on it ?`
-      : `${snap.org.name} has been added to ${snap.movieTitle}'s ${snap.docID.type}`;
+  if (!!snap.count && snap.eventType === 'google.firestore.document.create') {
+    if (snap.docID.type === 'delivery') {
+      return snap.org.userIds.includes(userId) && snap.count > 1
+        ? `You have been invited to participate in ${snap.movie.title.original}'s ${
+            snap.docID.type
+          }. Do you wish to work on it ?`
+        : `${snap.org.name} has been added to ${snap.movie.title.original}'s ${snap.docID.type}`;
     }
-  if (snap.docID.type === 'movie') {
-    return snap.org.userIds.includes(userId) && snap.count > 1
-      ? `You have been invited to participate in ${snap.movieTitle}. Do you wish to work on it ?`
-      : `${snap.org.name} has been added to ${snap.movieTitle}`;
-  } else {
+    if (snap.docID.type === 'movie') {
+      return snap.org.userIds.includes(userId) && snap.count > 1
+        ? `You have been invited to participate in ${
+            snap.movie.title.original
+          }. Do you wish to work on it ?`
+        : `${snap.org.name} has been added to ${snap.movie.title.original}`;
+    }
+  }
+  if (snap.eventType === 'google.firestore.document.delete') {
+    return `${snap.org.name} has been removed from ${snap.movie.title.original}`
+  }
+  else {
     throw new Error('Message is not valid');
   }
 }

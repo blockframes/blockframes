@@ -1,6 +1,6 @@
 import { db, functions } from './firebase';
 import { prepareNotification, triggerNotifications } from './notify';
-import { getOrgsOfDelivery, getDocument, Delivery, Material, getCollection, isTheSame } from './utils';
+import { getDocument, Delivery, Material, getCollection, isTheSame, getOrgsOfDocument } from './utils';
 
 export async function deleteFirestoreMovie (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -60,7 +60,7 @@ export async function deleteFirestoreDelivery (
   }
 
   // We store the orgs before the delivery is deleted
-  const orgs = await getOrgsOfDelivery(delivery.id);
+  const orgs = await getOrgsOfDocument(delivery.id, 'deliveries');
 
   const batch = db.batch();
   const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();

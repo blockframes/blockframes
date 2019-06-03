@@ -49,10 +49,13 @@ export interface Material {
 }
 
 export interface SnapObject {
-  movieTitle: string;
+  movie: Movie;
   docID: DocID;
-  count: number;
   org: Organization;
+  eventType: string;
+  delivery?: Delivery | null;
+  newStakeholderId?: string;
+  count?: number;
 }
 
 export interface DocID {
@@ -78,14 +81,8 @@ export async function getDocument<T>(path: string): Promise<T> {
     .then(doc => doc.data() as T);
 }
 
-export async function getOrgsOfDelivery(deliveryId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
-  const promises = stakeholders.map(({ orgId }) => getDocument<Organization>(`orgs/${orgId}`));
-  return Promise.all(promises);
-}
-
-export async function getOrgsOfMovie(movieId: string): Promise<Organization[]> {
-  const stakeholders = await getCollection<Stakeholder>(`movies/${movieId}/stakeholders`);
+export async function getOrgsOfDocument(documentId: string, collection: string): Promise<Organization[]> {
+  const stakeholders = await getCollection<Stakeholder>(`${collection}/${documentId}/stakeholders`);
   const promises = stakeholders.map(({ orgId }) => getDocument<Organization>(`orgs/${orgId}`));
   return Promise.all(promises);
 }

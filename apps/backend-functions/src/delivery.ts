@@ -3,14 +3,14 @@ import { triggerNotifications, prepareNotification } from './notify';
 import {
   Organization,
   getDocument,
-  getOrgsOfDelivery,
   getCollection,
   Stakeholder,
   Movie,
   Material,
   getCount,
   Delivery,
-  isTheSame
+  isTheSame,
+  getOrgsOfDocument
 } from './utils';
 
 export async function onDeliveryUpdate(
@@ -38,7 +38,7 @@ export async function onDeliveryUpdate(
   const processedId = delivery.processedId;
 
   const [orgs, movie, stakeholderCount] = await Promise.all([
-    getOrgsOfDelivery(delivery.id),
+    getOrgsOfDocument(delivery.id, 'deliveries'),
     getDocument<Movie>(`movies/${delivery.movieId}`),
     getCount(`deliveries/${delivery.id}/stakeholders`)
   ]);
@@ -69,7 +69,7 @@ export async function onDeliveryUpdate(
 
     const promises = copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
     // When delivery is signed, we create notifications for each stakeholder
-    const notifications = createNotifications(orgs, movie, delivery);
+    const notifications = createSignatureNotifications(orgs, movie, delivery);
 
     promises.push(triggerNotifications(notifications));
     await Promise.all(promises);
@@ -135,7 +135,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Mov
     throw new Error(`This organization doesn't exist !`);
   }
 
-  const notifications = createNotifications(orgs, movie, delivery, newStakeholderOrg);
+  const notifications = createSignatureNotifications(orgs, movie, delivery, newStakeholderOrg);
 
   await triggerNotifications(notifications);
 }
@@ -144,7 +144,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Mov
  * Create custom notifications for deliveries signatures. If it is used for a non-final signature,
  * pass the signatory's Organization as the 4th argument to get the correct message displayed in notification.
  */
-function createNotifications(
+function createSignatureNotifications(
   orgs: Organization[],
   movie: Movie,
   delivery: Delivery,

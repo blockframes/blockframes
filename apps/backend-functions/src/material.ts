@@ -1,7 +1,7 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, getOrgsOfDelivery, Organization, Material, Movie } from './utils';
+import { getDocument, Organization, Material, Movie, getOrgsOfDocument } from './utils';
 
 export const onMaterialUpdate = async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -15,7 +15,7 @@ export const onMaterialUpdate = async (
   const material: Material = change.after.data() as Material;
   const materialBefore = change.before.data();
   const orgsPromises = material.deliveriesIds.map((deliveryId: string) =>
-    getOrgsOfDelivery(deliveryId)
+    getOrgsOfDocument(deliveryId, 'deliveries')
   );
   const orgsPerDelivery = await Promise.all(orgsPromises);
   const orgs : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');

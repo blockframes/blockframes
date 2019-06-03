@@ -46,6 +46,7 @@ import { AccountModule, ProfileModule } from '@blockframes/account';
     UtilsModule,
     // Angular Fire
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireStorageModule,
     AngularFirestoreModule,
     AngularFireFunctionsModule,
