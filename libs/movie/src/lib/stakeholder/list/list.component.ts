@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { StakeholderService, createStakeholder } from '../+state';
+import { StakeholderService, createMovieStakeholder } from '../+state';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as firebase from 'firebase';
 import { takeWhile } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class StakeholderListComponent implements OnInit, OnDestroy {
   }
 
   public submit(org: Organization) {
-    const sh = createStakeholder({ orgId: org.id });
+    const sh = createMovieStakeholder({ orgId: org.id });
 
     // TODO: handle promises correctly (update loading status, send back error report, etc).
     this.service.add(this.movieQuery.getActiveId(), sh);

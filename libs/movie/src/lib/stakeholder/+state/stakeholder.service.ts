@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createStakeholder, Stakeholder } from './stakeholder.model';
+import { createMovieStakeholder, Stakeholder } from './stakeholder.model';
 import { Organization } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
 
@@ -11,7 +11,7 @@ export class StakeholderService {
 
   public async add(movieId: string, stakeholder: Partial<Stakeholder>, firstAdd: boolean = false ): Promise<string> {
     const id = this.db.createId();
-    const sh = createStakeholder({ ...stakeholder, id });
+    const sh = createMovieStakeholder({ ...stakeholder, id });
     const movieDoc = this.db.collection('movies').doc(movieId);
     const orgDoc = this.db.collection('orgs').doc(sh.orgId);
     const stakeholderDoc = movieDoc.collection('stakeholders').doc(sh.id);

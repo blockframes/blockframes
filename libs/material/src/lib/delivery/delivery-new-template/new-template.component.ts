@@ -41,7 +41,7 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
   }
 
   public saveTemplate(name: string, org: Organization) {
-    this.templateService.saveTemplate(name, org);
+    this.templateService.saveAsTemplate(name, org);
     this.dialogRef.close();
     this.snackBar.open('Saved template : ' + name + ' !', 'close', { duration: 2000 });
   }

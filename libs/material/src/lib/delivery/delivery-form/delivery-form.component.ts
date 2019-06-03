@@ -140,7 +140,7 @@ export class DeliveryFormComponent implements OnInit {
 
   public changeStep(stepId: string) {
     const materials = this.materialQuery.getActive();
-    this.materialService.changeStep(materials, stepId);
+    this.materialService.updateStep(materials, stepId);
     this.materialStore.returnToInitialState();
     this.allChecked = false;
   }

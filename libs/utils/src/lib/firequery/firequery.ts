@@ -13,10 +13,12 @@ export class FireQuery extends AngularFirestore {
   //////////////
 
   /** Return the current value of the path from Firestore */
-  async snapshot<T>(path: string): Promise<T> {
-    if (path.split('/').length % 2 === 0) {
+  public async snapshot<T>(path: string): Promise<T> {
+    // If path targets a collection ( odd number of segments after the split )
+    if (path.split('/').length % 2 !== 0) {
       const snapshot = await this.collection(path).ref.get();
       return snapshot.docs.map(doc => doc.data()) as any; // TODO: fix typing (doc.data() as T)
+    // Else path targets a doc
     } else {
       const snapshot = await this.doc(path).ref.get();
       return snapshot.data() as any; // TODO: fix typing (doc.data() as T)

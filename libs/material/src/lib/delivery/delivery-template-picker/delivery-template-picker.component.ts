@@ -39,7 +39,7 @@ export class DeliveryTemplatePickerComponent implements OnInit {
   }
 
   public async useMovieAsTemplate() {
-    const deliveryId = await this.deliveryService.addMovieMaterialsDelivery();
+    const deliveryId = await this.deliveryService.addDeliveryWithMovieMaterials();
     this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
   }
 

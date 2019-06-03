@@ -7,6 +7,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 
+/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
     ...delivery,
@@ -62,6 +63,7 @@ export class DeliveryService {
       .update({ approved: !material.approved });
   }
 
+  /** Update the property state of movie's materials */
   public updateMaterialState(materials: Material[], state: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
@@ -97,7 +99,7 @@ export class DeliveryService {
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
     if (!!templateId) {
-      const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials/`);
+      const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials`);
       await Promise.all(
         materials.map(material =>
           this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
@@ -108,9 +110,10 @@ export class DeliveryService {
     return id;
   }
 
-  public async addMovieMaterialsDelivery() {
+  /** Add a new delivery by copying the movie's materials */
+  public async addDeliveryWithMovieMaterials() {
     const movieId = this.movieQuery.getActiveId();
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials/`);
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials`);
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
     const delivery = createDelivery({ id, movieId, validated: [] });
@@ -121,10 +124,13 @@ export class DeliveryService {
       true
     );
 
+    // Add a new delivery in firebase
     this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
+    // Add the stakeholder of the delivery sub-collection in firebase
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
+    // Copy materials of movie in the sub-collection materials of the delivery
     await Promise.all(
       movieMaterials.map(material =>
         this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set({
@@ -139,8 +145,8 @@ export class DeliveryService {
   }
 
   public updateDueDate(dueDate: Date) {
-    const id = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${id}`).update({ dueDate });
+    const deliveryId = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ dueDate });
   }
 
   /** Add step in array steps of delivery */

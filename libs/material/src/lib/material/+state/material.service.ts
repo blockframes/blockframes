@@ -14,26 +14,23 @@ export class MaterialService {
     private movieQuery: MovieQuery,
   ) {}
 
+  /** Delete materials from a delivery
+   * trigger backend function deleteFirestoreMaterial() (delete materials from movie)
+   */
   public deleteMaterials(materials: Material[]) {
     const batch = this.db.firestore.batch();
     const deliveryId = this.deliveryQuery.getActiveId();
-    const movieId = this.movieQuery.getActiveId();
     materials.forEach(material => {
       const materialRef = this.db.doc<Material>(
         `deliveries/${deliveryId}/materials/${material.id}`
       ).ref;
       return batch.delete(materialRef);
     });
-    materials.forEach(material => {
-      const materialRef = this.db.doc<Material>(
-        `movies/${movieId}/materials/${material.id}`
-      ).ref;
-      return batch.delete(materialRef);
-    });
     batch.commit();
   }
 
-  public changeStep(materials: Material[], stepId: string) {
+  /** Update stepId of delivery's materials */
+  public updateStep(materials: Material[], stepId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
       const materialRef = this.db.doc<Material>(
