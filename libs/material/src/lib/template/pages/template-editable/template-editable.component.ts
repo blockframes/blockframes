@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TemplateView, Template } from '../+state/template.model';
-import { TemplateQuery } from '../+state/template.query';
-import { TemplateService } from '../+state/template.service';
-import { MaterialStore } from '../../material/+state/material.store';
-import { MaterialQuery } from '../../material/+state/material.query';
-import { MaterialTemplateForm, Material } from '../../material/+state/material.model';
+import { TemplateView, Template } from '../../+state/template.model';
+import { TemplateQuery } from '../../+state/template.query';
+import { TemplateService } from '../../+state/template.service';
+import { MaterialStore } from '../../../material/+state/material.store';
+import { MaterialQuery } from '../../../material/+state/material.query';
+import { MaterialTemplateForm, Material } from '../../../material/+state/material.model';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ConfirmComponent } from '@blockframes/ui';
 import { Router } from '@angular/router';

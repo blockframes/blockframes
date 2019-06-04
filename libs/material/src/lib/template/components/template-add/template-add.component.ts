@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { TemplateService } from '../+state/template.service';
+import { TemplateService } from '../../+state';
 import { Router } from '@angular/router';
 import { Organization } from '@blockframes/organization';
 

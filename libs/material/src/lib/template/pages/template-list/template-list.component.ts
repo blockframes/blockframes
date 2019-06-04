@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TemplateQuery, TemplateService, Template } from '../+state';
+import { TemplateQuery, TemplateService, Template } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { Organization } from '@blockframes/organization';
-import { TemplateAddComponent } from '../template-add/template-add.component';
+import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 
 @Component({
   selector: 'template-list',

@@ -3,14 +3,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 // Components
-import { TemplateEditableComponent } from './template-editable/template-editable.component';
-import { TemplateListComponent } from './template-list/template-list.component';
+import { TemplateEditableComponent } from './pages/template-editable/template-editable.component';
+import { TemplateListComponent } from './pages/template-list/template-list.component';
 import { TemplateActiveGuard } from './guards/template-active.guard';
-import { TemplateItemComponent } from './template-item/template-item.component';
-import { TemplateAddComponent } from './template-add/template-add.component';
+import { TemplateItemComponent } from './components/template-item/template-item.component';
+import { TemplateAddComponent } from './components/template-add/template-add.component';
 import { EditableModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
-import { TemplateEmptyComponent } from './template-empty/template-empty.component';
+import { TemplateEmptyComponent } from './components/template-empty/template-empty.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';

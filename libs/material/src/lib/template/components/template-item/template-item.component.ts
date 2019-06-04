@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Template } from '../+state';
+import { Template } from '../../+state';
 
 @Component({
   selector: 'template-item',

@@ -6,10 +6,10 @@ import {
   EventEmitter,
   Input
 } from '@angular/core';
-import { Material, MaterialStore } from '../+state';
+import { Material, MaterialStore } from '../../+state';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Step, DeliveryQuery } from '../../delivery/+state';
+import { Step, DeliveryQuery } from '../../../delivery/+state';
 
 @Component({
   selector: 'material-delivery-add-form',

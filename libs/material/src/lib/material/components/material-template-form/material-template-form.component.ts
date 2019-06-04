@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
-import { Material } from '../+state';
+import { Material } from '../../+state';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
