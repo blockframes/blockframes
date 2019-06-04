@@ -18,10 +18,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class FileUploadComponent {
   @Input() public accept: string[];
-  @Input() private path: string;
-  @Input() private types: string[];
-  @Output() private uploaded = new EventEmitter<Uint8Array>();
-  @Output() private storeUploaded = new EventEmitter<string>();
+  @Input() public path: string;
+  @Input() public types: string[];
+  @Input() public uploadOnFirestore = false; // TODO GENERIC FILE UPLOADER : ISSUE #423
+  @Output() public uploaded = new EventEmitter<Uint8Array>();
+  @Output() public storeUploaded = new EventEmitter<string>();
 
   public task: AngularFireUploadTask;
   public percentage: Observable<number>;
@@ -71,19 +72,21 @@ export class FileUploadComponent {
       return;
     }
 
-    const storagePath = `${this.path}/${file.name}`;
-    this.task = this.afStorage.upload(storagePath, file);
+    if (this.uploadOnFirestore) { // TODO GENERIC FILE UPLOADER : ISSUE #423
+      const storagePath = `${this.path}/${file.name}`;
+      this.task = this.afStorage.upload(storagePath, file);
 
-    // Progress monitoring
-    this.state = 'uploading';
-    this.percentage = this.task.percentageChanges();
+      // Progress monitoring
+      this.state = 'uploading';
+      this.percentage = this.task.percentageChanges();
 
-    const snapshot = await this.task;
+      const snapshot = await this.task;
 
-    // Success
-    this.state = 'success';
-    this.downloadURL = await snapshot.ref.getDownloadURL();
-    this.storeUploaded.emit(this.downloadURL);
+      // Success
+      this.state = 'success';
+      this.downloadURL = await snapshot.ref.getDownloadURL();
+      this.storeUploaded.emit(this.downloadURL);
+    }
 
     const reader = new FileReader();
     reader.addEventListener('loadend', _ => {

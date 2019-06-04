@@ -30,6 +30,7 @@
         accept="['.jpg', '.png']"
         path='test'
         [types]="['image/jpeg', 'image/png']"
+        [uploadOnFirestore]="true"
         (storeUploaded)="setPoster($event)"
       ></file-upload>
     </ng-template>
