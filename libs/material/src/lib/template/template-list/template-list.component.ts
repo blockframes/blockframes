@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TemplateQuery } from '../+state';
+import { TemplateQuery, TemplateService, Template } from '../+state';
 import { Observable } from 'rxjs';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { Organization } from '@blockframes/organization';
 import { TemplateAddComponent } from '../template-add/template-add.component';
 
@@ -18,11 +18,20 @@ export class TemplateListComponent implements OnInit {
   constructor(
     private query: TemplateQuery,
     public dialog: MatDialog,
+    private service: TemplateService,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
     this.hasTemplates$ = this.query.hasTemplates$;
     this.orgsWithTemplates$ = this.query.orgsWithTemplates$;
+  }
+
+  public deleteTemplate(template: Template) {
+    this.service.deleteTemplate(template.id);
+    this.snackBar.open(`Template "${template.name}" has been deleted.`, 'close', {
+      duration: 2000
+    });
   }
 
   public addTemplateDialog(event: MouseEvent, org: Organization): void {

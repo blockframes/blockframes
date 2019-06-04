@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'template-empty',
@@ -7,6 +7,4 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateEmptyComponent {
-
-  constructor() {}
 }

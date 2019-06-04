@@ -20,7 +20,7 @@ import {
 // Components
 import { MaterialTemplateItemComponent } from './material-template-item/material-template-item.component';
 import { MaterialTemplateFormComponent } from './material-template-form/material-template-form.component';
-import { MaterialListComponent } from './material-list/material-list.component';
+import { MaterialCategoryListComponent } from './material-category-list/material-category-list.component';
 import { MaterialDeliveryFormComponent } from './material-delivery-form/material-delivery-form.component';
 import { MaterialDeliveryItemComponent } from './material-delivery-item/material-delivery-item.component';
 import { MaterialDeliveryAddFormComponent } from './material-delivery-form/material-delivery-add-form.component';
@@ -31,7 +31,7 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
     MaterialTemplateItemComponent,
     MaterialTemplateFormComponent,
     MaterialTemplateAddFormComponent,
-    MaterialListComponent,
+    MaterialCategoryListComponent,
     MaterialDeliveryFormComponent,
     MaterialDeliveryItemComponent,
     MaterialDeliveryAddFormComponent,
@@ -40,7 +40,7 @@ import { MaterialTemplateAddFormComponent } from './material-template-form/mater
     MaterialTemplateItemComponent,
     MaterialTemplateFormComponent,
     MaterialTemplateAddFormComponent,
-    MaterialListComponent,
+    MaterialCategoryListComponent,
     MaterialDeliveryFormComponent,
     MaterialDeliveryItemComponent,
     MaterialDeliveryAddFormComponent,

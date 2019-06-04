@@ -9,32 +9,30 @@
         <span class="organization">
           {{ org.name }}
         </span>
-      <div class="divider"></div>
-      <div class="icon-container">
-        <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
-      </div>
-      <div class="icon-container">
-        <mat-icon class="view-icon" color="primary">view_module</mat-icon>
-      </div>
-      <button
-      mat-raised-button
-      (click)="addTemplateDialog($event, org)"
-      class="add-template mat-elevation-z0"
-    >
-      Create a template <mat-icon class="icon">add</mat-icon>
-    </button>
+        <div class="divider"></div>
+        <div class="icon-container">
+          <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
+        </div>
+        <div class="icon-container">
+          <mat-icon class="view-icon" color="primary">view_module</mat-icon>
+        </div>
+        <button
+          mat-raised-button
+          (click)="addTemplateDialog($event, org)"
+          class="add-template mat-elevation-z0"
+        >
+          Create a template <mat-icon class="icon">add</mat-icon>
+        </button>
       </mat-panel-title>
-
-
     </mat-expansion-panel-header>
     <div fxLayout="row wrap" fxLayoutAlign="start space-between">
-      <article
-        class="card-ngFor"
+      <template-item
         *ngFor="let template of org.templates"
-      >
-        <template-item class="mat-cards" [template]="template"></template-item>
-      </article>
+        class="mat-cards"
+        [template]="template"
+        (deleted)="deleteTemplate(template)"
+      ></template-item>
     </div>
-    <template-empty *ngIf="!(hasTemplates$ |async)"></template-empty>
+    <template-empty *ngIf="!(hasTemplates$ | async)"></template-empty>
   </mat-expansion-panel>
 </section>

@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
-    <material-list *ngIf="(template$ | async) as template" [template]="template"></material-list>
+    <material-category-list *ngIf="(template$ | async) as template" [template]="template"></material-category-list>
     <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
       <button class="create-material mat-elevation-z0" mat-raised-button (click)="addForm('')">
         Add a material
@@ -28,6 +28,7 @@
         <material-template-add-form
           *ngIf="form.category === ''"
           (material)="addMaterial($event)"
+          (canceled)="cancelAddForm()"
         ></material-template-add-form>
       </div>
       <article *ngFor="let category of (template$ | async | keyvalue)" [id]="category.key" class="category-block">
@@ -57,7 +58,7 @@
                 <material-template-form
                 [material]="material"
                 (update)="updateMaterial($event)"
-                (cancelForm)="cancelUpdateForm()"
+                (canceled)="cancelUpdateForm()"
                 ></material-template-form>
               </ng-template>
             </ui-editable>
@@ -66,6 +67,7 @@
             <material-template-add-form
               *ngIf="form.category === category.key"
               (material)="addMaterial($event)"
+              (canceled)="cancelAddForm()"
             ></material-template-add-form>
           </div>
         </div>

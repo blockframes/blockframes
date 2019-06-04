@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { TemplateService, Template } from '../+state';
-import { MatSnackBar } from '@angular/material';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Template } from '../+state';
 
 @Component({
   selector: 'template-item',
@@ -10,17 +9,13 @@ import { MatSnackBar } from '@angular/material';
 })
 export class TemplateItemComponent {
   @Input() template: Template;
-
-  constructor(private service: TemplateService, private snackBar: MatSnackBar) {}
+  @Output() deleted = new EventEmitter();
 
   public stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
 
-  public deleteTemplate(id: string) {
-    this.service.deleteTemplate(id);
-    this.snackBar.open(`Template "${this.template.name}" has been deleted.`, 'close', {
-      duration: 2000
-    });
+  public deleteTemplate() {
+    this.deleted.emit();
   }
 }

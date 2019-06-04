@@ -11,12 +11,12 @@ import { ConfirmComponent } from '@blockframes/ui';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'template-form',
-  templateUrl: './template-form.component.html',
-  styleUrls: ['./template-form.component.scss'],
+  selector: 'template-editable',
+  templateUrl: './template-editable.component.html',
+  styleUrls: ['./template-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateFormComponent implements OnInit {
+export class TemplateEditableComponent implements OnInit {
   public template$: Observable<TemplateView>;
   public form$: Observable<MaterialTemplateForm>;
   public templateActive$ : Observable<Template>;
@@ -34,7 +34,6 @@ export class TemplateFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.templateActive$ = this.query.selectActive();
     this.template$ = this.query.materialsByTemplate$;
     this.form$ = this.materialQuery.templateForm$;
@@ -77,13 +76,17 @@ export class TemplateFormComponent implements OnInit {
     this.router.navigate(['layout/templates/list']);
   }
 
-  openUpdateForm(material) {
+  public openUpdateForm(material) {
     this.materialId = material.id;
     this.materialStore.clearForm();
   }
 
-  cancelUpdateForm() {
+  public cancelUpdateForm() {
     delete this.materialId;
+  }
+
+  public cancelAddForm() {
+    this.materialStore.clearForm()
   }
 
 }

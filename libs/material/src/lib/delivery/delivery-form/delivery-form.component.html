@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav [opened]="true" mode="side">
-    <material-list *ngIf="(materials$ | async) as materials" [template]="materials"></material-list>
+    <material-category-list *ngIf="(materials$ | async) as materials" [template]="materials"></material-category-list>
     <article class="signature-button" fxLayout="row" fxLayoutAlign="center center">
       <button class="sign mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
         Add signature

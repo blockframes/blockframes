@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 // Components
-import { TemplateFormComponent } from './template-form/template-form.component';
+import { TemplateEditableComponent } from './template-editable/template-editable.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateActiveGuard } from './guards/template-active.guard';
 import { TemplateItemComponent } from './template-item/template-item.component';
@@ -39,7 +39,7 @@ const routes: Routes = [
   },
   {
     path: ':templateId',
-    component: TemplateFormComponent, // TODO rename in TemplateActiveForm
+    component: TemplateEditableComponent,
     canActivate: [TemplateActiveGuard],
     canDeactivate: [TemplateActiveGuard],
   }
@@ -47,7 +47,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    TemplateFormComponent,
+    TemplateEditableComponent,
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
