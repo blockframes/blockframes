@@ -52,13 +52,18 @@ export class KeyManagerService {
   }
   /** create / encrypt / store / from mnemonic */
   importFromMnemonic(ensDomain: string, mnemonic: string, encryptionPassword: string) {
-    const wallet = EthersWallet.fromMnemonic(mnemonic, '0'); // path '0'
-    this._encryptAndStore(wallet, ensDomain, encryptionPassword);
+    const privateKey = utils.HDNode.mnemonicToEntropy(mnemonic); // mnemonic is a 24 word phrase corresponding to private key !== BIP32/39 seed phrase
+    this.importFromPrivateKey(ensDomain, privateKey, encryptionPassword);
   }
   /** create / encrypt / store / from private key */
   importFromPrivateKey(ensDomain: string, privateKey: string, encryptionPassword: string) {
     const wallet = new EthersWallet(privateKey);
     this._encryptAndStore(wallet, ensDomain, encryptionPassword);
+  }
+
+  importFromJsonFile(jsonString: string) {
+    const {address, ensDomain, keyStore} = JSON.parse(jsonString);
+    this.store.add({address, ensDomain, keyStore});
   }
 
   /** load key (retreive / decrypt, set into process memory) */
