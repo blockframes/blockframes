@@ -21,3 +21,7 @@ export const contracts = {
   testErc1077: '0x01f1FB103ebc213D9f0dBBfaF9AC3a43D0f496E3',
   ensResolver: '0xde469c7106a9FBC3fb98912bB00be983a89bDDca',
 };
+export const persistenceSettings = {
+  // TODO : change to synchronizeTabs when available (angularFire 5.2)
+  experimentalTabSynchronization:true
+}
