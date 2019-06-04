@@ -44,8 +44,9 @@ export class KeyManagerItemComponent implements OnInit {
     return `key_${this.key.ensDomain}_${this.address.start}_${this.address.end}.json`;
   }
 
+  /** create a downloadable data blob (json file) from this key */
   get jsonKeystore() {
     const res = new Blob([JSON.stringify(this.key)], { type: 'application/octet-stream' });
-    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(res));
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(res)); // here we bypass security to prevent angular from escaping our data
   }
 }
