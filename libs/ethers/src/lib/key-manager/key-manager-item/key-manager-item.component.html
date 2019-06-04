@@ -16,7 +16,7 @@
       </ng-container>
       <ng-template #notActive>
         <button mat-icon-button (click)="unlockKey()"><mat-icon>lock</mat-icon></button>
-        <button mat-icon-button ><mat-icon>cloud_download</mat-icon></button>
+        <a mat-icon-button [href]="jsonKeystore" [download]="keyName"><mat-icon>cloud_download</mat-icon></a>
         <button mat-icon-button (click)="deleteKey()"><mat-icon>delete</mat-icon></button>
       </ng-template>
     </mat-card-actions>

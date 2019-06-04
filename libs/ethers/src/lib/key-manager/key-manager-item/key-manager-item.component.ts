@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from "@angular/core";
 import { Key, KeyManagerService } from "../+state";
 import { keyToAddressPart, AddressParts } from "@blockframes/utils";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: 'key-manager-item',
@@ -15,7 +16,8 @@ export class KeyManagerItemComponent implements OnInit {
   address: AddressParts;
 
   constructor(
-    private service: KeyManagerService
+    private service: KeyManagerService,
+    private sanitizer: DomSanitizer
   ){}
 
   ngOnInit() {
@@ -36,5 +38,14 @@ export class KeyManagerItemComponent implements OnInit {
 
   async exportKey() {
     this.service.exportActiveKey();
+  }
+
+  get keyName() {
+    return `key_${this.key.ensDomain}_${this.address.start}_${this.address.end}.json`;
+  }
+
+  get jsonKeystore() {
+    const res = new Blob([JSON.stringify(this.key)], { type: 'application/octet-stream' });
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(res));
   }
 }

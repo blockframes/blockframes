@@ -1,25 +1,52 @@
-<form [formGroup]="form" (ngSubmit)="recover()" fxLayout="column">
+
   <h3>Import a Key</h3>
   <mat-tab-group>
-    <mat-tab label="Mnemonic">
-      <mat-form-field>
-        <textarea matInput placeholder="Enter your Mnemonic" formControlName="mnemonic"></textarea>
-      </mat-form-field>
+
+    <!-- JSON KEYSTORE -->
+    <mat-tab label="File">
+      <file-upload
+        accept=".json"
+        path=""
+        [types]="['application/json']"
+        (uploaded)="fromFile($event)"
+      ></file-upload>
     </mat-tab>
+
+    <!-- MNEMONIC -->
+    <mat-tab label="Mnemonic">
+      <form [formGroup]="form" (ngSubmit)="recover('mnemonic')" fxLayout="column">
+        <mat-form-field>
+          <textarea matInput placeholder="Enter your Mnemonic" formControlName="importValue"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Enter your password" formControlName="password" />
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Confirm your password" formControlName="confirm" />
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button type="button" mat-button (click)="cancel()">Cancel</button>
+          <button type="submit" mat-raised-button>Import</button>
+        </div>
+      </form>
+    </mat-tab>
+
+    <!-- PRIVATE KEY -->
     <mat-tab label="Private Key">
-      <mat-form-field>
-        <input type="text" matInput placeholder="Enter your Private Key" formControlName="privateKey" />
-      </mat-form-field>
+      <form [formGroup]="form" (ngSubmit)="recover('private-key')" fxLayout="column">
+        <mat-form-field>
+          <input type="text" matInput placeholder="Enter your Private Key" formControlName="importValue" />
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Enter your password" formControlName="password" />
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Confirm your password" formControlName="confirm" />
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button type="button" mat-button (click)="cancel()">Cancel</button>
+          <button type="submit" mat-raised-button>Import</button>
+        </div>
+      </form>
     </mat-tab>
   </mat-tab-group>
-  <mat-form-field>
-    <input type="password" matInput placeholder="Enter your password" formControlName="password" />
-  </mat-form-field>
-  <mat-form-field>
-    <input type="password" matInput placeholder="Confirm your password" formControlName="confirm" />
-  </mat-form-field>
-  <div fxLayout="row" fxLayoutAlign="end center">
-    <button type="button" mat-button (click)="cancel()">Cancel</button>
-    <button type="submit" mat-raised-button>Import</button>
-  </div>
-</form>

@@ -12,12 +12,6 @@ function samePassword(control: FormGroup) { // TODO ISSUE #408
     : { notSame: true }
 }
 
-/** Require **either** mnemonic **or** private key **but not both** */
-function requireMnemonicXorPrivateKey(control: FormControl) {
-  const { mnemonic, privateKey } = control.value;
-  return (!!mnemonic !== !!privateKey) ? null : {bothEmpty: true}; // logical XOR
-}
-
 export interface ImportKeyData {
   ensDomain: string,
 }
@@ -40,32 +34,37 @@ export class RecoverComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      privateKey: new FormControl('', []),
-      mnemonic: new FormControl('', []),
+      importValue: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirm: new FormControl('', [])
-    }, { validators: [samePassword, requireMnemonicXorPrivateKey] });
+      confirm: new FormControl('', [Validators.required])
+    }, { validators: [samePassword] });
   }
 
   cancel() {
     this.dialog.close(false);
   }
 
-  async recover() {
+  async recover(importType: string) {
     if (!this.form.valid) {
       this.snackBar.open('Invalid values', 'close', { duration: 1000 });
       this.dialog.close(false);
       return;
     }
-    const { mnemonic, privateKey, password } = this.form.value;
-    if (!!mnemonic) {
-      this.service.importFromMnemonic(this.data.ensDomain, mnemonic, password);
-    } else if (!!privateKey) {
-      this.service.importFromPrivateKey(this.data.ensDomain, privateKey, password);
+    const { importValue, password } = this.form.value;
+    if (importType === 'mnemonic') {
+      this.service.importFromMnemonic(this.data.ensDomain, importValue, password);
+    } else if (importType === 'private-key') {
+      this.service.importFromPrivateKey(this.data.ensDomain, importValue, password);
     } else {
       this.dialog.close(false);
       throw new Error('There should be either a mnemonic or a private key but none was provided !');
     }
+    this.dialog.close(true);
+  }
+
+  fromFile(event: Uint8Array) {
+    const jsonString = new TextDecoder('utf8').decode(event);
+    this.service.importFromJsonFile(jsonString);
     this.dialog.close(true);
   }
 }
