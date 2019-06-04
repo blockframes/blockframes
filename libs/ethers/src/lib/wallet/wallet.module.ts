@@ -18,7 +18,7 @@ import {
 } from '@angular/material';
 
 import { BlockieModule } from '@blockframes/ui';
-import { KeyManagerModule } from '../key-manager/key-manger.module';
+import { KeyManagerModule } from '../key-manager/key-manager.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletViewComponent } from './wallet-view/wallet-view.component';
