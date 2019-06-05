@@ -24,7 +24,7 @@
       "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],
-      "@blockframes/template": ["libs/material/src/index.ts"], // TODO: remove this in favor of dynamic imports when Angular 8 is live
+      "@blockframes/template": ["libs/material/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"],
