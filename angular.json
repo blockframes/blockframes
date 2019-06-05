@@ -93,6 +93,35 @@
                 }
               ],
               "serviceWorker": true
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/ip-upload/ip-upload/src/environments/environment.ts",
+                  "with": "apps/ip-upload/ip-upload/src/environments/environment.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "serviceWorker": true
             }
           }
         },
@@ -318,6 +347,20 @@
                   "with": "apps/eth-events-server/src/environments/environment.staging.ts"
                 }
               ]
+            },
+            "ci": {
+              "optimization": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/eth-events-server/src/environments/environment.ts",
+                  "with": "apps/eth-events-server/src/environments/environment.ci.ts"
+                }
+              ]
             }
           }
         },
@@ -382,8 +425,68 @@
             "production": {
               "fileReplacements": [
                 {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                },
+                {
                   "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
                   "with": "apps/movie-financing/movie-financing/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
+                  "with": "apps/movie-financing/movie-financing/src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
+                  "with": "apps/movie-financing/movie-financing/src/environments/environment.ci.ts"
                 }
               ],
               "optimization": true,
@@ -650,6 +753,35 @@
                 }
               ],
               "serviceWorker": true
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
+                  "with": "apps/delivery/delivery/src/environments/environment.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "serviceWorker": true
             }
           }
         },
@@ -818,6 +950,36 @@
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/backend-functions/src/environments/environment.ts",
+                  "with": "apps/backend-functions/src/environments/environment.staging.ts"
+                }
+              ]
+            },
+            "ci": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/backend-functions/src/environments/environment.ts",
+                  "with": "apps/backend-functions/src/environments/environment.ci.ts"
                 }
               ]
             }

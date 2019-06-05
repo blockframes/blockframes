@@ -10,6 +10,14 @@ ng generate @nrwl/schematics:node-application eth-events-server
 # tags: leave empty
 ```
 
+
+## Environments
+
+Environments variables are used to adapt the application to different execution environment.
+The main environments to be aware of are: local development, continuous integration, staging and production.
+
+Each app uses its own `environment/` folder. Shared environments are stored in the root `/env` folder.
+
 ## Setup
 
 
