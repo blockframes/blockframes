@@ -29,8 +29,8 @@ export class ChipsAutocompleteComponent implements OnInit {
   public ctrl = new FormControl();
   public filteredItems : Observable<any[]>;
 
-  @ViewChild('inputEl') inputEl: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
   constructor() {}
 
