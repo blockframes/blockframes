@@ -25,7 +25,9 @@
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],
       "@blockframes/template": ["libs/material/src/index.ts"]
-    }
+    },
+    "module": "es2015",
+    "rootDir": "."
   },
   "exclude": ["node_modules", "tmp"]
 }
