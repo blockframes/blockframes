@@ -65,6 +65,7 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
+      - run: firebase deploy
       - run: npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
@@ -98,10 +99,10 @@ workflows:
       - test:
           requires:
             - build
-#      - test-e2e:
-#          requires:
-#            - lint
-#            - test
+      - test-e2e:
+          requires:
+            - lint
+            - test
 #      - request-deploy:
 #          type: approval
 #          requires:
