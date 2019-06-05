@@ -853,8 +853,7 @@
     "warnings": {
       "typescriptMismatch": false,
       "versionMismatch": false
-    },
-    "defaultCollection": "akita-schematics"
+    }
   },
   "defaultProject": "ip-upload"
 }
