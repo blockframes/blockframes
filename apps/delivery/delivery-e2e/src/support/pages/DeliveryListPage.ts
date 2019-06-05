@@ -15,6 +15,7 @@ export default class DeliveryListPage {
   }
 
   public clickDelivery(orgName1: string, orgName2?: string) {
+    cy.wait(1000);
     orgName2
       ? cy.get('.delivery-card').contains(orgName1 && orgName2).click()
       : cy.get('.delivery-card').contains(orgName1).click()

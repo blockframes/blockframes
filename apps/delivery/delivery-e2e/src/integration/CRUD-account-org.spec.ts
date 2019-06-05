@@ -35,7 +35,7 @@ describe('Test CRUD org', () => {
     p1.fillSignupEmail(EMAIL_USER);
     p1.fillSignupPassword(PASSWORD_USER);
     const p2: HomePage = p1.signup();
-    p2.assertEncryptingExists();
+    p2.assertIsEncrypting();
 
     // Edit profile
     p2.openUserMenu();

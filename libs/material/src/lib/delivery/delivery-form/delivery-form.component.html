@@ -3,7 +3,7 @@
   <mat-sidenav [opened]="true" mode="side">
     <material-category-repertory *ngIf="(materials$ | async) as materials" [template]="materials"></material-category-repertory>
     <article class="signature-button" fxLayout="row" fxLayoutAlign="center center">
-      <button class="sign mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
+      <button testId="addSignature" class="sign mat-elevation-z0" mat-raised-button routerLink="." fragment="sign">
         Add signature
         <mat-icon class="icon">create</mat-icon>
       </button>

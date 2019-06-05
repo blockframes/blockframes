@@ -5,7 +5,7 @@ export default abstract class NavbarPage {
     cy.get('.account-icon', {timeout: 60000}).contains('account_circle');
   }
 
-  public assertEncryptingExists() {
+  public assertIsEncrypting() {
     cy.get('mat-chip').contains('ENCRYPTING');
   }
 

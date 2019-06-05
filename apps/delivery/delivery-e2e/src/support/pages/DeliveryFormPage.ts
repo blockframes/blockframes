@@ -10,7 +10,7 @@ export default class DeliveryFormPage extends NavbarPage {
   }
 
   public verifyDeletedMaterial(value: string) {
-    cy.get('mat-card').contains(value).should('have.length', 0);
+    cy.get('[testId=materialItem]').contains(value).should('have.length', 0);
   }
 
   public verifySignatures(count: number) {
@@ -32,12 +32,12 @@ export default class DeliveryFormPage extends NavbarPage {
   }
 
   public clickAddSignature() {
-    cy.get('button').contains('Add signature').click();
+    cy.get('button[testId=addSignature]').click();
   }
 
   public clickDeleteMaterial(value: string) {
     cy.wait(1000);
-    cy.get('mat-card')
+    cy.get('[testId=materialItem]')
     .contains(value)
     .parent().parent()
     .trigger('mouseover')
@@ -45,7 +45,7 @@ export default class DeliveryFormPage extends NavbarPage {
   }
 
   public clickCheckBoxMaterial(name: string) {
-    cy.get('mat-card')
+    cy.get('[testId=materialItem]')
       .contains(name)
       .parent().parent()
       .find('.mat-checkbox-inner-container')
@@ -53,7 +53,7 @@ export default class DeliveryFormPage extends NavbarPage {
   }
 
   public clickCheckBoxMaterials(names: string[]) {
-    cy.wait(1000);
+    cy.wait(2000);
     names.forEach(name => this.clickCheckBoxMaterial(name));
   }
 

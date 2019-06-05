@@ -12,7 +12,7 @@ export default class TemplateFormPage {
   }
 
   public clickDeleteMaterial(value: string) {
-    cy.get('mat-card')
+    cy.get('[testId=materialItem]')
     .contains(value)
     .parent().parent()
     .trigger('mouseover')
