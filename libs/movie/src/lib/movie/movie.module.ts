@@ -44,7 +44,10 @@ import { ViewComponent } from './view/view.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { TitleFormComponent } from '../movie/title-form/title-form.component';
-import { MatTabsModule, MatGridListModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
 import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
 

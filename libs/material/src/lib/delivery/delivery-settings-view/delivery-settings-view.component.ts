@@ -4,7 +4,7 @@ import { DeliveryQuery, Step, DeliveryService, Delivery } from '../+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'delivery-settings-view',

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore,Key } from './key-manager.store';
 import { utils, Wallet as EthersWallet } from 'ethers';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AskPasswordComponent } from '../ask-password/ask-password.component';
 import { CreatePasswordComponent } from '../create-password/create-password.component';
 import { ExportComponent } from '../export-dialog/export-dialog.component';

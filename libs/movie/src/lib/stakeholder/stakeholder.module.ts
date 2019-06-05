@@ -12,7 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { StakeholderViewComponent } from './view/view.component';
 import { StakeholderItemComponent } from './item/item.component';
-import { MatSidenavModule, MatCheckboxModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
 
 @NgModule({

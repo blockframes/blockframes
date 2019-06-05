@@ -47,19 +47,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import {
-  MatInputModule,
-  MatMenuModule,
-  MatSidenavModule,
-  MatDialogModule,
-  MatSelectModule,
-  MatOptionModule,
-  MatExpansionModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatTooltipModule,
-} from '@angular/material';
-import { MatFormFieldModule } from '@angular/material';
+import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Guards
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';

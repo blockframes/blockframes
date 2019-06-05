@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TemplateView } from '../../template/+state';
 import { Observable } from 'rxjs';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../delivery-new-template/new-template.component';
 import { Material, MaterialDeliveryForm } from '../../material/+state/material.model';
 import { MaterialStore, MaterialQuery, MaterialService } from '../../material/+state';

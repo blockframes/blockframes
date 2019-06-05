@@ -6,7 +6,8 @@ import { TemplateService } from '../../+state/template.service';
 import { MaterialStore } from '../../../material/+state/material.store';
 import { MaterialQuery } from '../../../material/+state/material.query';
 import { MaterialTemplateForm, Material } from '../../../material/+state/material.model';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmComponent } from '@blockframes/ui';
 import { Router } from '@angular/router';
 

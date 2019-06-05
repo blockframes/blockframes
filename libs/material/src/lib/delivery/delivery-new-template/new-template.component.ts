@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialogRef, MatSnackBar } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateService } from '../../template/+state/template.service';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';

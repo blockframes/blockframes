@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeliveryService, DeliveryQuery, Delivery } from '../+state';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component';
 
 @Component({

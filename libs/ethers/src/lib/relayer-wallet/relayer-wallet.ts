@@ -6,7 +6,7 @@ import { Relayer } from '../relayer/relayer';
 import { LocalStorageVault } from '../vault/vault';
 import { baseEnsDomain } from '@env';
 import { toASCII } from 'punycode';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 // import { AskPasswordComponent } from '../wallet/ask-password/ask-password.component';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
