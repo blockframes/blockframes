@@ -65,8 +65,8 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
-      - run: firebase deploy
-      - run: npm run e2e --headless
+      - run: ENV=ci firebase deploy
+      - run: ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
