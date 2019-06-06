@@ -14,16 +14,16 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - dependencies-{{ .Environment.CACHE_VERSION }}
       - run: npm install
       - run: ./node_modules/.bin/cypress install
       - save_cache:
           paths:
             - node_modules
             - ~/.cache/Cypress
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - run: cp env/env.template.ts env/env.prod.ts
       - run: cp env/env.template.ts env/env.ts
       - run: npm run build:all
