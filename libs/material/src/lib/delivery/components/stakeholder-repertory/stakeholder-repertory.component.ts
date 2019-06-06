@@ -5,12 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component';
 
 @Component({
-  selector: 'delivery-stakeholder-list',
-  templateUrl: './stakeholder-list.component.html',
-  styleUrls: ['./stakeholder-list.component.scss'],
+  selector: 'delivery-stakeholder-repertory',
+  templateUrl: './stakeholder-repertory.component.html',
+  styleUrls: ['./stakeholder-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StakeholderListComponent implements OnInit {
+export class StakeholderRepertoryComponent implements OnInit {
 
   public delivery$: Observable<Delivery>;
 

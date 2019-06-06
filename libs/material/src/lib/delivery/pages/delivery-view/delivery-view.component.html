@@ -53,13 +53,13 @@
       <div class="materials" fxLayoutAlign="space-between center">
         <h2>{{ movie.title.original }}</h2>
         <span fxLayoutAlign="end">
-          <material-filters class="filters"></material-filters>
-          <material-actions
+          <delivery-filters class="filters"></delivery-filters>
+          <delivery-actions
           [allChecked]="allChecked"
           [deliverySteps]="delivery.steps"
           (newState)="changeState($event)"
           (selectAllMaterials)="selectAllMaterials()">
-          </material-actions>
+          </delivery-actions>
         </span>
       </div>
       <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">

@@ -38,7 +38,7 @@
     <div fxLayoutAlign="space-between center">
       <h2>{{ movie.title.original }}</h2>
       <span fxLayoutAlign="end" class="filters">
-        <material-filters></material-filters>
+        <delivery-filters></delivery-filters>
       </span>
     </div>
     <div *ngFor="let category of (materials$ | async | keyvalue)" fxLayout="column">

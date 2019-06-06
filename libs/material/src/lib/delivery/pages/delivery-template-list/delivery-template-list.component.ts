@@ -6,12 +6,12 @@ import { MovieQuery } from '@blockframes/movie';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'material-delivery-template-picker',
-  templateUrl: './delivery-template-picker.component.html',
-  styleUrls: ['./delivery-template-picker.component.scss'],
+  selector: 'material-delivery-template-list',
+  templateUrl: './delivery-template-list.component.html',
+  styleUrls: ['./delivery-template-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTemplatePickerComponent implements OnInit {
+export class DeliveryTemplateListComponent implements OnInit {
 
   public movieId = this.movieQuery.getActiveId();
   public templates$: Observable<Template[]>;

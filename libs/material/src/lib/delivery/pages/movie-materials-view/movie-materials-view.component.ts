@@ -6,12 +6,12 @@ import { DeliveryQuery } from '../../+state';
 import { TemplateView } from '../../../template/+state';
 
 @Component({
-  selector: 'delivery-movie-materials',
-  templateUrl: './movie-materials.component.html',
-  styleUrls: ['./movie-materials.component.scss'],
+  selector: 'delivery-movie-materials-view',
+  templateUrl: './movie-materials-view.component.html',
+  styleUrls: ['./movie-materials-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieMaterialsComponent implements OnInit {
+export class MovieMaterialsViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public materials$: Observable<TemplateView>;
   public progressionValue$: Observable<number>;

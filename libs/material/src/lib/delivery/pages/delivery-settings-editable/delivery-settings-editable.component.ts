@@ -7,12 +7,12 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'delivery-settings-view',
-  templateUrl: './delivery-settings-view.component.html',
-  styleUrls: ['./delivery-settings-view.component.scss'],
+  selector: 'delivery-settings-editable',
+  templateUrl: './delivery-settings-editable.component.html',
+  styleUrls: ['./delivery-settings-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliverySettingsViewComponent implements OnInit {
+export class DeliverySettingsEditableComponent implements OnInit {
   public hasForm = false;
   public delivery$: Observable<Delivery>;
   public movie$ : Observable<Movie>;

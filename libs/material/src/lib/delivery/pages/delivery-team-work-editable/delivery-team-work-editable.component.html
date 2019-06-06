@@ -1,10 +1,10 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav class="mat-elevation-z2" [opened]="true" fixedInViewport="true" fixedTopGap="191" [opened]="true" mode="side">
-    <delivery-team-work-list
+    <delivery-team-work-repertory
       *ngIf="(movie$ | async).stakeholders as movieStakeholders"
       [stakeholders]="movieStakeholders"
-    ></delivery-team-work-list>
+    ></delivery-team-work-repertory>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>

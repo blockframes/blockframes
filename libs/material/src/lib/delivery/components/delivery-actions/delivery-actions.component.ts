@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
-import { Step } from '../../../+state';
+import { Step } from '../../+state';
 
 @Component({
-  selector: 'material-actions',
-  templateUrl: './actions.component.html',
-  styleUrls: ['./actions.component.scss'],
+  selector: 'delivery-actions',
+  templateUrl: './delivery-actions.component.html',
+  styleUrls: ['./delivery-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsComponent{
+export class DeliveryActionsComponent{
   @Output() newState : EventEmitter<string> = new EventEmitter();
   @Output() selectAllMaterials: EventEmitter<void> = new EventEmitter();
   @Input() allChecked: boolean;

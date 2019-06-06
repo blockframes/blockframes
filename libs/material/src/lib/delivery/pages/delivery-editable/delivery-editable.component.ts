@@ -14,12 +14,12 @@ import { ConfirmComponent } from '@blockframes/ui';
 import { applyTransaction } from '@datorama/akita';
 
 @Component({
-  selector: 'delivery-form',
-  templateUrl: './delivery-form.component.html',
-  styleUrls: ['./delivery-form.component.scss'],
+  selector: 'delivery-editable',
+  templateUrl: './delivery-editable.component.html',
+  styleUrls: ['./delivery-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryFormComponent implements OnInit {
+export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<TemplateView>;
   public movie$: Observable<Movie>;
