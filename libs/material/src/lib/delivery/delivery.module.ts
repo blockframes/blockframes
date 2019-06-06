@@ -5,28 +5,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
-import { DeliveryListComponent } from './delivery-list/delivery-list.component';
-import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
-import { NewTemplateComponent } from './delivery-new-template/new-template.component';
-import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
-import { DeliveryTemplatePickerComponent } from './delivery-template-picker/delivery-template-picker.component';
-import { DeliveryTeamWorkViewComponent } from './delivery-team-work-view/delivery-team-work-view.component';
-import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
-import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
-import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
-import { FiltersComponent } from './movie-materials/filters/filters.component';
-import { ActionsComponent } from './movie-materials/actions/actions.component';
-import { MovieMaterialItemComponent } from './movie-material-item/movie-material-item.component';
-import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-item.component';
-import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
-import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
-import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
-import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
-import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
-import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
-import { DeliverySignComponent } from './delivery-sign/delivery-sign.component';
-import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
+import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
+import { StakeholderListComponent } from './components/stakeholder-list/stakeholder-list.component';
+import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
+import { DeliveryItemComponent } from './components/delivery-item/delivery-item.component';
+import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
+import { DeliveryViewItemComponent } from './components/delivery-view-item/delivery-view-item.component';
+import { DeliveryTeamWorkFormComponent } from './components/delivery-team-work-form/delivery-team-work-form.component';
+import { DeliveryTeamWorkItemComponent } from './components/delivery-team-work-item/delivery-team-work-item.component';
+import { DeliveryTeamWorkListComponent } from './components/delivery-team-work-list/delivery-team-work-list.component';
+import { DeliverySettingsItemComponent } from './components/delivery-settings-item/delivery-settings-item.component';
+import { DeliverySettingsFormComponent } from './components/delivery-settings-form/delivery-settings-form.component';
+import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
+import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
+
+// Pages
+import { MovieMaterialsComponent } from './pages/movie-materials/movie-materials.component';
+import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
+import { DeliveryFormComponent } from './pages/delivery-form/delivery-form.component';
+import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
+import { DeliveryTemplatePickerComponent } from './pages/delivery-template-picker/delivery-template-picker.component';
+import { DeliveryTeamWorkViewComponent } from './pages/delivery-team-work-view/delivery-team-work-view.component';
+import { FiltersComponent } from './pages/movie-materials/filters/filters.component';
+import { ActionsComponent } from './pages/movie-materials/actions/actions.component';
+import { DeliverySettingsViewComponent } from './pages/delivery-settings-view/delivery-settings-view.component';
 
 // Modules
 import { MaterialModule } from '../material/material.module';
