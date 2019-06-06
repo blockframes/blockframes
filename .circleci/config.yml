@@ -47,11 +47,14 @@ jobs:
       - run: npm run lint
   test:
     executor: blockframes-ci
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout
       - attach_workspace:
           at: ~/build
       - run: cp -R ~/build/* ./
+      - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
       - run: npm run test
   test-e2e:
     executor: blockframes-ci
