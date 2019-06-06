@@ -99,10 +99,14 @@ workflows:
       - test:
           requires:
             - build
+      - test-e2e-hold:
+          type: approval
+          requires:
+            - test
+            - lint
       - test-e2e:
           requires:
-            - lint
-            - test
+            - test-e2e-hold
 #      - request-deploy:
 #          type: approval
 #          requires:
