@@ -36,11 +36,10 @@ export const relayer = {
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
   baseEnsDomain: 'blockframes.test',
   network,
-  mnemonic: process.env.MNEMONIC
 };
 
 // Functions
 // =========
 
-export const sendgridAPIKey = process.env.SENDGRID_API_KEY;
 export const backupBucket = 'staging-backups';
+export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments

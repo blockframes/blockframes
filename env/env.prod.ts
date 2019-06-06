@@ -23,6 +23,7 @@ export const firebase = {
 
 export const network = 'goerli';
 export const factoryContract = 'factory2.eth';
+export const mnemonic = ''; // defined in functions.config, see backend-functions/environments
 
 // TODO : change the address
 export const contracts = {
@@ -36,12 +37,11 @@ export const relayer = {
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
   baseEnsDomain: 'blockframes.test',
   network,
-  mnemonic: null
 };
 
 // Functions
 // =========
 
-export const sendgridAPIKey = null;
 export const backupBucket = 'prod-backups';
+export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
 

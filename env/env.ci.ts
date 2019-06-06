@@ -1,24 +1,28 @@
 export const production = false;
-
 export const hmr = false; // hot-reloading: use true for local dev
+
+export const persistenceSettings = {
+  // TODO : change to synchronizeTabs when available (angularFire 5.2)
+  experimentalTabSynchronization: true
+};
 
 // Firebase
 // ========
 
 export const firebase = {
-  apiKey: "AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0",
-  authDomain: "blockframes-ci.firebaseapp.com",
-  databaseURL: "https://blockframes-ci.firebaseio.com",
-  projectId: "blockframes-ci",
-  storageBucket: "blockframes-ci.appspot.com",
-  messagingSenderId: "973979650792",
+  apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
+  authDomain: 'blockframes-ci.firebaseapp.com',
+  databaseURL: 'https://blockframes-ci.firebaseio.com',
+  projectId: 'blockframes-ci',
+  storageBucket: 'blockframes-ci.appspot.com',
+  messagingSenderId: '973979650792'
 };
 
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const baseEnsDomain = 'blockframes.test';
+export const factoryContract = 'create2.eth';
 
 // TODO : change the address
 export const contracts = {
@@ -27,16 +31,17 @@ export const contracts = {
   ensResolver: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96'
 };
 
-// Functions
-// =========
-
-export const sendgridAPIKey = process.env.SENDGRID_API_KEY;
-export const backupBucket = 'staging-backups';
-
 export const relayer = {
   registryAddress: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
-  baseDomain: 'blockframes.test',
+  baseEnsDomain: 'blockframes.test',
   network,
-  mnemonic: process.env.MNEMONIC
 };
+
+// Functions
+// =========
+
+export const backupBucket = 'ci-backups';
+export const sendgridAPIKey = '';
+export const mnemonic = '';
+
