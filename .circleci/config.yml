@@ -1,6 +1,17 @@
-# Javascript Node CircleCI 2.0 configuration file
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+# ENV VARIABLES:
+#   CACHE_VERSION:
+#     change this version when you need to trigger a global cache refresh on the ci,
+#     use case is: we move from node v9 to node v10 and we need to make sure the binaries are recompiled.
+#     currently "v1" in circleci.
+#   FIREBASE_SERVICE_ACCOUNT:
+#     contains the service account credentials for the blockframes-ci project.
+#     use case is: we want to use the firebase admin SDK and trigger deploys.
+#     /!\ secret value.
+#
 version: 2.1
+orbs:
+  do-exclusively: miyajan/do-exclusively@0.1.0
 executors:
   blockframes-ci:
     docker:
@@ -25,8 +36,7 @@ jobs:
             - node_modules
             - ~/.cache/Cypress
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: cp env/env.template.ts env/env.prod.ts
-      - run: cp env/env.template.ts env/env.ts
+      - run: cp env/env.prod.ts env/env.ts # required for the file rewrite to work
       - run: npm run build:all
       - persist_to_workspace:
           root: ~/repo
@@ -59,14 +69,22 @@ jobs:
       - run: npm run test
   test-e2e:
     executor: blockframes-ci
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout
       - attach_workspace:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
-      - run: ENV=ci firebase deploy
-      - run: ENV=ci npm run e2e --headless
+      - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
+      - do-exclusively/do-exclusively:
+          token: $CIRCLE_TOKEN
+          command: |
+            npm install --save-dev firebase-tools &&
+            npx firebase use ci &&
+            ENV=ci npx firebase deploy &&
+            ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
@@ -99,14 +117,13 @@ workflows:
       - test:
           requires:
             - build
-      - test-e2e-hold:
+      - click-to-run-e2e:
           type: approval
-          requires:
-            - test
-            - lint
       - test-e2e:
           requires:
-            - test-e2e-hold
+            - click-to-run-e2e
+            - test
+            - lint
 #      - request-deploy:
 #          type: approval
 #          requires:
