@@ -1,7 +1,7 @@
 import { NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { StakeholderListComponent } from './list/list.component';
+import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -10,8 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { StakeholderViewComponent } from './view/view.component';
-import { StakeholderItemComponent } from './item/item.component';
+import { StakeholderViewComponent } from './pages/stakeholder-view/stakeholder-view.component';
+import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
@@ -34,6 +34,6 @@ import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
     DirectivesModule,
     TeamWorkModule,
   ],
-  declarations: [StakeholderListComponent, StakeholderViewComponent, StakeholderItemComponent]
+  declarations: [StakeholderRepertoryComponent, StakeholderViewComponent, StakeholderItemComponent]
 })
 export class StakeholderModule {}

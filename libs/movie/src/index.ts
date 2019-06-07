@@ -12,4 +12,4 @@ export { default as staticModels } from './lib/movie/staticModels';
 // Stakeholder exports
 export * from './lib/stakeholder/+state';
 export * from './lib/stakeholder/stakeholder.module';
-export { StakeholderListComponent } from './lib/stakeholder/list/list.component';
+export { StakeholderRepertoryComponent } from './lib/stakeholder/components/stakeholder-repertory/stakeholder-repertory.component';

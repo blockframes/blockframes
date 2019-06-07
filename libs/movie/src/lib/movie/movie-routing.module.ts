@@ -12,7 +12,7 @@ import { FormTeamComponent } from './form/form.team.component';
 import { FormPromotionalComponent } from './form/form.promotional.component';
 
 // Guards
-import { StakeholderViewComponent } from '../stakeholder/view/view.component';
+import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieActiveGuard } from './guards/movie-active.guard';
 
 export const routes: Routes = [

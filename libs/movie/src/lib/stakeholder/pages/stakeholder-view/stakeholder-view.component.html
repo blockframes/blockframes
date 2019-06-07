@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav class="mat-elevation-z2" [opened]="true" fixedInViewport="true" fixedTopGap="191" mode="side">
-    <stakeholder-list></stakeholder-list>
+    <movie-stakeholder-repertory></movie-stakeholder-repertory>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
@@ -10,10 +10,10 @@
       <delivery-team-work-filters class="filters"></delivery-team-work-filters> <!-- Change it for a movie stakeholder filter -->
     </div>
     <div class="item-form" *ngFor="let stakeholder of (movie$ | async).stakeholders">
-      <stakeholder-item
-        (update)="openForm(stakeholder)"
+      <movie-stakeholder-item
+        (removed)="removeStakeholder(stakeholder.id)"
         [stakeholder]="stakeholder"
-      ></stakeholder-item>
+      ></movie-stakeholder-item>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
