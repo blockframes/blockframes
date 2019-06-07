@@ -1,43 +1,60 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+    // TODO: Figure out why I can't add a second || condition in create, read and update but I can in delete
 
-  	// SuperAdmin and DeliveriesAdmin rights in all deliveries and their sub-collections
-    match /deliveries/{restOfPath=**} {
-    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
-    }
-
-    // User rights in specific delivery and materials sub-collection
+    // User and Admins rights in specific delivery and materials sub-collection
     match /deliveries/{deliveryId}/{restOfPath=**} {
-    	allow create: if canCreateDocument(getDeliveryPath(deliveryId));
-      allow read: if canReadDocument(getDeliveryPath(deliveryId));
-      allow update: if canUpdateDocument(getDeliveryPath(deliveryId));
-      allow delete: if canDeleteDocument(getDeliveryPath(deliveryId));
+      allow read, write: if isSuperAdmin() && orgIsAdmin(deliveryId)
+      									 || isDeliveriesAdmin() && orgIsAdmin(deliveryId);
+
+    	allow create: if orgCanCreate(deliveryId) && canCreateDocument(getDeliveryPath(deliveryId))
+                    || orgCanCreate(deliveryId) && isDeliveriesAdmin()
+
+      allow read: if orgCanRead(deliveryId) && canReadDocument(getDeliveryPath(deliveryId))
+                  || orgCanRead(deliveryId) && isDeliveriesAdmin()
+
+      allow update: if orgCanUpdate(deliveryId) && canUpdateDocument(getDeliveryPath(deliveryId))
+                    || orgCanUpdate(deliveryId) && isDeliveriesAdmin()
+
+      allow delete: if orgCanDelete(deliveryId) && canDeleteDocument(getDeliveryPath(deliveryId))
+                    || orgCanDelete(deliveryId) && isDeliveriesAdmin()
     }
 
-    // SuperAdmin and DeliveriesAdmin rights in all templates and their sub-collections
-    match /templates/{restOfPath=**} {
-    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
-    }
-
-    // User rights in specific template and materials sub-collection
+    // User and Admins in specific template and materials sub-collection
     match /templates/{templateId}/{restOfPath=**} {
-    	allow create: if canCreateDocument(getTemplatePath(templateId));
-      allow read: if canReadDocument(getTemplatePath(templateId));
-      allow update: if canUpdateDocument(getTemplatePath(templateId));
-      allow delete: if canDeleteDocument(getTemplatePath(templateId));
-    }
+      allow read, write: if isSuperAdmin() && orgIsAdmin(templateId)
+      									 || isTemplatesAdmin() && orgIsAdmin(templateId)
 
-    // SuperAdmin and DeliveriesAdmin rights in all movies and their sub-collections
-    match /movies/{restOfPath=**} {
-    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
+    	allow create: if orgCanCreate(templateId) && canCreateDocument(getTemplatePath(templateId))
+                    || orgCanCreate(templateId) && isTemplatesAdmin()
+
+      allow read: if orgCanRead(templateId) && canReadDocument(getTemplatePath(templateId))
+                  || orgCanRead(templateId) && isTemplatesAdmin()
+
+      allow update: if orgCanUpdate(templateId) && canUpdateDocument(getTemplatePath(templateId))
+                    || orgCanUpdate(templateId) && isTemplatesAdmin()
+
+
+      allow delete: if orgCanDelete(templateId) && canDeleteDocument(getTemplatePath(templateId))
+                    || orgCanDelete(templateId) && isTemplatesAdmin()
     }
 
     // User rights in specific movie and materials sub-collection
     match /movies/{movieId}/{restOfPath=**} {
-    	allow create: if canCreateDocument(getMoviePath(movieId));
-      allow read: if canReadDocument(getMoviePath(movieId));
-      allow update: if canUpdateDocument(getMoviePath(movieId));
-      allow delete: if canDeleteDocument(getMoviePath(movieId));
+      allow read, write: if isSuperAdmin() && orgIsAdmin(movieId)
+      									 || isMoviesAdmin() && orgIsAdmin(movieId)
+
+    	allow create: if orgCanCreate(movieId) && canCreateDocument(getMoviePath(movieId))
+                    || orgCanCreate(movieId) && isMoviesAdmin()
+
+      allow read: if orgCanRead(movieId) && canReadDocument(getMoviePath(movieId))
+                  || orgCanRead(movieId) && isMoviesAdmin()
+
+      allow update: if orgCanUpdate(movieId) && canUpdateDocument(getMoviePath(movieId))
+                    || orgCanUpdate(movieId) && isMoviesAdmin()
+
+      allow delete: if orgCanDelete(movieId) && canDeleteDocument(getMoviePath(movieId))
+                    || orgCanDelete(movieId) && isMoviesAdmin()
     }
 
     // GLOBAL FUNCTIONS
@@ -64,6 +81,11 @@ service cloud.firestore {
     		get(/databases/$(database)/documents/rights/$(getUserOrg())).data.superAdminId;
   	}
 
+
+    function getOrgsDocumentRights(orgId, docId) {
+    	return get(/databases/$(database)/documents/rights/$(orgId)/docs/$(docId));
+    }
+
     // GLOBAL DOCUMENTS FUNCTIONS
 
     function canCreateDocument(document) {
@@ -81,6 +103,29 @@ service cloud.firestore {
     function canDeleteDocument(document) {
   		return request.auth.uid in document.data.canDelete;
   	}
+
+    // ORGS FUNCTIONS
+    // Checks if an org can perfom an action in a document where it is not admin
+
+    function orgCanCreate(docId) {
+      return getOrgsDocumentRights(getUserOrg(), docId).data.canCreate == true;
+    }
+
+    function orgCanRead(docId) {
+    	return getOrgsDocumentRights(getUserOrg(), docId).data.canRead == true;
+    }
+
+    function orgCanUpdate(docId) {
+    	return getOrgsDocumentRights(getUserOrg(), docId).data.canUpdate == true;
+    }
+
+    function orgCanDelete(docId) {
+    	return getOrgsDocumentRights(getUserOrg(), docId).data.canDelete == true;
+    }
+
+    function orgIsAdmin(docId) {
+    	return getOrgsDocumentRights(getUserOrg(), docId).data.isAdmin == true;
+    }
 
   	// DELIVERIES FUNCTIONS
 
