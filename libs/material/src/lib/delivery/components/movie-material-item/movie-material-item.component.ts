@@ -1,7 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Material } from '../../../material/+state';
-import { DeliveryService } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-movie-material-item',
@@ -11,20 +9,14 @@ import { MovieQuery } from '@blockframes/movie';
 })
 export class MovieMaterialItemComponent {
   @Input() material: Material;
+  @Output() approved = new EventEmitter();
 
   public stakeholder: string;
   public isOpen = true;
   public panelButtonLabel = 'LESS';
 
-  constructor(
-    private service: DeliveryService,
-    private movieQuery: MovieQuery,
-  ) {}
-
   public approvedToggle(material: Material) {
-    this.service
-      .approvedToggle(material, this.movieQuery.getActiveId())
-      .catch(err => console.log(err));
+    this.approved.emit(material);
   }
 
   public panelToggle() {

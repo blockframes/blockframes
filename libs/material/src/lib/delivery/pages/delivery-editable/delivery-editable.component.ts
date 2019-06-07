@@ -146,4 +146,7 @@ export class DeliveryEditableComponent implements OnInit {
     this.allChecked = false;
   }
 
+  public signDelivery() {
+    this.service.signDelivery();
+  }
 }

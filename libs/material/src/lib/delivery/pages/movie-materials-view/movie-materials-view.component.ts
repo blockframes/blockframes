@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
-import { DeliveryQuery } from '../../+state';
+import { DeliveryQuery, DeliveryService } from '../../+state';
 import { TemplateView } from '../../../template/+state';
+import { Material } from '../../../material/+state';
 
 @Component({
   selector: 'delivery-movie-materials-view',
@@ -18,7 +19,8 @@ export class MovieMaterialsViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private query: DeliveryQuery
+    private query: DeliveryQuery,
+    private service: DeliveryService,
   ) {}
 
   ngOnInit() {
@@ -27,4 +29,9 @@ export class MovieMaterialsViewComponent implements OnInit {
     this.progressionValue$ = this.query.movieProgression$;
   }
 
+  public approvedToggle(material: Material) {
+    this.service
+      .approvedToggle(material, this.movieQuery.getActiveId())
+      .catch(err => console.log(err));
+  }
 }

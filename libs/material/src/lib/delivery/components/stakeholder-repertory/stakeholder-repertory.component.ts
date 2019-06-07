@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { DeliveryService, DeliveryQuery, Delivery } from '../../+state';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Delivery } from '../../+state';
 import { MatDialog } from '@angular/material/dialog';
 import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component';
 
@@ -10,19 +9,12 @@ import { DeliverySignComponent } from '../delivery-sign/delivery-sign.component'
   styleUrls: ['./stakeholder-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StakeholderRepertoryComponent implements OnInit {
+export class StakeholderRepertoryComponent {
 
-  public delivery$: Observable<Delivery>;
+  @Input() delivery: Delivery;
+  @Output() signed = new EventEmitter();
 
-  constructor(
-    private service : DeliveryService,
-    private dialog: MatDialog,
-    private query: DeliveryQuery,
-  ) { }
-
-  ngOnInit() {
-    this.delivery$ = this.query.selectActive();
-  }
+  constructor(private dialog: MatDialog,) {}
 
   public openSignDelivery() {
     this.dialog.open(DeliverySignComponent, {
@@ -34,7 +26,7 @@ export class StakeholderRepertoryComponent implements OnInit {
   }
 
   public signDelivery() {
-    this.service.signDelivery();
+    this.signed.emit();
   }
 
 }

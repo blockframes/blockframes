@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
-import { DeliveryService } from '../../+state';
 
 @Component({
   selector: 'delivery-team-work-repertory',
@@ -10,10 +9,9 @@ import { DeliveryService } from '../../+state';
 })
 export class DeliveryTeamWorkRepertoryComponent {
   @Input() stakeholders: Stakeholder[];
-
-  constructor(private service: DeliveryService) {}
+  @Output() added = new EventEmitter();
 
   public addStakeholder(stakeholder: Stakeholder) {
-    this.service.addStakeholder(stakeholder);
+    this.added.emit(stakeholder);
   }
 }

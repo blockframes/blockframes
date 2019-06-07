@@ -152,7 +152,7 @@
           </div>
         </div>
       </article>
-      <delivery-stakeholder-repertory id="sign"></delivery-stakeholder-repertory>
+      <delivery-stakeholder-repertory *ngIf="(delivery$ | async) as delivery" id="sign" [delivery]="delivery" (signed)="signDelivery()"></delivery-stakeholder-repertory>
     </section>
   </mat-sidenav-content>
 </mat-sidenav-container>

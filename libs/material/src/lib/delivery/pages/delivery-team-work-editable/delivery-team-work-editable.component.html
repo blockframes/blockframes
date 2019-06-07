@@ -4,6 +4,7 @@
     <delivery-team-work-repertory
       *ngIf="(movie$ | async).stakeholders as movieStakeholders"
       [stakeholders]="movieStakeholders"
+      (added)="addStakeholder($event)"
     ></delivery-team-work-repertory>
   </mat-sidenav>
   <!-- Content -->
@@ -16,8 +17,9 @@
       <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
         <ng-template materialViewMode>
           <delivery-team-work-item
-            (update)="openForm(deliveryStakeholder)"
+            (updated)="openForm(deliveryStakeholder)"
             [stakeholder]="deliveryStakeholder"
+            (removed)="removeStakeholder(deliveryStakeholder.id)"
           ></delivery-team-work-item>
         </ng-template>
         <ng-template materialEditMode>
