@@ -9,7 +9,7 @@
     <div class="stakeholder-infos" fxLayout="column">
       <mat-card-title class="orgName">{{ stakeholder.organization.name }}</mat-card-title>
       <mat-card-actions>
-        <a (click)="removeStakeholder()">
+        <a (click)="removed.emit()">
           DELETE
         </a>
       </mat-card-actions>

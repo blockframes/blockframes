@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { StakeholderService, createMovieStakeholder } from '../+state';
+import { StakeholderService, createMovieStakeholder } from '../../+state';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as firebase from 'firebase';
 import { takeWhile } from 'rxjs/operators';
@@ -11,12 +11,12 @@ interface Organization {
 }
 
 @Component({
-  selector: 'stakeholder-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  selector: 'movie-stakeholder-repertory',
+  templateUrl: './stakeholder-repertory.component.html',
+  styleUrls: ['./stakeholder-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StakeholderListComponent implements OnInit, OnDestroy {
+export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   public addStakeholderForm: FormGroup;
   public orgOptions: Organization[];
   public isAlive = true;

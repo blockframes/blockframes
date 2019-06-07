@@ -8,7 +8,7 @@ import { ViewComponent } from './view/view.component';
 import { TitleFormComponent } from './title-form/title-form.component';
 
 // Guards
-import { StakeholderViewComponent } from '../stakeholder/view/view.component';
+import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieActiveGuard } from './guards/movie-active.guard';
 
 
