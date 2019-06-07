@@ -15,3 +15,10 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+import { prepareFirebase } from '../../../../backend-functions/src/tools/usersSetup';
+
+describe('Hooks', () => {
+  before(async () => {
+    await prepareFirebase();
+  });
+});
