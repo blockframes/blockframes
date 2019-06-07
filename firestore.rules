@@ -1,7 +1,122 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+
+  	// SuperAdmin and DeliveriesAdmin rights in all deliveries and their sub-collections
+    match /deliveries/{restOfPath=**} {
+    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
     }
+
+    // User rights in specific delivery and materials sub-collection
+    match /deliveries/{deliveryId}/{restOfPath=**} {
+    	allow create: if canCreateDocument(getDeliveryPath(deliveryId));
+      allow read: if canReadDocument(getDeliveryPath(deliveryId));
+      allow update: if canUpdateDocument(getDeliveryPath(deliveryId));
+      allow delete: if canDeleteDocument(getDeliveryPath(deliveryId));
+    }
+
+    // SuperAdmin and DeliveriesAdmin rights in all templates and their sub-collections
+    match /templates/{restOfPath=**} {
+    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
+    }
+
+    // User rights in specific template and materials sub-collection
+    match /templates/{templateId}/{restOfPath=**} {
+    	allow create: if canCreateDocument(getTemplatePath(templateId));
+      allow read: if canReadDocument(getTemplatePath(templateId));
+      allow update: if canUpdateDocument(getTemplatePath(templateId));
+      allow delete: if canDeleteDocument(getTemplatePath(templateId));
+    }
+
+    // SuperAdmin and DeliveriesAdmin rights in all movies and their sub-collections
+    match /movies/{restOfPath=**} {
+    	allow read, write: if isSuperAdmin() || isDeliveriesAdmin();
+    }
+
+    // User rights in specific movie and materials sub-collection
+    match /movies/{movieId}/{restOfPath=**} {
+    	allow create: if canCreateDocument(getMoviePath(movieId));
+      allow read: if canReadDocument(getMoviePath(movieId));
+      allow update: if canUpdateDocument(getMoviePath(movieId));
+      allow delete: if canDeleteDocument(getMoviePath(movieId));
+    }
+
+    // GLOBAL FUNCTIONS
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Works only if orgId field exists in user document
+    function userExists() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+  	function getUserOrg() {
+    	return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.orgId;
+  	}
+
+    function docExists(docId) {
+    	return exists(/databases/$(database)/documents/rights/$(getUserOrg())/docs/($docId));
+
+    }
+  	function isSuperAdmin() {
+    	return isAuthenticated() && userExists() && request.auth.uid ==
+    		get(/databases/$(database)/documents/rights/$(getUserOrg())).data.superAdminId;
+  	}
+
+    // GLOBAL DOCUMENTS FUNCTIONS
+
+    function canCreateDocument(document) {
+  		return request.auth.uid in document.data.canCreate;
+  	}
+
+    function canReadDocument(document) {
+  		return request.auth.uid in document.data.canRead;
+  	}
+
+    function canUpdateDocument(document) {
+  		return request.auth.uid in document.data.canUpdate;
+  	}
+
+    function canDeleteDocument(document) {
+  		return request.auth.uid in document.data.canDelete;
+  	}
+
+  	// DELIVERIES FUNCTIONS
+
+  	function isDeliveriesAdmin() {
+  		return isAuthenticated() && userExists() && request.auth.uid in
+    		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/deliveriesRights).data.admins;
+  	}
+
+    function getDeliveryPath(deliveryId) {
+    	return get(/databases/$(database)/documents
+      	/rights/$(getUserOrg())/apps/deliveriesRights/deliveryDocRights/$(deliveryId));
+    }
+
+    // TEMPLATES FUNCTIONS
+
+  	function isTemplatesAdmin() {
+  		return isAuthenticated() && userExists() && request.auth.uid in
+    		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/templatesRights).data.admins;
+  	}
+
+    function getTemplatePath(templateId) {
+    	return get(/databases/$(database)/documents
+      	/rights/$(getUserOrg())/apps/templatesRights/templateDocRights/$(templateId));
+    }
+
+    // MOVIES FUNCTIONS
+
+  	function isMoviesAdmin() {
+  		return isAuthenticated() && userExists() && request.auth.uid in
+    		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/moviesRights).data.admins;
+  	}
+
+    function getMoviePath(movieId) {
+    	return get(/databases/$(database)/documents
+      	/rights/$(getUserOrg())/apps/moviesRights/movieDocRights/$(movieId));
+    }
+
   }
 }
