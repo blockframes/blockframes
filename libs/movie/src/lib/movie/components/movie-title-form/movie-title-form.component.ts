@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/cor
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MovieService, MovieQuery } from '../+state';
+import { MovieService, MovieQuery } from '../../+state';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
@@ -10,17 +10,17 @@ import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-title-form',
-  templateUrl: './title-form.component.html',
-  styleUrls: ['./title-form.component.scss'],
+  templateUrl: './movie-title-form.component.html',
+  styleUrls: ['./movie-title-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleFormComponent implements OnInit {
+export class MovieTitleFormComponent implements OnInit {
   public titleForm: FormGroup;
   public orgList$: Observable<Organization[]>;
   private alive = true;
 
   constructor(
-    private dialogRef: MatDialogRef<TitleFormComponent>,
+    private dialogRef: MatDialogRef<MovieTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public org: any,
     private snackBar: MatSnackBar,
     private builder: FormBuilder,
@@ -40,9 +40,9 @@ export class TitleFormComponent implements OnInit {
   public async newMovie() {
     if (!this.titleForm.valid) {
       this.snackBar.open('Invalid form', 'close', { duration: 1000 });
-      return 
+      return
     }
-    
+
     try {
       const { title } = this.titleForm.value;
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });

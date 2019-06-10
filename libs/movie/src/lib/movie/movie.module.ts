@@ -38,17 +38,17 @@ import { FormMainComponent } from './form/form.main.component';
 import { FormStoryComponent } from './form/form.story.component'
 import { FormTeamComponent } from './form/form.team.component';
 import { FormPromotionalComponent } from './form/form.promotional.component';
-import { ListComponent } from './list/list.component';
-import { ViewComponent } from './view/view.component';
+import { MovieListComponent } from './pages/movie-list/movie-list.component';
+import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
-import { TitleFormComponent } from '../movie/title-form/title-form.component';
+import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HomeEmptyComponent } from './home-empty/home-empty.component';
+import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
 import { MovieForm } from './form/movie.form';
 
@@ -58,9 +58,9 @@ import { MovieForm } from './form/movie.form';
     ContainerComponent,
     FormComponent,
     FormStoryComponent,
-    ListComponent,
-    ViewComponent,
-    TitleFormComponent,
+    MovieListComponent,
+    MovieViewComponent,
+    MovieTitleFormComponent,
     FormMainComponent,
     FormTeamComponent,
     FormPromotionalComponent,
@@ -106,7 +106,7 @@ import { MovieForm } from './form/movie.form';
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
     MovieForm
   ],
-  entryComponents: [TitleFormComponent],
-  exports: [TitleFormComponent],
+  entryComponents: [MovieTitleFormComponent],
+  exports: [MovieTitleFormComponent],
 })
 export class MovieModule {}

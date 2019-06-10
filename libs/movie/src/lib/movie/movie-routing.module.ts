@@ -4,8 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 // Components
 import { ContainerComponent } from './form/container.component';
 import { HomeComponent } from './home/home.component';
-import { ViewComponent } from './view/view.component';
-import { TitleFormComponent } from './title-form/title-form.component';
+import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { FormMainComponent } from './form/form.main.component';
 import { FormStoryComponent } from './form/form.story.component';
 import { FormTeamComponent } from './form/form.team.component';
@@ -14,15 +13,14 @@ import { FormPromotionalComponent } from './form/form.promotional.component';
 // Guards
 import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieActiveGuard } from './guards/movie-active.guard';
+import { MovieListGuard } from './guards/movie-list.guard';
 
 export const routes: Routes = [
-  { path: '',  component: HomeComponent },
-
-  // MovieGuard: set active the Movie id in Akita
-
   {
-    path: 'form',
-    component: ContainerComponent,
+    path: '',
+    component: HomeComponent,
+    canActivate: [MovieListGuard],
+    canDeactivate: [MovieListGuard],
   },
   {
     path: 'form/:movieId',
@@ -40,15 +38,13 @@ export const routes: Routes = [
     path: 'form/:movieId/teamwork',
     component: StakeholderViewComponent,
     canActivate: [MovieActiveGuard],
+    canDeactivate: [MovieActiveGuard]
   },
   {
     path: 'movie/:movieId',
-    component: ViewComponent,
+    component: MovieViewComponent,
     canActivate: [MovieActiveGuard],
-  },
-  {
-    path: 'dev',
-    component: TitleFormComponent,
+    canDeactivate: [MovieActiveGuard]
   },
 ]
 
