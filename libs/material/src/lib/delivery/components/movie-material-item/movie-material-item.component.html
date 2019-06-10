@@ -2,11 +2,10 @@
   <mat-checkbox
     fxLayoutAlign="center center"
     color="primary"
-    [(ngModel)]="material.approved"
-    (click)="approvedToggle(material)"
+    [(ngModel)]="materialApproved"
+    (click)="approved.emit(material)"
   >
   </mat-checkbox>
-  <!-- <button (click)="approvedToggle()">save</button> -->
   <article class="material" fxLayout="column" fxLayoutAlign="center start">
     <span>
       <h4 mat-line>{{ material.value }}</h4>

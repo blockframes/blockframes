@@ -3,12 +3,12 @@ import { Stakeholder } from '@blockframes/movie';
 import { DeliveryService } from '../../+state';
 
 @Component({
-  selector: 'delivery-team-work-form',
-  templateUrl: './delivery-team-work-form.component.html',
-  styleUrls: ['./delivery-team-work-form.component.scss'],
+  selector: 'delivery-teamwork-form',
+  templateUrl: './delivery-teamwork-form.component.html',
+  styleUrls: ['./delivery-teamwork-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTeamWorkFormComponent implements OnInit {
+export class DeliveryTeamworkFormComponent implements OnInit {
   @Input() stakeholder: Stakeholder;
   @Output() cancelForm = new EventEmitter();
   public roles = ['Producer', 'International Seller', 'Distributor', 'Laboratory'];

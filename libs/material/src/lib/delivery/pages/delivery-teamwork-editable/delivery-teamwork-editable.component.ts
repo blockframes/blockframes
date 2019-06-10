@@ -4,12 +4,12 @@ import { DeliveryQuery, Delivery, DeliveryService } from '../../+state';
 import { Stakeholder, MovieQuery, Movie } from '@blockframes/movie';
 
 @Component({
-  selector: 'delivery-team-work-editable',
-  templateUrl: './delivery-team-work-editable.component.html',
-  styleUrls: ['./delivery-team-work-editable.component.scss'],
+  selector: 'delivery-teamwork-editable',
+  templateUrl: './delivery-teamwork-editable.component.html',
+  styleUrls: ['./delivery-teamwork-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryTeamWorkEditableComponent implements OnInit {
+export class DeliveryTeamworkEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public movie$: Observable<Movie>;
   public stakeholderId: string;

@@ -57,7 +57,7 @@ export class DeliveryService {
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */
-  public approvedToggle(material: Material, movieId: string) {
+  public toggleApproved(material: Material, movieId: string) {
     return this.db
       .doc<Material>(`movies/${movieId}/materials/${material.id}`)
       .update({ approved: !material.approved });

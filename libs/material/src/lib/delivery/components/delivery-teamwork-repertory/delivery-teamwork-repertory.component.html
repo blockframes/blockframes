@@ -22,7 +22,7 @@
     ></span>
     <p class="left">{{ stakeholder.organization.name }}</p>
   </div>
-  <button mat-icon-button color="primary" (click)="addStakeholder(stakeholder)">
+  <button mat-icon-button color="primary" (click)="added.emit(stakeholder)">
     <mat-icon>add_circle_outline</mat-icon>
   </button>
 </mat-card>

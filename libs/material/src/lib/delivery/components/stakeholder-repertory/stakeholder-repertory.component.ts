@@ -14,7 +14,7 @@ export class StakeholderRepertoryComponent {
   @Input() delivery: Delivery;
   @Output() signed = new EventEmitter();
 
-  constructor(private dialog: MatDialog,) {}
+  constructor(private dialog: MatDialog) {}
 
   public openSignDelivery() {
     this.dialog.open(DeliverySignComponent, {

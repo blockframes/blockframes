@@ -11,9 +11,9 @@ import { StakeholderItemComponent } from './components/stakeholder-item/stakehol
 import { DeliveryItemComponent } from './components/delivery-item/delivery-item.component';
 import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
 import { DeliveryViewItemComponent } from './components/delivery-view-item/delivery-view-item.component';
-import { DeliveryTeamWorkFormComponent } from './components/delivery-team-work-form/delivery-team-work-form.component';
-import { DeliveryTeamWorkItemComponent } from './components/delivery-team-work-item/delivery-team-work-item.component';
-import { DeliveryTeamWorkRepertoryComponent } from './components/delivery-team-work-repertory/delivery-team-work-repertory.component';
+import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
+import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
+import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
 import { DeliverySettingsItemComponent } from './components/delivery-settings-item/delivery-settings-item.component';
 import { DeliverySettingsFormComponent } from './components/delivery-settings-form/delivery-settings-form.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
@@ -27,7 +27,7 @@ import { DeliveryListComponent } from './pages/delivery-list/delivery-list.compo
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
 import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
-import { DeliveryTeamWorkEditableComponent } from './pages/delivery-team-work-editable/delivery-team-work-editable.component';
+import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
 
 // Modules
@@ -118,7 +118,7 @@ const routes: Routes = [
       },
       {
         path: 'teamwork',
-        component: DeliveryTeamWorkEditableComponent
+        component: DeliveryTeamworkEditableComponent
       },
       {
         path: 'settings',
@@ -137,7 +137,7 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryEditableComponent,
     NewTemplateComponent,
-    DeliveryTeamWorkEditableComponent,
+    DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
@@ -146,9 +146,9 @@ const routes: Routes = [
     DeliveryActionsComponent,
     MovieMaterialItemComponent,
     DeliveryViewItemComponent,
-    DeliveryTeamWorkFormComponent,
-    DeliveryTeamWorkItemComponent,
-    DeliveryTeamWorkRepertoryComponent,
+    DeliveryTeamworkFormComponent,
+    DeliveryTeamworkItemComponent,
+    DeliveryTeamworkRepertoryComponent,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
     DeliverySettingsEditableComponent,

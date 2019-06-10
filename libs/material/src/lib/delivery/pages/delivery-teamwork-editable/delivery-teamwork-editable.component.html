@@ -1,11 +1,11 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav class="mat-elevation-z2" [opened]="true" fixedInViewport="true" fixedTopGap="191" [opened]="true" mode="side">
-    <delivery-team-work-repertory
+    <delivery-teamwork-repertory
       *ngIf="(movie$ | async).stakeholders as movieStakeholders"
       [stakeholders]="movieStakeholders"
       (added)="addStakeholder($event)"
-    ></delivery-team-work-repertory>
+    ></delivery-teamwork-repertory>
   </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
@@ -16,17 +16,17 @@
     <div class="item-form" *ngFor="let deliveryStakeholder of (delivery$ | async).stakeholders">
       <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
         <ng-template materialViewMode>
-          <delivery-team-work-item
+          <delivery-teamwork-item
             (updated)="openForm(deliveryStakeholder)"
             [stakeholder]="deliveryStakeholder"
             (removed)="removeStakeholder(deliveryStakeholder.id)"
-          ></delivery-team-work-item>
+          ></delivery-teamwork-item>
         </ng-template>
         <ng-template materialEditMode>
-          <delivery-team-work-form
+          <delivery-teamwork-form
             (cancelForm)="cancelForm()"
             [stakeholder]="deliveryStakeholder"
-          ></delivery-team-work-form>
+          ></delivery-teamwork-form>
         </ng-template>
       </ui-editable>
     </div>

@@ -39,5 +39,4 @@ export class DeliveryViewItemComponent {
       ? (this.disableButtonLabel = 'ENABLE')
       : (this.disableButtonLabel = 'DISABLE');
   }
-
 }
