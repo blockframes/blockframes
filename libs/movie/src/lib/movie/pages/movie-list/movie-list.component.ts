@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MovieService } from '../+state';
+import { MovieService } from '../../+state';
 import { Observable } from 'rxjs';
 import { OrganizationQuery, OrganizationWithMovies } from '@blockframes/organization';
 import { MatDialog } from '@angular/material/dialog';
-import { TitleFormComponent } from '../title-form/title-form.component';
+import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 
 @Component({
   selector: 'movie-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  templateUrl: './movie-list.component.html',
+  styleUrls: ['./movie-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent implements OnInit {
+export class MovieListComponent implements OnInit {
   public orgs$: Observable<OrganizationWithMovies[]>;
 
   constructor(
@@ -26,7 +26,7 @@ export class ListComponent implements OnInit {
 
   public addNewMovie(event: MouseEvent, org: { id: string, name: string}) {
     event.stopPropagation();
-    this.dialog.open(TitleFormComponent, { data: org });
+    this.dialog.open(MovieTitleFormComponent, { data: org });
   }
 
   public delete(id: string) {

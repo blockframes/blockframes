@@ -33,8 +33,6 @@ export const routes: Routes = [
       },
       {
         path: 'home',
-        canActivate: [MovieListGuard],
-        canDeactivate: [MovieListGuard],
         loadChildren: '@blockframes/movie#MovieModule'
       },
       { path: 'templates',

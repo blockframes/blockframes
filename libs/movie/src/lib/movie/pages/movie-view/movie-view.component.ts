@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MovieQuery, Movie } from '../+state';
-import { getLabelBySlug } from '../staticModels';
+import { MovieQuery, Movie } from '../../+state';
+import { getLabelBySlug } from '../../staticModels';
 import { FormGroupLike } from '@datorama/akita';
 
 @Component({
-  selector: 'movie-financing-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss'],
+  selector: 'movie-view',
+  templateUrl: './movie-view.component.html',
+  styleUrls: ['./movie-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit {
+export class MovieViewComponent implements OnInit {
   @Input() form$: Observable<FormGroupLike>;
   @Input() mode: string;
 
