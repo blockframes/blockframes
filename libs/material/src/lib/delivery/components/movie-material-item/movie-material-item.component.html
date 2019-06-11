@@ -2,8 +2,8 @@
   <mat-checkbox
     fxLayoutAlign="center center"
     color="primary"
-    [(ngModel)]="materialApproved"
-    (click)="approved.emit(material)"
+    [checked]="material.approved"
+    (change)="approved.emit($event.checked)"
   >
   </mat-checkbox>
   <article class="material" fxLayout="column" fxLayoutAlign="center start">

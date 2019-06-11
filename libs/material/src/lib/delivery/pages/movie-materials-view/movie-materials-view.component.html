@@ -47,7 +47,7 @@
         <delivery-movie-material-item
           *ngFor="let material of category.value"
           [material]="material"
-          (approved)="toggleApproved($event)"
+          (approved)="toggleApproved(material.id, $event)"
         ></delivery-movie-material-item>
       </div>
     </div>

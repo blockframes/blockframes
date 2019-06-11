@@ -29,9 +29,9 @@ export class MovieMaterialsViewComponent implements OnInit {
     this.progressionValue$ = this.query.movieProgression$;
   }
 
-  public toggleApproved(material: Material) {
+  public toggleApproved(materialId: string, approved: boolean) {
     this.service
-      .toggleApproved(material, this.movieQuery.getActiveId())
+      .toggleApproved(materialId, approved)
       .catch(err => console.log(err));
   }
 }

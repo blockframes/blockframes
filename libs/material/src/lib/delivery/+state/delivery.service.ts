@@ -57,10 +57,11 @@ export class DeliveryService {
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */
-  public toggleApproved(material: Material, movieId: string) {
+  public toggleApproved(materialId: string, approved: boolean) {
+    const movieId = this.movieQuery.getActiveId();
     return this.db
-      .doc<Material>(`movies/${movieId}/materials/${material.id}`)
-      .update({ approved: !material.approved });
+      .doc<Material>(`movies/${movieId}/materials/${materialId}`)
+      .update({ approved });
   }
 
   /** Update the property state of movie's materials */
