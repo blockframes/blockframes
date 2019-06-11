@@ -1,6 +1,5 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TODO: Figure out why I can't add a second || condition in create, read and update but I can in delete
 
     // User and Admins rights in specific delivery and materials sub-collection
     match /deliveries/{deliveryId}/{restOfPath=**} {
@@ -9,52 +8,65 @@ service cloud.firestore {
 
     	allow create: if orgCanCreate(deliveryId) && canCreateDocument(getDeliveryPath(deliveryId))
                     || orgCanCreate(deliveryId) && isDeliveriesAdmin()
+                    || orgCanCreate(deliveryId) && isSuperAdmin();
 
       allow read: if orgCanRead(deliveryId) && canReadDocument(getDeliveryPath(deliveryId))
-                  || orgCanRead(deliveryId) && isDeliveriesAdmin()
+      						|| orgCanRead(deliveryId) && isDeliveriesAdmin()
+                  || orgCanRead(deliveryId) && isSuperAdming();
+
 
       allow update: if orgCanUpdate(deliveryId) && canUpdateDocument(getDeliveryPath(deliveryId))
                     || orgCanUpdate(deliveryId) && isDeliveriesAdmin()
+                    || orgCanUpdate(deliveryId) && isSuperAdmin();
 
       allow delete: if orgCanDelete(deliveryId) && canDeleteDocument(getDeliveryPath(deliveryId))
                     || orgCanDelete(deliveryId) && isDeliveriesAdmin()
+                    || orgCanDelete(deliveryId) && isSuperAdmin();
     }
 
     // User and Admins in specific template and materials sub-collection
     match /templates/{templateId}/{restOfPath=**} {
       allow read, write: if isSuperAdmin() && orgIsAdmin(templateId)
-      									 || isTemplatesAdmin() && orgIsAdmin(templateId)
+      									 || isTemplatesAdmin() && orgIsAdmin(templateId);
 
     	allow create: if orgCanCreate(templateId) && canCreateDocument(getTemplatePath(templateId))
                     || orgCanCreate(templateId) && isTemplatesAdmin()
+                    || orgCanCreate(templateId) && isSuperAdmin();
 
       allow read: if orgCanRead(templateId) && canReadDocument(getTemplatePath(templateId))
                   || orgCanRead(templateId) && isTemplatesAdmin()
+                  || orgCanRead(templateId) && isSuperAdmin();
 
       allow update: if orgCanUpdate(templateId) && canUpdateDocument(getTemplatePath(templateId))
                     || orgCanUpdate(templateId) && isTemplatesAdmin()
+                    || orgCanUpdate(templateId) && isSuperAdmin();
 
 
       allow delete: if orgCanDelete(templateId) && canDeleteDocument(getTemplatePath(templateId))
                     || orgCanDelete(templateId) && isTemplatesAdmin()
+                    || orgCanDelete(templateId) && isSuperAdmin();
     }
 
     // User rights in specific movie and materials sub-collection
     match /movies/{movieId}/{restOfPath=**} {
       allow read, write: if isSuperAdmin() && orgIsAdmin(movieId)
-      									 || isMoviesAdmin() && orgIsAdmin(movieId)
+      									 || isMoviesAdmin() && orgIsAdmin(movieId);
 
     	allow create: if orgCanCreate(movieId) && canCreateDocument(getMoviePath(movieId))
                     || orgCanCreate(movieId) && isMoviesAdmin()
+                    || orgCanCreate(movieId) && isSuperAdmin();
 
       allow read: if orgCanRead(movieId) && canReadDocument(getMoviePath(movieId))
                   || orgCanRead(movieId) && isMoviesAdmin()
+                  || orgCanRead(movieId) && isSuperAdmin();
 
       allow update: if orgCanUpdate(movieId) && canUpdateDocument(getMoviePath(movieId))
                     || orgCanUpdate(movieId) && isMoviesAdmin()
+                    || orgCanUpdate(movieId) && isSuperAdmin();
 
       allow delete: if orgCanDelete(movieId) && canDeleteDocument(getMoviePath(movieId))
                     || orgCanDelete(movieId) && isMoviesAdmin()
+                    || orgCanDelete(movieId) && isSuperAdmin();
     }
 
     // GLOBAL FUNCTIONS
@@ -89,19 +101,19 @@ service cloud.firestore {
     // GLOBAL DOCUMENTS FUNCTIONS
 
     function canCreateDocument(document) {
-  		return request.auth.uid in document.data.canCreate;
+  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canCreate;
   	}
 
     function canReadDocument(document) {
-  		return request.auth.uid in document.data.canRead;
+  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canRead;
   	}
 
     function canUpdateDocument(document) {
-  		return request.auth.uid in document.data.canUpdate;
+  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canUpdate;
   	}
 
     function canDeleteDocument(document) {
-  		return request.auth.uid in document.data.canDelete;
+  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canDelete;
   	}
 
     // ORGS FUNCTIONS
