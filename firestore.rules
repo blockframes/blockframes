@@ -1,6 +1,18 @@
 service cloud.firestore {
   match /databases/{database}/documents {
 
+  	match /orgs/{orgId} {
+    	allow write, read: if isSuperAdmin() && isOrgMember();
+      allow read: if isOrgMember();
+    }
+
+    match /users/{userId} {
+    	allow read: if currentUser().uid == userId;
+      allow update: if isOwner(userId) &&
+      								incomingData().uid == existingData().uid &&
+                      incomingData().email == existingData().email;
+    }
+
     // User and Admins rights in specific delivery and materials sub-collection
     match /deliveries/{deliveryId}/{restOfPath=**} {
       allow read, write: if isSuperAdmin() && orgIsAdmin(deliveryId)
@@ -68,28 +80,53 @@ service cloud.firestore {
                     || orgCanDelete(movieId) && isMoviesAdmin()
                     || orgCanDelete(movieId) && isSuperAdmin();
     }
+    ///////////////
+    // FUNCTIONS //
+    ///////////////
 
     // GLOBAL FUNCTIONS
 
-    function isAuthenticated() {
-      return request.auth != null;
+    function existingData() {
+      return resource.data;
     }
 
-    // Works only if orgId field exists in user document
+    function incomingData() {
+      return request.resource.data;
+    }
+
+    function currentUser() {
+      return request.auth;
+    }
+
+    function isSignedIn() {
+      return currentUser() != null;
+    }
+
+    function isOwner(userId) {
+    	return curentUser().uid == userId;
+    }
+
     function userExists() {
-      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      return exists(/databases/$(database)/documents/users/$(currentUser()));
     }
 
+    // Works only if orgId field exists in user document. THIS IS NOT OUR CURRENT DATA MODEL !
   	function getUserOrg() {
-    	return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.orgId;
+    	return get(/databases/$(database)/documents/users/$(currentUser())).data.orgId;
   	}
 
     function docExists(docId) {
     	return exists(/databases/$(database)/documents/rights/$(getUserOrg())/docs/($docId));
 
     }
+
+    function isOrgMember() {
+    	return isSignedIn() && userExists() && currentUser().uid in
+      	get(/databases/$(database)/documents/orgs/$(getUserOrg())).data.userIds;
+    }
+
   	function isSuperAdmin() {
-    	return isAuthenticated() && userExists() && request.auth.uid ==
+    	return isSignedIn() && userExists() && currentUser().uid ==
     		get(/databases/$(database)/documents/rights/$(getUserOrg())).data.superAdminId;
   	}
 
@@ -101,23 +138,24 @@ service cloud.firestore {
     // GLOBAL DOCUMENTS FUNCTIONS
 
     function canCreateDocument(document) {
-  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canCreate;
+  		return isSignedIn() && userExists() && currentUser().uid in document.data.canCreate;
   	}
 
     function canReadDocument(document) {
-  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canRead;
+  		return isSignedIn() && userExists() && currentUser().uid in document.data.canRead;
   	}
 
     function canUpdateDocument(document) {
-  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canUpdate;
+  		return isSignedIn() && userExists() && currentUser().uid in document.data.canUpdate;
   	}
 
     function canDeleteDocument(document) {
-  		return isAuthenticated() && userExists() && request.auth.uid in document.data.canDelete;
+  		return isSignedIn() && userExists() && currentUser().uid in document.data.canDelete;
   	}
 
     // ORGS FUNCTIONS
-    // Checks if an org can perfom an action in a document where it is not admin
+
+    // Checks if an org can perfom an action in a document
 
     function orgCanCreate(docId) {
       return getOrgsDocumentRights(getUserOrg(), docId).data.canCreate == true;
@@ -142,7 +180,7 @@ service cloud.firestore {
   	// DELIVERIES FUNCTIONS
 
   	function isDeliveriesAdmin() {
-  		return isAuthenticated() && userExists() && request.auth.uid in
+  		return isSignedIn() && userExists() && currentUser().uid in
     		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/deliveriesRights).data.admins;
   	}
 
@@ -154,7 +192,7 @@ service cloud.firestore {
     // TEMPLATES FUNCTIONS
 
   	function isTemplatesAdmin() {
-  		return isAuthenticated() && userExists() && request.auth.uid in
+  		return isSignedIn() && userExists() && currentUser().uid in
     		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/templatesRights).data.admins;
   	}
 
@@ -166,7 +204,7 @@ service cloud.firestore {
     // MOVIES FUNCTIONS
 
   	function isMoviesAdmin() {
-  		return isAuthenticated() && userExists() && request.auth.uid in
+  		return isSignedIn() && userExists() && currentUser().uid in
     		get(/databases/$(database)/documents/rights/$(getUserOrg())/apps/moviesRights).data.admins;
   	}
 
