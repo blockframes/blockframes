@@ -9,9 +9,9 @@ import { FormMainComponent } from './form/form.main.component';
 import { FormStoryComponent } from './form/form.story.component';
 import { FormTeamComponent } from './form/form.team.component';
 import { FormPromotionalComponent } from './form/form.promotional.component';
+import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 
 // Guards
-import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieActiveGuard } from './guards/movie-active.guard';
 import { MovieListGuard } from './guards/movie-list.guard';
 
@@ -26,6 +26,7 @@ export const routes: Routes = [
     path: 'form/:movieId',
     component: ContainerComponent,
     canActivate: [MovieActiveGuard],
+    canDeactivate: [MovieActiveGuard],
     children: [
       { path: '', redirectTo: 'main', pathMatch: 'full' },
       { path: 'main',component: FormMainComponent },
