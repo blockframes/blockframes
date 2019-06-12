@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery } from './types';
 
 @Injectable({ providedIn: 'root' })
@@ -56,6 +56,10 @@ export class FireQuery extends AngularFirestore {
     // Select all entities
     return this.collection<T>(path, queryFn).valueChanges()
       .pipe(
+        catchError(err => {
+          console.error('Query: ', query, ' has thrown: ', err);
+          return throwError(err);
+        }),
         switchMap((entities) => {
           if (!entities) return throwError(`Nothing found at path : ${query.path}`);
           if (!entities.length) return of([]);
@@ -80,6 +84,10 @@ export class FireQuery extends AngularFirestore {
   private fromDoc<T>(query: Query<T>) {
     return this.doc<T>(query.path).valueChanges()
       .pipe(
+        catchError(err => {
+          console.error('Query: ', query, ' has thrown: ', err);
+          return throwError(err);
+        }),
         switchMap(entity => {
           if (!entity) return throwError(`Nothing found at path : ${query.path}`)
           return (this.hasSubqueries(query))
