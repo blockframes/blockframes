@@ -2,87 +2,95 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
   	match /orgs/{orgId} {
-    	allow write, read: if isSuperAdmin() && isOrgMember();
-      allow read: if isOrgMember();
+    	allow write: if isSuperAdmin() && incomingData().id == existingData().id; // TODO: use isOrgMember() function
+      allow read: if true; // TODO: use isOrgMember() function
     }
 
     match /users/{userId} {
-    	allow read: if currentUser().uid == userId;
-      allow update: if isOwner(userId) &&
-      								incomingData().uid == existingData().uid &&
-                      incomingData().email == existingData().email;
+    	allow read: if isUserId(userId);
+      allow update: if isUserId(userId)
+      							&& incomingData().uid == existingData().uid
+                    && incomingData().email == existingData().email;
+    }
+
+    match /notifications/{notificationId} {
+  		allow read: if isUserId(existingData().userId);
+      allow update: if isUserId(existingData().userId);
+    }
+
+    match /rights/{orgId} {
+    	allow write: if isSuperAdmin() && isOrgMember(orgId) && incomingData().id == existingData().id;
+      allow read: if true; // TODO: use isOrgMember() function
     }
 
     // User and Admins rights in specific delivery and materials sub-collection
-    match /deliveries/{deliveryId}/{restOfPath=**} {
-      allow read, write: if isSuperAdmin() && orgIsAdmin(deliveryId)
-      									 || isDeliveriesAdmin() && orgIsAdmin(deliveryId);
+    match /deliveries/{deliveryId} {
+      allow read, write: if (isSuperAdmin() && orgIsAdmin(deliveryId))
+      									 || (isDeliveriesAdmin() && orgIsAdmin(deliveryId));
 
-    	allow create: if orgCanCreate(deliveryId) && canCreateDocument(getDeliveryPath(deliveryId))
-                    || orgCanCreate(deliveryId) && isDeliveriesAdmin()
-                    || orgCanCreate(deliveryId) && isSuperAdmin();
+    	allow create: if (orgCanCreate(deliveryId) && canCreateDocument(getDeliveryPath(deliveryId)))
+                    || (orgCanCreate(deliveryId) && isDeliveriesAdmin())
+                    || (orgCanCreate(deliveryId) && isSuperAdmin());
 
-      allow read: if orgCanRead(deliveryId) && canReadDocument(getDeliveryPath(deliveryId))
-      						|| orgCanRead(deliveryId) && isDeliveriesAdmin()
-                  || orgCanRead(deliveryId) && isSuperAdming();
+      allow read: if (orgCanRead(deliveryId) && canReadDocument(getDeliveryPath(deliveryId)))
+      						|| (orgCanRead(deliveryId) && isDeliveriesAdmin())
+                  || (orgCanRead(deliveryId) && isSuperAdming());
 
 
-      allow update: if orgCanUpdate(deliveryId) && canUpdateDocument(getDeliveryPath(deliveryId))
-                    || orgCanUpdate(deliveryId) && isDeliveriesAdmin()
-                    || orgCanUpdate(deliveryId) && isSuperAdmin();
+      allow update: if (orgCanUpdate(deliveryId) && canUpdateDocument(getDeliveryPath(deliveryId)))
+                    || (orgCanUpdate(deliveryId) && isDeliveriesAdmin())
+                    || (orgCanUpdate(deliveryId) && isSuperAdmin());
 
-      allow delete: if orgCanDelete(deliveryId) && canDeleteDocument(getDeliveryPath(deliveryId))
-                    || orgCanDelete(deliveryId) && isDeliveriesAdmin()
-                    || orgCanDelete(deliveryId) && isSuperAdmin();
+      allow delete: if (orgCanDelete(deliveryId) && canDeleteDocument(getDeliveryPath(deliveryId)))
+                    || (orgCanDelete(deliveryId) && isDeliveriesAdmin())
+                    || (orgCanDelete(deliveryId) && isSuperAdmin());
     }
 
     // User and Admins in specific template and materials sub-collection
-    match /templates/{templateId}/{restOfPath=**} {
-      allow read, write: if isSuperAdmin() && orgIsAdmin(templateId)
-      									 || isTemplatesAdmin() && orgIsAdmin(templateId);
+    match /templates/{templateId} {
+      allow read, write: if (isSuperAdmin() && orgIsAdmin(templateId))
+      									 || (isTemplatesAdmin() && orgIsAdmin(templateId));
 
-    	allow create: if orgCanCreate(templateId) && canCreateDocument(getTemplatePath(templateId))
-                    || orgCanCreate(templateId) && isTemplatesAdmin()
-                    || orgCanCreate(templateId) && isSuperAdmin();
+    	allow create: if (orgCanCreate(templateId) && canCreateDocument(getTemplatePath(templateId)))
+                    || (orgCanCreate(templateId) && isTemplatesAdmin())
+                    || (orgCanCreate(templateId) && isSuperAdmin());
 
-      allow read: if orgCanRead(templateId) && canReadDocument(getTemplatePath(templateId))
-                  || orgCanRead(templateId) && isTemplatesAdmin()
-                  || orgCanRead(templateId) && isSuperAdmin();
+      allow read: if (orgCanRead(templateId) && canReadDocument(getTemplatePath(templateId)))
+                  || (orgCanRead(templateId) && isTemplatesAdmin())
+                  || (orgCanRead(templateId) && isSuperAdmin());
 
-      allow update: if orgCanUpdate(templateId) && canUpdateDocument(getTemplatePath(templateId))
-                    || orgCanUpdate(templateId) && isTemplatesAdmin()
-                    || orgCanUpdate(templateId) && isSuperAdmin();
+      allow update: if (orgCanUpdate(templateId) && canUpdateDocument(getTemplatePath(templateId)))
+                    || (orgCanUpdate(templateId) && isTemplatesAdmin())
+                    || (orgCanUpdate(templateId) && isSuperAdmin());
 
 
-      allow delete: if orgCanDelete(templateId) && canDeleteDocument(getTemplatePath(templateId))
-                    || orgCanDelete(templateId) && isTemplatesAdmin()
-                    || orgCanDelete(templateId) && isSuperAdmin();
+      allow delete: if (orgCanDelete(templateId) && canDeleteDocument(getTemplatePath(templateId)))
+                    || (orgCanDelete(templateId) && isTemplatesAdmin())
+                    || (orgCanDelete(templateId) && isSuperAdmin());
     }
 
     // User rights in specific movie and materials sub-collection
-    match /movies/{movieId}/{restOfPath=**} {
-      allow read, write: if isSuperAdmin() && orgIsAdmin(movieId)
-      									 || isMoviesAdmin() && orgIsAdmin(movieId);
+    match /movies/{movieId} {
+    	allow read: if true;
+      allow read, write: if (isSuperAdmin() && orgIsAdmin(movieId))
+      									 || (isMoviesAdmin() && orgIsAdmin(movieId));
 
-    	allow create: if orgCanCreate(movieId) && canCreateDocument(getMoviePath(movieId))
-                    || orgCanCreate(movieId) && isMoviesAdmin()
-                    || orgCanCreate(movieId) && isSuperAdmin();
+    	allow create: if (orgCanCreate(movieId) && canCreateDocument(getMoviePath(movieId)))
+                    || (orgCanCreate(movieId) && isMoviesAdmin())
+                    || (orgCanCreate(movieId) && isSuperAdmin());
 
-      allow read: if orgCanRead(movieId) && canReadDocument(getMoviePath(movieId))
-                  || orgCanRead(movieId) && isMoviesAdmin()
-                  || orgCanRead(movieId) && isSuperAdmin();
+      allow read: if (orgCanRead(movieId) && canReadDocument(getMoviePath(movieId)))
+                  || (orgCanRead(movieId) && isMoviesAdmin())
+                  || (orgCanRead(movieId) && isSuperAdmin());
 
-      allow update: if orgCanUpdate(movieId) && canUpdateDocument(getMoviePath(movieId))
-                    || orgCanUpdate(movieId) && isMoviesAdmin()
-                    || orgCanUpdate(movieId) && isSuperAdmin();
+      allow update: if (orgCanUpdate(movieId) && canUpdateDocument(getMoviePath(movieId)))
+                    || (orgCanUpdate(movieId) && isMoviesAdmin())
+                    || (orgCanUpdate(movieId) && isSuperAdmin());
 
-      allow delete: if orgCanDelete(movieId) && canDeleteDocument(getMoviePath(movieId))
-                    || orgCanDelete(movieId) && isMoviesAdmin()
-                    || orgCanDelete(movieId) && isSuperAdmin();
+      allow delete: if (orgCanDelete(movieId) && canDeleteDocument(getMoviePath(movieId)))
+                    || (orgCanDelete(movieId) && isMoviesAdmin())
+                    || (orgCanDelete(movieId) && isSuperAdmin());
     }
-    ///////////////
-    // FUNCTIONS //
-    ///////////////
 
     // GLOBAL FUNCTIONS
 
@@ -102,27 +110,27 @@ service cloud.firestore {
       return currentUser() != null;
     }
 
-    function isOwner(userId) {
-    	return curentUser().uid == userId;
+    function isUserId(userId) {
+    	return currentUser().uid == userId;
     }
 
+    // Works only if orgId field exists in user document
     function userExists() {
-      return exists(/databases/$(database)/documents/users/$(currentUser()));
+      return exists(/databases/$(database)/documents/users/$(currentUser().uid));
     }
 
-    // Works only if orgId field exists in user document. THIS IS NOT OUR CURRENT DATA MODEL !
   	function getUserOrg() {
-    	return get(/databases/$(database)/documents/users/$(currentUser())).data.orgId;
+    	return get(/databases/$(database)/documents/users/$(currentUser().uid)).data.orgId;
   	}
 
     function docExists(docId) {
-    	return exists(/databases/$(database)/documents/rights/$(getUserOrg())/docs/($docId));
+    	return exists(/databases/$(database)/documents/rights/$(getUserOrg())/docs/$(docId));
 
     }
 
-    function isOrgMember() {
+    function isOrgMember(orgId) {
     	return isSignedIn() && userExists() && currentUser().uid in
-      	get(/databases/$(database)/documents/orgs/$(getUserOrg())).data.userIds;
+      	get(/databases/$(database)/documents/orgs/$(orgId)).data.userIds;
     }
 
   	function isSuperAdmin() {
@@ -131,50 +139,50 @@ service cloud.firestore {
   	}
 
 
-    function getOrgsDocumentRights(orgId, docId) {
-    	return get(/databases/$(database)/documents/rights/$(orgId)/docs/$(docId));
+    function getOrgsDocumentRights(docId) {
+    	return get(/databases/$(database)/documents/rights/$(getUserOrg())/docs/$(docId)).data;
     }
 
     // GLOBAL DOCUMENTS FUNCTIONS
 
     function canCreateDocument(document) {
-  		return isSignedIn() && userExists() && currentUser().uid in document.data.canCreate;
+  		return isSignedIn() && userExists() && docExists(document.id) && currentUser().uid in document.data.canCreate;
   	}
 
     function canReadDocument(document) {
-  		return isSignedIn() && userExists() && currentUser().uid in document.data.canRead;
+  		return isSignedIn() && userExists() && docExists(document.id) && currentUser().uid in document.data.canRead;
   	}
 
     function canUpdateDocument(document) {
-  		return isSignedIn() && userExists() && currentUser().uid in document.data.canUpdate;
+  		return isSignedIn() && userExists() && docExists(document.id) && currentUser().uid in document.data.canUpdate;
   	}
 
     function canDeleteDocument(document) {
-  		return isSignedIn() && userExists() && currentUser().uid in document.data.canDelete;
+  		return isSignedIn() && userExists() && docExists(document.id) && currentUser().uid in document.data.canDelete;
   	}
 
     // ORGS FUNCTIONS
-
-    // Checks if an org can perfom an action in a document
+    // Checks if an org can perfom an action in a document where it is not admin
 
     function orgCanCreate(docId) {
-      return getOrgsDocumentRights(getUserOrg(), docId).data.canCreate == true;
+      return get(/databases/$(database)/documents/rights/$(getUserOrg())/docs/$(docId))
+      			 	 .data.canCreate == true;
     }
 
     function orgCanRead(docId) {
-    	return getOrgsDocumentRights(getUserOrg(), docId).data.canRead == true;
+    	return getOrgsDocumentRights(docId).canRead == true;
     }
 
     function orgCanUpdate(docId) {
-    	return getOrgsDocumentRights(getUserOrg(), docId).data.canUpdate == true;
+    	return getOrgsDocumentRights(docId).canUpdate == true;
     }
 
     function orgCanDelete(docId) {
-    	return getOrgsDocumentRights(getUserOrg(), docId).data.canDelete == true;
+    	return getOrgsDocumentRights(gdocId).canDelete == true;
     }
 
     function orgIsAdmin(docId) {
-    	return getOrgsDocumentRights(getUserOrg(), docId).data.isAdmin == true;
+    	return getOrgsDocumentRights(docId).isAdmin == true;
     }
 
   	// DELIVERIES FUNCTIONS
