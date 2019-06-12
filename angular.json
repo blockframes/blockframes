@@ -240,7 +240,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
-            "tsConfig": "libs/ui/tsconfig.spec.json"
+            "tsConfig": "libs/ui/tsconfig.spec.json",
+            "setupFile": "libs/ui/src/test-setup.ts"
           }
         }
       }
@@ -269,7 +270,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ethers/jest.config.js",
-            "tsConfig": "libs/ethers/tsconfig.spec.json"
+            "tsConfig": "libs/ethers/tsconfig.spec.json",
+            "setupFile": "libs/ethers/src/test-setup.ts"
           }
         }
       }
@@ -339,7 +341,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/eth-events-server/jest.config.js",
-            "tsConfig": "apps/eth-events-server/tsconfig.spec.json"
+            "tsConfig": "apps/eth-events-server/tsconfig.spec.json",
+            "setupFile": "apps/eth-events-server/src/test-setup.ts"
           }
         }
       }
@@ -490,7 +493,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/movie/jest.config.js",
-            "tsConfig": "libs/movie/tsconfig.spec.json"
+            "tsConfig": "libs/movie/tsconfig.spec.json",
+            "setupFile": "libs/movie/src/test-setup.ts"
           }
         }
       }
@@ -740,7 +744,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json"
+            "tsConfig": "libs/material/tsconfig.spec.json",
+            "setupFile": "libs/material/src/test-setup.ts"
           }
         }
       },
@@ -774,7 +779,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
-            "tsConfig": "libs/utils/tsconfig.spec.json"
+            "tsConfig": "libs/utils/tsconfig.spec.json",
+            "setupFile": "libs/utils/src/test-setup.ts"
           }
         }
       },
@@ -833,7 +839,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
-            "tsConfig": "apps/backend-functions/tsconfig.spec.json"
+            "tsConfig": "apps/backend-functions/tsconfig.spec.json",
+            "setupFile": "apps/backend-functions/src/test-setup.ts"
           }
         }
       }
