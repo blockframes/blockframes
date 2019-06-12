@@ -11,7 +11,7 @@ interface Organization {
 }
 
 @Component({
-  selector: 'movie-stakeholder-repertory',
+  selector: 'stakeholder-repertory',
   templateUrl: './stakeholder-repertory.component.html',
   styleUrls: ['./stakeholder-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

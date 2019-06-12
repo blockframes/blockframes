@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from 
 import { Stakeholder } from '../../+state';
 
 @Component({
-  selector: 'movie-stakeholder-item',
+  selector: 'stakeholder-item',
   templateUrl: './stakeholder-item.component.html',
   styleUrls: ['./stakeholder-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
