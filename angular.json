@@ -939,6 +939,7 @@
           },
           "configurations": {
             "production": {
+              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -954,6 +955,7 @@
               ]
             },
             "staging": {
+              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -969,6 +971,7 @@
               ]
             },
             "ci": {
+              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
