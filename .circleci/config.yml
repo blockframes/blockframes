@@ -20,6 +20,9 @@ executors:
 jobs:
   build:
     executor: blockframes-ci
+    environment:
+      - ENV: "ci"
+      - NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
       - checkout
       # Download and cache dependencies
@@ -36,7 +39,7 @@ jobs:
             - node_modules
             - ~/.cache/Cypress
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: cp env/env.prod.ts env/env.ts # required for the file rewrite to work
+      - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - persist_to_workspace:
           root: ~/repo
@@ -71,6 +74,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+      - ENV: "ci"
     steps:
       - checkout
       - attach_workspace:
