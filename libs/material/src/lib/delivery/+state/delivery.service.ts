@@ -4,7 +4,7 @@ import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery, DocTransaction } from '@blockframes/utils';
+import { FireQuery } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
@@ -25,8 +25,7 @@ export class DeliveryService {
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
-    private db: FireQuery,
-    private docTx: DocTransaction
+    private db: FireQuery
   ) {}
 
   ///////////////////
@@ -96,7 +95,7 @@ export class DeliveryService {
       true
     );
 
-    this.docTx.createTransaction(delivery, stakeholder.orgId, templateId);
+    this.db.createTransaction(delivery, stakeholder.orgId, templateId);
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);

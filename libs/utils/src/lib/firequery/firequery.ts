@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery } from './types';
+import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery, initializeOwnDocRights, initializeSharedDocRights } from './types';
+import { Movie } from '@blockframes/movie';
+import { Template, Delivery, Material } from '@blockframes/material';
 
 @Injectable({ providedIn: 'root' })
 export class FireQuery extends AngularFirestore {
@@ -118,5 +120,40 @@ export class FireQuery extends AngularFirestore {
     const keys = Object.keys(query);
     const subQuery = keys.filter(key => !this.keysToRemove.includes(key));
     return subQuery.length > 0;
+  }
+
+  //////////////////////
+  // DOC TRANSACTIONS //
+  //////////////////////
+
+  /** Create a transaction for the document and add document rights (organization document rights and shared document rights) at the same time */
+  public async createTransaction<T>(document: Movie | Template | Delivery, orgId: string, templateId?: string) {
+    const promises = [];
+    const orgDocRights = initializeOwnDocRights(document.id);
+    const sharedDocRights = initializeSharedDocRights(document.id)
+
+    await this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const orgDocRightsRef = this.doc<any>(`rights/${orgId}/docs/${document.id}`).ref;
+      promises.push(tx.set(orgDocRightsRef, orgDocRights));
+
+      const sharedDocRightsRef = this.doc<any>(`rights/${orgId}/apps/${document.collectionName}Rights/docRights/${document.id}`).ref;
+      promises.push(tx.set(sharedDocRightsRef, sharedDocRights))
+
+      const documentRef = this.doc<T>(`${document.collectionName}/${document.id}`).ref;
+      promises.push(tx.set(documentRef, document));
+
+      // If a templateId is in the args, we add the template materials to the delivery materials sub-collection.
+      if (!!templateId) {
+        const materials = await this.snapshot<Material[]>(`templates/${templateId}/materials`);
+        materials.map(material => {
+          const materialRef =  this.doc<Material>(`${document.collectionName}/${document.id}/materials/${material.id}`).ref;
+          promises.push(tx.set(materialRef, material));
+          }
+        );
+        return document.id;
+      }
+      return Promise.all(promises);
+      }
+    )
   }
 }

@@ -7,5 +7,3 @@ export * from './lib/form/entity';
 export * from './lib/form/controls';
 export * from './lib/form/validators/validators';
 export * from './lib/form/matchers';
-export * from './lib/doc-transaction/doc-transaction';
-export * from './lib/doc-transaction/types';
