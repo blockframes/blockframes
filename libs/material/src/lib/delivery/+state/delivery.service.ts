@@ -4,7 +4,7 @@ import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, DocTransaction } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
