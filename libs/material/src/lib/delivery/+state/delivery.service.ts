@@ -4,7 +4,7 @@ import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, DocTransaction } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
@@ -26,6 +26,7 @@ export class DeliveryService {
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
     private db: FireQuery,
+    private docTx: DocTransaction
   ) {}
 
   ///////////////////
@@ -95,19 +96,11 @@ export class DeliveryService {
       true
     );
 
-    this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
+    this.docTx.createTransaction(delivery, stakeholder.orgId, templateId);
     this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder);
-    if (!!templateId) {
-      const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials`);
-      await Promise.all(
-        materials.map(material =>
-          this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
-        )
-      );
-      return id;
-    }
+
     return id;
   }
 

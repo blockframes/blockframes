@@ -10,6 +10,7 @@ export interface BaseTemplate {
 export interface Template extends BaseTemplate {
   materials?: Material[];
   created: firestore.Timestamp;
+  collectionName: string;
 }
 
 export interface TemplateView {
@@ -23,6 +24,7 @@ export interface TemplateView {
 export function createTemplate(template: BaseTemplate) {
   return template?{
     ...(template || {}),
+    collectionName: 'templates',
     created: firestore.Timestamp.now() // TODO: Figure out a way to use FieldValue to get a consistent date.
   } as Template : {} as Template
 }

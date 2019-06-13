@@ -34,6 +34,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
+  collectionName: string,
   materials?: Material[];
   stakeholders?: Stakeholder[];
 }
@@ -49,5 +50,6 @@ interface Title {
 export function createMovie(params?: Partial<Movie>) {
   return {
     ...params,
+    collectionName: 'movies'
   } as Movie;
 }

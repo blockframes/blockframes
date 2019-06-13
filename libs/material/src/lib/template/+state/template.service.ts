@@ -3,24 +3,27 @@ import { Organization } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, DocTransaction } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
   constructor(
     private db: FireQuery,
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery
+    private materialQuery: MaterialQuery,
+    private docTx: DocTransaction
   ) {}
 
-  public addTemplate(templateName: string, org: Organization): string {
+  public async addTemplate(templateName: string, org: Organization): Promise<string> {
     const templateId = this.db.createId();
     const template = createTemplate({
       id: templateId,
       name: templateName,
       orgId: org.id
     });
-    this.db.doc<Template>(`templates/${templateId}`).set(template);
+
+    this.docTx.createTransaction(template, org.id);
+
     return templateId;
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, DocTransaction } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 
@@ -10,6 +10,7 @@ export class MovieService {
   constructor(
   private db: FireQuery,
   private shService: StakeholderService,
+  private docTx: DocTransaction,
   ) {}
 
   public async add(original: string, orgId: string, firstAdd: boolean = false ): Promise<Movie> {
@@ -18,7 +19,8 @@ export class MovieService {
     const movie: Movie = createMovie({ id, title: { original }});
 
     // TODO: correct race condition
-    await this.db.doc<Movie>(`movies/${id}`).set(movie);
+    this.docTx.createTransaction<Movie>(movie, orgId);
+
     await this.shService.add(id, owner, firstAdd);
 
     return movie;
