@@ -3,15 +3,14 @@ import { Organization } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { FireQuery, DocTransaction } from '@blockframes/utils';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
   constructor(
     private db: FireQuery,
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery,
-    private docTx: DocTransaction
+    private materialQuery: MaterialQuery
   ) {}
 
   public async addTemplate(templateName: string, org: Organization): Promise<string> {

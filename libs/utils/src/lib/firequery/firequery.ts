@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery, initializeOwnDocRights, initializeSharedDocRights } from './types';
+import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery, initializeOwnerDocRights, initializeSharedDocRights } from './types';
 import { Movie } from '@blockframes/movie';
 import { Template, Delivery, Material } from '@blockframes/material';
 
@@ -129,7 +129,7 @@ export class FireQuery extends AngularFirestore {
   /** Create a transaction for the document and add document rights (organization document rights and shared document rights) at the same time */
   public async createTransaction<T>(document: Movie | Template | Delivery, orgId: string, templateId?: string) {
     const promises = [];
-    const orgDocRights = initializeOwnDocRights(document.id);
+    const orgDocRights = initializeOwnerDocRights(document.id);
     const sharedDocRights = initializeSharedDocRights(document.id)
 
     await this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {

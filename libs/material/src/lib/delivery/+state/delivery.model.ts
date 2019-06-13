@@ -12,7 +12,7 @@ interface AbstractDelivery {
   dueDate?: Date | Timestamp;
   state: State;
   isPaid: boolean;
-  collectionName: string;
+  collectionName: 'movies' | 'templates' | 'deliveries';
 }
 
 export interface Delivery extends AbstractDelivery {

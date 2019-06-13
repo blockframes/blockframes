@@ -34,7 +34,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-  collectionName: string,
+  collectionName: 'movies' | 'templates' | 'deliveries',
   materials?: Material[];
   stakeholders?: Stakeholder[];
 }

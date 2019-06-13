@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
-import { FireQuery, DocTransaction } from '@blockframes/utils';
+import { FireQuery } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 

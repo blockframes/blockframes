@@ -10,7 +10,7 @@ export interface BaseTemplate {
 export interface Template extends BaseTemplate {
   materials?: Material[];
   created: firestore.Timestamp;
-  collectionName: string;
+  collectionName: 'movies' | 'templates' | 'deliveries';
 }
 
 export interface TemplateView {
