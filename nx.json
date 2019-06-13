@@ -57,10 +57,10 @@
     "delivery-e2e": {
       "tags": []
     },
-    "libs-delivery": {
+    "backend-functions": {
       "tags": []
     },
-    "backend-functions": {
+    "material": {
       "tags": []
     }
   }
