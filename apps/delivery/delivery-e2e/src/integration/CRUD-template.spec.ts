@@ -1,14 +1,5 @@
 /// <reference types="cypress" />
-
-import { LandingPage, HomePage, TemplateListPage, TemplateFormPage, AddTemplateModal } from "../support/pages";
-
-let currentID = 0;
-
-const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
-
-function generateRandomEmail(): string {
-  return `cypress${Math.floor(Math.random() * 10000) + 1}@test.com`;
-}
+import { AddTemplateModal, HomePage, LandingPage, TemplateFormPage, TemplateListPage } from '../support/pages';
 
 const MATERIALS = [
   {
@@ -36,7 +27,7 @@ const MATERIAL_CHANGED = {
 
 const TEMPLATE_NAME_1 = 'CRUD template';
 
-const EMAIL_CYTEST = 'cytest@gmail.com';
+const EMAIL_CYTEST = 'cytest@blockframes.com';
 const PASSWORD_CYTEST = 'azerty';
 
 beforeEach(() => {
@@ -84,7 +75,11 @@ describe('Test CRUD template', () => {
     p5.fillCategory(MATERIAL_CHANGED.category);
     p5.clickSaveMaterial();
     p5.assertMaterialsCount(MATERIALS.length - 1);
-    p5.assertMaterialExists(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
+    p5.assertMaterialExists(
+      MATERIAL_CHANGED.value,
+      MATERIAL_CHANGED.description,
+      MATERIAL_CHANGED.category
+    );
 
     // Go to template list and delete the template
     const p6: TemplateListPage = p5.selectTemplates();
@@ -94,4 +89,3 @@ describe('Test CRUD template', () => {
     p6.assertTemplateDoesNotExists(TEMPLATE_NAME_1);
   });
 });
-

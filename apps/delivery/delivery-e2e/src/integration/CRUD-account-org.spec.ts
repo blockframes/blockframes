@@ -1,13 +1,13 @@
 /// <reference types="cypress" />
 
-import { LandingPage, HomePage, ViewProfilePage, EditProfilePage, OrganizationFormPage } from "../support/pages";
+import { EditProfilePage, HomePage, LandingPage, OrganizationFormPage, ViewProfilePage } from '../support/pages';
 
 let currentID = 0;
 
 const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
 
 function generateRandomEmail(): string {
-  return `cypress${Math.floor(Math.random() * 10000) + 1}@test.com`;
+  return `cypress${Math.floor(Math.random() * 10000) + 1}@blockframes.com`;
 }
 
 const EMAIL_CYTEST = 'hello@logicalpictures.com';

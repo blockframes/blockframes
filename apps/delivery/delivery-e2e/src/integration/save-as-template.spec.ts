@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
-
-import { LandingPage, HomePage, DeliveryListPage, DeliveryFormPage, NewTemplatePage, TemplateListPage, TemplateFormPage, TemplateDeleteModal } from "../support/pages";
-
-let currentID = 0;
-
-const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
-
-function generateRandomEmail(): string {
-  return `cypress${Math.floor(Math.random() * 10000) + 1}@test.com`;
-}
+import {
+  DeliveryFormPage,
+  DeliveryListPage,
+  HomePage,
+  LandingPage,
+  NewTemplatePage,
+  TemplateDeleteModal,
+  TemplateFormPage,
+  TemplateListPage
+} from '../support/pages';
 
 const MATERIALS = [
   {
@@ -35,7 +35,7 @@ const MATERIAL_CHANGED = {
 };
 
 const TEMPLATE_NAME_1 = 'SaveAsTemplate';
-const EMAIL_CYTEST = 'cytest@gmail.com';
+const EMAIL_CYTEST = 'cytest@blockframes.com';
 const PASSWORD_CYTEST = 'azerty';
 const MOVIE_CYTEST = 'I, robot';
 const ORG_CYTEST = 'cytest';
@@ -85,7 +85,11 @@ describe('I m a user and i can save a delivery as template', () => {
     p9.fillCategory(MATERIAL_CHANGED.category);
     p9.clickSaveMaterial();
     p9.assertMaterialsCount(MATERIALS.length);
-    p9.assertMaterialExists(MATERIAL_CHANGED.value, MATERIAL_CHANGED.description, MATERIAL_CHANGED.category);
+    p9.assertMaterialExists(
+      MATERIAL_CHANGED.value,
+      MATERIAL_CHANGED.description,
+      MATERIAL_CHANGED.category
+    );
 
     // Delete template
     const p10: TemplateDeleteModal = p9.deleteTemplate();
