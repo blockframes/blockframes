@@ -1,6 +1,7 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
+import { BFDocType } from "@blockframes/utils";
 
 export interface Movie {
   id: string,
@@ -34,7 +35,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-  collectionName: 'movies' | 'templates' | 'deliveries',
+  _type: BFDocType,
   materials?: Material[];
   stakeholders?: Stakeholder[];
 }
@@ -50,6 +51,6 @@ interface Title {
 export function createMovie(params?: Partial<Movie>) {
   return {
     ...params,
-    collectionName: 'movies'
+    _type: 'movies'
   } as Movie;
 }

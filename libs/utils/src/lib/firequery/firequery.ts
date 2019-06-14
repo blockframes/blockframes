@@ -2,9 +2,17 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { Query, QueryLike, QueryInput, QueryOutput, isQueryLike, createQuery, initializeOwnerDocRights, initializeSharedDocRights } from './types';
-import { Movie } from '@blockframes/movie';
-import { Template, Delivery, Material } from '@blockframes/material';
+import {
+  Query,
+  QueryLike,
+  QueryInput,
+  QueryOutput,
+  isQueryLike,
+  createQuery,
+  initializeOwnerDocRights,
+  initializeSharedDocRights,
+  BFDoc
+} from './types';
 
 @Injectable({ providedIn: 'root' })
 export class FireQuery extends AngularFirestore {
@@ -20,7 +28,7 @@ export class FireQuery extends AngularFirestore {
     if (path.split('/').length % 2 !== 0) {
       const snapshot = await this.collection(path).ref.get();
       return snapshot.docs.map(doc => doc.data()) as any; // TODO: fix typing (doc.data() as T)
-    // Else path targets a doc
+      // Else path targets a doc
     } else {
       const snapshot = await this.doc(path).ref.get();
       return snapshot.data() as any; // TODO: fix typing (doc.data() as T)
@@ -32,33 +40,32 @@ export class FireQuery extends AngularFirestore {
   ////////////////
 
   /** Make a query to firebase */
-  public fromQuery<T>(query: Query<T>[]): Observable<T[]>
-  public fromQuery<T>(query: string | Query<T>): Observable<T>
+  public fromQuery<T>(query: Query<T>[]): Observable<T[]>;
+  public fromQuery<T>(query: string | Query<T>): Observable<T>;
   public fromQuery<T, Q extends QueryInput<T>>(query: Q): QueryOutput<Q, T> {
     return isQueryLike(query)
-      ? this.fromSubQuery(query as QueryLike<T>) as any
-      : this.fromSubQuery(createQuery<T>(query as string))
+      ? (this.fromSubQuery(query as QueryLike<T>) as any)
+      : this.fromSubQuery(createQuery<T>(query as string));
   }
 
   // Dispatch subquery to collection or list of doc
   private fromSubQuery<T>(query: QueryLike<T>): Observable<T> | Observable<T[]> {
-    if (!query) return throwError(`Query failed`)
+    if (!query) return throwError(`Query failed`);
     if (Array.isArray(query)) {
       return this.fromDocList(query);
     }
     // If path is event, this is a doc, else, this is a collection
     const isEven = query.path.split('/').length % 2 === 0;
-    return isEven
-      ? this.fromDoc(query)
-      : this.fromCollection(query);
+    return isEven ? this.fromDoc(query) : this.fromCollection(query);
   }
 
   private fromCollection<T>(query: Query<T>): Observable<T[]> {
     const { path, queryFn } = query;
     // Select all entities
-    return this.collection<T>(path, queryFn).valueChanges()
+    return this.collection<T>(path, queryFn)
+      .valueChanges()
       .pipe(
-        switchMap((entities) => {
+        switchMap(entities => {
           if (!entities) return throwError(`Nothing found at path : ${query.path}`);
           if (!entities.length) return of([]);
           if (!this.hasSubqueries(query)) return of(entities);
@@ -80,13 +87,12 @@ export class FireQuery extends AngularFirestore {
 
   /** Query a unique document */
   private fromDoc<T>(query: Query<T>) {
-    return this.doc<T>(query.path).valueChanges()
+    return this.doc<T>(query.path)
+      .valueChanges()
       .pipe(
         switchMap(entity => {
-          if (!entity) return throwError(`Nothing found at path : ${query.path}`)
-          return (this.hasSubqueries(query))
-            ? this.getAllSubQueries(query, entity)
-            : of(entity);
+          if (!entity) return throwError(`Nothing found at path : ${query.path}`);
+          return this.hasSubqueries(query) ? this.getAllSubQueries(query, entity) : of(entity);
         })
       );
   }
@@ -98,22 +104,25 @@ export class FireQuery extends AngularFirestore {
     const subQueryKeys = keys.filter(key => !this.keysToRemove.includes(key));
     // For each key get the subquery
     const subQueries$ = subQueryKeys.map(key => {
-      const subEntity$ = (typeof query[key] === 'function')
-        ? this.fromSubQuery(query[key](entity))
-        : of(query[key]);
+      const subEntity$ =
+        typeof query[key] === 'function' ? this.fromSubQuery(query[key](entity)) : of(query[key]);
       return subEntity$.pipe(map(subentity => ({ key, subentity })));
     });
 
     return combineLatest(subQueries$).pipe(
       // Add the content to the object
-      map((subEntities) => subEntities.reduce((acc, {key, subentity}) => ({
-        ...acc,
-        [key]: subentity
-      }), {})),
-      map(subEntityObj => ({ ...entity, ...subEntityObj })),
+      map(subEntities =>
+        subEntities.reduce(
+          (acc, { key, subentity }) => ({
+            ...acc,
+            [key]: subentity
+          }),
+          {}
+        )
+      ),
+      map(subEntityObj => ({ ...entity, ...subEntityObj }))
     );
   }
-
 
   // HELPERS
   private hasSubqueries<T>(query: Query<T>) {
@@ -127,33 +136,27 @@ export class FireQuery extends AngularFirestore {
   //////////////////////
 
   /** Create a transaction for the document and add document rights (organization document rights and shared document rights) at the same time */
-  public async createTransaction<T>(document: Movie | Template | Delivery, orgId: string, templateId?: string) {
+  public async createAndSetRights<T>(
+    document: BFDoc,
+    orgId: string
+  ) {
     const promises = [];
     const orgDocRights = initializeOwnerDocRights(document.id);
-    const sharedDocRights = initializeSharedDocRights(document.id)
+    const sharedDocRights = initializeSharedDocRights(document.id);
 
-    await this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+    return this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const orgDocRightsRef = this.doc<any>(`rights/${orgId}/docs/${document.id}`).ref;
       promises.push(tx.set(orgDocRightsRef, orgDocRights));
 
-      const sharedDocRightsRef = this.doc<any>(`rights/${orgId}/apps/${document.collectionName}Rights/docRights/${document.id}`).ref;
-      promises.push(tx.set(sharedDocRightsRef, sharedDocRights))
+      const sharedDocRightsRef = this.doc<any>(
+        `rights/${orgId}/apps/${document._type}Rights/docRights/${document.id}`
+      ).ref;
+      promises.push(tx.set(sharedDocRightsRef, sharedDocRights));
 
-      const documentRef = this.doc<T>(`${document.collectionName}/${document.id}`).ref;
+      const documentRef = this.doc<T>(`${document._type}/${document.id}`).ref;
       promises.push(tx.set(documentRef, document));
 
-      // If a templateId is in the args, we add the template materials to the delivery materials sub-collection.
-      if (!!templateId) {
-        const materials = await this.snapshot<Material[]>(`templates/${templateId}/materials`);
-        materials.map(material => {
-          const materialRef =  this.doc<Material>(`${document.collectionName}/${document.id}/materials/${material.id}`).ref;
-          promises.push(tx.set(materialRef, material));
-          }
-        );
-        return document.id;
-      }
       return Promise.all(promises);
-      }
-    )
+    });
   }
 }

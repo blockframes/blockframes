@@ -1,5 +1,6 @@
 import { Material } from '../../material/+state/material.model';
 import { firestore } from 'firebase/app';
+import { BFDocType } from '@blockframes/utils';
 
 export interface BaseTemplate {
   id: string;
@@ -10,7 +11,7 @@ export interface BaseTemplate {
 export interface Template extends BaseTemplate {
   materials?: Material[];
   created: firestore.Timestamp;
-  collectionName: 'movies' | 'templates' | 'deliveries';
+  _type: BFDocType;
 }
 
 export interface TemplateView {
@@ -24,7 +25,7 @@ export interface TemplateView {
 export function createTemplate(template: BaseTemplate) {
   return template?{
     ...(template || {}),
-    collectionName: 'templates',
+    _type: 'templates',
     created: firestore.Timestamp.now() // TODO: Figure out a way to use FieldValue to get a consistent date.
   } as Template : {} as Template
 }

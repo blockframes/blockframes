@@ -18,7 +18,7 @@ export class MovieService {
     const movie: Movie = createMovie({ id, title: { original }});
 
     // TODO: correct race condition
-    this.db.createTransaction<Movie>(movie, orgId);
+    await this.db.createAndSetRights<Movie>(movie, orgId);
 
     await this.shService.add(id, owner, firstAdd);
 

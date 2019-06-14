@@ -1,4 +1,4 @@
-import { QueryFn } from '@angular/fire/firestore';
+import { QueryFn, DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 export type TypeofArray<T> = T extends (infer X)[] ? X : T;
@@ -30,6 +30,13 @@ export function isQueryLike<T>(query: QueryInput<T>): query is QueryLike<T> {
 ////////////////
 // DOC RIGHTS //
 ////////////////
+
+export type BFDocType = 'movies' | 'templates' | 'deliveries';
+
+export interface BFDoc extends DocumentData {
+  id: string;
+  _type: BFDocType;
+}
 
 export interface OrgDocRights {
   id: string;
