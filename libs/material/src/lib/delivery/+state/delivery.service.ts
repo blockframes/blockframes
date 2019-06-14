@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder, Movie } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
+import { Template, TemplateQuery } from '../../template/+state';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -22,6 +23,7 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
 export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
+    private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
@@ -93,26 +95,31 @@ export class DeliveryService {
       true
     );
 
-    await this.db.createAndSetRights(delivery, stakeholder.orgId);
+    const promises = [];
+
+    promises.push([
+      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.db
+      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
+      .set(deliveryStakeholder)
+    ])
 
     if (!!templateId) {
-      await this.copyTemplate(delivery, templateId);
+      const template = this.templateQuery.getEntity(templateId);
+      promises.push(this.copyMaterials(delivery, template));
     }
 
-    await this.db
-      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder);
+    await Promise.all(promises);
 
     return id;
   }
 
   /** Add a new delivery by copying the movie's materials */
   public async addDeliveryWithMovieMaterials() {
-    const movieId = this.movieQuery.getActiveId();
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials`);
+    const movie = this.movieQuery.getActive();
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
-    const delivery = createDelivery({ id, movieId, validated: [] });
+    const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
       stakeholder.id,
       stakeholder.orgId,
@@ -120,23 +127,18 @@ export class DeliveryService {
       true
     );
 
-    // Add a new delivery in firebase
-    this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    // Add the stakeholder of the delivery sub-collection in firebase
-    this.db
+    const promises = [];
+
+    promises.push([
+      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.copyMaterials(delivery, movie),
+      this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder);
-    // Copy materials of movie in the sub-collection materials of the delivery
-    await Promise.all(
-      movieMaterials.map(material =>
-        this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set({
-          id: material.id,
-          value: material.value,
-          description: material.description,
-          category: material.category
-        })
-      )
-    );
+      .set(deliveryStakeholder)
+    ]);
+
+    await Promise.all(promises);
+
     return id;
   }
 
@@ -208,15 +210,16 @@ export class DeliveryService {
     }
   }
 
-  public async copyTemplate(delivery: Delivery, templateId: string) {
-    const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials`);
+  /** Create a transaction to copy the template/movie materials into the delivery materials */
+  public async copyMaterials(delivery: Delivery, document: BFDoc) {
+    const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`)
 
     return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
 
       const promises = materials.map(material => {
         const materialRef = this.db.doc<Material>(`deliveries/${delivery.id}/materials/${material.id}`)
           .ref;
-        return tx.set(materialRef, material);
+        return tx.set(materialRef, {...material, state: '', stepId: ''});
       });
 
       return Promise.all(promises);

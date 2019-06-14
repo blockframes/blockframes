@@ -1,6 +1,5 @@
 import { Stakeholder } from '@blockframes/movie';
 import { firestore } from 'firebase/app';
-import { BFDocType } from '@blockframes/utils';
 type Timestamp = firestore.Timestamp;
 
 interface AbstractDelivery {
@@ -13,7 +12,7 @@ interface AbstractDelivery {
   dueDate?: Date | Timestamp;
   state: State;
   isPaid: boolean;
-  _type: BFDocType;
+  _type: 'deliveries';
 }
 
 export interface Delivery extends AbstractDelivery {

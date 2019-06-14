@@ -21,7 +21,7 @@ export class TemplateService {
       orgId: org.id
     });
 
-    await this.db.createAndSetRights(template, org.id);
+    await this.db.createDocAndRights(template, org.id);
 
     return templateId;
   }

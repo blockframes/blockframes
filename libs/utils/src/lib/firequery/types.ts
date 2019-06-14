@@ -11,20 +11,20 @@ export type Query<T> = {
 export type QueryLike<T> = Query<T> | Query<T>[];
 export type SubQueries<T> = {
   [K in keyof Partial<T>]: T[K] | ((entity: T) => QueryLike<T[K]>)
-}
+};
 
 export type QueryInput<T> = QueryLike<T> | string;
 export type QueryOutput<Q, T> =
-  Q extends string ? Observable<T> :
-  Q extends Query<(infer U)>[] ? Observable<U[]> :
-  Q extends Query<(infer V)> ? Observable<V> :
-  never;
+  Q extends string ? Observable<T>
+  : Q extends Query<infer U>[] ? Observable<U[]>
+  : Q extends Query<infer V> ? Observable<V>
+  : never;
 
 export function createQuery<T>(path: string): Query<T> {
   return { path } as Query<T>;
 }
 export function isQueryLike<T>(query: QueryInput<T>): query is QueryLike<T> {
-  return typeof query !== 'string'
+  return typeof query !== 'string';
 }
 
 ////////////////
@@ -56,24 +56,32 @@ export interface SharedDocRights {
   admins: [];
 }
 
-export function initializeOwnerDocRights (id: string) {
+/**
+ * Initialize the OrgDocRights with all fields set to true
+ * as the organization is the owner of this document.
+ */
+export function initializeOwnerDocRights(id: string) {
   return {
     id,
     canCreate: true,
     canRead: true,
     canUpdate: true,
     canDelete: true,
-    isAdmin: true,
+    isAdmin: true
   } as OrgDocRights;
 }
 
-export function initializeSharedDocRights (id: string) {
+/**
+ * Initialize the SharedDocRights with empty fields as
+ * it is shared with no one at the time it is created.
+ */
+export function initializeSharedDocRights(id: string) {
   return {
     id,
     canCreate: [],
     canRead: [],
     canUpdate: [],
     canDelete: [],
-    admins: [],
+    admins: []
   } as SharedDocRights;
 }

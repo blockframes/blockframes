@@ -28,7 +28,7 @@ export class FireQuery extends AngularFirestore {
     if (path.split('/').length % 2 !== 0) {
       const snapshot = await this.collection(path).ref.get();
       return snapshot.docs.map(doc => doc.data()) as any; // TODO: fix typing (doc.data() as T)
-      // Else path targets a doc
+    // Else path targets a doc
     } else {
       const snapshot = await this.doc(path).ref.get();
       return snapshot.data() as any; // TODO: fix typing (doc.data() as T)
@@ -44,7 +44,7 @@ export class FireQuery extends AngularFirestore {
   public fromQuery<T>(query: string | Query<T>): Observable<T>;
   public fromQuery<T, Q extends QueryInput<T>>(query: Q): QueryOutput<Q, T> {
     return isQueryLike(query)
-      ? (this.fromSubQuery(query as QueryLike<T>) as any)
+      ? this.fromSubQuery(query as QueryLike<T>) as any
       : this.fromSubQuery(createQuery<T>(query as string));
   }
 
@@ -56,16 +56,17 @@ export class FireQuery extends AngularFirestore {
     }
     // If path is event, this is a doc, else, this is a collection
     const isEven = query.path.split('/').length % 2 === 0;
-    return isEven ? this.fromDoc(query) : this.fromCollection(query);
+    return isEven
+      ? this.fromDoc(query)
+      : this.fromCollection(query);
   }
 
   private fromCollection<T>(query: Query<T>): Observable<T[]> {
     const { path, queryFn } = query;
     // Select all entities
-    return this.collection<T>(path, queryFn)
-      .valueChanges()
+    return this.collection<T>(path, queryFn).valueChanges()
       .pipe(
-        switchMap(entities => {
+        switchMap((entities) => {
           if (!entities) return throwError(`Nothing found at path : ${query.path}`);
           if (!entities.length) return of([]);
           if (!this.hasSubqueries(query)) return of(entities);
@@ -87,12 +88,13 @@ export class FireQuery extends AngularFirestore {
 
   /** Query a unique document */
   private fromDoc<T>(query: Query<T>) {
-    return this.doc<T>(query.path)
-      .valueChanges()
+    return this.doc<T>(query.path).valueChanges()
       .pipe(
         switchMap(entity => {
           if (!entity) return throwError(`Nothing found at path : ${query.path}`);
-          return this.hasSubqueries(query) ? this.getAllSubQueries(query, entity) : of(entity);
+          return this.hasSubqueries(query)
+            ? this.getAllSubQueries(query, entity)
+            : of(entity);
         })
       );
   }
@@ -111,15 +113,10 @@ export class FireQuery extends AngularFirestore {
 
     return combineLatest(subQueries$).pipe(
       // Add the content to the object
-      map(subEntities =>
-        subEntities.reduce(
-          (acc, { key, subentity }) => ({
+      map((subEntities) => subEntities.reduce((acc, { key, subentity }) => ({
             ...acc,
             [key]: subentity
-          }),
-          {}
-        )
-      ),
+          }), {})),
       map(subEntityObj => ({ ...entity, ...subEntityObj }))
     );
   }
@@ -136,8 +133,8 @@ export class FireQuery extends AngularFirestore {
   //////////////////////
 
   /** Create a transaction for the document and add document rights (organization document rights and shared document rights) at the same time */
-  public async createAndSetRights<T>(
-    document: BFDoc,
+  public async createDocAndRights<T>(
+    document: BFDoc, // TODO: Go a bit further into type checking (e.g. BFDoc<T>)
     orgId: string
   ) {
     const promises = [];
@@ -145,10 +142,10 @@ export class FireQuery extends AngularFirestore {
     const sharedDocRights = initializeSharedDocRights(document.id);
 
     return this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const orgDocRightsRef = this.doc<any>(`rights/${orgId}/docs/${document.id}`).ref;
+      const orgDocRightsRef = this.doc<T>(`rights/${orgId}/docs/${document.id}`).ref;
       promises.push(tx.set(orgDocRightsRef, orgDocRights));
 
-      const sharedDocRightsRef = this.doc<any>(
+      const sharedDocRightsRef = this.doc<T>(
         `rights/${orgId}/apps/${document._type}Rights/docRights/${document.id}`
       ).ref;
       promises.push(tx.set(sharedDocRightsRef, sharedDocRights));

@@ -1,7 +1,6 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
-import { BFDocType } from "@blockframes/utils";
 
 export interface Movie {
   id: string,
@@ -35,7 +34,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-  _type: BFDocType,
+  _type: 'movies',
   materials?: Material[];
   stakeholders?: Stakeholder[];
 }
