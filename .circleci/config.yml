@@ -87,7 +87,7 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use ci &&
-            ENV=ci npx firebase deploy &&
+            ENV=ci npx firebase deploy --token "${FIREBASE_CI_TOKEN}" &&
             ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
