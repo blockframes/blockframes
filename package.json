@@ -2,7 +2,7 @@
   "name": "blockframes",
   "version": "0.0.2",
   "license": "MIT",
-  "main": "dist/apps/backend-functions/main.js",
+  "main": "./main.js",
   "engines": {
     "node": "8"
   },

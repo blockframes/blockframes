@@ -30,7 +30,7 @@
       "npm --prefix \"$RESOURCE_DIR\" run lint backend-functions",
       "npm --prefix \"$RESOURCE_DIR\" run build:functions --configuration=${ENV:-production}"
     ],
-    "source": "/"
+    "source": "dist/apps/backend-functions/"
   },
   "firestore": {
     "rules": "firestore.rules",

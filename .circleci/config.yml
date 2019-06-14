@@ -87,6 +87,7 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use ci &&
+            cp ./package.json dist/apps/backend-functions/ &&
             ENV=ci npx firebase deploy --token "${FIREBASE_CI_TOKEN}" &&
             ENV=ci npm run e2e --headless
       - store_artifacts:
