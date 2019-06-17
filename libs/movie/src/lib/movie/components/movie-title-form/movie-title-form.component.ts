@@ -53,7 +53,7 @@ export class MovieTitleFormComponent implements OnInit {
         .subscribe(m => {
         if (m !== undefined) {
           this.alive = false;
-          this.router.navigate([`/layout/home/form/${movie.id}`]);
+          this.router.navigate([`/layout/home/${movie.id}/edit`]);
           this.dialogRef.close();
         }
       })

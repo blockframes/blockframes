@@ -51,7 +51,7 @@
               <mat-icon color="primary">control_camera</mat-icon>
               <span>Open in...</span>
             </button>
-            <button mat-menu-item [routerLink]="['form', movie.id]">
+            <button mat-menu-item [routerLink]="[movie.id, 'edit']">
               <mat-icon color="primary">edit</mat-icon>
               <span>Edit</span>
             </button>
@@ -61,7 +61,7 @@
             </button>
           </mat-menu>
           <mat-menu #subMenu="matMenu">
-            <button mat-menu-item [routerLink]="['movie', movie.id]">Explorer</button>
+            <button mat-menu-item [routerLink]="[movie.id]">Explorer</button>
           </mat-menu>
         </div>
         <mat-card-header [routerLink]="['/layout', movie.id, 'list']" class="clickable-item">

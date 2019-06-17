@@ -23,30 +23,26 @@ export const routes: Routes = [
     canDeactivate: [MovieListGuard],
   },
   {
-    path: 'form/:movieId',
-    component: ContainerComponent,
+    path: ':movieId',
     canActivate: [MovieActiveGuard],
     canDeactivate: [MovieActiveGuard],
     children: [
-      { path: '', redirectTo: 'main', pathMatch: 'full' },
-      { path: 'main',component: FormMainComponent },
-      { path: 'story',component: FormStoryComponent },
-      { path: 'team',component: FormTeamComponent },
-      { path: 'promo',component: FormPromotionalComponent },
+      { path: '', redirectTo: 'view', pathMatch: 'full' },
+      { path: 'view', component: MovieViewComponent },
+      { path: 'teamwork', component: StakeholderViewComponent },
+      {
+        path: 'edit',
+        component: ContainerComponent,
+        children: [
+          { path: '', redirectTo: 'main', pathMatch: 'full' },
+          { path: 'main',component: FormMainComponent },
+          { path: 'story',component: FormStoryComponent },
+          { path: 'team',component: FormTeamComponent },
+          { path: 'promo',component: FormPromotionalComponent },
+        ]
+      },
     ]
-  },
-  {
-    path: 'form/:movieId/teamwork',
-    component: StakeholderViewComponent,
-    canActivate: [MovieActiveGuard],
-    canDeactivate: [MovieActiveGuard]
-  },
-  {
-    path: 'movie/:movieId',
-    component: MovieViewComponent,
-    canActivate: [MovieActiveGuard],
-    canDeactivate: [MovieActiveGuard]
-  },
+  }
 ]
 
 @NgModule({

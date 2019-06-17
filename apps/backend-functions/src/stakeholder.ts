@@ -116,7 +116,7 @@ async function stakeholdersCollectionEvent(
 function createStakeholderNotifications(orgs: Organization[], snap: SnapObject) {
   const path = !!snap.delivery
     ? `/layout/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
-    : `/layout/home/form/${snap.movie.id}/teamwork`;
+    : `/layout/home/${snap.movie.id}/teamwork`;
   return orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
