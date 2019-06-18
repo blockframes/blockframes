@@ -194,4 +194,18 @@ export class MovieForm extends EntityForm<Movie> {
       input.value = '';
     }
   }
+
+  reset(value?: any, options?: Object): void {
+    super.reset(value, options);
+    this.clearFormArrays();
+  }
+
+  protected clearFormArrays() {
+    Object.keys(this.controls).forEach((key: string) => {
+      const abstractControl = this.controls[key];
+      if (abstractControl instanceof FormArray) {
+        abstractControl.clear();
+      }
+    });
+  }
 }
