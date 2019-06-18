@@ -61,6 +61,7 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes,{
     anchorScrolling: 'enabled',
     onSameUrlNavigation: 'reload',
+    paramsInheritanceStrategy: 'always'
   })],
   exports: [RouterModule]
 })
