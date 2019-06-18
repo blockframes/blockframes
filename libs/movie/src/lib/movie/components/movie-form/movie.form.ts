@@ -78,7 +78,7 @@ export class MovieForm extends EntityForm<Movie> {
   }
 
   //////////
-  // GETTERS 
+  // GETTERS
   //////////
 
   /* Getters for all form inputs */
@@ -109,7 +109,7 @@ export class MovieForm extends EntityForm<Movie> {
   }
 
   //////////
-  // UTILS 
+  // UTILS
   //////////
 
   public populate(movie) {

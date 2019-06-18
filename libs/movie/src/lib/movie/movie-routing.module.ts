@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Components
-import { ContainerComponent } from './form/container.component';
+import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { HomeComponent } from './home/home.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
-import { FormMainComponent } from './form/form.main.component';
-import { FormStoryComponent } from './form/form.story.component';
-import { FormTeamComponent } from './form/form.team.component';
-import { FormPromotionalComponent } from './form/form.promotional.component';
+import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
+import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component';
+import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
+import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 
 // Guards
@@ -32,13 +32,13 @@ export const routes: Routes = [
       { path: 'teamwork', component: StakeholderViewComponent },
       {
         path: 'edit',
-        component: ContainerComponent,
+        component: MovieEditableComponent,
         children: [
           { path: '', redirectTo: 'main', pathMatch: 'full' },
-          { path: 'main',component: FormMainComponent },
-          { path: 'story',component: FormStoryComponent },
-          { path: 'team',component: FormTeamComponent },
-          { path: 'promo',component: FormPromotionalComponent },
+          { path: 'main',component: MovieFormMainComponent },
+          { path: 'story',component: MovieFormStoryComponent },
+          { path: 'team',component: MovieFormTeamComponent },
+          { path: 'promo',component: MovieFormPromotionalComponent },
         ]
       },
     ]

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { createMovie, MovieQuery, MovieService } from '../+state';
+import { createMovie, MovieQuery, MovieService } from '../../+state';
 import { MatSnackBar } from '@angular/material';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
@@ -7,15 +7,15 @@ import { MovieForm } from './movie.form';
 
 @Component({
   selector: 'movie-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss'],
+  templateUrl: './movie-form.component.html',
+  styleUrls: ['./movie-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class FormComponent implements OnInit, OnDestroy {
+export class MovieFormComponent implements OnInit, OnDestroy {
   public persistForm: PersistNgFormPlugin;
   navLinks: any[];
-  activeLinkIndex = -1; 
+  activeLinkIndex = -1;
 
   constructor(
     private query: MovieQuery,
@@ -42,7 +42,7 @@ export class FormComponent implements OnInit, OnDestroy {
         label: 'Promotional elements',
         link: './promo',
         index: 3
-      }, 
+      },
     ];
   }
 
@@ -52,7 +52,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.activeLinkIndex = this.navLinks.indexOf(this.navLinks.find(tab => tab.link === '.' + this.router.url));
     });
 
-    // Akita Persist Form 
+    // Akita Persist Form
     this.persistForm = new PersistNgFormPlugin(this.query, createMovie).setForm(this.form);
 
     this.form.populate(this.query.getActive());

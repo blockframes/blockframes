@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MovieForm } from './movie.form';
+import { MovieForm } from '../movie.form';
 import { FormControl } from '@angular/forms';
-import { default as staticModels } from '../staticModels';
+import { default as staticModels } from '../../../staticModels';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, startWith, debounceTime, map } from 'rxjs/operators';
 
@@ -11,12 +11,12 @@ interface StaticModel {
 }
 
 @Component({
-  selector: 'movie-form-main-section',
-  templateUrl: './form.main.component.html',
-  styleUrls: ['./form.main.component.scss'],
+  selector: 'movie-form-main',
+  templateUrl: './movie-form-main.component.html',
+  styleUrls: ['./movie-form-main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormMainComponent implements OnInit {
+export class MovieFormMainComponent implements OnInit {
 
   public staticModels: any;
   public countriesFilterCtrl: FormControl = new FormControl();

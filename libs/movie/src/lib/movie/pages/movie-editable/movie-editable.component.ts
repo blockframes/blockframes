@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MovieQuery } from '../+state';
+import { MovieQuery } from '../../+state';
 import { FormGroupLike } from '@datorama/akita';
+
 @Component({
-  selector: 'movie-form-container',
-  templateUrl: './container.component.html',
-  styleUrls: ['./container.component.scss'],
+  selector: 'movie-editable',
+  templateUrl: './movie-editable.component.html',
+  styleUrls: ['./movie-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerComponent implements OnInit {
+export class MovieEditableComponent implements OnInit {
   public fullScreen = false;
   public form$ : Observable<FormGroupLike>;
 
@@ -17,7 +18,7 @@ export class ContainerComponent implements OnInit {
   ngOnInit() {
     this.form$ = this.query.movieFormChanges$;
   }
-  
+
   public toggleFullScreen() {
     return this.fullScreen = !this.fullScreen;
   }

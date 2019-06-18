@@ -32,12 +32,12 @@ import { StakeholderModule } from '../stakeholder/stakeholder.module';
 
 // Components
 import { HomeComponent } from './home/home.component';
-import { ContainerComponent } from './form/container.component';
-import { FormComponent } from './form/form.component';
-import { FormMainComponent } from './form/form.main.component';
-import { FormStoryComponent } from './form/form.story.component'
-import { FormTeamComponent } from './form/form.team.component';
-import { FormPromotionalComponent } from './form/form.promotional.component';
+import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
+import { MovieFormComponent } from './components/movie-form/movie-form.component';
+import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
+import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component'
+import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
+import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 
@@ -50,20 +50,20 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
-import { MovieForm } from './form/movie.form';
+import { MovieForm } from './components/movie-form/movie.form';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    ContainerComponent,
-    FormComponent,
-    FormStoryComponent,
+    MovieEditableComponent,
+    MovieFormComponent,
+    MovieFormStoryComponent,
     MovieListComponent,
     MovieViewComponent,
     MovieTitleFormComponent,
-    FormMainComponent,
-    FormTeamComponent,
-    FormPromotionalComponent,
+    MovieFormMainComponent,
+    MovieFormTeamComponent,
+    MovieFormPromotionalComponent,
     HomeEmptyComponent,
     DelayedWrapperComponent,
   ],
