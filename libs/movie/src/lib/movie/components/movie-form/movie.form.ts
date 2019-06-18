@@ -205,9 +205,7 @@ export class MovieForm extends EntityForm<Movie> {
 
   /*
   * Clear controls that are FormArrays because form.reset() only set values to null.
-  * ie: If I have a control that is a FormArray with 3 items ctrl=[toto,tata,tutu],
-  * form reset will set data to null: names=[null,null,null] 
-  * but expected behavior in our case should be names=[] ( and this is what clear does)
+  * For more information @see: https://github.com/angular/angular/issues/31110
   */
   protected clearFormArrays() {
     Object.keys(this.controls).forEach((key: string) => {
