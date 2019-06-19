@@ -2,14 +2,14 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'input-email',
-  templateUrl: './email.component.html',
-  styleUrls: ['./email.component.scss'],
+  selector: 'email-form-field',
+  templateUrl: './email-form-field.component.html',
+  styleUrls: ['./email-form-field.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmailComponent  {
+export class EmailFormFieldComponent  {
 
   @Input() form: FormGroup;
-  
+
   constructor() {}
 }

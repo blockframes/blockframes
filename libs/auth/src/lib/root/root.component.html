@@ -3,8 +3,8 @@
   <section testId="signin" id="signin" fxLayout="column" fxLayoutAlign="start center">
     <h1>Sign in</h1>
     <form [formGroup]="signinForm" (ngSubmit)="signin()" fxLayout="column">
-      <input-email [form]="signinForm"></input-email>
-      <input-password [form]="signinForm" [showHint]=false></input-password>
+      <email-form-field [form]="signinForm"></email-form-field>
+      <password-form-field [form]="signinForm" [showHint]=false></password-form-field>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button mat-raised-button color="primary">Signin</button>
       </div>
@@ -15,7 +15,7 @@
   <section testId="signup" id="signup" fxLayout="column" fxLayoutAlign="start center">
     <h1>Sign Up</h1>
     <form [formGroup]="signupForm" (ngSubmit)="signup()" fxLayout="column">
-      <input-email [form]="signupForm"></input-email>
+      <email-form-field [form]="signupForm"></email-form-field>
       <form-group-password-confirm [form]="signupForm"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button mat-raised-button color="primary">Signup</button>

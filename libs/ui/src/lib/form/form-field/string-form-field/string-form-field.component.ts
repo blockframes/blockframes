@@ -3,12 +3,12 @@ import { FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material';
 
 @Component({
-  selector: 'input-string',
-  templateUrl: './string.component.html',
-  styleUrls: ['./string.component.scss'],
+  selector: 'string-form-field',
+  templateUrl: './string-form-field.component.html',
+  styleUrls: ['./string-form-field.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StringComponent  {
+export class StringFormFieldComponent  {
 
   @Input() form: FormGroup;
   @Input() type = 'text';
@@ -17,6 +17,6 @@ export class StringComponent  {
   @Input() required = false;
   @Input() matcher : ErrorStateMatcher;
   @Input() class = '';
-  
+
   constructor() {}
 }
