@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthModule } from '@blockframes/auth';
 import { OrgFormComponent } from './org-form/org-form.component';
@@ -36,9 +37,9 @@ export const organizationRoutes: Routes = [
   },
   {
     path: ':orgId',
-    component: OrgShowComponent,
     canActivate: [OrganizationActiveGuard],
     canDeactivate: [OrganizationActiveGuard],
+    component: OrgShowComponent
   }
 ];
 
@@ -47,6 +48,7 @@ export const organizationRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
@@ -57,6 +59,7 @@ export const organizationRoutes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
     AuthModule,
     RouterModule.forChild(organizationRoutes)
   ],

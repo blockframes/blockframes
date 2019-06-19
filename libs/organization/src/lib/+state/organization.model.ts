@@ -37,9 +37,3 @@ export function createOrganization(params?: Partial<Organization>): Organization
     updated: params.updated || Date.now(),
   } : {} as Organization;
 }
-
-export const ROLES = {
-  ADMIN: 'ADMIN',
-  READ: 'READ',
-  WRITE: 'WRITE'
-};

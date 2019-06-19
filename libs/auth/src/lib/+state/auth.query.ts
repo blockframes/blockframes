@@ -24,4 +24,8 @@ export class AuthQuery extends Query<AuthState> {
     return this.getValue().requestedRoute;
   }
 
+  get userId() {
+    return this.user.uid;
+  }
+
 }

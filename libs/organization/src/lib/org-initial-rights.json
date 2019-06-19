@@ -1,0 +1,129 @@
+{
+  "orgPermissions": {
+    "admins": [],
+    "canCreate": [],
+    "canRead": [],
+    "canUpdate": [],
+    "canDelete": []
+  },
+  "appsPermissions": [
+    {
+      "name": "MediaDelivering",
+      "admins": [],
+      "canCreate": [],
+      "canRead": [],
+      "canUpdate": [],
+      "canDelete": []
+    },
+    {
+      "name": "MediaFinanciers",
+      "admins": [],
+      "canCreate": [],
+      "canRead": [],
+      "canUpdate": [],
+      "canDelete": []
+    },
+    {
+      "name": "HomeOfScripts",
+      "admins": [],
+      "canCreate": [],
+      "canRead": [],
+      "canUpdate": [],
+      "canDelete": []
+    }
+  ],
+  "roles": [
+    {
+      "name": "Super Admin",
+      "authorizations": {
+        "deliveries": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        },
+        "templates": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        },
+        "movies": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "authorizations": {
+        "deliveries": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        },
+        "templates": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        },
+        "movies": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        }
+      }
+    },
+    {
+      "name": "Editor",
+      "authorizations": {
+        "deliveries": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        "templates": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        "movies": {
+          "canCreate": true,
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        }
+      }
+    },
+    {
+      "name": "Explorer",
+      "authorizations": {
+        "deliveries": {
+          "canCreate": false,
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        },
+        "templates": {
+          "canCreate": false,
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        },
+        "movies": {
+          "canCreate": false,
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        }
+      }
+    }
+  ]
+}
