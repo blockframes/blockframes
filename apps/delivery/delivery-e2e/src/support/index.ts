@@ -19,6 +19,8 @@ import { prepareFirebase } from '../../../../backend-functions/src/tools/firebas
 
 describe('Hooks', () => {
   before(async () => {
+    // @ts-ignore
+    window.process = Cypress.env('process');
     await prepareFirebase();
   });
 });
