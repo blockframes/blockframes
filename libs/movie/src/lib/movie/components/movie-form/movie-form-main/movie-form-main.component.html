@@ -1,11 +1,11 @@
 <div [formGroup]="form">
   <!-- TITLES -->
   <h3> Titles </h3>
-  <input-string class="full-width" required=true [form]="form" placeholder="Original title" name="originalTitle"></input-string>
-  <input-string class="full-width" required=true [form]="form" placeholder="International title" name="internationalTitle"></input-string>
-  
+  <string-form-field class="full-width" required=true [form]="form" placeholder="Original title" name="originalTitle"></string-form-field>
+  <string-form-field class="full-width" required=true [form]="form" placeholder="International title" name="internationalTitle"></string-form-field>
+
   <h3> Directed By </h3>
-  <input-string class="full-width" required=true [form]="form" placeholder="Director name" name="directorName"></input-string>
+  <string-form-field class="full-width" required=true [form]="form" placeholder="Director name" name="directorName"></string-form-field>
 
   <!-- POSTER -->
   <h3> Poster </h3>
@@ -29,16 +29,16 @@
     </ng-template>
   </mat-card>
   <h3> Production </h3>
-  <input-string class="full-width" type="number" [form]="form" placeholder="Production year" name="productionYear"></input-string>
+  <string-form-field class="full-width" type="number" [form]="form" placeholder="Production year" name="productionYear"></string-form-field>
 
   <!-- AUDIOVISUAL TYPES -->
   <h3> Types </h3>
   <mat-form-field class="full-width">
     <mat-select formControlName="types"  placeholder="Film Type" multiple>
       <mat-option>
-        <ngx-mat-select-search 
+        <ngx-mat-select-search
           [formControl]="audiovisualTypesFilterCtrl"
-          [placeholderLabel]="'Search...'" 
+          [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching type found'"
         ></ngx-mat-select-search>
       </mat-option>
@@ -53,9 +53,9 @@
   <mat-form-field class="full-width">
     <mat-select formControlName="genres" placeholder="Genres" multiple>
       <mat-option>
-        <ngx-mat-select-search 
+        <ngx-mat-select-search
           [formControl]="genresFilterCtrl"
-          [placeholderLabel]="'Search...'" 
+          [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching genre found'"
         ></ngx-mat-select-search>
       </mat-option>
@@ -70,9 +70,9 @@
   <mat-form-field class="full-width">
     <mat-select formControlName="originCountry" placeholder="Origin Country">
       <mat-option>
-        <ngx-mat-select-search 
+        <ngx-mat-select-search
           [formControl]="countriesFilterCtrl"
-          [placeholderLabel]="'Search...'" 
+          [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching country found'"
         ></ngx-mat-select-search>
       </mat-option>
@@ -87,9 +87,9 @@
   <mat-form-field class="full-width">
     <mat-select formControlName="coProducerCountries" placeholder="Co Producers Countries" multiple>
       <mat-option>
-        <ngx-mat-select-search 
+        <ngx-mat-select-search
           [formControl]="countriesFilterCtrl"
-          [placeholderLabel]="'Search...'" 
+          [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching country found'"
         ></ngx-mat-select-search>
       </mat-option>
@@ -104,9 +104,9 @@
   <mat-form-field class="full-width">
     <mat-select formControlName="languages" placeholder="Film Languages" multiple>
       <mat-option>
-        <ngx-mat-select-search 
+        <ngx-mat-select-search
           [formControl]="languagesFilterCtrl"
-          [placeholderLabel]="'Search...'" 
+          [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching language found'"
         ></ngx-mat-select-search>
       </mat-option>

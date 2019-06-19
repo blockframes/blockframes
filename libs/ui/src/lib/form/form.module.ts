@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { StringComponent } from './inputs/string/string.component';
-import { TextareaComponent } from './inputs/textarea/textarea.component';
+import { StringFormFieldComponent } from './form-field/string-form-field/string-form-field.component';
+import { TextareaFormFieldComponent } from './form-field/textarea-form-field/textarea-form-field.component';
 import { ChipsAutocompleteComponent } from './chips-autocomplete/chips-autocomplete.component';
-import { EmailComponent } from './inputs/email/email.component';
-import { PasswordComponent } from './inputs/password/password.component';
+import { EmailFormFieldComponent } from './form-field/email-form-field/email-form-field.component';
+import { PasswordFormFieldComponent } from './form-field/password-form-field/password-form-field.component';
 import { PasswordConfirmComponent } from './form-groups/password-confirm/password-confirm.component';
 
 // Material
@@ -28,19 +28,19 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule
   ],
   declarations: [
-    StringComponent,
-    TextareaComponent,
+    StringFormFieldComponent,
+    TextareaFormFieldComponent,
     ChipsAutocompleteComponent,
-    EmailComponent,
-    PasswordComponent,
+    EmailFormFieldComponent,
+    PasswordFormFieldComponent,
     PasswordConfirmComponent
   ],
   exports: [
-    StringComponent,
-    TextareaComponent,
+    StringFormFieldComponent,
+    TextareaFormFieldComponent,
     ChipsAutocompleteComponent,
-    EmailComponent,
-    PasswordComponent,
+    EmailFormFieldComponent,
+    PasswordFormFieldComponent,
     PasswordConfirmComponent
   ],
 })
