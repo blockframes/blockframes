@@ -3,19 +3,17 @@ import { ID } from '@datorama/akita';
 import { createOrganization, Organization, OrgMember } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
-import * as INITIALRIGHTS from './../org-initial-rights.json';
-import { OrganizationQuery } from './organization.query';
-import { switchMap } from 'rxjs/operators';
+import * as INITIAL_RIGHTS from './../org-initial-rights.json';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   constructor(
     private store: OrganizationStore,
-    private query: OrganizationQuery,
     private db: FireQuery
   ) {}
 
-  public async addMember(orgId: string, member: OrgMember): Promise<string> {
+  /** Add a new user to the organization */
+  public addMember(orgId: string, member: OrgMember) {
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const userDoc = this.db.doc(`users/${member.id}`);
 
@@ -27,21 +25,20 @@ export class OrganizationService {
         const nextUserIds = [...userIds, member.id];
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
 
-        // update the user
+        // Update the user
         const updateUserTransaction = tx.update(userDoc.ref, { orgId })
 
         return Promise.all([orgTransaction, updateUserTransaction]);
       })
-      .then(() => {
-        console.log('Transaction successfully committed!');
-      })
-      .catch(error => {
-        console.log('Transaction failed: ', error);
-      });
+      .catch(error => {throw Error(error)});
 
     return member.id;
   }
 
+  /**
+   * Add a new organization to the database and create/update
+   * related documents (rights, apps permissions, user...).
+   */
   public async add(org: Organization, userId: string): Promise<string> {
     const orgId: string = this.db.createId();
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
@@ -52,25 +49,24 @@ export class OrganizationService {
 
     this.db.firestore
       .runTransaction(transaction => {
-        return Promise.all([
+
+        const promises = [
+          // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
-          // @todo admin slug comes from json
-          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: userId, ...INITIALRIGHTS.orgPermissions }),
-          INITIALRIGHTS.roles.forEach(role => {
-            const roleId = this.db.createId();
-            const orgRole = this.db.doc(`rights/${orgId}/roles/${roleId}`);
-            transaction.set(orgRole.ref, {id: roleId, ...role});
-          }),
-          INITIALRIGHTS.appsPermissions.forEach(app => {
+          // Set the new organization in rights collection.
+          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: userId, ...INITIAL_RIGHTS.orgPermissions }),
+          // Update user document with the new organization id.
+          transaction.update(userDoc.ref, { orgId }),
+          // Initialize apps permissions documents in organization apps sub-collection.
+          ...INITIAL_RIGHTS.appsPermissions.map(app => {
             const orgApp = this.db.doc(`rights/${orgId}/apps/${app.name}`);
-            transaction.set(orgApp.ref, app);
-          }),
-          transaction.update(userDoc.ref, { orgId })
-        ]);
+            return transaction.set(orgApp.ref, app);
+          })
+        ]
+
+        return Promise.all(promises);
       })
-      .catch(error => {
-        console.log('Transaction failed: ', error);
-      });
+      .catch(error => {throw Error(error)});
 
     return orgId;
   }
@@ -81,11 +77,5 @@ export class OrganizationService {
 
   public remove(id: ID | ID[]) {
     this.store.remove(id);
-  }
-
-  public getOrgRoles() {
-    return this.query
-      .selectActiveId()
-      .pipe(switchMap(id => this.db.collection(`rights/${id}/roles`).valueChanges()));
   }
 }

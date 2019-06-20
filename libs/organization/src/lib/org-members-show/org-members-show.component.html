@@ -24,7 +24,7 @@
       </mat-card>
     </mat-list>
 
-    <mat-card *ngIf="!!(enabled | async)">
+    <mat-card *ngIf="!!enabled">
       <mat-card-header>
         <mat-card-title>Add Member</mat-card-title>
         <mat-card-subtitle *ngIf="!!disabled">(Only Super Admin can add a member)</mat-card-subtitle>
@@ -41,18 +41,6 @@
           <mat-autocomplete #autoEmail="matAutocomplete" [displayWith]="displayFn">
             <mat-option *ngFor="let option of mailsOptions" [value]="option">
               {{ option.email }}
-            </mat-option>
-          </mat-autocomplete>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Role</mat-label>
-            <input matInput placeholder="role" aria-label="role" formControlName="role"
-                   [matAutocomplete]="autoRoles"
-            />
-          </mat-form-field>
-          <mat-autocomplete #autoRoles="matAutocomplete">
-            <mat-option *ngFor="let option of ($rolesOptions | async)" [value]="option.name">
-              {{ option.name }}
             </mat-option>
           </mat-autocomplete>
           <button testId="addMember" mat-raised-button color="primary" (click)="submit()">Add</button>

@@ -48,11 +48,7 @@
       "tags": []
     },
     "delivery": {
-      "tags": [
-        "delivery",
-        "template",
-        "material"
-      ]
+      "tags": ["delivery", "template", "material"]
     },
     "delivery-e2e": {
       "tags": []
@@ -64,6 +60,9 @@
       "tags": []
     },
     "backend-ops": {
+      "tags": []
+    },
+    "libs-rights": {
       "tags": []
     }
   }

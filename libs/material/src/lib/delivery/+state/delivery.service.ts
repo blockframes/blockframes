@@ -6,7 +6,7 @@ import { MovieQuery, Stakeholder, createDeliveryStakeholder, Movie } from '@bloc
 import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
-import { Template, TemplateQuery } from '../../template/+state';
+import { TemplateQuery } from '../../template/+state';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {

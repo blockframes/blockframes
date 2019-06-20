@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { OrgMembersStore } from './org-members.store';
-import { Organization, OrgMember } from './organization.model';
+import { Organization, OrgMember, OrganizationRights } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -51,11 +51,11 @@ export class OrgMembersService {
       );
   }
 
-  public async isSuperAdmin() {
-    const orgId = this.orgQuery.getActiveId();
-    const userId = this.auth.userId;
-    const orgRights = await this.db.snapshot<any>(`rights/${orgId}`);
-    return orgRights.superAdmin === userId;
+  public selectOrgRights(): Observable<OrganizationRights> {
+    // TODO: select user.orgId instead of active organization
+    return this.orgQuery.selectActiveId().pipe(
+      switchMap(id => this.db.doc<OrganizationRights>(`rights/${id}`).valueChanges)
+    )
   }
 
   private collection(orgID: string): AngularFirestoreDocument<Organization> {

@@ -23,6 +23,16 @@ export interface OrganizationWithMovies extends Organization {
   movies: Movie[];
 }
 
+export interface OrganizationRights {
+  orgId: string;
+  superAdmin: string;
+  canCreate: string [];
+  canRead: string [];
+  canUpdate: string [];
+  canDelete: string [];
+  admins: string [];
+}
+
 /**
  * A factory function that creates an Organization
  */

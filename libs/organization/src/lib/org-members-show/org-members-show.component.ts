@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrgMembersService, OrganizationQuery, Organization, OrganizationService } from '../+state';
-import { Observable, from } from 'rxjs';
+import { OrgMembersService, OrganizationQuery, Organization } from '../+state';
+import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
 
 
@@ -21,12 +21,10 @@ export class OrgMembersShowComponent implements OnInit {
   public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public $rolesOptions: Observable<any[]>;
-  public enabled: Observable<boolean>;
+  public enabled: boolean;
 
   constructor(
     private service: OrgMembersService,
-    private orgService: OrganizationService,
     private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
@@ -34,13 +32,11 @@ export class OrgMembersShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.enabled = from(this.service.isSuperAdmin());
+    this.enabled = true;
     this.addMemberForm = this.builder.group({
-      user: null,
-      role: ''
+      user: null
     });
     this.mailsOptions = [];
-    this.$rolesOptions = this.orgService.getOrgRoles();
     this.org$ = this.orgQuery.selectActive();
     this.onChange();
   }
