@@ -175,11 +175,14 @@
           "options": {
             "cypressConfig": "apps/ip-upload/ip-upload-e2e/cypress.json",
             "tsConfig": "apps/ip-upload/ip-upload-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ip-upload:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
             "production": {
               "devServerTarget": "ip-upload:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "ip-upload:serve"
             }
           }
         },
@@ -555,11 +558,14 @@
           "options": {
             "cypressConfig": "apps/movie-financing/movie-financing-e2e/cypress.json",
             "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
-            "devServerTarget": "movie-financing:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
             "production": {
               "devServerTarget": "movie-financing:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "movie-financing:serve"
             }
           }
         },
@@ -835,11 +841,14 @@
           "options": {
             "cypressConfig": "apps/delivery/delivery-e2e/cypress.json",
             "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "devServerTarget": "delivery:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
             "production": {
               "devServerTarget": "delivery:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "delivery:serve"
             }
           }
         },
