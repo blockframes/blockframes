@@ -7,6 +7,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
+import { RightsService } from '@blockframes/rights';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -27,6 +28,7 @@ export class DeliveryService {
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
+    private rightsService: RightsService,
     private db: FireQuery
   ) {}
 
@@ -98,7 +100,7 @@ export class DeliveryService {
     const promises = [];
 
     promises.push([
-      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.rightsService.createDocAndRights(delivery, stakeholder.orgId),
       this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder)
@@ -130,7 +132,7 @@ export class DeliveryService {
     const promises = [];
 
     promises.push([
-      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.rightsService.createDocAndRights(delivery, stakeholder.orgId),
       this.copyMaterials(delivery, movie),
       this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)

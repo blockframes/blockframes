@@ -4,13 +4,15 @@ import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery } from '@blockframes/utils';
+import { RightsService } from '@blockframes/rights';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
   constructor(
     private db: FireQuery,
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery
+    private materialQuery: MaterialQuery,
+    private rightsService: RightsService,
   ) {}
 
   public async addTemplate(templateName: string, org: Organization): Promise<string> {
@@ -21,7 +23,7 @@ export class TemplateService {
       orgId: org.id
     });
 
-    await this.db.createDocAndRights(template, org.id);
+    await this.rightsService.createDocAndRights(template, org.id);
 
     return templateId;
   }

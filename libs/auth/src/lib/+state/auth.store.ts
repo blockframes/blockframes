@@ -12,6 +12,7 @@ export interface User {
   lastName: string;
   firstName: string;
   biography: string;
+  orgId: string;
 }
 
 export interface UserForm {

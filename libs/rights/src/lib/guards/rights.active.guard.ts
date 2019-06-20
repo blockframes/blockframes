@@ -1,44 +1,68 @@
 import { Injectable } from '@angular/core';
-import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
+import { FireQuery, Query } from '@blockframes/utils';
 import { OrganizationRights, RightsStore } from '../+state';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
+import { User } from '@blockframes/auth';
+import { Subscription } from 'rxjs';
+import { applyTransaction } from '@datorama/akita';
 
 export const rightsActiveQuery = (orgId: string): Query<OrganizationRights> => ({
   path: `rights/${orgId}`,
-  userAppRights: org => ({
-    path: `rights/${org.id}/userAppRights`
+  userAppsRights: (org: OrganizationRights) => ({
+    path: `rights/${org.orgId}/userAppRights`
   }),
-  userDocRights: org => ({
-    path: `rights/${org.id}/userDocRights`,
+  userDocsRights: (org: OrganizationRights) => ({
+    path: `rights/${org.orgId}/userDocRights`,
   }),
-  orgDocRights: org => ({
-    path: `rights/${org.id}/orgDocRights`
+  orgDocsRights: (org: OrganizationRights) => ({
+    path: `rights/${org.orgId}/orgDocRights`
   })
 });
 
 @Injectable({ providedIn: 'root' })
-export class RightsActiveGuard extends StateActiveGuard<OrganizationRights> {
-  readonly params = ['orgId'];
-  readonly urlFallback: 'layout';
+export class RightsActiveGuard {
+  private urlFallback = '/layout';
+  private subscription: Subscription;
 
   constructor(
     private fireQuery: FireQuery,
     private afAuth: AngularFireAuth,
-    store: RightsStore,
-    router: Router) {
-    super(store, router);
-  }
+    private store: RightsStore,
+    private router: Router) {}
 
   query() {
     return this.afAuth.authState.pipe(
-      switchMap(user => {
-        const userDoc = this.fireQuery.doc(`users/${user.uid}`)
-        const userOrgId = userDoc.orgId;
-        const query = rightsActiveQuery(userOrgId);
-        return this.fireQuery.fromQuery<OrganizationRights>(query);
-      })
-    );
+      switchMap(fbUser => {
+        return this.fireQuery.doc<User>(`users/${fbUser.uid}`).valueChanges()
+          .pipe(
+            switchMap(user => this.fireQuery.fromQuery<OrganizationRights>(rightsActiveQuery(user.orgId)) )
+          );
+      }
+    ))
+  }
+
+  canActivate(): Promise<boolean | UrlTree> | UrlTree {
+    try {
+    return new Promise((res, rej) => {
+      this.subscription = this.query().pipe(
+        tap(entity => applyTransaction(() => {
+          this.store.upsert(entity[this.store.idKey], entity);
+          this.store.setActive(entity[this.store.idKey]);
+        }))
+      ).subscribe({
+        next: result => res(!!result),
+        error: err => res(this.router.parseUrl(this.urlFallback))
+      });
+    })
+  } catch(err) {
+    return this.router.parseUrl(this.urlFallback);
+  }
+  }
+
+  canDeactivate() {
+    this.subscription.unsubscribe();
+    return true;
   }
 }

@@ -1,14 +1,14 @@
 import { async, TestBed } from '@angular/core/testing';
-import { LibsRightsModule } from './libs-rights.module';
+import { RightsModule } from './rights.module';
 
-describe('LibsRightsModule', () => {
+describe('RightsModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LibsRightsModule]
+      imports: [RightsModule]
     }).compileComponents();
   }));
 
   it('should create', () => {
-    expect(LibsRightsModule).toBeDefined();
+    expect(RightsModule).toBeDefined();
   });
 });

@@ -9,7 +9,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
 import { OrganizationListGuard } from '@blockframes/organization';
-import { RightsGuard } from '@blockframes/rights'
+import { RightsActiveGuard } from '@blockframes/rights'
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -20,8 +20,8 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard, OrganizationListGuard, RightsGuard],
-    canDeactivate: [OrganizationListGuard],
+    canActivate: [AuthGuard, OrganizationListGuard, RightsActiveGuard],
+    canDeactivate: [OrganizationListGuard, RightsActiveGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {

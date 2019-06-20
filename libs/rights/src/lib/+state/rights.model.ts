@@ -6,15 +6,38 @@ export interface OrganizationRights {
   canRead: string [];
   canUpdate: string [];
   canDelete: string [];
+  userAppsRights?: AppRights[];
+  userDocsRights?: UserDocRights[];
+  orgDocsRights?: OrgDocRights[];
 }
 
-export interface AppsRights {
+export interface AppRights {
+  id: string;
   name: App;
   admins: string[];
   canCreate: string[];
   canRead: string[];
   canUpdate: string[];
   canDelete: string[];
+}
+
+export interface UserDocRights {
+  id: string,
+  admins: string[];
+  canCreate: string[];
+  canRead: string[];
+  canUpdate: string[];
+  canDelete: string[];
+}
+
+export interface OrgDocRights {
+  id: string,
+  owner: string,
+  isAdmin: boolean,
+  canCreate: boolean,
+  canRead: boolean,
+  canUpdate: boolean,
+  canDelete: boolean
 }
 
 export enum App  {
@@ -42,5 +65,28 @@ export function initializeAppRights(app: App) {
       canRead: [],
       canUpdate: [],
       canDelete: [],
-    } as AppsRights;
+    } as AppRights;
+}
+
+export function initializeUserDocRights(docId: string) {
+  return {
+    id: docId,
+    admins: [],
+    canCreate: [],
+    canRead: [],
+    canUpdate: [],
+    canDelete: []
+  } as UserDocRights;
+}
+
+export function initializeOrgDocRights(docId: string, orgId:string) {
+  return {
+    id: docId,
+    owner: orgId,
+    isAdmin: true,
+    canCreate: true,
+    canRead: true,
+    canUpdate: true,
+    canDelete: true
+  } as OrgDocRights;
 }

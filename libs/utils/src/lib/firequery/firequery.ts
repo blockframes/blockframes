@@ -9,9 +9,6 @@ import {
   QueryOutput,
   isQueryLike,
   createQuery,
-  initializeOwnerDocRights,
-  initializeSharedDocRights,
-  BFDoc
 } from './types';
 
 @Injectable({ providedIn: 'root' })
@@ -126,34 +123,5 @@ export class FireQuery extends AngularFirestore {
     const keys = Object.keys(query);
     const subQuery = keys.filter(key => !this.keysToRemove.includes(key));
     return subQuery.length > 0;
-  }
-
-  //////////////////////
-  // DOC TRANSACTIONS //
-  //////////////////////
-
-  /** Create a transaction for the document and add document rights (organization document rights and shared document rights) at the same time */
-  public async createDocAndRights<T>(
-    document: BFDoc, // TODO: Go a bit further into type checking (e.g. BFDoc<T>)
-    orgId: string
-  ) {
-    const promises = [];
-    const orgDocRights = initializeOwnerDocRights(document.id);
-    const sharedDocRights = initializeSharedDocRights(document.id);
-
-    return this.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const orgDocRightsRef = this.doc<T>(`rights/${orgId}/docs/${document.id}`).ref;
-      promises.push(tx.set(orgDocRightsRef, orgDocRights));
-
-      const sharedDocRightsRef = this.doc<T>(
-        `rights/${orgId}/apps/${document._type}Rights/docRights/${document.id}`
-      ).ref;
-      promises.push(tx.set(sharedDocRightsRef, sharedDocRights));
-
-      const documentRef = this.doc<T>(`${document._type}/${document.id}`).ref;
-      promises.push(tx.set(documentRef, document));
-
-      return Promise.all(promises);
-    });
   }
 }
