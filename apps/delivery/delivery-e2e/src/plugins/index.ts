@@ -12,8 +12,6 @@
 // the project's config changing)
 
 module.exports = (on: any, config: any) => {
-  console.error('TEST, PROCESS=', process.env);
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  config.env.process = process.env;
 };
