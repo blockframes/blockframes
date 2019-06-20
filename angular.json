@@ -1042,6 +1042,7 @@
           },
           "configurations": {
             "ci": {
+              "maxWorkers": 2,
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
@@ -1050,6 +1051,7 @@
               ]
             },
             "production": {
+              "maxWorkers": 2,
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
@@ -1058,6 +1060,7 @@
               ]
             },
             "staging": {
+              "maxWorkers": 2,
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
