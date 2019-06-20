@@ -16,7 +16,7 @@ export const firebase = {
 // DEMO VERSION: We use our staging setup to run the current production.
 export const network = 'goerli';
 export const baseEnsDomain = 'blockframes.test';
-export const factoryContract = 'create2.eth';
+export const factoryContract = 'factory2.eth';
 
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',

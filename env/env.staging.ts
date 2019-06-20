@@ -13,7 +13,7 @@ export const firebase = {
 
 export const network = 'ropsten';
 export const baseEnsDomain = 'blockframe.test';
-export const factoryContract = 'create2.eth';
+export const factoryContract = 'factory2.eth';
 
 // TODO : change the address
 export const contracts = {
