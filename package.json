@@ -21,6 +21,7 @@
     "test": "npx ng test",
     "lint": "npx ng lint",
     "e2e": "npm run e2e:ip-upload && npm run e2e:delivery && npm run e2e:movie-financing",
+    "pree2e": "ng build backend-ops && node dist/apps/backend-ops/main.js",
     "e2e:ip-upload": "./node_modules/.bin/ng e2e ip-upload-e2e --configuration=\"${ENV}\" --headless",
     "e2e:delivery": "./node_modules/.bin/ng e2e delivery-e2e --configuration=\"${ENV}\" --headless",
     "e2e:movie-financing": "./node_modules/.bin/ng e2e movie-financing-e2e --configuration=\"${ENV}\" --headless",
