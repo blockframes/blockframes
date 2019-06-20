@@ -23,6 +23,7 @@ export const firebase = {
 
 export const network = 'goerli';
 export const factoryContract = 'create2.eth';
+export const mnemonic = '';
 
 // TODO : change the address
 export const contracts = {
@@ -43,4 +44,3 @@ export const relayer = {
 
 export const backupBucket = 'ci-backups';
 export const sendgridAPIKey = '';
-export const mnemonic = '';
