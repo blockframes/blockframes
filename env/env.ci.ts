@@ -35,7 +35,7 @@ export const relayer = {
   registryAddress: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
   baseEnsDomain: 'blockframes.test',
-  network,
+  network
 };
 
 // Functions
@@ -44,4 +44,3 @@ export const relayer = {
 export const backupBucket = 'ci-backups';
 export const sendgridAPIKey = '';
 export const mnemonic = '';
-
