@@ -27,7 +27,7 @@ beforeEach(() => {
 });
 
 describe('Test CRUD org', () => {
-  it('should create an account, create an organization, add member to organization, then logout', () => {
+  it.skip('should create an account, create an organization, add member to organization, then logout', () => {
     // Create new account
     const p1: LandingPage = new LandingPage();
     const EMAIL_USER = generateRandomEmail();

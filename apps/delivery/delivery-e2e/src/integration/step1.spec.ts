@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 
 describe('Step 1: I\'m a user, I want accept a notification that add my org in a movie, create a delivery with a template, add a stakeholder, and sign', () => {
-  it('should create delivery with a template, add step, add step to materials and sign delivery', () => {
+  it.skip('should create delivery with a template, add step, add step to materials and sign delivery', () => {
     // TODO: reset database
 
     // Connexion

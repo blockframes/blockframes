@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 describe('I m a user and i can save a delivery as template', () => {
-  it('should login, go to a delivery, save it as a new template, edit a material in template, then delete this template', () => {
+  it.skip('should login, go to a delivery, save it as a new template, edit a material in template, then delete this template', () => {
     // Connexion
     const p1: LandingPage = new LandingPage();
     p1.fillSigninEmail(EMAIL_CYTEST);

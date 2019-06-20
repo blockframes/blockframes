@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 describe('Test CRUD movie', () => {
-  it('should login, create a movie, edit this movie, then delete it', () => {
+  it.skip('should login, create a movie, edit this movie, then delete it', () => {
     // Connexion
     const p1: LandingPage = new LandingPage();
     p1.fillSigninEmail(EMAIL_CYTEST);

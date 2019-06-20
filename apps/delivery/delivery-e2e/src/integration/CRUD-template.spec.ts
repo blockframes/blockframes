@@ -38,7 +38,7 @@ beforeEach(() => {
 });
 
 describe('Test CRUD template', () => {
-  it('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
+  it.skip('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
     // Connexion
     const p1: LandingPage = new LandingPage();
     p1.fillSigninEmail(EMAIL_CYTEST);
