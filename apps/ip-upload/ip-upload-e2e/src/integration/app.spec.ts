@@ -3,7 +3,7 @@ import { getTitle, Landing } from '../support/app.po';
 
 describe('Hello Ip Upload', () => {
   beforeEach(() => cy.visit('/'));
-  it('should display welcome message', () => {
+  it.skip('should display welcome message', () => {
     getTitle().contains('Welcome');
   });
 });
@@ -16,7 +16,7 @@ const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
 
 describe('story #24: I am a user, I want to timestamp a document at the source of a new Intellectual Property', () => {
-  it('', () => {
+  it.skip('', () => {
     let p: any = new Landing();
     p = p.clickConnection();
     p.fillEmail('laurent+test@singulargarden.com');
