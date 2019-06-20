@@ -5,7 +5,8 @@ import {
   yearValidators,
   ethereumPublicAddressValidators,
   ethereumPrivateAddressValidators,
-  ethereumMnemonicValidators
+  ethereumMnemonicValidators,
+  urlValidators
 } from './validators/validators';
 
 /* Checks if input is a valid email */
@@ -40,6 +41,13 @@ export class EthereumMnemonicControl extends FormControl{
 export class StringControl extends FormControl{
   constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
     super({ value, disabled }, validators !== undefined ? validators : stringValidators);
+  }
+}
+
+/* Checks if input is a valid url */
+export class UrlControl extends FormControl{
+  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
+    super({ value, disabled }, validators !== undefined ? validators : urlValidators);
   }
 }
 

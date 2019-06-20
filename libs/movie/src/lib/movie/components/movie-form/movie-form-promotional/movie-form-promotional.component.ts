@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MovieForm } from '../movie.form';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { UrlControl, StringControl } from '@blockframes/utils';
 
 @Component({
   selector: 'movie-form-promotional',
@@ -9,7 +11,15 @@ import { MovieForm } from '../movie.form';
 })
 export class MovieFormPromotionalComponent {
 
-  constructor(
-    public form: MovieForm
-  ) {}
+  public formGroup = new FormGroup({
+    label: new StringControl(''),
+    url: new UrlControl('')
+  })
+
+  constructor(public form: MovieForm) {
+   }
+
+   public submit() {
+     console.log(this.formGroup);
+   }
 }

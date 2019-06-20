@@ -10,6 +10,10 @@ export const stringValidators = [
 
 ];
 
+export const urlValidators = [
+  Validators.pattern('^(http|https):\/\/[^ "]+$')
+];
+
 export const yearValidators = [
   Validators.pattern("^[1-2][0-9]{3}$"),
 ];
