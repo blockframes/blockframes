@@ -1,0 +1,9 @@
+<mat-form-field [formGroup]="form">
+  <input matInput type="email" placeholder="Email" formControlName="email" required />
+  <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">
+    Please enter a <strong>valid</strong> email address.
+  </mat-error>
+  <mat-error *ngIf="form.get('email').hasError('required')">
+    Email is <strong>required</strong>
+  </mat-error>
+</mat-form-field>

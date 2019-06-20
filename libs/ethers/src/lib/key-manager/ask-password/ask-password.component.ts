@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PasswordForm } from '../forms/password.form';
 
 @Component({
   selector: 'key-manager-ask-password',
@@ -10,7 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class AskPasswordComponent implements OnInit {
 
-  form: FormGroup;
+  form: PasswordForm;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -18,9 +18,7 @@ export class AskPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = new FormGroup({
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]), // TODO ISSUE #408
-    });
+    this.form = new PasswordForm();
   }
 
   cancel() {

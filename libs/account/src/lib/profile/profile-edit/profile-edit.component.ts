@@ -1,13 +1,15 @@
 
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { AccountForm, User, AuthQuery, AuthService } from '@blockframes/auth';
 import { Observable } from 'rxjs';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 import { ProfileDeleteComponent } from '../profile-delete/profile-delete.component';
+
+import { ProfileForm } from './profile-edit.form';
 
 @Component({
   selector: 'account-profile-edit',
@@ -17,7 +19,7 @@ import { ProfileDeleteComponent } from '../profile-delete/profile-delete.compone
 })
 export class ProfileEditComponent implements OnInit, OnDestroy {
 
-  public accountForm: FormGroup;
+  public accountForm: ProfileForm;
   public persistForm: PersistNgFormPlugin<AccountForm>;
   public user$: Observable<User>;
   private alive = true;
@@ -25,7 +27,6 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private builder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog
@@ -34,17 +35,11 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-
+    // @todo use snapshot instead of observable #438
     this.user$.pipe(takeWhile(_ => this.alive))
     .subscribe(user => {
       if (user !== null ) {
-        this.accountForm = this.builder.group({
-          uid: { value: user.uid, disabled: true },
-          email: { value: user.email, disabled: true },
-          first_name: [user.firstName, Validators.required],
-          last_name: [user.lastName, Validators.required],
-          biography: user.biography,
-        });
+        this.accountForm = new ProfileForm(user);
         this.persistForm = new PersistNgFormPlugin(this.authQuery, 'accountForm');
         this.persistForm.setForm(this.accountForm);
       }
@@ -58,9 +53,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     }
 
     try {
-      const { first_name, last_name, biography } = this.accountForm.value;
+      const { firstName, lastName, biography } = this.accountForm.value;
 
-      this.authService.update(this.authQuery.user.uid, { firstName: first_name, lastName: last_name, biography })
+      this.authService.update(this.authQuery.user.uid, { firstName, lastName, biography })
       .then(() => {
         this.snackBar.open(`account updated`, 'close', { duration: 2000 });
         //this.accountForm.reset();

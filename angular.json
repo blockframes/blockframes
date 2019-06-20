@@ -32,9 +32,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/ip-upload/ip-upload/src/styles.scss"
-            ],
+            "styles": ["apps/ip-upload/ip-upload/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -129,7 +127,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/ip-upload/ip-upload/jest.config.js",
             "tsConfig": "apps/ip-upload/ip-upload/tsconfig.spec.json",
@@ -144,7 +142,7 @@
       "prefix": "",
       "architect": {
         "e2e": {
-          "builder": "@nrwl/builders:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/ip-upload/ip-upload-e2e/cypress.json",
             "tsConfig": "apps/ip-upload/ip-upload-e2e/tsconfig.e2e.json",
@@ -186,7 +184,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ip/jest.config.js",
             "tsConfig": "libs/ip/tsconfig.spec.json",
@@ -216,7 +214,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/auth/jest.config.js",
             "tsConfig": "libs/auth/tsconfig.spec.json",
@@ -239,10 +237,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
-            "tsConfig": "libs/ui/tsconfig.spec.json"
+            "tsConfig": "libs/ui/tsconfig.spec.json",
+            "setupFile": "libs/ui/src/test-setup.ts"
           }
         }
       }
@@ -268,10 +267,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ethers/jest.config.js",
-            "tsConfig": "libs/ethers/tsconfig.spec.json"
+            "tsConfig": "libs/ethers/tsconfig.spec.json",
+            "setupFile": "libs/ethers/src/test-setup.ts"
           }
         }
       }
@@ -284,7 +284,7 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@nrwl/builders:node-build",
+          "builder": "@nrwl/node:build",
           "options": {
             "outputPath": "dist/apps/eth-events-server",
             "main": "apps/eth-events-server/src/main.ts",
@@ -322,7 +322,7 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/builders:node-execute",
+          "builder": "@nrwl/node:execute",
           "options": {
             "buildTarget": "eth-events-server:build"
           }
@@ -338,10 +338,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/eth-events-server/jest.config.js",
-            "tsConfig": "apps/eth-events-server/tsconfig.spec.json"
+            "tsConfig": "apps/eth-events-server/tsconfig.spec.json",
+            "setupFile": "apps/eth-events-server/src/test-setup.ts"
           }
         }
       }
@@ -374,9 +375,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/movie-financing/movie-financing/src/styles.scss"
-            ],
+            "styles": ["apps/movie-financing/movie-financing/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -434,7 +433,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/movie-financing/movie-financing/jest.config.js",
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.spec.json",
@@ -449,7 +448,7 @@
       "prefix": "",
       "architect": {
         "e2e": {
-          "builder": "@nrwl/builders:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/movie-financing/movie-financing-e2e/cypress.json",
             "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
@@ -491,10 +490,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/movie/jest.config.js",
-            "tsConfig": "libs/movie/tsconfig.spec.json"
+            "tsConfig": "libs/movie/tsconfig.spec.json",
+            "setupFile": "libs/movie/src/test-setup.ts"
           }
         }
       }
@@ -523,7 +523,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/organization/jest.config.js",
             "tsConfig": "libs/organization/tsconfig.spec.json",
@@ -544,7 +544,7 @@
       "prefix": "blockframes",
       "architect": {
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/account/jest.config.js",
             "tsConfig": "libs/account/tsconfig.spec.json",
@@ -589,9 +589,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/delivery/delivery/src/styles.scss"
-            ],
+            "styles": ["apps/delivery/delivery/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -686,7 +684,7 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/delivery/delivery/jest.config.js",
             "tsConfig": "apps/delivery/delivery/tsconfig.spec.json",
@@ -701,7 +699,7 @@
       "prefix": "",
       "architect": {
         "e2e": {
-          "builder": "@nrwl/builders:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/delivery/delivery-e2e/cypress.json",
             "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
@@ -743,10 +741,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json"
+            "tsConfig": "libs/material/tsconfig.spec.json",
+            "setupFile": "libs/material/src/test-setup.ts"
           }
         }
       },
@@ -777,10 +776,11 @@
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
-            "tsConfig": "libs/utils/tsconfig.spec.json"
+            "tsConfig": "libs/utils/tsconfig.spec.json",
+            "setupFile": "libs/utils/src/test-setup.ts"
           }
         }
       },
@@ -798,14 +798,12 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@nrwl/builders:node-build",
+          "builder": "@nrwl/node:build",
           "options": {
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [
-              "apps/backend-functions/src/assets"
-            ]
+            "assets": ["apps/backend-functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -822,7 +820,7 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/builders:node-execute",
+          "builder": "@nrwl/node:execute",
           "options": {
             "buildTarget": "backend-functions:build"
           }
@@ -834,16 +832,15 @@
               "apps/backend-functions/tsconfig.app.json",
               "apps/backend-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
-          "builder": "@nrwl/builders:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
-            "tsConfig": "apps/backend-functions/tsconfig.spec.json"
+            "tsConfig": "apps/backend-functions/tsconfig.spec.json",
+            "setupFile": "apps/backend-functions/src/test-setup.ts"
           }
         }
       }
@@ -854,7 +851,20 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "akita-schematics"
+    "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "ip-upload"
+  "defaultProject": "ip-upload",
+  "schematics": {
+    "@nrwl/schematics:library": {
+      "unitTestRunner": "karma",
+      "framework": "angular"
+    },
+    "@nrwl/schematics:application": {
+      "unitTestRunner": "karma",
+      "e2eTestRunner": "protractor"
+    },
+    "@nrwl/schematics:node-application": {
+      "framework": "express"
+    }
+  }
 }

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component } from "@angular/core";
 import { Observable } from "rxjs";
 
-import {
-  MatDialog,
-} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 
 import { network } from "@env";
 import { WalletQuery, Wallet } from "../+state";

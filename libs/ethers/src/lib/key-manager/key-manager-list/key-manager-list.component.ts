@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from "@angular/core";
 import { KeyManagerQuery, Key, KeyManagerService } from "../+state";
 import { Observable } from "rxjs";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { RecoverComponent } from "../recover/recover.component";
 import { CreatePasswordComponent } from "../create-password/create-password.component";
 

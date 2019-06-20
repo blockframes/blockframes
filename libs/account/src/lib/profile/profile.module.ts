@@ -4,17 +4,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  MatListModule,
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatProgressSpinnerModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatDialogModule,
-  MatMenuModule,
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileViewComponent } from './profile-view/profile-view.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';

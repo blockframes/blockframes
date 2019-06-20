@@ -1,16 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { KeyManagerService } from '../+state';
-
-function samePassword(control: FormGroup) { // TODO ISSUE #408
-  const { password, confirm } = control.value;
-  return password === confirm
-    ? null
-    : { notSame: true }
-}
+import { RecoverForm } from '../forms/recover.form';
+import { XorControlsStateMatcher } from '@blockframes/utils';
 
 export interface ImportKeyData {
   ensDomain: string,
@@ -25,7 +20,8 @@ type ImportType = 'mnemonic' | 'private-key';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecoverComponent implements OnInit {
-  form: FormGroup;
+  form: RecoverForm;
+  public xorControlsMatcher: XorControlsStateMatcher;
 
   constructor(
     private service: KeyManagerService,
@@ -35,12 +31,10 @@ export class RecoverComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.form = new FormGroup({
-      importValue: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirm: new FormControl('', [Validators.required])
-    }, { validators: [samePassword] });
+    this.form = new RecoverForm();
+    this.xorControlsMatcher = new XorControlsStateMatcher('mnemonic','privateKey');
   }
+
 
   cancel() {
     this.dialog.close(false);

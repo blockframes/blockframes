@@ -1,0 +1,34 @@
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav class="mat-elevation-z2" [opened]="true" fixedInViewport="true" fixedTopGap="191" [opened]="true" mode="side">
+    <delivery-teamwork-repertory
+      *ngIf="(movie$ | async).stakeholders as movieStakeholders"
+      [stakeholders]="movieStakeholders"
+      (added)="addStakeholder($event)"
+    ></delivery-teamwork-repertory>
+  </mat-sidenav>
+  <!-- Content -->
+  <mat-sidenav-content>
+    <div class="menus" fxLayoutAlign="space-between center">
+      <h2>Delivery Stakeholders</h2>
+      <delivery-team-work-filters class="filters"></delivery-team-work-filters>
+    </div>
+    <div class="item-form" *ngFor="let deliveryStakeholder of (delivery$ | async).stakeholders">
+      <ui-editable [item]="deliveryStakeholder" [itemId]="stakeholderId">
+        <ng-template materialViewMode>
+          <delivery-teamwork-item
+            (updated)="openForm(deliveryStakeholder)"
+            [stakeholder]="deliveryStakeholder"
+            (removed)="removeStakeholder(deliveryStakeholder.id)"
+          ></delivery-teamwork-item>
+        </ng-template>
+        <ng-template materialEditMode>
+          <delivery-teamwork-form
+            (cancelForm)="cancelForm()"
+            [stakeholder]="deliveryStakeholder"
+          ></delivery-teamwork-form>
+        </ng-template>
+      </ui-editable>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

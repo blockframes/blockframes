@@ -32,35 +32,38 @@ import { StakeholderModule } from '../stakeholder/stakeholder.module';
 
 // Components
 import { HomeComponent } from './home/home.component';
-import { ContainerComponent } from './form/container.component';
-import { FormComponent } from './form/form.component';
-import { FormMainComponent } from './form/form.main.component';
-import { FormStoryComponent } from './form/form.story.component'
-import { FormTeamComponent } from './form/form.team.component';
-import { FormPromotionalComponent } from './form/form.promotional.component';
-import { ListComponent } from './list/list.component';
-import { ViewComponent } from './view/view.component';
+import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
+import { MovieFormComponent } from './components/movie-form/movie-form.component';
+import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
+import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component'
+import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
+import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
+import { MovieListComponent } from './pages/movie-list/movie-list.component';
+import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
-import { TitleFormComponent } from '../movie/title-form/title-form.component';
-import { MatTabsModule, MatGridListModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
-import { HomeEmptyComponent } from './home-empty/home-empty.component';
+import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
-
+import { MovieForm } from './components/movie-form/movie.form';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    ContainerComponent,
-    FormComponent,
-    FormStoryComponent,
-    ListComponent,
-    ViewComponent,
-    TitleFormComponent,
-    FormMainComponent,
-    FormTeamComponent,
-    FormPromotionalComponent,
+    MovieEditableComponent,
+    MovieFormComponent,
+    MovieFormStoryComponent,
+    MovieListComponent,
+    MovieViewComponent,
+    MovieTitleFormComponent,
+    MovieFormMainComponent,
+    MovieFormTeamComponent,
+    MovieFormPromotionalComponent,
     HomeEmptyComponent,
     DelayedWrapperComponent,
   ],
@@ -101,8 +104,9 @@ import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.compo
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
+    MovieForm
   ],
-  entryComponents: [TitleFormComponent],
-  exports: [TitleFormComponent],
+  entryComponents: [MovieTitleFormComponent],
+  exports: [MovieTitleFormComponent],
 })
 export class MovieModule {}

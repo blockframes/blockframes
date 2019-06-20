@@ -19,8 +19,8 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditableComponent implements OnInit {
-  @ContentChild(ViewModeDirective) viewModeTpl: ViewModeDirective;
-  @ContentChild(EditModeDirective) editModeTpl: EditModeDirective;
+  @ContentChild(ViewModeDirective, { static: true }) viewModeTpl: ViewModeDirective;
+  @ContentChild(EditModeDirective, { static: true }) editModeTpl: EditModeDirective;
 
   @Input() item: any;
   @Input() set itemId(id: string) {

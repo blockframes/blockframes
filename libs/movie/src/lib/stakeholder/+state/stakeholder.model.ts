@@ -10,7 +10,7 @@ export interface Stakeholder {
   isAccepted: boolean;
 }
 
-export function createStakeholder(params?: Partial<Stakeholder>) {
+export function createMovieStakeholder(params?: Partial<Stakeholder>) {
   if (params.organization) delete params.organization
   return {
     authorizations: [],

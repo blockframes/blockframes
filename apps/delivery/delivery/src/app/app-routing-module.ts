@@ -33,8 +33,6 @@ export const routes: Routes = [
       },
       {
         path: 'home',
-        canActivate: [MovieListGuard],
-        canDeactivate: [MovieListGuard],
         loadChildren: '@blockframes/movie#MovieModule'
       },
       { path: 'templates',
@@ -63,6 +61,7 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes,{
     anchorScrolling: 'enabled',
     onSameUrlNavigation: 'reload',
+    paramsInheritanceStrategy: 'always'
   })],
   exports: [RouterModule]
 })

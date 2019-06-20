@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, HomePage, TemplateListPage, TemplateFormPage, AddTemplateModal } from "../support/app.po";
+import { LandingPage, HomePage, TemplateListPage, TemplateFormPage, AddTemplateModal } from "../support/pages";
 
 let currentID = 0;
 

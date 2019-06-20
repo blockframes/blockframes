@@ -5,28 +5,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { MovieMaterialsComponent } from './movie-materials/movie-materials.component';
-import { DeliveryListComponent } from './delivery-list/delivery-list.component';
-import { DeliveryFormComponent } from './delivery-form/delivery-form.component';
-import { NewTemplateComponent } from './delivery-new-template/new-template.component';
-import { DeliveryViewComponent } from './delivery-view/delivery-view.component';
-import { DeliveryTemplatePickerComponent } from './delivery-template-picker/delivery-template-picker.component';
-import { DeliveryTeamWorkViewComponent } from './delivery-team-work-view/delivery-team-work-view.component';
-import { StakeholderListComponent } from './stakeholder-list/stakeholder-list.component';
-import { StakeholderItemComponent } from './stakeholder-item/stakeholder-item.component';
-import { DeliveryItemComponent } from './delivery-item/delivery-item.component';
-import { FiltersComponent } from './movie-materials/filters/filters.component';
-import { ActionsComponent } from './movie-materials/actions/actions.component';
-import { MovieMaterialItemComponent } from './movie-material-item/movie-material-item.component';
-import { DeliveryViewItemComponent } from './delivery-view-item/delivery-view-item.component';
-import { DeliveryTeamWorkFormComponent } from './delivery-team-work-form/delivery-team-work-form.component';
-import { DeliveryTeamWorkItemComponent } from './delivery-team-work-item/delivery-team-work-item.component';
-import { DeliveryTeamWorkListComponent } from './delivery-team-work-list/delivery-team-work-list.component';
-import { DeliverySettingsItemComponent } from './delivery-settings-item/delivery-settings-item.component';
-import { DeliverySettingsFormComponent } from './delivery-settings-form/delivery-settings-form.component';
-import { DeliverySettingsViewComponent } from './delivery-settings-view/delivery-settings-view.component';
-import { DeliverySignComponent } from './delivery-sign/delivery-sign.component';
-import { DeliveryEmptyComponent } from './delivery-empty/delivery-empty.component';
+import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
+import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
+import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
+import { DeliveryItemComponent } from './components/delivery-item/delivery-item.component';
+import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
+import { DeliveryViewItemComponent } from './components/delivery-view-item/delivery-view-item.component';
+import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
+import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
+import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
+import { DeliverySettingsItemComponent } from './components/delivery-settings-item/delivery-settings-item.component';
+import { DeliverySettingsFormComponent } from './components/delivery-settings-form/delivery-settings-form.component';
+import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
+import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
+import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
+import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
+
+// Pages
+import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
+import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
+import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
+import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
+import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
+import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
+import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
 
 // Modules
 import { MaterialModule } from '../material/material.module';
@@ -47,19 +49,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import {
-  MatInputModule,
-  MatMenuModule,
-  MatSidenavModule,
-  MatDialogModule,
-  MatSelectModule,
-  MatOptionModule,
-  MatExpansionModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatTooltipModule,
-} from '@angular/material';
-import { MatFormFieldModule } from '@angular/material';
+import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Guards
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
@@ -87,13 +86,13 @@ const routes: Routes = [
     path: 'template-picker',
     canActivate: [TemplateListGuard],
     canDeactivate: [TemplateListGuard],
-    component: DeliveryTemplatePickerComponent
+    component: DeliveryTemplateListComponent
   },
   {
     path: 'movie-materials',
     canActivate: [MovieMaterialsGuard],
     canDeactivate: [MovieMaterialsGuard],
-    component: MovieMaterialsComponent
+    component: MovieMaterialsViewComponent
   },
   {
     path: ':deliveryId',
@@ -115,17 +114,17 @@ const routes: Routes = [
         path: 'edit',
         canActivate: [DeliveryMaterialsGuard],
         canDeactivate: [DeliveryMaterialsGuard],
-        component: DeliveryFormComponent
+        component: DeliveryEditableComponent
       },
       {
         path: 'teamwork',
-        component: DeliveryTeamWorkViewComponent
+        component: DeliveryTeamworkEditableComponent
       },
       {
         path: 'settings',
         canActivate: [DeliveryMaterialsGuard],
         canDeactivate: [DeliveryMaterialsGuard],
-        component: DeliverySettingsViewComponent
+        component: DeliverySettingsEditableComponent
       }
     ]
   }
@@ -133,26 +132,26 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    MovieMaterialsComponent,
+    MovieMaterialsViewComponent,
     DeliveryListComponent,
     DeliveryViewComponent,
-    DeliveryFormComponent,
+    DeliveryEditableComponent,
     NewTemplateComponent,
-    DeliveryTeamWorkViewComponent,
-    DeliveryTemplatePickerComponent,
-    StakeholderListComponent,
+    DeliveryTeamworkEditableComponent,
+    DeliveryTemplateListComponent,
+    StakeholderRepertoryComponent,
     StakeholderItemComponent,
     DeliveryItemComponent,
-    FiltersComponent,
-    ActionsComponent,
+    DeliveryFiltersComponent,
+    DeliveryActionsComponent,
     MovieMaterialItemComponent,
     DeliveryViewItemComponent,
-    DeliveryTeamWorkFormComponent,
-    DeliveryTeamWorkItemComponent,
-    DeliveryTeamWorkListComponent,
+    DeliveryTeamworkFormComponent,
+    DeliveryTeamworkItemComponent,
+    DeliveryTeamworkRepertoryComponent,
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
-    DeliverySettingsViewComponent,
+    DeliverySettingsEditableComponent,
     DeliverySignComponent,
     DeliveryEmptyComponent,
   ],

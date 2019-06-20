@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Wallet as EthersWallet, utils } from 'ethers';
 
 export interface ExportData {

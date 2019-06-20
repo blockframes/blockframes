@@ -12,7 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
-import { MatBadgeModule, MatListModule } from '@angular/material';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatListModule } from '@angular/material/list';
 import { UtilsModule } from 'libs/utils/src/lib/utils.module';
 
 @NgModule({

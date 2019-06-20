@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder, Movie } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
+import { Template, TemplateQuery } from '../../template/+state';
 
+/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
     ...delivery,
@@ -21,10 +23,11 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
 export class DeliveryService {
   constructor(
     private movieQuery: MovieQuery,
+    private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
-    private db: FireQuery,
+    private db: FireQuery
   ) {}
 
   ///////////////////
@@ -56,12 +59,12 @@ export class DeliveryService {
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */
-  public approvedToggle(material: Material, movieId: string) {
-    return this.db
-      .doc<Material>(`movies/${movieId}/materials/${material.id}`)
-      .update({ approved: !material.approved });
+  public toggleApproved(materialId: string, approved: boolean) {
+    const movieId = this.movieQuery.getActiveId();
+    return this.db.doc<Material>(`movies/${movieId}/materials/${materialId}`).update({ approved });
   }
 
+  /** Update the property state of movie's materials */
   public updateMaterialState(materials: Material[], state: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
@@ -92,28 +95,31 @@ export class DeliveryService {
       true
     );
 
-    this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.db
+    const promises = [];
+
+    promises.push([
+      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder);
+      .set(deliveryStakeholder)
+    ])
+
     if (!!templateId) {
-      const materials = await this.db.snapshot<Material[]>(`templates/${templateId}/materials/`);
-      await Promise.all(
-        materials.map(material =>
-          this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set(material)
-        )
-      );
-      return id;
+      const template = this.templateQuery.getEntity(templateId);
+      promises.push(this.copyMaterials(delivery, template));
     }
+
+    await Promise.all(promises);
+
     return id;
   }
 
-  public async addMovieMaterialsDelivery() {
-    const movieId = this.movieQuery.getActiveId();
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials/`);
+  /** Add a new delivery by copying the movie's materials */
+  public async addDeliveryWithMovieMaterials() {
+    const movie = this.movieQuery.getActive();
     const id = this.db.createId();
     const stakeholder = this.query.findActiveStakeholder();
-    const delivery = createDelivery({ id, movieId, validated: [] });
+    const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
       stakeholder.id,
       stakeholder.orgId,
@@ -121,26 +127,24 @@ export class DeliveryService {
       true
     );
 
-    this.db.doc<Delivery>(`deliveries/${id}`).set(delivery);
-    this.db
+    const promises = [];
+
+    promises.push([
+      this.db.createDocAndRights(delivery, stakeholder.orgId),
+      this.copyMaterials(delivery, movie),
+      this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder);
-    await Promise.all(
-      movieMaterials.map(material =>
-        this.db.doc<Material>(`deliveries/${id}/materials/${material.id}`).set({
-          id: material.id,
-          value: material.value,
-          description: material.description,
-          category: material.category
-        })
-      )
-    );
+      .set(deliveryStakeholder)
+    ]);
+
+    await Promise.all(promises);
+
     return id;
   }
 
   public updateDueDate(dueDate: Date) {
-    const id = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${id}`).update({ dueDate });
+    const deliveryId = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ dueDate });
   }
 
   /** Add step in array steps of delivery */
@@ -173,7 +177,7 @@ export class DeliveryService {
     const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
     materials.forEach(material => {
       const doc = this.db.doc(`deliveries/${delivery.id}/materials/${material.id}`);
-      return batch.update(doc.ref, { step: "" });
+      return batch.update(doc.ref, { step: '' });
     });
     batch.commit();
   }
@@ -202,10 +206,24 @@ export class DeliveryService {
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
-      this.db
-        .doc<Delivery>(`deliveries/${delivery.id}`)
-        .update({ validated: updatedValidated });
+      this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ validated: updatedValidated });
     }
+  }
+
+  /** Create a transaction to copy the template/movie materials into the delivery materials */
+  public async copyMaterials(delivery: Delivery, document: BFDoc) {
+    const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`)
+
+    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+
+      const promises = materials.map(material => {
+        const materialRef = this.db.doc<Material>(`deliveries/${delivery.id}/materials/${material.id}`)
+          .ref;
+        return tx.set(materialRef, {...material, state: '', stepId: ''});
+      });
+
+      return Promise.all(promises);
+    });
   }
 
   ////////////////////////
@@ -224,7 +242,9 @@ export class DeliveryService {
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
     const delivery = this.query.getActive();
-    const deliveryStakeholder = delivery.stakeholders.find(stakeholder => stakeholder.id === movieStakeholder.id);
+    const deliveryStakeholder = delivery.stakeholders.find(
+      stakeholder => stakeholder.id === movieStakeholder.id
+    );
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
       const authorizations = [];
@@ -235,9 +255,7 @@ export class DeliveryService {
         false
       );
       this.db
-        .doc<Stakeholder>(
-          `deliveries/${delivery.id}/stakeholders/${newDeliveryStakeholder.id}`
-        )
+        .doc<Stakeholder>(`deliveries/${delivery.id}/stakeholders/${newDeliveryStakeholder.id}`)
         .set(newDeliveryStakeholder);
     }
   }
@@ -253,9 +271,7 @@ export class DeliveryService {
   /** Delete stakeholder delivery */
   public removeStakeholder(stakeholderId: string) {
     const deliveryId = this.query.getActiveId();
-    this.db
-      .doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`)
-      .delete();
+    this.db.doc<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderId}`).delete();
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */

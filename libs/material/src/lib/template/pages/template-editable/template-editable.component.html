@@ -1,0 +1,77 @@
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav [opened]="true" mode="side">
+    <material-category-repertory *ngIf="(template$ | async) as template" [template]="template"></material-category-repertory>
+    <div class="container-button" fxLayout="row" fxLayoutAlign="center center">
+      <button class="create-material mat-elevation-z0" mat-raised-button (click)="addForm('')">
+        Add a material
+        <mat-icon class="icon">add</mat-icon>
+      </button>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button
+        *ngIf="(templateActive$ | async) as templateActive"
+        class="delete-template mat-elevation-z0"
+        mat-raised-button
+        (click)="openDeleteTemplate(templateActive.id, templateActive.name)"
+      >
+        Delete template
+        <mat-icon class="icon">delete</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+  <!-- Content -->
+  <mat-sidenav-content>
+    <section>
+      <h2 *ngIf="(templateActive$ | async) as templateActive">{{ templateActive.name }}</h2>
+      <div *ngIf="(form$ | async) as form">
+        <material-template-add-form
+          *ngIf="form.category === ''"
+          (material)="addMaterial($event)"
+          (canceled)="cancelAddForm()"
+        ></material-template-add-form>
+      </div>
+      <article *ngFor="let category of (template$ | async | keyvalue)" [id]="category.key" class="category-block">
+        <div class="container" fxLayout="row" fxLayoutAlign="space-between center">
+          <h3>{{ category.key }}</h3>
+          <button
+            class="category-material mat-elevation-z0"
+            (click)="addForm(category.key)"
+            mat-raised-button
+          >
+            Add a material
+            <mat-icon class="icon">add</mat-icon>
+          </button>
+        </div>
+        <div>
+          <div *ngFor="let material of category.value">
+            <ui-editable [item]="material" [itemId]="materialId">
+              <ng-template materialViewMode>
+                <material-template-item
+                  [material]="material"
+                  (isDeleted)="deleteMaterial(material)"
+                  (isSelected)="selectMaterial($event, material.id)"
+                  (update)="openUpdateForm(material)"
+                ></material-template-item>
+              </ng-template>
+              <ng-template materialEditMode>
+                <material-template-form
+                [material]="material"
+                (update)="updateMaterial($event)"
+                (canceled)="cancelUpdateForm()"
+                ></material-template-form>
+              </ng-template>
+            </ui-editable>
+          </div>
+          <div *ngIf="(form$ | async) as form">
+            <material-template-add-form
+              *ngIf="form.category === category.key"
+              (material)="addMaterial($event)"
+              (canceled)="cancelAddForm()"
+            ></material-template-add-form>
+          </div>
+        </div>
+      </article>
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

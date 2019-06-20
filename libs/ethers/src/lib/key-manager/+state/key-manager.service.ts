@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore,Key } from './key-manager.store';
 import { utils, Wallet as EthersWallet } from 'ethers';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AskPasswordComponent } from '../ask-password/ask-password.component';
 import { CreatePasswordComponent } from '../create-password/create-password.component';
 import { ExportComponent } from '../export-dialog/export-dialog.component';
@@ -40,7 +41,7 @@ export class KeyManagerService {
   /**  create / encrypt / store / from random */
   async createFromRandom(ensDomain: string, password?: string) { // at signup password already is provided and we don't want to ask again for a password
     if (!password) {
-      const ref = this.dialog.open(CreatePasswordComponent, { width: '250px' });
+      const ref = this.dialog.open(CreatePasswordComponent, { width: '320px' });
       password = await ref.afterClosed().toPromise();
       if (!password) {
         throw new Error('No password provided');
@@ -68,7 +69,7 @@ export class KeyManagerService {
 
   /** load key (retreive / decrypt, set into process memory) */
   async unlockAndSetActive(key: Key) {
-    const ref = this.dialog.open(AskPasswordComponent, { width: '250px' })
+    const ref = this.dialog.open(AskPasswordComponent, { width: '320px' })
     const encryptionPassword = await ref.afterClosed().toPromise()
     if (!encryptionPassword) throw new Error('No password provided');
 
@@ -96,7 +97,7 @@ export class KeyManagerService {
 
   /** delete key */
   async deleteKey(key: Key) {
-    const ref = this.dialog.open(AskPasswordComponent, { width: '250px' });
+    const ref = this.dialog.open(AskPasswordComponent, { width: '320px' });
     const password = await ref.afterClosed().toPromise();
     if (!password) {
       throw new Error('No password provided');

@@ -12,6 +12,7 @@ interface AbstractDelivery {
   dueDate?: Date | Timestamp;
   state: State;
   isPaid: boolean;
+  _type: 'deliveries';
 }
 
 export interface Delivery extends AbstractDelivery {
@@ -52,6 +53,7 @@ export function createDelivery(params: Partial<Delivery>) {
     steps: [],
     state: State.pending,
     isPaid: false,
+    _type: 'deliveries',
     ...params
   } as Delivery;
 }

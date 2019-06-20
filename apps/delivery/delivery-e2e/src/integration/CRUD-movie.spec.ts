@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, HomePage, AddMovieModal, MovieEditPage } from "../support/app.po";
+import { LandingPage, HomePage, AddMovieModal, MovieEditPage } from "../support/pages";
 
 const INPUTS_FORM = {
   [MovieEditPage.FIELD_INTERNATIONAL_TITLE]: 'The terminator',

@@ -6,10 +6,17 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/home/form/:movieId',
+    route: '/layout/home/:movieId/edit',
     items: [
-      { name: 'edit film', path: '/layout/home/form/:movieId', exact:true },
-      { name: 'teamwork', path: '/layout/home/form/:movieId/teamwork', exact:true },
+      { name: 'edit film', path: '/layout/home/:movieId/edit' },
+      { name: 'teamwork', path: '/layout/home/:movieId/teamwork'},
+    ]
+  },
+  {
+    route: '/layout/home/:movieId/teamwork',
+    items: [
+      { name: 'edit film', path: '/layout/home/:movieId/edit' },
+      { name: 'teamwork', path: '/layout/home/:movieId/teamwork'},
     ]
   },
   {

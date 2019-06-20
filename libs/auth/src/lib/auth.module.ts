@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 // Component
 import { AuthRootComponent } from './root/root.component';
-
+import { UiFormModule } from '@blockframes/ui'
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'connection', pathMatch: 'full' },
@@ -32,6 +32,7 @@ export const AuthRoutes: Routes = [
     MatInputModule,
     MatButtonModule,
     RouterModule.forChild(AuthRoutes),
+    UiFormModule
   ],
   declarations: [AuthRootComponent],
 })

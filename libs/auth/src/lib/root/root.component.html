@@ -3,15 +3,11 @@
   <section testId="signin" id="signin" fxLayout="column" fxLayoutAlign="start center">
     <h1>Sign in</h1>
     <form [formGroup]="signinForm" (ngSubmit)="signin()" fxLayout="column">
-      <mat-form-field>
-        <input matInput type="email" placeholder="Email" formControlName="email" />
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="password" placeholder="Password" formControlName="pwd" />
-      </mat-form-field>
+      <input-email [form]="signinForm"></input-email>
+      <input-password [form]="signinForm" [showHint]=false></input-password>
       <div fxLayout="row" fxLayoutAlign="end center">
-          <button mat-raised-button color="primary">Signin</button>
-        </div>
+        <button mat-raised-button color="primary">Signin</button>
+      </div>
     </form>
   </section>
   <hr/>
@@ -19,15 +15,8 @@
   <section testId="signup" id="signup" fxLayout="column" fxLayoutAlign="start center">
     <h1>Sign Up</h1>
     <form [formGroup]="signupForm" (ngSubmit)="signup()" fxLayout="column">
-      <mat-form-field>
-        <input matInput type="email" placeholder="Email" formControlName="email" />
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="password" placeholder="Password" formControlName="pwd" />
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="password" placeholder="Confirm" formControlName="confirm" />
-      </mat-form-field>
+      <input-email [form]="signupForm"></input-email>
+      <form-group-password-confirm [form]="signupForm"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button mat-raised-button color="primary">Signup</button>
       </div>

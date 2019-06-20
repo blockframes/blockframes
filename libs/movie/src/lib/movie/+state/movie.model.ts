@@ -1,6 +1,6 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
-import { Stakeholder } from "@blockframes/movie/stakeholder/+state";
+import { Stakeholder } from "../../stakeholder/+state";
 
 export interface Movie {
   id: string,
@@ -34,6 +34,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
+  _type: 'movies',
   materials?: Material[];
   stakeholders?: Stakeholder[];
 }
@@ -49,5 +50,6 @@ interface Title {
 export function createMovie(params?: Partial<Movie>) {
   return {
     ...params,
+    _type: 'movies'
   } as Movie;
 }

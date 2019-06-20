@@ -1,13 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-function samePassword(control: FormGroup) { // TODO ISSUE #408
-  const { password, confirm } = control.value;
-  return password === confirm
-    ? null
-    : { notSame: true }
-}
+import { CreateForm } from '../forms/create.form';
 
 @Component({
   selector: 'key-manager-create-password',
@@ -17,7 +10,7 @@ function samePassword(control: FormGroup) { // TODO ISSUE #408
 })
 export class CreatePasswordComponent implements OnInit {
 
-  form: FormGroup;
+  form: CreateForm;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -25,10 +18,7 @@ export class CreatePasswordComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = new FormGroup({
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirm: new FormControl(''),
-    }, { validators: [samePassword] });
+    this.form = new CreateForm();
   }
 
   cancel() {
