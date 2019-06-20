@@ -6,7 +6,7 @@
 import * as admin from 'firebase-admin';
 import request from 'request';
 import { UserConfig, USERS } from './users.fixture';
-import { firebase } from '../environments/environment';
+import { firebase } from './environments/environment';
 
 type UserRecord = admin.auth.UserRecord;
 type Auth = admin.auth.Auth;
@@ -17,7 +17,10 @@ type Auth = admin.auth.Auth;
  * @param email
  * @param password
  */
-async function createUserIfItDoesntExists(auth: Auth, { uid, email, password }: UserConfig): Promise<UserRecord> {
+async function createUserIfItDoesntExists(
+  auth: Auth,
+  { uid, email, password }: UserConfig
+): Promise<UserRecord> {
   try {
     // await here to catch the error in the try / catch scope
     return await auth.getUser(uid);

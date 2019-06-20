@@ -1022,6 +1022,77 @@
           }
         }
       }
+    },
+    "backend-ops": {
+      "root": "apps/backend-ops",
+      "sourceRoot": "apps/backend-ops/src",
+      "projectType": "application",
+      "prefix": "backend-ops",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/backend-ops",
+            "main": "apps/backend-ops/src/main.ts",
+            "tsConfig": "apps/backend-ops/tsconfig.app.json",
+            "assets": [
+              "apps/backend-ops/src/assets"
+            ]
+          },
+          "configurations": {
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "backend-ops:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/backend-ops/tsconfig.app.json",
+              "apps/backend-ops/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/backend-ops/jest.config.js",
+            "tsConfig": "apps/backend-ops/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {
