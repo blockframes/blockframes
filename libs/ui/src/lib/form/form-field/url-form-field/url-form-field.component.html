@@ -1,0 +1,10 @@
+<mat-form-field>
+  <input [value]="value" (change)="addEvent($event)" type="text" matInput [placeholder]="placeholder" [required]="required"/>
+  <!-- <mat-error *ngIf="control.hasError('required')">
+    {{ controlName }} is <strong>required</strong>
+  </mat-error> -->
+  <mat-error *ngIf="ngControl.hasError('pattern')">
+    Invalid pattern.
+  </mat-error>
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+</mat-form-field>

@@ -29,21 +29,24 @@
   </div>
   <!-- Other promotional elements -->
   <h3> Other Promotional Elements </h3>
-  <div formArrayName="promotionalElements" *ngFor="let element of form.promotionalElements.controls; let i = index;">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field class="small-width small-margin">
-        <input matInput formControlName="label" placeholder="Label">
-      </mat-form-field>
-      <mat-form-field class="small-width small-margin">
-        <input matInput formControlName="url" placeholder="https://">
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="form.addPromotionalElement()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="form.removeFormControl(i, 'promotionalElements')">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
+  <div formArrayName="promotionalElements" >
+    <ng-container *ngFor="let element of form.promotionalElements.controls; let i = index;">
+      <div [formGroupName]="i" class="full-width">
+        <mat-form-field class="small-width small-margin">
+          <input matInput formControlName="label" placeholder="Label">
+        </mat-form-field>
+        <url-form-field class="small-margin" formControlName="url" placeholder="https://"></url-form-field>
+        <!-- <mat-form-field class="small-width small-margin">
+          <input matInput formControlName="url" placeholder="https://">
+        </mat-form-field> -->
+        <button mat-icon-button color="primary" (click)="form.addPromotionalElement()">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="form.removeFormControl(i, 'promotionalElements')">
+          <mat-icon>delete_circle</mat-icon>
+        </button>
+      </div>
+    </ng-container>
   </div>
   <div *ngIf="form.promotionalElements.controls.length == 0">
     <button mat-icon-button color="primary" (click)="form.addPromotionalElement()">
@@ -51,3 +54,12 @@
     </button>
   </div>
 </div>
+
+
+<form [formGroup]="formGroup" (submit)="submit()">
+  <div>
+    <input matInput formControlName="label" placeholder="Label">
+    <url-form-field formControlName="url" placeholder="https://"></url-form-field>
+  </div>
+  <button type="submit">Submit</button>
+</form>

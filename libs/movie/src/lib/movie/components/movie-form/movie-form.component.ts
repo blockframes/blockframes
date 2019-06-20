@@ -60,6 +60,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
 
   /* Saves the form */
   public submit() {
+    console.log(this.form.valid)
     if (!this.form.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
