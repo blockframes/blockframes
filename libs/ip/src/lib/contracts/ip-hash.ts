@@ -1,7 +1,7 @@
 import { contracts } from '@env';
 import { Injectable } from '@angular/core';
-import { INgContract, RelayerWallet } from '@blockframes/ethers';
-import { Contract, providers, ethers } from 'ethers';
+import { INgContract } from '@blockframes/ethers';
+import { Contract, providers, Wallet, Signer } from 'ethers';
 
 export interface IpHash extends INgContract {
   scriptsOwner(hash: string): Promise<string>;
@@ -17,9 +17,9 @@ export const abi = [
 ];
 
 @Injectable({ providedIn: 'root' })
-export class IpHashContract extends ethers.Contract {
-  constructor(wallet: RelayerWallet) {
-    super('ipHash', abi, wallet)
+export class IpHashContract extends Contract {
+  constructor(signer: Signer) {
+    super(contracts.ipHash, abi, signer)
   }
 }
 
