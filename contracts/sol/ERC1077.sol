@@ -1,5 +1,7 @@
 pragma solidity ^0.5.2;
 
+import "./Initable.sol";
+
 import "./KeyHolder.sol";
 import "./IERC1077.sol";
 
@@ -8,13 +10,22 @@ import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
 
-contract ERC1077 is KeyHolder, IERC1077 {
+contract ERC1077 is KeyHolder, IERC1077, Initable {
     using ECDSA for bytes32;
     using SafeMath for uint;
 
+    address payable public recoverAddress;
     uint public lastNonce;
 
-    constructor(address _key) KeyHolder(_key) public {
+    /* solium-disable-next-line no-empty-blocks */
+    constructor() KeyHolder(address(0x0)) public {} // this should never be called and is here only to satisfy the solc compiler
+
+    // this function play the role of the "constructor",
+    // it can be called only once, and should be called before any other (non pure/view) functions
+    function init() public requireNotInit() {
+        Initable.init();
+        this.addKey(address(0xdeAD00000000000000000000000000000000dEAd), 1); // ! WARNING CHANGE HARDCODED ADDRESS WITH USER KEY AT DEPLOY
+        recoverAddress = 0xdeAD00000000000000000000000000000000dEAd; // ! WARNING CHANGE HARDCODED ADDRESS AT DEPLOY
     }
 
     function canExecute(
@@ -99,7 +110,7 @@ contract ERC1077 is KeyHolder, IERC1077 {
         address gasToken,
         uint gasLimit,
         OperationType operationType,
-        bytes memory signatures) public returns (bytes32)
+        bytes memory signatures) public requireInit() returns (bytes32)
     {
         require(signatures.length != 0, "Invalid signatures");
         require(signatures.length % 65 == 0, "Invalid signatures");
@@ -118,7 +129,7 @@ contract ERC1077 is KeyHolder, IERC1077 {
         return messageHash;
     }
 
-    function refund(uint256 gasUsed, uint gasPrice, address gasToken) private {
+    function refund(uint256 gasUsed, uint gasPrice, address gasToken) private requireInit() {
         if (gasToken != address(0)) {
             ERC20 token = ERC20(gasToken);
             token.transfer(msg.sender, gasUsed.mul(gasPrice));
@@ -152,5 +163,10 @@ contract ERC1077 is KeyHolder, IERC1077 {
             lastSigner = signer;
         }
         return true;
+    }
+
+    function destroy() public requireInit() {
+        require(msg.sender == recoverAddress, 'You cannot perform this action');
+        selfdestruct(recoverAddress);
     }
 }
