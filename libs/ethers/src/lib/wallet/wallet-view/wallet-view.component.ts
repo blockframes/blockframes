@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
 
 import { network } from "@env";
-import { WalletQuery, Wallet } from "../+state";
+import { WalletQuery, Wallet, WalletService } from "../+state";
 
 
 @Component({
@@ -20,8 +20,8 @@ export class WalletViewComponent implements OnInit {
   isLoading$: Observable<boolean>;
 
   constructor(
-    public query: WalletQuery,
-    private dialog: MatDialog
+    public service: WalletService,
+    public query: WalletQuery
   ) {}
 
   ngOnInit() {
@@ -33,5 +33,10 @@ export class WalletViewComponent implements OnInit {
     return network === 'homestead' as string
       ? 'https://etherscan.io/address/'
       : `https://${network}.etherscan.io/address/`;
+  }
+
+  async deployERC1077() {
+    const res = await this.service.deployERC1077(this.query.getValue().ensDomain);
+    console.log(res);
   }
 }

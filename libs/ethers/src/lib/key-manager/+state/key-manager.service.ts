@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore,Key } from './key-manager.store';
 import { utils, Wallet as EthersWallet } from 'ethers';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { AskPasswordComponent } from '../ask-password/ask-password.component';
 import { CreatePasswordComponent } from '../create-password/create-password.component';
 import { ExportComponent } from '../export-dialog/export-dialog.component';
+import { KeyManagerQuery } from './key-manager.query';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {
@@ -15,6 +15,7 @@ export class KeyManagerService {
   constructor(
     private dialog: MatDialog,
     private store: KeyManagerStore,
+    private query: KeyManagerQuery,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -32,14 +33,18 @@ export class KeyManagerService {
   private async _encryptAndStore(wallet: EthersWallet, ensDomain: string, encryptionPassword: string) {
     this.store.setLoading(true);
     const keyStore = await wallet.encrypt(encryptionPassword);
-    const key = {address: wallet.address, ensDomain, keyStore};
+    let isMainKey = false;
+    if (this.query.getKeyCountOfUser(ensDomain) === 0) {
+      isMainKey = true;
+    }
+    const key = {address: wallet.address, ensDomain, keyStore, isMainKey};
     this.store.add(key);
     this._activateKey(key.address, wallet); // ? Should creating a key also activate this key ?
     this.store.setLoading(false);
   }
 
   /**  create / encrypt / store / from random */
-  async createFromRandom(ensDomain: string, password?: string) { // at signup password already is provided and we don't want to ask again for a password
+  async createFromRandom(ensDomain: string, password?: string) { // at signup password is already provided and we don't want to ask again
     if (!password) {
       const ref = this.dialog.open(CreatePasswordComponent, { width: '320px' });
       password = await ref.afterClosed().toPromise();
@@ -50,6 +55,7 @@ export class KeyManagerService {
 
     const wallet = EthersWallet.createRandom();
     this._encryptAndStore(wallet, ensDomain, password);
+    return wallet.address;
   }
   /** create / encrypt / store / from mnemonic */
   importFromMnemonic(ensDomain: string, mnemonic: string, encryptionPassword: string) {
@@ -63,8 +69,8 @@ export class KeyManagerService {
   }
 
   importFromJsonFile(jsonString: string) {
-    const {address, ensDomain, keyStore} = JSON.parse(jsonString);
-    this.store.add({address, ensDomain, keyStore});
+    const {address, ensDomain, keyStore, isMainKey} = JSON.parse(jsonString);
+    this.store.add({address, ensDomain, keyStore, isMainKey});
   }
 
   /** load key (retreive / decrypt, set into process memory) */
@@ -113,4 +119,7 @@ export class KeyManagerService {
     await ref.afterClosed().toPromise();
   }
 
+  signMessage(message: utils.Arrayish): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
 }

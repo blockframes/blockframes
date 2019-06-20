@@ -41,7 +41,7 @@ export class AuthService {
 
     const userCredentials = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
     await this.create(userCredentials.user);
-    this.wallet.createKeyFromRandom(email, password);
+    this.wallet.createRandomKeyFromEmail(email, password);
 
      // TODO MOVE IN WALLET ISSUE #315
     // this.wallet.createLocalKey('web', password, email)  // no await -> do the job in background

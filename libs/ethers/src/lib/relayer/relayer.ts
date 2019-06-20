@@ -21,12 +21,15 @@ export class Relayer implements IRelayer {
   /**
    * Create a ERC1077 for one account
    * @param uid user id (needed to update user doc in the firestore)
-   * @param username ENS username of the account
+   * @param username ENS username of the account, this should `bob` and **NOT** `bob.blockframes.eth`
    * @param key first address of the user (management key)
    */
-  public create(uid:string, username: string, key: string): Promise<Object> {
+  public create(username: string, key: string, erc1077address: string): Promise<Object> {
+    if (username.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
+      username = username.split('.')[0]
+    }
     const call = this.functions.httpsCallable('relayerCreate');
-    return call({ uid, username, key }).toPromise();
+    return call({ username, key, erc1077address }).toPromise();
   }
 
   /** Listen when the ENS name changed -> End of process */

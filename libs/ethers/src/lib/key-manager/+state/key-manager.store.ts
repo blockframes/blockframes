@@ -4,7 +4,8 @@ import { StoreConfig, EntityStore, EntityState, ID, guid, ActiveState } from '@d
 export interface Key {
   ensDomain: string,
   keyStore: string,
-  address: string
+  address: string,
+  isMainKey: boolean,
 }
 
 export interface KeyState extends EntityState<Key>, ActiveState<string> {}

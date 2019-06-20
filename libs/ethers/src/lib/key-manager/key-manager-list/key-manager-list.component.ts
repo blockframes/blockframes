@@ -25,7 +25,7 @@ export class KeyManagerListComponent implements OnInit {
 
   ngOnInit() {
     this.activeKey$ = this.query.selectActive();
-    this.keys$ = this.query.getAllKeysOfUser$(this.ensDomain);
+    this.keys$ = this.query.selectAllKeysOfUser$(this.ensDomain);
   }
 
   async createRandom() {
