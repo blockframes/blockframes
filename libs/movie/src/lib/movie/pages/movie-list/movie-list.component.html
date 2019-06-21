@@ -1,80 +1,86 @@
-<section *ngIf="(orgs$ | async); else empty">
-  <mat-expansion-panel
-    *ngFor="let org of (orgs$ | async)"
-    [expanded]="true"
-    class="mat-elevation-z0"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        <span class="organization">
-          {{ org.name }}
-        </span>
-        <div class="divider"></div>
-        <div class="icon-container">
-          <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
-        </div>
-        <div class="icon-container">
-          <mat-icon class="view-icon" color="primary">view_module</mat-icon>
-        </div>
-        <button
-          mat-raised-button
-          (click)="addNewMovie($event, { id: org.id, name: org.name })"
-          class="add-movie mat-elevation-z0"
-        >
-          Create a movie <mat-icon class="add-icon">add</mat-icon>
-        </button>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
-      <mat-card *ngFor="let movie of org.movies" class="movie-card">
-        <div class="img-container clickable-item">
-          <img
-            [routerLink]="['/layout', movie.id]"
-            *ngIf="movie.poster; else defaultPoster"
-            mat-card-image
-            src="{{ movie.poster }}"
-            alt="Movie poster"
-          />
-          <ng-template #defaultPoster
-            ><img
-              [routerLink]="['/layout', movie.id]"
-              class="mat-card-image"
-              src="/assets/images/default-movie-poster.png"
-              alt="Movie poster"
-          /></ng-template>
-
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon color="primary">more_vert</mat-icon>
+<section *ngIf="(orgs$ | async) as orgs">
+  <div *ngIf="orgs.length > 0; else empty">
+    <mat-expansion-panel
+      *ngFor="let org of orgs"
+      [expanded]="true"
+      class="mat-elevation-z0"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
+          <span class="organization">
+            {{ org.name }}
+          </span>
+          <div class="divider"></div>
+          <div class="icon-container">
+            <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
+          </div>
+          <div class="icon-container">
+            <mat-icon class="view-icon" color="primary">view_module</mat-icon>
+          </div>
+          <button
+            mat-raised-button
+            (click)="addNewMovie($event, { id: org.id, name: org.name })"
+            class="add-movie mat-elevation-z0"
+          >
+            Create a movie <mat-icon class="add-icon">add</mat-icon>
           </button>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item [matMenuTriggerFor]="subMenu">
-              <mat-icon color="primary">control_camera</mat-icon>
-              <span>Open in...</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
+        <mat-card *ngFor="let movie of org.movies" class="movie-card">
+          <div class="img-container clickable-item">
+            <img
+              [routerLink]="['/layout', movie.id]"
+              *ngIf="movie.poster; else defaultPoster"
+              mat-card-image
+              src="{{ movie.poster }}"
+              alt="Movie poster"
+            />
+            <ng-template #defaultPoster
+              ><img
+                [routerLink]="['/layout', movie.id]"
+                class="mat-card-image"
+                src="/assets/images/default-movie-poster.png"
+                alt="Movie poster"
+            /></ng-template>
+
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon color="primary">more_vert</mat-icon>
             </button>
-            <button mat-menu-item [routerLink]="[movie.id, 'edit']">
-              <mat-icon color="primary">edit</mat-icon>
-              <span>Edit</span>
-            </button>
-            <button mat-menu-item (click)="delete(movie.id)">
-              <mat-icon color="primary">delete_outline</mat-icon>
-              <span>Delete</span>
-            </button>
-          </mat-menu>
-          <mat-menu #subMenu="matMenu">
-            <button mat-menu-item [routerLink]="[movie.id]">Explorer</button>
-          </mat-menu>
-        </div>
-        <mat-card-header [routerLink]="['/layout', movie.id, 'list']" class="clickable-item">
-          <mat-card-title>
-            {{ movie.title.original}}
-            <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
-          </mat-card-title>
-          <mat-card-subtitle *ngIf="movie.directorName">{{ movie.directorName }}</mat-card-subtitle>
-        </mat-card-header>
-      </mat-card>
-    </article>
-  </mat-expansion-panel>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item [matMenuTriggerFor]="subMenu">
+                <mat-icon color="primary">control_camera</mat-icon>
+                <span>Open in...</span>
+              </button>
+              <button mat-menu-item [routerLink]="[movie.id, 'edit']">
+                <mat-icon color="primary">edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item (click)="delete(movie.id)">
+                <mat-icon color="primary">delete_outline</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+            <mat-menu #subMenu="matMenu">
+              <button mat-menu-item [routerLink]="[movie.id]">Explorer</button>
+            </mat-menu>
+          </div>
+          <mat-card-header [routerLink]="['/layout', movie.id, 'list']" class="clickable-item">
+            <mat-card-title>
+              {{ movie.title.original}}
+              <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
+            </mat-card-title>
+            <mat-card-subtitle *ngIf="movie.directorName">{{ movie.directorName }}</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </article>
+    </mat-expansion-panel>
+  </div>
+  <ng-template #empty>
+    <movie-home-empty></movie-home-empty>
+  </ng-template>
 </section>
-<ng-template #empty>
-  <movie-home-empty></movie-home-empty>
-</ng-template>
+
+
+
+

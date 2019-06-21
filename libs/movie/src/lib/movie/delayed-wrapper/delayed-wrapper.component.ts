@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MovieQuery } from '../+state';
 
 @Component({
   selector: 'movie-delayed-wrapper',
@@ -11,12 +12,13 @@ export class DelayedWrapperComponent {
 
   public isLoading$: Observable<boolean>;
 
-  constructor() {
-    this.isLoading$ = new Observable(subscriber => {
-      subscriber.next(true)
-      setTimeout(() => {
-        subscriber.next(false)
-      }, 1000)
-    })
+  constructor(private movieQuery: MovieQuery) {
+    this.isLoading$ = this.movieQuery.selectLoading();
+    // this.isLoading$ = new Observable(subscriber => {
+    //   subscriber.next(true)
+    //   setTimeout(() => {
+    //     subscriber.next(false)
+    //   }, 1000)
+    // })
   }
 }

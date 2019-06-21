@@ -14,11 +14,12 @@ import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/
 // Guards
 import { MovieActiveGuard } from './guards/movie-active.guard';
 import { MovieListGuard } from './guards/movie-list.guard';
+import { MovieListComponent } from './pages/movie-list/movie-list.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: MovieListComponent,
     canActivate: [MovieListGuard],
     canDeactivate: [MovieListGuard],
   },

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization, OrganizationWithMovies } from './organization.model';
-import { map, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, Observable, from } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Injectable({
@@ -19,8 +19,9 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
           map(movies => ({ ...org, movies }))
         )
       })
+      if (orgs.length === 0) return from([[]])
       return combineLatest(orgsWithMovies$)
-    }),
+    })
   );
 
   constructor(private movieQuery: MovieQuery, protected store: OrganizationStore) {

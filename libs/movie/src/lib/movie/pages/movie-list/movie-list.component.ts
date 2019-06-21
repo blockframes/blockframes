@@ -11,6 +11,7 @@ import { MovieTitleFormComponent } from '../../components/movie-title-form/movie
   styleUrls: ['./movie-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class MovieListComponent implements OnInit {
   public orgs$: Observable<OrganizationWithMovies[]>;
 
