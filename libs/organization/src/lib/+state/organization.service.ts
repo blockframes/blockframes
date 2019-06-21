@@ -3,7 +3,7 @@ import { ID } from '@datorama/akita';
 import { createOrganization, Organization, OrgMember } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
-import * as INITIAL_RIGHTS from './../org-initial-rights.json';
+import { App, initializeAppRights, initializeOrgRights } from '@blockframes/rights';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
@@ -44,8 +44,10 @@ export class OrganizationService {
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const orgRights = initializeOrgRights({orgId, superAdmin: userId});
     const orgRightsDoc = this.db.doc(`rights/${orgId}`);
     const userDoc = this.db.doc(`users/${userId}`);
+    const apps : App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore ]
 
     this.db.firestore
       .runTransaction(transaction => {
@@ -54,13 +56,14 @@ export class OrganizationService {
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
           // Set the new organization in rights collection.
-          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: userId, ...INITIAL_RIGHTS.orgPermissions }),
+          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: userId, ...orgRights }),
           // Update user document with the new organization id.
           transaction.update(userDoc.ref, { orgId }),
           // Initialize apps permissions documents in organization apps sub-collection.
-          ...INITIAL_RIGHTS.appsPermissions.map(app => {
-            const orgApp = this.db.doc(`rights/${orgId}/apps/${app.name}`);
-            return transaction.set(orgApp.ref, app);
+          ...apps.map(app => {
+            const orgApp = this.db.doc(`rights/${orgId}/userAppsRights/${app}`);
+            const appRights = initializeAppRights(app)
+            return transaction.set(orgApp.ref, appRights);
           })
         ]
 

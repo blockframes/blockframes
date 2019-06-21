@@ -8,6 +8,7 @@ import { map, pluck, switchMap, tap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 import { OrganizationQuery } from './organization.query';
 import { AuthQuery } from '@blockframes/auth';
+import { RightsQuery } from 'libs/rights/src/lib/+state';
 
 @Injectable({ providedIn: 'root' })
 export class OrgMembersService {
@@ -16,6 +17,7 @@ export class OrgMembersService {
     private orgService: OrganizationService,
     private orgQuery: OrganizationQuery,
     private auth: AuthQuery,
+    private rightsQuery: RightsQuery,
     private store: OrgMembersStore,
     private db: FireQuery
   ) {
@@ -60,5 +62,13 @@ export class OrgMembersService {
 
   private collection(orgID: string): AngularFirestoreDocument<Organization> {
     return this.db.collection('orgs').doc(orgID);
+  }
+
+  /** Checks if the connected user is the Super Admin of his organization */
+  public isSuperAdmin(): boolean {
+    const superAdminId = this.rightsQuery.getActive().superAdmin;
+    const userId = this.auth.userId;
+    console.log(superAdminId, userId)
+    return superAdminId === userId;
   }
 }

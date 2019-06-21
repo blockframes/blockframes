@@ -21,7 +21,7 @@ export class OrgMembersShowComponent implements OnInit {
   public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public enabled: boolean;
+  public isSuperAdmin: boolean;
 
   constructor(
     private service: OrgMembersService,
@@ -32,7 +32,7 @@ export class OrgMembersShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.enabled = true;
+    this.isSuperAdmin = this.service.isSuperAdmin();
     this.addMemberForm = this.builder.group({
       user: null
     });

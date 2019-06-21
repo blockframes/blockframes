@@ -43,7 +43,7 @@ export interface OrgDocRights {
 export enum App  {
   mediaDelivering = 'MediaDelivering',
   mediaFinanciers = 'MediaFinanciers',
-  homeOfScripts = 'HomeOfScripts'
+  storiesAndMore = 'StoriesAndMore'
 }
 
 export function initializeOrgRights(params: Partial<OrganizationRights>) {

@@ -36,7 +36,10 @@ export interface AuthState {
 }
 
 export function createUser(user: Partial<User>) {
-  return { ...user } as User;
+  return {
+    orgId: '',
+    ...user
+  } as User;
 }
 
 const initialState: AuthState = {
