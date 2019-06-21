@@ -31,7 +31,6 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
 
 // Components
-import { HomeComponent } from './home/home.component';
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieFormComponent } from './components/movie-form/movie-form.component';
 import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
@@ -49,12 +48,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { DelayedWrapperComponent } from './delayed-wrapper/delayed-wrapper.component';
 import { MovieForm } from './components/movie-form/movie.form';
 
 @NgModule({
   declarations: [
-    HomeComponent,
     MovieEditableComponent,
     MovieFormComponent,
     MovieFormStoryComponent,
@@ -65,7 +62,6 @@ import { MovieForm } from './components/movie-form/movie.form';
     MovieFormTeamComponent,
     MovieFormPromotionalComponent,
     HomeEmptyComponent,
-    DelayedWrapperComponent,
   ],
   imports: [
     CommonModule,

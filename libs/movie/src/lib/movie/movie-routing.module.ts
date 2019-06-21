@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { HomeComponent } from './home/home.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
 import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component';
