@@ -1,4 +1,4 @@
-pragma solidity ^0.5.2;
+pragma solidity ^0.5.9;
 
 import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./Initable.sol";
