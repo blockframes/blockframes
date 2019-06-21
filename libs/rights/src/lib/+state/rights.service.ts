@@ -25,9 +25,7 @@ export class RightsService {
       const orgDocRightsRef = this.db.doc<T>(`rights/${orgId}/orgDocsRights/${document.id}`).ref;
       promises.push(tx.set(orgDocRightsRef, orgDocRights));
 
-      const userDocRightsRef = this.db.doc<T>(
-        `rights/${orgId}/userDocsRights/${document.id}`
-      ).ref;
+      const userDocRightsRef = this.db.doc<T>(`rights/${orgId}/userDocsRights/${document.id}`).ref;
       promises.push(tx.set(userDocRightsRef, userDocRights));
 
       const documentRef = this.db.doc<T>(`${document._type}/${document.id}`).ref;

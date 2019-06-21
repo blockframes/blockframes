@@ -35,7 +35,7 @@ export interface AuthState {
   isBalanceLoading: boolean;
 }
 
-export function createUser(user: Partial<User>) {
+export function createUser(user: Partial<User> = {}) {
   return {
     orgId: '',
     ...user

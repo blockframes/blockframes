@@ -32,7 +32,7 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
   /** Specify the names of the params to check,
    *  should be same name as the route params
    */
-  abstract params?: string[];
+  abstract params: string[];
   abstract urlFallback: string;
   private subscription: Subscription;
 

@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { FireQuery, Query } from '@blockframes/utils';
 import { OrganizationRights, RightsStore } from '../+state';
 import { Router, UrlTree } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { switchMap, tap } from 'rxjs/operators';
-import { User } from '@blockframes/auth';
-import { Subscription, from } from 'rxjs';
+import { AuthQuery } from '@blockframes/auth';
+import { Subscription, of } from 'rxjs';
 import { applyTransaction } from '@datorama/akita';
 
 export const rightsActiveQuery = (orgId: string): Query<OrganizationRights> => ({
@@ -28,27 +27,20 @@ export class RightsActiveGuard {
 
   constructor(
     private fireQuery: FireQuery,
-    private afAuth: AngularFireAuth,
+    private auth: AuthQuery,
     private store: RightsStore,
     private router: Router
   ) {}
 
   query() {
-    return this.afAuth.authState.pipe(
-      switchMap(fbUser => {
-        return this.fireQuery
-          .doc<User>(`users/${fbUser.uid}`)
-          .valueChanges()
-          .pipe(
-            switchMap(user => {
-              // If the user is new to blockframes and doesn't have an orgId,
-              // he's still able to sign up or sign in.
-              if (!user.orgId) {
-                return from([null]);
-              }
-              return this.fireQuery.fromQuery<OrganizationRights>(rightsActiveQuery(user.orgId));
-            })
-          );
+    return this.auth.user$.pipe(
+      switchMap(user => {
+        // If the user is new to blockframes and doesn't have an orgId,
+        // he's still able to sign up or sign in.
+        if (!user.orgId) {
+          return of(null);
+        }
+        return this.fireQuery.fromQuery<OrganizationRights>(rightsActiveQuery(user.orgId));
       })
     );
   }
@@ -58,10 +50,10 @@ export class RightsActiveGuard {
       this.subscription = this.query()
         .pipe(
           tap(entity => {
-            // If there's no entity, return and don't apply transaction as the user
-            // doesn't belong to an organization yet.
+            // If the entity is null, don't we don't set the store and
+            // use our fallback path to connect the user.
             if (!entity) {
-              return;
+              return this.router.parseUrl(this.urlFallback);
             }
             applyTransaction(() => {
               try {

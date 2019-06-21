@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrgMembersService, OrganizationQuery, Organization } from '../+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
+import { RightsQuery } from 'libs/rights/src/lib/+state';
 
 
 interface User {
@@ -21,10 +22,11 @@ export class OrgMembersShowComponent implements OnInit {
   public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public isSuperAdmin: boolean;
+  public isSuperAdmin: Observable<boolean>;
 
   constructor(
     private service: OrgMembersService,
+    private rightsQuery: RightsQuery,
     private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
@@ -32,7 +34,7 @@ export class OrgMembersShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isSuperAdmin = this.service.isSuperAdmin();
+    this.isSuperAdmin = this.rightsQuery.isSuperAdmin;
     this.addMemberForm = this.builder.group({
       user: null
     });

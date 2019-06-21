@@ -24,7 +24,7 @@
       </mat-card>
     </mat-list>
 
-    <mat-card *ngIf="!!isSuperAdmin">
+    <mat-card *ngIf="!!(isSuperAdmin | async)">
       <mat-card-header>
         <mat-card-title>Add Member</mat-card-title>
         <mat-card-subtitle *ngIf="!!disabled">(Only Super Admin can add a member)</mat-card-subtitle>
