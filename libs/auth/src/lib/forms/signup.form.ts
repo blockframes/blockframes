@@ -1,15 +1,15 @@
 import {
   EntityControl,
-  EntityRulesForm,
   PasswordControl,
   EmailControl,
-  checkPasswords
+  checkPasswords,
+  FormEntity
 } from '@blockframes/utils';
 import { ValidatorFn } from '@angular/forms';
 
 interface SignUp {
   email: string
-  password: string 
+  password: string
   confirm: string
 }
 
@@ -31,6 +31,8 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
   }
 }
 
+type SignupControl = ReturnType<typeof createSignupControls>;
+
 function createSignupValidators(validators?: any[]): ValidatorFn[]{
   if(validators && validators.length) {
     return validators;
@@ -39,7 +41,7 @@ function createSignupValidators(validators?: any[]): ValidatorFn[]{
   }
 }
 
-export class SignupForm extends EntityRulesForm<SignUp> {
+export class SignupForm extends FormEntity<SignUp, SignupControl> {
   constructor(data?: SignUp, validators?: any[]) {
     super(
       createSignupControls(data),

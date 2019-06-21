@@ -1,6 +1,6 @@
 import {
   EntityControl,
-  EntityRulesForm,
+  FormEntity,
   PasswordControl,
   EmailControl
 } from '@blockframes/utils';
@@ -26,7 +26,9 @@ function createSigninControls(entity: Partial<SignIn>): EntityControl<SignIn> {
   }
 }
 
-export class SigninForm extends EntityRulesForm<SignIn> {
+type SigninControl = ReturnType<typeof createSigninControls>;
+
+export class SigninForm extends FormEntity<SignIn, SigninControl> {
   constructor(data?: SignIn) {
     super(createSigninControls(data))
   }

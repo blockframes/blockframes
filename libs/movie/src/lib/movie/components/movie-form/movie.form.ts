@@ -1,4 +1,4 @@
-import { EntityControl, EntityForm, StringControl, YearControl } from '@blockframes/utils';
+import { EntityControl, StringControl, YearControl, FormEntity } from '@blockframes/utils';
 import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
@@ -46,7 +46,7 @@ function createMovie(params?: Partial<Movie>): Movie {
   } as Movie
 }
 
-function createMovieControls(entity?: Partial<Movie>): EntityControl<Movie> {
+function createMovieControls(entity?: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
     originalTitle: new StringControl(movie.originalTitle, false, [Validators.required]),
@@ -69,8 +69,10 @@ function createMovieControls(entity?: Partial<Movie>): EntityControl<Movie> {
   }
 }
 
+type MovieControl = ReturnType<typeof createMovieControls>
+
 @Injectable({ providedIn: 'root' })
-export class MovieForm extends EntityForm<Movie> {
+export class MovieForm extends FormEntity<Movie, MovieControl> {
   protected builder : FormBuilder;
   constructor() {
     super(createMovieControls());
@@ -82,7 +84,7 @@ export class MovieForm extends EntityForm<Movie> {
   //////////
 
   /* Getters for all form inputs */
-  public currentFormValue(attr: string, index?: number) {
+  public currentFormValue(attr: Extract<keyof Movie, string>, index?: number) {
     if (index !== undefined) {
       const formArray = this.get(attr) as FormArray;
       return formArray.controls[index] !== null ? formArray.controls[index].value : '' as String;

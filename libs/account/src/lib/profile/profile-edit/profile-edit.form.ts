@@ -1,7 +1,6 @@
 import { Validators } from '@angular/forms';
 import {
-  EntityControl,
-  EntityForm,
+  FormEntity,
   EmailControl,
   StringControl
 } from '@blockframes/utils';
@@ -9,7 +8,7 @@ import {
 interface Profile {
   uid: string
   email: string
-  firstName: string 
+  firstName: string
   lastName: string
   biography: string
 }
@@ -25,7 +24,7 @@ function createProfile(params?: Partial<Profile>): Profile {
   } as Profile
 }
 
-function createProfileControls(entity: Partial<Profile>): EntityControl<Profile> {
+function createProfileControls(entity: Partial<Profile>) {
   const profile = createProfile(entity);
   return {
     uid: new StringControl(profile.uid, true),
@@ -36,8 +35,9 @@ function createProfileControls(entity: Partial<Profile>): EntityControl<Profile>
   }
 }
 
+type ProfileControl = ReturnType<typeof createProfileControls>
 
-export class ProfileForm extends EntityForm<Profile> {
+export class ProfileForm extends FormEntity<Profile, ProfileControl> {
   constructor(data?: Profile) {
     super(createProfileControls(data))
   }

@@ -1,7 +1,6 @@
 import { FormControl } from '@angular/forms';
 import {
   emailValidators,
-  passwordValidators,
   stringValidators,
   yearValidators,
   ethereumPublicAddressValidators,
@@ -13,13 +12,6 @@ import {
 export class EmailControl extends FormControl{
   constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
     super({ value, disabled }, validators !== undefined ? validators : emailValidators);
-  }
-}
-
-/* Checks if input is a valid password */
-export class PasswordControl extends FormControl{
-  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : passwordValidators);
   }
 }
 

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import { PasswordForm } from '../forms/password.form';
+import { PasswordControl } from '@blockframes/utils';
 
 @Component({
   selector: 'key-manager-ask-password',
@@ -10,7 +10,7 @@ import { PasswordForm } from '../forms/password.form';
 })
 export class AskPasswordComponent implements OnInit {
 
-  form: PasswordForm;
+  form: PasswordControl;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -18,7 +18,7 @@ export class AskPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = new PasswordForm();
+    this.form = new PasswordControl();
   }
 
   cancel() {

@@ -1,13 +1,13 @@
 import {
   EntityControl,
-  EntityRulesForm,
+  FormEntity,
   PasswordControl,
   checkPasswords }
 from '@blockframes/utils';
 import { ValidatorFn } from '@angular/forms';
 
 interface Create {
-  password: string 
+  password: string
   confirm: string
 }
 
@@ -27,6 +27,8 @@ function createCreateControls(entity: Partial<Create>): EntityControl<Create> {
   }
 }
 
+type CreateControl = ReturnType<typeof createCreateControls>;
+
 function createCreateValidators(validators?: any[]): ValidatorFn[]{
   if(validators && validators.length) {
     return validators;
@@ -35,7 +37,7 @@ function createCreateValidators(validators?: any[]): ValidatorFn[]{
   }
 }
 
-export class CreateForm extends EntityRulesForm<Create> {
+export class CreateForm extends FormEntity<Create, CreateControl> {
   constructor(data?: Create, validators?: any[]) {
     super(
       createCreateControls(data),

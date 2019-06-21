@@ -6,12 +6,6 @@ export const emailValidators = [
   Validators.email
 ]
 
-export const passwordValidators = [
-  Validators.required,
-  Validators.minLength(rules.password.min),
-  Validators.maxLength(rules.password.max)
-];
-
 export const stringValidators = [
 
 ];
