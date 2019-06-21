@@ -12,124 +12,135 @@ import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol
 
 contract ERC1077 is KeyHolder, IERC1077, Initable {
     using ECDSA for bytes32;
-    using SafeMath for uint;
+    using SafeMath for uint256;
 
-    address payable public recoverAddress;
-    uint public lastNonce;
+    address payable private recoverAddress;
+    uint256 private lastNonce;
 
-    /* solium-disable-next-line no-empty-blocks */
-    constructor() KeyHolder(address(0x0)) public {} // this should never be called and is here only to satisfy the solc compiler
+    /**
+    * @dev This contract will always be deployed through a Create2 Factory,
+    * @dev thus, the constructor will never been include in the runtime byteCode.
+    * @dev This constructor below will never be executed or deployed on the blockchain.
+    * @dev We need to keep it in here, because otherwise the compiler will throw an error.
+    * @dev May be we will be able to remove the constructor if we modify KeyHolder.
+    */
+    constructor() KeyHolder(address(0x0)) public {} // solium-disable-line no-empty-blocks
 
-    // this function play the role of the "constructor",
-    // it can be called only once, and should be called before any other (non pure/view) functions
+    /**
+    * @dev This function play the role of the "constructor",
+    * @dev it can be called only once, it should NOT contains any parameters,
+    * @dev but every storage initialization should be hardcoded here,
+    * @dev after compilation we can dynamically modify those arguments just before the create2 deploy.
+    * @dev NOTE : here we use 0xdead solely because it's easier to find this particular string among the compiled byteCode.
+    */
     function init() public requireNotInit() {
         Initable.init();
-        this.addKey(address(0xdeAD00000000000000000000000000000000dEAd), 1); // ! WARNING CHANGE HARDCODED ADDRESS WITH USER KEY AT DEPLOY
-        recoverAddress = 0xdeAD00000000000000000000000000000000dEAd; // ! WARNING CHANGE HARDCODED ADDRESS AT DEPLOY
+
+        // "constructor" classical initialization
+        this.addKey(address(0xdeAD00000000000000000000000000000000dEAd), 1); // HARDCODED ADDRESS WILL BE DYNAMICALLY CHANGED BEFORE DEPLOY
+        recoverAddress = 0xdeAD00000000000000000000000000000000dEAd; // HARDCODED ADDRESS WILL BE DYNAMICALLY CHANGED BEFORE DEPLOY
     }
 
+    /**
+    * @dev Check wether or not a MetaTx can be executed.
+    * @dev The function will compute the MetaTx hash, and then check the signature
+    * @dev against the hash and the known pub keys.
+    * @dev PARAM : a MetaTx
+    * @return a boolean
+    */
     function canExecute(
-        address to,
-        uint256 value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        address gasToken,
-        uint gasLimit,
-        OperationType operationType,
-        bytes memory signatures) public view returns (bool)
-    {
+        address to, uint256 value, bytes memory data, uint256 nonce,    // tx
+        uint256 gasPrice, address gasToken, uint256 gasLimit,           // gas
+        OperationType operationType,                                    // staticcall/call/delegatecal
+        bytes memory signatures                                         // signatures
+    ) public view returns (bool) {
         bytes32 hash = calculateMessageHash(
-            address(this),
-            to,
-            value,
-            data,
-            nonce,
-            gasPrice,
-            gasToken,
-            gasLimit,
-            operationType).toEthSignedMessageHash();
+            address(this), to, value, data, nonce,  // tx
+            gasPrice, gasToken, gasLimit,           // gas
+            operationType                           // staticcall/call/delegatecal
+        ).toEthSignedMessageHash();
         return areSignaturesValid(signatures, hash);
     }
 
+    /**
+    * @dev Calculate a MetaTx's hash
+    * @dev PARAM : a MetaTx WITHOUT the signatures
+    * @return a bytes32 hash
+    */
     function calculateMessageHash(
-        address from,
-        address to,
-        uint256 value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        address gasToken,
-        uint gasLimit,
-        OperationType operationType) public pure returns (bytes32)
-    {
+        address from, address to, uint256 value, bytes memory data, uint256 nonce,  // tx
+        uint256 gasPrice, address gasToken, uint256 gasLimit,                       // gas
+        OperationType operationType                                                 // staticcall/call/delegatecal
+    ) public pure returns (bytes32) {
         return keccak256(
             abi.encodePacked(
-                from,
-                to,
-                value,
-                keccak256(data),
-                nonce,
-                gasPrice,
-                gasToken,
-                gasLimit,
-                uint(operationType)
-        ));
+                from, to, value, keccak256(data), nonce,    // tx
+                gasPrice, gasToken, gasLimit,               // gas
+                uint256(operationType)                      // staticcall/call/delegatecal
+            )
+        );
     }
 
+    /**
+    * @dev Compute the address of the signer of a MetaTx
+    * @dev PARAM : a MetaTx
+    * @return an eth address, if the MetaTx was multi-signed, this function return the 0x0 address
+    */
     function getSigner(
-        address from,
-        address to,
-        uint value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        address gasToken,
-        uint gasLimit,
-        OperationType operationType,
-        bytes memory signatures ) public pure returns (address)
-    {
+        address from, address to, uint256 value, bytes memory data, uint256 nonce,  // tx
+        uint256 gasPrice, address gasToken, uint256 gasLimit,                       // gas
+        OperationType operationType,                                                // staticcall/call/delegatecal
+        bytes memory signatures                                                     // signatures
+    ) public pure returns (address) {
         return calculateMessageHash(
-            from,
-            to,
-            value,
-            data,
-            nonce,
-            gasPrice,
-            gasToken,
-            gasLimit,
-            operationType).toEthSignedMessageHash().recover(signatures);
+            from, to, value, data, nonce,   // tx
+            gasPrice, gasToken, gasLimit,   // gas
+            operationType                   // staticcall/call/delegatecal
+        ).toEthSignedMessageHash().recover(signatures);
     }
 
+    /**
+    * @dev Ask the contract to execute a MetaTx
+    * @dev PARAM : a MetaTx
+    * @return a bytes32 hash
+    */
     function executeSigned(
-        address to,
-        uint256 value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        address gasToken,
-        uint gasLimit,
-        OperationType operationType,
-        bytes memory signatures) public requireInit() returns (bytes32)
-    {
+        address to, uint256 value, bytes memory data, uint256 nonce,    // tx
+        uint256 gasPrice, address gasToken, uint256 gasLimit,           // gas
+        OperationType operationType,                                    // staticcall/call/delegatecal
+        bytes memory signatures
+    ) public requireInit() returns (bytes32) {
+
+        // checks
         require(signatures.length != 0, "Invalid signatures");
         require(signatures.length % 65 == 0, "Invalid signatures");
         require(nonce == lastNonce, "Invalid nonce");
         require(canExecute(to, value, data, nonce, gasPrice, gasToken, gasLimit, operationType, signatures), "Invalid signature");
+
+        // execute
         uint256 startingGas = gasleft();
         bytes memory _data;
         bool success;
-        /* solium-disable-next-line security/no-call-value */
-        (success, _data) = to.call.value(value)(data);
+        // TODO should check operationType and use staticcall or delegatecall if needed
+        (success, _data) = to.call.value(value)(data); // solium-disable-line security/no-call-value
+        lastNonce++;
+
+        // event
         bytes32 messageHash = calculateMessageHash(address(this), to, value, data, nonce, gasPrice, gasToken, gasLimit, operationType);
         emit ExecutedSigned(messageHash, lastNonce, success);
-        lastNonce++;
+
+        // refund  // TODO no need for refund
         uint256 gasUsed = startingGas.sub(gasleft());
         refund(gasUsed, gasPrice, gasToken);
+
         return messageHash;
     }
 
-    function refund(uint256 gasUsed, uint gasPrice, address gasToken) private requireInit() {
+    /**
+    * @dev Refund the relayer with ETH or ERC20 token
+    * @dev PARAM : the gas elements of a MetaTx
+    */
+    function refund(uint256 gasUsed, uint256 gasPrice, address gasToken) private requireInit() {
         if (gasToken != address(0)) {
             ERC20 token = ERC20(gasToken);
             token.transfer(msg.sender, gasUsed.mul(gasPrice));
@@ -138,9 +149,14 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         }
     }
 
+    /**
+    * @dev Ask the contract to execute a MetaTx
+    * @dev PARAM : hash and all signatures (concatenate) of this hash
+    * @return a boolean
+    */
     function areSignaturesValid(bytes memory signatures, bytes32 dataHash) private view returns(bool) {
         // There cannot be an owner with address 0.
-        uint sigCount = signatures.length / 65;
+        uint256 sigCount = signatures.length / 65;
         address lastSigner = address(0);
         address signer;
         uint8 v;
@@ -165,8 +181,28 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         return true;
     }
 
+    /**
+    * @dev Selfdestruct, and send back all ETH to the recoverAddress.
+    * @dev Only the recoverAddress can call this function, so becareful when setting it in the "init()" function.
+    */
     function destroy() public requireInit() {
         require(msg.sender == recoverAddress, 'You cannot perform this action');
         selfdestruct(recoverAddress);
+    }
+
+    /**
+    * @dev recoverAddress getter
+    * @return an eth address
+    */
+    function getRecoverAddress() public view returns(address) {
+        return recoverAddress;
+    }
+
+    /**
+    * @dev lastNonce getter
+    * @return a uint256
+    */
+    function getLastNonce() public view returns(uint256) {
+        return lastNonce;
     }
 }
