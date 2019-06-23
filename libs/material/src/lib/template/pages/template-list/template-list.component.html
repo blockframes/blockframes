@@ -33,6 +33,6 @@
         (deleted)="deleteTemplate(template)"
       ></template-item>
     </div>
-    <template-empty *ngIf="!(hasTemplates$ | async)"></template-empty>
+    <template-empty *ngIf="org.templates.length < 1"></template-empty>
   </mat-expansion-panel>
 </section>

@@ -14,7 +14,6 @@ import { TemplateAddComponent } from '../../components/template-add/template-add
 })
 export class TemplateListComponent implements OnInit {
   public orgsWithTemplates$: Observable<Organization[]>;
-  public hasTemplates$: Observable<boolean>;
 
   constructor(
     private query: TemplateQuery,
@@ -24,7 +23,6 @@ export class TemplateListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.hasTemplates$ = this.query.hasTemplates$;
     this.orgsWithTemplates$ = this.query.orgsWithTemplates$;
   }
 

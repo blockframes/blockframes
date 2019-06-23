@@ -6,7 +6,6 @@ export * from './lib/movie/movie.module';
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
-export { HomeComponent } from './lib/movie/home/home.component';
 export { default as staticModels } from './lib/movie/staticModels';
 
 // Stakeholder exports
