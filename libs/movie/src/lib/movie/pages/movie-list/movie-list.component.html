@@ -74,6 +74,7 @@
           </mat-card-header>
         </mat-card>
       </article>
+      <movie-empty *ngIf="org.movies.length < 1"></movie-empty>
     </mat-expansion-panel>
   </div>
   <ng-template #empty>

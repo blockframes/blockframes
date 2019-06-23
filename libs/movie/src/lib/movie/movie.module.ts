@@ -39,6 +39,7 @@ import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/
 import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
+import { MovieEmptyComponent } from './components/movie-empty/movie-empty.component';
 
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
@@ -62,6 +63,7 @@ import { MovieForm } from './components/movie-form/movie.form';
     MovieFormTeamComponent,
     MovieFormPromotionalComponent,
     HomeEmptyComponent,
+    MovieEmptyComponent,
   ],
   imports: [
     CommonModule,
