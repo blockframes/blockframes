@@ -35,7 +35,7 @@
         <mat-form-field class="small-width small-margin">
           <input matInput formControlName="label" placeholder="Label">
         </mat-form-field>
-        <url-form-field class="small-margin" formControlName="url" placeholder="https://"></url-form-field>
+        <url-form-field class="small-width small-margin" formControlName="url" placeholder="https://"></url-form-field>
         <!-- <mat-form-field class="small-width small-margin">
           <input matInput formControlName="url" placeholder="https://">
         </mat-form-field> -->
@@ -54,12 +54,3 @@
     </button>
   </div>
 </div>
-
-
-<form [formGroup]="formGroup" (submit)="submit()">
-  <div>
-    <input matInput formControlName="label" placeholder="Label">
-    <url-form-field formControlName="url" placeholder="https://"></url-form-field>
-  </div>
-  <button type="submit">Submit</button>
-</form>

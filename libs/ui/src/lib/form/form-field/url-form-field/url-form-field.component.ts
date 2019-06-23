@@ -20,14 +20,8 @@ export class UrlFormFieldComponent implements ControlValueAccessor {
     ) {
     if (this.ngControl !== null) {
       this.ngControl.valueAccessor = this;
-      console.log(this.ngControl)
     }
-    this.ngControl.control.hasError('pattern')
   }
-
-  // get control() {
-  //   return this.form.get(this.controlName);
-  // }
 
   get value() {
     const value = this._value;
