@@ -19,8 +19,8 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
           map(movies => ({ ...org, movies }))
         )
       })
-      if (orgs.length === 0) return from([[]])
-      return combineLatest(orgsWithMovies$)
+      // Return an observable of empty array if the user hasn't organization
+      return orgs.length === 0 ? from([[]]) : combineLatest(orgsWithMovies$)
     })
   );
 
