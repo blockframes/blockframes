@@ -1,5 +1,4 @@
-import { EntityControl, StringControl, YearControl, FormEntity } from '@blockframes/utils';
-import { EntityControl, EntityForm, StringControl, YearControl, UrlControl } from '@blockframes/utils';
+import { EntityControl, StringControl, YearControl, FormEntity, UrlControl } from '@blockframes/utils';
 import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
@@ -159,7 +158,7 @@ export class MovieForm extends FormEntity<Movie, MovieControl> {
   }
 
   public addFormControl(value: FormControl | FormGroup, key: string): void {
-    (this.get(key) as FormArray).push(value);
+    this[key].push(value);
   }
 
   public removeFormControl(index: number, key: string): void {
