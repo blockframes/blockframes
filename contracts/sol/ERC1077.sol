@@ -17,22 +17,18 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
     address payable private recoverAddress;
     uint256 private lastNonce;
 
-    /**
-    * @dev This contract will always be deployed through a Create2 Factory,
-    * @dev thus, the constructor will never been include in the runtime byteCode.
-    * @dev This constructor below will never be executed or deployed on the blockchain.
-    * @dev We need to keep it in here, because otherwise the compiler will throw an error.
-    * @dev May be we will be able to remove the constructor if we modify KeyHolder.
-    */
+    /// @dev This contract will always be deployed through a Create2 Factory,
+    /// thus, the constructor will never been include in the runtime byteCode.
+    /// This constructor below will never be executed or deployed on the blockchain.
+    /// We need to keep it in here, because otherwise the compiler will throw an error.
+    /// May be we will be able to remove the constructor if we modify KeyHolder.
     constructor() KeyHolder(address(0x0)) public {} // solium-disable-line no-empty-blocks
 
-    /**
-    * @dev This function play the role of the "constructor",
-    * @dev it can be called only once, it should NOT contains any parameters,
-    * @dev but every storage initialization should be hardcoded here,
-    * @dev after compilation we can dynamically modify those arguments just before the create2 deploy.
-    * @dev NOTE : here we use 0xdead solely because it's easier to find this particular string among the compiled byteCode.
-    */
+    /// @dev This function play the role of the "constructor",
+    /// it can be called only once, it should NOT contains any parameters,
+    /// but every storage initialization should be hardcoded here,
+    /// after compilation we can dynamically modify those arguments just before the create2 deploy.
+    /// NOTE : here we use 0xdead solely because it's easier to find this particular string among the compiled byteCode.
     function init() public requireNotInit() {
         Initable.init();
 
@@ -41,13 +37,11 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         recoverAddress = 0xdeAD00000000000000000000000000000000dEAd; // HARDCODED ADDRESS WILL BE DYNAMICALLY CHANGED BEFORE DEPLOY
     }
 
-    /**
-    * @dev Check wether or not a MetaTx can be executed.
-    * @dev The function will compute the MetaTx hash, and then check the signature
-    * @dev against the hash and the known pub keys.
-    * @dev PARAM : a MetaTx
-    * @return a boolean
-    */
+    /// @dev Check wether or not a MetaTx can be executed.
+    /// The function will compute the MetaTx hash, and then check the signature
+    /// against the hash and the known pub keys.
+    /// PARAM : a MetaTx
+    /// @return a boolean
     function canExecute(
         address to, uint256 value, bytes memory data, uint256 nonce,    // tx
         uint256 gasPrice, address gasToken, uint256 gasLimit,           // gas
@@ -62,11 +56,9 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         return areSignaturesValid(signatures, hash);
     }
 
-    /**
-    * @dev Calculate a MetaTx's hash
-    * @dev PARAM : a MetaTx WITHOUT the signatures
-    * @return a bytes32 hash
-    */
+    /// @dev Calculate a MetaTx's hash
+    /// PARAM : a MetaTx WITHOUT the signatures
+    /// @return a bytes32 hash
     function calculateMessageHash(
         address from, address to, uint256 value, bytes memory data, uint256 nonce,  // tx
         uint256 gasPrice, address gasToken, uint256 gasLimit,                       // gas
@@ -81,11 +73,9 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         );
     }
 
-    /**
-    * @dev Compute the address of the signer of a MetaTx
-    * @dev PARAM : a MetaTx
-    * @return an eth address, if the MetaTx was multi-signed, this function return the 0x0 address
-    */
+    /// @dev Compute the address of the signer of a MetaTx
+    /// PARAM : a MetaTx
+    /// @return an eth address, if the MetaTx was multi-signed, this function return the 0x0 address
     function getSigner(
         address from, address to, uint256 value, bytes memory data, uint256 nonce,  // tx
         uint256 gasPrice, address gasToken, uint256 gasLimit,                       // gas
@@ -99,11 +89,9 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         ).toEthSignedMessageHash().recover(signatures);
     }
 
-    /**
-    * @dev Ask the contract to execute a MetaTx
-    * @dev PARAM : a MetaTx
-    * @return a bytes32 hash
-    */
+    /// @dev Ask the contract to execute a MetaTx
+    /// PARAM : a MetaTx
+    /// @return a bytes32 hash
     function executeSigned(
         address to, uint256 value, bytes memory data, uint256 nonce,    // tx
         uint256 gasPrice, address gasToken, uint256 gasLimit,           // gas
@@ -136,10 +124,8 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         return messageHash;
     }
 
-    /**
-    * @dev Refund the relayer with ETH or ERC20 token
-    * @dev PARAM : the gas elements of a MetaTx
-    */
+    /// @dev Refund the relayer with ETH or ERC20 token
+    /// PARAM : the gas elements of a MetaTx
     function refund(uint256 gasUsed, uint256 gasPrice, address gasToken) private requireInit() {
         if (gasToken != address(0)) {
             ERC20 token = ERC20(gasToken);
@@ -149,11 +135,9 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         }
     }
 
-    /**
-    * @dev Ask the contract to execute a MetaTx
-    * @dev PARAM : hash and all signatures (concatenate) of this hash
-    * @return a boolean
-    */
+    /// @dev Ask the contract to execute a MetaTx
+    /// PARAM : hash and all signatures (concatenate) of this hash
+    /// @return a boolean
     function areSignaturesValid(bytes memory signatures, bytes32 dataHash) private view returns(bool) {
         // There cannot be an owner with address 0.
         uint256 sigCount = signatures.length / 65;
@@ -181,27 +165,21 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         return true;
     }
 
-    /**
-    * @dev Selfdestruct, and send back all ETH to the recoverAddress.
-    * @dev Only the recoverAddress can call this function, so becareful when setting it in the "init()" function.
-    */
+    /// @dev Selfdestruct, and send back all ETH to the recoverAddress.
+    /// Only the recoverAddress can call this function, so becareful when setting it in the "init()" function.
     function destroy() public requireInit() {
         require(msg.sender == recoverAddress, 'You cannot perform this action');
         selfdestruct(recoverAddress);
     }
 
-    /**
-    * @dev recoverAddress getter
-    * @return an eth address
-    */
+    /// @dev recoverAddress getter
+    /// @return an eth address
     function getRecoverAddress() public view returns(address) {
         return recoverAddress;
     }
 
-    /**
-    * @dev lastNonce getter
-    * @return a uint256
-    */
+    /// @dev lastNonce getter
+    /// @return a uint256
     function getLastNonce() public view returns(uint256) {
         return lastNonce;
     }
