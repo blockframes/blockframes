@@ -33,6 +33,6 @@
         (deleted)="deleteTemplate(template)"
       ></template-item>
     </div>
-    <template-empty *ngIf="org.templates.length < 1"></template-empty>
+    <template-empty *ngIf="org.templates.length === 0"></template-empty>
   </mat-expansion-panel>
 </section>

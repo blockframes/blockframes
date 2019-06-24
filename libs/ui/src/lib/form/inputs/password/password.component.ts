@@ -22,11 +22,15 @@ export class PasswordComponent  {
     return this.form.get(this.name);
   }
 
-  public get minLength(): { requiredLength: number, actualLength: number } {
-    return this.control.errors.minlength;
+  public get minLength(): { requiredLength: number, actualLength: number } | undefined {
+    if (!this.control.hasError('minLength') && !!this.control.errors) {
+      return this.control.errors.minlength;
+    }
   }
 
-  public get maxLength(): { requiredLength: number, actualLength: number } {
-    return this.control.errors.maxlength;
+  public get maxLength(): { requiredLength: number, actualLength: number } | undefined {
+    if (!this.control.hasError('maxLength') && !!this.control.errors) {
+      return this.control.errors.maxlength;
+    }
   }
 }

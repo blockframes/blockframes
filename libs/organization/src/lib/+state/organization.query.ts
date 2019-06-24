@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization, OrganizationWithMovies } from './organization.model';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { combineLatest, Observable, from } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Injectable({
@@ -19,8 +19,8 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
           map(movies => ({ ...org, movies }))
         )
       })
-      // Return an observable of empty array if the user hasn't organization
-      return orgs.length === 0 ? from([[]]) : combineLatest(orgsWithMovies$)
+      // Return an observable of empty array if the user has no organization
+      return orgs.length === 0 ? of([]) : combineLatest(orgsWithMovies$)
     })
   );
 
@@ -35,5 +35,4 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   get form$() {
     return this.select(state => state.form);
   }
-
 }
