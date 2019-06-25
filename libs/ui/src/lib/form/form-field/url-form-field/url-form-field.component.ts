@@ -35,13 +35,13 @@ export class UrlFormFieldComponent implements ControlValueAccessor {
     }
   }
 
-  public addEvent(event) {
-    this.value = event.target.value;
+  public addEvent(value: string) {
+    this.value = value;
     this.propagateChange(this.value);
   }
 
   public writeValue(value: string) {
-    if (value !== undefined) {
+    if (value) {
       this.value = value;
       this.propagateChange(this.value);
     }

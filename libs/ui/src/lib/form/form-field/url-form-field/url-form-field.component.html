@@ -1,7 +1,7 @@
 <mat-form-field>
   <input
     [value]="value"
-    (change)="addEvent($event)"
+    (change)="addEvent($event.target.value)"
     type="text"
     matInput
     [placeholder]="placeholder"
