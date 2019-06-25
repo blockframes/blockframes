@@ -57,7 +57,8 @@ export const initRelayer = (config: Config): Relayer => {
 
   const getNonce = async() => { // TODO Ethers v5 will handle the nonce automatically, remove this after migration to v5
     const nonce = await wallet.getTransactionCount();
-    return nonce + (nonceOffset++);
+    nonceOffset++;
+    return nonce + nonceOffset;
   };
 
   return <Relayer>{
@@ -70,7 +71,11 @@ export const initRelayer = (config: Config): Relayer => {
   };
 };
 
-interface UserInfos { username: string; key: string, erc1077address: string };
+interface UserInfos {
+  username: string;
+  key: string,
+  erc1077address: string
+};
 
 export const relayerCreateLogic = async (
   { username, key, erc1077address }: UserInfos,
@@ -85,13 +90,9 @@ export const relayerCreateLogic = async (
 
   try {
     utils.getAddress(key);
-  } catch (error) {
-    throw new Error('"key" should be a valid ethereum address !');
-  }
-  try {
     utils.getAddress(erc1077address);
   } catch (error) {
-    throw new Error('"erc1077address" should be a valid ethereum address !');
+    throw new Error('"key" and/or "erc1077address" should be a valid ethereum address !');
   }
 
   // compute needed values
@@ -114,11 +115,13 @@ export const relayerCreateLogic = async (
     */
 
     const ensWorkFlow = async () => {
-      if (await relayer.wallet.provider.resolveName(fullName) !== getAddress(erc1077address)) { // if name is already link to the good address : skip ensWorkflow
+      const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
+      if (retreivedAddress !== getAddress(erc1077address)) { // if name is already link to the good address : skip ensWorkflow
         const result: {[key: string]: string | undefined } = {};
 
         // (A) register the user ens username
-        if (await relayer.registry.owner(utils.namehash(fullName)) !== relayer.wallet.address) { // if name is already registered : skip registration
+        const nameOWner = await relayer.registry.owner(utils.namehash(fullName));
+        if (nameOWner !== relayer.wallet.address) { // if name is already registered : skip registration
           const registerTx: TxResponse = await relayer.registry.setSubnodeOwner(
             relayer.namehash,
             hash,
@@ -128,12 +131,11 @@ export const relayerCreateLogic = async (
           console.log(`(A) tx sent (register) : ${registerTx.hash}`); // display tx to firebase logging
           result['register'] = registerTx.hash;
           await registerTx.wait();
-        } else {
-          console.log('(A) skipping register');
         }
 
         // (B) set a resolver to the ens username : require waiting for (A)
-        if (await relayer.registry.resolver(utils.namehash(fullName)) !== relayer.resolver.address) { // if a resolver is already set : skip set resolver
+        const resolverAddress = await relayer.registry.resolver(utils.namehash(fullName))
+        if (resolverAddress !== relayer.resolver.address) { // if a resolver is already set : skip set resolver
           const resolverTx: TxResponse = await relayer.registry.setResolver(
             utils.namehash(fullName),
             relayer.resolver.address,
@@ -142,8 +144,6 @@ export const relayerCreateLogic = async (
           console.log(`(B) tx sent (setResolver) : ${resolverTx.hash}`); // display tx to firebase logging
           result['resolver'] = resolverTx.hash;
           await resolverTx.wait();
-        } else {
-          console.log('(B) skipping resolver');
         }
 
         // (C) link the erc1077 to the ens username : require waiting for (B)
@@ -173,7 +173,8 @@ export const relayerCreateLogic = async (
       }
 
       // (E) deploy ERC1077 : require waiting for (D)
-      if (await relayer.wallet.provider.getCode(erc1077address) === '0x') { // if there is code at this address : skip deploy
+      const codeAtAddress = await relayer.wallet.provider.getCode(erc1077address);
+      if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
         const deployTx: TxResponse = await relayer.contractFactory.deploy(hash, { nonce: await relayer.getNonce() });
         console.log(`(E) tx sent (deploy) : ${deployTx.hash}`); // display tx to firebase logging
         result['deploy'] = deployTx.hash;

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { providers, getDefaultProvider, utils, Contract } from 'ethers';
 import { toASCII } from 'punycode';
 import { baseEnsDomain, network, factoryContract } from '@env';
-import { abi as FACTROY_ABI } from '../../../../../../contracts/build/Factory2.json';
+import { Factory2 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
@@ -57,7 +57,9 @@ export class WalletService {
     const isLoading = this.keyManagerQuery.getValue().loading;
     if(!publicKey) {
       if(isLoading){
-        publicKey = await this.keyManagerQuery.waitForFirstKeyOfUser(ensDomain).then(key => key.address);
+        publicKey = await this.keyManagerQuery
+          .waitForFirstKeyOfUser(ensDomain)
+          .then(key => key.address);
       } else {
         try{
           publicKey = this.keyManagerQuery.getMainKeyOfUser(ensDomain).address;
@@ -80,7 +82,7 @@ export class WalletService {
     const factoryAddress = await this.provider.resolveName(factoryContract);
 
     // retreive init code
-    const factory2 = new Contract(factoryAddress, FACTROY_ABI, this.provider);
+    const factory2 = new Contract(factoryAddress, Factory2.abi, this.provider);
     const initCode = await factory2.getInitCode();
 
     // CREATE2 address
