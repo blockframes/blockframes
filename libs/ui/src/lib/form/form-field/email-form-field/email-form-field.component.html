@@ -1,9 +1,21 @@
-<mat-form-field [formGroup]="form">
-  <input matInput type="email" placeholder="Email" formControlName="email" required />
-  <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">
-    Please enter a <strong>valid</strong> email address.
-  </mat-error>
-  <mat-error *ngIf="form.get('email').hasError('required')">
-    Email is <strong>required</strong>
-  </mat-error>
+<mat-form-field>
+  <input
+    (change)="addEvent($event)"
+    (click)="addEvent($event)"
+    matInput
+    type="email"
+    [placeholder]="placeholder"
+    [required]="required"
+  />
+  <div *ngIf="ngControl.control">
+    <mat-error
+      *ngIf="ngControl.control.hasError('email')"
+    >
+      Please enter a <strong>valid</strong> email address.
+    </mat-error>
+    <mat-error *ngIf="ngControl.control.hasError('required') && ngControl.control.touched">
+      Email is <strong>required</strong>
+    </mat-error>
+  </div>
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
 </mat-form-field>
