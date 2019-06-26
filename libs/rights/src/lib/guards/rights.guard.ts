@@ -32,15 +32,18 @@ export class RightsGuard {
   ) {}
 
   isUrlTree(result: OrganizationRights | UrlTree) {
+    console.log("result: ", result)
+    console.log("route: ", this.router.url)
     return result instanceof UrlTree;
   }
 
   canActivate() {
     return new Promise(res => {
+      // TODO: handle cases where we create multiple instances of subscription without unsubscribing
       this.subscription = this.auth.user$
         .pipe(
           switchMap(user => {
-            if (!user.orgId) this.router.parseUrl('/layout/welcome');
+            if (!user.orgId) throw new Error('User has no orgId');
             return this.fireQuery.fromQuery(rightsQuery(user.orgId));
           }),
           tap(rights => {
@@ -48,14 +51,15 @@ export class RightsGuard {
               this.store.upsert(rights[this.store.idKey], rights);
               this.store.setActive(rights[this.store.idKey]);
             });
-          }),
-          catchError(error =>of(this.router.parseUrl('/layout'))
-          )
+          })
         )
         .subscribe({
           next: (result: OrganizationRights | UrlTree) =>
             this.isUrlTree(result) ? res(result) : res(!!result),
-          error: err => this.router.parseUrl('/layout')
+          error: (e) => {
+            console.log("error", e)
+            res(this.router.parseUrl('/layout/welcome'))
+          }
         });
     });
   }
