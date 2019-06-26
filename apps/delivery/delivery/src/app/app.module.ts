@@ -33,6 +33,7 @@ import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationModule } from 'libs/notification/notification.module';
+import { LandingPageModule } from '@blockframes/ui';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -94,6 +95,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
+    LandingPageModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

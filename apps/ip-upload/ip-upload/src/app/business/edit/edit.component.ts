@@ -53,7 +53,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.persistForm.setForm(this.form);
 
     this.ip = this.query.getActive() as Ip;
-    
+
     if (this.ip !== undefined ) {
       this.form.setValue(createIp(this.ip));
     } else {
@@ -117,7 +117,7 @@ export class EditComponent implements OnInit, OnDestroy {
     }
     await this.service.update(this.ip.id, this.form.value);
     this.snackBar.open(`Updated ${this.form.get('title').value}`, 'close', {duration: 1000});
-    this.router.navigate(['/layout/ip', this.ip.id]);
+    this.router.navigate(['/layout/with-org-segment/ip', this.ip.id]);
   }
 
   /** Clear current form with cancellation */

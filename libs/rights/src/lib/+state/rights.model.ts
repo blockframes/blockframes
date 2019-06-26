@@ -1,11 +1,11 @@
 export interface OrganizationRights {
   orgId: string;
   superAdmin: string;
-  admins: string [];
-  canCreate: string [];
-  canRead: string [];
-  canUpdate: string [];
-  canDelete: string [];
+  admins: string[];
+  canCreate: string[];
+  canRead: string[];
+  canUpdate: string[];
+  canDelete: string[];
   userAppsRights?: AppRights[];
   userDocsRights?: UserDocRights[];
   orgDocsRights?: OrgDocRights[];

@@ -160,7 +160,7 @@ function createSignatureNotifications(
       return prepareNotification({
         message,
         userId,
-        path: `/layout/${delivery.movieId}/${delivery.id}/view`,
+        path: `/layout/with-org-segment/${delivery.movieId}/${delivery.id}/view`,
         docID: { id: delivery.id, type: 'delivery' }
       });
     });

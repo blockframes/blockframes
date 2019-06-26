@@ -21,7 +21,7 @@ export class TemplateAddComponent {
   public addTemplate(templateName: string) {
     const templateId = this.service.addTemplate(templateName, this.data.org);
     this.close();
-    this.router.navigate([`layout/templates/${templateId}`])
+    this.router.navigate([`layout/with-org-segment/templates/${templateId}`])
   }
 
   public close(): void {

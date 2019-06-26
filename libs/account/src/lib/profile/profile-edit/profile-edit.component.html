@@ -1,6 +1,6 @@
 <main testId="profileEdit">
   <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-    <button mat-icon-button routerLink="/layout/account/profile/view" color="primary">
+    <button mat-icon-button routerLink="/layout/with-org-segment/account/profile/view" color="primary">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <form [formGroup]="accountForm">
@@ -26,7 +26,7 @@
       </mat-form-field>
     </form>
     <div>
-      <button mat-raised-button routerLink="/layout/account/profile/view">Cancel</button>
+      <button mat-raised-button routerLink="/layout/with-org-segment/account/profile/view">Cancel</button>
       <button mat-raised-button color="primary" (click)="updateProfile()">Save</button>
       <button mat-raised-button color="warn" (click)="deleteAccount()">Delete my account</button>
     </div>

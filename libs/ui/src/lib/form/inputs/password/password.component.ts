@@ -11,8 +11,8 @@ import { ErrorStateMatcher } from '@angular/material';
 export class PasswordComponent  {
 
   @Input() form: FormGroup;
-  @Input() showHint = true;
   @Input() name = 'password';
+  @Input() showHint = true;
   @Input() placeholder = 'Password';
   @Input() matcher: ErrorStateMatcher;
 
@@ -20,6 +20,10 @@ export class PasswordComponent  {
 
   public get control() {
     return this.form.get(this.name);
+  }
+
+  public get controlExists() {
+    return this.control.hasError('minLength') || this.control.hasError('maxLength') ? true : false;
   }
 
   public get minLength(): { requiredLength: number, actualLength: number } | undefined {

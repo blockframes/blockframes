@@ -26,11 +26,11 @@ export interface OrganizationWithMovies extends Organization {
 export interface OrganizationRights {
   orgId: string;
   superAdmin: string;
-  canCreate: string [];
-  canRead: string [];
-  canUpdate: string [];
-  canDelete: string [];
-  admins: string [];
+  canCreate: string[];
+  canRead: string[];
+  canUpdate: string[];
+  canDelete: string[];
+  admins: string[];
 }
 
 /**

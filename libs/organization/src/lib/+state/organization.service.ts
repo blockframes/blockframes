@@ -51,7 +51,6 @@ export class OrganizationService {
 
     this.db.firestore
       .runTransaction(transaction => {
-
         const promises = [
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
@@ -66,11 +65,9 @@ export class OrganizationService {
             return transaction.set(orgApp.ref, appRights);
           })
         ]
-
         return Promise.all(promises);
       })
       .catch(error => {throw Error(error)});
-
     return orgId;
   }
 

@@ -37,7 +37,6 @@ export interface AuthState {
 
 export function createUser(user: Partial<User> = {}) {
   return {
-    orgId: '',
     ...user
   } as User;
 }

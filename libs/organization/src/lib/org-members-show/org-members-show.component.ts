@@ -22,7 +22,7 @@ export class OrgMembersShowComponent implements OnInit {
   public org$: Observable<Organization>;
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public isSuperAdmin: Observable<boolean>;
+  public isSuperAdmin$: Observable<boolean>;
 
   constructor(
     private service: OrgMembersService,
@@ -34,9 +34,10 @@ export class OrgMembersShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isSuperAdmin = this.rightsQuery.isSuperAdmin;
+    this.isSuperAdmin$ = this.rightsQuery.isSuperAdmin$;
     this.addMemberForm = this.builder.group({
-      user: null
+      user: null,
+      role: ''
     });
     this.mailsOptions = [];
     this.org$ = this.orgQuery.selectActive();

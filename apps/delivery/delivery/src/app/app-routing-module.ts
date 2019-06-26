@@ -8,8 +8,9 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationListGuard } from '@blockframes/organization';
-import { RightsActiveGuard } from '@blockframes/rights'
+import { OrganizationListGuard, OrgFormComponent } from '@blockframes/organization';
+import { RightsGuard } from '@blockframes/rights'
+import { WelcomeComponent } from 'libs/ui/src/lib/landing-page/welcome.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -20,31 +21,64 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard, OrganizationListGuard, RightsActiveGuard],
-    canDeactivate: [OrganizationListGuard, RightsActiveGuard],
+    canActivate: [AuthGuard, OrganizationListGuard],
+    canDeactivate: [OrganizationListGuard],
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
-        path: 'organization',
-        loadChildren: '@blockframes/organization#OrganizationModule'
+        path: '',
+        redirectTo: 'with-org-segment',
+        pathMatch: 'full'
       },
       {
-        path: 'account',
-        loadChildren: '@blockframes/account#AccountModule'
+        path: 'with-org-segment', // Temporary name until we find a better one
+        canActivate: [RightsGuard],
+        canDeactivate: [RightsGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'home',
+            pathMatch: 'full'
+          },
+          {
+            path: 'organization',
+            loadChildren: '@blockframes/organization#OrganizationModule'
+          },
+          {
+            path: 'account',
+            loadChildren: '@blockframes/account#AccountModule'
+          },
+          {
+            path: 'home',
+            loadChildren: '@blockframes/movie#MovieModule'
+          },
+          { path: 'templates',
+            loadChildren: '@blockframes/template#TemplateModule'
+            // TODO: remove this in favor of dynamic imports when Angular 8 is live
+          },
+          {
+            path: ':movieId',
+            canActivate: [MovieActiveGuard],
+            canDeactivate: [MovieActiveGuard],
+            loadChildren: '@blockframes/material#DeliveryModule'
+          }
+        ]
       },
       {
-        path: 'home',
-        loadChildren: '@blockframes/movie#MovieModule'
-      },
-      { path: 'templates',
-        loadChildren: '@blockframes/template#TemplateModule'
-        // TODO: remove this in favor of dynamic imports when Angular 8 is live
-      },
-      {
-        path: ':movieId',
-        canActivate: [MovieActiveGuard],
-        canDeactivate: [MovieActiveGuard],
-        loadChildren: '@blockframes/material#DeliveryModule'
+        path: 'welcome',
+        children: [
+          {
+            path: '',
+            component: WelcomeComponent
+          },
+          {
+            path: 'create-organization',
+            component: OrgFormComponent
+          },
+          // {
+          //   path: 'join-organization',
+          //   component: OrgJoinComponent
+          // }
+        ]
       }
     ]
   },

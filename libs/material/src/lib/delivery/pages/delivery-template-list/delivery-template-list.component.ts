@@ -35,12 +35,12 @@ export class DeliveryTemplateListComponent implements OnInit {
     }
 
     const deliveryId = await this.deliveryService.addDelivery(templateId);
-    this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
+    this.router.navigate([`layout/with-org-segment/${this.movieId}/${deliveryId}/settings`]);
   }
 
   public async useMovieAsTemplate() {
     const deliveryId = await this.deliveryService.addDeliveryWithMovieMaterials();
-    this.router.navigate([`layout/${this.movieId}/${deliveryId}/settings`]);
+    this.router.navigate([`layout/with-org-segment/${this.movieId}/${deliveryId}/settings`]);
   }
 
 }
