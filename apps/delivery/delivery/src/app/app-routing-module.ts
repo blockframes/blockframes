@@ -26,7 +26,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'with-org-segment',
+        redirectTo: 'with-org-segment', // Temporary name until we find a better one
         pathMatch: 'full'
       },
       {

@@ -62,7 +62,7 @@ export class OrgFormComponent implements OnInit, OnDestroy {
     }
 
     const id = await this.service.add(this.form.value, await this.user.uid);
-    this.router.navigate(['../', id], { relativeTo: this.route });
+    this.router.navigate(['/layout']);
 
     this.snackBar.open(`Created ${this.form.get('name').value}`, 'close', { duration: 1000 });
     this.form.reset();
