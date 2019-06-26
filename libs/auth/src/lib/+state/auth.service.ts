@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthStore, User, createUser } from './auth.store';
-import { switchMap, takeWhile} from 'rxjs/operators';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { FireQuery } from '@blockframes/utils';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,7 +12,8 @@ export class AuthService {
     private store: AuthStore,
     private afAuth: AngularFireAuth,
     private wallet: WalletService,
-    private db: FireQuery
+    private db: FireQuery,
+    private router: Router
   ) {}
 
   //////////
@@ -26,7 +27,8 @@ export class AuthService {
 
   public async signin(email: string, password: string) {
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    this.subscribeOnUser();
+    // this.subscribeOnUser();
+    this.router.navigate(['layout']);
 
      // TODO MOVE IN WALLET ISSUE #315
     // this.initWallet(email);
@@ -64,17 +66,6 @@ export class AuthService {
   //////////
   // USER //
   //////////
-  /** Listen on user changes */
-  public subscribeOnUser() {
-    this.afAuth.authState.pipe(
-      takeWhile(user => !!user),
-      switchMap(({ uid }) => this.db.doc<User>(`users/${uid}`).valueChanges()),
-    ).subscribe(user => {
-      this.store.update({ user });
-      // this.initWallet(user.email); // TODO MOVE IN WALLET ISSUE #315
-    });
-  }
-
   /** Create a user based on firebase user */
   public create({ email, uid }: firebase.User) {
     const user = createUser({ email, uid })

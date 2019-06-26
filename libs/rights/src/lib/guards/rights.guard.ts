@@ -5,7 +5,6 @@ import { Router, UrlTree } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
 import { Subscription } from 'rxjs';
-import { applyTransaction } from '@datorama/akita';
 
 export const rightsQuery = (orgId: string): Query<OrganizationRights> => ({
   path: `rights/${orgId}`,
@@ -44,16 +43,10 @@ export class RightsGuard {
             if (!user.orgId) throw new Error('User has no orgId');
             return this.fireQuery.fromQuery(rightsQuery(user.orgId));
           }),
-          tap(rights => {
-            applyTransaction(() => {
-              this.store.upsert(rights[this.store.idKey], rights);
-              this.store.setActive(rights[this.store.idKey]);
-            });
-          })
+          tap(rights => this.store.upsert(rights[this.store.idKey], rights))
         )
         .subscribe({
-          next: (result: OrganizationRights | UrlTree) =>
-            this.isUrlTree(result) ? res(result) : res(!!result),
+          next: (result: OrganizationRights) => res(!!result),
           error: () => res(this.router.parseUrl('/layout/welcome'))
         });
     });
