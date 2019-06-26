@@ -89,7 +89,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   private deleteDelivery() {
     this.service.deleteDelivery();
-    this.router.navigate([`/layout/with-org-segment/${this.movieQuery.getActiveId()}/list`]);
+    this.router.navigate([`/layout/o/${this.movieQuery.getActiveId()}/list`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
 

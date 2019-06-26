@@ -58,7 +58,7 @@ export class DeliverySettingsEditableComponent implements OnInit {
   }
 
   public saveSettings(deliveryId: string) {
-    this.router.navigate([`layout/with-org-segment/${this.movieQuery.getActiveId()}/${deliveryId}/edit`]);
+    this.router.navigate([`layout/o/${this.movieQuery.getActiveId()}/${deliveryId}/edit`]);
     this.snackBar.open('Settings saved.', 'Close', {duration: 2000,});
   }
 }

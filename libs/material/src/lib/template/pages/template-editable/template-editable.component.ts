@@ -74,7 +74,7 @@ export class TemplateEditableComponent implements OnInit {
   private deleteTemplate(id: string, name: string) {
     this.service.deleteTemplate(id);
     this.snackBar.open(`Template "${name}" has been deleted.`, 'close', { duration: 2000 });
-    this.router.navigate(['layout/with-org-segment/templates/list']);
+    this.router.navigate(['layout/o/templates/list']);
   }
 
   public openUpdateForm(material) {

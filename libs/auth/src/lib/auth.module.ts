@@ -17,8 +17,8 @@ import { AuthRootComponent } from './root/root.component';
 import { UiFormModule } from '@blockframes/ui'
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'connection', pathMatch: 'full' },
-  { path: 'connection', component: AuthRootComponent }
+  { path: '', redirectTo: 'connexion', pathMatch: 'full' },
+  { path: 'connexion', component: AuthRootComponent }
 ];
 
 @NgModule({

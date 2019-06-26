@@ -4,11 +4,13 @@ import { createOrganization, Organization, OrgMember } from './organization.mode
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
 import { App, initializeAppRights, initializeOrgRights } from '@blockframes/rights';
+import { AuthStore, User } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   constructor(
     private store: OrganizationStore,
+    private authStore: AuthStore,
     private db: FireQuery
   ) {}
 
@@ -39,14 +41,14 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (rights, apps permissions, user...).
    */
-  public async add(org: Organization, userId: string): Promise<string> {
+  public async add(org: Organization, user: User): Promise<string> {
     const orgId: string = this.db.createId();
-    const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [userId] });
+    const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
-    const orgRights = initializeOrgRights({orgId, superAdmin: userId});
+    const orgRights = initializeOrgRights({orgId, superAdmin: user.uid});
     const orgRightsDoc = this.db.doc(`rights/${orgId}`);
-    const userDoc = this.db.doc(`users/${userId}`);
+    const userDoc = this.db.doc(`users/${user.uid}`);
     const apps : App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore ]
 
     this.db.firestore
@@ -55,7 +57,7 @@ export class OrganizationService {
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
           // Set the new organization in rights collection.
-          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: userId, ...orgRights }),
+          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: user.uid, ...orgRights }),
           // Update user document with the new organization id.
           transaction.update(userDoc.ref, { orgId }),
           // Initialize apps permissions documents in organization apps sub-collection.
@@ -67,7 +69,8 @@ export class OrganizationService {
         ]
         return Promise.all(promises);
       })
-      .catch(error => {throw Error(error)});
+      .catch(error => console.error(error));
+    this.authStore.updateUser({...user, ...{orgId}})
     return orgId;
   }
 

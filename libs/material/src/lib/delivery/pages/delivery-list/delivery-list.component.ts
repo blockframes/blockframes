@@ -31,8 +31,8 @@ export class DeliveryListComponent implements OnInit {
   public async selectDelivery(delivery: Delivery, movieId: string) {
     const validated = await this.service.isDeliveryValidated(delivery.id);
     validated
-      ? this.router.navigate([`layout/with-org-segment/${movieId}/${delivery.id}/view`])
-      : this.router.navigate([`layout/with-org-segment/${movieId}/${delivery.id}/edit`]);
+      ? this.router.navigate([`layout/o/${movieId}/${delivery.id}/view`])
+      : this.router.navigate([`layout/o/${movieId}/${delivery.id}/edit`]);
   }
 
 }

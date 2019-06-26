@@ -30,7 +30,7 @@
         <mat-card *ngFor="let movie of org.movies" class="movie-card">
           <div class="img-container clickable-item">
             <ng-container *ngIf="movie.poster; else defaultPoster">
-              <a [routerLink]="['/layout/with-org-segment', movie.id]">
+              <a [routerLink]="['/layout/o', movie.id]">
                 <img
                   mat-card-image
                   [src]="movie.poster"
@@ -39,7 +39,7 @@
               </a>
             </ng-container>
             <ng-template #defaultPoster>
-              <a [routerLink]="['/layout/with-org-segment', movie.id]">
+              <a [routerLink]="['/layout/o', movie.id]">
                 <img
                   class="mat-card-image"
                   src="/assets/images/default-movie-poster.png"
@@ -69,7 +69,7 @@
               <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
             </mat-menu>
           </div>
-          <a [routerLink]="['/layout/with-org-segment', movie.id, 'list']">
+          <a [routerLink]="['/layout/o', movie.id, 'list']">
             <mat-card-header class="clickable-item">
               <mat-card-title>
                 {{ movie.title.original}}

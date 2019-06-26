@@ -117,7 +117,7 @@ export class EditComponent implements OnInit, OnDestroy {
     }
     await this.service.update(this.ip.id, this.form.value);
     this.snackBar.open(`Updated ${this.form.get('title').value}`, 'close', {duration: 1000});
-    this.router.navigate(['/layout/with-org-segment/ip', this.ip.id]);
+    this.router.navigate(['/layout/o/ip', this.ip.id]);
   }
 
   /** Clear current form with cancellation */

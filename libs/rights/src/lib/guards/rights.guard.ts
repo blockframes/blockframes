@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { FireQuery, Query } from '@blockframes/utils';
 import { OrganizationRights, RightsStore } from '../+state';
 import { Router, UrlTree } from '@angular/router';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
-import { Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { applyTransaction } from '@datorama/akita';
 
 export const rightsQuery = (orgId: string): Query<OrganizationRights> => ({
@@ -32,8 +32,6 @@ export class RightsGuard {
   ) {}
 
   isUrlTree(result: OrganizationRights | UrlTree) {
-    console.log("result: ", result)
-    console.log("route: ", this.router.url)
     return result instanceof UrlTree;
   }
 
@@ -56,10 +54,7 @@ export class RightsGuard {
         .subscribe({
           next: (result: OrganizationRights | UrlTree) =>
             this.isUrlTree(result) ? res(result) : res(!!result),
-          error: (e) => {
-            console.log("error", e)
-            res(this.router.parseUrl('/layout/welcome'))
-          }
+          error: () => res(this.router.parseUrl('/layout/welcome'))
         });
     });
   }

@@ -26,11 +26,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'with-org-segment', // Temporary name until we find a better one
+        redirectTo: 'o', // Temporary name until we find a better one
         pathMatch: 'full'
       },
       {
-        path: 'with-org-segment', // Temporary name until we find a better one
+        path: 'o', // Temporary name until we find a better one
         canActivate: [RightsGuard],
         canDeactivate: [RightsGuard],
         children: [
