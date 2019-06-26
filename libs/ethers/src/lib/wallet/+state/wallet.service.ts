@@ -57,9 +57,8 @@ export class WalletService {
     const isLoading = this.keyManagerQuery.getValue().loading;
     if(!publicKey) {
       if(isLoading){
-        publicKey = await this.keyManagerQuery
-          .waitForFirstKeyOfUser(ensDomain)
-          .then(key => key.address);
+        const key = await this.keyManagerQuery.waitForFirstKeyOfUser(ensDomain);
+        const pubKey = key.address;
       } else {
         try{
           publicKey = this.keyManagerQuery.getMainKeyOfUser(ensDomain).address;
