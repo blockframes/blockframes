@@ -15,6 +15,9 @@ export class UrlFormFieldComponent implements ControlValueAccessor {
   @Input() required = false;
   private _value = "";
 
+  private onTouch: (value: string) => void = () => {};
+  private onChange: (value: string) => void = () => {};
+
   constructor(
     @Optional() @Self() public ngControl: NgControl,
     ) {
@@ -29,29 +32,31 @@ export class UrlFormFieldComponent implements ControlValueAccessor {
   }
 
   set value(value: string) {
-    if (value) {
+    if (value !== undefined) {
       this._value = value;
-      this.propagateChange(this._value);
+      this.onChange(this._value);
+      this.onTouch(this._value);
     }
   }
 
-  public addEvent(value: string) {
-    this.value = value;
-    this.propagateChange(this.value);
+  public addEvent(event: any) {
+    event.stopPropagation();
+    this.value = event.target.value;
+    this.onChange(this.value);
   }
 
   public writeValue(value: string) {
     if (value) {
       this.value = value;
-      this.propagateChange(this.value);
+      this.onChange(this.value);
     }
   }
 
-  public propagateChange = (_: any) => {};
-
-  public registerOnChange(fn) {
-    this.propagateChange = fn;
+  public registerOnChange(fn: (value: string) => void) {
+    this.onChange = fn;
   }
 
-  public registerOnTouched() {}
+  public registerOnTouched(fn: (value: string) => void) {
+    this.onTouch = fn;
+  }
 }

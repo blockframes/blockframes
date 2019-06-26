@@ -1,14 +1,15 @@
 <mat-form-field>
   <input
     [value]="value"
-    (change)="addEvent($event.target.value)"
+    (change)="addEvent($event)"
+    (click)="addEvent($event)"
     type="text"
     matInput
     [placeholder]="placeholder"
     [required]="required"
   />
   <div *ngIf="ngControl.control">
-    <mat-error *ngIf="ngControl.control.hasError('required')">
+    <mat-error *ngIf="ngControl.control.hasError('required') && ngControl.control.touched">
       Url is <strong>required</strong>
     </mat-error>
     <mat-error *ngIf="ngControl.control.hasError('pattern')"> Invalid pattern. </mat-error>
