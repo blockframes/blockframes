@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity } from '@datorama/akita';
-import { OrganizationRights } from './rights.model';
-import { RightsState, RightsStore } from './rights.store';
+import { Query } from '@datorama/akita';
+import { RightsStore, RightsState } from './rights.store';
 import { AuthQuery } from '@blockframes/auth';
-import { map } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RightsQuery extends QueryEntity<RightsState, OrganizationRights> {
+export class RightsQuery extends Query<RightsState> {
   constructor(
     protected store: RightsStore,
     private auth: AuthQuery
@@ -19,8 +17,6 @@ export class RightsQuery extends QueryEntity<RightsState, OrganizationRights> {
 
   /** Checks if the connected user is the Super Admin of his organization */
   public get isSuperAdmin$(): Observable<boolean> {
-    return this.selectActive().pipe(
-      map(({ superAdmin }) => superAdmin === this.auth.userId)
-    )
+    return this.select(state => state.superAdmin === this.auth.userId);
   }
 }

@@ -43,7 +43,7 @@ export class RightsGuard {
             if (!user.orgId) throw new Error('User has no orgId');
             return this.fireQuery.fromQuery(rightsQuery(user.orgId));
           }),
-          tap(rights => this.store.upsert(rights[this.store.idKey], rights))
+          tap(rights => this.store.update(rights))
         )
         .subscribe({
           next: (result: OrganizationRights) => res(!!result),

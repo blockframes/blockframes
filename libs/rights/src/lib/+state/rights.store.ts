@@ -1,20 +1,31 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { OrganizationRights } from './rights.model';
 
-export interface RightsState extends EntityState<OrganizationRights>, ActiveState<string> {}
 
-const initialState = {
-  active: null
-};
+export type RightsState = OrganizationRights;
+
+const initialState: RightsState = {
+  orgId: null,
+  superAdmin: null,
+  admins: [],
+  canCreate: [],
+  canRead: [],
+  canUpdate: [],
+  canDelete: [],
+  userAppsRights: [],
+  userDocsRights: [],
+  orgDocsRights: []
+}
 
 @Injectable({
   providedIn: 'root'
 })
-@StoreConfig({ name: 'rights', idKey: 'orgId' })
-export class RightsStore extends EntityStore<RightsState, OrganizationRights> {
+@StoreConfig({name: 'rights'})
+export class RightsStore extends Store<RightsState> {
   constructor() {
     super(initialState);
   }
 
 }
+
