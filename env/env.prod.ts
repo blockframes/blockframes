@@ -22,8 +22,9 @@ export const firebase = {
 // ========
 
 export const network = 'goerli';
-export const factoryContract = 'factory2.eth';
 export const mnemonic = ''; // defined in functions.config, see backend-functions/environments
+export const baseEnsDomain = 'blockframes.test';
+export const factoryContract = 'factory2.eth';
 
 // TODO : change the address
 export const contracts = {
@@ -35,8 +36,9 @@ export const contracts = {
 export const relayer = {
   registryAddress: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
-  baseEnsDomain: 'blockframes.test',
   network,
+  baseEnsDomain,
+  factoryContract
 };
 
 // Functions
@@ -44,4 +46,3 @@ export const relayer = {
 
 export const backupBucket = 'prod-backups';
 export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
-

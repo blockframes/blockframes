@@ -4,7 +4,6 @@ import * as CREATE2_FACTORY from './contracts/Factory2.json';
 import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
-import { factoryContract } from './environments/environment';
 import { getByteCode } from './contracts/byteCode';
 import { getAddress } from 'ethers/utils';
 
@@ -20,11 +19,12 @@ export interface Relayer {
 }
 
 export interface RelayerConfig {
-    mnemonic: string;
-    network: string;
-    baseEnsDomain: string;
-    registryAddress: string;
-    resolverAddress: string;
+  mnemonic: string;
+  network: string;
+  baseEnsDomain: string;
+  registryAddress: string;
+  resolverAddress: string;
+  factoryContract: string;
 }
 
 export interface SendParams {
@@ -48,7 +48,7 @@ export const initRelayer = (config: RelayerConfig): Relayer => {
   let wallet = Wallet.fromMnemonic(config.mnemonic);
   const provider = getDefaultProvider(config.network);
   wallet = wallet.connect(provider);
-  const contractFactory = new Contract(factoryContract, CREATE2_FACTORY.abi, wallet);
+  const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY.abi, wallet);
   const namehash = utils.namehash(config.baseEnsDomain);
   const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
   const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
