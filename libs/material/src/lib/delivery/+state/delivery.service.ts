@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder, Movie } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
+import { OrganizationQuery, RightsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { RightsService } from '@blockframes/rights';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {

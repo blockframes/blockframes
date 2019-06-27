@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Organization } from '@blockframes/organization';
+import { Organization, RightsService } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery } from '@blockframes/utils';
-import { RightsService } from '@blockframes/rights';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {

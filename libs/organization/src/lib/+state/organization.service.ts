@@ -3,8 +3,8 @@ import { ID } from '@datorama/akita';
 import { createOrganization, Organization, OrgMember } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
-import { App, initializeAppRights, initializeOrgRights } from '@blockframes/rights';
 import { AuthStore, User } from '@blockframes/auth';
+import { initializeOrgRights, App, initializeAppRights } from '../rights';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {

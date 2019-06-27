@@ -8,8 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationListGuard, OrgFormComponent } from '@blockframes/organization';
-import { RightsGuard } from '@blockframes/rights'
+import { OrganizationListGuard, OrgFormComponent, RightsGuard } from '@blockframes/organization';
 import { WelcomeComponent } from 'libs/ui/src/lib/landing-page/welcome.component';
 
 export const routes: Routes = [

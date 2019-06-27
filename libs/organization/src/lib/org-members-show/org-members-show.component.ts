@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrgMembersService, OrganizationQuery, Organization } from '../+state';
+import { RightsQuery } from '../rights/+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
-import { RightsQuery } from 'libs/rights/src/lib/+state';
 
 
 interface User {
