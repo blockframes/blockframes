@@ -5,7 +5,6 @@ import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
 import { getByteCode } from './contracts/byteCode';
-import { getAddress } from 'ethers/utils';
 
 type TxResponse = providers.TransactionResponse;
 
@@ -112,9 +111,10 @@ export const relayerCreateLogic = async (
      (A)->(B) means (A) must complete before (B)
     */
 
+    const ZERO_ADDRESS = '0x00000000000000000000000000000000000000';
     const ensWorkFlow = async () => {
       const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
-      if (retreivedAddress !== getAddress(erc1077address)) { // if name is already link to the good address : skip ensWorkflow
+      if (retreivedAddress !== ZERO_ADDRESS) { // if name is already link to a non-zero address : skip ensWorkflow
         const result: {[key: string]: string | undefined } = {};
 
         // (A) register the user ens username
