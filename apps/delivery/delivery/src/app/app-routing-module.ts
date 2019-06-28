@@ -15,7 +15,8 @@ export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
-    loadChildren: '@blockframes/account#AuthModule'  },
+    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
+  },
   {
     path: 'layout',
     component: LayoutComponent,
@@ -29,8 +30,8 @@ export const routes: Routes = [
       },
       {
         path: 'o',
-        canActivate: [RightsGuard /*, OrganizationGuard*/],
-        canDeactivate: [RightsGuard/*, OrganizationGuard*/],
+        canActivate: [RightsGuard, OrganizationGuard],
+        canDeactivate: [RightsGuard, OrganizationGuard],
         children: [
           {
             path: '',
@@ -39,25 +40,24 @@ export const routes: Routes = [
           },
           {
             path: 'organization',
-            loadChildren: '@blockframes/organization#OrganizationModule'
+            loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
           },
           {
             path: 'account',
-            loadChildren: '@blockframes/account#AccountModule'
+            loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
           },
           {
             path: 'home',
-            loadChildren: '@blockframes/movie#MovieModule'
+            loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
           },
           { path: 'templates',
-            loadChildren: '@blockframes/template#TemplateModule'
-            // TODO: remove this in favor of dynamic imports when Angular 8 is live
+            loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
           },
           {
             path: ':movieId',
             canActivate: [MovieActiveGuard],
             canDeactivate: [MovieActiveGuard],
-            loadChildren: '@blockframes/material#DeliveryModule'
+            loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
           }
         ]
       },
@@ -82,7 +82,7 @@ export const routes: Routes = [
   },
   {
     path: 'not-found',
-    loadChildren: '@blockframes/ui#ErrorNotFoundModule'
+    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
   },
   {
     path: '**',
