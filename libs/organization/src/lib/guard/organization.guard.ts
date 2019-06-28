@@ -39,8 +39,10 @@ export class OrganizationGuard {
         .pipe(
           switchMap(user => {
             console.log('orgsguard')
-            if (!user.orgId) throw new Error('User has no orgId');
-            console.log('user: ', user)
+            if (!user.orgId) {
+              console.log('user has no orgId')
+              throw new Error('User has no orgId')
+            };
             return this.fireQuery.fromQuery<Organization>(orgQuery(user.orgId));
           }),
           tap(org => this.store.update({org}))
@@ -48,7 +50,7 @@ export class OrganizationGuard {
         .subscribe({
           next: (result: Organization) => {
             console.log(result)
-            res(result)
+            res(!!result)
           },
           error: (err) => {
             console.log('error: ' ,err)

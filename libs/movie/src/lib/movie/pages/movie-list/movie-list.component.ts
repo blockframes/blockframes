@@ -13,6 +13,7 @@ import { MovieTitleFormComponent } from '../../components/movie-title-form/movie
 
 export class MovieListComponent implements OnInit {
 
+  public loading$: Observable<boolean>;
   public movies$: Observable<Movie[]>
 
   constructor(
@@ -22,6 +23,7 @@ export class MovieListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loading$ = this.query.selectLoading();
     this.movies$ = this.query.selectAll();
   }
 

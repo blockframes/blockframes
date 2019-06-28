@@ -17,7 +17,7 @@ import { MovieListComponent } from './pages/movie-list/movie-list.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'list',
     component: MovieListComponent,
     canActivate: [MovieListGuard],
     canDeactivate: [MovieListGuard],

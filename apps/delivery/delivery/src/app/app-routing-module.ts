@@ -23,21 +23,21 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [AuthGuard],
     children: [
-      {
-        path: '',
-        redirectTo: 'o',
-        pathMatch: 'full'
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'o',
+      //   pathMatch: 'full'
+      // },
       {
         path: 'o',
         canActivate: [RightsGuard, OrganizationGuard],
         canDeactivate: [RightsGuard, OrganizationGuard],
         children: [
-          {
-            path: '',
-            redirectTo: 'home',
-            pathMatch: 'full'
-          },
+          // {
+          //   path: '',
+          //   redirectTo: 'home',
+          //   pathMatch: 'full'
+          // },
           {
             path: 'organization',
             loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)

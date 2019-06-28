@@ -1,57 +1,64 @@
-<section *ngIf="(movies$ | async) as movies">
-  <ng-container *ngIf="movies.length > 0; else: empty">
-    <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
-      <mat-card *ngFor="let movie of (movies$ | async)" class="movie-card">
-        <div class="img-container clickable-item">
-          <ng-container *ngIf="movie.poster; else: defaultPoster">
-            <a [routerLink]="['/layout/o', movie.id]">
-              <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
-            </a>
-          </ng-container>
-          <ng-template #defaultPoster>
-            <a [routerLink]="['/layout/o', movie.id]">
-              <img
-                class="mat-card-image"
-                src="/assets/images/default-movie-poster.png"
-                alt="Movie poster link"
-              />
-            </a>
-          </ng-template>
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon color="primary">more_vert</mat-icon>
+<h1>Hello World</h1>
+<ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
+
+<ng-template #loaded>
+  <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
+    <mat-card *ngFor="let movie of (movies$ | async)" class="movie-card">
+      <div class="img-container clickable-item">
+        <ng-container *ngIf="movie.poster; else: defaultPoster">
+          <a [routerLink]="['/layout/o', movie.id]">
+            <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
+          </a>
+        </ng-container>
+        <ng-template #defaultPoster>
+          <a [routerLink]="['/layout/o', movie.id]">
+            <img
+              class="mat-card-image"
+              src="/assets/images/default-movie-poster.png"
+              alt="Movie poster link"
+            />
+          </a>
+        </ng-template>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon color="primary">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item [matMenuTriggerFor]="subMenu">
+            <mat-icon color="primary">control_camera</mat-icon>
+            <span>Open in...</span>
           </button>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item [matMenuTriggerFor]="subMenu">
-              <mat-icon color="primary">control_camera</mat-icon>
-              <span>Open in...</span>
-            </button>
-            <a mat-menu-item [routerLink]="[movie.id, 'edit']">
-              <mat-icon color="primary">edit</mat-icon>
-              <span>Edit</span>
-            </a>
-            <button mat-menu-item (click)="delete(movie.id)">
-              <mat-icon color="primary">delete_outline</mat-icon>
-              <span>Delete</span>
-            </button>
-          </mat-menu>
-          <mat-menu #subMenu="matMenu">
-            <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
-          </mat-menu>
-        </div>
-        <a [routerLink]="['/layout/o', movie.id, 'list']">
-          <mat-card-header class="clickable-item">
-            <mat-card-title>
-              {{ movie.title.original }}
-              <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
-            </mat-card-title>
-            <mat-card-subtitle *ngIf="movie.directorName">{{
-              movie.directorName
-            }}</mat-card-subtitle>
-          </mat-card-header>
-        </a>
-      </mat-card>
-    </article>
-    <movie-empty *ngIf="movies.length < 1"></movie-empty>
-  </ng-container>
-  <ng-template #empty> <movie-home-empty></movie-home-empty> </ng-template>
-</section>
+          <a mat-menu-item [routerLink]="[movie.id, 'edit']">
+            <mat-icon color="primary">edit</mat-icon>
+            <span>Edit</span>
+          </a>
+          <button mat-menu-item (click)="delete(movie.id)">
+            <mat-icon color="primary">delete_outline</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+        <mat-menu #subMenu="matMenu">
+          <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
+        </mat-menu>
+      </div>
+      <a [routerLink]="['/layout/o', movie.id, 'list']">
+        <mat-card-header class="clickable-item">
+          <mat-card-title>
+            {{ movie.title.original }}
+            <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="movie.directorName">{{ movie.directorName }}</mat-card-subtitle>
+        </mat-card-header>
+      </a>
+    </mat-card>
+  </article>
+</ng-template>
+
+<!--
+    <section *ngIf="(movies$ | async) as movies">
+    <ng-container *ngIf="movies.length > 0; else: empty">
+
+      <movie-empty *ngIf="movies.length < 1"></movie-empty>
+    </ng-container>
+    <ng-template #empty> <movie-home-empty></movie-home-empty> </ng-template>
+  </section>
+-->
