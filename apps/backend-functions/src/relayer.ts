@@ -114,7 +114,7 @@ export const relayerCreateLogic = async (
 
     const ensWorkFlow = async () => {
       const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
-      if (retreivedAddress !== getAddress(erc1077address)) { // if name is already link to the good address : skip ensWorkflow
+      if (retreivedAddress !== '0x00000000000000000000000000000000000000') { // if name is already link to a non-zero address : skip ensWorkflow
         const result: {[key: string]: string | undefined } = {};
 
         // (A) register the user ens username
