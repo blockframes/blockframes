@@ -5,7 +5,6 @@ import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
 import { getByteCode } from './contracts/byteCode';
-import { getAddress } from 'ethers/utils';
 
 type TxResponse = providers.TransactionResponse;
 
