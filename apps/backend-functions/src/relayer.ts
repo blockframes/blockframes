@@ -105,8 +105,8 @@ export const relayerCreateLogic = async (
     here are the order of the tx and their dependencies
 
        (A) --> (B) --> (C)     // ENS workflow
-        ||      ||
-       (D) --> (E)             // Deploy workflow
+        ||
+       (D)                     // Deploy workflow
 
       || means tx can happen at the same time,
      (A)->(B) means (A) must complete before (B)
@@ -160,21 +160,12 @@ export const relayerCreateLogic = async (
 
     const deployWorkFlow = async () => {
       const result: {[key: string]: string | undefined } = {};
-      const actualByteCode = await relayer.contractFactory.getByteCode();
-
-      // (D) set user bytecode
-      if (actualByteCode !== byteCode) { // if the factory already contains the good byteCode : skip set byteCode
-        const setByteCodeTx: TxResponse = await relayer.contractFactory.setByteCode(byteCode, { nonce: await relayer.getNonce() });
-        console.log(`(D) tx sent (setByteCode) : ${setByteCodeTx.hash}`); // display tx to firebase logging
-        result['byteCode'] = setByteCodeTx.hash;
-        await setByteCodeTx.wait();
-      }
-
+     
       // (E) deploy ERC1077 : require waiting for (D)
       const codeAtAddress = await relayer.wallet.provider.getCode(erc1077address);
       if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
-        const deployTx: TxResponse = await relayer.contractFactory.deploy(hash, { nonce: await relayer.getNonce() });
-        console.log(`(E) tx sent (deploy) : ${deployTx.hash}`); // display tx to firebase logging
+        const deployTx: TxResponse = await relayer.contractFactory.deploy(hash, byteCode, { nonce: await relayer.getNonce() });
+        console.log(`(D) tx sent (deploy) : ${deployTx.hash}`); // display tx to firebase logging
         result['deploy'] = deployTx.hash;
         await deployTx.wait();
       }

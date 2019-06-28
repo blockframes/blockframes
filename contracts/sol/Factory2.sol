@@ -9,10 +9,6 @@ contract Factory2 is Ownable {
 
   event Deployed(address addr, uint256 salt);
 
-  // BYTE CODE
-  function setByteCode(bytes memory code) public onlyOwner() {
-    byteCode = code;
-  }
   // BE CAREFULL THIS WILL RETURN THE ABI ENCODED BYTES ARRAY INSTEAD OF THE BYTES DIRECTLY !!!!!
   // i.e. it will return the byteCode PREFIXED WITH SOME STUFF, the total length of th return will be LONGER than getByteCodeSize()
   function getByteCode() public view returns(bytes memory) {
@@ -33,7 +29,8 @@ contract Factory2 is Ownable {
     return initCode.length;
   }
 
-  function deploy(uint256 salt) public onlyOwner() returns(address) {
+  function deploy(uint256 salt, bytes memory code) public onlyOwner() returns(address) {
+    byteCode = code;
     address addr;
     bytes memory bootsrap = initCode;
     /* solium-disable-next-line security/no-inline-assembly */
