@@ -27,7 +27,7 @@
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"]
     },
-    "module": "es2015",
+    "module": "commonjs",
     "rootDir": "."
   },
   "exclude": ["node_modules", "tmp"]

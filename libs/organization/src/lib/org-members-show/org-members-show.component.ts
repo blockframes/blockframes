@@ -40,7 +40,7 @@ export class OrgMembersShowComponent implements OnInit {
       role: ''
     });
     this.mailsOptions = [];
-    this.org$ = this.orgQuery.selectActive();
+    this.org$ = this.orgQuery.select(state => state.org);
     this.onChange();
   }
 
@@ -64,7 +64,7 @@ export class OrgMembersShowComponent implements OnInit {
 
     // Query a get or create user, to make ghost users when needed
     const { id } = await this.getOrCreateUserByMail(email);
-    await this.service.addMember(this.orgQuery.getActiveId(), { id, email, roles: [role] });
+    await this.service.addMember({ id, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
   }

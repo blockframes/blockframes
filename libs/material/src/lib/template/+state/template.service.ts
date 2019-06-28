@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Organization, RightsService } from '@blockframes/organization';
+import { Organization, RightsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
@@ -11,16 +11,21 @@ export class TemplateService {
     private db: FireQuery,
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
+    private orgQuery: OrganizationQuery,
     private rightsService: RightsService,
   ) {}
 
-  public async addTemplate(templateName: string, org: Organization): Promise<string> {
+  public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
+    const org = this.orgQuery.getValue().org;
     const template = createTemplate({
       id: templateId,
       name: templateName,
       orgId: org.id
     });
+
+    // Push the new id in org.templateIds
+    await this.db.doc<Organization>(`orgs/${org.id}`).update({templateIds: [...org.templateIds, templateId]})
 
     await this.rightsService.createDocAndRights(template, org.id);
 
@@ -50,11 +55,11 @@ export class TemplateService {
   }
 
   /** Save a delivery as new template */
-  public async saveAsTemplate(templateName: string, org: Organization) {
+  public async saveAsTemplate(templateName: string) {
     const materials = this.materialQuery.getAll();
     if (materials.length > 0) {
       // Add a new template
-      const templateId = this.addTemplate(templateName, org);
+      const templateId = this.addTemplate(templateName);
 
       // Add the delivery's materials in the template
       const batch = this.db.firestore.batch();
@@ -71,10 +76,10 @@ export class TemplateService {
   }
 
   /** Update template with delivery's materials */
-  public async updateTemplate(name: string, org: Organization) {
+  public async updateTemplate(name: string) {
     const template = this.query
       .getAll()
-      .find(entity => entity.name === name && entity.orgId === org.id);
+      .find(entity => entity.name === name && entity.orgId === this.orgQuery.getValue().org.id);
       const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
       const deliveryMaterials = this.materialQuery.getAll();
       if (deliveryMaterials.length > 0) {

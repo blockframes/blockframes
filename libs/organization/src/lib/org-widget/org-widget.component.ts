@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgWidgetComponent implements OnInit {
-  public orgList$: Observable<Organization[]>;
+  public org$: Observable<Organization>;
   public user$: Observable<User>;
 
   constructor(
@@ -21,6 +21,6 @@ export class OrgWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.auth.user$;
-    this.orgList$ = this.query.selectAll();
+    this.org$ = this.query.select(state => state.org);
   }
 }

@@ -8,30 +8,29 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationListGuard, OrgFormComponent, RightsGuard } from '@blockframes/organization';
+import { OrgFormComponent, RightsGuard, OrganizationGuard } from '@blockframes/organization';
 import { WelcomeComponent } from 'libs/ui/src/lib/landing-page/welcome.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
-    loadChildren: '@blockframes/auth#AuthModule'
-  },
+    loadChildren: '@blockframes/account#AuthModule'  },
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard, OrganizationListGuard],
-    canDeactivate: [OrganizationListGuard],
+    canActivate: [AuthGuard],
+    canDeactivate: [AuthGuard],
     children: [
       {
         path: '',
-        redirectTo: 'o', // Temporary name until we find a better one
+        redirectTo: 'o',
         pathMatch: 'full'
       },
       {
-        path: 'o', // Temporary name until we find a better one
-        canActivate: [RightsGuard],
-        canDeactivate: [RightsGuard],
+        path: 'o',
+        canActivate: [RightsGuard /*, OrganizationGuard*/],
+        canDeactivate: [RightsGuard/*, OrganizationGuard*/],
         children: [
           {
             path: '',

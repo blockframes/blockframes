@@ -13,14 +13,17 @@ export interface Organization {
   address: string;
   created: number;
   updated: number;
-  userIds: string[];
   movieIds: string[];
+  movies?: Movie[];
+  templateIds: string[];
   templates?: Template[];
+  userIds: string[];
   members?: OrgMember[];
 }
 
-export interface OrganizationWithMovies extends Organization {
-  movies: Movie[];
+export interface OrgForm {
+  name: string;
+  adress: string;
 }
 
 export interface OrganizationRights {
@@ -43,6 +46,7 @@ export function createOrganization(params?: Partial<Organization>): Organization
     address: params.address,
     userIds: params.userIds,
     movieIds: params.movieIds || [],
+    templateIds: params.templateIds || [],
     created: params.created || Date.now(),
     updated: params.updated || Date.now(),
   } : {} as Organization;

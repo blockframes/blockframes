@@ -1,38 +1,12 @@
-<section>
-  <mat-expansion-panel
-    *ngFor="let org of (orgsWithTemplates$ | async)"
-    [expanded]="true"
-    class="mat-elevation-z0"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-        <span class="organization">
-          {{ org.name }}
-        </span>
-        <div class="divider"></div>
-        <div class="icon-container">
-          <mat-icon class="view-icon" color="primary">view_quilt</mat-icon>
-        </div>
-        <div class="icon-container">
-          <mat-icon class="view-icon" color="primary">view_module</mat-icon>
-        </div>
-        <button
-          mat-raised-button
-          (click)="addTemplateDialog($event, org)"
-          class="add-template mat-elevation-z0"
-        >
-          Create a template <mat-icon class="icon">add</mat-icon>
-        </button>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div fxLayout="row wrap" fxLayoutAlign="start space-between">
-      <template-item
-        *ngFor="let template of org.templates"
-        class="mat-cards"
-        [template]="template"
-        (deleted)="deleteTemplate(template)"
-      ></template-item>
-    </div>
-    <template-empty *ngIf="org.templates.length === 0"></template-empty>
-  </mat-expansion-panel>
+<section *ngIf="(templates$ | async) as templates">
+  <div fxLayout="row wrap" fxLayoutAlign="start space-between">
+    <template-item
+      *ngFor="let template of (templates$ | async)"
+      class="mat-cards"
+      [template]="template"
+      (deleted)="deleteTemplate(template)"
+    ></template-item>
+  </div>
+  <template-empty *ngIf="templates.length === 0"></template-empty>
 </section>
+<button mat-raised-button color="primary" (click)="addTemplateDialog()">Create template</button>

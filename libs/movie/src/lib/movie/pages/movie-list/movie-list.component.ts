@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MovieService } from '../../+state';
+import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
-import { OrganizationQuery, OrganizationWithMovies } from '@blockframes/organization';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 
@@ -13,16 +12,17 @@ import { MovieTitleFormComponent } from '../../components/movie-title-form/movie
 })
 
 export class MovieListComponent implements OnInit {
-  public orgs$: Observable<OrganizationWithMovies[]>;
+
+  public movies$: Observable<Movie[]>
 
   constructor(
     private service: MovieService,
-    private orgQuery: OrganizationQuery,
+    private query: MovieQuery,
     private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
-    this.orgs$ = this.orgQuery.orgsWithMovies$;
+    this.movies$ = this.query.selectAll();
   }
 
   public addNewMovie(event: MouseEvent, org: { id: string, name: string}) {

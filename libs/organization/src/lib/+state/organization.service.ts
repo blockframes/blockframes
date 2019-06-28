@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
-import { ID } from '@datorama/akita';
 import { createOrganization, Organization, OrgMember } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
 import { AuthStore, User } from '@blockframes/auth';
 import { initializeOrgRights, App, initializeAppRights } from '../rights';
+import { OrganizationQuery } from './organization.query';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   constructor(
     private store: OrganizationStore,
+    private query: OrganizationQuery,
     private authStore: AuthStore,
     private db: FireQuery
   ) {}
 
   /** Add a new user to the organization */
-  public addMember(orgId: string, member: OrgMember) {
+  public addMember(member: OrgMember) {
+    const orgId = this.query.getValue().org.id;
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const userDoc = this.db.doc(`users/${member.id}`);
 
@@ -28,11 +30,13 @@ export class OrganizationService {
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
 
         // Update the user
-        const updateUserTransaction = tx.update(userDoc.ref, { orgId })
+        const updateUserTransaction = tx.update(userDoc.ref, { orgId });
 
         return Promise.all([orgTransaction, updateUserTransaction]);
       })
-      .catch(error => {throw Error(error)});
+      .catch(error => {
+        throw Error(error);
+      });
 
     return member.id;
   }
@@ -46,10 +50,10 @@ export class OrganizationService {
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
-    const orgRights = initializeOrgRights({orgId, superAdmin: user.uid});
+    const orgRights = initializeOrgRights({ orgId, superAdmin: user.uid });
     const orgRightsDoc = this.db.doc(`rights/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
-    const apps : App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore ]
+    const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
     this.db.firestore
       .runTransaction(transaction => {
@@ -63,22 +67,18 @@ export class OrganizationService {
           // Initialize apps permissions documents in organization apps sub-collection.
           ...apps.map(app => {
             const orgApp = this.db.doc(`rights/${orgId}/userAppsRights/${app}`);
-            const appRights = initializeAppRights(app)
+            const appRights = initializeAppRights(app);
             return transaction.set(orgApp.ref, appRights);
           })
-        ]
+        ];
         return Promise.all(promises);
       })
       .catch(error => console.error(error));
-    this.authStore.updateUser({...user, ...{orgId}})
+    this.authStore.updateUser({ ...user, ...{ orgId } });
     return orgId;
   }
 
-  public update(id, org: Partial<Organization>) {
-    this.store.update(id, org);
-  }
-
-  public remove(id: ID | ID[]) {
-    this.store.remove(id);
+  public update(org: Partial<Organization>) {
+    this.store.update(state => ({ ...state, org: { ...state.org, ...org } }));
   }
 }

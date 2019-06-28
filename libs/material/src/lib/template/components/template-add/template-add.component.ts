@@ -1,8 +1,7 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { TemplateService } from '../../+state';
 import { Router } from '@angular/router';
-import { Organization } from '@blockframes/organization';
 
 @Component({
   selector: 'material-template-add',
@@ -14,12 +13,11 @@ export class TemplateAddComponent {
   constructor(
     public dialogRef: MatDialogRef<TemplateAddComponent>,
     private service: TemplateService,
-    private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: { org: Organization }
+    private router: Router
   ) {}
 
   public addTemplate(templateName: string) {
-    const templateId = this.service.addTemplate(templateName, this.data.org);
+    const templateId = this.service.addTemplate(templateName);
     this.close();
     this.router.navigate([`layout/o/templates/${templateId}`])
   }

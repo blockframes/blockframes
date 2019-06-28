@@ -1,12 +1,13 @@
-<button matSubheader mat-menu-item routerLink="o/organization/list">
+<button matSubheader mat-menu-item>
   <mat-icon>domain</mat-icon>
-  <span>Organizations</span>
+  <span>Organization</span>
 </button>
 
-<button mat-menu-item routerLink="o/organization/form" *ngIf="(orgList$ | async)?.length==0">
+<button mat-menu-item routerLink="o/organization/form" *ngIf="!(org$ | async)">
   <mat-icon>add_circle</mat-icon>
   <span>Create</span>
 </button>
-<ng-container *ngFor="let organization of (orgList$ | async)">
-  <button [routerLink]="['o/organization/',organization.id]" mat-menu-item >{{ organization.name }}</button>
+
+<ng-container *ngIf="(org$ | async) as org">
+  <button [routerLink]="['o/organization/',org.id]" mat-menu-item >{{ org.name }}</button>
 </ng-container>

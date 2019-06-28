@@ -17,7 +17,7 @@ export class OrgShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.org$ = this.query.selectActive();
+    this.org$ = this.query.select(state => state.org);
   }
 
 }

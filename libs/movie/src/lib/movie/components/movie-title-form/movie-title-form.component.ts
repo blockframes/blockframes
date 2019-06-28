@@ -1,11 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MovieService, MovieQuery } from '../../+state';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -16,17 +14,14 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class MovieTitleFormComponent implements OnInit {
   public titleForm: FormGroup;
-  public orgList$: Observable<Organization[]>;
   private alive = true;
 
   constructor(
     private dialogRef: MatDialogRef<MovieTitleFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public org: any,
     private snackBar: MatSnackBar,
     private builder: FormBuilder,
     private service: MovieService,
     private router: Router,
-    private orgQuery: OrganizationQuery,
     private movieQuery: MovieQuery,
   ) { }
 
@@ -34,7 +29,6 @@ export class MovieTitleFormComponent implements OnInit {
     this.titleForm = this.builder.group({
       title: ['', Validators.required]
     });
-    this.orgList$ = this.orgQuery.selectAll();
   }
 
   public async newMovie() {
@@ -46,7 +40,7 @@ export class MovieTitleFormComponent implements OnInit {
     try {
       const { title } = this.titleForm.value;
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
-      const movie = await this.service.add(title, this.org.id, true);
+      const movie = await this.service.add(title, true);
 
       this.movieQuery.selectEntity(movie.id)
         .pipe(takeWhile(_ => this.alive))
