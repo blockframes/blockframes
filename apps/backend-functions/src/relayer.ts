@@ -112,9 +112,10 @@ export const relayerCreateLogic = async (
      (A)->(B) means (A) must complete before (B)
     */
 
+    const ZERO_ADDRESS = '0x00000000000000000000000000000000000000';
     const ensWorkFlow = async () => {
       const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
-      if (retreivedAddress !== '0x00000000000000000000000000000000000000') { // if name is already link to a non-zero address : skip ensWorkflow
+      if (retreivedAddress !== ZERO_ADDRESS) { // if name is already link to a non-zero address : skip ensWorkflow
         const result: {[key: string]: string | undefined } = {};
 
         // (A) register the user ens username
