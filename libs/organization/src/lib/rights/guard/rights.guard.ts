@@ -48,7 +48,6 @@ export class RightsGuard {
         )
         .subscribe({
           next: (result: OrganizationRights) => {
-            console.log(result)
             res(!!result)
           },
           error: () => res(this.router.parseUrl('/layout/welcome'))

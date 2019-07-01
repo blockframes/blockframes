@@ -9,13 +9,24 @@ import { MovieFormStoryComponent } from './components/movie-form/movie-form-stor
 import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
 import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
+import { MovieListComponent } from './pages/movie-list/movie-list.component';
+import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 
 // Guards
 import { MovieActiveGuard } from './guards/movie-active.guard';
 import { MovieListGuard } from './guards/movie-list.guard';
-import { MovieListComponent } from './pages/movie-list/movie-list.component';
 
 export const routes: Routes = [
+
+  {
+    path: '',
+    redirectTo: 'list',
+    pathMatch: 'full'
+  },
+  {
+    path: 'create',
+    component: MovieCreateComponent
+  },
   {
     path: 'list',
     component: MovieListComponent,
@@ -35,18 +46,18 @@ export const routes: Routes = [
         component: MovieEditableComponent,
         children: [
           { path: '', redirectTo: 'main', pathMatch: 'full' },
-          { path: 'main',component: MovieFormMainComponent },
-          { path: 'story',component: MovieFormStoryComponent },
-          { path: 'team',component: MovieFormTeamComponent },
-          { path: 'promo',component: MovieFormPromotionalComponent },
+          { path: 'main', component: MovieFormMainComponent },
+          { path: 'story', component: MovieFormStoryComponent },
+          { path: 'team', component: MovieFormTeamComponent },
+          { path: 'promo', component: MovieFormPromotionalComponent }
         ]
-      },
+      }
     ]
   }
-]
+];
 
 @NgModule({
-  imports : [RouterModule.forChild(routes)],
-  exports : [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-export class MovieRoutingModule { }
+export class MovieRoutingModule {}

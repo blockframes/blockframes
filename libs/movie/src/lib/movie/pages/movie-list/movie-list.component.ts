@@ -27,9 +27,8 @@ export class MovieListComponent implements OnInit {
     this.movies$ = this.query.selectAll();
   }
 
-  public addNewMovie(event: MouseEvent, org: { id: string, name: string}) {
-    event.stopPropagation();
-    this.dialog.open(MovieTitleFormComponent, { data: org });
+  public addNewMovie() {
+    this.dialog.open(MovieTitleFormComponent);
   }
 
   public delete(id: string) {

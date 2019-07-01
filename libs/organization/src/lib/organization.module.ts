@@ -21,11 +21,6 @@ import { OrgWidgetComponent } from './org-widget/org-widget.component';
 
 export const organizationRoutes: Routes = [
   {
-    path: '',
-    redirectTo: 'list',
-    pathMatch: 'full'
-  },
-  {
     path: 'form',
     component: OrgFormComponent
   },

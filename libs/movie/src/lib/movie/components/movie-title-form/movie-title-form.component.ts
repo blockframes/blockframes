@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MovieService, MovieQuery } from '../../+state';
 import { Router } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-title-form',
@@ -14,7 +13,6 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class MovieTitleFormComponent implements OnInit {
   public titleForm: FormGroup;
-  private alive = true;
 
   constructor(
     private dialogRef: MatDialogRef<MovieTitleFormComponent>,
@@ -43,14 +41,8 @@ export class MovieTitleFormComponent implements OnInit {
       const movie = await this.service.add(title, true);
 
       this.movieQuery.selectEntity(movie.id)
-        .pipe(takeWhile(_ => this.alive))
-        .subscribe(m => {
-        if (m !== undefined) {
-          this.alive = false;
-          this.router.navigate([`/layout/o/home/${movie.id}/edit`]);
-          this.dialogRef.close();
-        }
-      })
+      this.router.navigate([`/layout/o/home/${movie.id}/edit`]);
+      this.dialogRef.close();
     }
     catch (err) {
       this.snackBar.open('An error occured', 'close', { duration: 1000 });

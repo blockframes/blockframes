@@ -12,10 +12,6 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
     org.userIds.map(id => ({
       path: `users/${id}`
     })),
-  movies: (org: Organization) =>
-    org.movieIds.map(id => ({
-      path: `movies/${id}`
-    })),
   templates: (org: Organization) =>
     org.templateIds.map(id => ({
       path: `templates/${id}`
@@ -40,7 +36,6 @@ export class OrganizationGuard {
           switchMap(user => {
             console.log('orgsguard')
             if (!user.orgId) {
-              console.log('user has no orgId')
               throw new Error('User has no orgId')
             };
             return this.fireQuery.fromQuery<Organization>(orgQuery(user.orgId));
@@ -49,7 +44,6 @@ export class OrganizationGuard {
         )
         .subscribe({
           next: (result: Organization) => {
-            console.log(result)
             res(!!result)
           },
           error: (err) => {
@@ -59,7 +53,6 @@ export class OrganizationGuard {
         });
     });
   }
-
   canDeactivate() {
     this.subscription.unsubscribe();
     return true;

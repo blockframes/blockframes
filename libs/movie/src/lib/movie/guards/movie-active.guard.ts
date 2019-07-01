@@ -24,6 +24,7 @@ export class MovieActiveGuard extends StateActiveGuard<Movie> {
 
   query({ movieId }) {
     const query = movieActiveQuery(movieId);
+    console.log('movie active query')
     return this.fireQuery.fromQuery<Movie>(query);
   }
 }

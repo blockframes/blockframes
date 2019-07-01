@@ -50,6 +50,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { MovieForm } from './components/movie-form/movie.form';
+import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { MovieForm } from './components/movie-form/movie.form';
     MovieFormPromotionalComponent,
     HomeEmptyComponent,
     MovieEmptyComponent,
+    MovieCreateComponent,
   ],
   imports: [
     CommonModule,
