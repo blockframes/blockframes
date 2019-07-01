@@ -113,6 +113,7 @@
     "@types/line-reader": "0.0.28",
     "@types/lodash": "^4.14.123",
     "@types/node": "~10.12.23",
+    "@types/pdfmake": "^0.1.7",
     "@types/tmp": "0.0.34",
     "akita-schematics": "^2.0.0",
     "codelyzer": "~4.5.0",
