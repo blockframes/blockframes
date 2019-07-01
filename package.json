@@ -82,6 +82,7 @@
     "ngx-mat-select-search": "^1.7.2",
     "node-gyp": "^4.0.0",
     "npm": "^6.9.0",
+    "pdfmake": "^0.1.57",
     "punycode": "^2.1.1",
     "request": "^2.88.0",
     "rxjs": "~6.5.2",
