@@ -12,6 +12,7 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { applyTransaction } from '@datorama/akita';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-editable',
@@ -148,5 +149,11 @@ export class DeliveryEditableComponent implements OnInit {
 
   public signDelivery() {
     this.service.signDelivery();
+  }
+
+  public get deliveryContractURL(): Observable<string> {
+    return this.delivery$.pipe(
+      map(x => `/delivery/contract.pdf?deliveryId=${x.id}`)
+    )
   }
 }
