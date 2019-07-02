@@ -3,6 +3,7 @@ import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'movie-list',
@@ -20,6 +21,7 @@ export class MovieListComponent implements OnInit {
     private service: MovieService,
     private query: MovieQuery,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -31,7 +33,10 @@ export class MovieListComponent implements OnInit {
     this.dialog.open(MovieTitleFormComponent);
   }
 
-  public delete(id: string) {
-    this.service.remove(id);
+  public delete(movie: Movie) {
+    this.service.remove(movie.id);
+    this.snackBar.open(`Movie "${movie.title.original}" has been deleted.`, 'close', {
+      duration: 2000
+    });
   }
 }

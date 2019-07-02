@@ -26,11 +26,11 @@
             <mat-icon color="primary">control_camera</mat-icon>
             <span>Open in...</span>
           </button>
-          <a mat-menu-item [routerLink]="[movie.id, 'edit']">
+          <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
             <mat-icon color="primary">edit</mat-icon>
             <span>Edit</span>
           </a>
-          <button mat-menu-item (click)="delete(movie.id)">
+          <button mat-menu-item (click)="delete(movie)">
             <mat-icon color="primary">delete_outline</mat-icon>
             <span>Delete</span>
           </button>

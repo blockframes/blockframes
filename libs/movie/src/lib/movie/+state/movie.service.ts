@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
-import { RightsService, OrganizationQuery } from '@blockframes/organization';
+import { RightsService, OrganizationQuery, Organization } from '@blockframes/organization';
+import { MovieStore } from './movie.store';
 
 @Injectable({ providedIn: 'root' })
 
@@ -13,6 +14,7 @@ export class MovieService {
   private shService: StakeholderService,
   private orgQuery: OrganizationQuery,
   private rightsService: RightsService,
+  private store: MovieStore,
   ) {}
 
   public async add(original: string, firstAdd: boolean = false ): Promise<Movie> {
@@ -37,8 +39,23 @@ export class MovieService {
     this.db.doc<Movie>(`movies/${id}`).update(movie);
   }
 
-  public remove(id: string) {
-    this.db.doc<Movie>(`movies/${id}`).delete();
+  public remove(movieId: string) {
+    const org = this.orgQuery.getValue().org;
+    const movieIds = org.movieIds.filter(id => id !== movieId);
+
+    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+      const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
+      const promises = [
+        // Delete the movie in movies collection
+        tx.delete(movieDoc.ref),
+        // Delete the movie id in org.movieIds
+        tx.update(orgDoc.ref, { movieIds })
+      ];
+      // Remove the movie from the movies store
+      this.store.remove(movieId);
+      return Promise.all(promises);
+    });
   }
 
 }

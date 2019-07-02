@@ -4,12 +4,14 @@ import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery } from '@blockframes/utils';
+import { TemplateStore } from './template.store';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
   constructor(
     private db: FireQuery,
     private query: TemplateQuery,
+    private store: TemplateStore,
     private materialQuery: MaterialQuery,
     private orgQuery: OrganizationQuery,
     private rightsService: RightsService
@@ -18,7 +20,6 @@ export class TemplateService {
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
     const org = this.orgQuery.getValue().org;
-    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
     const template = createTemplate({
       id: templateId,
       name: templateName,
@@ -26,14 +27,33 @@ export class TemplateService {
     });
 
     // Push the new id in org.templateIds
-    await this.db.doc<Organization>(`orgs/${org.id}`).update({templateIds: [...org.templateIds, templateId]})
+    await this.db
+      .doc<Organization>(`orgs/${org.id}`)
+      .update({ templateIds: [...org.templateIds, templateId] });
+
+    // Create document rights
     await this.rightsService.createDocAndRights(template, org.id);
 
     return templateId;
   }
 
-  public deleteTemplate(id: string) {
-    this.db.doc<Template>(`templates/${id}`).delete();
+  public async deleteTemplate(templateId: string) {
+    const org = this.orgQuery.getValue().org;
+    const templateIds = org.templateIds.filter(id => id !== templateId);
+
+    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+      const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
+      const promises = [
+        // Delete the template in templates collection
+        tx.delete(templateDoc.ref),
+        // Delete the template id in org.templateIds
+        tx.update(orgDoc.ref, { templateIds })
+      ];
+      // Remove the template from the templates store
+      this.store.remove(templateId);
+      return Promise.all(promises);
+    });
   }
 
   public deleteMaterial(id: string) {
