@@ -1,36 +1,28 @@
 /**
  * Deals with PDF exports for various parts of the application.
  */
-import { groupBy, sortBy } from 'lodash';
+import { groupBy, sortBy, isEmpty } from 'lodash';
+import {
+  asIDMap,
+  Delivery,
+  getCollection,
+  getDocument,
+  IDMap,
+  Material,
+  Organization,
+  Stakeholder,
+  Step
+} from './utils';
 
 const PdfPrinter = require('pdfmake');
 
 // Types
 // =====
 
-// TODO: extract and sync with the rest of the backend codebase
-interface StakeHolder {
-  name: string;
-  organization: string;
-}
-
-interface Step {
-  name: string;
-  date: Date;
-}
-
-interface Material {
-  value: string;
-  category: string;
-  description: string;
-  id: string;
-  stepId: string;
-}
-
 interface DeliveryContent {
   txID: { [stakeholderID: string]: string };
-  stakeholders: { [stakeholderID: string]: StakeHolder };
-  steps: { [id: string]: Step };
+  orgs: IDMap<Organization>;
+  steps: IDMap<Step>;
   materials: Material[];
 }
 
@@ -78,13 +70,10 @@ const center = (content: string | { [k: string]: any }): any => {
 
 // These functions take our blockframes model and generate data the pdf rendering.
 
-function rowStakeholders(
-  stakeholdersIds: string[],
-  stakeholders: { [id: string]: StakeHolder }
-): any {
-  const columns: any = stakeholdersIds.map((id: string) => {
-    const stakeholder = stakeholders[id];
-    return [subHeader(stakeholder.name), description(stakeholder.organization)];
+function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
+  const columns: any = orgIds.map((id: string) => {
+    const org = orgs[id];
+    return [subHeader(org.name), description(org.address)];
   });
   return [
     header('Stakeholders'),
@@ -133,12 +122,16 @@ function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: S
 }
 
 function rowSignatures(
-  stakeholdersIds: string[],
-  stakeholders: { [id: string]: StakeHolder },
-  txID: { [stkID: string]: string }
+  organizationIds: string[],
+  organizations: { [id: string]: Organization },
+  txID: { [orgId: string]: string }
 ): any {
-  const columns = stakeholdersIds.map((id: string) => {
-    const stakeholder = stakeholders[id];
+  if (isEmpty(txID)) {
+    return [];
+  }
+
+  const columns = organizationIds.map((id: string) => {
+    const stakeholder = organizations[id];
     const tx = txID[id];
 
     return [bold(stakeholder.name), { qr: tx, fit: '100' }];
@@ -153,15 +146,15 @@ function rowSignatures(
   ];
 }
 
-export function buildDeliveryPDF({ txID, stakeholders, materials, steps }: DeliveryContent) {
+export function buildDeliveryPDF({ txID, orgs, materials, steps }: DeliveryContent) {
   // We store keys first to make sure order is preserved along the way
-  const stakeholdersIds = Object.keys(stakeholders);
+  const orgsIds = Object.keys(orgs);
 
   const docDefinition = {
     content: [
-      ...rowStakeholders(stakeholdersIds, stakeholders),
+      ...rowOrganizations(orgsIds, orgs),
       ...rowMaterialsPerCategory(materials, steps),
-      ...rowSignatures(stakeholdersIds, stakeholders, txID)
+      ...rowSignatures(orgsIds, orgs, txID)
     ],
     defaultStyle: {
       font: 'Helvetica'
@@ -191,4 +184,23 @@ export function buildDeliveryPDF({ txID, stakeholders, materials, steps }: Deliv
   };
   const printer = new PdfPrinter(FONTS);
   return printer.createPdfKitDocument(docDefinition);
+}
+
+export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
+  const deliveryId: string = req.query.deliveryId;
+
+  // TODO: factor out the data layer
+  const delivery = await getDocument<Delivery>(`deliveries/${deliveryId}`);
+  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`)
+
+  const orgs = await Promise.all(
+    stakeholders.map(stk => getDocument<Organization>(`orgs/${stk.orgId}`))
+  );
+
+  const materials = await getCollection<Material>(`deliveries/${deliveryId}/materials`);
+  const steps = asIDMap(delivery.steps);
+
+  const pdf = buildDeliveryPDF({ orgs: asIDMap(orgs), materials, steps, txID: {} });
+  pdf.pipe(resp);
+  pdf.end();
 }

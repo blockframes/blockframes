@@ -27,14 +27,12 @@ import * as backup from './backup';
 import * as migrations from './migrations';
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
-
+import { onGenerateDeliveryPDFRequest } from './pdf';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
  */
-export const onIpHashEvent = functions.pubsub
-  .topic('eth-events.ipHash')
-  .onPublish(onIpHash);
+export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
 
 /**
  * Trigger: when user uploads document to firestore.
@@ -120,6 +118,11 @@ export const onMovieStakeholderCreateEvent = onDocumentCreate(
   'movies/{movieID}/stakeholders/{stakeholerID}',
   onMovieStakeholderCreate
 );
+
+/**
+ * Trigger: REST call to generate a delivery PDF
+ */
+export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
 
 /**
  * Trigger: when a stakeholder is removed from a movie
