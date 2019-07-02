@@ -1,0 +1,66 @@
+mat-sidenav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+mat-sidenav-content {
+  background-image: url('https://img.freepik.com/free-vector/spot-light-background_1284-4685.jpg?size=626&ext=jpg');
+  background-size: cover;
+}
+
+mat-sidenav {
+  width: 800px;
+}
+
+// large
+@media screen and (min-width: 1280px) and (max-width: 1919px) {
+  mat-sidenav {
+    width: 600px;
+  }
+}
+
+// medium
+@media screen and (min-width: 960px) and (max-width: 1279px) {
+  mat-sidenav {
+    width: 400px;
+  }
+}
+
+// small
+@media screen and (min-width: 600px) and (max-width: 959px) {
+  mat-sidenav {
+    width: 300px;
+  }
+}
+
+// extra small
+@media screen and (max-width: 599px) {
+  mat-sidenav {
+    width: 100%;
+  }
+}
+
+
+// section {
+//   height: 100%;
+//   width: 50%;
+//   padding-top: 100px;
+// }
+
+// hr {
+//   border-right: none;
+//   border-left: solid 0.5px rgba(50, 50, 50, 0.5);
+//   height: 60%;
+// }
+
+// h1 {
+//   width: 50%;
+//   text-transform: uppercase;
+// }
+
+// form {
+//   width: 50%;
+// }
