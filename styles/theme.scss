@@ -2,9 +2,10 @@
 @include mat-core();
 @import './palette.scss';
 
+// Main theme
 $blockframes-theme-primary: mat-palette($mat-bf-blue);
-$blockframes-theme-accent: mat-palette($mat-bf-lightblue);
-$blockframes-theme-warn: mat-palette($mat-bf-crimson);
+$blockframes-theme-accent: mat-palette($mat-bf-orange);
+$blockframes-theme-warn: mat-palette($mat-bf-red);
 
 $blockframes-theme: mat-light-theme(
   $blockframes-theme-primary,
@@ -13,3 +14,19 @@ $blockframes-theme: mat-light-theme(
 );
 
 @include angular-material-theme($blockframes-theme);
+
+// Dark theme
+$blockframes-dark-theme-primary: mat-palette($mat-bf-darkblue);
+$blockframes-dark-theme-accent: mat-palette($mat-bf-darkblack);
+$blockframes-dark-theme-warn: mat-palette($mat-bf-darkgreen);
+
+$blockframes-dark-theme: mat-dark-theme(
+  $blockframes-dark-theme-primary,
+  $blockframes-dark-theme-accent,
+  $blockframes-dark-theme-warn
+);
+
+.dark-theme {
+  @include angular-material-theme($blockframes-dark-theme);
+}
+

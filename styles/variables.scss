@@ -1,14 +1,29 @@
 @import '~@angular/material/theming';
+@import './theme.scss';
 
+// Main theme
 $primary: mat-color($blockframes-theme-primary);
 $accent: mat-color($blockframes-theme-accent);
 $warn: mat-color($blockframes-theme-warn);
+
+// Dark-theme
+$dark-primary: mat-color($blockframes-dark-theme-primary);
+$dark-accent: mat-color($blockframes-dark-theme-accent);
+$dark-warn: mat-color($blockframes-dark-theme-warn);
 
 // CSS color variables
 :root {
   --primary: #{$primary};
   --warn: #{$warn};
   --accent: #{$accent};
-  --lightGrey: #818181;
-  --label: #666666;
+  --lightGrey: #4D5664;
+  --label: #B5BDCE;
+}
+
+// CSS dark-theme color variables
+.dark-theme {
+  @extend :root;
+  --primary: #{$dark-primary};
+  --warn: #{$dark-warn};
+  --accent: #{$dark-accent};
 }
