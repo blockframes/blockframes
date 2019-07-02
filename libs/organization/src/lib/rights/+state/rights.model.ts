@@ -1,6 +1,6 @@
 export interface OrganizationRights {
   orgId: string;
-  superAdmin: string;
+  superAdmins: string[];
   admins: string[];
   canCreate: string[];
   canRead: string[];
@@ -48,7 +48,7 @@ export enum App  {
 
 export function initializeOrgRights(params: Partial<OrganizationRights>) {
   return {
-    superAdmin: params.superAdmin,
+    superAdmins: [params.superAdmins],
     canCreate: [],
     canRead: [],
     canUpdate: [],

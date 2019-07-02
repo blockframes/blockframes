@@ -7,7 +7,7 @@ export type RightsState = OrganizationRights;
 
 const initialState: RightsState = {
   orgId: null,
-  superAdmin: null,
+  superAdmins: [],
   admins: [],
   canCreate: [],
   canRead: [],

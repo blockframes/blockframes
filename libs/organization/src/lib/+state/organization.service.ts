@@ -50,7 +50,7 @@ export class OrganizationService {
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
-    const orgRights = initializeOrgRights({ orgId, superAdmin: user.uid });
+    const orgRights = initializeOrgRights({ orgId, superAdmins: [user.uid] });
     const orgRightsDoc = this.db.doc(`rights/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];

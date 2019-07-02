@@ -17,6 +17,6 @@ export class RightsQuery extends Query<RightsState> {
 
   /** Checks if the connected user is the Super Admin of his organization */
   public get isSuperAdmin$(): Observable<boolean> {
-    return this.select(state => state.superAdmin === this.auth.userId);
+    return this.select(state => state.superAdmins.includes(this.auth.userId));
   }
 }
