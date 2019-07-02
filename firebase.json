@@ -12,6 +12,10 @@
         "destination": "/ip-upload/index.html"
       },
       {
+        "source": "/delivery/contract.pdf",
+        "function": "generateDeliveryPDF"
+      },
+      {
         "source": "/delivery{,/**}",
         "destination": "/delivery/index.html"
       },
