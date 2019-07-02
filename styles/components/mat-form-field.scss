@@ -1,6 +1,6 @@
 // input border
 .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: $primary !important;
+  color: var(--primary) !important;
 }
 
 // input left borders
