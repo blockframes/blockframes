@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 
 @Component({
   selector: 'template-create',
   templateUrl: './template-create.component.html',
-  styleUrls: ['./template-create.component.scss']
+  styleUrls: ['./template-create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateCreateComponent {
 

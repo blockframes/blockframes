@@ -39,23 +39,21 @@ export class MovieService {
     this.db.doc<Movie>(`movies/${id}`).update(movie);
   }
 
-  public remove(movieId: string) {
+  public remove(movieId: string): Promise<void> {
     const org = this.orgQuery.getValue().org;
     const movieIds = org.movieIds.filter(id => id !== movieId);
+    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+    const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
 
-    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
-      const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
-      const promises = [
-        // Delete the movie in movies collection
-        tx.delete(movieDoc.ref),
-        // Delete the movie id in org.movieIds
-        tx.update(orgDoc.ref, { movieIds })
-      ];
-      // Remove the movie from the movies store
-      this.store.remove(movieId);
-      return Promise.all(promises);
-    });
+    const batch = this.db.firestore.batch();
+    // Delete the movie in movies collection
+    batch.delete(movieDoc.ref);
+    // Delete the movie id in org.movieIds
+    batch.update(orgDoc.ref, { movieIds });
+    // Remove the movie from the movies store
+    this.store.remove(movieId);
+
+    return batch.commit();
   }
 
 }

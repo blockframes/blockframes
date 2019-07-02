@@ -40,7 +40,7 @@ export class OrgMembersShowComponent implements OnInit {
       role: ''
     });
     this.mailsOptions = [];
-    this.org$ = this.orgQuery.select(state => state.org);
+    this.org$ = this.orgQuery.select('org');
     this.onChange();
   }
 

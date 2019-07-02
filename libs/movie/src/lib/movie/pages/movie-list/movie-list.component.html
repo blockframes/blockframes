@@ -2,22 +2,29 @@
 
 <ng-template #loaded>
   <article class="movie-list-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
+
+    <!--Movie Card -->
     <mat-card *ngFor="let movie of (movies$ | async)" class="movie-card">
+
+      <!-- Movie Poster -->
       <div class="img-container clickable-item">
+
         <ng-container *ngIf="movie.poster; else: defaultPoster">
           <a [routerLink]="['/layout/o', movie.id]">
             <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
           </a>
         </ng-container>
+
         <ng-template #defaultPoster>
           <a [routerLink]="['/layout/o', movie.id]">
             <img
               class="mat-card-image"
               src="/assets/images/default-movie-poster.png"
-              alt="Movie poster link"
-            />
+              alt="Movie poster link"/>
           </a>
         </ng-template>
+
+        <!-- Movie Menu -->
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon color="primary">more_vert</mat-icon>
         </button>
@@ -38,8 +45,12 @@
         <mat-menu #subMenu="matMenu">
           <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
         </mat-menu>
+
       </div>
-      <a [routerLink]="['/layout/o', movie.id, 'list']">
+
+      <a [routerLink]="['/layout/o', movie.id]">
+
+        <!-- Movie Informations (title, year, director) -->
         <mat-card-header class="clickable-item">
           <mat-card-title>
             {{ movie.title.original }}
@@ -49,8 +60,11 @@
         </mat-card-header>
       </a>
     </mat-card>
+
   </article>
+
   <div fxLayoutAlign="center center">
     <button mat-raised-button color="primary" (click)="addNewMovie()">Add a movie</button>
   </div>
+
 </ng-template>

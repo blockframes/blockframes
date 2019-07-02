@@ -79,6 +79,8 @@ export class OrganizationService {
   }
 
   public update(org: Partial<Organization>) {
-    this.store.update(state => ({ ...state, org: { ...state.org, ...org } }));
+    this.store.update(state => ({
+      org: { ...state.org, ...org }
+    }));
   }
 }

@@ -37,23 +37,22 @@ export class TemplateService {
     return templateId;
   }
 
-  public async deleteTemplate(templateId: string) {
+  public deleteTemplate(templateId: string): Promise<void> {
     const org = this.orgQuery.getValue().org;
     const templateIds = org.templateIds.filter(id => id !== templateId);
+    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+    const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
 
-    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
-      const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
-      const promises = [
-        // Delete the template in templates collection
-        tx.delete(templateDoc.ref),
-        // Delete the template id in org.templateIds
-        tx.update(orgDoc.ref, { templateIds })
-      ];
-      // Remove the template from the templates store
-      this.store.remove(templateId);
-      return Promise.all(promises);
-    });
+    const batch = this.db.firestore.batch();
+    // Delete the template from the templates collection
+    batch.delete(templateDoc.ref);
+    // Delete templateId from org.templateIds
+    batch.update(orgDoc.ref, { templateIds });
+    // Remove the template from the templates store
+    this.store.remove(templateId);
+
+    return batch.commit();
+
   }
 
   public deleteMaterial(id: string) {
@@ -86,9 +85,7 @@ export class TemplateService {
       materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialDoc = this.db.doc<Material>(
-          `templates/${templateId}/materials/${material.id}`
-        );
+        const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialWithoutStep);
       });
       batch.commit();
@@ -97,27 +94,24 @@ export class TemplateService {
 
   /** Update template with delivery's materials */
   public async updateTemplate(name: string) {
+    const currentOrgId = this.orgQuery.getValue().org.id;
     const template = this.query
       .getAll()
-      .find(entity => entity.name === name && entity.orgId === this.orgQuery.getValue().org.id);
+      .find(entity => entity.name === name && entity.orgId === currentOrgId);
     const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
     const deliveryMaterials = this.materialQuery.getAll();
     if (deliveryMaterials.length > 0) {
       const batch = this.db.firestore.batch();
       // Delete all materials of template
       templateMaterials.forEach(material => {
-        const materialDoc = this.db.doc<Material>(
-          `templates/${template.id}/materials/${material.id}`
-        );
+        const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
         return batch.delete(materialDoc.ref);
       });
       // Add delivery's materials in template
       deliveryMaterials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialDoc = this.db.doc<Material>(
-          `templates/${template.id}/materials/${material.id}`
-        );
+        const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialWithoutStep);
       });
       batch.commit();

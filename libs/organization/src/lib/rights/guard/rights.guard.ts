@@ -46,9 +46,7 @@ export class RightsGuard {
           tap(rights => this.store.update(rights))
         )
         .subscribe({
-          next: (result: OrganizationRights) => {
-            res(!!result)
-          },
+          next: (result: OrganizationRights) => res(!!result),
           error: () => res(this.router.parseUrl('/layout/welcome'))
         });
     });

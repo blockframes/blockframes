@@ -3,11 +3,11 @@
   <span>Organization</span>
 </button>
 
-<button mat-menu-item routerLink="o/organization/form" *ngIf="!(org$ | async)">
+<a mat-menu-item routerLink="o/organization/form" *ngIf="!(org$ | async)">
   <mat-icon>add_circle</mat-icon>
   <span>Create</span>
-</button>
+</a>
 
 <ng-container *ngIf="(org$ | async) as org">
-  <button [routerLink]="['o/organization/',org.id]" mat-menu-item >{{ org.name }}</button>
+  <a mat-menu-item [routerLink]="['o/organization/',org.id]">{{ org.name }}</a>
 </ng-container>
