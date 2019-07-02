@@ -4,6 +4,7 @@ import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { Template, TemplateStore } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
 import { switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 const templateQuery = (id: string): Query<Template> => ({
   path: `templates/${id}`
@@ -11,7 +12,7 @@ const templateQuery = (id: string): Query<Template> => ({
 
 @Injectable({ providedIn: 'root' })
 export class TemplateListGuard extends StateListGuard<Template> {
-  urlFallback = 'layout';
+  urlFallback = '/layout/o/templates/create';
 
   constructor(
     private fireQuery: FireQuery,
@@ -26,8 +27,11 @@ export class TemplateListGuard extends StateListGuard<Template> {
     return this.orgQuery
       .select(state => state.org.templateIds)
       .pipe(
-        switchMap(ids => ids.map(id => this.fireQuery.fromQuery<Template[]>(templateQuery(id)))),
-        switchMap(templates => templates)
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No template yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<Template>(templateQuery(id)))
+          return combineLatest(queries)
+        })
       );
   }
 }

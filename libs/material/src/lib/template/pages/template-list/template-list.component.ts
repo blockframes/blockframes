@@ -12,6 +12,7 @@ import { TemplateAddComponent } from '../../components/template-add/template-add
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit {
+  public loading$: Observable<boolean>;
   public templates$: Observable<Template[]>;
 
   constructor(
@@ -22,6 +23,7 @@ export class TemplateListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loading$ = this.query.selectLoading();
     this.templates$ = this.query.selectAll();
   }
 
@@ -32,8 +34,7 @@ export class TemplateListComponent implements OnInit {
     });
   }
 
-  public addTemplateDialog(event: MouseEvent): void {
-    event.stopPropagation();
+  public addTemplateDialog(): void {
     this.dialog.open(TemplateAddComponent, {
       width: '400px'
     });

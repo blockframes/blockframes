@@ -10,7 +10,7 @@ import { TemplateItemComponent } from './components/template-item/template-item.
 import { TemplateAddComponent } from './components/template-add/template-add.component';
 import { EditableModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
-import { TemplateEmptyComponent } from './components/template-empty/template-empty.component';
+import { TemplateCreateComponent } from './pages/template-create/template-create.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -29,6 +29,10 @@ import { TemplateListGuard } from './guards/template-list.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
+  {
+    path: 'create',
+    component: TemplateCreateComponent
+  },
   {
     path: 'list',
     component: TemplateListComponent,
@@ -49,7 +53,7 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
-    TemplateEmptyComponent,
+    TemplateCreateComponent
   ],
   imports: [
     CommonModule,

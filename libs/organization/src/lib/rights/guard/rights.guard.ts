@@ -40,7 +40,6 @@ export class RightsGuard {
       this.subscription = this.auth.user$
         .pipe(
           switchMap(user => {
-            console.log('rights')
             if (!user.orgId) throw new Error('User has no orgId');
             return this.fireQuery.fromQuery<OrganizationRights>(rightsQuery(user.orgId));
           }),

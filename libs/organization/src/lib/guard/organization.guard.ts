@@ -11,10 +11,6 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
   members: (org: Organization) =>
     org.userIds.map(id => ({
       path: `users/${id}`
-    })),
-  templates: (org: Organization) =>
-    org.templateIds.map(id => ({
-      path: `templates/${id}`
     }))
 });
 
@@ -34,7 +30,6 @@ export class OrganizationGuard {
       this.subscription = this.auth.user$
         .pipe(
           switchMap(user => {
-            console.log('orgsguard')
             if (!user.orgId) {
               throw new Error('User has no orgId')
             };
@@ -47,7 +42,7 @@ export class OrganizationGuard {
             res(!!result)
           },
           error: (err) => {
-            console.log('error: ' ,err)
+            console.log('Error: ' ,err)
             res(this.router.parseUrl('/layout/welcome'))
           }
         });

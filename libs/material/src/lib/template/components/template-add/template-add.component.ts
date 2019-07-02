@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { TemplateService } from '../../+state';
+import { TemplateService, TemplateQuery } from '../../+state';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,8 +16,8 @@ export class TemplateAddComponent {
     private router: Router
   ) {}
 
-  public addTemplate(templateName: string) {
-    const templateId = this.service.addTemplate(templateName);
+  public async addTemplate(templateName: string) {
+    const templateId = await this.service.addTemplate(templateName);
     this.close();
     this.router.navigate([`layout/o/templates/${templateId}`])
   }

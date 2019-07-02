@@ -12,12 +12,13 @@ export class TemplateService {
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
     private orgQuery: OrganizationQuery,
-    private rightsService: RightsService,
+    private rightsService: RightsService
   ) {}
 
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
     const org = this.orgQuery.getValue().org;
+    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
     const template = createTemplate({
       id: templateId,
       name: templateName,
@@ -26,7 +27,6 @@ export class TemplateService {
 
     // Push the new id in org.templateIds
     await this.db.doc<Organization>(`orgs/${org.id}`).update({templateIds: [...org.templateIds, templateId]})
-
     await this.rightsService.createDocAndRights(template, org.id);
 
     return templateId;
@@ -80,24 +80,28 @@ export class TemplateService {
     const template = this.query
       .getAll()
       .find(entity => entity.name === name && entity.orgId === this.orgQuery.getValue().org.id);
-      const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
-      const deliveryMaterials = this.materialQuery.getAll();
-      if (deliveryMaterials.length > 0) {
-        const batch = this.db.firestore.batch();
-        // Delete all materials of template
-        templateMaterials.forEach(material => {
-            const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
-            return batch.delete(materialDoc.ref);
-        });
-        // Add delivery's materials in template
-        deliveryMaterials.forEach(material => {
-          const materialWithoutStep = { ...material, step: null };
-          delete materialWithoutStep.step;
-          const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
-          return batch.set(materialDoc.ref, materialWithoutStep);
-        });
-        batch.commit();
-      }
+    const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
+    const deliveryMaterials = this.materialQuery.getAll();
+    if (deliveryMaterials.length > 0) {
+      const batch = this.db.firestore.batch();
+      // Delete all materials of template
+      templateMaterials.forEach(material => {
+        const materialDoc = this.db.doc<Material>(
+          `templates/${template.id}/materials/${material.id}`
+        );
+        return batch.delete(materialDoc.ref);
+      });
+      // Add delivery's materials in template
+      deliveryMaterials.forEach(material => {
+        const materialWithoutStep = { ...material, step: null };
+        delete materialWithoutStep.step;
+        const materialDoc = this.db.doc<Material>(
+          `templates/${template.id}/materials/${material.id}`
+        );
+        return batch.set(materialDoc.ref, materialWithoutStep);
+      });
+      batch.commit();
+    }
   }
 
   /** Check if name is already used in an already template */

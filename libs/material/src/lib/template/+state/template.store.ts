@@ -11,7 +11,7 @@ const initialState = {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'template', idKey: 'id' })
+@StoreConfig({ name: 'templates', idKey: 'id' })
 export class TemplateStore extends EntityStore<TemplateState, Template> {
 
   constructor() {

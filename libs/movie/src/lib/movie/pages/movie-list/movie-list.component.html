@@ -1,4 +1,3 @@
-<h1>Hello World</h1>
 <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
 
 <ng-template #loaded>
@@ -51,14 +50,7 @@
       </a>
     </mat-card>
   </article>
+  <div fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" (click)="addNewMovie()">Add a movie</button>
+  </div>
 </ng-template>
-
-<!--
-    <section *ngIf="(movies$ | async) as movies">
-    <ng-container *ngIf="movies.length > 0; else: empty">
-
-      <movie-empty *ngIf="movies.length < 1"></movie-empty>
-    </ng-container>
-    <ng-template #empty> <movie-home-empty></movie-home-empty> </ng-template>
-  </section>
--->

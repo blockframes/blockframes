@@ -28,7 +28,6 @@ export class MovieListGuard extends StateListGuard<Movie> {
       .select(state => state.org.movieIds)
       .pipe(
         switchMap(ids => {
-          console.log(ids)
           if (!ids || ids.length === 0) throw new Error('No movie yet')
           const queries = ids.map(id => this.fireQuery.fromQuery<Movie>(movieQuery(id)))
           return combineLatest(queries)

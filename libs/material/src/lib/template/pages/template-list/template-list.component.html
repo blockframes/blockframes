@@ -1,4 +1,6 @@
-<section *ngIf="(templates$ | async) as templates">
+<ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
+
+<ng-template #loaded>
   <div fxLayout="row wrap" fxLayoutAlign="start space-between">
     <template-item
       *ngFor="let template of (templates$ | async)"
@@ -7,6 +9,7 @@
       (deleted)="deleteTemplate(template)"
     ></template-item>
   </div>
-  <template-empty *ngIf="templates.length === 0"></template-empty>
-</section>
-<button mat-raised-button color="primary" (click)="addTemplateDialog()">Create template</button>
+  <div fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" (click)="addTemplateDialog()">Create template</button>
+  </div>
+</ng-template>
