@@ -11,10 +11,13 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Component
 import { AuthRootComponent } from './root/root.component';
-import { UiFormModule } from '@blockframes/ui'
+import { UiFormModule } from '@blockframes/ui';
+import { SignupFormComponent } from './components/signup-form/signup-form.component';
+import { SigninFormComponent } from './components/signin-form/signin-form.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'connexion', pathMatch: 'full' },
@@ -31,9 +34,10 @@ export const AuthRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSidenavModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
-  declarations: [AuthRootComponent],
+  declarations: [AuthRootComponent, SigninFormComponent, SignupFormComponent],
 })
 export class AuthModule {}

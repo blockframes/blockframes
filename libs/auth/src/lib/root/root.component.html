@@ -1,25 +1,16 @@
-<main fxLayout="row" fxLayoutAlign="space-between center">
-  <!-- Singin -->
-  <section testId="signin" id="signin" fxLayout="column" fxLayoutAlign="start center">
-    <h1>Sign in</h1>
-    <form [formGroup]="signinForm" (ngSubmit)="signin()" fxLayout="column">
-      <email-form-field [form]="signinForm"></email-form-field>
-      <password-form-field [form]="signinForm" [showHint]=false></password-form-field>
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <button mat-raised-button color="primary">Signin</button>
-      </div>
-    </form>
-  </section>
-  <hr/>
-  <!-- Signup -->
-  <section testId="signup" id="signup" fxLayout="column" fxLayoutAlign="start center">
-    <h1>Sign Up</h1>
-    <form [formGroup]="signupForm" (ngSubmit)="signup()" fxLayout="column">
-      <email-form-field [form]="signupForm"></email-form-field>
-      <form-group-password-confirm [form]="signupForm"></form-group-password-confirm>
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <button mat-raised-button color="primary">Signup</button>
-      </div>
-    </form>
-  </section>
-</main>
+<mat-sidenav-container>
+  <mat-sidenav-content [fxLayoutAlign]="align">
+    <button *ngIf="!isSignin" mat-stroked-button (click)="toSignin()">
+      open login
+    </button>
+    <button *ngIf="isSignin" mat-stroked-button (click)="toSignup()">
+      open signin
+    </button>
+  </mat-sidenav-content>
+  <mat-sidenav #signinSidenav [opened]="isSignin" mode="side">
+    <auth-login-form (opened)="toSignup()" (submited)="signin($event)"></auth-login-form>
+  </mat-sidenav>
+  <mat-sidenav #signupSidenav opened=false mode="side" position="end">
+    <auth-signup-form (opened)="toSignin()" (submited)="signup($event)"></auth-signup-form>
+  </mat-sidenav>
+</mat-sidenav-container>

@@ -1,0 +1,11 @@
+<section testId="signin" id="signin" fxLayout="column" fxLayoutAlign="start center">
+  <h1>Sign in</h1>
+  <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
+    <input-email [form]="signinForm"></input-email>
+    <input-password [form]="signinForm" [showHint]="false"></input-password>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <button type="submit" mat-raised-button color="accent">Let's go to work !</button>
+      <button type="button" mat-stroked-button (click)="opened.emit()">I don't have an account</button>
+    </div>
+  </form>
+</section>
