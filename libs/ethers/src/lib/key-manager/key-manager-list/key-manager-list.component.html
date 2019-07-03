@@ -1,19 +1,11 @@
 
 <ng-container *ngIf="(keys$ | async) as keys; else keysLoading">
-  <section *ngIf="(activeKey$ | async) as activeKey">
-    <h3>Active Key</h3>
-    <key-manager-item [key]="activeKey" [active]="true"></key-manager-item>
-  </section>
-  <section>
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <h3>Stored Key{{keys.length > 1 ? 's' : ''}} ({{keys.length}})</h3>
-      <div>
-        <button mat-button color="primary" (click)="createRandom()">Create Key</button>
-        <button mat-flat-button color="primary" (click)="importKey()">Import Key</button>
-      </div>
+    <h2>Stored key{{keys.length > 1 ? 's' : ''}} ({{keys.length}})</h2>
+    <div fxLayout="row wrap">
+
+      <!-- TODO replace by Max's component -->
+      <key-manager-item *ngFor="let key of keys" [key]="key" (deleteKey)="deleteKey($event)"></key-manager-item>
     </div>
-    <key-manager-item *ngFor="let key of keys" [key]="key"></key-manager-item>
-  </section>
 </ng-container>
 <ng-template #keysLoading>
   Your keys are loading ...

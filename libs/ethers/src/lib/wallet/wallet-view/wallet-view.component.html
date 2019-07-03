@@ -1,46 +1,36 @@
 <main>
   <ng-container *ngIf="!(isLoading$ | async); else walletLoading">
     <ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
-      <header fxLayout="row" fxLayoutAlign="space-between center">
-        <!-- Wallet Profile -->
+      <header fxLayout="row" fxLayoutAlign="start center">
+        <h1 fxFlex="noshrink">Wallet and Keyring</h1>
+        <div fxFlex="grow" class=spacer></div>
+        <div fxFlex="noshrink">
+          <button mat-button color="primary">
+            <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
+            Import Key
+          </button>
+          <button mat-button color="primary" (click)="addKey()">
+            <mat-icon>add</mat-icon>
+            Add Key
+          </button>
+        </div>
+      </header>
+      <div class="container">
+        <h2>My Profile</h2>
         <div class="wallet-profile">
-          <eth-blockie mat-card-avatar size="40" [address]="wallet.address">
-          </eth-blockie>
+
+          <!-- TODO replace by Max's component -->
+          <eth-blockie mat-card-avatar size="40" [address]="wallet.address"></eth-blockie>
+
+          <!-- TODO replace by Max's component -->
           <h4>{{wallet.ensDomain}}</h4>
           <a [href]="explorerUrl + wallet.address" target="_blank" rel="noopener">
             {{wallet.address}}
           </a>
+
         </div>
-        <div class="wallet-balance">
-          <!-- Balance -->
-          <span>{{wallet.balance}} ETH</span>
-    
-          <div>
-            <mat-form-field appearance="outline" floatLabel="always">
-              <mat-label>Buy Tokens</mat-label>
-              <input matInput type="number" min="0.01" max="0.1" step="0.01" placeholder="token amount" [(ngModel)]="amount">
-              <span matSuffix>ETH</span>
-            </mat-form-field>
-
-            <!--TODO FIX THIS IN #315 -->
-            <!-- <button mat-raised-button color="primary" (click)="requestTokens()">Buy</button> -->
-            <button mat-raised-button color="primary">Buy</button>
-
-          </div>
-        </div>
-      </header>
-
-      <mat-card *ngIf="!wallet.hasERC1077" fxLayout="row" fxLayoutAlign="space-between center">
-        <p>
-          Your Wallet is not yet deployed on the Blockchain,
-          you can deploy it now, or it will be automatically deployed during your first Blockchain interaction
-        </p>
-        <button mat-stroked-button color="primary" (click)="deployERC1077()">Deploy Wallet</button>
-      </mat-card>
-
-      <section>
-        <key-manager-list [ensDomain]="wallet.ensDomain"></key-manager-list>
-      </section>
+        <key-manager-list [ensDomain]="wallet.ensDomain" (deleteKey)="deleteKey($event)"></key-manager-list>
+      </div>
 
     </ng-container>
   </ng-container>

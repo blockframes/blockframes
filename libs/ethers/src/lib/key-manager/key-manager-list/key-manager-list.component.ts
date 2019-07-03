@@ -1,9 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from "@angular/core";
-import { KeyManagerQuery, Key, KeyManagerService } from "../+state";
+import { Component, ChangeDetectionStrategy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs";
-import { MatDialog } from "@angular/material/dialog";
-import { RecoverComponent } from "../recover/recover.component";
-import { CreatePasswordComponent } from "../create-password/create-password.component";
+
+import { KeyManagerQuery, Key } from "../+state";
 
 @Component({
   selector: 'key-manager-list',
@@ -14,25 +12,19 @@ import { CreatePasswordComponent } from "../create-password/create-password.comp
 export class KeyManagerListComponent implements OnInit {
 
   @Input() ensDomain: string;
-  activeKey$: Observable<Key>;
+  @Output() deleteKey = new EventEmitter<Key>();
+
   keys$: Observable<Key[]>;
 
   constructor(
     private query: KeyManagerQuery,
-    private dialog: MatDialog,
-    private service: KeyManagerService
   ){}
 
   ngOnInit() {
-    this.activeKey$ = this.query.selectActive();
     this.keys$ = this.query.selectAllKeysOfUser$(this.ensDomain);
   }
 
-  async createRandom() {
-    this.service.createFromRandom(this.ensDomain);
-  }
-
-  async importKey() {
-    this.dialog.open(RecoverComponent, {data: {ensDomain: this.ensDomain}});
+  delete(key: Key) {
+    this.deleteKey.emit(key);
   }
 }
