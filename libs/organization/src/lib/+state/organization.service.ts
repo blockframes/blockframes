@@ -5,34 +5,39 @@ import { FireQuery } from '@blockframes/utils';
 import { AuthStore, User } from '@blockframes/auth';
 import { initializeOrgRights, App, initializeAppRights } from '../rights';
 import { OrganizationQuery } from './organization.query';
+import { RightsQuery } from '../rights/+state';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   constructor(
     private store: OrganizationStore,
     private query: OrganizationQuery,
+    private rightsQuery: RightsQuery,
     private authStore: AuthStore,
     private db: FireQuery
   ) {}
 
   /** Add a new user to the organization */
   public addMember(member: OrgMember) {
-    const orgId = this.query.getValue().org.id;
-    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const org = this.query.getValue().org;
+    const rights = this.rightsQuery.getValue();
+    const orgDoc = this.db.doc(`orgs/${org.id}`);
+    const rightsDoc = this.db.doc(`rights/${org.id}`);
     const userDoc = this.db.doc(`users/${member.id}`);
 
     this.db.firestore
-      .runTransaction(async tx => {
+      .runTransaction(tx => {
         // Update the org
-        const org = await tx.get(orgDoc.ref);
-        const { userIds } = org.data();
+        const { userIds } = this.query.getValue().org;
         const nextUserIds = [...userIds, member.id];
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
-
+        const nextAdminsIds = [...rights.admins, member.id];
+        const rightsTransaction = tx.update(rightsDoc.ref, { admins: nextAdminsIds})
         // Update the user
-        const updateUserTransaction = tx.update(userDoc.ref, { orgId });
+        // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
+        const updateUserTransaction = tx.update(userDoc.ref, { orgId: org.id });
 
-        return Promise.all([orgTransaction, updateUserTransaction]);
+        return Promise.all([orgTransaction, updateUserTransaction, rightsTransaction]);
       })
       .catch(error => {
         throw Error(error);

@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { initializeOrgDocRights, initializeUserDocRights } from './rights.model';
-import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RightsService {
-  constructor(private db: FireQuery, private authQuery: AuthQuery) {}
+  constructor(private db: FireQuery) {}
 
   //////////////////////
   // DOC TRANSACTIONS //
