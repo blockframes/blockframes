@@ -40,7 +40,6 @@ export class MovieTitleFormComponent implements OnInit {
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
       const movie = await this.service.add(title, true);
 
-      this.movieQuery.selectEntity(movie.id)
       this.router.navigate([`/layout/o/home/${movie.id}/edit`]);
       this.dialogRef.close();
     }

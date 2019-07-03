@@ -61,7 +61,7 @@ export class OrganizationService {
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
           // Set the new organization in rights collection.
-          transaction.set(orgRightsDoc.ref, { orgId, superAdmin: user.uid, ...orgRights }),
+          transaction.set(orgRightsDoc.ref, orgRights),
           // Update user document with the new organization id.
           transaction.update(userDoc.ref, { orgId }),
           // Initialize apps permissions documents in organization apps sub-collection.
