@@ -60,14 +60,10 @@ export class LoginViewComponent {
   }
 
   public toSignup() {
-    this.signupSidenav.open();
-    this.loginSidenav.close();
     this.isSignin = false;
   }
 
   public toSignin() {
-    this.signupSidenav.close();
-    this.loginSidenav.open();
     this.isSignin = true;
   }
 

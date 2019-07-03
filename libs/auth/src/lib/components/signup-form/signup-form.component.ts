@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { SignupForm } from '../../forms/signup.form';
 
 @Component({
@@ -8,13 +8,9 @@ import { SignupForm } from '../../forms/signup.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SignupFormComponent implements OnInit {
+export class SignupFormComponent {
   @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 
-  public signupForm: SignupForm;
-
-  ngOnInit() {
-    this.signupForm = new SignupForm();
-  }
+  public signupForm = new SignupForm();
 }
