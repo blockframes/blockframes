@@ -1,14 +1,33 @@
+@import '~@angular/material/theming';
+
 mat-sidenav-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  height: 100%;
+  width: 100%;
 }
 
 mat-sidenav-content {
-  background-image: url('https://img.freepik.com/free-vector/spot-light-background_1284-4685.jpg?size=626&ext=jpg');
+  background-image: url('libs/shared-assets/images/signin-signup.png');
   background-size: cover;
+}
+
+button {
+  &:hover {
+    @include mat-elevation(4);
+  }
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.mat-fab {
+  height: 120px;
+  width: 120px;
+  background-color: rgba(0,0,0,0.3);
+}
+
+mat-icon {
+  color: white;
 }
 
 mat-sidenav {

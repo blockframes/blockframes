@@ -8,6 +8,10 @@ const ICONS_SVG = [
     url: 'assets/icons/accepted.svg'
   },
   {
+    name: 'arrow',
+    url: 'assets/icons/arrow.svg'
+  },
+  {
     name: 'add',
     url: 'assets/icons/add.svg'
   },

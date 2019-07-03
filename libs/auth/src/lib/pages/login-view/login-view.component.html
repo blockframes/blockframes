@@ -1,10 +1,10 @@
 <mat-sidenav-container>
   <mat-sidenav-content [fxLayoutAlign]="align">
-    <button *ngIf="!isSignin" mat-stroked-button (click)="toSignin()">
-      open login
+    <button class="mat-elevation-z0" mat-icon-button mat-fab *ngIf="isSignin" (click)="toSignup()">
+      <mat-icon class="rotate" svgIcon="arrow"></mat-icon>
     </button>
-    <button *ngIf="isSignin" mat-stroked-button (click)="toSignup()">
-      open signin
+    <button class="mat-elevation-z0" mat-icon-button mat-fab *ngIf="!isSignin" (click)="toSignin()">
+      <mat-icon svgIcon="arrow"></mat-icon>
     </button>
   </mat-sidenav-content>
   <mat-sidenav #signinSidenav [opened]="isSignin" mode="side">

@@ -1,18 +1,19 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, AuthQuery } from '../+state';
+import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar, MatSidenav } from '@angular/material';
-import { SignupForm } from '../forms/signup.form';
-import { SigninForm } from '../forms/signin.form';
+import { SignupForm } from '../../forms/signup.form';
+import { SigninForm } from '../../forms/signin.form';
 
 @Component({
-  selector: 'auth-root',
-  templateUrl: './root.component.html',
-  styleUrls: ['./root.component.scss'],
+  selector: 'auth-login-view',
+  templateUrl: './login-view.component.html',
+  styleUrls: ['./login-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 
 })
-export class AuthRootComponent {
+
+export class LoginViewComponent {
   @ViewChild('signinSidenav', {static: false}) loginSidenav: MatSidenav;
   @ViewChild('signupSidenav', {static: false}) signupSidenav: MatSidenav;
 
@@ -71,6 +72,6 @@ export class AuthRootComponent {
   }
 
   get align() {
-    return this.isSignin ? 'start center' : 'end center';
+    return this.isSignin ? 'end center' : 'start center';
   }
 }
