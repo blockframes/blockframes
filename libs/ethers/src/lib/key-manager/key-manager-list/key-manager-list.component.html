@@ -1,6 +1,6 @@
 
 <ng-container *ngIf="(keys$ | async) as keys; else keysLoading">
-    <h2>Stored key{{keys.length > 1 ? 's' : ''}} ({{keys.length}})</h2>
+    <h3>Stored key{{keys.length > 1 ? 's' : ''}} ({{keys.length}})</h3>
     <div fxLayout="row wrap">
 
       <!-- TODO replace by Max's component -->

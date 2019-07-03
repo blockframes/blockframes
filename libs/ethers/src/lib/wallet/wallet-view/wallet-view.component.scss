@@ -1,43 +1,28 @@
 
 main {
-  background-color: #fafafa;
+  background-color: var(--whiteBackground);
   margin-left: 200px;
   margin-right: 200px;
-  margin-top: 5%;
+  margin-top: 100px;
   header {
-    h1 {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 0.37px;
-    }
     .spacer {
-      border-bottom: solid #e4e4e4 1px;
+      border-bottom: solid var(--borderGrey) 1px;
       margin: 0 30px 0 30px;
     }
     button {
-      border-radius: 20px !important; // sorry for the !important but there is already an !important on button somewhere else
-      background-color: rgba(26,72,245,0.05);
       margin-left: 16px;
-      font-size: 12px;
-      font-weight: 600;
-      mat-icon {
-        font-size: 18px;
-        font-weight: 600;
-      }
     }
   }
-  .container {
+  section {
     margin-left: 200px;
     margin-right: 200px;
-    h2 {
-      font-weight: 600;
-      font-size: 24px;
-      color: #4d5664;
+    h3 {
+      color: var(--lightGrey);
     }
     .wallet-profile {
       background-color: white;
       border-radius: 10px;
-      border: solid 1px #e4e4e4;
+      border: solid 1px var(--borderGrey);
     }
   }
 }

@@ -2,21 +2,21 @@
   <ng-container *ngIf="!(isLoading$ | async); else walletLoading">
     <ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
       <header fxLayout="row" fxLayoutAlign="start center">
-        <h1 fxFlex="noshrink">Wallet and Keyring</h1>
+        <h2 fxFlex="noshrink">Wallet and Keyring</h2>
         <div fxFlex="grow" class=spacer></div>
         <div fxFlex="noshrink">
-          <button mat-button color="primary">
+          <button mat-flat-button (click)="importKey()">
             <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
             Import Key
           </button>
-          <button mat-button color="primary" (click)="addKey()">
+          <button mat-flat-button (click)="addKey()">
             <mat-icon>add</mat-icon>
             Add Key
           </button>
         </div>
       </header>
-      <div class="container">
-        <h2>My Profile</h2>
+      <section>
+        <h3>My Profile</h3>
         <div class="wallet-profile">
 
           <!-- TODO replace by Max's component -->
@@ -30,7 +30,7 @@
 
         </div>
         <key-manager-list [ensDomain]="wallet.ensDomain" (deleteKey)="deleteKey($event)"></key-manager-list>
-      </div>
+      </section>
 
     </ng-container>
   </ng-container>

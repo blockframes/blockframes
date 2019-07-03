@@ -7,3 +7,13 @@ button:disabled { // TODO: Get rid of the !important and apply this on mat-raise
   color: var(--lightGrey)!important;
   border: none!important;
 }
+
+.mat-flat-button {
+  border-radius: 20px !important;
+  background-color: var(--flatButtonGrey) !important;
+  color: var(--primary) !important;
+  mat-icon {
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
