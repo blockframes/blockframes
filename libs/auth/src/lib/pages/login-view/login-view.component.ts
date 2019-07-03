@@ -59,6 +59,18 @@ export class LoginViewComponent {
     }
   }
 
+  public toSignup() {
+    this.signupSidenav.open();
+    this.loginSidenav.close();
+    this.isSignin = false;
+  }
+
+  public toSignin() {
+    this.signupSidenav.close();
+    this.loginSidenav.open();
+    this.isSignin = true;
+  }
+
   get align() {
     return this.isSignin ? 'end center' : 'start center';
   }

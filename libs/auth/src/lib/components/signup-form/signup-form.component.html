@@ -1,5 +1,5 @@
 <section testId="signup" fxLayout="column" fxLayoutAlign="start center">
-  <h1>Sign Up</h1>
+  <h2>Sign Up</h2>
   <form [formGroup]="signupForm" (ngSubmit)="submited.emit(signupForm)" fxLayout="column">
     <input-email [form]="signupForm"></input-email>
     <form-group-password-confirm [form]="signupForm"></form-group-password-confirm>
