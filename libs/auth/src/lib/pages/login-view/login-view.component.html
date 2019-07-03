@@ -1,4 +1,7 @@
 <mat-sidenav-container>
+  <mat-sidenav #signinSidenav [opened]="isSignin" mode="side">
+    <auth-login-form (opened)="toSignup()" (submited)="signin($event)"></auth-login-form>
+  </mat-sidenav>
   <mat-sidenav-content [fxLayoutAlign]="align">
     <button class="mat-elevation-z0" mat-icon-button mat-fab *ngIf="isSignin" (click)="toSignup()">
       <mat-icon class="rotate" svgIcon="arrow"></mat-icon>
@@ -7,10 +10,7 @@
       <mat-icon svgIcon="arrow"></mat-icon>
     </button>
   </mat-sidenav-content>
-  <mat-sidenav #signinSidenav [opened]="isSignin" mode="side">
-    <auth-login-form (opened)="toSignup()" (submited)="signin($event)"></auth-login-form>
-  </mat-sidenav>
-  <mat-sidenav #signupSidenav opened=false mode="side" position="end">
+  <mat-sidenav #signupSidenav [opened]="!isSignin" mode="side" position="end">
     <auth-signup-form (opened)="toSignin()" (submited)="signup($event)"></auth-signup-form>
   </mat-sidenav>
 </mat-sidenav-container>
