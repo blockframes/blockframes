@@ -1,35 +1,15 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity } from '@datorama/akita';
+import { Query } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
-import { Organization, OrganizationWithMovies } from './organization.model';
-import { map, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable, of } from 'rxjs';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
+export class OrganizationQuery extends Query<OrganizationState> {
 
-  public orgsWithMovies$: Observable<OrganizationWithMovies[]> = this.selectAll().pipe(
-    switchMap(orgs => {
-      const orgsWithMovies$ = orgs.map(org => {
-        return this.movieQuery.selectMany(org.movieIds).pipe(
-          map(movies => movies.filter(movie => !!movie)),
-          map(movies => ({ ...org, movies }))
-        )
-      })
-      // Return an observable of empty array if the user has no organization
-      return orgs.length === 0 ? of([]) : combineLatest(orgsWithMovies$)
-    })
-  );
 
-  constructor(private movieQuery: MovieQuery, protected store: OrganizationStore) {
+  constructor(protected store: OrganizationStore) {
     super(store);
-  }
-
-  public getOrgId(name: string) {
-    return this.getAll().find(org => org.name === name).id;
   }
 
   get form$() {

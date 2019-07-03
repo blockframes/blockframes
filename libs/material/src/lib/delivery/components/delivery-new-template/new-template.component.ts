@@ -14,7 +14,6 @@ import { takeWhile } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTemplateComponent implements OnInit, OnDestroy {
-  public orgs$: Observable<Organization[]>;
   public isUpdateTemplate = false;
   private isAlive = true;
 
@@ -26,13 +25,10 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<NewTemplateComponent>,
     private templateService: TemplateService,
-    private organizationQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
-    this.orgs$ = this.organizationQuery.selectAll();
-
     // Check if the name already exists in the selected organization
     this.form.valueChanges.pipe(takeWhile(() => this.isAlive)).subscribe(values =>
       this.templateService.nameExists(values.name, values.organization)
@@ -41,14 +37,14 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
     );
   }
 
-  public saveTemplate(name: string, org: Organization) {
-    this.templateService.saveAsTemplate(name, org);
+  public saveTemplate(name: string) {
+    this.templateService.saveAsTemplate(name);
     this.dialogRef.close();
     this.snackBar.open('Saved template : ' + name + ' !', 'close', { duration: 2000 });
   }
 
-  public updateTemplate(name: string, org: Organization) {
-    this.templateService.updateTemplate(name, org);
+  public updateTemplate(name: string) {
+    this.templateService.updateTemplate(name);
     this.dialogRef.close();
     this.snackBar.open('Updated template : ' + name + ' !', 'close', { duration: 2000 });
   }

@@ -8,30 +8,31 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationListGuard, OrgFormComponent, RightsGuard } from '@blockframes/organization';
+import { OrgFormComponent, RightsGuard, OrganizationGuard } from '@blockframes/organization';
 import { WelcomeComponent } from 'libs/ui/src/lib/landing-page/welcome.component';
+import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
-    loadChildren: '@blockframes/auth#AuthModule'
+    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
   },
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard, OrganizationListGuard],
-    canDeactivate: [OrganizationListGuard],
+    canActivate: [AuthGuard],
+    canDeactivate: [AuthGuard],
     children: [
       {
         path: '',
-        redirectTo: 'o', // Temporary name until we find a better one
+        redirectTo: 'o',
         pathMatch: 'full'
       },
       {
-        path: 'o', // Temporary name until we find a better one
-        canActivate: [RightsGuard],
-        canDeactivate: [RightsGuard],
+        path: 'o',
+        canActivate: [RightsGuard, OrganizationGuard],
+        canDeactivate: [RightsGuard, OrganizationGuard],
         children: [
           {
             path: '',
@@ -39,26 +40,30 @@ export const routes: Routes = [
             pathMatch: 'full'
           },
           {
+            path: 'no-movies',
+            component: MovieEmptyComponent
+          },
+          {
             path: 'organization',
-            loadChildren: '@blockframes/organization#OrganizationModule'
+            loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
           },
           {
             path: 'account',
-            loadChildren: '@blockframes/account#AccountModule'
+            loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
           },
           {
             path: 'home',
-            loadChildren: '@blockframes/movie#MovieModule'
+            loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
           },
-          { path: 'templates',
-            loadChildren: '@blockframes/template#TemplateModule'
-            // TODO: remove this in favor of dynamic imports when Angular 8 is live
+          {
+            path: 'templates',
+            loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
           },
           {
             path: ':movieId',
             canActivate: [MovieActiveGuard],
             canDeactivate: [MovieActiveGuard],
-            loadChildren: '@blockframes/material#DeliveryModule'
+            loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
           }
         ]
       },
@@ -70,9 +75,9 @@ export const routes: Routes = [
             component: WelcomeComponent
           },
           {
-            path: 'create-organization',
+            path: 'create',
             component: OrgFormComponent
-          },
+          }
           // {
           //   path: 'join-organization',
           //   component: OrgJoinComponent
@@ -83,7 +88,7 @@ export const routes: Routes = [
   },
   {
     path: 'not-found',
-    loadChildren: '@blockframes/ui#ErrorNotFoundModule'
+    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
   },
   {
     path: '**',
@@ -92,11 +97,13 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes,{
-    anchorScrolling: 'enabled',
-    onSameUrlNavigation: 'reload',
-    paramsInheritanceStrategy: 'always'
-  })],
+  imports: [
+    RouterModule.forRoot(routes, {
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always'
+    })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

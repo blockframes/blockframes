@@ -1,7 +1,7 @@
 .mat-expansion-indicator:before {
-  color: $primary !important;
+  color: var(--primary) !important;
 }
 
 .mat-expansion-indicator:after {
-  color: $primary !important;
+  color: var(--primary) !important;
 }

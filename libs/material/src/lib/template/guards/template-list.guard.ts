@@ -3,18 +3,16 @@ import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { Template, TemplateStore } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { flatten } from 'lodash';
 
-const templateListQuery = (orgId: string): Query<Template[]> => ({
-  path: `templates`,
-  queryFn: ref => ref.where('orgId', '==', orgId)
+const templateQuery = (id: string): Query<Template> => ({
+  path: `templates/${id}`
 });
 
 @Injectable({ providedIn: 'root' })
 export class TemplateListGuard extends StateListGuard<Template> {
-  urlFallback = 'layout';
+  urlFallback = '/layout/o/templates/create';
 
   constructor(
     private fireQuery: FireQuery,
@@ -26,15 +24,14 @@ export class TemplateListGuard extends StateListGuard<Template> {
   }
 
   get query() {
-    return this.orgQuery.selectAll().pipe(
-      switchMap(orgs => {
-        const templates$ = orgs.map(org => {
-          const query = templateListQuery(org.id);
-          return this.fireQuery.fromQuery<Template[]>(query);
-        });
-        return combineLatest(templates$)
-      }),
-      map(templates => flatten(templates))
-    )
+    return this.orgQuery
+      .select(state => state.org.templateIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No template yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<Template>(templateQuery(id)))
+          return combineLatest(queries)
+        })
+      );
   }
 }

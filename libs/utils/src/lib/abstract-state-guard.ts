@@ -16,7 +16,11 @@ export abstract class StateListGuard<T> implements CanActivate, CanDeactivate<an
       this.subscription = this.query.pipe(
         tap(entities => this.store.set(entities))
       ).subscribe({
-        next: result => res(!!result),
+        next: result => {
+          return typeof result === 'string'
+            ? res(this.router.parseUrl(result))
+            : res(!!result);
+        },
         error: err => res(this.router.parseUrl(this.urlFallback))
       })
     })
@@ -58,7 +62,11 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
           this.store.setActive(entity[this.store.idKey]);
         }))
       ).subscribe({
-        next: result => res(!!result),
+        next: result => {
+          return typeof result === 'string'
+            ? res(this.router.parseUrl(result))
+            : res(!!result);
+        },
         error: err => res(this.router.parseUrl(this.urlFallback))
       });
     })

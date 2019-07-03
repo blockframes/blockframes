@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { Movie, MovieStore } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization';
-import { switchMap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 const movieQuery = (id: string): Query<Movie> => ({
   path: `movies/${id}`
@@ -11,7 +12,7 @@ const movieQuery = (id: string): Query<Movie> => ({
 
 @Injectable({ providedIn: 'root' })
 export class MovieListGuard extends StateListGuard<Movie> {
-  urlFallback = 'layout';
+  urlFallback = '/layout/o/home/create';
 
   constructor(
     private fireQuery: FireQuery,
@@ -23,10 +24,14 @@ export class MovieListGuard extends StateListGuard<Movie> {
   }
 
   get query() {
-    return this.orgQuery.selectAll().pipe(
-      map(orgs => orgs.reduce((acc, org) => [...acc, ...org.movieIds], [])),
-      map(movieIds => movieIds.map(id => movieQuery(id))),
-      switchMap(query => this.fireQuery.fromQuery(query))
-    );
+    return this.orgQuery
+      .select(state => state.org.movieIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No movie yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<Movie>(movieQuery(id)))
+          return combineLatest(queries)
+        })
+      );
   }
 }

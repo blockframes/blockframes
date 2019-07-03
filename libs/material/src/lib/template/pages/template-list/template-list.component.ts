@@ -3,7 +3,6 @@ import { TemplateQuery, TemplateService, Template } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization } from '@blockframes/organization';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 
 @Component({
@@ -13,7 +12,8 @@ import { TemplateAddComponent } from '../../components/template-add/template-add
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit {
-  public orgsWithTemplates$: Observable<Organization[]>;
+  public loading$: Observable<boolean>;
+  public templates$: Observable<Template[]>;
 
   constructor(
     private query: TemplateQuery,
@@ -23,7 +23,8 @@ export class TemplateListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.orgsWithTemplates$ = this.query.orgsWithTemplates$;
+    this.loading$ = this.query.selectLoading();
+    this.templates$ = this.query.selectAll();
   }
 
   public deleteTemplate(template: Template) {
@@ -33,11 +34,9 @@ export class TemplateListComponent implements OnInit {
     });
   }
 
-  public addTemplateDialog(event: MouseEvent, org: Organization): void {
-    event.stopPropagation();
+  public addTemplateDialog(): void {
     this.dialog.open(TemplateAddComponent, {
-      width: '400px',
-      data: { org }
+      width: '400px'
     });
   }
 }

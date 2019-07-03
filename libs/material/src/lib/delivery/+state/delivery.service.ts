@@ -199,7 +199,7 @@ export class DeliveryService {
   /** Sign array validated of delivery with stakeholder logged */
   public signDelivery() {
     const delivery = this.query.getActive();
-    const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
+    const orgIdsOfUser = this.organizationQuery.getValue().org.id;
     const { validated } = delivery;
     const { stakeholders } = delivery;
 

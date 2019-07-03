@@ -3,8 +3,8 @@ import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
 import { Template, TemplateStore } from '../+state';
 import { Router } from '@angular/router';
 
-export const templateActiveQuery = (templateId: string): Query<Template> => ({
-  path: `templates/${templateId}`,
+export const templateActiveQuery = (id: string): Query<Template> => ({
+  path: `templates/${id}`,
   materials: template => ({
     path: `templates/${template.id}/materials`
   })

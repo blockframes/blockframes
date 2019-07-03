@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MovieService } from '../../+state';
+import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
-import { OrganizationQuery, OrganizationWithMovies } from '@blockframes/organization';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'movie-list',
@@ -13,24 +13,30 @@ import { MovieTitleFormComponent } from '../../components/movie-title-form/movie
 })
 
 export class MovieListComponent implements OnInit {
-  public orgs$: Observable<OrganizationWithMovies[]>;
+
+  public loading$: Observable<boolean>;
+  public movies$: Observable<Movie[]>
 
   constructor(
     private service: MovieService,
-    private orgQuery: OrganizationQuery,
+    private query: MovieQuery,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    this.orgs$ = this.orgQuery.orgsWithMovies$;
+    this.loading$ = this.query.selectLoading();
+    this.movies$ = this.query.selectAll();
   }
 
-  public addNewMovie(event: MouseEvent, org: { id: string, name: string}) {
-    event.stopPropagation();
-    this.dialog.open(MovieTitleFormComponent, { data: org });
+  public addNewMovie() {
+    this.dialog.open(MovieTitleFormComponent);
   }
 
-  public delete(id: string) {
-    this.service.remove(id);
+  public delete(movie: Movie) {
+    this.service.remove(movie.id);
+    this.snackBar.open(`Movie "${movie.title.original}" has been deleted.`, 'close', {
+      duration: 2000
+    });
   }
 }

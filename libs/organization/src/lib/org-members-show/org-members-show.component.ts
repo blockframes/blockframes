@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrgMembersService, OrganizationQuery, Organization } from '../+state';
+import { OrganizationQuery, Organization, OrganizationService } from '../+state';
 import { RightsQuery } from '../rights/+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
@@ -25,7 +25,7 @@ export class OrgMembersShowComponent implements OnInit {
   public isSuperAdmin$: Observable<boolean>;
 
   constructor(
-    private service: OrgMembersService,
+    private service: OrganizationService,
     private rightsQuery: RightsQuery,
     private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
@@ -40,7 +40,7 @@ export class OrgMembersShowComponent implements OnInit {
       role: ''
     });
     this.mailsOptions = [];
-    this.org$ = this.orgQuery.selectActive();
+    this.org$ = this.orgQuery.select('org');
     this.onChange();
   }
 
@@ -64,7 +64,7 @@ export class OrgMembersShowComponent implements OnInit {
 
     // Query a get or create user, to make ghost users when needed
     const { id } = await this.getOrCreateUserByMail(email);
-    await this.service.addMember(this.orgQuery.getActiveId(), { id, email, roles: [role] });
+    await this.service.addMember({ id, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
   }

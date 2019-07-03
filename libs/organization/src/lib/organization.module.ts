@@ -15,30 +15,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthModule } from '@blockframes/auth';
 import { OrgFormComponent } from './org-form/org-form.component';
-import { OrgListComponent } from './org-list/org-list.component';
 import { OrgShowComponent } from './org-show/org-show.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
 import { OrgWidgetComponent } from './org-widget/org-widget.component';
-import { OrganizationActiveGuard } from './guards/organization-active.guard';
 
 export const organizationRoutes: Routes = [
-  {
-    path: '',
-    redirectTo: 'list',
-    pathMatch: 'full'
-  },
   {
     path: 'form',
     component: OrgFormComponent
   },
   {
-    path: 'list',
-    component: OrgListComponent,
-  },
-  {
     path: ':orgId',
-    canActivate: [OrganizationActiveGuard],
-    canDeactivate: [OrganizationActiveGuard],
     component: OrgShowComponent
   }
 ];
@@ -64,7 +51,6 @@ export const organizationRoutes: Routes = [
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrgListComponent,
     OrgFormComponent,
     OrgShowComponent,
     OrgMembersShowComponent,

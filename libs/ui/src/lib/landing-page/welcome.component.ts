@@ -14,6 +14,6 @@ export class WelcomeComponent implements OnInit {
   }
 
   goToForm() {
-    this.router.navigate(["/layout/welcome/create-organization"])
+    this.router.navigate(["/layout/welcome/create"])
   }
 }

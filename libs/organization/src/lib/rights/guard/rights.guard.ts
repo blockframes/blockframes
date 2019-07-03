@@ -41,7 +41,7 @@ export class RightsGuard {
         .pipe(
           switchMap(user => {
             if (!user.orgId) throw new Error('User has no orgId');
-            return this.fireQuery.fromQuery(rightsQuery(user.orgId));
+            return this.fireQuery.fromQuery<OrganizationRights>(rightsQuery(user.orgId));
           }),
           tap(rights => this.store.update(rights))
         )

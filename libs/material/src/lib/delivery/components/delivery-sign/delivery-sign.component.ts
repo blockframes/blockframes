@@ -42,7 +42,7 @@ export class DeliverySignComponent {
   public async confirm() {
     this.loading = true;
     const delivery = this.deliveryQuery.getActive();
-    const orgIdsOfUser = this.organizationQuery.getAll().map(org => org.id);
+    const orgIdsOfUser = this.organizationQuery.getValue().org.id;
     const stakeholderId = delivery.stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId)).id;
     // await this.service.signDelivery(delivery.id, stakeholderId);// TODO WALLET SERVICE ISSUE #315, make this logic in delivery-editable
 
