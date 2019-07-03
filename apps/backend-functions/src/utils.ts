@@ -1,5 +1,6 @@
-import { db, functions } from './firebase';
+import { functions } from './firebase';
 import * as backup from './backup';
+import { Material } from './data/types';
 
 ///////////////
 // VARIABLES //
@@ -8,123 +9,6 @@ import * as backup from './backup';
 // String refers to svg icon name
 export const APP_DELIVERY_ICON = 'media_delivering';
 export const APP_MOVIE_ICON = 'media_financiers';
-
-////////////////
-// INTERFACES //
-////////////////
-
-// TODO: Figure out how we can access our front models
-
-export interface IDMap<T> {
-  [id: string]: T;
-}
-
-export interface Organization {
-  id: string;
-  userIds: string[];
-  name: string;
-  address: string;
-}
-
-export interface Stakeholder {
-  id: string;
-  orgId: string;
-}
-
-export interface Step {
-  id: string;
-  date: Date;
-  name: string;
-}
-
-export interface Delivery {
-  id: string;
-  movieId: string;
-  processedId: string;
-  stakeholders: string[];
-  materials: string[];
-  steps: Step[];
-}
-
-export interface Movie {
-  id: string;
-  title: {
-    original: string;
-  };
-}
-
-export interface Material {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-  deliveriesIds: string[];
-  state: string;
-  stepId: string;
-}
-
-export interface SnapObject {
-  movie: Movie;
-  docID: DocID;
-  org: Organization;
-  eventType: string;
-  delivery?: Delivery | null;
-  newStakeholderId?: string;
-  count?: number;
-}
-
-export interface DocID {
-  id: string;
-  type: 'movie' | 'delivery' | 'material';
-}
-
-interface DocWithID {
-  id: string;
-}
-
-export function asIDMap<T extends DocWithID>(items: T[]): IDMap<T> {
-  const result: IDMap<T> = {};
-
-  items.forEach(item => {
-    result[item.id] = item;
-  });
-
-  return result;
-}
-
-////////////////////////////////////
-// COLLECTIONS & DOCUMENT GETTERS //
-////////////////////////////////////
-
-export async function getCollection<T>(path: string): Promise<T[]> {
-  return db
-    .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data() as T));
-}
-
-export async function getDocument<T>(path: string): Promise<T> {
-  return db
-    .doc(path)
-    .get()
-    .then(doc => doc.data() as T);
-}
-
-export async function getOrgsOfDocument(
-  documentId: string,
-  collection: string
-): Promise<Organization[]> {
-  const stakeholders = await getCollection<Stakeholder>(`${collection}/${documentId}/stakeholders`);
-  const promises = stakeholders.map(({ orgId }) => getDocument<Organization>(`orgs/${orgId}`));
-  return Promise.all(promises);
-}
-
-export function getCount(collection: string) {
-  return db
-    .collection(collection)
-    .get()
-    .then(col => col.size);
-}
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //

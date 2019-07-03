@@ -1,20 +1,6 @@
 import { db, serverTimestamp } from './firebase';
-import { DocID, SnapObject, APP_DELIVERY_ICON, APP_MOVIE_ICON } from './utils';
-
-interface BaseNotification {
-  message: string;
-  userId: string;
-  docID: DocID;
-  stakeholderId?: string;
-  path?: string;
-}
-
-interface Notification extends BaseNotification {
-  id: string;
-  isRead: boolean;
-  date: any;
-  app: string;
-}
+import { APP_DELIVERY_ICON, APP_MOVIE_ICON } from './utils';
+import { BaseNotification, Notification, SnapObject } from './data/types';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: Notification[]): Promise<any> {
@@ -57,12 +43,12 @@ export function customMessage(userId: string, snap: SnapObject) {
   }
   if (snap.eventType === 'google.firestore.document.delete') {
     if (snap.docID.type === 'movie') {
-      return `${snap.org.name} has been removed from movie ${snap.movie.title.original}.`
+      return `${snap.org.name} has been removed from movie ${snap.movie.title.original}.`;
     }
     if (snap.docID.type === 'delivery') {
-      return `${snap.org.name} has been removed from ${snap.movie.title.original} delivery.`
+      return `${snap.org.name} has been removed from ${snap.movie.title.original} delivery.`;
     }
-    throw new Error('Document type is not defined.')
+    throw new Error('Document type is not defined.');
   }
-  throw new Error('Invalid message.')
+  throw new Error('Invalid message.');
 }

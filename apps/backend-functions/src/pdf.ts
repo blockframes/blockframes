@@ -1,24 +1,21 @@
 /**
  * Deals with PDF exports for various parts of the application.
+ *
+ * Designed to work both locally (for demo, testing & debugging)
+ * and in a firebase function.
  */
 import { groupBy, sortBy, isEmpty } from 'lodash';
-import {
-  asIDMap,
-  Delivery,
-  getCollection,
-  getDocument,
-  IDMap,
-  Material,
-  Organization,
-  Stakeholder,
-  Step
-} from './utils';
+import { asIDMap, Delivery, IDMap, Material, Organization, Stakeholder, Step } from './data/types';
+import { getCollection, getDocument } from './data/internals';
 
 const PdfPrinter = require('pdfmake');
 
 // Types
 // =====
 
+/**
+ * Internal type expected by the pdf generation for delivery.
+ */
 interface DeliveryContent {
   txID: { [stakeholderID: string]: string };
   orgs: IDMap<Organization>;
@@ -191,7 +188,7 @@ export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
 
   // TODO: factor out the data layer
   const delivery = await getDocument<Delivery>(`deliveries/${deliveryId}`);
-  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`)
+  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
 
   const orgs = await Promise.all(
     stakeholders.map(stk => getDocument<Organization>(`orgs/${stk.orgId}`))

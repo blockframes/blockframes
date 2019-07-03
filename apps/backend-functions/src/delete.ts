@@ -1,6 +1,8 @@
 import { db, functions } from './firebase';
 import { prepareNotification, triggerNotifications } from './notify';
-import { getDocument, Delivery, Material, getCollection, isTheSame, getOrgsOfDocument } from './utils';
+import { isTheSame } from './utils';
+import { getDocument, getCollection, getOrgsOfDocument } from './data/internals';
+import { Delivery, Material } from './data/types';
 
 export async function deleteFirestoreMovie (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -158,4 +160,4 @@ export async function deleteFirestoreMaterial (
     }
   }
   return true;
-};
+}
