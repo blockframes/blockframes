@@ -1,7 +1,129 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+
+    /// USERS RULES ///
+
+    match /users/{userId} {
+    	allow read: if isSignedIn();
+      allow update: if isSuperAdmin(getUserOrgId()); // Necessary to add users to an org. TODO : remove
+    	allow write: if currentUser().uid == incomingData().uid
+        || currentUser().uid == existingData().uid
+    }
+
+    /// NOTIFICATIONS RULES ///
+
+    match /notifications/{notificationId} {
+    	allow read: if currentUser().uid == existingData().userId
+    }
+
+    /// ORGANIZATION RULES ///
+
+    match /orgs/{orgId} {
+    	allow create, read: if isSignedIn()
+    	allow write: if isSuperAdmin(orgId)
+      	&& existingData().name == incomingData().name
+        && existingData().id == incomingData().id
+      allow update: if isOrgAdmin(orgId)
+      	&& existingData().name == incomingData().name
+        && existingData().id == incomingData().id
+    }
+
+    /// ORGRIGHS RULES ///
+
+    match /rights/{orgId} {
+    	allow create, read: if isSignedIn()
+    	allow write, read: if isSuperAdmin(orgId)
+        || isOrgAdmin(orgId)
+
+      match /{documents=**} {
+      	allow create, read: if isSignedIn()
+    		allow write, read: if isSuperAdmin(orgId)
+          || isOrgAdmin(orgId)
+      }
+    }
+
+    /// MOVIES RULES ///
+
+    match /movies/{movieId} {
+    	allow create: if isSuperAdmin(getUserOrgId())
+        || isOrgAdmin(getUserOrgId())
+    	allow write, read: if isSignedIn()
+        && getOrgsDocumentRights(movieId).owner == getUserOrgId()
+
+      match /{documents=**} {
+        allow create: if isSuperAdmin(getUserOrgId())
+          || isOrgAdmin(getUserOrgId())
+        allow write, read: if isSignedIn()
+          && getOrgsDocumentRights(movieId).owner == getUserOrgId()
+      }
+    }
+
+    /// DELIVERIES RULES ///
+
+    match /deliveries/{deliveryId} {
+    	allow create, list: if isSuperAdmin(getUserOrgId())
+        || isOrgAdmin(getUserOrgId())
+    	allow write, read: if isSignedIn()
+        && getOrgsDocumentRights(deliveryId).owner == getUserOrgId()
+
+      match /{documents=**} {
+        allow create: if isSuperAdmin(getUserOrgId())
+          || isOrgAdmin(getUserOrgId())
+        allow write, read: if isSignedIn()
+      }
+    }
+
+    // TEMPLATES RULES //
+
+    match /templates/{templateId} {
+    	allow create: if isSuperAdmin(getUserOrgId())
+        || isOrgAdmin(getUserOrgId())
+    	allow write, read: if isSignedIn()
+        && getOrgsDocumentRights(templateId).owner == getUserOrgId()
+
+      match /{documents=**} {
+        allow create: if isSuperAdmin(getUserOrgId())
+          || isOrgAdmin(getUserOrgId())
+        allow write, read: if isSignedIn()
+          && getOrgsDocumentRights(templateId).owner == getUserOrgId()
+      }
+    }
+
+    // FUNCTIONS //
+
+    function existingData() {
+      return resource.data
+    }
+
+    function incomingData() {
+      return request.resource.data
+    }
+
+    function currentUser() {
+      return request.auth
+    }
+
+    function isSignedIn() {
+      return currentUser() != null
+    }
+
+  	function getUserOrgId() {
+    	return get(/databases/$(database)/documents/users/$(currentUser().uid)).data.orgId
+  	}
+
+  	function isSuperAdmin(orgId) {
+    	return isSignedIn() && currentUser().uid in
+    		get(/databases/$(database)/documents/rights/$(orgId)).data.superAdmins
+  	}
+
+    function isOrgAdmin(orgId) {
+    	return isSignedIn() && currentUser().uid in
+    		get(/databases/$(database)/documents/rights/$(orgId)).data.admins
+    }
+
+    function getOrgsDocumentRights(docId) {
+    	return get(/databases/$(database)/documents/rights/$(getUserOrgId())/orgDocsRights/$(docId)).data
     }
   }
 }
+
