@@ -1,11 +1,26 @@
 <div [formGroup]="form">
   <!-- TITLES -->
   <h3> Titles </h3>
-  <string-form-field class="full-width" required=true [form]="form" placeholder="Original title" name="originalTitle"></string-form-field>
-  <string-form-field class="full-width" required=true [form]="form" placeholder="International title" name="internationalTitle"></string-form-field>
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="Original title" formControlName="originalTitle" required/>
+    <mat-error *ngIf="form.get('originalTitle').hasError('required')">
+      Original title is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="International title" formControlName="internationalTitle" required/>
+    <mat-error *ngIf="form.get('internationalTitle').hasError('required')">
+      International title is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
 
   <h3> Directed By </h3>
-  <string-form-field class="full-width" required=true [form]="form" placeholder="Director name" name="directorName"></string-form-field>
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="Director name" formControlName="directorName" required/>
+    <mat-error *ngIf="form.get('directorName').hasError('required')">
+      Director name is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
 
   <!-- POSTER -->
   <h3> Poster </h3>
@@ -29,7 +44,12 @@
     </ng-template>
   </mat-card>
   <h3> Production </h3>
-  <string-form-field class="full-width" type="number" [form]="form" placeholder="Production year" name="productionYear"></string-form-field>
+  <mat-form-field class="full-width">
+    <input matInput type="number" placeholder="Production year" formControlName="productionYear"/>
+    <mat-error *ngIf="form.get('productionYear').hasError('pattern')">
+      Invalid year.
+    </mat-error>
+  </mat-form-field>
 
   <!-- AUDIOVISUAL TYPES -->
   <h3> Types </h3>

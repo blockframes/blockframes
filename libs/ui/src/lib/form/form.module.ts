@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Components
-import { StringFormFieldComponent } from './form-field/string-form-field/string-form-field.component';
 import { ChipsAutocompleteComponent } from './chips-autocomplete/chips-autocomplete.component';
 import { PasswordFormFieldComponent } from './form-field/password-form-field/password-form-field.component';
 import { PasswordConfirmComponent } from './form-groups/password-confirm/password-confirm.component';
@@ -27,13 +26,11 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule
   ],
   declarations: [
-    StringFormFieldComponent,
     ChipsAutocompleteComponent,
     PasswordFormFieldComponent,
     PasswordConfirmComponent
   ],
   exports: [
-    StringFormFieldComponent,
     ChipsAutocompleteComponent,
     PasswordFormFieldComponent,
     PasswordConfirmComponent

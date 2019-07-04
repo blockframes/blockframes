@@ -31,12 +31,15 @@
   <!-- PRIVATE KEY -->
   <mat-tab label="Private Key">
     <form [formGroup]="form" (ngSubmit)="recover('private-key')" fxLayout="column">
-      <string-form-field
-        [form]="form"
-        name= "privateKey"
-        placeholder= "Enter your Private Key"
-        [matcher]=xorControlsMatcher
-      ></string-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Enter your Private Key" formControlName="privateKey" [errorStateMatcher]="xorControlsMatcher ? xorControlsMatcher : undefined"/>
+        <mat-error *ngIf="xorControlsMatcher && form.hasError('bothEmpty')">
+          Both fields <strong>cannot be setted</strong> at the same time.
+        </mat-error>
+        <mat-error *ngIf="form.get('privateKey').hasError('pattern')">
+          Invalid pattern.
+        </mat-error>
+      </mat-form-field>
       <form-group-password-confirm [form]="form"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button type="button" mat-button (click)="cancel()">Cancel</button>
