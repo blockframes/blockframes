@@ -59,14 +59,6 @@ export class LoginViewComponent {
     }
   }
 
-  public toSignup() {
-    this.isSignin = false;
-  }
-
-  public toSignin() {
-    this.isSignin = true;
-  }
-
   get align() {
     return this.isSignin ? 'end center' : 'start center';
   }
