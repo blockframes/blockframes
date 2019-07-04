@@ -14,12 +14,12 @@
   <!-- MNEMONIC -->
   <mat-tab label="Mnemonic">
     <form [formGroup]="form" (ngSubmit)="recover('mnemonic')" fxLayout="column">
-      <input-textarea
+      <textarea-form-field
         [form]="form"
         name= "mnemonic"
         placeholder= "Enter your Mnemonic"
         [matcher]=xorControlsMatcher
-      ></input-textarea>
+      ></textarea-form-field>
       <form-group-password-confirm [form]="form"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button type="button" mat-button (click)="cancel()">Cancel</button>
@@ -31,12 +31,12 @@
   <!-- PRIVATE KEY -->
   <mat-tab label="Private Key">
     <form [formGroup]="form" (ngSubmit)="recover('private-key')" fxLayout="column">
-      <input-string
+      <string-form-field
         [form]="form"
         name= "privateKey"
         placeholder= "Enter your Private Key"
         [matcher]=xorControlsMatcher
-      ></input-string>
+      ></string-form-field>
       <form-group-password-confirm [form]="form"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button type="button" mat-button (click)="cancel()">Cancel</button>

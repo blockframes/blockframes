@@ -3,12 +3,12 @@ import { FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material';
 
 @Component({
-  selector: 'input-password',
-  templateUrl: './password.component.html',
-  styleUrls: ['./password.component.scss'],
+  selector: 'password-form-field',
+  templateUrl: './password-form-field.component.html',
+  styleUrls: ['./password-form-field.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PasswordComponent  {
+export class PasswordFormFieldComponent  {
 
   @Input() form: FormGroup;
   @Input() name = 'password';

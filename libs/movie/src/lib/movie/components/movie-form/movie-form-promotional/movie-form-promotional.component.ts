@@ -9,7 +9,6 @@ import { MovieForm } from '../movie.form';
 })
 export class MovieFormPromotionalComponent {
 
-  constructor(
-    public form: MovieForm
-  ) {}
+  constructor(public form: MovieForm) {
+   }
 }

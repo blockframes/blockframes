@@ -1,4 +1,4 @@
-import { EntityControl, StringControl, YearControl, FormEntity } from '@blockframes/utils';
+import { EntityControl, StringControl, YearControl, FormEntity, UrlControl } from '@blockframes/utils';
 import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
@@ -178,8 +178,11 @@ export class MovieForm extends FormEntity<Movie, MovieControl> {
   }
 
   public addPromotionalElement(): void {
-    const defaultFormGroup = { label: '', url: ''};
-    this.addFormControl(this.builder.group(defaultFormGroup), 'promotionalElements');
+    const control = new FormGroup({
+      label: new StringControl(''),
+      url: new UrlControl('')
+    })
+    this.addFormControl(control, 'promotionalElements')
   }
 
   public addChip(event: MatChipInputEvent, object: string): void {
