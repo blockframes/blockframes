@@ -96,10 +96,12 @@ export class DeliveryService {
       true
     );
 
+    // Create document permissions
+    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId)
+
     const promises = [];
 
     promises.push([
-      this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId),
       this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder)

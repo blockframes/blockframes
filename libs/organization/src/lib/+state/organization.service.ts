@@ -18,14 +18,14 @@ export class OrganizationService {
   ) {}
 
   /** Add a new user to the organization */
-  public addMember(member: OrgMember) {
+  public async addMember(member: OrgMember) {
     const orgId = this.query.getValue().org.id;
     const permissions = this.permissionsQuery.getValue();
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${member.id}`);
 
-    this.db.firestore
+    await this.db.firestore
       .runTransaction(async tx => {
         // Update the org
         // Note: we don't use the store because we need to access fresh data IN the transaction

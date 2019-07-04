@@ -1,15 +1,14 @@
+rules_versions = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
 
     /// USERS RULES ///
 
     match /users/{userId} {
     	allow read, update: if isSignedIn(); // Secure it as soon as we got Inivitations collection
     	allow create: if currentUser().uid == existingData().uid
-				|| currentUser().uid == incomingData().uid
-      allow update, delete: if currentUser().uid == existingData().uid
-      	&& existingData() == incomingData()
-
+				|| currentUser().uid == incomingData().uid;
     }
 
     /// NOTIFICATIONS RULES ///
@@ -47,18 +46,11 @@ service cloud.firestore {
 
     /// MOVIES RULES ///
 
-    match /movies/{movieId} {
-    	allow create: if isSuperAdmin(getUserOrgId())
-        || isOrgAdmin(getUserOrgId())
-    	allow read, update, delete: if isSignedIn()
-        && getOrgsDocumentPermissions(movieId).owner == getUserOrgId()
-
-      match /{documents=**} {
-        allow create: if isSuperAdmin(getUserOrgId())
-          || isOrgAdmin(getUserOrgId())
-        allow read, update, delete: if isSignedIn()
-          && getOrgsDocumentPermissions(movieId).owner == getUserOrgId()
-      }
+    match /movies/{movieId}/{documents=**} {
+    	allow create: if orgCan('canCreate', getUserOrgId(), movieId) && userCan('canCreate', userId(), getUserOrgId(), movieId);
+      allow read: if orgCan('canRead', getUserOrgId(), movieId) && userCan('canRead', userId(), getUserOrgId(), movieId);
+    	allow update: if orgCan('canUpdate', getUserOrgId(), movieId) && userCan('canUpdate', userId(), getUserOrgId(), movieId);
+      allow delete: if orgCan('canDelete', getUserOrgId(), movieId) && userCan('canDelete', userId(), getUserOrgId(), movieId);
     }
 
     /// DELIVERIES RULES ///
@@ -95,37 +87,68 @@ service cloud.firestore {
     // FUNCTIONS //
 
     function existingData() {
-      return resource.data
+      return resource.data;
     }
 
     function incomingData() {
-      return request.resource.data
+      return request.resource.data;
     }
 
     function currentUser() {
-      return request.auth
+      return request.auth;
+    }
+
+    function userId() {
+      return request.auth.uid;
     }
 
     function isSignedIn() {
-      return currentUser() != null
+      return currentUser() != null;
     }
 
   	function getUserOrgId() {
-    	return get(/databases/$(database)/documents/users/$(currentUser().uid)).data.orgId
+    	return get(/databases/$(database)/documents/users/$(userId()).data.orgId;
   	}
 
-  	function isSuperAdmin(orgId) {
-    	return isSignedIn() && currentUser().uid in
-    		get(/databases/$(database)/documents/permissions/$(orgId)).data.superAdmins
+  	function isSuperAdmin(userId, orgId) {
+    	return userId in getOrgPermissions(orgId).superAdmins;
   	}
 
-    function isOrgAdmin(orgId) {
-    	return isSignedIn() && currentUser().uid in
-    		get(/databases/$(database)/documents/permissions/$(orgId)).data.admins
+    function isOrgAdmin(userId, orgId) {
+    	return userId in getOrgPermissions(orgId).admins
+        || isSuperAdmin(userId, OrgId);
     }
 
-    function getOrgsDocumentPermissions(docId) {
-    	return get(/databases/$(database)/documents/permissions/$(getUserOrgId())/orgDocsPermissions/$(docId)).data
+    function getOrgDocumentPermissions(orgId, docId) {
+    	return get(/databases/$(database)/documents/permissions/$(orgId)/orgDocsPermissions/$(docId)).data;
+    }
+
+    function getOrgPermissions(orgId) {
+    	return get(/databases/$(database)/documents/permissions/$(orgId)).data;
+    }
+
+    function getUserDocumentPermissions(orgId, docId) {
+      return get(/databases/$(database)/documents/permissions/$(orgId)/userDocsPermissions/$(docId)).data;
+    }
+
+    function orgCan(x, orgId, docId) {
+      return getOrgDocumentPermissions(orgId, docId).owner == orgId
+        || getOrgDocumentPermissions(orgId, docId).admin == true
+        || getOrgDocumentPermissions(orgId, docId)[x] == true;
+    }
+
+    function userCan(x, userId, orgId, docId) {
+      return isOrgAdmin(userId, orgId)
+        || userId in getOrgPermissions(orgId).[x]
+        || userId in getUserDocumentPermissions(orgId, docId).admins
+        || userId in getUserDocumentPermissions(orgId, docId)[x];
     }
   }
 }
+
+/////////////////////
+// DEPLOYING RULES //
+/////////////////////
+
+// firebase init firestore
+// firebase deploy --only firestore:rules

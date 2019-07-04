@@ -21,7 +21,7 @@ export class PermissionsService {
     const orgDocPermissions = createOrgDocPermissions(document.id, orgId);
     const userDocPermissions = createUserDocPermissions(document.id);
 
-    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const orgDocPermissionsRef = this.db.doc<T>(`permissions/${orgId}/orgDocsPermissions/${document.id}`).ref;
       promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
 

@@ -23,7 +23,6 @@ export class MovieService {
     const owner = createMovieStakeholder({orgId, isAccepted: true});
     const movie: Movie = createMovie({ id, title: { original }});
 
-    // TODO: correct race condition
     await this.permissionsService.createDocAndPermissions<Movie>(movie, orgId);
 
     await this.shService.add(id, owner, firstAdd);

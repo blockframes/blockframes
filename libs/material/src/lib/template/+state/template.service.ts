@@ -26,13 +26,13 @@ export class TemplateService {
       orgId: org.id
     });
 
+    // Create document permissions
+    await this.permissionsService.createDocAndPermissions(template, org.id);
+
     // Push the new id in org.templateIds
     await this.db
       .doc<Organization>(`orgs/${org.id}`)
       .update({ templateIds: [...org.templateIds, templateId] });
-
-    // Create document permissions
-    await this.permissionsService.createDocAndPermissions(template, org.id);
 
     return templateId;
   }
