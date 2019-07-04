@@ -1,0 +1,29 @@
+<main>
+  <h2>Import your Key</h2>
+  <p>
+    You have so many different things placeholder text has to be able to do, and I don't believe Lorem Ipsum has the stamina.
+    I write the best placeholder text, and I'm the biggest developer on the web by far...
+    While that's mock-ups and this is politics, are they really so different?
+    An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.
+  </p>
+  <section>
+    <div fxLayout="row" fxLayoutAlign="end">
+      json
+      <mat-slide-toggle (change)="toggleMnemonic()">mnemonic</mat-slide-toggle>
+    </div>
+    <ng-container *ngIf="!isMnemonic; else mnemonicImport">
+      <file-upload [accept]="['.json']" [types]="['application/json']" (uploaded)="importedJson($event)"></file-upload>
+    </ng-container>
+    <ng-template #mnemonicImport>
+
+      <!-- TODO use mnemonic import when ready -->
+      <p>Mnemonic import</p>
+      <!-- <wallet-import-mnemonic (imported)="mnemonic = $event"></wallet-import-mnemonic> -->
+
+    </ng-template>
+  </section>
+  <img src="/assets/images/import_key_pic.png">
+  <div>
+    <button mat-raised-button color="primary" (click)="import()">Import your Key</button>
+  </div>
+</main>
