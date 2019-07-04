@@ -1,8 +1,8 @@
 <section testId="signin" fxLayout="column" fxLayoutAlign="center center">
   <h2>Sign in</h2>
   <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
-    <input-email [form]="signinForm"></input-email>
-    <input-password [form]="signinForm" [showHint]="false"></input-password>
+    <email-form-field [form]="signinForm"></email-form-field>
+    <password-form-field [form]="signinForm" [showHint]="false"></password-form-field>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-raised-button color="accent">Let's go to work !</button>
       <button id="tosignup" type="button" color="primary" mat-button (click)="opened.emit()">I don't have an account</button>
