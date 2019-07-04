@@ -1,0 +1,55 @@
+section {
+  height: 100%;
+  background-color: var(--whiteBackground);
+}
+
+h1 {
+  margin-bottom: 7px;
+  margin-top: 0;
+}
+
+p {
+  margin-top: 0;
+}
+
+.image {
+  height: 518px;
+  width: 506px;
+  background-image: url('libs/shared-assets/images/welcome.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.content {
+  height: 518px;
+  width: 420px;
+  margin-left: 80px;
+}
+
+button {
+  margin-top: 80px;
+}
+
+// small
+@media screen and (min-width: 600px) and (max-width: 959px) {
+  .image {
+    height: 300px;
+    width: 300px;
+  }
+}
+
+// extra small
+@media screen and (max-width: 599px) {
+  button {
+    margin-top: 40px;
+  }
+  .image {
+    height: 200px;
+    width: 200px;
+  }
+  .content {
+    height: 250px;
+    width: 250px;
+    margin-left: 0;
+  }
+}

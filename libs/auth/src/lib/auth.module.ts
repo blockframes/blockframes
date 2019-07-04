@@ -19,9 +19,11 @@ import { LoginViewComponent } from './pages/login-view/login-view.component';
 import { UiFormModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
+import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'connexion', pathMatch: 'full' },
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent }
 ];
 
@@ -40,6 +42,6 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
-  declarations: [LoginViewComponent, SigninFormComponent, SignupFormComponent],
+  declarations: [LoginViewComponent, SigninFormComponent, SignupFormComponent, WelcomeViewComponent],
 })
 export class AuthModule {}
