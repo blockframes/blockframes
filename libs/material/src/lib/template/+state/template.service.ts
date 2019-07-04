@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Organization, RightsService, OrganizationQuery } from '@blockframes/organization';
+import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
@@ -14,7 +14,7 @@ export class TemplateService {
     private store: TemplateStore,
     private materialQuery: MaterialQuery,
     private orgQuery: OrganizationQuery,
-    private rightsService: RightsService
+    private permissionsService: PermissionsService
   ) {}
 
   public async addTemplate(templateName: string): Promise<string> {
@@ -31,8 +31,8 @@ export class TemplateService {
       .doc<Organization>(`orgs/${org.id}`)
       .update({ templateIds: [...org.templateIds, templateId] });
 
-    // Create document rights
-    await this.rightsService.createDocAndRights(template, org.id);
+    // Create document permissions
+    await this.permissionsService.createDocAndPermissions(template, org.id);
 
     return templateId;
   }

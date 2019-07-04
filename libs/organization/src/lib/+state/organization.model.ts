@@ -22,7 +22,7 @@ export interface OrgForm {
   adress: string;
 }
 
-export interface OrganizationRights {
+export interface Permissions {
   orgId: string;
   superAdmin: string;
   canCreate: string[];

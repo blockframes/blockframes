@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
 import { FireQuery, Query } from '@blockframes/utils';
-import { OrganizationRights, RightsStore } from '../+state';
+import { Permissions, PermissionsStore } from '../+state';
 import { Router, UrlTree } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
 import { Subscription } from 'rxjs';
 
-export const rightsQuery = (orgId: string): Query<OrganizationRights> => ({
-  path: `rights/${orgId}`,
-  userAppsRights: (org: OrganizationRights) => ({
-    path: `rights/${org.orgId}/userAppsRights`
+export const permissionsQuery = (orgId: string): Query<Permissions> => ({
+  path: `permissions/${orgId}`,
+  userAppsPermissions: (org: Permissions) => ({
+    path: `permissions/${org.orgId}/userAppsPermissions`
   }),
-  userDocsRights: (org: OrganizationRights) => ({
-    path: `rights/${org.orgId}/userDocsRights`
+  userDocsPermissions: (org: Permissions) => ({
+    path: `permissions/${org.orgId}/userDocsPermissions`
   }),
-  orgDocsRights: (org: OrganizationRights) => ({
-    path: `rights/${org.orgId}/orgDocsRights`
+  orgDocsPermissions: (org: Permissions) => ({
+    path: `permissions/${org.orgId}/orgDocsPermissions`
   })
 });
 
 @Injectable({ providedIn: 'root' })
-export class RightsGuard {
+export class PermissionsGuard {
   private subscription: Subscription;
 
   constructor(
     private fireQuery: FireQuery,
     private auth: AuthQuery,
-    private store: RightsStore,
+    private store: PermissionsStore,
     private router: Router
   ) {}
 
-  isUrlTree(result: OrganizationRights | UrlTree) {
+  isUrlTree(result: Permissions | UrlTree) {
     return result instanceof UrlTree;
   }
 
@@ -41,12 +41,12 @@ export class RightsGuard {
         .pipe(
           switchMap(user => {
             if (!user.orgId) throw new Error('User has no orgId');
-            return this.fireQuery.fromQuery<OrganizationRights>(rightsQuery(user.orgId));
+            return this.fireQuery.fromQuery<Permissions>(permissionsQuery(user.orgId));
           }),
-          tap(rights => this.store.update(rights))
+          tap(permissions => this.store.update(permissions))
         )
         .subscribe({
-          next: (result: OrganizationRights) => res(!!result),
+          next: (result: Permissions) => res(!!result),
           error: () => res(this.router.parseUrl('/layout/organization-home'))
         });
     });

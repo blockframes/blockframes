@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { RightsStore, RightsState } from './rights.store';
+import { PermissionsStore, PermissionsState } from './permissions.store';
 import { AuthQuery } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RightsQuery extends Query<RightsState> {
+export class PermissionsQuery extends Query<PermissionsState> {
   constructor(
-    protected store: RightsStore,
+    protected store: PermissionsStore,
     private auth: AuthQuery
   ) {
     super(store);

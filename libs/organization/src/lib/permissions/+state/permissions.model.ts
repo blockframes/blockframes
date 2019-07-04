@@ -1,4 +1,4 @@
-export interface OrganizationRights {
+export interface Permissions {
   orgId: string;
   superAdmins: string[];
   admins: string[];
@@ -6,12 +6,12 @@ export interface OrganizationRights {
   canRead: string[];
   canUpdate: string[];
   canDelete: string[];
-  userAppsRights?: AppRights[];
-  userDocsRights?: UserDocRights[];
-  orgDocsRights?: OrgDocRights[];
+  userAppsPermissions?: AppPermissions[];
+  userDocsPermissions?: UserDocPermissions[];
+  orgDocsPermissions?: OrgDocPermissions[];
 }
 
-export interface AppRights {
+export interface AppPermissions {
   id: string;
   name: App;
   admins: string[];
@@ -21,7 +21,7 @@ export interface AppRights {
   canDelete: string[];
 }
 
-export interface UserDocRights {
+export interface UserDocPermissions {
   id: string,
   admins: string[];
   canCreate: string[];
@@ -30,7 +30,7 @@ export interface UserDocRights {
   canDelete: string[];
 }
 
-export interface OrgDocRights {
+export interface OrgDocPermissions {
   id: string,
   owner: string,
   isAdmin: boolean,
@@ -46,7 +46,7 @@ export enum App  {
   storiesAndMore = 'StoriesAndMore'
 }
 
-export function initializeOrgRights(params: Partial<OrganizationRights>) {
+export function createPermissions(params: Partial<Permissions> = {}) {
   return {
     superAdmins: [params.superAdmins],
     canCreate: [],
@@ -54,10 +54,10 @@ export function initializeOrgRights(params: Partial<OrganizationRights>) {
     canUpdate: [],
     canDelete: [],
     ...params
-  } as OrganizationRights;
+  } as Permissions;
 }
 
-export function initializeAppRights(app: App) {
+export function createAppPermissions(app: App) {
   return {
       name: app,
       admins: [],
@@ -65,10 +65,10 @@ export function initializeAppRights(app: App) {
       canRead: [],
       canUpdate: [],
       canDelete: [],
-    } as AppRights;
+    } as AppPermissions;
 }
 
-export function initializeUserDocRights(docId: string) {
+export function createUserDocPermissions(docId: string) {
   return {
     id: docId,
     admins: [],
@@ -76,10 +76,10 @@ export function initializeUserDocRights(docId: string) {
     canRead: [],
     canUpdate: [],
     canDelete: []
-  } as UserDocRights;
+  } as UserDocPermissions;
 }
 
-export function initializeOrgDocRights(docId: string, orgId:string) {
+export function createOrgDocPermissions(docId: string, orgId:string) {
   return {
     id: docId,
     owner: orgId,
@@ -88,5 +88,5 @@ export function initializeOrgDocRights(docId: string, orgId:string) {
     canRead: true,
     canUpdate: true,
     canDelete: true
-  } as OrgDocRights;
+  } as OrgDocPermissions;
 }

@@ -3,7 +3,7 @@ import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
 import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
-import { OrganizationQuery, RightsService } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
@@ -27,7 +27,7 @@ export class DeliveryService {
     private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
-    private rightsService: RightsService,
+    private permissionsService: PermissionsService,
     private db: FireQuery
   ) {}
 
@@ -99,7 +99,7 @@ export class DeliveryService {
     const promises = [];
 
     promises.push([
-      this.rightsService.createDocAndRights(delivery, stakeholder.orgId),
+      this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId),
       this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
       .set(deliveryStakeholder)
@@ -131,7 +131,7 @@ export class DeliveryService {
     const promises = [];
 
     promises.push([
-      this.rightsService.createDocAndRights(delivery, stakeholder.orgId),
+      this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId),
       this.copyMaterials(delivery, movie),
       this.db
       .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)

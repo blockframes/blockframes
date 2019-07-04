@@ -4,10 +4,12 @@ service cloud.firestore {
     /// USERS RULES ///
 
     match /users/{userId} {
-    	allow read: if isSignedIn();
-      allow update: if isSuperAdmin(getUserOrgId()); // Necessary to add users to an org. TODO : remove
-    	allow write: if currentUser().uid == incomingData().uid
-        || currentUser().uid == existingData().uid
+    	allow read, update: if isSignedIn(); // Secure it as soon as we got Inivitations collection
+    	allow create: if currentUser().uid == existingData().uid
+				|| currentUser().uid == incomingData().uid
+      allow update, delete: if currentUser().uid == existingData().uid
+      	&& existingData() == incomingData()
+
     }
 
     /// NOTIFICATIONS RULES ///
@@ -19,8 +21,9 @@ service cloud.firestore {
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-    	allow create, read: if isSignedIn()
-    	allow write: if isSuperAdmin(orgId)
+    	allow create: if isSignedIn()
+      allow get: if isSuperAdmin(orgId) || isOrgAdmin(orgId)
+    	allow update, delete: if isSuperAdmin(orgId)
       	&& existingData().name == incomingData().name
         && existingData().id == incomingData().id
       allow update: if isOrgAdmin(orgId)
@@ -28,16 +31,16 @@ service cloud.firestore {
         && existingData().id == incomingData().id
     }
 
-    /// ORGRIGHS RULES ///
+    /// PERMISSIONS RULES ///
 
-    match /rights/{orgId} {
-    	allow create, read: if isSignedIn()
-    	allow write, read: if isSuperAdmin(orgId)
+    match /permissions/{orgId} {
+    	allow create: if isSignedIn()
+    	allow read, update, delete: if isSuperAdmin(orgId)
         || isOrgAdmin(orgId)
 
       match /{documents=**} {
-      	allow create, read: if isSignedIn()
-    		allow write, read: if isSuperAdmin(orgId)
+      	allow read, create: if isSignedIn()
+    		allow read, update, delete: if isSuperAdmin(orgId)
           || isOrgAdmin(orgId)
       }
     }
@@ -47,14 +50,14 @@ service cloud.firestore {
     match /movies/{movieId} {
     	allow create: if isSuperAdmin(getUserOrgId())
         || isOrgAdmin(getUserOrgId())
-    	allow write, read: if isSignedIn()
-        && getOrgsDocumentRights(movieId).owner == getUserOrgId()
+    	allow read, update, delete: if isSignedIn()
+        && getOrgsDocumentPermissions(movieId).owner == getUserOrgId()
 
       match /{documents=**} {
         allow create: if isSuperAdmin(getUserOrgId())
           || isOrgAdmin(getUserOrgId())
-        allow write, read: if isSignedIn()
-          && getOrgsDocumentRights(movieId).owner == getUserOrgId()
+        allow read, update, delete: if isSignedIn()
+          && getOrgsDocumentPermissions(movieId).owner == getUserOrgId()
       }
     }
 
@@ -63,13 +66,13 @@ service cloud.firestore {
     match /deliveries/{deliveryId} {
     	allow create, list: if isSuperAdmin(getUserOrgId())
         || isOrgAdmin(getUserOrgId())
-    	allow write, read: if isSignedIn()
-        && getOrgsDocumentRights(deliveryId).owner == getUserOrgId()
+    	allow read, update, delete: if isSignedIn()
+        && getOrgsDocumentPermissions(deliveryId).owner == getUserOrgId()
 
       match /{documents=**} {
         allow create: if isSuperAdmin(getUserOrgId())
           || isOrgAdmin(getUserOrgId())
-        allow write, read: if isSignedIn()
+        allow read, update, delete: if isSignedIn()
       }
     }
 
@@ -78,14 +81,14 @@ service cloud.firestore {
     match /templates/{templateId} {
     	allow create: if isSuperAdmin(getUserOrgId())
         || isOrgAdmin(getUserOrgId())
-    	allow write, read: if isSignedIn()
-        && getOrgsDocumentRights(templateId).owner == getUserOrgId()
+    	allow read, update, delete: if isSignedIn()
+        && getOrgsDocumentPermissions(templateId).owner == getUserOrgId()
 
       match /{documents=**} {
         allow create: if isSuperAdmin(getUserOrgId())
           || isOrgAdmin(getUserOrgId())
-        allow write, read: if isSignedIn()
-          && getOrgsDocumentRights(templateId).owner == getUserOrgId()
+        allow read, update, delete: if isSignedIn()
+          && getOrgsDocumentPermissions(templateId).owner == getUserOrgId()
       }
     }
 
@@ -113,17 +116,16 @@ service cloud.firestore {
 
   	function isSuperAdmin(orgId) {
     	return isSignedIn() && currentUser().uid in
-    		get(/databases/$(database)/documents/rights/$(orgId)).data.superAdmins
+    		get(/databases/$(database)/documents/permissions/$(orgId)).data.superAdmins
   	}
 
     function isOrgAdmin(orgId) {
     	return isSignedIn() && currentUser().uid in
-    		get(/databases/$(database)/documents/rights/$(orgId)).data.admins
+    		get(/databases/$(database)/documents/permissions/$(orgId)).data.admins
     }
 
-    function getOrgsDocumentRights(docId) {
-    	return get(/databases/$(database)/documents/rights/$(getUserOrgId())/orgDocsRights/$(docId)).data
+    function getOrgsDocumentPermissions(docId) {
+    	return get(/databases/$(database)/documents/permissions/$(getUserOrgId())/orgDocsPermissions/$(docId)).data
     }
   }
 }
-

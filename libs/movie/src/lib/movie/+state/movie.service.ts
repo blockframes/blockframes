@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
-import { RightsService, OrganizationQuery, Organization } from '@blockframes/organization';
+import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore } from './movie.store';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,7 @@ export class MovieService {
   private db: FireQuery,
   private shService: StakeholderService,
   private orgQuery: OrganizationQuery,
-  private rightsService: RightsService,
+  private permissionsService: PermissionsService,
   private store: MovieStore,
   ) {}
 
@@ -24,7 +24,7 @@ export class MovieService {
     const movie: Movie = createMovie({ id, title: { original }});
 
     // TODO: correct race condition
-    await this.rightsService.createDocAndRights<Movie>(movie, orgId);
+    await this.permissionsService.createDocAndPermissions<Movie>(movie, orgId);
 
     await this.shService.add(id, owner, firstAdd);
 

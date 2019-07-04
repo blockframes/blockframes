@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery, Organization, OrganizationService } from '../+state';
-import { RightsQuery } from '../rights/+state';
+import { PermissionsQuery } from '../permissions/+state';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
 
@@ -26,7 +26,7 @@ export class OrgMembersShowComponent implements OnInit {
 
   constructor(
     private service: OrganizationService,
-    private rightsQuery: RightsQuery,
+    private permissionsQuery: PermissionsQuery,
     private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
@@ -34,7 +34,7 @@ export class OrgMembersShowComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isSuperAdmin$ = this.rightsQuery.isSuperAdmin$;
+    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
     this.addMemberForm = this.builder.group({
       user: null,
       role: ''

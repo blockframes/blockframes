@@ -3,41 +3,44 @@ import { createOrganization, Organization, OrgMember } from './organization.mode
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
 import { AuthStore, User } from '@blockframes/auth';
-import { initializeOrgRights, App, initializeAppRights } from '../rights';
+import { createPermissions, App, createAppPermissions } from '../permissions';
 import { OrganizationQuery } from './organization.query';
-import { RightsQuery } from '../rights/+state';
+import { PermissionsQuery } from '../permissions/+state';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   constructor(
     private store: OrganizationStore,
     private query: OrganizationQuery,
-    private rightsQuery: RightsQuery,
+    private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private db: FireQuery
   ) {}
 
   /** Add a new user to the organization */
   public addMember(member: OrgMember) {
-    const org = this.query.getValue().org;
-    const rights = this.rightsQuery.getValue();
-    const orgDoc = this.db.doc(`orgs/${org.id}`);
-    const rightsDoc = this.db.doc(`rights/${org.id}`);
+    const orgId = this.query.getValue().org.id;
+    const permissions = this.permissionsQuery.getValue();
+    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${member.id}`);
 
     this.db.firestore
-      .runTransaction(tx => {
+      .runTransaction(async tx => {
         // Update the org
-        const { userIds } = this.query.getValue().org;
+        // Note: we don't use the store because we need to access fresh data IN the transaction
+        const org = await tx.get(orgDoc.ref);
+        const { userIds } = org.data();
         const nextUserIds = [...userIds, member.id];
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
-        const nextAdminsIds = [...rights.admins, member.id];
-        const rightsTransaction = tx.update(rightsDoc.ref, { admins: nextAdminsIds})
+        // Update the permissions and add the new member as an org admin
+        const nextAdminsIds = [...permissions.admins, member.id];
+        const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds})
         // Update the user
         // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
-        const updateUserTransaction = tx.update(userDoc.ref, { orgId: org.id });
+        const updateUserTransaction = tx.update(userDoc.ref, { orgId });
 
-        return Promise.all([orgTransaction, updateUserTransaction, rightsTransaction]);
+        return Promise.all([orgTransaction, updateUserTransaction, permissionsTransaction]);
       })
       .catch(error => {
         throw Error(error);
@@ -48,32 +51,32 @@ export class OrganizationService {
 
   /**
    * Add a new organization to the database and create/update
-   * related documents (rights, apps permissions, user...).
+   * related documents (permissions, apps permissions, user...).
    */
   public async add(org: Organization, user: User): Promise<string> {
     const orgId: string = this.db.createId();
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
 
     const orgDoc = this.db.doc(`orgs/${orgId}`);
-    const orgRights = initializeOrgRights({ orgId, superAdmins: [user.uid] });
-    const orgRightsDoc = this.db.doc(`rights/${orgId}`);
+    const permissions = createPermissions();
+    const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
-    this.db.firestore
+    await this.db.firestore
       .runTransaction(transaction => {
         const promises = [
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
-          // Set the new organization in rights collection.
-          transaction.set(orgRightsDoc.ref, orgRights),
+          // Set the new organization in permissions collection.
+          transaction.set(permissionsDoc.ref, permissions),
           // Update user document with the new organization id.
           transaction.update(userDoc.ref, { orgId }),
-          // Initialize apps permissions documents in organization apps sub-collection.
+          // Initialize apps permissions documents in permissions apps sub-collection.
           ...apps.map(app => {
-            const orgApp = this.db.doc(`rights/${orgId}/userAppsRights/${app}`);
-            const appRights = initializeAppRights(app);
-            return transaction.set(orgApp.ref, appRights);
+            const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
+            const appPermissions = createAppPermissions(app);
+            return transaction.set(newApp.ref, appPermissions);
           })
         ];
         return Promise.all(promises);

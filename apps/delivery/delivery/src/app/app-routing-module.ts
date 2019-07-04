@@ -8,7 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrgFormComponent, RightsGuard, OrganizationGuard } from '@blockframes/organization';
+import { OrgFormComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { OrganizationHomeComponent } from '@blockframes/organization';
 
@@ -31,8 +31,8 @@ export const routes: Routes = [
       },
       {
         path: 'o',
-        canActivate: [RightsGuard, OrganizationGuard],
-        canDeactivate: [RightsGuard, OrganizationGuard],
+        canActivate: [PermissionsGuard, OrganizationGuard],
+        canDeactivate: [PermissionsGuard, OrganizationGuard],
         children: [
           {
             path: '',
