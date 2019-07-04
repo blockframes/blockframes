@@ -12,6 +12,7 @@ export interface Permissions {
 }
 
 export interface AppPermissions {
+  id: string;
   name: App;
   admins: string[];
   canCreate: string[];
@@ -21,7 +22,7 @@ export interface AppPermissions {
 }
 
 export interface UserDocPermissions {
-  id: string;
+  id: string,
   admins: string[];
   canCreate: string[];
   canRead: string[];
@@ -30,46 +31,44 @@ export interface UserDocPermissions {
 }
 
 export interface OrgDocPermissions {
-  id: string;
-  owner: string;
-  isAdmin: boolean;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
+  id: string,
+  owner: string,
+  isAdmin: boolean,
+  canCreate: boolean,
+  canRead: boolean,
+  canUpdate: boolean,
+  canDelete: boolean
 }
 
-export enum App {
+export enum App  {
   mediaDelivering = 'MediaDelivering',
   mediaFinanciers = 'MediaFinanciers',
   storiesAndMore = 'StoriesAndMore'
 }
 
-export function createPermissions(params: Partial<Permissions> = {}): Permissions {
+export function createPermissions(params: Partial<Permissions> = {}) {
   return {
-    orgId: params.orgId,
-    superAdmins: params.superAdmins,
-    admins: [],
+    superAdmins: [params.superAdmins],
     canCreate: [],
     canRead: [],
     canUpdate: [],
     canDelete: [],
     ...params
-  };
+  } as Permissions;
 }
 
-export function createAppPermissions(app: App): AppPermissions {
+export function createAppPermissions(app: App) {
   return {
-    name: app,
-    admins: [],
-    canCreate: [],
-    canRead: [],
-    canUpdate: [],
-    canDelete: []
-  };
+      name: app,
+      admins: [],
+      canCreate: [],
+      canRead: [],
+      canUpdate: [],
+      canDelete: [],
+    } as AppPermissions;
 }
 
-export function createUserDocPermissions(docId: string): UserDocPermissions {
+export function createUserDocPermissions(docId: string) {
   return {
     id: docId,
     admins: [],
@@ -77,10 +76,10 @@ export function createUserDocPermissions(docId: string): UserDocPermissions {
     canRead: [],
     canUpdate: [],
     canDelete: []
-  };
+  } as UserDocPermissions;
 }
 
-export function createOrgDocPermissions(docId: string, orgId: string): OrgDocPermissions {
+export function createOrgDocPermissions(docId: string, orgId:string) {
   return {
     id: docId,
     owner: orgId,
@@ -89,5 +88,5 @@ export function createOrgDocPermissions(docId: string, orgId: string): OrgDocPer
     canRead: true,
     canUpdate: true,
     canDelete: true
-  };
+  } as OrgDocPermissions;
 }
