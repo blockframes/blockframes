@@ -1,8 +1,6 @@
 <ng-container [ngSwitch]="state">
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
-    <!-- <h3>Upload Your File</h3> -->
-
     <label>
         <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
       <input [accept]="accept" type="file" (change)="upload($event.target.files)" />

@@ -2,7 +2,10 @@ main {
   max-width: 500px;
   text-align: center;
   section {
-    margin: 48px 0 48px 0;
+    margin: 48px 0;
+    mat-form-field {
+      width: 100%;
+    }
   }
   img {
     margin-bottom: 80px;

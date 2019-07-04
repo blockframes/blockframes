@@ -8,21 +8,15 @@ import { Key } from "../../key-manager/+state";
   styleUrls: ['./wallet-import-key-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WalletImportKeyFromComponent implements OnInit {
+export class WalletImportKeyFromComponent {
 
-  isMnemonic: boolean;
+  isMnemonic = false;
   keyObject: Key;
-  mnemonic: string;
+  mnemonic = '';
   @Output() importKey = new EventEmitter<Key>();
   @Output() importMnemonic = new EventEmitter<string>();
 
   constructor(private snackBar: MatSnackBar){}
-
-  ngOnInit(){
-    this.isMnemonic = false;
-    this.keyObject = undefined;
-    this.mnemonic = '';
-  }
 
   toggleMnemonic() {
     this.isMnemonic = !this.isMnemonic;
@@ -38,10 +32,8 @@ export class WalletImportKeyFromComponent implements OnInit {
   }
 
   import() {
-    if (this.isMnemonic) {
-      this.importMnemonic.emit(this.mnemonic);
-    } else {
+    this.isMnemonic ?
+      this.importMnemonic.emit(this.mnemonic) :
       this.importKey.emit(this.keyObject);
-    }
   }
 }

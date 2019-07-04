@@ -8,7 +8,7 @@
   </p>
   <section>
     <div fxLayout="row" fxLayoutAlign="end">
-      json
+      <span>json</span>
       <mat-slide-toggle (change)="toggleMnemonic()">mnemonic</mat-slide-toggle>
     </div>
     <ng-container *ngIf="!isMnemonic; else mnemonicImport">
@@ -16,9 +16,9 @@
     </ng-container>
     <ng-template #mnemonicImport>
 
-      <!-- TODO use mnemonic import when ready -->
-      <p>Mnemonic import</p>
-      <!-- <wallet-import-mnemonic (imported)="mnemonic = $event"></wallet-import-mnemonic> -->
+      <mat-form-field>
+        <textarea matInput placeholder="Enter or paste your mnemonic" [(ngModel)]="mnemonic"></textarea>
+      </mat-form-field>
 
     </ng-template>
   </section>

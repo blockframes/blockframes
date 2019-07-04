@@ -17,13 +17,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent {
-  @Input() public accept: string[]; // use in the html to specify the input, ex: ['.json', '.png']
-  @Input() public types: string[]; // mime type, ex: ['image/png', 'application/json']
-  @Output() public uploaded = new EventEmitter<Uint8Array>(); // emit the current file as a Uint8Array
-
-  @Input() public uploadOnFirestore = false; // should we upload the file to firestore
-  @Input() public path: string; // firestore path
-  @Output() public storeUploaded = new EventEmitter<string>(); // event emited when the firestore upload is complete
+  /** use in the html to specify the input, ex: ['.json', '.png'] */
+  @Input() public accept: string[];
+  /** mime type, ex: ['image/png', 'application/json'] */
+  @Input() public types: string[];
+  /** should we upload the file to firestore */
+  @Input() public uploadOnFirestore = false;
+  /** firestore path */
+  @Input() public path: string;
+  /** emit the current file as a Uint8Array */
+  @Output() public uploaded = new EventEmitter<Uint8Array>();
+  /** event emited when the firestore upload is complete */
+  @Output() public storeUploaded = new EventEmitter<string>();
   
   public task: AngularFireUploadTask;
   public percentage: Observable<number>;
