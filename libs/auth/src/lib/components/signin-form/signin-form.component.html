@@ -1,7 +1,15 @@
 <section testId="signin" fxLayout="column" fxLayoutAlign="center center">
   <h2>Sign in</h2>
   <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
-    <email-form-field [form]="signinForm"></email-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput type="email" placeholder="Email" formControlName="email" required />
+      <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
+        Please enter a <strong>valid</strong> email address.
+      </mat-error>
+      <mat-error *ngIf="signinForm.get('email').hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
     <password-form-field [form]="signinForm" [showHint]="false"></password-form-field>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-raised-button color="accent">Let's go to work !</button>

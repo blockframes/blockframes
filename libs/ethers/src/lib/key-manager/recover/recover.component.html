@@ -14,12 +14,12 @@
   <!-- MNEMONIC -->
   <mat-tab label="Mnemonic">
     <form [formGroup]="form" (ngSubmit)="recover('mnemonic')" fxLayout="column">
-      <textarea-form-field
-        [form]="form"
-        name= "mnemonic"
-        placeholder= "Enter your Mnemonic"
-        [matcher]=xorControlsMatcher
-      ></textarea-form-field>
+      <mat-form-field>
+        <textarea matInput type="text" placeholder="Enter your Mnemonic" formControlName="mnemonic" [errorStateMatcher]="xorControlsMatcher ? xorControlsMatcher : undefined"></textarea>
+        <mat-error *ngIf="xorControlsMatcher && form.hasError('bothEmpty')">
+          Both fields <strong>cannot be setted</strong> at the same time.
+        </mat-error>
+      </mat-form-field>
       <form-group-password-confirm [form]="form"></form-group-password-confirm>
       <div fxLayout="row" fxLayoutAlign="end center">
         <button type="button" mat-button (click)="cancel()">Cancel</button>

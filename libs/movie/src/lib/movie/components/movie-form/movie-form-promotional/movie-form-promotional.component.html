@@ -35,7 +35,15 @@
         <mat-form-field class="small-width small-margin">
           <input matInput formControlName="label" placeholder="Label">
         </mat-form-field>
-        <url-form-field class="small-width small-margin" formControlName="url" placeholder="https://"></url-form-field>
+        <mat-form-field>
+          <input
+            formControlName="url"
+            type="url"
+            matInput
+            placeholder="https://"
+          />
+          <mat-error *ngIf="element.get('url').hasError('pattern')"> Invalid url. </mat-error>
+        </mat-form-field>
         <button mat-icon-button color="primary" (click)="form.addPromotionalElement()">
           <mat-icon>add_circle</mat-icon>
         </button>
