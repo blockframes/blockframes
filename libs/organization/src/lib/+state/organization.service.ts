@@ -35,7 +35,7 @@ export class OrganizationService {
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
         // Update the permissions and add the new member as an org admin
         const nextAdminsIds = [...permissions.admins, member.id];
-        const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds})
+        const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds });
         // Update the user
         // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
         const updateUserTransaction = tx.update(userDoc.ref, { orgId });
@@ -56,28 +56,34 @@ export class OrganizationService {
   public async add(org: Organization, user: User): Promise<string> {
     const orgId: string = this.db.createId();
     const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
-
     const orgDoc = this.db.doc(`orgs/${orgId}`);
-    const permissions = createPermissions();
+    const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
+    // Set permissions in the first transaction
+    await this.db.firestore.runTransaction(tx =>
+      Promise.all([
+        // Set the new organization in permissions collection.
+        tx.set(permissionsDoc.ref, permissions),
+        // Initialize apps permissions documents in permissions apps sub-collection.
+        ...apps.map(app => {
+          const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
+          const appPermissions = createAppPermissions(app);
+          return tx.set(newApp.ref, appPermissions);
+        })
+      ])
+    );
+
+    // Then set organization in the second transaction (rules from permissions will apply)
     await this.db.firestore
       .runTransaction(transaction => {
         const promises = [
           // Set the new organization in orgs collection.
           transaction.set(orgDoc.ref, newOrg),
-          // Set the new organization in permissions collection.
-          transaction.set(permissionsDoc.ref, permissions),
           // Update user document with the new organization id.
-          transaction.update(userDoc.ref, { orgId }),
-          // Initialize apps permissions documents in permissions apps sub-collection.
-          ...apps.map(app => {
-            const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
-            const appPermissions = createAppPermissions(app);
-            return transaction.set(newApp.ref, appPermissions);
-          })
+          transaction.update(userDoc.ref, { orgId })
         ];
         return Promise.all(promises);
       })

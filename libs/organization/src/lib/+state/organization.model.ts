@@ -16,20 +16,9 @@ export interface Organization {
   members?: OrgMember[];
 }
 
-
 export interface OrgForm {
   name: string;
   adress: string;
-}
-
-export interface Permissions {
-  orgId: string;
-  superAdmin: string;
-  canCreate: string[];
-  canRead: string[];
-  canUpdate: string[];
-  canDelete: string[];
-  admins: string[];
 }
 
 /**

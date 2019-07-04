@@ -1,4 +1,4 @@
-rules_versions = '2';
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -9,78 +9,77 @@ service cloud.firestore {
     	allow read, update: if isSignedIn(); // Secure it as soon as we got Inivitations collection
     	allow create: if currentUser().uid == existingData().uid
 				|| currentUser().uid == incomingData().uid;
+      allow delete: if false;
     }
 
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
-    	allow read: if currentUser().uid == existingData().userId
+    	allow read: if currentUser().uid == existingData().userId;
     }
 
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-    	allow create: if isSignedIn()
-      allow get: if isSuperAdmin(orgId) || isOrgAdmin(orgId)
-    	allow update, delete: if isSuperAdmin(orgId)
-      	&& existingData().name == incomingData().name
-        && existingData().id == incomingData().id
-      allow update: if isOrgAdmin(orgId)
-      	&& existingData().name == incomingData().name
-        && existingData().id == incomingData().id
+    	allow create: if isSignedIn() && userOrgId() == null;
+      allow read, update, delete: if isSuperAdmin(userId(), orgId)
+      	|| isOrgAdmin(userId(), orgId);
     }
 
     /// PERMISSIONS RULES ///
-
-    match /permissions/{orgId} {
-    	allow create: if isSignedIn()
-    	allow read, update, delete: if isSuperAdmin(orgId)
-        || isOrgAdmin(orgId)
-
-      match /{documents=**} {
-      	allow read, create: if isSignedIn()
-    		allow read, update, delete: if isSuperAdmin(orgId)
-          || isOrgAdmin(orgId)
-      }
+		// What about moving permissions CRUD into firebase functions
+    match /permissions/{orgId}/{documents=**} {
+    	allow read, write;
     }
 
     /// MOVIES RULES ///
 
-    match /movies/{movieId}/{documents=**} {
-    	allow create: if orgCan('canCreate', getUserOrgId(), movieId) && userCan('canCreate', userId(), getUserOrgId(), movieId);
-      allow read: if orgCan('canRead', getUserOrgId(), movieId) && userCan('canRead', userId(), getUserOrgId(), movieId);
-    	allow update: if orgCan('canUpdate', getUserOrgId(), movieId) && userCan('canUpdate', userId(), getUserOrgId(), movieId);
-      allow delete: if orgCan('canDelete', getUserOrgId(), movieId) && userCan('canDelete', userId(), getUserOrgId(), movieId);
+    match /movies/{movieId} {
+    	allow create: if orgCan('canCreate', userOrgId(), movieId)
+        && userCan('canCreate', userId(), userOrgId(), movieId);
+      allow read: if orgCan('canRead', userOrgId(), movieId)
+        && userCan('canRead', userId(), userOrgId(), movieId);
+    	allow update: if orgCan('canUpdate', userOrgId(), movieId)
+        && userCan('canUpdate', userId(), userOrgId(), movieId);
+      allow delete: if orgCan('canDelete', userOrgId(), movieId)
+        && userCan('canDelete', userId(), userOrgId(), movieId);
+
+        match /{documents=**} {
+        allow read, write;
+        }
     }
 
     /// DELIVERIES RULES ///
 
     match /deliveries/{deliveryId} {
-    	allow create, list: if isSuperAdmin(getUserOrgId())
-        || isOrgAdmin(getUserOrgId())
-    	allow read, update, delete: if isSignedIn()
-        && getOrgsDocumentPermissions(deliveryId).owner == getUserOrgId()
+    	allow create: if orgCan('canCreate', userOrgId(), deliveryId)
+        && userCan('canCreate', userId(), userOrgId(), deliveryId);
+      allow read: if orgCan('canRead', userOrgId(), deliveryId)
+        && userCan('canRead', userId(), userOrgId(), deliveryId);
+    	allow update: if orgCan('canUpdate', userOrgId(), deliveryId)
+        && userCan('canUpdate', userId(), userOrgId(), deliveryId);
+      allow delete: if orgCan('canDelete', userOrgId(), deliveryId)
+        && userCan('canDelete', userId(), userOrgId(), deliveryId);
 
       match /{documents=**} {
-        allow create: if isSuperAdmin(getUserOrgId())
-          || isOrgAdmin(getUserOrgId())
-        allow read, update, delete: if isSignedIn()
+        allow read, write;
       }
     }
 
     // TEMPLATES RULES //
 
     match /templates/{templateId} {
-    	allow create: if isSuperAdmin(getUserOrgId())
-        || isOrgAdmin(getUserOrgId())
-    	allow read, update, delete: if isSignedIn()
-        && getOrgsDocumentPermissions(templateId).owner == getUserOrgId()
+    	allow create: if orgCan('canCreate', userOrgId(), templateId)
+        && userCan('canCreate', userId(), userOrgId(), templateId);
+      allow read: if orgCan('canRead', userOrgId(), templateId)
+        && userCan('canRead', userId(), userOrgId(), templateId);
+    	allow update: if orgCan('canUpdate', userOrgId(), templateId)
+        && userCan('canUpdate', userId(), userOrgId(), templateId);
+      allow delete: if orgCan('canDelete', userOrgId(), templateId)
+        && userCan('canDelete', userId(), userOrgId(), templateId);
 
       match /{documents=**} {
-        allow create: if isSuperAdmin(getUserOrgId())
-          || isOrgAdmin(getUserOrgId())
-        allow read, update, delete: if isSignedIn()
-          && getOrgsDocumentPermissions(templateId).owner == getUserOrgId()
+        allow read, write;
       }
     }
 
@@ -99,24 +98,28 @@ service cloud.firestore {
     }
 
     function userId() {
-      return request.auth.uid;
+      return currentUser().uid;
     }
 
     function isSignedIn() {
       return currentUser() != null;
     }
 
-  	function getUserOrgId() {
-    	return get(/databases/$(database)/documents/users/$(userId()).data.orgId;
+  	function userOrgId() {
+    	return get(/databases/$(database)/documents/users/$(userId())).data.orgId;
   	}
 
   	function isSuperAdmin(userId, orgId) {
     	return userId in getOrgPermissions(orgId).superAdmins;
   	}
 
+		// TODO: Figure out why this always return false
+    // function isOrgAdmin(userId, orgId) {
+    // 	return userId in getOrgPermissions(orgId).admins || isSuperAdmin(userId, orgId);
+    // }
+
     function isOrgAdmin(userId, orgId) {
-    	return userId in getOrgPermissions(orgId).admins
-        || isSuperAdmin(userId, OrgId);
+    	return userId in getOrgPermissions(orgId).admins;
     }
 
     function getOrgDocumentPermissions(orgId, docId) {
@@ -139,16 +142,22 @@ service cloud.firestore {
 
     function userCan(x, userId, orgId, docId) {
       return isOrgAdmin(userId, orgId)
-        || userId in getOrgPermissions(orgId).[x]
+      	|| isSuperAdmin(userId, orgId)
+        || userId in getOrgPermissions(orgId)[x]
         || userId in getUserDocumentPermissions(orgId, docId).admins
         || userId in getUserDocumentPermissions(orgId, docId)[x];
     }
   }
 }
 
+
 /////////////////////
 // DEPLOYING RULES //
 /////////////////////
-
+//
 // firebase init firestore
 // firebase deploy --only firestore:rules
+//
+// OR
+//
+// Copy and paste these rules into the rules tab of your project database

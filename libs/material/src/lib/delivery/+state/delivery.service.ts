@@ -97,15 +97,15 @@ export class DeliveryService {
     );
 
     // Create document permissions
-    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId)
+    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
 
     const promises = [];
 
-    promises.push([
+    promises.push(
       this.db
-      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder)
-    ])
+        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
+        .set(deliveryStakeholder)
+    );
 
     if (!!templateId) {
       const template = this.templateQuery.getEntity(templateId);
@@ -130,17 +130,14 @@ export class DeliveryService {
       true
     );
 
-    const promises = [];
+    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
 
-    promises.push([
-      this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId),
+    await Promise.all([
       this.copyMaterials(delivery, movie),
       this.db
-      .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-      .set(deliveryStakeholder)
+        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
+        .set(deliveryStakeholder)
     ]);
-
-    await Promise.all(promises);
 
     return id;
   }
@@ -215,14 +212,16 @@ export class DeliveryService {
 
   /** Create a transaction to copy the template/movie materials into the delivery materials */
   public async copyMaterials(delivery: Delivery, document: BFDoc) {
-    const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`)
+    const materials = await this.db.snapshot<Material[]>(
+      `${document._type}/${document.id}/materials`
+    );
 
     return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-
       const promises = materials.map(material => {
-        const materialRef = this.db.doc<Material>(`deliveries/${delivery.id}/materials/${material.id}`)
-          .ref;
-        return tx.set(materialRef, {...material, state: '', stepId: ''});
+        const materialRef = this.db.doc<Material>(
+          `deliveries/${delivery.id}/materials/${material.id}`
+        ).ref;
+        return tx.set(materialRef, { ...material, state: '', stepId: '' });
       });
 
       return Promise.all(promises);
