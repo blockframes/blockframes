@@ -24,10 +24,6 @@ export class KeyManagerItemComponent implements OnInit {
     this.address = keyToAddressPart(this.key, 6);
   }
 
-  async unlockKey() {
-    this.service.unlockAndSetActive(this.key);
-  }
-
   lockKey() {
     this.service.deactivateKey();
   }

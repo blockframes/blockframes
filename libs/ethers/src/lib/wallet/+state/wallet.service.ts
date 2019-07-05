@@ -47,25 +47,12 @@ export class WalletService {
    * (i.e. the ERC1077 is not yet deployed) we precompute the address with CREATE2
    * @param ensDomain the full ENS domain : `alice.blockframes.eth`
    */
-  public async retreiveAddress(ensDomain: string, publicKey?: string) {
+  public async retreiveAddress(ensDomain: string) {
     this._requireProvider();
     const address = await this.provider.resolveName(ensDomain);
     if(!!address){
       this.store.update({hasERC1077: true});
       return address;
-    }
-    const isLoading = this.keyManagerQuery.getValue().loading;
-    if(!publicKey) {
-      if(isLoading){
-        const key = await this.keyManagerQuery.waitForFirstKeyOfUser(ensDomain);
-        const pubKey = key.address;
-      } else {
-        try{
-          publicKey = this.keyManagerQuery.getMainKeyOfUser(ensDomain).address;
-        }catch(error) {
-          publicKey = await this.keyManager.createFromRandom(ensDomain);
-        }
-      }
     }
     return await this.precomputeAddress(ensDomain);
   }

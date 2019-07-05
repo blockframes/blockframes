@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { KeyManagerStore,Key } from './key-manager.store';
 import { utils, Wallet as EthersWallet } from 'ethers';
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { AskPasswordComponent } from '../ask-password/ask-password.component';
-import { CreatePasswordComponent } from '../create-password/create-password.component';
-import { ExportComponent } from '../export-dialog/export-dialog.component';
 import { KeyManagerQuery } from './key-manager.query';
 
 @Injectable({ providedIn: 'root' })
@@ -44,14 +41,7 @@ export class KeyManagerService {
   }
 
   /**  create / encrypt / store / from random */
-  async createFromRandom(ensDomain: string, password?: string) { // at signup password is already provided and we don't want to ask again
-    if (!password) {
-      const ref = this.dialog.open(CreatePasswordComponent, { width: '320px' });
-      password = await ref.afterClosed().toPromise();
-      if (!password) {
-        throw new Error('No password provided');
-      }
-    }
+  async createFromRandom(ensDomain: string, password: string) { // at signup password is already provided and we don't want to ask again
 
     const wallet = EthersWallet.createRandom();
     this._encryptAndStore(wallet, ensDomain, password);
@@ -74,10 +64,7 @@ export class KeyManagerService {
   }
 
   /** load key (retreive / decrypt, set into process memory) */
-  async unlockAndSetActive(key: Key) {
-    const ref = this.dialog.open(AskPasswordComponent, { width: '320px' })
-    const encryptionPassword = await ref.afterClosed().toPromise()
-    if (!encryptionPassword) throw new Error('No password provided');
+  async unlockAndSetActive(key: Key, encryptionPassword: string) {
 
     this.store.setLoading(true);
     try {
@@ -103,11 +90,6 @@ export class KeyManagerService {
 
   /** delete key */
   async deleteKey(key: Key) {
-    const ref = this.dialog.open(AskPasswordComponent, { width: '320px' });
-    const password = await ref.afterClosed().toPromise();
-    if (!password) {
-      throw new Error('No password provided');
-    }
     this.store.remove(key.address);
   }
 
@@ -115,8 +97,7 @@ export class KeyManagerService {
   async exportActiveKey() {
     this._requireSigningKey();
     const wallet = new EthersWallet(this.signingKey);
-    const ref = this.dialog.open(ExportComponent, { width: '500px', data: {wallet} });
-    await ref.afterClosed().toPromise();
+    // TODO add a way to show the mnemonic
   }
 
   signMessage(message: utils.Arrayish): Promise<string> {

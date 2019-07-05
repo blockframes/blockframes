@@ -9,7 +9,7 @@ import { FormControl, FormGroup } from "@angular/forms";
   styleUrls: ['./wallet-import-key-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WalletImportKeyFromComponent {
+export class WalletImportKeyFormComponent {
 
   isMnemonic = false;
   keyObject: Key;

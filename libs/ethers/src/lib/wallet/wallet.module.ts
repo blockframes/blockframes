@@ -21,7 +21,7 @@ import { KeyManagerModule } from '../key-manager/key-manager.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletViewComponent } from './wallet-view/wallet-view.component';
-import { WalletImportKeyFromComponent } from './wallet-import-key-form/wallet-import-key-form.component';
+import { WalletImportKeyFormComponent } from './wallet-import-key-form/wallet-import-key-form.component';
 import { WalletWidgetComponent } from './wallet-widget/wallet-widget.component';
 
 
@@ -59,7 +59,7 @@ export const walletRoutes: Routes = [
   ],
   declarations: [
     WalletViewComponent,
-    WalletImportKeyFromComponent,
+    WalletImportKeyFormComponent,
     WalletWidgetComponent,
   ],
   exports: [
