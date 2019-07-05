@@ -1,0 +1,64 @@
+@import '~@angular/material/theming';
+
+mat-sidenav-container {
+  height: 100%;
+  width: 100%;
+}
+
+mat-sidenav-content {
+  background-image: url('libs/shared-assets/images/signin-signup.png');
+  background-size: cover;
+}
+
+button {
+  &:hover {
+    @include mat-elevation(4);
+  }
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.mat-fab {
+  height: 120px;
+  width: 120px;
+  background-color: var(--iconBackground);
+}
+
+mat-icon {
+  color: white;
+}
+
+mat-sidenav {
+  background-color: var(--whiteBackground);
+  width: 700px;
+}
+
+// large
+@media screen and (min-width: 1280px) and (max-width: 1919px) {
+  mat-sidenav {
+    width: 600px;
+  }
+}
+
+// medium
+@media screen and (min-width: 960px) and (max-width: 1279px) {
+  mat-sidenav {
+    width: 400px;
+  }
+}
+
+// small
+@media screen and (min-width: 600px) and (max-width: 959px) {
+  mat-sidenav {
+    width: 300px;
+  }
+}
+
+// extra small
+@media screen and (max-width: 599px) {
+  mat-sidenav {
+    width: 100%;
+  }
+}

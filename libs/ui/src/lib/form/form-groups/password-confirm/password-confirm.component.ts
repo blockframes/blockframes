@@ -15,7 +15,7 @@ export class PasswordConfirmComponent implements OnInit  {
   @Input() confirm = 'confirm';
 
   public passwordsMatcher: RepeatPasswordStateMatcher;
-  
+
   constructor() {}
 
   ngOnInit(){

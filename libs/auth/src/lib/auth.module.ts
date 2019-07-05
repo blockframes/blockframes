@@ -11,14 +11,20 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
 
 // Component
-import { AuthRootComponent } from './root/root.component';
-import { UiFormModule } from '@blockframes/ui'
+import { LoginViewComponent } from './pages/login-view/login-view.component';
+import { UiFormModule } from '@blockframes/ui';
+import { SignupFormComponent } from './components/signup-form/signup-form.component';
+import { SigninFormComponent } from './components/signin-form/signin-form.component';
+import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'connexion', pathMatch: 'full' },
-  { path: 'connexion', component: AuthRootComponent }
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: 'welcome', component: WelcomeViewComponent },
+  { path: 'connexion', component: LoginViewComponent }
 ];
 
 @NgModule({
@@ -31,9 +37,11 @@ export const AuthRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
-  declarations: [AuthRootComponent],
+  declarations: [LoginViewComponent, SigninFormComponent, SignupFormComponent, WelcomeViewComponent],
 })
 export class AuthModule {}

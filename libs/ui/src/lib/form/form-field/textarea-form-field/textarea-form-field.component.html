@@ -1,6 +1,0 @@
-<mat-form-field [formGroup]="form">
-  <textarea matInput [type]="type" [placeholder]="placeholder" [formControlName]="name" [errorStateMatcher]="matcher ? matcher : undefined"></textarea>
-  <mat-error *ngIf="matcher && form.hasError('bothEmpty')">
-    Both fields <strong>cannot be setted</strong> at the same time.
-  </mat-error>
-</mat-form-field>

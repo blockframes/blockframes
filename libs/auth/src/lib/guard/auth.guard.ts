@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
         )
         .subscribe({
           next: (response: boolean) => res(response),
-          error: () => res(this.router.parseUrl('auth'))
+          error: () => res(this.router.parseUrl('auth/connexion'))
         });
     });
   }
