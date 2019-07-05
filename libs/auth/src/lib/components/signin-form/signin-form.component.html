@@ -10,7 +10,19 @@
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <password-form-field [form]="signinForm" [showHint]="false"></password-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput type="password" placeholder="Password" formControlName="password" required/>
+      <mat-hint>Between 6 and 24 characters.</mat-hint>
+      <mat-error *ngIf="signinForm.get('password').hasError('minlength')">
+        Password with less than <strong>6</strong> characters.
+      </mat-error>
+      <mat-error *ngIf="signinForm.get('password').hasError('maxlength')">
+        Password with more than <strong>24</strong> characters.
+      </mat-error>
+      <mat-error *ngIf="signinForm.get('password').hasError('required')">
+        Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-raised-button color="accent">Let's go to work !</button>
       <button id="tosignup" type="button" color="primary" mat-button (click)="opened.emit()">I don't have an account</button>

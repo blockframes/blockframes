@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Components
 import { ChipsAutocompleteComponent } from './chips-autocomplete/chips-autocomplete.component';
-import { PasswordFormFieldComponent } from './form-field/password-form-field/password-form-field.component';
 import { PasswordConfirmComponent } from './form-groups/password-confirm/password-confirm.component';
 
 // Material
@@ -27,12 +26,10 @@ import { MatInputModule } from '@angular/material/input';
   ],
   declarations: [
     ChipsAutocompleteComponent,
-    PasswordFormFieldComponent,
     PasswordConfirmComponent
   ],
   exports: [
     ChipsAutocompleteComponent,
-    PasswordFormFieldComponent,
     PasswordConfirmComponent
   ],
 })
