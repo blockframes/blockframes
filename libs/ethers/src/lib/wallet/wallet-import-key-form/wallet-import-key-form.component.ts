@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from "@angular/core";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Key } from "../../key-manager/+state";
+import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'wallet-import-key-form',
@@ -13,6 +14,9 @@ export class WalletImportKeyFromComponent {
   isMnemonic = false;
   keyObject: Key;
   mnemonic = '';
+  mnemonicFrom = new FormControl({
+    mnemonicField: new FormGroup({}), // TODO use Max's custom mnemonic control
+  });
   @Output() importKey = new EventEmitter<Key>();
   @Output() importMnemonic = new EventEmitter<string>();
 
@@ -32,8 +36,8 @@ export class WalletImportKeyFromComponent {
   }
 
   import() {
-    this.isMnemonic ?
-      this.importMnemonic.emit(this.mnemonic) :
-      this.importKey.emit(this.keyObject);
+    this.isMnemonic
+      ? this.importMnemonic.emit(this.mnemonic)
+      : this.importKey.emit(this.keyObject);
   }
 }

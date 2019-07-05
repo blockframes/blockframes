@@ -16,8 +16,8 @@
     </ng-container>
     <ng-template #mnemonicImport>
 
-      <mat-form-field>
-        <textarea matInput placeholder="Enter or paste your mnemonic" [(ngModel)]="mnemonic"></textarea>
+      <mat-form-field [formGroup]="mnemonicFrom">
+        <textarea matInput placeholder="Enter or paste your mnemonic" formControlName="mnemonicField"></textarea>
       </mat-form-field>
 
     </ng-template>
