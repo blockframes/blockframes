@@ -8,16 +8,15 @@ article {
 }
 
 .image {
-  margin-top: 47.5px;
-  height: 215px;
+  margin-top: 48px;
+  height: 230px;
   width: 230px;
   background-image: url('libs/shared-assets/images/org-landing.png');
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.content {
-  width: 310px;
+.card-text {
+  width: 60%;
 }
 
 h2 {
@@ -26,7 +25,7 @@ h2 {
 
 .community {
   margin-top: 8px;
-  margin-bottom: 23.5px;
+  margin-bottom: 24px;
   font-size: 14px;
 }
 
@@ -40,19 +39,27 @@ mat-card-content {
   margin: 0;
 }
 
-mat-card-title {
+h4 {
   margin-top: 16px;
-  font-size: 16px;
+  margin-bottom: 4px;
 }
 
-mat-card-subtitle {
+p {
+  margin-top: 0;
   margin-bottom: 16px;
   font-size: 12px;
-  color: var(--textGrey);
 }
 
 mat-icon {
   color: var(--dynamicIcon);
 }
 
-
+// extra small
+@media screen and (max-width: 599px) {
+  article {
+    width: 80%;
+  }
+  section {
+    height: auto;
+  }
+}
