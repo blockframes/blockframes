@@ -2,34 +2,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Note: Add a verification of each document ID => {id: ID_SHOULD_BE_EQUAL_TO_PATH}
 
     /// USERS RULES ///
 
     match /users/{userId} {
-    	allow read, update: if isSignedIn(); // Secure it as soon as we got Inivitations collection
-    	allow create: if currentUser().uid == existingData().uid
-				|| currentUser().uid == incomingData().uid;
-      allow delete: if false;
+    	allow read, update: if isSignedIn(); // TODO: Secure it as soon as we got Inivitations collection
+    	allow create: if userId() == incomingData().uid;
     }
 
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
-    	allow read: if currentUser().uid == existingData().userId;
+    	allow read: if currentUser().uid == existingData().userId
     }
 
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-    	allow create: if isSignedIn() && userOrgId() == null;
-      allow read, update, delete: if isSuperAdmin(userId(), orgId)
-      	|| isOrgAdmin(userId(), orgId);
+    	allow create: if isSignedIn();
+      allow read, update, delete: if isOrgAdmin(userId(), orgId);
     }
 
     /// PERMISSIONS RULES ///
 		// What about moving permissions CRUD into firebase functions
-    match /permissions/{orgId}/{documents=**} {
+    match /permissions/{orgId} {
     	allow read, write;
+
+      match /{documents=**} {
+      	allow read, write;
+      }
     }
 
     /// MOVIES RULES ///
@@ -44,9 +46,9 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
         && userCan('canDelete', userId(), userOrgId(), movieId);
 
-        match /{documents=**} {
+      match /{documents=**} {
         allow read, write;
-        }
+      }
     }
 
     /// DELIVERIES RULES ///
@@ -113,13 +115,10 @@ service cloud.firestore {
     	return userId in getOrgPermissions(orgId).superAdmins;
   	}
 
-		// TODO: Figure out why this always return false
-    // function isOrgAdmin(userId, orgId) {
-    // 	return userId in getOrgPermissions(orgId).admins || isSuperAdmin(userId, orgId);
-    // }
-
     function isOrgAdmin(userId, orgId) {
-    	return userId in getOrgPermissions(orgId).admins;
+    	// /!\ Carefull, parentheses needed for operator precedence to work
+    	return (userId in getOrgPermissions(orgId).admins)
+        || isSuperAdmin(userId, orgId);
     }
 
     function getOrgDocumentPermissions(orgId, docId) {
@@ -134,30 +133,18 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/permissions/$(orgId)/userDocsPermissions/$(docId)).data;
     }
 
-    function orgCan(x, orgId, docId) {
-      return getOrgDocumentPermissions(orgId, docId).owner == orgId
-        || getOrgDocumentPermissions(orgId, docId).admin == true
-        || getOrgDocumentPermissions(orgId, docId)[x] == true;
+		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
+    function orgCan(action, orgId, docId) {
+      return (getOrgDocumentPermissions(orgId, docId).owner == orgId)
+        || (getOrgDocumentPermissions(orgId, docId).admin == true)
+        || (getOrgDocumentPermissions(orgId, docId)[action] == true);
     }
 
-    function userCan(x, userId, orgId, docId) {
+    function userCan(action, userId, orgId, docId) {
       return isOrgAdmin(userId, orgId)
-      	|| isSuperAdmin(userId, orgId)
-        || userId in getOrgPermissions(orgId)[x]
-        || userId in getUserDocumentPermissions(orgId, docId).admins
-        || userId in getUserDocumentPermissions(orgId, docId)[x];
+        || (userId in getOrgPermissions(orgId)[action])
+        || (userId in getUserDocumentPermissions(orgId, docId).admins)
+        || (userId in getUserDocumentPermissions(orgId, docId)[action]);
     }
   }
 }
-
-
-/////////////////////
-// DEPLOYING RULES //
-/////////////////////
-//
-// firebase init firestore
-// firebase deploy --only firestore:rules
-//
-// OR
-//
-// Copy and paste these rules into the rules tab of your project database
