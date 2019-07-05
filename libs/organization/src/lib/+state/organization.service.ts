@@ -23,7 +23,8 @@ export class OrganizationService {
     const permissions = this.permissionsQuery.getValue();
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
-    const userDoc = this.db.doc(`users/${member.id}`);
+    const userDoc = this.db.doc(`users/${member.uid}`);
+    console.log(member)
 
     await this.db.firestore
       .runTransaction(async tx => {
@@ -31,10 +32,10 @@ export class OrganizationService {
         // Note: we don't use the store because we need to access fresh data IN the transaction
         const org = await tx.get(orgDoc.ref);
         const { userIds } = org.data();
-        const nextUserIds = [...userIds, member.id];
+        const nextUserIds = [...userIds, member.uid];
         const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
         // Update the permissions and add the new member as an org admin
-        const nextAdminsIds = [...permissions.admins, member.id];
+        const nextAdminsIds = [...permissions.admins, member.uid];
         const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds });
         // Update the user
         // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
@@ -46,7 +47,7 @@ export class OrganizationService {
         throw Error(error);
       });
 
-    return member.id;
+    return member.uid;
   }
 
   /**

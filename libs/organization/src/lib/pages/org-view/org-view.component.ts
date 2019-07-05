@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Organization, OrganizationQuery } from '../+state';
+import { Organization, OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'org-show',
-  templateUrl: './org-show.component.html',
-  styleUrls: ['./org-show.component.scss'],
+  selector: 'org-view',
+  templateUrl: './org-view.component.html',
+  styleUrls: ['./org-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgShowComponent implements OnInit {
+export class OrgViewComponent implements OnInit {
   public org$: Observable<Organization>;
 
   constructor(

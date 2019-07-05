@@ -5,7 +5,7 @@ import { AuthQuery, User } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { first, takeWhile } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../+state';
+import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../../+state';
 
 @Component({
   selector: 'org-form',

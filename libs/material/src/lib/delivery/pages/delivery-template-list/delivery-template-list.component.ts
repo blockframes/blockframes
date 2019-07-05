@@ -30,10 +30,6 @@ export class DeliveryTemplateListComponent implements OnInit {
 
   public async createDelivery(templateId?: string) {
 
-    if (!!templateId) {
-      this.templateStore.setActive(templateId);
-    }
-
     const deliveryId = await this.deliveryService.addDelivery(templateId);
     this.router.navigate([`layout/o/${this.movieId}/${deliveryId}/settings`]);
   }

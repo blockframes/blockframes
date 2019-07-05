@@ -6,7 +6,7 @@ type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 interface UserProposal {
-  id: string,
+  uid: string,
   email: string,
 }
 
@@ -44,7 +44,7 @@ const findUserByMail = async (data: any, context: CallableContext): Promise<User
         return [];
       }
 
-      return q.docs.map(d => ({ id: d.id, email: d.data().email }));
+      return q.docs.map(d => ({ uid: d.id, email: d.data().email }));
     });
 };
 
@@ -81,7 +81,7 @@ const getOrCreateUserByMail = async (data: any, context: CallableContext): Promi
 
   try {
     const u = await auth.getUserByEmail(email);
-    return { id: u.uid, email };
+    return { uid: u.uid, email };
   } catch {
     const u = await auth.createUser({
       email,
@@ -91,7 +91,7 @@ const getOrCreateUserByMail = async (data: any, context: CallableContext): Promi
 
     // TODO: trigger API to send a mail.
 
-    return { id: u.uid, email };
+    return { uid: u.uid, email };
   }
 };
 

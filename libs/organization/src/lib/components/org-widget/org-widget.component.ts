@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthQuery, User } from '@blockframes/auth';
-import { Organization, OrganizationQuery } from '../+state';
+import { Organization, OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
 
 @Component({

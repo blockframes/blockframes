@@ -1,6 +1,6 @@
 <section>
   <div *ngIf="(org$ | async) as org">
     <h2>{{ org.name }}</h2>
-    <org-members-show></org-members-show>
+    <org-member-list></org-member-list>
   </div>
 </section>

@@ -1,5 +1,5 @@
 export interface OrgMember {
-  id: string;
+  uid: string;
   email: string;
   roles: string[];
 }
