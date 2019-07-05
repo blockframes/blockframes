@@ -9,8 +9,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
 import { OrgFormComponent, RightsGuard, OrganizationGuard } from '@blockframes/organization';
-import { WelcomeComponent } from 'libs/ui/src/lib/landing-page/welcome.component';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
+import { OrgLandingViewComponent } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -68,21 +68,12 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'welcome',
-        children: [
-          {
-            path: '',
-            component: WelcomeComponent
-          },
-          {
-            path: 'create',
-            component: OrgFormComponent
-          }
-          // {
-          //   path: 'join-organization',
-          //   component: OrgJoinComponent
-          // }
-        ]
+        path: 'landing',
+        component: OrgLandingViewComponent
+      },
+      {
+        path: 'create',
+        component: OrgFormComponent
       }
     ]
   },

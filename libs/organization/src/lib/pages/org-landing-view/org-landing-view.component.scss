@@ -1,0 +1,58 @@
+section {
+  background-color: var(--whiteBackground);
+  height: 100%;
+}
+
+article {
+  width: 500px;
+}
+
+.image {
+  margin-top: 47.5px;
+  height: 215px;
+  width: 230px;
+  background-image: url('libs/shared-assets/images/org-landing.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.content {
+  width: 310px;
+}
+
+h2 {
+  margin: 0;
+}
+
+.community {
+  margin-top: 8px;
+  margin-bottom: 23.5px;
+  font-size: 14px;
+}
+
+mat-card {
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+mat-card-content {
+  margin: 0;
+}
+
+mat-card-title {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+mat-card-subtitle {
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--textGrey);
+}
+
+mat-icon {
+  color: var(--dynamicIcon);
+}
+
+

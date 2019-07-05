@@ -18,8 +18,14 @@ import { OrgFormComponent } from './org-form/org-form.component';
 import { OrgShowComponent } from './org-show/org-show.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
 import { OrgWidgetComponent } from './org-widget/org-widget.component';
+import { OrgLandingViewComponent } from './pages/org-landing-view/org-landing-view.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 export const organizationRoutes: Routes = [
+  {
+    path: 'landing',
+    component: OrgLandingViewComponent
+  },
   {
     path: 'form',
     component: OrgFormComponent
@@ -48,13 +54,15 @@ export const organizationRoutes: Routes = [
     MatAutocompleteModule,
     MatCheckboxModule,
     AuthModule,
+    FlexLayoutModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
     OrgFormComponent,
     OrgShowComponent,
     OrgMembersShowComponent,
-    OrgWidgetComponent
+    OrgWidgetComponent,
+    OrgLandingViewComponent
   ],
   exports: [
     OrgWidgetComponent
