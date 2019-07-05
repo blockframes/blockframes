@@ -14,9 +14,8 @@ export class WalletImportKeyFromComponent {
   isMnemonic = false;
   keyObject: Key;
   mnemonic = '';
-  mnemonicFrom = new FormControl({
-    mnemonicField: new FormGroup({}), // TODO use Max's custom mnemonic control
-  });
+  mnemonicField = new FormControl(''); // TODO use Max's custom mnemonic control
+  
   @Output() importKey = new EventEmitter<Key>();
   @Output() importMnemonic = new EventEmitter<string>();
 
