@@ -38,13 +38,13 @@ const findUserByMail = async (data: any, context: CallableContext): Promise<User
     .where('email', '>=', prefix)
     .where('email', '<', prefixEnd)
     .get()
-    .then(q => {
+    .then(query => {
       // leave if there are too many results.
-      if (q.size > 10) {
+      if (query.size > 10) {
         return [];
       }
 
-      return q.docs.map(d => ({ uid: d.id, email: d.data().email }));
+      return query.docs.map(doc => ({ uid: doc.id, email: doc.data().email }));
     });
 };
 
@@ -80,10 +80,10 @@ const getOrCreateUserByMail = async (data: any, context: CallableContext): Promi
   const { email } = data;
 
   try {
-    const u = await auth.getUserByEmail(email);
-    return { uid: u.uid, email };
+    const user = await auth.getUserByEmail(email);
+    return { uid: user.uid, email };
   } catch {
-    const u = await auth.createUser({
+    const user = await auth.createUser({
       email,
       emailVerified: false,
       disabled: false
@@ -91,7 +91,7 @@ const getOrCreateUserByMail = async (data: any, context: CallableContext): Promi
 
     // TODO: trigger API to send a mail.
 
-    return { uid: u.uid, email };
+    return { uid: user.uid, email };
   }
 };
 

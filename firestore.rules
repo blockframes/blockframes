@@ -68,7 +68,7 @@ service cloud.firestore {
       }
     }
 
-    // TEMPLATES RULES //
+    /// TEMPLATES RULES ///
 
     match /templates/{templateId} {
     	allow create: if orgCan('canCreate', userOrgId(), templateId)
@@ -85,7 +85,8 @@ service cloud.firestore {
       }
     }
 
-    // FUNCTIONS //
+
+    /// FUNCTIONS ///
 
     function existingData() {
       return resource.data;
@@ -114,11 +115,6 @@ service cloud.firestore {
   	function isSuperAdmin(userId, orgId) {
     	return userId in getOrgPermissions(orgId).superAdmins;
   	}
-
-		// TODO: Figure out why this always return false
-    // function isOrgAdmin(userId, orgId) {
-    // 	return userId in getOrgPermissions(orgId).admins || isSuperAdmin(userId, orgId);
-    // }
 
     function isOrgAdmin(userId, orgId) {
     	// /!\ Carefull, parentheses needed for operator precedence to work

@@ -1,33 +1,33 @@
 <section>
   <mat-card>
-    <mat-card-header>
-      <mat-card-title>Principal Informations</mat-card-title>
-    </mat-card-header>
+    <mat-card-header> <mat-card-title>Principal Informations</mat-card-title> </mat-card-header>
     <mat-card-content>
-      <form [formGroup]="form">
+      <form [formGroup]="form" (ngSubmit)="addOrganization()">
         <h4>Organization Name</h4>
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
-          <input matInput placeholder="Name" aria-label="name" formControlName="name"/>
+          <input matInput placeholder="Name" aria-label="name" formControlName="name" />
         </mat-form-field>
 
         <h4>Organization Address</h4>
         <mat-form-field appearance="outline">
           <mat-label>Address</mat-label>
-          <textarea matInput placeholder="Address" aria-label="address" formControlName="address"></textarea>
+          <textarea
+            matInput
+            placeholder="Address"
+            aria-label="address"
+            formControlName="address"
+          ></textarea>
         </mat-form-field>
+        <mat-toolbar>
+          <mat-toolbar-row>
+            <div>
+              <button mat-button type="button" (click)="clear()">Cancel</button>
+              <button mat-raised-button type="submit" color="primary">Next</button>
+            </div>
+          </mat-toolbar-row>
+        </mat-toolbar>
       </form>
     </mat-card-content>
   </mat-card>
-  <mat-toolbar>
-    <mat-toolbar-row>
-      <div>
-        <button mat-button (click)="clear()">Cancel</button>
-        <button mat-raised-button color="primary" (click)="submit()">Next</button>
-      </div>
-    </mat-toolbar-row>
-  </mat-toolbar>
 </section>
-
-
-

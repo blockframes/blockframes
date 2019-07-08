@@ -6,14 +6,13 @@
   <mat-card-actions
     *ngIf="!!(isSuperAdmin$ | async)"
     fxLayout="column"
-    fxLayoutAlign="center center"
-  >
-    <a *ngIf="!!(isUserSuperAdmin$ | async)" mat-icon-button color="primary" (click)="switchRoles()"
-      >*<mat-icon>star</mat-icon></a
-    >
-    <a *ngIf="!(isUserSuperAdmin$ | async)" mat-icon-button color="primary" (click)="switchRoles()"
-      >*<mat-icon>star_border</mat-icon></a
-    >
+    fxLayoutAlign="center center">
+    <a *ngIf="!!(isUserSuperAdmin$ | async)" mat-icon-button color="primary" (click)="switchRoles()">
+      *<mat-icon>star</mat-icon>
+    </a>
+    <a *ngIf="!(isUserSuperAdmin$ | async)" mat-icon-button color="primary" (click)="switchRoles()">
+      *<mat-icon>star_border</mat-icon>
+    </a>
     <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>
 </mat-card>

@@ -23,7 +23,6 @@ export class OrganizationService {
     const orgDoc = this.db.doc(`orgs/${orgId}`);
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${member.uid}`);
-    console.log(member)
 
     await this.db.firestore
       .runTransaction(async tx => {

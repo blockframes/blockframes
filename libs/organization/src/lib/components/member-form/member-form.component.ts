@@ -37,7 +37,7 @@ export class MemberFormComponent implements OnInit {
     return user ? user.email : undefined;
   }
 
-  public async submit() {
+  public async addMember() {
     if (!this.addMemberForm.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');
@@ -65,15 +65,15 @@ export class MemberFormComponent implements OnInit {
 
   private async listUserByMail(prefix: string): Promise<User[]> {
     const f = firebase.functions().httpsCallable('findUserByMail');
-    return f({ prefix }).then(x => x.data);
+    return f({ prefix }).then(usersProposal => usersProposal.data);
   }
 
   private async onChange() {
-    this.addMemberForm.valueChanges.subscribe(x => {
+    this.addMemberForm.valueChanges.subscribe(userObject => {
       // TODO: debounce
-      this.listUserByMail(x.user).then(xs => {
+      this.listUserByMail(userObject.user).then(users => {
         // TODO: use an observable
-        this.mailsOptions = xs;
+        this.mailsOptions = users;
       });
     });
   }
