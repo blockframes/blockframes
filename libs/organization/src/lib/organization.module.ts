@@ -24,12 +24,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { OrgFormComponent } from './components/org-form/org-form.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrgWidgetComponent } from './components/org-widget/org-widget.component';
-import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 
 // Pages
 import { OrgViewComponent } from './pages/org-view/org-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
+import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -75,7 +75,8 @@ export const organizationRoutes: Routes = [
     OrgWidgetComponent,
     MemberListComponent,
     MemberViewComponent,
-    MemberFormComponent
+    MemberFormComponent,
+    OrganizationHomeComponent
   ],
   exports: [
     OrgWidgetComponent
