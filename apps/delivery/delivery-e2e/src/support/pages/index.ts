@@ -16,5 +16,26 @@ import DeliveryFormPage from './DeliveryFormPage';
 import NewTemplatePage from './NewTemplatePage';
 import TemplatePickerPage from './TemplatePickerPage';
 import DeliverySettingsFormPage from './DeliverySettingsFormPage';
+import LoginPage from './LoginPage';
 
-export { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeamWorkPage, DeliveryTeamWorkPage, EditProfilePage, TemplateDeleteModal, TemplateFormPage, AddMovieModal, MovieEditPage, TemplateListPage, AddTemplateModal, DeliveryListPage, DeliveryFormPage, NewTemplatePage, TemplatePickerPage, DeliverySettingsFormPage }
+export {
+  HomePage,
+  OrganizationFormPage,
+  LandingPage,
+  ViewProfilePage,
+  MovieTeamWorkPage,
+  DeliveryTeamWorkPage,
+  EditProfilePage,
+  TemplateDeleteModal,
+  TemplateFormPage,
+  AddMovieModal,
+  MovieEditPage,
+  TemplateListPage,
+  AddTemplateModal,
+  DeliveryListPage,
+  DeliveryFormPage,
+  NewTemplatePage,
+  TemplatePickerPage,
+  DeliverySettingsFormPage,
+  LoginPage
+};
