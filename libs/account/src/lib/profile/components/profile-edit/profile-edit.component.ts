@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
-import { ProfileDeleteComponent } from '../profile-delete/profile-delete.component';
+import { ProfileDeleteComponent } from '../../profile-delete/profile-delete.component';
 
 import { ProfileForm } from './profile-edit.form';
 

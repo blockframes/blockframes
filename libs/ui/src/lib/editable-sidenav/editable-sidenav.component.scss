@@ -1,0 +1,30 @@
+mat-sidenav-content {
+  width: 70%;
+}
+
+mat-sidenav {
+  margin-top: 66px;
+  width: 500px;
+  position: fixed;
+}
+
+// medium
+@media screen and (min-width: 960px) and (max-width: 1279px) {
+  mat-sidenav {
+    width: 400px;
+  }
+}
+
+// small
+@media screen and (min-width: 600px) and (max-width: 959px) {
+  mat-sidenav {
+    width: 300px;
+  }
+}
+
+// extra small
+@media screen and (max-width: 599px) {
+  mat-sidenav {
+    width: 200px;
+  }
+}

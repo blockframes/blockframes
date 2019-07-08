@@ -14,15 +14,17 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { ProfileViewComponent } from './profile-view/profile-view.component';
-import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+import { ProfileViewComponent } from './components/profile-view/profile-view.component';
+import { ProfileEditComponent } from './components/profile-edit/profile-edit.component';
 import { ProfileDeleteComponent } from './profile-delete/profile-delete.component';
 import { ProfileWidgetComponent } from './profile-widget/profile-widget.component';
 import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
+import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
+import { EditableSidenavModule } from '@blockframes/ui';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },
-  { path: 'view', component: ProfileViewComponent },
+  { path: 'view', component: ProfileEditableComponent },
   { path: 'edit', component: ProfileEditComponent },
 ];
 @NgModule({
@@ -40,6 +42,7 @@ export const profileRoutes: Routes = [
     MatInputModule,
     MatDialogModule,
     MatMenuModule,
+    EditableSidenavModule,
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [
@@ -48,6 +51,7 @@ export const profileRoutes: Routes = [
     ProfileDeleteComponent,
     ProfileWidgetComponent,
     ProfileMenuComponent,
+    ProfileEditableComponent
   ],
   exports: [
     ProfileDeleteComponent,
