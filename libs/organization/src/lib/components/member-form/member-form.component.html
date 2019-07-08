@@ -1,9 +1,9 @@
-<mat-card>
-  <mat-card-header>
+<mat-card fxLayout="column">
+  <mat-card-header fxLayoutAlign="center">
     <mat-card-title>Add Member</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="addMemberForm">
+    <form [formGroup]="addMemberForm" fxLayout ="row" fxLayoutAlign="space-evenly center">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput

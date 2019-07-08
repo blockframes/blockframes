@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '../../+state';
-import { PermissionsQuery } from '../../permissions/+state';
 
 @Component({
   selector: 'org-member-list',
@@ -10,12 +9,10 @@ import { PermissionsQuery } from '../../permissions/+state';
 })
 export class MemberListComponent implements OnInit {
   public org$: Observable<Organization>;
-  public isSuperAdmin$: Observable<boolean>;
 
-  constructor(private query: OrganizationQuery, private permissionsQuery: PermissionsQuery) {}
+  constructor(private query: OrganizationQuery) {}
 
   ngOnInit() {
     this.org$ = this.query.select('org');
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
   }
 }

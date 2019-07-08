@@ -5,11 +5,4 @@
     </mat-list>
   </div>
   <org-member-form *ngIf="!!(isSuperAdmin$ | async)"></org-member-form>
-  <mat-toolbar>
-    <mat-toolbar-row>
-      <div>
-        <button mat-button>Back</button> <button mat-raised-button color="primary">Done</button>
-      </div>
-    </mat-toolbar-row>
-  </mat-toolbar>
 </section>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { AuthModule } from '@blockframes/auth';
@@ -52,6 +53,7 @@ export const organizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     AuthModule,
+    FlexLayoutModule,
 
     // Material
     MatFormFieldModule,

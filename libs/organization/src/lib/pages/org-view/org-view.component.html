@@ -1,6 +1,7 @@
-<section>
+<section fxLayout="column">
   <div *ngIf="(org$ | async) as org">
     <h2>{{ org.name }}</h2>
     <org-member-list></org-member-list>
   </div>
+  <org-member-form *ngIf="!!(isSuperAdmin$ | async)"></org-member-form>
 </section>
