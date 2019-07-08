@@ -10,3 +10,4 @@ export interface Addresses {
   kovan?: string;
   rinkeby?: string;
   local?: string;
+}
