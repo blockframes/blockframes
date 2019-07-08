@@ -27,6 +27,7 @@
   },
   "functions": {
     "predeploy": [
+      "cp ./package.json dist/apps/backend-functions/package.json",
       "npm --prefix \"$RESOURCE_DIR\" run lint backend-functions",
       "npm --prefix \"$RESOURCE_DIR\" run build:functions --configuration=${ENV:-production}",
       "./ops/deploy_secrets.sh"
