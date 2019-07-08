@@ -1,11 +1,12 @@
-mat-sidenav-content {
-  width: 70%;
-}
-
 mat-sidenav {
   margin-top: 66px;
   width: 500px;
   position: fixed;
+  background-color: var(--whiteBackground);
+}
+
+.mat-drawer-side.mat-drawer-end {
+  border-left: none;
 }
 
 // medium
@@ -24,7 +25,10 @@ mat-sidenav {
 
 // extra small
 @media screen and (max-width: 599px) {
+  mat-sidenav-content {
+    width: 100%;
+  }
   mat-sidenav {
-    width: 200px;
+    width: 100%;
   }
 }

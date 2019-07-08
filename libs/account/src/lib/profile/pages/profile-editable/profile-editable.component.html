@@ -1,7 +1,7 @@
-<editable-sidenav (closed)="closed()" [opened]="opened">
+<editable-sidenav (closed)="opened=false" [opened]="opened">
 
   <account-profile-view content (edited)="opened=true"></account-profile-view>
 
-  <!-- <app-stakeholder-form sidenav [stakeholder]="activeStakeholder"></app-stakeholder-form> -->
+  <account-profile-edit sidenav (closed)="opened=false"></account-profile-edit>
 
 </editable-sidenav>

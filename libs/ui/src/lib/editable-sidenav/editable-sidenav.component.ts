@@ -14,6 +14,6 @@ export class EditableSidenavComponent {
 
   public closeSidenav() {
     this.opened = false;
-    this.closed.emit(false);
+    this.closed.emit();
   }
 }

@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { AccountForm, User, AuthQuery, AuthService } from '@blockframes/auth';
 import { Observable } from 'rxjs';
@@ -8,7 +8,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 import { ProfileDeleteComponent } from '../../profile-delete/profile-delete.component';
-
 import { ProfileForm } from './profile-edit.form';
 
 @Component({
@@ -18,6 +17,7 @@ import { ProfileForm } from './profile-edit.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEditComponent implements OnInit, OnDestroy {
+  @Output() closed = new EventEmitter();
 
   public accountForm: ProfileForm;
   public persistForm: PersistNgFormPlugin<AccountForm>;

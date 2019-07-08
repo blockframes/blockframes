@@ -1,8 +1,8 @@
 <main testId="profileEdit">
+  <button (click)="closed.emit()" color="primary" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
   <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-    <button mat-icon-button routerLink="/layout/o/account/profile/view" color="primary">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
     <form [formGroup]="accountForm">
       <mat-form-field floatLabel="always">
         <mat-label>Email</mat-label>
@@ -26,7 +26,6 @@
       </mat-form-field>
     </form>
     <div>
-      <button mat-raised-button routerLink="/layout/o/account/profile/view">Cancel</button>
       <button mat-raised-button color="primary" (click)="updateProfile()">Save</button>
       <button mat-raised-button color="warn" (click)="deleteAccount()">Delete my account</button>
     </div>

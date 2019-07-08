@@ -10,8 +10,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 export class ProfileEditableComponent {
   public opened = false;
-
-  public closed() {
-    this.opened = false;
-  }
 }
