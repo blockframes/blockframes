@@ -43,7 +43,7 @@ export class OrganizationGuard {
           },
           error: (err) => {
             console.log('Error: ' ,err)
-            res(this.router.parseUrl('layout/org-home'))
+            res(this.router.parseUrl('layout/organization-home'))
           }
         });
     });

@@ -18,13 +18,13 @@ import { OrgFormComponent } from './org-form/org-form.component';
 import { OrgShowComponent } from './org-show/org-show.component';
 import { OrgMembersShowComponent } from './org-members-show/org-members-show.component';
 import { OrgWidgetComponent } from './org-widget/org-widget.component';
-import { OrgHomeComponent } from './pages/org-home/org-home.component';
+import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 export const organizationRoutes: Routes = [
   {
-    path: 'org-home',
-    component: OrgHomeComponent
+    path: 'organization-home',
+    component: OrganizationHomeComponent
   },
   {
     path: 'form',
@@ -62,7 +62,7 @@ export const organizationRoutes: Routes = [
     OrgShowComponent,
     OrgMembersShowComponent,
     OrgWidgetComponent,
-    OrgHomeComponent
+    OrganizationHomeComponent
   ],
   exports: [
     OrgWidgetComponent
