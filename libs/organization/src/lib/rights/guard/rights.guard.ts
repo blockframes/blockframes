@@ -47,7 +47,7 @@ export class RightsGuard {
         )
         .subscribe({
           next: (result: OrganizationRights) => res(!!result),
-          error: () => res(this.router.parseUrl('/layout/landing'))
+          error: () => res(this.router.parseUrl('/layout/org-home'))
         });
     });
   }

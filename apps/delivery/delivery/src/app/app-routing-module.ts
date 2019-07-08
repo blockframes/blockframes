@@ -10,7 +10,7 @@ import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
 import { OrgFormComponent, RightsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
-import { OrgLandingViewComponent } from '@blockframes/organization';
+import { OrgHomeComponent } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -68,8 +68,8 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'landing',
-        component: OrgLandingViewComponent
+        path: 'org-home',
+        component: OrgHomeComponent
       },
       {
         path: 'create',
