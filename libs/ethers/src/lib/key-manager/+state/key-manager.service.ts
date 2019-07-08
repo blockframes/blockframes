@@ -41,7 +41,7 @@ export class KeyManagerService {
   }
 
   /**  create / encrypt / store / from random */
-  async createFromRandom(ensDomain: string, password: string) { // at signup password is already provided and we don't want to ask again
+  async createFromRandom(ensDomain: string, password: string) {
 
     const wallet = EthersWallet.createRandom();
     this._encryptAndStore(wallet, ensDomain, password);
@@ -88,12 +88,12 @@ export class KeyManagerService {
     delete this.signingKey;
   }
 
-  /** delete key */
+  /** delete a stored key (from the storage)*/
   async deleteKey(key: Key) {
     this.store.remove(key.address);
   }
 
-  /** export key */
+  /** export key : expose it's mnemonic/private key */
   async exportActiveKey() {
     this._requireSigningKey();
     const wallet = new EthersWallet(this.signingKey);
