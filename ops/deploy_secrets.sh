@@ -3,6 +3,16 @@
 SECRETS=./secrets.sh
 SECRETS_TEMPLATE=./secrets.template.sh
 
+TOKEN_ARG=""
+
+# ci deployement
+if [ -n "${FIREBASE_CI_TOKEN}" ]; then
+  TOKEN_ARG="--token ${FIREBASE_CI_TOKEN}"
+fi
+
+# Check that we have the configuration in memory,
+# If we don't, load from the local secrets file.
+# This file is for developers' local environment.
 if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
   echo -e "\e[33mno configuration found in your env, loading your secrets\e[0m"
 
@@ -17,6 +27,8 @@ if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
   fi
 fi
 
+
 echo "deploying the functions configuration"
 firebase functions:config:set sendgrid.api_key="${SENDGRID_API_KEY}" \
-                              relayer.mnemonic="${ETHEREUM_MNEMONIC}";
+                              relayer.mnemonic="${ETHEREUM_MNEMONIC}" \
+                              ${TOKEN_ARG};
