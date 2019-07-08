@@ -28,6 +28,7 @@ import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './pdf';
 import { onInvitationUpdate } from './invitation';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -128,12 +129,41 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 );
 
 /**
- * Trigger: when an invitation is update (e. g. when invitation.state change)
+ * Trigger: when an invitation is updated (e. g. when invitation.state change)
  */
 export const onInvitationUpdateEvent = onDocumentUpdate(
   'invitations/{invitationID}',
   onInvitationUpdate
-)
+);
+
+//--------------------------------
+//       Orgs Management        //
+//--------------------------------
+
+/**
+ * Trigger: when an organization is created
+ */
+export const onOrganizationCreateEvent = onDocumentCreate(
+  'orgs/{orgID}',
+  onOrganizationCreate
+);
+
+/**
+ * Trigger: when an organization is updated
+ */
+export const onOrganizationUpdateEvent = onDocumentUpdate(
+  'orgs/{orgID}',
+  onOrganizationUpdate
+);
+
+/**
+ * Trigger: when an organization is removed
+ */
+export const onOrganizationDeleteEvent = onDocumentDelete(
+  'orgs/{orgID}',
+  onOrganizationDelete
+);
+
 
 //--------------------------------
 //        GENERATE PDF          //
@@ -143,6 +173,7 @@ export const onInvitationUpdateEvent = onDocumentUpdate(
  * Trigger: REST call to generate a delivery PDF
  */
 export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
+
 
 //--------------------------------
 //            RELAYER           //

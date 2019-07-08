@@ -7,3 +7,7 @@ export { backupBucket, relayer, firebase, appUrl } from '@env';
 
 export const sendgridAPIKey = functions.config().sendgrid.apiKey;
 export const mnemonic = functions.config().relayer.mnemonic;
+
+export const algoliaId = functions.config().algolia.app_id;
+export const algoliaAdminKey = functions.config().algolia.api_key;
+export const algoliaSearchKey = functions.config().algolia.search_key;

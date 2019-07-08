@@ -10,6 +10,10 @@ import {
 import { getDocument, getCount, getOrganizationsOfDocument } from './data/internals';
 import { Delivery, DocInformations, Organization, Movie, SnapObject } from './data/types';
 
+// TODO: these functions are broken:
+// we lose the async which means that the function won't wait for the code to finish
+// and this additional layer of indirection is useless.
+
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
