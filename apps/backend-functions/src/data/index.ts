@@ -2,7 +2,7 @@
  * Data module for the backend,
  * defines the interface for client code and internal data storage operations.
  *
- * This module will (TODO) define a human-readable, business oriented interface,
+ * This module will (TODO) expose our human-readable, business oriented interface,
  * and introduce separation of concern between the client code (create delivery, generate notification, etc)
  * and the storage layer (firestore, retrieve document, access path `/delivery/${deliveryId}/x/y`
  *
@@ -12,6 +12,6 @@
  * - Regroup, organize and prepare the data manipulation code we already have,
  * - Build a layer of abstraction atop this layer to abstract the implementation details (firestore)
  *   and our business code (Materials, Delivery, etc),
- * - Reunite the backend and frontend data layers in a single shared library,
+ * - Reunite the backend and frontend data layers in the library corresponding to each model,
  *   to keep a single, up-to-date codebase.
  */
