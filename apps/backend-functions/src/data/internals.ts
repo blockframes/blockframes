@@ -30,6 +30,8 @@ export async function getOrgsOfDocument(
 }
 
 export function getCount(collection: string) {
+  // TODO: implement counters to make this function scalable.
+  // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
   return db
     .collection(collection)
     .get()
