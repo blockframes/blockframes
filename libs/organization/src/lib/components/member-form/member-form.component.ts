@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import * as firebase from 'firebase';
 import { OrganizationService } from '../../+state';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface User {
   uid: string;
@@ -14,9 +16,10 @@ export interface User {
   templateUrl: './member-form.component.html',
   styleUrls: ['./member-form.component.scss']
 })
-export class MemberFormComponent implements OnInit {
+export class MemberFormComponent implements OnInit, OnDestroy {
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
+  public destroyed$ = new Subject();
 
   constructor(
     private service: OrganizationService,
@@ -69,12 +72,17 @@ export class MemberFormComponent implements OnInit {
   }
 
   private async onChange() {
-    this.addMemberForm.valueChanges.subscribe(userObject => {
+    this.addMemberForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(userObject => {
       // TODO: debounce
       this.listUserByMail(userObject.user).then(users => {
         // TODO: use an observable
         this.mailsOptions = users;
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next;
+    this.destroyed$.unsubscribe;
   }
 }
