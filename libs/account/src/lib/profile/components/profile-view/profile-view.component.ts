@@ -11,8 +11,9 @@ import { Observable } from 'rxjs';
 })
 export class ProfileViewComponent implements OnInit {
 
-  user$: Observable<User>;
-  @Output() edited = new EventEmitter();
+  public user$: Observable<User>;
+  @Output() profileEdited = new EventEmitter();
+  @Output() passwordEdited = new EventEmitter();
 
   constructor(public query: AuthQuery){}
 

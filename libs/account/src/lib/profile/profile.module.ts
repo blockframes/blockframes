@@ -21,6 +21,7 @@ import { ProfileWidgetComponent } from './profile-widget/profile-widget.componen
 import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
 import { EditableSidenavModule } from '@blockframes/ui';
+import { PasswordEditEditComponent } from './components/password-edit/password-edit.component';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },
@@ -51,7 +52,8 @@ export const profileRoutes: Routes = [
     ProfileDeleteComponent,
     ProfileWidgetComponent,
     ProfileMenuComponent,
-    ProfileEditableComponent
+    ProfileEditableComponent,
+    PasswordEditEditComponent
   ],
   exports: [
     ProfileDeleteComponent,

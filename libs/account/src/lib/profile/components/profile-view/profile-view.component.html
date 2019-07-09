@@ -1,8 +1,11 @@
 <article>
   <mat-card class="mat-elevation-z1">
     <ng-container *ngIf="(user$ | async) as user; else: profileLoading">
-      <button mat-icon-button (click)="edited.emit()" color="primary">
+      <button mat-icon-button (click)="profileEdited.emit()" color="primary">
         <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="passwordEdited.emit()" color="primary">
+        <mat-icon>lock_open</mat-icon>
       </button>
       <section>
         <div>
