@@ -3,19 +3,10 @@ import * as functions from 'firebase-functions';
 import { auth, db } from './firebase';
 import * as SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from './environments/environment';
+import { userInviteTemplate } from './assets/mailTemplates';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
-
-const userWelcomePath = '/auth/welcome';
-
-const userInviteTemplate = ({ projectURL }: { projectURL: string }) =>
-  `
-  You've been invited to a project on the Blockframes Platform!\n
-  \n
-  Click on the following link to create your account and join the project:\n
-  ${projectURL}${userWelcomePath}
-  `;
 
 interface UserProposal {
   uid: string;
@@ -118,7 +109,7 @@ const getOrCreateUserByMail = async (
       to: email,
       from: 'admin@blockframes.io',
       subject: 'Your Blockframes account is waiting for you',
-      text: userInviteTemplate({ projectURL: 'https://blockframes.io/' })
+      text: userInviteTemplate()
     };
     await SendGrid.send(msg);
 
