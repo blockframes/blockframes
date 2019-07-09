@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { PasswordControl, checkPasswords } from '@blockframes/utils';
 import { AuthService } from '@blockframes/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PasswordEditForm } from '../../forms/password-edit.form';
 
 @Component({
   selector: 'account-password-edit',
@@ -15,12 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class PasswordEditEditComponent {
   @Output() closed = new EventEmitter();
 
-  public form = new FormGroup({
-    actualPassword: new PasswordControl(''),
-    password: new PasswordControl(''),
-    confirm: new PasswordControl('')
-  },
-  checkPasswords());
+  public form = new PasswordEditForm();
 
   constructor(private authService: AuthService, private snackBar: MatSnackBar) {}
 
@@ -36,6 +32,5 @@ export class PasswordEditEditComponent {
       console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: 5000 });
     }
-
   }
 }
