@@ -69,6 +69,8 @@
     "@ngrx/router-store": "7.2.0",
     "@ngrx/store": "7.2.0",
     "@nrwl/angular": "8.0.0",
+    "@sendgrid/mail": "^6.4.0",
+    "@types/sendgrid": "^4.3.0",
     "core-js": "^2.6.4",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^4.0.27",
