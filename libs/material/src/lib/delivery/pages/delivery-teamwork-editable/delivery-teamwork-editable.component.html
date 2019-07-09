@@ -1,12 +1,19 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
-  <mat-sidenav class="mat-elevation-z2" [opened]="true" fixedInViewport="true" fixedTopGap="191" [opened]="true" mode="side">
-    <delivery-teamwork-repertory
-      *ngIf="(movie$ | async).stakeholders as movieStakeholders"
-      [stakeholders]="movieStakeholders"
-      (added)="addStakeholder($event)"
-    ></delivery-teamwork-repertory>
-  </mat-sidenav>
+    <mat-sidenav
+      *ngIf="!!(isOrgAdmin$ | async)"
+      class="mat-elevation-z2"
+      [opened]="true"
+      fixedInViewport="true"
+      fixedTopGap="191"
+      [opened]="true"
+      mode="side">
+      <delivery-teamwork-repertory
+        *ngIf="(movie$ | async).stakeholders as movieStakeholders"
+        [stakeholders]="movieStakeholders"
+        (added)="addStakeholder($event)">
+      </delivery-teamwork-repertory>
+    </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>
     <div class="menus" fxLayoutAlign="space-between center">

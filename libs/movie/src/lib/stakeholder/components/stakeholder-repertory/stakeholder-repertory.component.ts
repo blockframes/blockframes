@@ -25,7 +25,7 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   constructor(
     private service: StakeholderService,
     private builder: FormBuilder,
-    private movieQuery: MovieQuery,
+    private movieQuery: MovieQuery
   ) {}
 
   ngOnInit() {
@@ -58,13 +58,14 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   }
 
   private async onChange() {
-    this.addStakeholderForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(typingOrgName => {
-      // TODO: debounce
-      this.listOrgsByName(typingOrgName.org)
-        .then(matchingOrgs => {
+    this.addStakeholderForm.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(typingOrgName => {
+        // TODO: debounce
+        this.listOrgsByName(typingOrgName.org).then(matchingOrgs => {
           // TODO: use an observable
           this.orgOptions = matchingOrgs;
         });
-    });
+      });
   }
 }
