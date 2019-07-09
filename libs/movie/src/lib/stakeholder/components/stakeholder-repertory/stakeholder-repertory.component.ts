@@ -25,7 +25,7 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   constructor(
     private service: StakeholderService,
     private builder: FormBuilder,
-    private movieQuery: MovieQuery
+    private movieQuery: MovieQuery,
   ) {}
 
   ngOnInit() {

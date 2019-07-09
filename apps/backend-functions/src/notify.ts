@@ -46,17 +46,25 @@ export function customMessage(userId: string, snap: SnapObject) {
       return snap.org.userIds.includes(userId) && snap.count > 1
         ? `You have been invited to participate in ${snap.movie.title.original}'s
           ${snap.docID.type}. Do you wish to work on it ?`
-        : `${snap.org.name} has been added to ${snap.movie.title.original}'s ${snap.docID.type}`;
+        : `${snap.org.name} has been added to ${snap.movie.title.original}'s ${snap.docID.type}.`;
     }
     if (snap.docID.type === 'movie') {
       return snap.org.userIds.includes(userId) && snap.count > 1
         ? `You have been invited to participate in ${snap.movie.title.original}.
           Do you wish to work on it ?`
-        : `${snap.org.name} has been added to ${snap.movie.title.original}`;
+        : `${snap.org.name} has been added to ${snap.movie.title.original}.`;
     }
   }
   if (snap.eventType === 'google.firestore.document.delete') {
-    return `${snap.org.name} has been removed from ${snap.movie.title.original}`
+    if (snap.docID.type === 'movie') {
+      return `${snap.org.name} has been removed from movie ${snap.movie.title.original}.`
+    }
+    if (snap.docID.type === 'delivery') {
+      return `${snap.org.name} has been removed from ${snap.movie.title.original} delivery.`
+    }
+    else {
+      throw new Error('Document type is not valid');
+    }
   }
   else {
     throw new Error('Message is not valid');

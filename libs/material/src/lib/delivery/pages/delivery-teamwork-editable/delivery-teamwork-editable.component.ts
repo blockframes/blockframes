@@ -27,7 +27,6 @@ export class DeliveryTeamworkEditableComponent implements OnInit {
     this.delivery$ = this.deliveryQuery.selectActive();
     this.movie$ = this.movieQuery.selectActive();
     this.isOrgAdmin$ = this.permissionsQuery.isOrgAdmin$;
-    this.isOrgAdmin$.subscribe(x => console.log(x))
   }
 
   public addStakeholder(stakeholder: Stakeholder) {

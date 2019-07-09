@@ -6,8 +6,7 @@
     [opened]="true"
     fixedInViewport="true"
     fixedTopGap="191"
-    mode="side"
-  >
+    mode="side">
     <stakeholder-repertory></stakeholder-repertory>
   </mat-sidenav>
   <!-- Content -->
@@ -20,8 +19,8 @@
     <div class="item-form" *ngFor="let stakeholder of (movie$ | async).stakeholders">
       <stakeholder-item
         (removed)="removeStakeholder(stakeholder.id)"
-        [stakeholder]="stakeholder"
-      ></stakeholder-item>
+        [stakeholder]="stakeholder">
+      </stakeholder-item>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
