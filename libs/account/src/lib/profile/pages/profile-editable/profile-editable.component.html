@@ -4,7 +4,7 @@
 
   <account-profile-edit *ngIf="isProfileEdit; else password" sidenav (closed)="opened=false"></account-profile-edit>
   <ng-template #password>
-    <account-password-edit sidenav></account-password-edit>
+    <account-password-edit sidenav (closed)="opened=false"></account-password-edit>
   </ng-template>
 
 </editable-sidenav>
