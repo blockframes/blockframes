@@ -19,7 +19,7 @@ export interface User {
 export class MemberFormComponent implements OnInit, OnDestroy {
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public destroyed$ = new Subject();
+  private destroyed$ = new Subject();
 
   constructor(
     private service: OrganizationService,
@@ -63,26 +63,26 @@ export class MemberFormComponent implements OnInit, OnDestroy {
 
   private async getOrCreateUserByMail(email: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email }).then(x => x.data);
+    return f({ email }).then(matchingEmail => matchingEmail.data);
   }
 
   private async listUserByMail(prefix: string): Promise<User[]> {
     const f = firebase.functions().httpsCallable('findUserByMail');
-    return f({ prefix }).then(usersProposal => usersProposal.data);
-  }
-
-  private async onChange() {
-    this.addMemberForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(userObject => {
-      // TODO: debounce
-      this.listUserByMail(userObject.user).then(users => {
-        // TODO: use an observable
-        this.mailsOptions = users;
-      });
-    });
+    return f({ prefix }).then(matchingUsers => matchingUsers.data);
   }
 
   ngOnDestroy() {
-    this.destroyed$.next;
-    this.destroyed$.unsubscribe;
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
+  }
+
+  private async onChange() {
+    this.addMemberForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(typingEmail => {
+      // TODO: debounce
+      this.listUserByMail(typingEmail.user).then(matchingUsers => {
+        // TODO: use an observable
+        this.mailsOptions = matchingUsers;
+      });
+    });
   }
 }

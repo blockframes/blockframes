@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery, User } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
-import { first, takeWhile } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../../+state';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'org-form',
@@ -17,7 +18,7 @@ export class OrgFormComponent implements OnInit, OnDestroy {
   public persistForm: PersistNgFormPlugin<OrganizationState>;
   public user: User;
   public form: FormGroup;
-  private alive = true;
+  private destroyed$ = new Subject();
 
   constructor(
     private service: OrganizationService,
@@ -41,12 +42,13 @@ export class OrgFormComponent implements OnInit, OnDestroy {
     this.persistForm = new PersistNgFormPlugin(this.query, 'form');
     this.persistForm.setForm(this.form);
     this.route.data
-      .pipe(takeWhile(_ => this.alive))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(({ org }) => org ? this.form.setValue(createOrganization(org)) : this.form.reset());
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
     this.persistForm.destroy();
   }
 
