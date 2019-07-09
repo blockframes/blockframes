@@ -20,6 +20,16 @@ export function getDocument<T>(path: string): Promise<T> {
     .then(doc => doc.data() as T);
 }
 
+/**
+ * Try to get all the organization in the stakeholders subcollection of `/{collection}/{documentId}`.
+ *
+ * Use with care: this function assumes the stakeholders collection exists and
+ * it doesn't not deduplicate the orgs.
+ *
+ * @param documentId
+ * @param collection
+ * @returns the organization that are in the document's stakeholders.
+ */
 export async function getOrgsOfDocument(
   documentId: string,
   collection: string
