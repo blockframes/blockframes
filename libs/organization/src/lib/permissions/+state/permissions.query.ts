@@ -3,6 +3,7 @@ import { Query } from '@datorama/akita';
 import { PermissionsStore, PermissionsState } from './permissions.store';
 import { AuthQuery } from '@blockframes/auth';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,9 @@ export class PermissionsQuery extends Query<PermissionsState> {
 
   /** Checks if the connected user is either SuperAdmin or Admin of his organization */
   public get isOrgAdmin$(): Observable<boolean> {
-    return this.isSuperAdmin$ || this.select(state => state.admins.includes(this.auth.userId));
+    return this.isSuperAdmin$.pipe(
+      map(isSuperAdmin => isSuperAdmin || this.getValue().admins.includes(this.auth.userId))
+    );
   }
 
   /** Checks if the user is SuperAdmin of his organization */

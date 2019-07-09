@@ -62,11 +62,7 @@ export function customMessage(userId: string, snap: SnapObject) {
     if (snap.docID.type === 'delivery') {
       return `${snap.org.name} has been removed from ${snap.movie.title.original} delivery.`
     }
-    else {
-      throw new Error('Document type is not valid');
-    }
+    throw { errorMessage: 'Document type is not defined.' }
   }
-  else {
-    throw new Error('Message is not valid');
-  }
+  throw { errorMessage: 'Message is not valid.' }
 }

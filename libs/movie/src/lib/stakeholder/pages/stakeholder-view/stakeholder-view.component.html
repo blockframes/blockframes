@@ -1,11 +1,9 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav
-    *ngIf="!!(isOrgAdmin$ | async)"
+    *ngIf="(isOrgAdmin$ | async)"
     class="mat-elevation-z2"
     [opened]="true"
-    fixedInViewport="true"
-    fixedTopGap="191"
     mode="side">
     <stakeholder-repertory></stakeholder-repertory>
   </mat-sidenav>
