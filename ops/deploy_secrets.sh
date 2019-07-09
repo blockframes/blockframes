@@ -19,7 +19,7 @@ if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
   if [ -f "$SECRETS" ]; then
     source ${SECRETS};
   else
-    echo -e "\e[31mno secrets.sh file found, using secrests.template.sh";
+    echo -e "\e[31mno secrets.sh file found, using secrets.template.sh";
     echo -e "(this is not secure, don't use for production!)\e[0m";
     echo -e "\e[31mpress enter to continue the deploy\e[0m";
     read -n 1 -s -r;
