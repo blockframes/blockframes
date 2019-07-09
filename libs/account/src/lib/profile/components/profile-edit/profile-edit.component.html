@@ -1,39 +1,42 @@
-<main testId="profileEdit">
-  <button (click)="closed.emit()" color="primary" mat-icon-button>
-    <mat-icon>close</mat-icon>
-  </button>
-  <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-    <form [formGroup]="accountForm">
-      <mat-form-field floatLabel="always">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" floatLabel="always">
-        <mat-label>First Name</mat-label>
-        <input matInput type="firstName" formControlName="firstName" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" floatLabel="always">
-        <mat-label>Last Name</mat-label>
-        <input matInput type="lastName" formControlName="lastName" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" floatLabel="always">
-        <mat-label>Biography</mat-label>
-        <textarea matInput type="biography" formControlName="biography"></textarea>
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <mat-label>Id</mat-label>
-        <input matInput formControlName="uid" />
-      </mat-form-field>
-    </form>
-    <div>
+<article fxLayout="column" fxLayoutAlign="center center">
+  <mat-card class="mat-elevation-z1">
+    <mat-card-header fxLayout="row" fxLayoutAlign="end center">
+      <button (click)="closed.emit()" color="primary" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <ng-container *ngIf="(user$ | async) as user; else: profileLoading">
+        <form [formGroup]="accountForm" fxLayout="column" fxLayoutAlign="space-around center">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>First Name</mat-label>
+            <input matInput type="firstName" formControlName="firstName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Last Name</mat-label>
+            <input matInput type="lastName" formControlName="lastName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Biography</mat-label>
+            <textarea matInput type="biography" formControlName="biography"></textarea>
+          </mat-form-field>
+          <mat-form-field floatLabel="always">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </form>
+      </ng-container>
+      <ng-template #profileLoading>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <p>Your Profile is loading...</p>
+          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
+      </ng-template>
+    </mat-card-content>
+    <mat-card-actions>
       <button mat-raised-button color="primary" (click)="updateProfile()">Save</button>
       <button mat-raised-button color="warn" (click)="deleteAccount()">Delete my account</button>
-    </div>
-  </ng-container>
-  <ng-template #profileLoading>
-    <div fxLayout="column" fxLayoutAlign="center center">
-      <p>Your Profile is loading...</p>
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
-  </ng-template>
-</main>
+    </mat-card-actions>
+  </mat-card>
+</article>

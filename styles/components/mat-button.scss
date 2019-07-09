@@ -4,6 +4,10 @@ button { // TODO: Get rid of the !important and apply this on mat-raised-button
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
 }
 
+.mat-icon-button {
+  padding: 0 !important;
+}
+
 .mat-raised-button {
   color: white !important;
 }

@@ -10,6 +10,7 @@ export class EditableSidenavComponent {
 
   @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
   @Input() opened = false;
+  @Input() title: string;
   @Output() closed = new EventEmitter();
 
   public closeSidenav() {

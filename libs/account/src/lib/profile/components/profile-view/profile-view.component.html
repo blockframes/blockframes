@@ -1,35 +1,33 @@
-<main testId="profileView">
-  <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-    <button mat-icon-button (click)="edited.emit()" color="primary">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <section>
-      <div>
-        <span class="key">Email</span>
-        <span class="value">{{ user.email }}</span>
+<article>
+  <mat-card class="mat-elevation-z1">
+    <ng-container *ngIf="(user$ | async) as user; else: profileLoading">
+      <button mat-icon-button (click)="edited.emit()" color="primary">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <section>
+        <div>
+          <span class="key">Email</span> <span class="value">{{ user.email }}</span>
+        </div>
+        <div>
+          <span class="key">First Name</span> <span class="value">{{ user.firstName }}</span>
+        </div>
+        <div>
+          <span class="key">Last Name</span> <span class="value">{{ user.lastName }}</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start">
+          <span fxFlex>Biography</span>
+          <p fxFlex="grow">{{ user.biography }}</p>
+        </div>
+        <div>
+          <span class="key">Id</span> <em>{{ user.uid }}</em>
+        </div>
+      </section>
+    </ng-container>
+    <ng-template #profileLoading>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <p>Your Profile is loading...</p>
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
       </div>
-      <div>
-        <span class="key">First Name</span>
-        <span class="value">{{ user.firstName }}</span>
-      </div>
-      <div>
-        <span class="key">Last Name</span>
-        <span class="value">{{ user.lastName }}</span>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="start">
-        <span fxFlex class="key">Biography</span>
-        <p fxFlex="grow">{{ user.biography }}</p>
-      </div>
-      <div>
-        <span class="key">Id</span>
-        <em>{{ user.uid }}</em>
-      </div>
-    </section>
-  </ng-container>
-  <ng-template #profileLoading>
-    <div fxLayout="column" fxLayoutAlign="center center">
-      <p>Your Profile is loading...</p>
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
-  </ng-template>
-</main>
+    </ng-template>
+  </mat-card>
+</article>

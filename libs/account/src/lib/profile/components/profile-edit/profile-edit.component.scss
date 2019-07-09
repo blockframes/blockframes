@@ -1,15 +1,16 @@
-
-main {
-  margin-top: 10%;
-  margin-right: 20%;
-  margin-left: 20%;
-  form {
-    mat-form-field {
-      display: block;
-    }
-  }
-  button {
-    margin: 50px 20px;
-  }
+article {
+  height: 100%;
 }
 
+mat-card {
+  height: 90%;
+  width: 80%;
+}
+
+mat-card-content {
+  height: 60%;
+}
+
+form {
+  height: 100%;
+}
