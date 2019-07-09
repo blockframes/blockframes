@@ -6,14 +6,14 @@
 import { db } from '../firebase';
 import { Organization, Stakeholder } from './types';
 
-export async function getCollection<T>(path: string): Promise<T[]> {
+export function getCollection<T>(path: string): Promise<T[]> {
   return db
     .collection(path)
     .get()
     .then(collection => collection.docs.map(doc => doc.data() as T));
 }
 
-export async function getDocument<T>(path: string): Promise<T> {
+export function getDocument<T>(path: string): Promise<T> {
   return db
     .doc(path)
     .get()
