@@ -30,7 +30,7 @@
         class="download-delivery-contract mat-elevation-z0"
         mat-raised-button
         target="_blank"
-        attr.href="{{ deliveryContractURL | async }}"
+        [href]="deliveryContractURL$ | async"
       >
         Download Contract
         <mat-icon class="icon">cloud_download</mat-icon>

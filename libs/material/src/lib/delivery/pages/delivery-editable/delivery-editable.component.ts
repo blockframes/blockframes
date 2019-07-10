@@ -151,7 +151,7 @@ export class DeliveryEditableComponent implements OnInit {
     this.service.signDelivery();
   }
 
-  public get deliveryContractURL(): Observable<string> {
+  public get deliveryContractURL$(): Observable<string> {
     return this.delivery$.pipe(
       map(({id}) => `/delivery/contract.pdf?deliveryId=${id}`)
     )
