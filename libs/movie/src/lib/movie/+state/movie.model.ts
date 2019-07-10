@@ -49,7 +49,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-
+  deliveryIds: string[];
 }
 
 interface Title {
@@ -62,7 +62,8 @@ interface Title {
  */
 export function createMovie(params?: Partial<Movie>) {
   return {
-    ...params,
-    _type: 'movies'
+    deliveryIds: [],
+    _type: 'movies',
+    ...params
   } as Movie;
 }

@@ -4,11 +4,11 @@ import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryDB } from '../+state';
 import { switchMap, map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
+import { combineLatest } from 'rxjs';
 
 
-const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
-  path: `deliveries`,
-  queryFn: ref => ref.where('movieId', '==', movieId),
+const deliveryQuery = (deliveryId: string): Query<DeliveryDB> => ({
+  path: `deliveries/${deliveryId}`,
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
@@ -19,7 +19,9 @@ const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
 
 @Injectable({ providedIn: 'root' })
 export class DeliveryListGuard extends StateListGuard<Delivery> {
-  urlFallback = 'layout';
+  public get urlFallback() {
+    return `layout/o/${this.movieQuery.getActiveId()}/template-picker`
+  }
 
   constructor(
     private fireQuery: FireQuery,
@@ -31,13 +33,15 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
   }
 
   get query() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => {
-        const query = deliveryQuery(movieId);
-        return this.fireQuery.fromQuery<DeliveryDB[]>(query);
-      }),
-      map(deliveries => deliveries.map(delivery =>
-        modifyTimestampToDate(delivery)))
-    );
+    return this.movieQuery.selectActive(movie => movie.deliveryIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No Delivery yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<DeliveryDB>(deliveryQuery(id)))
+          return combineLatest(queries)
+        }),
+        map(deliveries => deliveries.map(delivery =>
+          modifyTimestampToDate(delivery)))
+      );
   }
 }

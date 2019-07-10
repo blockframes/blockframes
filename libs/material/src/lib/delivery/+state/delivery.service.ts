@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder, StakeholderService } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
@@ -28,6 +28,7 @@ export class DeliveryService {
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
     private permissionsService: PermissionsService,
+    private shService: StakeholderService,
     private db: FireQuery
   ) {}
 
@@ -88,30 +89,32 @@ export class DeliveryService {
     const id = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
     const movieId = this.movieQuery.getActiveId();
+    const movieDoc = this.db.doc(`movies/${movieId}`);
     const delivery = createDelivery({ id, movieId, validated: [] });
-    const deliveryStakeholder = this.makeDeliveryStakeholder(
-      organization.id,
-      ['canValidateDelivery'],
-      true
-    );
 
-    // Create document permissions
-    await this.permissionsService.createDocAndPermissions(delivery, organization);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const promises = [];
+      const movieSnap = await tx.get(movieDoc.ref);
+      const deliveryIds = movieSnap.data().deliveryIds || [];
 
-    const promises = [];
+      // Create document and permissions
+      promises.push(await this.permissionsService.createDocAndPermissions(delivery, organization));
 
-    promises.push(
-      this.db
-        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-        .set(deliveryStakeholder)
-    );
+      // If there is a templateId, copy template materials to the delivery
+      if (!!templateId) {
+        const template = this.templateQuery.getEntity(templateId);
+        promises.push(this.copyMaterials(delivery, template));
+      }
 
-    if (!!templateId) {
-      const template = this.templateQuery.getEntity(templateId);
-      promises.push(this.copyMaterials(delivery, template));
-    }
+      // Create the stakeholder in the sub-collection
+      promises.push(await this.shService.addStakeholder(delivery, organization, true));
 
-    await Promise.all(promises);
+      // Update the movie deliveryIds
+      const nextDeliveryIds = [...deliveryIds, delivery.id];
+      promises.push(tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds}));
+
+      return Promise.all(promises);
+    })
 
     return id;
   }
