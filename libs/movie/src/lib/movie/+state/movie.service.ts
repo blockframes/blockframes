@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
+import { createMovieStakeholder, StakeholderService, Stakeholder } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
@@ -17,16 +17,33 @@ export class MovieService {
   private store: MovieStore,
   ) {}
 
-  public async add(original: string, firstAdd: boolean = false ): Promise<Movie> {
+  public async addMovie(original: string): Promise<Movie> {
     const id = this.db.createId();
-    const orgId = this.orgQuery.getValue().org.id
-    const owner = createMovieStakeholder({orgId, isAccepted: true});
+    const org = this.orgQuery.getValue().org;
+    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
     const movie: Movie = createMovie({ id, title: { original }});
 
-    await this.permissionsService.createDocAndPermissions<Movie>(movie, orgId);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const orgSnap = await tx.get(orgDoc.ref);
+      const movieIds = orgSnap.data().movieIds || [];
 
-    await this.shService.add(id, owner, firstAdd);
+      // Create movie document and permissions
+      await this.permissionsService.createDocAndPermissions<Movie>(movie, org);
 
+      // Create the first stakeholder in sub-collection
+      await this.shService.addStakeholder(movie.id, org, true);
+
+      // Update the org movieIds
+      if (movieIds.includes(movie.id)) {
+        return tx.update(orgDoc.ref, {}); // every document read in a transaction must be written.
+      }
+      const nextMovieIds = [...movieIds, movie.id];
+
+      return Promise.all([
+        tx.update(orgDoc.ref, { movieIds: nextMovieIds })
+      ]);
+
+    });
     return movie;
   }
 
@@ -51,6 +68,7 @@ export class MovieService {
     // Delete the movie id in org.movieIds
     batch.update(orgDoc.ref, { movieIds });
     // Remove the movie from the movies store
+    // TODO: Wait for firestore response before removing the movie.
     this.store.remove(movieId);
 
     return batch.commit();

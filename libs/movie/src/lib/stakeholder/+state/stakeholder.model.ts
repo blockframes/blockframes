@@ -2,18 +2,16 @@ import { Organization } from "@blockframes/organization";
 
 export interface Stakeholder {
   id: string;
-  orgId: string;
   organization?: Organization;
+  authorizations?: string[];
   orgMovieRole: string;
   role: string
-  authorizations: string[];
   isAccepted: boolean;
 }
 
 export function createMovieStakeholder(params?: Partial<Stakeholder>) {
   if (params.organization) delete params.organization
   return {
-    authorizations: [],
     orgMovieRole: '',
     role: '',
     isAccepted: false,

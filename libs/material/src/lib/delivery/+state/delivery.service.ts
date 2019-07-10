@@ -86,18 +86,17 @@ export class DeliveryService {
    */
   public async addDelivery(templateId?: string) {
     const id = this.db.createId();
-    const stakeholder = this.query.findActiveStakeholder();
+    const org = this.organizationQuery.getValue().org;
     const movieId = this.movieQuery.getActiveId();
     const delivery = createDelivery({ id, movieId, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
-      stakeholder.id,
-      stakeholder.orgId,
+      org.id,
       ['canValidateDelivery'],
       true
     );
 
     // Create document permissions
-    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
+    await this.permissionsService.createDocAndPermissions(delivery, org);
 
     const promises = [];
 
@@ -121,16 +120,15 @@ export class DeliveryService {
   public async addDeliveryWithMovieMaterials() {
     const movie = this.movieQuery.getActive();
     const id = this.db.createId();
-    const stakeholder = this.query.findActiveStakeholder();
+    const org = this.organizationQuery.getValue().org;
     const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
-      stakeholder.id,
-      stakeholder.orgId,
+      org.id,
       ['canValidateDelivery'],
       true
     );
 
-    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
+    await this.permissionsService.createDocAndPermissions(delivery, org);
 
     await Promise.all([
       this.copyMaterials(delivery, movie),
@@ -202,7 +200,7 @@ export class DeliveryService {
     const { validated } = delivery;
     const { stakeholders } = delivery;
 
-    const stakeholderSignee = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId));
+    const stakeholderSignee = stakeholders.find(({ id }) => orgIdsOfUser.includes(id));
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
@@ -234,11 +232,10 @@ export class DeliveryService {
 
   private makeDeliveryStakeholder(
     id: string,
-    orgId: string,
     authorizations: string[],
     isAccepted: boolean
   ) {
-    return createDeliveryStakeholder({ id, orgId, authorizations, isAccepted });
+    return createDeliveryStakeholder({ id, authorizations, isAccepted });
   }
 
   /** Add a stakeholder to the delivery */
@@ -252,7 +249,6 @@ export class DeliveryService {
       const authorizations = [];
       const newDeliveryStakeholder = this.makeDeliveryStakeholder(
         movieStakeholder.id,
-        movieStakeholder.orgId,
         authorizations,
         false
       );

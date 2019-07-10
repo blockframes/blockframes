@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MovieService, MovieQuery } from '../../+state';
+import { MovieService } from '../../+state';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,7 +20,6 @@ export class MovieTitleFormComponent implements OnInit {
     private builder: FormBuilder,
     private service: MovieService,
     private router: Router,
-    private movieQuery: MovieQuery,
   ) { }
 
   ngOnInit() {
@@ -38,14 +37,14 @@ export class MovieTitleFormComponent implements OnInit {
     try {
       const { title } = this.titleForm.value;
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
-      const movie = await this.service.add(title, true);
+      const movie = await this.service.addMovie(title);
 
       this.router.navigate([`/layout/o/home/${movie.id}/edit`]);
       this.dialogRef.close();
     }
     catch (err) {
       this.snackBar.open('An error occured', 'close', { duration: 1000 });
-      throw new Error('An error occured');
+      throw new Error(err);
     }
   }
 

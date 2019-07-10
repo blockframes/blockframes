@@ -9,43 +9,18 @@ export class StakeholderService {
 
   constructor(private db: FireQuery,) {}
 
-  public async add(movieId: string, stakeholder: Partial<Stakeholder>, firstAdd: boolean = false ): Promise<string> {
-    const id = this.db.createId();
-    const sh = createMovieStakeholder({ ...stakeholder, id });
-    const movieDoc = this.db.collection('movies').doc(movieId);
-    const orgDoc = this.db.collection('orgs').doc(sh.orgId);
-    const stakeholderDoc = movieDoc.collection('stakeholders').doc(sh.id);
+  public async addStakeholder(movieId: string, org: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
+    const stakeholder = createMovieStakeholder({id: org.id, isAccepted})
 
     await this.db.firestore.runTransaction(async (tx) => {
-      const promises = [];
-
-      // it true, add directly movie into org and bypasses notification approval
-      // required when a movie is created
-      if( firstAdd ) {
-        const org = await tx.get(orgDoc.ref);
-
-        // Update the org
-        const movieIds = org.data().movieIds || [];
-
-        // DEMO: Prevent double add
-        // TODO: allow to add the org multiple time with different orgs.
-        // BEWARE: update the delete method accordingly when you do.
-        if (movieIds.includes(movieId)) {
-          return tx.update(orgDoc.ref, {}); // every document read in a transaction must be written.
-        }
-
-        const nextMovieIds = [...movieIds, movieId];
-        promises.push(tx.update(orgDoc.ref, { movieIds: nextMovieIds }));
-      }
-
-      // Set the stakeholder
-      promises.push(tx.set(stakeholderDoc.ref, sh));
-
-      return Promise.all(promises);
+      const stakeholderDoc = this.db.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`)
+      return Promise.all([
+        tx.set(stakeholderDoc.ref, stakeholder)
+      ]);
     });
     console.log('Transaction successfully committed!');
 
-    return sh.id;
+    return stakeholder.id;
   }
 
   public update(movieId: string, stakeholder: Partial<Stakeholder>) {
@@ -63,12 +38,12 @@ export class StakeholderService {
 
       // Delete the stakeholder:
       const stk = await tx.get(stkDoc.ref);
-      const { orgId } = stk.data() as Stakeholder;
+      const { id } = stk.data() as Stakeholder;
 
       // Remove the movie from the org's movie list:
       // BEWARE: we'll have to check whether the org is still a stakeholder
       //         when we'll allow an org to have multiple stakeholder roles.
-      const orgPath = `orgs/${orgId}`;
+      const orgPath = `orgs/${id}`;
       const orgDoc = this.db.doc(orgPath);
       const org = await tx.get(orgDoc.ref);
       const { movieIds } = org.data() as Organization;

@@ -27,7 +27,7 @@ export class TemplateService {
     });
 
     // Create document permissions
-    await this.permissionsService.createDocAndPermissions(template, org.id);
+    await this.permissionsService.createDocAndPermissions(template, org);
 
     // Push the new id in org.templateIds
     await this.db
