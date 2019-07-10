@@ -10,6 +10,10 @@ ng generate @nrwl/schematics:node-application eth-events-server
 # tags: leave empty
 ```
 
+### Issues regarding application creation
+
+https://github.com/nrwl/nx/issues/1104
+
 
 ## Environments
 
