@@ -153,7 +153,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   public get deliveryContractURL(): Observable<string> {
     return this.delivery$.pipe(
-      map(x => `/delivery/contract.pdf?deliveryId=${x.id}`)
+      map(({id}) => `/delivery/contract.pdf?deliveryId=${id}`)
     )
   }
 }
