@@ -5,9 +5,7 @@
  * details on why, what and what's up next.
  */
 
-export interface IDMap<T> {
-  [id: string]: T;
-}
+export type IDMap<T> = Record<string, T>;
 
 interface DocWithID {
   id: string;
@@ -87,12 +85,13 @@ export interface SnapObject {
   count?: number;
 }
 
+/**
+ * Turn a list of items with ids into the corresponding mapping.
+ *
+ * @param items A list of item with an ID
+ * @returns an object that maps each id to its item,
+ *          `{id_x: item_x, id_y: item_y, ...}`
+ */
 export function asIDMap<T extends DocWithID>(items: T[]): IDMap<T> {
-  const result: IDMap<T> = {};
-
-  items.forEach(item => {
-    result[item.id] = item;
-  });
-
-  return result;
+  return items.reduce((result, item) => ({ ...result, [item.id]: item }), {});
 }
