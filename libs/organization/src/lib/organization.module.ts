@@ -29,12 +29,17 @@ import { OrgWidgetComponent } from './components/org-widget/org-widget.component
 import { OrgViewComponent } from './pages/org-view/org-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
+import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 
 export const organizationRoutes: Routes = [
   {
     path: 'organization-home',
     component: OrganizationHomeComponent
+  },
+  {
+    path: 'organization-find',
+    component: OrganizationFindComponent
   },
   {
     path: 'form',
@@ -76,7 +81,8 @@ export const organizationRoutes: Routes = [
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,
-    OrganizationHomeComponent
+    OrganizationHomeComponent,
+    OrganizationFindComponent
   ],
   exports: [
     OrgWidgetComponent
