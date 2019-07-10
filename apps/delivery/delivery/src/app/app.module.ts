@@ -49,6 +49,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AnalyticsModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -88,6 +89,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       KeyManagerModule,
       NotificationWidgetModule,
       EmailVerifyModule,
+
+      AnalyticsModule,
 
       // Firebase
       AngularFireModule.initializeApp(environment.firebase),

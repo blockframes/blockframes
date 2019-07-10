@@ -57,7 +57,7 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-horizontal/movie-card-horizontal.component';
 import { registerLocaleData } from '@angular/common';
 import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
-import { UtilsModule } from '@blockframes/utils';
+import { AnalyticsModule, UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
 import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
 import { MatRadioModule } from '@angular/material';
@@ -120,6 +120,8 @@ registerLocaleData(localeFr)
     AngularFireFunctionsModule,
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     FlexModule,
+    // Analytics
+    AnalyticsModule,
     // Fullpage (homepage)
     AngularFullpageModule,
     MatProgressBarModule,
