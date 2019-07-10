@@ -14,7 +14,7 @@ service cloud.firestore {
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
-    	allow read: if currentUser().uid == existingData().userId
+    	allow read: if currentUser().uid == existingData().userId;
     }
 
     /// ORGANIZATION RULES ///
@@ -68,7 +68,7 @@ service cloud.firestore {
       }
     }
 
-    // TEMPLATES RULES //
+    /// TEMPLATES RULES ///
 
     match /templates/{templateId} {
     	allow create: if orgCan('canCreate', userOrgId(), templateId)
@@ -85,7 +85,8 @@ service cloud.firestore {
       }
     }
 
-    // FUNCTIONS //
+
+    /// FUNCTIONS ///
 
     function existingData() {
       return resource.data;

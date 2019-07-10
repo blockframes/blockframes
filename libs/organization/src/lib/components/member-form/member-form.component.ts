@@ -1,46 +1,38 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationQuery, Organization, OrganizationService } from '../+state';
-import { PermissionsQuery } from '../permissions/+state';
-import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
 import * as firebase from 'firebase';
+import { OrganizationService } from '../../+state';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-
-interface User {
-  id: string;
+export interface User {
+  uid: string;
   email?: string;
 }
 
 @Component({
-  selector: 'org-members-show',
-  templateUrl: './org-members-show.component.html',
-  styleUrls: ['./org-members-show.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'org-member-form',
+  templateUrl: './member-form.component.html',
+  styleUrls: ['./member-form.component.scss']
 })
-export class OrgMembersShowComponent implements OnInit {
-  public org$: Observable<Organization>;
+export class MemberFormComponent implements OnInit, OnDestroy {
   public addMemberForm: FormGroup;
   public mailsOptions: User[];
-  public isSuperAdmin$: Observable<boolean>;
+  private destroyed$ = new Subject();
 
   constructor(
     private service: OrganizationService,
-    private permissionsQuery: PermissionsQuery,
-    private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
     this.addMemberForm = this.builder.group({
       user: null,
       role: ''
     });
     this.mailsOptions = [];
-    this.org$ = this.orgQuery.select('org');
     this.onChange();
   }
 
@@ -48,7 +40,7 @@ export class OrgMembersShowComponent implements OnInit {
     return user ? user.email : undefined;
   }
 
-  public async submit() {
+  public async addMember() {
     if (!this.addMemberForm.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');
@@ -63,30 +55,34 @@ export class OrgMembersShowComponent implements OnInit {
     }
 
     // Query a get or create user, to make ghost users when needed
-    const { id } = await this.getOrCreateUserByMail(email);
-    await this.service.addMember({ id, email, roles: [role] });
+    const { uid } = await this.getOrCreateUserByMail(email);
+    await this.service.addMember({ uid, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.addMemberForm.reset();
   }
 
   private async getOrCreateUserByMail(email: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email }).then(x => x.data);
+    return f({ email }).then(matchingEmail => matchingEmail.data);
   }
 
   private async listUserByMail(prefix: string): Promise<User[]> {
     const f = firebase.functions().httpsCallable('findUserByMail');
-    return f({ prefix }).then(x => x.data);
+    return f({ prefix }).then(matchingUsers => matchingUsers.data);
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
   }
 
   private async onChange() {
-    this.addMemberForm.valueChanges.subscribe(x => {
+    this.addMemberForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(typingEmail => {
       // TODO: debounce
-      this.listUserByMail(x.user)
-        .then(xs => {
-          // TODO: use an observable
-          this.mailsOptions = xs;
-        });
+      this.listUserByMail(typingEmail.user).then(matchingUsers => {
+        // TODO: use an observable
+        this.mailsOptions = matchingUsers;
+      });
     });
   }
 }

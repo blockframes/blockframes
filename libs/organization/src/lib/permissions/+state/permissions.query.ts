@@ -15,8 +15,13 @@ export class PermissionsQuery extends Query<PermissionsState> {
     super(store);
   }
 
-  /** Checks if the connected user is the Super Admin of his organization */
+  /** Checks if the connected user is SuperAdmin of his organization */
   public get isSuperAdmin$(): Observable<boolean> {
     return this.select(state => state.superAdmins.includes(this.auth.userId));
+  }
+
+  /** Checks if the user is SuperAdmin of his organization */
+  public isUserSuperAdmin(userId: string): Observable<boolean> {
+    return this.select(state => state.superAdmins.includes(userId));
   }
 }
