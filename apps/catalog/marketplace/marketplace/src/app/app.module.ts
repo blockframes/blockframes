@@ -39,6 +39,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
+import { AnalyticsModule } from '@blockframes/utils';
 
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
@@ -86,6 +87,9 @@ import { intercomId } from '@env';
     AngularFirePerformanceModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+
+    // Analytics
+    AnalyticsModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

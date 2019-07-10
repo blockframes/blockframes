@@ -51,6 +51,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
+import { AnalyticsModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
@@ -98,6 +99,9 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     AngularFirePerformanceModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+
+    // Analytics
+    AnalyticsModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

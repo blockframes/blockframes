@@ -9,6 +9,11 @@ export const persistenceSettings = {
   synchronizeTabs: true
 };
 
+// Analytics
+// =========
+
+export const sentryDsn = undefined;
+
 // Firebase
 // ========
 
