@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { auth, db } from './firebase';
-import * as SendGrid from '@sendgrid/mail';
+import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from './environments/environment';
 import { userInviteTemplate } from './assets/mailTemplates';
 
