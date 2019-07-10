@@ -16,7 +16,7 @@ export class MovieListGuard extends StateListGuard<Movie> {
 
   constructor(
     private fireQuery: FireQuery,
-    private orgQuery: OrganizationQuery,
+    private organizationQuery: OrganizationQuery,
     store: MovieStore,
     router: Router
   ) {
@@ -24,7 +24,7 @@ export class MovieListGuard extends StateListGuard<Movie> {
   }
 
   get query() {
-    return this.orgQuery
+    return this.organizationQuery
       .select(state => state.org.movieIds)
       .pipe(
         switchMap(ids => {

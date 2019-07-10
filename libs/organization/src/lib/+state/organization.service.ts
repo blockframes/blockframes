@@ -20,18 +20,18 @@ export class OrganizationService {
   public async addMember(member: OrgMember) {
     const orgId = this.query.getValue().org.id;
     const permissions = this.permissionsQuery.getValue();
-    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const organizationDoc = this.db.doc(`orgs/${orgId}`);
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${member.uid}`);
 
     await this.db.firestore
       .runTransaction(async tx => {
-        // Update the org
+        // Update the organization
         // Note: we don't use the store because we need to access fresh data IN the transaction
-        const org = await tx.get(orgDoc.ref);
+        const org = await tx.get(organizationDoc.ref);
         const { userIds } = org.data();
         const nextUserIds = [...userIds, member.uid];
-        const orgTransaction = tx.update(orgDoc.ref, { userIds: nextUserIds });
+        const organizationTransaction = tx.update(organizationDoc.ref, { userIds: nextUserIds });
         // Update the permissions and add the new member as an org admin
         const nextAdminsIds = [...permissions.admins, member.uid];
         const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds });
@@ -39,7 +39,7 @@ export class OrganizationService {
         // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
         const updateUserTransaction = tx.update(userDoc.ref, { orgId });
 
-        return Promise.all([orgTransaction, updateUserTransaction, permissionsTransaction]);
+        return Promise.all([organizationTransaction, updateUserTransaction, permissionsTransaction]);
       })
       .catch(error => {
         throw Error(error);
@@ -52,10 +52,10 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (permissions, apps permissions, user...).
    */
-  public async add(org: Organization, user: User): Promise<string> {
+  public async add(organization: Organization, user: User): Promise<string> {
     const orgId: string = this.db.createId();
-    const newOrg: Organization = createOrganization({ ...org, id: orgId, userIds: [user.uid] });
-    const orgDoc = this.db.doc(`orgs/${orgId}`);
+    const newOrganization: Organization = createOrganization({ ...organization, id: orgId, userIds: [user.uid] });
+    const organizationDoc = this.db.doc(`orgs/${orgId}`);
     const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
@@ -80,7 +80,7 @@ export class OrganizationService {
       .runTransaction(transaction => {
         const promises = [
           // Set the new organization in orgs collection.
-          transaction.set(orgDoc.ref, newOrg),
+          transaction.set(organizationDoc.ref, newOrganization),
           // Update user document with the new organization id.
           transaction.update(userDoc.ref, { orgId })
         ];
@@ -91,9 +91,9 @@ export class OrganizationService {
     return orgId;
   }
 
-  public update(org: Partial<Organization>) {
+  public update(organization: Partial<Organization>) {
     this.store.update(state => ({
-      org: { ...state.org, ...org }
+      org: { ...state.org, ...organization }
     }));
   }
 }

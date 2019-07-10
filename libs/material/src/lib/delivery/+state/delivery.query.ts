@@ -86,8 +86,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   /** Find the stakeholder from the movie and logged user organizations */
   public findActiveStakeholder() {
-    const currentOrgId = this.organizationQuery.getValue().org.id;
+    const organizationId = this.organizationQuery.getValue().org.id;
     const stakeholders = this.movieQuery.getActive().stakeholders;
-    return stakeholders.find(({id}) => id === currentOrgId);
+    return stakeholders.find(({id}) => id === organizationId);
   }
 }

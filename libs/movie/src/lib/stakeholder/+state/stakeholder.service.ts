@@ -11,22 +11,19 @@ export class StakeholderService {
 
   constructor(private db: FireQuery,) {}
 
-  public async addStakeholder(doc: Movie | Delivery, org: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
+  public async addStakeholder(doc: Movie | Delivery, organization: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
     const stakeholder = (doc._type === 'movies')
-      ? createMovieStakeholder({id: org.id, isAccepted})
+      ? createMovieStakeholder({id: organization.id, isAccepted})
       : createDeliveryStakeholder({
-        id: org.id,
+        id: organization.id,
         isAccepted,
         authorizations: isAccepted ? ['canUpdateDelivery'] : []
       })
 
     await this.db.firestore.runTransaction(async (tx) => {
       const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`)
-      return Promise.all([
-        tx.set(stakeholderDoc.ref, stakeholder)
-      ]);
+      tx.set(stakeholderDoc.ref, stakeholder)
     });
-    console.log('Transaction successfully committed!');
 
     return stakeholder.id;
   }
@@ -48,19 +45,19 @@ export class StakeholderService {
       const stk = await tx.get(stkDoc.ref);
       const { id } = stk.data() as Stakeholder;
 
-      // Remove the movie from the org's movie list:
-      // BEWARE: we'll have to check whether the org is still a stakeholder
-      //         when we'll allow an org to have multiple stakeholder roles.
-      const orgPath = `orgs/${id}`;
-      const orgDoc = this.db.doc(orgPath);
-      const org = await tx.get(orgDoc.ref);
-      const { movieIds } = org.data() as Organization;
+      // Remove the movie from the organization's movie list:
+      // BEWARE: we'll have to check whether the organization is still a stakeholder
+      //         when we'll allow an organization to have multiple stakeholder roles.
+      const organizationPath = `orgs/${id}`;
+      const organizationDoc = this.db.doc(organizationPath);
+      const organization = await tx.get(organizationDoc.ref);
+      const { movieIds } = organization.data() as Organization;
 
       const newMovieIds = movieIds.filter(x => x !== movieId);
 
       return Promise.all([
         tx.delete(stkDoc.ref),
-        tx.update(orgDoc.ref, { movieIds: newMovieIds })
+        tx.update(organizationDoc.ref, { movieIds: newMovieIds })
       ]);
     });
   }

@@ -16,7 +16,7 @@ export class TemplateListGuard extends StateListGuard<Template> {
 
   constructor(
     private fireQuery: FireQuery,
-    private orgQuery: OrganizationQuery,
+    private organizationQuery: OrganizationQuery,
     store: TemplateStore,
     router: Router
   ) {
@@ -24,7 +24,7 @@ export class TemplateListGuard extends StateListGuard<Template> {
   }
 
   get query() {
-    return this.orgQuery
+    return this.organizationQuery
       .select(state => state.org.templateIds)
       .pipe(
         switchMap(ids => {

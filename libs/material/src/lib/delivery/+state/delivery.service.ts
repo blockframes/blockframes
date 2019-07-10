@@ -86,17 +86,17 @@ export class DeliveryService {
    */
   public async addDelivery(templateId?: string) {
     const id = this.db.createId();
-    const org = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getValue().org;
     const movieId = this.movieQuery.getActiveId();
     const delivery = createDelivery({ id, movieId, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
-      org.id,
+      organization.id,
       ['canValidateDelivery'],
       true
     );
 
     // Create document permissions
-    await this.permissionsService.createDocAndPermissions(delivery, org);
+    await this.permissionsService.createDocAndPermissions(delivery, organization);
 
     const promises = [];
 
@@ -120,15 +120,15 @@ export class DeliveryService {
   public async addDeliveryWithMovieMaterials() {
     const movie = this.movieQuery.getActive();
     const id = this.db.createId();
-    const org = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getValue().org;
     const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
     const deliveryStakeholder = this.makeDeliveryStakeholder(
-      org.id,
+      organization.id,
       ['canValidateDelivery'],
       true
     );
 
-    await this.permissionsService.createDocAndPermissions(delivery, org);
+    await this.permissionsService.createDocAndPermissions(delivery, organization);
 
     await Promise.all([
       this.copyMaterials(delivery, movie),
@@ -196,11 +196,11 @@ export class DeliveryService {
   /** Sign array validated of delivery with stakeholder logged */
   public signDelivery() {
     const delivery = this.query.getActive();
-    const orgIdsOfUser = this.organizationQuery.getValue().org.id;
+    const organizationId = this.organizationQuery.getValue().org.id;
     const { validated } = delivery;
     const { stakeholders } = delivery;
 
-    const stakeholderSignee = stakeholders.find(({ id }) => orgIdsOfUser.includes(id));
+    const stakeholderSignee = stakeholders.find(({ id }) => organizationId === id);
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];

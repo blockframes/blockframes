@@ -8,11 +8,11 @@ import { Organization, OrganizationQuery } from '../../+state';
   styleUrls: ['./member-list.component.scss']
 })
 export class MemberListComponent implements OnInit {
-  public org$: Observable<Organization>;
+  public organization$: Observable<Organization>;
 
   constructor(private query: OrganizationQuery) {}
 
   ngOnInit() {
-    this.org$ = this.query.select('org');
+    this.organization$ = this.query.select('org');
   }
 }
