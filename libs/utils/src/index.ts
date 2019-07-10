@@ -8,4 +8,5 @@ export * from './lib/form/controls';
 export * from './lib/form/control-list';
 export * from './lib/form/validators/validators';
 export * from './lib/form/matchers';
-export * from './lib/excel.utils';
+export * from './lib/spreadsheet/export';
+export * from './lib/spreadsheet/import';
