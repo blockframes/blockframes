@@ -86,7 +86,8 @@
     "request": "^2.88.0",
     "rxjs": "~6.5.2",
     "tmp": "0.0.33",
-    "zone.js": "^0.9.1"
+    "zone.js": "^0.9.1",
+    "xlsx": "^0.14.3"
   },
   "devDependencies": {
     "jest-preset-angular": "7.0.0",
