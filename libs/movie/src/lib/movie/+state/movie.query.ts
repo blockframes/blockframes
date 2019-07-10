@@ -13,4 +13,23 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
     super(store);
   }
 
+
+  /**
+   * @dev this method will be changed since we now have an internal movie reference 
+   * Checks if a movie with given title, productionYear and directorName alreadyExists
+   * @param originalTitle 
+   * @param productionYear 
+   * @param directorName 
+   */
+  public movieExists(originalTitle : string, productionYear : number, directorName : string) : string {
+  
+    const movie = this.getAll().find(entity => 
+      entity.title.original === originalTitle &&
+      entity.productionYear === productionYear &&
+      entity.directorName === directorName
+    );
+
+    return movie !== undefined ? movie.id : undefined;
+  }
+
 }

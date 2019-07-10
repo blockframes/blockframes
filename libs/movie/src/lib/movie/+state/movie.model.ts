@@ -2,7 +2,19 @@ import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
 
+export interface MovieAvailability {
+  movieId? : string;
+  movie?: Partial<Movie>
+  territories: string[];
+  rights: string[];
+  start: Date;
+  end: Date;
+  languages?: string[];
+  exclusivity: boolean;
+}
+
 export interface Movie {
+  _type: 'movies',
   id: string,
   org?: Organization,
   title: Title, // will contain all titles: original, international, suiss, etc
@@ -21,6 +33,9 @@ export interface Movie {
   credits: {firstName: string, lastName: string, creditRole: string}[],
   images: string[],
   promotionalElements: {label: string, url: string}[],
+  materials?: Material[];
+  stakeholders?: Stakeholder[];
+  availabilities: MovieAvailability[],
 
   // not main movie attributes WIP
   ipId: string,
@@ -34,9 +49,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-  _type: 'movies',
-  materials?: Material[];
-  stakeholders?: Stakeholder[];
+
 }
 
 interface Title {
