@@ -1,7 +1,5 @@
 
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { PasswordControl, checkPasswords } from '@blockframes/utils';
 import { AuthService } from '@blockframes/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PasswordEditForm } from '../../forms/password-edit.form';
