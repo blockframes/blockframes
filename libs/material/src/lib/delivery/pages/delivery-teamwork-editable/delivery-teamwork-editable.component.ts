@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { Observable } from 'rxjs';
 import { DeliveryQuery, Delivery, DeliveryService } from '../../+state';
 import { Stakeholder, MovieQuery, Movie } from '@blockframes/movie';
+import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state';
 
 @Component({
   selector: 'delivery-teamwork-editable',
@@ -13,16 +14,19 @@ export class DeliveryTeamworkEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public movie$: Observable<Movie>;
   public stakeholderId: string;
+  public isOrgAdmin$: Observable<boolean>;
 
   constructor(
     private movieQuery: MovieQuery,
     private deliveryQuery: DeliveryQuery,
     private service: DeliveryService,
+    private permissionsQuery: PermissionsQuery,
   ) {}
 
   ngOnInit() {
     this.delivery$ = this.deliveryQuery.selectActive();
     this.movie$ = this.movieQuery.selectActive();
+    this.isOrgAdmin$ = this.permissionsQuery.isOrgAdmin$;
   }
 
   public addStakeholder(stakeholder: Stakeholder) {
