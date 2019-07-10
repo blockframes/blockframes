@@ -83,10 +83,10 @@ export class MemberFormComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
       ).subscribe(typingEmail => {
-      this.listUserByMail(typingEmail.user).then(matchingUsers => {
-        // TODO: use an observable
-        this.mailsOptions = matchingUsers;
-      });
+        this.listUserByMail(typingEmail.user).then(matchingUsers => {
+          // TODO: use an observable => ISSUE#608
+          this.mailsOptions = matchingUsers;
+        });
     });
   }
 }

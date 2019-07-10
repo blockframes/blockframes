@@ -63,12 +63,11 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
-        )
-      .subscribe(typingOrgName => {
+      ).subscribe(typingOrgName => {
         this.listOrgsByName(typingOrgName.org).then(matchingOrgs => {
-          // TODO: use an observable
+          // TODO: use an observable => ISSUE#608
           this.orgOptions = matchingOrgs;
         });
-      });
+    });
   }
 }
