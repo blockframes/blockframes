@@ -67,6 +67,22 @@ const center = (content: string | { [k: string]: any }): any => {
 
 // These functions take our blockframes model and generate data the pdf rendering.
 
+/**
+ * Render a list of orgs / stakeholders
+ *
+ * This returns the PDFMake columns:
+ * ```
+ * ## Stakeholders
+ *
+ * | OrgName      | OrgName      | OrgName      | OrgName      |
+ * | orgAddress   | orgAddress   | orgAddress   | orgAddress   |
+ * ```
+ *
+ * The parameter orgIds is used to enforce a certain order.
+ *
+ * @param orgIds
+ * @param orgs
+ */
 function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
   const columns: any = orgIds.map((id: string) => {
     const org = orgs[id];
@@ -81,6 +97,26 @@ function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
   ];
 }
 
+/**
+ * Render a list of material, assumes they are all in the same category.
+ *
+ * This returns the PDFMake table:
+ * ```
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ * ```
+ *
+ * @param materials
+ * @param steps
+ */
 function rowMaterials(materials: Material[], steps: { [id: string]: Step }): any {
   // NOTE: pdfmake side-effect over the data provided, we can reuse the same objects
   // multiple time, we have to keep this variable definition INSIDE the forEach.
@@ -104,6 +140,36 @@ function rowMaterials(materials: Material[], steps: { [id: string]: Step }): any
   };
 }
 
+/**
+ * Render a list of materials, grouped by category.
+ *
+ * This returns the PDFMake list of tables:
+ *
+ * ```
+ * ## Category1
+ *
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ *
+ * ## Category2
+ *
+ *    +---------------------------------------+------+
+ *    | material value                        | step |
+ *    | Material description                  |      |
+ *    +---------------------------------------+------+
+ * ```
+ *
+ * @param materials
+ * @param steps
+ */
 function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: Step }): any {
   const materialsPerCategory = groupBy(materials, (material: Material) => material.category);
   const categories = sortBy(Object.keys(materialsPerCategory));
@@ -118,6 +184,24 @@ function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: S
   return [header('Materials'), ...tables];
 }
 
+/**
+ * Render a list of orgs' transactions ids as QR codes
+ *
+ * This returns the PDFMake columns:
+ * ```
+ * ## Signatures
+ *
+ * | OrgName      | OrgName      | OrgName      | OrgName      |
+ * | ▒ tx QR Code | ▒ tx QR Code | ▒ tx QR Code | ▒ tx QR Code |
+ * ```
+ *
+ * The parameter orgIds is used to enforce a certain order.
+
+ *
+ * @param organizationIds
+ * @param organizations
+ * @param txID
+ */
 function rowSignatures(
   organizationIds: string[],
   organizations: { [id: string]: Organization },
@@ -143,6 +227,14 @@ function rowSignatures(
   ];
 }
 
+/**
+ * Render a delivery, its stakeholders, transactions and materials into a PDF document.
+ *
+ * @param txID
+ * @param orgs
+ * @param materials
+ * @param steps
+ */
 export function buildDeliveryPDF({ txID, orgs, materials, steps }: DeliveryContent) {
   // We store keys first to make sure order is preserved along the way
   const orgsIds = Object.keys(orgs);
@@ -183,6 +275,16 @@ export function buildDeliveryPDF({ txID, orgs, materials, steps }: DeliveryConte
   return printer.createPdfKitDocument(docDefinition);
 }
 
+/**
+ * Handle firebase requests to generate the PDF of a delivery.
+ *
+ * Wrapper around buildDeliveryPDF,
+ * handles firebase request, loads the delivery data from firestore
+ * and pipe the PDF to the express response.
+ *
+ * @param req   express requests, expects `deliveryId` in the query parameters.
+ * @param resp  express response, we will feed it with the pdf content.
+ */
 export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
   const deliveryId: string = req.query.deliveryId;
 
