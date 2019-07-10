@@ -38,7 +38,7 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
 
   public submit(org: Partial<Organization>) {
     // TODO: handle promises correctly (update loading status, send back error report, etc).
-    this.service.addStakeholder(this.movieQuery.getActiveId(), org);
+    this.service.addStakeholder(this.movieQuery.getActive(), org);
   }
 
   public displayFn(org?: Organization): string | undefined {

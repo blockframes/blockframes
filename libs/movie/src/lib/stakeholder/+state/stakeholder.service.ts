@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { createMovieStakeholder, Stakeholder } from './stakeholder.model';
+import { createMovieStakeholder, Stakeholder, createDeliveryStakeholder } from './stakeholder.model';
 import { Organization } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
+import { Delivery } from '@blockframes/material';
+import { Movie } from '../../movie/+state/movie.model';
 
 @Injectable({ providedIn: 'root' })
 
@@ -9,11 +11,17 @@ export class StakeholderService {
 
   constructor(private db: FireQuery,) {}
 
-  public async addStakeholder(movieId: string, org: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
-    const stakeholder = createMovieStakeholder({id: org.id, isAccepted})
+  public async addStakeholder(doc: Movie | Delivery, org: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
+    const stakeholder = (doc._type === 'movies')
+      ? createMovieStakeholder({id: org.id, isAccepted})
+      : createDeliveryStakeholder({
+        id: org.id,
+        isAccepted,
+        authorizations: isAccepted ? ['canUpdateDelivery'] : []
+      })
 
     await this.db.firestore.runTransaction(async (tx) => {
-      const stakeholderDoc = this.db.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`)
+      const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`)
       return Promise.all([
         tx.set(stakeholderDoc.ref, stakeholder)
       ]);
