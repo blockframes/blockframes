@@ -30,13 +30,13 @@ export class MovieService {
     return movie;
   }
 
-  public update(id: string, movie: any) : Promise<boolean>{
+  public update(id: string, movie: any) : Promise<void>{
     // we don't want to keep orgId in our Movie object
     if (movie.org) delete movie.org;
     if (movie.stakeholders) delete movie.stakeholders;
     if (movie.errors) delete movie.errors;
 
-    return this.db.doc<Movie>(`movies/${id}`).update(movie).then(_ => true);
+    return this.db.doc<Movie>(`movies/${id}`).update(movie);
   }
 
   public remove(movieId: string): Promise<void> {
