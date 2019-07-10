@@ -31,9 +31,11 @@ export const ethereumMnemonicValidators = [
 ];
 
 /** Require password and password confirm inputs to be the same */
-export function checkPasswords(password: string = 'password', confirm: string = 'confirm'): ValidatorFn {
+export function confirmPasswords(password: string = 'password', confirm: string = 'confirm'): ValidatorFn {
   return (group: FormGroup): { [key: string]: boolean } | null => {
-    return group.controls[password].value === group.controls[confirm].value ? null : { passwordsNotMatching: true }
+    return group.controls[password].value === group.controls[confirm].value
+      ? null
+      : { passwordsNotMatching: true };
   };
 };
 

@@ -7,7 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./profile-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class ProfileEditableComponent {
   public opened = false;
   public isProfileEdit = true;

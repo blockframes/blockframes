@@ -24,7 +24,7 @@ export class AuthService {
 
   public async updatePassword(actualPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
-    await this.afAuth.auth.signInWithEmailAndPassword(userEmail, actualPassword);
+    await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
     await this.afAuth.auth.currentUser.updatePassword(newPassword);
   }
 
