@@ -10,10 +10,10 @@ export const CONTEXT_MENU = [
     items: []
   },
   {
-    route: '/layout/o/o/home/:movieId/edit',
+    route: '/layout/o/home/:movieId/edit',
     items: [
-      { name: 'edit film', path: '/layout/o/o/home/:movieId/edit' },
-      { name: 'teamwork', path: '/layout/o/o/home/:movieId/teamwork'},
+      { name: 'edit film', path: '/layout/o/home/:movieId/edit' },
+      { name: 'teamwork', path: '/layout/o/home/:movieId/teamwork'},
     ]
   },
   {

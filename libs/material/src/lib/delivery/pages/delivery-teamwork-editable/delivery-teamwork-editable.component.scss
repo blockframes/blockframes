@@ -1,7 +1,7 @@
 mat-sidenav-container {
   height: 100%;
   min-height: 400px;
-  background-color: white;
+  background-color: var(--whiteBackground);
   margin: 83px 300px;
 }
 
@@ -13,10 +13,8 @@ mat-sidenav {
 
 mat-sidenav-content {
   margin-left: 50px;
-  height: 100%;
-  min-height: 800px;
   overflow: auto;
-  background-color: white;
+  background-color: var(--whiteBackground);
   padding-bottom: 50px;
 }
 

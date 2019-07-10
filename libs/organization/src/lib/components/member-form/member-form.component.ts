@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material';
 import * as firebase from 'firebase';
 import { OrganizationService } from '../../+state';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 export interface User {
   uid: string;
@@ -77,12 +77,16 @@ export class MemberFormComponent implements OnInit, OnDestroy {
   }
 
   private async onChange() {
-    this.addMemberForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(typingEmail => {
-      // TODO: debounce
-      this.listUserByMail(typingEmail.user).then(matchingUsers => {
-        // TODO: use an observable
-        this.mailsOptions = matchingUsers;
-      });
+    this.addMemberForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.destroyed$)
+      ).subscribe(typingEmail => {
+        this.listUserByMail(typingEmail.user).then(matchingUsers => {
+          // TODO: use an observable => ISSUE#608
+          this.mailsOptions = matchingUsers;
+        });
     });
   }
 }
