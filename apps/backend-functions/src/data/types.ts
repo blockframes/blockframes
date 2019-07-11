@@ -48,6 +48,7 @@ export interface Movie {
   title: {
     original: string;
   };
+  deliveryIds: string[];
 }
 
 export interface Material {
