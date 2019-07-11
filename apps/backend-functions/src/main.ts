@@ -120,17 +120,17 @@ export const onMovieStakeholderCreateEvent = onDocumentCreate(
 );
 
 /**
- * Trigger: REST call to generate a delivery PDF
- */
-export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
-
-/**
  * Trigger: when a stakeholder is removed from a movie
  */
 export const onMovieStakeholderDeleteEvent = onDocumentDelete(
   'movies/{movieID}/stakeholders/{stakeholerID}',
   onMovieStakeholderDelete
 );
+
+/**
+ * Trigger: REST call to generate a delivery PDF
+ */
+export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
 
 //--------------------------------
 //            RELAYER           //
