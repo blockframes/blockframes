@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthStore, User, createUser } from './auth.store';
-import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
@@ -12,7 +11,6 @@ export class AuthService {
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
-    private wallet: WalletService,
     private db: FireQuery,
     private router: Router,
     private query: AuthQuery
@@ -22,7 +20,7 @@ export class AuthService {
   // AUTH //
   //////////
 
-  public async updatePassword(actualPassword: string, newPassword: string) {
+  public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
     await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
     await this.afAuth.auth.currentUser.updatePassword(newPassword);
