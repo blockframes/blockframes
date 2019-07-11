@@ -1,11 +1,34 @@
+mat-sidenav-container {
+  padding-left : 200px;
+  padding-right: 200px;
+}
+
 mat-sidenav-content {
-  width: 70%;
+  margin-top: 66px;
+  width: 60%;
 }
 
 mat-sidenav {
-  width: 500px;
+  width: 25%;
+  height: 100%;
   position: fixed;
+  right: 200px !important;
   background-color: var(--whiteBackground);
+}
+
+mat-card-header {
+  width: 100%;
+}
+
+div {
+  height: 100%;
+  width: 100%;
+}
+
+mat-card {
+  margin-top: 66px;
+  width: 100%;
+  height: 80%;
 }
 
 .mat-drawer-side.mat-drawer-end {
@@ -15,14 +38,24 @@ mat-sidenav {
 // medium
 @media screen and (min-width: 960px) and (max-width: 1279px) {
   mat-sidenav {
-    width: 400px;
+    width: 30%;
+    right: 50px !important;
+  }
+  mat-sidenav-container {
+    padding-left : 50px;
+    padding-right: 50px;
   }
 }
 
 // small
 @media screen and (min-width: 600px) and (max-width: 959px) {
   mat-sidenav {
-    width: 300px;
+    width: 30%;
+    right: 20px !important;
+  }
+  mat-sidenav-container {
+    padding-left : 20px;
+    padding-right: 20px;
   }
 }
 
@@ -33,5 +66,10 @@ mat-sidenav {
   }
   mat-sidenav {
     width: 100%;
+    right: 0 !important;
+  }
+  mat-sidenav-container {
+    padding-left : 0;
+    padding-right: 0;
   }
 }

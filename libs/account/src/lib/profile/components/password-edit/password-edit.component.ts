@@ -13,8 +13,6 @@ import { FormGroup } from '@angular/forms';
 })
 
 export class PasswordEditComponent {
-  @Output() closed = new EventEmitter();
-
   public form = new FormGroup({
     current: new PasswordControl(),
     next: new PasswordControl()

@@ -17,8 +17,6 @@ import { ProfileForm } from '../../forms/profile-edit.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEditComponent implements OnInit, OnDestroy {
-  @Output() closed = new EventEmitter();
-
   public accountForm: ProfileForm;
   public persistForm: PersistNgFormPlugin<AccountForm>;
   public user$: Observable<User>;
@@ -58,7 +56,6 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
       this.authService.update(this.authQuery.user.uid, { firstName, lastName, biography })
       .then(() => {
         this.snackBar.open(`account updated`, 'close', { duration: 2000 });
-        //this.accountForm.reset();
       })
     } catch (err) {
       console.error(err);

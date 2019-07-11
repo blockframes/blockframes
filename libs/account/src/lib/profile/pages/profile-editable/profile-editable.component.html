@@ -1,10 +1,11 @@
-<editable-sidenav (closed)="opened=false" [opened]="opened">
-
-  <account-profile-view content (passwordEdited)="openPasswordEdit()" (profileEdited)="openProfileEdit()"></account-profile-view>
-
-  <account-profile-edit *ngIf="isProfileEdit; else password" sidenav (closed)="opened=false"></account-profile-edit>
-  <ng-template #password>
-    <account-password-edit sidenav (closed)="opened=false"></account-password-edit>
-  </ng-template>
-
+<editable-sidenav (closed)="opened = false" [opened]="opened">
+  <account-profile-view
+    content
+    (passwordEdited)="openPasswordEdit()"
+    (profileEdited)="openProfileEdit()"
+  ></account-profile-view>
+  <ng-container sidenav [ngSwitch]="sidenavContent">
+    <account-profile-edit *ngSwitchCase="'profile'"></account-profile-edit>
+    <account-password-edit *ngSwitchCase="'password'"></account-password-edit>
+  </ng-container>
 </editable-sidenav>
