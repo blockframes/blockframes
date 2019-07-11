@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder, StakeholderService } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder, StakeholderService, Movie } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
+import { DeliveryStore } from './delivery.store';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -93,27 +94,24 @@ export class DeliveryService {
     const delivery = createDelivery({ id, movieId, validated: [] });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const promises = [];
       const movieSnap = await tx.get(movieDoc.ref);
       const deliveryIds = movieSnap.data().deliveryIds || [];
 
       // Create document and permissions
-      promises.push(await this.permissionsService.createDocAndPermissions(delivery, organization));
+      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
       // If there is a templateId, copy template materials to the delivery
       if (!!templateId) {
         const template = this.templateQuery.getEntity(templateId);
-        promises.push(this.copyMaterials(delivery, template));
+        this.copyMaterials(delivery, template);
       }
 
       // Create the stakeholder in the sub-collection
-      promises.push(await this.shService.addStakeholder(delivery, organization, true));
+      await this.shService.addStakeholder(delivery, organization, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
-      promises.push(tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds}));
-
-      return Promise.all(promises);
+      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
     })
 
     return id;
@@ -121,24 +119,29 @@ export class DeliveryService {
 
   /** Add a new delivery by copying the movie's materials */
   public async addDeliveryWithMovieMaterials() {
-    const movie = this.movieQuery.getActive();
     const id = this.db.createId();
+    const movie = this.movieQuery.getActive();
+    const movieDoc = this.db.doc(`movies/${movie.id}`);
     const organization = this.organizationQuery.getValue().org;
     const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
-    const deliveryStakeholder = this.makeDeliveryStakeholder(
-      organization.id,
-      ['canValidateDelivery'],
-      true
-    );
 
-    await this.permissionsService.createDocAndPermissions(delivery, organization);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const movieSnap = await tx.get(movieDoc.ref);
+      const deliveryIds = movieSnap.data().deliveryIds || [];
 
-    await Promise.all([
-      this.copyMaterials(delivery, movie),
-      this.db
-        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-        .set(deliveryStakeholder)
-    ]);
+      // Create document and permissions
+      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+
+      // Copy movie materials to the delivery
+      this.copyMaterials(delivery, movie)
+
+      // Create the stakeholder in the sub-collection
+      await this.shService.addStakeholder(delivery, organization, true, tx);
+
+      // Update the movie deliveryIds
+      const nextDeliveryIds = [...deliveryIds, delivery.id];
+      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
+    })
 
     return id;
   }
@@ -192,8 +195,12 @@ export class DeliveryService {
 
   /** Deletes delivery and all the sub-collections in firebase */
   public async deleteDelivery() {
-    const id = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${id}`).delete();
+    const delivery = this.query.getActive();
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).delete();
+
+    // TODO: Move this operation to firebase delete function
+    const movie = this.movieQuery.getActive();
+    this.db.doc<Movie>(`movies/${movie.id}`).update({deliveryIds: movie.deliveryIds.filter(id => id !== delivery.id)})
   }
 
   /** Sign array validated of delivery with stakeholder logged */

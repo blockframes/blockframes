@@ -28,15 +28,12 @@ export class MovieService {
       const movieIds = organizationSnap.data().movieIds || [];
 
       // Create movie document and permissions
-      await this.permissionsService.createDocAndPermissions<Movie>(movie, organization);
+      await this.permissionsService.createDocAndPermissions<Movie>(movie, organization, tx);
 
       // Create the first stakeholder in sub-collection
-      await this.shService.addStakeholder(movie, organization, true);
+      await this.shService.addStakeholder(movie, organization, true, tx);
 
-      // Update the organization movieIds
-      if (movieIds.includes(movie.id)) {
-        return tx.update(organizationDoc.ref, {}); // every document read in a transaction must be written.
-      }
+      // Update the org movieIds
       const nextMovieIds = [...movieIds, movie.id];
       tx.update(organizationDoc.ref, { movieIds: nextMovieIds })
 
@@ -53,22 +50,15 @@ export class MovieService {
     return this.db.doc<Movie>(`movies/${id}`).update(movie);
   }
 
-  public remove(movieId: string): Promise<void> {
-    const organization = this.organizationQuery.getValue().org;
-    const movieIds = organization.movieIds.filter(id => id !== movieId);
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
+  public async remove(movieId: string): Promise<void> {
     const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
 
-    const batch = this.db.firestore.batch();
-    // Delete the movie in movies collection
-    batch.delete(movieDoc.ref);
-    // Delete the movie id in organization.movieIds
-    batch.update(organizationDoc.ref, { movieIds });
-    // Remove the movie from the movies store
-    // TODO: Wait for firestore response before removing the movie. => ISSUE#611
-    this.store.remove(movieId);
-
-    return batch.commit();
+    await this.db.firestore.runTransaction(async(tx: firebase.firestore.Transaction) => {
+      // Delete the movie in movies collection
+      tx.delete(movieDoc.ref);
+      // Remove the movie from the movies store
+      this.store.remove(movieId);
+    })
   }
 
 }

@@ -1,36 +1,48 @@
 import { Injectable } from '@angular/core';
-import { createMovieStakeholder, Stakeholder, createDeliveryStakeholder } from './stakeholder.model';
+import {
+  createMovieStakeholder,
+  Stakeholder,
+  createDeliveryStakeholder
+} from './stakeholder.model';
 import { Organization } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '@blockframes/material';
 import { Movie } from '../../movie/+state/movie.model';
 
 @Injectable({ providedIn: 'root' })
-
 export class StakeholderService {
+  constructor(private db: FireQuery) {}
 
-  constructor(private db: FireQuery,) {}
+  /** Add a stakeholder into movies or deliveries sub-collection */
+  public async addStakeholder(
+    doc: Movie | Delivery,
+    org: Partial<Organization>,
+    isAccepted: boolean = false,
+    tx?: firebase.firestore.Transaction
+  ): Promise<string> {
 
-  public async addStakeholder(doc: Movie | Delivery, organization: Partial<Organization>, isAccepted: boolean = false): Promise<string> {
     const stakeholder = (doc._type === 'movies')
-      ? createMovieStakeholder({id: organization.id, isAccepted})
+      ? createMovieStakeholder({ id: org.id, isAccepted })
       : createDeliveryStakeholder({
-        id: organization.id,
+        id: org.id,
         isAccepted,
         authorizations: isAccepted ? ['canUpdateDelivery'] : []
-      })
+      });
 
-    await this.db.firestore.runTransaction(async (tx) => {
-      const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`)
-      tx.set(stakeholderDoc.ref, stakeholder)
-    });
+    const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`);
+
+    (!!tx)
+      ? tx.set(stakeholderDoc.ref, stakeholder)
+      : stakeholderDoc.set(stakeholder)
 
     return stakeholder.id;
   }
 
   public update(movieId: string, stakeholder: Partial<Stakeholder>) {
     // TODO: use FireQuery:
-    this.db.doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`).update(stakeholder);
+    this.db
+      .doc<Stakeholder>(`movies/${movieId}/stakeholders/${stakeholder.id}`)
+      .update(stakeholder);
   }
 
   public async remove(movieId: string, stakeholderId: string) {
@@ -38,9 +50,7 @@ export class StakeholderService {
     const stkPath = `movies/${movieId}/stakeholders/${stakeholderId}`;
     const stkDoc = this.db.doc(stkPath);
 
-
-    return this.db.firestore.runTransaction(async (tx) => {
-
+    return this.db.firestore.runTransaction(async tx => {
       // Delete the stakeholder:
       const stk = await tx.get(stkDoc.ref);
       const { id } = stk.data() as Stakeholder;
@@ -55,11 +65,7 @@ export class StakeholderService {
 
       const newMovieIds = movieIds.filter(x => x !== movieId);
 
-      return Promise.all([
-        tx.delete(stkDoc.ref),
-        tx.update(organizationDoc.ref, { movieIds: newMovieIds })
-      ]);
+      return Promise.all([tx.delete(stkDoc.ref), tx.update(organizationDoc.ref, { movieIds: newMovieIds })]);
     });
   }
-
 }

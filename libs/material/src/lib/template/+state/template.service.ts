@@ -20,39 +20,39 @@ export class TemplateService {
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
+    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
     const template = createTemplate({
       id: templateId,
       name: templateName,
       orgId: organization.id
     });
 
-    // Create document permissions
-    await this.permissionsService.createDocAndPermissions(template, organization);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const organizationSnap = await tx.get(organizationDoc.ref);
+      const templateIds = organizationSnap.data().templateIds || [];
 
-    // Push the new id in organization.templateIds
-    await this.db
-      .doc<Organization>(`orgs/${organization.id}`)
-      .update({ templateIds: [...organization.templateIds, templateId] });
+      // Create document permissions
+      await this.permissionsService.createDocAndPermissions(template, organization, tx);
+
+      // Update the organization templateIds
+      const nextTemplateIds = [...templateIds, template.id];
+      tx.update(organizationDoc.ref, {templateIds: nextTemplateIds});
+    })
 
     return templateId;
   }
 
-  public deleteTemplate(templateId: string): Promise<void> {
-    const organization = this.organizationQuery.getValue().org;
-    const templateIds = organization.templateIds.filter(id => id !== templateId);
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
+  public async deleteTemplate(templateId: string): Promise<void> {
+    const org = this.organizationQuery.getValue().org;
+    const templateIds = org.templateIds.filter(id => id !== templateId);
+    const organizationDoc = this.db.doc<Organization>(`orgs/${org.id}`);
     const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
 
-    const batch = this.db.firestore.batch();
-    // Delete the template from the templates collection
-    batch.delete(templateDoc.ref);
-    // Delete templateId from org.templateIds
-    batch.update(organizationDoc.ref, { templateIds });
-    // Remove the template from the templates store
-    this.store.remove(templateId);
-
-    return batch.commit();
-
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      tx.delete(templateDoc.ref);
+      tx.update(organizationDoc.ref, { templateIds })
+      this.store.remove(templateId)
+    })
   }
 
   public deleteMaterial(id: string) {
