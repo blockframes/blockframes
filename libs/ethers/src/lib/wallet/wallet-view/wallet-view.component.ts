@@ -16,6 +16,7 @@ export class WalletViewComponent implements OnInit {
 
   wallet$: Observable<Wallet>;
   isLoading$: Observable<boolean>;
+  ensName: string;
 
   constructor(
     public service: WalletService,
@@ -25,17 +26,7 @@ export class WalletViewComponent implements OnInit {
   ngOnInit() {
     this.wallet$ = this.query.select();
     this.isLoading$ = this.query.selectLoading();
-  }
-
-  get explorerUrl() {
-    return network === 'homestead' as string
-      ? 'https://etherscan.io/address/'
-      : `https://${network}.etherscan.io/address/`;
-  }
-
-  async deployERC1077() {
-    const res = await this.service.deployERC1077(this.query.getValue().ensDomain);
-    console.log(res);
+    this.ensName = this.query.getValue().ensDomain;
   }
 
   // TODO implment this function : issue 544
