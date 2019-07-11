@@ -197,10 +197,6 @@ export class DeliveryService {
   public async deleteDelivery() {
     const delivery = this.query.getActive();
     this.db.doc<Delivery>(`deliveries/${delivery.id}`).delete();
-
-    // TODO: Move this operation to firebase delete function
-    const movie = this.movieQuery.getActive();
-    this.db.doc<Movie>(`movies/${movie.id}`).update({deliveryIds: movie.deliveryIds.filter(id => id !== delivery.id)})
   }
 
   /** Sign array validated of delivery with stakeholder logged */

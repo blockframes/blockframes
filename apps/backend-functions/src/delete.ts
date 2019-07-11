@@ -63,6 +63,7 @@ export async function deleteFirestoreDelivery(
 
   // We store the orgs before the delivery is deleted
   const orgs = await getOrgsOfDocument(delivery.id, 'deliveries');
+  console.log(orgs)
 
   const batch = db.batch();
   const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
@@ -83,14 +84,16 @@ export async function deleteFirestoreDelivery(
       }
     }
   });
+
   const movieDoc = await db.doc(`movies/${delivery.movieId}`).get();
   const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+
   if (movie.deliveryIds.includes(delivery.id)) {
     console.log(`delete delivery id reference in movie ${movie.id}`);
     const newDeliveryIds: string[] = movie.deliveryIds.filter(
       (deliveryId: string) => deliveryId !== delivery.id
     );
-    batch.update(movieDoc.ref, { movieIds: newDeliveryIds });
+    batch.update(movieDoc.ref, { deliveryIds: newDeliveryIds });
   }
 
   await batch.commit();
