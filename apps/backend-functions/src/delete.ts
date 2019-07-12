@@ -63,7 +63,6 @@ export async function deleteFirestoreDelivery(
 
   // We store the orgs before the delivery is deleted
   const orgs = await getOrgsOfDocument(delivery.id, 'deliveries');
-  console.log(orgs)
 
   const batch = db.batch();
   const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
@@ -87,13 +86,10 @@ export async function deleteFirestoreDelivery(
 
   const movieDoc = await db.doc(`movies/${delivery.movieId}`).get();
   const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
-
-  if (movie.deliveryIds.includes(delivery.id)) {
-    console.log(`delete delivery id reference in movie ${movie.id}`);
-    const newDeliveryIds: string[] = movie.deliveryIds.filter(
-      (deliveryId: string) => deliveryId !== delivery.id
-    );
-    batch.update(movieDoc.ref, { deliveryIds: newDeliveryIds });
+  const index = movie.deliveryIds.indexOf(delivery.id);
+  if (index !== -1) {
+    const deliveryIds = [ ...movie.deliveryIds.slice(0, index), ...movie.deliveryIds.slice(index + 1) ]
+    batch.update(movieDoc.ref, { deliveryIds });
   }
 
   await batch.commit();
@@ -162,12 +158,8 @@ export async function deleteFirestoreMaterial(
     if (movieMaterial.deliveriesIds.length === 1) {
       db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).delete();
     } else {
-      const newdeliveriesIds = movieMaterial.deliveriesIds.filter(
-        (id: string) => id !== delivery.id
-      );
-      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).update({
-        deliveriesIds: newdeliveriesIds
-      });
+      const deliveriesIds = movieMaterial.deliveriesIds.filter(id => id !== delivery.id);
+      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).update({ deliveriesIds });
     }
   }
   return true;

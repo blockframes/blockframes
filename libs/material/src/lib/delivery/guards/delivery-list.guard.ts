@@ -37,20 +37,23 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
       .selectActive(movie => movie.deliveryIds)
       .pipe(
         switchMap(ids => {
-          if (!ids || ids.length === 0) throw new Error('No Delivery yet');
+          if (!ids || ids.length === 0) return of([]);
           const queries = ids.map(id => {
             return this.fireQuery.fromQuery<DeliveryDB>(deliveryQuery(id)).pipe(
               catchError(e => {
-                // TODO: Only catch NotFoundError
+                // TODO: Only catch NotFoundError => ISSUE#627
                 return of(undefined);
               })
             );
           });
           return combineLatest(queries);
         }),
-        map(deliveries =>
-          deliveries.filter(x => !!x).map(delivery => modifyTimestampToDate(delivery))
-        )
+        map((deliveries: DeliveryDB[]) => {
+          if (deliveries.length === 0) throw new Error('There is no deliveries');
+          return deliveries
+            .filter(delivery => !!delivery)
+            .map((delivery: DeliveryDB) => modifyTimestampToDate(delivery));
+        })
       );
   }
 }
