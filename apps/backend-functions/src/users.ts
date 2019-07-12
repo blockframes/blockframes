@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './firebase';
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from './environments/environment';
@@ -96,6 +97,12 @@ const findOrgByName = async (data: any, context: CallableContext): Promise<OrgPr
     });
 };
 
+const generatePassword = () =>
+  passwordGenerator({
+    length: 12,
+    numbers: true
+  });
+
 const getOrCreateUserByMail = async (
   data: any,
   context: CallableContext
@@ -106,10 +113,13 @@ const getOrCreateUserByMail = async (
     const user = await auth.getUserByEmail(email);
     return { uid: user.uid, email };
   } catch {
+    const password = generatePassword();
+
     // User does not exists, send them an email.
     const user = await auth.createUser({
       email,
-      emailVerified: false,
+      password,
+      emailVerified: true,
       disabled: false
     });
 
@@ -118,7 +128,7 @@ const getOrCreateUserByMail = async (
       to: email,
       from: 'admin@blockframes.io',
       subject: 'Your Blockframes account is waiting for you',
-      text: userInviteTemplate()
+      text: userInviteTemplate({ email, password })
     };
     await SendGrid.send(msg);
 
