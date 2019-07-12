@@ -33,6 +33,10 @@ export class AuthGuard implements CanActivate {
             return this.db.doc<User>(`users/${user.uid}`).valueChanges();
           }),
           tap(user => this.store.update({ user })),
+          tap(user => {
+            console.log(!(user.firstName && user.lastName));
+            if (!(user.firstName && user.lastName)) return this.router.parseUrl('auth/connexion');
+          }),
           map(user => !!user)
         )
         .subscribe({
