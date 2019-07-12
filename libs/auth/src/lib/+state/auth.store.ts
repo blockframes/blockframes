@@ -1,3 +1,4 @@
+import * as firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
@@ -31,6 +32,7 @@ export interface AccountForm {
 
 export interface AuthState {
   user: User;
+  auth?: { emailVerified: boolean };
   form: UserForm;
   accountForm: AccountForm;
   requestedRoute?: string;
