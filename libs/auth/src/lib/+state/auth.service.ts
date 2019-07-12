@@ -23,12 +23,12 @@ export class AuthService {
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
     await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
-    await this.afAuth.auth.currentUser.updatePassword(newPassword);
+    return this.afAuth.auth.currentUser.updatePassword(newPassword);
   }
 
   public async signin(email: string, password: string) {
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    this.router.navigate(['layout']);
+    return this.router.navigate(['layout']);
   }
 
   public async signup(email: string, password: string, name: string, surname: string) {
