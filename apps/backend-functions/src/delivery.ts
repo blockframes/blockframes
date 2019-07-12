@@ -120,7 +120,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Mov
     throw new Error(`This stakeholder doesn't exist !`);
   }
 
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.orgId}`);
+  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
     throw new Error(`This organization doesn't exist !`);

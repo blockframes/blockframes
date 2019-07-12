@@ -25,6 +25,8 @@ export interface Organization {
 
 export interface Stakeholder {
   id: string;
+  isAccepted: boolean;
+  processedId: string;
 }
 
 export interface Step {
@@ -83,6 +85,15 @@ export interface SnapObject {
   delivery?: Delivery | null;
   newStakeholderId?: string;
   count?: number;
+}
+
+export interface UserDocPermissions {
+  admins: string[];
+  canCreate: string[];
+  canDelete: string[];
+  canRead: string[];
+  canUpdate: string[];
+  id: string;
 }
 
 /**

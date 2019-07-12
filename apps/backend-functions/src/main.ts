@@ -20,7 +20,8 @@ import {
   onDeliveryStakeholderCreate,
   onDeliveryStakeholderDelete,
   onMovieStakeholderCreate,
-  onMovieStakeholderDelete
+  onMovieStakeholderDelete,
+  onDeliveryStakeholderUpdate
 } from './stakeholder';
 import * as users from './users';
 import * as backup from './backup';
@@ -131,6 +132,14 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
  * Trigger: REST call to generate a delivery PDF
  */
 export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
+
+/**
+ * Trigger: when a delivery stakeholder is updated (e. g. when he accept the document invitation)
+  */
+export const onDeliveryStakeholderUpdateEvent = onDocumentUpdate(
+  'deliveries/{deliveryID}/stakeholders/{stakeholderID}',
+  onDeliveryStakeholderUpdate
+)
 
 //--------------------------------
 //            RELAYER           //

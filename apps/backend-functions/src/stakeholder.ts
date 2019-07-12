@@ -3,7 +3,9 @@ import { prepareNotification, triggerNotifications, customMessage } from './noti
 import {
   getDocument,
   getCount,
-  getOrgsOfDocument
+  getOrgsOfDocument,
+  initializeOrgDocPermissions,
+  initializeUserDocPermissions
 } from './data/internals';
 import {
   Delivery,
@@ -11,6 +13,8 @@ import {
   Organization,
   Movie,
   SnapObject,
+  Stakeholder,
+  UserDocPermissions,
 } from './data/types';
 
 export async function onDeliveryStakeholderCreate(
@@ -39,6 +43,58 @@ export async function onMovieStakeholderDelete(
   context: functions.EventContext
 ) {
   stakeholdersCollectionEvent(snap, context);
+}
+
+export async function onDeliveryStakeholderUpdate(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  context: functions.EventContext
+) {
+
+  if (!change.after || !change.before) {
+    throw new Error(`Parameter 'change' not found`);
+  }
+
+  const stakeholderDoc = change.after.data();
+  const stakeholderDocBefore = change.before.data();
+
+  if (!stakeholderDoc || !stakeholderDocBefore) {
+    throw new Error(`No changes detected on this document`);
+  }
+
+  const deliveryId = context.params.deliveryID;
+  const stakeholder = await getDocument<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderDoc.id}`);
+  const processedId = stakeholder.processedId;
+
+  if (processedId === context.eventId) {
+    throw new Error(`Document already processed with this context`);
+  }
+
+  // If the user accept the invitation, isAccepted is set from false to true
+  if(stakeholderDoc.isAccepted !== stakeholderDocBefore.isAccepted) {
+    try {
+
+      // Initialize organization permissions on a document owned by another organization
+      const orgDocPermissions = initializeOrgDocPermissions(deliveryId);
+      db.doc(`permissions/${stakeholder.id}/orgDocsPermissions/${deliveryId}`).set(orgDocPermissions);
+
+      // Then Initialize user permissions document
+      const userDocPermissions = initializeUserDocPermissions(deliveryId);
+      db.doc(`permissions/${stakeholder.id}/userDocsPermissions${deliveryId}`).set(userDocPermissions);
+
+      // Finally, populate the userDocPermissions with organization member ids.
+      // Push their id in canRead for test purpose.
+      const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder.id}`);
+      const userPermissions = await getDocument<UserDocPermissions>(`permissions/${stakeholder.id}/userDocsPermissions${deliveryId}`)
+      stakeholderOrg.userIds.forEach(userId => {
+        const canRead = [...userPermissions.canRead, userId]
+        return db.doc(`permissions/${stakeholder.id}/userDocsPermissions`).update({ canRead });
+      })
+
+    } catch(error) {
+      await db.doc(`deliveries/${deliveryId}/stakeholders/${stakeholder.id}`).update({ processedId: null });
+      throw new Error(error);
+    }
+  }
 }
 
 /**

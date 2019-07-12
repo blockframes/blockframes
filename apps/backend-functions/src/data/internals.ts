@@ -4,7 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../firebase';
-import { Organization, Stakeholder } from './types';
+import { Organization, Stakeholder, UserDocPermissions } from './types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -37,6 +37,28 @@ export async function getOrgsOfDocument(
   const stakeholders = await getCollection<Stakeholder>(`${collection}/${documentId}/stakeholders`);
   const promises = stakeholders.map(({ id }) => getDocument<Organization>(`orgs/${id}`));
   return Promise.all(promises);
+}
+
+export function initializeOrgDocPermissions(docId: string) {
+  return {
+    canCreate: false,
+    canDelete: false,
+    canRead: true,
+    canUpdate: false,
+    id: docId,
+    owner: false // TODO: Find a way to get the real ownerId
+  }
+}
+
+export function initializeUserDocPermissions(docId: string): UserDocPermissions {
+  return {
+    admins: [],
+    canCreate: [],
+    canDelete: [],
+    canRead: [],
+    canUpdate: [],
+    id: docId
+  }
 }
 
 export function getCount(collection: string) {
