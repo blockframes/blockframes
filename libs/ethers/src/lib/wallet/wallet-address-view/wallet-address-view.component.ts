@@ -1,18 +1,15 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { network } from '@env';
 
 @Component({
   selector: 'wallet-address-view',
   templateUrl: './wallet-address-view.component.html',
-  styleUrls: ['./wallet-address-view.component.scss']
+  styleUrls: ['./wallet-address-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush 
 })
-export class WalletAddressViewComponent implements OnInit {
+export class WalletAddressViewComponent {
   @Input() public ensName: string;
   @Input() public ethAddress: string;
-
-  constructor() {}
-
-  ngOnInit() {}
 
   public get url(): string {
     return network === 'homestead' as string
