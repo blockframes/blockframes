@@ -9,6 +9,7 @@ export class AuthQuery extends Query<AuthState> {
   public user$ = this.select(state => state.user);
   public encrytping$ = this.select(state => state.isEncrypting);
   public isBalanceLoading$ = this.select(state => state.isBalanceLoading);
+  public hasVerifiedEmail$ = this.select(state => state.auth && state.auth.emailVerified);
 
   constructor(protected store: AuthStore) {
     super(store);

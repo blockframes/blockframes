@@ -101,4 +101,8 @@ export class AuthService {
       .toPromise();
     return items.docs;
   }
+
+  public async sendVerifyEmail() {
+    return this.afAuth.auth.currentUser.sendEmailVerification();
+  }
 }

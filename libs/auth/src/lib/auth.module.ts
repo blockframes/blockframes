@@ -13,12 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
 import { UiFormModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
+import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { CongratulationComponent } from './pages/congratulation/congratulation.component';
@@ -43,6 +46,8 @@ export const AuthRoutes: Routes = [
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
+    MatTooltipModule,
+    MatBadgeModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
@@ -52,7 +57,9 @@ export const AuthRoutes: Routes = [
     SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
-    CongratulationComponent
-  ]
+    CongratulationComponent,
+    EmailVerifyComponent
+  ],
+  exports: [EmailVerifyComponent]
 })
 export class AuthModule {}
