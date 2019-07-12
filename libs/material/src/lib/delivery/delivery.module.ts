@@ -59,6 +59,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Guards
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
@@ -187,6 +188,7 @@ const routes: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
+    MatAutocompleteModule,
 
     RouterModule.forChild(routes)
   ],

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { StakeholderService, createMovieStakeholder } from '../../+state';
+import { StakeholderService } from '../../+state';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as firebase from 'firebase';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';

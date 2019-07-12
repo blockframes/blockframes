@@ -1,18 +1,21 @@
 <h4>Add stakeholders</h4>
 <mat-divider></mat-divider>
-<div fxLayout="row" fxLayoutAlign="space-between center">
-  <mat-form-field class="left label">
-    <mat-label>Search for an Organization</mat-label>
-    <input matInput />
+<form [formGroup]="addStakeholderForm" fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field class="search-bar">
+    <mat-label>Search organization</mat-label>
+    <input
+      type="text"
+      matInput
+      placeholder="Company Name"
+      formControlName="org"
+      [matAutocomplete]="autoName"
+    />
   </mat-form-field>
-  <button mat-icon-button color="primary"><mat-icon>search</mat-icon></button>
-</div>
-<mat-card class="mat-elevation-z0" *ngFor="let stakeholder of stakeholders">
-  <mat-card-content *ngIf="!!stakeholder.isAccepted" fxLayoutAlign="space-between center">
-    <span class="dot left mat-elevation-z4" [deliveryDotColor]="stakeholder.id"></span>
-    <p class="left">{{ stakeholder.organization.name }}</p>
-    <a mat-icon-button color="primary" (click)="added.emit(stakeholder)">
-      <mat-icon>add_circle_outline</mat-icon>
-    </a>
-  </mat-card-content>
-</mat-card>
+  <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let option of orgOptions" [value]="option" (click)="submit(option)">
+      {{ option.name }}
+      <mat-icon class="icon">add_circle</mat-icon>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-icon class="icon" matPrefix>search</mat-icon>
+</form>
