@@ -16,7 +16,7 @@ export interface MovieAvailability {
 export interface Movie {
   _type: 'movies',
   id: string,
-  org?: Organization,
+  organization?: Organization,
   title: Title, // will contain all titles: original, international, suiss, etc
   directorName: string,
   poster: string,

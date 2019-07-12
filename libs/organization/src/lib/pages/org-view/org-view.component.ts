@@ -10,7 +10,7 @@ import { PermissionsQuery } from '../../permissions/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgViewComponent implements OnInit {
-  public org$: Observable<Organization>;
+  public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
   constructor(
@@ -20,7 +20,7 @@ export class OrgViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.org$ = this.query.select('org');
+    this.organization$ = this.query.select('org');
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
   }
 

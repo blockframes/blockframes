@@ -1,23 +1,29 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { auth, db } from './firebase';
+import SendGrid from '@sendgrid/mail';
+import { sendgridAPIKey } from './environments/environment';
+import { userInviteTemplate } from './assets/mailTemplates';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 interface UserProposal {
-  uid: string,
-  email: string,
+  uid: string;
+  email: string;
 }
 
 interface OrgProposal {
-  id: string,
-  name: string,
+  id: string;
+  name: string;
 }
 
 const onUserCreate = (user: UserRecord) => {
   const { email, uid } = user;
-  return db.collection('users').doc(user.uid).set({ email, uid });
+  return db
+    .collection('users')
+    .doc(user.uid)
+    .set({ email, uid });
 };
 
 const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
@@ -34,7 +40,8 @@ const findUserByMail = async (data: any, context: CallableContext): Promise<User
   const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
   const prefixEnd: string = prefix.slice(0, -1) + incLast;
 
-  return db.collection('users')
+  return db
+    .collection('users')
     .where('email', '>=', prefix)
     .where('email', '<', prefixEnd)
     .get()
@@ -62,7 +69,8 @@ const findOrgByName = async (data: any, context: CallableContext): Promise<OrgPr
   const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
   const prefixEnd: string = prefix.slice(0, -1) + incLast;
 
-  return db.collection('orgs')
+  return db
+    .collection('orgs')
     .where('name', '>=', prefix)
     .where('name', '<', prefixEnd)
     .get()
@@ -72,24 +80,38 @@ const findOrgByName = async (data: any, context: CallableContext): Promise<OrgPr
         return [];
       }
 
-      return matchingOrgs.docs.map(matchingOrg => ({ id: matchingOrg.id, name: matchingOrg.data().name }));
+      return matchingOrgs.docs.map(matchingOrg => ({
+        id: matchingOrg.id,
+        name: matchingOrg.data().name
+      }));
     });
 };
 
-const getOrCreateUserByMail = async (data: any, context: CallableContext): Promise<UserProposal> => {
+const getOrCreateUserByMail = async (
+  data: any,
+  context: CallableContext
+): Promise<UserProposal> => {
   const { email } = data;
 
   try {
     const user = await auth.getUserByEmail(email);
     return { uid: user.uid, email };
   } catch {
+    // User does not exists, send them an email.
     const user = await auth.createUser({
       email,
       emailVerified: false,
       disabled: false
     });
 
-    // TODO: trigger API to send a mail.
+    SendGrid.setApiKey(sendgridAPIKey);
+    const msg = {
+      to: email,
+      from: 'admin@blockframes.io',
+      subject: 'Your Blockframes account is waiting for you',
+      text: userInviteTemplate()
+    };
+    await SendGrid.send(msg);
 
     return { uid: user.uid, email };
   }

@@ -1,6 +1,6 @@
 <section>
-  <ng-container *ngIf="(org$ | async) as org">
-    <h2>{{ org.name }}</h2>
+  <ng-container *ngIf="(organization$ | async) as organization">
+    <h2>{{ organization.name }}</h2>
     <org-member-list></org-member-list>
     <mat-list>
       <mat-list-item><mat-icon color="primary">star</mat-icon>: Super Admin</mat-list-item>

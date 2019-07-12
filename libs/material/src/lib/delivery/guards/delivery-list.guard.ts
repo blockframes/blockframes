@@ -12,7 +12,7 @@ const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.orgId}`
+      path: `orgs/${stakeholder.id}`
     })
   })
 });

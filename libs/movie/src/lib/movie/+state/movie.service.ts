@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createMovieStakeholder, StakeholderService } from '../../stakeholder/+state';
+import { createMovieStakeholder, StakeholderService, Stakeholder } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
@@ -12,27 +12,41 @@ export class MovieService {
   constructor(
   private db: FireQuery,
   private shService: StakeholderService,
-  private orgQuery: OrganizationQuery,
+  private organizationQuery: OrganizationQuery,
   private permissionsService: PermissionsService,
   private store: MovieStore,
   ) {}
 
-  public async add(original: string, firstAdd: boolean = false ): Promise<Movie> {
+  public async addMovie(original: string): Promise<Movie> {
     const id = this.db.createId();
-    const orgId = this.orgQuery.getValue().org.id
-    const owner = createMovieStakeholder({orgId, isAccepted: true});
+    const organization = this.organizationQuery.getValue().org;
+    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
     const movie: Movie = createMovie({ id, title: { original }});
 
-    await this.permissionsService.createDocAndPermissions<Movie>(movie, orgId);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const organizationSnap = await tx.get(organizationDoc.ref);
+      const movieIds = organizationSnap.data().movieIds || [];
 
-    await this.shService.add(id, owner, firstAdd);
+      // Create movie document and permissions
+      await this.permissionsService.createDocAndPermissions<Movie>(movie, organization);
 
+      // Create the first stakeholder in sub-collection
+      await this.shService.addStakeholder(movie, organization, true);
+
+      // Update the organization movieIds
+      if (movieIds.includes(movie.id)) {
+        return tx.update(organizationDoc.ref, {}); // every document read in a transaction must be written.
+      }
+      const nextMovieIds = [...movieIds, movie.id];
+      tx.update(organizationDoc.ref, { movieIds: nextMovieIds })
+
+    });
     return movie;
   }
 
   public update(id: string, movie: any) : Promise<void>{
     // we don't want to keep orgId in our Movie object
-    if (movie.org) delete movie.org;
+    if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
     if (movie.errors) delete movie.errors;
 
@@ -40,17 +54,18 @@ export class MovieService {
   }
 
   public remove(movieId: string): Promise<void> {
-    const org = this.orgQuery.getValue().org;
-    const movieIds = org.movieIds.filter(id => id !== movieId);
-    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+    const organization = this.organizationQuery.getValue().org;
+    const movieIds = organization.movieIds.filter(id => id !== movieId);
+    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
     const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
 
     const batch = this.db.firestore.batch();
     // Delete the movie in movies collection
     batch.delete(movieDoc.ref);
-    // Delete the movie id in org.movieIds
-    batch.update(orgDoc.ref, { movieIds });
+    // Delete the movie id in organization.movieIds
+    batch.update(organizationDoc.ref, { movieIds });
     // Remove the movie from the movies store
+    // TODO: Wait for firestore response before removing the movie. => ISSUE#611
     this.store.remove(movieId);
 
     return batch.commit();
