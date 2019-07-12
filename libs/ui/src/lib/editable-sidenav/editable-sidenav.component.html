@@ -1,18 +1,16 @@
-<mat-sidenav-container fxLayout="row" fxLayoutAlign="center">
+<mat-sidenav-container [class.padding-right]="!opened" fxLayout="row" fxLayoutAlign="center">
   <mat-sidenav-content>
     <ng-content select="[content]"></ng-content>
   </mat-sidenav-content>
   <mat-sidenav #sidenav [opened]="opened" mode="side" position="end">
-    <div fxLayout="column" fxLayoutAlign="center start">
-      <mat-card>
-        <mat-card-header fxLayout="row" fxLayoutAlign="end center">
-          <button (click)="closeSidenav()" color="primary" mat-icon-button>
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <ng-content select="[sidenav]"></ng-content>
-      </mat-card>
-    </div>
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="end center">
+        <button (click)="closeSidenav()" color="primary" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <ng-content select="[sidenav]"></ng-content>
+    </mat-card>
   </mat-sidenav>
 </mat-sidenav-container>
