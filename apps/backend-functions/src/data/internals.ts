@@ -35,7 +35,7 @@ export async function getOrgsOfDocument(
   collection: string
 ): Promise<Organization[]> {
   const stakeholders = await getCollection<Stakeholder>(`${collection}/${documentId}/stakeholders`);
-  const promises = stakeholders.map(({ orgId }) => getDocument<Organization>(`orgs/${orgId}`));
+  const promises = stakeholders.map(({ id }) => getDocument<Organization>(`orgs/${id}`));
   return Promise.all(promises);
 }
 

@@ -68,7 +68,7 @@ async function stakeholdersCollectionEvent(
     id: document.id,
     type: !!context.params.movieID ? 'movie' : 'delivery'
   };
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder.orgId}`);
+  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder.id}`);
 
   if (!!document && !!newStakeholder && !!newStakeholderOrg) {
     const documentSnapshot = await db.doc(`${collection}/${document.id}`).get();
@@ -100,8 +100,8 @@ async function stakeholdersCollectionEvent(
       };
 
       const notifications = createStakeholderNotifications(orgs, snapInformations);
-
       await triggerNotifications(notifications);
+
     } catch (e) {
       await db.doc(`${collection}/${document.id}`).update({ processedId: null });
       throw e;

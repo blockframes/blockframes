@@ -25,7 +25,6 @@ export interface Organization {
 
 export interface Stakeholder {
   id: string;
-  orgId: string;
 }
 
 export interface Step {
