@@ -1,0 +1,27 @@
+<section fxLayout="column" fxLayoutAlign="center center">
+  <article fxLayout="row" fxLayoutAlign="center center">
+    <div class="image"></div>
+    <form [formGroup]="form">
+      <h2>Your identity</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
+        sagittis. Curabitur scelerisque neque erat, ac bibendum nisi aliquet et.
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" placeholder="Name" formControlName="name" required />
+        <mat-error *ngIf="form.get('name').hasError('minlength')">
+          Name with less than <strong>3</strong> characters.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Surname</mat-label>
+        <input matInput type="text" placeholder="Surname" formControlName="surname" required />
+        <mat-error *ngIf="form.get('surname').hasError('minlength')">
+          Surname with less than <strong>3</strong> characters.
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </article>
+  <button (click)="update()" type="submit" mat-raised-button color="accent">Next</button>
+</section>

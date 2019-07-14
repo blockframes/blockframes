@@ -1,0 +1,19 @@
+section {
+  height: 100%;
+}
+
+article {
+  width: 30%;
+}
+
+.image {
+  height: 200px;
+  width: 300px;
+  background-image: url('libs/shared-assets/images/congratulation.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+button {
+  margin-top: 80px;
+}

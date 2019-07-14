@@ -1,0 +1,24 @@
+form {
+  width: 30%;
+  padding-left: 80px;
+}
+
+section {
+  height: 100%;
+}
+
+button {
+  margin-top: 80px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.image {
+  height: 400px;
+  width: 500px;
+  background-image: url('libs/shared-assets/images/rocket.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}

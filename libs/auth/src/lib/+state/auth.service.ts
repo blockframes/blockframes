@@ -50,8 +50,8 @@ export class AuthService {
   }
 
   /** Upate a user */
-  public update(uid: string, user: Partial<User>) {
-    return this.db.doc<User>(`users/${uid}`).update(user);
+  public async update(uid: string, user: Partial<User>) {
+    await this.db.doc<User>(`users/${uid}`).update(user);
   }
 
   /** Delete the current User */
