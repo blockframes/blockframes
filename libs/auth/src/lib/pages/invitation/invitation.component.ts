@@ -28,7 +28,7 @@ export class InvitationComponent {
       const uid = this.query.userId;
       try {
         await this.service.update(uid, this.form.value);
-        this.router.navigate(['layout/congratulation']);
+        this.router.navigate(['auth/congratulation']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 5000 });
       }

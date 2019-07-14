@@ -27,6 +27,8 @@ export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
+  { path: 'invitation', component: InvitationComponent },
+  { path: 'congratulation', component: CongratulationComponent }
 ];
 
 @NgModule({

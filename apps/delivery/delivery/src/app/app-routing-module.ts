@@ -6,8 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { OrganizationHomeComponent } from '@blockframes/organization';
-import { InvitationComponent } from 'libs/auth/src/lib/pages/invitation/invitation.component';
-import { CongratulationComponent } from 'libs/auth/src/lib/pages/congratulation/congratulation.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
@@ -72,14 +70,6 @@ export const routes: Routes = [
       {
         path: 'organization-home',
         component: OrganizationHomeComponent
-      },
-      {
-        path: 'invitation',
-        component: InvitationComponent
-      },
-      {
-        path: 'congratulation',
-        component: CongratulationComponent
       },
       {
         path: 'create',

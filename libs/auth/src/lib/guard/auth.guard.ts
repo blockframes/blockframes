@@ -34,14 +34,16 @@ export class AuthGuard implements CanActivate {
           }),
           tap(user => this.store.update({ user })),
           tap(user => {
-            console.log(!(user.firstName && user.lastName));
-            if (!(user.firstName && user.lastName)) return this.router.parseUrl('auth/connexion');
+            if (!(user.name && user.surname)) throw new Error('User don\'t have name and surname');
           }),
           map(user => !!user)
         )
         .subscribe({
           next: (response: boolean) => res(response),
-          error: () => res(this.router.parseUrl('auth/connexion'))
+          error: (error) => {
+            if (error.message === 'User don\'t have name and surname') res(this.router.parseUrl('auth/invitation'))
+            else {res(this.router.parseUrl('auth/connexion'))}
+          }
         });
     });
   }
