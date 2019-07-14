@@ -17,3 +17,13 @@ article {
 button {
   margin-top: 80px;
 }
+
+// extra small
+@media screen and (max-width: 599px) {
+  article {
+    width: 80%;
+  }
+  button {
+    margin-top: 40px;
+  }
+}

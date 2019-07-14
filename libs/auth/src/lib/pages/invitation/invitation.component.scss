@@ -22,3 +22,39 @@ mat-form-field {
   background-size: contain;
   background-repeat: no-repeat;
 }
+
+// extra small
+@media screen and (max-width: 599px) {
+  form {
+    width: 80%;
+    padding-left: 0;
+  }
+  article {
+    height: 80%;
+  }
+  .image {
+    height: 200px;
+    width: 200px;
+  }
+  button {
+    margin-top: 40px;
+  }
+}
+
+// small
+@media screen and (min-width: 600px) and (max-width: 959px) {
+  form {
+    width: 60%;
+    padding-left: 0;
+  }
+  article {
+    height: 80%;
+  }
+  .image {
+    height: 350px;
+    width: 400px;
+  }
+  button {
+    margin-top: 40px;
+  }
+}
