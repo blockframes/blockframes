@@ -12,8 +12,8 @@ export interface User {
   //TODO: issue#60 delete lastName and firstName
   lastName: string;
   firstName: string;
-  name: string;
-  surname: string;
+  name: string,
+  surname: string,
   biography: string;
   orgId: string;
 }
