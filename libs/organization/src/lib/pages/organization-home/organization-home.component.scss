@@ -57,7 +57,7 @@ mat-icon {
 }
 
 // extra small
-@include xs {
+@include mobile {
   article {
     width: 80%;
   }

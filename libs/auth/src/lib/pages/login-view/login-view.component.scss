@@ -37,28 +37,28 @@ mat-sidenav {
 }
 
 // large
-@include lg {
+@include large {
   mat-sidenav {
     width: 600px;
   }
 }
 
 // medium
-@include md {
+@include medium {
   mat-sidenav {
     width: 400px;
   }
 }
 
 // small
-@include sm {
+@include tablet {
   mat-sidenav {
     width: 300px;
   }
 }
 
 // extra small
-@include xs {
+@include mobile {
   mat-sidenav {
     width: 100%;
   }

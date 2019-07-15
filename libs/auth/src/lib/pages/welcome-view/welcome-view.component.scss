@@ -33,7 +33,7 @@ button {
 }
 
 // small
-@include sm {
+@include tablet {
   .image {
     height: 300px;
     width: 300px;
@@ -41,7 +41,7 @@ button {
 }
 
 // extra small
-@include xs {
+@include mobile {
   button {
     margin-top: 40px;
   }

@@ -24,7 +24,7 @@ mat-form-field {
   background-size: cover;
 }
 
-@include xs {
+@include mobile {
   form {
     width: 80%;
     padding-left: 0;
@@ -41,7 +41,7 @@ mat-form-field {
   }
 }
 
-@include sm {
+@include tablet {
   form {
     width: 60%;
     padding-left: 0;

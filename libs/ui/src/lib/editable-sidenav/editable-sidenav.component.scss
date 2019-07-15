@@ -38,7 +38,7 @@ mat-card {
 }
 
 // medium
-@include md {
+@include medium {
   mat-sidenav {
     width: 400px;
     padding-right: 50px;
@@ -52,7 +52,7 @@ mat-card {
 }
 
 // small
-@include sm {
+@include tablet {
   mat-sidenav {
     width: 300px;
     padding-right: 20px;
@@ -66,7 +66,7 @@ mat-card {
 }
 
 // extra small
-@include xs {
+@include mobile {
   mat-sidenav-content {
     width: 100%;
   }
