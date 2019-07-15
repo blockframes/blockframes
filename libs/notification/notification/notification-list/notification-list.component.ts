@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { NotificationQuery, NotificationService, Notification } from '../+state';
-import { takeWhile } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { NotificationService, NotificationQuery, Notification } from 'libs/notification/+state';
 
 @Component({
   selector: 'notification-list',
@@ -11,17 +11,17 @@ import { Observable } from 'rxjs';
 })
 export class NotificationListComponent implements OnInit, OnDestroy {
   public notifications$: Observable<Notification[]>
-
-  public isAlive = true;
+  private destroyed$ = new Subject();
 
   constructor(private service: NotificationService, private query: NotificationQuery) {}
 
   ngOnInit() {
     this.notifications$ = this.query.selectAll();
-    this.service.userNotifications.pipe(takeWhile(_ => (this.isAlive = true))).subscribe();
+    this.service.userNotifications.pipe(takeUntil(this.destroyed$)).subscribe();
   }
 
   ngOnDestroy() {
-    this.isAlive = false;
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
   }
 }

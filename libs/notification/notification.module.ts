@@ -2,28 +2,30 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'
 
-//Components
-import { NotificationListComponent } from './notification-list/notification-list.component';
-import { NotificationItemComponent } from './notification-item/notification-item.component';
+// Components
+import { NotificationListComponent } from './notification/notification-list/notification-list.component';
+import { NotificationItemComponent } from './notification/notification-item/notification-item.component';
+import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
 
-//Material
+// Modules
+import { UtilsModule } from '@blockframes/utils';
+
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
-import { UtilsModule } from 'libs/utils/src/lib/utils.module';
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationItemComponent, NotificationMenuComponent,],
+  declarations: [NotificationListComponent, NotificationItemComponent, NotificationWidgetComponent,],
   imports: [
     CommonModule,
     RouterModule,
     UtilsModule,
 
-    //Material
+    // Material
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
@@ -31,6 +33,6 @@ import { UtilsModule } from 'libs/utils/src/lib/utils.module';
     MatBadgeModule,
     MatListModule,
   ],
-  exports: [NotificationListComponent, NotificationMenuComponent,]
+  exports: [NotificationListComponent, NotificationWidgetComponent,]
 })
 export class NotificationModule { }

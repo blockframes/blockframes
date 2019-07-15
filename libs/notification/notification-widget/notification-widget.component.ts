@@ -4,16 +4,16 @@ import { User, AuthQuery } from "@blockframes/auth";
 import { NotificationQuery } from "../+state";
 
 @Component({
-  selector: 'notification-menu',
-  templateUrl: './notification-menu.component.html',
-  styleUrls: ['./notification-menu.component.scss'],
+  selector: 'notification-widget',
+  templateUrl: './notification-widget.component.html',
+  styleUrls: ['./notification-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationMenuComponent implements OnInit {
+export class NotificationWidgetComponent implements OnInit {
 
   public user$: Observable<User>;
   public notificationsCount$: Observable<number>;
-  
+
   constructor(
     private auth: AuthQuery,
     private notificationQuery: NotificationQuery,

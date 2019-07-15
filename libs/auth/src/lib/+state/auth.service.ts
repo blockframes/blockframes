@@ -49,7 +49,7 @@ export class AuthService {
     return this.db.doc<User>(`users/${uid}`).set(user);
   }
 
-  /** Upate a user */
+  /** Update a user */
   public update(uid: string, user: Partial<User>) {
     return this.db.doc<User>(`users/${uid}`).update(user);
   }

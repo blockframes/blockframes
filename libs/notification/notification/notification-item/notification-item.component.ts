@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NotificationService } from '../+state';
+import { NotificationService } from 'libs/notification/+state';
 
 @Component({
   selector: 'notification-item',
