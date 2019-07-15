@@ -30,6 +30,10 @@ import { OrgViewComponent } from './pages/org-view/org-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
+import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
+import { OrganizationPendingListComponent } from './components/organization-pending-list/organization-pending-list.component';
+import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
+import { OrganizationApprovedListComponent } from './components/organization-approved-list/organization-approved-list.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -76,7 +80,11 @@ export const organizationRoutes: Routes = [
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,
-    OrganizationHomeComponent
+    OrganizationHomeComponent,
+    OrganizationActivityViewComponent,
+    OrganizationPendingListComponent,
+    OrganizationActionItemComponent,
+    OrganizationApprovedListComponent
   ],
   exports: [
     OrgWidgetComponent
