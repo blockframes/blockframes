@@ -147,6 +147,10 @@ const ICONS_SVG = [
     name: 'circled_delete',
     url: 'assets/circled-icons/delete.svg'
   },
+  {
+    name: 'key_icon',
+    url: 'assets/icons/key_icon.svg'
+  }
 ];
 
 /**

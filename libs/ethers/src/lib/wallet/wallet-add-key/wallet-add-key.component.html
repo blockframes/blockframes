@@ -34,10 +34,7 @@
   <section *ngSwitchCase="steps.end">
     <h2>Congratulation</h2>
 
-    <!-- TODO issue 557 integrate Max's components -->
-    <p>This is a mock component, it will be replaced by "wallet-message-view"</p>
-    <button mat-raised-button color="accent" (redirectUser)="handleRedirect()">OK</button>
-    <!-- TODO -->
+    <wallet-message-view (redirectUser)="handleRedirect()"></wallet-message-view>
   </section>
   <a mat-button routerLink="/layout/o/account/wallet">Cancel</a>
   <a #downloadLink hidden>automatic_download</a>
