@@ -20,14 +20,14 @@ import { UiFormModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
-import { InvitationComponent } from './pages/invitation/invitation.component';
+import { IdentityComponent } from './pages/identity/identity.component';
 import { CongratulationComponent } from './pages/congratulation/congratulation.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
-  { path: 'invitation', component: InvitationComponent },
+  { path: 'identity', component: IdentityComponent },
   { path: 'congratulation', component: CongratulationComponent }
 ];
 
@@ -51,7 +51,7 @@ export const AuthRoutes: Routes = [
     SigninFormComponent,
     SignupFormComponent,
     WelcomeViewComponent,
-    InvitationComponent,
+    IdentityComponent,
     CongratulationComponent
   ]
 })

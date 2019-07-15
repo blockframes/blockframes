@@ -9,7 +9,7 @@ export interface User {
   };
   balance: string;
   email: string;
-  //TODO: delete lastName and firstName
+  //TODO: issue#60 delete lastName and firstName
   lastName: string;
   firstName: string;
   name: string;

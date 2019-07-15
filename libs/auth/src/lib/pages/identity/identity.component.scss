@@ -1,3 +1,5 @@
+@import 'variables';
+
 form {
   width: 30%;
   padding-left: 80px;
@@ -19,12 +21,10 @@ mat-form-field {
   height: 400px;
   width: 500px;
   background-image: url('libs/shared-assets/images/rocket.png');
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-// extra small
-@media screen and (max-width: 599px) {
+@include xs {
   form {
     width: 80%;
     padding-left: 0;
@@ -41,8 +41,7 @@ mat-form-field {
   }
 }
 
-// small
-@media screen and (min-width: 600px) and (max-width: 959px) {
+@include sm {
   form {
     width: 60%;
     padding-left: 0;

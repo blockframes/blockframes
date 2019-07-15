@@ -7,6 +7,7 @@ export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.comp
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
 export { default as staticModels } from './lib/movie/staticModels';
+export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';
 
 // Stakeholder exports
 export * from './lib/stakeholder/+state';

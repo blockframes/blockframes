@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
+import { MovieEmptyComponent } from '@blockframes/movie';
 import { OrganizationHomeComponent } from '@blockframes/organization';
 
 // Guards
