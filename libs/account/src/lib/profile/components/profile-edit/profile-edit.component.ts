@@ -37,7 +37,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     this.user$.pipe(takeWhile(_ => this.alive))
     .subscribe(user => {
       if (user !== null ) {
+        console.log(user)
         this.accountForm = new ProfileForm(user);
+        console.log(this.accountForm)
         this.persistForm = new PersistNgFormPlugin(this.authQuery, 'accountForm');
         this.persistForm.setForm(this.accountForm);
       }
@@ -51,9 +53,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     }
 
     try {
-      const { firstName, lastName, biography } = this.accountForm.value;
+      const { name, surname, phoneNumber, email, position } = this.accountForm.value;
 
-      this.authService.update(this.authQuery.user.uid, { firstName, lastName, biography })
+      this.authService.update(this.authQuery.user.uid, { name, surname, phoneNumber, email, position })
       .then(() => {
         this.snackBar.open(`account updated`, 'close', { duration: 2000 });
       })

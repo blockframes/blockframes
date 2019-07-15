@@ -1,25 +1,24 @@
-import { Validators } from '@angular/forms';
+import { Validators, FormControl } from '@angular/forms';
 import {
   FormEntity,
   EmailControl,
-  StringControl
 } from '@blockframes/utils';
 
 interface Profile {
-  uid: string
-  email: string
-  firstName: string
-  lastName: string
-  biography: string
+  name: string,
+  surname: string,
+  phoneNumber: string;
+  email: string;
+  position: string;
 }
 
 function createProfile(params?: Partial<Profile>): Profile {
   return {
-    uid: '',
+    name: '',
+    surname: '',
+    phoneNumber: '',
     email: '',
-    firstName: '',
-    lastName: '',
-    biography: '',
+    position: '',
     ...(params || {})
   } as Profile
 }
@@ -27,11 +26,11 @@ function createProfile(params?: Partial<Profile>): Profile {
 function createProfileControls(entity: Partial<Profile>) {
   const profile = createProfile(entity);
   return {
-    uid: new StringControl(profile.uid, true),
-    email: new EmailControl(profile.email, true),
-    firstName: new StringControl(profile.firstName, false, [Validators.required]),
-    lastName: new StringControl(profile.lastName, false, [Validators.required]),
-    biography: new StringControl(profile.biography),
+    name: new FormControl(profile.name, Validators.minLength(3)),
+    surname: new FormControl(profile.name, Validators.minLength(3)),
+    phoneNumber: new FormControl(profile.phoneNumber),
+    email: new EmailControl('ahahah'),
+    position: new FormControl(profile.position)
   }
 }
 

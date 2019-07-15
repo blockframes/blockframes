@@ -9,12 +9,10 @@ export interface User {
   };
   balance: string;
   email: string;
-  //TODO: issue#60 delete lastName and firstName
-  lastName: string;
-  firstName: string;
-  name: string,
-  surname: string,
-  biography: string;
+  name: string;
+  surname: string;
+  phoneNumber: string;
+  position: string,
   orgId: string;
 }
 
@@ -24,9 +22,11 @@ export interface UserForm {
 }
 
 export interface AccountForm {
-  lastName: string;
-  firstName: string;
-  biography: string;
+  name: string;
+  surname: string;
+  phoneNumber: string;
+  email: string;
+  position: string;
 }
 
 export interface AuthState {
@@ -52,9 +52,11 @@ const initialState: AuthState = {
     pwd: ''
   },
   accountForm: {
-    lastName: '',
-    firstName: '',
-    biography: '',
+    name: '',
+    surname: '',
+    phoneNumber: '',
+    email: '',
+    position: ''
   },
   isEncrypting: false,
   isBalanceLoading: false,

@@ -1,3 +1,8 @@
-form {
-  height: 100%;
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-title {
+  font-size: 16px;
+  color: var(--lightGrey);
 }
