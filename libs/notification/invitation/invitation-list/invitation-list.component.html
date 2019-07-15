@@ -1,3 +1,4 @@
-<p>
-  invitation-list works!
-</p>
+<div testId="invitations" *ngFor="let invitation of (invitations$ | async)">
+  <invitation-item [invitation]="invitation"></invitation-item>
+  <mat-divider></mat-divider>
+</div>

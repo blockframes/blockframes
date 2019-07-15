@@ -1,12 +1,13 @@
 <div *ngIf="(user$ | async) as user">
   <button mat-icon-button [matMenuTriggerFor]="notifications" class="notification-button">
     <mat-icon
-      *ngIf="(notificationsCount$ | async) as count; else empty"
+      *ngIf="(notificationsCount$ | async) as count; else: empty"
       svgIcon="notifications"
       [matBadge]="count"
       matBadgeColor="primary"
       matBadgeSize="medium"
-      class="notification-icon">
+      class="notification-icon"
+    >
     </mat-icon>
     <ng-template #empty>
       <mat-icon svgIcon="notifications" class="notification-icon"></mat-icon>
@@ -14,7 +15,8 @@
   </button>
 </div>
 <mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
-  <mat-list>
-    <notification-list></notification-list>
-  </mat-list>
+  <ng-container class="notification-list">
+    <mat-list> <invitation-list></invitation-list> </mat-list>
+    <mat-list> <notification-list></notification-list> </mat-list>
+  </ng-container>
 </mat-menu>

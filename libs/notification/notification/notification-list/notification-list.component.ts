@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
-import { NotificationService, NotificationQuery, Notification } from 'libs/notification/+state';
+import { NotificationService, NotificationQuery, Notification } from 'libs/notification/notification/+state';
 import { Order } from '@datorama/akita';
 
 @Component({
@@ -18,7 +18,6 @@ export class NotificationListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.notifications$ = this.query.selectAll({
-      filterBy: entity => entity.type !== 'invitation',
       sortBy: 'date',
       sortByOrder: Order.DESC
     });

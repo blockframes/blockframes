@@ -1,13 +1,11 @@
-// tslint:disable-next-line: interface-over-type-literal
-export type Notification = {
+export interface Invitation {
   id: string;
   app: string;
-  type : 'notification' | 'invitation';
   message: string;
   userId: string[];
   path: string;
   docID: DocID;
-  isRead: boolean;
+  isAccepted: 'accepted' | 'declined' | 'pending';
   date: number;
 };
 

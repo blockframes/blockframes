@@ -1,3 +1,14 @@
-<p>
-  invitation-item works!
-</p>
+<div class="container">
+  <span>
+    <mat-icon class="app-icon" svgIcon="{{ invitation.app }}"></mat-icon>
+    <p class="text">{{ invitation.message }}</p>
+  </span>
+  <div fxLayoutAlign="space-around center">
+    <button class="mat-elevation-z0" mat-raised-button color="primary">Accept</button>
+    <button class="mat-elevation-z0" mat-raised-button color="warn">Decline</button>
+  </div>
+  <p class="date">
+    Received {{ invitation.date.toDate() | date: 'MMM dd yyyy' }} at
+    {{ invitation.date.toDate() | date: 'hh:mm a' }}
+  </p>
+</div>

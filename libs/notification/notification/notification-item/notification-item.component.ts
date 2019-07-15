@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NotificationService } from 'libs/notification/+state';
+import { NotificationService, Notification } from 'libs/notification/notification/+state';
 
 @Component({
   selector: 'notification-item',
@@ -9,7 +9,7 @@ import { NotificationService } from 'libs/notification/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationItemComponent {
-  @Input() notification: any;
+  @Input() notification: Notification;
 
   private errorMessage = "This url doesn't exist."
 
