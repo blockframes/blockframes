@@ -1,5 +1,5 @@
 <section class="notification-list">
-  <div testId="notifications" *ngFor="let notification of (notifications$ | async | sort: 'date')">
+  <div testId="notifications" *ngFor="let notification of (notifications$ | async)">
     <notification-item [notification]="notification"></notification-item>
     <mat-divider></mat-divider>
   </div>

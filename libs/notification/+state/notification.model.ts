@@ -2,6 +2,7 @@
 export type Notification = {
   id: string;
   app: string;
+  type : 'notification' | 'invitation';
   message: string;
   userId: string[];
   path: string;

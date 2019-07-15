@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
 
 // Components
 import { NotificationListComponent } from './notification/notification-list/notification-list.component';
 import { NotificationItemComponent } from './notification/notification-item/notification-item.component';
 import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
+import { InvitationListComponent } from './invitation/invitation-list/invitation-list.component';
+import { InvitationItemComponent } from './invitation/invitation-item/invitation-item.component';
 
 // Modules
 import { UtilsModule } from '@blockframes/utils';
@@ -19,7 +21,13 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationItemComponent, NotificationWidgetComponent,],
+  declarations: [
+    NotificationListComponent,
+    NotificationItemComponent,
+    NotificationWidgetComponent,
+    InvitationListComponent,
+    InvitationItemComponent
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -31,8 +39,8 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
-    MatListModule,
+    MatListModule
   ],
-  exports: [NotificationListComponent, NotificationWidgetComponent,]
+  exports: [NotificationWidgetComponent]
 })
-export class NotificationModule { }
+export class NotificationModule {}
