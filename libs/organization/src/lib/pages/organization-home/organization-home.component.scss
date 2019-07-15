@@ -1,3 +1,5 @@
+@import 'variables';
+
 section {
   background-color: var(--whiteBackground);
   height: 100%;
@@ -55,7 +57,7 @@ mat-icon {
 }
 
 // extra small
-@media screen and (max-width: 599px) {
+@include xs {
   article {
     width: 80%;
   }

@@ -1,3 +1,5 @@
+@import 'variables';
+
 section {
   height: 100%;
   background-color: var(--whiteBackground);
@@ -31,7 +33,7 @@ button {
 }
 
 // small
-@media screen and (min-width: 600px) and (max-width: 959px) {
+@include sm {
   .image {
     height: 300px;
     width: 300px;
@@ -39,7 +41,7 @@ button {
 }
 
 // extra small
-@media screen and (max-width: 599px) {
+@include xs {
   button {
     margin-top: 40px;
   }

@@ -1,3 +1,5 @@
+@import 'variables';
+
 mat-sidenav-container {
   height: 100%;
   padding-top: 50px;
@@ -36,7 +38,7 @@ mat-card {
 }
 
 // medium
-@media screen and (min-width: 960px) and (max-width: 1279px) {
+@include md {
   mat-sidenav {
     width: 400px;
     padding-right: 50px;
@@ -50,7 +52,7 @@ mat-card {
 }
 
 // small
-@media screen and (min-width: 600px) and (max-width: 959px) {
+@include sm {
   mat-sidenav {
     width: 300px;
     padding-right: 20px;
@@ -64,7 +66,7 @@ mat-card {
 }
 
 // extra small
-@media screen and (max-width: 599px) {
+@include xs {
   mat-sidenav-content {
     width: 100%;
   }
