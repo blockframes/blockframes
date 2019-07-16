@@ -21,7 +21,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  public defaultPoster : string = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
+  public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
   public selection = new SelectionModel<MovieWithMetaData>(true, []);
   public displayedColumns: string[] = [
     'id',
@@ -166,7 +166,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   filterPredicate(data: Movie, filter) {
     const dataStr = data.title.original + data.productionYear + data.directorName;
-    return dataStr.toLowerCase().indexOf(filter) != -1; 
+    return dataStr.toLowerCase().indexOf(filter) !== -1; 
   }
 
 }

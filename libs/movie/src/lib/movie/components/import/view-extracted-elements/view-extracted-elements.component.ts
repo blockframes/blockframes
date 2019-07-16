@@ -155,7 +155,7 @@ export class ViewExtractedElementsComponent {
         }
 
         if (!isNaN(Number(m[8]))) {
-          movie.productionYear = parseInt(m[8]);
+          movie.productionYear = parseInt(m[8], 10);
         }
 
         this.getImage(m[17])
@@ -167,18 +167,18 @@ export class ViewExtractedElementsComponent {
             } else { return false; }
           })
           .then(_ => this._validateMovie(movie))
-          .then(movie => {
+          .then(m => {
             // check if movie is already in database
-            movie.id = this.movieQuery.movieExists(movie.title.original, movie.productionYear, movie.directorName);
-            return movie;
+            m.id = this.movieQuery.movieExists(m.title.original, m.productionYear, m.directorName);
+            return m;
           })
-          .then(movie => {
+          .then(m => {
             // @todo use createMovie of movieModel ?
-            if (movie.id !== undefined) {
-              this.moviesToUpdate.data.push(movie);
+            if (m.id !== undefined) {
+              this.moviesToUpdate.data.push(m);
               this.moviesToUpdate.data = [... this.moviesToUpdate.data];
             } else {
-              this.moviesToCreate.data.push(movie);
+              this.moviesToCreate.data.push(m);
               this.moviesToCreate.data = [... this.moviesToCreate.data];
             }
           })
@@ -358,7 +358,7 @@ export class ViewExtractedElementsComponent {
         const movie = {
           title: { original: m[0] },
           directorName: m[2],
-          productionYear: parseInt(m[1]),
+          productionYear: parseInt(m[1], 10),
         } as Partial<Movie>;
 
         const movieId = this.movieQuery.movieExists(movie.title.original, movie.productionYear, movie.directorName);

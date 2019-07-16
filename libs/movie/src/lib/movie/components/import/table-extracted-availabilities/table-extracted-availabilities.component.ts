@@ -142,7 +142,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
    */
   filterPredicate(data: MovieAvailability, filter) {
     const dataStr = data.movieId + data.start + data.end;
-    return dataStr.toLowerCase().indexOf(filter) != -1; 
+    return dataStr.toLowerCase().indexOf(filter) !== -1; 
   }
 
 }
