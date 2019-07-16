@@ -4,22 +4,24 @@ import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryDB } from '../+state';
 import { switchMap, map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
+import { combineLatest, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-
-const deliveryQuery = (movieId: string): Query<DeliveryDB[]> => ({
-  path: `deliveries`,
-  queryFn: ref => ref.where('movieId', '==', movieId),
+const deliveryQuery = (deliveryId: string): Query<DeliveryDB> => ({
+  path: `deliveries/${deliveryId}`,
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.orgId}`
+      path: `orgs/${stakeholder.id}`
     })
   })
 });
 
 @Injectable({ providedIn: 'root' })
 export class DeliveryListGuard extends StateListGuard<Delivery> {
-  urlFallback = 'layout';
+  public get urlFallback() {
+    return `layout/o/${this.movieQuery.getActiveId()}/template-picker`;
+  }
 
   constructor(
     private fireQuery: FireQuery,
@@ -31,13 +33,27 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
   }
 
   get query() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => {
-        const query = deliveryQuery(movieId);
-        return this.fireQuery.fromQuery<DeliveryDB[]>(query);
-      }),
-      map(deliveries => deliveries.map(delivery =>
-        modifyTimestampToDate(delivery)))
-    );
+    return this.movieQuery
+      .selectActive(movie => movie.deliveryIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) return of([]);
+          const queries = ids.map(id => {
+            return this.fireQuery.fromQuery<DeliveryDB>(deliveryQuery(id)).pipe(
+              catchError(e => {
+                // TODO: Only catch NotFoundError => ISSUE#627
+                return of(undefined);
+              })
+            );
+          });
+          return combineLatest(queries);
+        }),
+        map((deliveries: DeliveryDB[]) => {
+          if (deliveries.length === 0) throw new Error('There is no deliveries');
+          return deliveries
+            .filter(delivery => !!delivery)
+            .map((delivery: DeliveryDB) => modifyTimestampToDate(delivery));
+        })
+      );
   }
 }

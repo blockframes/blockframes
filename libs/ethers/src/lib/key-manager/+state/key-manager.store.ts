@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { StoreConfig, EntityStore, EntityState, ID, guid, ActiveState } from '@datorama/akita';
+import { StoreConfig, EntityStore, EntityState, ActiveState } from '@datorama/akita';
 
 export interface Key {
+  name: string,
   ensDomain: string,
   keyStore: string,
   address: string,

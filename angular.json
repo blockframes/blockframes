@@ -21,6 +21,11 @@
             "index": "apps/ip-upload/ip-upload/src/index.html",
             "main": "apps/ip-upload/ip-upload/src/main.ts",
             "polyfills": "apps/ip-upload/ip-upload/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles"
+              ]
+            },
             "tsConfig": "apps/ip-upload/ip-upload/tsconfig.app.json",
             "assets": [
               "apps/ip-upload/ip-upload/src/favicon.ico",
@@ -60,7 +65,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -89,7 +94,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -118,7 +123,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -411,6 +416,11 @@
             "index": "apps/movie-financing/movie-financing/src/index.html",
             "main": "apps/movie-financing/movie-financing/src/main.ts",
             "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles"
+              ]
+            },
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
             "assets": [
               "apps/movie-financing/movie-financing/src/favicon.ico",
@@ -449,7 +459,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ]
             },
@@ -477,7 +487,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ]
             },
@@ -505,7 +515,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ]
             }
@@ -688,6 +698,11 @@
             "index": "apps/delivery/delivery/src/index.html",
             "main": "apps/delivery/delivery/src/main.ts",
             "polyfills": "apps/delivery/delivery/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles"
+              ]
+            },
             "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
             "assets": [
               "apps/delivery/delivery/src/favicon.ico",
@@ -726,7 +741,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -755,7 +770,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -784,7 +799,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -879,6 +894,11 @@
             "index": "apps/catalog/catalog/src/index.html",
             "main": "apps/catalog/catalog/src/main.ts",
             "polyfills": "apps/catalog/catalog/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles"
+              ]
+            },
             "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
             "assets": [
               "apps/catalog/catalog/src/favicon.ico",
@@ -917,7 +937,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -946,7 +966,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true
@@ -975,7 +995,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "6mb"
+                  "maximumError": "8mb"
                 }
               ],
               "serviceWorker": true

@@ -4,7 +4,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 export interface Wallet {
   ensDomain: string,
   address: string,
-  balance: string,
   hasERC1077: boolean,
 }
 
@@ -15,7 +14,6 @@ export function createWallet(wallet: Partial<Wallet>) {
 const initialState: Wallet = {
   ensDomain: null,
   address: null,
-  balance: null,
   hasERC1077: false
 };
 

@@ -3,13 +3,15 @@ import { prepareNotification, triggerNotifications, customMessage } from './noti
 import {
   getDocument,
   getCount,
+  getOrgsOfDocument
+} from './data/internals';
+import {
   Delivery,
   DocID,
   Organization,
   Movie,
   SnapObject,
-  getOrgsOfDocument
-} from './utils';
+} from './data/types';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,

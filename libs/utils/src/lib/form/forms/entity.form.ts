@@ -1,11 +1,15 @@
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Validator, AsyncValidator } from './types';
+import { Observable } from 'rxjs';
 
 /** Generic EntityControl */
 export type EntityControl<T> = { [key in keyof T]: FormControl | FormGroup | FormArray };
 
 /** Generic FormGroup for Entity */
-export class FormEntity<E, Control extends EntityControl<E>> extends FormGroup {
+export class FormEntity<E, Control extends EntityControl<E> = EntityControl<E>> extends FormGroup {
+  value: E;
+  valueChanges: Observable<E>
+
   constructor(controls: Control, validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }

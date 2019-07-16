@@ -8,14 +8,14 @@ import { Subscription } from 'rxjs';
 
 export const permissionsQuery = (orgId: string): Query<Permissions> => ({
   path: `permissions/${orgId}`,
-  userAppsPermissions: (org: Permissions) => ({
-    path: `permissions/${org.orgId}/userAppsPermissions`
+  userAppsPermissions: (permissions: Permissions) => ({
+    path: `permissions/${permissions.orgId}/userAppsPermissions`
   }),
-  userDocsPermissions: (org: Permissions) => ({
-    path: `permissions/${org.orgId}/userDocsPermissions`
+  userDocsPermissions: (permissions: Permissions) => ({
+    path: `permissions/${permissions.orgId}/userDocsPermissions`
   }),
-  orgDocsPermissions: (org: Permissions) => ({
-    path: `permissions/${org.orgId}/orgDocsPermissions`
+  orgDocsPermissions: (permissions: Permissions) => ({
+    path: `permissions/${permissions.orgId}/orgDocsPermissions`
   })
 });
 

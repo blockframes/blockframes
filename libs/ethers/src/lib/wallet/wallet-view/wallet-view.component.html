@@ -1,39 +1,28 @@
 <main>
-  <ng-container *ngIf="!(isLoading$ | async); else walletLoading">
     <ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
       <header fxLayout="row" fxLayoutAlign="start center">
         <h2 fxFlex="noshrink">Wallet and Keyring</h2>
-        <div fxFlex="grow" class=spacer></div>
+        <div fxFlex="grow" class="spacer"></div>
         <div fxFlex="noshrink">
           <button mat-flat-button (click)="importKey()">
             <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
             Import Key
           </button>
-          <button mat-flat-button (click)="addKey()">
+          <a mat-flat-button routerLink="/layout/o/account/wallet/add">
             <mat-icon>add</mat-icon>
             Add Key
-          </button>
+          </a>
         </div>
       </header>
       <section>
         <h3>My Profile</h3>
-        <div class="wallet-profile">
-
-          <!-- TODO replace by Max's component -->
-          <eth-blockie mat-card-avatar size="40" [address]="wallet.address"></eth-blockie>
-
-          <!-- TODO replace by Max's component -->
-          <h4>{{wallet.ensDomain}}</h4>
-          <a [href]="explorerUrl + wallet.address" target="_blank" rel="noopener">
-            {{wallet.address}}
-          </a>
-
-        </div>
+        <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="36px">
+          <wallet-blockie fxFlex size="40" [address]="wallet.address"></wallet-blockie>
+          <wallet-address-view fxFlex [ethAddress]="wallet.address" [ensName]="ensName$ | async"></wallet-address-view>
+        </article>
         <key-manager-list [ensDomain]="wallet.ensDomain" (deleteKey)="deleteKey($event)"></key-manager-list>
       </section>
-
     </ng-container>
-  </ng-container>
   <ng-template #walletLoading>
     <div class="wallet-loading">
       <p>We are loading your informations...</p>

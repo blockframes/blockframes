@@ -9,6 +9,8 @@ export const persistenceSettings = {
 // Firebase
 // ========
 
+export const appUrl = 'https://staging.blockframes.io';
+
 export const firebase = {
   apiKey: 'AIzaSyAmos48yDq2xnxy9OPtQpLMiE4NeyJlA5Y',
   authDomain: 'blockframes-staging.firebaseapp.com',

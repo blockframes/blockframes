@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input } from "@angular/core";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Key } from "../../key-manager/+state";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
+import { validMnemonic } from '@blockframes/utils';
 
 @Component({
   selector: 'wallet-import-key-form',
@@ -14,8 +15,9 @@ export class WalletImportKeyFormComponent {
   isMnemonic = false;
   keyObject: Key;
   mnemonic = '';
-  mnemonicField = new FormControl(''); // TODO use Max's custom mnemonic control
+  mnemonicField = new FormControl('', [Validators.required, validMnemonic]);
   
+  @Input() lockMnemonic = false;
   @Output() importKey = new EventEmitter<Key>();
   @Output() importMnemonic = new EventEmitter<string>();
 

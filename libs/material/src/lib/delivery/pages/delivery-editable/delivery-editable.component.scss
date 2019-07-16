@@ -58,6 +58,12 @@ section {
   border: solid 1px var(--primary);
 }
 
+.download-delivery-contract {
+  @extend .save-template;
+  border-radius: 0;
+
+}
+
 .save-template:hover:enabled {
   background-color: var(--primary);
   color: #FFFFFF;

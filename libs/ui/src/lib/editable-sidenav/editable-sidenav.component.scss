@@ -1,0 +1,85 @@
+@import 'variables';
+
+mat-sidenav-container {
+  height: 100%;
+  padding-top: 50px;
+  padding-left : 200px;
+}
+
+.padding-right {
+  padding-right: 200px;
+}
+
+mat-sidenav-content {
+  width: 55%;
+}
+
+mat-sidenav {
+  width: 600px;
+  height: 100%;
+  background-color: var(--whiteBackground);
+  padding-top: 50px;
+  padding-right: 200px;
+  padding-bottom: 50px;
+  padding-left: 30px;
+}
+
+mat-card-header {
+  width: 100%;
+}
+
+mat-card {
+  width: 100%;
+  height: 100%;
+}
+
+.mat-drawer-side.mat-drawer-end {
+  border-left: none;
+}
+
+// medium
+@include medium {
+  mat-sidenav {
+    width: 400px;
+    padding-right: 50px;
+  }
+  mat-sidenav-container {
+    padding-left : 50px;
+  }
+  .padding-right {
+    padding-right: 50px;
+  }
+}
+
+// small
+@include tablet {
+  mat-sidenav {
+    width: 300px;
+    padding-right: 20px;
+  }
+  mat-sidenav-container {
+    padding-left : 20px;
+  }
+  .padding-right {
+    padding-right: 20px;
+  }
+}
+
+// extra small
+@include mobile {
+  mat-sidenav-content {
+    width: 100%;
+  }
+  mat-sidenav {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  mat-sidenav-container {
+    padding-left : 10px;
+    padding-right: 10px;
+  }
+  .padding-right {
+    padding-right: 10px;
+  }
+}

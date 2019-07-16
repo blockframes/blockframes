@@ -8,8 +8,8 @@ import { switchMap, tap } from 'rxjs/operators';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
-  members: (org: Organization) =>
-    org.userIds.map(id => ({
+  members: (organization: Organization) =>
+    organization.userIds.map(id => ({
       path: `users/${id}`
     }))
 });
@@ -35,7 +35,7 @@ export class OrganizationGuard {
             };
             return this.fireQuery.fromQuery<Organization>(orgQuery(user.orgId));
           }),
-          tap(org => this.store.update({org}))
+          tap(organization => this.store.update({org: organization}))
         )
         .subscribe({
           next: (result: Organization) => {

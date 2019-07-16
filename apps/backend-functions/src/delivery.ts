@@ -1,17 +1,8 @@
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import {
-  Organization,
-  getDocument,
-  getCollection,
-  Stakeholder,
-  Movie,
-  Material,
-  getCount,
-  Delivery,
-  isTheSame,
-  getOrgsOfDocument
-} from './utils';
+import { getDocument, getCollection, getCount, getOrgsOfDocument } from './data/internals';
+import { Organization, Stakeholder, Movie, Material, Delivery } from './data/types';
+import { isTheSame } from './utils';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,

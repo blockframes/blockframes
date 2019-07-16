@@ -9,9 +9,10 @@ import { MaterialStore, MaterialQuery, MaterialService } from '../../../material
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery } from '../../+state';
+import { DeliveryQuery, Delivery, DeliveryStore } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { applyTransaction } from '@datorama/akita';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-editable',
@@ -34,6 +35,7 @@ export class DeliveryEditableComponent implements OnInit {
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
+    private store: DeliveryStore,
     private service: DeliveryService,
     private materialService: MaterialService,
     private snackBar: MatSnackBar,
@@ -87,8 +89,8 @@ export class DeliveryEditableComponent implements OnInit {
     });
   }
 
-  private deleteDelivery() {
-    this.service.deleteDelivery();
+  private async deleteDelivery() {
+    await this.service.deleteDelivery();
     this.router.navigate([`/layout/o/${this.movieQuery.getActiveId()}/list`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
@@ -148,5 +150,11 @@ export class DeliveryEditableComponent implements OnInit {
 
   public signDelivery() {
     this.service.signDelivery();
+  }
+
+  public get deliveryContractURL$(): Observable<string> {
+    return this.delivery$.pipe(
+      map(({id}) => `/delivery/contract.pdf?deliveryId=${id}`)
+    )
   }
 }

@@ -36,15 +36,13 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
     this.onChange();
   }
 
-  public submit(org: Organization) {
-    const sh = createMovieStakeholder({ orgId: org.id });
-
-    // TODO: handle promises correctly (update loading status, send back error report, etc).
-    this.service.add(this.movieQuery.getActiveId(), sh);
+  public submit(organization: Partial<Organization>) {
+    // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
+    this.service.addStakeholder(this.movieQuery.getActive(), organization);
   }
 
-  public displayFn(org?: Organization): string | undefined {
-    return org ? org.name : undefined;
+  public displayFn(organization?: Organization): string | undefined {
+    return organization ? organization.name : undefined;
   }
 
   private async listOrgsByName(prefix: string): Promise<Organization[]> {

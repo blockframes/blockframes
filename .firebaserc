@@ -15,6 +15,7 @@
     "demo3": "blockframes-demo-3",
     "demo4": "blockframes-demo-4",
     "demo5": "blockframes-demo-5",
-    "ci": "blockframes-ci"
+    "ci": "blockframes-ci",
+    "max": "blockframes-max"
   }
 }

@@ -4,13 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
+import { MovieEmptyComponent } from '@blockframes/movie';
+import { OrganizationHomeComponent } from '@blockframes/organization';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
 import { OrgFormComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
-import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
-import { OrganizationHomeComponent } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },

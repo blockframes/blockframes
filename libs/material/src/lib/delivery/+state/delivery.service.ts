@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder } from '@blockframes/movie';
+import { MovieQuery, Stakeholder, createDeliveryStakeholder, StakeholderService, Movie } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
 import { MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
+import { DeliveryStore } from './delivery.store';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -28,6 +29,7 @@ export class DeliveryService {
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
     private permissionsService: PermissionsService,
+    private shService: StakeholderService,
     private db: FireQuery
   ) {}
 
@@ -86,58 +88,60 @@ export class DeliveryService {
    */
   public async addDelivery(templateId?: string) {
     const id = this.db.createId();
-    const stakeholder = this.query.findActiveStakeholder();
+    const organization = this.organizationQuery.getValue().org;
     const movieId = this.movieQuery.getActiveId();
+    const movieDoc = this.db.doc(`movies/${movieId}`);
     const delivery = createDelivery({ id, movieId, validated: [] });
-    const deliveryStakeholder = this.makeDeliveryStakeholder(
-      stakeholder.id,
-      stakeholder.orgId,
-      ['canValidateDelivery'],
-      true
-    );
 
-    // Create document permissions
-    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const movieSnap = await tx.get(movieDoc.ref);
+      const deliveryIds = movieSnap.data().deliveryIds || [];
 
-    const promises = [];
+      // Create document and permissions
+      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
-    promises.push(
-      this.db
-        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-        .set(deliveryStakeholder)
-    );
+      // If there is a templateId, copy template materials to the delivery
+      if (!!templateId) {
+        const template = this.templateQuery.getEntity(templateId);
+        this.copyMaterials(delivery, template);
+      }
 
-    if (!!templateId) {
-      const template = this.templateQuery.getEntity(templateId);
-      promises.push(this.copyMaterials(delivery, template));
-    }
+      // Create the stakeholder in the sub-collection
+      await this.shService.addStakeholder(delivery, organization, true, tx);
 
-    await Promise.all(promises);
+      // Update the movie deliveryIds
+      const nextDeliveryIds = [...deliveryIds, delivery.id];
+      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
+    })
 
     return id;
   }
 
   /** Add a new delivery by copying the movie's materials */
   public async addDeliveryWithMovieMaterials() {
-    const movie = this.movieQuery.getActive();
     const id = this.db.createId();
-    const stakeholder = this.query.findActiveStakeholder();
+    const movie = this.movieQuery.getActive();
+    const movieDoc = this.db.doc(`movies/${movie.id}`);
+    const organization = this.organizationQuery.getValue().org;
     const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
-    const deliveryStakeholder = this.makeDeliveryStakeholder(
-      stakeholder.id,
-      stakeholder.orgId,
-      ['canValidateDelivery'],
-      true
-    );
 
-    await this.permissionsService.createDocAndPermissions(delivery, stakeholder.orgId);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const movieSnap = await tx.get(movieDoc.ref);
+      const deliveryIds = movieSnap.data().deliveryIds || [];
 
-    await Promise.all([
-      this.copyMaterials(delivery, movie),
-      this.db
-        .doc<Stakeholder>(`deliveries/${id}/stakeholders/${deliveryStakeholder.id}`)
-        .set(deliveryStakeholder)
-    ]);
+      // Create document and permissions
+      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+
+      // Copy movie materials to the delivery
+      this.copyMaterials(delivery, movie)
+
+      // Create the stakeholder in the sub-collection
+      await this.shService.addStakeholder(delivery, organization, true, tx);
+
+      // Update the movie deliveryIds
+      const nextDeliveryIds = [...deliveryIds, delivery.id];
+      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
+    })
 
     return id;
   }
@@ -191,18 +195,18 @@ export class DeliveryService {
 
   /** Deletes delivery and all the sub-collections in firebase */
   public async deleteDelivery() {
-    const id = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${id}`).delete();
+    const delivery = this.query.getActive();
+    this.db.doc<Delivery>(`deliveries/${delivery.id}`).delete();
   }
 
   /** Sign array validated of delivery with stakeholder logged */
   public signDelivery() {
     const delivery = this.query.getActive();
-    const orgIdsOfUser = this.organizationQuery.getValue().org.id;
+    const organizationId = this.organizationQuery.getValue().org.id;
     const { validated } = delivery;
     const { stakeholders } = delivery;
 
-    const stakeholderSignee = stakeholders.find(({ orgId }) => orgIdsOfUser.includes(orgId));
+    const stakeholderSignee = stakeholders.find(({ id }) => organizationId === id);
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
@@ -234,11 +238,10 @@ export class DeliveryService {
 
   private makeDeliveryStakeholder(
     id: string,
-    orgId: string,
     authorizations: string[],
     isAccepted: boolean
   ) {
-    return createDeliveryStakeholder({ id, orgId, authorizations, isAccepted });
+    return createDeliveryStakeholder({ id, authorizations, isAccepted });
   }
 
   /** Add a stakeholder to the delivery */
@@ -252,7 +255,6 @@ export class DeliveryService {
       const authorizations = [];
       const newDeliveryStakeholder = this.makeDeliveryStakeholder(
         movieStakeholder.id,
-        movieStakeholder.orgId,
         authorizations,
         false
       );

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Wallet, WalletService } from "../+state";
+import { Wallet, WalletService, WalletQuery } from "../+state";
 import { Router, UrlTree, CanActivate, CanDeactivate } from "@angular/router";
 import { Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
-
+import { KeyManagerQuery } from '../../key-manager/+state';
 
 @Injectable({ providedIn: 'root' })
 export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {
 
-  urlFallback = 'layout/account';
+  urlFallback = 'layout/o/account';
   subscription: Subscription;
 
   constructor(
@@ -27,12 +27,11 @@ export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {
         next: result => res(!!result),
         error: err => res(this.router.parseUrl(this.urlFallback))
       });
-    })
+    });
   }
 
   canDeactivate() {
     this.subscription.unsubscribe();
-    this.walletService.cleanWallet();
     return true;
   }
 }

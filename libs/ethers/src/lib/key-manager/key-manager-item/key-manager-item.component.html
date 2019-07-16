@@ -1,24 +1,34 @@
-
-<mat-card>
-  <mat-card-content fxLayout="row" fxLayoutAlign="space-between center">
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <svg width="100" height="40">
-        <circle cx="20" cy="20" r="20" [attr.fill]="'#'+address.start"></circle>
-        <circle cx="40" cy="20" r="20" [attr.fill]="'#'+address.end"></circle>
-      </svg>
-      <div>{{'0x' + address.start + '...' + address.end}}</div>
-    </mat-card-header>
-
+<ng-container *ngIf="!isSmall; else smallVersion">
+    <mat-card-header fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon svgIcon="key_icon" aria-hidden="false" aria-label="Key icon">key_icon</mat-icon>
+      </mat-card-header>
+  <mat-card [ngStyle]="{ 'background-color': backgroundColor }">
+    <mat-card-content>
+      <p>{{ keyObject.name }}</p>
+      <p>Lorem Ipsum</p>
+    </mat-card-content>
     <mat-card-actions>
-      <ng-container *ngIf="active; else notActive">
-        <button mat-icon-button (click)="exportKey()"><mat-icon>visibility</mat-icon></button>
-        <button mat-icon-button (click)="lockKey()"><mat-icon>close</mat-icon></button>
-      </ng-container>
-      <ng-template #notActive>
-        <button mat-icon-button (click)="unlockKey()"><mat-icon>lock</mat-icon></button>
-        <a mat-icon-button [href]="jsonKeystore" [download]="keyName"><mat-icon>cloud_download</mat-icon></a>
-        <button mat-icon-button (click)="deleteKey()"><mat-icon>delete</mat-icon></button>
-      </ng-template>
+      <a mat-icon-button [href]="jsonKeystore">
+        <mat-icon class="material-icons-outlined">cloud_download</mat-icon>
+      </a>
+      <button mat-icon-button (click)="deleteKeyEvent.emit(key)">
+        <mat-icon class="material-icons-outlined">delete</mat-icon>
+      </button>
     </mat-card-actions>
-  </mat-card-content>
-</mat-card>
+  </mat-card>
+</ng-container>
+<ng-template #smallVersion>
+    <mat-card-header>
+        <mat-icon svgIcon="key-icon" aria-hidden="false" aria-label="Key icon"></mat-icon>
+      </mat-card-header>
+  <mat-card
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    [ngStyle]="{ 'background-color': backgroundColor }">
+    <mat-card-content>
+      <span>{{ keyObject.name }}</span></mat-card-content>
+    <mat-card-actions>
+      <mat-icon (click)="selectedKey.emit(key)">keyboard_arrow_right</mat-icon>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>

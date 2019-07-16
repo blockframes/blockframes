@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthQuery, User } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,8 @@ import { Observable } from 'rxjs';
 })
 export class ProfileViewComponent implements OnInit {
 
-  user$: Observable<User>;
+  public user$: Observable<User>;
+  @Output() editing = new EventEmitter<string>();
 
   constructor(public query: AuthQuery){}
 

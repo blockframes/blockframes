@@ -5,8 +5,8 @@ import {
   yearValidators,
   ethereumPublicAddressValidators,
   ethereumPrivateAddressValidators,
-  ethereumMnemonicValidators,
-  urlValidators
+  urlValidators,
+  validMnemonic
 } from './validators/validators';
 
 /* Checks if input is a valid email */
@@ -33,7 +33,7 @@ export class EthereumPublicKeyControl extends FormControl{
 /* Checks if input is a valid Ethereum Mnemonic */
 export class EthereumMnemonicControl extends FormControl{
   constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : ethereumMnemonicValidators);
+    super({ value, disabled }, validators !== undefined ? validators : validMnemonic);
   }
 }
 

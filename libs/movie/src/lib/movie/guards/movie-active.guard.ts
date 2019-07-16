@@ -8,7 +8,7 @@ export const movieActiveQuery = (id: string): Query<Movie> => ({
   stakeholders: (movie: Movie) => ({
     path: `movies/${movie.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.orgId}`
+      path: `orgs/${stakeholder.id}`
     })
   })
 });

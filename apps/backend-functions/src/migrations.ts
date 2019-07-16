@@ -1,4 +1,5 @@
-import { getCollection, getCount, Organization, Material } from './utils';
+import { getCollection, getCount } from './data/internals';
+import { Organization, Material } from './data/types';
 import { db, serverTimestamp } from './firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
 import { setRestoreFlag } from './backup';
@@ -28,7 +29,7 @@ function migrateMaterialToNewCollection(
   material: Material
 ) {
   if (template.materialsId.includes(material.id)) {
-    const materialRef = db.doc(`templates/${template.id}/materials/${material.id}`)
+    const materialRef = db.doc(`templates/${template.id}/materials/${material.id}`);
     batch.set(materialRef, material);
   }
 }

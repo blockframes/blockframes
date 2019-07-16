@@ -13,46 +13,46 @@ export class TemplateService {
     private query: TemplateQuery,
     private store: TemplateStore,
     private materialQuery: MaterialQuery,
-    private orgQuery: OrganizationQuery,
+    private organizationQuery: OrganizationQuery,
     private permissionsService: PermissionsService
   ) {}
 
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
-    const org = this.orgQuery.getValue().org;
+    const organization = this.organizationQuery.getValue().org;
+    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
     const template = createTemplate({
       id: templateId,
       name: templateName,
-      orgId: org.id
+      orgId: organization.id
     });
 
-    // Create document permissions
-    await this.permissionsService.createDocAndPermissions(template, org.id);
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const organizationSnap = await tx.get(organizationDoc.ref);
+      const templateIds = organizationSnap.data().templateIds || [];
 
-    // Push the new id in org.templateIds
-    await this.db
-      .doc<Organization>(`orgs/${org.id}`)
-      .update({ templateIds: [...org.templateIds, templateId] });
+      // Create document permissions
+      await this.permissionsService.createDocAndPermissions(template, organization, tx);
+
+      // Update the organization templateIds
+      const nextTemplateIds = [...templateIds, template.id];
+      tx.update(organizationDoc.ref, {templateIds: nextTemplateIds});
+    })
 
     return templateId;
   }
 
-  public deleteTemplate(templateId: string): Promise<void> {
-    const org = this.orgQuery.getValue().org;
+  public async deleteTemplate(templateId: string): Promise<void> {
+    const org = this.organizationQuery.getValue().org;
     const templateIds = org.templateIds.filter(id => id !== templateId);
-    const orgDoc = this.db.doc<Organization>(`orgs/${org.id}`);
+    const organizationDoc = this.db.doc<Organization>(`orgs/${org.id}`);
     const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
 
-    const batch = this.db.firestore.batch();
-    // Delete the template from the templates collection
-    batch.delete(templateDoc.ref);
-    // Delete templateId from org.templateIds
-    batch.update(orgDoc.ref, { templateIds });
-    // Remove the template from the templates store
-    this.store.remove(templateId);
-
-    return batch.commit();
-
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      tx.delete(templateDoc.ref);
+      tx.update(organizationDoc.ref, { templateIds })
+      this.store.remove(templateId)
+    })
   }
 
   public deleteMaterial(id: string) {
@@ -94,10 +94,10 @@ export class TemplateService {
 
   /** Update template with delivery's materials */
   public async updateTemplate(name: string) {
-    const currentOrgId = this.orgQuery.getValue().org.id;
+    const organizationId = this.organizationQuery.getValue().org.id;
     const template = this.query
       .getAll()
-      .find(entity => entity.name === name && entity.orgId === currentOrgId);
+      .find(entity => entity.name === name && entity.orgId === organizationId);
     const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
     const deliveryMaterials = this.materialQuery.getAll();
     if (deliveryMaterials.length > 0) {
@@ -119,7 +119,7 @@ export class TemplateService {
   }
 
   /** Check if name is already used in an already template */
-  public nameExists(name: string, org: Organization) {
-    return this.query.hasEntity(entity => entity.name === name && entity.orgId === org.id);
+  public nameExists(name: string, organization: Organization) {
+    return this.query.hasEntity(entity => entity.name === name && entity.orgId === organization.id);
   }
 }

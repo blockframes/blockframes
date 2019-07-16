@@ -5,4 +5,4 @@
  * Use this setup (non-production) when the execution context is outside firebase
  * functions.
  */
-export { factoryContract, backupBucket, relayer, sendgridAPIKey, mnemonic } from '@env';
+export { factoryContract, backupBucket, relayer, appUrl, sendgridAPIKey, mnemonic } from '@env';

@@ -1,7 +1,8 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, Organization, Material, Movie, getOrgsOfDocument } from './utils';
+import { getDocument, getOrgsOfDocument } from './data/internals';
+import { Organization, Material, Movie } from './data/types';
 
 export const onMaterialUpdate = async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,

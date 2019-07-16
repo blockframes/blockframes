@@ -1,0 +1,9 @@
+<editable-sidenav (closed)="opened = false" [opened]="opened">
+  <ng-container content>
+    <account-profile-view (editing)="openSidenav($event)"></account-profile-view>
+  </ng-container>
+  <ng-container sidenav [ngSwitch]="editContent">
+    <account-profile-edit *ngSwitchCase="'profile'"></account-profile-edit>
+    <account-password-edit *ngSwitchCase="'password'"></account-password-edit>
+  </ng-container>
+</editable-sidenav>

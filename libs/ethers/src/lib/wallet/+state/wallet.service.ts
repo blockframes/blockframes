@@ -24,7 +24,6 @@ export class WalletService {
     this.store.setLoading(true);
     const ensDomain = this.emailToEnsDomain(email);
     const address = await this.retreiveAddress(ensDomain);
-    this.addBalanceListener(address);
     this.store.update({ensDomain, address});
     this.store.setLoading(false);
   }
@@ -85,18 +84,11 @@ export class WalletService {
     }
   }
 
-  public addBalanceListener(address: string){
-    this._requireProvider();
-    this.provider.on(address, (newBalance: utils.BigNumber) => this.store.update({balance: utils.formatEther(newBalance)}));
-  }
-
-  public cleanWallet() {
-    delete this.provider;
-  }
-
-  public async createRandomKeyFromEmail(email: string, password?: string) {
+  public async createRandomKeyFromEmail(keyName: string, email: string, password?: string) {
     const ensDomain = this.emailToEnsDomain(email);
-    return await this.keyManager.createFromRandom(ensDomain, password);
+    const key = await this.keyManager.createFromRandom(keyName, ensDomain, password);
+    this.keyManager.storeKey(key);
+    return key;
   }
 
   public async deployERC1077(ensDomain: string) {

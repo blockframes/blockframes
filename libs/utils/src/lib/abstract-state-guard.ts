@@ -21,7 +21,10 @@ export abstract class StateListGuard<T> implements CanActivate, CanDeactivate<an
             ? res(this.router.parseUrl(result))
             : res(!!result);
         },
-        error: err => res(this.router.parseUrl(this.urlFallback))
+        error: err => {
+          console.log(err)
+          return res(this.router.parseUrl(this.urlFallback))
+        }
       })
     })
   }

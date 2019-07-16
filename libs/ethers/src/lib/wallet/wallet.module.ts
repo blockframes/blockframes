@@ -15,24 +15,39 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatStepperModule } from '@angular/material/stepper'; 
 
-import { BlockieModule, UploadModule } from '@blockframes/ui';
+import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { KeyManagerModule } from '../key-manager/key-manager.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
+import { WalletKeyGuard } from './guards/wallet-key.guard';
 import { WalletViewComponent } from './wallet-view/wallet-view.component';
 import { WalletImportKeyFormComponent } from './wallet-import-key-form/wallet-import-key-form.component';
 import { WalletWidgetComponent } from './wallet-widget/wallet-widget.component';
-
-
+import { WalletAddKeyTunnelComponent } from './wallet-add-key/wallet-add-key.component';
+import { WalletAskPasswordFormComponent } from './wallet-ask-password-form/wallet-ask-password-form.component';
+import { WalletCreatePasswordFormComponent } from './wallet-create-password-form/wallet-create-password-form.component';
+import { WalletMessageViewComponent } from './wallet-message-view/wallet-message-view.component';
+import { WalletBlockieComponent } from './wallet-blockie/wallet-blockie.component';
+import { WalletAddressViewComponent } from './wallet-address-view/wallet-address-view.component';
 
 
 export const walletRoutes: Routes = [
   { 
     path: '',
-    component: WalletViewComponent,
     canActivate: [WalletActiveGuard],
     canDeactivate: [WalletActiveGuard],
+    children: [
+      {
+        path: '',
+        canActivate: [WalletKeyGuard],
+        component: WalletViewComponent,
+      },
+      { path: 'add', component: WalletAddKeyTunnelComponent },
+      // { path: 'import', component: WalletAddKeyTunnelComponent }, // TODO issue 544
+      // { path: 'send', component: WalletAddKeyTunnelComponent }, // TODO issue 542
+    ]
   },
 ];
 @NgModule({
@@ -40,7 +55,6 @@ export const walletRoutes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    BlockieModule,
     KeyManagerModule,
     FlexLayoutModule,
     MatInputModule,
@@ -54,13 +68,22 @@ export const walletRoutes: Routes = [
     MatMenuModule,
     MatCardModule,
     MatSlideToggleModule,
+    MatStepperModule,
     UploadModule,
     RouterModule.forChild(walletRoutes),
+    UiFormModule
   ],
   declarations: [
     WalletViewComponent,
     WalletImportKeyFormComponent,
     WalletWidgetComponent,
+    WalletAddKeyTunnelComponent,
+    WalletAskPasswordFormComponent,
+    WalletCreatePasswordFormComponent,
+    WalletMessageViewComponent,
+    WalletBlockieComponent,
+    WalletAddressViewComponent
+    
   ],
   exports: [
     WalletWidgetComponent,

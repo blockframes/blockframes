@@ -10,7 +10,7 @@
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <form-group-password-confirm [form]="signupForm"></form-group-password-confirm>
+    <password-confirm formControlName="password"></password-confirm>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-raised-button color="accent">Let's begin</button>
       <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an account</button>

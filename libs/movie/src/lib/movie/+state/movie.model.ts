@@ -16,7 +16,7 @@ export interface MovieAvailability {
 export interface Movie {
   _type: 'movies',
   id: string,
-  org?: Organization,
+  organization?: Organization,
   title: Title, // will contain all titles: original, international, suiss, etc
   directorName: string,
   poster: string,
@@ -49,7 +49,7 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-
+  deliveryIds: string[];
 }
 
 interface Title {
@@ -62,7 +62,8 @@ interface Title {
  */
 export function createMovie(params?: Partial<Movie>) {
   return {
-    ...params,
-    _type: 'movies'
+    deliveryIds: [],
+    _type: 'movies',
+    ...params
   } as Movie;
 }
