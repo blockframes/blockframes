@@ -1,12 +1,12 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { AccountForm, User, AuthQuery, AuthService } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ProfileDeleteComponent } from '../../profile-delete/profile-delete.component';
 import { ProfileForm } from '../../forms/profile-edit.form';
 
@@ -33,17 +33,31 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
+    this.accountForm = new ProfileForm();
+    console.log(this.accountForm)
     // @todo use snapshot instead of observable #438
     this.user$.pipe(takeWhile(_ => this.alive))
     .subscribe(user => {
       if (user !== null ) {
-        console.log(user)
-        this.accountForm = new ProfileForm(user);
-        console.log(this.accountForm)
+        const user2 = {
+          name: user.name || '',
+          surname: user.surname || '',
+          phoneNumber: user.phoneNumber || '',
+          email: user.email || '',
+          position: user.position || ''
+        }
+        // this.accountForm = new ProfileForm(user);
         this.persistForm = new PersistNgFormPlugin(this.authQuery, 'accountForm');
-        this.persistForm.setForm(this.accountForm);
+        this.persistForm.setForm(this.accountForm, { emitEvent: false});
+        this.accountForm.setValue(user2, { emitEvent: false});
       }
     });
+    this.accountForm.valueChanges.pipe(debounceTime(3000),
+    distinctUntilChanged()).subscribe(form => {debounceTime(2000);this.updateProfile()});
+  }
+
+  public log() {
+    console.log('lala')
   }
 
   public updateProfile() {

@@ -1,18 +1,20 @@
 <ng-container *ngIf="(user$ | async) as user; else: profileLoading">
   <mat-card-title>Picture</mat-card-title>
   <!-- TODO: issue#579 import picture -->
-  <img
-    mat-card-image
-    src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-    alt="Photo of a Shiba Inu"
-  />
+  <div fxLayoutAlign="center">
+    <img
+      mat-card-image
+      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+      alt="Photo of a Shiba Inu"
+    />
+  </div>
   <mat-card-actions fxLayout="column" fxLayoutAlign="center center">
     <button mat-raised-button color="accent">Import a picture</button>
     <button mat-button color="primary">Delete this picture</button>
   </mat-card-actions>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <form [formGroup]="accountForm" fxLayout="column" fxLayoutAlign="space-around center">
+    <form [formGroup]="accountForm" (ngSubmit)="updateProfile()" fxLayout="column" fxLayoutAlign="space-around center">
       <mat-card-title>Identity</mat-card-title>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
@@ -36,6 +38,7 @@
         <mat-label>Position</mat-label>
         <input matInput placeholder="Position" type="text" formControlName="position" />
       </mat-form-field>
+      <button mat-raised-button type="submit" color="accent">Update</button>
     </form>
   </mat-card-content>
 </ng-container>
