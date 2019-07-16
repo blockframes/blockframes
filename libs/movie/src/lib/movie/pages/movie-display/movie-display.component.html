@@ -1,11 +1,11 @@
 <mat-card class="movie-card-view mat-elevation-z0" *ngIf="movie">
     <mat-card-header class="movie-card-header">
-      <mat-card-title class="movie-card-meta-title" *ngIf="movie.originalTitle || movie.title">
-        {{ movie.originalTitle !== undefined ? movie.originalTitle : movie.title.original }}
+      <mat-card-title class="movie-card-meta-title" *ngIf="movie.title">
+        {{ movie.title.original }}
       </mat-card-title>
       <mat-card-title class="movie-card-production-year" *ngIf="movie.productionYear">({{ movie.productionYear }})</mat-card-title>
-      <mat-card-subtitle class="movie-card-sub-title" *ngIf="movie.internationalTitle || movie.title ">
-        {{ movie.internationalTitle !== undefined ? movie.internationalTitle : movie.title.international }}
+      <mat-card-subtitle class="movie-card-sub-title" *ngIf="movie.title ">
+        {{ movie.title.international }}
       </mat-card-subtitle>
     </mat-card-header>
     <img mat-card-image class="movie-poster" *ngIf="movie.poster" [src]="movie.poster"> 

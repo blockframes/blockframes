@@ -8,7 +8,9 @@
         <mat-icon>arrow_left</mat-icon>
       </ng-template>
     </button>
-    <movie-display [movie]="form"></movie-display>
+    <ng-container *ngIf="(form$ | async) as form">
+      <movie-display [data]="form"></movie-display>
+    </ng-container>
   </mat-drawer-content>
   <mat-drawer opened #drawer mode="side" position="end" [ngClass]="{ 'mat-drawer-fullscreen' : fullScreen }">
     <button mat-icon-button class="toggle-fullscreen" (click)="toggleFullScreen()">

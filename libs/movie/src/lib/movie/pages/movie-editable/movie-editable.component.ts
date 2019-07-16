@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MovieQuery } from '../../+state';
-import { FormGroupLike } from '@datorama/akita';
-import { takeWhile } from 'rxjs/internal/operators/takeWhile';
+import { FlatMovie } from '../../components/movie-form/movie.form';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'movie-editable',
@@ -9,30 +9,20 @@ import { takeWhile } from 'rxjs/internal/operators/takeWhile';
   styleUrls: ['./movie-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieEditableComponent implements OnInit, OnDestroy {
+export class MovieEditableComponent implements OnInit {
   public fullScreen = false;
-  public form: FormGroupLike;
-  private isAlive = true;
+  public form$: Observable<FlatMovie>;
 
   constructor(
     private query: MovieQuery,
-    private cdRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
-    this.query.movieFormChanges$
-    .pipe(takeWhile(() => this.isAlive))
-    .subscribe(form => {
-      this.form = form;
-      this.cdRef.detectChanges(); // required on first component load
-    });
+    this.form$ = this.query.movieFormChanges$;
   }
 
   public toggleFullScreen() {
     return this.fullScreen = !this.fullScreen;
   }
 
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
 }
