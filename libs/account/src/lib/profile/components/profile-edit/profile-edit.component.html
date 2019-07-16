@@ -1,4 +1,4 @@
-<ng-container *ngIf="(user$ | async) as user; else: profileLoading">
+<ng-container *ngIf="user">
   <mat-card-title>Picture</mat-card-title>
   <!-- TODO: issue#579 import picture -->
   <div fxLayoutAlign="center">
@@ -14,7 +14,7 @@
   </mat-card-actions>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <form [formGroup]="accountForm" (ngSubmit)="updateProfile()" fxLayout="column" fxLayoutAlign="space-around center">
+    <form [formGroup]="accountForm" fxLayout="column" fxLayoutAlign="space-around center">
       <mat-card-title>Identity</mat-card-title>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
@@ -31,20 +31,9 @@
         <input matInput placeholder="Phone number" type="tel" formControlName="phoneNumber" />
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput placeholder="Email" type="email" formControlName="email" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
         <mat-label>Position</mat-label>
         <input matInput placeholder="Position" type="text" formControlName="position" />
       </mat-form-field>
-      <button mat-raised-button type="submit" color="accent">Update</button>
     </form>
   </mat-card-content>
 </ng-container>
-<ng-template #profileLoading>
-  <div fxLayout="column" fxLayoutAlign="center center">
-    <p>Your Profile is loading...</p>
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
-</ng-template>
