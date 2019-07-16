@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MovieQuery, Movie } from '../../+state';
 import { getLabelBySlug } from '../../staticModels';
 import { FormGroupLike } from '@datorama/akita';
@@ -10,11 +9,11 @@ import { FormGroupLike } from '@datorama/akita';
   styleUrls: ['./movie-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieViewComponent implements OnInit {
-  @Input() form$: Observable<FormGroupLike>; // @todo an Observable should never be used as Input
+export class MovieViewComponent implements OnInit, OnChanges {
+  @Input() form: Movie | FormGroupLike;
   @Input() mode: string;
 
-  movie$: Observable<Movie | FormGroupLike>;
+  public movie: Movie | FormGroupLike;
 
   constructor(
     private query: MovieQuery,
@@ -22,9 +21,19 @@ export class MovieViewComponent implements OnInit {
 
   ngOnInit() {
     if (this.mode === 'preview'){
-      this.movie$ = this.form$;
+      this.movie = this.form;
     } else {
-      this.movie$ = this.query.selectActive();
+      this.movie = this.query.getActive();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.form = changes.form.currentValue;
+
+    if (this.mode === 'preview'){
+      this.movie = this.form;
+    } else {
+      this.movie = this.query.getActive();
     }
   }
 

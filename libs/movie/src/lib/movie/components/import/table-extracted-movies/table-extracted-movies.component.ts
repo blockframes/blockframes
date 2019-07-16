@@ -16,10 +16,10 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 })
 export class TableExtractedMoviesComponent implements OnInit {
 
-  @Input() movies : MatTableDataSource<MovieWithMetaData>;
-  @Input() mode : string;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @Input() movies: MatTableDataSource<MovieWithMetaData>;
+  @Input() mode: string;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
   public selection = new SelectionModel<MovieWithMetaData>(true, []);
@@ -50,19 +50,19 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.movies.sort = this.sort;
   }
 
-  createMovie(movie: Movie) : Promise<boolean> {
-    return this._createMovie(movie)
-    .then(() => {
-      this.snackBar.open('Movie created!', 'close', { duration: 3000 });
-      return true;
-    });
+  createMovie(movie: Movie): Promise<boolean> {
+    return this.addMovie(movie)
+      .then(() => {
+        this.snackBar.open('Movie created!', 'close', { duration: 3000 });
+        return true;
+      });
   }
 
-  createSelectedMovies() : Promise<boolean>{
+  createSelectedMovies(): Promise<boolean> {
     const moviesToCreate = [];
     this.selection.selected.forEach((movie: MovieWithMetaData) => {
-      if(movie.id === undefined && this.errorCount(movie) === 0) {
-        moviesToCreate.push(this._createMovie(movie));
+      if (movie.id === undefined && this.errorCount(movie) === 0) {
+        moviesToCreate.push(this.addMovie(movie));
       }
     })
 
@@ -72,15 +72,13 @@ export class TableExtractedMoviesComponent implements OnInit {
     });
   }
 
-  private _createMovie(movie: Movie) : Promise<boolean>{
+  private addMovie(movie: Movie): Promise<void> {
     return this.movieService.add(movie.title.original, true)
       .then(({ id }) => {
         movie.id = id;
-        this.movieService.update(id, JSON.parse(JSON.stringify(movie))); //@todo remove #483
-        return true;
+        return this.movieService.update(id, JSON.parse(JSON.stringify(movie))); //@todo remove #483
       });
   }
-
 
   updateSelectedMovies() { // : Promise<boolean>
     // @todo
@@ -91,7 +89,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   errorCount(movie: MovieWithMetaData, type: string = 'error') {
-    return movie.errors.filter((error: ExcelImportError) => error.type === type ).length;
+    return movie.errors.filter((error: ExcelImportError) => error.type === type).length;
   }
 
   ///////////////////
@@ -99,15 +97,11 @@ export class TableExtractedMoviesComponent implements OnInit {
   ///////////////////
 
   previewMovie(movie: Movie) {
-    const movie$ = Observable.create((observer) => {
-      observer.next(movie);
-      observer.complete();
-    });
-    this.dialog.open(PreviewMovieComponent, { data: movie$ });
+    this.dialog.open(PreviewMovieComponent, { data: movie });
   }
 
   displayErrors(movie: MovieWithMetaData) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: movie.title.original, errors: movie.errors} , width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, { data: { title: movie.title.original, errors: movie.errors }, width: '50%' });
   }
 
   ///////////////////
@@ -166,7 +160,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   filterPredicate(data: Movie, filter) {
     const dataStr = data.title.original + data.productionYear + data.directorName;
-    return dataStr.toLowerCase().indexOf(filter) !== -1; 
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
 }

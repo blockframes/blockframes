@@ -49,7 +49,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   }
 
   async addAvailability(availability: MovieAvailabilityWithMetaData) : Promise<void> {
-    await this._addAvailability(availability);
+    await this.addMovieAvailabilities(availability);
     this.snackBar.open('Movie availability added!', 'close', { duration: 3000 });
   }
 
@@ -57,7 +57,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
     // @todo with transaction
   }
 
-  private _addAvailability(availability: MovieAvailabilityWithMetaData) : Promise<void> {
+  private addMovieAvailabilities(availability: MovieAvailabilityWithMetaData) : Promise<void> {
     const movie  = this.movieQuery.getEntity(availability.movieId);
 
     //@todo check if unique before add
