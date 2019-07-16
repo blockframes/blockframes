@@ -72,7 +72,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   private addMovie(movie: Movie): Promise<void> {
-    return this.movieService.add(movie.title.original, true)
+    return this.movieService.addMovie(movie.title.original)
       .then(({ id }) => {
         movie.id = id;
         return this.movieService.update(id, JSON.parse(JSON.stringify(movie))); //@todo remove #483
