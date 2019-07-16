@@ -1,5 +1,5 @@
-<section fxLayout="column" fxLayoutAlign="center center">
-  <h1>Activity Report</h1>
-  <org-pending-list></org-pending-list>
-  <org-approved-list></org-approved-list>
-</section>
+<article fxLayout="row" fxLayoutAlign="start center"> 
+    <h1>Activity Report</h1><mat-divider></mat-divider>
+</article>
+<org-pending-list [pendingActions]="pendingActions"></org-pending-list>
+<org-approved-list [approvedActions]="approvedActions"></org-approved-list>

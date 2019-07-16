@@ -46,10 +46,18 @@ export const organizationRoutes: Routes = [
   },
   {
     path: ':orgId',
-    component: OrgViewComponent
+    children: [
+      {
+        path: '',
+        component: OrgViewComponent,
+      },
+      {
+        path: 'activityreport',
+        component: OrganizationActivityViewComponent
+      }
+    ]
   }
 ];
-
 
 @NgModule({
   imports: [
@@ -86,9 +94,6 @@ export const organizationRoutes: Routes = [
     OrganizationActionItemComponent,
     OrganizationApprovedListComponent
   ],
-  exports: [
-    OrgWidgetComponent
-  ]
+  exports: [OrgWidgetComponent]
 })
-export class OrganizationModule {
-}
+export class OrganizationModule {}

@@ -1,3 +1,9 @@
-<p>
-  organization-pending-list works!
-</p>
+<section>
+  <h2>Pending Approval</h2>
+  <article fxLayout="row" fxLayoutAlign="space-around center">
+    <h4>Document Name <mat-icon>arrow_upward</mat-icon></h4>
+    <h4>Signed</h4>
+    <h4>Countersigned</h4>
+  </article>
+  <org-action-item *ngFor="let action of pendingActions" [actionItems]="action"></org-action-item>
+</section>

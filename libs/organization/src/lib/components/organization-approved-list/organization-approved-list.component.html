@@ -1,1 +1,9 @@
-<org-action-item></org-action-item>
+
+<h2>Actions Approved</h2>
+<article fxLayout="row" fxLayoutAlign="space-around center">
+    <h4>Document Name <mat-icon>arrow_upward</mat-icon></h4>
+    <h4>Signed</h4>
+    <h4>Countersigned</h4>
+    <h4>Date</h4>
+</article>
+<org-action-item *ngFor="let action of approvedActions" [actionItems]="action"></org-action-item>
