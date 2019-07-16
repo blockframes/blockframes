@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Movie, MovieQuery, MovieAvailability } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
@@ -28,6 +28,7 @@ export interface MovieAvailabilityWithMetaData extends MovieAvailability {
   selector: 'movie-view-extracted-elements',
   templateUrl: './view-extracted-elements.component.html',
   styleUrls: ['./view-extracted-elements.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class ViewExtractedElementsComponent {
 

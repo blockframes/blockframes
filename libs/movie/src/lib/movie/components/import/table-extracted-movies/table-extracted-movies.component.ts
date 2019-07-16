@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Movie, MovieService } from '../../../+state';
 import { PreviewMovieComponent } from './../preview-movie/preview-movie.component';
@@ -12,6 +12,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
   selector: 'movie-table-extracted-movies',
   templateUrl: './table-extracted-movies.component.html',
   styleUrls: ['./table-extracted-movies.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableExtractedMoviesComponent implements OnInit {
 

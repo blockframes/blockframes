@@ -11,7 +11,7 @@ import { FormGroupLike } from '@datorama/akita';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieViewComponent implements OnInit {
-  @Input() form$: Observable<FormGroupLike>;
+  @Input() form$: Observable<FormGroupLike>; // @todo an Observable should never be used as Input
   @Input() mode: string;
 
   movie$: Observable<Movie | FormGroupLike>;

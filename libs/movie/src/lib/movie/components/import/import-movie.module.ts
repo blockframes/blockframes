@@ -20,7 +20,7 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { MovieSharedModule } from '../../movie.shared.module';
 
 // Components
-import { ImportMovieSheetComponent } from './import-movie-sheet/import-movie-sheet.component';
+import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
 import { ImportStepperComponent } from './import-stepper/import-stepper.component';
 import { PreviewSheetComponent } from './preview-sheet/preview-sheet.component';
 import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
@@ -33,7 +33,7 @@ import { TableExtractedAvailabilitiesComponent } from './table-extracted-availab
 @NgModule({
   declarations: [
     ImportStepperComponent,
-    ImportMovieSheetComponent,
+    ImportSpreadsheetComponent,
     ViewExtractedElementsComponent,
     TableExtractedMoviesComponent,
     TableExtractedAvailabilitiesComponent,

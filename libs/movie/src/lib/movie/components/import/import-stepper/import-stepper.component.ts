@@ -1,11 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { SheetTab } from '@blockframes/utils';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ViewExtractedElementsComponent } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
 
 @Component({
   selector: 'movie-import-stepper',
   templateUrl: './import-stepper.component.html',
   styleUrls: ['./import-stepper.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportStepperComponent {
 
@@ -13,12 +14,10 @@ export class ImportStepperComponent {
 
   constructor() {}
 
-  next($event: { sheet: SheetTab, fileType: string}) {
-    if($event.fileType === 'movies') {
-      this.viewExtractedElementsComponent.formatMovies($event.sheet)
-    } else {
-      this.viewExtractedElementsComponent.formatAvailabilities($event.sheet)
-    }
+  next(importEvent : SpreadsheetImportEvent) {
+    importEvent.fileType === 'movies' ?
+      this.viewExtractedElementsComponent.formatMovies(importEvent.sheet) :
+      this.viewExtractedElementsComponent.formatAvailabilities(importEvent.sheet);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MovieService, MovieAvailability, MovieQuery } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -10,6 +10,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
   selector: 'movie-table-extracted-availabilities',
   templateUrl: './table-extracted-availabilities.component.html',
   styleUrls: ['./table-extracted-availabilities.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableExtractedAvailabilitiesComponent implements OnInit {
 
@@ -47,12 +48,9 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
     this.availabilities.sort = this.sort;
   }
 
-  addAvailability(availability: MovieAvailabilityWithMetaData)  { //: Promise<boolean>
-    return this._addAvailability(availability)
-    .then(() => {
-      this.snackBar.open('Movie availability added!', 'close', { duration: 3000 });
-      return true;
-    });
+  async addAvailability(availability: MovieAvailabilityWithMetaData) : Promise<void> {
+    await this._addAvailability(availability);
+    this.snackBar.open('Movie availability added!', 'close', { duration: 3000 });
   }
 
   addSelectedAvailabilities() { // : Promise<boolean>
