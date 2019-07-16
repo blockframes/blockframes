@@ -3,7 +3,8 @@ import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@ang
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
 
-interface Movie {
+// @todo remove after MCD movie review and subform implementation
+export interface FlatMovie {
   originalTitle: string
   internationalTitle: string
   directorName: string
@@ -23,7 +24,7 @@ interface Movie {
   promotionalElements: any[],
 }
 
-function createMovie(params?: Partial<Movie>): Movie {
+function createFlatMovie(params?: Partial<FlatMovie>): FlatMovie {
   return {
     originalTitle: '',
     internationalTitle: '',
@@ -43,11 +44,11 @@ function createMovie(params?: Partial<Movie>): Movie {
     images: [],
     promotionalElements: [],
     ...(params || {})
-  } as Movie
+  } as FlatMovie
 }
 
-function createMovieControls(entity?: Partial<Movie>) {
-  const movie = createMovie(entity);
+function createMovieControls(entity?: Partial<FlatMovie>) {
+  const movie = createFlatMovie(entity);
   return {
     originalTitle: new StringControl(movie.originalTitle, false, [Validators.required]),
     internationalTitle: new StringControl(movie.internationalTitle, false, [Validators.required]),
@@ -72,7 +73,7 @@ function createMovieControls(entity?: Partial<Movie>) {
 type MovieControl = ReturnType<typeof createMovieControls>
 
 @Injectable({ providedIn: 'root' })
-export class MovieForm extends FormEntity<Movie, MovieControl> {
+export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
   protected builder : FormBuilder;
   constructor() {
     super(createMovieControls());
@@ -84,7 +85,7 @@ export class MovieForm extends FormEntity<Movie, MovieControl> {
   //////////
 
   /* Getters for all form inputs */
-  public currentFormValue(attr: Extract<keyof Movie, string>, index?: number) {
+  public currentFormValue(attr: Extract<keyof FlatMovie, string>, index?: number) {
     if (index !== undefined) {
       const formArray = this.get(attr) as FormArray;
       return formArray.controls[index] !== null ? formArray.controls[index].value : '' as String;
@@ -200,7 +201,7 @@ export class MovieForm extends FormEntity<Movie, MovieControl> {
     }
   }
 
-  reset(value?: EntityControl<Movie>, options?: {
+  reset(value?: EntityControl<FlatMovie>, options?: {
       onlySelf?: boolean;
       emitEvent?: boolean;
   }): void {

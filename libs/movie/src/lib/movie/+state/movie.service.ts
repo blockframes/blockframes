@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createMovieStakeholder, StakeholderService, Stakeholder } from '../../stakeholder/+state';
+import { StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
