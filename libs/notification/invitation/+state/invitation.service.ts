@@ -4,7 +4,6 @@ import { switchMap, tap, filter } from 'rxjs/operators';
 import { InvitationStore } from './invitation.store';
 import { AuthQuery } from '@blockframes/auth';
 import { Invitation } from './invitation.model';
-import { Stakeholder } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -33,28 +32,8 @@ export class InvitationService {
     };
   }
 
-  public joinTeamwork(stakeholderId: string, id: string, type: string) {
-    const collectionName = (type === 'delivery') ? 'deliveries' : 'movies';
-    return this.db
-      .doc<Stakeholder>(`${collectionName}/${id}/stakeholders/${stakeholderId}`)
-      .update({ isAccepted: true })
-      .then(() => {
-        if (collectionName === 'movies') { // @todo move this to a function
-          return this.addMovieToOrg(stakeholderId, collectionName, id);
-        }
-      })
+  public acceptInvitation(invitationId: string) {
+    return this.db.doc<Invitation>(`invitations/${invitationId}`).update({ state: 'accepted' });
   }
 
-  private addMovieToOrg(stakeholderId: string, collectionName: string, movieId: string) {
-    return this.db
-      .doc<Stakeholder>(`${collectionName}/${movieId}/stakeholders/${stakeholderId}`).get().toPromise()
-      .then(sh => sh.data().orgId)
-      .then( orgId => this.db.collection('orgs').doc(orgId).get().toPromise())
-      .then( org => {
-        const movieIds = org.data().movieIds || [];
-        if( !movieIds.includes(movieId) ) {
-          return org.ref.update({ movieIds : [...movieIds, movieId] });
-        }
-      })
-  }
 }

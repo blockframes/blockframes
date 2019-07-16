@@ -19,7 +19,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.invitations$ = this.query.selectAll({
-      filterBy: entity => entity.isAccepted === 'pending',
+      filterBy: entity => entity.state === 'pending',
       sortBy: 'date',
       sortByOrder: Order.DESC
     });

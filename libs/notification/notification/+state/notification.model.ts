@@ -1,3 +1,7 @@
+import { firestore } from 'firebase/app';
+import { DocID } from 'libs/notification/notification/+state';
+type Timestamp = firestore.Timestamp;
+
 export interface Notification {
   id: string;
   app: string;
@@ -6,11 +10,11 @@ export interface Notification {
   path: string;
   docID: DocID;
   isRead: boolean;
-  date: number;
+  date: Date | Timestamp;
   stakeholderId: string;
 };
 
-interface DocID {
+export interface DocID {
   id: string,
   type : 'movie' | 'delivery'
 }

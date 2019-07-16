@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation } from '../+state';
+import { Invitation, InvitationService } from '../+state';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'invitation-item',
@@ -10,9 +11,16 @@ import { Invitation } from '../+state';
 export class InvitationItemComponent implements OnInit {
   @Input() invitation: Invitation;
 
-  constructor() { }
+  constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  acceptInvitation(invitation: Invitation) {
+    this.service.acceptInvitation(invitation.id);
+    this.snackBar.open(
+      `You accepted to join the delivery's teamwork. You will receive another notification when you'll be able to navigate to the document`,
+      'close',
+      { duration: 5000 }
+    );
   }
-
 }

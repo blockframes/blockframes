@@ -1,15 +1,14 @@
+import { firestore } from 'firebase/app';
+import { DocID } from 'libs/notification/notification/+state';
+type Timestamp = firestore.Timestamp;
+
 export interface Invitation {
   id: string;
   app: string;
   message: string;
-  userId: string[];
+  userId: string;
   path: string;
   docID: DocID;
-  isAccepted: 'accepted' | 'declined' | 'pending';
-  date: number;
+  state: 'accepted' | 'declined' | 'pending';
+  date: Date | Timestamp;
 };
-
-interface DocID {
-  id: string,
-  type : 'movie' | 'delivery'
-}

@@ -9,9 +9,6 @@ import { NotificationWidgetComponent } from './notification-widget/notification-
 import { InvitationListComponent } from './invitation/invitation-list/invitation-list.component';
 import { InvitationItemComponent } from './invitation/invitation-item/invitation-item.component';
 
-// Modules
-import { UtilsModule } from '@blockframes/utils';
-
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -31,7 +28,6 @@ import { MatListModule } from '@angular/material/list';
   imports: [
     CommonModule,
     RouterModule,
-    UtilsModule,
 
     // Material
     MatIconModule,

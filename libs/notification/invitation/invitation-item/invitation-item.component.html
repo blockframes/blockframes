@@ -4,7 +4,7 @@
     <p class="text">{{ invitation.message }}</p>
   </span>
   <div fxLayoutAlign="space-around center">
-    <button class="mat-elevation-z0" mat-raised-button color="primary">Accept</button>
+    <button class="mat-elevation-z0" mat-raised-button color="primary" (click)="acceptInvitation(invitation)">Accept</button>
     <button class="mat-elevation-z0" mat-raised-button color="warn">Decline</button>
   </div>
   <p class="date">
