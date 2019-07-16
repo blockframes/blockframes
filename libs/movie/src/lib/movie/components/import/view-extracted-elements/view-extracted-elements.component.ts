@@ -2,13 +2,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Movie, MovieQuery, MovieAvailability } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
-import * as XLSX from 'xlsx';
 import { SSF$Date } from 'ssf/types';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
 import { getSlug } from '../../../staticModels';
+import { SSF } from 'xlsx';
 
-export interface ExcelImportError {
+export interface SpreadsheetImportError {
   field: string;
   name: string;
   reason: string;
@@ -17,11 +17,11 @@ export interface ExcelImportError {
 }
 
 export interface MovieWithMetaData extends Movie {
-  errors?: ExcelImportError[];
+  errors?: SpreadsheetImportError[];
 }
 
 export interface MovieAvailabilityWithMetaData extends MovieAvailability {
-  errors?: ExcelImportError[];
+  errors?: SpreadsheetImportError[];
 }
 
 @Component({
@@ -86,7 +86,7 @@ export class ViewExtractedElementsComponent {
               name: "Genres",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
-            } as ExcelImportError);
+            } as SpreadsheetImportError);
           }
         }
 
@@ -133,7 +133,7 @@ export class ViewExtractedElementsComponent {
               name: "Languages",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
-            } as ExcelImportError);
+            } as SpreadsheetImportError);
           }
         }
 
@@ -149,7 +149,7 @@ export class ViewExtractedElementsComponent {
               name: "Country of origin",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
-            } as ExcelImportError);
+            } as SpreadsheetImportError);
 
           }
         }
@@ -243,7 +243,7 @@ export class ViewExtractedElementsComponent {
         name: "Production Year",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.title.international) {
@@ -253,7 +253,7 @@ export class ViewExtractedElementsComponent {
         name: "International title",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.title.original) {
@@ -263,7 +263,7 @@ export class ViewExtractedElementsComponent {
         name: "Original title",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.synopsis) {
@@ -273,7 +273,7 @@ export class ViewExtractedElementsComponent {
         name: "Synopsis",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.directorName) {
@@ -283,7 +283,7 @@ export class ViewExtractedElementsComponent {
         name: "Director Name",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.poster) {
@@ -293,7 +293,7 @@ export class ViewExtractedElementsComponent {
         name: "Poster",
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (movie.genres.length === 0) {
@@ -303,7 +303,7 @@ export class ViewExtractedElementsComponent {
         name: "Genres",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (movie.languages.length === 0) {
@@ -313,7 +313,7 @@ export class ViewExtractedElementsComponent {
         name: "Languages",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (movie.credits.length === 0) {
@@ -323,7 +323,7 @@ export class ViewExtractedElementsComponent {
         name: "Credits",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (movie.keywords.length === 0) {
@@ -333,7 +333,7 @@ export class ViewExtractedElementsComponent {
         name: "Keywords",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     if (!movie.originCountry) {
@@ -343,7 +343,7 @@ export class ViewExtractedElementsComponent {
         name: "Country of origin",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     return movie;
@@ -363,8 +363,8 @@ export class ViewExtractedElementsComponent {
 
         const movieId = this.movieQuery.movieExists(movie.title.original, movie.productionYear, movie.directorName);
 
-        const start: SSF$Date = XLSX.SSF.parse_date_code(m[5]);
-        const end: SSF$Date = XLSX.SSF.parse_date_code(m[6]);
+        const start: SSF$Date = SSF.parse_date_code(m[5]);
+        const end: SSF$Date = SSF.parse_date_code(m[6]);
 
         const availability = {
           movieId,
@@ -388,7 +388,7 @@ export class ViewExtractedElementsComponent {
     });
   }
 
-  private _validateMovieAvailability(availability: MovieAvailabilityWithMetaData): ExcelImportError[] {
+  private _validateMovieAvailability(availability: MovieAvailabilityWithMetaData): SpreadsheetImportError[] {
     availability.errors = [];
 
     if (!availability.movieId) {
@@ -398,7 +398,7 @@ export class ViewExtractedElementsComponent {
         name: "Movie",
         reason: 'Movie not found',
         hint: 'Try importing it first or check if data is correct.'
-      } as ExcelImportError);
+      } as SpreadsheetImportError);
     }
 
     return availability.errors;

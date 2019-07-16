@@ -2,9 +2,8 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Movie, MovieService } from '../../../+state';
 import { PreviewMovieComponent } from './../preview-movie/preview-movie.component';
-import { Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MovieWithMetaData, ExcelImportError } from '../view-extracted-elements/view-extracted-elements.component';
+import { MovieWithMetaData, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
 
@@ -89,7 +88,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   errorCount(movie: MovieWithMetaData, type: string = 'error') {
-    return movie.errors.filter((error: ExcelImportError) => error.type === type).length;
+    return movie.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
   ///////////////////

@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MovieService, MovieAvailability, MovieQuery } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ExcelImportError, MovieAvailabilityWithMetaData } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportError, MovieAvailabilityWithMetaData } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
 
@@ -75,7 +75,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   }
 
   errorCount(availability: MovieAvailabilityWithMetaData, type: string = 'error') {
-    return availability.errors.filter((error: ExcelImportError) => error.type === type ).length;
+    return availability.errors.filter((error: SpreadsheetImportError) => error.type === type ).length;
   }
 
   ///////////////////

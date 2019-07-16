@@ -1,6 +1,6 @@
 <mat-horizontal-stepper [linear]="true" #stepper>
   <mat-step>
-    <ng-template matStepLabel>Import your Excel file</ng-template>
+    <ng-template matStepLabel>Import your Spreadsheet file</ng-template>
     <movie-import-spreadsheet (importEvent)="next($event)"></movie-import-spreadsheet>
   </mat-step>
   <mat-step>

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ExcelImportError } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 
 @Component({
   selector: 'movie-view-import-errors',
@@ -11,7 +11,7 @@ import { ExcelImportError } from '../view-extracted-elements/view-extracted-elem
 export class ViewImportErrorsComponent  {
   constructor(
     private dialog: MatDialogRef<ViewImportErrorsComponent>,
-    @Inject(MAT_DIALOG_DATA) public element: { title: string, errors: ExcelImportError[] },
+    @Inject(MAT_DIALOG_DATA) public element: { title: string, errors: SpreadsheetImportError[] },
   ) { }
 
   step = 0;
