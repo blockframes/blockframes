@@ -20,6 +20,6 @@ export class ProfileViewComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.query.user$;
-    this.organization$ = this.organizationQuery.select(state => state.org);
+    this.organization$ = this.organizationQuery.select('org');
   }
 }

@@ -2,8 +2,9 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { User, AuthQuery, AuthService } from '@blockframes/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { takeWhile, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProfileForm, Profile } from '../../forms/profile-edit.form';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'account-profile-edit',
@@ -14,7 +15,7 @@ import { ProfileForm, Profile } from '../../forms/profile-edit.form';
 export class ProfileEditComponent implements OnInit, OnDestroy {
   public accountForm: ProfileForm;
   public user: User;
-  private alive = true;
+  private destroyed$ = new Subject();
 
   constructor(
     private authQuery: AuthQuery,
@@ -37,12 +38,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        takeWhile(_ => this.alive)
+        takeUntil(this.destroyed$)
       )
-      .subscribe(_ => {
-        debounceTime(2000);
-        this.updateProfile();
-      });
+      .subscribe(_ => this.updateProfile());
   }
 
   public updateProfile() {
@@ -59,24 +57,8 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // public deleteAccount() {
-  //   const dialogRef = this.dialog.open(ProfileDeleteComponent, {
-  //     width: '450px',
-  //     data: { email: '' }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result === this.authQuery.user.email) {
-  //       this.snackBar.open('Account deleted', 'close', { duration: 5000 });
-  //       this.authService.delete();
-  //       this.router.navigate(['/auth']);
-  //     } else if (result !== undefined) {
-  //       this.snackBar.open('Type in your email to confirm deletion', 'close', { duration: 5000 });
-  //     }
-  //   });
-  // }
-
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
   }
 }
