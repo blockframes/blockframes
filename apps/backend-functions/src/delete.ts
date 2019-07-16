@@ -95,7 +95,6 @@ export async function deleteFirestoreDelivery(
   await batch.commit();
 
   // When delivery is deleted, notifications are created for each stakeholder of this delivery
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
   const notifications = orgs
     .filter(org => !!org && !!org.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])

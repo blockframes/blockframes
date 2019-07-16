@@ -4,7 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../firebase';
-import { Organization, Stakeholder, UserDocPermissions } from './types';
+import { Organization, Stakeholder, UserDocPermissions, OrgDocPermissions } from './types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -39,25 +39,27 @@ export async function getOrgsOfDocument(
   return Promise.all(promises);
 }
 
-export function initializeOrgDocPermissions(docId: string) {
+export function initializeOrgDocPermissions(docId: string, params?: Partial<OrgDocPermissions>): OrgDocPermissions {
   return {
     canCreate: false,
     canDelete: false,
     canRead: true,
     canUpdate: false,
     id: docId,
-    owner: false // TODO: Find a way to get the real ownerId
+    owner: false, // TODO: Find a way to get the real ownerId
+    ...params
   }
 }
 
-export function initializeUserDocPermissions(docId: string): UserDocPermissions {
+export function initializeUserDocPermissions(docId: string, params?: Partial<UserDocPermissions>): UserDocPermissions {
   return {
     admins: [],
     canCreate: [],
     canDelete: [],
     canRead: [],
     canUpdate: [],
-    id: docId
+    id: docId,
+    ...params
   }
 }
 

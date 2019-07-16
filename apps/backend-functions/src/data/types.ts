@@ -19,6 +19,7 @@ export interface DocID {
 export interface Organization {
   id: string;
   userIds: string[];
+  movieIds: string[];
   name: string;
   address: string;
 }
@@ -73,8 +74,24 @@ export interface BaseNotification {
 export interface Notification extends BaseNotification {
   id: string;
   isRead: boolean;
-  date: any;
+  date: FirebaseFirestore.FieldValue;
   app: string;
+}
+
+export interface BaseInvitation {
+  message: string;
+  userId: string;
+  docID: DocID;
+  stakeholderId?: string;
+  path?: string;
+}
+
+export interface Invitation extends BaseInvitation {
+  id: string;
+  state: 'accepted' | 'declined' | 'pending';
+  date: FirebaseFirestore.FieldValue;
+  app: string;
+  processedId?: string;
 }
 
 export interface SnapObject {
@@ -87,13 +104,22 @@ export interface SnapObject {
   count?: number;
 }
 
+export interface OrgDocPermissions {
+  id: string;
+  canCreate: boolean;
+  canRead: boolean;
+  canUpdate: boolean;
+  canDelete: boolean;
+  owner: boolean;
+}
+
 export interface UserDocPermissions {
+  id: string;
   admins: string[];
   canCreate: string[];
   canDelete: string[];
   canRead: string[];
   canUpdate: string[];
-  id: string;
 }
 
 /**

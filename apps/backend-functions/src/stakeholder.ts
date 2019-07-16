@@ -1,21 +1,14 @@
 import { functions, db } from './firebase';
-import { prepareNotification, triggerNotifications, customMessage } from './notify';
 import {
-  getDocument,
-  getCount,
-  getOrgsOfDocument,
-  initializeOrgDocPermissions,
-  initializeUserDocPermissions
-} from './data/internals';
-import {
-  Delivery,
-  DocID,
-  Organization,
-  Movie,
-  SnapObject,
-  Stakeholder,
-  UserDocPermissions,
-} from './data/types';
+  prepareNotification,
+  triggerNotifications,
+  customMessage,
+  prepareInvitation,
+  invitationMessage,
+  triggerInvitations
+} from './notify';
+import { getDocument, getCount, getOrgsOfDocument } from './data/internals';
+import { Delivery, DocID, Organization, Movie, SnapObject } from './data/types';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -43,58 +36,6 @@ export async function onMovieStakeholderDelete(
   context: functions.EventContext
 ) {
   stakeholdersCollectionEvent(snap, context);
-}
-
-export async function onDeliveryStakeholderUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-) {
-
-  if (!change.after || !change.before) {
-    throw new Error(`Parameter 'change' not found`);
-  }
-
-  const stakeholderDoc = change.after.data();
-  const stakeholderDocBefore = change.before.data();
-
-  if (!stakeholderDoc || !stakeholderDocBefore) {
-    throw new Error(`No changes detected on this document`);
-  }
-
-  const deliveryId = context.params.deliveryID;
-  const stakeholder = await getDocument<Stakeholder>(`deliveries/${deliveryId}/stakeholders/${stakeholderDoc.id}`);
-  const processedId = stakeholder.processedId;
-
-  if (processedId === context.eventId) {
-    throw new Error(`Document already processed with this context`);
-  }
-
-  // If the user accept the invitation, isAccepted is set from false to true
-  if(stakeholderDoc.isAccepted !== stakeholderDocBefore.isAccepted) {
-    try {
-
-      // Initialize organization permissions on a document owned by another organization
-      const orgDocPermissions = initializeOrgDocPermissions(deliveryId);
-      db.doc(`permissions/${stakeholder.id}/orgDocsPermissions/${deliveryId}`).set(orgDocPermissions);
-
-      // Then Initialize user permissions document
-      const userDocPermissions = initializeUserDocPermissions(deliveryId);
-      db.doc(`permissions/${stakeholder.id}/userDocsPermissions${deliveryId}`).set(userDocPermissions);
-
-      // Finally, populate the userDocPermissions with organization member ids.
-      // Push their id in canRead for test purpose.
-      const stakeholderOrg = await getDocument<Organization>(`orgs/${stakeholder.id}`);
-      const userPermissions = await getDocument<UserDocPermissions>(`permissions/${stakeholder.id}/userDocsPermissions${deliveryId}`)
-      stakeholderOrg.userIds.forEach(userId => {
-        const canRead = [...userPermissions.canRead, userId]
-        return db.doc(`permissions/${stakeholder.id}/userDocsPermissions`).update({ canRead });
-      })
-
-    } catch(error) {
-      await db.doc(`deliveries/${deliveryId}/stakeholders/${stakeholder.id}`).update({ processedId: null });
-      throw new Error(error);
-    }
-  }
 }
 
 /**
@@ -139,12 +80,12 @@ async function stakeholdersCollectionEvent(
         getOrgsOfDocument(document.id, collection),
         getCount(`${collection}/${document.id}/stakeholders`)
       ]);
-      const movie = (!!context.params.movieID)
+      const movie = !!context.params.movieID
         ? document
         : await getDocument<Movie>(`movies/${document.movieId}`);
-      const delivery = (!!context.params.deliveryID)
+      const delivery = !!context.params.deliveryID
         ? await getDocument<Delivery>(`deliveries/${document.id}`)
-        : null
+        : null;
       const snapInformations: SnapObject = {
         movie,
         docID,
@@ -158,6 +99,8 @@ async function stakeholdersCollectionEvent(
       const notifications = createStakeholderNotifications(orgs, snapInformations);
       await triggerNotifications(notifications);
 
+      const invitations = createStakeholderInvitations(orgs, snapInformations);
+      await triggerInvitations(invitations);
     } catch (e) {
       await db.doc(`${collection}/${document.id}`).update({ processedId: null });
       throw e;
@@ -177,14 +120,41 @@ function createStakeholderNotifications(orgs: Organization[], snap: SnapObject) 
     : `/layout/o/home/${snap.movie.id}/teamwork`;
   return orgs
     .filter(org => !!org && !!org.userIds)
+    .filter(org => org.id !== snap.newStakeholderId)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map((userId: string) => {
       return prepareNotification({
-        message: customMessage(userId, snap),
+        message: customMessage(snap),
         userId,
         path,
         stakeholderId: snap.newStakeholderId,
         docID: snap.docID
       });
     });
+}
+
+/**
+ * Takes a list of Organization and a SnapObject to generate one invitation for each users
+ * invited to work on the new document, with custom path and message.
+ */
+function createStakeholderInvitations(orgs: Organization[], snap: SnapObject) {
+  if (!!snap.count && snap.count > 1) {
+    const path = !!snap.delivery
+      ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
+      : `/layout/o/home/${snap.movie.id}/teamwork`;
+    return orgs
+      .filter(org => !!org && !!org.userIds)
+      .filter(org => org.id === snap.newStakeholderId)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map((userId: string) => {
+        return prepareInvitation({
+          message: invitationMessage(snap),
+          userId,
+          path,
+          stakeholderId: snap.newStakeholderId,
+          docID: snap.docID
+        });
+      });
+  }
+  throw new Error('No invitation needed for document owner.');
 }
