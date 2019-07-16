@@ -1,36 +1,41 @@
-<article>
-  <mat-card class="mat-elevation-z1">
+<section>
+  <mat-card class="mat-elevation-z1" fxLayoutAlign="start center">
     <ng-container *ngIf="(user$ | async) as user; else: profileLoading">
       <mat-card-content fxLayout="row" fxLayoutAlign="center center">
+        <!-- TODO: issue#579 import picture -->
         <img
-          mat-card-image
+          mat-card-avatar
           src="https://material.angular.io/assets/img/examples/shiba2.jpg"
           alt="Photo of a Shiba Inu"
         />
-        <div class="information" fxLayout="column" fxLayoutAlign="start center">
+        <article class="information" fxLayout="column" fxLayoutAlign="start start">
           <div>
-            <span class="name">{{ user.name }}</span>
+            <p class="name">{{ user.name }}</p>
+            <p>{{ user.surname }}</p>
           </div>
+          <mat-divider [inset]="true"></mat-divider>
           <div>
-            <span>{{ user.surname }}</span>
+            <p><span class="label" *ngIf="user.phoneNumber">Phone number: </span> <span>{{ user.phoneNumber }}</span></p>
+
+            <p><span class="label">Email: </span> <span>{{ user.email }}</span></p>
+
+            <p><span class="label" *ngIf="user.position">Position: </span> <span>{{ user.position }}</span></p>
           </div>
-          <div>
-            <span>Phone number: </span> <span>{{ user.phoneNumber }}</span>
+          <mat-divider [inset]="true"></mat-divider>
+          <div *ngIf="(organization$ | async) as organization">
+            <p><span class="label">Organization: </span> <span>{{ organization.name }}</span></p>
           </div>
-          <div>
-            <span>Email: </span> <span>{{ user.email }}</span>
-          </div>
-          <div>
-            <span>Position: </span> <span>{{ user.position }}</span>
-          </div>
-        </div>
+          <mat-divider [inset]="true"></mat-divider>
+        </article>
       </mat-card-content>
-      <button mat-icon-button (click)="editing.emit('profile')" color="primary">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button (click)="editing.emit('password')" color="primary">
-        <mat-icon>lock_open</mat-icon>
-      </button>
+      <article class="action">
+        <button mat-icon-button (click)="editing.emit('password')" color="primary">
+          <mat-icon class="icon" svgIcon="change_pass"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="editing.emit('profile')"color="primary">
+          <mat-icon class="icon">edit</mat-icon>
+        </button>
+      </article>
     </ng-container>
     <ng-template #profileLoading>
       <div fxLayout="column" fxLayoutAlign="center center">
@@ -39,4 +44,4 @@
       </div>
     </ng-template>
   </mat-card>
-</article>
+</section>

@@ -12,6 +12,14 @@ const ICONS_SVG = [
     url: 'assets/icons/adjustable_wrench.svg'
   },
   {
+    name: 'edit',
+    url: 'assets/icons/edit.svg'
+  },
+  {
+    name: 'change_pass',
+    url: 'assets/icons/change_pass.svg'
+  },
+  {
     name: 'magic_wand',
     url: 'assets/icons/magic_wand.svg'
   },
