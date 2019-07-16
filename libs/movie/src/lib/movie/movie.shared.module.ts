@@ -8,11 +8,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 // Components
-import { MovieViewComponent } from './pages/movie-view/movie-view.component';
+import { MovieDisplayComponent } from './pages/movie-display/movie-display.component';
 
 @NgModule({
   declarations: [
-    MovieViewComponent
+    MovieDisplayComponent
   ],
   imports: [
     CommonModule,
@@ -20,6 +20,6 @@ import { MovieViewComponent } from './pages/movie-view/movie-view.component';
     MatDividerModule,
     MatGridListModule,
   ],
-  exports: [MovieViewComponent],
+  exports: [MovieDisplayComponent],
 })
 export class MovieSharedModule {}

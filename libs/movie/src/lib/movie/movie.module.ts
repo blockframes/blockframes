@@ -52,6 +52,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { MovieForm } from './components/movie-form/movie.form';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
+import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
     HomeEmptyComponent,
     MovieEmptyComponent,
     MovieCreateComponent,
+    MovieViewComponent,
   ],
   imports: [
     CommonModule,

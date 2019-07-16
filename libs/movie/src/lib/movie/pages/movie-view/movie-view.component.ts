@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, } from '@angular/core';
 import { MovieQuery, Movie } from '../../+state';
-import { getLabelBySlug } from '../../staticModels';
-import { FormGroupLike } from '@datorama/akita';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'movie-view',
@@ -10,29 +9,14 @@ import { FormGroupLike } from '@datorama/akita';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieViewComponent implements OnInit {
-  @Input() mode: string;
-  @Input() set form(form: Movie | FormGroupLike) {
-    this.movie = this.mode === 'preview' ? form : this.query.getActive();
-  }
 
-  public movie: Movie | FormGroupLike;
+  public movie$: Observable<Movie>;
 
   constructor(
     private query: MovieQuery,
   ) { }
 
   ngOnInit() {
-    // @todo not mandatory when used has childComponent but required when statefull
-    if (this.mode === 'preview'){
-      this.movie = this.form;
-    } else {
-      this.movie = this.query.getActive();
-    }
+    this.movie$ = this.query.selectActive()
   }
-
-  /* Returns label from json staticModels */
-  public getStaticBySlug (scope: string, slug: string) {
-    return getLabelBySlug (scope, slug) as string;
-  }
-
 }
