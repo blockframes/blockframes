@@ -167,21 +167,21 @@ export class ViewExtractedElementsComponent {
             } else { return false; }
           })
           .then(_ => this._validateMovie(movie))
-          .then(m => {
+          .then(mo => {
             // check if movie is already in database
-            m.id = this.movieQuery.movieExists(m.title.original, m.productionYear, m.directorName);
-            return m;
+            mo.id = this.movieQuery.movieExists(mo.title.original, mo.productionYear, mo.directorName);
+            return mo;
           })
-          .then(m => {
+          .then(mo => {
             // @todo use createMovie of movieModel ?
-            if (m.id !== undefined) {
-              this.moviesToUpdate.data.push(m);
+            if (mo.id !== undefined) {
+              this.moviesToUpdate.data.push(mo);
               this.moviesToUpdate.data = [... this.moviesToUpdate.data];
             } else {
-              this.moviesToCreate.data.push(m);
+              this.moviesToCreate.data.push(mo);
               this.moviesToCreate.data = [... this.moviesToCreate.data];
             }
-          })
+          });
       }
     });
     /*
