@@ -82,7 +82,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
     delete movie.originalTitle;
     delete movie.internationalTitle;
 
-    return movie;
+    return JSON.parse(JSON.stringify(movie)); //@todo remove #483
   }
 
   private clear() {

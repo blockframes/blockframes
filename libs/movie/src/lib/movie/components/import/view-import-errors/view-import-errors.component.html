@@ -1,0 +1,25 @@
+<mat-dialog-content>
+  <h1>{{ element.title }}</h1>
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel *ngFor="let error of element.errors; let i = index" [expanded]="step === i"
+      (opened)="setStep(i)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ error.name }}
+        </mat-panel-title>
+        <mat-panel-description [style.color]="error.type === 'error' ? 'red' : 'orange'">
+          {{ error.reason }}
+          <mat-icon>{{ error.type }}</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p><strong>{{ error.field }} : </strong> {{ error.hint }}</p>
+      <mat-action-row>
+        <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Previous</button>
+        <ng-container *ngIf="element.errors.length > 0">
+          <button mat-button color="primary"
+            (click)="nextStep(i+1)">{{ i+1 === element.errors.length ? 'End' : 'Next' }}</button>
+        </ng-container>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-dialog-content>

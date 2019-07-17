@@ -1,0 +1,16 @@
+<mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab *ngFor='let tab of tabs' [label]="tab.name">
+      <table mat-table [dataSource]="tab.rows" class="mat-elevation-z8 full-width-table">
+
+        <ng-container *ngFor="let header of tab.headers; let i = index" [matColumnDef]="header">
+          <th mat-header-cell *matHeaderCellDef> {{ header }} </th>
+          <td mat-cell *matCellDef="let element"> {{ element[i] }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tab.headers"></tr>
+        <tr mat-row *matRowDef="let row; columns: tab.headers;"></tr>
+      </table>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>

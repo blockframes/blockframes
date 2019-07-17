@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { MovieQuery, Movie } from '../../+state';
 import { getLabelBySlug } from '../../staticModels';
 import { FormGroupLike } from '@datorama/akita';
@@ -11,20 +10,23 @@ import { FormGroupLike } from '@datorama/akita';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieViewComponent implements OnInit {
-  @Input() form$: Observable<FormGroupLike>;
   @Input() mode: string;
+  @Input() set form(form: Movie | FormGroupLike) {
+    this.movie = this.mode === 'preview' ? form : this.query.getActive();
+  }
 
-  movie$: Observable<Movie | FormGroupLike>;
+  public movie: Movie | FormGroupLike;
 
   constructor(
     private query: MovieQuery,
   ) { }
 
   ngOnInit() {
+    // @todo not mandatory when used has childComponent but required when statefull
     if (this.mode === 'preview'){
-      this.movie$ = this.form$;
+      this.movie = this.form;
     } else {
-      this.movie$ = this.query.selectActive();
+      this.movie = this.query.getActive();
     }
   }
 

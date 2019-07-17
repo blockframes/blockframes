@@ -20,11 +20,15 @@ import { UiFormModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
+import { IdentityComponent } from './pages/identity/identity.component';
+import { CongratulationComponent } from './pages/congratulation/congratulation.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
-  { path: 'connexion', component: LoginViewComponent }
+  { path: 'connexion', component: LoginViewComponent },
+  { path: 'identity', component: IdentityComponent },
+  { path: 'congratulation', component: CongratulationComponent }
 ];
 
 @NgModule({
@@ -42,6 +46,13 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
-  declarations: [LoginViewComponent, SigninFormComponent, SignupFormComponent, WelcomeViewComponent],
+  declarations: [
+    LoginViewComponent,
+    SigninFormComponent,
+    SignupFormComponent,
+    WelcomeViewComponent,
+    IdentityComponent,
+    CongratulationComponent
+  ]
 })
 export class AuthModule {}

@@ -8,8 +8,7 @@
         <mat-icon>arrow_left</mat-icon>
       </ng-template>
     </button>
-    <!-- TODO: Don't pass an observable as input-->
-    <movie-view [form$]="form$" mode="preview"></movie-view>
+    <movie-view [form]="form" mode="preview"></movie-view>
   </mat-drawer-content>
   <mat-drawer opened #drawer mode="side" position="end" [ngClass]="{ 'mat-drawer-fullscreen' : fullScreen }">
     <button mat-icon-button class="toggle-fullscreen" (click)="toggleFullScreen()">

@@ -81,6 +81,10 @@ const models = {
     {
       'slug': 'financier',
       'label': 'Financier'
+    },
+    {
+      'slug': 'broadcaster-coproducer',
+      'label': 'Broadcaster coproducer'
     }
   ],
   'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
@@ -1159,6 +1163,11 @@ const models = {
       'label': 'Zimbabwe'
     }
   ]
+};
+
+export const getSlug = (scope: string, str: string) => {
+  const item = models[scope].find(i => i.slug === str.trim().toLowerCase());
+  return item !== undefined ? item.slug : false;
 };
 
 export const getLabelBySlug = (scope: string, slug: string) => {

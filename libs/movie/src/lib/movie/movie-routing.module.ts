@@ -11,6 +11,7 @@ import { MovieFormPromotionalComponent } from './components/movie-form/movie-for
 import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
+import { ImportStepperComponent } from './components/import/import-stepper/import-stepper.component';
 
 // Guards
 import { MovieActiveGuard } from './guards/movie-active.guard';
@@ -31,6 +32,12 @@ export const routes: Routes = [
     path: 'list',
     component: MovieListComponent,
     canActivate: [MovieListGuard],
+    canDeactivate: [MovieListGuard],
+  },
+  {
+    path: 'import',
+    component: ImportStepperComponent,
+    canActivate: [MovieListGuard], // @todo not working if user does not have a movie in its list
     canDeactivate: [MovieListGuard],
   },
   {

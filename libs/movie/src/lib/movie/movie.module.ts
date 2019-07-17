@@ -30,6 +30,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
 import { MovieSharedModule } from './movie.shared.module';
+import { ImportMovieModule } from './components/import/import-movie.module';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
@@ -100,6 +101,7 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
     UploadModule,
     UiFormModule,
     StakeholderModule,
+    ImportMovieModule,
     MovieSharedModule,
   ],
   providers: [
