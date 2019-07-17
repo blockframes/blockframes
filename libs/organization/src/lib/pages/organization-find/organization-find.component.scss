@@ -1,0 +1,47 @@
+@import 'variables';
+
+section {
+  height: 100%;
+}
+
+article {
+  width: 30%;
+}
+
+.image {
+  height: 300px;
+  width: 200px;
+  background-image: url('libs/shared-assets/images/find_organization.png');
+  background-size: cover;
+}
+
+h2 {
+  margin: 0;
+}
+
+p{
+  margin-top: 8px;
+  margin-bottom: 50px;
+}
+
+form {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.submit {
+  margin-top: 80px;
+}
+
+// extra small
+@include mobile {
+  article {
+    width: 80%;
+  }
+  .submit {
+    margin-top: 40px;
+  }
+}

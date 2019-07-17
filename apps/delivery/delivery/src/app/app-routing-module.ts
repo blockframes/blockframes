@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { MovieEmptyComponent } from '@blockframes/movie';
 import { OrganizationHomeComponent } from '@blockframes/organization';
+import { OrganizationFindComponent } from '@blockframes/organization';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
@@ -70,6 +71,10 @@ export const routes: Routes = [
       {
         path: 'organization-home',
         component: OrganizationHomeComponent
+      },
+      {
+        path: 'organization-find',
+        component: OrganizationFindComponent
       },
       {
         path: 'create',

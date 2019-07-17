@@ -5,3 +5,4 @@ export * from './lib/components/organization-create/organization-create.componen
 export * from './lib/permissions/guard/permissions.guard'
 export * from './lib/permissions/+state/permissions.service'
 export * from './lib/pages/organization-home/organization-home.component';
+export * from './lib/pages/organization-find/organization-find.component';

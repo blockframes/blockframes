@@ -1,0 +1,29 @@
+<section fxLayout="row" fxLayoutAlign="center">
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <h2>Find your organization</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
+      sagittis. Duis a auctor nulla, a finibus mauris. Nullam eu maximus lorem.
+    </p>
+    <form [formGroup]="addOrganizationForm">
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          placeholder="Organization name"
+          matInput
+          formControlName="org"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of (orgOptions | async)" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+
+    <div class="image"></div>
+    <button class="submit" mat-raised-button color="accent" (click)="addOrganization()">Let's go !</button>
+    <a routerLink="../organization-home"><button mat-button color="primary">Back</button></a>
+  </article>
+</section>

@@ -120,7 +120,6 @@ export const organizationRoutes: Routes = [
     OrganizationSignerFormComponent,
     OrganizationQuorumRepertoryComponent,
     OrganizationEditableComponent,
-    OrganizationFormComponent,
     OrganizationActionItemComponent,
     OrganizationActivityViewComponent
   ],
