@@ -4,7 +4,6 @@ import { switchMap, tap, filter } from 'rxjs/operators';
 import { NotificationStore } from './notification.store';
 import { AuthQuery } from '@blockframes/auth';
 import { Notification } from './notification.model';
-import { Stakeholder } from '@blockframes/movie';
 
 @Injectable({
   providedIn: 'root'

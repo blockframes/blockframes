@@ -1,11 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { StakeholderService } from '../../+state';
 import { FormControl } from '@angular/forms';
-import * as firebase from 'firebase';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie/movie/+state';
 import { Subject } from 'rxjs';
-import { Organization } from '@blockframes/organization';
+import { Organization, OrganizationService } from '@blockframes/organization';
 
 @Component({
   selector: 'stakeholder-repertory',
@@ -18,7 +17,11 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   public organizations: Organization[];
   private destroyed$ = new Subject();
 
-  constructor(private service: StakeholderService, private movieQuery: MovieQuery) {}
+  constructor(
+    private service: StakeholderService,
+    private movieQuery: MovieQuery,
+    private organizationService: OrganizationService
+  ) {}
 
   ngOnInit() {
     this.onChange();
@@ -33,11 +36,6 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
     return organization ? organization.name : undefined;
   }
 
-  private async listOrganizationsByName(prefix: string): Promise<Organization[]> {
-    const call = firebase.functions().httpsCallable('findOrgByName');
-    return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
-  }
-
   private async onChange() {
     this.stakeholderForm.valueChanges
       .pipe(
@@ -45,11 +43,9 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
       )
-      .subscribe(stakeholderName => {
-        this.listOrganizationsByName(stakeholderName).then(matchingOrganizations => {
-          // TODO: use an observable => ISSUE#608
-          this.organizations = matchingOrganizations;
-        });
+      .subscribe(async stakeholderName => {
+        this.organizations = await this.organizationService.getOrganizationsByName(stakeholderName);
+        // TODO: use an observable => ISSUE#608
       });
   }
 

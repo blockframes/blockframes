@@ -13,7 +13,7 @@
     </mat-form-field>
     <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let organization of organizations" [value]="organization" (click)="submit(organization)">
-        {{ organization.name }}
+        <span>{{ organization.name }}</span>
         <mat-icon color="primary">add_circle</mat-icon>
       </mat-option>
     </mat-autocomplete>

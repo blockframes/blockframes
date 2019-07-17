@@ -6,7 +6,13 @@ export interface Invitation {
   id: string;
   appIcon: string;
   message: string;
-  userId: string;
+  userInformations: {
+    userId: string,
+    name: string,
+    surname: string,
+    email: string
+  }
+  orgId?: string;
   path: string;
   docInformations: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
