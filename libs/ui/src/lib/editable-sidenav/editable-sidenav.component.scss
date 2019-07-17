@@ -3,25 +3,19 @@
 mat-sidenav-container {
   height: 100%;
   padding-top: 50px;
-  padding-left : 200px;
-}
-
-.padding-right {
-  padding-right: 200px;
 }
 
 mat-sidenav-content {
   width: 55%;
 }
 
-mat-sidenav {
-  width: 600px;
-  height: 100%;
-  background-color: var(--whiteBackground);
-  padding-top: 50px;
-  padding-right: 200px;
-  padding-bottom: 50px;
-  padding-left: 30px;
+.mat-sidenav {
+  background-color: rgba(0,0,0,0);
+  width: 40%;
+  padding: 50px 100px;
+  height: calc(100vh - var(--toolbarHeight));
+  position: fixed;
+  top: var(--toolbarHeight);
 }
 
 mat-card-header {
@@ -38,48 +32,38 @@ mat-card {
 }
 
 // medium
-@include medium {
-  mat-sidenav {
-    width: 400px;
-    padding-right: 50px;
+ @include medium {
+  .mat-sidenav {
+    padding: 25px 50px;
   }
   mat-sidenav-container {
-    padding-left : 50px;
+    padding-top: 25px;
   }
-  .padding-right {
-    padding-right: 50px;
-  }
-}
+ }
 
 // small
 @include tablet {
-  mat-sidenav {
-    width: 300px;
-    padding-right: 20px;
+  .mat-sidenav {
+    padding: 25px 25px;
   }
   mat-sidenav-container {
-    padding-left : 20px;
-  }
-  .padding-right {
-    padding-right: 20px;
+    padding-top: 25px;
   }
 }
 
 // extra small
 @include mobile {
-  mat-sidenav-content {
-    width: 100%;
-  }
-  mat-sidenav {
-    width: 100%;
-    padding-right: 10px;
-    padding-left: 10px;
+  .mat-sidenav {
+    padding: 10px 10px;
   }
   mat-sidenav-container {
-    padding-left : 10px;
-    padding-right: 10px;
+    padding: 10px 10px;
   }
-  .padding-right {
-    padding-right: 10px;
+  mat-sidenav-content {
+    width: 100%;
+
+  }
+  .mat-sidenav {
+    width: 100%;
   }
 }

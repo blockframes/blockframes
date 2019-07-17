@@ -1,32 +1,31 @@
-<header>
-  <toolbar-header id="navbar">
-    <ng-container app-icon>
-      <button testId="home" mat-icon-button routerLink="/layout">
-        <mat-icon svgIcon="media_delivering" class="app-icon"></mat-icon>
-      </button>
-    </ng-container>
+<toolbar-header id="navbar">
+  <ng-container app-icon>
+    <button testId="home" mat-icon-button routerLink="/layout">
+      <mat-icon svgIcon="media_delivering" class="app-icon"></mat-icon>
+    </button>
+  </ng-container>
 
-    <ng-container encrypting>
-      <encrypting-chips></encrypting-chips>
-    </ng-container>
+  <ng-container encrypting>
+    <encrypting-chips></encrypting-chips>
+  </ng-container>
 
     <ng-container notifications>
       <notification-widget></notification-widget>
     </ng-container>
 
-    <ng-container profile-menu>
-      <account-profile-menu>
-        <ng-container widgets>
-          <account-profile-widget></account-profile-widget>
-          <wallet-widget></wallet-widget>
-          <mat-divider></mat-divider>
-          <org-widget></org-widget>
-        </ng-container>
-      </account-profile-menu>
-    </ng-container>
+  <ng-container profile-menu>
+    <account-profile-menu>
+      <ng-container widgets>
+        <account-profile-widget></account-profile-widget>
+        <wallet-widget></wallet-widget>
+        <mat-divider></mat-divider>
+        <org-widget></org-widget>
+      </ng-container>
+    </account-profile-menu>
+  </ng-container>
 
-  </toolbar-header>
-</header>
+</toolbar-header>
+
 <main>
   <router-outlet></router-outlet>
 </main>
