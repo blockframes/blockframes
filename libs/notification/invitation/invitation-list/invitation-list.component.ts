@@ -11,11 +11,10 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-
   public invitations$: Observable<Invitation[]>;
   private destroyed$ = new Subject();
 
-  constructor(private query: InvitationQuery, private service: InvitationService) { }
+  constructor(private query: InvitationQuery, private service: InvitationService) {}
 
   ngOnInit() {
     this.invitations$ = this.query.selectAll({
@@ -23,7 +22,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    this.service.userInvitations.pipe(takeUntil(this.destroyed$)).subscribe();
+    this.service.userInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
   }
 
   ngOnDestroy() {

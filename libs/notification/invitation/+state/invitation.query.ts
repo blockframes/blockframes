@@ -7,12 +7,7 @@ import { InvitationStore, InvitationState } from './invitation.store';
   providedIn: 'root'
 })
 export class InvitationQuery extends QueryEntity<InvitationState, Invitation> {
-
-
-  constructor(
-    protected store: InvitationStore,
-  ) {
+  constructor(protected store: InvitationStore) {
     super(store);
   }
-
 }

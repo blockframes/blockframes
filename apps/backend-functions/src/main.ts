@@ -62,7 +62,7 @@ export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
 /**
- * Trigger: REST call to find a list of orgs by name.
+ * Trigger: REST call to find a list of organizations by name.
  */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);

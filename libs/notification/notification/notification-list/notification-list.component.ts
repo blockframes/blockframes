@@ -21,7 +21,7 @@ export class NotificationListComponent implements OnInit, OnDestroy {
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    this.service.userNotifications.pipe(takeUntil(this.destroyed$)).subscribe();
+    this.service.userNotifications$.pipe(takeUntil(this.destroyed$)).subscribe();
   }
 
   ngOnDestroy() {

@@ -15,8 +15,8 @@ export class InvitationService {
     private db: FireQuery
   ) {}
 
-  // TODO : move this in /layout guard
-  public get userInvitations() {
+  // TODO : move this in /layout guard => ISSUE#641
+  public get userInvitations$() {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.db.fromQuery(this.getInvitationByUserId(user.uid))),
@@ -24,7 +24,7 @@ export class InvitationService {
     );
   }
 
-  // TODO : move this in /layout guard
+  // TODO : move this in /layout guard => ISSUE#641
   private getInvitationByUserId(userId: string): Query<Invitation> {
     return {
       path: `invitations`,
@@ -35,5 +35,4 @@ export class InvitationService {
   public acceptInvitation(invitationId: string) {
     return this.db.doc<Invitation>(`invitations/${invitationId}`).update({ state: 'accepted' });
   }
-
 }

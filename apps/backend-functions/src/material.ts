@@ -1,7 +1,7 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, getOrgsOfDocument } from './data/internals';
+import { getDocument, getOrganizationsOfDocument } from './data/internals';
 import { Organization, Material, Movie } from './data/types';
 
 export const onMaterialUpdate = async (
@@ -16,10 +16,10 @@ export const onMaterialUpdate = async (
   const material: Material = change.after.data() as Material;
   const materialBefore = change.before.data();
   const orgsPromises = material.deliveriesIds.map((deliveryId: string) =>
-    getOrgsOfDocument(deliveryId, 'deliveries')
+    getOrganizationsOfDocument(deliveryId, 'deliveries')
   );
   const orgsPerDelivery = await Promise.all(orgsPromises);
-  const orgs : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
+  const organizations : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
 
   if (!material || !materialBefore) {
     throw new Error(`No changes detected on this document`);
@@ -35,7 +35,7 @@ export const onMaterialUpdate = async (
    * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
    * betweeen two runs to enforce "only once delivery".
    */
-  if (!!movie && !!material && !!orgs) {
+  if (!!movie && !!material && !!organizations) {
     const materialDoc = await db.doc(`movies/${movie.id}/materials/${material.id}`).get();
     const processedId = materialDoc.data()!.processedId;
 
@@ -44,18 +44,16 @@ export const onMaterialUpdate = async (
     }
 
     try {
-      const notifications = orgs
-        .filter((org: Organization) => !!org && !!org.userIds)
-        .reduce((ids: string[], { userIds }: Organization): string[] => {
-          return [...ids, ...userIds];
-        }, [])
+      const notifications = organizations
+        .filter(organization => !!organization && !!organization.userIds)
+        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
         .map((userId: string) =>
           prepareNotification({
             message: `Material : ${material.value} from movie : ${
               movie.title.original
             } is now in state : ${material.state}`,
             userId,
-            docID: {id: material.id, type: 'material'},
+            docInformations: {id: material.id, type: 'material'},
             path: `/layout/${movie.id}/view/${material.deliveriesIds[0]}`
             // mocked path using first delivery in array
           })

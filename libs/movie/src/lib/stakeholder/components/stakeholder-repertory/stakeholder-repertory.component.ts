@@ -1,15 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { StakeholderService } from '../../+state';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import * as firebase from 'firebase';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie/movie/+state';
 import { Subject } from 'rxjs';
-
-interface Organization {
-  id: string;
-  name?: string;
-}
+import { Organization } from '@blockframes/organization';
 
 @Component({
   selector: 'stakeholder-repertory',
@@ -18,21 +14,13 @@ interface Organization {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
-  public addStakeholderForm: FormGroup;
-  public orgOptions: Organization[];
+  public stakeholderForm = new FormControl();
+  public organizations: Organization[];
   private destroyed$ = new Subject();
 
-  constructor(
-    private service: StakeholderService,
-    private builder: FormBuilder,
-    private movieQuery: MovieQuery
-  ) {}
+  constructor(private service: StakeholderService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
-    this.orgOptions = [];
-    this.addStakeholderForm = this.builder.group({
-      org: null
-    });
     this.onChange();
   }
 
@@ -45,27 +33,28 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
     return organization ? organization.name : undefined;
   }
 
-  private async listOrgsByName(prefix: string): Promise<Organization[]> {
+  private async listOrganizationsByName(prefix: string): Promise<Organization[]> {
     const call = firebase.functions().httpsCallable('findOrgByName');
-    return call({ prefix }).then(matchingOrgs => matchingOrgs.data);
+    return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
+  }
+
+  private async onChange() {
+    this.stakeholderForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(stakeholderName => {
+        this.listOrganizationsByName(stakeholderName).then(matchingOrganizations => {
+          // TODO: use an observable => ISSUE#608
+          this.organizations = matchingOrganizations;
+        });
+      });
   }
 
   ngOnDestroy() {
     this.destroyed$.next();
     this.destroyed$.unsubscribe();
-  }
-
-  private async onChange() {
-    this.addStakeholderForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
-      ).subscribe(typingOrgName => {
-        this.listOrgsByName(typingOrgName.org).then(matchingOrgs => {
-          // TODO: use an observable => ISSUE#608
-          this.orgOptions = matchingOrgs;
-        });
-    });
   }
 }

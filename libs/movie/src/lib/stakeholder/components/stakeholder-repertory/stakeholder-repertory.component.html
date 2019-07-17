@@ -1,21 +1,22 @@
-<h4>Add stakeholders</h4>
-<mat-divider></mat-divider>
-<form [formGroup]="addStakeholderForm" fxLayout="row" fxLayoutAlign="space-between center">
-  <mat-form-field class="search-bar">
-    <mat-label>Search organization</mat-label>
-    <input
-      type="text"
-      matInput
-      placeholder="Company Name"
-      formControlName="org"
-      [matAutocomplete]="autoName"
-    />
-  </mat-form-field>
-  <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let option of orgOptions" [value]="option" (click)="submit(option)">
-      {{ option.name }}
-      <mat-icon class="icon">add_circle</mat-icon>
-    </mat-option>
-  </mat-autocomplete>
-  <mat-icon class="icon" matPrefix>search</mat-icon>
-</form>
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h4>Add stakeholders</h4>
+  <mat-divider></mat-divider>
+  <form fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-form-field>
+      <mat-label>Search an organization</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="Company Name"
+        [formControl]="stakeholderForm"
+        [matAutocomplete]="autoName"/>
+    </mat-form-field>
+    <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let organization of organizations" [value]="organization" (click)="submit(organization)">
+        {{ organization.name }}
+        <mat-icon color="primary">add_circle</mat-icon>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-icon color="primary" matPrefix>search</mat-icon>
+  </form>
+</section>

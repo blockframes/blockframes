@@ -1,4 +1,4 @@
-<div *ngIf="(user$ | async) as user">
+<section *ngIf="(user$ | async) as user">
   <button
     mat-icon-button
     [matMenuTriggerFor]="notifications"
@@ -15,10 +15,10 @@
       <mat-icon svgIcon="notifications" class="notification-icon"></mat-icon>
     </ng-template>
   </button>
-</div>
+</section>
 <mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
-  <ng-container class="notification-list">
+  <section class="notification-list">
     <mat-list> <invitation-list></invitation-list> </mat-list>
     <mat-list> <notification-list></notification-list> </mat-list>
-  </ng-container>
+  </section>
 </mat-menu>

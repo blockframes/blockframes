@@ -7,7 +7,7 @@ import { MovieQuery } from '@blockframes/movie';
 import { combineLatest, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-// TODO: add a stakeholderIds in delivery so we can filter them here.
+// TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
 const deliveryQuery = (deliveryId: string): Query<DeliveryDB> => ({
   path: `deliveries/${deliveryId}`,

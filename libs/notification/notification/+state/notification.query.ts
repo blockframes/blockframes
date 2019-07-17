@@ -7,12 +7,7 @@ import { NotificationStore, NotificationState } from './notification.store';
   providedIn: 'root'
 })
 export class NotificationQuery extends QueryEntity<NotificationState, Notification> {
-
-
-  constructor(
-    protected store: NotificationStore,
-  ) {
+  constructor(protected store: NotificationStore) {
     super(store);
   }
-
 }

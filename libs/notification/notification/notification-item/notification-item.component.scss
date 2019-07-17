@@ -2,24 +2,14 @@
   padding: 10px;
 }
 
-.app-icon {
-  float:left;
-  height: 40px;
-  width: 40px;
-}
-
 .message {
   cursor: pointer;
+  font-size: 12px;
 }
 
-.no-click {
-  cursor: default;
-}
-
-.text {
-  font-size: 11px;
-  margin: 0;
-  margin-bottom: 15px;
+mat-icon {
+  min-height: 40px;
+  min-width: 40px;
 }
 
 .date {

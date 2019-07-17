@@ -2,16 +2,13 @@
   padding: 10px;
 }
 
-.app-icon {
-  float:left;
-  height: 40px;
-  width: 40px;
+mat-icon {
+  min-height: 40px;
+  min-width: 40px;
 }
 
-.text {
-  font-size: 11px;
-  margin: 0;
-  margin-bottom: 15px;
+.message {
+  font-size: 12px;
 }
 
 .date {
@@ -19,12 +16,4 @@
   font-size: 10px;
   color: var(--lightGrey);
   margin-bottom: 0;
-}
-
-button {
-  margin: 2.5%;
-  width: 45%;
-  height: 35px;
-  text-align: center;
-  font-weight: bold;
 }

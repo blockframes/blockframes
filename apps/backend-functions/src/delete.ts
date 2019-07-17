@@ -1,7 +1,7 @@
 import { db, functions } from './firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
-import { getDocument, getCollection, getOrgsOfDocument } from './data/internals';
+import { getDocument, getCollection, getOrganizationsOfDocument } from './data/internals';
 import { Delivery, Material, Movie } from './data/types';
 
 export async function deleteFirestoreMovie (
@@ -26,10 +26,10 @@ export async function deleteFirestoreMovie (
     batch.delete(doc.ref);
   });
   console.log(`${stakeholders.size} stakeholder(s) deleted`);
-  const orgs = await db.collection(`orgs`).get();
-  orgs.forEach(doc => {
+  const organizations = await db.collection(`orgs`).get();
+  organizations.forEach(doc => {
     if (doc.data().movieIds.includes(movie.id)) {
-      console.log(`delete movie id reference in org ${doc.data().id}`);
+      console.log(`delete movie id reference in organization ${doc.data().id}`);
       const newMovieIds: string[] = doc
         .data()
         .movieIds.filter((movieId: string) => movieId !== movie.id);
@@ -61,8 +61,8 @@ export async function deleteFirestoreDelivery(
     throw new Error(`This delivery doesn't exist !`);
   }
 
-  // We store the orgs before the delivery is deleted
-  const orgs = await getOrgsOfDocument(delivery.id, 'deliveries');
+  // We store the organizations before the delivery is deleted
+  const organizations = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
   const batch = db.batch();
   const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
@@ -95,14 +95,14 @@ export async function deleteFirestoreDelivery(
   await batch.commit();
 
   // When delivery is deleted, notifications are created for each stakeholder of this delivery
-  const notifications = orgs
-    .filter(org => !!org && !!org.userIds)
+  const notifications = organizations
+    .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map((userId: string) =>
+    .map(userId =>
       prepareNotification({
         message: `${movie.title.original}'s delivery has been deleted.`,
         userId,
-        docID: { id: delivery.id, type: 'delivery' }
+        docInformations: { id: delivery.id, type: 'delivery' }
       })
     );
 

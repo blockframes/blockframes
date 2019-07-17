@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { NotificationListComponent } from './notification/notification-list/notification-list.component';
@@ -28,6 +29,7 @@ import { MatListModule } from '@angular/material/list';
   imports: [
     CommonModule,
     RouterModule,
+    FlexLayoutModule,
 
     // Material
     MatIconModule,

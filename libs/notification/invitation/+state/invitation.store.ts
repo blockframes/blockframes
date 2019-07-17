@@ -11,10 +11,9 @@ const initialState = {
 @Injectable({
   providedIn: 'root'
 })
-@StoreConfig({ name: 'invitations', idKey: 'id' })
+@StoreConfig({ name: 'invitations' })
 export class InvitationStore extends EntityStore<InvitationState, Invitation> {
   constructor() {
     super(initialState);
   }
-
 }

@@ -11,7 +11,7 @@ import { NotificationService, Notification } from 'libs/notification/notificatio
 export class NotificationItemComponent {
   @Input() notification: Notification;
 
-  private errorMessage = "This url doesn't exist."
+  private errorMessage = "This url doesn't exist.";
 
   constructor(private router: Router, private service: NotificationService) {}
 
@@ -27,7 +27,6 @@ export class NotificationItemComponent {
 
   public goToTeamwork() {
     try {
-      this.service.joinTeamwork(this.notification.stakeholderId, this.notification.docID.id, this.notification.docID.type);
       this.router.navigate([this.notification.path]);
       this.service.readNotification(this.notification.id);
     } catch (error) {

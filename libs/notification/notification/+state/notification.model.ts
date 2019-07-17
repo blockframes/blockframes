@@ -1,20 +1,20 @@
 import { firestore } from 'firebase/app';
-import { DocID } from 'libs/notification/notification/+state';
+import { DocInformations } from 'libs/notification/notification/+state';
 type Timestamp = firestore.Timestamp;
 
 export interface Notification {
   id: string;
-  app: string;
+  appIcon: string;
   message: string;
   userId: string[];
   path: string;
-  docID: DocID;
+  docInformations: DocInformations;
   isRead: boolean;
-  date: Date | Timestamp;
+  date: Timestamp;
   stakeholderId: string;
 };
 
-export interface DocID {
+export interface DocInformations {
   id: string,
   type : 'movie' | 'delivery'
 }

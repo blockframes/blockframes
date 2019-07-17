@@ -1,28 +1,25 @@
-<div
-  *ngIf="!!notification.path; else noPath"
-  [ngClass]="{ 'already-read': notification.isRead }"
-  class="container"
->
-  <span class="message" (click)="goToPath()">
-    <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
-    <p class="text">{{ notification.message }}</p>
+<article *ngIf="!!notification.path; else: noPath" class="container">
+  <span class="message" (click)="goToPath()" fxLayout="row">
+    <mat-icon [svgIcon]="notification.appIcon"></mat-icon>
+    {{ notification.message }}
   </span>
-  <a *ngIf="notification.message.includes('link')" (click)="goToPath()"><button mat-raised-button color="primary">Go to the document</button></a>
+  <a *ngIf="notification.message.includes('link')" (click)="goToPath()" fxLayoutAlign="center">
+    <button mat-raised-button color="primary">Go</button>
+  </a>
   <p class="date">
     Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
     {{ notification.date.toDate() | date: 'hh:mm a' }}
   </p>
-</div>
-
+</article>
 <ng-template #noPath>
-  <div [ngClass]="{ 'already-read': !!notification.isRead }" class="container">
-    <span class="message" (click)="read()">
-      <mat-icon class="app-icon" svgIcon="{{ notification.app }}"></mat-icon>
-      <p class="text">{{ notification.message }}</p>
+  <article [ngClass]="{ 'already-read': !!notification.isRead }" class="container">
+    <span class="message" (click)="read()" fxLayout="row">
+      <mat-icon [svgIcon]="notification.appIcon"></mat-icon>
+      {{ notification.message }}
     </span>
     <p class="date">
       Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
       {{ notification.date.toDate() | date: 'hh:mm a' }}
     </p>
-  </div>
+  </article>
 </ng-template>

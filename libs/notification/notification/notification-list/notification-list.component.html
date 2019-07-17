@@ -1,4 +1,4 @@
-<div testId="notifications" *ngFor="let notification of (notifications$ | async)">
+<section testId="notifications" *ngFor="let notification of (notifications$ | async)">
   <notification-item [notification]="notification"></notification-item>
   <mat-divider></mat-divider>
-</div>
+</section>

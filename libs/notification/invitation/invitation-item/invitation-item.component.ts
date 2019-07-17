@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Invitation, InvitationService } from '../+state';
 import { MatSnackBar } from '@angular/material';
 
@@ -8,12 +8,10 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invitation-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvitationItemComponent implements OnInit {
+export class InvitationItemComponent {
   @Input() invitation: Invitation;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
-
-  ngOnInit() {}
 
   acceptInvitation(invitation: Invitation) {
     this.service.acceptInvitation(invitation.id);

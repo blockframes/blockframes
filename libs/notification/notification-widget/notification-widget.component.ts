@@ -29,7 +29,6 @@ export class NotificationWidgetComponent implements OnInit, OnDestroy {
       .selectCount(entity => !entity.isRead)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(count => (this.notifCount = count));
-    // TODO: sum the notificationsCount and the invitationsCount
     this.invitationQuery
       .selectCount(entity => entity.state === 'pending')
       .pipe(takeUntil(this.destroyed$))

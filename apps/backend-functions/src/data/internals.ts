@@ -4,7 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../firebase';
-import { Organization, Stakeholder, UserDocPermissions, OrgDocPermissions } from './types';
+import { Organization, Stakeholder, UserDocPermissions, OrganizationDocPermissions } from './types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -30,7 +30,7 @@ export function getDocument<T>(path: string): Promise<T> {
  * @param collection
  * @returns the organization that are in the document's stakeholders.
  */
-export async function getOrgsOfDocument(
+export async function getOrganizationsOfDocument(
   documentId: string,
   collection: string
 ): Promise<Organization[]> {
@@ -39,32 +39,39 @@ export async function getOrgsOfDocument(
   return Promise.all(promises);
 }
 
-export function initializeOrgDocPermissions(docId: string, params?: Partial<OrgDocPermissions>): OrgDocPermissions {
+/** Create organization permissions on a shared document (owned by another organization) */
+export function createOrganizationDocPermissions(
+  params: Partial<OrganizationDocPermissions>
+): OrganizationDocPermissions {
   return {
     canCreate: false,
     canDelete: false,
     canRead: true,
     canUpdate: false,
-    id: docId,
-    owner: false, // TODO: Find a way to get the real ownerId
+    id: '',
+    owner: false, // TODO: Find a way to get the real ownerId (or stick to the boolean if it's overcomplicating things) => ISSUE#637
     ...params
-  }
+  };
 }
 
-export function initializeUserDocPermissions(docId: string, params?: Partial<UserDocPermissions>): UserDocPermissions {
+/** Create user related permissions on a shared document (owned by another organization) */
+export function createUserDocPermissions(
+  params: Partial<UserDocPermissions>
+): UserDocPermissions {
   return {
     admins: [],
     canCreate: [],
     canDelete: [],
     canRead: [],
     canUpdate: [],
-    id: docId,
+    id: '',
     ...params
-  }
+  };
 }
 
-export function getCount(collection: string) {
-  // TODO: implement counters to make this function scalable.
+/** Get the number of elements in a firestore collection */
+export function getCount(collection: string): Promise<number> {
+  // TODO: implement counters to make this function scalable. => ISSUE#646
   // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
   return db
     .collection(collection)

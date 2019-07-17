@@ -1,6 +1,6 @@
 import { db, functions } from './firebase';
 import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, getCollection, getCount, getOrgsOfDocument } from './data/internals';
+import { getDocument, getCollection, getCount, getOrganizationsOfDocument } from './data/internals';
 import { Organization, Stakeholder, Movie, Material, Delivery } from './data/types';
 import { isTheSame } from './utils';
 
@@ -28,8 +28,8 @@ export async function onDeliveryUpdate(
   const delivery = await getDocument<Delivery>(`deliveries/${deliveryDoc.id}`);
   const processedId = delivery.processedId;
 
-  const [orgs, movie, stakeholderCount] = await Promise.all([
-    getOrgsOfDocument(delivery.id, 'deliveries'),
+  const [organizations, movie, stakeholderCount] = await Promise.all([
+    getOrganizationsOfDocument(delivery.id, 'deliveries'),
     getDocument<Movie>(`movies/${delivery.movieId}`),
     getCount(`deliveries/${delivery.id}/stakeholders`)
   ]);
@@ -39,7 +39,7 @@ export async function onDeliveryUpdate(
   const isBeforeStateClean = deliveryDocBefore.validated.length === stakeholderCount - 1;
 
   if (isNewSignature && !isFullSignatures) {
-    await notifyOnNewSignee(delivery, orgs, movie);
+    await notifyOnNewSignee(delivery, organizations, movie);
   }
 
   if (!isBeforeStateClean || !isFullSignatures) {
@@ -60,7 +60,7 @@ export async function onDeliveryUpdate(
 
     const promises = copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
     // When delivery is signed, we create notifications for each stakeholder
-    const notifications = createSignatureNotifications(orgs, movie, delivery);
+    const notifications = createSignatureNotifications(organizations, movie, delivery);
 
     promises.push(triggerNotifications(notifications));
     await Promise.all(promises);
@@ -110,7 +110,7 @@ function copyMaterialsToMovie(
  * Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
  * that all stakeholders approved the delivery.
  */
-async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Movie): Promise<void> {
+async function notifyOnNewSignee(delivery: any, organizations: Organization[], movie: Movie): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
   const newStakeholder = await getDocument<Stakeholder>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
@@ -126,7 +126,7 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Mov
     throw new Error(`This organization doesn't exist !`);
   }
 
-  const notifications = createSignatureNotifications(orgs, movie, delivery, newStakeholderOrg);
+  const notifications = createSignatureNotifications(organizations, movie, delivery, newStakeholderOrg);
 
   await triggerNotifications(notifications);
 }
@@ -136,15 +136,15 @@ async function notifyOnNewSignee(delivery: any, orgs: Organization[], movie: Mov
  * pass the signatory's Organization as the 4th argument to get the correct message displayed in notification.
  */
 function createSignatureNotifications(
-  orgs: Organization[],
+  organizations: Organization[],
   movie: Movie,
   delivery: Delivery,
   newStakeholderOrg?: Organization
 ) {
-  return orgs
-    .filter(org => !!org && !!org.userIds)
+  return organizations
+    .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map((userId: string) => {
+    .map(userId => {
       const message = (!!newStakeholderOrg)
         ? `${newStakeholderOrg.name} just signed ${movie.title.original}'s delivery`
         : `${movie.title.original}'s delivery has been approved by all stakeholders.`;
@@ -152,7 +152,7 @@ function createSignatureNotifications(
         message,
         userId,
         path: `/layout/o/${delivery.movieId}/${delivery.id}/view`,
-        docID: { id: delivery.id, type: 'delivery' }
+        docInformations: { id: delivery.id, type: 'delivery' }
       });
     });
 }

@@ -11,7 +11,7 @@ interface DocWithID {
   id: string;
 }
 
-export interface DocID {
+export interface DocInformations {
   id: string;
   type: 'movie' | 'delivery' | 'material';
 }
@@ -66,7 +66,7 @@ export interface Material {
 export interface BaseNotification {
   message: string;
   userId: string;
-  docID: DocID;
+  docInformations: DocInformations;
   stakeholderId?: string;
   path?: string;
 }
@@ -75,13 +75,13 @@ export interface Notification extends BaseNotification {
   id: string;
   isRead: boolean;
   date: FirebaseFirestore.FieldValue;
-  app: string;
+  appIcon: AppIcon;
 }
 
 export interface BaseInvitation {
   message: string;
   userId: string;
-  docID: DocID;
+  docInformations: DocInformations;
   stakeholderId?: string;
   path?: string;
 }
@@ -90,21 +90,26 @@ export interface Invitation extends BaseInvitation {
   id: string;
   state: 'accepted' | 'declined' | 'pending';
   date: FirebaseFirestore.FieldValue;
-  app: string;
+  appIcon: AppIcon;
   processedId?: string;
+}
+
+export enum AppIcon {
+  mediaDelivering = 'media_delivering',
+  mediaFinanciers = 'media_financiers',
 }
 
 export interface SnapObject {
   movie: Movie;
-  docID: DocID;
-  org: Organization;
+  docInformations: DocInformations;
+  organization: Organization;
   eventType: string;
   delivery?: Delivery | null;
   newStakeholderId?: string;
   count?: number;
 }
 
-export interface OrgDocPermissions {
+export interface OrganizationDocPermissions {
   id: string;
   canCreate: boolean;
   canRead: boolean;
