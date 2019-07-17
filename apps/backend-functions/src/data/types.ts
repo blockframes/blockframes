@@ -11,7 +11,7 @@ interface DocWithID {
   id: string;
 }
 
-export interface DocID {
+export interface DocInformations {
   id: string;
   type: 'movie' | 'delivery' | 'material';
 }
@@ -19,13 +19,15 @@ export interface DocID {
 export interface Organization {
   id: string;
   userIds: string[];
+  movieIds: string[];
   name: string;
   address: string;
 }
 
 export interface Stakeholder {
   id: string;
-  orgId: string;
+  isAccepted: boolean;
+  processedId: string;
 }
 
 export interface Step {
@@ -64,7 +66,7 @@ export interface Material {
 export interface BaseNotification {
   message: string;
   userId: string;
-  docID: DocID;
+  docInformations: DocInformations;
   stakeholderId?: string;
   path?: string;
 }
@@ -72,18 +74,57 @@ export interface BaseNotification {
 export interface Notification extends BaseNotification {
   id: string;
   isRead: boolean;
-  date: any;
-  app: string;
+  date: FirebaseFirestore.FieldValue;
+  appIcon: AppIcon;
+}
+
+export interface BaseInvitation {
+  message: string;
+  userId: string;
+  docInformations: DocInformations;
+  stakeholderId?: string;
+  path?: string;
+}
+
+export interface Invitation extends BaseInvitation {
+  id: string;
+  state: 'accepted' | 'declined' | 'pending';
+  date: FirebaseFirestore.FieldValue;
+  appIcon: AppIcon;
+  processedId?: string;
+}
+
+export enum AppIcon {
+  mediaDelivering = 'media_delivering',
+  mediaFinanciers = 'media_financiers',
 }
 
 export interface SnapObject {
   movie: Movie;
-  docID: DocID;
-  org: Organization;
+  docInformations: DocInformations;
+  organization: Organization;
   eventType: string;
   delivery?: Delivery | null;
   newStakeholderId?: string;
   count?: number;
+}
+
+export interface OrganizationDocPermissions {
+  id: string;
+  canCreate: boolean;
+  canRead: boolean;
+  canUpdate: boolean;
+  canDelete: boolean;
+  owner: boolean;
+}
+
+export interface UserDocPermissions {
+  id: string;
+  admins: string[];
+  canCreate: string[];
+  canDelete: string[];
+  canRead: string[];
+  canUpdate: string[];
 }
 
 /**

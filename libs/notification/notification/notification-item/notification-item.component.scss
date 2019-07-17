@@ -2,24 +2,18 @@
   padding: 10px;
 }
 
-.app-icon {
-  float:left;
-  height: 40px;
-  width: 40px;
-}
-
 .message {
   cursor: pointer;
+  font-size: 12px;
 }
 
-.no-click {
-  cursor: default;
+.nav-anchor {
+  text-align: center;
 }
 
-.text {
-  font-size: 11px;
-  margin: 0;
-  margin-bottom: 15px;
+mat-icon {
+  min-height: 40px;
+  min-width: 40px;
 }
 
 .date {
@@ -33,12 +27,4 @@
   background-color: rgba(0, 0, 0, 0.020);
   color: var(--lightGrey);
   filter: grayscale(100%);
-}
-
-button {
-  margin: 2.5%;
-  width: 45%;
-  height: 35px;
-  text-align: center;
-  font-weight: bold;
 }

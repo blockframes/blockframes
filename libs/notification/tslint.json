@@ -1,7 +1,7 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [true, "attribute", "notification", "camelCase"],
-    "component-selector": [true, "element", "notification", "kebab-case"]
+    "directive-selector": [true, "attribute", "invitation", "notification", "camelCase"],
+    "component-selector": [true, "element", "invitation", "notification", "kebab-case"]
   }
 }

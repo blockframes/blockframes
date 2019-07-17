@@ -1,0 +1,24 @@
+<section *ngIf="(user$ | async) as user">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="notifications"
+    class="notification-button">
+    <mat-icon
+      *ngIf="notifCount > 0 || invitCount > 0; else: empty"
+      svgIcon="notifications"
+      [matBadge]="notifCount + invitCount"
+      matBadgeColor="primary"
+      matBadgeSize="medium"
+      class="notification-icon">
+    </mat-icon>
+    <ng-template #empty>
+      <mat-icon svgIcon="notifications" class="notification-icon"></mat-icon>
+    </ng-template>
+  </button>
+</section>
+<mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
+  <section class="notification-list">
+    <mat-list> <invitation-list></invitation-list> </mat-list>
+    <mat-list> <notification-list></notification-list> </mat-list>
+  </section>
+</mat-menu>

@@ -28,6 +28,7 @@ import * as migrations from './migrations';
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './pdf';
+import { onInvitationUpdate } from './invitation';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -61,7 +62,7 @@ export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
 /**
- * Trigger: REST call to find a list of orgs by name.
+ * Trigger: REST call to find a list of organizations by name.
  */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);
@@ -126,6 +127,18 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
   'movies/{movieID}/stakeholders/{stakeholerID}',
   onMovieStakeholderDelete
 );
+
+/**
+ * Trigger: when an invitation is update (e. g. when invitation.state change)
+ */
+export const onInvitationUpdateEvent = onDocumentUpdate(
+  'invitations/{invitationID}',
+  onInvitationUpdate
+)
+
+//--------------------------------
+//        GENERATE PDF          //
+//--------------------------------
 
 /**
  * Trigger: REST call to generate a delivery PDF

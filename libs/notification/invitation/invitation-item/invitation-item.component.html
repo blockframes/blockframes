@@ -1,0 +1,14 @@
+<article class="container">
+  <span class="message">
+    <mat-icon [svgIcon]="invitation.appIcon"></mat-icon>
+    {{ invitation.message }}
+  </span>
+  <article fxLayoutAlign="space-around center">
+    <button mat-raised-button color="primary" (click)="acceptInvitation(invitation)">Accept</button>
+    <button mat-raised-button color="warn">Decline</button>
+  </article>
+  <p class="date">
+    Received {{ invitation.date.toDate() | date: 'MMM dd yyyy' }} at
+    {{ invitation.date.toDate() | date: 'hh:mm a' }}
+  </p>
+</article>

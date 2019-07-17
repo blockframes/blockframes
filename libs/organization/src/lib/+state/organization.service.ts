@@ -5,6 +5,7 @@ import { FireQuery } from '@blockframes/utils';
 import { AuthStore, User } from '@blockframes/auth';
 import { OrganizationQuery } from './organization.query';
 import { PermissionsQuery, createPermissions, App, createAppPermissions } from '../permissions/+state';
+import firebase from 'firebase';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
@@ -95,5 +96,11 @@ export class OrganizationService {
     this.store.update(state => ({
       org: { ...state.org, ...organization }
     }));
+  }
+
+  /** Returns a list of organizations whose part of name match with @param prefix */
+  public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
+    const call = firebase.functions().httpsCallable('findOrgByName');
+    return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
   }
 }

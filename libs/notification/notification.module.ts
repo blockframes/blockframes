@@ -1,36 +1,44 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-//Components
-import { NotificationListComponent } from './notification-list/notification-list.component';
-import { NotificationItemComponent } from './notification-item/notification-item.component';
+// Components
+import { NotificationListComponent } from './notification/notification-list/notification-list.component';
+import { NotificationItemComponent } from './notification/notification-item/notification-item.component';
+import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
+import { InvitationListComponent } from './invitation/invitation-list/invitation-list.component';
+import { InvitationItemComponent } from './invitation/invitation-item/invitation-item.component';
 
-//Material
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
-import { UtilsModule } from 'libs/utils/src/lib/utils.module';
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationItemComponent, NotificationMenuComponent,],
+  declarations: [
+    NotificationListComponent,
+    NotificationItemComponent,
+    NotificationWidgetComponent,
+    InvitationListComponent,
+    InvitationItemComponent
+  ],
   imports: [
     CommonModule,
     RouterModule,
-    UtilsModule,
+    FlexLayoutModule,
 
-    //Material
+    // Material
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
-    MatListModule,
+    MatListModule
   ],
-  exports: [NotificationListComponent, NotificationMenuComponent,]
+  exports: [NotificationWidgetComponent]
 })
-export class NotificationModule { }
+export class NotificationModule {}

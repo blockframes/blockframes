@@ -1,17 +1,14 @@
 import { functions, db } from './firebase';
-import { prepareNotification, triggerNotifications, customMessage } from './notify';
 import {
-  getDocument,
-  getCount,
-  getOrgsOfDocument
-} from './data/internals';
-import {
-  Delivery,
-  DocID,
-  Organization,
-  Movie,
-  SnapObject,
-} from './data/types';
+  prepareNotification,
+  triggerNotifications,
+  customMessage,
+  prepareInvitation,
+  invitationMessage,
+  triggerInvitations
+} from './notify';
+import { getDocument, getCount, getOrganizationsOfDocument } from './data/internals';
+import { Delivery, DocInformations, Organization, Movie, SnapObject } from './data/types';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -64,13 +61,13 @@ async function stakeholdersCollectionEvent(
   const document = !!context.params.movieID
     ? await getDocument<any>(`${collection}/${context.params.movieID}`)
     : await getDocument<any>(`${collection}/${context.params.deliveryID}`);
-  const docID: DocID = {
+  const docInformations: DocInformations = {
     id: document.id,
     type: !!context.params.movieID ? 'movie' : 'delivery'
   };
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder.orgId}`);
+  const organization = await getDocument<Organization>(`orgs/${newStakeholder.id}`);
 
-  if (!!document && !!newStakeholder && !!newStakeholderOrg) {
+  if (!!document && !!newStakeholder && !!organization) {
     const documentSnapshot = await db.doc(`${collection}/${document.id}`).get();
     const processedId = documentSnapshot.data()!.processedId;
 
@@ -79,29 +76,33 @@ async function stakeholdersCollectionEvent(
     }
 
     try {
-      const [orgs, stakeholderCount] = await Promise.all([
-        getOrgsOfDocument(document.id, collection),
+      const [organizations, stakeholderCount] = await Promise.all([
+        getOrganizationsOfDocument(document.id, collection),
         getCount(`${collection}/${document.id}/stakeholders`)
       ]);
-      const movie = (!!context.params.movieID)
+      const movie = !!context.params.movieID
         ? document
         : await getDocument<Movie>(`movies/${document.movieId}`);
-      const delivery = (!!context.params.deliveryID)
+      const delivery = !!context.params.deliveryID
         ? await getDocument<Delivery>(`deliveries/${document.id}`)
-        : null
+        : null;
       const snapInformations: SnapObject = {
         movie,
-        docID,
-        org: newStakeholderOrg,
+        docInformations,
+        organization,
         eventType: context.eventType,
         newStakeholderId: newStakeholder.id,
         count: stakeholderCount,
         delivery
       };
 
-      const notifications = createStakeholderNotifications(orgs, snapInformations);
+      const notifications = createNotifications(organizations, snapInformations);
+      triggerNotifications(notifications);
 
-      await triggerNotifications(notifications);
+      const invitations = createInvitations(organizations, snapInformations);
+      // TODO: trigger only one invitation shared among all the organization members (loaded with user.orgId in the frontend) => ISSUE#645
+      triggerInvitations(invitations);
+
     } catch (e) {
       await db.doc(`${collection}/${document.id}`).update({ processedId: null });
       throw e;
@@ -115,20 +116,45 @@ async function stakeholdersCollectionEvent(
  * Takes a list of Organization and a SnapObject to generate one notification for each users
  * working on the document, with custom path and message.
  */
-function createStakeholderNotifications(orgs: Organization[], snap: SnapObject) {
+function createNotifications(organizations: Organization[], snap: SnapObject) {
   const path = !!snap.delivery
     ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
     : `/layout/o/home/${snap.movie.id}/teamwork`;
-  return orgs
-    .filter(org => !!org && !!org.userIds)
+  return organizations
+    .filter(organization => !!organization && !!organization.userIds && organization.id !== snap.organization.id)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map((userId: string) => {
+    .map(userId => {
       return prepareNotification({
-        message: customMessage(userId, snap),
+        message: customMessage(snap),
         userId,
         path,
         stakeholderId: snap.newStakeholderId,
-        docID: snap.docID
+        docInformations: snap.docInformations
       });
     });
+}
+
+/**
+ * Takes a list of Organization and a SnapObject to generate one invitation for each users
+ * invited to work on the new document, with custom path and message.
+ */
+function createInvitations(organizations: Organization[], snap: SnapObject) {
+  if (!!snap.count && snap.count > 1) {
+    const path = !!snap.delivery
+      ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
+      : `/layout/o/home/${snap.movie.id}/teamwork`;
+    return organizations
+      .filter(organization => !!organization && !!organization.userIds && organization.id === snap.organization.id)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map(userId => {
+        return prepareInvitation({
+          message: invitationMessage(snap),
+          userId,
+          path,
+          stakeholderId: snap.newStakeholderId,
+          docInformations: snap.docInformations
+        });
+      });
+  }
+  throw new Error('No invitation needed for document owner.');
 }

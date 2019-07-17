@@ -11,10 +11,9 @@ const initialState = {
 @Injectable({
   providedIn: 'root'
 })
-@StoreConfig({ name: 'notifications', idKey: 'id' })
+@StoreConfig({ name: 'notifications' })
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
   constructor() {
     super(initialState);
   }
-
 }
