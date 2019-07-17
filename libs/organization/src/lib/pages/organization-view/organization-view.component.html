@@ -16,7 +16,7 @@
           <span>* Click on the star to grant or remove Admin privileges</span>
         </mat-list-item>
       </mat-list>
-      <org-member-form *ngIf="(isSuperAdmin$ | async)"></org-member-form>
+      <organization-member-form *ngIf="(isSuperAdmin$ | async)"></organization-member-form>
     </ng-container>
     <ng-template #organizationLoading>
       <div fxLayout="column" fxLayoutAlign="center center">

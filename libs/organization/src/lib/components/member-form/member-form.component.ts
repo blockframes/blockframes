@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import * as firebase from 'firebase';
 import { OrganizationService } from '../../+state';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth';
 
 export interface User {
   uid: string;
@@ -12,27 +12,27 @@ export interface User {
 }
 
 @Component({
-  selector: 'org-member-form',
+  selector: 'organization-member-form',
   templateUrl: './member-form.component.html',
   styleUrls: ['./member-form.component.scss']
 })
 export class MemberFormComponent implements OnInit, OnDestroy {
-  public addMemberForm: FormGroup;
-  public mailsOptions: User[];
+  public memberForm: FormGroup;
+  public users: User[];
   private destroyed$ = new Subject();
 
   constructor(
     private service: OrganizationService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
   ) {}
 
   ngOnInit() {
-    this.addMemberForm = this.builder.group({
+    this.memberForm = this.builder.group({
       user: null,
       role: ''
     });
-    this.mailsOptions = [];
     this.onChange();
   }
 
@@ -41,12 +41,12 @@ export class MemberFormComponent implements OnInit, OnDestroy {
   }
 
   public async addMember() {
-    if (!this.addMemberForm.valid) {
+    if (!this.memberForm.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 1000 });
       throw new Error('Invalid form');
     }
 
-    const { user, role } = this.addMemberForm.value;
+    const { user, role } = this.memberForm.value;
     let email = user; // on user input, user = raw email string
 
     // on auto-complete, user = {id, email}
@@ -55,20 +55,10 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     }
 
     // Query a get or create user, to make ghost users when needed
-    const { uid } = await this.getOrCreateUserByMail(email);
+    const { uid } = await this.authService.getOrCreateUserByMail(email);
     await this.service.addMember({ uid, email, roles: [role] });
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
-    this.addMemberForm.reset();
-  }
-
-  private async getOrCreateUserByMail(email: string): Promise<User> {
-    const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email }).then(matchingEmail => matchingEmail.data);
-  }
-
-  private async listUserByMail(prefix: string): Promise<User[]> {
-    const f = firebase.functions().httpsCallable('findUserByMail');
-    return f({ prefix }).then(matchingUsers => matchingUsers.data);
+    this.memberForm.reset();
   }
 
   ngOnDestroy() {
@@ -77,16 +67,15 @@ export class MemberFormComponent implements OnInit, OnDestroy {
   }
 
   private async onChange() {
-    this.addMemberForm.valueChanges
+    this.memberForm.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
-      ).subscribe(typingEmail => {
-        this.listUserByMail(typingEmail.user).then(matchingUsers => {
+      ).subscribe(async typingEmail => {
+        this.users = await this.authService.getUserByMail(typingEmail.user);
           // TODO: use an observable => ISSUE#608
-          this.mailsOptions = matchingUsers;
-        });
+        ;
     });
   }
 }

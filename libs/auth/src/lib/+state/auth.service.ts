@@ -4,6 +4,7 @@ import { AuthStore, User, createUser } from './auth.store';
 import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
+import firebase from 'firebase';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -111,5 +112,15 @@ export class AuthService {
       .get()
       .toPromise();
     return items.docs;
+  }
+
+  public async getOrCreateUserByMail(email: string): Promise<User> {
+    const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
+    return f({ email }).then(matchingEmail => matchingEmail.data);
+  }
+
+  public async getUserByMail(prefix: string): Promise<User[]> {
+    const f = firebase.functions().httpsCallable('findUserByMail');
+    return f({ prefix }).then(matchingUsers => matchingUsers.data);
   }
 }

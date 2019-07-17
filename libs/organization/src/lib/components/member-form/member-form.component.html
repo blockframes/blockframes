@@ -3,7 +3,7 @@
     <mat-card-title>Invite a user</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="addMemberForm" (ngSubmit)="addMember()" fxLayout ="row" fxLayoutAlign="space-evenly center">
+    <form [formGroup]="memberForm" (ngSubmit)="addMember()" fxLayout ="row" fxLayoutAlign="space-evenly center">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput
@@ -12,8 +12,8 @@
           [matAutocomplete]="autoEmail"/>
       </mat-form-field>
       <mat-autocomplete #autoEmail="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let option of mailsOptions" [value]="option">
-          {{ option.email }}
+        <mat-option *ngFor="let user of users" [value]="user">
+          {{ user.email }}
         </mat-option>
       </mat-autocomplete>
       <button testId="addMember" type="submit" mat-raised-button color="primary">Add</button>
