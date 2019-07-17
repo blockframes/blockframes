@@ -29,7 +29,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
-import { MovieDisplayModule } from './pages/movie-display/movie-display.module';
+import { MovieDisplayModule } from './components/movie-display/movie-display.module';
 import { ImportMovieModule } from './components/import/import-movie.module';
 
 // Components

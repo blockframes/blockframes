@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Movie } from '../../../+state';
 import { getLabelBySlug } from '../../../staticModels';
-import { FlatMovie } from '../../../components/movie-form/movie.form';
+import { FlatMovie } from './../../movie-form/movie.form';
 
 @Component({
   selector: 'movie-display',
