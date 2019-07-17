@@ -3,7 +3,8 @@ import { FireQuery, Query } from '@blockframes/utils';
 import { switchMap, tap, filter } from 'rxjs/operators';
 import { InvitationStore } from './invitation.store';
 import { AuthQuery } from '@blockframes/auth';
-import { Invitation } from './invitation.model';
+import { Invitation, createInvitation } from './invitation.model';
+import { Organization } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,22 @@ export class InvitationService {
     private store: InvitationStore,
     private db: FireQuery
   ) {}
+
+  public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
+    const user = this.authQuery.user;
+    const invitation = createInvitation({
+      id: this.db.createId(),
+      message: 'A user would like to participate to your orgnaization',
+      orgId: organization.id,
+      userInformations: {
+        userId: user.uid,
+        name: user.name,
+        surname: user.surname,
+        email: user.email
+      }
+    });
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+  }
 
   // TODO : move this in /layout guard => ISSUE#641
   public get userInvitations$() {

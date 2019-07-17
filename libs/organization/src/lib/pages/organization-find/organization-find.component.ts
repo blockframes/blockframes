@@ -3,9 +3,10 @@ import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { startWith, map, filter, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Organization } from '../../+state';
+import { Organization, OrganizationService } from '../../+state';
 import firebase from 'firebase';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InvitationService } from '@blockframes/notification';
 
 @Component({
   selector: 'organization-find',
@@ -22,7 +23,9 @@ export class OrganizationFindComponent implements OnInit, OnDestroy {
 
   constructor(
     private builder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private invitationService: InvitationService
   ) {}
 
   ngOnInit() {
@@ -39,8 +42,12 @@ export class OrganizationFindComponent implements OnInit, OnDestroy {
 
   public addOrganization() {
     if(this.selectedOrganization) {
-      // TODO: create a new invitation
-      console.log(this.selectedOrganization);
+      try {
+        this.invitationService.sendInvitationToOrg(this.selectedOrganization);
+        this.router.navigate(['layout/congratulation']);
+      } catch (error) {
+        this.snackBar.open(error.message, 'close', { duration: 2000 });
+      }
     }
     else {
       this.snackBar.open('Please select an organization', 'close', { duration: 2000 });

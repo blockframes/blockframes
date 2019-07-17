@@ -6,15 +6,23 @@ export interface Invitation {
   id: string;
   appIcon: string;
   message: string;
-  userInformations: {
+  userInformations?: {
     userId: string,
     name: string,
     surname: string,
     email: string
   }
-  orgId?: string;
+  orgId: string;
   path: string;
   docInformations: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
   date: Timestamp;
 };
+
+export function createInvitation(params: Partial<Invitation>) {
+  return {
+    state: 'pending',
+    date: firestore.Timestamp.now(),
+    ...params
+  } as Invitation;
+}
