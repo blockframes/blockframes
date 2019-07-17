@@ -9,12 +9,12 @@ import { createOrganization, OrganizationQuery, OrganizationService, Organizatio
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'org-form',
-  templateUrl: './org-form.component.html',
-  styleUrls: ['./org-form.component.scss'],
+  selector: 'organization-form',
+  templateUrl: './organization-form.component.html',
+  styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgFormComponent implements OnInit, OnDestroy {
+export class OrganizationFormComponent implements OnInit, OnDestroy {
   public persistForm: PersistNgFormPlugin<OrganizationState>;
   public user: User;
   public form: FormGroup;

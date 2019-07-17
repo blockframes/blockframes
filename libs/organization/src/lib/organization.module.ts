@@ -21,27 +21,31 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
-import { MatTableModule, MatSortModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Components
-import { OrgFormComponent } from './components/org-form/org-form.component';
+import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
-import { OrgWidgetComponent } from './components/org-widget/org-widget.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationQuorumRepertoryComponent } from './components/organization-quorum-repertory/organization-quorum-repertory.component';
+import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
+import { OrganizationEditComponent } from './components/organization-edit/organization-edit.component';
 
 // Pages
-import { OrgViewComponent } from './pages/org-view/org-view.component';
+import { OrganizationViewComponent } from './pages/organization-view/organization-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
 import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
+import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -50,13 +54,13 @@ export const organizationRoutes: Routes = [
   },
   {
     path: 'form',
-    component: OrgFormComponent
+    component: OrganizationFormComponent
   },
   {
     path: ':orgId',
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
-      { path: 'view', component: OrgViewComponent },
+      { path: 'view', component: OrganizationEditableComponent },
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
@@ -95,12 +99,13 @@ export const organizationRoutes: Routes = [
     MatRippleModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrgFormComponent,
-    OrgViewComponent,
-    OrgWidgetComponent,
+    OrganizationFormComponent,
+    OrganizationViewComponent,
+    OrganizationWidgetComponent,
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,
@@ -113,8 +118,14 @@ export const organizationRoutes: Routes = [
     OrganizationActionRepertoryComponent,
     OrganizationSignerRepertoryComponent,
     OrganizationSignerFormComponent,
-    OrganizationQuorumRepertoryComponent
+    OrganizationQuorumRepertoryComponent,
+    OrganizationEditableComponent,
+    OrganizationEditComponent,
+    OrganizationActionItemComponent,
+    OrganizationActivityViewComponent
   ],
-  exports: [OrgWidgetComponent]
+  exports: [
+    OrganizationWidgetComponent
+  ]
 })
 export class OrganizationModule {}

@@ -1,27 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AuthQuery, User } from '@blockframes/auth';
 import { Organization, OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
-import { PermissionsQuery } from '../../permissions/+state';
 
 @Component({
-  selector: 'org-view',
-  templateUrl: './org-view.component.html',
-  styleUrls: ['./org-view.component.scss'],
+  selector: 'organization-widget',
+  templateUrl: './organization-widget.component.html',
+  styleUrls: ['./organization-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgViewComponent implements OnInit {
+export class OrganizationWidgetComponent implements OnInit {
   public organization$: Observable<Organization>;
-  public isSuperAdmin$: Observable<boolean>;
+  public user$: Observable<User>;
 
   constructor(
     private query: OrganizationQuery,
-    private permissionsQuery: PermissionsQuery,
+    private auth: AuthQuery,
   ) {
   }
 
   ngOnInit() {
+    this.user$ = this.auth.user$;
     this.organization$ = this.query.select('org');
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
   }
-
 }

@@ -1,0 +1,28 @@
+<article>
+  <mat-card class="mat-elevation-z1">
+    <ng-container *ngIf="(organization$ | async) as organization; else: organizationLoading">
+      <span fxLayout="row" fxLayoutAlign="none center">
+        <h2>{{ organization.name }}</h2>
+        <button *ngIf="(isSuperAdmin$ | async)" mat-icon-button (click)="editing.emit()" color="primary">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </span>
+      <p>{{ organization.address }}</p>
+      <org-member-list></org-member-list>
+      <mat-list>
+        <mat-list-item><mat-icon color="primary">star</mat-icon>: Admin</mat-list-item>
+        <mat-list-item><mat-icon color="primary">star_border</mat-icon>: Member</mat-list-item>
+        <mat-list-item *ngIf="(isSuperAdmin$ | async)">
+          <span>* Click on the star to grant or remove Admin privileges</span>
+        </mat-list-item>
+      </mat-list>
+      <org-member-form *ngIf="(isSuperAdmin$ | async)"></org-member-form>
+    </ng-container>
+    <ng-template #organizationLoading>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <p>Your organization profile is loading...</p>
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+    </ng-template>
+  </mat-card>
+</article>

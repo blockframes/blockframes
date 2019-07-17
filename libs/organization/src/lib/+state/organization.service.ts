@@ -111,9 +111,8 @@ export class OrganizationService {
   }
 
   public update(organization: Partial<Organization>) {
-    this.store.update(state => ({
-      org: { ...state.org, ...organization }
-    }));
+    const organizationId = this.query.getValue().org.id;
+    this.db.doc(`orgs/${organizationId}`).update(organization);
   }
 
   /** Returns a list of organizations whose part of name match with @param prefix */

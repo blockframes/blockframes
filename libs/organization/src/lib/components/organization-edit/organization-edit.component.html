@@ -1,0 +1,25 @@
+<mat-card-content>
+  <ng-container *ngIf="(organization$ | async) as organization; else: organizationLoading">
+    <mat-card-title>Editing {{ organization.name }}</mat-card-title>
+    <form fxLayout="column" fxLayoutAlign="space-around center">
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>Address</mat-label>
+        <input
+          matInput
+          type="firstName"
+          [formControl]="organizationForm"
+          value="{{organization.address}}"
+          placeholder="Organization address"/>
+      </mat-form-field>
+    </form>
+  </ng-container>
+  <ng-template #organizationLoading>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <p>Your organization profile is loading...</p>
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  </ng-template>
+</mat-card-content>
+<mat-card-actions>
+  <button mat-raised-button color="primary" (click)="updateOrganization()">Save</button>
+</mat-card-actions>
