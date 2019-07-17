@@ -1,16 +1,19 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
     <ng-container content>
-        <article fxLayout="row" fxLayoutAlign="start center"> 
-            <h1>Activity Report</h1><mat-divider></mat-divider>
-            </article>
-            <h2>Pending Approval</h2>
-            <org-action-item [actionItems]="pendingActions$ | async" (clickedOnSigners)="openSidenav($event)">
-            </org-action-item>
-            <h2>Actions Approved</h2>
-            <org-action-item [actionItems]="approvedActions$ | async" (clickedOnSigners)="openSidenav($event)">
-            </org-action-item>
+        <h1 fxLayout="row" fxLayoutAlign="start center">
+            <span>Activity Report</span>
+            <mat-divider></mat-divider>
+        </h1>
+        <h2>Pending Approval</h2>
+        <org-action-item [actionItems]="pendingActions$ | async" (clickedOnSigners)="openSidenav($event)">
+        </org-action-item>
+        <h2>Actions Approved</h2>
+        <org-action-item [actionItems]="approvedActions$ | async" (clickedOnSigners)="openSidenav($event)">
+        </org-action-item>
     </ng-container>
-        <ng-container sidenav>
-            <p>{{ sidenavContent }}</p>
-        </ng-container>
-    </editable-sidenav>
+    <ng-container sidenav>
+        <section>
+            <p *ngFor="let signer of signers">{{ signer }}</p>
+        </section>
+    </ng-container>
+</editable-sidenav>

@@ -6,16 +6,16 @@
 
   <ng-container matColumnDef="Signers">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Signer </th>
-    <td matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.signers)">
-       {{element.signers}}
-      </td>
+    <td class="clickable" matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.signers)">
+      {{element.signers}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="Countersigners">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Countersigner </th>
-    <td matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.counterSigners)">
-       {{element.counterSigners}} 
-      </td>
+    <td class="clickable" matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.counterSigners)">
+      {{element.counterSigners}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="Date">

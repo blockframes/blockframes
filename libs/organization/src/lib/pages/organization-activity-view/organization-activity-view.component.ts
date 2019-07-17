@@ -67,7 +67,7 @@ export class OrganizationActivityViewComponent implements OnInit {
   public approvedActions$ = of(mockApprovedActions);
 
   // TODO #638: replace any
-  public sidenavContent: any[];
+  public signers: any[] = [];
 
   // Flag to indicate whether sidenav is open or not
   public opened = false;
@@ -77,10 +77,15 @@ export class OrganizationActivityViewComponent implements OnInit {
 
   ngOnInit() {}
 
-    // TODO #638: replace any refactor the function when you know how the real data is going to look like
-    // also the sidenav is going to need a refactoring
-    public openSidenav(signers: any) {
-      this.opened = !this.opened;
-      this.sidenavContent = signers;
+  // TODO #638: replace any refactor the function when you know how the real data is going to look like
+  // also the sidenav is going to need a refactoring
+  public openSidenav(signers: any) {
+    if (JSON.stringify(signers) !== JSON.stringify(this.signers)) {
+      this.signers = signers;
+      this.opened = true;
+    } else {
+      this.opened = false;
+      this.signers = [];
     }
+  }
 }
