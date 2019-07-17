@@ -2,7 +2,7 @@ import HomePage from "./HomePage";
 
 export default class MovieEditPage {
   public static FIELD_INTERNATIONAL_TITLE = 'internationalTitle'
-  public static FIELD_DIRECTOR_NAME = 'directorName';
+  public static FIELD_DIRECTORS = 'directors';
   public static FIELD_PRODUCTION_YEAR = 'productionYear';
 
   public static OPTION_TYPES = 'types';

@@ -26,7 +26,7 @@ class MovieForm extends EntityForm<Movie> {
 export interface FlatMovie {
   originalTitle: string
   internationalTitle: string
-  directorName: string
+  directors: any[],
   poster: string
   productionYear: string
   genres: string
@@ -46,7 +46,7 @@ function createFlatMovie(params?: Partial<FlatMovie>): FlatMovie {
   return {
     originalTitle: '',
     internationalTitle: '',
-    directorName: '',
+    directors: [],
     poster: '',
     productionYear: '',
     genres: '',
@@ -69,7 +69,7 @@ function createMovieControls(entity?: Partial<FlatMovie>) {
   return {
     originalTitle: new StringControl(movie.originalTitle, false, [Validators.required]),
     internationalTitle: new StringControl(movie.internationalTitle, false, [Validators.required]),
-    directorName: new StringControl(movie.directorName, false, [Validators.required]),
+    directors: new FormArray(movie.directors),
     poster: new StringControl(movie.poster),
     productionYear: new YearControl(movie.productionYear),
     genres:  new StringControl(movie.genres),
@@ -115,6 +115,10 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     return this.get('keywords') as FormArray;
   }
 
+  public get movieDirectors() {
+    return this.get('directors') as FormArray;
+  }
+
   public get movieCredits() {
     return this.get('credits') as FormArray;
   }
@@ -136,7 +140,6 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     // Common fields
     this.get('originalTitle').setValue(movie.title.original);
     this.get('internationalTitle').setValue(movie.title.international);
-    this.get('directorName').setValue(movie.directorName);
     this.get('poster').setValue(movie.poster);
     this.get('productionYear').setValue(movie.productionYear);
     this.get('genres').setValue(movie.genres);
@@ -151,6 +154,12 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     if (movie.keywords && movie.keywords.length) {
       movie.keywords.forEach((keyword) => {
         this.addFormControl(new FormControl(keyword), 'keywords');
+      })
+    }
+
+    if (movie.directors && movie.directors.length) {
+      movie.directors.forEach((director) => {
+        this.addFormControl(this.builder.group(director), 'movieDirectors');
       })
     }
 

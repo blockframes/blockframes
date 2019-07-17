@@ -10,14 +10,19 @@
     </mat-card-header>
     <img mat-card-image class="movie-poster" *ngIf="movie.poster" [src]="movie.poster"> 
     <mat-card-content 
-      *ngIf="movie.directorName"
+      *ngIf="movie.directors && movie.directors.length > 0"
       class="movie-card-section"
     >
-      <mat-card-title>Directed by</mat-card-title>
-      <mat-card-subtitle>{{ movie.directorName }}</mat-card-subtitle>
+      <ng-container *ngIf="movie.directors.length > 0">
+        <mat-card-title>Directors</mat-card-title>
+        <mat-card-subtitle *ngIf="movie.directors.length > 0">
+            <span *ngFor="let item of movie.directors; let isLast=last">
+              {{ item.firstName }} {{ item.lastName }}{{ !isLast?',':'' }}
+            </span>
+        </mat-card-subtitle>
+      </ng-container>
     </mat-card-content>
     <mat-card-content *ngIf="
-      (movie.types && movie.types.length > 0 )||
       (movie.genres && movie.genres.length > 0 )||
       (movie.originCountry && movie.originCountry.length > 0 )|| 
       (movie.coProducerCountries && movie.coProducerCountries.length > 0 )||

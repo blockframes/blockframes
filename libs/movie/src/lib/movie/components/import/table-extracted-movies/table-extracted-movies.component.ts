@@ -28,7 +28,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     'title.original',
     'poster',
     'productionYear',
-    'directorName',
     'errors',
     'warnings',
     'actions',
@@ -158,7 +157,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: Movie, filter) {
-    const dataStr = data.title.original + data.productionYear + data.directorName;
+    const dataStr = data.title.original + data.productionYear  //+ data.directorName;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

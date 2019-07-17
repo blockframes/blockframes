@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MovieForm } from '../movie.form';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder } from '@angular/forms';
 import { default as staticModels } from '../../../staticModels';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, startWith, debounceTime, map } from 'rxjs/operators';
@@ -26,7 +26,10 @@ export class MovieFormMainComponent implements OnInit {
   public languages$: Observable<StaticModel[]>;
   public genres$: Observable<StaticModel[]>;
 
-  constructor(public form: MovieForm) {}
+  constructor(
+    public form: MovieForm,
+    private builder: FormBuilder,
+  ) {}
 
   ngOnInit() {
     this.staticModels = staticModels;
@@ -47,5 +50,10 @@ export class MovieFormMainComponent implements OnInit {
       distinctUntilChanged(),
       map(name => model.filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
     )
+  }
+
+  public addDirector(): void {
+    const defaultFormGroup = { firstName: '', lastName: '' };
+    this.form.addFormControl(this.builder.group(defaultFormGroup), 'movieDirectors');
   }
 }

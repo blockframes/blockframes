@@ -4,7 +4,7 @@ import { LandingPage, HomePage, AddMovieModal, MovieEditPage } from "../support/
 
 const INPUTS_FORM = {
   [MovieEditPage.FIELD_INTERNATIONAL_TITLE]: 'The terminator',
-  [MovieEditPage.FIELD_DIRECTOR_NAME]: 'Bruce',
+  [MovieEditPage.FIELD_DIRECTORS]: ['Bruce'],
   [MovieEditPage.FIELD_PRODUCTION_YEAR]: '2019',
 };
 

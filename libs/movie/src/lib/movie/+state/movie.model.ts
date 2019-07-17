@@ -18,7 +18,7 @@ export interface Movie {
   id: string,
   organization?: Organization,
   title: Title, // will contain all titles: original, international, suiss, etc
-  directorName: string,
+  directors: {firstName: string, lastName: string}[],
   poster: string,
   productionYear: number,
   genres: string[],
@@ -36,9 +36,25 @@ export interface Movie {
   stakeholders?: Stakeholder[];
   availabilities: MovieAvailability[],
 
+  // @todo add to Draw.io
+  internalRef: string,
+  scoring: string,
+  isan: string,
+  length: number,
+  productionCompanies: string[],
+  broadcasterCoproducers: string[],
+  color: string;
+  certifications: string[],
+  pegi: string,
+  internationalPremiere: { name: string, year: number},
+  originCountryReleaseDate: Date,
+  prizes: {name: string, year: string, prize: string}[]
+  keyAssets: string[],
+  dubbings: string[],
+  subtitles: string[],
+
   // not main movie attributes WIP
   ipId: string,
-  isan: number,
   directorNote: string,
   producerNote: string,
   goalBudget: number,

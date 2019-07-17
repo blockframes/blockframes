@@ -1160,7 +1160,21 @@ const models = {
       'slug': 'zimbabwe',
       'label': 'Zimbabwe'
     }
-  ]
+  ],
+  'CERTIFICATIONS': [
+    {
+      'slug': 'european-qualification',
+      'label': 'European Qualification'
+    },
+    {
+      'slug': 'art-essai',
+      'label': 'Art & Essai'
+    },
+    {
+      'slug': 'eof',
+      'label': 'EOF'
+    }
+  ],
 };
 
 export const getSlug = (scope: string, str: string) => {

@@ -56,7 +56,9 @@
             {{ movie.title.original }}
             <span *ngIf="movie.productionYear"> ({{ movie.productionYear }})</span>
           </mat-card-title>
-          <mat-card-subtitle *ngIf="movie.directorName">{{ movie.directorName }}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="movie.directors">
+            <span *ngFor="let director of movie.directors; let isLast=last">{{ director.firstName }} {{ director.lastName }} {{ !isLast?'-':'' }}</span>
+          </mat-card-subtitle>
         </mat-card-header>
       </a>
     </mat-card>
