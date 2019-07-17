@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { of } from 'rxjs';
 
 // TODO #638: delete this mock values
 const mockPendingActions = [
@@ -59,11 +60,11 @@ const mockApprovedActions = [
 export class OrganizationActivityViewComponent implements OnInit {
   /** Observable which contains pending actions */
   // TODO #638: work with real data
-  public pendingActions$ = mockPendingActions;
+  public pendingActions$ = of(mockPendingActions);
 
   /** Observable which contains approved actinos */
   // TODO #638: work with real data
-  public approvedActions$ = mockApprovedActions;
+  public approvedActions$ = of(mockApprovedActions);
 
   // TODO #638: replace any
   public sidenavContent: any[];

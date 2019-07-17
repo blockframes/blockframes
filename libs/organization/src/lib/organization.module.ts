@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { OrgFormComponent } from './components/org-form/org-form.component';
@@ -47,10 +48,8 @@ export const organizationRoutes: Routes = [
   {
     path: ':orgId',
     children: [
-      {
-        path: '',
-        component: OrgViewComponent,
-      },
+      { path: '', redirectTo: 'view', pathMatch: 'full' },
+      { path: 'view', component: OrgViewComponent },
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
@@ -82,6 +81,7 @@ export const organizationRoutes: Routes = [
     MatCheckboxModule,
     MatTableModule,
     MatSortModule,
+    MatRippleModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [

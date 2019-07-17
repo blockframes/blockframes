@@ -1,19 +1,19 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-<ng-container matColumnDef="Document name">
+  <ng-container matColumnDef="Document name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Document name </th>
     <td mat-cell *matCellDef="let element"> {{element.docName}} </td>
   </ng-container>
 
   <ng-container matColumnDef="Signers">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Signer </th>
-    <td class="clickable" mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.signers)">
+    <td matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.signers)">
        {{element.signers}}
       </td>
   </ng-container>
 
   <ng-container matColumnDef="Countersigners">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Countersigner </th>
-    <td class="clickable" mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.counterSigners)">
+    <td matRipple mat-cell *matCellDef="let element" (click)="clickedOnSigners.emit(element.counterSigners)">
        {{element.counterSigners}} 
       </td>
   </ng-container>

@@ -22,7 +22,7 @@ export class OrganizationActionItemComponent implements OnInit {
   public dataSource;
 
   // TODO #638: replace any and make it an Observable
-  @Input() actionItems$: any;
+  @Input() actionItems: any;
 
   // TODO #638: replace any
   @Output() clickedOnSigners: EventEmitter<any> = new EventEmitter();
@@ -30,7 +30,7 @@ export class OrganizationActionItemComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.actionItems$);
+    this.dataSource = new MatTableDataSource(this.actionItems);
     this.dataSource.sort = this.sort;
   }
 
