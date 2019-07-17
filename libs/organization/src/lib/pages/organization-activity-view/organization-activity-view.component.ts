@@ -1,52 +1,52 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-// TODO: delete after real data is available
+// TODO #638: delete this mock values
 const mockPendingActions = [
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6']
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6']
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6']
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6']
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6']
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6']
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6']
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6']
   }
 ];
 
-const mockapprovedActions = [
+const mockApprovedActions = [
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6'],
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6'],
     date: '09.06.2019'
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6'],
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6'],
     date: '09.06.2019'
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6'],
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6'],
     date: '09.06.2019'
   },
   {
     docName: 'Lorem Ipsum',
-    signed: ['1', '2', '3'],
-    counterSigned: ['4', '5', '6'],
+    signers: ['1', '2', '3'],
+    counterSigners: ['4', '5', '6'],
     date: '09.06.2019'
   }
 ];
@@ -58,15 +58,28 @@ const mockapprovedActions = [
 })
 export class OrganizationActivityViewComponent implements OnInit {
   /** Observable which contains pending actions */
-  // TODO: work with real data
-  public pendingActions = mockPendingActions;
+  // TODO #638: work with real data
+  public pendingActions$ = mockPendingActions;
 
   /** Observable which contains approved actinos */
-  // TODO: work with real data
-  public approvedActions = mockapprovedActions;
+  // TODO #638: work with real data
+  public approvedActions$ = mockApprovedActions;
 
-  // Keep the constructor and ngOnInit for later
+  // TODO #638: replace any
+  public sidenavContent: any[];
+
+  // Flag to indicate whether sidenav is open or not
+  public opened = false;
+
+  // TODO #638: save it for later
   constructor() {}
 
   ngOnInit() {}
+
+    // TODO #638: replace any refactor the function when you know how the real data is going to look like
+    // also the sidenav is going to need a refactoring
+    public openSidenav(signers: any) {
+      this.opened = !this.opened;
+      this.sidenavContent = signers;
+    }
 }

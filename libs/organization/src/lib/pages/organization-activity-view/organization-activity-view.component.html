@@ -1,5 +1,16 @@
-<article fxLayout="row" fxLayoutAlign="start center"> 
-    <h1>Activity Report</h1><mat-divider></mat-divider>
-</article>
-<org-pending-list [pendingActions]="pendingActions"></org-pending-list>
-<org-approved-list [approvedActions]="approvedActions"></org-approved-list>
+<editable-sidenav (closed)="opened = false" [opened]="opened">
+    <ng-container content>
+        <article fxLayout="row" fxLayoutAlign="start center"> 
+            <h1>Activity Report</h1><mat-divider></mat-divider>
+            </article>
+            <h2>Pending Approval</h2>
+            <org-action-item [actionItems$]="pendingActions$" (clickedOnSigners)="openSidenav($event)">
+            </org-action-item>
+            <h2>Actions Approved</h2>
+            <org-action-item [actionItems$]="approvedActions$" (clickedOnSigners)="openSidenav($event)">
+            </org-action-item>
+    </ng-container>
+        <ng-container sidenav>
+            <p>{{ sidenavContent }}</p>
+        </ng-container>
+    </editable-sidenav>

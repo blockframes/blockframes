@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { AuthModule } from '@blockframes/auth';
+import { EditableSidenavModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -24,6 +25,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { OrgFormComponent } from './components/org-form/org-form.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrgWidgetComponent } from './components/org-widget/org-widget.component';
+import { MatTableModule, MatSortModule } from '@angular/material';
 
 // Pages
 import { OrgViewComponent } from './pages/org-view/org-view.component';
@@ -31,9 +33,7 @@ import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
-import { OrganizationPendingListComponent } from './components/organization-pending-list/organization-pending-list.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
-import { OrganizationApprovedListComponent } from './components/organization-approved-list/organization-approved-list.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -52,7 +52,7 @@ export const organizationRoutes: Routes = [
         component: OrgViewComponent,
       },
       {
-        path: 'activityreport',
+        path: 'activityreports',
         component: OrganizationActivityViewComponent
       }
     ]
@@ -66,6 +66,7 @@ export const organizationRoutes: Routes = [
     FormsModule,
     AuthModule,
     FlexLayoutModule,
+    EditableSidenavModule,
 
     // Material
     MatFormFieldModule,
@@ -79,6 +80,8 @@ export const organizationRoutes: Routes = [
     MatButtonModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatTableModule,
+    MatSortModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
@@ -90,9 +93,7 @@ export const organizationRoutes: Routes = [
     MemberFormComponent,
     OrganizationHomeComponent,
     OrganizationActivityViewComponent,
-    OrganizationPendingListComponent,
-    OrganizationActionItemComponent,
-    OrganizationApprovedListComponent
+    OrganizationActionItemComponent
   ],
   exports: [OrgWidgetComponent]
 })
