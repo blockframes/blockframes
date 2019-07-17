@@ -24,7 +24,7 @@ export class MovieDisplayComponent {
     return getLabelBySlug (scope, slug) as string;
   }
 
-  // @todo WIP
+  // @todo #643 WIP
   private fromFlatMovie(data) {
     const movie = { ... data };
 
