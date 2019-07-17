@@ -29,7 +29,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
-import { MovieSharedModule } from './movie.shared.module';
+import { MovieDisplayModule } from './pages/movie-display/movie-display.module';
 import { ImportMovieModule } from './components/import/import-movie.module';
 
 // Components
@@ -104,7 +104,7 @@ import { MovieViewComponent } from './pages/movie-view/movie-view.component';
     UiFormModule,
     StakeholderModule,
     ImportMovieModule,
-    MovieSharedModule,
+    MovieDisplayModule,
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated

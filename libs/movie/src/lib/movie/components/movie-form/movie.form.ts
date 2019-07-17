@@ -3,7 +3,26 @@ import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@ang
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
 
-// @todo remove after MCD movie review and subform implementation
+/*
+      => movie form => control value accessor pour que les enfants voient que ce qu'il les intererssent
+
+      ```<form [formGroup]="movieForm">
+  <movie-form-story controlFormName="story"></movie-form-story>
+</form>``` => ControlValueAccessor
+
+class MovieForm extends EntityForm<Movie> {
+  constructor(movie: Movie) {
+    super({
+      ...,
+      story: new EntityForm<Movie['story']>(movie.story),
+
+
+    }
+  }
+*/
+
+
+// @todo #643 remove after MCD movie review and subform implementation
 export interface FlatMovie {
   originalTitle: string
   internationalTitle: string

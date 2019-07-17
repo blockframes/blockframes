@@ -4,15 +4,17 @@ import { NgModule } from '@angular/core';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatGridListModule, MatDividerModule } from '@angular/material';
+
+// Libraries
 
 // Components
-import { MovieDisplayComponent } from './pages/movie-display/movie-display.component';
+import { MovieDisplayComponent } from './movie-display/movie-display.component';
 
 @NgModule({
   declarations: [
-    MovieDisplayComponent
+    MovieDisplayComponent,
+    // @todo #643 => to-word component childs for each section
   ],
   imports: [
     CommonModule,
@@ -22,4 +24,4 @@ import { MovieDisplayComponent } from './pages/movie-display/movie-display.compo
   ],
   exports: [MovieDisplayComponent],
 })
-export class MovieSharedModule {}
+export class MovieDisplayModule {}

@@ -17,7 +17,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
-import { MovieSharedModule } from '../../movie.shared.module';
+import { MovieDisplayModule } from '../../pages/movie-display/movie-display.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -67,7 +67,7 @@ import { TableExtractedAvailabilitiesComponent } from './table-extracted-availab
     // Librairies
     UploadModule,
     UiFormModule,
-    MovieSharedModule,
+    MovieDisplayModule,
   ],
   providers: [ ],
   entryComponents: [

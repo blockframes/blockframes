@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Movie } from '../../+state';
-import { getLabelBySlug } from '../../staticModels';
-import { FlatMovie } from '../../components/movie-form/movie.form';
+import { Movie } from '../../../+state';
+import { getLabelBySlug } from '../../../staticModels';
+import { FlatMovie } from '../../../components/movie-form/movie.form';
 
 @Component({
   selector: 'movie-display',
@@ -11,8 +11,10 @@ import { FlatMovie } from '../../components/movie-form/movie.form';
 })
 export class MovieDisplayComponent {
   public movie : Movie;
+  public movieSections : any;
+
   @Input() set data(data: Movie | FlatMovie) {
-    this.movie = this.toSection(data);
+    this.movie = this.fromFlatMovie(data);
   }
 
   constructor() { }
@@ -20,10 +22,10 @@ export class MovieDisplayComponent {
   /* Returns label from json staticModels */
   public getStaticBySlug (scope: string, slug: string) {
     return getLabelBySlug (scope, slug) as string;
-  } 
+  }
 
   // @todo WIP
-  private toSection(data) {
+  private fromFlatMovie(data) {
     const movie = { ... data };
 
     if(!movie.title){

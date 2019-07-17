@@ -70,6 +70,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   /* Applies movie modifications to fit actual model */
+  //@todo #643 should be removed
   private preUpdate(movie: any) {
     movie.title = {};
     if (movie.originalTitle) {
