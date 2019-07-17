@@ -14,15 +14,10 @@ export class OrganizationViewComponent implements OnInit {
   public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
-  constructor(
-    private query: OrganizationQuery,
-    private permissionsQuery: PermissionsQuery,
-  ) {
-  }
+  constructor(private query: OrganizationQuery, private permissionsQuery: PermissionsQuery) {}
 
   ngOnInit() {
     this.organization$ = this.query.select('org');
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
   }
-
 }

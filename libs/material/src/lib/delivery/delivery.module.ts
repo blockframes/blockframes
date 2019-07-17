@@ -85,6 +85,7 @@ const routes: Routes = [
   },
   {
     path: 'template-picker',
+    // TODO: Getting redirected to templates/list if there is no template to load => ISSUE#648
     canActivate: [TemplateListGuard],
     canDeactivate: [TemplateListGuard],
     component: DeliveryTemplateListComponent

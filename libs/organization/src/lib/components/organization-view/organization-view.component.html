@@ -3,7 +3,11 @@
     <ng-container *ngIf="(organization$ | async) as organization; else: organizationLoading">
       <span fxLayout="row" fxLayoutAlign="none center">
         <h2>{{ organization.name }}</h2>
-        <button *ngIf="(isSuperAdmin$ | async)" mat-icon-button (click)="editing.emit()" color="primary">
+        <button
+          mat-icon-button
+          color="primary"
+          *ngIf="(isSuperAdmin$ | async)"
+          (click)="editing.emit()">
           <mat-icon>edit</mat-icon>
         </button>
       </span>

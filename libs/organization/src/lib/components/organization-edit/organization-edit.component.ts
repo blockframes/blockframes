@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationEditComponent implements OnInit, OnDestroy {
-  public organizationForm = new FormControl();
+  public addressForm = new FormControl();
   public organization$: Observable<Organization>;
   private destroyed$ = new Subject();
 
@@ -26,12 +26,12 @@ export class OrganizationEditComponent implements OnInit, OnDestroy {
   }
 
   public updateOrganization() {
-    if (!this.organizationForm.valid) {
-      this.snackBar.open('form invalid', 'close', { duration: 1000 });
+    if (!this.addressForm.valid) {
+      this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
     }
     try {
-      this.service.update({ address: this.organizationForm.value });
+      this.service.update({ address: this.addressForm.value });
       this.snackBar.open(`Organization updated`, 'close', { duration: 2000 });
     } catch (err) {
       console.error(err);

@@ -26,9 +26,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 // Components
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
+import { OrganizationViewComponent } from './components/organization-view/organization-view.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
@@ -39,7 +42,6 @@ import { OrganizationWidgetComponent } from './components/organization-widget/or
 import { OrganizationEditComponent } from './components/organization-edit/organization-edit.component';
 
 // Pages
-import { OrganizationViewComponent } from './pages/organization-view/organization-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -124,8 +126,6 @@ export const organizationRoutes: Routes = [
     OrganizationActionItemComponent,
     OrganizationActivityViewComponent
   ],
-  exports: [
-    OrganizationWidgetComponent
-  ]
+  exports: [OrganizationWidgetComponent]
 })
 export class OrganizationModule {}
