@@ -6,7 +6,8 @@ mat-sidenav-container {
 }
 
 mat-sidenav-content {
-  width: 55%;
+  width: 60%;
+  padding-left: 100px;
 }
 
 .mat-sidenav {
@@ -36,6 +37,9 @@ mat-card {
   .mat-sidenav {
     padding: 25px 50px;
   }
+  mat-sidenav-content {
+    padding-left: 50px;
+  }
   mat-sidenav-container {
     padding-top: 25px;
   }
@@ -45,6 +49,9 @@ mat-card {
 @include tablet {
   .mat-sidenav {
     padding: 25px 25px;
+  }
+  mat-sidenav-content {
+    padding-left: 25px;
   }
   mat-sidenav-container {
     padding-top: 25px;
@@ -61,7 +68,7 @@ mat-card {
   }
   mat-sidenav-content {
     width: 100%;
-
+    padding-left: 0;
   }
   .mat-sidenav {
     width: 100%;
