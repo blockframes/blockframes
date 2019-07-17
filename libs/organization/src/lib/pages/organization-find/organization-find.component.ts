@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map, filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'organization-find',
@@ -16,6 +17,8 @@ export class OrganizationFindComponent implements OnInit {
   });
   orgOptions: Observable<string[]>;
   options: string[] = ['organization name', 'super org', 'org on fire'];
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.orgOptions = this.addOrganizationForm.valueChanges
@@ -33,6 +36,7 @@ export class OrganizationFindComponent implements OnInit {
 
   public addOrganization() {
     // Create a new invitation
-    console.log(this.addOrganizationForm.value)
+    console.log(this.addOrganizationForm.value);
+    this.router.navigate(['layout/congratulation']);
   }
 }

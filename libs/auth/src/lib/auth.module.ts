@@ -18,13 +18,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
-import { UiFormModule } from '@blockframes/ui';
+import { UiFormModule, CongratulationModule, CongratulationComponent } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
 import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
-import { CongratulationComponent } from './pages/congratulation/congratulation.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -48,6 +47,7 @@ export const AuthRoutes: Routes = [
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
+    CongratulationModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
@@ -57,7 +57,6 @@ export const AuthRoutes: Routes = [
     SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
-    CongratulationComponent,
     EmailVerifyComponent
   ],
   exports: [EmailVerifyComponent]

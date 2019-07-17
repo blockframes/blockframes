@@ -14,3 +14,5 @@ export * from './lib/editable/editable.module';
 export * from './lib/directives/directives.module';
 export * from './lib/team-work/team-work.module';
 export * from './lib/editable-sidenav/editable-sidenav.module';
+export * from './lib/congratulation/congratulation.module';
+export * from './lib/congratulation/congratulation.component';
