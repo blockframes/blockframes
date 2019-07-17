@@ -17,7 +17,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
-import { MovieDisplayModule } from '../../pages/movie-display/movie-display.module';
+import { MovieDisplayModule } from '../../components/movie-display/movie-display.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
