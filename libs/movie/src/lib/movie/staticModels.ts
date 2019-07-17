@@ -55,6 +55,26 @@ const models = {
     {
       'slug': 'war',
       'label': 'War'
+    },
+    {
+      'slug': 'fiction',
+      'label': 'Fiction'
+    },
+    {
+      'slug': 'documentary',
+      'label': 'Documentary'
+    },
+    {
+      'slug': 'tv-show',
+      'label': 'TV Show'
+    },
+    {
+      'slug': 'web-series',
+      'label': 'Web Series'
+    },
+    {
+      'slug': 'virtual-reality',
+      'label': 'Virtual Reality'
     }
   ],
   'STAKEHOLDER_ROLES': [
@@ -315,28 +335,6 @@ const models = {
     {
       'slug': 'new-zealand-dollar',
       'label': 'New Zealand dollar'
-    }
-  ],
-  'AUDIOVISUAL_TYPES': [
-    {
-      'slug': 'fiction',
-      'label': 'Fiction'
-    },
-    {
-      'slug': 'documentary',
-      'label': 'Documentary'
-    },
-    {
-      'slug': 'tv-show',
-      'label': 'TV Show'
-    },
-    {
-      'slug': 'web-series',
-      'label': 'Web Series'
-    },
-    {
-      'slug': 'virtual-reality',
-      'label': 'Virtual Reality'
     }
   ],
   'SELECTION_CATEGORIES': [

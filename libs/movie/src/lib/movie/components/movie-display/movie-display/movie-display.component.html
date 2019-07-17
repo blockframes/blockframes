@@ -27,14 +27,6 @@
     >
       <mat-divider></mat-divider>
       <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
-      <ng-container *ngIf="movie.types && movie.types.length > 0">
-        <mat-card-title>Types</mat-card-title>
-        <mat-card-subtitle *ngIf="movie.types">
-          <span *ngFor="let item of movie.types; let isLast=last">
-            {{ getStaticBySlug('AUDIOVISUAL_TYPES', item) }}{{ !isLast?',':'' }}
-          </span>
-        </mat-card-subtitle>
-      </ng-container>
       <ng-container *ngIf="movie.genres  && movie.genres.length > 0">
         <mat-card-title>Genres</mat-card-title>
         <mat-card-subtitle *ngIf="movie.genres">

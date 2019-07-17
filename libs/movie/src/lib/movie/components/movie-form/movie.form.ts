@@ -29,7 +29,6 @@ export interface FlatMovie {
   directorName: string
   poster: string
   productionYear: string
-  types: string
   genres: string
   originCountry: string
   coProducerCountries: string
@@ -50,7 +49,6 @@ function createFlatMovie(params?: Partial<FlatMovie>): FlatMovie {
     directorName: '',
     poster: '',
     productionYear: '',
-    types: '',
     genres: '',
     originCountry: '',
     coProducerCountries: '',
@@ -74,7 +72,6 @@ function createMovieControls(entity?: Partial<FlatMovie>) {
     directorName: new StringControl(movie.directorName, false, [Validators.required]),
     poster: new StringControl(movie.poster),
     productionYear: new YearControl(movie.productionYear),
-    types:  new StringControl(movie.types),
     genres:  new StringControl(movie.genres),
     originCountry:  new StringControl(movie.originCountry),
     coProducerCountries:  new StringControl(movie.coProducerCountries),
@@ -142,7 +139,6 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     this.get('directorName').setValue(movie.directorName);
     this.get('poster').setValue(movie.poster);
     this.get('productionYear').setValue(movie.productionYear);
-    this.get('types').setValue(movie.types);
     this.get('genres').setValue(movie.genres);
     this.get('originCountry').setValue(movie.originCountry);
     this.get('coProducerCountries').setValue(movie.coProducerCountries);

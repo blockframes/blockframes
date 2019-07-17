@@ -22,11 +22,9 @@ export class MovieFormMainComponent implements OnInit {
   public countriesFilterCtrl: FormControl = new FormControl();
   public languagesFilterCtrl: FormControl = new FormControl();
   public genresFilterCtrl: FormControl = new FormControl();
-  public audiovisualTypesFilterCtrl: FormControl = new FormControl();
   public countries$: Observable<StaticModel[]>;
   public languages$: Observable<StaticModel[]>;
   public genres$: Observable<StaticModel[]>;
-  public audiovisualTypes$: Observable<StaticModel[]>;
 
   constructor(public form: MovieForm) {}
 
@@ -40,7 +38,6 @@ export class MovieFormMainComponent implements OnInit {
     this.countries$ = this.filterSelectSearch(this.countriesFilterCtrl, this.staticModels['COUNTRIES']);
     this.languages$ = this.filterSelectSearch(this.languagesFilterCtrl, this.staticModels['LANGUAGES']);
     this.genres$ = this.filterSelectSearch(this.genresFilterCtrl, this.staticModels['GENRES']);
-    this.audiovisualTypes$ = this.filterSelectSearch(this.audiovisualTypesFilterCtrl, this.staticModels['AUDIOVISUAL_TYPES']);
   }
 
   private filterSelectSearch(control: FormControl, model: StaticModel[]) {

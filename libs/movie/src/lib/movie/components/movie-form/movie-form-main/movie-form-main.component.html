@@ -51,23 +51,6 @@
     </mat-error>
   </mat-form-field>
 
-  <!-- AUDIOVISUAL TYPES -->
-  <h3> Types </h3>
-  <mat-form-field class="full-width">
-    <mat-select formControlName="types"  placeholder="Film Type" multiple>
-      <mat-option>
-        <ngx-mat-select-search
-          [formControl]="audiovisualTypesFilterCtrl"
-          [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching type found'"
-        ></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let type of audiovisualTypes$ | async" [value]="type.slug">
-        {{ type.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
   <!-- GENRES -->
   <h3> Genres </h3>
   <mat-form-field class="full-width">

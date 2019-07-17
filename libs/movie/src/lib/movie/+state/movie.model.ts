@@ -21,7 +21,6 @@ export interface Movie {
   directorName: string,
   poster: string,
   productionYear: number,
-  types: string[],
   genres: string[],
   originCountry: string,
   coProducerCountries: string[],

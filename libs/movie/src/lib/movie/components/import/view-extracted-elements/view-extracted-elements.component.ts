@@ -55,7 +55,6 @@ export class ViewExtractedElementsComponent {
           },
           directorName: m[3],
           synopsis: m[5],
-          types: [],
           genres: [],
           originCountry: 'TODO',
           languages: [],
@@ -184,43 +183,6 @@ export class ViewExtractedElementsComponent {
           });
       }
     });
-    /*
-
-
-    => PROPOSER UN FORMAT XLS A VINCENT
-
-    export interface Movie {
-
-  productionYear: number,
-  types: string[],
-  genres: string[],
-  originCountry: string,
-  coProducerCountries: string[],
-  languages: string[],
-  status: string,
-  logline: string,
-  synopsis: string,
-  keywords: string[],
-  credits: {firstName: string, lastName: string, creditRole: string}[],
-  images: string[],
-  promotionalElements: {label: string, url: string}[],
-
-  // not main movie attributes WIP
-  ipId: string,
-  isan: number,
-  directorNote: string,
-  producerNote: string,
-  goalBudget: number,
-  movieCurrency: string,
-  fundedBudget: number,
-  breakeven: number,
-  backendProfit: number,
-  potentialRevenues: number,
-  selectionCategories: string,
-  _type: 'movies',
-  materials?: Material[];
-  stakeholders?: Stakeholder[];
-}*/
   }
 
   private getImage(imageUrl: string): Promise<Blob | boolean> {
