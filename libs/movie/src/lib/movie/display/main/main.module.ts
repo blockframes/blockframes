@@ -7,4 +7,4 @@ import { MovieDisplayMainComponent } from './main.component';
   declarations: [MovieDisplayMainComponent],
   exports: [MovieDisplayMainComponent]
 })
-export class MovieFormMainModule {}
+export class MovieDisplayMainModule {}
