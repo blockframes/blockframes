@@ -15,15 +15,14 @@
           [matAutocomplete]="auto"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of (orgOptions | async)" [value]="option">
-            {{ option }}
+          <mat-option *ngFor="let option of orgOptions" [value]="option.name" (click)="selectOrganization(option)">
+            {{ option.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
     </form>
-
     <div class="image"></div>
-    <button class="submit" mat-raised-button color="accent" (click)="addOrganization()">Let's go !</button>
+    <button class="submit" (click)="addOrganization()" mat-raised-button color="accent">Let's go !</button>
     <a routerLink="../organization-home"><button mat-button color="primary">Back</button></a>
   </article>
 </section>
