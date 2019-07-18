@@ -3,7 +3,7 @@ import { User, AuthQuery, AuthService } from '@blockframes/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { ProfileForm, Profile } from '../../forms/profile-edit.form';
+import { ProfileForm } from '../../forms/profile-edit.form';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -26,14 +26,7 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.authQuery.user;
-    this.accountForm = new ProfileForm();
-    const profile: Profile = {
-      name: this.user.name || '',
-      surname: this.user.surname || '',
-      phoneNumber: this.user.phoneNumber || '',
-      position: this.user.position || ''
-    };
-    this.accountForm.setValue(profile);
+    this.accountForm = new ProfileForm(this.user);
     this.accountForm.valueChanges
       .pipe(
         debounceTime(300),
@@ -49,9 +42,7 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      const { name, surname, phoneNumber, position } = this.accountForm.value;
-      this.authService
-        .update(this.authQuery.user.uid, { name, surname, phoneNumber, position })
+      this.authService.update(this.authQuery.user.uid, this.accountForm.value);
     } catch (err) {
       console.error(err);
     }

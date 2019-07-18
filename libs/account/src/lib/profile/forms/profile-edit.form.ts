@@ -1,7 +1,6 @@
 import { Validators, FormControl } from '@angular/forms';
 import {
   FormEntity,
-  EmailControl,
 } from '@blockframes/utils';
 
 export interface Profile {
