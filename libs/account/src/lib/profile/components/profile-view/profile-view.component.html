@@ -6,24 +6,24 @@
         <img
           mat-card-avatar
           src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-          alt="Photo of a Shiba Inu"
+          alt="Profile picture"
         />
         <article class="information" fxLayout="column" fxLayoutAlign="start start">
           <div>
-            <p class="name">{{ user.name }}</p>
-            <p>{{ user.surname }}</p>
+            <h4 class="name"><b>{{ user.name }}</b></h4>
+            <span>{{ user.surname }}</span>
           </div>
           <mat-divider [inset]="true"></mat-divider>
           <div>
-            <p><span class="label" *ngIf="user.phoneNumber">Phone number: </span> <span>{{ user.phoneNumber }}</span></p>
-
-            <p><span class="label">Email: </span> <span>{{ user.email }}</span></p>
-
-            <p><span class="label" *ngIf="user.position">Position: </span> <span>{{ user.position }}</span></p>
+            <span *ngIf="user.phoneNumber"><b>Phone number:</b> {{ user.phoneNumber }}</span>
+            <br/>
+            <span><b>Email:</b> {{ user.email }}</span>
+            <br/>
+            <span *ngIf="user.position"><b>Position:</b> {{ user.position }}</span>
           </div>
           <mat-divider [inset]="true"></mat-divider>
           <div *ngIf="(organization$ | async) as organization">
-            <p><span class="label">Organization: </span> <span>{{ organization.name }}</span></p>
+            <span><b>Organization:</b> {{ organization.name }}</span>
           </div>
           <mat-divider [inset]="true"></mat-divider>
         </article>

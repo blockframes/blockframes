@@ -23,8 +23,8 @@ function createProfile(params?: Partial<Profile>): Profile {
 function createProfileControls(entity: Partial<Profile>) {
   const profile = createProfile(entity);
   return {
-    name: new FormControl(profile.name, Validators.minLength(3)),
-    surname: new FormControl(profile.name, Validators.minLength(3)),
+    name: new FormControl(profile.name),
+    surname: new FormControl(profile.name),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position)
   }

@@ -18,27 +18,13 @@ mat-card-content {
   padding-left: 24px;
 }
 
+.information div {
+  padding: 16px 0;
+}
+
 img {
   width: 250px;
   height: 250px;
-}
-
-p {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-.name {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.label {
-  font-weight: bold;
-}
-
-div {
-  padding: 16px 0;
 }
 
 mat-card-actions {
