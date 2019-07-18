@@ -21,12 +21,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
+import { MatTableModule, MatSortModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // Components
 import { OrgFormComponent } from './components/org-form/org-form.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrgWidgetComponent } from './components/org-widget/org-widget.component';
-import { MatTableModule, MatSortModule } from '@angular/material';
+import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
+import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
+import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 
 // Pages
 import { OrgViewComponent } from './pages/org-view/org-view.component';
@@ -34,7 +39,7 @@ import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
-import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
+import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -53,6 +58,10 @@ export const organizationRoutes: Routes = [
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
+      },
+      {
+        path: 'administration',
+        component: OrganizationAdminViewComponent
       }
     ]
   }
@@ -82,6 +91,8 @@ export const organizationRoutes: Routes = [
     MatTableModule,
     MatSortModule,
     MatRippleModule,
+    MatSelectModule,
+    MatSlideToggleModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
@@ -93,7 +104,10 @@ export const organizationRoutes: Routes = [
     MemberFormComponent,
     OrganizationHomeComponent,
     OrganizationActivityViewComponent,
-    OrganizationActionItemComponent
+    OrganizationActionItemComponent,
+    OrganizationAdminViewComponent,
+    OrganizationActionRepertoryComponent,
+    OrganizationSignerRepertoryComponent
   ],
   exports: [OrgWidgetComponent]
 })
