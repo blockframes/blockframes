@@ -103,6 +103,9 @@ export const CONTEXT_MENU = [
   },
   {
     route: '/layout/o/organization/:orgId',
-    items: [{ name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }]
+    items: [
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+    ]
   }
 ];
