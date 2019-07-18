@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '@blockframes/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PasswordControl } from '@blockframes/utils';
