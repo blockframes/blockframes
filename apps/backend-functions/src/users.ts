@@ -20,10 +20,19 @@ interface OrgProposal {
 
 const onUserCreate = (user: UserRecord) => {
   const { email, uid } = user;
-  return db
-    .collection('users')
-    .doc(user.uid)
-    .set({ email, uid });
+
+  const userDocRef = db.collection('users').doc(user.uid);
+
+  // transaction to UPSERT the user doc
+  return db.runTransaction(async tx => {
+    const userDoc = await tx.get(userDocRef);
+
+    if (userDoc.exists) {
+      tx.update(userDocRef, { email, uid });
+    } else {
+      tx.set(userDocRef, { email, uid });
+    }
+  });
 };
 
 const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
