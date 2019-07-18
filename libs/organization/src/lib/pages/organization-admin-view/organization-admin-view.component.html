@@ -1,0 +1,90 @@
+<!-- Main content -->
+<editable-sidenav (closed)="opened = false" [opened]="opened">
+  <ng-container content>
+    <h1 fxLayout="row" fxLayoutAlign="start center">
+      <span>{{ organizationName }}</span>
+      <mat-divider></mat-divider>
+    </h1>
+    <h2>Important actions</h2>
+    <org-action-repertory [actionGroups]="createdActionGroups$ | async" (editAction)="openDetails($event)">
+    </org-action-repertory>
+    <h2>Organization signatures</h2>
+    <mat-form-field>
+      <mat-label>Add new signatory</mat-label>
+      <input matInput type="text" [formControl]="signerFormControl" placeholder="Max Musterman">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <button mat-button (click)="addSignatory(signerFormControl.value)">Add new signers</button>
+    <org-signer-repertory [signerList]="organizationSigners$ | async" (editSigner)="openOptions($event)">
+    </org-signer-repertory>
+  </ng-container>
+  <!-- Sidenav -->
+  <ng-container sidenav>
+    <ng-container *ngIf="optionsOrMember; else options">
+      <mat-form-field>
+        <mat-label>How much members needed</mat-label>
+        <mat-select>
+          <mat-option>None</mat-option>
+          <mat-option value="1">1</mat-option>
+          <mat-option value="2">2</mat-option>
+          <mat-option value="3">3</mat-option>
+          <mat-option value="4">4</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+      <h2>Members</h2>
+      <mat-card *ngFor="let member of actionMembers" fxLayout="row" fxLayoutAlign="space-around center">
+        <mat-icon>account_box</mat-icon>
+        {{member}}
+        <mat-icon (click)="deleteUser(member)">delete</mat-icon>
+      </mat-card>
+    </ng-container>
+    <ng-template #options>
+      <section fxLayout="column" fxLayoutAlign="center start">
+        <h3>Organization actions</h3>
+        <p>
+          {{signerOptions}}
+        </p>
+        <article>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p> Lorem Ipsum</p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p> Lorem Ipsum</p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p> Lorem Ipsum</p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+        </article>
+        <mat-divider></mat-divider>
+        <h3>DApps signer</h3>
+        <article>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p fxLayoutAlign="start center">
+              <mat-icon>reorder</mat-icon>
+              Lorem Ipsum
+            </p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p fxLayoutAlign="start center">
+              <mat-icon>reorder</mat-icon>
+              Lorem Ipsum
+            </p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+          <span fxLayout="row" fxLayoutAlign="space-between center">
+            <p fxLayoutAlign="start center">
+              <mat-icon>reorder</mat-icon>
+              Lorem Ipsum
+            </p>
+            <mat-slide-toggle></mat-slide-toggle>
+          </span>
+        </article>
+      </section>
+    </ng-template>
+  </ng-container>
+</editable-sidenav>
