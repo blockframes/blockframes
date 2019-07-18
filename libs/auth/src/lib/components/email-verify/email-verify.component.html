@@ -1,4 +1,4 @@
-<p *ngIf="!(hasVerifiedEmail$ | async)">
+<article *ngIf="!(hasVerifiedEmail$ | async)">
   <button
     mat-icon-button
     matTooltip="Your email is not verified, click here to send another verification mail."
@@ -8,4 +8,4 @@
   >
     <mat-icon matBadge="!" matBadgePosition="before" matBadgeColor="accent">email</mat-icon>
   </button>
-</p>
+</article>
