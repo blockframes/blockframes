@@ -32,11 +32,16 @@ export class AuthService {
   }
 
   public async signup(email: string, password: string, name: string, surname: string) {
-    await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    // TODO: issue#633
-    // const uid = await this.afAuth.auth.currentUser.uid;
-    // const user = createUser({name, surname});
-    // this.update(uid, user);
+    const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+
+    const user = createUser({
+      uid: authUser.user.uid,
+      email: authUser.user.email,
+      name,
+      surname
+    });
+
+    this.create(user);
   }
 
   public async logout() {
@@ -48,9 +53,8 @@ export class AuthService {
   // USER //
   //////////
   /** Create a user based on firebase user */
-  public create({ email, uid }: firebase.User) {
-    const user = createUser({ email, uid })
-    return this.db.doc<User>(`users/${uid}`).set(user);
+  public create(user: User) {
+    return this.db.doc<User>(`users/${user.uid}`).set(user);
   }
 
   /** Update a user */
