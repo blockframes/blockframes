@@ -13,7 +13,7 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private db: FireQuery,
     private router: Router,
-    private query: AuthQuery
+    private query: AuthQuery,
   ) {}
 
   //////////
@@ -41,7 +41,7 @@ export class AuthService {
       surname
     });
 
-    this.create(user);
+    return this.create(user);
   }
 
   public async logout() {
@@ -54,7 +54,16 @@ export class AuthService {
   //////////
   /** Create a user based on firebase user */
   public create(user: User) {
-    return this.db.doc<User>(`users/${user.uid}`).set(user);
+    const userDocRef = this.db.firestore.collection('users').doc(user.uid);
+    // transaction to UPSERT the user doc
+    return this.db.firestore.runTransaction(async tx => {
+      const userDoc = await tx.get(userDocRef);
+      if (userDoc.exists) {
+        tx.update(userDocRef, user);
+      } else {
+        tx.set(userDocRef, user)
+      }
+    })
   }
 
   /** Update a user */
