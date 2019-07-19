@@ -145,11 +145,9 @@ function createInvitations(organizations: Organization[], snap: SnapObject) {
       : `/layout/o/home/${snap.movie.id}/teamwork`;
     return organizations
       .filter(organization => !!organization && !!organization.userIds && organization.id === snap.organization.id)
-      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-      .map(userId => {
+      .map(() => {
         return prepareInvitation({
           message: invitationMessage(snap),
-          userId,
           path,
           stakeholderId: snap.newStakeholderId,
           docInformations: snap.docInformations

@@ -80,9 +80,14 @@ export interface Notification extends BaseNotification {
 
 export interface BaseInvitation {
   message: string;
-  userId: string;
+  userInformations?: {
+    userId: string;
+    name?: string;
+    surname?: string;
+    email: string
+  };
   docInformations: DocInformations;
-  stakeholderId?: string;
+  stakeholderId: string;
   path?: string;
 }
 
@@ -105,7 +110,7 @@ export interface SnapObject {
   organization: Organization;
   eventType: string;
   delivery?: Delivery | null;
-  newStakeholderId?: string;
+  newStakeholderId: string;
   count?: number;
 }
 
