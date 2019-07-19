@@ -28,7 +28,7 @@ export class InvitationService {
   private getInvitationsByOrgId(organizationId: string): Query<Invitation> {
     return {
       path: `invitations`,
-      queryFn: ref => ref.where('stakeholderId', '==', organizationId)
+      queryFn: ref => ref.where('organizationId', '==', organizationId)
     };
   }
 

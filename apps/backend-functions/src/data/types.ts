@@ -87,7 +87,7 @@ export interface BaseInvitation {
     email: string
   };
   docInformations: DocInformations;
-  stakeholderId: string;
+  organizationId: string;
   path?: string;
 }
 

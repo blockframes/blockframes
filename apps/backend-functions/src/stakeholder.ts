@@ -149,7 +149,7 @@ function createInvitations(organizations: Organization[], snap: SnapObject) {
         return prepareInvitation({
           message: invitationMessage(snap),
           path,
-          stakeholderId: snap.newStakeholderId,
+          organizationId: snap.newStakeholderId,
           docInformations: snap.docInformations
         });
       });

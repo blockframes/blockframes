@@ -37,7 +37,7 @@ export async function onInvitationUpdate(
     try {
       // Create all the constants we need to work with
       const documentId = invitation.docInformations.id;
-      const stakeholderId = invitation.stakeholderId;
+      const stakeholderId = invitation.organizationId;
       const delivery = await getDocument<Delivery>(`deliveries/${documentId}`);
 
       const [
