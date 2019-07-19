@@ -26,8 +26,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.memberForm = this.builder.group({
