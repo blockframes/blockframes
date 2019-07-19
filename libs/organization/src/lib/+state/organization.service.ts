@@ -121,7 +121,7 @@ export class OrganizationService {
     return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
   }
 
-  // TODO(#679): ssmehow the updateActiveMembers array don't filter correctly 
+  // TODO(#679): somehow the updateActiveMembers array don't filter correctly
   // the id out of the activeMembersArray.
   public async deleteActiveSigner(member: OrganizationMember, action: OrganizationAction) {
     const organizationId = this.query.getValue().org.id;

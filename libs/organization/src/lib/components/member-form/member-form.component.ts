@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationService } from '../../+state';
 import { Subject } from 'rxjs';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth';
 
 export interface User {
@@ -26,7 +26,8 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private builder: FormBuilder
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.memberForm = this.builder.group({
@@ -72,10 +73,10 @@ export class MemberFormComponent implements OnInit, OnDestroy {
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
-      ).subscribe(async typingEmail => {
+      )
+      .subscribe(async typingEmail => {
         this.users = await this.authService.getUserByMail(typingEmail.user);
-          // TODO: use an observable => ISSUE#608
-        ;
-    });
+        // TODO: use an observable => ISSUE#608
+      });
   }
 }
