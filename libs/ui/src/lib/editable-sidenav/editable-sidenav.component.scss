@@ -33,6 +33,11 @@ mat-card {
   border-left: none;
 }
 
+mat-icon {
+  height: 16px;
+  width: 16px;
+}
+
 // medium
  @include medium {
   .mat-sidenav {
