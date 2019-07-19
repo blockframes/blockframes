@@ -1,10 +1,13 @@
-export interface OrganizationMember {
-  uid: string;
-  name?: string;
+export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
   /** Array of ids from OrganizationAction */
   activeOnActions?: string[];
+}
+
+export interface OrganizationMember extends OrganizationMemberRequest {
+  uid: string;
+  name?: string;
 }
 
 export interface Organization {

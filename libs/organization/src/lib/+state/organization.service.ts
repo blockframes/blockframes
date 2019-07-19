@@ -3,17 +3,18 @@ import {
   createOrganization,
   Organization,
   OrganizationAction,
-  OrganizationMember
+  OrganizationMember,
+  OrganizationMemberRequest
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
-import { AuthStore, User } from '@blockframes/auth';
+import { AuthService, AuthStore, User } from '@blockframes/auth';
 import { OrganizationQuery } from './organization.query';
 import {
-  PermissionsQuery,
-  createPermissions,
   App,
-  createAppPermissions
+  createAppPermissions,
+  createPermissions,
+  PermissionsQuery
 } from '../permissions/+state';
 import firebase from 'firebase';
 
@@ -24,43 +25,27 @@ export class OrganizationService {
     private query: OrganizationQuery,
     private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
+    private authService: AuthService,
     private db: FireQuery
   ) {}
 
-  /** Add a new user to the organization */
-  public async addMember(member: OrganizationMember) {
+  /**
+   * Add a new user to the organization
+   *
+   * @param member
+   */
+  public async addMember(member: OrganizationMemberRequest) {
     const orgId = this.query.getValue().org.id;
-    const permissions = this.permissionsQuery.getValue();
-    const organizationDoc = this.db.doc(`orgs/${orgId}`);
-    const permissionsDoc = this.db.doc(`permissions/${orgId}`);
-    const userDoc = this.db.doc(`users/${member.uid}`);
+    // get a user or create a ghost user when needed:
+    const { uid } = await this.authService.getOrCreateUserByMail(member.email); // TODO: limit the number of requests per organizations!
 
-    await this.db.firestore
-      .runTransaction(async tx => {
-        // Update the organization
-        // Note: we don't use the store because we need to access fresh data IN the transaction
-        const org = await tx.get(organizationDoc.ref);
-        const { userIds } = org.data();
-        const nextUserIds = [...userIds, member.uid];
-        const organizationTransaction = tx.update(organizationDoc.ref, { userIds: nextUserIds });
-        // Update the permissions and add the new member as an org admin
-        const nextAdminsIds = [...permissions.admins, member.uid];
-        const permissionsTransaction = tx.update(permissionsDoc.ref, { admins: nextAdminsIds });
-        // Update the user
-        // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
-        const updateUserTransaction = tx.update(userDoc.ref, { orgId });
+    // TODO: use a definitive data type
+    // TODO: compare with backend-functions
+    const invitation = { userId: uid, orgId, type: 'orgInvitation', state: 'pending' };
 
-        return Promise.all([
-          organizationTransaction,
-          updateUserTransaction,
-          permissionsTransaction
-        ]);
-      })
-      .catch(error => {
-        throw Error(error);
-      });
+    await this.db.collection('invitations').add(invitation);
 
-    return member.uid;
+    return uid;
   }
 
   /**
@@ -125,10 +110,14 @@ export class OrganizationService {
   // the id out of the activeMembersArray.
   public async deleteActiveSigner(member: OrganizationMember, action: OrganizationAction) {
     const organizationId = this.query.getValue().org.id;
-    const actionData = await this.db.snapshot<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`);
-    const updatedActiveMembers = actionData.activeMembers.filter(_member => _member.uid !== member.uid);
+    const actionData = await this.db.snapshot<OrganizationAction>(
+      `orgs/${organizationId}/actions/${action.id}`
+    );
+    const updatedActiveMembers = actionData.activeMembers.filter(
+      _member => _member.uid !== member.uid
+    );
     return this.db
       .doc<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`)
-      .update({activeMembers: updatedActiveMembers});
+      .update({ activeMembers: updatedActiveMembers });
   }
 }

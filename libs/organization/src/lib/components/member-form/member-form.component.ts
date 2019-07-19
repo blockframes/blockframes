@@ -54,9 +54,8 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       email = user.email;
     }
 
-    // Query a get or create user, to make ghost users when needed
-    const { uid } = await this.authService.getOrCreateUserByMail(email);
-    await this.service.addMember({ uid, email, roles: [role] });
+    await this.service.addMember({ email, roles: [role] });
+
     this.snackBar.open(`added user`, 'close', { duration: 2000 });
     this.memberForm.reset();
   }
