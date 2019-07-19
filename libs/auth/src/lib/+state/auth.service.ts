@@ -33,6 +33,8 @@ export class AuthService {
   public async signup(email: string, password: string, name: string, surname: string) {
     const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
 
+    await authUser.user.sendEmailVerification();
+
     const user = createUser({
       uid: authUser.user.uid,
       email: authUser.user.email,
