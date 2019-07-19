@@ -8,20 +8,5 @@ import { ControlContainer } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEditComponent {
-
-  constructor(
-    public controlContainer: ControlContainer
-  ) {}
-
-  // public updateProfile() {
-  //   if (!this.accountForm.valid) {
-  //     this.snackBar.open('form invalid', 'close', { duration: 1000 });
-  //     return;
-  //   }
-  //   try {
-  //     this.authService.update(this.authQuery.user.uid, this.accountForm.value);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
+  constructor(public controlContainer: ControlContainer) {}
 }

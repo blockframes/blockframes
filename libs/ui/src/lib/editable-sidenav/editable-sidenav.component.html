@@ -5,6 +5,9 @@
   <mat-sidenav #sidenav fxLayout="row" fxLayoutAlign="center center" [opened]="opened" mode="side" position="end">
     <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="end center">
+        <button (click)="saved.emit()" color="primary" mat-icon-button>
+          <mat-icon>save</mat-icon>
+        </button>
         <button (click)="closeSidenav()" color="primary" mat-icon-button>
           <mat-icon>close</mat-icon>
         </button>
