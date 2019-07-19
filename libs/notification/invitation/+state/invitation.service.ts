@@ -19,16 +19,16 @@ export class InvitationService {
   public get userInvitations$() {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.db.fromQuery(this.getInvitationByUserId(user.uid))),
-      tap((invitations: any) => this.store.set(invitations)) // TODO : Find a way to cast invitations as Invitation[];
+      switchMap(user => this.db.fromQuery(this.getInvitationsByOrgId(user.orgId))),
+      tap((invitations: any) => this.store.set(invitations))
     );
   }
 
   // TODO : move this in /layout guard => ISSUE#641
-  private getInvitationByUserId(userId: string): Query<Invitation> {
+  private getInvitationsByOrgId(organizationId: string): Query<Invitation> {
     return {
       path: `invitations`,
-      queryFn: ref => ref.where('userId', '==', userId)
+      queryFn: ref => ref.where('stakeholderId', '==', organizationId)
     };
   }
 
