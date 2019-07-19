@@ -24,8 +24,8 @@ import { EditableSidenavModule, UiFormModule } from '@blockframes/ui';
 import { PasswordFormComponent } from './components/password-form/password-form.component';
 
 export const profileRoutes: Routes = [
-  { path: '', redirectTo: 'view', pathMatch: 'full' },
-  { path: 'view', component: ProfileEditableComponent },
+  { path: '', redirectTo: 'edit', pathMatch: 'full' },
+  { path: 'edit', component: ProfileEditableComponent },
 ];
 @NgModule({
   imports: [
