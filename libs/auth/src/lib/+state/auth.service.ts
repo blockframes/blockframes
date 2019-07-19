@@ -78,7 +78,7 @@ export class AuthService {
 
     await this.store.update({ user: null });
     await this.afAuth.auth.currentUser.delete();
-    await this._deleteSubCollections(uid);
+    await this.deleteSubCollections(uid);
     await this.db.doc<User>(`users/${uid}`).delete();
   }
 
@@ -87,23 +87,24 @@ export class AuthService {
   }
 
   /** Deletes user subCollections */
-  private async _deleteSubCollections(uid) {
+  private async deleteSubCollections(uid: string) {
     // @todo check if user is the only member of org (and the only ADMIN)
     // @todo remove uid from org.userIds
-    const permissions = await this._getUserSubcollectionItems(uid, 'permissions');
+    const permissions = await this.getUserSubcollectionItems(uid, 'permissions');
+
     return Promise.all(
-      permissions.map(o =>
+      permissions.map(({ id }) =>
         this.db
           .doc<User>(`users/${uid}`)
           .collection('permissions')
-          .doc(o.id)
+          .doc(id)
           .delete()
       )
     );
   }
 
   /** Returns promise of subcollection[] */
-  private async _getUserSubcollectionItems(uid, collectionName) {
+  private async getUserSubcollectionItems(uid: string, collectionName: string) {
     const items = await this.db
       .doc<User>(`users/${uid}`)
       .collection(collectionName)
