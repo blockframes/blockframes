@@ -71,7 +71,7 @@ const backupedCollections = async (firestore: Firestore): Promise<CollectionRefe
     .filter(x => !x.path.startsWith('_restore'));
 };
 
-const freeze = async (req: any, resp: any) => {
+export const freeze = async (req: any, resp: any) => {
   // Prep ouput
   const now = new Date().toISOString();
   const bucket: Bucket = await getBackupBucket();
@@ -229,7 +229,7 @@ export const skipWhenRestoring = (f: any) => {
 };
 
 
-const restore = async (req: any, resp: any) => {
+export const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
   const files: GFile[] = (await bucket.getFiles())[0];
@@ -283,5 +283,3 @@ const restore = async (req: any, resp: any) => {
   console.info(`Done processing: ${promises.length - 1} lines loaded`);
   return resp.status(200).send('success');
 };
-
-export { freeze, restore };
