@@ -82,14 +82,18 @@ export class AuthService {
   }
 
   /** Deletes user subCollections */
-  private async _deleteSubCollections (uid) {
+  private async _deleteSubCollections(uid) {
     // @todo check if user is the only member of org (and the only ADMIN)
     // @todo remove uid from org.userIds
     const permissions = await this._getUserSubcollectionItems(uid, 'permissions');
-    return await permissions.map(o => this.db.doc<User>(`users/${uid}`)
-      .collection('permissions')
-      .doc(o.id)
-      .delete()
+    return Promise.all(
+      permissions.map(o =>
+        this.db
+          .doc<User>(`users/${uid}`)
+          .collection('permissions')
+          .doc(o.id)
+          .delete()
+      )
     );
   }
 
