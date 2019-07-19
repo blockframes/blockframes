@@ -6,6 +6,8 @@ import { startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup } from '@angular/forms';
 import { PasswordControl } from '@blockframes/utils';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'account-profile-editable',
@@ -21,16 +23,21 @@ export class ProfileEditableComponent implements OnInit {
     current: new PasswordControl(),
     next: new PasswordControl()
   });
+  public organization$: Observable<Organization>;
+  public userEmail: string;
 
   constructor(
     private authQuery: AuthQuery,
     private snackBar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private organizationQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
     const user = this.authQuery.user;
+    this.userEmail = user.email;
     this.profileForm = new ProfileForm(user);
+    this.organization$ = this.organizationQuery.select('org');
   }
 
   public update() {

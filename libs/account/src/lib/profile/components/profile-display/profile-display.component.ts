@@ -1,9 +1,8 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { Organization } from '@blockframes/organization';
 import { Profile } from '../../forms/profile-edit.form';
-import { AuthQuery } from '@blockframes/auth';
 
 @Component({
   selector: 'account-profile-display',
@@ -11,16 +10,10 @@ import { AuthQuery } from '@blockframes/auth';
   styleUrls: ['./profile-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileDisplayComponent implements OnInit {
-  public organization$: Observable<Organization>;
+export class ProfileDisplayComponent {
   public email: string;
   @Output() editing = new EventEmitter<string>();
   @Input() user$: Observable<Profile>;
-
-  constructor(private organizationQuery: OrganizationQuery, private authQuery: AuthQuery){}
-
-  ngOnInit() {
-    this.organization$ = this.organizationQuery.select('org');
-    this.email = this.authQuery.user.email;
-  }
+  @Input() userEmail: string;
+  @Input() organization$: Observable<Organization>;
 }
