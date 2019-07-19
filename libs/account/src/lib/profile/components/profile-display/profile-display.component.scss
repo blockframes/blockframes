@@ -27,29 +27,14 @@ img {
   height: 250px;
 }
 
-mat-card-actions {
-  position: absolute;
-  padding: 0;
-  bottom: 8px;
-  right: 56px;
-}
-
 @include mobile {
   mat-card {
     height: 100%;
-  }
-  mat-card-actions {
-    bottom: 0;
-    right: 0;
   }
 }
 
 @include tablet {
   mat-card {
     height: 100%;
-  }
-  mat-card-actions {
-    bottom: 0;
-    right: 0;
   }
 }
