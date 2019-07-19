@@ -4,7 +4,18 @@ import { Delivery, Invitation, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 
 async function onOrgInvitationAccepted(invitation: Invitation) {
-  // TODO
+  const userRef = db.collection('users').doc(invitation.userId);
+  const invitationRef = db.collection('invitations').doc(invitation.id);
+
+  return db.runTransaction(async tx => {
+    const user = await tx.get(userRef);
+
+    return Promise.all([
+      tx.set(userRef, {...user, orgId: invitation.orgId}),
+      tx.delete(invitationRef),
+      ]
+    )
+  })
 }
 
 async function onStakeholderInvitationAccepted(invitation: Invitation) {
