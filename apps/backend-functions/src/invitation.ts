@@ -63,7 +63,7 @@ export async function onInvitationUpdate(
       const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
       const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
 
-      db.runTransaction(tx => {
+      await db.runTransaction(tx => {
         return Promise.all([
           // Initialize organization permissions on a document owned by another organization
           tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
