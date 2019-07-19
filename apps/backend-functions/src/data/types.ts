@@ -78,6 +78,9 @@ export interface Notification extends BaseNotification {
   appIcon: AppIcon;
 }
 
+export type InvitationState = 'accepted' | 'declined' | 'pending';
+export type InvitationType = 'orgInvitation';
+
 export interface BaseInvitation {
   message: string;
   userInformations?: {
@@ -86,6 +89,8 @@ export interface BaseInvitation {
     surname?: string;
     email: string
   };
+  userId: string;
+  type?: InvitationType;
   docInformations: DocInformations;
   organizationId: string;
   path?: string;
@@ -93,7 +98,7 @@ export interface BaseInvitation {
 
 export interface Invitation extends BaseInvitation {
   id: string;
-  state: 'accepted' | 'declined' | 'pending';
+  state: InvitationState;
   date: FirebaseFirestore.FieldValue;
   appIcon: AppIcon;
   processedId?: string;
