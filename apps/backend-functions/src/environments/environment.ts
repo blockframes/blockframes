@@ -9,9 +9,20 @@ import * as functions from 'firebase-functions';
 
 export { factoryContract, backupBucket, relayer, appUrl } from '@env';
 
-export const sendgridAPIKey = functions.config().sendgrid.apiKey;
-export const mnemonic = functions.config().relayer.mnemonic;
+/**
+ * Helper to work in local / remote dev mode:
+ * in local the function config will be empty and this function will return an undefined value.
+ * Later, when we test the backend functions code, we'll let dev define env variables
+ * for local testing.
+ *
+ * @param path the field path to look for, ['x', 'y'] will look for config.x.y
+ */
+const mockConfigIfNeeded = (...path: string[]): any =>
+  path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config);
 
-export const algoliaId = functions.config().algolia.app_id;
-export const algoliaAdminKey = functions.config().algolia.api_key;
-export const algoliaSearchKey = functions.config().algolia.search_key;
+export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'apiKey');
+export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
+
+export const algoliaId = mockConfigIfNeeded('algolia.app_id');
+export const algoliaAdminKey = mockConfigIfNeeded('algolia.api_key');
+export const algoliaSearchKey = mockConfigIfNeeded('algolia.search_key');
