@@ -19,14 +19,16 @@ export async function onInvitationUpdate(
   const invitationDocBefore = change.before.data();
 
   if (!invitationDoc || !invitationDocBefore) {
-    throw new Error(`No changes detected on this document`);
+    console.info("No changes detected on this document");
+    return;
   }
 
   const invitation = await getDocument<Invitation>(`invitations/${invitationDoc.id}`);
   const processedId = invitation.processedId;
 
   if (processedId === context.eventId) {
-    throw new Error(`Document already processed with this context`);
+    console.warn("Document already processed with this context");
+    return;
   }
 
   // If the stakeholder accept the invitation, we create all permissions and notifications

@@ -22,11 +22,13 @@ export const onMaterialUpdate = async (
   const organizations : Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
 
   if (!material || !materialBefore) {
-    throw new Error(`No changes detected on this document`);
+    console.info(`No changes detected on this document`);
+    return;
   }
 
   if (material.state === materialBefore.state) {
-    throw new Error(`No changes detected on material.state property`);
+    console.info(`No changes detected on material.state property`);
+    return;
   }
 
   /**
@@ -40,7 +42,8 @@ export const onMaterialUpdate = async (
     const processedId = materialDoc.data()!.processedId;
 
     if (processedId === context.eventId) {
-      throw new Error(`Document already processed with this context`);
+      console.warn("Document already processed with this context");
+      return;
     }
 
     try {
