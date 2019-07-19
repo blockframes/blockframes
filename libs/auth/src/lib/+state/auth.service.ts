@@ -7,13 +7,12 @@ import { AuthQuery } from './auth.query';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
     private db: FireQuery,
     private router: Router,
-    private query: AuthQuery,
+    private query: AuthQuery
   ) {}
 
   //////////
@@ -61,9 +60,9 @@ export class AuthService {
       if (userDoc.exists) {
         tx.update(userDocRef, user);
       } else {
-        tx.set(userDocRef, user)
+        tx.set(userDocRef, user);
       }
-    })
+    });
   }
 
   /** Update a user */
@@ -79,6 +78,10 @@ export class AuthService {
     await this.afAuth.auth.currentUser.delete();
     await this._deleteSubCollections(uid);
     await this.db.doc<User>(`users/${uid}`).delete();
+  }
+
+  public async sendVerifyEmail() {
+    return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 
   /** Deletes user subCollections */
@@ -99,14 +102,11 @@ export class AuthService {
 
   /** Returns promise of subcollection[] */
   private async _getUserSubcollectionItems(uid, collectionName) {
-    const items = await this.db.doc<User>(`users/${uid}`)
+    const items = await this.db
+      .doc<User>(`users/${uid}`)
       .collection(collectionName)
       .get()
       .toPromise();
     return items.docs;
-  }
-
-  public async sendVerifyEmail() {
-    return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 }
