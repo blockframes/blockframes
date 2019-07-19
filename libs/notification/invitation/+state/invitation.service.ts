@@ -16,11 +16,12 @@ export class InvitationService {
     private db: FireQuery
   ) {}
 
+  /** Create an invitation for user asks to join an organization */
   public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
     const user = this.authQuery.user;
     const invitation = createInvitation({
       id: this.db.createId(),
-      message: 'A user would like to participate to your orgnaization',
+      message: 'A user would like to participate to your organization',
       orgId: organization.id,
       userInformations: {
         userId: user.uid,
