@@ -6,12 +6,12 @@ import { Profile } from '../../forms/profile-edit.form';
 import { AuthQuery } from '@blockframes/auth';
 
 @Component({
-  selector: 'account-profile-view',
-  templateUrl: './profile-view.component.html',
-  styleUrls: ['./profile-view.component.scss'],
+  selector: 'account-profile-display',
+  templateUrl: './profile-display.component.html',
+  styleUrls: ['./profile-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileViewComponent implements OnInit {
+export class ProfileDisplayComponent implements OnInit {
   public organization$: Observable<Organization>;
   public email: string;
   @Output() editing = new EventEmitter<string>();

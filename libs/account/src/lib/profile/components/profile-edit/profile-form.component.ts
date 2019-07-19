@@ -1,14 +1,12 @@
-
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: 'account-password-edit',
-  templateUrl: './password-edit.component.html',
-  styleUrls: ['./password-edit.component.scss'],
+  selector: '[formGroup] profileForm, account-profile-form',
+  templateUrl: './profile-form.component.html',
+  styleUrls: ['./profile-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-export class PasswordEditComponent {
+export class ProfileFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 }
