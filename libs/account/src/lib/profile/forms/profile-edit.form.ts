@@ -10,14 +10,14 @@ export interface Profile {
   position: string;
 }
 
-function createProfile(params?: Partial<Profile>): Profile {
+function createProfile(params: Partial<Profile> = {}): Profile {
   return {
     name: '',
     surname: '',
     phoneNumber: '',
     position: '',
-    ...(params || {})
-  } as Profile
+    ...params
+  }
 }
 
 function createProfileControls(entity: Partial<Profile>) {

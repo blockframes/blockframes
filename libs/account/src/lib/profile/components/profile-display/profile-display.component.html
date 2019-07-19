@@ -1,47 +1,45 @@
-<section>
+<ng-container *ngIf="user; else: loading">
   <mat-card class="mat-elevation-z1" fxLayoutAlign="start center">
-    <ng-container *ngIf="(user$ | async) as user; else profileLoading">
-      <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-        <!-- TODO: issue#579 import picture -->
-        <img
-          mat-card-avatar
-          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-          alt="Profile picture"
-        />
-        <article class="information" fxLayout="column" fxLayoutAlign="start start">
-          <div>
-            <h4 class="name"><b>{{ user.name }}</b></h4>
-            <span>{{ user.surname }}</span>
-          </div>
-          <mat-divider [inset]="true"></mat-divider>
-          <div>
-            <span *ngIf="user.phoneNumber"><b>Phone number:</b> {{ user.phoneNumber }}</span>
-            <br/>
-            <span><b>Email:</b> {{ email }}</span>
-            <br/>
-            <span *ngIf="user.position"><b>Position:</b> {{ user.position }}</span>
-          </div>
-          <mat-divider [inset]="true"></mat-divider>
-          <div *ngIf="(organization$ | async) as organization">
-            <span><b>Organization:</b> {{ organization.name }}</span>
-          </div>
-          <mat-divider [inset]="true"></mat-divider>
-        </article>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-icon-button (click)="editing.emit('password')" color="primary">
-          <mat-icon svgIcon="change_pass"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="editing.emit('profile')"color="primary">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </mat-card-actions>
-    </ng-container>
-    <ng-template #profileLoading>
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <p>Your Profile is loading...</p>
-        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-      </div>
-    </ng-template>
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
+      <!-- TODO: issue#579 import picture -->
+      <img
+        mat-card-avatar
+        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+        alt="Profile picture"
+      />
+      <article class="information" fxLayout="column" fxLayoutAlign="start start">
+        <div>
+          <h4 class="name">
+            <b>{{ user.name }}</b>
+          </h4>
+          <span>{{ user.surname }}</span>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+        <div fxLayout="column">
+          <span *ngIf="user.phoneNumber"><b>Phone number:</b> {{ user.phoneNumber }}</span>
+          <span><b>Email:</b> {{ userEmail }}</span>
+          <span *ngIf="user.position"><b>Position:</b> {{ user.position }}</span>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+        <div>
+          <span *ngIf="organization"><b>Organization:</b> {{ organization.name }}</span>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+      </article>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-icon-button (click)="editing.emit('password')" color="primary">
+        <mat-icon svgIcon="change_pass"></mat-icon>
+      </button>
+      <button mat-icon-button (click)="editing.emit('profile')" color="primary">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-card-actions>
   </mat-card>
-</section>
+</ng-container>
+<ng-template #loading>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <p>Your Profile is loading...</p>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

@@ -11,4 +11,8 @@ import { ControlContainer } from '@angular/forms';
 
 export class PasswordFormComponent {
   constructor(public controlContainer: ControlContainer) {}
+
+  public get control() {
+    return this.controlContainer.control;
+  }
 }

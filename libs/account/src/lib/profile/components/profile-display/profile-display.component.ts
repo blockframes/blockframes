@@ -1,6 +1,5 @@
 
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization';
 import { Profile } from '../../forms/profile-edit.form';
 
@@ -13,7 +12,7 @@ import { Profile } from '../../forms/profile-edit.form';
 export class ProfileDisplayComponent {
   public email: string;
   @Output() editing = new EventEmitter<string>();
-  @Input() user$: Observable<Profile>;
+  @Input() user: Profile;
   @Input() userEmail: string;
-  @Input() organization$: Observable<Organization>;
+  @Input() organization: Organization;
 }

@@ -9,4 +9,8 @@ import { ControlContainer } from '@angular/forms';
 })
 export class ProfileFormComponent {
   constructor(public controlContainer: ControlContainer) {}
+
+  public get control() {
+    return this.controlContainer.control;
+  }
 }

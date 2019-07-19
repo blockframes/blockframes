@@ -15,7 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
-import { ProfileFormComponent } from './components/profile-edit/profile-form.component';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { ProfileDeleteComponent } from './profile-delete/profile-delete.component';
 import { ProfileWidgetComponent } from './profile-widget/profile-widget.component';
 import { ProfileMenuComponent } from './profile-menu/profile-menu.component';

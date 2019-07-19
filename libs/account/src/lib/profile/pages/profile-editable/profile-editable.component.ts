@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { ProfileForm } from '../../forms/profile-edit.form';
@@ -17,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class ProfileEditableComponent implements OnInit {
   public opened = false;
-  public editContent = "profile";
+  public editContent = 'profile';
   public profileForm: ProfileForm;
   public editPasswordForm = new FormGroup({
     current: new PasswordControl(),
@@ -41,39 +40,24 @@ export class ProfileEditableComponent implements OnInit {
   }
 
   public update() {
-    switch (this.editContent) {
-      case 'profile':
-        this.updateProfile();
-        break;
-      case 'password':
-        this.updatePassword();
-        break;
-    }
-  }
-
-  public updateProfile() {
-    if (!this.profileForm.valid) {
-      this.snackBar.open('form invalid', 'close', { duration: 1000 });
-      return;
-    }
     try {
-      this.authService.update(this.authQuery.user.uid, this.profileForm.value);
-      this.snackBar.open('Profile change succesfull', 'close', { duration: 2000 });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  public updatePassword() {
-    if (this.editPasswordForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 2000 });
-      return;
-    }
-    try {
-      this.authService.updatePassword(this.editPasswordForm.value.current, this.editPasswordForm.value.next);
-      this.snackBar.open('Password change succesfull', 'close', { duration: 2000 });
-    } catch (err) {
-      this.snackBar.open(err.message, 'close', { duration: 5000 });
+      switch (this.editContent) {
+        case 'profile':
+          if (this.profileForm.invalid) throw new Error('Your profile informations are not valid');
+          this.authService.update(this.authQuery.user.uid, this.profileForm.value);
+          this.snackBar.open('Profile change succesfull', 'close', { duration: 2000 });
+          break;
+        case 'password':
+          if (this.editPasswordForm.invalid) throw new Error('Your informations for change your password are not valid');
+          this.authService.updatePassword(
+            this.editPasswordForm.value.current,
+            this.editPasswordForm.value.next
+          );
+          this.snackBar.open('Password change succesfull', 'close', { duration: 2000 });
+          break;
+      }
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
 
