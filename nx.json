@@ -59,6 +59,12 @@
     "delivery-e2e": {
       "tags": []
     },
+    "main": {
+      "tags": ["main"]
+    },
+    "main-e2e": {
+      "tags": []
+    },
     "backend-functions": {
       "tags": []
     },
