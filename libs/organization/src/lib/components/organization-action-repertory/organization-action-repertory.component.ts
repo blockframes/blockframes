@@ -1,5 +1,14 @@
-import { Component, Input, ViewChild, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  OnInit,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { Action } from '../../+state';
 
 @Component({
   selector: 'org-action-repertory',
@@ -9,23 +18,20 @@ import { MatTableDataSource, MatSort } from '@angular/material';
 })
 export class OrganizationActionRepertoryComponent implements OnInit {
   /** Headline of the columns in the material table */
-  public displayedColumns: string[] = ['empty', 'Quorum', 'Active', 'empty2'];
+  public displayedColumns: string[] = ['No Headline', 'Quorum', 'Active', 'No Headline2'];
 
   /** Variable to save the data source of the material table */
-  // TODO #638 replace any
-  public dataSource: MatTableDataSource<Array<any>>;
+  public dataSource: MatTableDataSource<Action>;
 
-  // TODO #638: replace any
-  @Input() actionGroups: any;
+  @Input() actions: Action[];
 
-  // TODO #638: replace any
-  @Output() editAction: EventEmitter<any> = new EventEmitter();
+  @Output() selected = new EventEmitter();
 
   /** Init code to work with the build in material sort function */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.actionGroups);
+    this.dataSource = new MatTableDataSource(this.actions);
     this.dataSource.sort = this.sort;
   }
 }
