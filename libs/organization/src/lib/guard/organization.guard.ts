@@ -35,7 +35,7 @@ export class OrganizationGuard {
             };
             return this.fireQuery.fromQuery<Organization>(orgQuery(user.orgId));
           }),
-          tap(organization => this.store.update({org: organization}))
+          tap(organization => this.store.updateOrganization(organization))
         )
         .subscribe({
           next: (result: Organization) => {
