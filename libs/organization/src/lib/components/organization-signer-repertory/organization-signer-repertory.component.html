@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="signerList" matSort class="mat-elevation-z2">
+<table mat-table [dataSource]="signerList" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="User">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -11,13 +11,13 @@
   
     <ng-container matColumnDef="Signatory on">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Signatory on</th>
-      <td mat-cell *matCellDef="let element"> {{element.activeOn.length}} actions </td>
+      <td mat-cell *matCellDef="let element"> {{element.activeActions }} actions </td>
     </ng-container>
   
-    <ng-container matColumnDef="empty">
+    <ng-container matColumnDef="No Headline">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <mat-icon matRipple class="clickable" (click)="editSigner.emit(element.name)">edit</mat-icon>
+        <mat-icon matRipple class="clickable" (click)="selected.emit(element.name)">edit</mat-icon>
       </td>
     </ng-container>
   

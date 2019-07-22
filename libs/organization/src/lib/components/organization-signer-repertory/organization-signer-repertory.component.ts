@@ -1,5 +1,14 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  ViewChild,
+  EventEmitter,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { OrgMember } from '../../+state';
 
 @Component({
   selector: 'org-signer-repertory',
@@ -8,25 +17,21 @@ import { MatTableDataSource, MatSort } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationSignerRepertoryComponent implements OnInit {
- /** Headline of the columns in the material table */
- public displayedColumns: string[] = ['User', 'Mail', 'Signatory on', 'empty'];
+  /** Headline of the columns in the material table */
+  public displayedColumns: string[] = ['User', 'Mail', 'Signatory on', 'No Headline'];
 
- /** Variable to save the data source of the material table */
- // TODO #638 replace any
- public dataSource: MatTableDataSource<Array<any>>;
+  /** Variable to save the data source of the material table */
+  public dataSource: MatTableDataSource<OrgMember>;
 
- // TODO #638: replace any
- @Input() signerList: any;
+  @Input() signerList: OrgMember[];
 
- // TODO #638: replace any
- @Output() editSigner: EventEmitter<any> = new EventEmitter();
+  @Output() selected = new EventEmitter<OrgMember>();
 
- /** Init code to work with the build in material sort function */
- @ViewChild(MatSort, { static: true }) sort: MatSort;
+  /** Init code to work with the build in material sort function */
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
- ngOnInit() {
-   this.dataSource = new MatTableDataSource(this.signerList);
-   this.dataSource.sort = this.sort;
- }
-
+  ngOnInit() {
+    this.dataSource = new MatTableDataSource(this.signerList);
+    this.dataSource.sort = this.sort;
+  }
 }
