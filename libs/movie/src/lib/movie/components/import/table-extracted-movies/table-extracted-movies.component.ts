@@ -23,7 +23,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
   public selection = new SelectionModel<MovieWithMetaData>(true, []);
   public displayedColumns: string[] = [
-    'id',
+    'internalRef',
     'select',
     'title.original',
     'poster',
@@ -157,7 +157,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: Movie, filter) {
-    const dataStr = data.title.original + data.productionYear  //+ data.directorName;
+    const dataStr = data.internalRef + data.title.original + data.productionYear;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
