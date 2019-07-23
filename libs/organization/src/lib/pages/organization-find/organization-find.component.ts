@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -16,13 +16,12 @@ import { InvitationService } from '@blockframes/notification';
 })
 
 export class OrganizationFindComponent implements OnInit, OnDestroy {
-  public addOrganizationForm: FormGroup;
+  public orgControl = new FormControl();
   public orgOptions: Organization[];
-  private selectedOrganization: Partial<Organization>;
+  private selected: Partial<Organization>;
   private destroyed$ = new Subject();
 
   constructor(
-    private builder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
     private invitationService: InvitationService
@@ -30,21 +29,18 @@ export class OrganizationFindComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.orgOptions = [];
-    this.addOrganizationForm = this.builder.group({
-      org: null
-    });
     // TODO: issue#577 new search function
     this.onChange();
   }
 
   public selectOrganization(organization: Partial<Organization>) {
-    this.selectedOrganization = organization;
+    this.selected = organization;
   }
 
   public addOrganization() {
-    if (this.selectedOrganization) {
+    if (this.selected) {
       try {
-        this.invitationService.sendInvitationToOrg(this.selectedOrganization);
+        this.invitationService.sendInvitationToOrg(this.selected);
         this.router.navigate(['layout/congratulation']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -61,16 +57,14 @@ export class OrganizationFindComponent implements OnInit, OnDestroy {
     return call({ prefix }).then(matchingOrgs => matchingOrgs.data);
   }
 
-  private async onChange() {
-    this.addOrganizationForm.valueChanges
+  private onChange() {
+    this.orgControl.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
-      ).subscribe(typingOrgName => {
-        this.listOrgsByName(typingOrgName.org).then(matchingOrgs => {
-          this.orgOptions = matchingOrgs;
-        });
+      ).subscribe(async typingOrgName => {
+        this.orgOptions = await this.listOrgsByName(typingOrgName);
     });
   }
 

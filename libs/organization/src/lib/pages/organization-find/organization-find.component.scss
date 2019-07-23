@@ -24,10 +24,6 @@ p{
   margin-bottom: 50px;
 }
 
-form {
-  width: 100%;
-}
-
 mat-form-field {
   width: 100%;
 }
@@ -38,6 +34,9 @@ mat-form-field {
 
 // extra small
 @include mobile {
+  section {
+    height: auto;
+  }
   article {
     width: 80%;
   }
