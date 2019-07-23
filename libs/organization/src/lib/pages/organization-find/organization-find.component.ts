@@ -16,10 +16,11 @@ import { InvitationService } from '@blockframes/notification';
 })
 
 export class OrganizationFindComponent implements OnInit, OnDestroy {
-  public orgControl = new FormControl();
-  public orgOptions: Organization[];
   private selected: Partial<Organization>;
   private destroyed$ = new Subject();
+
+  public orgControl = new FormControl();
+  public orgOptions: Organization[];
 
   constructor(
     private snackBar: MatSnackBar,

@@ -1,7 +1,9 @@
 <section fxLayout="column" fxLayoutAlign="center center">
-  <h1>{{ message.headline }}</h1>
+  <h2>{{ message.headline }}</h2>
   <p>{{ message.subline }}</p>
-  <img src="/assets/images/ppl_celebrating.png" alt="People celebrating" />
-  <a mat-raised-button color="accent" (click)="redirectUser.emit()">Okay</a>
+  <div fxLayout="row" fxLayoutAlign="center">
+    <img [src]="imageUrl" alt="People celebrating" />
+  </div>
+  <a (click)="redirectUser.emit()"><button mat-raised-button color="accent">{{ buttonMessage }}</button></a>
 </section>
 

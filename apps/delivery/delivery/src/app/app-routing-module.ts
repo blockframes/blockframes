@@ -12,7 +12,8 @@ import { CongratulationComponent } from '@blockframes/ui';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrganizationCreateComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { OrgFormComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { OrganizationFeedbackComponent } from 'libs/organization/src/lib/pages/organization-feedback/organization-feedback.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -79,7 +80,7 @@ export const routes: Routes = [
       },
       {
         path: 'congratulation',
-        component: CongratulationComponent
+        component: OrganizationFeedbackComponent
       },
       {
         path: 'create',

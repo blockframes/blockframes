@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { AuthModule } from '@blockframes/auth';
 import { EditableSidenavModule } from '@blockframes/ui';
+import { FeedbackMessageModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -81,6 +82,7 @@ export const organizationRoutes: Routes = [
     AuthModule,
     FlexLayoutModule,
     EditableSidenavModule,
+    FeedbackMessageModule,
 
     // Material
     MatFormFieldModule,
