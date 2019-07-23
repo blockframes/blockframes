@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MovieQuery } from '../../+state';
-import { FlatMovie } from '../../components/movie-form/movie.form';
+import { MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -11,7 +10,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class MovieEditableComponent implements OnInit {
   public fullScreen = false;
-  public form$: Observable<FlatMovie>;
+  public form$: Observable<Movie>;
 
   constructor(
     private query: MovieQuery,

@@ -1,3 +1,130 @@
 <form [formGroup]="controlContainer.control">
+  <!-- INTERNAL REF -->
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" required />
+    <mat-error *ngIf="controlContainer.control.get('internalRef').hasError('required')">
+      Internal ref is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
 
+  <div formGroupName="title">
+    <!-- TITLES -->
+    <h3> Titles </h3>
+    <mat-form-field class="full-width">
+      <input matInput type="text" placeholder="Original title" formControlName="original" required />
+      <mat-error *ngIf="controlContainer.control.get('title').get('original').hasError('required')">
+        Original title is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput type="text" placeholder="International title" formControlName="international" required />
+      <mat-error *ngIf="controlContainer.control.get('title').get('international').hasError('required')">
+        International title is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <h3> Directed By </h3>
+
+  <div formArrayName="directors"
+    *ngFor="let director of controlContainer.control.get('directors').controls; let i = index;">
+    <div [formGroupName]="i" class="full-width">
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="firstName" placeholder="First Name">
+      </mat-form-field>
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="lastName" placeholder="Last Name">
+      </mat-form-field>
+      <button mat-icon-button color="primary" (click)="addDirector()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="removeDirector(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="controlContainer.control.get('directors').controls.length == 0">
+    <button mat-icon-button color="primary" (click)="addDirector()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+
+  <!-- POSTER -->
+  <h3> Poster </h3>
+  <mat-card class="movie-poster-thumbnail mat-elevation-z0">
+    <ng-container *ngIf="controlContainer.control.get('poster').value; else fileUpload">
+      <img mat-card-image [src]="controlContainer.control.get('poster').value">
+      <mat-card-actions>
+        <button mat-raised-button color="warn" (click)="controlContainer.control.get('poster').patchValue('')">
+          <mat-icon>delete_circle</mat-icon> Remove
+        </button>
+      </mat-card-actions>
+    </ng-container>
+    <ng-template #fileUpload>
+      <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
+        [uploadOnFirestore]="true" (storeUploaded)="controlContainer.control.get('poster').patchValue($event)">
+      </file-upload>
+    </ng-template>
+  </mat-card>
+
+  <!-- PRODUCTION -->
+  <h3> Production </h3>
+  <mat-form-field class="full-width">
+    <input matInput type="number" placeholder="Production year" formControlName="productionYear" />
+    <mat-error *ngIf="controlContainer.control.get('productionYear').hasError('pattern')">
+      Invalid year.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- GENRES -->
+  <h3> Genres </h3>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="genres" placeholder="Genres" multiple>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="genresFilterCtrl" [placeholderLabel]="'Search...'"
+          [noEntriesFoundLabel]="'no matching genre found'"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let genre of genres$ | async" [value]="genre.slug">
+        {{ genre.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- ORIGIN COUNTRY -->
+  <h3> Origin Country </h3>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="originCountry" placeholder="Origin Country">
+      <mat-option>
+        <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
+          [noEntriesFoundLabel]="'no matching country found'"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
+        {{ country.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- LANGUAGES -->
+  <h3> Languages </h3>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="languages" placeholder="Film Languages" multiple>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
+          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
+        {{ language.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- STATUS -->
+  <h3> Status </h3>
+  <mat-form-field>
+    <mat-select formControlName="status" placeholder="Status">
+      <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
+        {{ status.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </form>

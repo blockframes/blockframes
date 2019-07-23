@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
-import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
 import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component';
 import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
 import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
@@ -37,7 +36,7 @@ export const routes: Routes = [
   {
     path: 'import',
     component: ImportStepperComponent,
-    canActivate: [MovieListGuard], // @todo not working if user does not have a movie in its list
+    canActivate: [MovieListGuard], // @todo not working if user does not have a movie in their list
     canDeactivate: [MovieListGuard],
   },
   {
@@ -49,16 +48,20 @@ export const routes: Routes = [
       { path: 'view', component: MovieViewComponent },
       { path: 'teamwork', component: StakeholderViewComponent },
       {
-        path: 'edit',
+        path: 'edit', //todo remove
         component: MovieEditableComponent,
         children: [
-          { path: '', redirectTo: 'main', pathMatch: 'full' },
-          { path: 'main', component: MovieFormMainComponent },
+          { path: '', redirectTo: 'story', pathMatch: 'full' },
           { path: 'story', component: MovieFormStoryComponent },
           { path: 'team', component: MovieFormTeamComponent },
           { path: 'promo', component: MovieFormPromotionalComponent }
         ]
+      },
+      {
+        path: 'edit-new/:sectionId', //@todo rename
+        component: MovieEditableComponent,
       }
+      
     ]
   }
 ];

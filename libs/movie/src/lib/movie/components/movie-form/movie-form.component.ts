@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulatio
 import { createMovie, MovieQuery, MovieService } from '../../+state';
 import { MatSnackBar } from '@angular/material';
 import { PersistNgFormPlugin } from '@datorama/akita';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MovieForm } from './movie.form';
 
 @Component({
@@ -16,6 +16,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   public persistForm: PersistNgFormPlugin;
   navLinks: any[];
   activeLinkIndex = -1;
+  public sectionId: string;
 
   constructor(
     private query: MovieQuery,
@@ -23,16 +24,18 @@ export class MovieFormComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     public form: MovieForm,
+    private route: ActivatedRoute,
   ) {
+    
 
     this.navLinks = [
       {
         label: 'Main Informations',
-        link: './main',
+        link: '../../edit-new/main',
         index: 0
       }, {
         label: 'Story description',
-        link: './story',
+        link: '../../edit-new/story',
         index: 1
       }, {
         label: 'Movie Team',
@@ -47,6 +50,9 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.sectionId = params.sectionId;
+    })
 
     this.router.events.subscribe(() => {
       this.activeLinkIndex = this.navLinks.indexOf(this.navLinks.find(tab => tab.link === '.' + this.router.url));
@@ -64,7 +70,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
     } else {
-      this.snackBar.open(`${this.form.get('originalTitle').value} saved.`, 'close', { duration: 2000 });
+      this.snackBar.open(`${this.form.get('main').get('title').get('original').value} saved.`, 'close', { duration: 2000 });
       this.service.update(this.query.getActiveId(), this.preUpdate({ ...this.form.value }));
     }
   }
@@ -72,16 +78,6 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   /* Applies movie modifications to fit actual model */
   //@todo #643 should be removed
   private preUpdate(movie: any) {
-    movie.title = {};
-    if (movie.originalTitle) {
-      movie.title.original = movie.originalTitle;
-    }
-
-    if (movie.internationalTitle) {
-      movie.title.international = movie.internationalTitle;
-    }
-    delete movie.originalTitle;
-    delete movie.internationalTitle;
 
     return JSON.parse(JSON.stringify(movie)); //@todo remove #483
   }

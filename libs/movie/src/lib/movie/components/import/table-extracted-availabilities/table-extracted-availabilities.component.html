@@ -29,19 +29,14 @@
     <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.title.original">
+  <ng-container matColumnDef="movie.main.title.original">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Origninal Title </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.title.original }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.main.title.original }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.productionYear">
+  <ng-container matColumnDef="movie.main.productionYear">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Production Year </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.productionYear }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="movie.directorName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Director Name </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.directorName }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.main.productionYear }} </td>
   </ng-container>
 
   <ng-container matColumnDef="start">

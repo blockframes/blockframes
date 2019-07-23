@@ -2,7 +2,7 @@ import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
 
-export interface MovieAvailability {
+export interface MovieAvailability { //@todo rename into movieSales
   movieId? : string;
   movie?: Partial<Movie>
   territories: string[];
@@ -13,19 +13,36 @@ export interface MovieAvailability {
   exclusivity: boolean;
 }
 
+export interface Title {
+  original: string;
+  international?: string;
+}
+
+export interface Credit {
+  firstName: string,
+  lastName: string,
+  creditRole?: string,
+}
+
+export interface MovieMain {
+  internalRef?: string,
+  title: Title,
+  directors?: Credit[],
+  poster?: string,
+  productionYear?: number,
+  genres?: string[],
+  originCountry?: string,
+  languages?: string[],
+  status?: string,
+  //@todo #643 missing productionCompanies & length
+}
+
 export interface Movie {
   _type: 'movies',
   id: string,
   organization?: Organization,
-  title: Title, // will contain all titles: original, international, suiss, etc
-  directors: {firstName: string, lastName: string}[],
-  poster: string,
-  productionYear: number,
-  genres: string[],
-  originCountry: string,
-  coProducerCountries: string[],
-  languages: string[],
-  status: string,
+
+
   logline: string,
   synopsis: string,
   keywords: string[],
@@ -36,8 +53,8 @@ export interface Movie {
   stakeholders?: Stakeholder[];
   availabilities: MovieAvailability[],
 
-  // @todo add to Draw.io
-  internalRef: string,
+  // @todo add new fields to Draw.io
+
   scoring: string,
   isan: string,
   length: number,
@@ -64,12 +81,11 @@ export interface Movie {
   backendProfit: number,
   potentialRevenues: number,
   selectionCategories: string,
-  deliveryIds: string[];
-}
+  deliveryIds: string[],
 
-interface Title {
-  original: string;
-  international?: string;
+
+  // Sections
+  main : MovieMain,
 }
 
 /**

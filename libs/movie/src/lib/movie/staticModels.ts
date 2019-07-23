@@ -1188,3 +1188,8 @@ export const getLabelBySlug = (scope: string, slug: string) => {
 };
 
 export default models;
+
+export interface StaticModel {
+  label: string;
+  slug: string;
+}

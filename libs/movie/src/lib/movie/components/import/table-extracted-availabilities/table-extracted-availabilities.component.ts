@@ -22,9 +22,8 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   public displayedColumns: string[] = [
     'id',
     'select',
-    'movie.title.original',
-    'movie.productionYear',
-    'movie.directorName',
+    'movie.main.title.original',
+    'movie.main.productionYear',
     'start',
     'end',
     'exclusivity',
@@ -83,7 +82,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   ///////////////////
 
   displayErrors(availability: MovieAvailabilityWithMetaData) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: availability.movie.title.original, errors: availability.errors} , width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, { data: { title: availability.movie.main.title.original, errors: availability.errors} , width: '50%' });
   }
 
   ///////////////////

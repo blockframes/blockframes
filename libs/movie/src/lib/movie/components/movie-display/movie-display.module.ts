@@ -10,6 +10,7 @@ import { MatGridListModule, MatDividerModule } from '@angular/material';
 
 // Components
 import { MovieDisplayComponent } from './movie-display/movie-display.component';
+import { MovieDisplayMainModule } from '../../display/main/main.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,8 @@ import { MovieDisplayComponent } from './movie-display/movie-display.component';
     MatCardModule,
     MatDividerModule,
     MatGridListModule,
+
+    MovieDisplayMainModule,
   ],
   exports: [MovieDisplayComponent],
 })

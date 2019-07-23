@@ -1,0 +1,65 @@
+<ng-container *ngIf="data">
+  internal ref: {{ data.internalRef }}
+
+  <mat-card-header class="movie-card-header">
+    <mat-card-title class="movie-card-meta-title" *ngIf="data.title">
+      {{ data.title.original }}
+    </mat-card-title>
+    <mat-card-title class="movie-card-production-year" *ngIf="data.productionYear">({{ data.productionYear }})
+    </mat-card-title>
+    <mat-card-subtitle class="movie-card-sub-title" *ngIf="data.title ">
+      {{ data.title.international }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image class="movie-poster" *ngIf="data.poster" [src]="data.poster">
+  <mat-card-content *ngIf="data.directors && data.directors.length > 0" class="movie-card-section">
+    <ng-container *ngIf="data.directors.length > 0">
+      <mat-card-title>Directors</mat-card-title>
+      <mat-card-subtitle *ngIf="data.directors.length > 0">
+        <span *ngFor="let item of data.directors; let isLast=last">
+          {{ item.firstName }} {{ item.lastName }}{{ !isLast?',':'' }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+  </mat-card-content>
+  <mat-card-content *ngIf="
+            (data.genres && data.genres.length > 0 )||
+            (data.originCountry && data.originCountry.length > 0 )|| 
+            (data.languages && data.languages.length > 0 )|| 
+            (data.status && data.status.length > 0)" class="movie-card-section">
+    <mat-divider></mat-divider>
+    <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
+    <ng-container *ngIf="data.genres  && data.genres.length > 0">
+      <mat-card-title>Genres</mat-card-title>
+      <mat-card-subtitle *ngIf="data.genres">
+        <span *ngFor="let item of data.genres; let isLast=last">
+          {{ getStaticBySlug('GENRES', item) }}{{ !isLast?',':'' }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+    <ng-container *ngIf="data.originCountry && data.originCountry.length > 0">
+      <mat-card-title>Origin Country</mat-card-title>
+      <mat-card-subtitle *ngIf="data.originCountry">
+        <span>
+          {{ getStaticBySlug('COUNTRIES', data.originCountry) }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+    <ng-container *ngIf="data.languages && data.languages.length > 0">
+      <mat-card-title>Languages</mat-card-title>
+      <mat-card-subtitle *ngIf="data.languages">
+        <span *ngFor="let item of data.languages; let isLast=last">
+          {{ getStaticBySlug('LANGUAGES', item) }}{{ !isLast?',':'' }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+    <ng-container *ngIf="data.status &&  data.status.length > 0">
+      <mat-card-title>Status</mat-card-title>
+      <mat-card-subtitle *ngIf="data.status">
+        <span>
+          {{ getStaticBySlug('MOVIE_STATUS', data.status) }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+  </mat-card-content>
+</ng-container>

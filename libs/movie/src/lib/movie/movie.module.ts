@@ -35,7 +35,7 @@ import { ImportMovieModule } from './components/import/import-movie.module';
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieFormComponent } from './components/movie-form/movie-form.component';
-import { MovieFormMainComponent } from './components/movie-form/movie-form-main/movie-form-main.component';
+
 import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component'
 import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
 import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
@@ -53,6 +53,7 @@ import { HomeEmptyComponent } from './components/home-empty/home-empty.component
 import { MovieForm } from './components/movie-form/movie.form';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
+import { MovieFormModule } from './form/form.module';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,6 @@ import { MovieViewComponent } from './pages/movie-view/movie-view.component';
     MovieFormStoryComponent,
     MovieListComponent,
     MovieTitleFormComponent,
-    MovieFormMainComponent,
     MovieFormTeamComponent,
     MovieFormPromotionalComponent,
     HomeEmptyComponent,
@@ -105,6 +105,7 @@ import { MovieViewComponent } from './pages/movie-view/movie-view.component';
     StakeholderModule,
     ImportMovieModule,
     MovieDisplayModule,
+    MovieFormModule,
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated

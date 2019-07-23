@@ -50,11 +50,14 @@ export class ViewExtractedElementsComponent {
     sheetTab.rows.forEach(async m => {
       if (m[1] !== undefined) {
         const movie = {
-          title: {},
+          main: {
+            title: {},
+            directors: [],
+            genres: [],
+            languages: [],
+            status: 'finished', // all imported movies are in finished state
+          },
           internationalPremiere: {},
-          directors: [],
-          genres: [],
-          languages: [],
           dubbings: [],
           subtitles: [],
           errors: [],
@@ -65,7 +68,6 @@ export class ViewExtractedElementsComponent {
           broadcasterCoproducers: [],
           certifications: [],
           keyAssets: [],
-          status: 'finished', // all imported movies are in finished state
         } as MovieWithMetaData;
 
         //////////////////
@@ -73,14 +75,14 @@ export class ViewExtractedElementsComponent {
         //////////////////
 
         // INTERNAL REF (Film Code)
-        movie.internalRef = m[0];
+        movie.main.internalRef = m[0];
 
         // ORIGINAL TITLE (Original Title)
-        movie.title.original = m[1];
+        movie.main.title.original = m[1];
 
         // PRODUCTION YEAR
         if (!isNaN(Number(m[2]))) {
-          movie.productionYear = parseInt(m[2], 10);
+          movie.main.productionYear = parseInt(m[2], 10);
         }
 
         // SCORING (Scoring)
@@ -107,7 +109,7 @@ export class ViewExtractedElementsComponent {
               director.lastName = a.split("\\s+")[0];
             }
 
-            movie.directors.push(director);
+            movie.main.directors.push(director);
           });
         }
 
@@ -116,7 +118,7 @@ export class ViewExtractedElementsComponent {
         if (data !== false) {
           const snapshot = await this.afStorage.upload(`movies/${m[8].split('/')[m[8].split('/').length - 1]}`, data)
           const url = await snapshot.ref.getDownloadURL();
-          movie.poster = url;
+          movie.main.poster = url;
         }
 
         //////////////////
@@ -128,7 +130,7 @@ export class ViewExtractedElementsComponent {
 
 
         // INTERNATIONAL TITLE (International Title)
-        movie.title.international = m[10];
+        movie.main.title.international = m[10];
 
         // LENGTH (Length)
         if (!isNaN(Number(m[11]))) {
@@ -156,7 +158,7 @@ export class ViewExtractedElementsComponent {
         if (m[15] !== undefined) {
           const country = getSlug('COUNTRIES', m[15]);
           if (country !== false) {
-            movie.originCountry = country;
+            movie.main.originCountry = country;
           } else {
             movie.errors.push({
               type: 'warning',
@@ -233,7 +235,7 @@ export class ViewExtractedElementsComponent {
           m[23].split(',').forEach((g: string) => {
             const genre = getSlug('GENRES', g);
             if (genre !== false) {
-              movie.genres.push(genre);
+              movie.main.genres.push(genre);
             } else {
               errors = true;
             }
@@ -285,7 +287,7 @@ export class ViewExtractedElementsComponent {
           m[27].split(',').forEach((g: string) => {
             const language = getSlug('LANGUAGES', g);
             if (language !== false) {
-              movie.languages.push(language);
+              movie.main.languages.push(language);
             } else {
               errors = true;
             }
@@ -354,7 +356,7 @@ export class ViewExtractedElementsComponent {
 
         const movieWithErrors = this.validateMovie(movie);
         // check if movie is already in database
-        movieWithErrors.id = this.movieQuery.movieExists(movie.internalRef);
+        movieWithErrors.id = this.movieQuery.movieExists(movie.main.internalRef);
         if (movieWithErrors.id !== undefined) {
           this.moviesToUpdate.data.push(movieWithErrors);
           this.moviesToUpdate.data = [... this.moviesToUpdate.data];
@@ -385,7 +387,7 @@ export class ViewExtractedElementsComponent {
     // REQUIRED FIELDS
     //////////////////
 
-    if (!movie.internalRef) {
+    if (!movie.main.internalRef) {
       movie.errors.push({
         type: 'error',
         field: 'internalRef',
@@ -395,7 +397,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.title.original) {
+    if (!movie.main.title.original) {
       movie.errors.push({
         type: 'error',
         field: 'title.original',
@@ -405,7 +407,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.productionYear) {
+    if (!movie.main.productionYear) {
       movie.errors.push({
         type: 'error',
         field: 'productionYear',
@@ -432,7 +434,7 @@ export class ViewExtractedElementsComponent {
 
     // @todo (Mandate Medias)
 
-    if (movie.directors.length === 0) {
+    if (movie.main.directors.length === 0) {
       movie.errors.push({
         type: 'error',
         field: 'directors',
@@ -442,7 +444,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.poster) {
+    if (!movie.main.poster) {
       movie.errors.push({
         type: 'error',
         field: 'poster',
@@ -466,7 +468,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.title.international) {
+    if (!movie.main.title.international) {
       movie.errors.push({
         type: 'warning',
         field: 'title.international',
@@ -516,7 +518,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.originCountry) {
+    if (!movie.main.originCountry) {
       movie.errors.push({
         type: 'warning',
         field: 'originCountry',
@@ -586,7 +588,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.genres.length === 0) {
+    if (movie.main.genres.length === 0) {
       movie.errors.push({
         type: 'warning',
         field: 'genres',
@@ -626,7 +628,7 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.languages.length === 0) {
+    if (movie.main.languages.length === 0) {
       movie.errors.push({
         type: 'warning',
         field: 'languages',
@@ -671,7 +673,7 @@ export class ViewExtractedElementsComponent {
           productionYear: parseInt(m[1], 10),
         } as Partial<Movie>;
 
-        const movieId = this.movieQuery.movieExists(movie.internalRef);
+        const movieId = this.movieQuery.movieExists(movie.main.internalRef);
 
         const start: SSF$Date = SSF.parse_date_code(m[5]);
         const end: SSF$Date = SSF.parse_date_code(m[6]);

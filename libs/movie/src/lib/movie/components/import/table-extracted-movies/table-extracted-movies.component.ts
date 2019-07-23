@@ -23,11 +23,11 @@ export class TableExtractedMoviesComponent implements OnInit {
   public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
   public selection = new SelectionModel<MovieWithMetaData>(true, []);
   public displayedColumns: string[] = [
-    'internalRef',
+    'main.internalRef',
     'select',
-    'title.original',
-    'poster',
-    'productionYear',
+    'main.title.original',
+    'main.poster',
+    'main.productionYear',
     'errors',
     'warnings',
     'actions',
@@ -71,7 +71,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   private addMovie(movie: Movie): Promise<void> {
-    return this.movieService.addMovie(movie.title.original)
+    return this.movieService.addMovie(movie.main.title.original)
       .then(({ id }) => {
         movie.id = id;
         return this.movieService.update(id, JSON.parse(JSON.stringify(movie))); //@todo remove #483
@@ -99,7 +99,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   displayErrors(movie: MovieWithMetaData) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: movie.title.original, errors: movie.errors }, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, { data: { title: movie.main.title.original, errors: movie.errors }, width: '50%' });
   }
 
   ///////////////////
@@ -157,7 +157,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: Movie, filter) {
-    const dataStr = data.internalRef + data.title.original + data.productionYear;
+    const dataStr = data.main.internalRef + data.main.title.original + data.main.productionYear;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

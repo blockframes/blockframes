@@ -2,94 +2,48 @@ import { EntityControl, StringControl, YearControl, FormEntity, UrlControl } fro
 import { Validators, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { Injectable } from '@angular/core';
-
-/*
-      => movie form => control value accessor pour que les enfants voient que ce qu'il les intererssent
-
-      ```<form [formGroup]="movieForm">
-  <movie-form-story controlFormName="story"></movie-form-story>
-</form>``` => ControlValueAccessor
-
-class MovieForm extends EntityForm<Movie> {
-  constructor(movie: Movie) {
-    super({
-      ...,
-      story: new EntityForm<Movie['story']>(movie.story),
+import { Movie } from '../../+state/movie.model';
 
 
-    }
-  }
-*/
+function createMovieControls() {
 
-
-// @todo #643 remove after MCD movie review and subform implementation
-export interface FlatMovie {
-  originalTitle: string
-  internationalTitle: string
-  directors: any[],
-  poster: string
-  productionYear: string
-  genres: string
-  originCountry: string
-  coProducerCountries: string
-  languages: string
-  status: string
-  logline: string
-  synopsis:string
-  keywords: any[],
-  credits: any[],
-  images: any[],
-  promotionalElements: any[],
-}
-
-function createFlatMovie(params?: Partial<FlatMovie>): FlatMovie {
   return {
-    originalTitle: '',
-    internationalTitle: '',
-    directors: [],
-    poster: '',
-    productionYear: '',
-    genres: '',
-    originCountry: '',
-    coProducerCountries: '',
-    languages: '',
-    status: '',
-    logline: '',
-    synopsis:'',
-    keywords: [],
-    credits: [],
-    images: [],
-    promotionalElements: [],
-    ...(params || {})
-  } as FlatMovie
-}
 
-function createMovieControls(entity?: Partial<FlatMovie>) {
-  const movie = createFlatMovie(entity);
-  return {
-    originalTitle: new StringControl(movie.originalTitle, false, [Validators.required]),
-    internationalTitle: new StringControl(movie.internationalTitle, false, [Validators.required]),
-    directors: new FormArray(movie.directors),
-    poster: new StringControl(movie.poster),
-    productionYear: new YearControl(movie.productionYear),
-    genres:  new StringControl(movie.genres),
-    originCountry:  new StringControl(movie.originCountry),
-    coProducerCountries:  new StringControl(movie.coProducerCountries),
-    languages:  new StringControl(movie.languages),
-    status:  new StringControl(movie.status, false, [Validators.required]),
-    logline:  new StringControl(movie.logline, false, [Validators.maxLength(180)]),
-    synopsis: new StringControl(movie.synopsis, false, [Validators.maxLength(500)]),
-    keywords: new FormArray(movie.keywords),
-    credits: new FormArray(movie.credits),
-    images: new FormArray(movie.images),
-    promotionalElements: new FormArray(movie.promotionalElements),
+    // @todo WIP SECTIONS
+    logline:  new StringControl('', false, [Validators.maxLength(180)]),
+    synopsis: new StringControl('', false, [Validators.maxLength(500)]),
+    keywords: new FormArray([]),
+    credits: new FormArray([]),
+    images: new FormArray([]),
+    promotionalElements: new FormArray([]),
+
+    ////////////
+    /// SECTIONS
+    ////////////
+
+    // MAIN SECTION
+    
+    main: new FormEntity<Movie['main']>({
+      internalRef : new StringControl(''),
+      title: new FormEntity<Movie['main']['title']>({
+        original: new StringControl(''),
+        international: new StringControl(''),
+      }),
+      directors: new FormArray([]),
+      poster: new StringControl(''),
+      productionYear: new YearControl(''),
+      genres:  new StringControl(''), 
+      originCountry:  new StringControl(''),
+      languages:  new StringControl(''),
+      status:  new StringControl('', false, [Validators.required]),
+    }),
   }
 }
 
 type MovieControl = ReturnType<typeof createMovieControls>
 
 @Injectable({ providedIn: 'root' })
-export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
+export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
   protected builder : FormBuilder;
   constructor() {
     super(createMovieControls());
@@ -101,22 +55,18 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
   //////////
 
   /* Getters for all form inputs */
-  public currentFormValue(attr: Extract<keyof FlatMovie, string>, index?: number) {
+  public currentFormValue(attr: Extract<keyof Movie, string>, index?: number) {
     if (index !== undefined) {
       const formArray = this.get(attr) as FormArray;
       return formArray.controls[index] !== null ? formArray.controls[index].value : '' as String;
     } else {
-      const input = this.get(attr);
+      const input = this.get(attr) as FormControl;
       return input !== null ? input.value: '' as String;
     }
   }
 
   public get keywords() {
     return this.get('keywords') as FormArray;
-  }
-
-  public get movieDirectors() {
-    return this.get('directors') as FormArray;
   }
 
   public get movieCredits() {
@@ -135,31 +85,35 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
   // UTILS
   //////////
 
-  public populate(movie) {
+  public populate(movie: Movie) {
 
     // Common fields
-    this.get('originalTitle').setValue(movie.title.original);
-    this.get('internationalTitle').setValue(movie.title.international);
-    this.get('poster').setValue(movie.poster);
-    this.get('productionYear').setValue(movie.productionYear);
-    this.get('genres').setValue(movie.genres);
-    this.get('originCountry').setValue(movie.originCountry);
-    this.get('coProducerCountries').setValue(movie.coProducerCountries);
-    this.get('languages').setValue(movie.languages);
-    this.get('status').setValue(movie.status);
+
     this.get('logline').setValue(movie.logline);
     this.get('synopsis').setValue(movie.synopsis);
+
+    // SECTION
+    const mainSection = this.get('main');
+    mainSection.get('internalRef').setValue(movie.main.internalRef);
+    mainSection.get('title').get('original').setValue(movie.main.title.original);
+    mainSection.get('title').get('international').setValue(movie.main.title.international);
+    mainSection.get('poster').setValue(movie.main.poster);
+    mainSection.get('productionYear').setValue(movie.main.internalRef);
+    mainSection.get('genres').setValue(movie.main.genres);
+    mainSection.get('originCountry').setValue(movie.main.originCountry);
+    mainSection.get('languages').setValue(movie.main.languages);
+    mainSection.get('status').setValue(movie.main.status);
+
+    if (movie.main.directors && movie.main.directors.length) {
+      movie.main.directors.forEach((director) => {
+        (mainSection.get('directors') as FormArray).push(this.builder.group(director))
+      })
+    }
 
     // Populate custom fields
     if (movie.keywords && movie.keywords.length) {
       movie.keywords.forEach((keyword) => {
         this.addFormControl(new FormControl(keyword), 'keywords');
-      })
-    }
-
-    if (movie.directors && movie.directors.length) {
-      movie.directors.forEach((director) => {
-        this.addFormControl(this.builder.group(director), 'movieDirectors');
       })
     }
 
@@ -186,12 +140,9 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     this[key].push(value);
   }
 
+  // @todo remove
   public removeFormControl(index: number, key: string): void {
     this[key].removeAt(index);
-  }
-
-  public setPoster(poster: string) {
-    this.patchValue({ poster });
   }
 
   public setImage(image: string, index: number): void {
@@ -225,7 +176,7 @@ export class MovieForm extends FormEntity<FlatMovie, MovieControl> {
     }
   }
 
-  reset(value?: EntityControl<FlatMovie>, options?: {
+  reset(value?: EntityControl<Movie>, options?: {
       onlySelf?: boolean;
       emitEvent?: boolean;
   }): void {

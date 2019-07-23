@@ -21,7 +21,7 @@ export class MovieService {
     const id = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
     const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
-    const movie: Movie = createMovie({ id, title: { original }});
+    const movie: Movie = createMovie({ id, main: {title: { original }}});
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const organizationSnap = await tx.get(organizationDoc.ref);

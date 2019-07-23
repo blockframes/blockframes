@@ -35,7 +35,7 @@ export class MovieListComponent implements OnInit {
 
   public delete(movie: Movie) {
     this.service.remove(movie.id);
-    this.snackBar.open(`Movie "${movie.title.original}" has been deleted.`, 'close', {
+    this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {
       duration: 2000
     });
   }
