@@ -29,7 +29,13 @@ export class ImportSpreadsheetComponent {
   }
 
   importSpreadsheet(bytes: Uint8Array) {
-    this.sheets = importSpreadsheet(bytes);
+    let sheetRange;
+    if(this.fileType.value === 'movies') {
+      sheetRange = 'A10:AD100';
+    } else {
+      // @todo for sales
+    }
+    this.sheets = importSpreadsheet(bytes, sheetRange);
   }
 
   next(): void {

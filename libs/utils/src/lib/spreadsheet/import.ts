@@ -9,7 +9,7 @@ export interface SheetTab {
   rows: any[][];
 }
 
-export function importSpreadsheet(bytes: Uint8Array) : SheetTab[] {
+export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[] {
 
   // convert Uint8Array to binary String
   let bstr = "";
@@ -22,7 +22,7 @@ export function importSpreadsheet(bytes: Uint8Array) : SheetTab[] {
   // For each tab
   const tabs : SheetTab[] = workBook.SheetNames.map( (name, index)  => {
     const worksheet: WorkSheet = workBook.Sheets[name];
-    const rows = <Matrix>(utils.sheet_to_json(worksheet, { header: 1 }));
+    const rows = <Matrix>(utils.sheet_to_json(worksheet, { header: 1, range }));
     const headers = rows.shift();
     
     return { name, index, headers, rows } as SheetTab;
