@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Movie, MovieQuery, MovieAvailability } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
@@ -40,6 +40,7 @@ export class ViewExtractedElementsComponent {
     private movieQuery: MovieQuery,
     private afStorage: AngularFireStorage,
     private httpClient: HttpClient,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
 
@@ -362,6 +363,7 @@ export class ViewExtractedElementsComponent {
           this.moviesToCreate.data = [... this.moviesToCreate.data];
         }
 
+        this.cdRef.detectChanges();
       }
     });
   }
