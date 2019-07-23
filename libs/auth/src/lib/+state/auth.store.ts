@@ -21,19 +21,10 @@ export interface UserForm {
   pwd: string;
 }
 
-export interface AccountForm {
-  name: string;
-  surname: string;
-  phoneNumber: string;
-  email: string;
-  position: string;
-}
-
 export interface AuthState {
   user: User;
   auth?: { emailVerified: boolean };
   form: UserForm;
-  accountForm: AccountForm;
   requestedRoute?: string;
   isEncrypting: boolean;
   isBalanceLoading: boolean;
@@ -50,13 +41,6 @@ const initialState: AuthState = {
   form: {
     email: '',
     pwd: ''
-  },
-  accountForm: {
-    name: '',
-    surname: '',
-    phoneNumber: '',
-    email: '',
-    position: ''
   },
   isEncrypting: false,
   isBalanceLoading: false,
