@@ -4,7 +4,7 @@ import { Organization } from '@blockframes/organization';
 import { Profile } from '../../forms/profile-edit.form';
 
 @Component({
-  selector: 'account-profile-display',
+  selector: 'profile-display',
   templateUrl: './profile-display.component.html',
   styleUrls: ['./profile-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

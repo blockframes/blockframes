@@ -9,7 +9,7 @@ import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'account-profile-editable',
+  selector: 'profile-editable',
   templateUrl: './profile-editable.component.html',
   styleUrls: ['./profile-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -49,10 +49,8 @@ export class ProfileEditableComponent implements OnInit {
           break;
         case 'password':
           if (this.editPasswordForm.invalid) throw new Error('Your informations for change your password are not valid');
-          this.authService.updatePassword(
-            this.editPasswordForm.value.current,
-            this.editPasswordForm.value.next
-          );
+          const { current, next } = this.editPasswordForm.value;
+          this.authService.updatePassword(current, next);
           this.snackBar.open('Password change succesfull', 'close', { duration: 2000 });
           break;
       }
