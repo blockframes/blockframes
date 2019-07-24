@@ -1,9 +1,10 @@
-export interface OrgMember {
+export interface OrganizationMember {
   uid: string;
   name?: string;
   email: string;
   roles: string[];
-  activeActions?: string[];
+  /** Array of ids from OrganizationAction */
+  activeOnActions?: string[];
 }
 
 export interface Organization {
@@ -15,19 +16,21 @@ export interface Organization {
   movieIds: string[];
   templateIds: string[];
   userIds: string[];
-  members?: OrgMember[];
-  actions?: Action[];
+  members?: OrganizationMember[];
+  actions: OrganizationAction[]
 }
 
-export interface OrgForm {
+export interface OrganizationForm {
   name: string;
   adress: string;
 }
 
-export interface Action {
-  actionGroup: string;
-  quorum: string[];
-  activeMembers: string[];
+export interface OrganizationAction {
+  id: string;
+  actionName: string;
+  quorumMembers: number;
+  /** Array of uids from OrganizationMember. The u of uids stands for user not unique */
+  activeMembers: OrganizationMember[];
 }
 /**
  * A factory function that creates an Organization

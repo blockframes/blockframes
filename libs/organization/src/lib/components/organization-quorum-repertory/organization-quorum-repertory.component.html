@@ -1,0 +1,14 @@
+<h2>{{ action.actionName }}</h2>
+<mat-form-field>
+  <mat-label>How much members needed</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let number of numbers" [value]="number">{{number}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-divider></mat-divider>
+<h2>Members</h2>
+<mat-card *ngFor="let signer of action.activeMembers" fxLayout="row" fxLayoutAlign="space-around center">
+  <mat-icon>account_box</mat-icon>
+  <span>{{signer.name}}</span>
+  <mat-icon class="clickable" (click)="deleteSigner(signer, action)">delete</mat-icon>
+</mat-card>

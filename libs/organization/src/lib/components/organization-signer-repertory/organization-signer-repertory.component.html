@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="signerList" matSort class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="User">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -11,13 +11,15 @@
   
     <ng-container matColumnDef="Signatory on">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Signatory on</th>
-      <td mat-cell *matCellDef="let element"> {{element.activeActions }} actions </td>
+      <!-- we have to check how many actions this signer is active on, so we can use the correct grammar-->
+      <td mat-cell *matCellDef="let element"> {{ element.activeActions }}
+        action<ng-container *ngIf="element.activeActions.length > 1">s</ng-container> </td>
     </ng-container>
   
     <ng-container matColumnDef="No Headline">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <mat-icon matRipple class="clickable" (click)="selected.emit(element.name)">edit</mat-icon>
+        <mat-icon matRipple class="clickable" (click)="selected.emit(element.uid)">edit</mat-icon>
       </td>
     </ng-container>
   

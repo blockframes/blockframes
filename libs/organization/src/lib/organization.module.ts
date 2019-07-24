@@ -32,6 +32,8 @@ import { OrgWidgetComponent } from './components/org-widget/org-widget.component
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
+import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
+import { OrganizationQuorumRepertoryComponent } from './components/organization-quorum-repertory/organization-quorum-repertory.component';
 
 // Pages
 import { OrgViewComponent } from './pages/org-view/org-view.component';
@@ -106,8 +108,12 @@ export const organizationRoutes: Routes = [
     OrganizationActivityViewComponent,
     OrganizationActionItemComponent,
     OrganizationAdminViewComponent,
+    // TODO(PL): maybe you have to change the suffix because now they take in a form,
+    // so it is not a repertory anymore. But it depens on how you handle it.
     OrganizationActionRepertoryComponent,
-    OrganizationSignerRepertoryComponent
+    OrganizationSignerRepertoryComponent,
+    OrganizationSignerFormComponent,
+    OrganizationQuorumRepertoryComponent
   ],
   exports: [OrgWidgetComponent]
 })

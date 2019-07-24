@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
-import { createOrganization, Organization, OrgMember } from './organization.model';
+import {
+  createOrganization,
+  Organization,
+  OrganizationAction,
+  OrganizationMember
+} from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
 import { AuthStore, User } from '@blockframes/auth';
 import { OrganizationQuery } from './organization.query';
-import { PermissionsQuery, createPermissions, App, createAppPermissions } from '../permissions/+state';
+import {
+  PermissionsQuery,
+  createPermissions,
+  App,
+  createAppPermissions
+} from '../permissions/+state';
 import firebase from 'firebase';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +28,7 @@ export class OrganizationService {
   ) {}
 
   /** Add a new user to the organization */
-  public async addMember(member: OrgMember) {
+  public async addMember(member: OrganizationMember) {
     const orgId = this.query.getValue().org.id;
     const permissions = this.permissionsQuery.getValue();
     const organizationDoc = this.db.doc(`orgs/${orgId}`);
@@ -40,7 +50,11 @@ export class OrganizationService {
         // TODO: Move this to the user side as we shouldn't be authorized to write in user document if we're not the concerned user
         const updateUserTransaction = tx.update(userDoc.ref, { orgId });
 
-        return Promise.all([organizationTransaction, updateUserTransaction, permissionsTransaction]);
+        return Promise.all([
+          organizationTransaction,
+          updateUserTransaction,
+          permissionsTransaction
+        ]);
       })
       .catch(error => {
         throw Error(error);
@@ -55,7 +69,11 @@ export class OrganizationService {
    */
   public async add(organization: Organization, user: User): Promise<string> {
     const orgId: string = this.db.createId();
-    const newOrganization: Organization = createOrganization({ ...organization, id: orgId, userIds: [user.uid] });
+    const newOrganization: Organization = createOrganization({
+      ...organization,
+      id: orgId,
+      userIds: [user.uid]
+    });
     const organizationDoc = this.db.doc(`orgs/${orgId}`);
     const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
@@ -102,5 +120,16 @@ export class OrganizationService {
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
     const call = firebase.functions().httpsCallable('findOrgByName');
     return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
+  }
+
+  // TODO(PL): this function is written by Yohann. Somehow the updateActiveMembers array don't filter correctly 
+  // the id out of the activeMembersArray
+  public async deleteActiveSigner(member: OrganizationMember, action: OrganizationAction) {
+    const organizationId = this.query.getValue().org.id;
+    const actionData = await this.db.snapshot<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`);
+    const updatedActiveMembers = actionData.activeMembers.filter(_member => _member.uid !== member.uid);
+    return this.db
+      .doc<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`)
+      .update({activeMembers: updatedActiveMembers});
   }
 }

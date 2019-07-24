@@ -1,3 +1,4 @@
+import { OrganizationAction } from './../../+state/organization.model';
 import {
   Component,
   Input,
@@ -8,7 +9,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { Action } from '../../+state';
 
 @Component({
   selector: 'org-action-repertory',
@@ -17,15 +17,15 @@ import { Action } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationActionRepertoryComponent implements OnInit {
-  /** Headline of the columns in the material table */
+  /** Headline of the columns in the material table. No Headline means no text. */
   public displayedColumns: string[] = ['No Headline', 'Quorum', 'Active', 'No Headline2'];
 
   /** Variable to save the data source of the material table */
-  public dataSource: MatTableDataSource<Action>;
+  public dataSource: MatTableDataSource<OrganizationAction>;
 
-  @Input() actions: Action[];
+  @Input() actions: OrganizationAction[];
 
-  @Output() selected = new EventEmitter();
+  @Output() detailedView = new EventEmitter();
 
   /** Init code to work with the build in material sort function */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
