@@ -20,12 +20,12 @@ export class NotificationService {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.db.fromQuery(this.getNotificationsByUserId(user.uid))),
-      tap((notifications: any) => this.store.set(notifications)) // TODO : Find a way to cast notifications as Notification[];
+      tap((notifications: Notification[]) => this.store.set(notifications))
     );
   }
 
   // TODO : move this in /layout guard => ISSUE#641
-  private getNotificationsByUserId(userId: string): Query<Notification> {
+  private getNotificationsByUserId(userId: string): Query<Notification[]> {
     return {
       path: `notifications`,
       queryFn: ref => ref.where('userId', '==', userId)

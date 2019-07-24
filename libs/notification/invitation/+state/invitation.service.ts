@@ -20,12 +20,12 @@ export class InvitationService {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.db.fromQuery(this.getInvitationsByOrgId(user.orgId))),
-      tap((invitations: any) => this.store.set(invitations))
+      tap((invitations: Invitation[]) => this.store.set(invitations))
     );
   }
 
   // TODO : move this in /layout guard => ISSUE#641
-  private getInvitationsByOrgId(organizationId: string): Query<Invitation> {
+  private getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
     return {
       path: `invitations`,
       queryFn: ref => ref.where('organizationId', '==', organizationId)
