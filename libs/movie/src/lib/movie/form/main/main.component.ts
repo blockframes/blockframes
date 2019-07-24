@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ControlContainer, FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { default as staticModels, StaticModel } from '../../staticModels';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { MovieMainForm } from './main.form';
 
 
 @Component({
   selector: '[formGroupName] movie-form-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMainComponent implements OnInit {
   
@@ -20,14 +22,15 @@ export class MovieFormMainComponent implements OnInit {
   public languages$: Observable<StaticModel[]>;
   public genres$: Observable<StaticModel[]>;
 
-  constructor(
-    public controlContainer: ControlContainer,
-    private builder: FormBuilder,
-  ) { }
+  constructor(public controlContainer: ControlContainer) { }
 
   ngOnInit() {
     this.staticModels = staticModels;
     this.selectSearchSubScriptions();
+  }
+
+  get main() : MovieMainForm {
+    return this.controlContainer.control as MovieMainForm;
   }
 
   /* Selects with search bar */
@@ -46,14 +49,4 @@ export class MovieFormMainComponent implements OnInit {
     );
   }
 
-  public addDirector(): void {
-    (this.controlContainer.control.get('directors') as FormArray)
-      .push(this.builder.group({ firstName: '', lastName: '' }));
-  }
-
-  public removeDirector(i: number): void {
-    (this.controlContainer.control.get('directors') as FormArray).removeAt(i);
-  }
-
-  
 }

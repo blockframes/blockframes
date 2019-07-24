@@ -1,0 +1,19 @@
+<ng-container *ngIf="data">
+  <mat-card-content *ngIf="
+  data.logline || data.synopsis" class="movie-card-section">
+    <mat-divider></mat-divider>
+    <mat-card-title class="movie-card-meta-title">Story description</mat-card-title>
+    <ng-container *ngIf="data.logline">
+      <mat-card-title>Logline</mat-card-title>
+      <mat-card-subtitle>
+        <p>{{ data.logline }}</p>
+      </mat-card-subtitle>
+    </ng-container>
+    <ng-container *ngIf="data.synopsis">
+      <mat-card-title>Synopsis</mat-card-title>
+      <mat-card-subtitle>
+        <p>{{ data.synopsis }}</p>
+      </mat-card-subtitle>
+    </ng-container>
+  </mat-card-content>
+</ng-container>

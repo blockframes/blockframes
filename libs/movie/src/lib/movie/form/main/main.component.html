@@ -1,8 +1,8 @@
-<form [formGroup]="controlContainer.control">
+<form [formGroup]="main">
   <!-- INTERNAL REF -->
   <mat-form-field class="full-width">
     <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" required />
-    <mat-error *ngIf="controlContainer.control.get('internalRef').hasError('required')">
+    <mat-error *ngIf="main.get('internalRef').hasError('required')">
       Internal ref is <strong>required</strong>
     </mat-error>
   </mat-form-field>
@@ -12,22 +12,21 @@
     <h3> Titles </h3>
     <mat-form-field class="full-width">
       <input matInput type="text" placeholder="Original title" formControlName="original" required />
-      <mat-error *ngIf="controlContainer.control.get('title').get('original').hasError('required')">
+      <mat-error *ngIf="main.title.get('original').hasError('required')">
         Original title is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput type="text" placeholder="International title" formControlName="international" required />
-      <mat-error *ngIf="controlContainer.control.get('title').get('international').hasError('required')">
+      <mat-error *ngIf="main.title.get('international').hasError('required')">
         International title is <strong>required</strong>
       </mat-error>
     </mat-form-field>
   </div>
 
   <h3> Directed By </h3>
-
   <div formArrayName="directors"
-    *ngFor="let director of controlContainer.control.get('directors').controls; let i = index;">
+    *ngFor="let director of main.directors.controls; let i = index;">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field class="small-margin">
         <input matInput formControlName="firstName" placeholder="First Name">
@@ -35,16 +34,16 @@
       <mat-form-field class="small-margin">
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
-      <button mat-icon-button color="primary" (click)="addDirector()">
+      <button mat-icon-button color="primary" (click)="main.addDirector()">
         <mat-icon>add_circle</mat-icon>
       </button>
-      <button mat-icon-button color="primary" (click)="removeDirector(i)">
+      <button mat-icon-button color="primary" (click)="main.removeDirector(i)">
         <mat-icon>delete_circle</mat-icon>
       </button>
     </div>
   </div>
-  <div *ngIf="controlContainer.control.get('directors').controls.length == 0">
-    <button mat-icon-button color="primary" (click)="addDirector()">
+  <div *ngIf="main.directors.controls.length === 0">
+    <button mat-icon-button color="primary" (click)="main.addDirector()">
       <mat-icon>add_circle</mat-icon>
     </button>
   </div>
@@ -52,17 +51,17 @@
   <!-- POSTER -->
   <h3> Poster </h3>
   <mat-card class="movie-poster-thumbnail mat-elevation-z0">
-    <ng-container *ngIf="controlContainer.control.get('poster').value; else fileUpload">
-      <img mat-card-image [src]="controlContainer.control.get('poster').value">
+    <ng-container *ngIf="main.get('poster').value; else fileUpload">
+      <img mat-card-image [src]="main.get('poster').value">
       <mat-card-actions>
-        <button mat-raised-button color="warn" (click)="controlContainer.control.get('poster').patchValue('')">
+        <button mat-raised-button color="warn" (click)="main.get('poster').patchValue('')">
           <mat-icon>delete_circle</mat-icon> Remove
         </button>
       </mat-card-actions>
     </ng-container>
     <ng-template #fileUpload>
       <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
-        [uploadOnFirestore]="true" (storeUploaded)="controlContainer.control.get('poster').patchValue($event)">
+        [uploadOnFirestore]="true" (storeUploaded)="main.get('poster').patchValue($event)">
       </file-upload>
     </ng-template>
   </mat-card>
@@ -71,7 +70,7 @@
   <h3> Production </h3>
   <mat-form-field class="full-width">
     <input matInput type="number" placeholder="Production year" formControlName="productionYear" />
-    <mat-error *ngIf="controlContainer.control.get('productionYear').hasError('pattern')">
+    <mat-error *ngIf="main.get('productionYear').hasError('pattern')">
       Invalid year.
     </mat-error>
   </mat-form-field>
@@ -127,4 +126,43 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <!-- SHORT SYNOPSIS -->
+  <h3> Short synopsis </h3>
+  <mat-form-field class="full-width">
+    <textarea matInput #synopsis formControlName="shortSynopsis" maxlength="500" placeholder="Short synopsis"
+      type="string"></textarea>
+    <mat-hint align="end">{{ main.shortSynopsis.value?.length }} / 500</mat-hint>
+  </mat-form-field>
+
+  <!-- LENGTH -->
+  <h3> Length </h3>
+  <mat-form-field class="full-width">
+    <input matInput type="number" placeholder="Length" formControlName="length" />
+    <mat-error *ngIf="main.get('length').hasError('required')">
+      Length is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <!-- PRODUCTION COMPANIES -->
+  <h3> Production companies </h3>
+  <div formArrayName="productionCompanies"
+    *ngFor="let productionCompany of main.productionCompanies.controls; let i = index;">
+    <div [formGroupName]="i" class="full-width">
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="firstName" placeholder="Company name">
+      </mat-form-field>
+      <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="main.removeProductionCompany(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="main.productionCompanies.controls.length === 0">
+    <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
 </form>

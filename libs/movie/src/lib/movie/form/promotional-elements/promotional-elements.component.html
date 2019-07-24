@@ -1,0 +1,53 @@
+<form [formGroup]="promotionalElements">
+  <!-- IMAGES -->
+  <h3> Images </h3>
+  <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index;">
+    <div [formGroupName]="i" class="full-width">
+      <mat-card class="movie-poster-thumbnail mat-elevation-z0">
+        <ng-container *ngIf="promotionalElements.images.controls[i].value; else fileUpload">
+          <img mat-card-image [src]="promotionalElements.images.controls[i].value">
+        </ng-container>
+        <ng-template #fileUpload>
+          <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
+            [uploadOnFirestore]="true" (storeUploaded)="promotionalElements.setImage($event, i)"></file-upload>
+        </ng-template>
+        <mat-card-actions>
+          <button mat-raised-button color="warn" (click)="promotionalElements.removeImage(i)">
+            <mat-icon>delete_circle</mat-icon> Remove
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  <div *ngIf="promotionalElements.images.controls.length < 6">
+    <button mat-icon-button color="primary" (click)="promotionalElements.addImage()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+  <!-- OTHER PROMOTIONAL ELEMENTS -->
+  <h3> Other Promotional Elements </h3>
+  <div formArrayName="promotionalElements">
+    <ng-container *ngFor="let element of promotionalElements.promotionalElements.controls; let i = index;">
+      <div [formGroupName]="i" class="full-width">
+        <mat-form-field class="small-width small-margin">
+          <input matInput formControlName="label" placeholder="Label">
+        </mat-form-field>
+        <mat-form-field>
+          <input formControlName="url" type="url" matInput placeholder="https://" />
+          <mat-error *ngIf="element.get('url').hasError('pattern')"> Invalid url. </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="promotionalElements.removePromotionalElement(i)">
+          <mat-icon>delete_circle</mat-icon>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="promotionalElements.promotionalElements.controls.length == 0">
+    <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+</form>

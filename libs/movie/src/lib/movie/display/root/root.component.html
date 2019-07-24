@@ -1,0 +1,7 @@
+<mat-card class="movie-card-view mat-elevation-z0" *ngIf="movie">
+  <movie-display-main [data]="movie.main"></movie-display-main>
+  <movie-display-promotional-elements [data]="movie.promotionalElements"></movie-display-promotional-elements>
+  <movie-display-promotional-description [data]="movie.promotionalDescription"></movie-display-promotional-description>
+  <movie-display-story [data]="movie.story"></movie-display-story>
+  <movie-display-sales-cast [data]="movie.salesCast"></movie-display-sales-cast>
+</mat-card>

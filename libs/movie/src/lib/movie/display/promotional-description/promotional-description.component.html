@@ -1,0 +1,12 @@
+<ng-container *ngIf="data">
+  <mat-card-content *ngIf="(data.keywords && data.keywords.length > 0)" class="movie-card-section">
+    <ng-container *ngIf="data.keywords.length > 0">
+      <mat-card-title class="movie-card-meta-title">Keywords</mat-card-title>
+      <mat-card-subtitle *ngIf="data.keywords">
+        <span *ngFor="let item of data.keywords; let isLast=last">
+          {{ item }}{{ !isLast?',':'' }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+  </mat-card-content>
+</ng-container>

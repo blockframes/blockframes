@@ -1,0 +1,15 @@
+<form [formGroup]="promotionalDescription">
+  <!-- KEYWORDS -->
+  <h3> Keywords </h3>
+  <mat-form-field class="full-width">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let keyword of promotionalDescription.keywords.controls ; let i = index;" [selectable]="true" [removable]="true"
+        (removed)="promotionalDescription.removeKeyword(i)">
+        {{ keyword.value }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Keywords" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="promotionalDescription.addChip($event)">
+    </mat-chip-list>
+  </mat-form-field>
+</form>

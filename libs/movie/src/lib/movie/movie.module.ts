@@ -29,19 +29,13 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
-import { MovieDisplayModule } from './components/movie-display/movie-display.module';
+import { MovieDisplayModule } from './display/display.module';
 import { ImportMovieModule } from './components/import/import-movie.module';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { MovieFormComponent } from './components/movie-form/movie-form.component';
-
-import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component'
-import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
-import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieEmptyComponent } from './components/movie-empty/movie-empty.component';
-
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
@@ -50,20 +44,16 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { MovieForm } from './components/movie-form/movie.form';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
+import { MovieForm } from './form/movie.form';
 
 @NgModule({
   declarations: [
     MovieEditableComponent,
-    MovieFormComponent,
-    MovieFormStoryComponent,
     MovieListComponent,
     MovieTitleFormComponent,
-    MovieFormTeamComponent,
-    MovieFormPromotionalComponent,
     HomeEmptyComponent,
     MovieEmptyComponent,
     MovieCreateComponent,
@@ -109,7 +99,6 @@ import { MovieFormModule } from './form/form.module';
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-    MovieForm
   ],
   entryComponents: [MovieTitleFormComponent],
   exports: [MovieTitleFormComponent],

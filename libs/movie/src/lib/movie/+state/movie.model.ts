@@ -20,7 +20,7 @@ export interface Title {
 
 export interface Credit {
   firstName: string,
-  lastName: string,
+  lastName?: string,
   creditRole?: string,
 }
 
@@ -34,31 +34,42 @@ export interface MovieMain {
   originCountry?: string,
   languages?: string[],
   status?: string,
-  //@todo #643 missing productionCompanies & length
+  productionCompanies?: Credit[],
+  length?: number,
+  shortSynopsis?: string,
+}
+
+export interface MoviePromotionalElements {
+  images: string[],
+  promotionalElements: {label: string, url: string}[],
+}
+
+export interface MoviePromotionalDescription {
+  keyAssets: string[],
+  keywords: string[],
+}
+
+export interface MovieSalesCast {
+  credits: Credit[],
+}
+
+export interface MovieStory {
+  synopsis: string,
+  logline: string,
 }
 
 export interface Movie {
+   // @todo #643 add new fields to Draw.io
   _type: 'movies',
   id: string,
   organization?: Organization,
-
-
-  logline: string,
-  synopsis: string,
-  keywords: string[],
-  credits: {firstName: string, lastName: string, creditRole: string}[],
-  images: string[],
-  promotionalElements: {label: string, url: string}[],
   materials?: Material[];
   stakeholders?: Stakeholder[];
   availabilities: MovieAvailability[],
 
-  // @todo add new fields to Draw.io
-
+  // @todo #643 not main movie attributes WIP
   scoring: string,
   isan: string,
-  length: number,
-  productionCompanies: string[],
   broadcasterCoproducers: string[],
   color: string;
   certifications: string[],
@@ -66,11 +77,9 @@ export interface Movie {
   internationalPremiere: { name: string, year: number},
   originCountryReleaseDate: Date,
   prizes: {name: string, year: string, prize: string}[]
-  keyAssets: string[],
   dubbings: string[],
   subtitles: string[],
 
-  // not main movie attributes WIP
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -86,6 +95,10 @@ export interface Movie {
 
   // Sections
   main : MovieMain,
+  story: MovieStory,
+  promotionalElements: MoviePromotionalElements,
+  promotionalDescription: MoviePromotionalDescription,
+  salesCast: MovieSalesCast,
 }
 
 /**

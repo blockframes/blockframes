@@ -1177,6 +1177,8 @@ const models = {
   ],
 };
 
+//@todo #643 make more comprehensible (not slug)
+
 export const getSlug = (scope: string, str: string) => {
   const item = models[scope].find(i => i.slug === str.trim().toLowerCase());
   return item !== undefined ? item.slug : false;

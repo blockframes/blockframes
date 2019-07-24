@@ -38,7 +38,7 @@ export class EthereumMnemonicControl extends FormControl{
 }
 
 /* Checks if input is a valid string */
-export class StringControl extends FormControl{
+export class StringControl extends FormControl{ //@todo #643 remove
   constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
     super({ value, disabled }, validators !== undefined ? validators : stringValidators);
   }

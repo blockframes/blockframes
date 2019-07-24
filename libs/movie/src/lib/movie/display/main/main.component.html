@@ -26,6 +26,9 @@
             (data.genres && data.genres.length > 0 )||
             (data.originCountry && data.originCountry.length > 0 )|| 
             (data.languages && data.languages.length > 0 )|| 
+            (data.productionCompanies && data.productionCompanies.length > 0) ||
+            data.shortSynopsis ||
+            data.length ||
             (data.status && data.status.length > 0)" class="movie-card-section">
     <mat-divider></mat-divider>
     <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
@@ -58,6 +61,28 @@
       <mat-card-subtitle *ngIf="data.status">
         <span>
           {{ getStaticBySlug('MOVIE_STATUS', data.status) }}
+        </span>
+      </mat-card-subtitle>
+    </ng-container>
+    <ng-container *ngIf="data.shortSynopsis">
+      <mat-card-title>Short Synopsis</mat-card-title>
+      <mat-card-subtitle>
+        <p>{{ data.shortSynopsis }}</p>
+      </mat-card-subtitle>
+    </ng-container>
+
+    <ng-container *ngIf="data.length">
+      <mat-card-title>Length</mat-card-title>
+      <mat-card-subtitle>
+        <p>{{ data.length }} min</p>
+      </mat-card-subtitle>
+    </ng-container>
+
+    <ng-container *ngIf="data.productionCompanies && data.productionCompanies.length > 0">
+      <mat-card-title>Production Companies</mat-card-title>
+      <mat-card-subtitle *ngIf="data.productionCompanies.length > 0">
+        <span *ngFor="let item of data.productionCompanies; let isLast=last">
+          {{ item.firstName }} {{ !isLast?',':'' }}
         </span>
       </mat-card-subtitle>
     </ng-container>

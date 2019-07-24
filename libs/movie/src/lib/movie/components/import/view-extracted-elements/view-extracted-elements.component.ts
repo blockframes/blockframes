@@ -55,19 +55,23 @@ export class ViewExtractedElementsComponent {
             directors: [],
             genres: [],
             languages: [],
+            productionCompanies: [],
             status: 'finished', // all imported movies are in finished state
+          }, 
+          promotionalDescription: {
+            keywords: [],
+            keyAssets: [],
+          },
+          salesCast: {
+            credits: [],
           },
           internationalPremiere: {},
           dubbings: [],
           subtitles: [],
           errors: [],
-          keywords: [],
-          credits: [],
           prizes: [],
-          productionCompanies: [],
           broadcasterCoproducers: [],
           certifications: [],
-          keyAssets: [],
         } as MovieWithMetaData;
 
         //////////////////
@@ -134,13 +138,13 @@ export class ViewExtractedElementsComponent {
 
         // LENGTH (Length)
         if (!isNaN(Number(m[11]))) {
-          movie.length = parseInt(m[11], 10);
+          movie.main.length = parseInt(m[11], 10);
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
         if (m[12] !== undefined) {
           m[12].split(',').forEach((p: string) => {
-            movie.productionCompanies.push(p);
+            movie.main.productionCompanies.push({ firstName: p });
           });
         }
 
@@ -162,7 +166,7 @@ export class ViewExtractedElementsComponent {
           } else {
             movie.errors.push({
               type: 'warning',
-              field: 'originCountry',
+              field: 'main.originCountry',
               name: "Country of origin",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
@@ -210,12 +214,12 @@ export class ViewExtractedElementsComponent {
               credit.lastName = a.split("\\s+")[0];
             }
 
-            movie.credits.push(credit);
+            movie.salesCast.credits.push(credit);
           });
         }
 
         // SYNOPSIS (Short Synopsis)
-        movie.synopsis = m[20];
+        movie.main.shortSynopsis = m[20];
 
         // INTERNATIONAL PREMIERE (International Premiere )
         if (m[21] !== undefined) {
@@ -270,14 +274,14 @@ export class ViewExtractedElementsComponent {
         // KEY ASSETS (Key Assets)
         if (m[25] !== undefined) {
           m[25].split(',').forEach((k: string) => {
-            movie.keyAssets.push(k);
+            movie.promotionalDescription.keyAssets.push(k);
           });
         }
 
         // KEYWORDS
         if (m[26] !== undefined) {
           m[26].split(',').forEach((k: string) => {
-            movie.keywords.push(k);
+            movie.promotionalDescription.keywords.push(k);
           });
         }
 
@@ -428,11 +432,11 @@ export class ViewExtractedElementsComponent {
     }
 
 
-    // @todo (Mandate End of rights)
+    // @todo #643 (Mandate End of rights)
 
-    // @todo (Mandate Territories)
+    // @todo #643 (Mandate Territories)
 
-    // @todo (Mandate Medias)
+    // @todo #643 (Mandate Medias)
 
     if (movie.main.directors.length === 0) {
       movie.errors.push({
@@ -471,27 +475,27 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.title.international) {
       movie.errors.push({
         type: 'warning',
-        field: 'title.international',
+        field: 'main.title.international',
         name: "International title",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (!movie.length) {
+    if (!movie.main.length) {
       movie.errors.push({
         type: 'warning',
-        field: 'length',
+        field: 'main.length',
         name: "Length",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (movie.productionCompanies.length === 0) {
+    if (movie.main.productionCompanies.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'productionCompanies',
+        field: 'main.productionCompanies',
         name: "Production Companie(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -501,7 +505,7 @@ export class ViewExtractedElementsComponent {
     if (movie.broadcasterCoproducers.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'broadcasterCoproducers',
+        field: 'main.broadcasterCoproducers',
         name: "TV / Platform coproducer(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -521,7 +525,7 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.originCountry) {
       movie.errors.push({
         type: 'warning',
-        field: 'originCountry',
+        field: 'main.originCountry',
         name: "Country of origin",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -548,20 +552,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.credits.length === 0) {
+    if (movie.salesCast.credits.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'credits',
+        field: 'salesCast.credits',
         name: "Principal Cast",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
       } as SpreadsheetImportError);
     }
 
-    if (!movie.synopsis) {
+    if (!movie.main.shortSynopsis) {
       movie.errors.push({
         type: 'warning',
-        field: 'synopsis',
+        field: 'main.shortSynopsis',
         name: "Synopsis",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -591,7 +595,7 @@ export class ViewExtractedElementsComponent {
     if (movie.main.genres.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'genres',
+        field: 'main.genres',
         name: "Genres",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -608,20 +612,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.keyAssets.length === 0) {
+    if (movie.promotionalDescription.keyAssets.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'keyAssets',
+        field: 'promotionalDescription.keyAssets',
         name: "Key assets",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (movie.keywords.length === 0) {
+    if (movie.promotionalDescription.keywords.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'keywords',
+        field: 'promotionalDescription.keywords',
         name: "Keywords",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -631,7 +635,7 @@ export class ViewExtractedElementsComponent {
     if (movie.main.languages.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'languages',
+        field: 'main.languages',
         name: "Languages",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

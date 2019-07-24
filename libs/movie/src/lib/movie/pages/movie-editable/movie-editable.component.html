@@ -9,7 +9,7 @@
       </ng-template>
     </button>
     <ng-container *ngIf="(form$ | async) as form">
-      <movie-display [data]="form"></movie-display>
+      <movie-display-root [movie]="form"></movie-display-root>
     </ng-container>
   </mat-drawer-content>
   <mat-drawer opened #drawer mode="side" position="end" [ngClass]="{ 'mat-drawer-fullscreen' : fullScreen }">
@@ -21,6 +21,6 @@
         <mat-icon>fullscreen</mat-icon>
       </ng-template>
     </button>
-    <movie-form></movie-form>
+    <movie-form-root></movie-form-root>
   </mat-drawer>
 </mat-drawer-container>

@@ -4,9 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
-import { MovieFormStoryComponent } from './components/movie-form/movie-form-story/movie-form-story.component';
-import { MovieFormTeamComponent } from './components/movie-form/movie-form-team/movie-form-team.component';
-import { MovieFormPromotionalComponent } from './components/movie-form/movie-form-promotional/movie-form-promotional.component';
 import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
@@ -36,7 +33,7 @@ export const routes: Routes = [
   {
     path: 'import',
     component: ImportStepperComponent,
-    canActivate: [MovieListGuard], // @todo not working if user does not have a movie in their list
+    canActivate: [MovieListGuard], // @todo #643 not working if user does not have at least one movie in his list
     canDeactivate: [MovieListGuard],
   },
   {
@@ -47,21 +44,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', component: MovieViewComponent },
       { path: 'teamwork', component: StakeholderViewComponent },
-      {
-        path: 'edit', //todo remove
-        component: MovieEditableComponent,
-        children: [
-          { path: '', redirectTo: 'story', pathMatch: 'full' },
-          { path: 'story', component: MovieFormStoryComponent },
-          { path: 'team', component: MovieFormTeamComponent },
-          { path: 'promo', component: MovieFormPromotionalComponent }
-        ]
-      },
-      {
-        path: 'edit-new/:sectionId', //@todo rename
-        component: MovieEditableComponent,
-      }
-      
+      { path: 'edit', component: MovieEditableComponent }
     ]
   }
 ];

@@ -1,0 +1,28 @@
+<form [formGroup]="form">
+  <mat-card class="movie-form-container">
+    <mat-card-content class="movie-form-card">
+      <mat-tab-group class="movie-form-nav-bar">
+        <mat-tab label="Main">
+          <movie-form-main formGroupName="main"></movie-form-main>
+        </mat-tab>
+        <mat-tab label="Promotional Elements">
+          <movie-form-promotional-elements formGroupName="promotionalElements"></movie-form-promotional-elements>
+        </mat-tab>
+        <mat-tab label="Promotional Description">
+          <movie-form-promotional-description formGroupName="promotionalDescription"></movie-form-promotional-description>
+        </mat-tab>
+        <mat-tab label="Story">
+          <movie-form-story formGroupName="story"></movie-form-story>
+        </mat-tab>
+        <mat-tab label="Sales cast">
+          <movie-form-sales-cast formGroupName="salesCast"></movie-form-sales-cast>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions class="movie-card-actions">
+      <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+      <button testId="saveMovie" class="save-btn" mat-raised-button (click)="submit()" type="submit">Save movie
+        <mat-icon>save</mat-icon></button>
+    </mat-card-actions>
+  </mat-card>
+</form>
