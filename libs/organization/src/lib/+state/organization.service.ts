@@ -122,8 +122,8 @@ export class OrganizationService {
     return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
   }
 
-  // TODO(PL): this function is written by Yohann. Somehow the updateActiveMembers array don't filter correctly 
-  // the id out of the activeMembersArray
+  // TODO(#679): ssmehow the updateActiveMembers array don't filter correctly 
+  // the id out of the activeMembersArray.
   public async deleteActiveSigner(member: OrganizationMember, action: OrganizationAction) {
     const organizationId = this.query.getValue().org.id;
     const actionData = await this.db.snapshot<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`);

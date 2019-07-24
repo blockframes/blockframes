@@ -1,15 +1,15 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationAction, OrganizationMember } from '../../+state';
 
 @Component({
   selector: 'organization-quorum-repertory',
   templateUrl: './organization-quorum-repertory.component.html',
-  styleUrls: ['./organization-quorum-repertory.component.scss']
+  styleUrls: ['./organization-quorum-repertory.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationQuorumRepertoryComponent  {
   @Input() action: OrganizationAction;
-  // TODO(PL): maybe there is a better type as object, but you have to emit the current member to delete,
-  // as well as the current action.id 
+  // TODO (#679): maybe there is a better type than object
   @Output() deleteActiveSigner = new EventEmitter<object>();
   @Output() newQuorumMember = new EventEmitter<number>();
   /** Variable to iterate through with an ngFor to display the mat-select options */
@@ -18,7 +18,7 @@ export class OrganizationQuorumRepertoryComponent  {
   // TODO(PL): on the top of the sidenav there is a dropdown menu, where you can specifiy the amount of
   // quorum members needed to sign this action
   constructor() {
-    this.numbers = Array(this.action.quorumMembers).fill(0).map((x,i)=>i +1);
+    this.numbers = Array(5).fill(0).map((x,i)=>i +1);
   }
   deleteSigner(member: OrganizationMember, action: OrganizationAction) {
     this.deleteActiveSigner.emit({member, action})

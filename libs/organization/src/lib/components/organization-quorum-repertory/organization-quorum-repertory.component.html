@@ -10,5 +10,7 @@
 <mat-card *ngFor="let signer of action.activeMembers" fxLayout="row" fxLayoutAlign="space-around center">
   <mat-icon>account_box</mat-icon>
   <span>{{signer.name}}</span>
-  <mat-icon class="clickable" (click)="deleteSigner(signer, action)">delete</mat-icon>
+  <button mat-icon-button (click)="deleteSigner(signer, action)">
+      <mat-icon>delete</mat-icon>
+    </button>
 </mat-card>

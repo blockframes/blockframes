@@ -23,6 +23,12 @@ export class OrganizationActionRepertoryComponent implements OnInit {
   /** Variable to save the data source of the material table */
   public dataSource: MatTableDataSource<OrganizationAction>;
 
+  memberMapping: { [k: string]: string } = {
+    '=0': 'No member',
+    '=1': '1 member',
+    other: '# members'
+  };
+
   @Input() actions: OrganizationAction[];
 
   @Output() detailedView = new EventEmitter();

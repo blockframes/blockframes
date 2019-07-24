@@ -1,5 +1,5 @@
 import { Organization, OrganizationAction } from './../../+state/organization.model';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationQuery, OrganizationService } from '../../+state';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -10,8 +10,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./organization-admin-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationAdminViewComponent implements OnInit, OnDestroy {
-
+export class OrganizationAdminViewComponent implements OnInit {
   /** Observable that contains all the signers in an organization */
   public organization$: Observable<Organization>;
 
@@ -19,7 +18,7 @@ export class OrganizationAdminViewComponent implements OnInit, OnDestroy {
   public action: OrganizationAction;
 
   /**
-   * A flag which determine whether to show the options of a signer or 
+   * A flag which determine whether to show the options of a signer or
    * the members of an action in the sidenav
    * true means action members, false means options of signers
    */
@@ -31,10 +30,7 @@ export class OrganizationAdminViewComponent implements OnInit, OnDestroy {
   /** Flag to indicate if sidenav is open */
   public opened = false;
 
-  constructor(
-    private query: OrganizationQuery,
-    private service: OrganizationService
-  ) {}
+  constructor(private query: OrganizationQuery, private service: OrganizationService) {}
 
   ngOnInit() {
     this.organization$ = this.query.select('org');
@@ -46,19 +42,14 @@ export class OrganizationAdminViewComponent implements OnInit, OnDestroy {
     this.action = action;
   }
 
-  public deleteActiveSigner({member, action}) {
+  public deleteActiveSigner({ member, action }) {
     this.service.deleteActiveSigner(member, action);
-  } 
+  }
 
   /** This function should get triggered by the input field */
   public addSigner(name: string) {
-    // TODO(PL): Add a signer to the organization. Also the input field should 
-    // have some autocompletion thing, where to look for the correct member?
+    // TODO(#682): Add a signer to the organization. Also the input field should
+    // have some autocompletion, where to look for the correct member?
     console.log('implement me in the service ' + name);
-  }
-
-  ngOnDestroy() {
-    // TODO(PL): Implement the subscription
-    // this.subscription.unsubscribe();
   }
 }

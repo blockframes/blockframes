@@ -1,5 +1,5 @@
 <!-- Main content -->
-<editable-sidenav (closed)="opened ? false : true" [opened]="opened" *ngIf="organization$ | async as organization">
+<editable-sidenav (closed)="opened = false" [opened]="opened" *ngIf="organization$ | async as organization">
   <ng-container content>
     <h1 fxLayout="row" fxLayoutAlign="start center">
       <span>{{ organization.name }}</span>

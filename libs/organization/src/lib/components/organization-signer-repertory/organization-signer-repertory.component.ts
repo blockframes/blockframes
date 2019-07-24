@@ -24,6 +24,12 @@ export class OrganizationSignerRepertoryComponent implements OnInit {
   /** Variable to save the data source of the material table */
   public dataSource: MatTableDataSource<OrganizationMember>;
 
+  public actionsMapping: { [k: string]: string } = {
+    '=0': 'No actions',
+    '=1': '# action',
+    other: '# actions'
+  };
+
   @Input() signerList: OrganizationMember[];
 
   @Output() selected = new EventEmitter<OrganizationMember>();
@@ -36,7 +42,7 @@ export class OrganizationSignerRepertoryComponent implements OnInit {
  /** TODO(PL): This component should take in a form that
    *  that listen on the save icon button click event from the sidenav. 
    */
-  constructor(public container: ControlContainer){}
+  // constructor(public container: ControlContainer){}
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(this.signerList);

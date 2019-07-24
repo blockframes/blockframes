@@ -12,12 +12,11 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
     organization.userIds.map(id => ({
       path: `users/${id}`
     })),
-    // TODO(PL): Yohan wrote this query.
+    // TODO(#681): refactoring
   actions: (organization: Organization) => ({
     path: `orgs/${organization.id}/actions`,
-    // TODO remove activeMembers subscripton 
+    // TODO(#681): remove activeMembers subscripton 
     activeMembers: (action: OrganizationAction) => {
-      console.log(organization);
       return action.activeMembers.map(id => ({
         path: `users/${id}`
       }))

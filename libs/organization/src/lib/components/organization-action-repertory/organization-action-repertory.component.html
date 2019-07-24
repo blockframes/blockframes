@@ -7,24 +7,26 @@
   <ng-container matColumnDef="Quorum">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Quorum </th>
     <!-- we need to check if there is only one quorum member so the grammar is correct -->
-    <td mat-cell *matCellDef="let element"> {{element.quorumMembers}}
-      member<ng-container *ngIf="element.quorumMembers > 1">s</ng-container>
-    </td>
+    <td mat-cell *matCellDef="let element"> {{element.quorumMembers |  i18nPlural: memberMapping }}</td>
 
   </ng-container>
 
   <ng-container matColumnDef="Active">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Active </th>
     <!-- we need to check if there is only one active member so the grammar is correct -->
-    <td mat-cell *matCellDef="let element"> {{element.activeMembers.length}}
-      member<ng-container *ngIf="element.activeMembers.length > 1">s</ng-container>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="element.activeMembers">
+        {{element.activeMembers.length | i18nPlural: memberMapping}}
+      </ng-container>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="No Headline2">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="detailedView.emit(element)">
-      <mat-icon matRipple class="clickable">edit</mat-icon>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="detailedView.emit(element)">
+        <mat-icon>edit</mat-icon>
+      </button>
     </td>
   </ng-container>
 
