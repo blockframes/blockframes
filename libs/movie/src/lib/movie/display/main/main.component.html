@@ -22,14 +22,7 @@
       </mat-card-subtitle>
     </ng-container>
   </mat-card-content>
-  <mat-card-content *ngIf="
-            (data.genres && data.genres.length > 0 )||
-            (data.originCountry && data.originCountry.length > 0 )|| 
-            (data.languages && data.languages.length > 0 )|| 
-            (data.productionCompanies && data.productionCompanies.length > 0) ||
-            data.shortSynopsis ||
-            data.length ||
-            (data.status && data.status.length > 0)" class="movie-card-section">
+  <mat-card-content *ngIf="shouldDisplayMainInformations" class="movie-card-section">
     <mat-divider></mat-divider>
     <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
     <ng-container *ngIf="data.genres  && data.genres.length > 0">

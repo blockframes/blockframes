@@ -2,7 +2,7 @@ import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
 
-export interface MovieAvailability { //@todo rename into movieSales
+export interface MovieAvailability { //@todo #643 rename into movieSales
   movieId? : string;
   movie?: Partial<Movie>
   territories: string[];

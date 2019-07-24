@@ -5,7 +5,7 @@
     <mat-card-title class="movie-card-meta-title">Movie Team</mat-card-title>
     <ng-container *ngIf="data.credits.length > 0">
       <mat-card-title>Credits</mat-card-title>
-      <mat-card-subtitle *ngIf="data.credits.length > 0">
+      <mat-card-subtitle>
         <table class="movie-credits-table">
           <tr *ngFor="let item of data.credits; let isLast=last">
             <td class="movie-credit-table-role">{{ getStaticBySlug('CREDIT_ROLES', item.creditRole) }}</td>

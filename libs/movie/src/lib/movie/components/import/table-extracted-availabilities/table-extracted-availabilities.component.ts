@@ -82,7 +82,8 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   ///////////////////
 
   displayErrors(availability: MovieAvailabilityWithMetaData) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: availability.movie.main.title.original, errors: availability.errors} , width: '50%' });
+    const data = { title: availability.movie.main.title.original, errors: availability.errors};
+    this.dialog.open(ViewImportErrorsComponent, { data , width: '50%' });
   }
 
   ///////////////////
