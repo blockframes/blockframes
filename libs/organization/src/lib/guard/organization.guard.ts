@@ -52,9 +52,9 @@ export class OrganizationGuard {
           next: (result: Organization) => {
             res(!!result);
           },
-          error: err => {
-            console.log('Error: ', err);
-            res(this.router.parseUrl('layout/organization-home'));
+          error: (err) => {
+            console.log('Error: ' ,err)
+            res(this.router.parseUrl('layout/create-organization'))
           }
         });
     });

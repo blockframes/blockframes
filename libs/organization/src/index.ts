@@ -1,5 +1,6 @@
 export * from './lib/+state';
 export * from './lib/organization.module';
+export * from './lib/no-organization.module';
 export * from './lib/guard/organization.guard'
 export * from './lib/components/organization-create/organization-create.component';
 export * from './lib/permissions/guard/permissions.guard'

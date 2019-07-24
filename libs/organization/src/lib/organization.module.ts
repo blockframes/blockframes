@@ -43,20 +43,11 @@ import { OrganizationFormComponent } from './components/organization-form/organi
 // Pages
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
-import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
 import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 
 export const organizationRoutes: Routes = [
-  {
-    path: 'organization-home',
-    component: OrganizationHomeComponent
-  },
-  {
-    path: 'create',
-    component: OrganizationCreateComponent
-  },
   {
     path: ':orgId',
     children: [
@@ -108,10 +99,11 @@ export const organizationRoutes: Routes = [
     OrganizationCreateComponent,
     OrganizationDisplayComponent,
     OrganizationWidgetComponent,
+    OrgViewComponent,
+    OrgWidgetComponent,
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,
-    OrganizationHomeComponent,
     OrganizationActivityViewComponent,
     OrganizationActionItemComponent,
     OrganizationAdminViewComponent,
