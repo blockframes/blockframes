@@ -1,9 +1,34 @@
+/**
+ * Manage invitations updates.
+ */
 import { db, functions } from './firebase';
 import { createOrganizationDocPermissions, createUserDocPermissions, getDocument } from './data/internals';
 import { Delivery, Invitation, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
+import { sendMail } from './email';
+import { auth } from 'firebase-admin';
 
-async function onOrgInvitationAccepted(invitation: Invitation) {
+type InvitationOrUndefined = Invitation | undefined;
+
+/**
+ * @param before
+ * @param after
+ * @returns whether the invitation just got accepted.
+ */
+function wasAccepted(before: Invitation, after: Invitation) {
+  return before.state === 'pending' && after.state === 'accepted';
+}
+
+/**
+ * @param before
+ * @param after
+ * @returns whether the invitation just got created
+ */
+function wasCreated(before: InvitationOrUndefined, after: Invitation) {
+  return !before && !!after;
+}
+
+async function onOrgInvitationAccept(invitation: Invitation) {
   const userRef = db.collection('users').doc(invitation.userId);
   const invitationRef = db.collection('invitations').doc(invitation.id);
 
@@ -11,89 +36,141 @@ async function onOrgInvitationAccepted(invitation: Invitation) {
     const user = await tx.get(userRef);
 
     return Promise.all([
-      tx.set(userRef, {...user, orgId: invitation.orgId}),
-      tx.delete(invitationRef),
-      ]
-    )
-  })
+      tx.set(userRef, { ...user, orgId: invitation.organizationId }),
+      tx.delete(invitationRef)
+    ]);
+  });
 }
 
-async function onStakeholderInvitationAccepted(invitation: Invitation) {
+async function getUserMail(userId: string): Promise<string | undefined> {
+  const user = await auth().getUser(userId);
+  return user.email;
+}
+
+async function onOrgInvitationCreate(invitation: Invitation) {
+  const p1 = triggerNotifications([
+    // TODO: fix this notification
+    prepareNotification({
+      userId: invitation.userId,
+      message: `You have been invited to an organization!\n
+          Click on the link beflow to go to the invitation!`,
+      docInformations: { id: '12', type: 'movie' },
+      path: ''
+    })
+  ]);
+  // TODO: define content
+  const userMail = await getUserMail(invitation.userId);
+
+  let p2;
+
+  if (!userMail) {
+    console.error('No user email provided for userId:', invitation.userId);
+  } else {
+    p2 = sendMail(userMail, 'You have been invited to an organization', 'TODO');
+  }
+
+  return Promise.all([p1, p2]);
+}
+
+async function onStakeholderInvitationAccept(invitation: Invitation): Promise<any> {
   // If the stakeholder accept the invitation, we create all permissions and notifications
   // we need to get the new users on the documents with their own (and limited) permissions.
-  try {
-    // Create all the constants we need to work with
-    const documentId = invitation.docInformations.id;
-    const stakeholderId = invitation.organizationId;
-    const delivery = await getDocument<Delivery>(`deliveries/${documentId}`);
 
-    const [
-      organizationDocPermissionsSnap,
-      userDocPermissionsSnap,
-      stakeholderSnap,
-      organizationSnap,
-      organizationMoviePermissionsSnap,
-      userMoviePermissionsSnap,
-      organization
-    ] = await Promise.all([
-      db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${documentId}`).get(),
-      db.doc(`permissions/${stakeholderId}/userDocsPermissions/${documentId}`).get(),
-      db.doc(`deliveries/${documentId}/stakeholders/${stakeholderId}`).get(),
-      db.doc(`orgs/${stakeholderId}`).get(),
-      db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
-      db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
-      getDocument<Organization>(`orgs/${stakeholderId}`)
+  // Create all the constants we need to work with
+  const documentId = invitation.docInformations.id;
+  const stakeholderId = invitation.organizationId;
+  const delivery = await getDocument<Delivery>(`deliveries/${documentId}`);
+
+  const [
+    organizationDocPermissionsSnap,
+    userDocPermissionsSnap,
+    stakeholderSnap,
+    organizationSnap,
+    organizationMoviePermissionsSnap,
+    userMoviePermissionsSnap,
+    organization
+  ] = await Promise.all([
+    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${documentId}`).get(),
+    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${documentId}`).get(),
+    db.doc(`deliveries/${documentId}/stakeholders/${stakeholderId}`).get(),
+    db.doc(`orgs/${stakeholderId}`).get(),
+    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
+    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
+    getDocument<Organization>(`orgs/${stakeholderId}`)
+  ]);
+
+  const orgDocPermissions = createOrganizationDocPermissions({
+    id: documentId,
+    canUpdate: true
+  });
+  const userDocPermissions = createUserDocPermissions({ id: documentId });
+  const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
+  const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
+
+  return db.runTransaction(tx => {
+    return Promise.all([
+      // Initialize organization permissions on a document owned by another organization
+      tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
+
+      // Then Initialize user permissions document
+      tx.set(userDocPermissionsSnap.ref, userDocPermissions),
+
+      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true
+      tx.update(stakeholderSnap.ref, { isAccepted: true }),
+
+      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
+      tx.update(organizationSnap.ref, {
+        movieIds: [...organization.movieIds, delivery.movieId]
+      }),
+
+      // Finally, also initialize reading rights on the movie for the invited organization
+      tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
+      tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
+
+      // Now that permissions are in the database, notify organization users with direct link to the document
+      triggerNotifications(
+        organization.userIds.map(userId => {
+          return prepareNotification({
+            message:
+              `You can now work on ${invitation.docInformations.type} ${
+                invitation.docInformations.id
+              }.\n` + `Click on the link below to go to the ${invitation.docInformations.type}`,
+            userId,
+            docInformations: invitation.docInformations,
+            path: invitation.path
+          });
+        })
+      )
     ]);
+  });
+}
 
-    const orgDocPermissions = createOrganizationDocPermissions({
-      id: documentId,
-      canUpdate: true
-    });
-    const userDocPermissions = createUserDocPermissions({ id: documentId });
-    const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
-    const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
-
-    await db.runTransaction(tx => {
-      return Promise.all([
-        // Initialize organization permissions on a document owned by another organization
-        tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
-
-        // Then Initialize user permissions document
-        tx.set(userDocPermissionsSnap.ref, userDocPermissions),
-
-        // Make the new stakeholder active on the delivery by switch isAccepted property from false to true
-        tx.update(stakeholderSnap.ref, { isAccepted: true }),
-
-        // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
-        tx.update(organizationSnap.ref, {
-          movieIds: [...organization.movieIds, delivery.movieId]
-        }),
-
-        // Finally, also initialize reading rights on the movie for the invited organization
-        tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
-        tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
-
-        // Now that permissions are in the database, notify organization users with direct link to the document
-        triggerNotifications(
-          organization.userIds.map(userId => {
-            return prepareNotification({
-              message:
-                `You can now work on ${invitation.docInformations.type} ${
-                  invitation.docInformations.id
-                }.\n` + `Click on the link below to go to the ${invitation.docInformations.type}`,
-              userId,
-              docInformations: invitation.docInformations,
-              path: invitation.path
-            });
-          })
-        )
-      ]);
-    });
-    return true;
-  } catch (error) {
-    await db.doc(`invitations/${invitation.id}`).update({ processedId: null });
-    throw error;
+async function onOrgInvitationUpdate(
+  before: InvitationOrUndefined,
+  after: Invitation,
+  invitation: Invitation
+): Promise<any> {
+  if (wasCreated(before, after)) {
+    return onOrgInvitationCreate(invitation);
+  } else if (wasAccepted(before!, after)) {
+    return onOrgInvitationAccept(invitation);
   }
+  return;
+}
+
+async function onStakeholderInvitationUpdate(
+  before: InvitationOrUndefined,
+  after: Invitation,
+  invitation: Invitation
+): Promise<any> {
+  if (!before) {
+    return;
+  }
+
+  if (wasAccepted(before, after)) {
+    return onStakeholderInvitationAccept(invitation);
+  }
+  return;
 }
 
 export async function onInvitationUpdate(
@@ -107,14 +184,15 @@ export async function onInvitationUpdate(
     throw new Error(`Parameter 'change' not found`);
   }
 
-  const invitationDocBefore = before.data();
-  const invitationDoc = after.data();
+  const invitationDocBefore = before.data() as InvitationOrUndefined;
+  const invitationDoc = after.data() as InvitationOrUndefined;
 
-  if (!invitationDoc || !invitationDocBefore) {
-    console.info('No changes detected on this document');
+  if (!invitationDoc) {
+    // Doc was deleted, ignoring...
     return;
   }
 
+  // Prevent duplicate events with the processedId workflow
   const invitation: Invitation = await getDocument<Invitation>(`invitations/${invitationDoc.id}`);
   const processedId = invitation.processedId;
 
@@ -122,18 +200,20 @@ export async function onInvitationUpdate(
     console.warn('Document already processed with this context');
     return;
   }
+  await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
 
-  // We only care about switches from 'pending' to 'accepted' for now
-  if (!(invitationDocBefore.state === 'pending' && invitationDoc.state === 'accepted')) {
-    return;
-  }
-
-  switch (invitationDoc.type) {
-    case undefined:
-      return onStakeholderInvitationAccepted(invitation);
-    case 'orgInvitation':
-      return onOrgInvitationAccepted(invitation);
-    default:
-      throw new Error(`Unhandled invitation type: ${invitation.type}`);
+  try {
+    switch (invitationDoc.type) {
+      case undefined:
+        return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
+      case 'orgInvitation':
+        return await onOrgInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
+      default:
+        throw new Error(`Unhandled invitation type: ${invitation.type}`);
+    }
+  } catch (e) {
+    console.error('invitation management thrown:', e);
+    await db.doc(`invitations/${invitation.id}`).update({ processedId: null });
+    throw e;
   }
 }

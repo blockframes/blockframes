@@ -2,9 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './firebase';
-import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey } from './environments/environment';
 import { userInviteTemplate } from './assets/mailTemplates';
+import { sendMail } from './email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -123,14 +122,11 @@ const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    SendGrid.setApiKey(sendgridAPIKey);
-    const msg = {
-      to: email,
-      from: 'admin@blockframes.io',
-      subject: 'Your Blockframes account is waiting for you',
-      text: userInviteTemplate({ email, password })
-    };
-    await SendGrid.send(msg);
+    await sendMail(
+      email,
+      'Your Blockframes account is waiting for you',
+      userInviteTemplate({ email, password })
+    );
 
     return { uid: user.uid, email };
   }
