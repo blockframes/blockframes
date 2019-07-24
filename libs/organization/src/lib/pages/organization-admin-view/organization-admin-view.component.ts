@@ -1,13 +1,8 @@
+import { Organization, OrganizationAction } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import {
-  OrganizationQuery,
-  Action,
-  OrgMember,
-  Organization,
-  OrganizationService
-} from '../../+state';
-import { Observable, Subscription } from 'rxjs';
-import { FormControl, FormArray } from '@angular/forms';
+import { OrganizationQuery, OrganizationService } from '../../+state';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'org-admin-view',
@@ -16,56 +11,54 @@ import { FormControl, FormArray } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationAdminViewComponent implements OnInit, OnDestroy {
-  /** Observable that contains all the information about the current organization */
+
+  /** Observable that contains all the signers in an organization */
   public organization$: Observable<Organization>;
 
-  /** Variable to save the current orgranization name */
-  public organizationName: string;
-
-  /** A variable for the child component which actions are active */
-  public actionMembers: Action[];
-
-  /** A variable for the child component which signer are in an organization */
-  public signerOptions: OrgMember;
-
-  /** A subscription on the organization store to get all the signers */
-  private subscription: Subscription;
-  public form: FormArray;
+  /** Variable for holding the active members on a specific action */
+  public action: OrganizationAction;
 
   /**
-   * A flag which determine whether to show the options or the members in the sidenav
-   *  true means members, false means options
+   * A flag which determine whether to show the options of a signer or 
+   * the members of an action in the sidenav
+   * true means action members, false means options of signers
    */
-  public optionsOrMember: boolean;
+  public optionsOrSigner: boolean;
 
   /** Form control for adding a new signer to a organization */
-  public signerFormControl: FormControl = new FormControl();
+  public signerFormControl = new FormControl();
 
-  selected = 0;
-  values$ = this.form.valueChanges;
+  /** Flag to indicate if sidenav is open */
+  public opened = false;
 
-  constructor(private query: OrganizationQuery, private service: OrganizationService) {}
+  constructor(
+    private query: OrganizationQuery,
+    private service: OrganizationService
+  ) {}
 
   ngOnInit() {
     this.organization$ = this.query.select('org');
-    this.subscription = this.query.select('org').subscribe(signers => {
-      this.form.patchValue(signers.members);
-    });
   }
 
-  public openDetails(index: number) {
-    this.optionsOrMember = true;
+  public openDetails(action: OrganizationAction) {
+    this.opened = true;
+    this.optionsOrSigner = true;
+    this.action = action;
   }
 
+  public deleteActiveSigner({member, action}) {
+    this.service.deleteActiveSigner(member, action);
+  } 
+
+  /** This function should get triggered by the input field */
   public addSigner(name: string) {
-    console.log('implement me in the service' + name);
-  }
-
-  public save() {
-    this.service.update(this.form.value);
+    // TODO(PL): Add a signer to the organization. Also the input field should 
+    // have some autocompletion thing, where to look for the correct member?
+    console.log('implement me in the service ' + name);
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    // TODO(PL): Implement the subscription
+    // this.subscription.unsubscribe();
   }
 }
