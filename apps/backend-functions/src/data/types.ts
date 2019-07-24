@@ -147,3 +147,5 @@ export interface UserDocPermissions {
 export function asIDMap<T extends DocWithID>(items: T[]): IDMap<T> {
   return items.reduce((result, item) => ({ ...result, [item.id]: item }), {});
 }
+
+export type InvitationOrUndefined = Invitation | undefined;

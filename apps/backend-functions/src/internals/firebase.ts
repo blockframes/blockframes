@@ -11,3 +11,8 @@ export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 export const getBackupBucketName = (): string => backupBucket; // TODO: secure bucket
 
 export { admin, functions };
+
+export async function getUserMail(userId: string): Promise<string | undefined> {
+  const user = await admin.auth().getUser(userId);
+  return user.email;
+}

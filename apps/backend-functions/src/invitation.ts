@@ -1,15 +1,16 @@
 /**
  * Manage invitations updates.
  */
-import { createOrganizationDocPermissions, createUserDocPermissions, getDocument } from './data/internals';
-import { db, functions } from './internals/firebase';
-import { Delivery, Invitation, Organization } from './data/types';
+import {
+  createOrganizationDocPermissions,
+  createUserDocPermissions,
+  getDocument
+} from './data/internals';
+import { db, functions, getUserMail } from './internals/firebase';
+import { Delivery, Invitation, InvitationOrUndefined, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
-import { auth } from 'firebase-admin';
 import { userInviteToOrg } from './assets/mailTemplates';
-
-type InvitationOrUndefined = Invitation | undefined;
 
 /**
  * @param before
@@ -74,11 +75,6 @@ async function onOrgInvitationAccept(invitation: Invitation) {
       tx.delete(invitationRef)
     ]);
   });
-}
-
-async function getUserMail(userId: string): Promise<string | undefined> {
-  const user = await auth().getUser(userId);
-  return user.email;
 }
 
 async function onOrgInvitationCreate(invitation: Invitation) {
