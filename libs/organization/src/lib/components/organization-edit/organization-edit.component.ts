@@ -1,8 +1,5 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { Organization, OrganizationQuery, OrganizationService } from '../../+state';
-import { MatSnackBar } from '@angular/material';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
 
 @Component({
   selector: 'organization-edit',
@@ -10,36 +7,10 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./organization-edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationEditComponent implements OnInit, OnDestroy {
-  public addressForm = new FormControl();
-  public organization$: Observable<Organization>;
-  private destroyed$ = new Subject();
+export class OrganizationEditComponent {
+  constructor(public controlContainer: ControlContainer) {}
 
-  constructor(
-    private query: OrganizationQuery,
-    private service: OrganizationService,
-    private snackBar: MatSnackBar
-  ) {}
-
-  ngOnInit() {
-    this.organization$ = this.query.select('org');
-  }
-
-  public updateOrganization() {
-    if (!this.addressForm.valid) {
-      this.snackBar.open('form invalid', 'close', { duration: 2000 });
-      throw new Error('Invalid form');
-    }
-    try {
-      this.service.update({ address: this.addressForm.value });
-      this.snackBar.open(`Organization updated`, 'close', { duration: 2000 });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
+  public get control() {
+    return this.controlContainer.control;
   }
 }

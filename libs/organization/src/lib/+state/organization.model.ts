@@ -11,6 +11,7 @@ export interface Organization {
   id: string;
   name: string;
   address: string;
+  phoneNumber: string;
   created: number;
   updated: number;
   movieIds: string[];

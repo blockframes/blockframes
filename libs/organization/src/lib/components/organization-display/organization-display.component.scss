@@ -1,0 +1,42 @@
+@import 'variables';
+
+mat-card {
+  height: 350px;
+}
+
+mat-card-content {
+  margin: 0;
+  width: 100%;
+}
+
+.information {
+  width: 70%;
+  padding-left: 24px;
+}
+
+.information div {
+  padding: 16px 0;
+}
+
+img {
+  width: 250px;
+  height: 250px;
+}
+
+@include mobile {
+  mat-card {
+    height: 100%;
+  }
+}
+
+@include medium {
+  mat-card {
+    height: 100%;
+  }
+}
+
+@include tablet {
+  mat-card {
+    height: 100%;
+  }
+}

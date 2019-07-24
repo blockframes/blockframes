@@ -31,7 +31,7 @@ import { MatSortModule } from '@angular/material/sort';
 
 // Components
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
-import { OrganizationViewComponent } from './components/organization-view/organization-view.component';
+import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
@@ -106,7 +106,7 @@ export const organizationRoutes: Routes = [
   ],
   declarations: [
     OrganizationFormComponent,
-    OrganizationViewComponent,
+    OrganizationDisplayComponent,
     OrganizationWidgetComponent,
     MemberListComponent,
     MemberViewComponent,

@@ -1,9 +1,14 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
   <ng-container content>
-    <profile-display [userEmail]="userEmail" [organization]="organization$ | async" [user]="user$ | async" (editing)="openSidenav($event)"></profile-display>
+    <profile-display
+      [userEmail]="userEmail"
+      [organization]="organization$ | async"
+      [user]="user$ | async"
+      (editing)="openSidenav($event)">
+    </profile-display>
   </ng-container>
   <ng-container sidenav [ngSwitch]="editContent">
     <profile-form [formGroup]="profileForm" *ngSwitchCase="'profile'"></profile-form>
     <profile-password-form [formGroup]="editPasswordForm" *ngSwitchCase="'password'"></profile-password-form>
- </ng-container>
+  </ng-container>
 </editable-sidenav>
