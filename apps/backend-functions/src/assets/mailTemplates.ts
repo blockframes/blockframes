@@ -1,8 +1,9 @@
 import { appUrl } from '../environments/environment';
+import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
 
-export const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
+const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `
   You've been invited to a project on the Blockframes Platform!\n
   \n
@@ -12,3 +13,19 @@ export const userInviteTemplate = ({ email, password }: { email: string; passwor
   Click on the following link to login to your account and join the project:\n
   ${appUrl}${USER_WELCOME_PATH}
   `;
+
+export function userInvite(email: string, password: string): EmailRequest {
+  return {
+    to: email,
+    subject: 'Your Blockframes account is waiting for you',
+    text: userInviteTemplate({ email, password })
+  };
+}
+
+export function userInviteToOrg(email: string): EmailRequest {
+  return {
+    to: email,
+    subject: 'You have been invited to an organization',
+    text: 'TODO'
+  };
+}

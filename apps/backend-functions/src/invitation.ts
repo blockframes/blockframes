@@ -11,6 +11,7 @@ import { Delivery, Invitation, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
 import { auth } from 'firebase-admin';
+import { userInviteToOrg } from './assets/mailTemplates';
 
 type InvitationOrUndefined = Invitation | undefined;
 
@@ -70,7 +71,7 @@ async function onOrgInvitationCreate(invitation: Invitation) {
   if (!userMail) {
     console.error('No user email provided for userId:', invitation.userId);
   } else {
-    p2 = sendMail(userMail, 'You have been invited to an organization', 'TODO');
+    p2 = sendMail(userInviteToOrg(userMail));
   }
 
   return Promise.all([p1, p2]);

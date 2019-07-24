@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInviteTemplate } from './assets/mailTemplates';
+import { userInvite } from './assets/mailTemplates';
 import { sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
@@ -122,11 +122,7 @@ const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMail(
-      email,
-      'Your Blockframes account is waiting for you',
-      userInviteTemplate({ email, password })
-    );
+    await sendMail(userInvite(email, password));
 
     return { uid: user.uid, email };
   }
