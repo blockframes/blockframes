@@ -1,6 +1,12 @@
 <ng-container *ngIf="data">
   internal ref: {{ data.internalRef }}
+  <!-- @todo #643 
+  A card is not supposed to have several content and title, ... 
+  Prefer regular section + material typography
 
+  Don't use mat-card-*** if you don't have the mat-card in the same HTML. 
+  This shows that you should use section/article instead.
+  -->
   <mat-card-header class="movie-card-header">
     <mat-card-title class="movie-card-meta-title" *ngIf="data.title">
       {{ data.title.original }}
@@ -75,6 +81,7 @@
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle *ngIf="data.productionCompanies.length > 0">
         <span *ngFor="let item of data.productionCompanies; let isLast=last">
+          <!-- @todo #643 do the oposite for each occurence : isLast ? '' : ',' -->
           {{ item.firstName }} {{ !isLast?',':'' }}
         </span>
       </mat-card-subtitle>

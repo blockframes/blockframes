@@ -6,7 +6,7 @@
       Internal ref is <strong>required</strong>
     </mat-error>
   </mat-form-field>
-
+  <!-- @todo #643 Use articles and sections.-->
   <div formGroupName="title">
     <!-- TITLES -->
     <h3> Titles </h3>
@@ -25,6 +25,7 @@
   </div>
 
   <h3> Directed By </h3>
+  <!-- @todo #643 You should create a getter inside the MovieMainForm to access all directors directly.-->
   <div formArrayName="directors"
     *ngFor="let director of main.directors.controls; let i = index;">
     <div [formGroupName]="i" class="full-width">

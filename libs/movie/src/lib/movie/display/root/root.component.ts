@@ -3,7 +3,7 @@ import { Movie } from '../../+state';
 import { getLabelBySlug } from '../../staticModels';
 
 @Component({
-  selector: 'movie-display-root',
+  selector: '[movie] movie-display-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -19,7 +19,7 @@
     </ng-container>
     <ng-container *ngIf="data.promotionalElements && data.promotionalElements.length > 0">
       <mat-card-title>Other promotional elements</mat-card-title>
-      <mat-card-subtitle *ngIf="data.promotionalElements">
+      <mat-card-subtitle>
         <div *ngFor="let item of data.promotionalElements;">
           <a target="_blank" class="promotional-element-link" href="{{ item.url }}">{{ item.label }}</a>
         </div>

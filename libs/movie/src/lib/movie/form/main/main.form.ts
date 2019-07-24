@@ -19,12 +19,12 @@ function createMovieMainControls() {
     poster: new StringControl(''),
     productionYear: new YearControl(''),
     genres: new StringControl(''),
-    originCountry: new StringControl(''),
+    originCountry: new StringControl(''), //@todo #643 Don't use StringControl. Use FieldForm<string> or just FormControl
     languages: new StringControl(''), //@todo #643 do not use stringControll
     status: new StringControl('', false, [Validators.required]),
     length: new StringControl(''),
     shortSynopsis: new StringControl(''), //@todo #643 use lenthAValidator < 500
-    productionCompanies: new FormArray([]),
+    productionCompanies: new FormArray([]), //@todo #643 Use FormList<string> as it comes with type checking.
   }
 }
 

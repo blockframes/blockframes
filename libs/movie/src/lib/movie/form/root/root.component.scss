@@ -2,6 +2,7 @@ mat-card.movie-form-container {
   padding: 0px;
   box-shadow: none !important;
 
+  // @todo #643 remove that. This should be at the root.
   *:not(.material-icons) {
     font-family: 'Roboto', "Helvetica Neue", sans-serif !important;
   }

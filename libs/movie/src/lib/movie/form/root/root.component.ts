@@ -26,6 +26,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // @todo #643 => navigation arrows , not mat-tab
+    // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
 
     this.form = new MovieForm();
 

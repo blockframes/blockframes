@@ -12,6 +12,9 @@ export class MovieDisplayMainComponent {
 
   @Input() data: MovieMain;
 
+  /**
+   * @todo #643 add more getters like this in various components
+   */
   get shouldDisplayMainInformations()  {
     return (this.data.genres && this.data.genres.length > 0) ||
       (this.data.originCountry && this.data.originCountry.length > 0) ||
