@@ -20,10 +20,12 @@ export class InvitationService {
   public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
     const user = this.authQuery.user;
     const message = `${user.name} ${user.surname} would like to participate to your organization`;
-    const invitation = createInvitation(
-      { id: this.db.createId(), message, orgId: organization.id },
+    const invitation = createInvitation({
+      id: this.db.createId(),
+      message,
+      orgId: organization.id,
       user
-    );
+    });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 

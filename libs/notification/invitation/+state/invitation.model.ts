@@ -13,13 +13,16 @@ export interface Invitation {
   docInformations: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
   date: Timestamp;
-};
+}
 
-export function createInvitation(params: Partial<Invitation>, user?: User): Invitation {
+export function createInvitation(params: Partial<Invitation> = {}): Invitation {
+  function createUser(user: Partial<User> = {}) {
+    return { ...user };
+  }
   return {
     state: 'pending',
     date: firestore.Timestamp.now(),
-    user,
+    user: createUser(params.user),
     ...params
-  } as Invitation
+  } as Invitation;
 }
