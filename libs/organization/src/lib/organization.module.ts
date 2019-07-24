@@ -26,11 +26,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
 
 // Components
-import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
+import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
@@ -40,6 +38,7 @@ import { OrganizationSignerFormComponent } from './components/organization-signe
 import { OrganizationQuorumRepertoryComponent } from './components/organization-quorum-repertory/organization-quorum-repertory.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationEditComponent } from './components/organization-edit/organization-edit.component';
+import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 
 // Pages
 import { MemberListComponent } from './pages/member-list/member-list.component';
@@ -55,14 +54,14 @@ export const organizationRoutes: Routes = [
     component: OrganizationHomeComponent
   },
   {
-    path: 'form',
-    component: OrganizationFormComponent
+    path: 'create',
+    component: OrganizationCreateComponent
   },
   {
     path: ':orgId',
     children: [
-      { path: '', redirectTo: 'view', pathMatch: 'full' },
-      { path: 'view', component: OrganizationEditableComponent },
+      { path: '', redirectTo: 'edit', pathMatch: 'full' },
+      { path: 'edit', component: OrganizationEditableComponent },
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
@@ -105,7 +104,7 @@ export const organizationRoutes: Routes = [
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrganizationFormComponent,
+    OrganizationCreateComponent,
     OrganizationDisplayComponent,
     OrganizationWidgetComponent,
     MemberListComponent,
@@ -122,7 +121,7 @@ export const organizationRoutes: Routes = [
     OrganizationSignerFormComponent,
     OrganizationQuorumRepertoryComponent,
     OrganizationEditableComponent,
-    OrganizationEditComponent,
+    OrganizationFormComponent,
     OrganizationActionItemComponent,
     OrganizationActivityViewComponent
   ],
