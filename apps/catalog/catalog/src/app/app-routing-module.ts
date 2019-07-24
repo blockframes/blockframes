@@ -8,7 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrgFormComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { PermissionsGuard, OrganizationGuard, OrganizationCreateComponent } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { OrganizationHomeComponent } from '@blockframes/organization';
 
@@ -73,7 +73,7 @@ export const routes: Routes = [
       },
       {
         path: 'create',
-        component: OrgFormComponent
+        component: OrganizationCreateComponent
       }
     ]
   },

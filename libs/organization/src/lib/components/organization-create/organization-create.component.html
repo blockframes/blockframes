@@ -1,17 +1,17 @@
-<section>
-  <mat-card>
+<section class="mat-typography" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card fxLayout="column" fxLayoutAlign="center none">
     <mat-card-header>
-      <mat-card-title>Principal Informations</mat-card-title>
+      <h1>Principal Informations</h1>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="addOrganization()">
-        <h4>Organization Name</h4>
+        <h2>Organization Name</h2>
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input matInput placeholder="Name" aria-label="name" formControlName="name" />
         </mat-form-field>
 
-        <h4>Organization Address</h4>
+        <h2>Organization Address</h2>
         <mat-form-field appearance="outline">
           <mat-label>Address</mat-label>
           <textarea
@@ -22,11 +22,9 @@
           ></textarea>
         </mat-form-field>
         <mat-toolbar>
-          <mat-toolbar-row>
-            <div>
-              <button mat-button type="button" (click)="clear()">Cancel</button>
-              <button mat-raised-button type="submit" color="primary">Next</button>
-            </div>
+          <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-around center">
+            <button mat-button type="button" (click)="clear()">Cancel</button>
+            <button mat-raised-button type="submit" color="primary">Next</button>
           </mat-toolbar-row>
         </mat-toolbar>
       </form>

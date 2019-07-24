@@ -59,7 +59,7 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
   /** Add a new Organization */
   public async addOrganization() {
     if (!this.form.valid) {
-      this.snackBar.open('form invalid', 'close', { duration: 1000 });
+      this.snackBar.open('Form invalid', 'close', { duration: 1000 });
       return;
     }
 
