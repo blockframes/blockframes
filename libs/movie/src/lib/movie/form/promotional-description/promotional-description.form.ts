@@ -37,7 +37,7 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
 
   }
 
-  public addChip(event: MatChipInputEvent, object: string): void {
+  public addChip(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
