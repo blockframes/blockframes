@@ -31,7 +31,12 @@
     <button mat-button (click)="step = steps.export">Previous</button>
   </article>
   <article *ngSwitchCase="steps.end">
-    <feedback-message [message]="message" (redirectUser)="handleRedirect()"></feedback-message>
+    <feedback-message
+      title="Congratulation !"
+      subTitle="Your key was successfully created !"
+      buttonMessage="Back to wallet"
+      (redirectUser)="handleRedirect()"
+    ></feedback-message>
   </article>
   <a mat-button routerLink="/layout/o/account/wallet">Cancel</a>
   <a #downloadLink hidden>automatic_download</a>

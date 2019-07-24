@@ -7,7 +7,6 @@ import { LayoutComponent } from './layout/layout.component';
 import { MovieEmptyComponent } from '@blockframes/movie';
 import { OrganizationHomeComponent } from '@blockframes/organization';
 import { OrganizationFindComponent } from '@blockframes/organization';
-import { CongratulationComponent } from '@blockframes/ui';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';

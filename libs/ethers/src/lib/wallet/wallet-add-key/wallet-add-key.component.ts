@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
-import { FeedbackMessage } from "@blockframes/ui";
 
 enum steps {
   password,
@@ -20,7 +19,7 @@ enum steps {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WalletAddKeyTunnelComponent implements OnInit {
-  
+
   steps = steps;
   step = this.steps.password;
   key: Key;
@@ -44,7 +43,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
     // check if there is a ?redirect=<redirect url> in the route, otherwise use default redirect
     this.route.queryParams.pipe(map(params => 'redirect' in params ? params.redirect : '/layout/o/account/wallet'))
       .subscribe(redirectRoute => this.redirectRoute = redirectRoute);
-    
+
   }
 
   async setPassword(password: string) {
@@ -88,13 +87,5 @@ export class WalletAddKeyTunnelComponent implements OnInit {
 
   handleRedirect() {
     this.router.navigateByUrl(this.redirectRoute);
-  }
-
-  get message(): FeedbackMessage {
-    return {
-      headline: 'Congratulation !',
-      subline: 'Your key was successfully created !',
-      isError: false,
-    };
   }
 }

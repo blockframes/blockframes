@@ -1,5 +1,4 @@
 import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
-import { FeedbackMessage } from './feedback-message.module';
 
 @Component({
   selector: 'feedback-message',
@@ -8,8 +7,11 @@ import { FeedbackMessage } from './feedback-message.module';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeedbackMessageComponent {
-  /** The message which should be displayed when this component is called. */
-  @Input() public message: FeedbackMessage;
+  /** The title which should be displayed when this component is called. */
+  @Input() public title: string;
+
+  /** The sub-title which should be displayed when this component is called. */
+  @Input() public subTitle: string;
 
   /** The url of image which should be displayed when this component is called. */
   @Input() public imageUrl = '/assets/images/ppl_celebrating.png';

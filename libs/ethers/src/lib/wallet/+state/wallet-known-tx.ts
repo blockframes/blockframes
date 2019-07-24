@@ -7,12 +7,13 @@ export function getMockTx(callback: (...args) => void): LocalTx { // TODO remove
     value: '0x0',
     data: `0xca5cade8`
   }
+  // TODO: delete FeedbackMessage
   const message: FeedbackMessage = {
     headline: 'Congratulation !',
     subline: 'Your transaction was successfully sent to the Blockchain !',
     isError: false,
   };
-  
+
   return {...tx, message, callback};
 }
 

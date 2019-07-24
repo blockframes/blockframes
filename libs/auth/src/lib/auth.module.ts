@@ -18,19 +18,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
-import { UiFormModule, CongratulationModule, CongratulationComponent } from '@blockframes/ui';
+import { UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
 import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
+import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
   { path: 'identity', component: IdentityComponent },
-  { path: 'congratulation', component: CongratulationComponent }
+  { path: 'congratulation', component: IdentityFeedbackComponent }
 ];
 
 @NgModule({
@@ -47,7 +48,8 @@ export const AuthRoutes: Routes = [
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
-    CongratulationModule,
+    FeedbackMessageModule,
+
     RouterModule.forChild(AuthRoutes),
     UiFormModule
   ],
@@ -57,7 +59,8 @@ export const AuthRoutes: Routes = [
     SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
-    EmailVerifyComponent
+    EmailVerifyComponent,
+    IdentityFeedbackComponent
   ],
   exports: [EmailVerifyComponent]
 })

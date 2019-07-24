@@ -3,7 +3,6 @@ import { Key, KeyManagerService, KeyManagerQuery } from "../../key-manager/+stat
 import { WalletQuery } from "../+state";
 import { Observable } from "rxjs";
 import { Router } from "@angular/router";
-import { FeedbackMessage } from "@blockframes/ui";
 
 enum steps {
   import,
@@ -55,13 +54,5 @@ export class WalletImportKeyComponent implements OnInit {
 
   handleRedirection() {
     this.router.navigateByUrl('/layout/o/account/wallet'); // TODO handle dynamic redirect from state : issue#617
-  }
-
-  get message(): FeedbackMessage {
-    return {
-      headline: 'Congratulation !',
-      subline: 'Your key was successfully imported',
-      isError: false,
-    };
   }
 }
