@@ -3,8 +3,8 @@
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { functions } from './firebase';
-import { deleteSearchableOrg, storeSearchableOrg } from './algolia';
+import { functions } from './internals/firebase';
+import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,

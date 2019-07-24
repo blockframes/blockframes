@@ -1,4 +1,4 @@
-import { functions, db } from './firebase';
+import { functions, db } from './internals/firebase';
 import {
   prepareNotification,
   triggerNotifications,

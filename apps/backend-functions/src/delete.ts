@@ -1,4 +1,4 @@
-import { db, functions } from './firebase';
+import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
 import { getDocument, getCollection, getOrganizationsOfDocument } from './data/internals';

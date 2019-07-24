@@ -1,6 +1,6 @@
 import algoliasearch from 'algoliasearch';
 
-import { algoliaAdminKey, algoliaId } from './environments/environment';
+import { algoliaAdminKey, algoliaId } from '../environments/environment';
 
 const indexOrganizationsBuilder = () => {
   const client = algoliasearch(algoliaId, algoliaAdminKey);

@@ -1,4 +1,4 @@
-import { buildDeliveryPDF } from '../pdf';
+import { buildDeliveryPDF } from '../internals/pdf';
 import * as fs from 'fs';
 
 const testData = {

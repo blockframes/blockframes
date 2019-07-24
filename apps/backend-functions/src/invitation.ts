@@ -1,11 +1,15 @@
 /**
  * Manage invitations updates.
  */
-import { db, functions } from './firebase';
-import { createOrganizationDocPermissions, createUserDocPermissions, getDocument } from './data/internals';
+import {
+  createOrganizationDocPermissions,
+  createUserDocPermissions,
+  getDocument
+} from './data/internals';
+import { db, functions } from './internals/firebase';
 import { Delivery, Invitation, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
-import { sendMail } from './email';
+import { sendMail } from './internals/email';
 import { auth } from 'firebase-admin';
 
 type InvitationOrUndefined = Invitation | undefined;

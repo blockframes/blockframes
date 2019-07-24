@@ -3,7 +3,7 @@
  *
  * This code deals directly with the low level parts of firebase,
  */
-import { db } from '../firebase';
+import { db } from '../internals/firebase';
 import { Organization, Stakeholder, UserDocPermissions, OrganizationDocPermissions } from './types';
 
 export function getCollection<T>(path: string): Promise<T[]> {

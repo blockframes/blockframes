@@ -1,4 +1,4 @@
-import { db, serverTimestamp } from './firebase';
+import { db, serverTimestamp } from './internals/firebase';
 import {
   BaseNotification,
   Notification,

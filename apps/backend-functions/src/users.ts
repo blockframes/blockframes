@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
-import { auth, db } from './firebase';
+import { auth, db } from './internals/firebase';
 import { userInviteTemplate } from './assets/mailTemplates';
-import { sendMail } from './email';
+import { sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;

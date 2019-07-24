@@ -1,4 +1,4 @@
-import { db, functions } from './firebase';
+import { db, functions } from './internals/firebase';
 import { triggerNotifications, prepareNotification } from './notify';
 import { getDocument, getCollection, getCount, getOrganizationsOfDocument } from './data/internals';
 import { Organization, Stakeholder, Movie, Material, Delivery } from './data/types';

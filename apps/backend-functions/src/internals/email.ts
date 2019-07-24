@@ -1,5 +1,5 @@
 import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey } from './environments/environment';
+import { sendgridAPIKey } from '../environments/environment';
 
 export function sendMail(to: string, subject: string, text: string) {
   if (sendgridAPIKey === '') {

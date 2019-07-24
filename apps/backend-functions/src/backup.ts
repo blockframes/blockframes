@@ -3,7 +3,7 @@ import readline from 'readline';
 import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
-import { db, getBackupBucketName } from './firebase';
+import { db, getBackupBucketName } from './internals/firebase';
 
 type Firestore = admin.firestore.Firestore
 type CollectionReference = admin.firestore.CollectionReference;

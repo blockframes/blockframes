@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { backupBucket } from './environments/environment';
+import { backupBucket } from '../environments/environment';
 
 admin.initializeApp(functions.config().firebase);
 export const db = admin.firestore();

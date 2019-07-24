@@ -1,5 +1,5 @@
 import { flatten, uniqBy } from 'lodash';
-import { db, functions } from './firebase';
+import { db, functions } from './internals/firebase';
 import { triggerNotifications, prepareNotification } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
 import { Organization, Material, Movie } from './data/types';

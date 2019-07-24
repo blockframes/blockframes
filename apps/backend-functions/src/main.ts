@@ -2,7 +2,7 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
-import { functions } from './firebase';
+import { functions } from './internals/firebase';
 import {
   RelayerConfig,
   relayerDeployLogic,
@@ -26,7 +26,7 @@ import * as backup from './backup';
 import * as migrations from './migrations';
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
-import { onGenerateDeliveryPDFRequest } from './pdf';
+import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationUpdate } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 

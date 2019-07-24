@@ -1,4 +1,4 @@
-import { db } from './firebase';
+import { db } from './internals/firebase';
 import { Message } from 'firebase-functions/lib/providers/pubsub';
 
 const { ethers } = require('ethers');

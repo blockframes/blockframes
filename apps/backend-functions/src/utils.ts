@@ -1,4 +1,4 @@
-import { functions } from './firebase';
+import { functions } from './internals/firebase';
 import * as backup from './backup';
 import { Material } from './data/types';
 
