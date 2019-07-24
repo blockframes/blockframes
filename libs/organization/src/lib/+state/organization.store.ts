@@ -12,6 +12,7 @@ const initialState: OrganizationState = {
     name: '',
     adress: ''
   },
+
   org: null
 };
 @Injectable({ providedIn: 'root' })

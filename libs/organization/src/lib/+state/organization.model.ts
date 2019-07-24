@@ -5,6 +5,7 @@ export interface OrganizationMember {
   roles: string[];
   /** Array of ids from OrganizationAction */
   activeOnActions?: string[];
+
 }
 
 export interface Organization {
