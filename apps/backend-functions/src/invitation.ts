@@ -1,11 +1,7 @@
 /**
  * Manage invitations updates.
  */
-import {
-  createOrganizationDocPermissions,
-  createUserDocPermissions,
-  getDocument
-} from './data/internals';
+import { createOrganizationDocPermissions, createUserDocPermissions, getDocument } from './data/internals';
 import { db, functions } from './internals/firebase';
 import { Delivery, Invitation, Organization } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
@@ -34,14 +30,47 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
 }
 
 async function onOrgInvitationAccept(invitation: Invitation) {
-  const userRef = db.collection('users').doc(invitation.userId);
+  const { userId, organizationId } = invitation;
+
+  if (!organizationId) {
+    console.error('No orgId defined in the invitation', invitation);
+    return;
+  }
+
+  const userRef = db.collection('users').doc(userId);
+  const organizationRef = db.collection('orgs').doc(organizationId);
+  const permissionsRef = db.collection('permissions').doc(organizationId);
   const invitationRef = db.collection('invitations').doc(invitation.id);
 
   return db.runTransaction(async tx => {
-    const user = await tx.get(userRef);
+    const [user, org, perm] = await Promise.all([
+      tx.get(userRef),
+      tx.get(organizationRef),
+      tx.get(permissionsRef)
+    ]);
+
+    const userData = user.data();
+    const orgData = org.data();
+    const permData = perm.data();
+
+    if (!userData || !orgData || !permData) {
+      console.error(
+        'Something went wrong with the invitation, a required document is not set\n',
+        userData,
+        orgData,
+        permData
+      );
+      return;
+    }
 
     return Promise.all([
+      // Update user's orgId
       tx.set(userRef, { ...user, orgId: invitation.organizationId }),
+      // Update organization
+      tx.set(organizationRef, { ...orgData, userIds: [...orgData.userIds, userId] }),
+      // Update Permissions
+      tx.set(permissionsRef, { ...permData, admins: [...permData.admins, invitation.userId] }),
+      // Remove the invitation
       tx.delete(invitationRef)
     ]);
   });
@@ -58,7 +87,7 @@ async function onOrgInvitationCreate(invitation: Invitation) {
     prepareNotification({
       userId: invitation.userId,
       message: `You have been invited to an organization!\n
-          Click on the link beflow to go to the invitation!`,
+          Click on the link below to go to the invitation!`,
       docInformations: { id: '12', type: 'movie' },
       path: ''
     })
@@ -209,7 +238,7 @@ export async function onInvitationUpdate(
 
   try {
     switch (invitationDoc.type) {
-      case undefined:
+      case undefined: // TODO: define type in the app.
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'orgInvitation':
         return await onOrgInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
