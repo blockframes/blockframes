@@ -5,16 +5,29 @@
  * details on why, what and what's up next.
  */
 
+// Low Level Types
+// ===============
+
 export type IDMap<T> = Record<string, T>;
 
 interface DocWithID {
   id: string;
 }
 
+export enum DocType {
+  movie = 'movie',
+  delivery = 'delivery',
+  material = 'material'
+}
+
 export interface DocInformations {
   id: string;
-  type: 'movie' | 'delivery' | 'material';
+  type: DocType;
 }
+
+// Core Application Types
+// ======================
+// Business & App Related
 
 export interface Organization {
   id: string;
@@ -63,62 +76,6 @@ export interface Material {
   stepId: string;
 }
 
-export interface BaseNotification {
-  message: string;
-  userId: string;
-  docInformations: DocInformations;
-  stakeholderId?: string;
-  path?: string;
-}
-
-export interface Notification extends BaseNotification {
-  id: string;
-  isRead: boolean;
-  date: FirebaseFirestore.FieldValue;
-  appIcon: AppIcon;
-}
-
-export type InvitationState = 'accepted' | 'declined' | 'pending';
-export type InvitationType = 'orgInvitation';
-
-export interface BaseInvitation {
-  message: string;
-  userInformations?: {
-    userId: string;
-    name?: string;
-    surname?: string;
-    email: string
-  };
-  userId: string;
-  type?: InvitationType;
-  docInformations: DocInformations;
-  organizationId: string;
-  path?: string;
-}
-
-export interface Invitation extends BaseInvitation {
-  id: string;
-  state: InvitationState;
-  date: FirebaseFirestore.FieldValue;
-  appIcon: AppIcon;
-  processedId?: string;
-}
-
-export enum AppIcon {
-  mediaDelivering = 'media_delivering',
-  mediaFinanciers = 'media_financiers',
-}
-
-export interface SnapObject {
-  movie: Movie;
-  docInformations: DocInformations;
-  organization: Organization;
-  eventType: string;
-  delivery?: Delivery | null;
-  newStakeholderId: string;
-  count?: number;
-}
-
 export interface OrganizationDocPermissions {
   id: string;
   canCreate: boolean;
@@ -137,6 +94,97 @@ export interface UserDocPermissions {
   canUpdate: string[];
 }
 
+// Internal Interaction Types
+// ==========================
+
+export enum App {
+  main = 'main',
+  mediaDelivering = 'media_delivering',
+  mediaFinanciers = 'media_financiers'
+}
+
+// Legacy for compat between Notifications & Invitations
+// TODO: use App everywhere and let the frontend / concrete code deal with
+//       the app specifics (icons, message, etc).
+export type AppIcon = App;
+
+// Invitations
+// -----------
+
+export enum InvitationState {
+  accepted = 'accepted',
+  declined = 'declined',
+  pending = 'pending'
+}
+
+export enum InvitationType {
+  stakeholder = 'stakeholder',
+  toOrganization = 'toOrganization'
+}
+
+/**
+ * Raw invitation with generic fields,
+ * use type dispatch to identify the actual content of the invitation.
+ */
+interface RawInvitation {
+  id: string;
+  app: App;
+  state: InvitationState;
+  type: InvitationType;
+  date: FirebaseFirestore.FieldValue;
+  processedId?: string;
+}
+
+export interface InvitationStakeholder extends RawInvitation {
+  type: InvitationType.stakeholder;
+  docId: string;
+  docType: DocType;
+  organizationId: string;
+}
+
+export interface InvitationToOrganization extends RawInvitation {
+  type: InvitationType.toOrganization;
+  userId: string;
+  organizationId: string;
+}
+
+export type Invitation = InvitationStakeholder | InvitationToOrganization;
+export type InvitationOrUndefined = Invitation | undefined;
+
+// Notifications
+// -------------
+
+export interface BaseNotification {
+  message: string;
+  userInformations?: {
+    userId: string;
+    name?: string;
+    surname?: string;
+    email: string;
+  };
+  userId: string;
+  docInformations: DocInformations;
+  organizationId?: string;
+  path?: string;
+}
+
+export interface Notification extends BaseNotification {
+  id: string;
+  isRead: boolean;
+  date: FirebaseFirestore.FieldValue;
+  appIcon: App;
+}
+
+export interface SnapObject {
+  movie: Movie;
+  docInformations: DocInformations;
+  organization: Organization;
+  eventType: string;
+  delivery?: Delivery | null;
+  newStakeholderId: string;
+  count?: number;
+}
+
 /**
  * Turn a list of items with ids into the corresponding mapping.
  *
@@ -147,5 +195,3 @@ export interface UserDocPermissions {
 export function asIDMap<T extends DocWithID>(items: T[]): IDMap<T> {
   return items.reduce((result, item) => ({ ...result, [item.id]: item }), {});
 }
-
-export type InvitationOrUndefined = Invitation | undefined;

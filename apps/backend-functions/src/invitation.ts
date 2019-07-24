@@ -7,7 +7,16 @@ import {
   getDocument
 } from './data/internals';
 import { db, functions, getUserMail } from './internals/firebase';
-import { Delivery, Invitation, InvitationOrUndefined, Organization } from './data/types';
+import {
+  Delivery,
+  Invitation,
+  InvitationOrUndefined,
+  InvitationStakeholder,
+  InvitationState,
+  InvitationToOrganization,
+  InvitationType,
+  Organization
+} from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
 import { userInviteToOrg } from './assets/mailTemplates';
@@ -18,7 +27,7 @@ import { userInviteToOrg } from './assets/mailTemplates';
  * @returns whether the invitation just got accepted.
  */
 function wasAccepted(before: Invitation, after: Invitation) {
-  return before.state === 'pending' && after.state === 'accepted';
+  return before.state === InvitationState.pending && after.state === InvitationState.accepted;
 }
 
 /**
@@ -30,7 +39,7 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
   return !before && !!after;
 }
 
-async function onOrgInvitationAccept(invitation: Invitation) {
+async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
   const { userId, organizationId } = invitation;
 
   if (!organizationId) {
@@ -77,39 +86,28 @@ async function onOrgInvitationAccept(invitation: Invitation) {
   });
 }
 
-async function onOrgInvitationCreate(invitation: Invitation) {
-  const p1 = triggerNotifications([
-    // TODO: fix this notification
-    prepareNotification({
-      userId: invitation.userId,
-      message: `You have been invited to an organization!\n
-          Click on the link below to go to the invitation!`,
-      docInformations: { id: '12', type: 'movie' },
-      path: ''
-    })
-  ]);
-  // TODO: define content
-  const userMail = await getUserMail(invitation.userId);
-
-  let p2;
+async function onInvitationToOrgCreate({ userId }: InvitationToOrganization) {
+  const userMail = await getUserMail(userId);
 
   if (!userMail) {
-    console.error('No user email provided for userId:', invitation.userId);
+    console.error('No user email provided for userId:', userId);
+    return;
   } else {
-    p2 = sendMail(userInviteToOrg(userMail));
+    return sendMail(userInviteToOrg(userMail));
   }
-
-  return Promise.all([p1, p2]);
 }
 
-async function onStakeholderInvitationAccept(invitation: Invitation): Promise<any> {
+async function onStakeholderRawInvitationAccept({
+  docId,
+  organizationId,
+  docType
+}: InvitationStakeholder): Promise<any> {
   // If the stakeholder accept the invitation, we create all permissions and notifications
   // we need to get the new users on the documents with their own (and limited) permissions.
 
   // Create all the constants we need to work with
-  const documentId = invitation.docInformations.id;
-  const stakeholderId = invitation.organizationId;
-  const delivery = await getDocument<Delivery>(`deliveries/${documentId}`);
+  const stakeholderId = organizationId;
+  const delivery = await getDocument<Delivery>(`deliveries/${docId}`);
 
   const [
     organizationDocPermissionsSnap,
@@ -120,9 +118,9 @@ async function onStakeholderInvitationAccept(invitation: Invitation): Promise<an
     userMoviePermissionsSnap,
     organization
   ] = await Promise.all([
-    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${documentId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${documentId}`).get(),
-    db.doc(`deliveries/${documentId}/stakeholders/${stakeholderId}`).get(),
+    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${docId}`).get(),
+    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${docId}`).get(),
+    db.doc(`deliveries/${docId}/stakeholders/${stakeholderId}`).get(),
     db.doc(`orgs/${stakeholderId}`).get(),
     db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
     db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
@@ -130,10 +128,10 @@ async function onStakeholderInvitationAccept(invitation: Invitation): Promise<an
   ]);
 
   const orgDocPermissions = createOrganizationDocPermissions({
-    id: documentId,
+    id: docId,
     canUpdate: true
   });
-  const userDocPermissions = createUserDocPermissions({ id: documentId });
+  const userDocPermissions = createUserDocPermissions({ id: docId });
   const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
   const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
 
@@ -162,12 +160,11 @@ async function onStakeholderInvitationAccept(invitation: Invitation): Promise<an
         organization.userIds.map(userId => {
           return prepareNotification({
             message:
-              `You can now work on ${invitation.docInformations.type} ${
-                invitation.docInformations.id
-              }.\n` + `Click on the link below to go to the ${invitation.docInformations.type}`,
+              `You can now work on ${docType} ${docId}.\n` +
+              `Click on the link below to go to the ${docType}`,
             userId,
-            docInformations: invitation.docInformations,
-            path: invitation.path
+            docInformations: { id: docId, type: docType },
+            path: '/TODO/redefine/path' // TODO: redefine paths correctly
           });
         })
       )
@@ -175,15 +172,15 @@ async function onStakeholderInvitationAccept(invitation: Invitation): Promise<an
   });
 }
 
-async function onOrgInvitationUpdate(
+async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
-  invitation: Invitation
+  invitation: InvitationToOrganization
 ): Promise<any> {
   if (wasCreated(before, after)) {
-    return onOrgInvitationCreate(invitation);
+    return onInvitationToOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
-    return onOrgInvitationAccept(invitation);
+    return onInvitationToOrgAccept(invitation);
   }
   return;
 }
@@ -191,14 +188,14 @@ async function onOrgInvitationUpdate(
 async function onStakeholderInvitationUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
-  invitation: Invitation
+  invitation: InvitationStakeholder
 ): Promise<any> {
   if (!before) {
     return;
   }
 
   if (wasAccepted(before, after)) {
-    return onStakeholderInvitationAccept(invitation);
+    return onStakeholderRawInvitationAccept(invitation);
   }
   return;
 }
@@ -233,13 +230,13 @@ export async function onInvitationUpdate(
   await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
 
   try {
-    switch (invitationDoc.type) {
-      case undefined: // TODO: define type in the app.
+    switch (invitation.type) {
+      case InvitationType.stakeholder:
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
-      case 'orgInvitation':
-        return await onOrgInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
+      case InvitationType.toOrganization:
+        return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
-        throw new Error(`Unhandled invitation type: ${invitation.type}`);
+        throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }
   } catch (e) {
     console.error('invitation management thrown:', e);

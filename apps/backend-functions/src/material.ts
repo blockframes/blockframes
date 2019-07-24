@@ -1,8 +1,8 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
-import { triggerNotifications, prepareNotification } from './notify';
+import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Organization, Material, Movie } from './data/types';
+import { DocType, Material, Movie, Organization } from './data/types';
 
 export const onMaterialUpdate = async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -56,7 +56,7 @@ export const onMaterialUpdate = async (
               movie.title.original
             } is now in state : ${material.state}`,
             userId,
-            docInformations: {id: material.id, type: 'material'},
+            docInformations: { id: material.id, type: DocType.material },
             path: `/layout/${movie.id}/view/${material.deliveriesIds[0]}`
             // mocked path using first delivery in array
           })

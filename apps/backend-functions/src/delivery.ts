@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
-import { triggerNotifications, prepareNotification } from './notify';
-import { getDocument, getCollection, getCount, getOrganizationsOfDocument } from './data/internals';
-import { Organization, Stakeholder, Movie, Material, Delivery } from './data/types';
+import { prepareNotification, triggerNotifications } from './notify';
+import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
+import { Delivery, DocType, Material, Movie, Organization, Stakeholder } from './data/types';
 import { isTheSame } from './utils';
 
 export async function onDeliveryUpdate(
@@ -152,7 +152,7 @@ function createSignatureNotifications(
         message,
         userId,
         path: `/layout/o/${delivery.movieId}/${delivery.id}/view`,
-        docInformations: { id: delivery.id, type: 'delivery' }
+        docInformations: { id: delivery.id, type: DocType.delivery }
       });
     });
 }

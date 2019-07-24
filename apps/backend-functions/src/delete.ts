@@ -1,8 +1,8 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
-import { getDocument, getCollection, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, Material, Movie } from './data/types';
+import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
+import { Delivery, DocType, Material, Movie } from './data/types';
 
 export async function deleteFirestoreMovie (
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -102,7 +102,7 @@ export async function deleteFirestoreDelivery(
       prepareNotification({
         message: `${movie.title.original}'s delivery has been deleted.`,
         userId,
-        docInformations: { id: delivery.id, type: 'delivery' }
+        docInformations: { id: delivery.id, type: DocType.delivery }
       })
     );
 

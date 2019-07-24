@@ -1,11 +1,13 @@
 import { db, serverTimestamp } from './internals/firebase';
 import {
-  BaseNotification,
-  Notification,
-  SnapObject,
+  App,
+  BaseNotification, DocType,
   Invitation,
-  BaseInvitation,
-  AppIcon
+  InvitationStakeholder,
+  InvitationState,
+  InvitationType,
+  Notification,
+  SnapObject
 } from './data/types';
 
 /** Takes one or more notifications and add them on the notifications collection */
@@ -38,19 +40,28 @@ export function prepareNotification(notif: BaseNotification): Notification {
     id: db.collection('notifications').doc().id,
     isRead: false,
     date: serverTimestamp(),
-    appIcon: notif.docInformations.type === 'delivery' ? AppIcon.mediaDelivering : AppIcon.mediaFinanciers,
+    appIcon: notif.docInformations.type === 'delivery' ? App.mediaDelivering : App.mediaFinanciers,
     ...notif
   };
 }
 
-/** Takes a BaseInvitation (message, userId...), and adds Invitation fields to return a real Invitation */
-export function prepareInvitation(invit: BaseInvitation): Invitation {
+interface InvitationStakeholderOpts {
+  stakeholderId: string;
+  app: App;
+  docId: string;
+  docType: DocType;
+}
+
+export function prepareStakeholderInvitation({stakeholderId, app, docId, docType}: InvitationStakeholderOpts): InvitationStakeholder {
   return {
+    type: InvitationType.stakeholder,
+    docId,
+    docType,
+    stakeholderId,
     id: db.collection('invitations').doc().id,
-    state: 'pending',
+    app,
+    state: InvitationState.pending,
     date: serverTimestamp(),
-    appIcon: invit.docInformations.type === 'delivery' ? AppIcon.mediaDelivering : AppIcon.mediaFinanciers,
-    ...invit
   };
 }
 
