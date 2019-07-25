@@ -55,6 +55,7 @@ export class OrganizationService {
     const newOrganization: Organization = createOrganization({
       ...organization,
       id: orgId,
+      state: OrganizationState.pending,
       userIds: [user.uid]
     });
     const organizationDoc = this.db.doc(`orgs/${orgId}`);

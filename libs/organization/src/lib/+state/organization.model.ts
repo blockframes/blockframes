@@ -1,3 +1,8 @@
+export enum OrganizationState {
+  pending = 'pending',
+  accepted = 'accepted'
+}
+
 export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
@@ -29,6 +34,7 @@ export interface OrganizationAction {
 
 export interface Organization {
   id: string;
+  state: OrganizationState;
   name: string;
   address: string;
   phoneNumber: string;
@@ -39,7 +45,7 @@ export interface Organization {
   userIds: string[];
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
-  actions?: OrganizationAction[]
+  actions?: OrganizationAction[];
 }
 
 export interface OrganizationForm {
