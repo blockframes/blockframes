@@ -14,6 +14,7 @@ export class StakeholderService {
   constructor(private db: FireQuery) {}
 
   /** Add a stakeholder into movies or deliveries sub-collection */
+  // TODO: org should be just orgId
   public async addStakeholder(
     doc: Movie | Delivery,
     org: Partial<Organization>,
@@ -31,9 +32,11 @@ export class StakeholderService {
 
     const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`);
 
-    (!!tx)
-      ? tx.set(stakeholderDoc.ref, stakeholder)
-      : stakeholderDoc.set(stakeholder)
+    if (!!tx) {
+      await tx.set(stakeholderDoc.ref, stakeholder)
+    } else {
+      await stakeholderDoc.set(stakeholder);
+    }
 
     return stakeholder.id;
   }

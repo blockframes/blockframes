@@ -1,10 +1,24 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { StakeholderService } from '../../+state';
+import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { MovieQuery } from '@blockframes/movie/movie/+state';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import algoliasearch from 'algoliasearch/lite';
+import { MovieQuery } from '@blockframes/movie/movie/+state';
 import { Organization, OrganizationService } from '@blockframes/organization';
+import { StakeholderService } from '../../+state';
+import {
+  InstantSearchConfig,
+  SearchClient
+} from 'angular-instantsearch/instantsearch/instantsearch';
+
+// @ts-ignore
+const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
+
+interface AlgoliaOrganizationHit {
+  objectID: string;
+  name: string;
+}
 
 @Component({
   selector: 'stakeholder-repertory',
@@ -15,6 +29,10 @@ import { Organization, OrganizationService } from '@blockframes/organization';
 export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   public stakeholderForm = new FormControl();
   public organizations: Organization[];
+  private config: InstantSearchConfig = {
+    indexName: algolia.indexNameOrganizations,
+    searchClient
+  };
   private destroyed$ = new Subject();
 
   constructor(
@@ -23,30 +41,11 @@ export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
     private organizationService: OrganizationService
   ) {}
 
-  ngOnInit() {
-    this.onChange();
-  }
+  ngOnInit() {}
 
-  public submit(organization: Partial<Organization>) {
+  public submit(hit: AlgoliaOrganizationHit) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    this.service.addStakeholder(this.movieQuery.getActive(), organization);
-  }
-
-  public displayFn(organization?: Organization): string | undefined {
-    return organization ? organization.name : undefined;
-  }
-
-  private async onChange() {
-    this.stakeholderForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
-      )
-      .subscribe(async stakeholderName => {
-        this.organizations = await this.organizationService.getOrganizationsByName(stakeholderName);
-        // TODO: use an observable => ISSUE#608
-      });
+    this.service.addStakeholder(this.movieQuery.getActive(), { id: hit.objectID });
   }
 
   ngOnDestroy() {

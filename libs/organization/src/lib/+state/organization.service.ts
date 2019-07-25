@@ -116,7 +116,10 @@ export class OrganizationService {
     }));
   }
 
-  /** Returns a list of organizations whose part of name match with @param prefix */
+  /**
+   * @param prefix Organizations name prefix we are looking for
+   * @returns A list of organizations
+   * */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
     const call = firebase.functions().httpsCallable('findOrgByName');
     return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);

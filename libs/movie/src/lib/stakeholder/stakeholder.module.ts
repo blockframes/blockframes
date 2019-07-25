@@ -1,7 +1,6 @@
 import { NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -15,6 +14,9 @@ import { StakeholderItemComponent } from './components/stakeholder-item/stakehol
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
+import { NgAisModule } from 'angular-instantsearch';
+import { MatListModule } from '@angular/material/list';
+import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,8 @@ import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
     MatCheckboxModule,
     DirectivesModule,
     TeamWorkModule,
+    NgAisModule,
+    MatListModule
   ],
   declarations: [StakeholderRepertoryComponent, StakeholderViewComponent, StakeholderItemComponent]
 })

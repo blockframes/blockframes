@@ -1,3 +1,17 @@
+@import url('https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css');
+
 mat-option {
   font-size: 12px;
+}
+
+::ng-deep {
+  form {
+    width: 90%;
+    margin: auto;
+  }
+
+  .ais-SearchBox {
+    width: 90%;
+    margin: auto auto 1rem;
+  }
 }
