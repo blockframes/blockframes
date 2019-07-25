@@ -183,7 +183,7 @@ function createInvitation(organizations: Organization[], snap: SnapObject): Invi
   }
 
   return prepareStakeholderInvitation({
-    stakeholderId: snap.newStakeholderId,
+    organizationId: snap.newStakeholderId,
     app,
     docId: snap.docInformations.id,
     docType: snap.docInformations.type

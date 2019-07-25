@@ -46,18 +46,18 @@ export function prepareNotification(notif: BaseNotification): Notification {
 }
 
 interface InvitationStakeholderOpts {
-  stakeholderId: string;
+  organizationId: string;
   app: App;
   docId: string;
   docType: DocType;
 }
 
-export function prepareStakeholderInvitation({stakeholderId, app, docId, docType}: InvitationStakeholderOpts): InvitationStakeholder {
+export function prepareStakeholderInvitation({organizationId, app, docId, docType}: InvitationStakeholderOpts): InvitationStakeholder {
   return {
     type: InvitationType.stakeholder,
     docId,
     docType,
-    stakeholderId,
+    organizationId,
     id: db.collection('invitations').doc().id,
     app,
     state: InvitationState.pending,
