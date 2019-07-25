@@ -1,3 +1,6 @@
+/**
+ * Templates for transactional emails we send to user and to cascade8 admins.
+ */
 import { appUrl } from '../environments/environment';
 import { EmailRequest } from '../internals/email';
 
@@ -14,6 +17,7 @@ const userInviteTemplate = ({ email, password }: { email: string; password: stri
   ${appUrl}${USER_WELCOME_PATH}
   `;
 
+/** Generates a transactional email request for user invited to the application. */
 export function userInvite(email: string, password: string): EmailRequest {
   return {
     to: email,
@@ -22,6 +26,7 @@ export function userInvite(email: string, password: string): EmailRequest {
   };
 }
 
+/** Generates a transactional email request for user invited to an organization. */
 export function userInviteToOrg(email: string): EmailRequest {
   return {
     to: email,

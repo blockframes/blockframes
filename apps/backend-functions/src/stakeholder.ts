@@ -51,7 +51,7 @@ export async function onMovieStakeholderDelete(
 }
 
 /**
- * Create custom notifications for users when a new stakeholder, from a delivery or a movie
+ * Creates custom notifications for users when a new stakeholder, from a delivery or a movie
  * they are working on, is invited. It rely on @param context to check if it is an event
  * from movies or deliveries collection.
  */
@@ -66,7 +66,7 @@ async function stakeholdersCollectionEvent(
     throw new Error(`New stakeholder not found !`);
   }
 
-  // TODO: extract semi-generic part, too many if then else, won't work with more types.
+  // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
   const document = !!context.params.movieID
     ? await getDocument<any>(`${collection}/${context.params.movieID}`)
     : await getDocument<any>(`${collection}/${context.params.deliveryID}`);
@@ -115,7 +115,6 @@ async function stakeholdersCollectionEvent(
       const notifications = createNotifications(organizations, snapInformations);
       const invitation = createInvitation(organizations, snapInformations);
 
-      // TODO: trigger only one invitation shared among all the organization members (loaded with user.orgId in the frontend) => ISSUE#645
       return await Promise.all([
         triggerInvitations([invitation]),
         triggerNotifications(notifications)
@@ -137,12 +136,12 @@ function createNotifications(organizations: Organization[], snap: SnapObject) {
     ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
     : `/layout/o/home/${snap.movie.id}/teamwork`;
 
-  const isNotTheInvitedMember = (organization: Organization): boolean => {
+  const isNotTheInvitedOrganization = (organization: Organization): boolean => {
     return !!organization && !!organization.userIds && organization.id !== snap.organization.id;
   };
 
   return organizations
-    .filter(isNotTheInvitedMember)
+    .filter(isNotTheInvitedOrganization)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
       return prepareNotification({
@@ -158,8 +157,8 @@ function createNotifications(organizations: Organization[], snap: SnapObject) {
 /**
  * Temporary function, extract an app from a snap object,
  *
- * TODO: refactor out the SnapObject and fix typing to keep application
- * information down the call stack.
+ * TODO(issue#686): refactor out the SnapObject and fix typing to keep application
+ *  information down the call stack.
  */
 function extractApp(snap: SnapObject): App {
   switch (snap.docInformations.type) {

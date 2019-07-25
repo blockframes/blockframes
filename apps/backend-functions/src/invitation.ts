@@ -21,24 +21,17 @@ import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
 import { userInviteToOrg } from './assets/mailTemplates';
 
-/**
- * @param before
- * @param after
- * @returns whether the invitation just got accepted.
- */
+/** Checks if an invitation just got accepted. */
 function wasAccepted(before: Invitation, after: Invitation) {
   return before.state === InvitationState.pending && after.state === InvitationState.accepted;
 }
 
-/**
- * @param before
- * @param after
- * @returns whether the invitation just got created
- */
+/** Checks if an invitation just got created. */
 function wasCreated(before: InvitationOrUndefined, after: Invitation) {
   return !before && !!after;
 }
 
+/** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
   const { userId, organizationId } = invitation;
 
@@ -53,22 +46,22 @@ async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
   const invitationRef = db.collection('invitations').doc(invitation.id);
 
   return db.runTransaction(async tx => {
-    const [user, org, perm] = await Promise.all([
+    const [user, organization, permission] = await Promise.all([
       tx.get(userRef),
       tx.get(organizationRef),
       tx.get(permissionsRef)
     ]);
 
     const userData = user.data();
-    const orgData = org.data();
-    const permData = perm.data();
+    const organizationData = organization.data();
+    const permissionData = permission.data();
 
-    if (!userData || !orgData || !permData) {
+    if (!userData || !organizationData || !permissionData) {
       console.error(
         'Something went wrong with the invitation, a required document is not set\n',
         userData,
-        orgData,
-        permData
+        organizationData,
+        permissionData
       );
       return;
     }
@@ -77,15 +70,16 @@ async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
       // Update user's orgId
       tx.set(userRef, { ...user, orgId: invitation.organizationId }),
       // Update organization
-      tx.set(organizationRef, { ...orgData, userIds: [...orgData.userIds, userId] }),
+      tx.set(organizationRef, { ...organizationData, userIds: [...organizationData.userIds, userId] }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permData, admins: [...permData.admins, invitation.userId] }),
+      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, invitation.userId] }),
       // Remove the invitation
       tx.delete(invitationRef)
     ]);
   });
 }
 
+/** Sends an email when an organization invites a user to join. */
 async function onInvitationToOrgCreate({ userId }: InvitationToOrganization) {
   const userMail = await getUserMail(userId);
 
@@ -97,7 +91,11 @@ async function onInvitationToOrgCreate({ userId }: InvitationToOrganization) {
   }
 }
 
-async function onStakeholderRawInvitationAccept({
+/**
+ * Updates permissions when an organization / user accepts a invitation to
+ * work on a document (deliveries, movies, etc).
+ */
+async function onStakeholderInvitationAccept({
   docId,
   organizationId,
   docType
@@ -172,6 +170,10 @@ async function onStakeholderRawInvitationAccept({
   });
 }
 
+/**
+ * Dispatch 'creation' and 'accepted' events when an invitation to
+ * join an organization is updated.
+ */
 async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
@@ -185,6 +187,7 @@ async function onInvitationToOrgUpdate(
   return;
 }
 
+/** Dispatch 'accepted' event when an invitation to join a document is accepted. */
 async function onStakeholderInvitationUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
@@ -195,11 +198,17 @@ async function onStakeholderInvitationUpdate(
   }
 
   if (wasAccepted(before, after)) {
-    return onStakeholderRawInvitationAccept(invitation);
+    return onStakeholderInvitationAccept(invitation);
   }
   return;
 }
 
+/**
+ * Handles firestore updates on an invitation object,
+ *
+ * Check the data, manage processed ids (to prevent duplicates events in functions),
+ * and dispatch to the correct piece of code depending on the invitation type.
+ */
 export async function onInvitationUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
@@ -230,6 +239,7 @@ export async function onInvitationUpdate(
   await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
 
   try {
+    // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
       case InvitationType.stakeholder:
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);

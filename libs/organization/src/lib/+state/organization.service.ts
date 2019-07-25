@@ -29,11 +29,7 @@ export class OrganizationService {
     private db: FireQuery
   ) {}
 
-  /**
-   * Add a new user to the organization
-   *
-   * @param member
-   */
+  /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
     const orgId = this.query.getValue().org.id;
     // get a user or create a ghost user when needed:

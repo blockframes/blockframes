@@ -97,27 +97,27 @@ export interface UserDocPermissions {
 // Internal Interaction Types
 // ==========================
 
-export enum App {
+export const enum App {
   main = 'main',
   mediaDelivering = 'media_delivering',
   mediaFinanciers = 'media_financiers'
 }
 
 // Legacy for compat between Notifications & Invitations
-// TODO: use App everywhere and let the frontend / concrete code deal with
-//       the app specifics (icons, message, etc).
+// TODO(issue#684): use App everywhere and let the frontend / concrete
+//  code deal with the app specifics (icons, message, etc).
 export type AppIcon = App;
 
 // Invitations
 // -----------
 
-export enum InvitationState {
+export const enum InvitationState {
   accepted = 'accepted',
   declined = 'declined',
   pending = 'pending'
 }
 
-export enum InvitationType {
+export const enum InvitationType {
   stakeholder = 'stakeholder',
   toOrganization = 'toOrganization'
 }
@@ -135,9 +135,7 @@ interface RawInvitation {
   processedId?: string;
 }
 
-/**
- * Invite a stakeholder to work on a document.
- */
+/** Invite a stakeholder to work on a document. */
 export interface InvitationStakeholder extends RawInvitation {
   type: InvitationType.stakeholder;
   docId: string;
@@ -145,9 +143,7 @@ export interface InvitationStakeholder extends RawInvitation {
   organizationId: string;
 }
 
-/**
- * Invite a user to an organization.
- */
+/** Invite a user to an organization. */
 export interface InvitationToOrganization extends RawInvitation {
   type: InvitationType.toOrganization;
   userId: string;

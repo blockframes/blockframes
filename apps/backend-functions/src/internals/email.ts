@@ -7,6 +7,11 @@ export interface EmailRequest {
   text: string;
 }
 
+/**
+ * Sends a transactional email configured by the EmailRequest provided.
+ *
+ * Handles development mode: logs a warning when no sendgrid API key is provided.
+ */
 export async function sendMail({ to, subject, text }: EmailRequest): Promise<any> {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
