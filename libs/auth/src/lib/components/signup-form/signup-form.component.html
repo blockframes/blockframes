@@ -13,15 +13,15 @@
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput type="text" placeholder="Name" formControlName="name" required />
-      <mat-error *ngIf="signupForm.get('name').hasError('minlength')">
-        Name with less than <strong>3</strong> characters.
+      <mat-error *ngIf="signupForm.get('name').hasError('required')">
+        Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Surname</mat-label>
       <input matInput type="text" placeholder="Surname" formControlName="surname" required />
-      <mat-error *ngIf="signupForm.get('surname').hasError('minlength')">
-        Surname with less than <strong>3</strong> characters.
+      <mat-error *ngIf="signupForm.get('surname').hasError('required')">
+        Surname is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <password-confirm formControlName="password"></password-confirm>

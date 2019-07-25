@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
 })
 export class IdentityComponent {
   public form = new FormGroup({
-    name: new FormControl('', Validators.minLength(3)),
-    surname: new FormControl('', Validators.minLength(3))
+    name: new FormControl(''),
+    surname: new FormControl('')
   });
 
   constructor(
@@ -26,6 +26,7 @@ export class IdentityComponent {
   public async update() {
     if (this.form.invalid) {
       this.snackBar.open('Please enter valid name and surname', 'close', { duration: 2000 });
+      return;
     }
     try {
       const uid = this.query.userId;

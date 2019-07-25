@@ -16,11 +16,17 @@
     <h4>Identity</h4>
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input matInput placeholder="Name" type="text" formControlName="name" />
+      <input matInput placeholder="Name" type="text" formControlName="name" required />
+      <mat-error *ngIf="control.get('name').hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Surname</mat-label>
-      <input matInput placeholder="Surname" type="text" formControlName="surname" />
+      <input matInput placeholder="Surname" type="text" formControlName="surname" required />
+      <mat-error *ngIf="control.get('surname').hasError('required')">
+        Surname is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
     <mat-divider></mat-divider>
     <h4>Informations</h4>

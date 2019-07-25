@@ -28,8 +28,8 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
   return {
     email: new EmailControl(signup.email),
     password: new PasswordControl(signup.password),
-    name: new FormControl(signup.name, Validators.minLength(3)),
-    surname: new FormControl(signup.surname, Validators.minLength(3))
+    name: new FormControl(signup.name),
+    surname: new FormControl(signup.surname)
   }
 }
 
