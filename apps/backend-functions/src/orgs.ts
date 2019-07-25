@@ -5,6 +5,8 @@
  */
 import { functions } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
+import { sendMail } from './internals/email';
+import { organizationCreate } from './assets/mailTemplates';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -18,8 +20,12 @@ export function onOrganizationCreate(
     throw new Error('organization update function got invalid org data');
   }
 
-  // Update algolia's index
-  return storeSearchableOrg(orgID, org.name);
+  return Promise.all([
+    // Send a mail to c8 admin to accept the organization
+    sendMail(organizationCreate(org.id)),
+    // Update algolia's index
+    storeSearchableOrg(orgID, org.name)
+  ]);
 }
 
 export function onOrganizationUpdate(

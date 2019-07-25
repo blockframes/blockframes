@@ -1,7 +1,7 @@
 /**
  * Templates for transactional emails we send to user and to cascade8 admins.
  */
-import { appUrl } from '../environments/environment';
+import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
@@ -31,6 +31,14 @@ export function userInviteToOrg(email: string): EmailRequest {
   return {
     to: email,
     subject: 'You have been invited to an organization',
+    text: 'TODO'
+  };
+}
+
+export function organizationCreate(orgId: string): EmailRequest {
+  return {
+    to: adminEmail,
+    subject: 'A new organization has been created',
     text: 'TODO'
   };
 }
