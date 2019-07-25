@@ -1,4 +1,4 @@
-export enum OrganizationState {
+export enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
 }
@@ -34,7 +34,7 @@ export interface OrganizationAction {
 
 export interface Organization {
   id: string;
-  state: OrganizationState;
+  status: OrganizationStatus; // is the organization accepted by cascade8 admins?
   name: string;
   address: string;
   phoneNumber: string;

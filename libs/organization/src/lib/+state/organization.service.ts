@@ -2,21 +2,16 @@ import { Injectable } from '@angular/core';
 import {
   createOrganization,
   Organization,
-  OrganizationAction,
   OrganizationMember,
+  OrganizationMemberRequest,
   OrganizationOperation,
-  OrganizationMemberRequest
+  OrganizationStatus
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { FireQuery } from '@blockframes/utils';
 import { AuthService, AuthStore, User } from '@blockframes/auth';
 import { OrganizationQuery } from './organization.query';
-import {
-  App,
-  createAppPermissions,
-  createPermissions,
-  PermissionsQuery
-} from '../permissions/+state';
+import { App, createAppPermissions, createPermissions } from '../permissions/+state';
 import firebase from 'firebase';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
 
@@ -55,7 +50,7 @@ export class OrganizationService {
     const newOrganization: Organization = createOrganization({
       ...organization,
       id: orgId,
-      state: OrganizationState.pending,
+      status: OrganizationStatus.pending,
       userIds: [user.uid]
     });
     const organizationDoc = this.db.doc(`orgs/${orgId}`);
@@ -120,7 +115,7 @@ export class OrganizationService {
       .doc<OrganizationActionOld>(`orgs/${organizationId}/actions/${action.id}`)
       .update({ activeMembers: updatedActiveMembers });
   }*/
-  
+
   //-------------------------------------------------
   //            BLOCKCHAIN PART OF ORGS
   //-------------------------------------------------
@@ -162,10 +157,10 @@ export class OrganizationService {
   addOperationMember(id: string, newMember: OrganizationMember) {
     const operation = this.query.getOperationById(id);
     if(!operation) throw new Error('This operation doesn\'t exists');
-    
+
     const memberExists = operation.members.some(member => member.uid === newMember.uid);
     if (!!memberExists) throw new Error('This member is already a signer of this operation');
-    
+
     this.upsertOperation({
       ...operation,
       members: [...operation.members, newMember],
@@ -175,16 +170,16 @@ export class OrganizationService {
   removeOperationMember(id: string, memberToRemove: OrganizationMember) {
     const operation = this.query.getOperationById(id);
     if(!operation) throw new Error('This operation doesn\'t exists');
-    
+
     const members = operation.members.filter(member => member.uid !== memberToRemove.uid);
     const newOperation = { ...operation, members };
-    
+
     this.upsertOperation(newOperation);
   }
 
   // TODO REMOVE THIS ASAP : issue 676
   public instantiateMockData() {
-    
+
     const oldOrgMembers = this.query.getValue().org.members;
     const newOrgMembers = mockOrgMembers.concat(oldOrgMembers);
 
