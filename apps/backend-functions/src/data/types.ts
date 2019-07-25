@@ -135,6 +135,9 @@ interface RawInvitation {
   processedId?: string;
 }
 
+/**
+ * Invite a stakeholder to work on a document.
+ */
 export interface InvitationStakeholder extends RawInvitation {
   type: InvitationType.stakeholder;
   docId: string;
@@ -142,12 +145,19 @@ export interface InvitationStakeholder extends RawInvitation {
   organizationId: string;
 }
 
+/**
+ * Invite a user to an organization.
+ */
 export interface InvitationToOrganization extends RawInvitation {
   type: InvitationType.toOrganization;
   userId: string;
   organizationId: string;
 }
 
+/**
+ * This is the generic type for invitation,
+ * use the type field to figure out which kind of invitation you are working with.
+ */
 export type Invitation = InvitationStakeholder | InvitationToOrganization;
 export type InvitationOrUndefined = Invitation | undefined;
 
