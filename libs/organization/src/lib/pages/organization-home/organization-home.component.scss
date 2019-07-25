@@ -8,18 +8,8 @@ article {
   width: 500px;
 }
 
-.item-text {
-  padding-left: 40px;
-  h4 {
-    margin-bottom: 4px;
-  }
-  p {
-    margin-top: 0;
-  }
-}
-
-.mat-list-base .mat-list-item {
-  height: 100%;
+h4 {
+  margin-bottom: 4px;
 }
 
 .image {
@@ -40,6 +30,9 @@ h2 {
   font-size: 14px;
 }
 
+mat-icon {
+  margin-right: 16px;
+}
 
 // extra small
 @include mobile {
