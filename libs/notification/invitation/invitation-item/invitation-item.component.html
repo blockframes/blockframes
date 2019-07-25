@@ -1,7 +1,7 @@
 <article class="container">
   <span class="message">
-    <mat-icon [svgIcon]="invitation.appIcon"></mat-icon>
-    {{ invitation.message }}
+    <mat-icon [svgIcon]="invitation.app"></mat-icon>
+    {{ message }}
   </span>
   <article fxLayoutAlign="space-around center">
     <button mat-raised-button color="primary" (click)="acceptInvitation(invitation)">Accept</button>

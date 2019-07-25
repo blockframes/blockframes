@@ -21,4 +21,11 @@ export class InvitationItemComponent {
       { duration: 5000 }
     );
   }
+
+  public get message(): string {
+    if (this.invitation.type === 'joinOrganization') {
+      return 'A user wants to join your organization.'
+    }
+    return ''; // TODO: issue#576, implement one message by type of invitation
+  }
 }
