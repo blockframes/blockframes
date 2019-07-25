@@ -29,7 +29,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Components
-import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
 import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
@@ -96,11 +95,9 @@ export const organizationRoutes: Routes = [
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrganizationCreateComponent,
+    OrganizationFormComponent,
     OrganizationDisplayComponent,
     OrganizationWidgetComponent,
-    OrgViewComponent,
-    OrgWidgetComponent,
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,

@@ -29,6 +29,7 @@ export const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        // The redirection route when user has no organization
         path: 'organization',
         loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
       },

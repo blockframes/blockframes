@@ -16,14 +16,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatRippleModule } from '@angular/material/core';
+import { MatListModule } from '@angular/material/list';
 
 // Components
-import { OrgFormComponent } from './components/org-form/org-form.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
-import { MatListModule } from '@angular/material/list';
+import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -45,7 +45,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'create',
-    component: OrgFormComponent
+    component: OrganizationCreateComponent
   }
 ];
 
@@ -67,14 +67,13 @@ export const noOrganizationRoutes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
-    MatRippleModule,
     RouterModule.forChild(noOrganizationRoutes)
   ],
   declarations: [
     OrganizationHomeComponent,
     OrganizationFindComponent,
     OrganizationFeedbackComponent,
-    OrgFormComponent
+    OrganizationCreateComponent
   ]
 })
 export class NoOrganizationModule {}

@@ -1,33 +1,33 @@
 import { firestore } from 'firebase/app';
 import { DocInformations } from 'libs/notification/notification/+state';
-import { User } from '@blockframes/auth';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
   id: string;
-  appIcon: string;
-  message: string;
-  user?: User;
-  orgId: string;
-  path: string;
-  docInformations: DocInformations;
+  app: string;
+  type: 'joinOrganization'; // This will be extented with other invitations
+  userId?: string;
+  organizationId: string;
+  docInformations?: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
   date: Timestamp;
 }
 
-export function createInvitation(params: Partial<Invitation> = {}): Invitation {
-  function createUser(user: Partial<User> = {}) {
-    return {
-      uid: user.uid,
-      email: user.email,
-      name: user.name,
-      surname: user.surname
-    };
-  }
+/**
+ * Required options to create an invitation
+ */
+export interface InvitationToJoinOrganizationOptions {
+  id: string;
+  organizationId: string;
+  userId: string;
+}
+
+export function createInvitationToJoinOrganization(params: InvitationToJoinOrganizationOptions): Invitation {
   return {
+    app: 'main',
     state: 'pending',
+    type: 'joinOrganization',
     date: firestore.Timestamp.now(),
-    user: createUser(params.user),
     ...params
-  } as Invitation;
+  };
 }
