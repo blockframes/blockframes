@@ -3,10 +3,18 @@
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { functions } from './internals/firebase';
+import express from 'express';
+import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
-import { organizationCreate } from './assets/mailTemplates';
+import { organizationCreate, organizationWasAccepted } from './assets/mailTemplates';
+import { Organization } from './data/types';
+import { acceptNewOrgPage, acceptNewOrgPageComplete } from './assets/adminTemplates';
+
+export enum OrganizationStatus {
+  pending = 'pending',
+  accepted = 'accepted'
+}
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -56,3 +64,41 @@ export function onOrganizationDelete(
   // Update algolia's index
   return deleteSearchableOrg(context.params.orgID);
 }
+
+
+// Organization Administration: Accept new orgs
+// ============================================
+
+function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
+  return organizationRef.update({ status: OrganizationStatus.accepted });
+}
+
+async function mailOrganizationAdminOnAccept(organizationRef: DocumentReference): Promise<any> {
+  const { userIds } = (await organizationRef.get()).data() as Organization;
+
+  return userIds.map(async userId => {
+    const email = await getUserMail(userId);
+    if (!email) {
+      console.error('User:', userId, 'has no email!');
+      return;
+    }
+    return sendMail(organizationWasAccepted(email));
+  });
+}
+
+export const onAcceptNewOrg = express();
+
+onAcceptNewOrg.get('/:orgId', async (req: express.Request, res: express.Response) => {
+  const { orgId } = req.params;
+  res.send(acceptNewOrgPage(orgId));
+});
+
+onAcceptNewOrg.post('/:orgId', async (req: express.Request, res: express.Response) => {
+  const { orgId } = req.params;
+  const organizationRef = db.collection('orgs').doc(orgId);
+
+  await acceptOrganization(organizationRef);
+  await mailOrganizationAdminOnAccept(organizationRef);
+
+  return res.send(acceptNewOrgPageComplete(orgId));
+});

@@ -42,3 +42,11 @@ export function organizationCreate(orgId: string): EmailRequest {
     text: 'TODO'
   };
 }
+
+export function organizationWasAccepted(email: string): EmailRequest {
+  return {
+    to: email,
+    subject: 'Your organization was accepted by admins',
+    text: 'TODO'
+  }
+}

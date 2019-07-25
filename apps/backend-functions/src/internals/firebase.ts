@@ -1,5 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+
+export type DocumentReference = admin.firestore.DocumentReference;
+
 import { backupBucket } from '../environments/environment';
 
 admin.initializeApp(functions.config().firebase);

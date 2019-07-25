@@ -28,7 +28,7 @@ import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationUpdate } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, onAcceptNewOrg } from './orgs';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -90,6 +90,15 @@ export const restoreFirestore = functions.https
  */
 export const updateToV2 = functions.https
   .onRequest(migrations.updateToV2);
+
+/**
+ * Trigger: REST call to validate organizations
+ *
+ * When organizations are created they are in status "pending",
+ * cascade8 admins will accept the organization with this function.
+ */
+export const acceptOrganization = functions.https
+  .onRequest(onAcceptNewOrg);
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
