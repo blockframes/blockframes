@@ -30,8 +30,13 @@ h2 {
   font-size: 14px;
 }
 
-mat-icon {
+.first-icon {
   margin-right: 16px;
+}
+
+.second-icon {
+  margin-left: 16px;
+  color: var(--dynamicIcon);
 }
 
 // extra small
