@@ -26,3 +26,5 @@ export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 export const algoliaId = mockConfigIfNeeded('algolia.app_id');
 export const algoliaAdminKey = mockConfigIfNeeded('algolia.api_key');
 export const algoliaSearchKey = mockConfigIfNeeded('algolia.search_key');
+
+export const adminEmail = mockConfigIfNeeded('admin.email')

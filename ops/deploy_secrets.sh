@@ -33,4 +33,5 @@ firebase functions:config:set sendgrid.api_key="${SENGRID_API_KEY}" \
                               algolia.app_id="${ALGOLIA_APP_ID}" \
                               algolia.api_key="${ALGOLIA_API_KEY}" \
                               algolia.search_key="${ALGOLIA_SEARCH_KEY}" \
+                              admin.email="${CASCADE8_ADMIN}" \
                               ${TOKEN_ARG};
