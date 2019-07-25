@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: 'organization-form',
+  selector: '[formGroupName] organization-form, [formGroup] organization-form, organization-form',
   templateUrl: './organization-form.component.html',
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

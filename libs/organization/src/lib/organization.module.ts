@@ -37,7 +37,6 @@ import { OrganizationSignerRepertoryComponent } from './components/organization-
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationQuorumRepertoryComponent } from './components/organization-quorum-repertory/organization-quorum-repertory.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
-import { OrganizationEditComponent } from './components/organization-edit/organization-edit.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 
 // Pages

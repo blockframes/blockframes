@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: '[formGroup] profileForm, profile-form',
+  selector: '[formGroupName] profile-form, [formGroup] profile-form, profile-form',
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

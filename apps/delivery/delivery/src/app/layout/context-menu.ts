@@ -102,8 +102,25 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/o/organization/:orgId',
+    route: '/layout/o/organization/:orgId/activityreports',
     items: [
+      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+    ]
+  },
+  {
+    route: '/layout/o/organization/:orgId/edit',
+    items: [
+      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+    ]
+  },
+  {
+    route: '/layout/o/organization/:orgId/administration',
+    items: [
+      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
       { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
       { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
     ]
