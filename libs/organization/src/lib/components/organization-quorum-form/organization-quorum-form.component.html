@@ -1,0 +1,22 @@
+<mat-form-field>
+  <mat-label>How much members needed</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let number of " [value]="number">{{number}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-divider></mat-divider>
+<article>
+  <h2>Members</h2>
+  <form [formGroup]="control">
+    <span *ngFor="let member of this.controlContainer.control.get('activeMembers').value" fxLayout="row"
+      fxLayoutAlign="space-around center">
+      <mat-icon>
+        accessibility
+      </mat-icon>
+      {{member.name}}
+      <button mat-icon-button (click)="deleteActiveSigner.emit(member.uid)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </span>
+  </form>
+</article>

@@ -6,7 +6,7 @@
       <mat-divider></mat-divider>
     </h1>
     <h2>Important actions</h2>
-    <org-action-repertory [actions]="organization.actions" (detailedView)="openDetails($event)">
+    <org-action-repertory [actions]="organization.actions" (editing)="openSidenav('action', $event)">
     </org-action-repertory>
     <h2>Organization signatures</h2>
     <mat-form-field>
@@ -15,18 +15,20 @@
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <button mat-button (click)="addSigner(signerFormControl.value)">Add new signers</button>
-    <!-- The selected event should be triggered when the admin is clicked on the pen of the signer -->
-      <org-signer-repertory [signerList]="organization.members" (selected)="openOptions($event)">
-      </org-signer-repertory>
+    <org-signer-repertory [signerList]="organization.members" (selected)="openOptions($event)">
+    </org-signer-repertory>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav>
-    <ng-container *ngIf="optionsOrSigner; else options">
-        <organization-quorum-repertory [action]="action" (deleteActiveSigner)="deleteActiveSigner($event)">
-        </organization-quorum-repertory>
-  </ng-container>
-    <ng-template #options>
-      <!-- <organization-signer-form></organization-signer-form> -->
-    </ng-template>
+    <ng-container [ngSwitch]="editContent">
+      <ng-container *ngSwitchCase="'action'">
+        <organization-quorum-form [formGroup]="form.action(activeForm)"
+          (deleteActiveSigner)="deleteActiveSigner($event)">
+        </organization-quorum-form>
+      </ng-container>
+      <ng-container *ngSwitchCase="'member'">
+        <!-- <organization-signer-form ></organization-signer-form> -->
+      </ng-container>
+    </ng-container>
   </ng-container>
 </editable-sidenav>

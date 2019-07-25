@@ -24,11 +24,6 @@ export interface Organization {
   actions: OrganizationAction[]
 }
 
-export interface OrganizationForm {
-  name: string;
-  adress: string;
-}
-
 export interface OrganizationAction {
   id: string;
   actionName: string;
@@ -49,6 +44,8 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     templateIds: [],
     created: Date.now(),
     updated: Date.now(),
+    actions: [],
+    members: [],
     ...params
   } as Organization;
 }

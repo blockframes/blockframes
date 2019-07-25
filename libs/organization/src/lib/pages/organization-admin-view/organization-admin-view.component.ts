@@ -1,8 +1,10 @@
-import { Organization, OrganizationAction } from './../../+state/organization.model';
+import { OrganizationForm, OrganizationActionForm } from './../../organization.form';
+import { Organization } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationQuery, OrganizationService } from '../../+state';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { tap, switchMap, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'org-admin-view',
@@ -14,15 +16,7 @@ export class OrganizationAdminViewComponent implements OnInit {
   /** Observable that contains all the signers in an organization */
   public organization$: Observable<Organization>;
 
-  /** Variable for holding the active members on a specific action */
-  public action: OrganizationAction;
-
-  /**
-   * A flag which determine whether to show the options of a signer or
-   * the members of an action in the sidenav
-   * true means action members, false means options of signers
-   */
-  public optionsOrSigner: boolean;
+  public form = new OrganizationForm();
 
   /** Form control for adding a new signer to a organization */
   public signerFormControl = new FormControl();
@@ -30,20 +24,32 @@ export class OrganizationAdminViewComponent implements OnInit {
   /** Flag to indicate if sidenav is open */
   public opened = false;
 
+  /** Variable to indicate whether to show an action in the sidenav or a member */
+  public editContent: 'action' | 'member';
+
+  /** A number to iindicate which action we want to alter in the sidenav */
+  public activeForm: number;
+
   constructor(private query: OrganizationQuery, private service: OrganizationService) {}
 
   ngOnInit() {
-    this.organization$ = this.query.select('org');
+    this.organization$ = this.query
+      .select('org')
+      .pipe(
+        tap(
+          org => (this.form = new OrganizationForm(org)),
+          switchMap(org => this.form.valueChanges.pipe(startWith(org)))
+        )
+      );
   }
 
-  public openDetails(action: OrganizationAction) {
+  public openSidenav(editContent: 'action' | 'member', index: number) {
     this.opened = true;
-    this.optionsOrSigner = true;
-    this.action = action;
+    this.editContent = editContent;
+    this.activeForm = index;
   }
 
-  public deleteActiveSigner({ member, action }) {
-    this.service.deleteActiveSigner(member, action);
+  public deleteActiveSigner(uid: string) {
   }
 
   /** This function should get triggered by the input field */
@@ -51,5 +57,11 @@ export class OrganizationAdminViewComponent implements OnInit {
     // TODO(#682): Add a signer to the organization. Also the input field should
     // have some autocompletion, where to look for the correct member?
     console.log('implement me in the service ' + name);
+  }
+
+  // TODO(#682)
+  public openOptions() {
+    this.opened = true;
+    this.editContent = this.editContent;
   }
 }

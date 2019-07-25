@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Organization, OrganizationForm, createOrganization } from './organization.model';
+import { Organization, createOrganization } from './organization.model';
 
 export interface OrganizationState {
   org: Organization;
-  form: OrganizationForm;
+  form: any;
 }
 
+// TODO #687
 const initialState: OrganizationState = {
   form: {
     name: '',

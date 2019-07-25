@@ -23,7 +23,8 @@ export class OrganizationActionRepertoryComponent implements OnInit {
   /** Variable to save the data source of the material table */
   public dataSource: MatTableDataSource<OrganizationAction>;
 
-  memberMapping: { [k: string]: string } = {
+  /** Mapping for helping with the correct grammar. */
+  public memberMapping: { [k: string]: string } = {
     '=0': 'No member',
     '=1': '1 member',
     other: '# members'
@@ -31,7 +32,7 @@ export class OrganizationActionRepertoryComponent implements OnInit {
 
   @Input() actions: OrganizationAction[];
 
-  @Output() detailedView = new EventEmitter();
+  @Output() editing = new EventEmitter<number>();
 
   /** Init code to work with the build in material sort function */
   @ViewChild(MatSort, { static: true }) sort: MatSort;

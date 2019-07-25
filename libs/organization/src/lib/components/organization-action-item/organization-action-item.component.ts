@@ -21,7 +21,7 @@ export class OrganizationActionItemComponent implements OnInit {
 
   public dataSource;
 
-  // TODO #638: replace any and make it an Observable
+  // TODO #638: replace any
   @Input() actionItems: any;
 
   // TODO #638: replace any
@@ -32,13 +32,5 @@ export class OrganizationActionItemComponent implements OnInit {
   ngOnInit() {
     this.dataSource = new MatTableDataSource(this.actionItems);
     this.dataSource.sort = this.sort;
-  }
-
-  /** This is a helper function which checks if the Observable got a key in his object stream,
-   * if not we going to display somehting else.
-   */
-  // TODO #638: the input is going to be an Observable, so fit the function
-  public hasDateValue() {
-    return true
   }
 }

@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   createOrganization,
   Organization,
-  OrganizationAction,
-  OrganizationMember,
   OrganizationMemberRequest
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
@@ -104,7 +102,7 @@ export class OrganizationService {
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly
   // the id out of the activeMembersArray.
-  public async deleteActiveSigner(member: OrganizationMember, action: OrganizationAction) {
+  /* public async deleteActiveSigner(member: OrganizationMember) {
     const organizationId = this.query.getValue().org.id;
     const actionData = await this.db.snapshot<OrganizationAction>(
       `orgs/${organizationId}/actions/${action.id}`
@@ -115,5 +113,5 @@ export class OrganizationService {
     return this.db
       .doc<OrganizationAction>(`orgs/${organizationId}/actions/${action.id}`)
       .update({ activeMembers: updatedActiveMembers });
-  }
+  }*/
 }

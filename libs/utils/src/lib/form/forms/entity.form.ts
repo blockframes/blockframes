@@ -10,7 +10,7 @@ export class FormEntity<E, Control extends EntityControl<E> = EntityControl<E>> 
   value: E;
   valueChanges: Observable<E>
 
-  constructor(controls: Control, validators?: Validator, asyncValidators?: AsyncValidator) {
+  constructor(controls: Partial<Control>, validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }
 

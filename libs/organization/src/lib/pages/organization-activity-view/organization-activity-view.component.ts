@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { of } from 'rxjs';
 
 // TODO #638: delete this mock values
@@ -57,7 +57,7 @@ const mockApprovedActions = [
   styleUrls: ['./organization-activity-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationActivityViewComponent implements OnInit {
+export class OrganizationActivityViewComponent {
   /** Observable which contains pending actions */
   // TODO #638: work with real data
   public pendingActions$ = of(mockPendingActions);
@@ -72,10 +72,6 @@ export class OrganizationActivityViewComponent implements OnInit {
   // Flag to indicate whether sidenav is open or not
   public opened = false;
 
-  // TODO #638: save it for later
-  constructor() {}
-
-  ngOnInit() {}
 
   // TODO #638: replace any refactor the function when you know how the real data is going to look like
   // also the sidenav is going to need a refactoring
