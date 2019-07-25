@@ -29,7 +29,7 @@ export const routes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: 'create-organization',
+        path: 'organization',
         loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
       },
       {

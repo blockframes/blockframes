@@ -23,6 +23,7 @@ import { OrgFormComponent } from './components/org-form/org-form.component';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
+import { MatListModule } from '@angular/material/list';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -58,6 +59,7 @@ export const noOrganizationRoutes: Routes = [
 
     // Material
     MatFormFieldModule,
+    MatListModule,
     MatIconModule,
     MatCardModule,
     MatDividerModule,

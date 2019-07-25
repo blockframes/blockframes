@@ -1,12 +1,25 @@
 @import 'variables';
 
 section {
-  background-color: var(--whiteBackground);
   height: 100%;
 }
 
 article {
   width: 500px;
+}
+
+.item-text {
+  padding-left: 40px;
+  h4 {
+    margin-bottom: 4px;
+  }
+  p {
+    margin-top: 0;
+  }
+}
+
+.mat-list-base .mat-list-item {
+  height: 100%;
 }
 
 .image {
@@ -15,10 +28,6 @@ article {
   width: 230px;
   background-image: url('libs/shared-assets/images/org-landing.png');
   background-size: cover;
-}
-
-.card-text {
-  width: 60%;
 }
 
 h2 {
@@ -31,30 +40,6 @@ h2 {
   font-size: 14px;
 }
 
-mat-card {
-  width: 100%;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-mat-card-content {
-  margin: 0;
-}
-
-h4 {
-  margin-top: 16px;
-  margin-bottom: 4px;
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 12px;
-}
-
-mat-icon {
-  color: var(--dynamicIcon);
-}
 
 // extra small
 @include mobile {

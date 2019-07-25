@@ -42,7 +42,7 @@ export class OrganizationFindComponent implements OnInit, OnDestroy {
     if (this.selected) {
       try {
         this.invitationService.sendInvitationToOrg(this.selected);
-        this.router.navigate(['layout/create-organization/congratulation']);
+        this.router.navigate(['layout/organization/congratulation']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
       }

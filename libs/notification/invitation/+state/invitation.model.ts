@@ -17,7 +17,12 @@ export interface Invitation {
 
 export function createInvitation(params: Partial<Invitation> = {}): Invitation {
   function createUser(user: Partial<User> = {}) {
-    return { ...user };
+    return {
+      uid: user.uid,
+      email: user.email,
+      name: user.name,
+      surname: user.surname
+    };
   }
   return {
     state: 'pending',

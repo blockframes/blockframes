@@ -5,35 +5,33 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
       sagittis. Duis a auctor nulla, a finibus mauris. Nullam eu maximus lorem.
     </p>
-    <mat-card class="mat-elevation-z0">
+    <mat-nav-list>
       <a routerLink="../create">
-        <mat-card-content matRipple fxLayout="row" fxLayoutAlign="space-around center">
-          <mat-icon svgIcon="adjustable_wrench"></mat-icon>
-          <div class="card-text">
-            <h4 class="firstTitle">Create your organization</h4>
-            <p>
+        <mat-list-item>
+          <mat-icon matListIcon svgIcon="adjustable_wrench"></mat-icon>
+          <div class="item-text">
+            <h4 mat-line><b>Create your organization</b></h4>
+            <p mat-line>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus
               quis sagittis.
             </p>
           </div>
-          <mat-icon>keyboard_arrow_right</mat-icon>
-        </mat-card-content>
+        </mat-list-item>
       </a>
       <mat-divider></mat-divider>
-      <a routerLink="../find">
-        <mat-card-content matRipple fxLayout="row" fxLayoutAlign="space-around center">
-          <mat-icon svgIcon="magnifying_glass"></mat-icon>
-          <div class="card-text">
-            <h4>Find your organization</h4>
-            <p>
+      <a routerLink="../create">
+        <mat-list-item>
+          <mat-icon matListIcon svgIcon="magnifying_glass"></mat-icon>
+          <div class="item-text">
+            <h4 mat-line><b>Find your organization</b></h4>
+            <p mat-line>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus
               quis sagittis.
             </p>
           </div>
-          <mat-icon>keyboard_arrow_right</mat-icon>
-        </mat-card-content>
+        </mat-list-item>
       </a>
-    </mat-card>
+    </mat-nav-list>
     <div class="image"></div>
   </article>
 </section>

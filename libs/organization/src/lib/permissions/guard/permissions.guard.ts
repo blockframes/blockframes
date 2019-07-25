@@ -47,7 +47,7 @@ export class PermissionsGuard {
         )
         .subscribe({
           next: (result: Permissions) => res(!!result),
-          error: () => res(this.router.parseUrl('layout/create-organization'))
+          error: () => res(this.router.parseUrl('layout/organization'))
         });
     });
   }

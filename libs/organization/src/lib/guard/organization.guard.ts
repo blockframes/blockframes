@@ -54,7 +54,7 @@ export class OrganizationGuard {
           },
           error: (err) => {
             console.log('Error: ' ,err)
-            res(this.router.parseUrl('layout/create-organization'))
+            res(this.router.parseUrl('layout/organization'))
           }
         });
     });
