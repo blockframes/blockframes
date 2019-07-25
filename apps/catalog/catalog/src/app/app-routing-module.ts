@@ -8,9 +8,8 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { PermissionsGuard, OrganizationGuard, OrganizationCreateComponent } from '@blockframes/organization';
+import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
-import { OrganizationHomeComponent } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -28,6 +27,11 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'o',
         pathMatch: 'full'
+      },
+      {
+        // The redirection route when user has no organization
+        path: 'organization',
+        loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
       },
       {
         path: 'o',
@@ -67,14 +71,6 @@ export const routes: Routes = [
           }
         ]
       },
-      {
-        path: 'organization-home',
-        component: OrganizationHomeComponent
-      },
-      {
-        path: 'create',
-        component: OrganizationCreateComponent
-      }
     ]
   },
   {

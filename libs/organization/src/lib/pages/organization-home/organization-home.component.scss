@@ -42,9 +42,12 @@ h2 {
 // extra small
 @include mobile {
   article {
-    width: 80%;
+    width: 100%;
   }
   section {
     height: auto;
+  }
+  mat-nav-list {
+    width: 100%;
   }
 }
