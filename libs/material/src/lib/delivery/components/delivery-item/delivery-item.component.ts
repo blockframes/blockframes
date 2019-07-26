@@ -26,7 +26,7 @@ export class DeliveryItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.paymentIcon = this.delivery.isPaid ? 'payed' : 'not_payed';
+    this.paymentIcon = this.delivery.isPaid ? 'payed' : 'notPayed';
     this.stakeholders = this.delivery.stakeholders.map(({ organization }) => organization.name).join(' | ');
   }
 

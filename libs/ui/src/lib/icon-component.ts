@@ -8,8 +8,8 @@ const ICONS_SVG = [
     url: 'assets/icons/accepted.svg'
   },
   {
-    name: 'adjustable_wrench',
-    url: 'assets/icons/adjustable_wrench.svg'
+    name: 'adjustableWrench',
+    url: 'assets/icons/adjustableWrench.svg'
   },
   {
     name: 'cross',
@@ -24,16 +24,16 @@ const ICONS_SVG = [
     url: 'assets/icons/edit.svg'
   },
   {
-    name: 'change_pass',
-    url: 'assets/icons/change_pass.svg'
+    name: 'changePass',
+    url: 'assets/icons/changePass.svg'
   },
   {
-    name: 'magic_wand',
-    url: 'assets/icons/magic_wand.svg'
+    name: 'magicWand',
+    url: 'assets/icons/magicWand.svg'
   },
   {
-    name: 'magnifying_glass',
-    url: 'assets/icons/magnifying_glass.svg'
+    name: 'magnifyingGlass',
+    url: 'assets/icons/magnifyingGlass.svg'
   },
   {
     name: 'arrow',
@@ -61,7 +61,7 @@ const ICONS_SVG = [
   },
   {
     name: 'enabled',
-    url: 'assets/icons/remove_red_eye.svg'
+    url: 'assets/icons/removeRedEye.svg'
   },
   {
     name: 'filter',
@@ -76,8 +76,8 @@ const ICONS_SVG = [
     url: 'assets/apps/home_of_scripts.svg'
   },
   {
-    name: 'library_books',
-    url: 'assets/icons/library_books.svg'
+    name: 'libraryBooks',
+    url: 'assets/icons/libraryBooks.svg'
   },
   {
     name: 'logical',
@@ -112,8 +112,8 @@ const ICONS_SVG = [
     url: 'assets/icons/order.svg'
   },
   {
-    name: 'not_payed',
-    url: 'assets/icons/not-payed.svg'
+    name: 'notPayed',
+    url: 'assets/icons/notPayed.svg'
   },
   {
     name: 'payed',
@@ -124,8 +124,8 @@ const ICONS_SVG = [
     url: 'assets/icons/pending.svg'
   },
   {
-    name: 'picture_as_pdf',
-    url: 'assets/icons/picture_as_pdf.svg'
+    name: 'pictureAsPdf',
+    url: 'assets/icons/pictureAsPdf.svg'
   },
   {
     name: 'refused',
@@ -164,8 +164,8 @@ const ICONS_SVG = [
     url: 'assets/circled-icons/delete.svg'
   },
   {
-    name: 'key_icon',
-    url: 'assets/icons/key_icon.svg'
+    name: 'keyIcon',
+    url: 'assets/icons/keyIcon.svg'
   }
 ];
 
@@ -174,7 +174,7 @@ const ICONS_SVG = [
  * To be used at the root of every app.
  *
  * Invoke the icons with:
- *  <mat-icon svgIcon="not_payed"></mat-icon>
+ *  <mat-icon svgIcon="notPayed"></mat-icon>
  */
 @Injectable({ providedIn: 'root' })
 export class IconComponent {
