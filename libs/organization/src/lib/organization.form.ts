@@ -1,14 +1,31 @@
-import { FormList } from './../../../utils/src/lib/form/forms/list.form';
 import { FormControl, FormArray } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
-import { Organization, createOrganization, OrganizationAction } from './+state';
+import { FormEntity, FormField, FormList } from '@blockframes/utils';
+import { Organization, createOrganization, OrganizationAction, OrganizationMember } from './+state';
 
-export class OrganizationActionForm extends FormEntity<OrganizationAction> {
+interface OrganizationControl {
+  name: FormControl;
+  address: FormControl;
+  actions: FormList<OrganizationAction>;
+}
+
+interface OrganizatoinActionControl {
+  activeMembers: FormField<OrganizationMember[]>;
+  quorumMembers: FormControl;
+}
+
+export class OrganizationActionForm extends FormEntity<
+  OrganizationAction,
+  OrganizatoinActionControl
+> {
   constructor(action: OrganizationAction) {
     super({
-      activeMembers: new FormControl(action.activeMembers),
+      activeMembers: new FormField<OrganizationMember[]>(action.activeMembers),
       quorumMembers: new FormControl(action.quorumMembers)
     });
+  }
+  
+  get activeMembers() {
+    return this.get('activeMembers');
   }
 
   removeMember(id: string) {
@@ -17,13 +34,13 @@ export class OrganizationActionForm extends FormEntity<OrganizationAction> {
   }
 }
 
-export class OrganizationForm extends FormEntity<Organization> {
+export class OrganizationForm extends FormEntity<Organization, OrganizationControl> {
   constructor(organization: Partial<Organization> = {}) {
     const org = createOrganization(organization);
     super({
       name: new FormControl(org.name),
       address: new FormControl(org.address),
-      actions: FormList.factory(org.actions, (action) => new OrganizationActionForm(action))  // new FormArray(org.actions.map(action => ))
+      actions: FormList.factory(org.actions, action => new OrganizationActionForm(action))
     });
   }
   action(index: number): OrganizationActionForm {

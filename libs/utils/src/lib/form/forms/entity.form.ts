@@ -3,7 +3,7 @@ import { Validator, AsyncValidator } from './types';
 import { Observable } from 'rxjs';
 
 /** Generic EntityControl */
-export type EntityControl<T> = { [key in keyof T]: FormControl | FormGroup | FormArray };
+export type EntityControl<T> = { [key in keyof Partial<T>]: FormControl | FormGroup | FormArray };
 
 /** Generic FormGroup for Entity */
 export class FormEntity<E, Control extends EntityControl<E> = EntityControl<E>> extends FormGroup {

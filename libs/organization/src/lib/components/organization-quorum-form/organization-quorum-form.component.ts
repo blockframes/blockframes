@@ -1,5 +1,6 @@
 import { ControlContainer } from '@angular/forms';
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { OrganizationActionForm } from '../../organization.form';
 
 @Component({
   selector: '[formGroup] activeMembers, organization-quorum-form',
@@ -8,15 +9,13 @@ import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angul
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationQuorumFormComponent {
-  @Output() deleteActiveSigner = new EventEmitter<number>();
-  @Output() newQuorumMember = new EventEmitter<number>();
   /** Variable to iterate through with an ngFor to display the mat-select options */
   public numbers: number[];
 
   constructor(public controlContainer: ControlContainer) {
   }
 
-  public get control() {
-    return this.controlContainer.control;
+  public get control(): OrganizationActionForm {
+    return this.controlContainer.control as OrganizationActionForm;
   }
 }

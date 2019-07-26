@@ -8,18 +8,19 @@
 <section>
   <h2>Members</h2>
   <form [formGroup]="control">
-    <ng-container *ngFor="let member of control.get('activeMembers').value">
-      <article fxLayout="row"
-      fxLayoutAlign="center center" fxLayoutGap="15px">
-      <mat-icon>
-        accessibility
-      </mat-icon>
-      <span>
-        {{member.name}}
-        <button mat-icon-button (click)="deleteActiveSigner.emit(member.uid)">
+    <ng-container *ngFor="let member of control.activeMembers.value">
+      <article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+        <div>
+          <mat-icon>
+            accessibility
+          </mat-icon>
+          <span>
+            {{member.name}}
+          </span>
+        </div>
+        <button mat-icon-button (click)="control.removeMember(member.uid)">
           <mat-icon>delete</mat-icon>
         </button>
-      </span>
       </article>
     </ng-container>
   </form>
