@@ -15,15 +15,14 @@
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <button mat-button (click)="addSigner(signerFormControl.value)">Add new signers</button>
-    <org-signer-repertory [signerList]="organization.members" (selected)="openOptions($event)">
+    <org-signer-repertory [signerList]="organization.members" (selected)="openOptions('member', $event)">
     </org-signer-repertory>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav>
     <ng-container [ngSwitch]="editContent">
       <ng-container *ngSwitchCase="'action'">
-        <organization-quorum-form [formGroup]="form.action(activeForm)"
-          (deleteActiveSigner)="deleteActiveSigner($event)">
+        <organization-quorum-form [formGroup]="form.action(activeForm)">
         </organization-quorum-form>
       </ng-container>
       <ng-container *ngSwitchCase="'member'">

@@ -1,7 +1,7 @@
-import { OrganizationForm, OrganizationActionForm } from './../../organization.form';
-import { Organization } from './../../+state/organization.model';
+import { OrganizationForm } from './../../organization.form';
+import { Organization, OrganizationMember } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery, OrganizationService } from '../../+state';
+import { OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { tap, switchMap, startWith } from 'rxjs/operators';
@@ -30,26 +30,19 @@ export class OrganizationAdminViewComponent implements OnInit {
   /** A number to iindicate which action we want to alter in the sidenav */
   public activeForm: number;
 
-  constructor(private query: OrganizationQuery, private service: OrganizationService) {}
+  constructor(private query: OrganizationQuery) {}
 
   ngOnInit() {
-    this.organization$ = this.query
-      .select('org')
-      .pipe(
-        tap(
-          org => (this.form = new OrganizationForm(org)),
-          switchMap(org => this.form.valueChanges.pipe(startWith(org)))
-        )
-      );
+    this.organization$ = this.query.select('org').pipe(
+      tap(org => (this.form = new OrganizationForm(org))),
+      switchMap(org => this.form.valueChanges.pipe(startWith(org)))
+    );
   }
 
   public openSidenav(editContent: 'action' | 'member', index: number) {
     this.opened = true;
     this.editContent = editContent;
     this.activeForm = index;
-  }
-
-  public deleteActiveSigner(uid: string) {
   }
 
   /** This function should get triggered by the input field */
@@ -60,7 +53,7 @@ export class OrganizationAdminViewComponent implements OnInit {
   }
 
   // TODO(#682)
-  public openOptions() {
+  public openOptions(editContent: 'action' | 'member', member: OrganizationMember) {
     this.opened = true;
     this.editContent = this.editContent;
   }

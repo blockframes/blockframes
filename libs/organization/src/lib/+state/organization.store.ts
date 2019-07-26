@@ -7,7 +7,7 @@ export interface OrganizationState {
   form: any;
 }
 
-// TODO #687
+// TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
   form: {
     name: '',

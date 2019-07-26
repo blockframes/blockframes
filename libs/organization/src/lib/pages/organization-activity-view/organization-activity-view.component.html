@@ -5,11 +5,11 @@
             <mat-divider></mat-divider>
         </h1>
         <h2>Pending Approval</h2>
-        <org-action-item [actionItems]="pendingActions$ | async" (clickedOnSigners)="openSidenav($event)">
-        </org-action-item>
+        <org-activity-repertory [actionItems]="pendingActions$ | async" (clickedOnSigners)="openSidenav($event)">
+        </org-activity-repertory>
         <h2>Actions Approved</h2>
-        <org-action-item [actionItems]="approvedActions$ | async" (clickedOnSigners)="openSidenav($event)">
-        </org-action-item>
+        <org-activity-repertory [actionItems]="approvedActions$ | async" (clickedOnSigners)="openSidenav($event)">
+        </org-activity-repertory>
     </ng-container>
     <ng-container sidenav>
         <section>

@@ -5,18 +5,22 @@
   </mat-select>
 </mat-form-field>
 <mat-divider></mat-divider>
-<article>
+<section>
   <h2>Members</h2>
   <form [formGroup]="control">
-    <span *ngFor="let member of this.controlContainer.control.get('activeMembers').value" fxLayout="row"
-      fxLayoutAlign="space-around center">
+    <ng-container *ngFor="let member of control.get('activeMembers').value">
+      <article fxLayout="row"
+      fxLayoutAlign="center center" fxLayoutGap="15px">
       <mat-icon>
         accessibility
       </mat-icon>
-      {{member.name}}
-      <button mat-icon-button (click)="deleteActiveSigner.emit(member.uid)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </span>
+      <span>
+        {{member.name}}
+        <button mat-icon-button (click)="deleteActiveSigner.emit(member.uid)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </span>
+      </article>
+    </ng-container>
   </form>
-</article>
+</section>

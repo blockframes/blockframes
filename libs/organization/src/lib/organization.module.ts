@@ -31,13 +31,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
-import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
+import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
 
 // Pages
 import { MemberListComponent } from './pages/member-list/member-list.component';
@@ -102,13 +102,13 @@ export const organizationRoutes: Routes = [
     MemberViewComponent,
     MemberFormComponent,
     OrganizationActivityViewComponent,
-    OrganizationActionItemComponent,
+    OrganizationActivityRepertoryComponent,
     OrganizationAdminViewComponent,
     OrganizationActionRepertoryComponent,
     OrganizationSignerRepertoryComponent,
     OrganizationSignerFormComponent,
     OrganizationEditableComponent,
-    OrganizationActionItemComponent,
+    OrganizationFormComponent,
     OrganizationActivityViewComponent,
     OrganizationQuorumFormComponent
   ],
