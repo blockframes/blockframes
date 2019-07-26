@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../components/organization-member-add/organization-member-addcomponent';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
@@ -10,7 +9,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./member-view.component.scss']
 })
 export class MemberViewComponent implements OnInit {
-  @Input() member: User;
+  @Input() member: any;
   public isSuperAdmin$: Observable<boolean>;
   public isUserSuperAdmin$: Observable<boolean>;
 

@@ -1,5 +1,6 @@
 import { firestore } from 'firebase/app';
 import { DocInformations } from 'libs/notification/notification/+state';
+import { User } from '@blockframes/auth';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
@@ -7,6 +8,7 @@ export interface Invitation {
   app: string;
   type: 'joinOrganization'; // This will be extented with other invitations
   userId?: string;
+  user?: User;
   organizationId: string;
   docInformations?: DocInformations;
   state: 'accepted' | 'declined' | 'pending';

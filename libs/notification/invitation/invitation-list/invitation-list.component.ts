@@ -22,7 +22,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    this.service.userInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
+    this.service.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
   }
 
   ngOnDestroy() {

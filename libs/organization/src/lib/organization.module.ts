@@ -39,6 +39,8 @@ import { OrganizationWidgetComponent } from './components/organization-widget/or
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
 import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
+import { OrganizationMemberPendingComponent } from './components/organization-member-pending/organization-member-pending.component';
+
 
 // Pages
 import { OrganizationMemberRepertoryComponent } from './components/organization-member-repertory/organization-member-repertory.component';
@@ -102,6 +104,7 @@ export const organizationRoutes: Routes = [
   ],
   declarations: [
     OrganizationFormComponent,
+    OrganizationMemberPendingComponent,
     OrganizationDisplayComponent,
     OrganizationMemberEditableComponent,
     OrganizationWidgetComponent,

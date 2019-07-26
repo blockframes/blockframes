@@ -4,7 +4,7 @@ import { switchMap, tap, filter } from 'rxjs/operators';
 import { InvitationStore } from './invitation.store';
 import { AuthQuery } from '@blockframes/auth';
 import { Invitation, createInvitationToJoinOrganization } from './invitation.model';
-import { Organization } from '@blockframes/organization';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class InvitationService {
   }
 
   // TODO : move this in /layout guard => ISSUE#641
-  public get userInvitations$() {
+  public get organizationInvitations$() {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.db.fromQuery(this.getInvitationsByOrgId(user.orgId))),
@@ -40,7 +40,10 @@ export class InvitationService {
   private getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
     return {
       path: `invitations`,
-      queryFn: ref => ref.where('organizationId', '==', organizationId)
+      queryFn: ref => ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
+      user: (invitation: Invitation) => ({
+        path: `profiles/${invitation.userId}`
+      })
     };
   }
 

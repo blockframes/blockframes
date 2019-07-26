@@ -1,7 +1,12 @@
 
 <editable-sidenav (closed)="opened = false" [opened]="opened">
   <ng-container content>
-    <organization-member-add></organization-member-add>
+    <organization-member-pending (accepted)="acceptInvitation($event)" [invitations]="invitations$ | async"></organization-member-pending>
+    <organization-member-add [formGroup]="emailControl" (addedMember)="addMember()"></organization-member-add>
     <organization-member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></organization-member-repertory>
   </ng-container>
+  <!-- TODO:
+  <ng-container sidenav>
+    <organization-member-form></organization-member-form>
+  </ng-container> -->
 </editable-sidenav>

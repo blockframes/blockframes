@@ -1,80 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { OrganizationService } from '../../+state';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth';
-
-export interface User {
-  uid: string;
-  email?: string;
-}
+import { Component, Output, EventEmitter } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: 'organization-member-add',
+  selector: '[formGroup] emailControl, organization-member-add',
   templateUrl: './organization-member-add.component.html',
   styleUrls: ['./organization-member-add.component.scss']
 })
-export class OrganizationMemberAddComponent implements OnInit, OnDestroy {
-  public memberForm: FormGroup;
-  public users: User[];
-  private destroyed$ = new Subject();
+export class OrganizationMemberAddComponent {
+  @Output() addedMember = new EventEmitter();
 
   constructor(
-    private service: OrganizationService,
-    private authService: AuthService,
-    private snackBar: MatSnackBar,
-    private builder: FormBuilder
+    public controlContainer: ControlContainer,
   ) {}
 
-  ngOnInit() {
-    this.memberForm = this.builder.group({
-      user: null,
-      role: ''
-    });
-    this.onChange();
-  }
-
-  displayFn(user?: User): string | undefined {
-    return user ? user.email : undefined;
-  }
-
-  public async addMember() {
-    if (!this.memberForm.valid) {
-      this.snackBar.open('form invalid', 'close', { duration: 1000 });
-      throw new Error('Invalid form');
-    }
-
-    const { user, role } = this.memberForm.value;
-    let email = user; // on user input, user = raw email string
-
-    // on auto-complete, user = {id, email}
-    if (typeof user !== typeof '') {
-      email = user.email;
-    }
-
-    await this.service.addMember({ email, roles: [role] });
-
-    this.snackBar.open(`added user`, 'close', { duration: 2000 });
-    this.memberForm.reset();
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
-  }
-
-  private async onChange() {
-    this.memberForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
-      )
-      .subscribe(async typingEmail => {
-        this.users = await this.authService.getUserByMail(typingEmail.user);
-        // TODO: use an observable => ISSUE#608
-      });
+  public get control() {
+    return this.controlContainer.control;
   }
 }

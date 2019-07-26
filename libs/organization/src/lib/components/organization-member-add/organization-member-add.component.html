@@ -1,22 +1,10 @@
-<mat-card fxLayout="column">
-  <mat-card-header fxLayoutAlign="center">
-    <mat-card-title>Invite a user</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form [formGroup]="memberForm" (ngSubmit)="addMember()" fxLayout ="row" fxLayoutAlign="space-evenly center">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput
-          type="email" placeholder="email" aria-label="email"
-          formControlName="user"
-          [matAutocomplete]="autoEmail"/>
-      </mat-form-field>
-      <mat-autocomplete #autoEmail="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let user of users" [value]="user">
-          {{ user.email }}
-        </mat-option>
-      </mat-autocomplete>
-      <button testId="addMember" type="submit" mat-raised-button color="primary">Add</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+<mat-form-field appearance="outline">
+  <mat-label>Add new member</mat-label>
+  <input matInput type="email" placeholder="Email" aria-label="Email" [formControl]="control" />
+  <mat-error *ngIf="control.hasError('email')">
+    Please enter a <strong>valid</strong> email address.
+  </mat-error>
+</mat-form-field>
+<button mat-button testId="addMember" (click)="addedMember.emit()" color="primary">
+  Send invitation
+</button>
