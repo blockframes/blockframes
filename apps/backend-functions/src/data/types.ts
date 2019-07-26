@@ -29,12 +29,18 @@ export interface DocInformations {
 // ======================
 // Business & App Related
 
+export const enum OrganizationStatus {
+  pending = 'pending',
+  accepted = 'accepted'
+}
+
 export interface Organization {
   id: string;
   userIds: string[];
   movieIds: string[];
   name: string;
   address: string;
+  status: OrganizationStatus;
 }
 
 export interface Stakeholder {

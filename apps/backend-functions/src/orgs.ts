@@ -8,13 +8,8 @@ import { db, DocumentReference, functions, getUserMail } from './internals/fireb
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { organizationCreate, organizationWasAccepted } from './assets/mailTemplates';
-import { Organization } from './data/types';
+import { Organization, OrganizationStatus } from './data/types';
 import { acceptNewOrgPage, acceptNewOrgPageComplete } from './assets/adminTemplates';
-
-export enum OrganizationStatus {
-  pending = 'pending',
-  accepted = 'accepted'
-}
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -65,14 +60,15 @@ export function onOrganizationDelete(
   return deleteSearchableOrg(context.params.orgID);
 }
 
-
 // Organization Administration: Accept new orgs
 // ============================================
 
+/** Update an organization when it has been accepted by admins. */
 function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
   return organizationRef.update({ status: OrganizationStatus.accepted });
 }
 
+/** Send an email to organization admins when it has been accepted. */
 async function mailOrganizationAdminOnAccept(organizationRef: DocumentReference): Promise<any> {
   const { userIds } = (await organizationRef.get()).data() as Organization;
 
@@ -86,13 +82,17 @@ async function mailOrganizationAdminOnAccept(organizationRef: DocumentReference)
   });
 }
 
+// We serve an express app in the function
+// this let us deal easily with get / post, url params, etc.
 export const onAcceptNewOrg = express();
 
+// When an admin access the page, they'll see the "accept org" form.
 onAcceptNewOrg.get('/:orgId', async (req: express.Request, res: express.Response) => {
   const { orgId } = req.params;
   res.send(acceptNewOrgPage(orgId));
 });
 
+// When an admin submit the "accept org" form, it'll update the organization, send mails, etc.
 onAcceptNewOrg.post('/:orgId', async (req: express.Request, res: express.Response) => {
   const { orgId } = req.params;
   const organizationRef = db.collection('orgs').doc(orgId);

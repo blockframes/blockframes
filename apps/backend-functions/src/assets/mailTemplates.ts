@@ -18,6 +18,13 @@ const userInviteTemplate = ({ email, password }: { email: string; password: stri
   ${appUrl}${USER_WELCOME_PATH}
   `;
 
+const organizationCreateTemplate = (orgId: string): string =>
+  `
+  A new organization was created on the blockframes project,\n
+  \n
+  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
+  `;
+
 /** Generates a transactional email request for user invited to the application. */
 export function userInvite(email: string, password: string): EmailRequest {
   return {
@@ -36,13 +43,7 @@ export function userInviteToOrg(email: string): EmailRequest {
   };
 }
 
-const organizationCreateTemplate = (orgId: string): string =>
-  `
-  A new organization was created on the blockframes project,\n
-  \n
-  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
-  `;
-
+/** Generates a transactional email request to let cascade8 admin know that a new org is waiting for approval. */
 export function organizationCreate(orgId: string): EmailRequest {
   return {
     to: adminEmail,
@@ -51,6 +52,7 @@ export function organizationCreate(orgId: string): EmailRequest {
   };
 }
 
+/** Generates a transactional email request to let organization admins know that their org was approved. */
 export function organizationWasAccepted(email: string): EmailRequest {
   return {
     to: email,

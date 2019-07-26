@@ -1,5 +1,6 @@
 import { buildDeliveryPDF } from '../internals/pdf';
 import * as fs from 'fs';
+import { OrganizationStatus } from '../data/types';
 
 const testData = {
   txID: {
@@ -8,9 +9,30 @@ const testData = {
     id3: '0x7e91a0b95412093e639189a05a2dbf68e16c3062001e673826616222baffcac8'
   },
   orgs: {
-    id1: { name: 'John Doe', address: 'LogicalPicture', userIds: [], id: '', movieIds: [] },
-    id2: { name: 'Tomme Hardy', address: '20Th Century Fox', userIds: [], id: '', movieIds: [] },
-    id3: { name: 'Francis Munster', address: 'Disney', userIds: [], id: '', movieIds: [] }
+    id1: {
+      name: 'John Doe',
+      address: 'LogicalPicture',
+      userIds: [],
+      id: '',
+      movieIds: [],
+      status: OrganizationStatus.accepted
+    },
+    id2: {
+      name: 'Tomme Hardy',
+      address: '20Th Century Fox',
+      userIds: [],
+      id: '',
+      movieIds: [],
+      status: OrganizationStatus.accepted
+    },
+    id3: {
+      name: 'Francis Munster',
+      address: 'Disney',
+      userIds: [],
+      id: '',
+      movieIds: [],
+      status: OrganizationStatus.accepted
+    }
   },
   steps: {
     i36vwU1eVdlNObEafOre: { id: '', name: 'A', date: new Date() },
