@@ -87,18 +87,24 @@ async function mailOrganizationAdminOnAccept(organizationRef: DocumentReference)
 export const onAcceptNewOrg = express();
 
 // When an admin access the page, they'll see the "accept org" form.
-onAcceptNewOrg.get('/:orgId', async (req: express.Request, res: express.Response) => {
-  const { orgId } = req.params;
-  res.send(acceptNewOrgPage(orgId));
-});
+onAcceptNewOrg.get(
+  '/admin/acceptOrganization/:organizationId',
+  async (req: express.Request, res: express.Response) => {
+    const { organizationId } = req.params;
+    res.send(acceptNewOrgPage(organizationId));
+  }
+);
 
 // When an admin submit the "accept org" form, it'll update the organization, send mails, etc.
-onAcceptNewOrg.post('/:orgId', async (req: express.Request, res: express.Response) => {
-  const { orgId } = req.params;
-  const organizationRef = db.collection('orgs').doc(orgId);
+onAcceptNewOrg.post(
+  '/admin/acceptOrganization/:organizationId',
+  async (req: express.Request, res: express.Response) => {
+    const { organizationId } = req.params;
+    const organizationRef = db.collection('orgs').doc(organizationId);
 
-  await acceptOrganization(organizationRef);
-  await mailOrganizationAdminOnAccept(organizationRef);
+    await acceptOrganization(organizationRef);
+    await mailOrganizationAdminOnAccept(organizationRef);
 
-  return res.send(acceptNewOrgPageComplete(orgId));
-});
+    return res.send(acceptNewOrgPageComplete(organizationId));
+  }
+);
