@@ -60,3 +60,11 @@ export function organizationWasAccepted(email: string): EmailRequest {
     text: 'TODO'
   };
 }
+
+export function organizationCanAccessApp(email: string, appId: string): EmailRequest {
+  return {
+    to: email,
+    subject: 'Your organization has access to a new app',
+    text: 'TODO'
+  }
+}

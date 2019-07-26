@@ -82,6 +82,10 @@ export interface Material {
   stepId: string;
 }
 
+export interface OrganizationPermissions {
+  superAdmins: string[];
+}
+
 export interface OrganizationDocPermissions {
   id: string;
   canCreate: boolean;
@@ -98,6 +102,12 @@ export interface UserDocPermissions {
   canDelete: string[];
   canRead: string[];
   canUpdate: string[];
+}
+
+export enum AppAccessStatus {
+  requests = 'requested',
+  pending = 'pending',
+  accepted = 'accepted'
 }
 
 // Internal Interaction Types
