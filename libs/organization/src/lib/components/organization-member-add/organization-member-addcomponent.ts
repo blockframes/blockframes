@@ -12,11 +12,11 @@ export interface User {
 }
 
 @Component({
-  selector: 'organization-member-form',
-  templateUrl: './member-form.component.html',
-  styleUrls: ['./member-form.component.scss']
+  selector: 'organization-member-add',
+  templateUrl: './organization-member-add.component.html',
+  styleUrls: ['./organization-member-add.component.scss']
 })
-export class MemberFormComponent implements OnInit, OnDestroy {
+export class OrganizationMemberAddComponent implements OnInit, OnDestroy {
   public memberForm: FormGroup;
   public users: User[];
   private destroyed$ = new Subject();

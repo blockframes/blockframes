@@ -10,6 +10,9 @@ const ICONS_SVG = [
   {
     name: 'adjustableWrench',
     url: 'assets/icons/adjustableWrench.svg'
+    name: 'signatory',
+    url: 'assets/icons/signatory.svg'
+  },
   },
   {
     name: 'cross',

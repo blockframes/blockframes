@@ -1,0 +1,7 @@
+
+<editable-sidenav (closed)="opened = false" [opened]="opened">
+  <ng-container content>
+    <organization-member-add></organization-member-add>
+    <organization-member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></organization-member-repertory>
+  </ng-container>
+</editable-sidenav>

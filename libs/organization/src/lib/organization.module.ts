@@ -30,7 +30,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
-import { MemberFormComponent } from './components/member-form/member-form.component';
+import { OrganizationMemberAddComponent } from './components/organization-member-add/organization-member-addcomponent';
+import { OrganizationActionItemComponent } from './components/organization-action-item/organization-action-item.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
@@ -40,11 +41,12 @@ import { OrganizationQuorumFormComponent } from './components/organization-quoru
 import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
 
 // Pages
-import { MemberListComponent } from './pages/member-list/member-list.component';
+import { OrganizationMemberRepertoryComponent } from './components/organization-member-repertory/organization-member-repertory.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
 import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
+import { OrganizationMemberEditableComponent } from './pages/organization-member-editable/organization-member-editable.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -52,6 +54,10 @@ export const organizationRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'edit', pathMatch: 'full' },
       { path: 'edit', component: OrganizationEditableComponent },
+      {
+        path: 'members',
+        component: OrganizationMemberEditableComponent
+      },
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
@@ -97,10 +103,11 @@ export const organizationRoutes: Routes = [
   declarations: [
     OrganizationFormComponent,
     OrganizationDisplayComponent,
+    OrganizationMemberEditableComponent,
     OrganizationWidgetComponent,
-    MemberListComponent,
+    OrganizationMemberRepertoryComponent,
     MemberViewComponent,
-    MemberFormComponent,
+    OrganizationMemberAddComponent,
     OrganizationActivityViewComponent,
     OrganizationActivityRepertoryComponent,
     OrganizationAdminViewComponent,
