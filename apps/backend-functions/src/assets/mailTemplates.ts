@@ -5,6 +5,7 @@ import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
+const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization/';
 
 const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `
@@ -35,11 +36,18 @@ export function userInviteToOrg(email: string): EmailRequest {
   };
 }
 
+const organizationCreateTemplate = (orgId: string): string =>
+  `
+  A new organization was created on the blockframes project,\n
+  \n
+  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
+  `;
+
 export function organizationCreate(orgId: string): EmailRequest {
   return {
     to: adminEmail,
     subject: 'A new organization has been created',
-    text: 'TODO'
+    text: organizationCreateTemplate(orgId)
   };
 }
 
@@ -48,5 +56,5 @@ export function organizationWasAccepted(email: string): EmailRequest {
     to: email,
     subject: 'Your organization was accepted by admins',
     text: 'TODO'
-  }
+  };
 }
