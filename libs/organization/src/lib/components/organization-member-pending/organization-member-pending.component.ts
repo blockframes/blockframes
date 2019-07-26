@@ -9,5 +9,6 @@ import { Invitation } from '@blockframes/notification';
 
 export class OrganizationMemberPendingComponent {
   @Output() accepted = new EventEmitter<string>();
+  @Output() declined = new EventEmitter<string>();
   @Input() invitations: Invitation[];
 }

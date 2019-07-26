@@ -50,4 +50,8 @@ export class InvitationService {
   public acceptInvitation(invitationId: string) {
     return this.db.doc<Invitation>(`invitations/${invitationId}`).update({ state: 'accepted' });
   }
+
+  public declineInvitation(invitationId: string) {
+    return this.db.doc<Invitation>(`invitations/${invitationId}`).update({ state: 'declined' });
+  }
 }

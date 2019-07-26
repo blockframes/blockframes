@@ -17,6 +17,10 @@ const ICONS_SVG = [
     name: 'acceptMember',
     url: 'assets/icons/acceptMember.svg'
   },
+  {
+    name: 'refuseMember',
+    url: 'assets/icons/refuseMember.svg'
+  },
   },
   {
     name: 'cross',

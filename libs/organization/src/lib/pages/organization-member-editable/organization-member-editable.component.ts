@@ -15,9 +15,20 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject();
 
   public opened = false;
-  public members$: Observable<OrganizationMember[]>;
+
+  /** The control to send an invitation with the given email */
   public emailControl = new FormControl('', Validators.email);
-  public invitations$: Observable<Invitation[]>;
+
+  /** Observable of all members of the organization */
+  public members$: Observable<OrganizationMember[]>;
+
+  /** Observable of all the members who asked to join the organization */
+  public invitationsToJoinOrganization$: Observable<Invitation[]>;
+
+  /** Observable of all the members invited by the organization
+   * Coming soon
+   */
+  public invitationsToOrganization$: Observable<Invitation[]>;
 
   constructor(
     private query: OrganizationQuery,
@@ -31,7 +42,7 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
-    this.invitations$ = this.invitationQuery.selectAll();
+    this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll();
   }
 
   public openSidenav(member: OrganizationMember) {
@@ -50,6 +61,10 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
 
   public acceptInvitation(invitationId: string) {
     this.invitationService.acceptInvitation(invitationId);
+  }
+
+  public declineInvitation(invitationId: string) {
+    this.invitationService.declineInvitation(invitationId);
   }
 
   ngOnDestroy() {
