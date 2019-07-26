@@ -28,7 +28,7 @@ fi
 
 
 echo "deploying the functions configuration"
-firebase functions:config:set sendgrid.api_key="${SENGRID_API_KEY}" \
+firebase functions:config:set sendgrid.api_key="${SENDGRID_API_KEY}" \
                               relayer.mnemonic="${ETHEREUM_MNEMONIC}" \
                               algolia.app_id="${ALGOLIA_APP_ID}" \
                               algolia.api_key="${ALGOLIA_API_KEY}" \
