@@ -99,7 +99,6 @@ export class OrganizationService {
     const call = firebase.functions().httpsCallable('findOrgByName');
     return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
   }
-<<<<<<< HEAD
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly
   // the id out of the activeMembersArray.
