@@ -1,4 +1,4 @@
-export enum OrganizationStatus {
+export const enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
 }
