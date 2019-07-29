@@ -37,7 +37,8 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.members$ = this.query.select(state => state.org.members);
+    this.members$ = this.query.members$;
+    this.members$.subscribe(m => console.log(m))
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
@@ -57,6 +58,7 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
       const userEmail = this.emailControl.value;
       const organizationId = this.organizationQuery.id;
       await this.invitationService.sendInvitationToUser(userEmail, organizationId);
+      this.snackBar.open('The invitation was created', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

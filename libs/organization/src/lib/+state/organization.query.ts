@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 import { App } from '../permissions/+state';
+import { PermissionsQuery } from '../permissions/+state';
 
 const APPS_DETAILS: AppDetails[] = [
   {
@@ -53,7 +54,7 @@ export class OrganizationQuery extends Query<OrganizationState> {
     )
   );
 
-  constructor(protected store: OrganizationStore, protected db: FireQuery) {
+  constructor(protected store: OrganizationStore, private permissionsQuery: PermissionsQuery) {
     super(store);
   }
 
@@ -61,11 +62,26 @@ export class OrganizationQuery extends Query<OrganizationState> {
     return this.select(state => state.org.id);
   }
 
+  public members$ = this.select(state => state.org.members).pipe(
+    map(members => {
+      const members2 = members.map(member => {
+        let roles = [];
+        this.permissionsQuery.isUserSuperAdmin(member.uid) ? roles = ['admin'] : roles = ['member'];
+        return { ...member, roles };
+      });
+      return members2;
+    })
+  );
+
   get status$(): Observable<OrganizationStatus> {
     return this.select(state => state.org).pipe(
       filter(org => !!org),
       map(org => org.status)
     );
+  }
+
+  get id() {
+    return this.getValue().org.id;
   }
 
   get form$() {
