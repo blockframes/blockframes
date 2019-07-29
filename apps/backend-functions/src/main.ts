@@ -28,7 +28,8 @@ import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationUpdate } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, onAcceptNewOrg } from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
+import { adminApp } from './admin';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -92,13 +93,17 @@ export const updateToV2 = functions.https
   .onRequest(migrations.updateToV2);
 
 /**
- * Trigger: REST call to validate organizations
+ * Trigger: REST call to the /admin app
  *
- * When organizations are created they are in status "pending",
- * cascade8 admins will accept the organization with this function.
+ * - Let admin accept organizations:
+ *    When organizations are created they are in status "pending",
+ *    cascade8 admins will accept the organization with this function.
+ * - Let admin give an organization access to applications:
+ *    Organization cannot access applications until they requested it and
+ *    a cascade8 administrator accept their request.
  */
-export const acceptOrganization = functions.https
-  .onRequest(onAcceptNewOrg);
+export const admin = functions.https
+  .onRequest(adminApp);
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`

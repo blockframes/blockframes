@@ -105,7 +105,7 @@ export interface UserDocPermissions {
 }
 
 export enum AppAccessStatus {
-  requests = 'requested',
+  requested = 'requested',
   pending = 'pending',
   accepted = 'accepted'
 }
