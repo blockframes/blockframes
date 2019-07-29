@@ -1,4 +1,11 @@
+import firebase from 'firebase';
 import { Injectable } from '@angular/core';
+import { FireQuery } from '@blockframes/utils';
+import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { App, createAppPermissions, createPermissions } from '../permissions/+state';
+import { orgQuery } from '../guard/organization.guard';
 import {
   createOrganization,
   Organization,
@@ -8,11 +15,7 @@ import {
   OrganizationStatus
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
-import { FireQuery } from '@blockframes/utils';
-import { AuthService, AuthStore, User } from '@blockframes/auth';
 import { OrganizationQuery } from './organization.query';
-import { App, createAppPermissions, createPermissions } from '../permissions/+state';
-import firebase from 'firebase';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
 
 @Injectable({ providedIn: 'root' })
@@ -23,6 +26,7 @@ export class OrganizationService {
     // private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
+    private authQuery: AuthQuery,
     private db: FireQuery
   ) {}
 

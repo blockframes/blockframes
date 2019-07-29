@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
+import { OrganizationStatus } from './organization.model';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationQuery extends Query<OrganizationState> {
-
-
   constructor(protected store: OrganizationStore) {
     super(store);
+  }
+
+  get status$(): Observable<OrganizationStatus> {
+    return this.select(state => state.org).pipe(
+      filter(org => !!org),
+      map(org => org.status)
+    );
   }
 
   get form$() {

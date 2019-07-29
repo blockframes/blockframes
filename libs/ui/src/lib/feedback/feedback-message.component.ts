@@ -19,6 +19,9 @@ export class FeedbackMessageComponent {
   /** The message of button which should be displayed when this component is called. */
   @Input() public buttonMessage = 'Explore your dashboard';
 
+  /** Whether the button is enabled or not */
+  @Input() public enabled = true;
+
   /**
    * An event that notify the parent component that the user want to back
    * to his wallet or depending on the routerparams where he came from

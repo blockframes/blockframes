@@ -79,7 +79,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'not-found'
+    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
   }
 ];
 

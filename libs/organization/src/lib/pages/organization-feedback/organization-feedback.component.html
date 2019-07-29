@@ -1,8 +1,9 @@
 <section fxLayout="row" fxLayoutAlign="center center">
   <feedback-message
-    title="Congratulation !"
-    subTitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis."
+    title="Congratulation!"
+    subTitle="Your organization is almost ready to use, a Cascade8 administrator is going to reach out soon."
     imageUrl="/assets/images/congratulation.png"
+    [enabled]="canMoveOn | async"
     (redirectUser)="navigate()">
   </feedback-message>
 </section>
