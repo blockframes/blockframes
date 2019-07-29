@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { FireQuery, Query } from '@blockframes/utils';
 import { switchMap, tap, filter } from 'rxjs/operators';
 import { InvitationStore } from './invitation.store';
-import { AuthQuery } from '@blockframes/auth';
-import { Invitation, createInvitationToJoinOrganization } from './invitation.model';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { AuthQuery, AuthService } from '@blockframes/auth';
+import {
+  Invitation,
+  createInvitationToJoinOrganization,
+  createInvitationToOrganization
+} from './invitation.model';
+import { Organization } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +17,8 @@ export class InvitationService {
   constructor(
     private authQuery: AuthQuery,
     private store: InvitationStore,
-    private db: FireQuery
+    private db: FireQuery,
+    private authService: AuthService
   ) {}
 
   /** Create an invitation for user asks to join an organization */
@@ -25,6 +30,22 @@ export class InvitationService {
       userId
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+  }
+
+  /** Create an invitation for an organization asks user to join it */
+  public async sendInvitationToUser(userEmail: string, organizationId: string): Promise<void> {
+    //try {
+    // Get a user or create a ghost user when needed
+    const { uid } = await this.authService.getOrCreateUserByMail(userEmail);
+    const invitation = createInvitationToOrganization({
+      id: this.db.createId(),
+      organizationId: organizationId,
+      userId: uid
+    });
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   // TODO : move this in /layout guard => ISSUE#641
@@ -40,9 +61,11 @@ export class InvitationService {
   private getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
     return {
       path: `invitations`,
-      queryFn: ref => ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
+      queryFn: ref =>
+        ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
       user: (invitation: Invitation) => ({
-        path: `profiles/${invitation.userId}`
+        // TODO: use profiles collections instead of users, issue#693
+        path: `users/${invitation.userId}`
       })
     };
   }

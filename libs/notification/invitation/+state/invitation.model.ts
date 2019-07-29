@@ -6,8 +6,9 @@ type Timestamp = firestore.Timestamp;
 export interface Invitation {
   id: string;
   app: string;
-  type: 'joinOrganization'; // This will be extented with other invitations
+  type: 'joinOrganization' | 'toOrganization'; // This will be extented with other invitations
   userId?: string;
+  userEmail?: string;
   user?: User;
   organizationId: string;
   docInformations?: DocInformations;
@@ -16,7 +17,7 @@ export interface Invitation {
 }
 
 /**
- * Required options to create an invitation
+ * Required options to create an invitation to join organization
  */
 export interface InvitationToJoinOrganizationOptions {
   id: string;
@@ -29,6 +30,16 @@ export function createInvitationToJoinOrganization(params: InvitationToJoinOrgan
     app: 'main',
     state: 'pending',
     type: 'joinOrganization',
+    date: firestore.Timestamp.now(),
+    ...params
+  };
+}
+
+export function createInvitationToOrganization(params: InvitationToJoinOrganizationOptions): Invitation {
+  return {
+    app: 'main',
+    state: 'pending',
+    type: 'toOrganization',
     date: firestore.Timestamp.now(),
     ...params
   };

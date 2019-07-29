@@ -25,14 +25,13 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   /** Observable of all the members who asked to join the organization */
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
-  /** Observable of all the members invited by the organization
-   * Coming soon
-   */
+  /** Observable of all the members invited by the organization */
   public invitationsToOrganization$: Observable<Invitation[]>;
 
   constructor(
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
+    private organizationQuery: OrganizationQuery,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery
   ) {}
@@ -42,7 +41,8 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
-    this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll();
+    this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
+    this.invitationsToOrganization$ = this .invitationQuery.invitationsToOrganization$;
   }
 
   public openSidenav(member: OrganizationMember) {
@@ -54,6 +54,9 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
     try {
       if (this.emailControl.invalid) throw new Error('Please enter a valid email address');
       // TODO: implement service for create a new invitation
+      const userEmail = this.emailControl.value;
+      const organizationId = this.organizationQuery.id;
+      this.invitationService.sendInvitationToUser(userEmail, organizationId)
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

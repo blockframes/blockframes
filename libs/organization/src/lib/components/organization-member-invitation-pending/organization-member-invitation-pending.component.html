@@ -1,0 +1,6 @@
+<mat-list>
+  <mat-list-item *ngFor="let invitation of invitations">
+    {{ invitation.user.email }}
+    <button (click)="declined.emit(invitation.id)" mat-icon-button><mat-icon svgIcon="refuseMember"></mat-icon></button>
+  </mat-list-item>
+</mat-list>

@@ -40,8 +40,8 @@ export class OrganizationService {
   private organization$: Observable<Organization>;
 
   constructor(
-    private store: OrganizationStore,
     private query: OrganizationQuery,
+    private store: OrganizationStore,
     // private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
