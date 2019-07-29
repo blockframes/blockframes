@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite } from './assets/mailTemplates';
+import { userInvite } from './assets/mail-templates';
 import { sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;

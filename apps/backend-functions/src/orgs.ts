@@ -7,9 +7,9 @@ import express from 'express';
 import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
-import { organizationCreate, organizationWasAccepted } from './assets/mailTemplates';
 import { Organization, OrganizationStatus } from './data/types';
-import { acceptNewOrgPage, acceptNewOrgPageComplete } from './assets/adminTemplates';
+import { organizationCreate, organizationWasAccepted } from './assets/mail-templates';
+import { acceptNewOrgPage, acceptNewOrgPageComplete } from './assets/admin-templates';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,

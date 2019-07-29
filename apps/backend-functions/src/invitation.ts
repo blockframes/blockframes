@@ -19,7 +19,7 @@ import {
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
-import { userInviteToOrg } from './assets/mailTemplates';
+import { userInviteToOrg } from './assets/mail-templates';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: Invitation, after: Invitation) {
