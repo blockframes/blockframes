@@ -72,14 +72,16 @@ function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
 async function mailOrganizationAdminOnAccept(organizationRef: DocumentReference): Promise<any> {
   const { userIds } = (await organizationRef.get()).data() as Organization;
 
-  return userIds.map(async userId => {
-    const email = await getUserMail(userId);
-    if (!email) {
-      console.error('User:', userId, 'has no email!');
-      return;
-    }
-    return sendMail(organizationWasAccepted(email));
-  });
+  return Promise.all(
+    userIds.map(async userId => {
+      const email = await getUserMail(userId);
+      if (!email) {
+        console.error('User:', userId, 'has no email!');
+        return;
+      }
+      return sendMail(organizationWasAccepted(email));
+    })
+  );
 }
 
 // We serve an express app in the function
