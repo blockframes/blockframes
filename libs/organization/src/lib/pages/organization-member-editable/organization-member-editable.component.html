@@ -14,7 +14,7 @@
       (addedMember)="addMember()">
     </organization-member-add>
     <organization-member-invitation-pending
-      [invitations]="invitationsToOrganization | async"
+      [invitations]="invitationsToOrganization$ | async"
       (declined)="declineInvitation($event)">
     </organization-member-invitation-pending>
   </ng-container>

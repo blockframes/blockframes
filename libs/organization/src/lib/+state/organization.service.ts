@@ -16,6 +16,7 @@ import {
 import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
+import { OrganizationStore } from './organization.store';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,

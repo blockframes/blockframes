@@ -13,12 +13,12 @@ export class InvitationQuery extends QueryEntity<InvitationState, Invitation> {
     super(store);
   }
 
-  /** Returns only invitations type of 'joinOrganization' */
+  /** Returns only invitations type of 'joinOrganization': members who ask organziation to join it */
   public invitationsToJoinOrganization$: Observable<Invitation[]> = this.selectAll().pipe(
     map(invitations => invitations.filter(invitation => invitation.type === 'joinOrganization'))
   );
 
-    /** Returns only invitations type of 'toOrganization' */
+    /** Returns only invitations type of 'toOrganization': members invited by the organization */
     public invitationsToOrganization$: Observable<Invitation[]> = this.selectAll().pipe(
       map(invitations => invitations.filter(invitation => invitation.type === 'toOrganization'))
     );

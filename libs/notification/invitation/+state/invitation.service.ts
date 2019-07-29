@@ -34,7 +34,6 @@ export class InvitationService {
 
   /** Create an invitation for an organization asks user to join it */
   public async sendInvitationToUser(userEmail: string, organizationId: string): Promise<void> {
-    //try {
     // Get a user or create a ghost user when needed
     const { uid } = await this.authService.getOrCreateUserByMail(userEmail);
     const invitation = createInvitationToOrganization({
@@ -43,9 +42,6 @@ export class InvitationService {
       userId: uid
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }
 
   // TODO : move this in /layout guard => ISSUE#641

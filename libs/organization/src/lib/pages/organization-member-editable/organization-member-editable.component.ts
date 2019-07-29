@@ -56,7 +56,7 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
       // TODO: implement service for create a new invitation
       const userEmail = this.emailControl.value;
       const organizationId = this.organizationQuery.id;
-      this.invitationService.sendInvitationToUser(userEmail, organizationId)
+      await this.invitationService.sendInvitationToUser(userEmail, organizationId);
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
