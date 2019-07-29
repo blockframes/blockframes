@@ -20,8 +20,8 @@ service cloud.firestore {
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-        // TODO: allow create only if state is pending.
-        // TODO: allow update only if state is not changed (admin will change it).
+        // TODO(issue#697): allow create only if state is pending.
+        // TODO(issue#697): allow update only if state is not changed (admin will change it).
     	allow create: if isSignedIn();
         allow read, update, delete: if isOrgAdmin(userId(), orgId);
     }

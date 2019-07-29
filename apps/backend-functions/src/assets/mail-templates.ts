@@ -9,19 +9,19 @@ const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization/';
 
 const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `
-  You've been invited to a project on the Blockframes Platform!\n
-  \n
+  You've been invited to a project on the Blockframes Platform!
+
   login: ${email}\n
   password: ${password}\n
-  \n
-  Click on the following link to login to your account and join the project:\n
+
+  Click on the following link to login to your account and join the project:
   ${appUrl}${USER_WELCOME_PATH}
   `;
 
-const organizationCreateTemplate = (orgId: string): string =>
+const organizationCreatedTemplate = (orgId: string): string =>
   `
-  A new organization was created on the blockframes project,\n
-  \n
+  A new organization was created on the blockframes project,
+
   Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
   `;
 
@@ -44,11 +44,11 @@ export function userInviteToOrg(email: string): EmailRequest {
 }
 
 /** Generates a transactional email request to let cascade8 admin know that a new org is waiting for approval. */
-export function organizationCreate(orgId: string): EmailRequest {
+export function organizationCreated(orgId: string): EmailRequest {
   return {
     to: adminEmail,
     subject: 'A new organization has been created',
-    text: organizationCreateTemplate(orgId)
+    text: organizationCreatedTemplate(orgId)
   };
 }
 

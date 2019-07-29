@@ -8,7 +8,7 @@ import { db, DocumentReference, functions, getUserMail } from './internals/fireb
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { Organization, OrganizationStatus } from './data/types';
-import { organizationCreate, organizationWasAccepted } from './assets/mail-templates';
+import { organizationCreated, organizationWasAccepted } from './assets/mail-templates';
 import { acceptNewOrgPage, acceptNewOrgPageComplete } from './assets/admin-templates';
 
 export function onOrganizationCreate(
@@ -25,7 +25,7 @@ export function onOrganizationCreate(
 
   return Promise.all([
     // Send a mail to c8 admin to accept the organization
-    sendMail(organizationCreate(org.id)),
+    sendMail(organizationCreated(org.id)),
     // Update algolia's index
     storeSearchableOrg(orgID, org.name)
   ]);
