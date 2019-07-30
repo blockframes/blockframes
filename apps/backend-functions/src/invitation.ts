@@ -236,7 +236,10 @@ export async function onInvitationUpdate(
     console.warn('Document already processed with this context');
     return;
   }
-  await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
+
+  // TODO(issue#699): redesign the processed id flow to prevent infinite loop due to
+  //   the update event being triggered on every processedId change (use another table?)
+  // await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
 
   try {
     // dispatch to the correct events depending on the invitation type.
