@@ -37,6 +37,7 @@ export class PermissionsService {
   }
 
   /** Switch a user from admins array to superAdmins (and vice versa) to grant him SuperAdmin privileges */
+  // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
   public switchRoles(userId: string) {
     const orgPermissions = this.query.getValue();
     const orgPermissionsDoc = this.db.doc<Permissions>(`permissions/${orgPermissions.orgId}`);

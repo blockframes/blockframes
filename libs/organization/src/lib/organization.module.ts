@@ -40,6 +40,7 @@ import { OrganizationQuorumFormComponent } from './components/organization-quoru
 import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
 import { OrganizationMemberPendingComponent } from './components/organization-member-pending/organization-member-pending.component';
 import { OrganizationMemberInvitationComponent } from './components/organization-member-invitation/organization-member-invitation.component';
+import { OrganizationMemberFormComponent } from './components/organization-member-form/organization-member-form.component';
 
 
 // Pages
@@ -105,6 +106,7 @@ export const organizationRoutes: Routes = [
   declarations: [
     OrganizationFormComponent,
     OrganizationMemberPendingComponent,
+    OrganizationMemberFormComponent,
     OrganizationMemberInvitationComponent,
     OrganizationDisplayComponent,
     OrganizationMemberEditableComponent,

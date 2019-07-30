@@ -5,7 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { PermissionsQuery } from '../../permissions/+state';
+import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 
 @Component({
   selector: 'organization-member-editable',
@@ -17,8 +17,14 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
 
   public opened = false;
 
+  /** The selected member open in the sidenav */
+  public selected: OrganizationMemberWithRole;
+
   /** The control to send an invitation with the given email */
   public emailControl = new FormControl('', Validators.email);
+
+  /** The control to choose the role of member */
+  public roleControl = new FormControl();
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMemberWithRole[]>;
@@ -37,21 +43,24 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
     private organizationQuery: OrganizationQuery,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
-    private permissionsQuery: PermissionsQuery
+    private permissionsQuery: PermissionsQuery,
+    private permissionsService: PermissionsService
   ) {}
 
   ngOnInit() {
+    // TODO: this observable does not change correctly when a member is updated: issue#707
     this.members$ = this.query.membersWithRole$;
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$
+    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
     this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
-    this.invitationsToOrganization$ = this .invitationQuery.invitationsToOrganization$;
+    this.invitationsToOrganization$ = this.invitationQuery.invitationsToOrganization$;
   }
 
   public openSidenav(member: OrganizationMemberWithRole) {
-    // TODO: use member.role for set form
+    this.selected = member;
+    this.roleControl.setValue(this.selected.role);
     this.opened = true;
   }
 
@@ -73,6 +82,20 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
 
   public declineInvitation(invitationId: string) {
     this.invitationService.declineInvitation(invitationId);
+  }
+
+  public async updateRole() {
+    try {
+      if (this.roleControl.value !== this.selected.role) {
+        // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
+        await this.permissionsService.switchRoles(this.selected.uid);
+        this.snackBar.open('Role updated', 'close', { duration: 2000 });
+      } else {
+        throw new Error('The member already has this role');
+      }
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   ngOnDestroy() {

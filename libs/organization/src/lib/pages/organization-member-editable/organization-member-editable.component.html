@@ -1,4 +1,4 @@
-<editable-sidenav (closed)="opened = false" [opened]="opened">
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
   <ng-container content>
     <organization-member-pending
       (declined)="declineInvitation($event)"
@@ -21,10 +21,7 @@
       [isSuperAdmin]="isSuperAdmin$ | async">
     </organization-member-invitation>
   </ng-container>
-  <!--
-    TODO:
     <ng-container sidenav>
-      <organization-member-form></organization-member-form>
+      <organization-member-form [formGroup]="roleControl"></organization-member-form>
     </ng-container>
-  -->
 </editable-sidenav>

@@ -12,8 +12,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 import { App } from '../permissions/+state';
 import { PermissionsQuery } from '../permissions/+state';
-import { combineLatest } from 'rxjs';
-import { OrganizationMemberWithRole } from './organization.model';
+import { combineLatest, Observable } from 'rxjs';
+import { OrganizationMemberWithRole, UserRole } from './organization.model';
 
 const APPS_DETAILS: AppDetails[] = [
   {
@@ -60,17 +60,20 @@ export class OrganizationQuery extends Query<OrganizationState> {
     super(store);
   }
 
-  public membersWithRole$ = combineLatest([this.members$, this.permissionsQuery.superAdmins$])
-    .pipe(
-      map(([members, superAdmins]) => {
-        return members.map(member => {
-          return {
-            ...member,
-            role: superAdmins.includes(member.uid) ? 'admin' : 'member'
-          } as OrganizationMemberWithRole;
-        });
-      })
-    );
+  // TODO: this query does not change correctly when a member is updated: issue#707
+  public membersWithRole$: Observable<OrganizationMemberWithRole[]> = combineLatest([
+    this.members$,
+    this.permissionsQuery.superAdmins$
+  ]).pipe(
+    map(([members, superAdmins]) => {
+      return members.map(member => {
+        return {
+          ...member,
+          role: superAdmins.includes(member.uid) ? UserRole.admin : UserRole.member
+        };
+      });
+    })
+  );
 
   get members$() {
     return this.select(state => state.org.members);
