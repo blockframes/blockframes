@@ -37,6 +37,10 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   avatar?: string;
 }
 
+export interface OrganizationMemberWithRole extends OrganizationMember {
+  role: 'admin' | 'member';
+}
+
 export interface OrganizationOperation {
   id: string;
   name: string;

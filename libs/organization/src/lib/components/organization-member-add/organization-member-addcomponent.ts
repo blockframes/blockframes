@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
@@ -9,9 +9,7 @@ import { ControlContainer } from '@angular/forms';
 export class OrganizationMemberAddComponent {
   @Output() addedMember = new EventEmitter();
 
-  constructor(
-    public controlContainer: ControlContainer,
-  ) {}
+  constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
     return this.controlContainer.control;

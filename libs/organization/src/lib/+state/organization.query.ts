@@ -12,6 +12,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 import { App } from '../permissions/+state';
 import { PermissionsQuery } from '../permissions/+state';
+import { combineLatest } from 'rxjs';
+import { OrganizationMemberWithRole } from './organization.model';
 
 const APPS_DETAILS: AppDetails[] = [
   {
@@ -58,20 +60,21 @@ export class OrganizationQuery extends Query<OrganizationState> {
     super(store);
   }
 
-  get orgId$(): Observable<string> {
-    return this.select(state => state.org.id);
-  }
+  public membersWithRole$ = combineLatest([this.members$, this.permissionsQuery.superAdmins$])
+    .pipe(
+      map(([members, superAdmins]) => {
+        return members.map(member => {
+          return {
+            ...member,
+            role: superAdmins.includes(member.uid) ? 'admin' : 'member'
+          } as OrganizationMemberWithRole;
+        });
+      })
+    );
 
-  public members$ = this.select(state => state.org.members).pipe(
-    map(members => {
-      const members2 = members.map(member => {
-        let roles = [];
-        this.permissionsQuery.isUserSuperAdmin(member.uid) ? roles = ['admin'] : roles = ['member'];
-        return { ...member, roles };
-      });
-      return members2;
-    })
-  );
+  get members$() {
+    return this.select(state => state.org.members);
+  }
 
   get status$(): Observable<OrganizationStatus> {
     return this.select(state => state.org).pipe(

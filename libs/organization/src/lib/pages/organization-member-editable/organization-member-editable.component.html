@@ -3,20 +3,23 @@
     <organization-member-pending
       (declined)="declineInvitation($event)"
       (accepted)="acceptInvitation($event)"
-      [invitations]="invitationsToJoinOrganization$ | async">
+      [invitations]="invitationsToJoinOrganization$ | async"
+      [isSuperAdmin]="isSuperAdmin$ | async">
     </organization-member-pending>
     <organization-member-repertory
       [members]="members$ | async"
       (editing)="openSidenav($event)">
     </organization-member-repertory>
     <organization-member-add
+      *ngIf="isSuperAdmin$ | async"
       [formGroup]="emailControl"
       (addedMember)="addMember()">
     </organization-member-add>
-    <organization-member-invitation-pending
+    <organization-member-invitation
       [invitations]="invitationsToOrganization$ | async"
-      (declined)="declineInvitation($event)">
-    </organization-member-invitation-pending>
+      (declined)="declineInvitation($event)"
+      [isSuperAdmin]="isSuperAdmin$ | async">
+    </organization-member-invitation>
   </ng-container>
   <!--
     TODO:

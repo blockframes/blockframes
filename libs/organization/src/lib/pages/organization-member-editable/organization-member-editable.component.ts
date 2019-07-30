@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { OrganizationQuery, OrganizationMember } from '../../+state';
+import { OrganizationQuery, OrganizationMemberWithRole } from '../../+state';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { PermissionsQuery } from '../../permissions/+state';
 
 @Component({
   selector: 'organization-member-editable',
@@ -20,7 +21,7 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   public emailControl = new FormControl('', Validators.email);
 
   /** Observable of all members of the organization */
-  public members$: Observable<OrganizationMember[]>;
+  public members$: Observable<OrganizationMemberWithRole[]>;
 
   /** Observable of all the members who asked to join the organization */
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
@@ -28,17 +29,20 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   /** Observable of all the members invited by the organization */
   public invitationsToOrganization$: Observable<Invitation[]>;
 
+  public isSuperAdmin$: Observable<boolean>;
+
   constructor(
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
     private organizationQuery: OrganizationQuery,
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery
+    private invitationQuery: InvitationQuery,
+    private permissionsQuery: PermissionsQuery
   ) {}
 
   ngOnInit() {
-    this.members$ = this.query.members$;
-    this.members$.subscribe(m => console.log(m))
+    this.members$ = this.query.membersWithRole$;
+    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
@@ -46,15 +50,14 @@ export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
     this.invitationsToOrganization$ = this .invitationQuery.invitationsToOrganization$;
   }
 
-  public openSidenav(member: OrganizationMember) {
-    // TODO: use member for set form
+  public openSidenav(member: OrganizationMemberWithRole) {
+    // TODO: use member.role for set form
     this.opened = true;
   }
 
   public async addMember() {
     try {
       if (this.emailControl.invalid) throw new Error('Please enter a valid email address');
-      // TODO: implement service for create a new invitation
       const userEmail = this.emailControl.value;
       const organizationId = this.organizationQuery.id;
       await this.invitationService.sendInvitationToUser(userEmail, organizationId);
