@@ -1,38 +1,24 @@
 import { MoviePromotionalDescription } from '../../+state';
-import { FormEntity } from '@blockframes/utils';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormEntity, FormList } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 
-/* @todo #643
-FormArray => FormList
-*/
-function createMoviePromotionalDescriptionControls() {
-
+function createMoviePromotionalDescriptionControls(promotionalDescription: MoviePromotionalDescription) {
   return {
-    keywords: new FormArray([]),
-    keyAssets: new FormArray([]),
+    keywords: FormList.factory(promotionalDescription.keywords || [], el => new FormControl(el)),
+    keyAssets: FormList.factory(promotionalDescription.keyAssets || [], el => new FormControl(el)),
   }
 }
 
 type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePromotionalDescription>, MoviePromotionalDescriptionControl>{
-  constructor() {
-    super(createMoviePromotionalDescriptionControls());
+  constructor(promotionalDescription: MoviePromotionalDescription) {
+    super(createMoviePromotionalDescriptionControls(promotionalDescription));
   }
 
   get keywords() {
-    return this.get('keywords') as FormArray;
-  }
-
-  public populate(moviePromotional: MoviePromotionalDescription) {
-
-    if (moviePromotional.keywords && moviePromotional.keywords.length) {
-      moviePromotional.keywords.forEach((keyword) => {
-        this.keywords.push(new FormControl(keyword))
-      })
-    }
-
+    return this.get('keywords');
   }
 
   public addChip(event: MatChipInputEvent): void {
@@ -50,8 +36,7 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
     }
   }
 
-  //@todo #643 factorize 
   public removeKeyword(i: number): void {
-    this.get('keywords').removeAt(i);
+    this.keywords.removeAt(i);
   }
 }

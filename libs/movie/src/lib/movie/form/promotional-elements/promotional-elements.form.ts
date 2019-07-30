@@ -1,49 +1,42 @@
-import { MoviePromotionalElements } from '../../+state';
-import { FormEntity } from '@blockframes/utils';
-import { FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { MoviePromotionalElements, PromotionalElement } from '../../+state';
+import { FormEntity, FormList, UrlControl } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 
-/* @todo #643
-FormArray => FormList
-*/
-function createMoviePromotionalElementsControls() {
 
+interface MoviePromotionalElementFormControl {
+  label: FormControl,
+  url: UrlControl
+}
+
+export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,MoviePromotionalElementFormControl> {
+  constructor(promotionalElement: PromotionalElement) {
+    super({
+      label: new FormControl(promotionalElement.label),
+      url: new UrlControl(promotionalElement.url),
+    });
+  }
+}
+
+function createMoviePromotionalElementsControls(promotionalElements? : MoviePromotionalElements) {
   return {
-    images: new FormArray([]),
-    promotionalElements: new FormArray([]),
+    images: FormList.factory(promotionalElements.images || [], el => new FormControl(el)),
+    promotionalElements: FormList.factory(promotionalElements.promotionalElements || [], el => new MoviePromotionalElementForm(el)),
   }
 }
 
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
 export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromotionalElements>, MoviePromotionalElementsControl>{
-  protected builder : FormBuilder; //@todo #643 no more builder group
-  constructor() {
-    super(createMoviePromotionalElementsControls());
-    this.builder = new FormBuilder();
+  constructor(promotionalElements : MoviePromotionalElements) {
+    super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
   get images() {
-    return this.get('images') as FormArray;
+    return this.get('images');
   }
 
   get promotionalElements() {
-    return this.get('promotionalElements') as FormArray;
-  }
-
-  public populate(moviePromotional: MoviePromotionalElements) {
-
-    if (moviePromotional.images && moviePromotional.images.length) {
-      moviePromotional.images.forEach((image) => {
-        this.images.push(new FormControl(image));
-      })
-    }
-
-    if (moviePromotional.promotionalElements && moviePromotional.promotionalElements.length) {
-      moviePromotional.promotionalElements.forEach((element) => {
-        this.promotionalElements.push(this.builder.group(element));
-      })
-    }
-
+    return this.get('promotionalElements');
   }
 
   public setImage(image: string, index: number): void {
@@ -55,10 +48,13 @@ export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromot
   }
 
   public addPromotionalElement(): void {
-    this.promotionalElements.push(this.builder.group({ label: '', url: ''}));
+    const promotionalElement = new FormEntity<PromotionalElement>({
+      label: new FormControl(''),
+      url: new UrlControl(''),
+    });
+    this.promotionalElements.push(promotionalElement);
   }
 
-  //@todo #643 factorize with removeImages
   public removePromotionalElement(i: number): void {
     this.promotionalElements.removeAt(i);
   }

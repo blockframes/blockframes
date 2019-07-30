@@ -8,14 +8,14 @@ import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
 import { Movie } from '../+state';
 
 
-function createMovieControls() {
+function createMovieControls(movie: Movie) {
 
   return {
-    main: new MovieMainForm(),
-    promotionalElements: new MoviePromotionalElementsForm(),
-    promotionalDescription: new MoviePromotionalDescriptionForm(),
-    story: new MovieStoryForm(),
-    salesCast: new MovieSalesCastForm(),
+    main: new MovieMainForm(movie.main),
+    promotionalElements: new MoviePromotionalElementsForm(movie.promotionalElements),
+    promotionalDescription: new MoviePromotionalDescriptionForm(movie.promotionalDescription),
+    story: new MovieStoryForm(movie.story),
+    salesCast: new MovieSalesCastForm(movie.salesCast),
   }
 }
 
@@ -23,18 +23,9 @@ type MovieControl = ReturnType<typeof createMovieControls>
 
 export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
   protected builder : FormBuilder;
-  constructor() {
-    super(createMovieControls());
+  constructor(movie: Movie) {
+    super(createMovieControls(movie));
     this.builder = new FormBuilder();
-  }
-
-  public populate(movie: Movie) {
-    // @todo #643 on populate, keywords, Directed By etc are filled with empty data: check if it is still the case
-    if( movie.main ) { this.get('main').populate(movie.main) }
-    if( movie.promotionalElements ) { this.get('promotionalElements').populate(movie.promotionalElements) }
-    if( movie.promotionalDescription ) { this.get('promotionalDescription').populate(movie.promotionalDescription) }
-    if( movie.story ) { this.get('story').populate(movie.story) }
-    if( movie.salesCast ) { this.get('salesCast').populate(movie.salesCast) }
   }
 
   reset(value?: EntityControl<Movie>, options?: {

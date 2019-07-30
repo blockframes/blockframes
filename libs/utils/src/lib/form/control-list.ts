@@ -37,13 +37,6 @@ export class EthereumMnemonicControl extends FormControl{
   }
 }
 
-/* Checks if input is a valid string */
-export class StringControl extends FormControl{ //@todo #643 remove
-  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : stringValidators);
-  }
-}
-
 /* Checks if input is a valid url */
 export class UrlControl extends FormControl{
   constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
@@ -53,7 +46,7 @@ export class UrlControl extends FormControl{
 
 /* Checks if input is a valid year */
 export class YearControl extends FormControl{
-  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
+  constructor (value : string | number = '', disabled : boolean = false, validators? : any[]) {
     super({ value, disabled }, validators !== undefined ? validators : yearValidators);
   }
 }

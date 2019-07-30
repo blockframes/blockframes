@@ -39,9 +39,14 @@ export interface MovieMain {
   shortSynopsis?: string,
 }
 
+export interface PromotionalElement {
+  label: string,
+  url: string
+}
+
 export interface MoviePromotionalElements {
   images: string[],
-  promotionalElements: {label: string, url: string}[],
+  promotionalElements: PromotionalElement[],
 }
 
 export interface MoviePromotionalDescription {
@@ -108,7 +113,12 @@ export function createMovie(params?: Partial<Movie>) : Movie {
   return {
     deliveryIds: [],
     _type: 'movies',
-    ...params
+    main: {},
+    story: {},
+    promotionalElements: {},
+    promotionalDescription: {},
+    salesCast: {},
+    ... params
   } as Movie;
 }
 

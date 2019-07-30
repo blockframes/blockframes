@@ -1,17 +1,11 @@
 import { MovieStory } from '../../+state';
-import { FormEntity, StringControl } from '@blockframes/utils';
-import { Validators, FormBuilder } from '@angular/forms';
+import { FormEntity, FormField } from '@blockframes/utils';
+import { Validators } from '@angular/forms';
 
-/* @todo #643
-FormControl => FieldControl
-FormArray => FormList
-FormGroup => EntityForm
-*/
-function createMovieStoryControls() {
-
+function createMovieStoryControls(story: MovieStory) {
   return {
-    logline:  new StringControl('', false, [Validators.maxLength(180)]), 
-    synopsis: new StringControl(''), //@todo #643 use lenthAValidator < 500
+    logline:  new FormField<string>(story.logline, [Validators.maxLength(180)]), 
+    synopsis: new FormField<string>(story.synopsis, [Validators.maxLength(500)]), 
   }
 }
 
@@ -19,8 +13,8 @@ type MovieStoryControl = ReturnType<typeof createMovieStoryControls>
 
 export class MovieStoryForm extends FormEntity<Partial<MovieStory>, MovieStoryControl>{
 
-  constructor() {
-    super(createMovieStoryControls());
+  constructor(story: MovieStory) {
+    super(createMovieStoryControls(story));
   }
 
   get logline() {
@@ -30,11 +24,4 @@ export class MovieStoryForm extends FormEntity<Partial<MovieStory>, MovieStoryCo
   get synopsis() {
     return this.get('synopsis');
   }
-
-  public populate(movieStory: MovieStory) {
-    this.logline.setValue(movieStory.logline);
-    this.synopsis.setValue(movieStory.synopsis);
-  }
-
-
 }

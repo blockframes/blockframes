@@ -1,40 +1,50 @@
-import { MovieMain, Movie } from '../../+state';
-import { FormEntity, StringControl, FormList, YearControl } from '@blockframes/utils';
-import { FormArray, Validators, FormBuilder } from '@angular/forms';
+import { MovieMain, Movie, Credit } from '../../+state';
+import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
+import { Validators, FormControl } from '@angular/forms';
 
-/* @todo #643
-FormControl => FieldControl
-FormArray => FormList
-FormGroup => EntityForm
-*/
-function createMovieMainControls() {
+
+interface MovieCreditFormControl {
+  firstName: FormControl,
+  lastName?: FormControl,
+  creditRole?: FormControl,
+}
+
+export class MovieCreditForm extends FormEntity<Credit,MovieCreditFormControl> {
+  constructor(credit: Credit) {
+    super({
+      firstName: new FormControl(credit.firstName),
+      lastName: new FormControl(credit.lastName),
+      creditRole: new FormControl(credit.creditRole),
+    });
+  }
+}
+
+function createMovieMainControls(main? : MovieMain ) {
 
   return {
-    internalRef: new StringControl(''),
+    internalRef: new FormField<string>(main.internalRef),
     title: new FormEntity<Movie['main']['title']>({
-      original: new StringControl(''),
-      international: new StringControl(''),
+      original: new FormField<string>(main.title.original),
+      international: new FormField<string>(main.title.international),
     }),
-    directors: new FormArray([]), //@todo #643 use FormList
-    poster: new StringControl(''),
-    productionYear: new YearControl(''),
-    genres: new StringControl(''),
-    originCountry: new StringControl(''), //@todo #643 Don't use StringControl. Use FieldForm<string> or just FormControl
-    languages: new StringControl(''), //@todo #643 do not use stringControll
-    status: new StringControl('', false, [Validators.required]),
-    length: new StringControl(''),
-    shortSynopsis: new StringControl(''), //@todo #643 use lenthAValidator < 500
-    productionCompanies: new FormArray([]), //@todo #643 Use FormList<string> as it comes with type checking.
+    directors: FormList.factory(main.directors || [], el => new MovieCreditForm(el)),
+    poster: new FormField<string>(main.poster),
+    productionYear: new YearControl(main.productionYear),
+    genres: new FormField<string[]>(main.genres || [] ),
+    originCountry: new FormField<string>(main.originCountry),
+    languages: new FormField<string[]>(main.languages || []),
+    status: new FormField<string>(main.status , [Validators.required]),
+    length: new FormField<number>(main.length),
+    shortSynopsis: new FormField<string>(main.shortSynopsis, [Validators.maxLength(500)] ),
+    productionCompanies: FormList.factory(main.productionCompanies || [], el => new MovieCreditForm(el)),
   }
 }
 
 type MovieMainControl = ReturnType<typeof createMovieMainControls>
 
 export class MovieMainForm extends FormEntity<Partial<MovieMain>, MovieMainControl>{
-  protected builder : FormBuilder; //@todo #643 no more builder group
-  constructor() {
-    super(createMovieMainControls());
-    this.builder = new FormBuilder();
+  constructor(main: MovieMain) {
+    super(createMovieMainControls(main));
   }
 
   get title() {
@@ -42,57 +52,34 @@ export class MovieMainForm extends FormEntity<Partial<MovieMain>, MovieMainContr
   }
 
   get directors() {
-    return this.get('directors') as FormArray;
+    return this.get('directors');
   }
 
   get productionCompanies() {
-    return this.get('productionCompanies')  as FormArray;
+    return this.get('productionCompanies');
   }
 
   get shortSynopsis() {
-    return this.get('shortSynopsis') as StringControl;
-  }
-
-  public populate(movieMain: MovieMain) {
-
-    this.get('internalRef').setValue(movieMain.internalRef);
-    this.title.get('original').setValue(movieMain.title.original);
-    this.title.get('international').setValue(movieMain.title.international);
-    this.get('poster').setValue(movieMain.poster);
-    this.get('productionYear').setValue(movieMain.productionYear);
-    this.get('genres').setValue(movieMain.genres);
-    this.get('originCountry').setValue(movieMain.originCountry);
-    this.get('languages').setValue(movieMain.languages);
-    this.get('status').setValue(movieMain.status);
-    this.shortSynopsis.setValue(movieMain.shortSynopsis);
-    this.get('length').setValue(movieMain.length);
-
-    if (movieMain.directors && movieMain.directors.length) {
-      movieMain.directors.forEach((director) => {
-        this.directors.push(this.builder.group(director))
-      })
-    }
-
-    if (movieMain.productionCompanies && movieMain.productionCompanies.length) {
-      movieMain.productionCompanies.forEach((company) => {
-        this.productionCompanies.push(this.builder.group(company))
-      })
-    }
-
+    return this.get('shortSynopsis');
   }
 
   public addDirector(): void {
-    // @todo #643 use no builder : this.get('directors').push(new FieldControl<Director>(director));
-    this.directors.push(this.builder.group({ firstName: '', lastName: '' }));
+    const credit = new FormEntity<Credit>({
+      firstName: new FormControl(''),
+      lastName: new FormControl(''),
+    });
+    this.directors.push(credit);
   }
 
-  //@todo #643 factorize with removeProductionCompany
   public removeDirector(i: number): void {
     this.directors.removeAt(i);
   }
 
   public addProductionCompany(): void {
-    this.productionCompanies.push(this.builder.group({ firstName: ''}));
+    const credit = new FormEntity<Credit>({
+      firstName: new FormControl(''),
+    });
+    this.productionCompanies.push(credit);
   }
 
   public removeProductionCompany(i: number): void {

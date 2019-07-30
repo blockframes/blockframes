@@ -1,21 +1,21 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, AbstractControl } from '@angular/forms';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { FormField } from './field.form';
 import { Validator, AsyncValidator } from './types';
 
-type GetForm<T> = T extends FormField<any> ? T : T extends FormEntity<any, any> ? T : FormField<T>;
+// type GetForm<T> = T extends FormField<any> ? T : T extends FormEntity<any, any> ? T : FormField<T>;
 
 type GetValue<T> = T extends FormField<infer I> ? I : T extends FormEntity<infer J, any> ? J : T;
 
 /** A list of FormField */
-export class FormList<T> extends FormArray {
-  constructor(controls: GetForm<T>[], validators?: Validator, asyncValidators?: AsyncValidator) {
+export class FormList<T, Control extends AbstractControl = any> extends FormArray {
+  constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }
 
-  static factory<T, Control>(value: T[], createControl: (value: T) => Control) {
-    const form = new FormList<T>([]);
+  static factory<T, Control extends AbstractControl>(value: T[], createControl: (value: T) => Control) {
+    const form = new FormList<T, Control>([]);
     form['createControl'] = createControl.bind(form);
     form.patchValue(value);
     return form;
@@ -34,19 +34,19 @@ export class FormList<T> extends FormArray {
     }
   }
 
-  at(index: number): GetForm<T> {
-    return super.at(index) as GetForm<T>;
+  at(index: number): Control {
+    return super.at(index) as Control;
   }
 
-  push(control: GetForm<T>) {
+  push(control: Control) {
     super.push(control);
   }
 
-  insert(index: number, control: GetForm<T>) {
+  insert(index: number, control: Control) {
     super.insert(index, control);
   }
 
-  setControl(index: number, control: GetForm<T>) {
+  setControl(index: number, control: Control) {
     super.setControl(index, control);
   }
 
