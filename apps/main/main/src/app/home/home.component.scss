@@ -1,39 +1,28 @@
+@import 'variables';
+
 section {
-  font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
-  flex-direction: row;
-  box-sizing: border-box;
-  display: flex;
-  place-content: stretch center;
-  align-items: stretch;
-  background-color: white;
-}
-
-.card-container {
-  border: 1px solid #dadce0;
-  box-sizing: border-box;
-  overflow: hidden;
-  width: auto;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2);
-  padding: 30px;
-  text-align: center;
-  margin-top: 66px;
-}
-
-.card-container h2 {
-  color: rgba(0, 0, 0, 0.87);
-  font-weight: normal;
-  font-size: 24px;
-}
-
-.icons-container {
-  display: inline-flex;
-  margin-top: 15px;
-}
-
-.icons-container a {
-  padding: 0 10px;
+  background-color: var(--whiteBackground);
+  height: 100%;
+  margin: 0 200px;
 }
 
 img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+mat-divider {
   width: 100%;
+}
+
+mat-card-content {
+  height: 200px;
+}
+
+mat-card-footer {
+  padding: 5px;
+}
+
+mat-card {
+  width: 23%;
 }

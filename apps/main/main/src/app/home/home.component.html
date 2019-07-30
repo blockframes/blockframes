@@ -1,20 +1,21 @@
-<section class="card-container">
-  <h2>Select the app you would like to use</h2>
-  <article class="icons-container">
-    <a href="/delivery">
-      <img src="/assets/fake-data/media_delivering.svg" alt="Media Delivering">
-    </a>
-
-    <a href="/movie-financing">
-      <img src="/assets/fake-data/media_financiers.svg" alt="Media Financiers">
-    </a>
-
-    <a href="/ip-upload">
-      <img src="/assets/fake-data/home_of_scripts.svg" alt="Home Of Scripts">
-    </a>
-
-    <a href="/bigger-boat">
-      <img src="/assets/fake-data/bigger-boat.svg" alt="Bigger Boat">
-    </a>
+<section>
+  <h2 fxLayout="row" fxLayoutAlign="start center">
+    <span>Welcome to Blockframes</span>
+    <mat-divider></mat-divider>
+  </h2>
+  <article>
+    <h3>My DApps</h3>
+    <article fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-card *ngFor="let dapp of dapps">
+        <a routerLink="{{dapp.routerLink}}">
+          <mat-card-content><img src="{{dapp.logoSrc}}" alt="DApp logo"/></mat-card-content>
+        </a>
+        <mat-divider></mat-divider>
+        <mat-card-footer>
+          <h4>{{ dapp.name }}</h4>
+          <small> Lorem ipsum dolor sit amet consectetur adipisicing elit. </small>
+        </mat-card-footer>
+      </mat-card>
+    </article>
   </article>
 </section>
