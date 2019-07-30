@@ -4,7 +4,7 @@ import { MoviePromotionalDescriptionForm } from './promotional-description.form'
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: '[formGroupName] movie-form-promotional-description',
+  selector: '[formGroup] movie-form-promotional-description, [formGroupName] movie-form-promotional-description',
   templateUrl: './promotional-description.component.html',
   styleUrls: ['./promotional-description.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

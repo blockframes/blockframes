@@ -4,7 +4,7 @@ import { MovieStoryForm } from './story.form';
 
 
 @Component({
-  selector: '[formGroupName] movie-form-story',
+  selector: '[formGroup] movie-form-story, [formGroupName] movie-form-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -3,7 +3,7 @@ import { ControlContainer } from '@angular/forms';
 import { MoviePromotionalElementsForm } from './promotional-elements.form';
 
 @Component({
-  selector: '[formGroupName] movie-form-promotional-elements',
+  selector: '[formGroup] movie-form-promotional-elements, [formGroupName] movie-form-promotional-elements',
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
