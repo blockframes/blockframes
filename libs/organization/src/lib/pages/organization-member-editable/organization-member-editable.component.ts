@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { OrganizationQuery, OrganizationMemberWithRole } from '../../+state';
 import { FormControl, Validators } from '@angular/forms';
@@ -10,7 +10,8 @@ import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 @Component({
   selector: 'organization-member-editable',
   templateUrl: './organization-member-editable.component.html',
-  styleUrls: ['./organization-member-editable.component.scss']
+  styleUrls: ['./organization-member-editable.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject();

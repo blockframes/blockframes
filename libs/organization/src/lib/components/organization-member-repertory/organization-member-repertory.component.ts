@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { OrganizationMember } from '../../+state';
@@ -6,7 +6,8 @@ import { OrganizationMember } from '../../+state';
 @Component({
   selector: 'organization-member-repertory',
   templateUrl: './organization-member-repertory.component.html',
-  styleUrls: ['./organization-member-repertory.component.scss']
+  styleUrls: ['./organization-member-repertory.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationMemberRepertoryComponent implements OnInit {
   @Input() members: OrganizationMember[];
