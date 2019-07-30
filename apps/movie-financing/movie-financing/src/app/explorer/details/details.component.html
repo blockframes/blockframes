@@ -88,7 +88,7 @@
                 <li>
                   <span class="key">Cast</span> <span class="value">
                   <span *ngFor="let item of movie.artistic.cast; let isLast=last">
-                    {{ item.name }}{{ !isLast ? ',' : '' }}
+                    {{ item.name }}{{ isLast ? '' : ',' }}
                   </span>
                 </span>
                 </li>

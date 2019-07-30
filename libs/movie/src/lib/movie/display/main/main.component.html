@@ -23,7 +23,7 @@
       <mat-card-title>Directors</mat-card-title>
       <mat-card-subtitle *ngIf="data.directors.length > 0">
         <span *ngFor="let item of data.directors; let isLast=last">
-          {{ item.firstName }} {{ item.lastName }}{{ !isLast?',':'' }}
+          {{ item.firstName }} {{ item.lastName }}{{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -35,7 +35,7 @@
       <mat-card-title>Genres</mat-card-title>
       <mat-card-subtitle *ngIf="data.genres">
         <span *ngFor="let item of data.genres; let isLast=last">
-          {{ getStaticBySlug('GENRES', item) }}{{ !isLast?',':'' }}
+          {{ getStaticBySlug('GENRES', item) }}{{ isLast ?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -51,7 +51,7 @@
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle *ngIf="data.languages">
         <span *ngFor="let item of data.languages; let isLast=last">
-          {{ getStaticBySlug('LANGUAGES', item) }}{{ !isLast?',':'' }}
+          {{ getStaticBySlug('LANGUAGES', item) }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -81,8 +81,7 @@
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle *ngIf="data.productionCompanies.length > 0">
         <span *ngFor="let item of data.productionCompanies; let isLast=last">
-          <!-- @todo #643 do the oposite for each occurence : isLast ? '' : ',' -->
-          {{ item.firstName }} {{ !isLast?',':'' }}
+          {{ item.firstName }} {{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>

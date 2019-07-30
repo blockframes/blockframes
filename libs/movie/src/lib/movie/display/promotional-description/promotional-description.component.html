@@ -4,7 +4,7 @@
       <mat-card-title class="movie-card-meta-title">Keywords</mat-card-title>
       <mat-card-subtitle *ngIf="data.keywords">
         <span *ngFor="let item of data.keywords; let isLast=last">
-          {{ item }}{{ !isLast?',':'' }}
+          {{ item }}{{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
