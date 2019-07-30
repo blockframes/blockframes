@@ -66,12 +66,10 @@ export class OrganizationQuery extends Query<OrganizationState> {
     this.permissionsQuery.superAdmins$
   ]).pipe(
     map(([members, superAdmins]) => {
-      return members.map(member => {
-        return {
-          ...member,
-          role: superAdmins.includes(member.uid) ? UserRole.admin : UserRole.member
-        };
-      });
+      return members.map(member => ({
+        ...member,
+        role: superAdmins.includes(member.uid) ? UserRole.admin : UserRole.member
+      }));
     })
   );
 

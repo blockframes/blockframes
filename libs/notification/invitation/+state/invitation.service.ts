@@ -21,7 +21,7 @@ export class InvitationService {
     private authService: AuthService
   ) {}
 
-  /** Create an invitation for user asks to join an organization */
+  /** Create an invitation when a user asks to join an organization */
   public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
     const userId = this.authQuery.userId;
     const invitation = createInvitationToJoinOrganization({
@@ -32,7 +32,7 @@ export class InvitationService {
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 
-  /** Create an invitation for an organization asks user to join it */
+  /** Create an invitation when an organization asks a user to join it */
   public async sendInvitationToUser(userEmail: string, organizationId: string): Promise<void> {
     // Get a user or create a ghost user when needed
     const { uid } = await this.authService.getOrCreateUserByMail(userEmail);
