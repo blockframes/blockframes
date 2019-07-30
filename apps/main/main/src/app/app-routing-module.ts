@@ -9,7 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { OrganizationGuard, PermissionsGuard } from '@blockframes/organization';
 
 export const routes: Routes = [
-  { path: 'layout', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
