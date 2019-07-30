@@ -1,14 +1,22 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MoviePromotionalElements } from '../../+state';
+import { MoviePromotionalElements, createMoviePromotionalElements } from '../../+state';
 
 @Component({
-  selector: '[data] movie-display-promotional-elements',
+  selector: '[moviePromotionalElements] movie-display-promotional-elements',
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayPromotionalElementsComponent {
 
-  @Input() data: MoviePromotionalElements;
+  public data : MoviePromotionalElements;
+  @Input() set moviePromotionalElements(moviePromotionalElements: Partial<MoviePromotionalElements>) {
+    this.data = createMoviePromotionalElements(moviePromotionalElements);
+  }
+
+  get shouldDisplayPromotionalElements()  {
+    return this.data.images.length > 0 ||
+    this.data.promotionalElements.length > 0
+  }
 
 }

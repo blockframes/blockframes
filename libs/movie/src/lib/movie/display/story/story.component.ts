@@ -1,15 +1,17 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieStory } from '../../+state';
+import { MovieStory, createMovieStory } from '../../+state';
 
 @Component({
-  selector: '[data] movie-display-story',
+  selector: '[movieStory] movie-display-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayStoryComponent {
 
-  @Input() data: MovieStory;
-
+  public data : MovieStory;
+  @Input() set movieStory(movieStory: Partial<MovieStory>) {
+    this.data = createMovieStory(movieStory);
+  }
 
 }

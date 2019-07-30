@@ -104,10 +104,54 @@ export interface Movie {
 /**
  * A factory function that creates Movie
  */
-export function createMovie(params?: Partial<Movie>) {
+export function createMovie(params?: Partial<Movie>) : Movie {
   return {
     deliveryIds: [],
     _type: 'movies',
     ...params
   } as Movie;
+}
+
+
+export function createMovieMain(params? : Partial<MovieMain>) : MovieMain{
+  return {
+    title: {
+      original: '',
+      international: '',
+    },
+    directors: [],
+    genres: [],
+    languages: [],
+    productionCompanies: [],
+    ... params
+  } as MovieMain;
+}
+
+export function createMoviePromotionalElements(params? : Partial<MoviePromotionalElements>) : MoviePromotionalElements{
+  return {
+    images: [],
+    promotionalElements: [],
+    ... params
+  } as MoviePromotionalElements;
+}
+
+export function createMoviePromotionalDescription(params? : Partial<MoviePromotionalDescription>) : MoviePromotionalDescription{
+  return {
+    keyAssets: [],
+    keywords: [],
+    ... params
+  } as MoviePromotionalDescription;
+}
+
+export function createMovieSalesCast(params? : Partial<MovieSalesCast>) : MovieSalesCast{
+  return {
+    credits: [],
+    ... params
+  } as MovieSalesCast;
+}
+
+export function createMovieStory(params? : Partial<MovieStory>) : MovieStory{
+  return {
+    ... params
+  } as MovieStory;
 }
