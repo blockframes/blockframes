@@ -8,7 +8,6 @@ export interface Invitation {
   app: string;
   type: 'joinOrganization' | 'toOrganization'; // This will be extented with other invitations
   userId?: string;
-  userEmail?: string;
   user?: User;
   organizationId: string;
   docInformations?: DocInformations;
