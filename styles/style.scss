@@ -11,6 +11,7 @@
 @import './components/mat-menu';
 @import './components/mat-button';
 @import './components/mat-card';
+@import './components/mat-list';
 
 * {
   box-sizing: border-box;
@@ -51,6 +52,5 @@ p {
 }
 
 main {
-  margin-top: 66px;
   height: 100%;
 }

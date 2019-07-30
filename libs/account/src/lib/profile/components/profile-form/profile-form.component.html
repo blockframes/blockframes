@@ -1,0 +1,42 @@
+<h4>Picture</h4>
+<!-- TODO: issue#579 import picture -->
+<div fxLayoutAlign="center">
+  <img
+    src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+    alt="Profile picture"
+  />
+</div>
+<article class="actions" fxLayout="column" fxLayoutAlign="center center">
+  <button mat-raised-button color="accent">Import a picture</button>
+  <button mat-button color="primary">Delete this picture</button>
+</article>
+<mat-divider></mat-divider>
+<article>
+  <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+    <h4>Identity</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Name" type="text" formControlName="name" required />
+      <mat-error *ngIf="control.get('name').hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Surname</mat-label>
+      <input matInput placeholder="Surname" type="text" formControlName="surname" required />
+      <mat-error *ngIf="control.get('surname').hasError('required')">
+        Surname is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-divider></mat-divider>
+    <h4>Informations</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Phone number</mat-label>
+      <input matInput placeholder="Phone number" type="tel" formControlName="phoneNumber" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Position</mat-label>
+      <input matInput placeholder="Position" type="text" formControlName="position" />
+    </mat-form-field>
+  </form>
+</article>

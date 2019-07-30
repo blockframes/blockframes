@@ -1,0 +1,19 @@
+@import 'variables';
+
+mat-card {
+  width: 50%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-toolbar {
+  background: transparent;
+}
+
+@include mobile {
+  mat-card {
+    width: 100%;
+  }
+}

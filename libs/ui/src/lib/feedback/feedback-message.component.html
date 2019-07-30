@@ -1,0 +1,8 @@
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h2>{{ title }}</h2>
+  <p>{{ subTitle }}</p>
+  <div fxLayout="row" fxLayoutAlign="center">
+    <img [src]="imageUrl" alt="congratulation" />
+  </div>
+  <a (click)="redirectUser.emit()" mat-raised-button color="accent">{{ buttonMessage }}</a>
+</section>

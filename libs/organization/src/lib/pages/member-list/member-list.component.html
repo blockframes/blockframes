@@ -1,7 +1,7 @@
 <section>
   <ng-container *ngIf="(organization$ | async).members as members">
     <mat-list *ngFor="let member of members">
-      <org-member-view [member]="member"></org-member-view>
+      <organization-member-view [member]="member"></organization-member-view>
     </mat-list>
   </ng-container>
 </section>

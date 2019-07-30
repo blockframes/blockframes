@@ -6,12 +6,8 @@
       [opened]="true"
       fixedInViewport="false"
       mode="side">
-      <ng-container *ngIf="(movie$ | async).stakeholders as movieStakeholders">
-        <delivery-teamwork-repertory
-          [stakeholders]="movieStakeholders"
-          (added)="addStakeholder($event)">
-        </delivery-teamwork-repertory>
-      </ng-container>
+      <delivery-teamwork-repertory>
+      </delivery-teamwork-repertory>
     </mat-sidenav>
   <!-- Content -->
   <mat-sidenav-content>

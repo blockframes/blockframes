@@ -1,19 +1,19 @@
 {
   "hosting": {
     "public": "dist/apps/",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      {
-        "source": "/ip-upload{,/**}",
-        "destination": "/ip-upload/index.html"
-      },
       {
         "source": "/delivery/contract.pdf",
         "function": "generateDeliveryPDF"
+      },
+      {
+        "source": "/admin/acceptOrganization{,/**}",
+        "function": "acceptOrganization"
+      },
+      {
+        "source": "/ip-upload{,/**}",
+        "destination": "/ip-upload/index.html"
       },
       {
         "source": "/delivery{,/**}",

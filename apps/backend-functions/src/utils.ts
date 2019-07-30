@@ -1,14 +1,6 @@
-import { functions } from './firebase';
+import { functions } from './internals/firebase';
 import * as backup from './backup';
 import { Material } from './data/types';
-
-///////////////
-// VARIABLES //
-///////////////
-
-// String refers to svg icon name
-export const APP_DELIVERY_ICON = 'media_delivering';
-export const APP_MOVIE_ICON = 'media_financiers';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //

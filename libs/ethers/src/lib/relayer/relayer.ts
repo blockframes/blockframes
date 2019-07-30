@@ -1,74 +1,44 @@
 import { Injectable } from '@angular/core';
-import { providers, EventFilter, utils } from 'ethers';
-import firebase from 'firebase';
+import { providers } from 'ethers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
-import { contracts, baseEnsDomain } from '@env';
-
-export interface IRelayer {
-  create(uid:string, name: string, key: string): Promise<Object>;
-  prepare(name: string): Promise<EventFilter>;
-  send(name: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse>;
-  addKey(name: string, key: string): Promise<Object>;
-  removeKey(name: string, key: string): Promise<Object>;
-}
-
 @Injectable({ providedIn: 'root' })
-export class Relayer implements IRelayer {
+export class Relayer {
 
   constructor(private functions: AngularFireFunctions) {}
 
   /**
    * Create a ERC1077 for one account
-   * @param uid user id (needed to update user doc in the firestore)
    * @param username ENS username of the account, this should `bob` and **NOT** `bob.blockframes.eth`
    * @param key first address of the user (management key)
+   * @param erc1077address first address of the user (management key)
    */
-  public create(username: string, key: string, erc1077address: string): Promise<Object> {
+  public deploy(username: string, key: string, erc1077address: string): Promise<Object> {
     if (username.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
       username = username.split('.')[0]
     }
-    const call = this.functions.httpsCallable('relayerCreate');
-    return call({ username, key, erc1077address }).toPromise();
+    const callDeploy = this.functions.httpsCallable('relayerDeploy');
+    const deploy =  callDeploy({ username, key, erc1077address }).toPromise();
+    return deploy;
   }
 
-  /** Listen when the ENS name changed -> End of process */
-  public async prepare(username: string): Promise<EventFilter> {
-    const namehash = utils.namehash(`${username}.${baseEnsDomain}`);
-    return <EventFilter>{
-      address: contracts.ensResolver,
-      topics: [
-        '0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2', // this is the topic of the event NameChanged(bytes32,string)
-        namehash
-      ]
-    };
+  /**
+   * Register and link a name to an address
+   * @param name ENS name , this should `bob` and **NOT** `bob.blockframes.eth`
+   * @param address address to link the name with
+   */
+  public registerENSName(name: string, address: string): Promise<Object> {
+    if (name.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
+    name = name.split('.')[0]
+    }
+    const callRegister = this.functions.httpsCallable('relayerRegister');
+    const registration = callRegister({ name, address }).toPromise();
+    return registration;
   }
 
   /** Send a transaction to the relayer  */
-  send(username: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse> {
+  send(address: string, tx: providers.TransactionRequest): Promise<providers.TransactionResponse> {
     const call = this.functions.httpsCallable('relayerSend');
-    return call({ username, tx }).toPromise();
-  }
-
-  /** Add an address to the ERC1077 */
-  addKey(username: string, key: string): Promise<Object> {
-    const call = this.functions.httpsCallable('relayerAddKey');
-    return call({ username, key }).toPromise();
-  }
-
-  /** Remove an address of the ERC1077 */
-  removeKey(username: string, key: string): Promise<Object> {
-    const call = this.functions.httpsCallable('relayerRemoveKey');
-    return call({ username, key }).toPromise();
-  }
-
-  requestTokens(username: string, amount: number): Promise<providers.TransactionResponse> {
-    const call = this.functions.httpsCallable('relayerRequestTokens');
-    return call({username, amount}).toPromise();
-  }
-
-  signDelivery(username: string, deliveryId: string, stakeholderId: string): Promise<providers.TransactionResponse> {
-    const call = this.functions.httpsCallable('relayerSignDelivery');
-    return call({username, deliveryId, stakeholderId}).toPromise();
+    return call({ address, tx }).toPromise();
   }
 }

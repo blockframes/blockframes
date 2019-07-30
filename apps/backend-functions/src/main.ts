@@ -2,13 +2,12 @@
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
-import { functions } from './firebase';
+import { functions } from './internals/firebase';
 import {
   RelayerConfig,
-  relayerCreateLogic,
-  relayerRequestTokensLogic,
+  relayerDeployLogic,
+  relayerRegisterENSLogic,
   relayerSendLogic,
-  relayerSignDeliveryLogic
 } from './relayer';
 import {
   deleteFirestoreDelivery,
@@ -27,7 +26,9 @@ import * as backup from './backup';
 import * as migrations from './migrations';
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
-import { onGenerateDeliveryPDFRequest } from './pdf';
+import { onGenerateDeliveryPDFRequest } from './internals/pdf';
+import { onInvitationUpdate } from './invitation';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, onAcceptNewOrg } from './orgs';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -61,7 +62,7 @@ export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
 /**
- * Trigger: REST call to find a list of orgs by name.
+ * Trigger: REST call to find a list of organizations by name.
  */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);
@@ -89,6 +90,15 @@ export const restoreFirestore = functions.https
  */
 export const updateToV2 = functions.https
   .onRequest(migrations.updateToV2);
+
+/**
+ * Trigger: REST call to validate organizations
+ *
+ * When organizations are created they are in status "pending",
+ * cascade8 admins will accept the organization with this function.
+ */
+export const acceptOrganization = functions.https
+  .onRequest(onAcceptNewOrg);
 
 /**
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
@@ -128,9 +138,51 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 );
 
 /**
+ * Trigger: when an invitation is updated (e. g. when invitation.state change)
+ */
+export const onInvitationUpdateEvent = onDocumentUpdate(
+  'invitations/{invitationID}',
+  onInvitationUpdate
+);
+
+//--------------------------------
+//       Orgs Management        //
+//--------------------------------
+
+/**
+ * Trigger: when an organization is created
+ */
+export const onOrganizationCreateEvent = onDocumentCreate(
+  'orgs/{orgID}',
+  onOrganizationCreate
+);
+
+/**
+ * Trigger: when an organization is updated
+ */
+export const onOrganizationUpdateEvent = onDocumentUpdate(
+  'orgs/{orgID}',
+  onOrganizationUpdate
+);
+
+/**
+ * Trigger: when an organization is removed
+ */
+export const onOrganizationDeleteEvent = onDocumentDelete(
+  'orgs/{orgID}',
+  onOrganizationDelete
+);
+
+
+//--------------------------------
+//        GENERATE PDF          //
+//--------------------------------
+
+/**
  * Trigger: REST call to generate a delivery PDF
  */
 export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
+
 
 //--------------------------------
 //            RELAYER           //
@@ -141,17 +193,14 @@ const RELAYER_CONFIG: RelayerConfig = {
   mnemonic
 };
 
-export const relayerCreate = functions.https
-  .onCall((data, context) => relayerCreateLogic(data, RELAYER_CONFIG));
+export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
+  .onCall((data, context) => relayerDeployLogic(data, RELAYER_CONFIG));
+
+export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
+  .onCall((data, context) => relayerRegisterENSLogic(data, RELAYER_CONFIG));
 
 export const relayerSend = functions.https
   .onCall((data, context) => relayerSendLogic(data, RELAYER_CONFIG));
-
-export const relayerRequestTokens = functions.https
-  .onCall((data, context) => relayerRequestTokensLogic(data, RELAYER_CONFIG));
-
-export const relayerSignDelivery = functions.https
-  .onCall((data, context) => relayerSignDeliveryLogic(data, RELAYER_CONFIG));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //

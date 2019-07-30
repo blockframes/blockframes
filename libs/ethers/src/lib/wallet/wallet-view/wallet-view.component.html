@@ -1,32 +1,30 @@
-<main>
-    <ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
-      <header fxLayout="row" fxLayoutAlign="start center">
-        <h2 fxFlex="noshrink">Wallet and Keyring</h2>
-        <div fxFlex="grow" class="spacer"></div>
-        <div fxFlex="noshrink">
-          <button mat-flat-button (click)="importKey()">
-            <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
-            Import Key
-          </button>
-          <a mat-flat-button routerLink="/layout/o/account/wallet/add">
-            <mat-icon>add</mat-icon>
-            Add Key
-          </a>
-        </div>
-      </header>
-      <section>
-        <h3>My Profile</h3>
-        <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="36px">
-          <wallet-blockie fxFlex size="40" [address]="wallet.address"></wallet-blockie>
-          <wallet-address-view fxFlex [ethAddress]="wallet.address" [ensName]="ensName$ | async"></wallet-address-view>
-        </article>
-        <key-manager-list [ensDomain]="wallet.ensDomain" (deleteKey)="deleteKey($event)"></key-manager-list>
-      </section>
-    </ng-container>
-  <ng-template #walletLoading>
-    <div class="wallet-loading">
-      <p>We are loading your informations...</p>
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+<ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
+  <header fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center">
+    <h2 fxFlex="noshrink" fxFlex.lt-md="grow">Wallet and Keyring</h2>
+    <hr fxFlex="grow" />
+    <div fxFlex="noshrink">
+      <a mat-flat-button routerLink="/layout/o/account/wallet/import">
+        <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
+        Import Key
+      </a>
+      <a mat-flat-button routerLink="/layout/o/account/wallet/add">
+        <mat-icon>add</mat-icon>
+        Add Key
+      </a>
     </div>
-  </ng-template>
-</main>
+  </header>
+  <section>
+    <h3>My Profile</h3>
+    <article fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center">
+      <wallet-blockie fxFlex="noshrink" [address]="wallet.address"></wallet-blockie>
+      <wallet-address-view fxFlex="grow" [ethAddress]="wallet.address" [ensName]="wallet.ensDomain"></wallet-address-view>
+    </article>
+    <key-manager-list [ensDomain]="wallet.ensDomain" (deleteKey)="deleteKey($event)"></key-manager-list>
+  </section>
+</ng-container>
+<ng-template #walletLoading>
+  <div class="wallet-loading">
+    <p>We are loading your informations...</p>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

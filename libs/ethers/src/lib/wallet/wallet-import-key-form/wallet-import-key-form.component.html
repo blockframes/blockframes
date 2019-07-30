@@ -1,4 +1,4 @@
-<main>
+<section>
   <h2>Import your Key</h2>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -7,7 +7,7 @@
     voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
     non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
-  <section>
+  <article>
     <div fxLayout="row" fxLayoutAlign="end">
       <span>json</span>
       <mat-slide-toggle (change)="toggleMnemonic()" [disabled]="lockMnemonic">
@@ -23,14 +23,17 @@
     </ng-container>
     <ng-template #mnemonicImport>
       <mat-form-field>
-        <textarea
-          matInput
-          placeholder="Enter or paste your mnemonic"
-          [formControl]="mnemonicField"
-        ></textarea>
+        <textarea matInput placeholder="Enter or paste your mnemonic" [formControl]="mnemonic"></textarea>
       </mat-form-field>
     </ng-template>
-  </section>
-  <img src="/assets/images/import_key_pic.png" />
-  <button mat-raised-button color="primary" (click)="import()">Import your Key</button>
-</main>
+    <div fxLayout="row" fxLayoutAlign="center">
+      <img src="/assets/images/import_key_pic.png">
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="isDisabled"
+      (click)="import()"
+    >Import your Key</button>
+  </article>
+</section>

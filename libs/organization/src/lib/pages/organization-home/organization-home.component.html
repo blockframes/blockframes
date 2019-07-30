@@ -5,47 +5,31 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
       sagittis. Duis a auctor nulla, a finibus mauris. Nullam eu maximus lorem.
     </p>
-    <mat-card class="mat-elevation-z0">
-      <mat-card-content fxLayout="row" fxLayoutAlign="space-around center">
-        <a routerLink="../create"><mat-icon svgIcon="adjustable_wrench"></mat-icon></a>
-        <div class="card-text">
-          <h4 class="firstTitle">Create your organization</h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
-            sagittis.
+    <mat-nav-list>
+      <a routerLink="../create">
+        <mat-list-item>
+          <mat-icon class="first-icon" matListIcon svgIcon="adjustableWrench"></mat-icon>
+          <h4 mat-line><b>Create your organization</b></h4>
+          <p mat-line>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
+            Donec luctus dictum metus quis sagittis.
           </p>
-        </div>
-        <a routerLink="../create"><mat-icon>keyboard_arrow_right</mat-icon></a>
-      </mat-card-content>
+          <mat-icon class="second-icon">keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+      </a>
       <mat-divider></mat-divider>
-      <mat-card-content fxLayout="row" fxLayoutAlign="space-around center">
-        <!-- TODO: routerLink -->
-        <a><mat-icon svgIcon="magnifying_glass"></mat-icon></a>
-        <div class="card-text">
-          <h4>Create your organization</h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
-            sagittis.
+      <a routerLink="../find">
+        <mat-list-item>
+          <mat-icon class="first-icon" matListIcon svgIcon="magnifyingGlass"></mat-icon>
+          <h4 mat-line><b>Find your organization</b></h4>
+          <p mat-line>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
+            Donec luctus dictum metus quis sagittis.
           </p>
-        </div>
-        <!-- TODO: routerLink -->
-        <a><mat-icon>keyboard_arrow_right</mat-icon></a>
-      </mat-card-content>
-      <mat-divider></mat-divider>
-      <mat-card-content fxLayout="row" fxLayoutAlign="space-around center">
-        <!-- TODO: routerLink -->
-        <a><mat-icon svgIcon="magic_wand"></mat-icon></a>
-        <div class="card-text">
-          <h4>Create your organization</h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
-            sagittis.
-          </p>
-        </div>
-        <!-- TODO: routerLink -->
-        <a><mat-icon>keyboard_arrow_right</mat-icon></a>
-      </mat-card-content>
-    </mat-card>
+          <mat-icon class="second-icon">keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+      </a>
+    </mat-nav-list>
     <div class="image"></div>
   </article>
 </section>

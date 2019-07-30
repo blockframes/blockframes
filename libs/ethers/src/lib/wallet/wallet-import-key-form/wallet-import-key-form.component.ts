@@ -12,10 +12,10 @@ import { validMnemonic } from '@blockframes/utils';
 })
 export class WalletImportKeyFormComponent {
 
+  fileUploaded = false;
   isMnemonic = false;
   keyObject: Key;
-  mnemonic = '';
-  mnemonicField = new FormControl('', [Validators.required, validMnemonic]);
+  mnemonic = new FormControl('', [Validators.required, validMnemonic]);
   
   @Input() lockMnemonic = false;
   @Output() importKey = new EventEmitter<Key>();
@@ -31,6 +31,7 @@ export class WalletImportKeyFormComponent {
     try {
       const jsonString = new TextDecoder('utf-8').decode(jsonFile);
       this.keyObject = JSON.parse(jsonString);
+      this.fileUploaded = true;
     } catch(err) {
       this.snackBar.open(`Ooops : ${err}`, 'close', { duration: 1000 });
     }
@@ -38,7 +39,11 @@ export class WalletImportKeyFormComponent {
 
   import() {
     this.isMnemonic
-      ? this.importMnemonic.emit(this.mnemonic)
+      ? this.importMnemonic.emit(this.mnemonic.value)
       : this.importKey.emit(this.keyObject);
+  }
+
+  get isDisabled() {
+    return (!this.isMnemonic && !this.fileUploaded) || (this.isMnemonic && !this.mnemonic.valid);
   }
 }

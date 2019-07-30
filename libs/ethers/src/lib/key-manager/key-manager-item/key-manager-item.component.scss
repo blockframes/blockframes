@@ -1,7 +1,44 @@
-mat-card {
-  margin-top: 10px;
+article {
+  background-color: white;
+  border: solid 1px var(--borderGrey);
+  border-radius: 10px;
+  height: 100px;
+  width: 320px;
+  div.image {
+    height: 100px;
+    width: 100px;
+    border-radius: 10px 0 0 10px;
+    margin-right: 16px;
+    img {
+      margin: 38px 29px;
+    }
+  }
+  div {
+    h5 {
+      margin: 0;
+    }
+    p {
+      margin: 0;
+    }
+    a {
+      margin-left: 100px;
+    }
+  }
 }
 
-mat-card-header {
-  max-width: 40%;
+article.small {
+  height: 50px;
+  h5 {
+    margin-left: 20px;
+  }
+  div.small {
+    height: 50px;
+    width: 50px;
+    border-radius: 0 10px 10px 0;
+    margin-right: 0;
+    button {
+      margin: 5px;
+      color: white
+    }
+  }
 }

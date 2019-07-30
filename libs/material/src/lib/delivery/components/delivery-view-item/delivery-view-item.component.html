@@ -78,9 +78,9 @@
       </ng-container>
       <div class="payment">
         <h5>Payment</h5>
-        <mat-icon *ngIf="material.state === 'delivered' || material.state === 'accepted'; else notPayed" class="icons" svgIcon="{{ paymentIcons[0] }}"></mat-icon>
+        <mat-icon *ngIf="material.state === 'delivered' || material.state === 'accepted'; else notPayed" class="icons" svgIcon="payed"></mat-icon>
         <ng-template #notPayed>
-            <mat-icon class="icons" svgIcon="{{ paymentIcons[1] }}"></mat-icon>
+            <mat-icon class="icons" svgIcon="notPayed"></mat-icon>
         </ng-template>
 
       </div>

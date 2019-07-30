@@ -1,11 +1,12 @@
-main {
-  background-color: var(--whiteBackground);
-  margin-left: 200px;
-  margin-right: 200px;
-  margin-top: 100px;
+@import 'variables';
+
+:host {
+  display: block;
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 100px;
   header {
-    .spacer {
-      border-bottom: solid var(--borderGrey) 1px;
+    hr {
       margin: 0 30px 0 30px;
     }
     button {
@@ -13,8 +14,6 @@ main {
     }
   }
   section {
-    margin-left: 200px;
-    margin-right: 200px;
     h3 {
       color: var(--lightGrey);
     }
@@ -22,6 +21,42 @@ main {
       background-color: white;
       border-radius: 10px;
       border: solid 1px var(--borderGrey);
+    }
+  }
+}
+
+@include tablet {
+  :host {
+    display: block;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    header {
+      hr {
+        display: none;
+      }
+      button {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+@include mobile {
+  :host {
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    header {
+      hr {
+        display: none;
+      }
+    }
+    section {
+      wallet-address-view {
+        margin-bottom: 20px;
+      }
     }
   }
 }

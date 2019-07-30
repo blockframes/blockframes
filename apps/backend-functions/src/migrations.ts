@@ -1,6 +1,6 @@
 import { getCollection, getCount } from './data/internals';
 import { Organization, Material } from './data/types';
-import { db, serverTimestamp } from './firebase';
+import { db, serverTimestamp } from './internals/firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
 import { setRestoreFlag } from './backup';
 

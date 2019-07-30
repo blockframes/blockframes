@@ -19,11 +19,11 @@ enum steps {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WalletAddKeyTunnelComponent implements OnInit {
-  
+
   steps = steps;
   step = this.steps.password;
   key: Key;
-  loading$ = new Observable<boolean>();
+  encrypting$: Observable<boolean>;
   redirectRoute: string;
   @ViewChild('downloadLink', {static: false}) downloadLink: ElementRef<HTMLAnchorElement>;
 
@@ -37,13 +37,13 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loading$ = this.keyQuery.selectLoading();
+    this.encrypting$ = this.keyQuery.selectLoading();
 
     // TODO remove this ASAP see issue #617
     // check if there is a ?redirect=<redirect url> in the route, otherwise use default redirect
     this.route.queryParams.pipe(map(params => 'redirect' in params ? params.redirect : '/layout/o/account/wallet'))
       .subscribe(redirectRoute => this.redirectRoute = redirectRoute);
-    
+
   }
 
   async setPassword(password: string) {

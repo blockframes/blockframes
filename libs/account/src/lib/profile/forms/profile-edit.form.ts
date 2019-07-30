@@ -1,44 +1,37 @@
-import { Validators } from '@angular/forms';
-import {
-  FormEntity,
-  EmailControl,
-  StringControl
-} from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
+import { FormEntity } from '@blockframes/utils';
 
-interface Profile {
-  uid: string
-  email: string
-  firstName: string
-  lastName: string
-  biography: string
+export interface Profile {
+  name: string;
+  surname: string;
+  phoneNumber: string;
+  position: string;
 }
 
-function createProfile(params?: Partial<Profile>): Profile {
+function createProfile(params: Partial<Profile> = {}): Profile {
   return {
-    uid: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    biography: '',
-    ...(params || {})
-  } as Profile
+    name: '',
+    surname: '',
+    phoneNumber: '',
+    position: '',
+    ...params
+  };
 }
 
 function createProfileControls(entity: Partial<Profile>) {
   const profile = createProfile(entity);
   return {
-    uid: new StringControl(profile.uid, true),
-    email: new EmailControl(profile.email, true),
-    firstName: new StringControl(profile.firstName, false, [Validators.required]),
-    lastName: new StringControl(profile.lastName, false, [Validators.required]),
-    biography: new StringControl(profile.biography),
-  }
+    name: new FormControl(profile.name),
+    surname: new FormControl(profile.surname),
+    phoneNumber: new FormControl(profile.phoneNumber),
+    position: new FormControl(profile.position)
+  };
 }
 
-type ProfileControl = ReturnType<typeof createProfileControls>
+type ProfileControl = ReturnType<typeof createProfileControls>;
 
 export class ProfileForm extends FormEntity<Profile, ProfileControl> {
   constructor(data?: Profile) {
-    super(createProfileControls(data))
+    super(createProfileControls(data));
   }
 }

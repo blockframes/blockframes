@@ -1,34 +1,27 @@
-<ng-container *ngIf="!isSmall; else smallVersion">
-    <mat-card-header fxLayout="column" fxLayoutAlign="center center">
-        <mat-icon svgIcon="key_icon" aria-hidden="false" aria-label="Key icon">key_icon</mat-icon>
-      </mat-card-header>
-  <mat-card [ngStyle]="{ 'background-color': backgroundColor }">
-    <mat-card-content>
-      <p>{{ keyObject.name }}</p>
+<ng-container *ngIf="isSmall; else notSmall">
+  <article class="small" fxLayout="row" fxLayoutAlign="space-between center">
+    <h5>{{ keyObject.name }}</h5>
+    <div class="small" [ngStyle]="{ 'background-color': backgroundColor }">
+      <button mat-icon-button (click)="selectKey.emit(keyObject)">
+        <mat-icon class="material-icons-outlined">keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </article>
+</ng-container>
+<ng-template #notSmall>
+  <article fxLayout="row" fxLayoutAlign="start center">
+    <div class="image" [ngStyle]="{ 'background-color': backgroundColor }">
+      <img src="/assets/icons/keyIcon.svg">
+    </div>
+    <div>
+      <h5>{{ keyObject.name }}</h5>
       <p>Lorem Ipsum</p>
-    </mat-card-content>
-    <mat-card-actions>
       <a mat-icon-button [href]="jsonKeystore">
         <mat-icon class="material-icons-outlined">cloud_download</mat-icon>
       </a>
-      <button mat-icon-button (click)="deleteKeyEvent.emit(key)">
+      <button mat-icon-button (click)="deleteKey.emit(keyObject)">
         <mat-icon class="material-icons-outlined">delete</mat-icon>
       </button>
-    </mat-card-actions>
-  </mat-card>
-</ng-container>
-<ng-template #smallVersion>
-    <mat-card-header>
-        <mat-icon svgIcon="key-icon" aria-hidden="false" aria-label="Key icon"></mat-icon>
-      </mat-card-header>
-  <mat-card
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    [ngStyle]="{ 'background-color': backgroundColor }">
-    <mat-card-content>
-      <span>{{ keyObject.name }}</span></mat-card-content>
-    <mat-card-actions>
-      <mat-icon (click)="selectedKey.emit(key)">keyboard_arrow_right</mat-icon>
-    </mat-card-actions>
-  </mat-card>
+    </div>
+  </article>
 </ng-template>

@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { auth, db } from './firebase';
-import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey } from './environments/environment';
-import { userInviteTemplate } from './assets/mailTemplates';
+import { generate as passwordGenerator } from 'generate-password';
+import { auth, db } from './internals/firebase';
+import { userInvite } from './assets/mail-templates';
+import { sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -20,10 +20,19 @@ interface OrgProposal {
 
 const onUserCreate = (user: UserRecord) => {
   const { email, uid } = user;
-  return db
-    .collection('users')
-    .doc(user.uid)
-    .set({ email, uid });
+
+  const userDocRef = db.collection('users').doc(user.uid);
+
+  // transaction to UPSERT the user doc
+  return db.runTransaction(async tx => {
+    const userDoc = await tx.get(userDocRef);
+
+    if (userDoc.exists) {
+      tx.update(userDocRef, { email, uid });
+    } else {
+      tx.set(userDocRef, { email, uid });
+    }
+  });
 };
 
 const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
@@ -87,6 +96,12 @@ const findOrgByName = async (data: any, context: CallableContext): Promise<OrgPr
     });
 };
 
+const generatePassword = () =>
+  passwordGenerator({
+    length: 12,
+    numbers: true
+  });
+
 const getOrCreateUserByMail = async (
   data: any,
   context: CallableContext
@@ -97,21 +112,17 @@ const getOrCreateUserByMail = async (
     const user = await auth.getUserByEmail(email);
     return { uid: user.uid, email };
   } catch {
+    const password = generatePassword();
+
     // User does not exists, send them an email.
     const user = await auth.createUser({
       email,
-      emailVerified: false,
+      password,
+      emailVerified: true,
       disabled: false
     });
 
-    SendGrid.setApiKey(sendgridAPIKey);
-    const msg = {
-      to: email,
-      from: 'admin@blockframes.io',
-      subject: 'Your Blockframes account is waiting for you',
-      text: userInviteTemplate()
-    };
-    await SendGrid.send(msg);
+    await sendMail(userInvite(email, password));
 
     return { uid: user.uid, email };
   }

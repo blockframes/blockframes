@@ -4,10 +4,10 @@ import { AuthStore, User, createUser } from './auth.store';
 import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
+import firebase from 'firebase';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   constructor(
     private store: AuthStore,
     private afAuth: AngularFireAuth,
@@ -23,16 +23,27 @@ export class AuthService {
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
     await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
-    await this.afAuth.auth.currentUser.updatePassword(newPassword);
+    return this.afAuth.auth.currentUser.updatePassword(newPassword);
   }
 
   public async signin(email: string, password: string) {
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    this.router.navigate(['layout']);
+    return this.router.navigate(['layout']);
   }
 
-  public signup(email: string, password: string) {
-    this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  public async signup(email: string, password: string, name: string, surname: string) {
+    const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+
+    await authUser.user.sendEmailVerification();
+
+    const user = createUser({
+      uid: authUser.user.uid,
+      email: authUser.user.email,
+      name,
+      surname
+    });
+
+    return this.create(user);
   }
 
   public async logout() {
@@ -44,12 +55,20 @@ export class AuthService {
   // USER //
   //////////
   /** Create a user based on firebase user */
-  public create({ email, uid }: firebase.User) {
-    const user = createUser({ email, uid })
-    return this.db.doc<User>(`users/${uid}`).set(user);
+  public create(user: User) {
+    const userDocRef = this.db.firestore.collection('users').doc(user.uid);
+    // transaction to UPSERT the user doc
+    return this.db.firestore.runTransaction(async tx => {
+      const userDoc = await tx.get(userDocRef);
+      if (userDoc.exists) {
+        tx.update(userDocRef, user);
+      } else {
+        tx.set(userDocRef, user);
+      }
+    });
   }
 
-  /** Upate a user */
+  /** Update a user */
   public update(uid: string, user: Partial<User>) {
     return this.db.doc<User>(`users/${uid}`).update(user);
   }
@@ -60,28 +79,48 @@ export class AuthService {
 
     await this.store.update({ user: null });
     await this.afAuth.auth.currentUser.delete();
-    await this._deleteSubCollections(uid);
+    await this.deleteSubCollections(uid);
     await this.db.doc<User>(`users/${uid}`).delete();
   }
 
+  public async sendVerifyEmail() {
+    return this.afAuth.auth.currentUser.sendEmailVerification();
+  }
+
   /** Deletes user subCollections */
-  private async _deleteSubCollections (uid) {
+  private async deleteSubCollections(uid: string) {
     // @todo check if user is the only member of org (and the only ADMIN)
     // @todo remove uid from org.userIds
-    const permissions = await this._getUserSubcollectionItems(uid, 'permissions');
-    return await permissions.map(o => this.db.doc<User>(`users/${uid}`)
-      .collection('permissions')
-      .doc(o.id)
-      .delete()
+    const permissions = await this.getUserSubcollectionItems(uid, 'permissions');
+
+    return Promise.all(
+      permissions.map(({ id }) =>
+        this.db
+          .doc<User>(`users/${uid}`)
+          .collection('permissions')
+          .doc(id)
+          .delete()
+      )
     );
   }
 
   /** Returns promise of subcollection[] */
-  private async _getUserSubcollectionItems(uid, collectionName) {
-    const items = await this.db.doc<User>(`users/${uid}`)
+  private async getUserSubcollectionItems(uid: string, collectionName: string) {
+    const items = await this.db
+      .doc<User>(`users/${uid}`)
       .collection(collectionName)
       .get()
       .toPromise();
     return items.docs;
+  }
+
+  public async getOrCreateUserByMail(email: string): Promise<User> {
+    const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
+    return f({ email }).then(matchingEmail => matchingEmail.data);
+  }
+
+  public async getUserByMail(prefix: string): Promise<User[]> {
+    const f = firebase.functions().httpsCallable('findUserByMail');
+    return f({ prefix }).then(matchingUsers => matchingUsers.data);
   }
 }

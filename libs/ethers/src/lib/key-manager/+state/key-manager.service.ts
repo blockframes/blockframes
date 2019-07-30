@@ -76,13 +76,13 @@ export class KeyManagerService {
   }
 
   /** load key (retreive / decrypt, set into process memory) */
-  async unlockAndSetActive(key: Key, encryptionPassword: string) {
+  async unlockKey(key: Key, encryptionPassword: string) {
 
     this.store.setLoading(true);
     try {
       const wallet = await EthersWallet.fromEncryptedJson(key.keyStore, encryptionPassword)
-      this.activateKey(key.address, wallet);
       this.store.setLoading(false);
+      return wallet;
     }
     catch(error) {
       this.store.setLoading(false);

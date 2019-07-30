@@ -18,10 +18,8 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
     uint256 private lastNonce;
 
     /// @dev This contract will always be deployed through a Create2 Factory,
-    /// thus, the constructor will never been include in the runtime byteCode.
-    /// This constructor below will never be executed or deployed on the blockchain.
-    /// We need to keep it in here, because otherwise the compiler will throw an error.
-    /// May be we will be able to remove the constructor if we modify KeyHolder.
+    /// KeyHolder needs a key for it's constructor so we add the zero address assuming no body will ever control this account
+    /// real "constructor" initialization is done in the `init()` function because the parameter cannot be included in the bytecode for a create2 deploy
     constructor() KeyHolder(address(0x0)) public {} // solium-disable-line no-empty-blocks
 
     /// @dev This function play the role of the "constructor",
@@ -29,12 +27,12 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
     /// but every storage initialization should be hardcoded here,
     /// after compilation we can dynamically modify those arguments just before the create2 deploy.
     /// NOTE : here we use 0xdead solely because it's easier to find this particular string among the compiled byteCode.
-    function init() public requireNotInit() {
+    function init(address pubKey, address payable recover) public requireNotInit() {
         Initable.init();
 
         // "constructor" classical initialization
-        this.addKey(address(0xdeAD00000000000000000000000000000000dEAd), 1); // HARDCODED ADDRESS WILL BE DYNAMICALLY CHANGED BEFORE DEPLOY
-        recoverAddress = 0xdeAD00000000000000000000000000000000dEAd; // HARDCODED ADDRESS WILL BE DYNAMICALLY CHANGED BEFORE DEPLOY
+        this.addKey(pubKey, 1);
+        recoverAddress = recover;
     }
 
     /// @dev Check wether or not a MetaTx can be executed.
@@ -96,7 +94,7 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         address to, uint256 value, bytes memory data, uint256 nonce,    // tx
         uint256 gasPrice, address gasToken, uint256 gasLimit,           // gas
         OperationType operationType,                                    // staticcall/call/delegatecal
-        bytes memory signatures
+        bytes memory signatures                                         // signatures
     ) public requireInit() returns (bytes32) {
 
         // checks
@@ -106,7 +104,6 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         require(canExecute(to, value, data, nonce, gasPrice, gasToken, gasLimit, operationType, signatures), "Invalid signature");
 
         // execute
-        uint256 startingGas = gasleft();
         bytes memory _data;
         bool success;
         // TODO should check operationType and use staticcall or delegatecall if needed
@@ -116,10 +113,6 @@ contract ERC1077 is KeyHolder, IERC1077, Initable {
         // event
         bytes32 messageHash = calculateMessageHash(address(this), to, value, data, nonce, gasPrice, gasToken, gasLimit, operationType);
         emit ExecutedSigned(messageHash, lastNonce, success);
-
-        // refund  // TODO no need for refund
-        uint256 gasUsed = startingGas.sub(gasleft());
-        refund(gasUsed, gasPrice, gasToken);
 
         return messageHash;
     }

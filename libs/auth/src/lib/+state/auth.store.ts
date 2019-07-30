@@ -9,12 +9,10 @@ export interface User {
   };
   balance: string;
   email: string;
-  //TODO: issue#60 delete lastName and firstName
-  lastName: string;
-  firstName: string;
   name: string;
   surname: string;
-  biography: string;
+  phoneNumber: string;
+  position: string,
   orgId: string;
 }
 
@@ -23,16 +21,10 @@ export interface UserForm {
   pwd: string;
 }
 
-export interface AccountForm {
-  lastName: string;
-  firstName: string;
-  biography: string;
-}
-
 export interface AuthState {
   user: User;
+  auth?: { emailVerified: boolean };
   form: UserForm;
-  accountForm: AccountForm;
   requestedRoute?: string;
   isEncrypting: boolean;
   isBalanceLoading: boolean;
@@ -49,11 +41,6 @@ const initialState: AuthState = {
   form: {
     email: '',
     pwd: ''
-  },
-  accountForm: {
-    lastName: '',
-    firstName: '',
-    biography: '',
   },
   isEncrypting: false,
   isBalanceLoading: false,

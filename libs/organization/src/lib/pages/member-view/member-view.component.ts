@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
-  selector: 'org-member-view',
+  selector: 'organization-member-view',
   templateUrl: './member-view.component.html',
   styleUrls: ['./member-view.component.scss']
 })

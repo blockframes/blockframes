@@ -6,6 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { AuthModule } from '@blockframes/auth';
+import { EditableSidenavModule } from '@blockframes/ui';
+import { FeedbackMessageModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -19,33 +21,48 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Components
-import { OrgFormComponent } from './components/org-form/org-form.component';
+import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberFormComponent } from './components/member-form/member-form.component';
-import { OrgWidgetComponent } from './components/org-widget/org-widget.component';
+import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
+import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
+import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
+import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
+import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
+import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
+import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
 
 // Pages
-import { OrgViewComponent } from './pages/org-view/org-view.component';
 import { MemberListComponent } from './pages/member-list/member-list.component';
 import { MemberViewComponent } from './pages/member-view/member-view.component';
-import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
+import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
+import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
+import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 
 export const organizationRoutes: Routes = [
   {
-    path: 'organization-home',
-    component: OrganizationHomeComponent
-  },
-  {
-    path: 'form',
-    component: OrgFormComponent
-  },
-  {
     path: ':orgId',
-    component: OrgViewComponent
+    children: [
+      { path: '', redirectTo: 'edit', pathMatch: 'full' },
+      { path: 'edit', component: OrganizationEditableComponent },
+      {
+        path: 'activityreports',
+        component: OrganizationActivityViewComponent
+      },
+      {
+        path: 'administration',
+        component: OrganizationAdminViewComponent
+      }
+    ]
   }
 ];
-
 
 @NgModule({
   imports: [
@@ -54,6 +71,8 @@ export const organizationRoutes: Routes = [
     FormsModule,
     AuthModule,
     FlexLayoutModule,
+    EditableSidenavModule,
+    FeedbackMessageModule,
 
     // Material
     MatFormFieldModule,
@@ -67,20 +86,32 @@ export const organizationRoutes: Routes = [
     MatButtonModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatTableModule,
+    MatSortModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrgFormComponent,
-    OrgViewComponent,
-    OrgWidgetComponent,
+    OrganizationFormComponent,
+    OrganizationDisplayComponent,
+    OrganizationWidgetComponent,
     MemberListComponent,
     MemberViewComponent,
     MemberFormComponent,
-    OrganizationHomeComponent
+    OrganizationActivityViewComponent,
+    OrganizationActivityRepertoryComponent,
+    OrganizationAdminViewComponent,
+    OrganizationActionRepertoryComponent,
+    OrganizationSignerRepertoryComponent,
+    OrganizationSignerFormComponent,
+    OrganizationEditableComponent,
+    OrganizationFormComponent,
+    OrganizationActivityViewComponent,
+    OrganizationQuorumFormComponent
   ],
-  exports: [
-    OrgWidgetComponent
-  ]
+  exports: [OrganizationWidgetComponent]
 })
-export class OrganizationModule {
-}
+export class OrganizationModule {}

@@ -28,9 +28,10 @@ export class AuthGuard implements CanActivate {
     return new Promise((res, rej) => {
       this.subscription = this.afAuth.authState
         .pipe(
-          switchMap(user => {
-            if (!user) throw new Error('Not connected');
-            return this.db.doc<User>(`users/${user.uid}`).valueChanges();
+          switchMap(userAuth => {
+            if (!userAuth) throw new Error('Not connected');
+            this.store.update({ auth: { emailVerified: userAuth.emailVerified } });
+            return this.db.doc<User>(`users/${userAuth.uid}`).valueChanges();
           }),
           tap(user => this.store.update({ user })),
           map(user => (user && user.name && user.surname) ? true : this.router.parseUrl('auth/identity'))

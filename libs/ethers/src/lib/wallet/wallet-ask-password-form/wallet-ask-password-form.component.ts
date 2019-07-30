@@ -11,8 +11,8 @@ export class WalletAskPasswordFormComponent {
   public password = new PasswordControl();
 
   /** An event that will send the setted password by the user */
-  @Output() userPassword: EventEmitter<string> = new EventEmitter();
+  @Output() userPassword = new EventEmitter();
 
   /** An event that will notify the parent component that the user forgot his password */
-  @Output() forgotPassword: EventEmitter<void> = new EventEmitter();
+  @Output() forgotPassword = new EventEmitter();
 }

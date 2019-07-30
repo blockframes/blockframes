@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Organization, OrganizationQuery } from '../../+state';
 
 @Component({
-  selector: 'org-member-list',
+  selector: 'organization-member-list',
   templateUrl: './member-list.component.html',
   styleUrls: ['./member-list.component.scss']
 })

@@ -1,14 +1,22 @@
 <ng-container *ngIf="(keys$ | async) as keys; else: keysLoading">
-  <h3>Stored key{{ keys.length > 1 ? 's' : '' }} ({{ keys.length }})</h3>
-  <div fxLayout="row wrap">
-    <key-manager-item
-      *ngFor="let key of (keys$ | async)"
-      [key]="key"
-      (deleteKeyEvent)="delete($event)">
-    </key-manager-item>
-  </div>
+  <h3>Keyring ({{ keys.length }})</h3>
+  <ng-container *ngIf="isSmall; else notSmall">
+    <article fxLayout="column" fxLayoutAlign="start center">
+      <key-manager-item *ngFor="let key of (keys$ | async)" [key]="key" [isSmall]="small" (selectKey)="selectKey.emit($event)"></key-manager-item>
+    </article>
+  </ng-container>
+  <ng-template #notSmall>
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutAlign.lt-lg="space-around">
+      <ng-container *ngFor="let key of (keys$ | async)">
+        <key-manager-item [key]="key" [isSmall]="small" (deleteKey)="deleteKey.emit($event)"></key-manager-item>
+      </ng-container>
+    </article>
+  </ng-template>
+  
 </ng-container>
 <ng-template #keysLoading>
-  Your keys are loading ...
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    Your keys are loading ...
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </article>
 </ng-template>

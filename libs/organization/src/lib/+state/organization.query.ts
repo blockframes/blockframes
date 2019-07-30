@@ -15,4 +15,16 @@ export class OrganizationQuery extends Query<OrganizationState> {
   get form$() {
     return this.select(state => state.form);
   }
+
+  get pendingActions$() {
+    return this.select(state => state.org.actions.filter(action => !action.isApproved));
+  }
+
+  get approvedActions$() {
+    return this.select(state => state.org.actions.filter(action => !action.isApproved));
+  }
+
+  getOperationById(id: string) {
+    return this.getValue().org.operations.filter(action => action.id === id)[0];
+  }
 }

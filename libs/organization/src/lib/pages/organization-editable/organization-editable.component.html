@@ -1,0 +1,13 @@
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
+  <ng-container content>
+    <organization-display
+      [organizationInformations]="organizationInformations$ | async"
+      [organization]="organization$ | async"
+      [isSuperAdmin]="isSuperAdmin$ | async"
+      (editing)="openSidenav()">
+    </organization-display>
+  </ng-container>
+  <ng-container sidenav>
+    <organization-form [formGroup]="organizationProfileForm"></organization-form>
+  </ng-container>
+</editable-sidenav>

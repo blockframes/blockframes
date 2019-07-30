@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
-
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -27,7 +26,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
-import { OrganizationModule } from '@blockframes/organization';
+import { OrganizationModule, NoOrganizationModule } from '@blockframes/organization';
 import { ProfileModule } from '@blockframes/account';
 import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
@@ -94,6 +93,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
+    NoOrganizationModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { providers, getDefaultProvider, utils, Contract } from 'ethers';
+import { providers, getDefaultProvider, utils, Contract, Wallet as EthersWallet } from 'ethers';
 import { toASCII } from 'punycode';
 import { baseEnsDomain, network, factoryContract } from '@env';
-import { Factory2 } from '@blockframes/contracts';
+import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
-import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
+import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
+import { MetaTx, SignedMetaTx, LocalTx } from '../../types';
+import { WalletQuery } from './wallet.query';
+import { getMockTx } from './wallet-known-tx';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -14,18 +17,16 @@ export class WalletService {
   provider: providers.Provider
 
   constructor(
-    private keyManagerQuery: KeyManagerQuery,
+    private query: WalletQuery,
     private store: WalletStore,
     private keyManager: KeyManagerService,
     private relayer: Relayer,
   ) {}
 
   public async updateFromEmail(email: string) {
-    this.store.setLoading(true);
     const ensDomain = this.emailToEnsDomain(email);
     const address = await this.retreiveAddress(ensDomain);
     this.store.update({ensDomain, address});
-    this.store.setLoading(false);
   }
 
   /**
@@ -49,9 +50,12 @@ export class WalletService {
   public async retreiveAddress(ensDomain: string) {
     this._requireProvider();
     const address = await this.provider.resolveName(ensDomain);
-    if(!!address){
-      this.store.update({hasERC1077: true});
-      return address;
+    if (!!address){
+      const code = await this.provider.getCode(ensDomain);
+      if (code !== '0x') {
+        this.store.update({hasERC1077: true});
+        return address;
+      }
     }
     return await this.precomputeAddress(ensDomain);
   }
@@ -66,15 +70,11 @@ export class WalletService {
 
     const factoryAddress = await this.provider.resolveName(factoryContract);
 
-    // retreive init code
-    const factory2 = new Contract(factoryAddress, Factory2.abi, this.provider);
-    const initCode = await factory2.getInitCode();
-
     // CREATE2 address
     let payload = '0xff';
     payload += factoryAddress.substr(2);
-    payload += utils.keccak256(utils.toUtf8Bytes(ensDomain.split('.')[0])).substr(2); // salt
-    payload += utils.keccak256(initCode).substr(2);
+    payload += utils.keccak256(utils.toUtf8Bytes(this.getNameFromENS(ensDomain))).substr(2); // salt
+    payload += utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
     return `0x${utils.keccak256(payload).slice(-40)}`;
   }
 
@@ -91,14 +91,115 @@ export class WalletService {
     return key;
   }
 
-  public async deployERC1077(ensDomain: string) {
-    // TODO check if not already deployed
-    let key = null;
-    try{
-      key = this.keyManagerQuery.getMainKeyOfUser(ensDomain).address;
-    } catch(error) {
-      throw new Error('You are trying to deploy an ERC1077 without any key');
+  /** Get first part of an ens domain : `alice.blockframes.eth` -> `alice` */
+  public getNameFromENS(ensDomain: string) {
+    return ensDomain.split('.')[0];
+  }
+
+  public async deployERC1077(ensDomain: string, pubKey: string) {
+    if (this.query.getValue().hasERC1077) {
+      throw new Error('Your smart-wallet is already deployed');
     }
-    return this.relayer.create(ensDomain.split('.')[0], key, await this.precomputeAddress(ensDomain));
+    this.store.setLoading(true);
+    try {
+      const name =  this.getNameFromENS(ensDomain);
+      const erc1077Address = await this.precomputeAddress(ensDomain);
+      const result = await this.relayer.deploy(name, pubKey, erc1077Address);
+      this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
+      this.store.update({hasERC1077: true})
+      this.store.setLoading(false);
+      return result;
+    } catch(err) {
+      this.store.setLoading(false);
+      console.error(err);
+      throw new Error('Deploy seems to have failed, but firebase function is maybe still runing');
+    }
+  }
+
+  /** return an instance of an ERC10777 contract */
+  private getUsersERC1077(ensDomainOrAddress: string) {
+    this._requireProvider();
+    return new Contract(ensDomainOrAddress, ERC1077.abi, this.provider);
+  }
+
+  public async setDeleteKeyTx(pubKey: string) {
+    this.setTx(getMockTx(() => console.log('Mock Tx callback !!!'))); // TODO use getDeleteKeyTx : issue#655
+    // TODO call key manager delete key to delete localy after the tx has been mined : issue#655
+  }
+
+  public setTx(tx: LocalTx) {
+    this.store.update({tx});
+  }
+
+  private hashMetaTx(from: string, metaTx: MetaTx) {
+    return this.getUsersERC1077(from).calculateMessageHash(
+      from, metaTx.to, metaTx.value, metaTx.data, metaTx.nonce, // tx
+      metaTx.gasPrice, metaTx.gasToken, metaTx.gasLimit, // gas
+      metaTx.operationType // op type
+    );
+  }
+
+  private signedMetaTxToData(signedMetaTx: SignedMetaTx) {
+    const abiCoder = new utils.AbiCoder();
+    return abiCoder.encode([
+      'address', // to
+      'uint256', // value
+      'bytes', // data
+      'uint256', // nonce
+      'uint256', // gasPrice
+      'address', // address
+      'uint256', // gasLimit
+      'uint8', // operationType
+      'bytes', // signatures
+    ],[
+      signedMetaTx.to, signedMetaTx.value, signedMetaTx.data, signedMetaTx.nonce, // tx
+      signedMetaTx.gasPrice, signedMetaTx.gasToken, signedMetaTx.gasLimit, // gas
+      signedMetaTx.operationType, // op type
+      signedMetaTx.signatures, // signature
+    ]);
+  }
+
+  public async prepareMetaTx(wallet: EthersWallet): Promise<SignedMetaTx> {
+    this._requireProvider();
+    const from = this.query.getValue().address;
+    const erc1077 = this.getUsersERC1077(from);
+
+    // prepare
+    const metaTx = {
+      ...this.query.getValue().tx,
+      nonce: await erc1077.getLastNonce(),
+      gasPrice: await this.provider.getGasPrice().then(bigNum => bigNum.toHexString()),
+      gasLimit: '0x0', // temporary gas limit
+      gasToken: '0x0000000000000000000000000000000000000000', // zero address means ether instead of erc20
+      operationType: '0x0', // required but not used in the contract yet
+    }
+
+    // estimate gas
+    const mockTxHash = await this.hashMetaTx(from, metaTx);
+    const mockSignature = await wallet.signMessage(mockTxHash);
+    const mockSignedMetaTx: SignedMetaTx = {...metaTx, signatures: mockSignature};
+    const mockTx: providers.TransactionRequest = {
+      to: from,
+      value: 0,
+      data: this.signedMetaTxToData(mockSignedMetaTx),
+    }
+    const estimatedGasLimit = await this.provider.estimateGas(mockTx).then(bigNum => bigNum.toHexString());
+
+    // hash & sign
+    metaTx.gasLimit = estimatedGasLimit; // replace temporary gasLimit by its estimation
+    const txHash = await this.hashMetaTx(from, metaTx);
+    const signature = await wallet.signMessage(utils.arrayify(txHash));
+    return {...metaTx, signatures: signature};
+  }
+
+  public async sendSignedMetaTx(ensDomain: string, signedMetaTx: SignedMetaTx, ...args: any[]) {
+    const txResponse = await this.relayer.send(await this.retreiveAddress(this.getNameFromENS(ensDomain)), signedMetaTx);
+    this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
+    return txResponse;
+  }
+
+  public async waitForTx(txHash: string) {
+    this._requireProvider();
+    return this.provider.waitForTransaction(txHash);
   }
 }

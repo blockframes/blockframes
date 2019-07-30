@@ -5,12 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { LayoutComponent } from './layout/layout.component';
 import { MovieEmptyComponent } from '@blockframes/movie';
-import { OrganizationHomeComponent } from '@blockframes/organization';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { MovieActiveGuard } from '@blockframes/movie';
-import { OrgFormComponent, PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -28,6 +27,11 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'o',
         pathMatch: 'full'
+      },
+      {
+        // The redirection route when user has no organization
+        path: 'organization',
+        loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
       },
       {
         path: 'o',
@@ -66,14 +70,6 @@ export const routes: Routes = [
             loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
           }
         ]
-      },
-      {
-        path: 'organization-home',
-        component: OrganizationHomeComponent
-      },
-      {
-        path: 'create',
-        component: OrgFormComponent
       }
     ]
   },

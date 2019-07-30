@@ -1,7 +1,9 @@
-main {
+@import 'variables';
+
+section {
   max-width: 500px;
   text-align: center;
-  section {
+  article {
     margin: 48px 0;
     mat-form-field {
       width: 100%;
@@ -9,5 +11,14 @@ main {
   }
   img {
     margin-bottom: 80px;
+  }
+}
+
+@include mobile {
+  section {
+    img {
+      width: 250px;
+      margin-bottom: 30px;
+    }
   }
 }

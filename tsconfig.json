@@ -25,7 +25,8 @@
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],
       "@blockframes/template": ["libs/material/src/index.ts"],
-      "@blockframes/contracts": ["contracts/build"]
+      "@blockframes/contracts": ["contracts/build"],
+      "@blockframes/notification": ["libs/notification/index.ts"]
     },
     "module": "commonjs",
     "rootDir": "."

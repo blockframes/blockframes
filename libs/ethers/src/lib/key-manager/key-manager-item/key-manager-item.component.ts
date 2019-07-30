@@ -1,14 +1,7 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnInit,
-  Input,
-  EventEmitter,
-  Output
-} from '@angular/core';
-import { Key, KeyManagerService } from '../+state';
-import { keyToAddressPart, AddressParts } from '@blockframes/utils';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { Key, KeyManagerService } from "../+state";
+import { keyToAddressPart, AddressParts } from "@blockframes/utils";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: 'key-manager-item',
@@ -35,16 +28,15 @@ export class KeyManagerItemComponent implements OnInit {
   @Input() isSmall = false;
 
   /** Event to indicate the parent component which key is selected */
-  @Output() selectedKey: EventEmitter<Key> = new EventEmitter();
+  @Output() selectKey: EventEmitter<Key> = new EventEmitter();
 
   /** Event to indicate the parent component which key should be deleted */
-  @Output() deleteKeyEvent: EventEmitter<Key> = new EventEmitter();
+  @Output() deleteKey: EventEmitter<Key> = new EventEmitter();
 
   constructor(
     private service: KeyManagerService,
-    private sanitizer: DomSanitizer,
-  ) {
-  }
+    private sanitizer: DomSanitizer
+  ){}
 
   ngOnInit() {
     this.address = keyToAddressPart(this.keyObject, 6);
@@ -52,10 +44,6 @@ export class KeyManagerItemComponent implements OnInit {
 
   lockKey() {
     this.service.deactivateKey();
-  }
-
-  async deleteKey() {
-    this.service.deleteKey(this.keyObject);
   }
 
   async exportKey() {
@@ -74,9 +62,9 @@ export class KeyManagerItemComponent implements OnInit {
   }
 
   /** Get the 6 digits after the second index of the ethereum address to set the background color  */
-  private setBackgroundColor(ethAddress: string): string {
+  private setBackgroundColor(ethAddress: string) {
     const firstIndexIsF = this.keyObject.address.substring(2, 8).charAt(1) === 'f';
     const secondIndexIsF = this.keyObject.address.substring(2, 8).charAt(2) === 'f';
-    return firstIndexIsF && secondIndexIsF ? '#0f17ff' : ethAddress.substring(2, 8);
+    return firstIndexIsF && secondIndexIsF ? '#0f17ff' : '#' + ethAddress.substring(2, 8);
   }
 }

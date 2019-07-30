@@ -1,0 +1,21 @@
+@import 'variables';
+
+section {
+  text-align: center;
+  max-width: 500px;
+  button {
+    margin-top: 80px;
+  }
+}
+
+@include mobile {
+  section {
+    margin: 0 20px;
+    img {
+      width: 250px;
+    }
+    button {
+      margin-top: 40px;
+    }
+  }
+}

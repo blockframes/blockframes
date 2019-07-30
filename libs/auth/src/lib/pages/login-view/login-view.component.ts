@@ -49,8 +49,8 @@ export class LoginViewComponent {
       return;
     }
     try {
-      const { email, password } = signupForm.value;
-      await this.service.signup(email, password);
+      const { email, password, name, surname } = signupForm.value;
+      await this.service.signup(email, password, name, surname);
       const route = this.query.requestedRoute || 'layout';
       this.router.navigate([route]);
     } catch (err) {

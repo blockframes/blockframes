@@ -12,9 +12,6 @@ export class DeliveryViewItemComponent {
   @Input() isChecked: boolean;
   @Output() isSelected = new EventEmitter<boolean>();
 
-  // Visual bullshit for WoW effect
-  public paymentIcons = ['payed', 'not_payed'];
-
   public isOpen = true;
   public disableMaterial = false;
   public panelButtonLabel = 'LESS';

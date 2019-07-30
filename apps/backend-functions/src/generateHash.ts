@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { utils } from 'ethers';
 import * as fs from 'fs';
 import { ObjectMetadata } from 'firebase-functions/lib/providers/storage';
-import { db } from './firebase';
+import { db } from './internals/firebase';
 
 export const RE_IP_UPLOAD = /^ip\/(.+)\/version\/(.+)$/;
 
