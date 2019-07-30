@@ -1,13 +1,12 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 // Components
 import { LayoutComponent } from './layout/layout.component';
-
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { HomeComponent } from './home/home.component';
+import { OrganizationGuard, PermissionsGuard } from '@blockframes/organization';
 
 export const routes: Routes = [
   { path: 'layout', redirectTo: '', pathMatch: 'full' },
@@ -16,14 +15,44 @@ export const routes: Routes = [
     loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
   },
   {
-    path: '',
+    path: 'layout',
     component: LayoutComponent,
     canActivate: [AuthGuard],
     canDeactivate: [AuthGuard],
     children: [
       {
         path: '',
-        component: HomeComponent
+        redirectTo: 'o',
+        pathMatch: 'full'
+      },
+      {
+        // The redirection route when user has no organization
+        path: 'organization',
+        loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+      },
+      {
+        path: 'o',
+        canActivate: [PermissionsGuard, OrganizationGuard],
+        canDeactivate: [PermissionsGuard, OrganizationGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'home',
+            pathMatch: 'full'
+          },
+          {
+            path: 'organization',
+            loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
+          },
+          {
+            path: 'account',
+            loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+          },
+          {
+            path: 'home',
+            component: HomeComponent
+          }
+        ]
       }
     ]
   },
@@ -33,7 +62,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'not-found'
+    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
   }
 ];
 
