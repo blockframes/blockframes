@@ -20,7 +20,7 @@ export class MovieSalesCastForm extends FormEntity<Partial<MovieSalesCast>, Movi
   protected builder: FormBuilder; //@todo #643 no more builder group
   constructor() {
     super(createMovieSalesCastControls());
-    this.builder = new FormBuilder;
+    this.builder = new FormBuilder();
   }
 
   get credits() {

@@ -20,7 +20,7 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
   protected builder: FormBuilder; //@todo #643 no more builder group
   constructor() {
     super(createMoviePromotionalDescriptionControls());
-    this.builder = new FormBuilder;
+    this.builder = new FormBuilder();
   }
 
   get keywords() {

@@ -12,11 +12,11 @@ import { Movie } from '../+state';
 function createMovieControls() {
 
   return {
-    main: new MovieMainForm,
-    promotionalElements: new MoviePromotionalElementsForm,
-    promotionalDescription: new MoviePromotionalDescriptionForm,
-    story: new MovieStoryForm,
-    salesCast: new MovieSalesCastForm,
+    main: new MovieMainForm(),
+    promotionalElements: new MoviePromotionalElementsForm(),
+    promotionalDescription: new MoviePromotionalDescriptionForm(),
+    story: new MovieStoryForm(),
+    salesCast: new MovieSalesCastForm(),
   }
 }
 
@@ -26,7 +26,7 @@ export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
   protected builder : FormBuilder;
   constructor() {
     super(createMovieControls());
-    this.builder = new FormBuilder;
+    this.builder = new FormBuilder();
   }
 
   public populate(movie: Movie) {

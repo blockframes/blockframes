@@ -19,7 +19,7 @@ export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromot
   protected builder : FormBuilder; //@todo #643 no more builder group
   constructor() {
     super(createMoviePromotionalElementsControls());
-    this.builder = new FormBuilder;
+    this.builder = new FormBuilder();
   }
 
   get images() {
