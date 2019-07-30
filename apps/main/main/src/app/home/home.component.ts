@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-interface Dapp {
+interface AppDetails {
   name: string;
   logoSrc: string;
-  routerLink: string;
+  href: string;
 }
 
 @Component({
@@ -13,26 +13,26 @@ interface Dapp {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  public dapps: Dapp[] = [
+  public dapps: AppDetails[] = [
     {
       name: 'Media Financiers',
       logoSrc: 'http://graphouille.g.r.pic.centerblog.net/6c2aaddd.png',
-      routerLink: './movie-financing'
+      href: '/movie-financing'
     },
     {
       name: 'Stories and More',
       logoSrc: 'http://recueil-de-png.r.e.pic.centerblog.net/8cc2960d.png',
-      routerLink: './stories-and-more'
+      href: '/stories-and-more'
     },
     {
       name: 'Media Delivering',
       logoSrc: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
-      routerLink: './delivery'
+      href: '/delivery'
     },
     {
       name: 'Bigger Boat',
       logoSrc: 'https://www.stickpng.com/assets/images/580b57fbd9996e24bc43bb8e.png',
-      routerLink: './bigger-boat'
+      href: '/bigger-boat'
     }
   ];
 

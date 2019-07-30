@@ -7,7 +7,7 @@
     <h3>My DApps</h3>
     <article fxLayout="row" fxLayoutAlign="space-between center">
       <mat-card *ngFor="let dapp of dapps">
-        <a routerLink="{{dapp.routerLink}}">
+        <a href="{{dapp.href}}">
           <mat-card-content><img src="{{dapp.logoSrc}}" alt="DApp logo"/></mat-card-content>
         </a>
         <mat-divider></mat-divider>
