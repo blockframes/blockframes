@@ -1,7 +1,9 @@
 <h4>Pending members</h4>
 <mat-list>
   <mat-list-item *ngFor="let invitation of invitations">
-    {{ invitation.user.name }} {{ invitation.user.surname }} {{ invitation.user.email }}
+    <span>{{ invitation.user.name }}</span>
+    <span>{{ invitation.user.surname }}</span>
+    <span>{{ invitation.user.email }}</span>
     <button *ngIf="isSuperAdmin" (click)="accepted.emit(invitation.id)" mat-icon-button>
       <mat-icon svgIcon="acceptMember"></mat-icon>
     </button>

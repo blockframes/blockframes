@@ -2,12 +2,12 @@ import { Component, Output, EventEmitter, Input, ChangeDetectionStrategy } from 
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: '[formGroup] emailControl, organization-member-add',
-  templateUrl: './organization-member-add.component.html',
-  styleUrls: ['./organization-member-add.component.scss'],
+  selector: '[formGroup] emailControl, member-add',
+  templateUrl: './member-add.component.html',
+  styleUrls: ['./member-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationMemberAddComponent {
+export class MemberAddComponent {
   @Output() addedMember = new EventEmitter();
 
   constructor(public controlContainer: ControlContainer) {}

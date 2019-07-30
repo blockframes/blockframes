@@ -8,12 +8,12 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 
 @Component({
-  selector: 'organization-member-editable',
-  templateUrl: './organization-member-editable.component.html',
-  styleUrls: ['./organization-member-editable.component.scss'],
+  selector: 'member-editable',
+  templateUrl: './member-editable.component.html',
+  styleUrls: ['./member-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationMemberEditableComponent implements OnInit, OnDestroy {
+export class MemberEditableComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject();
 
   public opened = false;

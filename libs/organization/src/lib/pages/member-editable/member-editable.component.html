@@ -1,27 +1,27 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
   <ng-container content>
-    <organization-member-pending
+    <member-pending
       (declined)="declineInvitation($event)"
       (accepted)="acceptInvitation($event)"
       [invitations]="invitationsToJoinOrganization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async">
-    </organization-member-pending>
-    <organization-member-repertory
+    </member-pending>
+    <member-repertory
       [members]="members$ | async"
       (editing)="openSidenav($event)">
-    </organization-member-repertory>
-    <organization-member-add
+    </member-repertory>
+    <member-add
       *ngIf="isSuperAdmin$ | async"
       [formGroup]="emailControl"
       (addedMember)="addMember()">
-    </organization-member-add>
-    <organization-member-invitation
+    </member-add>
+    <member-invitation
       [invitations]="invitationsToOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">
-    </organization-member-invitation>
+    </member-invitation>
   </ng-container>
     <ng-container sidenav>
-      <organization-member-form [formGroup]="roleControl"></organization-member-form>
+      <member-form-role [formGroup]="roleControl"></member-form-role>
     </ng-container>
 </editable-sidenav>

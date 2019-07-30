@@ -2,13 +2,13 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { Invitation } from '@blockframes/notification';
 
 @Component({
-  selector: 'organization-member-invitation',
-  templateUrl: './organization-member-invitation.component.html',
-  styleUrls: ['./organization-member-invitation.component.scss'],
+  selector: 'member-invitation',
+  templateUrl: './member-invitation.component.html',
+  styleUrls: ['./member-invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrganizationMemberInvitationComponent {
+export class MemberInvitationComponent {
   @Output() declined = new EventEmitter<string>();
   @Input() invitations: Invitation[];
   @Input() isSuperAdmin: boolean;
