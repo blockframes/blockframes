@@ -3,7 +3,7 @@ import { MovieMain, createMovieMain } from '../../+state';
 import { getLabelBySlug } from '../../staticModels';
 
 @Component({
-  selector: '[movieMain] movie-display-main',
+  selector: '[main] movie-display-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -11,8 +11,8 @@ import { getLabelBySlug } from '../../staticModels';
 export class MovieDisplayMainComponent {
 
   public data : MovieMain;
-  @Input() set movieMain(movieMain: Partial<MovieMain>) {
-    this.data = createMovieMain(movieMain);
+  @Input() set main(main: Partial<MovieMain>) {
+    this.data = createMovieMain(main);
   }
 
   get shouldDisplayMainInformations()  {

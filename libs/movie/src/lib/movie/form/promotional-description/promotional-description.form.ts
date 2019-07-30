@@ -1,6 +1,6 @@
 import { MoviePromotionalDescription } from '../../+state';
 import { FormEntity } from '@blockframes/utils';
-import { FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { FormArray, FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 
 /* @todo #643
@@ -17,10 +17,8 @@ function createMoviePromotionalDescriptionControls() {
 type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePromotionalDescription>, MoviePromotionalDescriptionControl>{
-  protected builder: FormBuilder; //@todo #643 no more builder group
   constructor() {
     super(createMoviePromotionalDescriptionControls());
-    this.builder = new FormBuilder();
   }
 
   get keywords() {

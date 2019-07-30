@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MoviePromotionalElements, createMoviePromotionalElements } from '../../+state';
 
 @Component({
-  selector: '[moviePromotionalElements] movie-display-promotional-elements',
+  selector: '[promotionalElements] movie-display-promotional-elements',
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -10,8 +10,8 @@ import { MoviePromotionalElements, createMoviePromotionalElements } from '../../
 export class MovieDisplayPromotionalElementsComponent {
 
   public data : MoviePromotionalElements;
-  @Input() set moviePromotionalElements(moviePromotionalElements: Partial<MoviePromotionalElements>) {
-    this.data = createMoviePromotionalElements(moviePromotionalElements);
+  @Input() set promotionalElements(promotionalElements: Partial<MoviePromotionalElements>) {
+    this.data = createMoviePromotionalElements(promotionalElements);
   }
 
   get shouldDisplayPromotionalElements()  {
