@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 
 export { backupBucket, relayer, firebase, appUrl } from '@env';
 
-export const sendgridAPIKey = functions.config().sendgrid.apiKey;
+export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
 
 export const algoliaId = functions.config().algolia.app_id;
