@@ -1,11 +1,10 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, Query } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { App, createAppPermissions, createPermissions } from '../permissions/+state';
-import { orgQuery } from '../guard/organization.guard';
 import {
   createOrganization,
   Organization,
@@ -18,8 +17,28 @@ import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
 
+export const orgQuery = (orgId: string): Query<Organization> => ({
+  path: `orgs/${orgId}`,
+  members: (organization: Organization) =>
+    organization.userIds.map(id => ({
+      path: `users/${id}`
+    }))
+  // TODO(#681): refactoring
+  // actions: (organization: Organization) => ({
+  //   path: `orgs/${organization.id}/actions`,
+  //   // TODO(#681): remove activeMembers subscription
+  //   activeMembers: (action: OrganizationAction) => {
+  //     return action.activeMembers.map(id => ({
+  //       path: `users/${id}`
+  //     }))
+  //   }
+  // })
+});
+
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
+  private orgObservable$: Observable<Organization>;
+
   constructor(
     private store: OrganizationStore,
     private query: OrganizationQuery,
@@ -29,6 +48,26 @@ export class OrganizationService {
     private authQuery: AuthQuery,
     private db: FireQuery
   ) {}
+
+  /** Returns an observable over organization, to be reused when you need orgs without guards */
+  public sync(): Observable<Organization> {
+    // prevent creating multiple side-effecting subs
+    if (this.orgObservable$) {
+      return this.orgObservable$;
+    }
+
+    this.orgObservable$ = this.authQuery.user$.pipe(
+      switchMap(user => {
+        if (!user.orgId) {
+          throw new Error('User has no orgId');
+        }
+        return this.db.fromQuery<Organization>(orgQuery(user.orgId));
+      }),
+      tap(organization => this.store.updateOrganization(organization))
+    );
+
+    return this.orgObservable$;
+  }
 
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
