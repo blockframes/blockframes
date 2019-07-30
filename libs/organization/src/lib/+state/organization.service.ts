@@ -37,7 +37,7 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
-  private orgObservable$: Observable<Organization>;
+  private organization$: Observable<Organization>;
 
   constructor(
     private store: OrganizationStore,
@@ -52,11 +52,11 @@ export class OrganizationService {
   /** Returns an observable over organization, to be reused when you need orgs without guards */
   public sync(): Observable<Organization> {
     // prevent creating multiple side-effecting subs
-    if (this.orgObservable$) {
-      return this.orgObservable$;
+    if (this.organization$) {
+      return this.organization$;
     }
 
-    this.orgObservable$ = this.authQuery.user$.pipe(
+    this.organization$ = this.authQuery.user$.pipe(
       switchMap(user => {
         if (!user.orgId) {
           throw new Error('User has no orgId');
@@ -66,7 +66,7 @@ export class OrganizationService {
       tap(organization => this.store.updateOrganization(organization))
     );
 
-    return this.orgObservable$;
+    return this.organization$;
   }
 
   /** Add a new user to the organization */
