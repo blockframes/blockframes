@@ -8,7 +8,7 @@ import DeliveryListPage from "./DeliveryListPage";
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    // TODO: check if we are on a home page
+    // TODO#704: check if we are on a home page
   }
 
   public clickAddMovie(orgName: string) {
