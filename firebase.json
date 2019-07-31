@@ -29,7 +29,7 @@
       },
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/main/index.html"
       }
     ]
   },
