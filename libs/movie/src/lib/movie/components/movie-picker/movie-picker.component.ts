@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
+import { MovieQuery } from '../../+state/movie.query';
+import { Movie } from '../../+state/movie.model';
 
 @Component({
   selector: 'movie-picker',
@@ -6,6 +9,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./movie-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoviePickerComponent {
-  constructor() {}
+export class MoviePickerComponent implements OnInit {
+  public movies$: Observable<Movie[]>;
+  public loading$: Observable<boolean>;
+  @Output() selected = new EventEmitter<string>();
+
+  constructor(private query: MovieQuery) {}
+
+  ngOnInit() {
+    this.movies$ = this.query.selectAll();
+    this.loading$ = this.query.selectLoading();
+  }
 }

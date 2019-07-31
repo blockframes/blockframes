@@ -39,6 +39,7 @@ import {
   UiFormModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
+import { ConfirmModule, DirectivesModule, EditableModule, TeamWorkModule, UiFormModule } from '@blockframes/ui';
 import { MaterialModule } from '../material/material.module';
 
 // Material
@@ -50,7 +51,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -61,27 +62,24 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
 // Guards
-import { MovieActiveGuard, MovieModule } from '@blockframes/movie';
+import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
-import {
-  DeliveryMaterialsGuard,
-  MovieMaterialsGuard,
-  SignedDeliveryMaterialsGuard
-} from '../material';
+import { DeliveryMaterialsGuard, MovieMaterialsGuard, SignedDeliveryMaterialsGuard } from '../material';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 
 const routes: Routes = [
   {
     path: 'add',
+    canActivate: [MovieListGuard],
+    canDeactivate: [MovieListGuard],
     children: [
       {
         path: '1-find-movie',
         pathMatch: 'full',
-        component: DeliveryAddFindMovieComponent,
+        component: DeliveryAddFindMovieComponent
       }
     ]
   },
