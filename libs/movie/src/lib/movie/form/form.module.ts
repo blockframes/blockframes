@@ -8,7 +8,10 @@ import {
   MatSelectModule,
   MatChipsModule,
   MatCardModule,
-  MatTabsModule
+  MatTabsModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -22,6 +25,7 @@ import { MovieFormPromotionalDescriptionComponent } from './promotional-descript
 import { MovieFormSalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
+import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
 
 
 
@@ -42,6 +46,9 @@ import { MovieFormRootComponent } from './root/root.component';
     MatChipsModule,
     NgxMatSelectSearchModule,
     MatTabsModule,
+    MatCheckboxModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
 
     // Librairies
     UiFormModule,
@@ -54,6 +61,7 @@ import { MovieFormRootComponent } from './root/root.component';
     MovieFormPromotionalDescriptionComponent,
     MovieFormStoryComponent,
     MovieFormSalesCastComponent,
+    MovieFormSalesInfoComponent,
   ],
   exports: [
     MovieFormRootComponent

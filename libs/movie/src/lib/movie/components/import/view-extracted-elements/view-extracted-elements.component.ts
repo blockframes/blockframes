@@ -65,13 +65,16 @@ export class ViewExtractedElementsComponent {
           salesCast: {
             credits: [],
           },
-          internationalPremiere: {},
+          salesInfo: {
+            certifications: [],
+            internationalPremiere: {},
+          },
           dubbings: [],
           subtitles: [],
           errors: [],
           prizes: [],
           broadcasterCoproducers: [],
-          certifications: [],
+          
         } as MovieWithMetaData;
 
         //////////////////
@@ -90,7 +93,19 @@ export class ViewExtractedElementsComponent {
         }
 
         // SCORING (Scoring)
-        movie.scoring = m[3];
+        const scoring = getSlug('SCORING', m[3]);
+        if (scoring !== false) {
+          movie.salesInfo.scoring = scoring;
+        } else {
+          movie.errors.push({
+            type: 'error',
+            field: 'salesInfo.scoring',
+            name: "Scoring",
+            reason: 'Required field could not be parsed',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+
+        }
 
         // ?? (Mandate End of rights)
         // m[4]
@@ -156,7 +171,20 @@ export class ViewExtractedElementsComponent {
         }
 
         // BROADCASTER COPRODUCERS (Color / Black & White )
-        movie.color = m[14];
+        movie.salesInfo.color = m[14];
+        const color = getSlug('COLORS', m[14]);
+        if (color !== false) {
+          movie.salesInfo.color = color;
+        } else {
+          movie.errors.push({
+            type: 'warning',
+            field: 'salesInfo.color',
+            name: "Color",
+            reason: 'Optional field could not be parsed',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+
+        }
 
         // ORIGIN COUNTRY (Country of Origin)
         if (m[15] !== undefined) {
@@ -176,19 +204,17 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (European Qualification)
-        if (m[16].toLowerCase() === 'yes') {
-          movie.certifications.push('european-qualification');
-        }
+        movie.salesInfo.europeanQualification = m[16].toLowerCase() === 'yes' ? true : false;
 
         // PEGI (Rating)
-        movie.pegi = m[17];
+        movie.salesInfo.pegi = m[17];
 
         // CERTIFICATIONS (Certifications)
         if (m[18] !== undefined) {
           m[18].split(',').forEach((c: string) => {
             const certification = getSlug('CERTIFICATIONS', c);
             if (certification !== false) {
-              movie.certifications.push(certification);
+              movie.salesInfo.certifications.push(certification);
             } else {
               movie.errors.push({
                 type: 'warning',
@@ -224,14 +250,14 @@ export class ViewExtractedElementsComponent {
         // INTERNATIONAL PREMIERE (International Premiere )
         if (m[21] !== undefined) {
           if (m[21].split(',').length === 2 && !isNaN(Number(m[21].split(',')[1]))) {
-            movie.internationalPremiere.name = m[21].split(',')[0];
-            movie.internationalPremiere.year = Number(m[21].split(',')[1]);
+            movie.salesInfo.internationalPremiere.name = m[21].split(',')[0];
+            movie.salesInfo.internationalPremiere.year = Number(m[21].split(',')[1]);
           }
         }
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(m[22]);
-        movie.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+        movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
 
         // GENRES (Genres)
         if (m[23] !== undefined) {
@@ -421,10 +447,10 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.scoring) {
+    if (!movie.salesInfo.scoring) {
       movie.errors.push({
         type: 'error',
-        field: 'scoring',
+        field: 'salesInfo.scoring',
         name: "Scoring",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -512,10 +538,10 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.color) {
+    if (!movie.salesInfo.color) {
       movie.errors.push({
         type: 'warning',
-        field: 'color',
+        field: 'salesInfo.color',
         name: "Color / Black & White ",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -532,20 +558,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.certifications) {
+    if (!movie.salesInfo.certifications) {
       movie.errors.push({
         type: 'warning',
-        field: 'certifications',
+        field: 'salesInfo.certifications',
         name: "Certifications",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (!movie.pegi) {
+    if (!movie.salesInfo.pegi) {
       movie.errors.push({
         type: 'warning',
-        field: 'pegi',
+        field: 'salesInfo.pegi',
         name: 'Rating',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -572,20 +598,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.internationalPremiere) {
+    if (!movie.salesInfo.internationalPremiere) {
       movie.errors.push({
         type: 'warning',
-        field: 'internationalPremiere',
+        field: 'salesInfo.internationalPremiere',
         name: "International Premiere",
         reason: 'Optional field is missing or could not be parsed',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (!movie.originCountryReleaseDate) {
+    if (!movie.salesInfo.originCountryReleaseDate) {
       movie.errors.push({
         type: 'warning',
-        field: 'originCountryReleaseDate',
+        field: 'salesInfo.originCountryReleaseDate',
         name: 'Release date in Origin Country',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

@@ -1,0 +1,30 @@
+<ng-container *ngIf="data">
+  <mat-list>
+    <mat-list-item *ngIf="data.scoring">
+      <strong>Scoring :</strong>  {{ getStaticBySlug('SCORING', data.scoring) }}
+    </mat-list-item>
+    <mat-list-item *ngIf="data.color">
+      <strong>Color :</strong> {{ getStaticBySlug('COLORS', data.color) }}
+    </mat-list-item>
+    <mat-list-item *ngIf="data.europeanQualification">
+      <strong>Eureopean Qualification :</strong> {{data.europeanQualification}}
+    </mat-list-item>
+    <mat-list-item *ngIf="data.pegi">
+      <strong>Rating (PEGI) :</strong> {{data.pegi}}
+    </mat-list-item>
+    <mat-list-item *ngIf="data.certifications.length > 0">
+      <strong>Certifications :</strong>
+      <ul>
+        <li *ngFor="let item of data.certifications;">
+          {{ getStaticBySlug('CERTIFICATIONS', item) }}
+        </li>
+      </ul>
+    </mat-list-item>
+    <mat-list-item *ngIf="data.internationalPremiere.name">
+      <strong>International Premiere :</strong> {{data.internationalPremiere.name}} ({{data.internationalPremiere.year}})
+    </mat-list-item>
+    <mat-list-item *ngIf="data.originCountryReleaseDate">
+      <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }}
+    </mat-list-item>
+  </mat-list>
+</ng-container>

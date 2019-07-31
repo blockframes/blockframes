@@ -18,6 +18,12 @@ export interface Title {
   international?: string;
 }
 
+export interface Prize {
+  name: string,
+  year: number,
+  prize?: string,
+}
+
 export interface Credit {
   firstName: string,
   lastName?: string,
@@ -64,6 +70,16 @@ export interface MovieStory {
   logline: string,
 }
 
+export interface MovieSalesInfo {
+  scoring: string,
+  color: string,
+  europeanQualification: boolean,
+  pegi: string,
+  certifications: string[],
+  internationalPremiere: Prize,
+  originCountryReleaseDate: Date,
+}
+
 export interface Movie {
    // @todo #643 add new fields to Draw.io
   _type: 'movies',
@@ -74,17 +90,11 @@ export interface Movie {
   availabilities: MovieAvailability[],
 
   // @todo #643 not main movie attributes WIP
-  scoring: string,
+  
   broadcasterCoproducers: string[],
-  color: string;
-  certifications: string[],
-  pegi: string,
-  internationalPremiere: { name: string, year: number},
-  originCountryReleaseDate: Date,
   prizes: {name: string, year: string, prize: string}[]
   dubbings: string[],
   subtitles: string[],
-
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -104,6 +114,7 @@ export interface Movie {
   promotionalElements: MoviePromotionalElements,
   promotionalDescription: MoviePromotionalDescription,
   salesCast: MovieSalesCast,
+  salesInfo: MovieSalesInfo,
 }
 
 /**
@@ -118,6 +129,7 @@ export function createMovie(params?: Partial<Movie>) : Movie {
     promotionalElements: {},
     promotionalDescription: {},
     salesCast: {},
+    salesInfo: {},
     ... params
   } as Movie;
 }
@@ -158,6 +170,18 @@ export function createMovieSalesCast(params? : Partial<MovieSalesCast>) : MovieS
     credits: [],
     ... params
   } as MovieSalesCast;
+}
+
+export function createMovieSalesInfo(params? : Partial<MovieSalesInfo>) : MovieSalesInfo{
+  return {
+    internationalPremiere: {
+      name: '',
+      year: '',
+      prize: '',
+    },
+    certifications: [],
+    ... params
+  } as MovieSalesInfo;
 }
 
 export function createMovieStory(params? : Partial<MovieStory>) : MovieStory{

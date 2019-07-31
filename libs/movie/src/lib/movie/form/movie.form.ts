@@ -6,6 +6,7 @@ import { MoviePromotionalDescriptionForm } from './promotional-description/promo
 import { MovieStoryForm } from './story/story.form';
 import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
 import { Movie, createMovie } from '../+state';
+import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 
 
 function createMovieControls(movie: Partial<Movie>) {
@@ -16,6 +17,7 @@ function createMovieControls(movie: Partial<Movie>) {
     promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
     story: new MovieStoryForm(entity.story),
     salesCast: new MovieSalesCastForm(entity.salesCast),
+    salesInfo: new MovieSalesInfoForm(entity.salesInfo),
   }
 }
 
