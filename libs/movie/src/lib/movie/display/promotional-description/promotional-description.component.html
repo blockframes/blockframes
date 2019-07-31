@@ -7,4 +7,14 @@
       </span>
     </mat-card-subtitle>
   </mat-card-content>
+  <mat-card-content *ngIf="data.keyAssets.length > 0" class="movie-card-section">
+    <mat-card-title class="movie-card-meta-title">Key Assets</mat-card-title>
+    <mat-card-subtitle>
+      <ul>
+        <li *ngFor="let item of data.keyAssets;">
+          {{ item }}
+        </li>
+      </ul>
+    </mat-card-subtitle>
+  </mat-card-content>
 </ng-container>

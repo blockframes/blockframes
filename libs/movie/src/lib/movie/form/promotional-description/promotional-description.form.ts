@@ -22,6 +22,10 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
     return this.get('keywords');
   }
 
+  get keyAssets() {
+    return this.get('keyAssets');
+  }
+
   public addChip(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
@@ -39,5 +43,13 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
 
   public removeKeyword(i: number): void {
     this.keywords.removeAt(i);
+  }
+
+  public addKeyAsset(): void {
+    this.keyAssets.push(new FormControl(''));
+  }
+
+  public removeKeyAsset(i: number): void {
+   this.keyAssets.removeAt(i);
   }
 }
