@@ -16,8 +16,10 @@
     </member-invitation>
   </ng-container>
   <ng-container sidenav>
-    <!-- <form [formArray]="membersform">
-      <member-form-role formGroupName="activeForm"></member-form-role>
-    </form> -->
+    <form [formGroup]="formGroup">
+    <div formArrayName="members">
+      <member-form-role [formGroupName]="indexForm"></member-form-role>
+    </div>
+  </form>
   </ng-container>
 </editable-sidenav>

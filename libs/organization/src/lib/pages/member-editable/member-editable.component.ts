@@ -7,7 +7,7 @@ import { InvitationService, InvitationQuery, Invitation } from '@blockframes/not
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 import { FormList } from '@blockframes/utils';
-import { tap, switchMap, startWith } from 'rxjs/operators';
+import { tap, switchMap, startWith, map } from 'rxjs/operators';
 
 function createMemberRoleControl(member: OrganizationMemberWithRole) {
   return new FormGroup({
@@ -45,9 +45,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   public isSuperAdmin$: Observable<boolean>;
 
    //public membersForm = new FormList([]);
+   public formGroup = new FormGroup({
+     members: FormList.factory([])
+   });
   public membersForm = FormList.factory([], createMemberRoleControl);
 
-  public activeForm: number;
+  public indexForm = 1;
 
   constructor(
     private query: OrganizationQuery,
@@ -61,13 +64,10 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // TODO: this observable does not change correctly when a member is updated: issue#707
     //this.members$ = this.query.membersWithRole$;
-
     this.members$ = this.query.membersWithRole$.pipe(
-      tap(members => this.membersForm.patchValue(members)),
-      switchMap(members => this.membersForm.valueChanges.pipe(startWith(members)))
+      tap(members => this.formGroup.get('members').patchValue(members)),
+      switchMap(members => this.formGroup.get('members').valueChanges.pipe(startWith(members)))
     );
-
-    console.log(this.membersForm)
 
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
 
@@ -77,9 +77,10 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationsToOrganization$ = this.invitationQuery.invitationsToOrganization$;
   }
 
-  public openSidenav(member: OrganizationMemberWithRole) {
-    this.selected = member;
-    this.roleControl.setValue(this.selected.role);
+  public openSidenav(index: number) {
+    this.indexForm = index;
+    console.log(this.indexForm)
+    //this.roleControl.setValue(this.selected.role);
     this.opened = true;
   }
 
@@ -91,7 +92,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationService.declineInvitation(invitationId);
   }
 
+  public get members() {
+    return this.formGroup.get('members');
+  }
+
   public async updateRole() {
+    console.log(this.formGroup.get('members'))
     try {
       if (this.roleControl.value !== this.selected.role) {
         // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
