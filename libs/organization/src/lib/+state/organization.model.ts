@@ -40,17 +40,17 @@ export interface OrganizationMember extends OrganizationMemberRequest {
 export interface OrganizationOperation {
   id: string;
   name: string;
-	quorum: number;
-	members: OrganizationMember[]
+  quorum: number;
+  members: OrganizationMember[];
 }
 
 export interface OrganizationAction {
-  id: string,
-  opid: string,
-  name: string,
-  signers: OrganizationMember[],
-  isApproved: boolean,
-  approvalDate?: string,
+  id: string;
+  opid: string;
+  name: string;
+  signers: OrganizationMember[];
+  isApproved: boolean;
+  approvalDate?: string;
 }
 
 export interface Organization {
