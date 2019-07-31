@@ -49,9 +49,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DappGridComponent } from './app-grid/app-grid.component';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, HomeComponent],
+  declarations: [AppComponent, LayoutComponent, HomeComponent, DappGridComponent],
   imports: [
     // Angular
     BrowserModule,

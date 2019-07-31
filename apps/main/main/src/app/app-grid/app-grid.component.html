@@ -1,0 +1,22 @@
+<article test-id="apps-grid">
+  <h3>Apps</h3>
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-card *ngFor="let app of (apps$ | async)">
+      <a [href]="app.href">
+        <mat-card-content><img [src]="app.logoSrc" alt="App logo"/></mat-card-content>
+      </a>
+      <mat-divider></mat-divider>
+      <mat-card-actions [ngSwitch]="app.status">
+        <button *ngSwitchCase="'none'" mat-button (click)="requestAccess(app.id)">
+          Request Access To App
+        </button>
+        <button *ngSwitchCase="'pending'" disabled mat-button>Access Requested</button>
+        <a [href]="app.href" *ngSwitchCase="'accepted'" mat-button>Access App</a>
+      </mat-card-actions>
+      <mat-card-footer>
+        <h4>{{ app.name }}</h4>
+        <small> Lorem ipsum dolor sit amet consectetur adipisicing elit. </small>
+      </mat-card-footer>
+    </mat-card>
+  </article>
+</article>

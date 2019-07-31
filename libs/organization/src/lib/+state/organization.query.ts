@@ -13,6 +13,10 @@ export class OrganizationQuery extends Query<OrganizationState> {
     super(store);
   }
 
+  get orgId$(): Observable<string> {
+    return this.select(state => state.org.id);
+  }
+
   get status$(): Observable<OrganizationStatus> {
     return this.select(state => state.org).pipe(
       filter(org => !!org),
