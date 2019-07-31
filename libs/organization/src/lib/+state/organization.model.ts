@@ -1,15 +1,22 @@
-
 /** Gives information about an application */
+import { App } from '../permissions/+state';
+
 export interface AppDetails {
   name: string;
   logoSrc: string;
   href: string;
-  id: string;
+  id: App;
+}
+
+export const enum AppStatus {
+  none = 'none', // no request nor accept.
+  requested = 'requested',
+  accepted = 'accepted'
 }
 
 /** An application details with the organization authorizations */
 export interface AppDetailsWithStatus extends AppDetails {
-  status: string; // TODO: type
+  status: AppStatus;
 }
 
 export const enum OrganizationStatus {
