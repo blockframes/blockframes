@@ -19,10 +19,11 @@ import {
   allowAccessToAppPageComplete
 } from './assets/admin-templates';
 
-const APPS = ['a', 'b', 'c'];
+// TODO(#714): Synchronize data types with the frontend
+const APPS = ['MediaDelivering', 'MediaFinanciers', 'StoriesAndMore'];
 
 /**
- * Handles firestore update on request to application acess,
+ * Handles firestore update on request to application access,
  */
 export async function onRequestAccessToAppWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
