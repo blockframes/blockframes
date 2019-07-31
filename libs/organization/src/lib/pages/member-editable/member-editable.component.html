@@ -6,22 +6,16 @@
       [invitations]="invitationsToJoinOrganization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-pending>
-    <member-repertory
-      [members]="members$ | async"
-      (editing)="openSidenav($event)">
+    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)">
     </member-repertory>
-    <member-add
-      *ngIf="isSuperAdmin$ | async"
-      [formGroup]="emailControl"
-      (addedMember)="addMember()">
-    </member-add>
+    <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
     <member-invitation
       [invitations]="invitationsToOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-invitation>
   </ng-container>
-    <ng-container sidenav>
-      <member-form-role [formGroup]="roleControl"></member-form-role>
-    </ng-container>
+  <ng-container sidenav>
+    <member-form-role [formGroup]="roleControl"></member-form-role>
+  </ng-container>
 </editable-sidenav>

@@ -21,9 +21,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   /** The selected member open in the sidenav */
   public selected: OrganizationMemberWithRole;
 
-  /** The control to send an invitation with the given email */
-  public emailControl = new FormControl('', Validators.email);
-
   /** The control to choose the role of member */
   public roleControl = new FormControl();
 
@@ -41,7 +38,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   constructor(
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
-    private organizationQuery: OrganizationQuery,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private permissionsQuery: PermissionsQuery,
@@ -63,18 +59,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.selected = member;
     this.roleControl.setValue(this.selected.role);
     this.opened = true;
-  }
-
-  public async addMember() {
-    try {
-      if (this.emailControl.invalid) throw new Error('Please enter a valid email address');
-      const userEmail = this.emailControl.value;
-      const organizationId = this.organizationQuery.id;
-      await this.invitationService.sendInvitationToUser(userEmail, organizationId);
-      this.snackBar.open('The invitation was created', 'close', { duration: 2000 });
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 2000 });
-    }
   }
 
   public acceptInvitation(invitationId: string) {
