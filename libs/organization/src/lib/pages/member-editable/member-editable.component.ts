@@ -9,9 +9,9 @@ import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 import { FormList } from '@blockframes/utils';
 import { tap, switchMap, startWith } from 'rxjs/operators';
 
-function createMemberRoleControl(member) {
+function createMemberRoleControl(member: OrganizationMemberWithRole) {
   return new FormGroup({
-    id: new FormControl(member.id),
+    id: new FormControl(member.uid),
     role: new FormControl(member.role)
   })
 }
@@ -44,8 +44,9 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   public isSuperAdmin$: Observable<boolean>;
 
-  // public membersForm = new FormList([]);
+   //public membersForm = new FormList([]);
   public membersForm = FormList.factory([], createMemberRoleControl);
+
   public activeForm: number;
 
   constructor(
@@ -59,12 +60,14 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // TODO: this observable does not change correctly when a member is updated: issue#707
-    this.members$ = this.query.membersWithRole$;
+    //this.members$ = this.query.membersWithRole$;
 
     this.members$ = this.query.membersWithRole$.pipe(
       tap(members => this.membersForm.patchValue(members)),
       switchMap(members => this.membersForm.valueChanges.pipe(startWith(members)))
     );
+
+    console.log(this.membersForm)
 
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
 
