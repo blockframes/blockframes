@@ -5,17 +5,17 @@ import { MoviePromotionalElementsForm } from './promotional-elements/promotional
 import { MoviePromotionalDescriptionForm } from './promotional-description/promotional-description.form';
 import { MovieStoryForm } from './story/story.form';
 import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
-import { Movie } from '../+state';
+import { Movie, createMovie } from '../+state';
 
 
-function createMovieControls(movie: Movie) {
-
+function createMovieControls(movie: Partial<Movie>) {
+  const entity = createMovie(movie);
   return {
-    main: new MovieMainForm(movie.main),
-    promotionalElements: new MoviePromotionalElementsForm(movie.promotionalElements),
-    promotionalDescription: new MoviePromotionalDescriptionForm(movie.promotionalDescription),
-    story: new MovieStoryForm(movie.story),
-    salesCast: new MovieSalesCastForm(movie.salesCast),
+    main: new MovieMainForm(entity.main),
+    promotionalElements: new MoviePromotionalElementsForm(entity.promotionalElements),
+    promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
+    story: new MovieStoryForm(entity.story),
+    salesCast: new MovieSalesCastForm(entity.salesCast),
   }
 }
 

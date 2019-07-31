@@ -28,7 +28,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
     // @todo #643 => navigation arrows , not mat-tab
     // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
 
-    this.form = new MovieForm(createMovie(this.query.getActive()));
+    this.form = new MovieForm(this.query.getActive());
 
     // Akita Persist Form
     this.persistForm = new PersistNgFormPlugin(this.query, createMovie).setForm(this.form);
