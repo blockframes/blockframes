@@ -59,5 +59,4 @@ export class ContextMenuQuery extends QueryEntity<ContextMenuState, ContextMenu>
       })
     )
   }
-
 }

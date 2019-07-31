@@ -62,7 +62,7 @@ export const routes: Routes = [
           },
           {
             path: 'catalog',
-            loadChildren: () => HomeModule
+            loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
           },
           {
             path: 'templates',

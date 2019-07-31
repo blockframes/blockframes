@@ -1,4 +1,3 @@
-import { HomeModule } from './pages/home/home.module';
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
