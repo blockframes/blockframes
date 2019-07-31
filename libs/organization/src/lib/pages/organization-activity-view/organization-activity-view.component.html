@@ -1,19 +1,24 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
     <ng-container content>
-        <h1 fxLayout="row" fxLayoutAlign="start center">
-            <span>Activity Report</span>
-            <mat-divider></mat-divider>
-        </h1>
-        <h2>Pending Approval</h2>
-        <org-activity-repertory [actionItems]="pendingActions$ | async" (clickedOnSigners)="openSidenav($event)">
-        </org-activity-repertory>
-        <h2>Actions Approved</h2>
-        <org-activity-repertory [actionItems]="approvedActions$ | async" (clickedOnSigners)="openSidenav($event)">
-        </org-activity-repertory>
+      <h1 fxLayout="row" fxLayoutAlign="start center">
+        <span fxFlex="noshrink">Activity Report</span>
+        <mat-divider></mat-divider>
+      </h1>
+      <h2>Pending Approval</h2>
+      <org-actions-table [actions]="pendingActions$ | async" [isApproved]="false" (actionSelected)="openSidenav($event)">
+      </org-actions-table>
+      <h2>Actions Approved</h2>
+      <org-actions-table [actions]="approvedActions$ | async" [isApproved]="true" (actionSelected)="openSidenav($event)">
+      </org-actions-table>
     </ng-container>
     <ng-container sidenav>
-        <section>
-            <p *ngFor="let signer of signers">{{ signer }}</p>
-        </section>
+      <section *ngIf="!!selectedAction">
+        <h3>{{selectedAction.name}}</h3>
+        <h4>{{selectedAction.isApproved ? 'aprroved on ' + selectedAction.approvalDate : 'Pending'}}</h4>
+        <article *ngFor="let signer of selectedAction.signers" fxLayout="row" fxLayoutAlign="start center">
+          <img [src]="signer.avatar">
+          {{signer.name}}
+        </article>
+      </section>
     </ng-container>
 </editable-sidenav>

@@ -1,4 +1,4 @@
-import { OrganizationForm } from './../../organization.form';
+import { OrganizationForm, OrganizationOperationForm } from './../../organization.form';
 import { Organization, OrganizationMember, OrganizationOperation } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationQuery, OrganizationService } from '../../+state';
@@ -14,9 +14,9 @@ import { tap, switchMap, startWith } from 'rxjs/operators';
 })
 export class OrganizationAdminViewComponent implements OnInit {
   /** Observable that contains all the signers in an organization */
-  public organization$: Observable<Organization>;
+  public organization$ = new Observable<Organization>();
 
-  public form: OrganizationForm;
+  public operationForm: OrganizationOperationForm;
 
   /** Form control for adding a new signer to a organization */
   public signerFormControl = new FormControl();
@@ -25,22 +25,25 @@ export class OrganizationAdminViewComponent implements OnInit {
   public opened = false;
 
   /** Variable to indicate whether to show an action in the sidenav or a member */
-  public editContent: 'action' | 'member';
+  public editContent: 'operation' | 'member';
 
-  /** A number to iindicate which action we want to alter in the sidenav */
+  /** A number to indicate which action we want to alter in the sidenav */
   public activeForm: number;
 
   constructor(private query: OrganizationQuery, private service: OrganizationService) {}
 
   ngOnInit() {
-    this.organization$ = this.query.select('org').pipe(
-      tap(org => (this.form = new OrganizationForm(org))),
-      switchMap(org => this.form.valueChanges.pipe(startWith(org)))
-    );
+    this.organization$ = this.query.select('org');//.pipe(
+      // tap(org => (this.form = new OrganizationForm(org))),
+      // switchMap(org => this.form.valueChanges.pipe(startWith(org)))
+    // );
+    this.operationForm = new OrganizationOperationForm(null);
   }
 
-  public openSidenav(editContent: 'action' | 'member', index: number) {
+  public openSidenavOperation(operation: OrganizationOperation) {
     this.opened = true;
+    this.editContent = 'operation';
+    this.operationForm = new OrganizationOperationForm(operation);
     // this.optionsOrSigner = true;
     // this.action = action;
   }

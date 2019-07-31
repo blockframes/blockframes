@@ -1,0 +1,12 @@
+@import 'variables';
+
+table {
+  width: 100%;
+  cursor: pointer;
+  td {
+    height: 48px;
+    mat-icon {
+      margin: 0 10px;
+    }
+  }
+}

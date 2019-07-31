@@ -1,0 +1,10 @@
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <img [src]="urls[0]">
+  <ng-container *ngIf="urls.length > 1">
+      <img [src]="urls[1]">
+  </ng-container>
+  <ng-container *ngIf="urls.length > 2">
+    +{{urls.length - 2}}
+  </ng-container>
+</div>

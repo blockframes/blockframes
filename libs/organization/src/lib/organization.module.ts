@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { AuthModule } from '@blockframes/auth';
-import { EditableSidenavModule } from '@blockframes/ui';
+import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 
 // Material
@@ -31,17 +31,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberAddComponent } from './components/member-add/member-add.component';
-import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
+import { OrganizationOperationsTableComponent } from './components/organization-operations-table/organization-operations-table.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
-import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
 import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
+import { OrganizationActionsTableComponent } from './components/organization-actions-table/organization-actions-table.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
@@ -81,6 +81,7 @@ export const organizationRoutes: Routes = [
     FlexLayoutModule,
     EditableSidenavModule,
     FeedbackMessageModule,
+    AvatarListModule,
 
     // Material
     MatFormFieldModule,
@@ -113,9 +114,9 @@ export const organizationRoutes: Routes = [
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationActivityViewComponent,
-    OrganizationActivityRepertoryComponent,
+    OrganizationActionsTableComponent,
     OrganizationAdminViewComponent,
-    OrganizationActionRepertoryComponent,
+    OrganizationOperationsTableComponent,
     OrganizationSignerRepertoryComponent,
     OrganizationSignerFormComponent,
     OrganizationEditableComponent,

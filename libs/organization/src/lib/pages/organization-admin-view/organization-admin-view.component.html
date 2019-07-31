@@ -2,27 +2,28 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" *ngIf="organization$ | async as organization">
   <ng-container content>
     <h1 fxLayout="row" fxLayoutAlign="start center">
-      <span>{{ organization.name }}</span>
+      <span fxFlex="noshrink">{{ organization.name }}</span>
       <mat-divider></mat-divider>
     </h1>
-    <h2>Important actions</h2>
-    <org-action-repertory [actions]="organization.actions" (editing)="openSidenav('action', $event)">
-    </org-action-repertory>
-    <h2>Organization signatures</h2>
-    <mat-form-field>
+    <h2>Operations</h2>
+    <org-operations-table [operations]="organization.operations" (editOperation)="openSidenavOperation($event)">
+    </org-operations-table>
+    <h2>Users Operations Permissions</h2>
+    <!-- <mat-form-field>
       <mat-label>Add new signatory</mat-label>
       <input matInput type="text" [formControl]="signerFormControl" placeholder="Sam Sample">
       <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-    <button mat-button (click)="addSigner(signerFormControl.value)">Add new signers</button>
-    <org-signer-repertory [signerList]="organization.members" (selected)="openOptions('member', $event)">
+    </mat-form-field> -->
+    <!-- <button mat-button (click)="addSigner(signerFormControl.value)">Add new signers</button> -->
+    <org-signer-repertory [signerList]="organization.members"> <!--(selected)="openOptions('member', $event)">-->
     </org-signer-repertory>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav>
     <ng-container [ngSwitch]="editContent">
-      <ng-container *ngSwitchCase="'action'">
-        <organization-quorum-form [formGroup]="form.action(activeForm)">
+      <ng-container *ngSwitchCase="'operation'">
+        <p>hello</p>
+        <organization-quorum-form [formGroup]="operationForm(activeForm)">
         </organization-quorum-form>
       </ng-container>
       <ng-container *ngSwitchCase="'member'">

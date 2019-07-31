@@ -23,7 +23,7 @@ OrganizationOperation,
       quorum: new FormControl(operation.quorum)
     });
   }
-  
+
   get activeMembers() {
     return this.get('members');
   }
@@ -34,16 +34,17 @@ OrganizationOperation,
   }
 }
 
-export class OrganizationForm extends FormEntity<Organization, OrganizationControl> {
-  constructor(organization: Partial<Organization> = {}) {
-    const org = createOrganization(organization);
-    super({
-      name: new FormControl(org.name),
-      address: new FormControl(org.address),
-      operations: FormList.factory(org.operations, operation => new OrganizationOperationForm(operation))
-    });
-  }
-  action(index: number): OrganizationOperationForm {
-    return (<FormArray>this.get('operations')).at(index) as OrganizationOperationForm;
-  }
-}
+// export class OrganizationForm extends FormEntity<Organization, OrganizationControl> {
+//   constructor(organization: Partial<Organization> = {}) {
+//     const org = createOrganization(organization);
+//     super({
+//       name: new FormControl(org.name),
+//       address: new FormControl(org.address),
+//       operations: FormList.factory(org.operations, operation => new OrganizationOperationForm(operation))
+//     });
+//   }
+//   operation(operation: OrganizationOperation): OrganizationOperationForm {
+//     return this.get('operations').
+//      at(index) as OrganizationOperationForm;
+//   }
+// }

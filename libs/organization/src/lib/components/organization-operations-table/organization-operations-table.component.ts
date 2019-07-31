@@ -1,6 +1,6 @@
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationAction } from './../../+state/organization.model';
+import { OrganizationOperation } from './../../+state/organization.model';
 import {
   Component,
   Input,
@@ -12,17 +12,17 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'org-action-repertory',
-  templateUrl: './organization-action-repertory.component.html',
-  styleUrls: ['./organization-action-repertory.component.scss'],
+  selector: 'org-operations-table',
+  templateUrl: './organization-operations-table.component.html',
+  styleUrls: ['./organization-operations-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationActionRepertoryComponent implements OnInit {
+export class OrganizationOperationsTableComponent implements OnInit {
   /** Headline of the columns in the material table. No Headline means no text. */
-  public displayedColumns: string[] = ['No Headline', 'Quorum', 'Active', 'No Headline2'];
+  public displayedColumns: string[] = ['Operation', 'Quorum', 'Active', 'No Headline2'];
 
   /** Variable to save the data source of the material table */
-  public dataSource: MatTableDataSource<OrganizationAction>;
+  public dataSource: MatTableDataSource<OrganizationOperation>;
 
   /** Mapping for helping with the correct grammar. */
   public memberMapping: { [k: string]: string } = {
@@ -31,15 +31,15 @@ export class OrganizationActionRepertoryComponent implements OnInit {
     other: '# members'
   };
 
-  @Input() actions: OrganizationAction[];
+  @Input() operations: OrganizationOperation[];
 
-  @Output() editing = new EventEmitter<number>();
+  @Output() editOperation = new EventEmitter<OrganizationOperation>();
 
   /** Init code to work with the build in material sort function */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.actions);
+    this.dataSource = new MatTableDataSource<OrganizationOperation>(this.operations);
     this.dataSource.sort = this.sort;
   }
 }
