@@ -134,7 +134,7 @@ export class OrganizationService {
 
   public update(organization: Partial<Organization>) {
     const organizationId = this.query.getValue().org.id;
-    this.db.doc(`orgs/${organizationId}`).update(organization);
+    return this.db.doc(`orgs/${organizationId}`).update(organization);
   }
 
   /** Returns a list of organizations whose part of name match with @param prefix */
@@ -191,7 +191,7 @@ export class OrganizationService {
   updateOperationQuorum(id: string, newQuorum: number) {
     const operation = this.query.getOperationById(id);
     if (!operation) throw new Error('This operation doesn\'t exists');
-    this.upsertOperation({
+    return this.upsertOperation({
       ...operation,
       quorum: newQuorum
     });
@@ -204,7 +204,7 @@ export class OrganizationService {
     const memberExists = operation.members.some(member => member.uid === newMember.uid);
     if (!!memberExists) throw new Error('This member is already a signer of this operation');
 
-    this.upsertOperation({
+    return this.upsertOperation({
       ...operation,
       members: [...operation.members, newMember]
     });
@@ -232,7 +232,7 @@ export class OrganizationService {
     const members = operation.members.filter(member => member.uid !== memberToRemove.uid);
     const newOperation = { ...operation, members };
 
-    this.upsertOperation(newOperation);
+    return this.upsertOperation(newOperation);
   }
 
   // TODO REMOVE THIS ASAP : issue 676
@@ -241,6 +241,6 @@ export class OrganizationService {
     const oldOrgMembers = this.query.getValue().org.members;
     const newOrgMembers = mockOrgMembers.concat(oldOrgMembers);
 
-    this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
+    return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
   }
 }
