@@ -26,6 +26,7 @@ export interface Credit {
 
 export interface MovieMain {
   internalRef?: string,
+  isan?: string,
   title: Title,
   directors?: Credit[],
   poster?: string,
@@ -74,7 +75,6 @@ export interface Movie {
 
   // @todo #643 not main movie attributes WIP
   scoring: string,
-  isan: string,
   broadcasterCoproducers: string[],
   color: string;
   certifications: string[],

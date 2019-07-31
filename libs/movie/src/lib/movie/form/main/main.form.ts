@@ -23,6 +23,7 @@ function createMovieMainControls(main? : Partial<MovieMain> ) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormField(entity.internalRef),
+    isan: new FormField(entity.isan),
     title: new FormEntity<Movie['main']['title']>({
       original: new FormField(entity.title.original),
       international: new FormField(entity.title.international),

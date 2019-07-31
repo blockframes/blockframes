@@ -130,7 +130,7 @@ export class ViewExtractedElementsComponent {
         //////////////////
 
         // ISAN (ISAN Number)
-        movie.isan = m[9];
+        movie.main.isan = m[9];
 
 
         // INTERNATIONAL TITLE (International Title)
@@ -462,10 +462,10 @@ export class ViewExtractedElementsComponent {
     // OPTIONAL FIELDS
     //////////////////
 
-    if (!movie.isan) {
+    if (!movie.main.isan) {
       movie.errors.push({
         type: 'warning',
-        field: 'isan',
+        field: 'main.isan',
         name: "ISAN number",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

@@ -6,6 +6,14 @@
       Internal ref is <strong>required</strong>
     </mat-error>
   </mat-form-field>
+  <!-- ISAN NUMBER -->
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="ISAN number (ISAN 0000-0001-8947-0000-8-0000-0000-D)"
+      formControlName="isan" required />
+    <mat-error *ngIf="main.get('isan').hasError('required')">
+      ISAN number is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
   <!-- @todo #643 Use articles and sections.-->
   <div formGroupName="title">
     <!-- TITLES -->
@@ -25,9 +33,7 @@
   </div>
 
   <h3> Directed By </h3>
-  <!-- @todo #643 You should create a getter inside the MovieMainForm to access all directors directly.-->
-  <div formArrayName="directors"
-    *ngFor="let director of main.directors.controls; let i = index;">
+  <div formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index;">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field class="small-margin">
         <input matInput formControlName="firstName" placeholder="First Name">
