@@ -10,6 +10,18 @@ import {
 } from './invitation.model';
 import { Organization } from '@blockframes/organization';
 
+export function getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
+  return {
+    path: `invitations`,
+    queryFn: ref =>
+      ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
+    user: (invitation: Invitation) => ({
+      // TODO: use profiles collections instead of users, issue#693
+      path: `users/${invitation.userId}`
+    })
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,22 +60,9 @@ export class InvitationService {
   public get organizationInvitations$() {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.db.fromQuery(this.getInvitationsByOrgId(user.orgId))),
+      switchMap(user => this.db.fromQuery(getInvitationsByOrgId(user.orgId))),
       tap((invitations: Invitation[]) => this.store.set(invitations))
     );
-  }
-
-  // TODO : move this in /layout guard => ISSUE#641
-  private getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
-    return {
-      path: `invitations`,
-      queryFn: ref =>
-        ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
-      user: (invitation: Invitation) => ({
-        // TODO: use profiles collections instead of users, issue#693
-        path: `users/${invitation.userId}`
-      })
-    };
   }
 
   public acceptInvitation(invitationId: string) {
