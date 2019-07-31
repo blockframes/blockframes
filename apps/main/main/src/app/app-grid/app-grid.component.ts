@@ -50,7 +50,7 @@ const APPS_DETAILS: AppDetails[] = [
   styleUrls: ['./app-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DappGridComponent implements OnInit {
+export class AppGridComponent implements OnInit {
   private apps$: Observable<AppDetailsWithStatus[]>;
   private orgId: string;
 
