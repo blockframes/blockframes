@@ -1,9 +1,9 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
-import { FireQuery, Query } from '@blockframes/utils';
-import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { FireQuery, Query } from '@blockframes/utils';
+import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions } from '../permissions/+state';
 import {
   createOrganization,
@@ -190,29 +190,44 @@ export class OrganizationService {
 
   updateOperationQuorum(id: string, newQuorum: number) {
     const operation = this.query.getOperationById(id);
-    if(!operation) throw new Error('This operation doesn\'t exists');
+    if (!operation) throw new Error('This operation doesn\'t exists');
     this.upsertOperation({
       ...operation,
-      quorum: newQuorum,
+      quorum: newQuorum
     });
   }
 
   addOperationMember(id: string, newMember: OrganizationMember) {
     const operation = this.query.getOperationById(id);
-    if(!operation) throw new Error('This operation doesn\'t exists');
+    if (!operation) throw new Error('This operation doesn\'t exists');
 
     const memberExists = operation.members.some(member => member.uid === newMember.uid);
     if (!!memberExists) throw new Error('This member is already a signer of this operation');
 
     this.upsertOperation({
       ...operation,
-      members: [...operation.members, newMember],
+      members: [...operation.members, newMember]
+    });
+  }
+
+  /** Lets an organization request access to an application */
+  public requestAccessToApp(orgId: string, appId: string): Promise<any> {
+    const docRef = this.db.collection('app-requests').doc(orgId).ref;
+
+    return this.db.firestore.runTransaction(async tx => {
+      const doc = await tx.get(docRef);
+
+      if (!doc.exists) {
+        return tx.set(docRef, { [appId]: 'requested' });
+      } else {
+        return tx.update(docRef, { [appId]: 'requested' });
+      }
     });
   }
 
   removeOperationMember(id: string, memberToRemove: OrganizationMember) {
     const operation = this.query.getOperationById(id);
-    if(!operation) throw new Error('This operation doesn\'t exists');
+    if (!operation) throw new Error('This operation doesn\'t exists');
 
     const members = operation.members.filter(member => member.uid !== memberToRemove.uid);
     const newOperation = { ...operation, members };

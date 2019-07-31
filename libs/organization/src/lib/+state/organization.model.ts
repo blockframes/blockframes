@@ -1,3 +1,17 @@
+
+/** Gives information about an application */
+export interface AppDetails {
+  name: string;
+  logoSrc: string;
+  href: string;
+  id: string;
+}
+
+/** An application details with the organization authorizations */
+export interface AppDetailsWithStatus extends AppDetails {
+  status: string; // TODO: type
+}
+
 export const enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
