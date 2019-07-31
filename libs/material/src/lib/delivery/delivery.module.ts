@@ -31,7 +31,6 @@ import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-edi
 import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
 
 // Modules
-import { MaterialModule } from '../material/material.module';
 import {
   EditableModule,
   DirectivesModule,
@@ -40,6 +39,7 @@ import {
   UiFormModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
+import { MaterialModule } from '../material/material.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -63,71 +63,90 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Guards
+import { MovieActiveGuard, MovieModule } from '@blockframes/movie';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
 import {
   DeliveryMaterialsGuard,
   MovieMaterialsGuard,
-  SignedDeliveryMaterialsGuard,
- } from '../material';
+  SignedDeliveryMaterialsGuard
+} from '../material';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
+import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'list',
-    pathMatch: 'full'
+    path: 'add',
+    children: [
+      {
+        path: '1-find-movie',
+        pathMatch: 'full',
+        component: DeliveryAddFindMovieComponent,
+      }
+    ]
   },
   {
-    path: 'list',
-    canActivate: [DeliveryListGuard],
-    canDeactivate: [DeliveryListGuard],
-    component: DeliveryListComponent
-  },
-  {
-    path: 'template-picker',
-    // TODO: Getting redirected to templates/list if there is no template to load => ISSUE#648
-    canActivate: [TemplateListGuard],
-    canDeactivate: [TemplateListGuard],
-    component: DeliveryTemplateListComponent
-  },
-  {
-    path: 'movie-materials',
-    canActivate: [MovieMaterialsGuard],
-    canDeactivate: [MovieMaterialsGuard],
-    component: MovieMaterialsViewComponent
-  },
-  {
-    path: ':deliveryId',
-    canActivate: [DeliveryActiveGuard],
-    canDeactivate: [DeliveryActiveGuard],
-    children : [
+    path: ':movieId',
+    canActivate: [MovieActiveGuard],
+    canDeactivate: [MovieActiveGuard],
+    children: [
       {
         path: '',
-        redirectTo: 'view',
+        redirectTo: 'list',
         pathMatch: 'full'
       },
       {
-        path: 'view',
-        canActivate: [SignedDeliveryMaterialsGuard],
-        canDeactivate: [SignedDeliveryMaterialsGuard],
-        component: DeliveryViewComponent
+        path: 'list',
+        canActivate: [DeliveryListGuard],
+        canDeactivate: [DeliveryListGuard],
+        component: DeliveryListComponent
       },
       {
-        path: 'edit',
-        canActivate: [DeliveryMaterialsGuard],
-        canDeactivate: [DeliveryMaterialsGuard],
-        component: DeliveryEditableComponent
+        path: 'template-picker',
+        // TODO: Getting redirected to templates/list if there is no template to load => ISSUE#648
+        canActivate: [TemplateListGuard],
+        canDeactivate: [TemplateListGuard],
+        component: DeliveryTemplateListComponent
       },
       {
-        path: 'teamwork',
-        component: DeliveryTeamworkEditableComponent
+        path: 'movie-materials',
+        canActivate: [MovieMaterialsGuard],
+        canDeactivate: [MovieMaterialsGuard],
+        component: MovieMaterialsViewComponent
       },
       {
-        path: 'settings',
-        canActivate: [DeliveryMaterialsGuard],
-        canDeactivate: [DeliveryMaterialsGuard],
-        component: DeliverySettingsEditableComponent
+        path: ':deliveryId',
+        canActivate: [DeliveryActiveGuard],
+        canDeactivate: [DeliveryActiveGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'view',
+            pathMatch: 'full'
+          },
+          {
+            path: 'view',
+            canActivate: [SignedDeliveryMaterialsGuard],
+            canDeactivate: [SignedDeliveryMaterialsGuard],
+            component: DeliveryViewComponent
+          },
+          {
+            path: 'edit',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliveryEditableComponent
+          },
+          {
+            path: 'teamwork',
+            component: DeliveryTeamworkEditableComponent
+          },
+          {
+            path: 'settings',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliverySettingsEditableComponent
+          }
+        ]
       }
     ]
   }
@@ -139,6 +158,7 @@ const routes: Routes = [
     DeliveryListComponent,
     DeliveryViewComponent,
     DeliveryEditableComponent,
+    DeliveryAddFindMovieComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
@@ -156,7 +176,7 @@ const routes: Routes = [
     DeliverySettingsFormComponent,
     DeliverySettingsEditableComponent,
     DeliverySignComponent,
-    DeliveryEmptyComponent,
+    DeliveryEmptyComponent
   ],
   imports: [
     CommonModule,
@@ -193,8 +213,9 @@ const routes: Routes = [
     MatAutocompleteModule,
     OrganizationModule,
 
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MovieModule
   ],
-  entryComponents: [NewTemplateComponent, DeliverySignComponent,]
+  entryComponents: [NewTemplateComponent, DeliverySignComponent]
 })
 export class DeliveryModule {}
