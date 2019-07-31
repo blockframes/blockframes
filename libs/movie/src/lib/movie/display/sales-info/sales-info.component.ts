@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieSalesInfo, createMovieSalesInfo } from '../../+state';
-import { getLabelBySlug } from '../../staticModels';
+import { getLabelByCode } from '../../staticModels';
 
 @Component({
   selector: '[salesInfo] movie-display-sales-info',
@@ -11,13 +11,9 @@ import { getLabelBySlug } from '../../staticModels';
 export class MovieDisplaySalesInfoComponent {
 
   public data: MovieSalesInfo;
+  public getLabelByCode = getLabelByCode;
   @Input() set salesInfo(salesInfo: Partial<MovieSalesInfo>) {
     this.data = createMovieSalesInfo(salesInfo);
-  }
-
-  /* Returns label from json staticModels */
-  public getStaticBySlug(scope: string, slug: string) {
-    return getLabelBySlug(scope, slug) as string;
   }
 
 }

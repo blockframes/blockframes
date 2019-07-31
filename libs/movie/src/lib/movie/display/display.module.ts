@@ -11,8 +11,6 @@ import { MovieDisplayStoryComponent } from './story/story.component';
 import { MovieDisplaySalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieDisplaySalesInfoComponent } from './sales-info/sales-info.component';
 
-//@todo #643 check css / HTML
-
 @NgModule({
   imports: [
     CommonModule,

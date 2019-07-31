@@ -2,6 +2,7 @@
   <span>internal ref: {{ data.internalRef }}</span>
   <span>ISAN number: {{ data.isan }}</span>
   <!-- @todo #643 
+  check css / HTML:
   A card is not supposed to have several content and title, ... 
   Prefer regular section + material typography
 
@@ -34,7 +35,7 @@
       <mat-card-title>Genres</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.genres; let isLast=last">
-          {{ getStaticBySlug('GENRES', item) }}{{ isLast ?'':',' }}
+          {{ getLabelByCode('GENRES', item) }}{{ isLast ?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -42,7 +43,7 @@
       <mat-card-title>Origin Country</mat-card-title>
       <mat-card-subtitle>
         <span>
-          {{ getStaticBySlug('COUNTRIES', data.originCountry) }}
+          {{ getLabelByCode('COUNTRIES', data.originCountry) }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -50,7 +51,7 @@
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.languages; let isLast=last">
-          {{ getStaticBySlug('LANGUAGES', item) }}{{ isLast?'':',' }}
+          {{ getLabelByCode('LANGUAGES', item) }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -58,7 +59,7 @@
       <mat-card-title>Status</mat-card-title>
       <mat-card-subtitle>
         <span>
-          {{ getStaticBySlug('MOVIE_STATUS', data.status) }}
+          {{ getLabelByCode('MOVIE_STATUS', data.status) }}
         </span>
       </mat-card-subtitle>
     </ng-container>

@@ -1,10 +1,10 @@
 <ng-container *ngIf="data">
   <mat-list>
     <mat-list-item *ngIf="data.scoring">
-      <strong>Scoring :</strong>  {{ getStaticBySlug('SCORING', data.scoring) }}
+      <strong>Scoring :</strong>  {{ getLabelByCode('SCORING', data.scoring) }}
     </mat-list-item>
     <mat-list-item *ngIf="data.color">
-      <strong>Color :</strong> {{ getStaticBySlug('COLORS', data.color) }}
+      <strong>Color :</strong> {{ getLabelByCode('COLORS', data.color) }}
     </mat-list-item>
     <mat-list-item *ngIf="data.europeanQualification">
       <strong>Eureopean Qualification :</strong> {{data.europeanQualification}}
@@ -16,7 +16,7 @@
       <strong>Certifications :</strong>
       <ul>
         <li *ngFor="let item of data.certifications;">
-          {{ getStaticBySlug('CERTIFICATIONS', item) }}
+          {{ getLabelByCode('CERTIFICATIONS', item) }}
         </li>
       </ul>
     </mat-list-item>

@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieMain, createMovieMain } from '../../+state';
-import { getLabelBySlug } from '../../staticModels';
+import { getLabelByCode } from '../../staticModels';
 
 @Component({
   selector: '[main] movie-display-main',
@@ -11,6 +11,7 @@ import { getLabelBySlug } from '../../staticModels';
 export class MovieDisplayMainComponent {
 
   public data : MovieMain;
+  public getLabelByCode = getLabelByCode;
   @Input() set main(main: Partial<MovieMain>) {
     this.data = createMovieMain(main);
   }
@@ -23,10 +24,5 @@ export class MovieDisplayMainComponent {
       this.data.shortSynopsis ||
       this.data.length ||
       this.data.status
-  }
-
-  /* Returns label from json staticModels */
-  public getStaticBySlug(scope: string, slug: string) {
-    return getLabelBySlug(scope, slug) as string;
   }
 }

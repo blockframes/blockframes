@@ -5,7 +5,7 @@ import { SheetTab } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
-import { getSlug } from '../../../staticModels';
+import { getCodeIfExists } from '../../../staticModels';
 import { SSF } from 'xlsx';
 
 export interface SpreadsheetImportError {
@@ -93,7 +93,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // SCORING (Scoring)
-        const scoring = getSlug('SCORING', m[3]);
+        const scoring = getCodeIfExists('SCORING', m[3]);
         if (scoring !== false) {
           movie.salesInfo.scoring = scoring;
         } else {
@@ -172,7 +172,7 @@ export class ViewExtractedElementsComponent {
 
         // BROADCASTER COPRODUCERS (Color / Black & White )
         movie.salesInfo.color = m[14];
-        const color = getSlug('COLORS', m[14]);
+        const color = getCodeIfExists('COLORS', m[14]);
         if (color !== false) {
           movie.salesInfo.color = color;
         } else {
@@ -188,7 +188,7 @@ export class ViewExtractedElementsComponent {
 
         // ORIGIN COUNTRY (Country of Origin)
         if (m[15] !== undefined) {
-          const country = getSlug('COUNTRIES', m[15]);
+          const country = getCodeIfExists('COUNTRIES', m[15]);
           if (country !== false) {
             movie.main.originCountry = country;
           } else {
@@ -212,7 +212,7 @@ export class ViewExtractedElementsComponent {
         // CERTIFICATIONS (Certifications)
         if (m[18] !== undefined) {
           m[18].split(',').forEach((c: string) => {
-            const certification = getSlug('CERTIFICATIONS', c);
+            const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification !== false) {
               movie.salesInfo.certifications.push(certification);
             } else {
@@ -263,7 +263,7 @@ export class ViewExtractedElementsComponent {
         if (m[23] !== undefined) {
           let errors = false;
           m[23].split(',').forEach((g: string) => {
-            const genre = getSlug('GENRES', g);
+            const genre = getCodeIfExists('GENRES', g);
             if (genre !== false) {
               movie.main.genres.push(genre);
             } else {
@@ -315,7 +315,7 @@ export class ViewExtractedElementsComponent {
         if (m[27] !== undefined) {
           let errors = false;
           m[27].split(',').forEach((g: string) => {
-            const language = getSlug('LANGUAGES', g);
+            const language = getCodeIfExists('LANGUAGES', g);
             if (language !== false) {
               movie.main.languages.push(language);
             } else {
@@ -338,7 +338,7 @@ export class ViewExtractedElementsComponent {
         if (m[28] !== undefined) {
           let errors = false;
           m[28].split(',').forEach((g: string) => {
-            const dubbing = getSlug('LANGUAGES', g);
+            const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing !== false) {
               movie.dubbings.push(dubbing);
             } else {
@@ -361,7 +361,7 @@ export class ViewExtractedElementsComponent {
         if (m[29] !== undefined) {
           let errors = false;
           m[29].split(',').forEach((g: string) => {
-            const subtitle = getSlug('LANGUAGES', g);
+            const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle !== false) {
               movie.subtitles.push(subtitle);
             } else {
