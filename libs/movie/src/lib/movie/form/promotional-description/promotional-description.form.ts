@@ -1,12 +1,13 @@
-import { MoviePromotionalDescription } from '../../+state';
+import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 
-function createMoviePromotionalDescriptionControls(promotionalDescription: MoviePromotionalDescription) {
+function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription>) {
+  const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
-    keywords: FormList.factory(promotionalDescription.keywords || [], el => new FormControl(el)),
-    keyAssets: FormList.factory(promotionalDescription.keyAssets || [], el => new FormControl(el)),
+    keywords: FormList.factory(entity.keywords),
+    keyAssets: FormList.factory(entity.keyAssets),
   }
 }
 

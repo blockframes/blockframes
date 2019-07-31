@@ -1,26 +1,28 @@
-import { MoviePromotionalElements, PromotionalElement } from '../../+state';
+import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements } from '../../+state';
 import { FormEntity, FormList, UrlControl } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 
-interface MoviePromotionalElementFormControl {
-  label: FormControl,
-  url: UrlControl
-}
-
-export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,MoviePromotionalElementFormControl> {
-  constructor(promotionalElement: PromotionalElement) {
-    super({
-      label: new FormControl(promotionalElement.label),
-      url: new UrlControl(promotionalElement.url),
-    });
+function createPromotionalElementControl(promotionalElement? : PromotionalElement) {
+  return {
+    label: new FormControl(promotionalElement.label),
+    url: new UrlControl(promotionalElement.url),
   }
 }
 
-function createMoviePromotionalElementsControls(promotionalElements? : MoviePromotionalElements) {
+type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
+
+export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,PromotionalElementControl> {
+  constructor(promotionalElement: PromotionalElement) {
+    super(createPromotionalElementControl(promotionalElement));
+  }
+}
+
+function createMoviePromotionalElementsControls(promotionalElements? : Partial<MoviePromotionalElements>) {
+  const entity = createMoviePromotionalElements(promotionalElements);
   return {
-    images: FormList.factory(promotionalElements.images || [], el => new FormControl(el)),
-    promotionalElements: FormList.factory(promotionalElements.promotionalElements || [], el => new MoviePromotionalElementForm(el)),
+    images: FormList.factory(entity.images),
+    promotionalElements: FormList.factory(entity.promotionalElements, el => new MoviePromotionalElementForm(el)),
   }
 }
 

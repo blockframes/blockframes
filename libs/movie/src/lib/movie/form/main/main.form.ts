@@ -1,42 +1,42 @@
-import { MovieMain, Movie, Credit } from '../../+state';
+import { MovieMain, Movie, Credit, createMovieMain } from '../../+state';
 import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
 import { Validators, FormControl } from '@angular/forms';
 
 
-interface MovieCreditFormControl {
-  firstName: FormControl,
-  lastName?: FormControl,
-  creditRole?: FormControl,
-}
-
-export class MovieCreditForm extends FormEntity<Credit,MovieCreditFormControl> {
-  constructor(credit: Credit) {
-    super({
-      firstName: new FormControl(credit.firstName),
-      lastName: new FormControl(credit.lastName),
-      creditRole: new FormControl(credit.creditRole),
-    });
+function createCreditFormControl(credit? : Partial<Credit>) {
+  return {
+    firstName: new FormControl(credit.firstName),
+    lastName: new FormControl(credit.lastName),
+    creditRole: new FormControl(credit.creditRole),
   }
 }
 
-function createMovieMainControls(main? : MovieMain ) {
+type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
+export class MovieCreditForm extends FormEntity<Credit,CreditFormControl> {
+  constructor(credit: Credit) {
+    super(createCreditFormControl(credit));
+  }
+}
+
+function createMovieMainControls(main? : Partial<MovieMain> ) {
+  const entity = createMovieMain(main);
   return {
-    internalRef: new FormField<string>(main.internalRef),
+    internalRef: new FormField(entity.internalRef),
     title: new FormEntity<Movie['main']['title']>({
-      original: new FormField<string>(main.title.original),
-      international: new FormField<string>(main.title.international),
+      original: new FormField(entity.title.original),
+      international: new FormField(entity.title.international),
     }),
-    directors: FormList.factory(main.directors || [], el => new MovieCreditForm(el)),
-    poster: new FormField<string>(main.poster),
-    productionYear: new YearControl(main.productionYear),
-    genres: new FormField<string[]>(main.genres || [] ),
-    originCountry: new FormField<string>(main.originCountry),
-    languages: new FormField<string[]>(main.languages || []),
-    status: new FormField<string>(main.status , [Validators.required]),
-    length: new FormField<number>(main.length),
-    shortSynopsis: new FormField<string>(main.shortSynopsis, [Validators.maxLength(500)] ),
-    productionCompanies: FormList.factory(main.productionCompanies || [], el => new MovieCreditForm(el)),
+    directors: FormList.factory(entity.directors, el => new MovieCreditForm(el)),
+    poster: new FormField(entity.poster),
+    productionYear: new YearControl(entity.productionYear),
+    genres: new FormField<string[]>(entity.genres),
+    originCountry: new FormField(entity.originCountry),
+    languages: new FormField<string[]>(entity.languages),
+    status: new FormField(entity.status , [Validators.required]),
+    length: new FormField<number>(entity.length),
+    shortSynopsis: new FormField(entity.shortSynopsis, [Validators.maxLength(500)] ),
+    productionCompanies: FormList.factory(entity.productionCompanies, el => new MovieCreditForm(el)),
   }
 }
 

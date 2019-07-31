@@ -1,11 +1,12 @@
-import { MovieSalesCast, Credit } from '../../+state';
+import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MovieCreditForm } from '../main/main.form';
 
-function createMovieSalesCastControls(salesCast: MovieSalesCast) {
+function createMovieSalesCastControls(salesCast: Partial<MovieSalesCast>){
+  const entity = createMovieSalesCast(salesCast);
   return {
-    credits: FormList.factory(salesCast.credits || [], el => new MovieCreditForm(el)),
+    credits: FormList.factory(entity.credits, el => new MovieCreditForm(el)),
   }
 }
 
