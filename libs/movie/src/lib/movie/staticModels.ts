@@ -1161,13 +1161,37 @@ const models = {
       'label': 'Zimbabwe'
     }
   ],
-  'CERTIFICATIONS': [
+  'SCORING': [
     {
-      'slug': 'european-qualification',
-      'label': 'European Qualification'
+      'slug': 'a', 
+      'label': 'A'
     },
     {
-      'slug': 'art-essai',
+      'slug': 'b', 
+      'label': 'B'
+    },
+    {
+      'slug': 'c', 
+      'label': 'C'
+    },
+    {
+      'slug': 'd', 
+      'label': 'D'
+    },
+  ],
+  'COLORS': [
+    {
+      'slug': 'c', 
+      'label': 'Color'
+    },
+    {
+      'slug': 'b', 
+      'label': 'Black & white'
+    }
+  ],
+  'CERTIFICATIONS': [
+    {
+      'slug': 'art-essai', 
       'label': 'Art & Essai'
     },
     {
@@ -1180,7 +1204,7 @@ const models = {
 //@todo #643 make more comprehensible (not slug)
 
 export const getSlug = (scope: string, str: string) => {
-  const item = models[scope].find(i => i.slug === str.trim().toLowerCase());
+  const item = models[scope].find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
   return item !== undefined ? item.slug : false;
 };
 
