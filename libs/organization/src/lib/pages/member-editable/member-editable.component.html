@@ -16,6 +16,8 @@
     </member-invitation>
   </ng-container>
   <ng-container sidenav>
-    <member-form-role [formGroup]="roleControl"></member-form-role>
+    <form [formArray]="form">
+      <member-form-role formGroupName="activeForm"></member-form-role>
+    </form>
   </ng-container>
 </editable-sidenav>

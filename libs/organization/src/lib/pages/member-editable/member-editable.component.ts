@@ -1,11 +1,20 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { OrganizationQuery, OrganizationMemberWithRole } from '../../+state';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
+import { FormList } from '@blockframes/utils';
+import { tap, switchMap, startWith } from 'rxjs/operators';
+
+function createMemberRoleControl(member) {
+  return new FormGroup({
+    id: new FormControl(member.id),
+    role: new FormControl(member.role)
+  })
+}
 
 @Component({
   selector: 'member-editable',
@@ -35,6 +44,10 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   public isSuperAdmin$: Observable<boolean>;
 
+  // public membersForm = new FormList([]);
+  public membersForm = FormList.factory([], createMemberRoleControl);
+  public activeForm: number;
+
   constructor(
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
@@ -47,6 +60,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // TODO: this observable does not change correctly when a member is updated: issue#707
     this.members$ = this.query.membersWithRole$;
+
+    this.members$ = this.query.membersWithRole$.pipe(
+      tap(members => this.membersForm.patchValue(members)),
+      switchMap(members => this.membersForm.valueChanges.pipe(startWith(members)))
+    );
+
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641

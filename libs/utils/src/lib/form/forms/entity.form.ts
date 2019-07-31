@@ -14,6 +14,15 @@ export class FormEntity<E, Control extends EntityControl<E> = EntityControl<E>> 
     super(controls, validators, asyncValidators);
   }
 
+  // static factory<E, Control extends EntityControl<E>>(entity: E, createControl?: (entity: E) => Control) {
+  //   const form = new FormEntity<E, Control>({});
+  //   if (createControl) {
+  //     form['createControl'] = createControl.bind(form);
+  //   }
+  //   form.patchValue(entity);
+  //   return form;
+  // }
+
   get<K extends keyof E>(path: Extract<K, string>): Control[K] {
     return super.get(path) as Control[K];
   }

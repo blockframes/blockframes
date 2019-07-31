@@ -8,9 +8,29 @@ import { Validator, AsyncValidator } from './types';
 
 type GetValue<T> = T extends FormField<infer I> ? I : T extends FormEntity<infer J, any> ? J : T;
 
+export function createControlForm(value: any) {
+  if (Array.isArray(value)) {
+    // return FormList.factory(value);
+    return new FormList(value);
+  } else if (typeof value === 'object') {
+    // return FormEntity.factory(value);
+    let form = {}
+    for (const key in value) {
+      form[key] = createControl(control[key]);
+    }
+    return new FormGroup(form);
+  } else if (typeof value === 'function') {
+    throw new Error('Value cannot be a function');
+  } else {
+    return new FormControl(value);
+  }
+}
+
 /** A list of FormField */
-export class FormList<T, Control extends AbstractControl = any> extends FormArray {
-  constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
+export class FormList<T> extends FormArray {
+  createControl =  createControlForm;
+
+  constructor(controls: GetForm<T>[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }
 
@@ -24,17 +44,23 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   }
 
   // TODO(#691): impprove GetForm and GetValue
-  createControl(value: T): any{
-    if (Array.isArray(value)) {
-      return new FormList(value);
-    } else if (typeof value === 'object') {
-      return new FormGroup(value as any);
-    } else if (typeof value === 'function') {
-      throw new Error('Value cannot be a function');
-    } else {
-      return new FormControl(value);
-    }
-  }
+  // createControl(value: T): any{
+  //   if (Array.isArray(value)) {
+  //     // return FormList.factory(value);
+  //     return new FormList(value);
+  //   } else if (typeof value === 'object') {
+  //     // return FormEntity.factory(value);
+  //     let form = {}
+  //     for (const key in value) {
+  //       form[key] = this.createControl(control[key]);
+  //     }
+  //     return new FormGroup(form);
+  //   } else if (typeof value === 'function') {
+  //     throw new Error('Value cannot be a function');
+  //   } else {
+  //     return new FormControl(value);
+  //   }
+  // }
 
   at(index: number): Control {
     return super.at(index) as Control;
