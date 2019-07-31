@@ -26,6 +26,7 @@ import { MovieFormSalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
 import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
+import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
 
 
 
@@ -62,6 +63,7 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     MovieFormStoryComponent,
     MovieFormSalesCastComponent,
     MovieFormSalesInfoComponent,
+    MovieFormVersionInfoComponent,
   ],
   exports: [
     MovieFormRootComponent

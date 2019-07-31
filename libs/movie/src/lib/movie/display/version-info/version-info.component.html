@@ -1,0 +1,20 @@
+<ng-container *ngIf="data">
+  <mat-list>
+    <mat-list-item *ngIf="data.dubbings.length > 0">
+      <strong>Available dubbing(s) :</strong>
+      <ul>
+        <li *ngFor="let item of data.dubbings;">
+          {{ getLabelByCode('LANGUAGES', item) }}
+        </li>
+      </ul>
+    </mat-list-item>
+    <mat-list-item *ngIf="data.subtitles.length > 0">
+      <strong>Available subtitles(s) :</strong>
+      <ul>
+        <li *ngFor="let item of data.subtitles;">
+          {{ getLabelByCode('LANGUAGES', item) }}
+        </li>
+      </ul>
+    </mat-list-item>
+  </mat-list>
+</ng-container>

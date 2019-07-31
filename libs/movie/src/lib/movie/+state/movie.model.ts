@@ -80,6 +80,11 @@ export interface MovieSalesInfo {
   originCountryReleaseDate: Date,
 }
 
+export interface MovieVersionInfo {
+  dubbings: string[],
+  subtitles: string[],
+}
+
 export interface Movie {
    // @todo #643 add new fields to Draw.io
   _type: 'movies',
@@ -93,8 +98,6 @@ export interface Movie {
   
   broadcasterCoproducers: string[],
   prizes: {name: string, year: string, prize: string}[]
-  dubbings: string[],
-  subtitles: string[],
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -115,6 +118,7 @@ export interface Movie {
   promotionalDescription: MoviePromotionalDescription,
   salesCast: MovieSalesCast,
   salesInfo: MovieSalesInfo,
+  versionInfo: MovieVersionInfo,
 }
 
 /**
@@ -130,6 +134,7 @@ export function createMovie(params?: Partial<Movie>) : Movie {
     promotionalDescription: {},
     salesCast: {},
     salesInfo: {},
+    versionInfo: {},
     ... params
   } as Movie;
 }
@@ -188,4 +193,12 @@ export function createMovieStory(params? : Partial<MovieStory>) : MovieStory{
   return {
     ... params
   } as MovieStory;
+}
+
+export function createMovieVersionInfo(params? : Partial<MovieVersionInfo>) : MovieVersionInfo{
+  return {
+    dubbings: [],
+    subtitles: [],
+    ... params
+  } as MovieVersionInfo;
 }

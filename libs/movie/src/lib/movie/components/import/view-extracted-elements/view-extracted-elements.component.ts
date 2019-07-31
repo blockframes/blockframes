@@ -69,8 +69,10 @@ export class ViewExtractedElementsComponent {
             certifications: [],
             internationalPremiere: {},
           },
-          dubbings: [],
-          subtitles: [],
+          versionInfo: {
+            dubbings: [],
+            subtitles: [],
+          },
           errors: [],
           prizes: [],
           broadcasterCoproducers: [],
@@ -340,7 +342,7 @@ export class ViewExtractedElementsComponent {
           m[28].split(',').forEach((g: string) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing !== false) {
-              movie.dubbings.push(dubbing);
+              movie.versionInfo.dubbings.push(dubbing);
             } else {
               errors = true;
             }
@@ -363,7 +365,7 @@ export class ViewExtractedElementsComponent {
           m[29].split(',').forEach((g: string) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle !== false) {
-              movie.subtitles.push(subtitle);
+              movie.versionInfo.subtitles.push(subtitle);
             } else {
               errors = true;
             }
@@ -668,20 +670,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.dubbings.length === 0) {
+    if (movie.versionInfo.dubbings.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'dubbings',
+        field: 'versionInfo.dubbings',
         name: "Dubbings",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);
     }
 
-    if (movie.subtitles.length === 0) {
+    if (movie.versionInfo.subtitles.length === 0) {
       movie.errors.push({
         type: 'warning',
-        field: 'subtitles',
+        field: 'versionInfo.subtitles',
         name: "Subtitles",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
