@@ -1,8 +1,9 @@
 export const CONTEXT_MENU = [
   {
-    route: 'default',
+    route: 'layout/o/catalog/home',
     items: [
-      { name: 'Upload avails & films doc', path: '/layout/o/home/import' }, // @todo #643 temp until good place for this route is found
+      { name: 'home', path: '/layout/o/catalog/home' }, 
+
     ]
   }
 ];

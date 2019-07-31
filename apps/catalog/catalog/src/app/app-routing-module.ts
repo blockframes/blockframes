@@ -1,3 +1,4 @@
+import { HomeModule } from './pages/home/home.module';
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -40,7 +41,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'home',
+            redirectTo: 'catalog',
             pathMatch: 'full'
           },
           {
@@ -58,6 +59,10 @@ export const routes: Routes = [
           {
             path: 'home',
             loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
+          },
+          {
+            path: 'catalog',
+            loadChildren: () => HomeModule
           },
           {
             path: 'templates',
