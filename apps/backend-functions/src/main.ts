@@ -24,12 +24,12 @@ import {
 import * as users from './users';
 import * as backup from './backup';
 import * as migrations from './migrations';
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from './utils';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationUpdate } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
-import { adminApp } from './admin';
+import { adminApp, onRequestAccessToAppWrite } from './admin';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -148,6 +148,18 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 export const onInvitationUpdateEvent = onDocumentUpdate(
   'invitations/{invitationID}',
   onInvitationUpdate
+);
+
+//--------------------------------
+//       Apps Management        //
+//--------------------------------
+
+/**
+ * Trigger: when an organization requests access to apps
+ */
+export const onAccessToApp= onDocumentWrite(
+  'app-requests/{orgId}',
+  onRequestAccessToAppWrite
 );
 
 //--------------------------------

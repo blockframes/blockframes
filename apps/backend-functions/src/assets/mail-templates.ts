@@ -6,6 +6,7 @@ import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
 const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization/';
+const ADMIN_ACCESS_TO_APP_PATH = '/admin/accessToApp/';
 
 const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `
@@ -23,6 +24,13 @@ const organizationCreatedTemplate = (orgId: string): string =>
   A new organization was created on the blockframes project,
 
   Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
+  `;
+
+const organizationRequestAccessToAppTemplate = (orgId: string, appId: string): string =>
+  `
+  An organization requested access to an app,
+
+  Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}${orgId}/${appId} to enable it.
   `;
 
 /** Generates a transactional email request for user invited to the application. */
@@ -66,5 +74,14 @@ export function organizationCanAccessApp(email: string, appId: string): EmailReq
     to: email,
     subject: 'Your organization has access to a new app',
     text: 'TODO'
-  }
+  };
+}
+
+/** Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access. */
+export function organizationRequestedAccessToApp(orgId: string, appId: string): EmailRequest {
+  return {
+    to: adminEmail,
+    subject: 'An organization requested access to an app',
+    text: organizationRequestAccessToAppTemplate(orgId, appId)
+  };
 }

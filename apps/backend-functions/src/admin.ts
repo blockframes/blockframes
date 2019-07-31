@@ -4,16 +4,47 @@
  *
  */
 import express from 'express';
-import { db, DocumentReference, getUserMail } from './internals/firebase';
+import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
 import { sendMail } from './internals/email';
 import { AppAccessStatus, OrganizationPermissions, OrganizationStatus } from './data/types';
-import { organizationCanAccessApp, organizationWasAccepted } from './assets/mail-templates';
+import {
+  organizationCanAccessApp,
+  organizationRequestedAccessToApp,
+  organizationWasAccepted
+} from './assets/mail-templates';
 import {
   acceptNewOrgPage,
   acceptNewOrgPageComplete,
   allowAccessToAppPage,
   allowAccessToAppPageComplete
 } from './assets/admin-templates';
+
+const APPS = ['a', 'b', 'c'];
+
+/**
+ * Handles firestore update on request to application acess,
+ */
+export async function onRequestAccessToAppWrite(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  context: functions.EventContext
+) {
+  const { orgId } = context.params;
+
+  const before = change.before.data();
+  const after = change.after.data();
+
+  if (!after) {
+    return;
+  }
+
+  const requestedApps = APPS.filter(appId => {
+    return after && after[appId] === 'requested' && (!before || !before[appId]);
+  });
+
+  return Promise.all(
+    requestedApps.map(appId => sendMail(organizationRequestedAccessToApp(orgId, appId)))
+  );
+}
 
 // We serve an express app at the /admin URL
 // this let us deal easily with get / post, url params, etc.
