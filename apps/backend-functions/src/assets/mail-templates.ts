@@ -5,8 +5,8 @@ import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
-const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization/';
-const ADMIN_ACCESS_TO_APP_PATH = '/admin/accessToApp/';
+export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
+export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 
 const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `
@@ -23,14 +23,14 @@ const organizationCreatedTemplate = (orgId: string): string =>
   `
   A new organization was created on the blockframes project,
 
-  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}${orgId} to enable it.
+  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
   `;
 
 const organizationRequestAccessToAppTemplate = (orgId: string, appId: string): string =>
   `
   An organization requested access to an app,
 
-  Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}${orgId}/${appId} to enable it.
+  Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}/${orgId}/${appId} to enable it.
   `;
 
 /** Generates a transactional email request for user invited to the application. */

@@ -8,6 +8,8 @@ import { db, DocumentReference, functions, getUserMail } from './internals/fireb
 import { sendMail } from './internals/email';
 import { AppAccessStatus, OrganizationPermissions, OrganizationStatus } from './data/types';
 import {
+  ADMIN_ACCEPT_ORG_PATH,
+  ADMIN_ACCESS_TO_APP_PATH,
   organizationCanAccessApp,
   organizationRequestedAccessToApp,
   organizationWasAccepted
@@ -88,7 +90,7 @@ async function mailOrganizationAdminOnAccept(organizationId: string): Promise<an
 
 // When an admin access the page, they'll see the "accept org" form.
 adminApp.get(
-  '/admin/acceptOrganization/:organizationId',
+  `${ADMIN_ACCEPT_ORG_PATH}/:organizationId`,
   async (req: express.Request, res: express.Response) => {
     const { organizationId } = req.params;
     res.send(acceptNewOrgPage(organizationId));
@@ -97,7 +99,7 @@ adminApp.get(
 
 // When an admin submit the "accept org" form, it'll update the organization, send mails, etc.
 adminApp.post(
-  '/admin/acceptOrganization/:organizationId',
+  `${ADMIN_ACCEPT_ORG_PATH}/:organizationId`,
   async (req: express.Request, res: express.Response) => {
     const { organizationId } = req.params;
     const organizationRef = db.collection('orgs').doc(organizationId);
@@ -134,7 +136,7 @@ async function mailOrganizationAdminOnAccessToApp(
 }
 
 adminApp.get(
-  '/admin/allowAccessToApp/:orgId/:appId',
+  `${ADMIN_ACCESS_TO_APP_PATH}/:orgId/:appId`,
   async (req: express.Request, res: express.Response) => {
     const { orgId, appId } = req.params;
     return res.send(allowAccessToAppPage(orgId, appId));
@@ -142,7 +144,7 @@ adminApp.get(
 );
 
 adminApp.post(
-  '/admin/allowAccessToApp/:orgId/:appId',
+  `${ADMIN_ACCESS_TO_APP_PATH}/:orgId/:appId`,
   async (req: express.Request, res: express.Response) => {
     const { orgId, appId } = req.params;
 
