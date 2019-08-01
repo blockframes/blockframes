@@ -1,8 +1,8 @@
 import { MovieSalesInfo, createMovieSalesInfo, Movie } from '../../+state';
 import { FormEntity, FormField } from '@blockframes/utils';
 
-function createMovieSalesInfoControls(SalesInfo: Partial<MovieSalesInfo>){
-  const entity = createMovieSalesInfo(SalesInfo);
+function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
+  const entity = createMovieSalesInfo(salesInfo);
   return {
     scoring: new FormField(entity.scoring),
     color: new FormField(entity.color),

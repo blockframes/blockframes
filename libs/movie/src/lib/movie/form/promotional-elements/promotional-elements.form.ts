@@ -3,7 +3,7 @@ import { FormEntity, FormList, UrlControl } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 
-function createPromotionalElementControl(promotionalElement? : PromotionalElement) {
+function createPromotionalElementControl(promotionalElement : Partial<PromotionalElement> = {}) {
   return {
     label: new FormControl(promotionalElement.label),
     url: new UrlControl(promotionalElement.url),
@@ -18,7 +18,7 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,P
   }
 }
 
-function createMoviePromotionalElementsControls(promotionalElements? : Partial<MoviePromotionalElements>) {
+function createMoviePromotionalElementsControls(promotionalElements : Partial<MoviePromotionalElements> = {}) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
     images: FormList.factory(entity.images),

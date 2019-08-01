@@ -23,25 +23,17 @@ export class MovieFormSalesInfoComponent implements OnInit {
 
   ngOnInit() {
     this.staticModels = staticModels;
-    this.selectSearchSubScriptions();
+    // Init search bar
+    this.certifications$ = this.certificationsFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(name => this.staticModels['CERTIFICATIONS'].filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
+    );
   }
 
   get salesInfo(): MovieSalesInfoForm {
     return this.controlContainer.control as MovieSalesInfoForm;
-  }
-
-  /* Selects with search bar */
-  private selectSearchSubScriptions(): void {
-    this.certifications$ = this.filterSelectSearch(this.certificationsFilterCtrl, this.staticModels['CERTIFICATIONS']);
-  }
-
-  private filterSelectSearch(control: FormControl, model: StaticModel[]) {
-    return control.valueChanges.pipe(
-      startWith(''),
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(name => model.filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
-    );
   }
 
 }

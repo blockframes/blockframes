@@ -3,7 +3,7 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MovieCreditForm } from '../main/main.form';
 
-function createMovieSalesCastControls(salesCast: Partial<MovieSalesCast>){
+function createMovieSalesCastControls(salesCast: Partial<MovieSalesCast> = {}){
   const entity = createMovieSalesCast(salesCast);
   return {
     credits: FormList.factory(entity.credits, el => new MovieCreditForm(el)),

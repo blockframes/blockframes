@@ -33,7 +33,7 @@
   </div>
   <!-- DIRECTORS -->
   <h3> Directed By </h3>
-  <div formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index;">
+  <div formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field class="small-margin">
         <input matInput formControlName="firstName" placeholder="First Name">
@@ -49,11 +49,11 @@
       </button>
     </div>
   </div>
-  <div *ngIf="main.directors.controls.length === 0">
+  <ng-container *ngIf="main.directors.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addDirector()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
   <!-- POSTER -->
   <h3> Poster </h3>
   <mat-card class="movie-poster-thumbnail mat-elevation-z0">
@@ -145,7 +145,7 @@
   <!-- PRODUCTION COMPANIES -->
   <h3> Production companies </h3>
   <div formArrayName="productionCompanies"
-    *ngFor="let productionCompany of main.productionCompanies.controls; let i = index;">
+    *ngFor="let productionCompany of main.productionCompanies.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field class="small-margin">
         <input matInput formControlName="firstName" placeholder="Company name">
@@ -158,9 +158,9 @@
       </button>
     </div>
   </div>
-  <div *ngIf="main.productionCompanies.controls.length === 0">
+  <ng-container *ngIf="main.productionCompanies.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
 </form>

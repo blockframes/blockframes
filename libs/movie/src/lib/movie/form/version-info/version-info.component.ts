@@ -23,25 +23,16 @@ export class MovieFormVersionInfoComponent implements OnInit {
 
   ngOnInit() {
     this.staticModels = staticModels;
-    this.selectSearchSubScriptions();
+    // Init search bar
+    this.languages$ = this.languagesFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(name => this.staticModels['LANGUAGES'].filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
+    );
   }
 
   get versionInfo(): MovieVersionInfoForm {
     return this.controlContainer.control as MovieVersionInfoForm;
   }
-
-  /* Selects with search bar */
-  private selectSearchSubScriptions(): void {
-    this.languages$ = this.filterSelectSearch(this.languagesFilterCtrl, this.staticModels['LANGUAGES']);
-  }
-
-  private filterSelectSearch(control: FormControl, model: StaticModel[]) {
-    return control.valueChanges.pipe(
-      startWith(''),
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(name => model.filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
-    );
-  }
-
 }

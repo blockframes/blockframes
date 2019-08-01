@@ -1,9 +1,9 @@
 <mat-card class="movie-card-view mat-elevation-z0" *ngIf="movie">
   <movie-display-main [main]="movie.main"></movie-display-main>
-  <movie-display-promotional-elements [promotionalElements]="movie.promotionalElements"></movie-display-promotional-elements>
-  <movie-display-promotional-description [promotionalDescription]="movie.promotionalDescription"></movie-display-promotional-description>
+  <movie-display-promotional-elements [elements]="movie.promotionalElements"></movie-display-promotional-elements>
+  <movie-display-promotional-description [description]="movie.promotionalDescription"></movie-display-promotional-description>
   <movie-display-story [story]="movie.story"></movie-display-story>
-  <movie-display-sales-cast [salesCast]="movie.salesCast"></movie-display-sales-cast>
-  <movie-display-sales-info [salesInfo]="movie.salesInfo"></movie-display-sales-info>
-  <movie-display-version-info [versionInfo]="movie.versionInfo"></movie-display-version-info>
+  <movie-display-sales-cast [cast]="movie.salesCast"></movie-display-sales-cast>
+  <movie-display-sales-info [info]="movie.salesInfo"></movie-display-sales-info>
+  <movie-display-version-info [info]="movie.versionInfo"></movie-display-version-info>
 </mat-card>

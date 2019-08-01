@@ -3,7 +3,7 @@ import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils
 import { Validators, FormControl } from '@angular/forms';
 
 
-function createCreditFormControl(credit? : Partial<Credit>) {
+function createCreditFormControl(credit : Partial<Credit> = {}) {
   return {
     firstName: new FormControl(credit.firstName),
     lastName: new FormControl(credit.lastName),
@@ -19,7 +19,7 @@ export class MovieCreditForm extends FormEntity<Credit,CreditFormControl> {
   }
 }
 
-function createMovieMainControls(main? : Partial<MovieMain> ) {
+function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormField(entity.internalRef),

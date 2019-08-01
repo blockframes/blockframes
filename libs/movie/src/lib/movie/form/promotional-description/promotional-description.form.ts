@@ -3,7 +3,7 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 
-function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription>) {
+function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription> = {}) {
   const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
     keywords: FormList.factory(entity.keywords),

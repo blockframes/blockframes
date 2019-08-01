@@ -1,7 +1,7 @@
 <form [formGroup]="salesCast">
   <!-- CREDITS -->
   <h3> Credits </h3>
-  <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index;">
+  <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field class="small-margin">
         <input matInput formControlName="firstName" placeholder="First Name">
@@ -24,9 +24,9 @@
       </button>
     </div>
   </div>
-  <div *ngIf="salesCast.credits.controls.length == 0">
+  <ng-container *ngIf="salesCast.credits.controls.length == 0">
     <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
 </form>

@@ -124,7 +124,7 @@ export interface Movie {
 /**
  * A factory function that creates Movie
  */
-export function createMovie(params?: Partial<Movie>) : Movie {
+export function createMovie(params: Partial<Movie> = {}) : Movie {
   return {
     deliveryIds: [],
     _type: 'movies',
@@ -140,7 +140,7 @@ export function createMovie(params?: Partial<Movie>) : Movie {
 }
 
 
-export function createMovieMain(params? : Partial<MovieMain>) : MovieMain{
+export function createMovieMain(params : Partial<MovieMain> = {}) : MovieMain{
   return {
     title: {
       original: '',
@@ -154,7 +154,7 @@ export function createMovieMain(params? : Partial<MovieMain>) : MovieMain{
   } as MovieMain;
 }
 
-export function createMoviePromotionalElements(params? : Partial<MoviePromotionalElements>) : MoviePromotionalElements{
+export function createMoviePromotionalElements(params : Partial<MoviePromotionalElements> = {}) : MoviePromotionalElements{
   return {
     images: [],
     promotionalElements: [],
@@ -162,7 +162,7 @@ export function createMoviePromotionalElements(params? : Partial<MoviePromotiona
   } as MoviePromotionalElements;
 }
 
-export function createMoviePromotionalDescription(params? : Partial<MoviePromotionalDescription>) : MoviePromotionalDescription{
+export function createMoviePromotionalDescription(params : Partial<MoviePromotionalDescription> = {}) : MoviePromotionalDescription{
   return {
     keyAssets: [],
     keywords: [],
@@ -170,14 +170,14 @@ export function createMoviePromotionalDescription(params? : Partial<MoviePromoti
   } as MoviePromotionalDescription;
 }
 
-export function createMovieSalesCast(params? : Partial<MovieSalesCast>) : MovieSalesCast{
+export function createMovieSalesCast(params : Partial<MovieSalesCast> = {}) : MovieSalesCast{
   return {
     credits: [],
     ... params
   } as MovieSalesCast;
 }
 
-export function createMovieSalesInfo(params? : Partial<MovieSalesInfo>) : MovieSalesInfo{
+export function createMovieSalesInfo(params : Partial<MovieSalesInfo> = {}) : MovieSalesInfo{
   return {
     internationalPremiere: {
       name: '',
@@ -189,13 +189,13 @@ export function createMovieSalesInfo(params? : Partial<MovieSalesInfo>) : MovieS
   } as MovieSalesInfo;
 }
 
-export function createMovieStory(params? : Partial<MovieStory>) : MovieStory{
+export function createMovieStory(params : Partial<MovieStory> = {}) : MovieStory{
   return {
     ... params
   } as MovieStory;
 }
 
-export function createMovieVersionInfo(params? : Partial<MovieVersionInfo>) : MovieVersionInfo{
+export function createMovieVersionInfo(params : Partial<MovieVersionInfo> = {}) : MovieVersionInfo{
   return {
     dubbings: [],
     subtitles: [],

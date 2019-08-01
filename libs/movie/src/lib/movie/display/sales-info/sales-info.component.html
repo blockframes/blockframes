@@ -15,7 +15,7 @@
     <mat-list-item *ngIf="data.certifications.length > 0">
       <strong>Certifications :</strong>
       <ul>
-        <li *ngFor="let item of data.certifications;">
+        <li *ngFor="let item of data.certifications">
           {{ getLabelByCode('CERTIFICATIONS', item) }}
         </li>
       </ul>

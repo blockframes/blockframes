@@ -3,7 +3,7 @@
   <h3> Keywords </h3>
   <mat-form-field class="full-width">
     <mat-chip-list #chipList>
-      <mat-chip *ngFor="let keyword of promotionalDescription.keywords.controls ; let i = index;" [selectable]="true"
+      <mat-chip *ngFor="let keyword of promotionalDescription.keywords.controls ; let i = index" [selectable]="true"
         [removable]="true" (removed)="promotionalDescription.removeKeyword(i)">
         {{ keyword.value }}
         <mat-icon matChipRemove>cancel</mat-icon>
@@ -14,7 +14,7 @@
   </mat-form-field>
   <!-- Key assets -->
   <h3> Key assets </h3>
-  <div formArrayName="keyAssets" *ngFor="let keyAssets of promotionalDescription.keyAssets.controls; let i = index;">
+  <div formArrayName="keyAssets" *ngFor="let keyAssets of promotionalDescription.keyAssets.controls; let i = index">
     <div class="full-width">
       <mat-form-field class="small-margin">
         <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="Key asset" type="string"></textarea>
@@ -27,9 +27,9 @@
       </button>
     </div>
   </div>
-  <div *ngIf="promotionalDescription.keyAssets.controls.length === 0">
+  <ng-container *ngIf="promotionalDescription.keyAssets.controls.length === 0">
     <button mat-icon-button color="primary" (click)="promotionalDescription.addKeyAsset()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
 </form>

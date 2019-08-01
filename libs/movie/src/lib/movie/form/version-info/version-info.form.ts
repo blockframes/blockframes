@@ -1,7 +1,7 @@
 import { MovieVersionInfo, createMovieVersionInfo } from '../../+state';
 import { FormEntity, FormField } from '@blockframes/utils';
 
-function createMovieVersionInfoControls(versionInfo: Partial<MovieVersionInfo>){
+function createMovieVersionInfoControls(versionInfo: Partial<MovieVersionInfo> = {}){
   const entity = createMovieVersionInfo(versionInfo);
   return {
     subtitles: new FormField(entity.subtitles),
