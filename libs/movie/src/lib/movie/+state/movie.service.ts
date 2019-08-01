@@ -45,7 +45,6 @@ export class MovieService {
     // we don't want to keep orgId in our Movie object
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
-    if (movie.errors) delete movie.errors;
 
     return this.db.doc<Movie>(`movies/${id}`).update(movie);
   }

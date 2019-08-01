@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MovieService, MovieAvailability, MovieQuery } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SpreadsheetImportError, MovieAvailabilityWithMetaData } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportError, SalesImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
 
@@ -14,16 +14,16 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 })
 export class TableExtractedAvailabilitiesComponent implements OnInit {
 
-  @Input() availabilities : MatTableDataSource<MovieAvailabilityWithMetaData>;
+  @Input() rows : MatTableDataSource<SalesImportState>;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  public selection = new SelectionModel<MovieAvailabilityWithMetaData>(true, []);
+  public selection = new SelectionModel<SalesImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
-    'movie.main.title.original',
-    'movie.main.productionYear',
+    'sale.movie.main.title.original',
+    'sale.movie.main.productionYear',
     'start',
     'end',
     'exclusivity',
@@ -41,14 +41,14 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
 
   ngOnInit() {
     // Mat table setup
-    this.availabilities.paginator = this.paginator;
-    this.availabilities.filterPredicate = this.filterPredicate;
-    this.availabilities.sortingDataAccessor = this.sortingDataAccessor;
-    this.availabilities.sort = this.sort;
+    this.rows.paginator = this.paginator;
+    this.rows.filterPredicate = this.filterPredicate;
+    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sort = this.sort;
   }
 
-  async addAvailability(availability: MovieAvailabilityWithMetaData) : Promise<void> {
-    await this.addMovieAvailabilities(availability);
+  async addAvailability(data: SalesImportState) : Promise<void> {
+    await this.addMovieAvailabilities(data);
     this.snackBar.open('Movie availability added!', 'close', { duration: 3000 });
   }
 
@@ -56,15 +56,14 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
     // @todo with transaction
   }
 
-  private addMovieAvailabilities(availability: MovieAvailabilityWithMetaData) : Promise<void> {
-    const movie  = this.movieQuery.getEntity(availability.movieId);
+  private addMovieAvailabilities(data: SalesImportState) : Promise<void> {
+    const movie  = this.movieQuery.getEntity(data.sale.movieId);
 
     //@todo check if unique before add
     //@todo use subcollection ?
 
-    const newAvailability = { ... availability };
+    const newAvailability = { ... data.sale };
 
-    if(newAvailability.errors) delete newAvailability.errors;
     if(newAvailability.movie) delete newAvailability.movie;
     if(newAvailability.movieId) delete newAvailability.movieId;
 
@@ -73,16 +72,16 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
     return this.movieService.update(movie.id, { availabilities });
   }
 
-  errorCount(availability: MovieAvailabilityWithMetaData, type: string = 'error') {
-    return availability.errors.filter((error: SpreadsheetImportError) => error.type === type ).length;
+  errorCount(data: SalesImportState, type: string = 'error') {
+    return data.errors.filter((error: SpreadsheetImportError) => error.type === type ).length;
   }
 
   ///////////////////
   // POPINS
   ///////////////////
 
-  displayErrors(availability: MovieAvailabilityWithMetaData) {
-    const data = { title: availability.movie.main.title.original, errors: availability.errors};
+  displayErrors(availability: SalesImportState) {
+    const data = { title: availability.sale.movie.main.title.original, errors: availability.errors};
     this.dialog.open(ViewImportErrorsComponent, { data , width: '50%' });
   }
 
@@ -95,7 +94,7 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
    */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.availabilities.data.length;
+    const numRows = this.rows.data.length;
     return numSelected === numRows;
   }
 
@@ -105,13 +104,13 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.availabilities.data.forEach(row => this.selection.select(row));
+      this.rows.data.forEach(row => this.selection.select(row));
   }
 
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: MovieAvailability): string {
+  checkboxLabel(row?: SalesImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -133,15 +132,15 @@ export class TableExtractedAvailabilitiesComponent implements OnInit {
    * Apply filter on MAT table with filterValue
    */
   applyFilter(filterValue: string) {
-    this.availabilities.filter = filterValue.trim().toLowerCase();
+    this.rows.filter = filterValue.trim().toLowerCase();
   }
 
   /**
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: MovieAvailability, filter) {
-    const dataStr = data.movieId + data.start + data.end;
+  filterPredicate(data: SalesImportState, filter) {
+    const dataStr = data.sale.movieId + data.sale.start + data.sale.end;
     return dataStr.toLowerCase().indexOf(filter) !== -1; 
   }
 

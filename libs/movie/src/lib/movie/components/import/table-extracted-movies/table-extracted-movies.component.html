@@ -1,4 +1,4 @@
-<p>Found <strong>{{ movies.data.length }}</strong> movie(s).</p>
+<p>Found <strong>{{ rows.data.length }}</strong> movie(s).</p>
 <ng-container *ngIf="mode === 'create'; else update">
   <p>For selection ({{this.selection.selected.length}} items selected) :
     <button mat-raised-button color="primary" [disabled]="this.selection.selected.length === 0"
@@ -16,7 +16,7 @@
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 
-<table mat-table [dataSource]="movies" matSort class="extracted-movie-list">
+<table mat-table [dataSource]="rows" matSort class="extracted-movie-list">
 
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
@@ -32,21 +32,21 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="main.internalRef">
+  <ng-container matColumnDef="movie.main.internalRef">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.main.internalRef }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.main.internalRef }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="main.title.original">
+  <ng-container matColumnDef="movie.main.title.original">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Origninal Title </th>
-    <td mat-cell *matCellDef="let element"> {{ element.main.title.original || '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.main.title.original || '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="main.poster">
+  <ng-container matColumnDef="movie.main.poster">
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.main.poster; else noposter">
-          <img class="poster" [src]="element.main.poster">
+      <ng-container *ngIf="element.movie.main.poster; else noposter">
+          <img class="poster" [src]="element.movie.main.poster">
       </ng-container>
       <ng-template #noposter>
         --
@@ -54,9 +54,9 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="main.productionYear">
+  <ng-container matColumnDef="movie.main.productionYear">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Production Year </th>
-    <td mat-cell *matCellDef="let element"> {{ element.main.productionYear || '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.main.productionYear || '--' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">
@@ -78,15 +78,15 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.id; else create">
+      <ng-container *ngIf="element.movie.id; else create">
         <button mat-raised-button color="accent" [disabled]="errorCount(element, 'warning') > 0 "
-          (click)="updateMovie(element)">Update</button>
+          (click)="updateMovie(element.movie)">Update</button>
         <button mat-raised-button color="primary" [routerLink]="['../', element.id, 'edit']">Access<mat-icon>
             arrow_forward</mat-icon></button>
       </ng-container>
       <ng-template #create>
         <button mat-raised-button color="primary" [disabled]="errorCount(element) > 0 "
-          (click)="createMovie(element)">Create<mat-icon>create</mat-icon>
+          (click)="createMovie(element.movie)">Create<mat-icon>create</mat-icon>
         </button>
       </ng-template>
     </td>
@@ -95,14 +95,14 @@
   <ng-container matColumnDef="preview">
     <th mat-header-cell *matHeaderCellDef> Preview </th>
     <td mat-cell *matCellDef="let element">
-      <button mat-raised-button color="primary" (click)="previewMovie(element)">
+      <button mat-raised-button color="primary" (click)="previewMovie(element.movie)">
         <mat-icon>pageview</mat-icon>
       </button>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
