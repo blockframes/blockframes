@@ -9,6 +9,7 @@ import { Movie, createMovie } from '../+state';
 import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
+import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
 
 
 function createMovieControls(movie: Partial<Movie>) {
@@ -22,6 +23,7 @@ function createMovieControls(movie: Partial<Movie>) {
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
     versionInfo: new MovieVersionInfoForm(entity.versionInfo),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
+    salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
   }
 }
 
