@@ -4,4 +4,21 @@ section {
     color: white;
     background-color: var(--accent);
   }
+  article {
+    width: 100%;
+    height: 800px;
+  }
+  mat-carousel {
+    width: 1024px;
+    height: 500px;
+
+    .bottom {
+      height: 100%;
+      position: inherit;
+    }
+
+    .white {
+      color: white;
+    }
+  }
 }

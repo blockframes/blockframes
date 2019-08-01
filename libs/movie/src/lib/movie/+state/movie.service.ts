@@ -4,7 +4,12 @@ import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore } from './movie.store';
-
+import { Query} from '@blockframes/utils';
+import { switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+const movieQuery = (id: string): Query<Movie> => ({
+  path: `movies/${id}`
+});
 @Injectable({ providedIn: 'root' })
 
 export class MovieService {
@@ -15,6 +20,7 @@ export class MovieService {
   private organizationQuery: OrganizationQuery,
   private permissionsService: PermissionsService,
   private store: MovieStore,
+  private fireQuery: FireQuery
   ) {}
 
   public async addMovie(original: string): Promise<Movie> {
@@ -58,6 +64,19 @@ export class MovieService {
       // Remove the movie from the movies store
       this.store.remove(movieId);
     })
+  }
+
+  // TODO #721: remove this function
+  get query() {
+    return this.organizationQuery
+      .select(state => state.org.movieIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No movie yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<Movie>(movieQuery(id)))
+          return combineLatest(queries)
+        })
+      );
   }
 
 }
