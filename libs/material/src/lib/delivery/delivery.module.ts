@@ -29,6 +29,11 @@ import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.compo
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
+import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
+import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
+import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
+import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
+
 // Modules
 import {
   ActionsListModule,
@@ -64,6 +69,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 // Guards
 import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
@@ -73,12 +79,8 @@ import {
   MovieMaterialsGuard,
   SignedDeliveryMaterialsGuard
 } from '../material';
-import { TemplateListGuard } from '../template/guards/template-list.guard';
-import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
-import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
-import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
-import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
+import { TemplateListGuard } from '../template/guards/template-list.guard';
 
 const routes: Routes = [
   {
