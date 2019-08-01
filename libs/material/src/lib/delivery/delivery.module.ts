@@ -69,6 +69,7 @@ import { DeliveryListGuard } from './guards/delivery-list.guard';
 import { DeliveryMaterialsGuard, MovieMaterialsGuard, SignedDeliveryMaterialsGuard } from '../material';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
+import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 
 const routes: Routes = [
   {
@@ -80,6 +81,13 @@ const routes: Routes = [
         path: '1-find-movie',
         pathMatch: 'full',
         component: DeliveryAddFindMovieComponent
+      },
+      {
+        path: '2-choose-starter/:movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
+        pathMatch: 'full',
+        component: DeliveryAddChooseStarterComponent
       }
     ]
   },
@@ -157,6 +165,7 @@ const routes: Routes = [
     DeliveryViewComponent,
     DeliveryEditableComponent,
     DeliveryAddFindMovieComponent,
+    DeliveryAddChooseStarterComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
