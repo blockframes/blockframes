@@ -11,6 +11,7 @@ type GetValue<T> = T extends FormField<infer I> ? I : T extends FormEntity<infer
 /** A list of FormField */
 export class FormList<T, Control extends AbstractControl = any> extends FormArray {
   createControl: (value: T) => Control = createControlForm;
+  controls: Control[];
 
   constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);

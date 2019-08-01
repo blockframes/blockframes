@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMember } from '../../+state';
+import { OrganizationMemberWithRole } from '../../+state';
 
 @Component({
   selector: 'member-repertory',
@@ -9,16 +9,17 @@ import { OrganizationMember } from '../../+state';
   styleUrls: ['./member-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberRepertoryComponent implements OnInit {
-  @Input() members: OrganizationMember[];
-  @Output() editing = new EventEmitter();
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+export class MemberRepertoryComponent {
 
-  public dataSource: MatTableDataSource<OrganizationMember>;
-  public displayedColumns: string[] = ['name', 'email', 'role', 'signer', 'action'];
-
-  ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.members);
+  @Input() set members(members: OrganizationMemberWithRole[]) {
+    this.dataSource = new MatTableDataSource(members);
     this.dataSource.sort = this.sort;
   }
+
+  @Output() editing = new EventEmitter<string>();
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  public dataSource: MatTableDataSource<OrganizationMemberWithRole>;
+  public displayedColumns: string[] = ['name', 'email', 'role', 'signer', 'action'];
 }

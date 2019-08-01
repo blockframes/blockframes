@@ -34,6 +34,7 @@ export interface OrganizationMemberRequest {
 export interface OrganizationMember extends OrganizationMemberRequest {
   uid: string;
   name?: string;
+  surname?: string;
   avatar?: string;
 }
 
