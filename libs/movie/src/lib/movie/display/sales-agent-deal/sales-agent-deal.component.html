@@ -1,0 +1,23 @@
+<ng-container *ngIf="data">
+  <mat-list>
+    <mat-list-item *ngIf="data.rightsEnd">
+      <strong>Mandate End of rights :</strong> {{data.rightsEnd | date: 'dd MMM yyyy' }}
+    </mat-list-item>
+    <mat-list-item *ngIf="data.territories.length > 0">
+      <strong>Territories :</strong>
+      <ul>
+        <li *ngFor="let item of data.territories">
+          {{ getLabelByCode('TERRITORIES', item) }}
+        </li>
+      </ul>
+    </mat-list-item>
+    <mat-list-item *ngIf="data.medias.length > 0">
+      <strong>Medias :</strong>
+      <ul>
+        <li *ngFor="let item of data.medias">
+          {{ getLabelByCode('MEDIAS', item) }}
+        </li>
+      </ul>
+    </mat-list-item>
+  </mat-list>
+</ng-container>

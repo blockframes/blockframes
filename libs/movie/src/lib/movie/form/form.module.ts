@@ -28,6 +28,7 @@ import { MovieFormRootComponent } from './root/root.component';
 import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
 import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
 import { MovieFormFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
+import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 
 
 
@@ -66,6 +67,7 @@ import { MovieFormFestivalPrizesComponent } from './festival-prizes/festival-pri
     MovieFormSalesInfoComponent,
     MovieFormVersionInfoComponent,
     MovieFormFestivalPrizesComponent,
+    MovieFormSalesAgentDealComponent,
   ],
   exports: [
     MovieFormRootComponent
