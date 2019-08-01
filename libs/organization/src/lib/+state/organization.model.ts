@@ -3,7 +3,7 @@ import { App } from '../permissions/+state';
 
 export interface AppDetails {
   name: string;
-  logoSrc: string;
+  logo: string;
   href: string;
   id: App;
 }

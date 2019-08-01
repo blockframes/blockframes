@@ -15,19 +15,19 @@ import { App } from '../permissions/+state';
 const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Media Financiers',
-    logoSrc: 'http://graphouille.g.r.pic.centerblog.net/6c2aaddd.png',
+    logo: 'http://graphouille.g.r.pic.centerblog.net/6c2aaddd.png',
     href: '/movie-financing',
     id: App.mediaFinanciers
   },
   {
     name: 'Stories and More',
-    logoSrc: 'http://recueil-de-png.r.e.pic.centerblog.net/8cc2960d.png',
+    logo: 'http://recueil-de-png.r.e.pic.centerblog.net/8cc2960d.png',
     href: '/stories-and-more',
     id: App.storiesAndMore
   },
   {
     name: 'Media Delivering',
-    logoSrc: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
+    logo: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
     href: '/delivery',
     id: App.mediaDelivering
   }

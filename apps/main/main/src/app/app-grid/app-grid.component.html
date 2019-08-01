@@ -3,7 +3,7 @@
   <article fxLayout="row" fxLayoutAlign="space-between center">
     <mat-card *ngFor="let app of (apps$ | async)">
       <a [href]="app.href">
-        <mat-card-content><img [src]="app.logoSrc" alt="App logo"/></mat-card-content>
+        <mat-card-content><img [src]="app.logo" alt="App logo"/></mat-card-content>
       </a>
       <mat-divider></mat-divider>
       <mat-card-actions [ngSwitch]="app.status">
