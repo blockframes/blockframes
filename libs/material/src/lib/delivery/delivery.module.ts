@@ -87,6 +87,11 @@ const routes: Routes = [
     canDeactivate: [MovieListGuard],
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '1-find-movie'
+      },
+      {
         path: '1-find-movie',
         pathMatch: 'full',
         component: DeliveryAddFindMovieComponent

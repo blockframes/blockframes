@@ -1,7 +1,10 @@
 export const CONTEXT_MENU = [
   {
     route: 'default',
-    items: [{ name: 'templates', path: '/layout/o/templates/list' }]
+    items: [
+      { name: 'templates', path: '/layout/o/templates/list' },
+      { name: 'add a delivery', path: '/layout/o/delivery/add/1-find-movie' }
+    ]
   },
   {
     route: '/layout/welcome',
