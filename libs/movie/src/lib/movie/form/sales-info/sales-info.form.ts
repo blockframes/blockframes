@@ -1,5 +1,6 @@
 import { MovieSalesInfo, createMovieSalesInfo, Movie } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity, FormField, FormList } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
@@ -14,6 +15,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
       year: new FormField(entity.internationalPremiere.year),
     }),
     originCountryReleaseDate: new FormField<Date>(entity.originCountryReleaseDate),
+    broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
   }
 }
 
@@ -22,6 +24,18 @@ type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
 export class MovieSalesInfoForm extends FormEntity<Partial<MovieSalesInfo>, MovieSalesInfoControl>{
   constructor(SalesInfo : MovieSalesInfo) {
     super(createMovieSalesInfoControls(SalesInfo));
+  }
+
+  get broadcasterCoproducers() {
+    return this.get('broadcasterCoproducers');
+  }
+
+  public addBroadcasterCoproducers(): void {
+    this.broadcasterCoproducers.push(new FormControl(''));
+  }
+
+  public removeBroadcasterCoproducers(i: number): void {
+   this.broadcasterCoproducers.removeAt(i);
   }
 
 }

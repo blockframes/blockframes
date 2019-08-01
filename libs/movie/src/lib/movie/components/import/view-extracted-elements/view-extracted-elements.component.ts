@@ -70,13 +70,13 @@ export class ViewExtractedElementsComponent {
           salesInfo: {
             certifications: [],
             internationalPremiere: {},
+            broadcasterCoproducers: [],
           },
           versionInfo: {
             dubbings: [],
             subtitles: [],
           },
           prizes: [],
-          broadcasterCoproducers: [],
         } as Movie;
 
         const importErrors = { movie, errors: [] }  as MovieImportState;
@@ -170,7 +170,7 @@ export class ViewExtractedElementsComponent {
         // BROADCASTER COPRODUCERS (TV / Platform coproducer(s))
         if (spreadSheetRow[13]) {
           spreadSheetRow[13].split(',').forEach((p: string) => {
-            movie.broadcasterCoproducers.push(p);
+            movie.salesInfo.broadcasterCoproducers.push(p);
           });
         }
 
@@ -533,10 +533,10 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.broadcasterCoproducers.length === 0) {
+    if (movie.salesInfo.broadcasterCoproducers.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.broadcasterCoproducers',
+        field: 'main.salesInfo.broadcasterCoproducers',
         name: "TV / Platform coproducer(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

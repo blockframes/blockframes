@@ -78,6 +78,7 @@ export interface MovieSalesInfo {
   certifications: string[],
   internationalPremiere: Prize,
   originCountryReleaseDate: Date,
+  broadcasterCoproducers: string[],
 }
 
 export interface MovieVersionInfo {
@@ -96,7 +97,7 @@ export interface Movie {
 
   // @todo #643 not main movie attributes WIP
   
-  broadcasterCoproducers: string[],
+  
   prizes: {name: string, year: string, prize: string}[]
   ipId: string,
   directorNote: string,
@@ -185,6 +186,7 @@ export function createMovieSalesInfo(params : Partial<MovieSalesInfo> = {}) : Mo
       prize: '',
     },
     certifications: [],
+    broadcasterCoproducers: [],
     ... params
   } as MovieSalesInfo;
 }

@@ -58,4 +58,26 @@
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
+  <!-- Broadcaster coproducers -->
+  <h3> TV / Platform coproducer(s), if any </h3>
+  <div formArrayName="broadcasterCoproducers" *ngFor="let broadcasterCoproducer of salesInfo.broadcasterCoproducers.controls; let i = index">
+    <div class="full-width">
+      <mat-form-field class="small-margin">
+        <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="TV / Platform coproducer"
+          type="string"></textarea>
+      </mat-form-field>
+      <button *ngIf="salesInfo.broadcasterCoproducers.controls.length < 3" mat-icon-button color="primary"
+        (click)="salesInfo.addBroadcasterCoproducers()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="salesInfo.removeBroadcasterCoproducers(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <ng-container *ngIf="salesInfo.broadcasterCoproducers.controls.length === 0">
+    <button mat-icon-button color="primary" (click)="salesInfo.addBroadcasterCoproducers()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </ng-container>
 </form>
