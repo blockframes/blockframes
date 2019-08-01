@@ -29,14 +29,14 @@ import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.compo
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
-
 // Modules
 import {
   ActionsListModule,
-  EditableModule,
-  DirectivesModule,
-  TeamWorkModule,
+  ActionsPickerModule,
   ConfirmModule,
+  DirectivesModule,
+  EditableModule,
+  TeamWorkModule,
   UiFormModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
@@ -76,6 +76,7 @@ import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
+import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 
 const routes: Routes = [
   {
@@ -104,6 +105,18 @@ const routes: Routes = [
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
             component: DeliveryAddTemplatePickerComponent
+          },
+          {
+            path: ':templateId',
+            canActivate: [TemplateActiveGuard],
+            canDeactivate: [TemplateActiveGuard],
+            children: [
+              {
+                path: '4-settings',
+                pathMatch: 'full',
+                component: null
+              }
+            ]
           }
         ]
       }
@@ -214,6 +227,7 @@ const routes: Routes = [
     ConfirmModule,
     UiFormModule,
     ActionsListModule,
+    ActionsPickerModule,
     EditableModule,
     DirectivesModule,
     TeamWorkModule,
