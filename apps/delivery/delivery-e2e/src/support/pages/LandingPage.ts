@@ -1,5 +1,5 @@
 import HomePage from './HomePage';
-import LoginPage from './LoginPage';
+import {LoginPage} from '@blockframes/auth';
 
 export default class LandingPage {
   constructor() {

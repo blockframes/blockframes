@@ -1,12 +1,6 @@
 /// <reference types="cypress" />
-import {
-  EditProfilePage,
-  HomePage,
-  LandingPage,
-  LoginPage,
-  OrganizationFormPage,
-  ViewProfilePage
-} from '../support/pages';
+import { HomePage, LoginPage } from '../support/pages';
+import { LandingPage } from '@blockframes/auth/e2e/index';
 
 function randomEmail(): string {
   return `cypress${Math.floor(Math.random() * 10000) + 1}@blockframes.com`;
