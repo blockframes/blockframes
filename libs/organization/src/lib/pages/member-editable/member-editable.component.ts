@@ -11,9 +11,9 @@ import { tap, switchMap, startWith, map } from 'rxjs/operators';
 
 function createMemberRoleControl(member: OrganizationMemberWithRole) {
   return new FormGroup({
-    id: new FormControl(member.uid),
+    uid: new FormControl(member.uid),
     role: new FormControl(member.role)
-  })
+  });
 }
 
 @Component({
@@ -27,12 +27,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   public opened = false;
 
-  /** The selected member open in the sidenav */
-  public selected: OrganizationMemberWithRole;
-
-  /** The control to choose the role of member */
-  public roleControl = new FormControl();
-
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMemberWithRole[]>;
 
@@ -44,13 +38,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   public isSuperAdmin$: Observable<boolean>;
 
-   //public membersForm = new FormList([]);
-   public formGroup = new FormGroup({
-     members: FormList.factory([])
-   });
-  public membersForm = FormList.factory([], createMemberRoleControl);
+  public membersGroup = new FormGroup({
+    members: FormList.factory([], createMemberRoleControl)
+  });
 
-  public indexForm = 1;
+  /** The index of selected member permits to open the sidenav */
+  public membersIndex: number;
 
   constructor(
     private query: OrganizationQuery,
@@ -63,10 +56,9 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // TODO: this observable does not change correctly when a member is updated: issue#707
-    //this.members$ = this.query.membersWithRole$;
     this.members$ = this.query.membersWithRole$.pipe(
-      tap(members => this.formGroup.get('members').patchValue(members)),
-      switchMap(members => this.formGroup.get('members').valueChanges.pipe(startWith(members)))
+      tap(members => this.membersGroup.get('members').patchValue(members)),
+      switchMap(members => this.membersGroup.get('members').valueChanges.pipe(startWith(members))),
     );
 
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
@@ -77,10 +69,13 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationsToOrganization$ = this.invitationQuery.invitationsToOrganization$;
   }
 
-  public openSidenav(index: number) {
-    this.indexForm = index;
-    console.log(this.indexForm)
-    //this.roleControl.setValue(this.selected.role);
+  public openSidenav(memberId: string) {
+    /*
+      We need to find the right index of the formList
+       because the index sent by the mat-table can change according to the sort
+    */
+    const members = this.membersGroup.get('members').value;
+    this.membersIndex = members.findIndex(member => member.uid === memberId);
     this.opened = true;
   }
 
@@ -93,22 +88,22 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   }
 
   public get members() {
-    return this.formGroup.get('members');
+    return this.membersGroup.get('members');
   }
 
   public async updateRole() {
-    console.log(this.formGroup.get('members'))
-    try {
-      if (this.roleControl.value !== this.selected.role) {
-        // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
-        await this.permissionsService.switchRoles(this.selected.uid);
-        this.snackBar.open('Role updated', 'close', { duration: 2000 });
-      } else {
-        throw new Error('The member already has this role');
-      }
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 2000 });
-    }
+    console.log(this.membersGroup.get('members').value);
+    // try {
+    //   if (this.roleControl.value !== this.selected.role) {
+    //     // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
+    //     await this.permissionsService.switchRoles(this.selected.uid);
+    //     this.snackBar.open('Role updated', 'close', { duration: 2000 });
+    //   } else {
+    //     throw new Error('The member already has this role');
+    //   }
+    // } catch (error) {
+    //   this.snackBar.open(error.message, 'close', { duration: 2000 });
+    // }
   }
 
   ngOnDestroy() {

@@ -15,11 +15,11 @@
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-invitation>
   </ng-container>
-  <ng-container sidenav>
-    <form [formGroup]="formGroup">
-    <div formArrayName="members">
-      <member-form-role [formGroupName]="indexForm"></member-form-role>
-    </div>
-  </form>
+  <ng-container *ngIf="membersIndex !== undefined" sidenav>
+    <form [formGroup]="membersGroup">
+      <div formArrayName="members">
+        <member-form-role [formGroupName]="membersIndex"></member-form-role>
+      </div>
+    </form>
   </ng-container>
 </editable-sidenav>
