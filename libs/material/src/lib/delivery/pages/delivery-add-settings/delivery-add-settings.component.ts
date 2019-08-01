@@ -35,5 +35,8 @@ export class DeliveryAddSettingsComponent {
     this.options = options;
   }
 
-  public onCompleteFlow() {}
+  public onCompleteFlow() {
+    // TODO(#590): Implement the jump to the last page that creates the delivery
+    //  with all of our configuration.
+  }
 }
