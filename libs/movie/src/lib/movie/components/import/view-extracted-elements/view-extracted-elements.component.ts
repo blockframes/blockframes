@@ -16,7 +16,7 @@ export interface SpreadsheetImportError {
   hint?: string;
 }
 
-export interface MovieImportState   {
+export interface MovieImportState {
   movie: Movie;
   errors?: SpreadsheetImportError[];
 }
@@ -59,7 +59,7 @@ export class ViewExtractedElementsComponent {
             languages: [],
             productionCompanies: [],
             status: 'finished', // all imported movies are in finished state
-          }, 
+          },
           promotionalDescription: {
             keywords: [],
             keyAssets: [],
@@ -78,10 +78,14 @@ export class ViewExtractedElementsComponent {
           },
           festivalPrizes: {
             prizes: [],
+          },
+          salesAgentDeal: {
+            territories: [],
+            medias: []
           }
         } as Movie;
 
-        const importErrors = { movie, errors: [] }  as MovieImportState;
+        const importErrors = { movie, errors: [] } as MovieImportState;
 
         //////////////////
         // REQUIRED FIELDS
@@ -113,14 +117,47 @@ export class ViewExtractedElementsComponent {
 
         }
 
-        // ?? (Mandate End of rights)
-        // spreadSheetRow[4]
+        // END OF RIGHTS (Mandate End of rights)
+        if (spreadSheetRow[4]) {
+          const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[4]);
+          movie.salesAgentDeal.rightsEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+        }
 
-        // ?? (Mandate Territories)
-        // spreadSheetRow[5]
+        // TERRITORIES (Mandate Territories)
+        if (spreadSheetRow[5]) {
+          spreadSheetRow[5].split(',').forEach((c: string) => {
+            const territory = getCodeIfExists('TERRITORIES', c);
+            if (territory !== false) {
+              movie.salesAgentDeal.territories.push(territory);
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'salesAgentDeal.territories',
+                name: "Mandate Territories",
+                reason: 'Required field could not be parsed',
+                hint: 'Edit corresponding sheet field.'
+              } as SpreadsheetImportError);
+            }
+          });
+        }
 
-        // ?? (Mandate Medias)
-        // spreadSheetRow[6]
+        // MEDIAS (Mandate Medias)
+        if (spreadSheetRow[6]) {
+          spreadSheetRow[6].split(';').forEach((c: string) => {
+            const media = getCodeIfExists('MEDIAS', c);
+            if (media !== false) {
+              movie.salesAgentDeal.medias.push(media);
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'salesAgentDeal.medias',
+                name: "Mandate Medias",
+                reason: 'Required field could not be parsed',
+                hint: 'Edit corresponding sheet field.'
+              } as SpreadsheetImportError);
+            }
+          });
+        }
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[7]) {
@@ -224,7 +261,7 @@ export class ViewExtractedElementsComponent {
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'certifications',
+                field: 'salesInfo.certifications',
                 name: "Certifications",
                 reason: 'Optional field could not be parsed',
                 hint: 'Edit corresponding sheet field.'
@@ -262,8 +299,10 @@ export class ViewExtractedElementsComponent {
         }
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-        const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[22]);
-        movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+        if (spreadSheetRow[22]) {
+          const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[22]);
+          movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+        }
 
         // GENRES (Genres)
         if (spreadSheetRow[23]) {
@@ -280,7 +319,7 @@ export class ViewExtractedElementsComponent {
           if (errors) {
             importErrors.errors.push({
               type: 'warning',
-              field: 'genres',
+              field: 'main.genres',
               name: "Genres",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
@@ -332,7 +371,7 @@ export class ViewExtractedElementsComponent {
           if (errors) {
             importErrors.errors.push({
               type: 'warning',
-              field: 'languages',
+              field: 'main.languages',
               name: "Languages",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
@@ -355,7 +394,7 @@ export class ViewExtractedElementsComponent {
           if (errors) {
             importErrors.errors.push({
               type: 'warning',
-              field: 'dubbing',
+              field: 'versionInfo.dubbing',
               name: "Dubbings",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
@@ -378,7 +417,7 @@ export class ViewExtractedElementsComponent {
           if (errors) {
             importErrors.errors.push({
               type: 'warning',
-              field: 'subtitle',
+              field: 'versionInfo.subtitle',
               name: "Subtitles",
               reason: 'Optional field could not be parsed',
               hint: 'Edit corresponding sheet field.'
@@ -427,7 +466,7 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.internalRef) {
       errors.push({
         type: 'error',
-        field: 'internalRef',
+        field: 'main.internalRef',
         name: "Film Code ",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -437,7 +476,7 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.title.original) {
       errors.push({
         type: 'error',
-        field: 'title.original',
+        field: 'main.title.original',
         name: "Original title",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -447,7 +486,7 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.productionYear) {
       errors.push({
         type: 'error',
-        field: 'productionYear',
+        field: 'main.productionYear',
         name: "Production Year",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -464,17 +503,40 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
+    if (!movie.salesAgentDeal.rightsEnd) {
+      errors.push({
+        type: 'error',
+        field: 'salesAgentDeal.rightsEnd',
+        name: 'Mandate End of rights',
+        reason: 'Required field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
 
-    // @todo #643 (Mandate End of rights)
+    if (!movie.salesAgentDeal.territories) {
+      errors.push({
+        type: 'error',
+        field: 'salesAgentDeal.territories',
+        name: "Mandate Territories",
+        reason: 'Required field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
 
-    // @todo #643 (Mandate Territories)
-
-    // @todo #643 (Mandate Medias)
+    if (!movie.salesAgentDeal.medias) {
+      errors.push({
+        type: 'error',
+        field: 'salesAgentDeal.medias',
+        name: "Mandate Medias",
+        reason: 'Required field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
 
     if (movie.main.directors.length === 0) {
       errors.push({
         type: 'error',
-        field: 'directors',
+        field: 'main.directors',
         name: "Directors",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -484,7 +546,7 @@ export class ViewExtractedElementsComponent {
     if (!movie.main.poster) {
       errors.push({
         type: 'error',
-        field: 'poster',
+        field: 'main.poster',
         name: "Poster",
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
@@ -706,7 +768,7 @@ export class ViewExtractedElementsComponent {
       if (spreadSheetRow[0]) {
         const movie = {
           main: {
-            title: {original: spreadSheetRow[0]},
+            title: { original: spreadSheetRow[0] },
             productionYear: parseInt(spreadSheetRow[1], 10),
             directors: [spreadSheetRow[2]]
           },
@@ -714,6 +776,7 @@ export class ViewExtractedElementsComponent {
 
         const movieId = this.movieQuery.movieExists(movie.main.internalRef);
 
+        // @todo #643 handle errors
         const start: SSF$Date = SSF.parse_date_code(spreadSheetRow[5]);
         const end: SSF$Date = SSF.parse_date_code(spreadSheetRow[6]);
 
@@ -728,8 +791,8 @@ export class ViewExtractedElementsComponent {
           exclusivity: spreadSheetRow[8] === 'Y' ? true : false,
 
         } as MovieAvailability;
-        
-        const importErrors = { sale, errors: [] }  as SalesImportState;
+
+        const importErrors = { sale, errors: [] } as SalesImportState;
 
         this.validateMovieAvailability(importErrors);
 
