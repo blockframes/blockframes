@@ -12,6 +12,7 @@ import { MovieDisplaySalesCastComponent } from './sales-cast/sales-cast.componen
 import { MovieDisplaySalesInfoComponent } from './sales-info/sales-info.component';
 import { MovieDisplayVersionInfoComponent } from './version-info/version-info.component';
 import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
+import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-
     MovieDisplaySalesInfoComponent,
     MovieDisplayVersionInfoComponent,
     MovieDisplayFestivalPrizesComponent,
+    MovieDisplaySalesAgentDealComponent,
   ],
   exports: [
     MovieDisplayComponent,
