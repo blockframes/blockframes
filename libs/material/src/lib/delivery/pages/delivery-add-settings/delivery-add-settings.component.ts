@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActionPickerListItem } from '@blockframes/ui';
 
 export const enum DeliveryOption {
@@ -18,7 +17,7 @@ export const enum DeliveryOption {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddSettingsComponent {
-  private items: ActionPickerListItem<DeliveryOption>[] = [
+  public items: ActionPickerListItem<DeliveryOption>[] = [
     {
       title: 'Materials to be charged',
       payload: DeliveryOption.materialsToBeCharged
@@ -28,13 +27,13 @@ export class DeliveryAddSettingsComponent {
       payload: DeliveryOption.deliveryListToBeSigned
     }
   ];
-  private options: DeliveryOption[] = [];
+  public options: DeliveryOption[] = [];
 
-  constructor(private router: Router) {}
+  constructor() {}
 
-  picked(options: DeliveryOption[]) {
+  public picked(options: DeliveryOption[]) {
     this.options = options;
   }
 
-  onCompleteFlow() {}
+  public onCompleteFlow() {}
 }

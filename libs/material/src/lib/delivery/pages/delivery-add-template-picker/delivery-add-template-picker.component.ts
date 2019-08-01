@@ -17,9 +17,9 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddTemplatePickerComponent implements OnInit {
-  private loading$: Observable<boolean>;
-  private items$: Observable<ActionPickerItem<Template>[]>;
-  private currentTemplate: Template;
+  public loading$: Observable<boolean>;
+  public items$: Observable<ActionPickerItem<Template>[]>;
+  public currentTemplate: Template;
 
   constructor(
     private templateQuery: TemplateQuery,
@@ -39,11 +39,11 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     );
   }
 
-  picked(template: Template) {
+  public picked(template: Template) {
     this.currentTemplate = template;
   }
 
-  onTemplatePicked() {
+  public onTemplatePicked() {
     const templateId = this.currentTemplate.id;
     const movieId = this.movieQuery.getActiveId();
     return this.router.navigate([`/layout/o/delivery/add/${movieId}/${templateId}/4-settings`]);
