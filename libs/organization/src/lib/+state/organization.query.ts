@@ -37,31 +37,28 @@ const APPS_DETAILS: AppDetails[] = [
   providedIn: 'root'
 })
 export class OrganizationQuery extends Query<OrganizationState> {
+  /**
+   * an Observable that describe the list
+   * of application that are accessible to the current
+   * organization.
+   */
+  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.orgId$.pipe(
+    map(orgId => this.db.collection('app-requests').doc(orgId)),
+    switchMap(docRef => docRef.valueChanges()),
+    map((appRequest = {}) =>
+      APPS_DETAILS.map(app => ({
+        ...app,
+        status: (appRequest[app.id] as AppStatus) || AppStatus.none
+      }))
+    )
+  );
+
   constructor(protected store: OrganizationStore, protected db: FireQuery) {
     super(store);
   }
 
   get orgId$(): Observable<string> {
     return this.select(state => state.org.id);
-  }
-
-  /**
-   * Returns an Observable that describe the list
-   * of application that are accessible to the current
-   * organization.
-   */
-  get appsDetails$(): Observable<AppDetailsWithStatus[]> {
-    return this.orgId$.pipe(
-      map(orgId => this.db.collection('app-requests').doc(orgId)),
-      switchMap(docRef => docRef.valueChanges()),
-      map(appRequest => appRequest || {}), // default to an empty document if no requests happened done so fare
-      map(appRequest =>
-        APPS_DETAILS.map(app => ({
-          ...app,
-          status: (appRequest[app.id] as AppStatus) || AppStatus.none
-        }))
-      )
-    );
   }
 
   get status$(): Observable<OrganizationStatus> {
