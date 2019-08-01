@@ -1209,7 +1209,7 @@ const models = {
  */
 export const getCodeIfExists = (scope: string, str: string) => {
   const item = models[scope].find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
-  return item !== undefined ? item.slug : false;
+  return item.slug || false;
 };
 
 /**
@@ -1220,7 +1220,7 @@ export const getCodeIfExists = (scope: string, str: string) => {
  */
 export const getLabelByCode = (scope: string, slug: string) => {
   const item = models[scope].find(i => i.slug === slug);
-  return item !== undefined ? item.label : '';
+  return item.label || '';
 };
 
 export default models;
