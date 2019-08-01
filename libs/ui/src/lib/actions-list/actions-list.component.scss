@@ -1,0 +1,25 @@
+@import 'variables';
+
+:host {
+  width: 100%;
+}
+
+h4 {
+  margin-bottom: 4px;
+}
+
+.left-icon {
+  margin-right: 16px;
+}
+
+.right-icon {
+  margin-left: 16px;
+  color: var(--dynamicIcon);
+}
+
+// extra small
+@include mobile {
+  mat-nav-list {
+    width: 100%;
+  }
+}

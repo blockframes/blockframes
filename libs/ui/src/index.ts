@@ -9,6 +9,7 @@ export * from './lib/toolbar/+state';
 export * from './lib/confirm/confirm.module';
 export * from './lib/confirm/confirm.component';
 export * from './lib/feedback/feedback-message.module';
+export * from './lib/actions-list/actions-list.module';
 export * from './lib/icon-component';
 export * from './lib/editable/editable.module';
 export * from './lib/directives/directives.module';
