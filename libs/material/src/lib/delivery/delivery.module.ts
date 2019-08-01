@@ -32,6 +32,7 @@ import { DeliverySettingsEditableComponent } from './pages/delivery-settings-edi
 // Modules
 import {
   ActionsListModule,
+  ActionsPickerListModule,
   ActionsPickerModule,
   ConfirmModule,
   DirectivesModule,
@@ -77,6 +78,7 @@ import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/d
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
+import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
 
 const routes: Routes = [
   {
@@ -114,7 +116,7 @@ const routes: Routes = [
               {
                 path: '4-settings',
                 pathMatch: 'full',
-                component: null
+                component: DeliveryAddSettingsComponent
               }
             ]
           }
@@ -198,6 +200,7 @@ const routes: Routes = [
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
     DeliveryAddTemplatePickerComponent,
+    DeliveryAddSettingsComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
@@ -228,6 +231,7 @@ const routes: Routes = [
     UiFormModule,
     ActionsListModule,
     ActionsPickerModule,
+    ActionsPickerListModule,
     EditableModule,
     DirectivesModule,
     TeamWorkModule,

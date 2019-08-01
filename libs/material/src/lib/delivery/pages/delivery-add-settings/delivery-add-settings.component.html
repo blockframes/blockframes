@@ -1,0 +1,11 @@
+<section fxLayout="row" fxLayoutAlign="center center">
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <h2>Settings</h2>
+    <p>Lorem ipsum dolor sit amet</p>
+
+    <actions-picker-list [items]="items" (picked)="this.picked($event)"></actions-picker-list>
+    <button (click)="onCompleteFlow()" mat-button color="primary" [disabled]="this.options.length === 0">
+      Continue
+    </button>
+  </article>
+</section>
