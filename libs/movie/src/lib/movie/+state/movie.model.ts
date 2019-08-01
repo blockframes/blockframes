@@ -86,6 +86,10 @@ export interface MovieVersionInfo {
   subtitles: string[],
 }
 
+export interface MovieFestivalPrizes {
+  prizes: Prize[]
+}
+
 export interface Movie {
    // @todo #643 add new fields to Draw.io
   _type: 'movies',
@@ -97,8 +101,6 @@ export interface Movie {
 
   // @todo #643 not main movie attributes WIP
   
-  
-  prizes: {name: string, year: string, prize: string}[]
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -120,6 +122,7 @@ export interface Movie {
   salesCast: MovieSalesCast,
   salesInfo: MovieSalesInfo,
   versionInfo: MovieVersionInfo,
+  festivalPrizes: MovieFestivalPrizes,
 }
 
 /**
@@ -136,6 +139,7 @@ export function createMovie(params: Partial<Movie> = {}) : Movie {
     salesCast: {},
     salesInfo: {},
     versionInfo: {},
+    festivalPrizes: {},
     ... params
   } as Movie;
 }
@@ -203,4 +207,11 @@ export function createMovieVersionInfo(params : Partial<MovieVersionInfo> = {}) 
     subtitles: [],
     ... params
   } as MovieVersionInfo;
+}
+
+export function createMovieFestivalPrizes(params : Partial<MovieFestivalPrizes> = {}) : MovieFestivalPrizes{
+  return {
+    prizes: [],
+    ... params
+  } as MovieFestivalPrizes;
 }

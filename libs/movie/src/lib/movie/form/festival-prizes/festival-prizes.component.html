@@ -1,0 +1,28 @@
+<form [formGroup]="festivalprizes">
+  <!-- FESTIVAL PRIZES -->
+  <h3> Festival Prizes </h3>
+  <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
+    <div [formGroupName]="i" class="full-width">
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="name" placeholder="Festival name">
+      </mat-form-field>
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="year" placeholder="Festival year">
+      </mat-form-field>
+      <mat-form-field class="small-margin">
+        <input matInput formControlName="prize" placeholder="Prize">
+      </mat-form-field>
+      <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="festivalprizes.removePrize(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <ng-container *ngIf="festivalprizes.prizes.controls.length == 0">
+    <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </ng-container>
+</form>

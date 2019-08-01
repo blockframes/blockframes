@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { MovieService, MovieAvailability, MovieQuery } from '../../../+state';
+import { MovieService, MovieQuery } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, SalesImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';

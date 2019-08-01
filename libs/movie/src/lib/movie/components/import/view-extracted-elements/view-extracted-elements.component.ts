@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { Movie, MovieQuery, MovieAvailability } from '../../../+state';
+import { Movie, MovieQuery, MovieAvailability, Prize } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -76,7 +76,9 @@ export class ViewExtractedElementsComponent {
             dubbings: [],
             subtitles: [],
           },
-          prizes: [],
+          festivalPrizes: {
+            prizes: [],
+          }
         } as Movie;
 
         const importErrors = { movie, errors: [] }  as MovieImportState;
@@ -291,11 +293,11 @@ export class ViewExtractedElementsComponent {
           spreadSheetRow[24].split(',').forEach((p: string) => {
 
             if (p.split(';').length === 3) {
-              const prize = { name: '', year: '', prize: '' };
+              const prize = { name: '', year: undefined, prize: '' } as Prize;
               prize.name = p.split(';')[0];
-              prize.year = p.split(';')[1];
+              prize.year = parseInt(p.split(';')[1], 10);
               prize.prize = p.split(';')[2];
-              movie.prizes.push(prize);
+              movie.festivalPrizes.prizes.push(prize);
             }
 
           });
@@ -633,10 +635,10 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (movie.prizes.length === 0) {
+    if (movie.festivalPrizes.prizes.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'prizes',
+        field: 'festivalPrizes.prizes',
         name: "Festival Prizes",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

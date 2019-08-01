@@ -11,6 +11,7 @@ import { MovieDisplayStoryComponent } from './story/story.component';
 import { MovieDisplaySalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieDisplaySalesInfoComponent } from './sales-info/sales-info.component';
 import { MovieDisplayVersionInfoComponent } from './version-info/version-info.component';
+import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { MovieDisplayVersionInfoComponent } from './version-info/version-info.co
     MovieDisplaySalesCastComponent,
     MovieDisplaySalesInfoComponent,
     MovieDisplayVersionInfoComponent,
+    MovieDisplayFestivalPrizesComponent,
   ],
   exports: [
     MovieDisplayComponent,
