@@ -11,6 +11,7 @@ export * from './lib/confirm/confirm.component';
 export * from './lib/feedback/feedback-message.module';
 export * from './lib/actions-list/actions-list.module';
 export * from './lib/actions-picker/actions-picker.module';
+export * from './lib/actions-picker-list/actions-picker-list.module';
 export * from './lib/icon-component';
 export * from './lib/editable/editable.module';
 export * from './lib/directives/directives.module';
