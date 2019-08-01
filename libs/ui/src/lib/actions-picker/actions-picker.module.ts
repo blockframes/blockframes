@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActionPickerItem, ActionsPickerComponent } from './actions-picker.component';
+import { MatRadioModule } from '@angular/material';
 
 // Share the type of items with our users.
 export { ActionPickerItem };
@@ -14,7 +15,7 @@ export { ActionPickerItem };
  */
 @NgModule({
   declarations: [ActionsPickerComponent],
-  imports: [MatListModule, MatIconModule, RouterModule, CommonModule],
+  imports: [MatListModule, MatIconModule, RouterModule, CommonModule, MatRadioModule],
   exports: [ActionsPickerComponent]
 })
 export class ActionsPickerModule {}

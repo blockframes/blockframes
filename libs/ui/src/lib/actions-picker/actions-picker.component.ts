@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-export interface ActionPickerItem {
-  icon: string;
+export interface ActionPickerItem<T> {
   title: string;
-  description: string;
+  payload: T;
 }
 
 @Component({
@@ -12,6 +11,7 @@ export interface ActionPickerItem {
   styleUrls: ['./actions-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPickerComponent {
-  @Input() public items: ActionPickerItem[];
+export class ActionsPickerComponent<T> {
+  @Input() public items: ActionPickerItem<T>[];
+  @Output() public picked = new EventEmitter<T>();
 }
