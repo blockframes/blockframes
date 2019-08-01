@@ -32,6 +32,7 @@ import { DeliverySettingsEditableComponent } from './pages/delivery-settings-edi
 
 // Modules
 import {
+  ActionsListModule,
   EditableModule,
   DirectivesModule,
   TeamWorkModule,
@@ -194,6 +195,7 @@ const routes: Routes = [
     MaterialModule,
     ConfirmModule,
     UiFormModule,
+    ActionsListModule,
     EditableModule,
     DirectivesModule,
     TeamWorkModule,
