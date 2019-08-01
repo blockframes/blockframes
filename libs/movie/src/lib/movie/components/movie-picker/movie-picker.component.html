@@ -3,37 +3,36 @@
 <ng-template #loaded>
   <article class="movie-picker-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
     <!-- Movie Card -->
-    <mat-card
-      *ngFor="let movie of (movies$ | async)" class="movie-card"
-      (click)="selected.emit(movie.id)"
-    >
-      <!-- Movie Poster -->
-      <div class="img-container clickable-item">
-        <ng-container *ngIf="movie.main.poster; else: defaultPoster">
-          <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
-        </ng-container>
+    <a *ngFor="let movie of (movies$ | async)" (click)="selected.emit(movie.id)">
+      <mat-card>
+        <!-- Movie Poster -->
+        <div class="img-container clickable-item">
+          <ng-container *ngIf="movie.main.poster; else: defaultPoster">
+            <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
+          </ng-container>
 
-        <ng-template #defaultPoster>
-          <img
-            class="mat-card-image"
-            src="/assets/images/default-movie-poster.png"
-            alt="Movie poster link"
-          />
-        </ng-template>
-      </div>
+          <ng-template #defaultPoster>
+            <img
+              class="mat-card-image"
+              src="/assets/images/default-movie-poster.png"
+              alt="Movie poster link"
+            />
+          </ng-template>
+        </div>
 
-      <!-- Movie Informations (title, year, director) -->
-      <mat-card-header class="clickable-item">
-        <mat-card-title>
-          {{ movie.main.title.original }}
-          <span *ngIf="movie.main.productionYear"> ({{ movie.main.productionYear }})</span>
-        </mat-card-title>
-        <mat-card-subtitle *ngIf="movie.main.directors">
-          <span *ngFor="let director of movie.main.directors; let isLast = last"
-            >{{ director.firstName }} {{ director.lastName }} {{ isLast ? '' : '-' }}</span
-          >
-        </mat-card-subtitle>
-      </mat-card-header>
-    </mat-card>
+        <!-- Movie Informations (title, year, director) -->
+        <mat-card-header class="clickable-item">
+          <mat-card-title>
+            {{ movie.main.title.original }}
+            <span *ngIf="movie.main.productionYear"> ({{ movie.main.productionYear }})</span>
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="movie.main.directors">
+            <span *ngFor="let director of movie.main.directors; let isLast = last"
+              >{{ director.firstName }} {{ director.lastName }} {{ isLast ? '' : '-' }}</span
+            >
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </a>
   </article>
 </ng-template>
