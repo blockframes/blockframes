@@ -5,7 +5,7 @@
 
     <ng-container *ngIf="(loading$ | async); else: loaded">Loading</ng-container>
     <ng-template #loaded>
-      <actions-picker [items]="items$ | async" (picked)="this.picked($event)"></actions-picker>
+      <actions-picker [items]="items$ | async" (picked)="picked($event)"></actions-picker>
     </ng-template>
 
     <button (click)="onTemplatePicked()" mat-button color="primary" [disabled]="!currentTemplate">Continue</button>
