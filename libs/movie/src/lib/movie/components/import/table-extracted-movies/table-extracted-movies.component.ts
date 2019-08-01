@@ -3,7 +3,7 @@ import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } fro
 import { Movie, MovieService } from '../../../+state';
 import { PreviewMovieComponent } from './../preview-movie/preview-movie.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MovieWithMetaData, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
+import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
 
@@ -15,19 +15,19 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 })
 export class TableExtractedMoviesComponent implements OnInit {
 
-  @Input() movies: MatTableDataSource<MovieWithMetaData>;
+  @Input() rows: MatTableDataSource<MovieImportState>;
   @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
-  public selection = new SelectionModel<MovieWithMetaData>(true, []);
+  public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
-    'main.internalRef',
+    'movie.main.internalRef',
     'select',
-    'main.title.original',
-    'main.poster',
-    'main.productionYear',
+    'movie.main.title.original',
+    'movie.main.poster',
+    'movie.main.productionYear',
     'errors',
     'warnings',
     'actions',
@@ -42,10 +42,10 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   ngOnInit() {
     // Mat table setup
-    this.movies.paginator = this.paginator;
-    this.movies.filterPredicate = this.filterPredicate;
-    this.movies.sortingDataAccessor = this.sortingDataAccessor;
-    this.movies.sort = this.sort;
+    this.rows.paginator = this.paginator;
+    this.rows.filterPredicate = this.filterPredicate;
+    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sort = this.sort;
   }
 
   createMovie(movie: Movie): Promise<boolean> {
@@ -58,9 +58,9 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   createSelectedMovies(): Promise<boolean> {
     const moviesToCreate = [];
-    this.selection.selected.forEach((movie: MovieWithMetaData) => {
-      if (movie.id === undefined && this.errorCount(movie) === 0) {
-        moviesToCreate.push(this.addMovie(movie));
+    this.selection.selected.forEach((data: MovieImportState) => {
+      if (data.movie.id === undefined && this.errorCount(data) === 0) {
+        moviesToCreate.push(this.addMovie(data.movie));
       }
     })
 
@@ -86,8 +86,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     console.log(`todo ${movie.id}`);
   }
 
-  errorCount(movie: MovieWithMetaData, type: string = 'error') {
-    return movie.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
+  errorCount(data: MovieImportState, type: string = 'error') {
+    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
   ///////////////////
@@ -98,8 +98,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.dialog.open(PreviewMovieComponent, { data: movie });
   }
 
-  displayErrors(movie: MovieWithMetaData) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: movie.main.title.original, errors: movie.errors }, width: '50%' });
+  displayErrors(data: MovieImportState) {
+    this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.main.title.original, errors: data.errors }, width: '50%' });
   }
 
   ///////////////////
@@ -111,7 +111,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.movies.data.length;
+    const numRows = this.rows.data.length;
     return numSelected === numRows;
   }
 
@@ -121,17 +121,17 @@ export class TableExtractedMoviesComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.movies.data.forEach(row => this.selection.select(row));
+      this.rows.data.forEach(row => this.selection.select(row));
   }
 
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: Movie): string {
+  checkboxLabel(row?: MovieImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
   }
 
   /**
@@ -149,15 +149,15 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Apply filter on MAT table with filterValue
    */
   applyFilter(filterValue: string) {
-    this.movies.filter = filterValue.trim().toLowerCase();
+    this.rows.filter = filterValue.trim().toLowerCase();
   }
 
   /**
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: Movie, filter) {
-    const dataStr = data.main.internalRef + data.main.title.original + data.main.productionYear;
+  filterPredicate(data: MovieImportState, filter) {
+    const dataStr = data.movie.main.internalRef + data.movie.main.title.original + data.movie.main.productionYear;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

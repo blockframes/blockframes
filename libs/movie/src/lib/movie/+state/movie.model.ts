@@ -18,6 +18,12 @@ export interface Title {
   international?: string;
 }
 
+export interface Prize {
+  name: string,
+  year: number,
+  prize?: string,
+}
+
 export interface Credit {
   firstName: string,
   lastName?: string,
@@ -26,6 +32,7 @@ export interface Credit {
 
 export interface MovieMain {
   internalRef?: string,
+  isan?: string,
   title: Title,
   directors?: Credit[],
   poster?: string,
@@ -39,9 +46,14 @@ export interface MovieMain {
   shortSynopsis?: string,
 }
 
+export interface PromotionalElement {
+  label: string,
+  url: string
+}
+
 export interface MoviePromotionalElements {
   images: string[],
-  promotionalElements: {label: string, url: string}[],
+  promotionalElements: PromotionalElement[],
 }
 
 export interface MoviePromotionalDescription {
@@ -58,6 +70,21 @@ export interface MovieStory {
   logline: string,
 }
 
+export interface MovieSalesInfo {
+  scoring: string,
+  color: string,
+  europeanQualification: boolean,
+  pegi: string,
+  certifications: string[],
+  internationalPremiere: Prize,
+  originCountryReleaseDate: Date,
+}
+
+export interface MovieVersionInfo {
+  dubbings: string[],
+  subtitles: string[],
+}
+
 export interface Movie {
    // @todo #643 add new fields to Draw.io
   _type: 'movies',
@@ -68,18 +95,9 @@ export interface Movie {
   availabilities: MovieAvailability[],
 
   // @todo #643 not main movie attributes WIP
-  scoring: string,
-  isan: string,
+  
   broadcasterCoproducers: string[],
-  color: string;
-  certifications: string[],
-  pegi: string,
-  internationalPremiere: { name: string, year: number},
-  originCountryReleaseDate: Date,
   prizes: {name: string, year: string, prize: string}[]
-  dubbings: string[],
-  subtitles: string[],
-
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -99,21 +117,30 @@ export interface Movie {
   promotionalElements: MoviePromotionalElements,
   promotionalDescription: MoviePromotionalDescription,
   salesCast: MovieSalesCast,
+  salesInfo: MovieSalesInfo,
+  versionInfo: MovieVersionInfo,
 }
 
 /**
  * A factory function that creates Movie
  */
-export function createMovie(params?: Partial<Movie>) : Movie {
+export function createMovie(params: Partial<Movie> = {}) : Movie {
   return {
     deliveryIds: [],
     _type: 'movies',
-    ...params
+    main: {},
+    story: {},
+    promotionalElements: {},
+    promotionalDescription: {},
+    salesCast: {},
+    salesInfo: {},
+    versionInfo: {},
+    ... params
   } as Movie;
 }
 
 
-export function createMovieMain(params? : Partial<MovieMain>) : MovieMain{
+export function createMovieMain(params : Partial<MovieMain> = {}) : MovieMain{
   return {
     title: {
       original: '',
@@ -127,7 +154,7 @@ export function createMovieMain(params? : Partial<MovieMain>) : MovieMain{
   } as MovieMain;
 }
 
-export function createMoviePromotionalElements(params? : Partial<MoviePromotionalElements>) : MoviePromotionalElements{
+export function createMoviePromotionalElements(params : Partial<MoviePromotionalElements> = {}) : MoviePromotionalElements{
   return {
     images: [],
     promotionalElements: [],
@@ -135,7 +162,7 @@ export function createMoviePromotionalElements(params? : Partial<MoviePromotiona
   } as MoviePromotionalElements;
 }
 
-export function createMoviePromotionalDescription(params? : Partial<MoviePromotionalDescription>) : MoviePromotionalDescription{
+export function createMoviePromotionalDescription(params : Partial<MoviePromotionalDescription> = {}) : MoviePromotionalDescription{
   return {
     keyAssets: [],
     keywords: [],
@@ -143,15 +170,35 @@ export function createMoviePromotionalDescription(params? : Partial<MoviePromoti
   } as MoviePromotionalDescription;
 }
 
-export function createMovieSalesCast(params? : Partial<MovieSalesCast>) : MovieSalesCast{
+export function createMovieSalesCast(params : Partial<MovieSalesCast> = {}) : MovieSalesCast{
   return {
     credits: [],
     ... params
   } as MovieSalesCast;
 }
 
-export function createMovieStory(params? : Partial<MovieStory>) : MovieStory{
+export function createMovieSalesInfo(params : Partial<MovieSalesInfo> = {}) : MovieSalesInfo{
+  return {
+    internationalPremiere: {
+      name: '',
+      year: '',
+      prize: '',
+    },
+    certifications: [],
+    ... params
+  } as MovieSalesInfo;
+}
+
+export function createMovieStory(params : Partial<MovieStory> = {}) : MovieStory{
   return {
     ... params
   } as MovieStory;
+}
+
+export function createMovieVersionInfo(params : Partial<MovieVersionInfo> = {}) : MovieVersionInfo{
+  return {
+    dubbings: [],
+    subtitles: [],
+    ... params
+  } as MovieVersionInfo;
 }

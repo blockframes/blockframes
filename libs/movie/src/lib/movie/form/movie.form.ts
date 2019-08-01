@@ -5,17 +5,21 @@ import { MoviePromotionalElementsForm } from './promotional-elements/promotional
 import { MoviePromotionalDescriptionForm } from './promotional-description/promotional-description.form';
 import { MovieStoryForm } from './story/story.form';
 import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
-import { Movie } from '../+state';
+import { Movie, createMovie } from '../+state';
+import { MovieSalesInfoForm } from './sales-info/sales-info.form';
+import { MovieVersionInfoForm } from './version-info/version-info.form';
 
 
-function createMovieControls() {
-
+function createMovieControls(movie: Partial<Movie>) {
+  const entity = createMovie(movie);
   return {
-    main: new MovieMainForm(),
-    promotionalElements: new MoviePromotionalElementsForm(),
-    promotionalDescription: new MoviePromotionalDescriptionForm(),
-    story: new MovieStoryForm(),
-    salesCast: new MovieSalesCastForm(),
+    main: new MovieMainForm(entity.main),
+    promotionalElements: new MoviePromotionalElementsForm(entity.promotionalElements),
+    promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
+    story: new MovieStoryForm(entity.story),
+    salesCast: new MovieSalesCastForm(entity.salesCast),
+    salesInfo: new MovieSalesInfoForm(entity.salesInfo),
+    versionInfo: new MovieVersionInfoForm(entity.versionInfo),
   }
 }
 
@@ -23,18 +27,9 @@ type MovieControl = ReturnType<typeof createMovieControls>
 
 export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
   protected builder : FormBuilder;
-  constructor() {
-    super(createMovieControls());
+  constructor(movie: Movie) {
+    super(createMovieControls(movie));
     this.builder = new FormBuilder();
-  }
-
-  public populate(movie: Movie) {
-    // @todo #643 on populate, keywords, Directed By etc are filled with empty data: check if it is still the case
-    if( movie.main ) { this.get('main').populate(movie.main) }
-    if( movie.promotionalElements ) { this.get('promotionalElements').populate(movie.promotionalElements) }
-    if( movie.promotionalDescription ) { this.get('promotionalDescription').populate(movie.promotionalDescription) }
-    if( movie.story ) { this.get('story').populate(movie.story) }
-    if( movie.salesCast ) { this.get('salesCast').populate(movie.salesCast) }
   }
 
   reset(value?: EntityControl<Movie>, options?: {

@@ -1,0 +1,28 @@
+<form [formGroup]="versionInfo">
+  <!-- DUBBINGS -->
+  <h3> Dubbings </h3>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="dubbings" placeholder="Available dubbing(s)" multiple>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
+          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
+        {{ language.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- SUBTITLES -->
+  <h3> Subtitles </h3>
+  <mat-form-field class="full-width">
+    <mat-select formControlName="subtitles" placeholder="Available subtitle(s)" multiple>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
+          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
+        {{ language.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

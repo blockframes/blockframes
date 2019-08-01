@@ -1,7 +1,7 @@
 <form [formGroup]="promotionalElements">
   <!-- IMAGES -->
   <h3> Images </h3>
-  <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index;">
+  <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-card class="movie-poster-thumbnail mat-elevation-z0">
         <ng-container *ngIf="promotionalElements.images.controls[i].value; else fileUpload">
@@ -19,15 +19,15 @@
       </mat-card>
     </div>
   </div>
-  <div *ngIf="promotionalElements.images.controls.length < 6">
+  <ng-container *ngIf="promotionalElements.images.controls.length < 6">
     <button mat-icon-button color="primary" (click)="promotionalElements.addImage()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
   <!-- OTHER PROMOTIONAL ELEMENTS -->
   <h3> Other Promotional Elements </h3>
   <div formArrayName="promotionalElements">
-    <ng-container *ngFor="let element of promotionalElements.promotionalElements.controls; let i = index;">
+    <ng-container *ngFor="let element of promotionalElements.promotionalElements.controls; let i = index">
       <div [formGroupName]="i" class="full-width">
         <mat-form-field class="small-width small-margin">
           <input matInput formControlName="label" placeholder="Label">
@@ -45,9 +45,9 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="promotionalElements.promotionalElements.controls.length == 0">
+  <ng-container *ngIf="promotionalElements.promotionalElements.controls.length == 0">
     <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
       <mat-icon>add_circle</mat-icon>
     </button>
-  </div>
+  </ng-container>
 </form>

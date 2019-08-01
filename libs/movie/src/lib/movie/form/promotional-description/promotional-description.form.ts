@@ -1,38 +1,29 @@
-import { MoviePromotionalDescription } from '../../+state';
-import { FormEntity } from '@blockframes/utils';
-import { FormArray, FormControl } from '@angular/forms';
+import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
+import { FormEntity, FormList } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 
-/* @todo #643
-FormArray => FormList
-*/
-function createMoviePromotionalDescriptionControls() {
-
+function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription> = {}) {
+  const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
-    keywords: new FormArray([]),
-    keyAssets: new FormArray([]),
+    keywords: FormList.factory(entity.keywords),
+    keyAssets: FormList.factory(entity.keyAssets),
   }
 }
 
 type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePromotionalDescription>, MoviePromotionalDescriptionControl>{
-  constructor() {
-    super(createMoviePromotionalDescriptionControls());
+  constructor(promotionalDescription: MoviePromotionalDescription) {
+    super(createMoviePromotionalDescriptionControls(promotionalDescription));
   }
 
   get keywords() {
-    return this.get('keywords') as FormArray;
+    return this.get('keywords');
   }
 
-  public populate(moviePromotional: MoviePromotionalDescription) {
-
-    if (moviePromotional.keywords && moviePromotional.keywords.length) {
-      moviePromotional.keywords.forEach((keyword) => {
-        this.keywords.push(new FormControl(keyword))
-      })
-    }
-
+  get keyAssets() {
+    return this.get('keyAssets');
   }
 
   public addChip(event: MatChipInputEvent): void {
@@ -50,8 +41,15 @@ export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePro
     }
   }
 
-  //@todo #643 factorize 
   public removeKeyword(i: number): void {
-    this.get('keywords').removeAt(i);
+    this.keywords.removeAt(i);
+  }
+
+  public addKeyAsset(): void {
+    this.keyAssets.push(new FormControl(''));
+  }
+
+  public removeKeyAsset(i: number): void {
+   this.keyAssets.removeAt(i);
   }
 }
