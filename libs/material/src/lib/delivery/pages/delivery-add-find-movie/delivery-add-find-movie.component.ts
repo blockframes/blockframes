@@ -15,6 +15,6 @@ export class DeliveryAddFindMovieComponent {
   constructor(private router: Router) {}
 
   private async onMoviePicked(movieId: string): Promise<boolean> {
-    return this.router.navigate([`/layout/o/delivery/add/2-choose-starter/${movieId}`]);
+    return this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
 }

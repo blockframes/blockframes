@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { ActionItem } from '@blockframes/ui';
 
 /**
@@ -14,16 +13,19 @@ import { ActionItem } from '@blockframes/ui';
 })
 export class DeliveryAddChooseStarterComponent {
   items: ActionItem[] = [
-    { icon: 'order', title: 'Choose a template', description: 'Lorem ipsum', routerLink: 'a' },
-    { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: 'a' },
+    {
+      icon: 'order',
+      title: 'Choose a template',
+      description: 'Lorem ipsum',
+      routerLink: '../3-pick-template'
+    },
+    { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: '#' },
     {
       icon: 'order',
       title: 'Import specific delivery list',
       description: 'Lorem ipsum',
-      routerLink: 'a'
+      routerLink: 'import-delivery-list'
     },
-    { icon: 'order', title: 'Blank', description: 'Lorem ipsum', routerLink: 'a' }
+    { icon: 'order', title: 'Blank', description: 'Lorem ipsum', routerLink: '#' }
   ];
-
-  constructor(private router: Router) {}
 }

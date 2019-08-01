@@ -67,10 +67,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
-import { DeliveryMaterialsGuard, MovieMaterialsGuard, SignedDeliveryMaterialsGuard } from '../material';
+import {
+  DeliveryMaterialsGuard,
+  MovieMaterialsGuard,
+  SignedDeliveryMaterialsGuard
+} from '../material';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
+import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 
 const routes: Routes = [
   {
@@ -84,11 +89,23 @@ const routes: Routes = [
         component: DeliveryAddFindMovieComponent
       },
       {
-        path: '2-choose-starter/:movieId',
+        path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
-        pathMatch: 'full',
-        component: DeliveryAddChooseStarterComponent
+        children: [
+          {
+            path: '2-choose-starter',
+            pathMatch: 'full',
+            component: DeliveryAddChooseStarterComponent
+          },
+          {
+            path: '3-pick-template',
+            canActivate: [TemplateListGuard],
+            canDeactivate: [TemplateListGuard],
+            pathMatch: 'full',
+            component: DeliveryAddTemplatePickerComponent
+          }
+        ]
       }
     ]
   },
@@ -167,6 +184,7 @@ const routes: Routes = [
     DeliveryEditableComponent,
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
+    DeliveryAddTemplatePickerComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
