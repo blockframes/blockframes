@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { MovieService } from '@blockframes/movie/movie/+state';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-home',
@@ -11,13 +11,12 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 })
 export class CatalogHomeComponent implements OnInit {
   /** Observable to fetch all movies from the store */
-  public movies$: Observable<Movie[]>;
+  public movies$: Observable<Movie>;
 
-  constructor(private query: MovieService) {}
+  constructor(private fireQuery: FireQuery) {}
 
   ngOnInit() {
-    // TODO #721: use query
-    this.movies$ = this.query.query;
-    this.movies$.subscribe(x => console.log(x))
+  // TODO #721: look for query when data query model is done.
+  this.movies$ = this.fireQuery.fromQuery<Movie>('movies');
   }
 }

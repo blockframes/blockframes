@@ -1,44 +1,51 @@
-<section page-id=catalog-home *ngIf="movies$ | async as movies">
-    <article fxLayout="column" fxLayoutAlign="center center">
+<section test-id="content" page-id="catalog-homepage" *ngIf="movies$ | async as movies">
+    <article fxLayout="column" fxLayoutAlign="center center" class="header-img">
         <h1 class="mat-display-3">Welcome to Bigger Boat</h1>
         <p class="mat-body-1">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
             ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit esse cillum
             dolore eu fugiat nulla pariatur.</p>
-        <button mat-button color="accent" test-id=discover>Discover our films</button>
+        <button mat-button color="accent" test-id="discover">Discover our films</button>
     </article>
     <!-- New films -->
     <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px">
         <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
             <h4 class="mat-display-2">New films</h4>
             <span>Lorem ipsum</span>
-            <button mat-button test-id=seeMore color="accent">See more</button>
+            <button mat-button test-id="seeMore1" color="accent">See more</button>
         </div>
-        <ng-container>
-            <mat-carousel test-id=mat-carousel1 proportion="50" [hideArrows]="true" [hideIndicators]="true">
+            <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
                 <mat-carousel-slide #matCarouselSlide *ngFor="let image of movies" [image]="image.images"
                     [hideOverlay]="true">
-                    <div fxLayout="column" fxLayoutAlign="flex-end center" class="bottom">
-                        <h1 class="mat-h1 white">{{image.title.original}}</h1>
-                        <span class="mat-body-1 white">{{image.directorName}}</span>
-                        <span class="mat-body-2 white">Production year: {{image.productionYear}}</span>
+                    <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                        <footer fxLayout="column" fxLayoutAlign="center center">
+                            <h2 class="mat-h2">{{image.title.original}}</h2>
+                            <span class="mat-body-1">{{image.directorName}}</span>
+                            <span class="mat-body-2">Production year: {{image.productionYear}}</span>
+                        </footer>
                     </div>
                 </mat-carousel-slide>
             </mat-carousel>
-        </ng-container>
     </article>
     <!-- Best sellers -->
     <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px">
-        <mat-carousel test-id=mat-carousel1 proportion="50" [hideArrows]="true" [hideIndicators]="true">
+        <mat-carousel test-id="mat-carousel2" proportion="50" [hideArrows]="true" [hideIndicators]="true">
             <mat-carousel-slide #matCarouselSlide *ngFor="let image of movies" [image]="image.images"
                 [hideOverlay]="true">
+                <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                    <footer fxLayout="column" fxLayoutAlign="center center">
+                        <h3 class="mat-h2">{{image.title.original}}</h3>
+                        <span class="mat-body-1">{{image.directorName}}</span>
+                        <span class="mat-body-2">Production year: {{image.productionYear}}</span>
+                    </footer>
+                </div>
             </mat-carousel-slide>
         </mat-carousel>
         <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
             <h4 class="mat-display-2">Best sellers</h4>
             <span>Lorem ipsum</span>
-            <button mat-button test-id=seeMore color="accent">See more</button>
+            <button mat-button test-id="seeMore2" color="accent">See more</button>
         </div>
     </article>
     <!-- Awarded films -->
@@ -46,11 +53,18 @@
         <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
             <h4 class="mat-display-2">Awarded films</h4>
             <span>Lorem ipsum</span>
-            <button mat-button test-id=seeMore color="accent">See more</button>
+            <button mat-button test-id="seeMore3" color="accent">See more</button>
         </div>
-        <mat-carousel test-id=mat-carousel1 proportion="50" [hideArrows]="true" [hideIndicators]="true">
+        <mat-carousel test-id="mat-carousel3" proportion="50" [hideArrows]="true" [hideIndicators]="true">
             <mat-carousel-slide #matCarouselSlide *ngFor="let image of movies" [image]="image.images"
                 [hideOverlay]="true">
+                <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                    <footer fxLayout="column" fxLayoutAlign="center center">
+                        <h3 class="mat-h2">{{image.title.original}}</h3>
+                        <span class="mat-body-1">{{image.directorName}}</span>
+                        <span class="mat-body-2">Production year: {{image.productionYear}}</span>
+                    </footer>
+                </div>
             </mat-carousel-slide>
         </mat-carousel>
     </article>

@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCarouselModule, MatCarouselComponent } from '@ngmodule/material-carousel';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 // Pages
 import { CatalogHomeComponent } from './home.component';
@@ -21,7 +21,7 @@ import { CatalogHomeComponent } from './home.component';
     FlexLayoutModule,
     MatCarouselModule,
     RouterModule.forChild([
-      { path: '', redirectTo: 'home', pathMatch: 'fulll' },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         component: CatalogHomeComponent
