@@ -135,7 +135,8 @@ export const enum InvitationState {
 
 export const enum InvitationType {
   stakeholder = 'stakeholder',
-  toOrganization = 'toOrganization'
+  fromUserToOrganization = 'fromUserToOrganization',
+  fromOrganizationToUser = 'fromOrganizationToUser'
 }
 
 /**
@@ -160,8 +161,8 @@ export interface InvitationStakeholder extends RawInvitation {
 }
 
 /** Invite a user to an organization. */
-export interface InvitationToOrganization extends RawInvitation {
-  type: InvitationType.toOrganization;
+export interface InvitationFromOrganizationToUser extends RawInvitation {
+  type: InvitationType.fromOrganizationToUser;
   userId: string;
   organizationId: string;
 }
@@ -170,7 +171,7 @@ export interface InvitationToOrganization extends RawInvitation {
  * This is the generic type for invitation,
  * use the type field to figure out which kind of invitation you are working with.
  */
-export type Invitation = InvitationStakeholder | InvitationToOrganization;
+export type Invitation = InvitationStakeholder | InvitationFromOrganizationToUser;
 export type InvitationOrUndefined = Invitation | undefined;
 
 // Notifications

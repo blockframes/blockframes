@@ -16,8 +16,8 @@ export interface Invitation {
 }
 
 export const enum InvitationType {
-  joinOrganization = 'joinOrganization',
-  toOrganization = 'toOrganization'
+  fromUserToOrganization = 'fromUserToOrganization',
+  fromOrganizationToUser = 'fromOrganizationToUser'
 }
 
 /**
@@ -33,7 +33,7 @@ export function createInvitationToJoinOrganization(params: InvitationToJoinOrgan
   return {
     app: 'main',
     state: 'pending',
-    type: InvitationType.joinOrganization,
+    type: InvitationType.fromUserToOrganization,
     date: firestore.Timestamp.now(),
     ...params
   };
@@ -43,7 +43,7 @@ export function createInvitationToOrganization(params: InvitationToJoinOrganizat
   return {
     app: 'main',
     state: 'pending',
-    type: InvitationType.toOrganization,
+    type: InvitationType.fromOrganizationToUser,
     date: firestore.Timestamp.now(),
     ...params
   };

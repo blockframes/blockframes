@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationService } from '../+state';
+import { Invitation, InvitationService, InvitationType } from '../+state';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -23,7 +23,7 @@ export class InvitationItemComponent {
   }
 
   public get message(): string {
-    if (this.invitation.type === 'joinOrganization') {
+    if (this.invitation.type === InvitationType.fromUserToOrganization) {
       return 'A user wants to join your organization.'
     }
     return ''; // TODO: issue#576, implement one message by type of invitation

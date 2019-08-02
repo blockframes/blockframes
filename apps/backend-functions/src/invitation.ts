@@ -13,7 +13,7 @@ import {
   InvitationOrUndefined,
   InvitationStakeholder,
   InvitationState,
-  InvitationToOrganization,
+  InvitationFromOrganizationToUser,
   InvitationType,
   Organization
 } from './data/types';
@@ -32,7 +32,7 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
+async function onInvitationToOrgAccept(invitation: InvitationFromOrganizationToUser) {
   const { userId, organizationId } = invitation;
 
   if (!organizationId) {
@@ -80,7 +80,7 @@ async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ userId }: InvitationToOrganization) {
+async function onInvitationToOrgCreate({ userId }: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(userId);
 
   if (!userMail) {
@@ -177,7 +177,7 @@ async function onStakeholderInvitationAccept({
 async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
-  invitation: InvitationToOrganization
+  invitation: InvitationFromOrganizationToUser
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToOrgCreate(invitation);
@@ -246,7 +246,7 @@ export async function onInvitationUpdate(
     switch (invitation.type) {
       case InvitationType.stakeholder:
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.toOrganization:
+      case InvitationType.fromOrganizationToUser:
         return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
