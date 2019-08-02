@@ -1,27 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { Organization } from '@blockframes/organization';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import algoliasearch from 'algoliasearch/lite';
-import { algolia } from '@env';
-
-// @ts-ignore
-const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
-const index = searchClient.initIndex(algolia.indexNameOrganizations);
-
-/** An Organization search result coming from Algolia */
-export interface OrganizationAlgoliaResult {
-  name: string;
-  objectID: string;
-}
+import { IndexForOrganizations, OrganizationAlgoliaResult } from '@blockframes/utils';
+import { Index } from 'algoliasearch';
 
 @Component({
   selector: 'organization-search',
@@ -35,7 +18,8 @@ export class OrganizationSearchComponent implements OnInit, OnDestroy {
   public organizationForm = new FormControl();
   private subscription: Subscription;
 
-  constructor() {}
+  constructor(@Inject(IndexForOrganizations) private organizationIndex: Index) {
+  }
 
   ngOnInit() {
     this.subscription = this.searchOnChange();
@@ -49,7 +33,7 @@ export class OrganizationSearchComponent implements OnInit, OnDestroy {
     return organization ? organization.name : undefined;
   }
 
-  submit(organizationResult: any) {
+  submit(organizationResult: OrganizationAlgoliaResult) {
     this.picked.emit(organizationResult);
     this.organizationForm.reset();
   }
@@ -61,7 +45,7 @@ export class OrganizationSearchComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((stakeholderName: string) => {
-        index.search(stakeholderName, (err, result) => {
+        this.organizationIndex.search(stakeholderName, (err, result) => {
           if (err) {
             console.error(err);
             return;

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { OrganizationAlgoliaResult } from '@blockframes/organization';
+import { OrganizationAlgoliaResult } from '@blockframes/utils';
 import { MovieQuery } from '@blockframes/movie/movie/+state';
 import { StakeholderService } from '../../+state';
 

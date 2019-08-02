@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { StakeholderService } from '@blockframes/movie';
 import { DeliveryQuery } from '../../+state';
-import { OrganizationAlgoliaResult } from '@blockframes/organization';
+import { OrganizationAlgoliaResult } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-teamwork-repertory',
