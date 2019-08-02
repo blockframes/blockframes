@@ -39,6 +39,7 @@ import {
   ConfirmModule,
   UiFormModule
 } from '@blockframes/ui';
+import { OrganizationModule } from '@blockframes/organization';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -190,6 +191,7 @@ const routes: Routes = [
     MatNativeDateModule,
     MatTooltipModule,
     MatAutocompleteModule,
+    OrganizationModule,
 
     RouterModule.forChild(routes)
   ],

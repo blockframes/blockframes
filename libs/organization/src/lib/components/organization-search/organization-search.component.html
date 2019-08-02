@@ -1,0 +1,18 @@
+<form fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <mat-label>Search an organization</mat-label>
+    <input
+      type="text"
+      matInput
+      placeholder="Company Name"
+      [formControl]="organizationForm"
+      [matAutocomplete]="autoName"/>
+  </mat-form-field>
+  <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let organization of organizationsSearchResults" [value]="organization" (click)="submit(organization)">
+      <span>{{ organization.name }}</span>
+      <mat-icon color="primary">add_circle</mat-icon>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-icon color="primary" matPrefix>search</mat-icon>
+</form>

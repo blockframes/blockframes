@@ -41,7 +41,7 @@ import { OrganizationActivityRepertoryComponent } from './components/organizatio
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
-
+import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
@@ -121,8 +121,9 @@ export const organizationRoutes: Routes = [
     OrganizationEditableComponent,
     OrganizationFormComponent,
     OrganizationActivityViewComponent,
-    OrganizationQuorumFormComponent
+    OrganizationQuorumFormComponent,
+    OrganizationSearchComponent
   ],
-  exports: [OrganizationWidgetComponent]
+  exports: [OrganizationWidgetComponent, OrganizationSearchComponent]
 })
 export class OrganizationModule {}
