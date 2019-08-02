@@ -16,7 +16,7 @@ export class StakeholderService {
   /** Add a stakeholder into movies or deliveries sub-collection */
   public async addStakeholder(
     doc: Movie | Delivery,
-    org: Partial<Organization>,
+    org: {id: string},
     isAccepted: boolean = false,
     tx?: firebase.firestore.Transaction
   ): Promise<string> {

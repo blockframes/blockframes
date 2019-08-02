@@ -27,7 +27,7 @@ export class DeliveryTeamworkRepertoryComponent implements OnInit, OnDestroy {
     this.onChange();
   }
 
-  public submit(organization: Partial<Organization>) {
+  public submit(organization: {id: string}) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
     const delivery = this.query.getActive();
     this.service.addStakeholder(delivery, organization);

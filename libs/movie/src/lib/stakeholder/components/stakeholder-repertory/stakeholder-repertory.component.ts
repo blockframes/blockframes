@@ -1,10 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { StakeholderService } from '../../+state';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import algoliasearch from 'algoliasearch/lite';
+import { algolia } from '@env';
+import { Organization } from '@blockframes/organization';
 import { MovieQuery } from '@blockframes/movie/movie/+state';
-import { Subject } from 'rxjs';
-import { Organization, OrganizationService } from '@blockframes/organization';
+import { StakeholderService } from '../../+state';
+
+// @ts-ignore
+const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
+const index = searchClient.initIndex(algolia.indexNameOrganizations);
+
+/** An Organization search result coming from Algolia */
+interface OrganizationAlgoliaResult {
+  name: string;
+  objectID: string;
+}
 
 @Component({
   selector: 'stakeholder-repertory',
@@ -14,43 +26,43 @@ import { Organization, OrganizationService } from '@blockframes/organization';
 })
 export class StakeholderRepertoryComponent implements OnInit, OnDestroy {
   public stakeholderForm = new FormControl();
-  public organizations: Organization[];
-  private destroyed$ = new Subject();
+  public organizationsSearchResults: OrganizationAlgoliaResult[];
+  private subscription: Subscription;
 
-  constructor(
-    private service: StakeholderService,
-    private movieQuery: MovieQuery,
-    private organizationService: OrganizationService
-  ) {}
+  constructor(private service: StakeholderService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
-    this.onChange();
+    this.subscription = this.searchOnChange();
   }
 
-  public submit(organization: Partial<Organization>) {
+  public submit(hit: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    this.service.addStakeholder(this.movieQuery.getActive(), organization);
+    this.service.addStakeholder(this.movieQuery.getActive(), { id: hit.objectID });
   }
 
   public displayFn(organization?: Organization): string | undefined {
     return organization ? organization.name : undefined;
   }
 
-  private async onChange() {
-    this.stakeholderForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
-      )
-      .subscribe(async stakeholderName => {
-        this.organizations = await this.organizationService.getOrganizationsByName(stakeholderName);
-        // TODO: use an observable => ISSUE#608
-      });
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
+  private searchOnChange() {
+    return this.stakeholderForm.valueChanges
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged()
+      )
+      .subscribe((stakeholderName: string) => {
+        index.search(stakeholderName, (err, result) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          this.organizationsSearchResults = result.hits;
+        });
+      });
   }
 }
