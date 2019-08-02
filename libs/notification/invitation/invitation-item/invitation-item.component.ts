@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationService } from '../+state';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Invitation, InvitationService, InvitationType } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'invitation-item',
@@ -13,6 +14,13 @@ export class InvitationItemComponent {
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
+  public get message(): string {
+    if (this.invitation.type === InvitationType.fromUserToOrganization) {
+      return 'A user wants to join your organization.';
+    }
+    return ''; // TODO: issue#576, implement one message by type of invitation
+  }
+
   acceptInvitation(invitation: Invitation) {
     this.service.acceptInvitation(invitation.id);
     this.snackBar.open(
@@ -20,12 +28,5 @@ export class InvitationItemComponent {
       'close',
       { duration: 5000 }
     );
-  }
-
-  public get message(): string {
-    if (this.invitation.type === 'joinOrganization') {
-      return 'A user wants to join your organization.'
-    }
-    return ''; // TODO: issue#576, implement one message by type of invitation
   }
 }
