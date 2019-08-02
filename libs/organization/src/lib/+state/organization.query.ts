@@ -7,13 +7,12 @@ import {
   AppStatus,
   OrganizationStatus
 } from './organization.model';
-import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 import { App } from '../permissions/+state';
 import { PermissionsQuery } from '../permissions/+state';
 import { combineLatest, Observable } from 'rxjs';
-import { OrganizationMemberWithRole, UserRole } from './organization.model';
+import { OrganizationMember, UserRole } from './organization.model';
 
 const APPS_DETAILS: AppDetails[] = [
   {
@@ -56,12 +55,18 @@ export class OrganizationQuery extends Query<OrganizationState> {
     )
   );
 
-  constructor(protected store: OrganizationStore, private permissionsQuery: PermissionsQuery) {
+  constructor(
+    protected store: OrganizationStore,
+    private permissionsQuery: PermissionsQuery,
+    protected db: FireQuery
+    ) {
     super(store);
   }
 
+  public members$ = this.select(state => state.org.members);
+
   // TODO: this query does not change correctly when a member is updated: issue#707
-  public membersWithRole$: Observable<OrganizationMemberWithRole[]> = combineLatest([
+  public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
     this.members$,
     this.permissionsQuery.superAdmins$
   ]).pipe(
@@ -73,8 +78,8 @@ export class OrganizationQuery extends Query<OrganizationState> {
     })
   );
 
-  get members$() {
-    return this.select(state => state.org.members);
+  get orgId$(): Observable<string> {
+    return this.select(state => state.org.id);
   }
 
   get status$(): Observable<OrganizationStatus> {

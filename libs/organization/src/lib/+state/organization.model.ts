@@ -36,15 +36,12 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   name?: string;
   surname?: string;
   avatar?: string;
+  role?: UserRole;
 }
 
 export const enum UserRole {
   admin = 'admin',
   member = 'member'
-}
-
-export interface OrganizationMemberWithRole extends OrganizationMember {
-  role: UserRole;
 }
 
 export interface OrganizationOperation {

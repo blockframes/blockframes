@@ -1,8 +1,8 @@
 import { FormList } from "@blockframes/utils";
-import { OrganizationMemberWithRole } from "../+state";
+import { OrganizationMember } from "../+state";
 import { FormGroup, FormControl } from "@angular/forms";
 
-function createMemberFormGroup(member: OrganizationMemberWithRole) {
+function createMemberFormGroup(member: OrganizationMember) {
   return new FormGroup({
     uid: new FormControl(member.uid),
     name: new FormControl(member.name),

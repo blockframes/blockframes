@@ -1,7 +1,7 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMemberWithRole } from '../../+state';
+import { OrganizationMember } from '../../+state';
 
 @Component({
   selector: 'member-repertory',
@@ -11,7 +11,7 @@ import { OrganizationMemberWithRole } from '../../+state';
 })
 export class MemberRepertoryComponent {
 
-  @Input() set members(members: OrganizationMemberWithRole[]) {
+  @Input() set members(members: OrganizationMember[]) {
     this.dataSource = new MatTableDataSource(members);
     this.dataSource.sort = this.sort;
   }
@@ -20,6 +20,6 @@ export class MemberRepertoryComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrganizationMemberWithRole>;
+  public dataSource: MatTableDataSource<OrganizationMember>;
   public displayedColumns: string[] = ['name', 'email', 'role', 'signer', 'action'];
 }

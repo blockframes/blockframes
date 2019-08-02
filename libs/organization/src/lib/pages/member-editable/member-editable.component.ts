@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { OrganizationQuery, OrganizationMemberWithRole } from '../../+state';
+import { OrganizationQuery, OrganizationMember } from '../../+state';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
@@ -24,7 +24,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   public opened = false;
 
   /** Observable of all members of the organization */
-  public members$: Observable<OrganizationMemberWithRole[]>;
+  public members$: Observable<OrganizationMember[]>;
 
   /** Observable of all the members who asked to join the organization */
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
