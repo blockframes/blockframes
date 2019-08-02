@@ -6,13 +6,18 @@ type Timestamp = firestore.Timestamp;
 export interface Invitation {
   id: string;
   app: string;
-  type: 'joinOrganization' | 'toOrganization'; // This will be extented with other invitations
+  type: InvitationType;
   userId?: string;
   user?: User;
   organizationId: string;
   docInformations?: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
   date: Timestamp;
+}
+
+export const enum InvitationType {
+  joinOrganization = 'joinOrganization',
+  toOrganization = 'toOrganization'
 }
 
 /**
@@ -28,7 +33,7 @@ export function createInvitationToJoinOrganization(params: InvitationToJoinOrgan
   return {
     app: 'main',
     state: 'pending',
-    type: 'joinOrganization',
+    type: InvitationType.joinOrganization,
     date: firestore.Timestamp.now(),
     ...params
   };
@@ -38,7 +43,7 @@ export function createInvitationToOrganization(params: InvitationToJoinOrganizat
   return {
     app: 'main',
     state: 'pending',
-    type: 'toOrganization',
+    type: InvitationType.toOrganization,
     date: firestore.Timestamp.now(),
     ...params
   };
