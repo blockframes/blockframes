@@ -54,10 +54,10 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
 
   patchValue(
     value: T[],
-    options?: {
+    options: {
       onlySelf?: boolean;
       emitEvent?: boolean;
-    }
+    } = {}
   ) {
     value.forEach((newValue, index) => {
       // If there is a form already patch it

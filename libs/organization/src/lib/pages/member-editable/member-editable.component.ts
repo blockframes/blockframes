@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
+import { PermissionsService, PermissionsQuery } from '../../permissions/+state';
 import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
 
@@ -44,12 +44,11 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
-    private permissionsQuery: PermissionsQuery,
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
+    private permissionQuery: PermissionsQuery
   ) {}
 
   ngOnInit() {
-    // TODO: this observable does not change correctly when a member is updated: issue#707
     this.members$ = this.query.membersWithRole$.pipe(
       tap(members => this.membersFormList.patchValue(members)),
       switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
@@ -62,6 +61,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
       map(index => this.membersFormList.controls[index])
     );
 
+    this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
     this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
