@@ -17,7 +17,7 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddTemplatePickerComponent implements OnInit {
-  public loading$: Observable<boolean>;
+  public isLoading$: Observable<boolean>;
   public items$: Observable<ActionPickerItem<Template>[]>;
   public currentTemplate: Template;
 
@@ -28,7 +28,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loading$ = this.templateQuery.selectLoading();
+    this.isLoading$ = this.templateQuery.selectLoading();
     this.items$ = this.templateQuery.selectAll().pipe(
       map(templates =>
         templates.map((template: Template) => ({
@@ -39,7 +39,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     );
   }
 
-  public picked(template: Template) {
+  public selectTemplate(template: Template) {
     this.currentTemplate = template;
   }
 

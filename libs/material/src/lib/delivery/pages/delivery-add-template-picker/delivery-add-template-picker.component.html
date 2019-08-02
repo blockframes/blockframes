@@ -3,9 +3,9 @@
     <h2>Choose a template</h2>
     <p>Lorem ipsum dolor sit amet</p>
 
-    <ng-container *ngIf="(loading$ | async); else: loaded">Loading</ng-container>
+    <ng-container *ngIf="(isLoading$ | async); else: loaded">Loading</ng-container>
     <ng-template #loaded>
-      <actions-picker [items]="items$ | async" (picked)="picked($event)"></actions-picker>
+      <actions-picker [items]="items$ | async" (picked)="selectTemplate($event)"></actions-picker>
     </ng-template>
 
     <button (click)="onTemplatePicked()" mat-button color="primary" [disabled]="!currentTemplate">Continue</button>
