@@ -19,7 +19,7 @@ export class InvitationQuery extends QueryEntity<InvitationState, Invitation> {
   );
 
   /** Returns only invitations type of 'toOrganization': members invited by the organization */
-  public invitationsToOrganization$: Observable<Invitation[]> = this.selectAll().pipe(
+  public invitationsFromOrganization$: Observable<Invitation[]> = this.selectAll().pipe(
     map(invitations => invitations.filter(invitation => invitation.type === 'toOrganization'))
   );
 }

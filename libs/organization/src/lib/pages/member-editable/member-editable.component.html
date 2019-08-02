@@ -6,27 +6,15 @@
       [invitations]="invitationsToJoinOrganization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-pending>
-
-    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)">
-    </member-repertory>
-
+    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
     <member-invitation
-      [invitations]="invitationsToOrganization$ | async"
+      [invitations]="invitationsFromOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-invitation>
   </ng-container>
-  <ng-container *ngIf="membersIndex !== undefined && membersForm.controls.length > 0" sidenav>
-    <!--
-    <form [formGroup]="membersGroup">
-      <div formArrayName="members">
-        <member-form-role [formGroupName]="membersIndex"></member-form-role>
-      </div>
-    </form>
-    -->
-    <ng-container *ngIf="(selectedMemberControl$ | async) as formGroup">
-      <member-form-role [formGroup]="formGroup"></member-form-role>
-    </ng-container>
+  <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
+    <member-form-role [formGroup]="memberFormGroup"></member-form-role>
   </ng-container>
 </editable-sidenav>

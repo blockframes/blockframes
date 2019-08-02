@@ -1,23 +1,13 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { OrganizationQuery, OrganizationMemberWithRole } from '../../+state';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
-import { FormList } from '@blockframes/utils';
 import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
-
-function createMemberRoleControl(member: OrganizationMemberWithRole) {
-  return new FormGroup({
-    uid: new FormControl(member.uid),
-    name: new FormControl(member.name),
-    surname: new FormControl(member.surname),
-    email: new FormControl(member.email),
-    role: new FormControl(member.role)
-  });
-}
+import { createMemberFormList } from '../../forms/member.form';
 
 @Component({
   selector: 'member-editable',
@@ -28,6 +18,9 @@ function createMemberRoleControl(member: OrganizationMemberWithRole) {
 export class MemberEditableComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject();
 
+  /** Observable of the selected memberId */
+  private selectedMemberId$ = new BehaviorSubject<string>(null);
+
   public opened = false;
 
   /** Observable of all members of the organization */
@@ -37,19 +30,14 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   /** Observable of all the members invited by the organization */
-  public invitationsToOrganization$: Observable<Invitation[]>;
+  public invitationsFromOrganization$: Observable<Invitation[]>;
 
   public isSuperAdmin$: Observable<boolean>;
 
-  public membersGroup = new FormGroup({
-    members: FormList.factory([], createMemberRoleControl)
-  });
-  public membersForm = FormList.factory([], createMemberRoleControl);
+  public membersFormList = createMemberFormList();
 
-  /** The index of selected member permits to open the sidenav */
-  public membersIndex = 0;
-  private selectedMemberId$ = new BehaviorSubject<string>(null);
-  public selectedMemberControl$: Observable<FormGroup>;
+  /** Observable of the selected memberFormGroup in the membersFormList */
+  public memberFormGroup$: Observable<FormGroup>;
 
   constructor(
     private query: OrganizationQuery,
@@ -63,34 +51,25 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // TODO: this observable does not change correctly when a member is updated: issue#707
     this.members$ = this.query.membersWithRole$.pipe(
-      tap(members => this.membersForm.patchValue(members)),
-      switchMap(members => this.membersForm.valueChanges.pipe(startWith(members))),
+      tap(members => this.membersFormList.patchValue(members)),
+      switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
     );
 
-    this.selectedMemberControl$ = this.selectedMemberId$.pipe(
-      filter(uid => !!uid),
-      map(uid => this.membersForm.value.findIndex(member => member.uid === uid)),
-      map(index => this.membersForm.controls[index])
+    /** Return the memberFormGroup linked to the selected memberId */
+    this.memberFormGroup$ = this.selectedMemberId$.pipe(
+      filter(memberId => !!memberId),
+      map(memberId => this.membersFormList.value.findIndex(member => member.uid === memberId)),
+      map(index => this.membersFormList.controls[index])
     );
 
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
     this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
     this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
-    this.invitationsToOrganization$ = this.invitationQuery.invitationsToOrganization$;
-  }
-
-  public selectMemberId(uid: string) {
-    this.selectedMemberId$.next(uid);
+    this.invitationsFromOrganization$ = this.invitationQuery.invitationsFromOrganization$;
   }
 
   public openSidenav(memberId: string) {
-    /*
-      We need to find the right index of the formList
-       because the index sent by the mat-table can change according to the sort
-    */
-    this.selectMemberId(memberId);
-    // const members = this.membersForm.value;
-    // this.membersIndex = members.findIndex(member => member.uid === memberId);
+    this.selectedMemberId$.next(memberId);
     this.opened = true;
   }
 
@@ -102,12 +81,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationService.declineInvitation(invitationId);
   }
 
-  public get members() {
-    return this.membersGroup.get('members');
-  }
-
   public async updateRole() {
-    console.log(this.membersForm.value);
+    // I'm working on that
+    // Don't review this
+
+
+    // console.log(this.membersFormList.value);
     // try {
     //   if (this.roleControl.value !== this.selected.role) {
     //     // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
