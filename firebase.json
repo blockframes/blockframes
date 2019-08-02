@@ -8,8 +8,8 @@
         "function": "generateDeliveryPDF"
       },
       {
-        "source": "/admin/acceptOrganization{,/**}",
-        "function": "acceptOrganization"
+        "source": "/admin{,/**}",
+        "function": "admin"
       },
       {
         "source": "/ip-upload{,/**}",
@@ -29,7 +29,7 @@
       },
       {
         "source": "**",
-        "destination": "/main/index.html"
+        "destination": "/index.html"
       }
     ]
   },

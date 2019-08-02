@@ -6,6 +6,17 @@ import { Material } from './data/types';
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
 
+/**
+ * Trigger a function when a document is written (create / update / delete).
+ *
+ * Handles internal features such as skipping functions when we backup / restore the db.
+ */
+export function onDocumentWrite(docPath: string, fn: Function) {
+  return functions.firestore
+    .document(docPath)
+    .onWrite(backup.skipWhenRestoring(fn))
+}
+
 export function onDocumentDelete(docPath: string, fn: Function) {
   return functions.firestore
   .document(docPath)
