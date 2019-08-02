@@ -82,22 +82,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   }
 
   public async updateRole() {
-    // I'm working on that
-    // Don't review this
-
-
-    // console.log(this.membersFormList.value);
-    // try {
-    //   if (this.roleControl.value !== this.selected.role) {
-    //     // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
-    //     await this.permissionsService.switchRoles(this.selected.uid);
-    //     this.snackBar.open('Role updated', 'close', { duration: 2000 });
-    //   } else {
-    //     throw new Error('The member already has this role');
-    //   }
-    // } catch (error) {
-    //   this.snackBar.open(error.message, 'close', { duration: 2000 });
-    // }
+    try {
+      this.permissionsService.updateMembersRole(this.membersFormList.value);
+      this.snackBar.open('Roles updated', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   ngOnDestroy() {

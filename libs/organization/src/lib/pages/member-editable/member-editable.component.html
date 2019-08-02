@@ -1,4 +1,5 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
+  <!-- Content -->
   <ng-container content>
     <member-pending
       (declined)="declineInvitation($event)"
@@ -14,6 +15,7 @@
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-invitation>
   </ng-container>
+  <!-- Sidenav -->
   <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
     <member-form-role [formGroup]="memberFormGroup"></member-form-role>
   </ng-container>

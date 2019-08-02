@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { createOrgDocPermissions, createUserDocPermissions, Permissions } from './permissions.model';
 import { PermissionsQuery } from './permissions.query';
-import { Organization } from '../../+state';
+import { Organization, OrganizationMember, UserRole } from '../../+state';
+import { isValidMnemonic } from 'ethers/utils/hdnode';
 
 @Injectable({
   providedIn: 'root'
@@ -36,28 +37,35 @@ export class PermissionsService {
     return Promise.all(promises);
   }
 
-  /** Switch a user from admins array to superAdmins (and vice versa) to grant him SuperAdmin privileges */
-  // TODO: update switchRoles() with transaction and be able to add new roles: issue#706
-  public switchRoles(userId: string) {
-    const orgPermissions = this.query.getValue();
-    const orgPermissionsDoc = this.db.doc<Permissions>(`permissions/${orgPermissions.orgId}`);
-    const batch = this.db.firestore.batch();
+  /** Update roles of members of the organization */
+  public async updateMembersRole(members: OrganizationMember[]) {
+    const orgId = this.query.getValue().orgId;
+    const orgPermissionsDocRef = this.db.doc<Permissions>(`permissions/${orgId}`).ref;
 
-    // Delete userId from admins / superAdmins array to keep the document clean
-    if (orgPermissions.admins.includes(userId)) {
-      const admins = orgPermissions.admins.filter(adminId => adminId !== userId);
-      batch.update(orgPermissionsDoc.ref, {admins});
-      const superAdmins = [...orgPermissions.superAdmins, userId];
-      batch.update(orgPermissionsDoc.ref, {superAdmins});
-    }
+    return this.db.firestore.runTransaction(async tx => {
+      const orgPermissionsDoc = await tx.get(orgPermissionsDocRef);
+      let {superAdmins, admins} = orgPermissionsDoc.data() as Permissions;
 
-    if (orgPermissions.superAdmins.includes(userId)) {
-      const superAdmins = orgPermissions.superAdmins.filter(superAdminId => superAdminId !== userId);
-      batch.update(orgPermissionsDoc.ref, {superAdmins});
-      const admins = [...orgPermissions.admins, userId];
-      batch.update(orgPermissionsDoc.ref, {admins});
-    }
+      const isAdmin = (uid) => admins.includes(uid)
+      const isSuperAdmin = (uid) => superAdmins.includes(uid)
 
-    return batch.commit();
+      members.forEach(({uid, role}) => {
+        // Case of role = 'admin': we remove the memberId of admins and insert it in superAdmins
+        if (role === UserRole.admin) {
+          if (isAdmin(uid) && !isSuperAdmin(uid)) {
+            admins = admins.filter(admin => admin !== uid);
+            superAdmins = [...superAdmins, uid];
+          }
+        }
+        // Case of role = 'member': we remove the memberId of superAdmins and insert it in admins
+        else {
+          if (!isAdmin(uid) && isSuperAdmin(uid)) {
+            superAdmins = superAdmins.filter(superAdmin => superAdmin !== uid);
+            admins = [...admins, uid]
+          };
+        }
+      });
+      return tx.update(orgPermissionsDocRef, { admins, superAdmins });
+    })
   }
 }

@@ -9,6 +9,9 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PermissionsQuery extends Query<PermissionsState> {
+  /** Return an array containing the userIds of the superAdmins of the organization */
+  public superAdmins$: Observable<string[]> = this.select(state => state.superAdmins);
+
   constructor(protected store: PermissionsStore, private auth: AuthQuery) {
     super(store);
   }
@@ -16,11 +19,6 @@ export class PermissionsQuery extends Query<PermissionsState> {
   /** Checks if the connected user is SuperAdmin of his organization */
   public get isSuperAdmin$(): Observable<boolean> {
     return this.select(state => state.superAdmins.includes(this.auth.userId));
-  }
-
-  /** Return an array containing the userIds of the superAdmins of the organization */
-  public get superAdmins$(): Observable<string[]> {
-    return this.select(state => state.superAdmins);
   }
 
   /** Checks if the connected user is either SuperAdmin or Admin of his organization */
