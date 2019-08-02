@@ -1,5 +1,5 @@
-<mat-selection-list (selectionChange)="forwardToParent($event)">
-  <mat-list-option *ngFor="let item of items" [value]="item">
+<mat-selection-list (selectionChange)="selectItem($event)">
+  <mat-list-option *ngFor="let item of items" [value]="item.payload">
     <b>{{ item.title }}</b>
   </mat-list-option>
 </mat-selection-list>

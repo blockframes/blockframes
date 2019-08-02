@@ -16,9 +16,9 @@ export class ActionsPickerListComponent<T> {
   @Input() public items: ActionPickerListItem<T>[];
   @Output() public picked = new EventEmitter<T[]>();
 
-  public forwardToParent(event: MatSelectionListChange) {
+  public selectItem(event: MatSelectionListChange) {
     const selected = event.source.selectedOptions.selected;
-    const selectedValues = selected.map(x => x.value.payload);
+    const selectedValues = selected.map(x => x.value);
     return this.picked.emit(selectedValues);
   }
 }
