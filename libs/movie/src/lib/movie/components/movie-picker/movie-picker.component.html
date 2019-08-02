@@ -1,4 +1,4 @@
-<ng-container *ngIf="(loading$ | async); else: loaded"> Loading</ng-container>
+<ng-container *ngIf="(isLoading$ | async); else: loaded"> Loading</ng-container>
 
 <ng-template #loaded>
   <article class="movie-picker-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
