@@ -13,10 +13,7 @@ interface OrganizationOperationControl {
   quorum: FormControl;
 }
 
-export class OrganizationOperationForm extends FormEntity<
-OrganizationOperation,
-  OrganizationOperationControl
-> {
+export class OrganizationOperationForm extends FormEntity<OrganizationOperation, OrganizationOperationControl> {
   constructor(operation: OrganizationOperation) {
     super({
       members: new FormField<OrganizationMember[]>(operation.members),
@@ -24,7 +21,7 @@ OrganizationOperation,
     });
   }
 
-  get activeMembers() {
+  get members(): FormControl {
     return this.get('members');
   }
 
@@ -43,7 +40,7 @@ OrganizationOperation,
 //       operations: FormList.factory(org.operations, operation => new OrganizationOperationForm(operation))
 //     });
 //   }
-//   operation(operation: OrganizationOperation): OrganizationOperationForm {
+//   operation(index: number): OrganizationOperationForm {
 //     return this.get('operations').
 //      at(index) as OrganizationOperationForm;
 //   }

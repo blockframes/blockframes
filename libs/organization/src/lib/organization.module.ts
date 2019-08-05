@@ -31,17 +31,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberAddComponent } from './components/member-add/member-add.component';
-import { OrganizationOperationsTableComponent } from './components/organization-operations-table/organization-operations-table.component';
+import { OrganizationOperationsRepertoryComponent } from './components/organization-operations-repertory/organization-operations-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
-import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
 import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
-import { OrganizationActionsTableComponent } from './components/organization-actions-table/organization-actions-table.component';
+import { OrganizationActionsRepertoryComponent } from './components/organization-actions-repertory/organization-actions-repertory.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
@@ -114,15 +113,14 @@ export const organizationRoutes: Routes = [
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationActivityViewComponent,
-    OrganizationActionsTableComponent,
+    OrganizationActionsRepertoryComponent,
     OrganizationAdminViewComponent,
-    OrganizationOperationsTableComponent,
+    OrganizationOperationsRepertoryComponent,
     OrganizationSignerRepertoryComponent,
     OrganizationSignerFormComponent,
     OrganizationEditableComponent,
     OrganizationFormComponent,
     OrganizationActivityViewComponent,
-    OrganizationQuorumFormComponent,
     OrganizationSearchComponent
   ],
   exports: [OrganizationWidgetComponent, OrganizationSearchComponent]

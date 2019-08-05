@@ -11,12 +11,12 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { OrganizationAction } from '../../+state';
 
 @Component({
-  selector: 'org-actions-table',
-  templateUrl: './organization-actions-table.component.html',
-  styleUrls: ['./organization-actions-table.component.scss'],
+  selector: 'org-actions-repertory',
+  templateUrl: './organization-actions-repertory.component.html',
+  styleUrls: ['./organization-actions-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationActionsTableComponent implements OnInit {
+export class OrganizationActionsRepertoryComponent implements OnInit {
   // The columns we want to display
   public displayedColumns: string[] = ['Document name', 'Signers'];
 

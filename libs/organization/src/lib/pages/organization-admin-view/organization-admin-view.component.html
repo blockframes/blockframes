@@ -1,33 +1,44 @@
 <!-- Main content -->
-<editable-sidenav (closed)="opened = false" [opened]="opened" *ngIf="organization$ | async as organization">
+<editable-sidenav (closed)="opened = false" [opened]="opened"><!--TODO *ngIf="organization$ | async as organization">-->
   <ng-container content>
+
+    <!-- Admin Tab -->
     <h1 fxLayout="row" fxLayoutAlign="start center">
-      <span fxFlex="noshrink">{{ organization.name }}</span>
+      <span fxFlex="noshrink">TODO</span><!-- TODO {{ organization.name }}</span>-->
       <mat-divider></mat-divider>
     </h1>
-    <h2>Operations</h2>
-    <org-operations-table [operations]="organization.operations" (editOperation)="openSidenavOperation($event)">
-    </org-operations-table>
-    <h2>Users Operations Permissions</h2>
-    <!-- <mat-form-field>
-      <mat-label>Add new signatory</mat-label>
-      <input matInput type="text" [formControl]="signerFormControl" placeholder="Sam Sample">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field> -->
-    <!-- <button mat-button (click)="addSigner(signerFormControl.value)">Add new signers</button> -->
-    <org-signer-repertory [signerList]="organization.members"> <!--(selected)="openOptions('member', $event)">-->
-    </org-signer-repertory>
+    <!-- Operations -->
+    <section *ngIf="operations$ | async as operations">
+      <h2>Operations</h2>
+      <org-operations-repertory [operations]="operations" (editing)="openSidenavOperation($event)">
+      </org-operations-repertory>
+    </section>
+    <!--Operation Perissions-->
+    <!-- <section>
+      <h2>Users Operations Permissions</h2>
+      <org-signer-repertory [signerList]="organization.members"> <!--(selected)="openOptions('member', $event)">->
+      </org-signer-repertory>
+    </section> -->
+
   </ng-container>
-  <!-- Sidenav -->
   <ng-container sidenav>
     <ng-container [ngSwitch]="editContent">
       <ng-container *ngSwitchCase="'operation'">
-        <p>hello</p>
-        <organization-quorum-form [formGroup]="operationForm(activeForm)">
-        </organization-quorum-form>
+        <p>Ok 2</p>
+        <!-- <ng-container *ngIf="(operationFormGroup$ | async) as operationFormGroup" > -->
+
+          <!-- Quorum -->
+          <p>hello</p>
+          <organization-quorum-form [formGroup]="operationFormGroup$ | async">
+          </organization-quorum-form>
+        <!-- </ng-container> -->
       </ng-container>
       <ng-container *ngSwitchCase="'member'">
+
+        <!-- Members operation permission -->
+        <p>WIP not ready yet</p>
         <!-- <organization-signer-form ></organization-signer-form> -->
+
       </ng-container>
     </ng-container>
   </ng-container>
