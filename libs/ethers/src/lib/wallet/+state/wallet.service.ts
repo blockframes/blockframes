@@ -35,7 +35,8 @@ export class WalletService {
    * then add base ens domain
    * @example `漢micHel+9@exemple.com` -> `xn--michel439-2c2s.blockframes.eth`
    */
-  public emailToEnsDomain(email: string) {
+  // TODO issue#714 (Laurent work on a way to get those functions in only one place)
+  public emailToEnsDomain(email: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
     return toASCII(email.split('@')[0]).toLowerCase()
       .split('')
       .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
@@ -65,7 +66,8 @@ export class WalletService {
    * @param ensDomain this is use as a salt (salt need to be unique for each user)
    * @param publicKey this is used in the smart-contract constructor argument
    */
-  public async precomputeAddress(ensDomain: string) {
+  // TODO issue#714 (Laurent work on a way to get those functions in only one place)
+  public async precomputeAddress(ensDomain: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
     this._requireProvider();
 
     const factoryAddress = await this.provider.resolveName(factoryContract);

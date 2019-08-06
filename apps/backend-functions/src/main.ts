@@ -24,7 +24,7 @@ import {
 import * as users from './users';
 import * as backup from './backup';
 import * as migrations from './migrations';
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite } from './utils';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite, onOrgDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
@@ -177,7 +177,7 @@ export const onOrganizationCreateEvent = onDocumentCreate(
 /**
  * Trigger: when an organization is updated
  */
-export const onOrganizationUpdateEvent = onDocumentUpdate(
+export const onOrganizationUpdateEvent = onOrgDocumentUpdate( // using `onOrgDocument` instead of `onDocument` for an increase timout of 540s
   'orgs/{orgID}',
   onOrganizationUpdate
 );

@@ -1,8 +1,10 @@
-import { Wallet, Contract, utils, getDefaultProvider, providers } from 'ethers';
+import { Wallet, Contract, utils, getDefaultProvider, providers, ContractFactory } from 'ethers';
+import { toASCII } from 'punycode';
 import * as CREATE2_FACTORY from './contracts/Factory2.json';
 import * as ERC1077 from './contracts/ERC1077.json';
 import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
+import * as ORG_CONTRACT from './contracts/Organization.json';
 
 type TxResponse = providers.TransactionResponse;
 type TxReceipt = providers.TransactionReceipt;
@@ -89,6 +91,34 @@ interface RegisterParams {
   address: string;
 }
 
+// TODO issue#714 (Laurent work on a way to get those functions in only one place)
+export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!! there is a copy of this function in 'libs/ethers/wallet/wallet.service.ts'
+  return toASCII(email.split('@')[0]).toLowerCase()
+    .split('')
+    .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
+    .join('') + '.' + baseEnsDomain;
+}
+// TODO issue#714 (Laurent work on a way to get those functions in only one place)
+export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs/ethers/wallet/wallet.service.ts'
+  const relayer = initRelayer(config);
+  const factoryAddress = await relayer.wallet.provider.resolveName(relayer.contractFactory.address);
+  ensDomain = ensDomain.split('.')[0];
+  // CREATE2 address
+  let payload = '0xff';
+  payload += factoryAddress.substr(2);
+  payload += utils.keccak256(utils.toUtf8Bytes(ensDomain)).substr(2); // salt
+  payload += utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
+  return `0x${utils.keccak256(payload).slice(-40)}`;
+}
+
+/** check if an ENS name is linked to an eth address */
+export async function isENSNameRegistred(ensName: string, config: RelayerConfig) {
+  const relayer = initRelayer(config);
+
+  const address = await relayer.wallet.provider.resolveName(ensName); // return eth address or null
+  return !!address;
+}
+
 //---------------------------------------------------
 //                   DEPLOY
 //---------------------------------------------------
@@ -161,9 +191,12 @@ export async function relayerRegisterENSLogic(
     throw new Error('"address" should be a valid ethereum address !');
   }
 
+  // in case name is of the form `name.blockframes.eth` we only want the first part to prevent ending with `name.blockframes.eth.blockframes.eth`
+  const [labelName] = name.split('.');
+
   // compute needed values
-  const fullName = `${name}.${config.baseEnsDomain}`;
-  const hash = utils.keccak256(utils.toUtf8Bytes(name));
+  const fullName = `${labelName}.${config.baseEnsDomain}`;
+  const hash = utils.keccak256(utils.toUtf8Bytes(labelName));
 
   try {
     /*
@@ -281,3 +314,30 @@ export async function relayerSendLogic(
   const txReceipt = await sendTx.wait();
   return txReceipt;
 };
+
+//---------------------------------------------------
+//               DEPLOY ORG CONTRACT
+//---------------------------------------------------
+
+export async function relayerDeployOrganizationLogic(
+  adminAddress: string,
+  config: RelayerConfig
+) {
+  const relayer: Relayer = initRelayer(config);
+  // check required params
+  if (!adminAddress) {
+    throw new Error('"adminAddress" is a mandatory parameters !');
+  }
+
+  try {
+    utils.getAddress(adminAddress);
+  } catch (error) {
+    throw new Error('"adminAddress" should be a valid ethereum address !');
+  }
+
+  const orgFactory = new ContractFactory(ORG_CONTRACT.abi, ORG_CONTRACT.bytecode, relayer.wallet);
+  const contract = await orgFactory.deploy(adminAddress);
+  console.log(`tx sent (deployOrganization) : ${contract.deployTransaction.hash}`); // display tx to firebase logging
+  await contract.deployed();
+  return contract.address;
+}
