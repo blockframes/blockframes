@@ -3,81 +3,87 @@
         <h1 class="mat-display-3">Welcome to Bigger Boat</h1>
         <p class="mat-body-1">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit esse cillum
-            dolore eu fugiat nulla pariatur.</p>
+            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur.</p>
         <button mat-button color="accent" test-id="discover">Discover our films</button>
     </article>
-    <!-- New films -->
-    <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px">
-        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
-            <h4 class="mat-display-2">New films</h4>
-            <span>Lorem ipsum</span>
-            <button mat-button test-id="seeMore1" color="accent">See more</button>
-        </div>
-        <ng-container *ngFor="let information of movies">
-            <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-                <mat-carousel-slide #matCarouselSlide *ngFor="let image of information.promotionalElements.images"
-                    [image]="image" [hideOverlay]="true">
-                    <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
-                        <footer fxLayout="column" fxLayoutAlign="center center">
-                            <h2 class="mat-h2">{{information.main.title.original}}</h2>
-                            <ng-container *ngFor="let director of information.main.directors">
-                                <span class="mat-body-1">{{ director.firstName }} {{ director.lastName }}</span>
-                            </ng-container>
-                            <span class="mat-body-2">Production year: {{information.main.productionYear}}</span>
-                        </footer>
-                    </div>
-                </mat-carousel-slide>
-            </mat-carousel>
+    <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px"
+        *ngFor="let key of keys; let keyIndex = index">
+        <!-- We want by every iteration of the keys array that the text switches side-->
+        <ng-container *ngIf="keyIndex%2 === 0">
+            <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
+                <h4 class="mat-display-2">{{ key.sectionName }}</h4>
+                <span>{{ key.subline}} </span>
+                <a mat-button test-id="seeMore1" color="accent" [href]="key.link">See more</a>
+            </div>
         </ng-container>
-    </article>
-    <!-- Best sellers -->
-    <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px">
-        <ng-container *ngFor="let information of movies">
-            <mat-carousel test-id="mat-carousel2" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-                <mat-carousel-slide #matCarouselSlide *ngFor="let image of information.promotionalElements.images"
-                    [image]="image" [hideOverlay]="true">
-                    <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
-                        <footer fxLayout="column" fxLayoutAlign="center center">
-                            <h2 class="mat-h2">{{information.main.title.original}}</h2>
-                            <ng-container *ngFor="let director of information.main.directors">
-                                <span class="mat-body-1">{{ director.firstName }} {{ director.lastName }}</span>
-                            </ng-container>
-                            <span class="mat-body-2">Production year: {{information.main.productionYear}}</span>
-                        </footer>
-                    </div>
-                </mat-carousel-slide>
-            </mat-carousel>
-        </ng-container>
-        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
-            <h4 class="mat-display-2">Best sellers</h4>
-            <span>Lorem ipsum</span>
-            <button mat-button test-id="seeMore2" color="accent">See more</button>
-        </div>
-    </article>
-    <!-- Awarded films -->
-    <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="200px">
-        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
-            <h4 class="mat-display-2">Awarded films</h4>
-            <span>Lorem ipsum</span>
-            <button mat-button test-id="seeMore3" color="accent">See more</button>
-        </div>
-        <ng-container *ngFor="let information of movies">
-            <mat-carousel test-id="mat-carousel3" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-                <mat-carousel-slide #matCarouselSlide *ngFor="let image of information.promotionalElements.images"
-                    [image]="image" [hideOverlay]="true">
-                    <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
-                        <footer fxLayout="column" fxLayoutAlign="center center">
-                            <h2 class="mat-h2">{{information.main.title.original}}</h2>
-                            <ng-container *ngFor="let director of information.main.directors">
-                                <span class="mat-body-1">{{ director.firstName }} {{ director.lastName }}</span>
-                            </ng-container>
-                            <span class="mat-body-2">Production year: {{information.main.productionYear}}</span>
-                        </footer>
-                    </div>
-                </mat-carousel-slide>
-            </mat-carousel>
+        <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
+            <ng-container *ngIf="key.sectionName === 'New Films'">
+                <ng-container *ngFor="let movie of movies">
+                    <ng-container *ngIf="movie.main.productionYear === 2019">
+                        <!-- We only want to use the first image in the promotinalElements.images array-->
+                        <mat-carousel-slide #matCarouselSlide [image]="movie.promotionalElements.images[0]"
+                            [hideOverlay]="true">
+                            <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                                <footer fxLayout="column" fxLayoutAlign="center center">
+                                    <h2 class="mat-h2">{{ movie.main.title.original }}</h2>
+                                    <span class="mat-body-1"
+                                        *ngFor="let director of movie.main.directors">{{ director.firstName }}
+                                        {{ director.lastName }}</span>
+                                    <span class="mat-body-2">Production year: {{ movie.main.productionYear }}</span>
+                                </footer>
+                            </div>
+                        </mat-carousel-slide>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="key.sectionName === 'Best Sellers'">
+                <ng-container *ngFor="let movie of movies">
+                    <ng-container *ngIf="movie.salesInfo.scoring < 4">
+                        <!-- We only want to use the first image in the promotinalElements.images array-->
+                        <mat-carousel-slide #matCarouselSlide [image]="movie.promotionalElements.images[0]"
+                            [hideOverlay]="true">
+                            <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                                <footer fxLayout="column" fxLayoutAlign="center center">
+                                    <h2 class="mat-h2">{{ movie.main.title.original }}</h2>
+                                    <span class="mat-body-1"
+                                        *ngFor="let director of movie.main.directors">{{ director.firstName }}
+                                        {{ director.lastName }}</span>
+                                    <span class="mat-body-2">Production year: {{ movie.main.productionYear }}</span>
+                                </footer>
+                            </div>
+                        </mat-carousel-slide>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="key.sectionName === 'Awarded Films'">
+                <ng-container *ngFor="let movie of movies">
+                    <ng-container *ngIf="movie.festivalPrizes">
+                        <!-- We only want to use the first image in the promotinalElements.images array-->
+                        <mat-carousel-slide #matCarouselSlide [image]="movie.promotionalElements.images[0]"
+                            [hideOverlay]="true">
+                            <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                                <footer fxLayout="column" fxLayoutAlign="center center">
+                                    <h2 class="mat-h2">{{ movie.main.title.original }}</h2>
+                                    <span class="mat-body-1"
+                                        *ngFor="let director of movie.main.directors">{{ director.firstName }}
+                                        {{ director.lastName }}</span>
+                                    <span class="mat-body-2">Production year: {{ movie.main.productionYear }}</span>
+                                </footer>
+                            </div>
+                        </mat-carousel-slide>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </mat-carousel>
+        <!-- We want by every iteration of the keys array that the text switches side-->
+        <ng-container *ngIf="keyIndex%2 === 1">
+            <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
+                <h4 class="mat-display-2">{{ key.sectionName }}</h4>
+                <span>{{ key.subline}} </span>
+                <a mat-button test-id="seeMore1" color="accent" [href]="key.link">See more</a>
+            </div>
         </ng-container>
     </article>
 </section>
