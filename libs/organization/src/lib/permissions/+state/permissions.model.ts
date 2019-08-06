@@ -39,7 +39,7 @@ export interface OrgDocPermissions {
   canDelete: boolean;
 }
 
-export enum App {
+export const enum App {
   mediaDelivering = 'MediaDelivering',
   mediaFinanciers = 'MediaFinanciers',
   storiesAndMore = 'StoriesAndMore'

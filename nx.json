@@ -73,9 +73,6 @@
     },
     "backend-ops": {
       "tags": []
-    },
-    "libs-permissions": {
-      "tags": []
     }
   }
 }

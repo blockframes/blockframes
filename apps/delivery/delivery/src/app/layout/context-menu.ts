@@ -105,24 +105,36 @@ export const CONTEXT_MENU = [
     route: '/layout/o/organization/:orgId/activityreports',
     items: [
       { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+      { name: 'members', path: '/layout/o/organization/:orgId/members' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
+    ]
+  },
+  {
+    route: '/layout/o/organization/:orgId/members',
+    items: [
+      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'members', path: '/layout/o/organization/:orgId/members' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
     ]
   },
   {
     route: '/layout/o/organization/:orgId/edit',
     items: [
       { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+      { name: 'members', path: '/layout/o/organization/:orgId/members' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
     ]
   },
   {
     route: '/layout/o/organization/:orgId/administration',
     items: [
       { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' }
+      { name: 'members', path: '/layout/o/organization/:orgId/members' },
+      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
+      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
     ]
   }
 ];

@@ -1,3 +1,24 @@
+/** Gives information about an application */
+import { App } from '../permissions/+state';
+
+export interface AppDetails {
+  name: string;
+  logo: string;
+  href: string;
+  id: App;
+}
+
+export const enum AppStatus {
+  none = 'none', // no request nor accept.
+  requested = 'requested',
+  accepted = 'accepted'
+}
+
+/** An application details with the organization authorizations */
+export interface AppDetailsWithStatus extends AppDetails {
+  status: AppStatus;
+}
+
 export const enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
@@ -13,23 +34,30 @@ export interface OrganizationMemberRequest {
 export interface OrganizationMember extends OrganizationMemberRequest {
   uid: string;
   name?: string;
+  surname?: string;
   avatar?: string;
+  role?: UserRole;
+}
+
+export const enum UserRole {
+  admin = 'admin',
+  member = 'member'
 }
 
 export interface OrganizationOperation {
   id: string;
   name: string;
-	quorum: number;
-	members: OrganizationMember[]
+  quorum: number;
+  members: OrganizationMember[];
 }
 
 export interface OrganizationAction {
-  id: string,
-  opid: string,
-  name: string,
-  signers: OrganizationMember[],
-  isApproved: boolean,
-  approvalDate?: string,
+  id: string;
+  opid: string;
+  name: string;
+  signers: OrganizationMember[];
+  isApproved: boolean;
+  approvalDate?: string;
 }
 
 export interface Organization {

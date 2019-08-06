@@ -30,7 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
-import { MemberFormComponent } from './components/member-form/member-form.component';
+import { MemberAddComponent } from './components/member-add/member-add.component';
 import { OrganizationActionRepertoryComponent } from './components/organization-action-repertory/organization-action-repertory.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
@@ -38,13 +38,17 @@ import { OrganizationWidgetComponent } from './components/organization-widget/or
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { OrganizationQuorumFormComponent } from './components/organization-quorum-form/organization-quorum-form.component';
 import { OrganizationActivityRepertoryComponent } from './components/organization-activity-repertory/organization-activity-repertory.component';
+import { MemberPendingComponent } from './components/member-pending/member-pending.component';
+import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
+import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
+
 
 // Pages
-import { MemberListComponent } from './pages/member-list/member-list.component';
-import { MemberViewComponent } from './pages/member-view/member-view.component';
+import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
 import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
 import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
+import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 
 export const organizationRoutes: Routes = [
   {
@@ -52,6 +56,10 @@ export const organizationRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'edit', pathMatch: 'full' },
       { path: 'edit', component: OrganizationEditableComponent },
+      {
+        path: 'members',
+        component: MemberEditableComponent
+      },
       {
         path: 'activityreports',
         component: OrganizationActivityViewComponent
@@ -96,11 +104,14 @@ export const organizationRoutes: Routes = [
   ],
   declarations: [
     OrganizationFormComponent,
+    MemberPendingComponent,
+    MemberFormRoleComponent,
+    MemberInvitationComponent,
     OrganizationDisplayComponent,
+    MemberEditableComponent,
     OrganizationWidgetComponent,
-    MemberListComponent,
-    MemberViewComponent,
-    MemberFormComponent,
+    MemberRepertoryComponent,
+    MemberAddComponent,
     OrganizationActivityViewComponent,
     OrganizationActivityRepertoryComponent,
     OrganizationAdminViewComponent,

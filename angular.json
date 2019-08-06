@@ -1512,18 +1512,17 @@
     },
     "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "ip-upload",
   "schematics": {
-    "@nrwl/schematics:library": {
-      "unitTestRunner": "karma",
-      "framework": "angular"
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     },
-    "@nrwl/schematics:application": {
-      "unitTestRunner": "karma",
-      "e2eTestRunner": "protractor"
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
     "@nrwl/schematics:node-application": {
       "framework": "express"
     }
-  }
+  },
+  "defaultProject": "delivery"
 }

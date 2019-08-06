@@ -9,6 +9,9 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PermissionsQuery extends Query<PermissionsState> {
+  /** Return an array containing the userIds of the superAdmins of the organization */
+  public superAdmins$: Observable<string[]> = this.select(state => state.superAdmins);
+
   constructor(protected store: PermissionsStore, private auth: AuthQuery) {
     super(store);
   }
