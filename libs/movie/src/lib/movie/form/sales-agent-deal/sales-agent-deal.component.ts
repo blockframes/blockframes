@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { startWith, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: '[formGroup] movie-form-sales-agentdeal, [formGroupName] movie-form-sales-agentdeal',
+  selector: '[formGroup] sales-form-deal, [formGroupName] sales-form-deal',
   templateUrl: './sales-agent-deal.component.html',
   styleUrls: ['./sales-agent-deal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
