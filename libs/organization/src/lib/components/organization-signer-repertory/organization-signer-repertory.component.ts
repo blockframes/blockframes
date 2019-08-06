@@ -8,7 +8,8 @@ import {
   EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { OrganizationMember } from '../../+state';
 
 @Component({

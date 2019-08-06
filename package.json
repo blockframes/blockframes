@@ -9,6 +9,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npx ng serve --hmr --disable-host-check",
+    "build:stats": "ng build --prod --stats-json",
     "build:main": "npx ng build main --base-href / --configuration=\"${ENV:-dev}\"",
     "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
     "build:movie-financing": "npx ng build movie-financing --base-href /movie-financing/ --configuration=\"${ENV:-dev}\"",
@@ -45,7 +46,8 @@
     "dep-graph": "./node_modules/.bin/nx dep-graph",
     "help": "./node_modules/.bin/nx help",
     "contracts:build": "npx waffle ./waffle-config.json",
-    "affected": "./node_modules/.bin/nx affected"
+    "affected": "./node_modules/.bin/nx affected",
+    "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -138,6 +140,7 @@
     "tsickle": "0.34.3",
     "tslib": "^1.9.0",
     "tslint": "~5.12.1",
-    "typescript": "~3.4.5"
+    "typescript": "~3.4.5",
+    "webpack-bundle-analyzer": "^3.4.1"
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 
 @Component({

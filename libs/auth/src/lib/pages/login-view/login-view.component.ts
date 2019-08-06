@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, AuthQuery } from '../../+state';
-import { MatSnackBar, MatSidenav } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
 
@@ -10,12 +11,10 @@ import { SigninForm } from '../../forms/signin.form';
   templateUrl: './login-view.component.html',
   styleUrls: ['./login-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-
 })
-
 export class LoginViewComponent {
-  @ViewChild('signinSidenav', {static: false}) loginSidenav: MatSidenav;
-  @ViewChild('signupSidenav', {static: false}) signupSidenav: MatSidenav;
+  @ViewChild('signinSidenav', { static: false }) loginSidenav: MatSidenav;
+  @ViewChild('signupSidenav', { static: false }) signupSidenav: MatSidenav;
 
   public isSignin = true;
   private snackbarDuration = 2000;
@@ -24,7 +23,7 @@ export class LoginViewComponent {
     private service: AuthService,
     private query: AuthQuery,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {}
 
   public async signin(signinForm: SigninForm) {

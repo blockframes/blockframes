@@ -7,7 +7,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'org-activity-repertory',

@@ -3,7 +3,7 @@ import { OrganizationQuery, OrganizationService, Organization } from '../../+sta
 import { PermissionsQuery } from '../../permissions/+state';
 import { OrganizationProfileForm } from '../../forms/organization-profile-edit-form';
 import { Observable } from 'rxjs';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { startWith, tap } from 'rxjs/operators';
 
 @Component({

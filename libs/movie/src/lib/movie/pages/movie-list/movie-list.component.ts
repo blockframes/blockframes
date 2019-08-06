@@ -3,7 +3,7 @@ import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'movie-list',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { createMovie, MovieQuery, MovieService } from '../../+state';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
 import { MovieForm } from './../movie.form';
