@@ -15,9 +15,9 @@ import { MovieMainForm } from './main.form';
 export class MovieFormMainComponent implements OnInit {
   
   public staticModels: any;
-  public countriesFilterCtrl: FormControl = new FormControl();
-  public languagesFilterCtrl: FormControl = new FormControl();
-  public genresFilterCtrl: FormControl = new FormControl();
+  public countriesFilterCtrl = new FormControl();
+  public languagesFilterCtrl = new FormControl();
+  public genresFilterCtrl = new FormControl();
   public countries$: Observable<StaticModel[]>;
   public languages$: Observable<StaticModel[]>;
   public genres$: Observable<StaticModel[]>;

@@ -16,7 +16,7 @@ export class MovieFormSalesInfoComponent implements OnInit {
   public staticModels: any;
   public europeanQualification: false;
 
-  public certificationsFilterCtrl: FormControl = new FormControl();
+  public certificationsFilterCtrl = new FormControl();
   public certifications$: Observable<StaticModel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
