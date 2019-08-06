@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule, MatDividerModule, MatGridListModule, MatListModule } from '@angular/material';
-
+// Material
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDividerModule } from '@angular/material/divider';
 // Componenents
 import { MovieDisplayComponent } from './root/root.component';
 import { MovieDisplayMainComponent } from './main/main.component';
@@ -15,13 +18,7 @@ import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-
 import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatListModule,
-  ],
+  imports: [CommonModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule],
   declarations: [
     MovieDisplayComponent,
     MovieDisplayMainComponent,
@@ -34,8 +31,6 @@ import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-ag
     MovieDisplayFestivalPrizesComponent,
     MovieDisplaySalesAgentDealComponent,
   ],
-  exports: [
-    MovieDisplayComponent,
-  ]
+  exports: [MovieDisplayComponent]
 })
 export class MovieDisplayModule {}

@@ -5,8 +5,8 @@ import { IpHashContract, IP_TYPES, IpService, IpState, IpQuery, Ip, createIp } f
 import { User, AuthQuery } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { utils } from 'ethers';
-import { first, takeWhile} from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { first} from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ip-edit',

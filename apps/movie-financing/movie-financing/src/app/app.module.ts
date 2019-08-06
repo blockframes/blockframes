@@ -5,23 +5,21 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import localeFr from '@angular/common/locales/fr';
 import { RouterModule } from '@angular/router';
 // Material
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatChipsModule,
-  MatExpansionModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  MatBadgeModule
-} from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 // import { MatButtonModule } from '@angular/material/button';
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -110,6 +108,7 @@ registerLocaleData(localeFr)
     MatProgressBarModule,
     MatExpansionModule,
     MatBadgeModule,
+    MatMenuModule,
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
     environment.production ? [] : [AkitaNgDevtools.forRoot()],
@@ -120,7 +119,7 @@ registerLocaleData(localeFr)
     AngularFullpageModule,
     MatProgressBarModule,
     FinancingRangeSliderModule,
-    MatMenuModule
+
   ],
   providers: [{
       provide: LOCALE_ID,

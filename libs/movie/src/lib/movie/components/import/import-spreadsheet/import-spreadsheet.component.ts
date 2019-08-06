@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PreviewSheetComponent } from './../preview-sheet/preview-sheet.component';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';

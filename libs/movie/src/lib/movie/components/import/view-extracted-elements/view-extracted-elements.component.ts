@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { Movie, MovieQuery, MovieAvailability, Prize } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';

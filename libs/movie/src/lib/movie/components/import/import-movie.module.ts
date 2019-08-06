@@ -1,3 +1,7 @@
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 // Angular
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -14,6 +18,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
@@ -26,7 +32,6 @@ import { PreviewSheetComponent } from './preview-sheet/preview-sheet.component';
 import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
-import { MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, MatExpansionModule, MatSelectModule } from '@angular/material';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 import { TableExtractedAvailabilitiesComponent } from './table-extracted-availabilities/table-extracted-availabilities.component';
 

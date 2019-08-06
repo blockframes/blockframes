@@ -1,3 +1,5 @@
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { OrganizationAction } from './../../+state/organization.model';
 import {
   Component,
@@ -8,7 +10,6 @@ import {
   EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
   selector: 'org-action-repertory',

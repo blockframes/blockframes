@@ -1,7 +1,7 @@
 import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription> = {}) {
   const entity = createMoviePromotionalDescription(promotionalDescription);

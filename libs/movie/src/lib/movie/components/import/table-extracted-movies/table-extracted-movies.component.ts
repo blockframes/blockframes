@@ -1,5 +1,9 @@
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Movie, MovieService } from '../../../+state';
 import { PreviewMovieComponent } from './../preview-movie/preview-movie.component';
 import { SelectionModel } from '@angular/cdk/collections';
