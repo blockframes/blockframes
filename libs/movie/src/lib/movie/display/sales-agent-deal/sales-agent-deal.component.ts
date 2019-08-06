@@ -3,7 +3,7 @@ import { createMovieSalesAgentDeal, MovieSalesAgentDeal } from '../../+state';
 import { getLabelByCode } from '../../staticModels';
 
 @Component({
-  selector: '[deal] sales-display-deal',
+  selector: '[deal] movie-display-salesdeal',
   templateUrl: './sales-agent-deal.component.html',
   styleUrls: ['./sales-agent-deal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
