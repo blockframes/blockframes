@@ -14,8 +14,8 @@ import { startWith, debounceTime, map, distinctUntilChanged } from 'rxjs/operato
 export class MovieFormSalesAgentDealComponent implements OnInit {
   
   public staticModels: any;
-  public territoriesFilterCtrl: FormControl = new FormControl();
-  public mediasFilterCtrl: FormControl = new FormControl();
+  public territoriesFilterCtrl = new FormControl();
+  public mediasFilterCtrl = new FormControl();
   public territories$: Observable<StaticModel[]>;
   public medias$: Observable<StaticModel[]>;
 

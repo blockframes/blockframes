@@ -16,7 +16,7 @@ export class MovieFormVersionInfoComponent implements OnInit {
   public staticModels: any;
   public europeanQualification: false;
 
-  public languagesFilterCtrl: FormControl = new FormControl();
+  public languagesFilterCtrl = new FormControl();
   public languages$: Observable<StaticModel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
