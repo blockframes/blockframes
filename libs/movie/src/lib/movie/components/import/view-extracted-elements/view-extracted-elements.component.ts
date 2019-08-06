@@ -26,6 +26,51 @@ export interface SalesImportState {
   errors?: SpreadsheetImportError[];
 }
 
+enum SpreadSheetMovie {
+  internalRef,
+  originalTitle,
+  productionYear,
+  scoring,
+  rightsEnd,
+  territories,
+  medias,
+  directors,
+  poster,
+  isan,
+  internationalTitle,
+  length,
+  productionCompanies,
+  broadcasterCoproducers,
+  color,
+  originCountry,
+  europeanQualification,
+  rating,
+  certifications,
+  cast,
+  shortSynopsis,
+  internationalPremiere,
+  originCountryReleaseDate,
+  genres,
+  festivalPrizes,
+  keyAssets,
+  keywords,
+  languages,
+  dubbings,
+  subtitles
+}
+
+enum SpreadSheetSale {
+  originalTitle,
+  productionYear,
+  directors,
+  territories,
+  rights,
+  start,
+  end,
+  languages,
+  exclusivity
+}
+
 @Component({
   selector: 'movie-view-extracted-elements',
   templateUrl: './view-extracted-elements.component.html',
@@ -50,7 +95,7 @@ export class ViewExtractedElementsComponent {
     this.clearDataSources();
 
     sheetTab.rows.forEach(async spreadSheetRow => {
-      if (spreadSheetRow[1]) {
+      if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
         const movie = {
           main: {
             title: {},
@@ -92,18 +137,18 @@ export class ViewExtractedElementsComponent {
         //////////////////
 
         // INTERNAL REF (Film Code)
-        movie.main.internalRef = spreadSheetRow[0];
+        movie.main.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
 
         // ORIGINAL TITLE (Original Title)
-        movie.main.title.original = spreadSheetRow[1];
+        movie.main.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
 
         // PRODUCTION YEAR
-        if (!isNaN(Number(spreadSheetRow[2]))) {
-          movie.main.productionYear = parseInt(spreadSheetRow[2], 10);
+        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.productionYear]))) {
+          movie.main.productionYear = parseInt(spreadSheetRow[SpreadSheetMovie.productionYear], 10);
         }
 
         // SCORING (Scoring)
-        const scoring = getCodeIfExists('SCORING', spreadSheetRow[3]);
+        const scoring = getCodeIfExists('SCORING', spreadSheetRow[SpreadSheetMovie.scoring]);
         if (scoring !== false) {
           movie.salesInfo.scoring = scoring;
         } else {
@@ -118,14 +163,14 @@ export class ViewExtractedElementsComponent {
         }
 
         // END OF RIGHTS (Mandate End of rights)
-        if (spreadSheetRow[4]) {
-          const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[4]);
+        if (spreadSheetRow[SpreadSheetMovie.rightsEnd]) {
+          const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsEnd]);
           movie.salesAgentDeal.rightsEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
         }
 
         // TERRITORIES (Mandate Territories)
-        if (spreadSheetRow[5]) {
-          spreadSheetRow[5].split(',').forEach((c: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.territories]) {
+          spreadSheetRow[SpreadSheetMovie.territories].split(',').forEach((c: string) => {
             const territory = getCodeIfExists('TERRITORIES', c);
             if (territory !== false) {
               movie.salesAgentDeal.territories.push(territory);
@@ -142,8 +187,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // MEDIAS (Mandate Medias)
-        if (spreadSheetRow[6]) {
-          spreadSheetRow[6].split(';').forEach((c: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.medias]) {
+          spreadSheetRow[SpreadSheetMovie.medias].split(';').forEach((c: string) => {
             const media = getCodeIfExists('MEDIAS', c);
             if (media !== false) {
               movie.salesAgentDeal.medias.push(media);
@@ -160,8 +205,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // DIRECTORS (Director(s))
-        if (spreadSheetRow[7]) {
-          spreadSheetRow[7].split(',').forEach((a: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.directors]) {
+          spreadSheetRow[SpreadSheetMovie.directors].split(',').forEach((a: string) => {
             const director = { firstName: '', lastName: '' };
 
             if (a.split("\\s+").length > 1) {
@@ -176,9 +221,9 @@ export class ViewExtractedElementsComponent {
         }
 
         // POSTER (Poster)
-        const data = await this.getImage(spreadSheetRow[8]);
+        const data = await this.getImage(spreadSheetRow[SpreadSheetMovie.poster]);
         if (data !== false) {
-          const snapshot = await this.afStorage.upload(`movies/${spreadSheetRow[8].split('/')[spreadSheetRow[8].split('/').length - 1]}`, data)
+          const snapshot = await this.afStorage.upload(`movies/${spreadSheetRow[SpreadSheetMovie.poster].split('/')[spreadSheetRow[SpreadSheetMovie.poster].split('/').length - 1]}`, data)
           const url = await snapshot.ref.getDownloadURL();
           movie.main.poster = url;
         }
@@ -188,34 +233,34 @@ export class ViewExtractedElementsComponent {
         //////////////////
 
         // ISAN (ISAN Number)
-        movie.main.isan = spreadSheetRow[9];
+        movie.main.isan = spreadSheetRow[SpreadSheetMovie.isan];
 
 
         // INTERNATIONAL TITLE (International Title)
-        movie.main.title.international = spreadSheetRow[10];
+        movie.main.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
 
         // LENGTH (Length)
-        if (!isNaN(Number(spreadSheetRow[11]))) {
-          movie.main.length = parseInt(spreadSheetRow[11], 10);
+        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
+          movie.main.length = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
-        if (spreadSheetRow[12]) {
-          spreadSheetRow[12].split(',').forEach((p: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.productionCompanies]) {
+          spreadSheetRow[SpreadSheetMovie.productionCompanies].split(',').forEach((p: string) => {
             movie.main.productionCompanies.push({ firstName: p });
           });
         }
 
         // BROADCASTER COPRODUCERS (TV / Platform coproducer(s))
-        if (spreadSheetRow[13]) {
-          spreadSheetRow[13].split(',').forEach((p: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers]) {
+          spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers].split(',').forEach((p: string) => {
             movie.salesInfo.broadcasterCoproducers.push(p);
           });
         }
 
         // BROADCASTER COPRODUCERS (Color / Black & White )
-        movie.salesInfo.color = spreadSheetRow[14];
-        const color = getCodeIfExists('COLORS', spreadSheetRow[14]);
+        movie.salesInfo.color = spreadSheetRow[SpreadSheetMovie.color];
+        const color = getCodeIfExists('COLORS', spreadSheetRow[SpreadSheetMovie.color]);
         if (color !== false) {
           movie.salesInfo.color = color;
         } else {
@@ -230,8 +275,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // ORIGIN COUNTRY (Country of Origin)
-        if (spreadSheetRow[15]) {
-          const country = getCodeIfExists('COUNTRIES', spreadSheetRow[15]);
+        if (spreadSheetRow[SpreadSheetMovie.originCountry]) {
+          const country = getCodeIfExists('COUNTRIES', spreadSheetRow[SpreadSheetMovie.originCountry]);
           if (country !== false) {
             movie.main.originCountry = country;
           } else {
@@ -247,14 +292,14 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (European Qualification)
-        movie.salesInfo.europeanQualification = spreadSheetRow[16].toLowerCase() === 'yes' ? true : false;
+        movie.salesInfo.europeanQualification = spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes' ? true : false;
 
         // PEGI (Rating)
-        movie.salesInfo.pegi = spreadSheetRow[17];
+        movie.salesInfo.pegi = spreadSheetRow[SpreadSheetMovie.rating];
 
         // CERTIFICATIONS (Certifications)
-        if (spreadSheetRow[18]) {
-          spreadSheetRow[18].split(',').forEach((c: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.certifications]) {
+          spreadSheetRow[SpreadSheetMovie.certifications].split(',').forEach((c: string) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification !== false) {
               movie.salesInfo.certifications.push(certification);
@@ -272,8 +317,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // CREDITS (Principal Cast)
-        if (spreadSheetRow[19]) {
-          spreadSheetRow[19].split(',').forEach((a: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.cast]) {
+          spreadSheetRow[SpreadSheetMovie.cast].split(',').forEach((a: string) => {
             const credit = { firstName: '', lastName: '', creditRole: 'actor' };
 
             if (a.split("\\s+").length > 1) {
@@ -288,26 +333,26 @@ export class ViewExtractedElementsComponent {
         }
 
         // SYNOPSIS (Short Synopsis)
-        movie.main.shortSynopsis = spreadSheetRow[20];
+        movie.main.shortSynopsis = spreadSheetRow[SpreadSheetMovie.shortSynopsis];
 
         // INTERNATIONAL PREMIERE (International Premiere )
-        if (spreadSheetRow[21]) {
-          if (spreadSheetRow[21].split(',').length === 2 && !isNaN(Number(spreadSheetRow[21].split(',')[1]))) {
-            movie.salesInfo.internationalPremiere.name = spreadSheetRow[21].split(',')[0];
-            movie.salesInfo.internationalPremiere.year = Number(spreadSheetRow[21].split(',')[1]);
+        if (spreadSheetRow[SpreadSheetMovie.internationalPremiere]) {
+          if (spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',').length === 2 && !isNaN(Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]))) {
+            movie.salesInfo.internationalPremiere.name = spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[0];
+            movie.salesInfo.internationalPremiere.year = Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]);
           }
         }
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-        if (spreadSheetRow[22]) {
-          const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[22]);
+        if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
+          const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]);
           movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
         }
 
         // GENRES (Genres)
-        if (spreadSheetRow[23]) {
+        if (spreadSheetRow[SpreadSheetMovie.genres]) {
           let errors = false;
-          spreadSheetRow[23].split(',').forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.genres].split(',').forEach((g: string) => {
             const genre = getCodeIfExists('GENRES', g);
             if (genre !== false) {
               movie.main.genres.push(genre);
@@ -328,8 +373,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // PRIZES (Prizes)
-        if (spreadSheetRow[24]) {
-          spreadSheetRow[24].split(',').forEach((p: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
+          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(',').forEach((p: string) => {
 
             if (p.split(';').length === 3) {
               const prize = { name: '', year: undefined, prize: '' } as Prize;
@@ -343,23 +388,23 @@ export class ViewExtractedElementsComponent {
         }
 
         // KEY ASSETS (Key Assets)
-        if (spreadSheetRow[25]) {
-          spreadSheetRow[25].split(',').forEach((k: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.keyAssets]) {
+          spreadSheetRow[SpreadSheetMovie.keyAssets].split(',').forEach((k: string) => {
             movie.promotionalDescription.keyAssets.push(k);
           });
         }
 
         // KEYWORDS
-        if (spreadSheetRow[26]) {
-          spreadSheetRow[26].split(',').forEach((k: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.keywords]) {
+          spreadSheetRow[SpreadSheetMovie.keywords].split(',').forEach((k: string) => {
             movie.promotionalDescription.keywords.push(k);
           });
         }
 
         // LANGUAGES (Original Language(s))
-        if (spreadSheetRow[27]) {
+        if (spreadSheetRow[SpreadSheetMovie.languages]) {
           let errors = false;
-          spreadSheetRow[27].split(',').forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.languages].split(',').forEach((g: string) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language !== false) {
               movie.main.languages.push(language);
@@ -380,9 +425,9 @@ export class ViewExtractedElementsComponent {
         }
 
         // DUBS (Available dubbing(s))
-        if (spreadSheetRow[28]) {
+        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           let errors = false;
-          spreadSheetRow[28].split(',').forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.dubbings].split(',').forEach((g: string) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing !== false) {
               movie.versionInfo.dubbings.push(dubbing);
@@ -403,9 +448,9 @@ export class ViewExtractedElementsComponent {
         }
 
         // SUBTILES (Available subtitle(s))
-        if (spreadSheetRow[29]) {
+        if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
           let errors = false;
-          spreadSheetRow[29].split(',').forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.subtitles].split(',').forEach((g: string) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle !== false) {
               movie.versionInfo.subtitles.push(subtitle);
@@ -765,30 +810,30 @@ export class ViewExtractedElementsComponent {
     this.clearDataSources();
     sheetTab.rows.forEach(spreadSheetRow => {
 
-      if (spreadSheetRow[0]) {
+      if (spreadSheetRow[SpreadSheetSale.originalTitle]) {
         const movie = {
           main: {
-            title: { original: spreadSheetRow[0] },
-            productionYear: parseInt(spreadSheetRow[1], 10),
-            directors: [spreadSheetRow[2]]
+            title: { original: spreadSheetRow[SpreadSheetSale.originalTitle] },
+            productionYear: parseInt(spreadSheetRow[SpreadSheetSale.productionYear], 10),
+            directors: [spreadSheetRow[SpreadSheetSale.directors]]
           },
         } as Partial<Movie>; // @todo rework for #643
 
         const movieId = this.movieQuery.movieExists(movie.main.internalRef);
 
         // @todo #643 handle errors
-        const start: SSF$Date = SSF.parse_date_code(spreadSheetRow[5]);
-        const end: SSF$Date = SSF.parse_date_code(spreadSheetRow[6]);
+        const start: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.start]);
+        const end: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.end]);
 
         const sale = {
           movieId,
           movie,
-          territories: spreadSheetRow[3].split(','),
-          rights: spreadSheetRow[4] ? spreadSheetRow[4].split(',') : [],
+          territories: spreadSheetRow[SpreadSheetSale.territories].split(','),
+          rights: spreadSheetRow[SpreadSheetSale.rights] ? spreadSheetRow[SpreadSheetSale.rights].split(',') : [],
           start: new Date(`${start.y}-${start.m}-${start.d}`),
           end: new Date(`${end.y}-${end.m}-${end.d}`),
-          languages: spreadSheetRow[7] ? spreadSheetRow[7].split(',') : [],
-          exclusivity: spreadSheetRow[8] === 'Y' ? true : false,
+          languages: spreadSheetRow[SpreadSheetSale.languages] ? spreadSheetRow[SpreadSheetSale.languages].split(',') : [],
+          exclusivity: spreadSheetRow[SpreadSheetSale.exclusivity] === 'Y' ? true : false,
 
         } as MovieAvailability;
 
