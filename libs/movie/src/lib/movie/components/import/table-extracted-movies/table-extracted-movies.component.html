@@ -79,7 +79,7 @@
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.id; else create">
-        <button mat-raised-button color="accent" [disabled]="errorCount(element, 'warning') > 0 "
+        <button mat-raised-button color="accent" [disabled]="errorCount(element) > 0 "
           (click)="updateMovie(element.movie)">Update</button>
         <button mat-raised-button color="primary" [routerLink]="['../', element.id, 'edit']">Access<mat-icon>
             arrow_forward</mat-icon></button>

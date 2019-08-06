@@ -53,7 +53,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   createMovie(movie: Movie): Promise<boolean> {
-    return this.addMovie(movie)
+    return this.doCreateMovie(movie)
       .then(() => {
         this.snackBar.open('Movie created!', 'close', { duration: 3000 });
         return true;
@@ -64,7 +64,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     const moviesToCreate = [];
     this.selection.selected.forEach((data: MovieImportState) => {
       if (data.movie.id === undefined && this.errorCount(data) === 0) {
-        moviesToCreate.push(this.addMovie(data.movie));
+        moviesToCreate.push(this.doCreateMovie(data.movie));
       }
     })
 
@@ -74,7 +74,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     });
   }
 
-  private addMovie(movie: Movie): Promise<void> {
+  private doCreateMovie(movie: Movie): Promise<void> {
     return this.movieService.addMovie(movie.main.title.original)
       .then(({ id }) => {
         movie.id = id;
@@ -82,12 +82,30 @@ export class TableExtractedMoviesComponent implements OnInit {
       });
   }
 
-  updateSelectedMovies() { // : Promise<boolean>
-    // @todo
+  updateSelectedMovies() : Promise<boolean> {    
+    const moviesToUpdate = [];
+    this.selection.selected.forEach((data: MovieImportState) => {
+      if (data.movie.id !== undefined && this.errorCount(data) === 0) {
+        moviesToUpdate.push(this.doUpdateMovie(data.movie));
+      }
+    })
+
+    return Promise.all(moviesToUpdate).then(() => {
+      this.snackBar.open(`${moviesToUpdate.length} movies updated!`, 'close', { duration: 3000 });
+      return true;
+    });
   }
 
   updateMovie(movie: Movie) {
-    console.log(`todo ${movie.id}`);
+    return this.doUpdateMovie(movie)
+      .then(() => {
+        this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
+        return true;
+      });
+  }
+
+  private doUpdateMovie(movie: Movie): Promise<void> {
+    return this.movieService.update(movie.id, JSON.parse(JSON.stringify(movie))) //@todo remove #483
   }
 
   errorCount(data: MovieImportState, type: string = 'error') {
