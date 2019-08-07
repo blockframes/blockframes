@@ -8,7 +8,7 @@
       <actions-picker [items]="items$ | async" (picked)="selectTemplate($event)"></actions-picker>
     </ng-template>
 
-    <button (click)="onTemplatePicked()" mat-button color="primary" [disabled]="!currentTemplate">Continue</button>
+    <a (click)="onTemplatePicked()" mat-button color="primary" [disabled]="!currentTemplate">Continue</a>
     <a [routerLink]="['../2-choose-starter']"> Cancel </a>
   </article>
 </section>
