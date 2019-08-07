@@ -26,7 +26,7 @@ const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
 export class DeliveryAddTemplatePickerComponent implements OnInit {
   public isLoading$: Observable<boolean>;
   public items$: Observable<ActionPickerItem<Template>[]>;
-  public currentTemplate: Template;
+  public currentTemplate: Template | undefined;
 
   constructor(
     private templateQuery: TemplateQuery,
@@ -43,9 +43,13 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     this.currentTemplate = template;
   }
 
-  public onContinue() {
+  public get continueURL(): string {
+    if (!this.currentTemplate) {
+      return '#';
+    }
+
     const templateId = this.currentTemplate.id;
     const movieId = this.movieQuery.getActiveId();
-    return this.router.navigate([`/layout/o/delivery/add/${movieId}/${templateId}/4-settings`]);
+    return `/layout/o/delivery/add/${movieId}/${templateId}/4-settings`;
   }
 }
