@@ -6,6 +6,13 @@ import { ActionPickerItem } from '@blockframes/ui';
 import { Template, TemplateQuery } from '../../../template/+state';
 import { MovieQuery } from '@blockframes/movie';
 
+/** Turn an array of templates into a list of ActionPickerItem */
+const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
+  templates.map(template => ({
+    title: template.name,
+    payload: template
+  }));
+
 /**
  * Page for the flow: "create a delivery"
  * third step, choose a template.
@@ -29,14 +36,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.templateQuery.selectLoading();
-    this.items$ = this.templateQuery.selectAll().pipe(
-      map(templates =>
-        templates.map((template: Template) => ({
-          title: template.name,
-          payload: template
-        }))
-      )
-    );
+    this.items$ = this.templateQuery.selectAll().pipe(map(createActions));
   }
 
   public selectTemplate(template: Template) {
