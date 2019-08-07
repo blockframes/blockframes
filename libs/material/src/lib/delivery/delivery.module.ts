@@ -46,7 +46,6 @@ import {
   UiFormModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
-import { ConfirmModule, DirectivesModule, EditableModule, TeamWorkModule, UiFormModule } from '@blockframes/ui';
 import { MaterialModule } from '../material/material.module';
 
 // Material
