@@ -40,6 +40,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -135,6 +136,7 @@
             "browserTarget": "main:build"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "browserTarget": "main:build:production"
             },
@@ -182,6 +184,7 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "main:serve:production"
             },
@@ -237,6 +240,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -332,6 +336,7 @@
             "browserTarget": "ip-upload:build"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "browserTarget": "ip-upload:build:production"
             },
@@ -379,6 +384,7 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "ip-upload:serve:production"
             },
@@ -524,6 +530,7 @@
             "tsConfig": "apps/eth-events-server/tsconfig.app.json"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "optimization": true,
               "extractLicenses": true,
@@ -631,6 +638,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -723,6 +731,7 @@
             "browserTarget": "movie-financing:build"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "browserTarget": "movie-financing:build:production"
             }
@@ -767,6 +776,7 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "movie-financing:serve:production"
             },
@@ -913,6 +923,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -1008,6 +1019,7 @@
             "browserTarget": "delivery:build"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "browserTarget": "delivery:build:production"
             },
@@ -1055,6 +1067,7 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "delivery:serve:production"
             },
@@ -1109,6 +1122,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -1204,6 +1218,7 @@
             "browserTarget": "catalog:build"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "browserTarget": "catalog:build:production"
             },
@@ -1251,6 +1266,7 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "catalog:serve:production"
             },
@@ -1354,6 +1370,7 @@
             "assets": ["apps/backend-functions/src/assets"]
           },
           "configurations": {
+            "dev": {},
             "production": {
               "maxWorkers": 2,
               "optimization": true,
@@ -1448,6 +1465,7 @@
             ]
           },
           "configurations": {
+            "dev": {},
             "ci": {
               "maxWorkers": 2,
               "fileReplacements": [
