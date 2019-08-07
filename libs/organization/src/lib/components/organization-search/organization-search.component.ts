@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { Organization } from '@blockframes/organization';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { IndexForOrganizations, OrganizationAlgoliaResult } from '@blockframes/utils';
+import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
 import { Index } from 'algoliasearch';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 
 @Component({
   selector: 'organization-search',
@@ -12,47 +13,35 @@ import { Index } from 'algoliasearch';
   styleUrls: ['./organization-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationSearchComponent implements OnInit, OnDestroy {
+export class OrganizationSearchComponent implements OnInit {
   @Output() picked = new EventEmitter<OrganizationAlgoliaResult>();
-  public organizationsSearchResults: OrganizationAlgoliaResult[];
   public organizationForm = new FormControl();
-  private subscription: Subscription;
+  public searchResults$: Observable<OrganizationAlgoliaResult[]>;
 
-  constructor(@Inject(IndexForOrganizations) private organizationIndex: Index) {
-  }
+  constructor(@Inject(OrganizationsIndex) private organizationIndex: Index) {}
 
   ngOnInit() {
-    this.subscription = this.searchOnChange();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+    // @ts-ignore
+    this.searchResults$ = this.organizationForm.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(name => {
+        return new Promise((res, rej) => {
+          this.organizationIndex.search(name, (err, result) =>
+            err ? rej(err) : res(result.hits as OrganizationAlgoliaResult[])
+          );
+        });
+      })
+    );
   }
 
   public displayFn(organization?: Organization): string | undefined {
     return organization ? organization.name : undefined;
   }
 
-  submit(organizationResult: OrganizationAlgoliaResult) {
-    this.picked.emit(organizationResult);
+  submit(event: MatAutocompleteSelectedEvent) {
+    const result: OrganizationAlgoliaResult = event.option.value;
+    this.picked.emit(result);
     this.organizationForm.reset();
-  }
-
-  private searchOnChange() {
-    return this.organizationForm.valueChanges
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged()
-      )
-      .subscribe((stakeholderName: string) => {
-        this.organizationIndex.search(stakeholderName, (err, result) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-
-          this.organizationsSearchResults = result.hits;
-        });
-      });
   }
 }

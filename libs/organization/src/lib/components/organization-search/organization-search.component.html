@@ -6,10 +6,15 @@
       matInput
       placeholder="Company Name"
       [formControl]="organizationForm"
-      [matAutocomplete]="autoName"/>
+      [matAutocomplete]="autoName"
+    />
   </mat-form-field>
-  <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let organization of organizationsSearchResults" [value]="organization" (click)="submit(organization)">
+  <mat-autocomplete
+    #autoName="matAutocomplete"
+    [displayWith]="displayFn"
+    (optionSelected)="submit($event)"
+  >
+    <mat-option *ngFor="let organization of (searchResults$ | async)" [value]="organization">
       <span>{{ organization.name }}</span>
       <mat-icon color="primary">add_circle</mat-icon>
     </mat-option>
