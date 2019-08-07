@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Organization } from '@blockframes/organization';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -21,15 +28,12 @@ export class OrganizationSearchComponent implements OnInit {
   constructor(@Inject(OrganizationsIndex) private organizationIndex: Index) {}
 
   ngOnInit() {
-    // @ts-ignore
     this.searchResults$ = this.organizationForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(name => {
-        return new Promise((res, rej) => {
-          this.organizationIndex.search(name, (err, result) =>
-            err ? rej(err) : res(result.hits as OrganizationAlgoliaResult[])
-          );
+        return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
+          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
         });
       })
     );
