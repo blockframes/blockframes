@@ -35,11 +35,11 @@ export class InvitationService {
   ) {}
 
   /** Create an invitation when a user asks to join an organization */
-  public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
+  public sendInvitationToOrg(organizationId: string): Promise<void> {
     const userId = this.authQuery.userId;
     const invitation = createInvitationToJoinOrganization({
       id: this.db.createId(),
-      organizationId: organization.id,
+      organizationId: organizationId,
       userId
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
