@@ -109,7 +109,7 @@ export class ViewExtractedElementsComponent {
 
     sheetTab.rows.forEach(async spreadSheetRow => {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
-        const existingMovie = this.movieQuery.movieExists(spreadSheetRow[SpreadSheetMovie.internalRef]);
+        const existingMovie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetMovie.internalRef]);
         const movie = {
           main: createMovieMain(),
           promotionalDescription: createMoviePromotionalDescription(),
@@ -839,7 +839,7 @@ export class ViewExtractedElementsComponent {
 
       if (spreadSheetRow[SpreadSheetSale.originalTitle]) {
         // @todo rework for #643
-        const movie = this.movieQuery.movieExists(spreadSheetRow[SpreadSheetSale.internalRef]);
+        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]);
 
         // @todo #643 handle errors
         const start: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.start]);

@@ -11,6 +11,10 @@ import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elem
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
 
+const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
+  return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
+};
+
 @Component({
   selector: 'movie-table-extracted-movies',
   templateUrl: './table-extracted-movies.component.html',
@@ -52,64 +56,56 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  createMovie(movie: Movie): Promise<boolean> {
-    return this.doCreateMovie(movie)
-      .then(() => {
-        this.snackBar.open('Movie created!', 'close', { duration: 3000 });
-        return true;
-      });
+  async createMovie(movie: Movie): Promise<boolean> {
+    await this.movieService.addMovie(movie.main.title.original, this.prepareMovieSave(movie));
+    this.snackBar.open('Movie created!', 'close', { duration: 3000 });
+    return true;
   }
 
-  createSelectedMovies(): Promise<boolean> {
-    const moviesToCreate = [];
-    this.selection.selected.forEach((data: MovieImportState) => {
-      if (data.movie.id === undefined && this.errorCount(data) === 0) {
-        moviesToCreate.push(this.doCreateMovie(data.movie));
-      }
-    })
-
-    return Promise.all(moviesToCreate).then(() => {
-      this.snackBar.open(`${moviesToCreate.length} movies created!`, 'close', { duration: 3000 });
+  async createSelectedMovies(): Promise<boolean> {
+    try {
+      const creations = this.selection.selected
+        .filter((importState: MovieImportState) => !importState.movie.id && !hasImportErrors(importState))
+        .map((importState: MovieImportState) => this.movieService.addMovie(
+          importState.movie.main.title.original,
+          this.prepareMovieSave(importState.movie)
+        ));
+      await Promise.all(creations);
+      this.snackBar.open(`${creations.length} movies created!`, 'close', { duration: 3000 });
       return true;
-    });
+    } catch (err) {
+      this.snackBar.open(`Could not create movies`, 'close', { duration: 3000 });
+    }
   }
 
-  private doCreateMovie(movie: Movie): Promise<void> {
-    return this.movieService.addMovie(movie.main.title.original)
-      .then(({ id }) => {
-        movie.id = id;
-        return this.movieService.update(id, JSON.parse(JSON.stringify(movie))); //@todo remove #483
-      });
+  async updateMovie(movie: Movie) {
+    await this.movieService.update(movie.id, this.prepareMovieSave(movie))
+    this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
+    return true;
   }
 
-  updateSelectedMovies() : Promise<boolean> {    
-    const moviesToUpdate = [];
-    this.selection.selected.forEach((data: MovieImportState) => {
-      if (data.movie.id !== undefined && this.errorCount(data) === 0) {
-        moviesToUpdate.push(this.doUpdateMovie(data.movie));
-      }
-    })
-
-    return Promise.all(moviesToUpdate).then(() => {
-      this.snackBar.open(`${moviesToUpdate.length} movies updated!`, 'close', { duration: 3000 });
+  async updateSelectedMovies(): Promise<boolean> {
+    try {
+      const updates = this.selection.selected
+        .filter((importState: MovieImportState) => importState.movie.id && !hasImportErrors(importState))
+        .map((importState: MovieImportState) => this.movieService.update(
+          importState.movie.id,
+          this.prepareMovieSave(importState.movie)
+        ));
+      await Promise.all(updates);
+      this.snackBar.open(`${updates.length} movies updated!`, 'close', { duration: 3000 });
       return true;
-    });
-  }
-
-  updateMovie(movie: Movie) {
-    return this.doUpdateMovie(movie)
-      .then(() => {
-        this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
-        return true;
-      });
-  }
-
-  private doUpdateMovie(movie: Movie): Promise<void> {
-    return this.movieService.update(movie.id, JSON.parse(JSON.stringify(movie))) //@todo remove #483
+    } catch (err) {
+      this.snackBar.open(`Could not update movies`, 'close', { duration: 3000 });
+    }
   }
 
   errorCount(data: MovieImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
+  }
+
+  prepareMovieSave(movie: Movie) {
+    return movie.id, JSON.parse(JSON.stringify(movie)); //@todo remove #483
   }
 
   ///////////////////

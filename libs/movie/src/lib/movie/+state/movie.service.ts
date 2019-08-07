@@ -17,11 +17,16 @@ export class MovieService {
   private store: MovieStore,
   ) {}
 
-  public async addMovie(original: string): Promise<Movie> {
+  public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
     const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
-    const movie: Movie = createMovie({ id, main: {title: { original }}});
+
+    if(!movie) { // create empty movie
+      movie = createMovie({ id, main: {title: { original }}});
+    } else { // we set an id for this new movie
+      movie = createMovie({ id, ...movie });
+    }
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const organizationSnap = await tx.get(organizationDoc.ref);
