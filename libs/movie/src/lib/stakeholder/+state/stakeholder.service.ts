@@ -16,15 +16,15 @@ export class StakeholderService {
   /** Add a stakeholder into movies or deliveries sub-collection */
   public async addStakeholder(
     doc: Movie | Delivery,
-    org: {id: string},
+    organizationId: string,
     isAccepted: boolean = false,
     tx?: firebase.firestore.Transaction
   ): Promise<string> {
 
     const stakeholder = (doc._type === 'movies')
-      ? createMovieStakeholder({ id: org.id, isAccepted })
+      ? createMovieStakeholder({ id: organizationId, isAccepted })
       : createDeliveryStakeholder({
-        id: org.id,
+        id: organizationId,
         isAccepted,
         authorizations: isAccepted ? ['canUpdateDelivery'] : []
       });
@@ -33,7 +33,7 @@ export class StakeholderService {
 
     (!!tx)
       ? tx.set(stakeholderDoc.ref, stakeholder)
-      : stakeholderDoc.set(stakeholder)
+      : stakeholderDoc.set(stakeholder);
 
     return stakeholder.id;
   }

@@ -15,6 +15,6 @@ export class DeliveryTeamworkRepertoryComponent {
   public submit({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
     const delivery = this.query.getActive();
-    this.service.addStakeholder(delivery, { id: objectID });
+    this.service.addStakeholder(delivery, objectID);
   }
 }

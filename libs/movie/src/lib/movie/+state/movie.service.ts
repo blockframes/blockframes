@@ -32,7 +32,7 @@ export class MovieService {
       await this.permissionsService.createDocAndPermissions<Movie>(movie, organization, tx);
 
       // Create the first stakeholder in sub-collection
-      await this.shService.addStakeholder(movie, organization, true, tx);
+      await this.shService.addStakeholder(movie, organization.id, true, tx);
 
       // Update the org movieIds
       const nextMovieIds = [...movieIds, movie.id];

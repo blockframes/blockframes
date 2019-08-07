@@ -14,6 +14,6 @@ export class StakeholderRepertoryComponent {
 
   public submit({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    this.service.addStakeholder(this.movieQuery.getActive(), { id: objectID });
+    this.service.addStakeholder(this.movieQuery.getActive(), objectID);
   }
 }

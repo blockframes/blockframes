@@ -107,7 +107,7 @@ export class DeliveryService {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization, true, tx);
+      await this.shService.addStakeholder(delivery, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -136,7 +136,7 @@ export class DeliveryService {
       this.copyMaterials(delivery, movie)
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization, true, tx);
+      await this.shService.addStakeholder(delivery, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
