@@ -4,7 +4,7 @@
 import {
   createOrganizationDocPermissions,
   createUserDocPermissions,
-  getDocument
+  getDocument, getSuperAdmins
 } from './data/internals';
 import { db, functions, getUserMail } from './internals/firebase';
 import {
@@ -15,11 +15,11 @@ import {
   InvitationState,
   InvitationFromOrganizationToUser,
   InvitationType,
-  Organization
+  Organization, InvitationFromUserToOrganization
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
-import { userInviteToOrg } from './assets/mail-templates';
+import { userInviteToOrg, userRequestedToJoinYourOrg } from './assets/mail-templates';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: Invitation, after: Invitation) {
@@ -187,6 +187,52 @@ async function onInvitationToOrgUpdate(
   return;
 }
 
+
+/** Sends an email when an organization invites a user to join. */
+async function onInvitationFromUserToJoinOrgCreate({ organizationId, userId }: InvitationFromUserToOrganization) {
+  const userEmail = await getUserMail(userId);
+
+  if (!userEmail) {
+    throw new Error(`no email for userId: ${userId}`);
+  }
+
+  const superAdmins = await getSuperAdmins(organizationId);
+
+  return Promise.all(
+    superAdmins.map(async adminId => {
+      const adminMail = await getUserMail(adminId);
+      if (!adminMail){
+        return;
+      }
+      return sendMail(userRequestedToJoinYourOrg(adminMail, userEmail))
+    })
+  );
+}
+
+/** TODO */
+async function onInvitationFromUserToJoinOrgAccept({ organizationId, userId }: InvitationFromUserToOrganization) {
+  // TODO
+}
+
+
+/**
+ * Dispatch 'creation' and 'accepted' events when a request to
+ * join an organization is updated.
+ */
+async function onInvitationFromUserToJoinOrgUpdate(
+  before: InvitationOrUndefined,
+  after: Invitation,
+  invitation: InvitationFromUserToOrganization
+): Promise<any> {
+  if (wasCreated(before, after)) {
+    return onInvitationFromUserToJoinOrgCreate(invitation);
+  } else if (wasAccepted(before!, after)) {
+    return onInvitationFromUserToJoinOrgAccept(invitation);
+  }
+  return;
+}
+
+
 /** Dispatch 'accepted' event when an invitation to join a document is accepted. */
 async function onStakeholderInvitationUpdate(
   before: InvitationOrUndefined,
@@ -209,7 +255,7 @@ async function onStakeholderInvitationUpdate(
  * Check the data, manage processed ids (to prevent duplicates events in functions),
  * and dispatch to the correct piece of code depending on the invitation type.
  */
-export async function onInvitationUpdate(
+export async function onInvitationWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ) {
@@ -248,6 +294,8 @@ export async function onInvitationUpdate(
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromOrganizationToUser:
         return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+      case InvitationType.fromUserToOrganization:
+        return await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

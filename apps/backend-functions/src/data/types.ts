@@ -167,11 +167,18 @@ export interface InvitationFromOrganizationToUser extends RawInvitation {
   organizationId: string;
 }
 
+/** A user requests to join an organization. */
+export interface InvitationFromUserToOrganization extends RawInvitation {
+  type: InvitationType.fromUserToOrganization;
+  userId: string;
+  organizationId: string;
+}
+
 /**
  * This is the generic type for invitation,
  * use the type field to figure out which kind of invitation you are working with.
  */
-export type Invitation = InvitationStakeholder | InvitationFromOrganizationToUser;
+export type Invitation = InvitationStakeholder | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
 export type InvitationOrUndefined = Invitation | undefined;
 
 // Notifications

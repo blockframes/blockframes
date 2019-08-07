@@ -4,7 +4,13 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../internals/firebase';
-import { Organization, Stakeholder, UserDocPermissions, OrganizationDocPermissions } from './types';
+import {
+  Organization,
+  OrganizationDocPermissions,
+  OrganizationPermissions,
+  Stakeholder,
+  UserDocPermissions
+} from './types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -77,4 +83,17 @@ export function getCount(collection: string): Promise<number> {
     .collection(collection)
     .get()
     .then(col => col.size);
+}
+
+/** Retrieve the list of superAdmins of an organization */
+export async function getSuperAdmins(organizationId: string): Promise<string[]> {
+  const permissionsRef = db.collection('permissions').doc(organizationId);
+  const permissionsDoc = await permissionsRef.get();
+
+  if (!permissionsDoc.exists) {
+    throw new Error(`organization: ${organizationId} does not exists`);
+  }
+
+  const { superAdmins } = permissionsDoc.data() as OrganizationPermissions;
+  return superAdmins;
 }

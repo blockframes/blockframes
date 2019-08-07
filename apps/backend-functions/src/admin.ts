@@ -6,7 +6,7 @@
 import express from 'express';
 import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
 import { sendMail } from './internals/email';
-import { AppAccessStatus, OrganizationPermissions, OrganizationStatus } from './data/types';
+import { AppAccessStatus, OrganizationStatus } from './data/types';
 import {
   ADMIN_ACCEPT_ORG_PATH,
   ADMIN_ACCESS_TO_APP_PATH,
@@ -20,6 +20,7 @@ import {
   allowAccessToAppPage,
   allowAccessToAppPageComplete
 } from './assets/admin-templates';
+import { getSuperAdmins } from './data/internals';
 
 // TODO(#714): Synchronize data types with the frontend
 const APPS = ['MediaDelivering', 'MediaFinanciers', 'StoriesAndMore'];
@@ -52,19 +53,6 @@ export async function onRequestAccessToAppWrite(
 // We serve an express app at the /admin URL
 // this let us deal easily with get / post, url params, etc.
 export const adminApp = express();
-
-/** Retrieve the list of superAdmins of an organization */
-async function getSuperAdmins(organizationId: string): Promise<string[]> {
-  const permissionsRef = db.collection('permissions').doc(organizationId);
-  const permissionsDoc = await permissionsRef.get();
-
-  if (!permissionsDoc.exists) {
-    throw new Error(`organization: ${organizationId} does not exists`);
-  }
-
-  const { superAdmins } = permissionsDoc.data() as OrganizationPermissions;
-  return superAdmins;
-}
 
 // Organization Administration: Accept new orgs
 // ============================================

@@ -27,7 +27,7 @@ import * as migrations from './migrations';
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
-import { onInvitationUpdate } from './invitation';
+import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 
@@ -145,9 +145,9 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 /**
  * Trigger: when an invitation is updated (e. g. when invitation.state change)
  */
-export const onInvitationUpdateEvent = onDocumentUpdate(
+export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
-  onInvitationUpdate
+  onInvitationWrite
 );
 
 //--------------------------------
