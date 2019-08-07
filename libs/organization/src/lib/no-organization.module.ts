@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { FeedbackMessageModule } from '@blockframes/ui';
+import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -55,7 +55,6 @@ export const noOrganizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
-    FeedbackMessageModule,
 
     // Material
     MatFormFieldModule,
@@ -67,7 +66,12 @@ export const noOrganizationRoutes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
-    RouterModule.forChild(noOrganizationRoutes)
+
+    // UI
+    ActionsListModule,
+    FeedbackMessageModule,
+
+    RouterModule.forChild(noOrganizationRoutes),
   ],
   declarations: [
     OrganizationHomeComponent,

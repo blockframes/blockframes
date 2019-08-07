@@ -15,6 +15,7 @@ import { StakeholderItemComponent } from './components/stakeholder-item/stakehol
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
+import { OrganizationModule } from '@blockframes/organization';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { DirectivesModule, TeamWorkModule } from '@blockframes/ui';
     MatCheckboxModule,
     DirectivesModule,
     TeamWorkModule,
+    OrganizationModule,
   ],
   declarations: [StakeholderRepertoryComponent, StakeholderViewComponent, StakeholderItemComponent]
 })

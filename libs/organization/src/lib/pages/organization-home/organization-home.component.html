@@ -5,31 +5,7 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
       sagittis. Duis a auctor nulla, a finibus mauris. Nullam eu maximus lorem.
     </p>
-    <mat-nav-list>
-      <a routerLink="../create">
-        <mat-list-item>
-          <mat-icon class="first-icon" matListIcon svgIcon="adjustableWrench"></mat-icon>
-          <h4 mat-line><b>Create your organization</b></h4>
-          <p mat-line>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-            Donec luctus dictum metus quis sagittis.
-          </p>
-          <mat-icon class="second-icon">keyboard_arrow_right</mat-icon>
-        </mat-list-item>
-      </a>
-      <mat-divider></mat-divider>
-      <a routerLink="../find">
-        <mat-list-item>
-          <mat-icon class="first-icon" matListIcon svgIcon="magnifyingGlass"></mat-icon>
-          <h4 mat-line><b>Find your organization</b></h4>
-          <p mat-line>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-            Donec luctus dictum metus quis sagittis.
-          </p>
-          <mat-icon class="second-icon">keyboard_arrow_right</mat-icon>
-        </mat-list-item>
-      </a>
-    </mat-nav-list>
+    <actions-list [items]="items"></actions-list>
     <div class="image"></div>
   </article>
 </section>

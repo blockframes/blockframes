@@ -9,16 +9,18 @@ const indexOrganizationsBuilder = () => {
 };
 
 export function storeSearchableOrg(orgId: string, name: string): Promise<any> {
-  if (algoliaId === "") {
-    console.warn("No algolia id set, assuming dev config: skipping")
+  if (algoliaId === '') {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
   }
 
-  return indexOrganizationsBuilder().saveObject({objectID: orgId, name});
+  return indexOrganizationsBuilder().saveObject({ objectID: orgId, name });
 }
 
 export function deleteSearchableOrg(orgId: string): Promise<any> {
-  if (algoliaId === "") {
-    console.warn("No algolia id set, assuming dev config: skipping")
+  if (algoliaId === '') {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
   }
 
   return indexOrganizationsBuilder().deleteObject(orgId);

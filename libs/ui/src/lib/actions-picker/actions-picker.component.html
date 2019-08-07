@@ -1,0 +1,5 @@
+<mat-radio-group fxLayout="column" (change)="picked.emit($event.value.payload)">
+  <mat-radio-button *ngFor="let item of items" [value]="item">
+    <b>{{ item.title }}</b>
+  </mat-radio-button>
+</mat-radio-group>
