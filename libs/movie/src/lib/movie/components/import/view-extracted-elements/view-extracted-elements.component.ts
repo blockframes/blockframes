@@ -11,7 +11,8 @@ import {
   createMovieSalesInfo,
   createMovieVersionInfo,
   createMovieFestivalPrizes,
-  createMovieSalesAgentDeal
+  createMovieSalesAgentDeal,
+  cleanModel
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
@@ -118,7 +119,7 @@ export class ViewExtractedElementsComponent {
           versionInfo: createMovieVersionInfo(),
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
-          ... existingMovie ? JSON.parse(JSON.stringify(existingMovie)) : undefined // deep object clone to remove readonly setting
+          ... existingMovie ? cleanModel(existingMovie) : undefined
         } as Movie;
 
         movie.main.status = 'finished'; // all imported movies are in finished state

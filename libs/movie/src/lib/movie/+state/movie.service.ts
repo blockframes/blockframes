@@ -5,6 +5,18 @@ import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore } from './movie.store';
 
+/**
+ * @see #483
+ * This method is used before pushing data on db 
+ * to prevent "Unsupported field value: undefined" errors.
+ * Doing JSON.parse(JSON.stringify(data)) clones object and
+ * removes undefined fields and empty arrays.
+ * This methods also removes readonly settings on objects coming from Akita
+ */
+export function cleanModel<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
 @Injectable({ providedIn: 'root' })
 
 export class MovieService {
@@ -34,7 +46,7 @@ export class MovieService {
       const movieIds = organizationSnap.data().movieIds || [];
 
       // Create movie document and permissions
-      await this.permissionsService.createDocAndPermissions<Movie>(movie, organization, tx);
+      await this.permissionsService.createDocAndPermissions<Movie>(cleanModel(movie), organization, tx);
 
       // Create the first stakeholder in sub-collection
       await this.shService.addStakeholder(movie, organization.id, true, tx);
@@ -52,7 +64,7 @@ export class MovieService {
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    return this.db.doc<Movie>(`movies/${id}`).update(movie);
+    return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
   }
 
   public async remove(movieId: string): Promise<void> {

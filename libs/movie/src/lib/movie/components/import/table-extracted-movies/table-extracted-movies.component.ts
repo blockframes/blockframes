@@ -57,7 +57,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async createMovie(movie: Movie): Promise<boolean> {
-    await this.movieService.addMovie(movie.main.title.original, this.prepareMovieSave(movie));
+    await this.movieService.addMovie(movie.main.title.original, movie);
     this.snackBar.open('Movie created!', 'close', { duration: 3000 });
     return true;
   }
@@ -66,10 +66,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const creations = this.selection.selected
         .filter(importState => !importState.movie.id && !hasImportErrors(importState))
-        .map(importState => {
-          const movieToSave = this.prepareMovieSave(importState.movie);
-          return this.movieService.addMovie(importState.movie.main.title.original, movieToSave)
-        });
+        .map(importState => this.movieService.addMovie(importState.movie.main.title.original, importState.movie));
       await Promise.all(creations);
       this.snackBar.open(`${creations.length} movies created!`, 'close', { duration: 3000 });
       return true;
@@ -79,7 +76,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async updateMovie(movie: Movie) {
-    await this.movieService.update(movie.id, this.prepareMovieSave(movie))
+    await this.movieService.update(movie.id, movie)
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
@@ -88,10 +85,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const updates = this.selection.selected
         .filter(importState => importState.movie.id && !hasImportErrors(importState))
-        .map(importState => {
-          const movieToSave = this.prepareMovieSave(importState.movie);
-          return this.movieService.update(importState.movie.id, movieToSave);
-        });
+        .map(importState => this.movieService.update(importState.movie.id, importState.movie));
       await Promise.all(updates);
       this.snackBar.open(`${updates.length} movies updated!`, 'close', { duration: 3000 });
       return true;
@@ -102,10 +96,6 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   errorCount(data: MovieImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
-  }
-
-  prepareMovieSave(movie: Movie) {
-    return JSON.parse(JSON.stringify(movie)); //@todo remove #483
   }
 
   ///////////////////

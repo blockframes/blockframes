@@ -42,7 +42,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
       throw new Error('Invalid form');
     } else {
       this.snackBar.open(`${this.form.get('main').get('title').get('original').value} saved.`, 'close', { duration: 2000 });
-      this.service.update(this.query.getActiveId(), JSON.parse(JSON.stringify({ ...this.form.value }))); //@todo remove #483;
+      this.service.update(this.query.getActiveId(), { ...this.form.value });
     }
   }
 
