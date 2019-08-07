@@ -1,14 +1,15 @@
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FireQuery } from '@blockframes/utils';
+import { map } from 'rxjs/operators';
 
-interface MovieSections {
-  sectionName: string;
+interface CarouselSection {
+  title: string;
   subline: string;
   link: string;
+  movies: Movie[];
 }
-
 @Component({
   selector: 'catalog-home',
   templateUrl: './home.component.html',
@@ -17,30 +18,41 @@ interface MovieSections {
 })
 export class CatalogHomeComponent implements OnInit {
   /** Observable to fetch all movies from the store */
-  public movies$: Observable<any>;
-
-  public keys: MovieSections[] = [
-    {
-      sectionName: 'New Films',
-      subline: 'Lorem Ipsum',
-      link: '#',
-    },
-    {
-      sectionName: 'Best Sellers',
-      subline: 'Lorem Ipsum',
-      link: '#',
-    },
-    {
-      sectionName: 'Awarded Films',
-      subline: 'Lorem Ipsum',
-      link: '#',
-    }
-  ];
+  public moviesBySections$: Observable<CarouselSection[]>;
 
   constructor(private fireQuery: FireQuery) {}
 
   ngOnInit() {
     // TODO #721: look for query when data query model is done.
-    this.movies$ = this.fireQuery.fromQuery<Movie>('movies');
+    const latest$ = this.fireQuery
+      .collection<Movie>('movies', ref => ref.limit(5).where('main.productionYear', '>=', 2019))
+      .valueChanges();
+    const scoring$ = this.fireQuery
+      .collection<Movie>('movies', ref => ref.limit(5).where('salesInfo.scoring', '>', 4))
+      .valueChanges();
+    const prizes$ = this.fireQuery
+      .collection<Movie>('movies', ref =>
+        ref.limit(5).where('festivalPrizes.prizes', '==', true)
+      )
+      .valueChanges();
+    this.moviesBySections$ = combineLatest([latest$, scoring$, prizes$]).pipe(
+      map(([latest, scoring, prizes]) => {
+        return [
+          { title: 'New Films', subline: 'Lorem Ipsum', link: '#', movies: latest },
+          {
+            title: 'Best Sellers',
+            subline: 'Lorem Ipsum',
+            link: '#',
+            movies: scoring
+          },
+          {
+            title: 'Awarded Films',
+            subline: 'Lorem Ipsum',
+            link: '#',
+            movies: prizes
+          }
+        ];
+      })
+    );
   }
 }
