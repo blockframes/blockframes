@@ -18,7 +18,7 @@ import { Index } from 'algoliasearch';
 })
 
 export class OrganizationFindComponent implements OnInit {
-  private selected: OrganizationAlgoliaResult;
+  public selected: OrganizationAlgoliaResult;
   public searchResults$: Observable<OrganizationAlgoliaResult[]>;
   public orgControl = new FormControl();
 

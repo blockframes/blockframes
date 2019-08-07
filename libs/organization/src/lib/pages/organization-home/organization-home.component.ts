@@ -27,7 +27,7 @@ export class OrganizationHomeComponent implements OnInit {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
     }
   ];
-  private items$: Observable<ActionItem[]>;
+  public items$: Observable<ActionItem[]>;
 
   constructor(private invitationService: InvitationService) {}
 
