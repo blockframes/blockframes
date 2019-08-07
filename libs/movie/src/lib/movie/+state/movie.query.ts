@@ -19,8 +19,7 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
    * @param internalRef 
    */
   public existingMovie(internalRef: string) : Movie {
-    const movie = this.getAll().find(entity =>  entity.main.internalRef === internalRef );
-    return movie;
+    return this.getAll().find(entity =>  entity.main.internalRef === internalRef );
   }
 
 }

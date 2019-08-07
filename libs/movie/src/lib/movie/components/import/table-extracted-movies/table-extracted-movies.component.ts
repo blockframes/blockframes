@@ -65,11 +65,11 @@ export class TableExtractedMoviesComponent implements OnInit {
   async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected
-        .filter((importState: MovieImportState) => !importState.movie.id && !hasImportErrors(importState))
-        .map((importState: MovieImportState) => this.movieService.addMovie(
-          importState.movie.main.title.original,
-          this.prepareMovieSave(importState.movie)
-        ));
+        .filter(importState => !importState.movie.id && !hasImportErrors(importState))
+        .map(importState => {
+          const movieToSave = this.prepareMovieSave(importState.movie);
+          return this.movieService.addMovie(importState.movie.main.title.original, movieToSave)
+        });
       await Promise.all(creations);
       this.snackBar.open(`${creations.length} movies created!`, 'close', { duration: 3000 });
       return true;
@@ -87,11 +87,11 @@ export class TableExtractedMoviesComponent implements OnInit {
   async updateSelectedMovies(): Promise<boolean> {
     try {
       const updates = this.selection.selected
-        .filter((importState: MovieImportState) => importState.movie.id && !hasImportErrors(importState))
-        .map((importState: MovieImportState) => this.movieService.update(
-          importState.movie.id,
-          this.prepareMovieSave(importState.movie)
-        ));
+        .filter(importState => importState.movie.id && !hasImportErrors(importState))
+        .map(importState => {
+          const movieToSave = this.prepareMovieSave(importState.movie);
+          return this.movieService.update(importState.movie.id, movieToSave);
+        });
       await Promise.all(updates);
       this.snackBar.open(`${updates.length} movies updated!`, 'close', { duration: 3000 });
       return true;
