@@ -43,7 +43,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     this.currentTemplate = template;
   }
 
-  public onTemplatePicked() {
+  public onContinue() {
     const templateId = this.currentTemplate.id;
     const movieId = this.movieQuery.getActiveId();
     return this.router.navigate([`/layout/o/delivery/add/${movieId}/${templateId}/4-settings`]);
