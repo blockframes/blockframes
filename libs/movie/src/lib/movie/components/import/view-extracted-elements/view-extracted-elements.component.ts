@@ -144,7 +144,7 @@ export class ViewExtractedElementsComponent {
         // SCORING (Scoring)
         if(spreadSheetRow[SpreadSheetMovie.scoring]) {
           const scoring = getCodeIfExists('SCORING', spreadSheetRow[SpreadSheetMovie.scoring]);
-          if (scoring !== false) {
+          if (scoring) {
             movie.salesInfo.scoring = scoring;
           } else {
             importErrors.errors.push({
@@ -169,7 +169,7 @@ export class ViewExtractedElementsComponent {
           movie.salesAgentDeal.territories = [];
           spreadSheetRow[SpreadSheetMovie.territories].split(',').forEach((c: string) => {
             const territory = getCodeIfExists('TERRITORIES', c);
-            if (territory !== false) {
+            if (territory) {
               movie.salesAgentDeal.territories.push(territory);
             } else {
               importErrors.errors.push({
@@ -188,7 +188,7 @@ export class ViewExtractedElementsComponent {
           movie.salesAgentDeal.medias = [];
           spreadSheetRow[SpreadSheetMovie.medias].split(';').forEach((c: string) => {
             const media = getCodeIfExists('MEDIAS', c);
-            if (media !== false) {
+            if (media) {
               movie.salesAgentDeal.medias.push(media);
             } else {
               importErrors.errors.push({
@@ -265,7 +265,7 @@ export class ViewExtractedElementsComponent {
         // COLOR (Color / Black & White )
         if(spreadSheetRow[SpreadSheetMovie.color]) {
           const color = getCodeIfExists('COLORS', spreadSheetRow[SpreadSheetMovie.color]);
-          if (color !== false) {
+          if (color) {
             movie.salesInfo.color = color;
           } else {
             importErrors.errors.push({
@@ -282,7 +282,7 @@ export class ViewExtractedElementsComponent {
         // ORIGIN COUNTRY (Country of Origin)
         if (spreadSheetRow[SpreadSheetMovie.originCountry]) {
           const country = getCodeIfExists('COUNTRIES', spreadSheetRow[SpreadSheetMovie.originCountry]);
-          if (country !== false) {
+          if (country) {
             movie.main.originCountry = country;
           } else {
             importErrors.errors.push({
@@ -311,7 +311,7 @@ export class ViewExtractedElementsComponent {
           movie.salesInfo.certifications = [];
           spreadSheetRow[SpreadSheetMovie.certifications].split(',').forEach((c: string) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
-            if (certification !== false) {
+            if (certification) {
               movie.salesInfo.certifications.push(certification);
             } else {
               importErrors.errors.push({
@@ -368,7 +368,7 @@ export class ViewExtractedElementsComponent {
           let errors = false;
           spreadSheetRow[SpreadSheetMovie.genres].split(',').forEach((g: string) => {
             const genre = getCodeIfExists('GENRES', g);
-            if (genre !== false) {
+            if (genre) {
               movie.main.genres.push(genre);
             } else {
               errors = true;
@@ -423,7 +423,7 @@ export class ViewExtractedElementsComponent {
           movie.main.languages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(',').forEach((g: string) => {
             const language = getCodeIfExists('LANGUAGES', g);
-            if (language !== false) {
+            if (language) {
               movie.main.languages.push(language);
             } else {
               errors = true;
@@ -447,7 +447,7 @@ export class ViewExtractedElementsComponent {
           movie.versionInfo.dubbings = [];
           spreadSheetRow[SpreadSheetMovie.dubbings].split(',').forEach((g: string) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
-            if (dubbing !== false) {
+            if (dubbing) {
               movie.versionInfo.dubbings.push(dubbing);
             } else {
               errors = true;
@@ -471,7 +471,7 @@ export class ViewExtractedElementsComponent {
           movie.versionInfo.subtitles = [];
           spreadSheetRow[SpreadSheetMovie.subtitles].split(',').forEach((g: string) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
-            if (subtitle !== false) {
+            if (subtitle) {
               movie.versionInfo.subtitles.push(subtitle);
             } else {
               errors = true;

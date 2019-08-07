@@ -1398,7 +1398,9 @@ export const getCodeIfExists = (scope: string, str: string) => {
   if(item) { return item.slug }
 
   item = models[scope].find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
-  return item.slug || false;
+  if(item) { return item.slug }
+
+  return null;
 };
 
 /**

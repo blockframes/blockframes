@@ -105,7 +105,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   prepareMovieSave(movie: Movie) {
-    return movie.id, JSON.parse(JSON.stringify(movie)); //@todo remove #483
+    return JSON.parse(JSON.stringify(movie)); //@todo remove #483
   }
 
   ///////////////////
