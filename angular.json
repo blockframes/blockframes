@@ -1355,6 +1355,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -1484,6 +1485,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
