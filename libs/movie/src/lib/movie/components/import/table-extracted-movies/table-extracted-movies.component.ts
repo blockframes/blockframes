@@ -56,17 +56,18 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createMovie(movie: Movie): Promise<boolean> {
-    await this.movieService.addMovie(movie.main.title.original, movie);
+  async createMovie(importState: MovieImportState): Promise<boolean> {
+    await this.addMovie(importState);
+    this.rows.data = [...this.rows.data];
     this.snackBar.open('Movie created!', 'close', { duration: 3000 });
     return true;
   }
 
-  async createSelectedMovies(): Promise<boolean> {
+  async createSelectedMovies() : Promise<boolean> {
     try {
       const creations = this.selection.selected
         .filter(importState => !importState.movie.id && !hasImportErrors(importState))
-        .map(importState => this.movieService.addMovie(importState.movie.main.title.original, importState.movie));
+        .map(importState => this.addMovie(importState))
       await Promise.all(creations);
       this.snackBar.open(`${creations.length} movies created!`, 'close', { duration: 3000 });
       return true;
@@ -75,8 +76,25 @@ export class TableExtractedMoviesComponent implements OnInit {
     }
   }
 
-  async updateMovie(movie: Movie) {
-    await this.movieService.update(movie.id, movie)
+  /**
+   * Adds a movie to database and prevents multi-insert by refreshing mat-table
+   * @param importState 
+   */
+  private async addMovie(importState: MovieImportState) : Promise<boolean> {
+    await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
+    importState.errors.push({
+      type: 'error',
+      field: 'main.internalRef',
+      name: 'Film Code',
+      reason: 'Movie already exists',
+      hint: 'Movie already saved'
+    } as SpreadsheetImportError)
+    this.rows.data = [...this.rows.data];
+    return true;
+  }
+
+  async updateMovie(importState: MovieImportState) {
+    await this.movieService.update(importState.movie.id, importState.movie)
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
