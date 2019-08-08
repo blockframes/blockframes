@@ -20,12 +20,8 @@ export class InvitationItemComponent {
     return ''; // TODO: issue#576, implement one message by type of invitation
   }
 
-  acceptInvitation(invitation: Invitation) {
-    this.service.acceptInvitation(invitation.id);
-    this.snackBar.open(
-      `You accepted to join the delivery's teamwork. You will receive another notification when you'll be able to navigate to the document`,
-      'close',
-      { duration: 5000 }
-    );
+  public async acceptInvitation(invitation: Invitation) {
+    await this.service.acceptInvitation(invitation.id);
+    this.snackBar.open(`You accepted the invitation!`, 'close', { duration: 5000 });
   }
 }

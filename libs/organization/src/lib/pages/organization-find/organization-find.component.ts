@@ -45,7 +45,7 @@ export class OrganizationFindComponent implements OnInit {
     this.selected = result;
   }
 
-  public async addOrganization() {
+  public async requestToJoinOrganization() {
     if (this.selected) {
       try {
         await this.invitationService.sendInvitationToOrg(this.selected.objectID);
