@@ -22,9 +22,7 @@
             "main": "apps/main/main/src/main.ts",
             "polyfills": "apps/main/main/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/main/main/tsconfig.app.json",
             "assets": [
@@ -154,10 +152,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/main/main/tsconfig.app.json",
-              "apps/main/main/tsconfig.spec.json"
-            ],
+            "tsConfig": ["apps/main/main/tsconfig.app.json", "apps/main/main/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**"]
           }
         },
@@ -221,9 +216,7 @@
             "main": "apps/ip-upload/ip-upload/src/main.ts",
             "polyfills": "apps/ip-upload/ip-upload/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/ip-upload/ip-upload/tsconfig.app.json",
             "assets": [
@@ -620,9 +613,7 @@
             "main": "apps/movie-financing/movie-financing/src/main.ts",
             "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
             "assets": [
@@ -905,9 +896,7 @@
             "main": "apps/delivery/delivery/src/main.ts",
             "polyfills": "apps/delivery/delivery/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
             "assets": [
@@ -1080,205 +1069,6 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "catalog": {
-      "root": "apps/catalog/catalog/",
-      "sourceRoot": "apps/catalog/catalog/src",
-      "projectType": "application",
-      "prefix": "catalog",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/catalog",
-            "index": "apps/catalog/catalog/src/index.html",
-            "main": "apps/catalog/catalog/src/main.ts",
-            "polyfills": "apps/catalog/catalog/src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
-            },
-            "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
-            "assets": [
-              "apps/catalog/catalog/src/favicon.ico",
-              "apps/catalog/catalog/src/assets",
-              {
-                "glob": "**/*",
-                "input": "./libs/shared-assets/",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/catalog/catalog/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "10mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "10mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "10mb"
-                }
-              ],
-              "serviceWorker": true
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "catalog:build"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "browserTarget": "catalog:build:production"
-            },
-            "staging": {
-              "browserTarget": "catalog:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "catalog:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/catalog/catalog/tsconfig.app.json",
-              "apps/catalog/catalog/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/catalog/catalog/jest.config.js",
-            "tsConfig": "apps/catalog/catalog/tsconfig.spec.json",
-            "setupFile": "apps/catalog/catalog/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "catalog-e2e": {
-      "root": "apps/catalog/catalog-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
-            "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "devServerTarget": "catalog:serve:production"
-            },
-            "ci": {
-              "devServerTarget": "catalog:serve"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
             "exclude": ["**/node_modules/**"]
           }
         }
@@ -1460,9 +1250,7 @@
             "outputPath": "dist/apps/backend-ops",
             "main": "apps/backend-ops/src/main.ts",
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
-            "assets": [
-              "apps/backend-ops/src/assets"
-            ]
+            "assets": ["apps/backend-ops/src/assets"]
           },
           "configurations": {
             "dev": {},
@@ -1508,9 +1296,7 @@
               "apps/backend-ops/tsconfig.app.json",
               "apps/backend-ops/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -1518,6 +1304,281 @@
           "options": {
             "jestConfig": "apps/backend-ops/jest.config.js",
             "tsConfig": "apps/backend-ops/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "catalog-dashboard": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:class": {
+          "skipTests": true
+        },
+        "@nrwl/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        },
+        "@nrwl/angular:directive": {
+          "skipTests": true
+        },
+        "@nrwl/angular:guard": {
+          "skipTests": true
+        },
+        "@nrwl/angular:module": {
+          "skipTests": true
+        },
+        "@nrwl/angular:pipe": {
+          "skipTests": true
+        },
+        "@nrwl/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "apps/catalog-dashboard/catalog-dashboard",
+      "sourceRoot": "apps/catalog-dashboard/catalog-dashboard/src",
+      "prefix": "blockframes",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/catalog-dashboard/catalog-dashboard",
+            "index": "apps/catalog-dashboard/catalog-dashboard/src/index.html",
+            "main": "apps/catalog-dashboard/catalog-dashboard/src/main.ts",
+            "polyfills": "apps/catalog-dashboard/catalog-dashboard/src/polyfills.ts",
+            "tsConfig": "apps/catalog-dashboard/catalog-dashboard/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/catalog-dashboard/catalog-dashboard/src/favicon.ico",
+              "apps/catalog-dashboard/catalog-dashboard/src/assets"
+            ],
+            "styles": ["apps/catalog-dashboard/catalog-dashboard/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.ts",
+                  "with": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "all",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "catalog-dashboard:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "catalog-dashboard:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "catalog-dashboard:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/catalog-dashboard/catalog-dashboard/tsconfig.app.json",
+              "apps/catalog-dashboard/catalog-dashboard/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/catalog-dashboard/catalog-dashboard/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/catalog-dashboard/catalog-dashboard/jest.config.js",
+            "tsConfig": "apps/catalog-dashboard/catalog-dashboard/tsconfig.spec.json",
+            "setupFile": "apps/catalog-dashboard/catalog-dashboard/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "catalog-dashboard-e2e": {
+      "root": "apps/catalog-dashboard/catalog-dashboard-e2e",
+      "sourceRoot": "apps/catalog-dashboard/catalog-dashboard-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/catalog-dashboard/catalog-dashboard-e2e/cypress.json",
+            "tsConfig": "apps/catalog-dashboard/catalog-dashboard-e2e/tsconfig.e2e.json",
+            "devServerTarget": "catalog-dashboard:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "catalog-dashboard:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "tslint",
+            "tsConfig": ["apps/catalog-dashboard/catalog-dashboard-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/catalog-dashboard/catalog-dashboard-e2e/**"]
+          }
+        }
+      }
+    },
+    "catalog-marketplace": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:class": {
+          "skipTests": true
+        },
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/catalog-marketplace/catalog-marketplace",
+      "sourceRoot": "apps/catalog-marketplace/catalog-marketplace/src",
+      "prefix": "catalog",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/catalog-marketplace/catalog-marketplace/",
+            "index": "apps/catalog-marketplace/catalog-marketplace/src/index.html",
+            "main": "apps/catalog-marketplace/catalog-marketplace/src/main.ts",
+            "polyfills": "apps/catalog-marketplace/catalog-marketplace/src/polyfills.ts",
+            "tsConfig": "apps/catalog-marketplace/catalog-marketplace/tsconfig.app.json",
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/catalog-marketplace/catalog-marketplace/src/favicon.ico",
+              "apps/catalog-marketplace/catalog-marketplace/src/assets"
+            ],
+            "styles": ["apps/catalog-marketplace/catalog-marketplace/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.ts",
+                  "with": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "serviceWorker": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "catalog-marketplace:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "catalog-marketplace:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "catalog-marketplace:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/catalog-marketplace/catalog-marketplace/tsconfig.app.json",
+              "apps/catalog-marketplace/catalog-marketplace/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/catalog-marketplace/catalog-marketplace/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/catalog-marketplace/catalog-marketplace/jest.config.js",
+            "tsConfig": "apps/catalog-marketplace/catalog-marketplace/tsconfig.spec.json",
+            "setupFile": "apps/catalog-marketplace/catalog-marketplace/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "catalog-marketplace-e2e": {
+      "root": "apps/catalog-marketplace/catalog-marketplace-e2e",
+      "sourceRoot": "apps/catalog-marketplace/catalog-marketplace-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/catalog-marketplace/catalog-marketplace-e2e/cypress.json",
+            "tsConfig": "apps/catalog-marketplace/catalog-marketplace-e2e/tsconfig.e2e.json",
+            "devServerTarget": "catalog-marketplace:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "catalog-marketplace:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "tslint",
+            "tsConfig": ["apps/catalog-marketplace/catalog-marketplace-e2e/tsconfig.e2e.json"],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/catalog-marketplace/catalog-marketplace-e2e/**"
+            ]
           }
         }
       }
