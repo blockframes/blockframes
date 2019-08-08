@@ -4,7 +4,8 @@
 import {
   createOrganizationDocPermissions,
   createUserDocPermissions,
-  getDocument, getSuperAdmins
+  getDocument,
+  getSuperAdmins
 } from './data/internals';
 import { db, functions, getUserMail } from './internals/firebase';
 import {
@@ -15,7 +16,8 @@ import {
   InvitationState,
   InvitationFromOrganizationToUser,
   InvitationType,
-  Organization, InvitationFromUserToOrganization
+  Organization,
+  InvitationFromUserToOrganization
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
@@ -31,19 +33,15 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
   return !before && !!after;
 }
 
-/** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept(invitation: InvitationFromOrganizationToUser) {
-  const { userId, organizationId } = invitation;
-
+async function addUserToOrg(userId: string, organizationId: string) {
   if (!organizationId) {
-    console.error('No orgId defined in the invitation', invitation);
+    throw new Error('no organization id provided!');
     return;
   }
 
   const userRef = db.collection('users').doc(userId);
   const organizationRef = db.collection('orgs').doc(organizationId);
   const permissionsRef = db.collection('permissions').doc(organizationId);
-  const invitationRef = db.collection('invitations').doc(invitation.id);
 
   return db.runTransaction(async tx => {
     const [user, organization, permission] = await Promise.all([
@@ -68,15 +66,27 @@ async function onInvitationToOrgAccept(invitation: InvitationFromOrganizationToU
 
     return Promise.all([
       // Update user's orgId
-      tx.set(userRef, { ...user, orgId: invitation.organizationId }),
+      tx.set(userRef, { ...user, orgId: organizationId }),
       // Update organization
-      tx.set(organizationRef, { ...organizationData, userIds: [...organizationData.userIds, userId] }),
+      tx.set(organizationRef, {
+        ...organizationData,
+        userIds: [...organizationData.userIds, userId]
+      }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, invitation.userId] }),
-      // Remove the invitation
-      tx.delete(invitationRef)
+      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, userId] })
     ]);
   });
+}
+
+/** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
+async function onInvitationToOrgAccept({
+  userId,
+  organizationId,
+  id
+}: InvitationFromOrganizationToUser) {
+  // TODO: When a user is added to an org, clear other invitations
+  await addUserToOrg(userId, organizationId);
+  await deleteInvitation(id);
 }
 
 /** Sends an email when an organization invites a user to join. */
@@ -187,9 +197,11 @@ async function onInvitationToOrgUpdate(
   return;
 }
 
-
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationFromUserToJoinOrgCreate({ organizationId, userId }: InvitationFromUserToOrganization) {
+async function onInvitationFromUserToJoinOrgCreate({
+  organizationId,
+  userId
+}: InvitationFromUserToOrganization) {
   const userEmail = await getUserMail(userId);
 
   if (!userEmail) {
@@ -201,19 +213,32 @@ async function onInvitationFromUserToJoinOrgCreate({ organizationId, userId }: I
   return Promise.all(
     superAdmins.map(async adminId => {
       const adminMail = await getUserMail(adminId);
-      if (!adminMail){
+      if (!adminMail) {
+        console.error('no mail for admin:', adminId);
+
         return;
       }
-      return sendMail(userRequestedToJoinYourOrg(adminMail, userEmail))
+      return sendMail(userRequestedToJoinYourOrg(adminMail, userEmail));
     })
   );
 }
 
-/** TODO */
-async function onInvitationFromUserToJoinOrgAccept({ organizationId, userId }: InvitationFromUserToOrganization) {
-  // TODO
+async function deleteInvitation(invitationId: string) {
+  // Delete the invitation
+  const invitationRef = db.collection('invitations').doc(invitationId);
+  await invitationRef.delete();
 }
 
+/** Send a mail and update the user, org and permission when the user was accepted. */
+async function onInvitationFromUserToJoinOrgAccept({
+  organizationId,
+  userId,
+  id
+}: InvitationFromUserToOrganization) {
+  // TODO: When a user is added to an org, clear other invitations
+  await addUserToOrg(userId, organizationId);
+  await deleteInvitation(id);
+}
 
 /**
  * Dispatch 'creation' and 'accepted' events when a request to
@@ -231,7 +256,6 @@ async function onInvitationFromUserToJoinOrgUpdate(
   }
   return;
 }
-
 
 /** Dispatch 'accepted' event when an invitation to join a document is accepted. */
 async function onStakeholderInvitationUpdate(
@@ -295,7 +319,11 @@ export async function onInvitationWrite(
       case InvitationType.fromOrganizationToUser:
         return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromUserToOrganization:
-        return await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+        return await onInvitationFromUserToJoinOrgUpdate(
+          invitationDocBefore,
+          invitationDoc,
+          invitation
+        );
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }
