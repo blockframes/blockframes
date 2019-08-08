@@ -21,9 +21,8 @@ import { CatalogMarketplaceHomeComponent } from './marketplace-home.component';
     FlexLayoutModule,
     MatCarouselModule,
     RouterModule.forChild([
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
-        path: 'home',
+        path: '',
         component: CatalogMarketplaceHomeComponent
       }
     ])

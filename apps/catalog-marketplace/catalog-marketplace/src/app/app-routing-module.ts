@@ -61,7 +61,19 @@ export const routes: Routes = [
           },
           {
             path: 'catalog',
-            loadChildren: () => import('./pages/marketplace-home/marketplace-home.module').then(m => m.MarketplaceHomeModule)
+            children: [
+              {
+                path: '', redirectTo: 'home', pathMatch: 'full'
+              },
+              {
+                path: 'home',
+                loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
+              },
+              {
+                path: 'search',
+                loadChildren: () => import('./pages/marketplace-search/marketplace-search.module').then(m => m.MarketplaceSearchModule)
+              },
+            ]
           },
           {
             path: 'templates',

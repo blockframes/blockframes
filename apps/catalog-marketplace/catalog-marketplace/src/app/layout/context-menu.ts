@@ -11,5 +11,11 @@ export const CONTEXT_MENU = [
       { name: 'home', path: '/layout/o/catalog/home' }, 
 
     ]
+  },
+  {
+    route: '/layout/o/catalog/search',
+    items: [
+      { name: 'search', path: '/layout/o/catalog/search'}
+    ]
   }
 ];
