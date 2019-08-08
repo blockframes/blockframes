@@ -33,7 +33,7 @@ import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
-import { TableExtractedAvailabilitiesComponent } from './table-extracted-availabilities/table-extracted-availabilities.component';
+import { TableExtractedSalesComponent } from './table-extracted-sales/table-extracted-sales.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,7 @@ import { TableExtractedAvailabilitiesComponent } from './table-extracted-availab
     ImportSpreadsheetComponent,
     ViewExtractedElementsComponent,
     TableExtractedMoviesComponent,
-    TableExtractedAvailabilitiesComponent,
+    TableExtractedSalesComponent,
     PreviewSheetComponent,
     PreviewMovieComponent,
     ViewImportErrorsComponent,

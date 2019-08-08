@@ -6,7 +6,7 @@
   <h3>Movies to Create</h3>
   <movie-table-extracted-movies [rows]="moviesToCreate" mode="create"></movie-table-extracted-movies>
 </ng-container>
-<ng-container *ngIf="availabilities.data.length">
-  <h3>Movies Availabilities</h3>
-  <movie-table-extracted-availabilities [rows]="availabilities"></movie-table-extracted-availabilities>
+<ng-container *ngIf="sales.data.length">
+  <h3>Movies Sales</h3>
+  <movie-table-extracted-sales [rows]="sales"></movie-table-extracted-sales>
 </ng-container>

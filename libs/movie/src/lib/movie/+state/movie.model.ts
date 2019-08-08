@@ -2,15 +2,17 @@ import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
 
-export interface MovieAvailability { //@todo #643 rename into movieSales
-  movieId? : string;
-  movie?: Partial<Movie>
+export interface MovieSale { 
+  operatorName: string;
+  showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
+  rightsStart: Date;
+  rightsEnd: Date;
   territories: string[];
-  rights: string[];
-  start: Date;
-  end: Date;
-  languages?: string[];
-  exclusivity: boolean;
+  medias: string[];
+  dubbings: string[];
+  subtitles: string[];
+  exclusive: boolean;
+  price: number;
 }
 
 export interface Title {
@@ -103,7 +105,7 @@ export interface Movie {
   organization?: Organization,
   materials?: Material[];
   stakeholders?: Stakeholder[];
-  availabilities: MovieAvailability[],
+  sales: MovieSale[], //@todo 581 => move to subcollection
 
   // @todo #643 not main movie attributes WIP
   
@@ -148,6 +150,7 @@ export function createMovie(params: Partial<Movie> = {}) : Movie {
     versionInfo: {},
     festivalPrizes: {},
     salesAgentDeal: {},
+    sales: [],
     ... params
   } as Movie;
 }
@@ -230,4 +233,14 @@ export function createMovieSalesAgentDeal(params : Partial<MovieSalesAgentDeal> 
     medias: [],
     ... params
   } as MovieSalesAgentDeal;
+}
+
+export function createMovieSale(params : Partial<MovieSale> = {}) : MovieSale{
+  return {
+    territories: [],
+    medias: [],
+    dubbings: [],
+    subtitles: [],
+    ... params
+  } as MovieSale;
 }
