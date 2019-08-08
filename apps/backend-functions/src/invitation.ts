@@ -78,6 +78,29 @@ async function addUserToOrg(userId: string, organizationId: string) {
   });
 }
 
+async function mailOnInvitationAccept(userId: string, organizationId: string) {
+  const userEmail = await getUserMail(userId);
+  const adminIds = await getSuperAdmins(organizationId);
+  const adminEmails = await Promise.all(adminIds.map(getUserMail));
+
+  return Promise.all([
+    sendMail({
+      to: userEmail!,
+      subject: 'You join a new organization',
+      text: 'TODO'
+    }),
+    ...adminEmails
+      .filter(mail => !!mail)
+      .map(adminEmail =>
+        sendMail({
+          to: adminEmail!,
+          subject: 'A user joined the organization',
+          text: `user: ${userEmail}`
+        })
+      )
+  ]);
+}
+
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept({
   userId,
@@ -87,6 +110,7 @@ async function onInvitationToOrgAccept({
   // TODO: When a user is added to an org, clear other invitations
   await addUserToOrg(userId, organizationId);
   await deleteInvitation(id);
+  return mailOnInvitationAccept(userId, organizationId);
 }
 
 /** Sends an email when an organization invites a user to join. */
@@ -238,6 +262,7 @@ async function onInvitationFromUserToJoinOrgAccept({
   // TODO: When a user is added to an org, clear other invitations
   await addUserToOrg(userId, organizationId);
   await deleteInvitation(id);
+  return mailOnInvitationAccept(userId, organizationId);
 }
 
 /**
