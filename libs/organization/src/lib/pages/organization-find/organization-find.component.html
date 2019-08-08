@@ -1,4 +1,4 @@
-<section fxLayout="row" fxLayoutAlign="center">
+<section fxLayout="row" fxLayoutAlign="center" test-id="content" page-id="organization-find">
   <article fxLayout="column" fxLayoutAlign="center center">
     <h2>Find your organization</h2>
     <p>
@@ -7,6 +7,7 @@
     </p>
     <mat-form-field appearance="outline">
       <input
+        aria-label="search"
         type="text"
         placeholder="Organization name"
         matInput
@@ -20,7 +21,7 @@
       </mat-autocomplete>
     </mat-form-field>
     <div class="image"></div>
-    <button class="add-org" (click)="addOrganization()" mat-raised-button color="accent" [disabled]="!selected">Let's go !</button>
+    <button test-id="join-org" class="add-org" (click)="addOrganization()" mat-raised-button color="accent" [disabled]="!selected">Let's go !</button>
     <a routerLink="../home"><button mat-button color="primary">Back</button></a>
   </article>
 </section>
