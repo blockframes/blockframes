@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Invitation, InvitationService, InvitationType } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'invitation-item',
