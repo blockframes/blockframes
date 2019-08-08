@@ -36,7 +36,6 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
 async function addUserToOrg(userId: string, organizationId: string) {
   if (!organizationId) {
     throw new Error('no organization id provided!');
-    return;
   }
 
   const userRef = db.collection('users').doc(userId);
@@ -56,7 +55,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
     if (!userData || !organizationData || !permissionData) {
       console.error(
-        'Something went wrong with the invitation, a required document is not set\n',
+        'Something went wrong with the invitation, a required document is not set',
         userData,
         organizationData,
         permissionData
@@ -66,7 +65,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
     return Promise.all([
       // Update user's orgId
-      tx.set(userRef, { ...user, orgId: organizationId }),
+      tx.set(userRef, { ...userData, orgId: organizationId }),
       // Update organization
       tx.set(organizationRef, {
         ...organizationData,
