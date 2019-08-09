@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
-import { InvitationService } from '@blockframes/notification';
+import { InvitationService, InvitationType } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -35,13 +35,24 @@ export class OrganizationHomeComponent implements OnInit {
     this.items$ = this.invitationService.userInvitations$.pipe(
       map(invitations => {
         const actions = invitations.map(invitation => {
-          return {
-            matIcon: 'alternate_email',
-            title: `Join ${invitation.organization.name}`,
-            action: () => this.acceptInvitation(invitation),
-            description:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
-          };
+          switch (invitation.type) {
+            case InvitationType.fromUserToOrganization:
+              return {
+                matIcon: 'alternate_email',
+                title: `Pending request to ${invitation.organization.name}`,
+                routerLink: '#',
+                description:
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+              };
+            case InvitationType.fromOrganizationToUser:
+              return {
+                matIcon: 'alternate_email',
+                title: `Join ${invitation.organization.name}`,
+                action: () => this.acceptInvitation(invitation),
+                description:
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+              };
+          }
         });
 
         return [...actions, ...this.defaultItems];
