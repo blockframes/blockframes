@@ -11,13 +11,13 @@ import { db, functions, getUserMail } from './internals/firebase';
 import {
   Delivery,
   Invitation,
+  InvitationFromOrganizationToUser,
+  InvitationFromUserToOrganization,
   InvitationOrUndefined,
   InvitationStakeholder,
   InvitationState,
-  InvitationFromOrganizationToUser,
   InvitationType,
-  Organization,
-  InvitationFromUserToOrganization
+  Organization
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
@@ -229,16 +229,13 @@ async function onInvitationFromUserToJoinOrgCreate({
 
   const superAdmins = await getSuperAdmins(organizationId);
 
-  return Promise.all(
-    superAdmins.map(async adminId => {
-      const adminMail = await getUserMail(adminId);
-      if (!adminMail) {
-        console.error('no mail for admin:', adminId);
+  const superAdminsMails = await Promise.all(superAdmins.map(getUserMail));
+  const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
-        return;
-      }
-      return sendMail(userRequestedToJoinYourOrg(adminMail, userEmail));
-    })
+  return Promise.all(
+    validSuperAdminMails.map(adminEmail =>
+      sendMail(userRequestedToJoinYourOrg(adminEmail!, userEmail))
+    )
   );
 }
 
