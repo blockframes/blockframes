@@ -21,7 +21,12 @@ import {
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
-import { userInviteToOrg, userRequestedToJoinYourOrg } from './assets/mail-templates';
+import {
+  userInviteToOrg,
+  userJoinedAnOrganization,
+  userJoinedYourOrganization,
+  userRequestedToJoinYourOrg
+} from './assets/mail-templates';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: Invitation, after: Invitation) {
@@ -38,7 +43,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }
 
-  console.debug("add user:", userId, "to org:", organizationId);
+  console.debug('add user:', userId, 'to org:', organizationId);
 
   const userRef = db.collection('users').doc(userId);
   const organizationRef = db.collection('orgs').doc(organizationId);
@@ -84,22 +89,11 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const adminIds = await getSuperAdmins(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
 
-  return Promise.all([
-    sendMail({
-      to: userEmail!,
-      subject: 'You join a new organization',
-      text: 'TODO'
-    }),
-    ...adminEmails
-      .filter(mail => !!mail)
-      .map(adminEmail =>
-        sendMail({
-          to: adminEmail!,
-          subject: 'A user joined the organization',
-          text: `user: ${userEmail}`
-        })
-      )
-  ]);
+  const adminEmailPromises = adminEmails
+    .filter(mail => !!mail)
+    .map(adminEmail => sendMail(userJoinedYourOrganization(adminEmail!, userEmail!)));
+
+  return Promise.all([sendMail(userJoinedAnOrganization(userEmail!)), ...adminEmailPromises]);
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */

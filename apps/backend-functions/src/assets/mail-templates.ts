@@ -99,5 +99,21 @@ export function userRequestedToJoinYourOrg(adminMail: string, userMail: string):
     to: adminMail,
     subject: 'A user requested to join your organization',
     text: userRequestedToJoinYourOrgTemplate(userMail)
+  };
+}
+
+export function userJoinedAnOrganization(userEmail: string): EmailRequest {
+  return {
+    to: userEmail,
+    subject: 'You joined a new organization',
+    text: 'TODO'
+  };
+}
+
+export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailRequest {
+  return {
+    to: orgAdminEmail,
+    subject: 'A user joined the organization',
+    text: `user: ${userEmail}`
   }
 }
