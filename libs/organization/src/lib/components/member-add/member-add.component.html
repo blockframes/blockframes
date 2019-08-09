@@ -1,11 +1,19 @@
-<h4>Send invitation</h4>
-<mat-form-field appearance="outline">
-  <mat-label>Add new member</mat-label>
-  <input matInput type="email" placeholder="Email" aria-label="Email" [formControl]="emailControl" />
-  <mat-error *ngIf="emailControl.hasError('email')">
-    Please enter a <strong>valid</strong> email address.
-  </mat-error>
-</mat-form-field>
-<button mat-button testId="addMember" (click)="sendInvitation()" color="primary">
-  Send invitation
-</button>
+<section test-id="member-add">
+  <h4>Send invitation</h4>
+  <mat-form-field appearance="outline">
+    <mat-label>Add new member</mat-label>
+    <input
+      matInput
+      type="email"
+      placeholder="Email"
+      aria-label="Email"
+      [formControl]="emailControl"
+    />
+    <mat-error *ngIf="emailControl.hasError('email')">
+      Please enter a <strong>valid</strong> email address.
+    </mat-error>
+  </mat-form-field>
+  <button mat-button test-id="add" (click)="sendInvitation()" color="primary">
+    Send invitation
+  </button>
+</section>
