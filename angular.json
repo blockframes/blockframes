@@ -1478,8 +1478,7 @@
               "includePaths": ["styles"]
             },
             "assets": [
-              "apps/catalog-marketplace/catalog-marketplace/src/favicon.ico",
-              "apps/catalog-marketplace/catalog-marketplace/src/assets"
+              "apps/catalog-marketplace/catalog-marketplace/src/favicon.ico"
             ],
             "styles": ["apps/catalog-marketplace/catalog-marketplace/src/styles.scss"],
             "scripts": []
@@ -1489,8 +1488,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.ts",
-                  "with": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.prod.ts"
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
                 },
                 {
                   "replace": "env/env.ts",
@@ -1543,37 +1542,37 @@
                 }
               ],
               "serviceWorker": true
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.ts",
+                  "with": "app/catalog-marketplace/catalog-marketplace/src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "10mb"
+                }
+              ],
+              "serviceWorker": true
             }
           }
-        },
-        "staging": {
-          "fileReplacements": [
-            {
-              "replace": "env/env.ts",
-              "with": "env/env.staging.ts"
-            },
-            {
-              "replace": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.ts",
-              "with": "app/catalog-marketplace/catalog-marketplace/src/environments/environment.staging.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": true,
-          "extractCss": true,
-          "namedChunks": false,
-          "aot": true,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "2mb",
-              "maximumError": "10mb"
-            }
-          ],
-          "serviceWorker": true
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
