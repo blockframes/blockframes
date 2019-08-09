@@ -200,8 +200,8 @@ async function onStakeholderInvitationAccept({
 }
 
 /**
- * Dispatch 'creation' and 'accepted' events when an invitation to
- * join an organization is updated.
+ * Dispatch the invitation update call depending on whether the invitation
+ * was 'created' or 'accepted'.
  */
 async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
@@ -258,8 +258,8 @@ async function onInvitationFromUserToJoinOrgAccept({
 }
 
 /**
- * Dispatch 'creation' and 'accepted' events when a request to
- * join an organization is updated.
+ * Dispatch the invitation update call depending on whether the invitation
+ * was 'created' or 'accepted'.
  */
 async function onInvitationFromUserToJoinOrgUpdate(
   before: InvitationOrUndefined,
@@ -274,7 +274,9 @@ async function onInvitationFromUserToJoinOrgUpdate(
   return;
 }
 
-/** Dispatch 'accepted' event when an invitation to join a document is accepted. */
+/**
+ * Dispatch the invitation update call when the invitation was 'accepted'.
+ */
 async function onStakeholderInvitationUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
