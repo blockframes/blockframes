@@ -1541,7 +1541,7 @@
                   "maximumError": "10mb"
                 }
               ],
-              "serviceWorker": true
+              "serviceWorker": false
             },
             "staging": {
               "fileReplacements": [
