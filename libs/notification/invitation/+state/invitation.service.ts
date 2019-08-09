@@ -17,7 +17,7 @@ export function getInvitationsByOrgId(organizationId: string): Query<Invitation[
       ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
     user: (invitation: Invitation) => ({
       // TODO: use profiles collections instead of users, issue#693
-      // TODO: when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
+      // TODO(issue#740): when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
       path: `users/${invitation.userId}`
     })
   };
