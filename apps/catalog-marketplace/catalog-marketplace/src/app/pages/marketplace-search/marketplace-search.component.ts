@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'catalog-marketplace-search',
@@ -6,4 +6,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./marketplace-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent {}
+export class MarketplaceSearchComponent implements OnInit{
+  constructor() {}
+  ngOnInit() {
+    
+  }
+}

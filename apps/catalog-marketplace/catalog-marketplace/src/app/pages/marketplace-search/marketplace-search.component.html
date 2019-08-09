@@ -1,3 +1,22 @@
 <section>
-    <h1>hello world</h1>
+    <article fxLayout="row" fxLayoutAlign="center center" class="header-img">
+        <h1>Search what you want</h1>
+    </article>
+    <article>
+        <div></div>
+        <span fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+            <h3>Search</h3>
+            <mat-divider></mat-divider>
+            <mat-icon>format_list_bulleted</mat-icon>
+            <button mat-button [matMenuTriggerFor]="menu">Sort by <mat-icon>
+                    arrow_drop_down</mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>All films</button>
+                <button mat-menu-item>Title</button>
+                <button mat-menu-item>Director</button>
+                <button mat-menu-item>Product date</button>
+                <button mat-menu-item>Notation</button>
+            </mat-menu>
+        </span>
+    </article>
 </section>
