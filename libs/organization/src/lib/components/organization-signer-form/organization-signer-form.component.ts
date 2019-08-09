@@ -1,17 +1,35 @@
 import { ControlContainer } from '@angular/forms';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { OrganizationOperation } from '../../+state';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'organization-signer-form',
   templateUrl: './organization-signer-form.component.html',
   styleUrls: ['./organization-signer-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class OrganizationSignerFormComponent {
 
+  @Input() operations: OrganizationOperation[];
+
   constructor(public controlContainer: ControlContainer) { }
 
-  /** TODO(PL): This component should take in a form that
-   *  that listen on the save icon button click event from the sidenav. 
-   */
+  public get control() {
+    return this.controlContainer.control;
+  }
+  
+  isSelected(id: string) {
+    return this.control.get('operationsId').value.includes(id);
+  }
+
+  public handleToggle(toggle: MatSlideToggleChange, id: string) {
+    const operationsId = this.control.get('operationsId').value.filter(operationId => operationId !== id);
+
+    if (toggle.checked) {
+      operationsId.push(id);
+    }
+    
+    this.control.get('operationsId').patchValue(operationsId);
+  }
 }

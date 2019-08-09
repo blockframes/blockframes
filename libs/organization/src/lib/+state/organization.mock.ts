@@ -6,28 +6,32 @@ const Alice: OrganizationMember = {
   name: 'Alice',
   uid: '0',
   email: 'alice@test.com',
-  roles: []
+  roles: [],
+  operationsId: ['0', '1'],
 };
 const Bob: OrganizationMember = {
   avatar: 'https://fakeimg.pl/300/',
   name: 'Bob',
   uid: '1',
   email: 'bob@test.com',
-  roles: []
+  roles: [],
+  operationsId: ['1'],
 };
 const Charlie: OrganizationMember = {
   avatar: 'https://fakeimg.pl/300/',
   name: 'Charlie',
   uid: '2',
   email: 'charlie@test.com',
-  roles: []
+  roles: [],
+  operationsId: ['1'],
 };
 const David: OrganizationMember = {
   avatar: 'https://fakeimg.pl/300/',
   name: 'David',
   uid: '3',
   email: 'david@test.com',
-  roles: []
+  roles: [],
+  operationsId: ['0'],
 };
 export const mockOperations: OrganizationOperation[] = [
   { id: '0', name: 'Signing Delivery',  quorum: 2, members: [Alice, David] },

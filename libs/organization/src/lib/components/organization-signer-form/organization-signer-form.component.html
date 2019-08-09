@@ -1,42 +1,11 @@
-<section fxLayout="column" fxLayoutAlign="center start">
-  <h3>Organization actions</h3>
+<form [formGroup]="control">
   <article>
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <span> Lorem Ipsum</span>
-      <mat-slide-toggle></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <span> Lorem Ipsum</span>
-      <mat-slide-toggle></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <span> Lorem Ipsum</span>
-      <mat-slide-toggle></mat-slide-toggle>
-    </div>
+    <h2>{{control.value.name}}</h2>
+    <ng-container *ngFor="let operation of operations">
+      <div fxLayout="row">
+        <span fxFlex>{{operation.name}}</span>
+        <mat-slide-toggle fxFlex [checked]="isSelected(operation.id)" (change)="handleToggle($event, operation.id)"></mat-slide-toggle>
+      </div>
+    </ng-container>
   </article>
-  <mat-divider></mat-divider>
-  <h3>DApps signer</h3>
-  <article>
-    <p fxLayout="row" fxLayoutAlign="space-between center">
-      <span fxLayoutAlign="start center">
-        <mat-icon>reorder</mat-icon>
-        Lorem Ipsum
-        <mat-slide-toggle></mat-slide-toggle>
-      </span>
-    </p>
-    <p fxLayout="row" fxLayoutAlign="space-between center">
-      <span fxLayoutAlign="start center">
-        <mat-icon>reorder</mat-icon>
-        Lorem Ipsum
-        <mat-slide-toggle></mat-slide-toggle>
-      </span>
-    </p>
-    <p fxLayout="row" fxLayoutAlign="space-between center">
-      <span fxLayoutAlign="start center">
-        <mat-icon>reorder</mat-icon>
-        Lorem Ipsum
-        <mat-slide-toggle></mat-slide-toggle>
-      </span>
-    </p>
-  </article>
-</section>
+</form>

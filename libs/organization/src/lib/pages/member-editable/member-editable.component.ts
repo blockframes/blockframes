@@ -57,7 +57,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     /** Return the memberFormGroup linked to the selected memberId */
     this.memberFormGroup$ = this.selectedMemberId$.pipe(
       filter(memberId => !!memberId),
-      tap(memberId => console.log(memberId, this.membersFormList.value)), // TODO NO_RELEASE
       map(memberId => this.membersFormList.value.findIndex(member => member.uid === memberId)),
       map(index => this.membersFormList.controls[index])
     );

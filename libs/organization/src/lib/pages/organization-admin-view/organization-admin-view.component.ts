@@ -1,10 +1,11 @@
-import { OrganizationOperation } from './../../+state/organization.model';
+import { OrganizationOperation, OrganizationMember } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery, OrganizationService } from '../../+state';
+import { OrganizationQuery } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { createOperationFormList } from '../../forms/operations.form';
+import { createMemberFormList } from '../../forms/member.form';
 
 @Component({
   selector: 'org-admin-view',
@@ -13,14 +14,18 @@ import { createOperationFormList } from '../../forms/operations.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationAdminViewComponent implements OnInit {
-  /** Observable that contains all the signers in an organization */
-  // public organization$ = new Observable<Organization>();
+  
   public operations$: Observable<OrganizationOperation[]>;
   private selectedOperationId$ = new BehaviorSubject<string>(null);
   public operationFormList = createOperationFormList();
   public operationFormGroup$: Observable<FormGroup>;
 
+  public members$: Observable<OrganizationMember[]>;
+  private selectedMemberId$ = new BehaviorSubject<string>(null);
+  public memberFormList = createMemberFormList();
+  public memberFormGroup$: Observable<FormGroup>;
 
+  public organizationName: string;
 
   /** Flag to indicate if sidenav is open */
   public opened = false;
@@ -30,26 +35,34 @@ export class OrganizationAdminViewComponent implements OnInit {
 
   constructor(
     private query: OrganizationQuery,
-    private service: OrganizationService
   ) {}
 
   ngOnInit() {
 
     /** Return the operationFormGroup linked to the selected operation.id */
     this.operations$ = this.query.select('org').pipe(
-      tap(organisation => console.log('query select', organisation)),
+      tap(organization => this.organizationName = organization.name),
       map(organization => organization.operations),
       tap(operations => this.operationFormList.patchValue(operations)),
       switchMap(operations => this.operationFormList.valueChanges.pipe(startWith(operations)))
     );
-
     this.operationFormGroup$ = this.selectedOperationId$.pipe(
       filter(operationId => !!operationId),
-      tap(memberId => console.log(memberId, this.operationFormList.value)),
       map(operationId => this.operationFormList.value.findIndex(operation => operation.id === operationId)),
-      tap(index => console.log('selectOp at', index)),
       map(index => this.operationFormList.controls[index]),
     );
+
+
+    this.members$ = this.query.select('org').pipe(
+      map(organization => organization.members),
+      tap(members => this.memberFormList.patchValue(members)),
+      switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
+    );
+    this.memberFormGroup$ = this.selectedMemberId$.pipe(
+      filter(memberId => !!memberId),
+      map(memberId => this.memberFormList.value.findIndex(member => member.uid === memberId)),
+      map(index => this.memberFormList.controls[index])
+    )
   }
 
   public openSidenavOperation(operationId: string) {
@@ -58,20 +71,9 @@ export class OrganizationAdminViewComponent implements OnInit {
     this.opened = true;
   }
 
-  // public deleteActiveSigner({member, operation}: {member: OrganizationMember, operation: OrganizationOperation}) {
-  //   this.service.removeOperationMember(operation.id, member);
-  // }
-
-  // /** This function should get triggered by the input field */
-  // public addSigner(name: string) {
-  //   // TODO(#682): Add a signer to the organization. Also the input field should
-  //   // have some autocompletion, where to look for the correct member?
-  //   console.log('implement me in the service ' + name);
-  // }
-
-  // // TODO(#682)
-  // public openOptions(editContent: 'action' | 'member', member: OrganizationMember) {
-  //   this.opened = true;
-  //   this.editContent = this.editContent;
-  // }
+  public openSidenavMember(memberId: string) {
+    this.selectedMemberId$.next(memberId);
+    this.editContent = 'member';
+    this.opened = true;
+  }
 }

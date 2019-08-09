@@ -27,8 +27,6 @@ export const enum OrganizationStatus {
 export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
-  /** Array of ids from OrganizationAction */
-  activeOnActions?: string[];
 }
 
 export interface OrganizationMember extends OrganizationMemberRequest {
@@ -37,6 +35,7 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   surname?: string;
   avatar?: string;
   role?: UserRole;
+  operationsId?: string[];
 }
 
 export const enum UserRole {

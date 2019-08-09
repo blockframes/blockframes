@@ -1,44 +1,44 @@
 <!-- Main content -->
-<editable-sidenav (closed)="opened = false" [opened]="opened"><!--TODO *ngIf="organization$ | async as organization">-->
+<editable-sidenav *ngIf="operations$ | async as operations" (closed)="opened = false" [opened]="opened">
   <ng-container content>
 
     <!-- Admin Tab -->
     <h1 fxLayout="row" fxLayoutAlign="start center">
-      <span fxFlex="noshrink">TODO</span><!-- TODO {{ organization.name }}</span>-->
+      <span fxFlex="noshrink">{{organizationName}}</span>
       <mat-divider></mat-divider>
     </h1>
     <!-- Operations -->
-    <section *ngIf="operations$ | async as operations">
+    <section>
       <h2>Operations</h2>
-      <org-operations-repertory [operations]="operations" (editing)="openSidenavOperation($event)">
+      <org-operations-repertory [operations]="operations" (editing)="openSidenavOperation($event)" >
       </org-operations-repertory>
     </section>
+
     <!--Operation Perissions-->
-    <!-- <section>
+    <section *ngIf="members$ | async as members">
       <h2>Users Operations Permissions</h2>
-      <org-signer-repertory [signerList]="organization.members"> <!--(selected)="openOptions('member', $event)">->
+      <org-signer-repertory [members]="members" (selected)="openSidenavMember($event)" >
       </org-signer-repertory>
-    </section> -->
+    </section>
 
   </ng-container>
   <ng-container sidenav>
     <ng-container [ngSwitch]="editContent">
       <ng-container *ngSwitchCase="'operation'">
-        <p>Ok 2</p>
-        <!-- <ng-container *ngIf="(operationFormGroup$ | async) as operationFormGroup" > -->
+        <ng-container *ngIf="(operationFormGroup$ | async) as operationFormGroup" >
 
-          <!-- Quorum -->
-          <p>hello</p>
-          <organization-quorum-form [formGroup]="operationFormGroup$ | async">
-          </organization-quorum-form>
-        <!-- </ng-container> -->
+          <!-- Operation -->
+          <organization-operation-form [formGroup]="operationFormGroup"></organization-operation-form>
+
+        </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'member'">
+        <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" >
 
-        <!-- Members operation permission -->
-        <p>WIP not ready yet</p>
-        <!-- <organization-signer-form ></organization-signer-form> -->
+          <!-- Members operation permission -->
+          <organization-signer-form [formGroup]="memberFormGroup" [operations]="operations"></organization-signer-form>
 
+        </ng-container>
       </ng-container>
     </ng-container>
   </ng-container>

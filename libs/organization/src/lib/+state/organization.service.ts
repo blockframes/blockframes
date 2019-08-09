@@ -236,11 +236,20 @@ export class OrganizationService {
   }
 
   // TODO REMOVE THIS ASAP : issue 676
-  public instantiateMockData() {
+  public async instantiateMockData() {
 
-    const oldOrgMembers = this.query.getValue().org.members;
-    const newOrgMembers = mockOrgMembers.concat(oldOrgMembers);
-
-    return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
+    const { org } = this.query.getValue();
+    const mockUser = await this.db.snapshot<OrganizationMember>('users/0');
+    if (!mockUser) {
+      console.log('mock data doesn\'t exists, creating ...');
+      mockOrgMembers.forEach(async member => {
+        await this.db.collection('users').doc(member.uid).set({...member, orgId: org.id});
+      });
+      const userIds = org.userIds.concat(mockOrgMembers.map(member => member.uid));
+      await this.db.collection('orgs').doc(org.id).set({...org, userIds});
+      const newOrgMembers = mockOrgMembers.concat(org.members);
+      return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
+    }
+    return;
   }
 }
