@@ -98,3 +98,11 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     ...params
   } as Organization;
 }
+
+export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
+  return {
+    quorum: 0,
+    members: [],
+    ...operation,
+  } as OrganizationOperation
+}

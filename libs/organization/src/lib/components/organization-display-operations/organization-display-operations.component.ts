@@ -10,12 +10,12 @@ import {
 import { MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
-  selector: 'org-operations-repertory',
-  templateUrl: './organization-operations-repertory.component.html',
-  styleUrls: ['./organization-operations-repertory.component.scss'],
+  selector: 'org-display-operations',
+  templateUrl: './organization-display-operations.component.html',
+  styleUrls: ['./organization-display-operations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationOperationsRepertoryComponent {
+export class OrganizationDisplayOperationsComponent {
 
   @Input() set operations(operations: OrganizationOperation[]) {
     this.dataSource = new MatTableDataSource(operations);

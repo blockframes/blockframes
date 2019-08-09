@@ -10,14 +10,14 @@
     <!-- Operations -->
     <section>
       <h2>Operations</h2>
-      <org-operations-repertory [operations]="operations" (editing)="openSidenavOperation($event)" >
-      </org-operations-repertory>
+      <org-display-operations [operations]="operations" (editing)="openSidenav('operation', $event)" >
+      </org-display-operations>
     </section>
 
     <!--Operation Perissions-->
     <section *ngIf="members$ | async as members">
       <h2>Users Operations Permissions</h2>
-      <org-signer-repertory [members]="members" (selected)="openSidenavMember($event)" >
+      <org-signer-repertory [members]="members" (selected)="openSidenav('member', $event)" >
       </org-signer-repertory>
     </section>
 

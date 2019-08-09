@@ -1,27 +1,21 @@
-import { FormList } from "@blockframes/utils";
-import { OrganizationOperation } from "../+state";
-import { FormGroup, FormControl, AbstractControl } from "@angular/forms";
+import { FormList, FormEntity } from "@blockframes/utils";
+import { OrganizationOperation, createOperation } from "../+state";
+import { FormControl } from "@angular/forms";
 
-// // To add in model
-// function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
-//   return {
-//     quorum: 0,
-//     members: [],
-//     ...operation,
-//   } as OrganizationOperation
-// }
-
-function createOperationFormGroup(operation: OrganizationOperation) {
-// function createOperationFormGroup(operation: Partial<OrganizationOperation> = {}) {
-  // const { id, quorum, members } = createOperation(operation);
-  return new FormGroup({
-    id: new FormControl(operation.id),
-    name: new FormControl(operation.name),
-    quorum: new FormControl(operation.quorum),
-    members: new FormControl(operation.members),
-  });
+function createOperationControl(operation: Partial<OrganizationOperation> = {}) {
+   const op = createOperation(operation);
+   return {
+    id: new FormControl(op.id),
+    name: new FormControl(op.name),
+    quorum: new FormControl(op.quorum),
+    members: new FormControl(op.members),
+  };
 }
+export type OperationControl = ReturnType<typeof createOperationControl>;
 
 export function createOperationFormList() {
-  return FormList.factory([], createOperationFormGroup);
+  return FormList.factory([], (operation: OrganizationOperation) => {
+    const control = createOperationControl(operation);
+    return new FormEntity(control);
+  });
 }

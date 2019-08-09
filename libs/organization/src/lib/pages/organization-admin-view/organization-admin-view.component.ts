@@ -14,7 +14,7 @@ import { createMemberFormList } from '../../forms/member.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationAdminViewComponent implements OnInit {
-  
+
   public operations$: Observable<OrganizationOperation[]>;
   private selectedOperationId$ = new BehaviorSubject<string>(null);
   public operationFormList = createOperationFormList();
@@ -65,15 +65,11 @@ export class OrganizationAdminViewComponent implements OnInit {
     )
   }
 
-  public openSidenavOperation(operationId: string) {
-    this.selectedOperationId$.next(operationId);
-    this.editContent = 'operation';
-    this.opened = true;
-  }
-
-  public openSidenavMember(memberId: string) {
-    this.selectedMemberId$.next(memberId);
-    this.editContent = 'member';
+  public openSidenav(context: 'member' | 'operation', id: string) {
+    context === 'member'
+      ? this.selectedMemberId$.next(id)
+      : this.selectedOperationId$.next(id)
+    this.editContent = context;
     this.opened = true;
   }
 }
