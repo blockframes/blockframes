@@ -40,8 +40,8 @@ import { MemberPendingComponent } from './components/member-pending/member-pendi
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
 import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
-import { OrganizationOperationFormComponent } from './components/organization-operation-form/organization-operation-form.component';
-import { OrganizationActionsRepertoryComponent } from './components/organization-actions-repertory/organization-actions-repertory.component';
+import { OrganizationFormOperationComponent } from './components/organization-form-operation/organization-form-operation.component';
+import { OrganizationDisplayActionsComponent } from './components/organization-display-actions/organization-display-actions.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
@@ -114,8 +114,8 @@ export const organizationRoutes: Routes = [
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationActivityViewComponent,
-    OrganizationOperationFormComponent,
-    OrganizationActionsRepertoryComponent,
+    OrganizationFormOperationComponent,
+    OrganizationDisplayActionsComponent,
     OrganizationAdminViewComponent,
     OrganizationOperationsRepertoryComponent,
     OrganizationSignerRepertoryComponent,

@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="Document name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Action name </th>
-    <td matRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)" fXLayout="row" fxLayoutAlign="start center">
+    <td matRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)">
       <mat-icon>list</mat-icon>
       {{action.name}}
     </td>

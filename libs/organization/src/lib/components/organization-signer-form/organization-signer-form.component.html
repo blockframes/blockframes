@@ -4,7 +4,7 @@
     <ng-container *ngFor="let operation of operations">
       <div fxLayout="row">
         <span fxFlex>{{operation.name}}</span>
-        <mat-slide-toggle fxFlex [checked]="isSelected(operation.id)" (change)="handleToggle($event, operation.id)"></mat-slide-toggle>
+        <mat-slide-toggle fxFlex [checked]="isSelected(operation.id)" (change)="toggleSelection($event, operation.id)"></mat-slide-toggle>
       </div>
     </ng-container>
   </article>

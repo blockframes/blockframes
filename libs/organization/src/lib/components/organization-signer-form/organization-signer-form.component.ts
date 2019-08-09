@@ -20,16 +20,16 @@ export class OrganizationSignerFormComponent {
   }
   
   isSelected(id: string) {
-    return this.control.get('operationsId').value.includes(id);
+    return this.control.get('operationIds').value.includes(id);
   }
 
-  public handleToggle(toggle: MatSlideToggleChange, id: string) {
-    const operationsId = this.control.get('operationsId').value.filter(operationId => operationId !== id);
+  public toggleSelection(toggle: MatSlideToggleChange, id: string) {
+    const operationIds = this.control.get('operationsId').value.filter(operationId => operationId !== id);
 
     if (toggle.checked) {
-      operationsId.push(id);
+      operationIds.push(id);
     }
     
-    this.control.get('operationsId').patchValue(operationsId);
+    this.control.get('operationIds').patchValue(operationIds);
   }
 }

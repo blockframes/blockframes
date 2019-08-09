@@ -241,12 +241,22 @@ export class OrganizationService {
     const { org } = this.query.getValue();
     const mockUser = await this.db.snapshot<OrganizationMember>('users/0');
     if (!mockUser) {
-      console.log('mock data doesn\'t exists, creating ...');
-      mockOrgMembers.forEach(async member => {
-        await this.db.collection('users').doc(member.uid).set({...member, orgId: org.id});
-      });
-      const userIds = org.userIds.concat(mockOrgMembers.map(member => member.uid));
-      await this.db.collection('orgs').doc(org.id).set({...org, userIds});
+      const batch = this.db.firestore.batch();
+
+      await Promise.all(
+        mockOrgMembers.map(async member => {
+          const memeberRef = await this.db.firestore.collection('users').doc(member.uid);
+          batch.set(memeberRef, {...member, orgId: org.id});
+        })
+      );
+      
+      const orgRef = await this.db.firestore.collection('orgs').doc(org.id);
+      const memberIds = mockOrgMembers.map(member => member.uid);
+      const userIds = [...org.userIds, ...memberIds];
+      batch.set(orgRef, {...org, userIds});
+
+      await batch.commit();
+
       const newOrgMembers = mockOrgMembers.concat(org.members);
       return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
     }

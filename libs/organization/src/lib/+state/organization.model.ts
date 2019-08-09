@@ -35,7 +35,7 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   surname?: string;
   avatar?: string;
   role?: UserRole;
-  operationsId?: string[];
+  operationIds?: string[];
 }
 
 export const enum UserRole {

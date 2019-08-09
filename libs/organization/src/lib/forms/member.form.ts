@@ -9,7 +9,7 @@ function createMemberFormGroup(member: OrganizationMember) {
     surname: new FormControl(member.surname),
     email: new FormControl(member.email),
     role: new FormControl(member.role),
-    operationsId: new FormControl(!!member.operationsId ? member.operationsId : [])
+    operationIds: new FormControl(!!member.operationIds ? member.operationIds : [])
   });
 }
 
