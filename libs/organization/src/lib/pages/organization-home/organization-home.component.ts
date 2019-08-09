@@ -1,8 +1,24 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
-import { InvitationService, InvitationType } from '@blockframes/notification';
+import { Invitation, InvitationService, InvitationType } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+
+const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
+  matIcon: 'alternate_email',
+  title: `Pending request to ${invitation.organization.name}`,
+  routerLink: '#',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+});
+
+const invitationActionFromOrgToUser = (invitation: Invitation) => ({
+  matIcon: 'alternate_email',
+  title: `Join ${invitation.organization.name}`,
+  action: () => this.acceptInvitation(invitation),
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+});
 
 @Component({
   selector: 'organization-home',
@@ -35,23 +51,14 @@ export class OrganizationHomeComponent implements OnInit {
     this.items$ = this.invitationService.userInvitations$.pipe(
       map(invitations => {
         const actions = invitations.map(invitation => {
+          // Create the action item depending on which kind of invitation we have,
+          // - If the user created an invitation that is still pending, display with no action,
+          // - If an org sent them an invitation, display with an action that let them accept the invite.
           switch (invitation.type) {
             case InvitationType.fromUserToOrganization:
-              return {
-                matIcon: 'alternate_email',
-                title: `Pending request to ${invitation.organization.name}`,
-                routerLink: '#',
-                description:
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
-              };
+              return invitationActionFromUserToOrganization(invitation);
             case InvitationType.fromOrganizationToUser:
-              return {
-                matIcon: 'alternate_email',
-                title: `Join ${invitation.organization.name}`,
-                action: () => this.acceptInvitation(invitation),
-                description:
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
-              };
+              return invitationActionFromOrgToUser(invitation);
           }
         });
 
