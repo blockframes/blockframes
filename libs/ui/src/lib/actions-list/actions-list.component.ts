@@ -1,11 +1,22 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-export interface ActionItem {
+interface ActionItemLink {
   routerLink: string;
-  icon: string;
+  icon?: string;
+  matIcon?: string;
   title: string;
   description: string;
 }
+
+interface ActionItemAction {
+  action: () => any;
+  icon?: string;
+  matIcon?: string;
+  title: string;
+  description: string;
+}
+
+export type ActionItem = ActionItemLink | ActionItemAction
 
 @Component({
   selector: 'actions-list',
