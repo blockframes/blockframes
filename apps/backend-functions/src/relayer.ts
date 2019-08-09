@@ -149,7 +149,7 @@ export async function relayerDeployLogic(
   try {
 
     const result: Record<string, TxReceipt> = {};
- 
+
     const codeAtAddress = await relayer.wallet.provider.getCode(erc1077address);
     if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
       const deployTx: TxResponse = await relayer.contractFactory.deploy(
@@ -158,7 +158,7 @@ export async function relayerDeployLogic(
         key.toLocaleLowerCase(),
         recoverAddress.toLocaleLowerCase(),
       )
-        
+
       result['deploy'] = await deployTx.wait();
       console.log(`(D) tx sent (deploy) : ${deployTx.hash}`);
     }
@@ -208,7 +208,7 @@ export async function relayerRegisterENSLogic(
     */
 
     const ZERO_ADDRESS = '0x00000000000000000000000000000000000000';
-    
+
     const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
     if (!!retreivedAddress && retreivedAddress !== ZERO_ADDRESS) { // if name is already link to a non-zero address : skip
       throw new Error(`${fullName} already linked to an address (${retreivedAddress})`);
@@ -335,8 +335,8 @@ export async function relayerDeployOrganizationLogic(
     throw new Error('"adminAddress" should be a valid ethereum address !');
   }
 
-  const orgFactory = new ContractFactory(ORG_CONTRACT.abi, ORG_CONTRACT.bytecode, relayer.wallet);
-  const contract = await orgFactory.deploy(adminAddress);
+  const organizationFactory = new ContractFactory(ORG_CONTRACT.abi, ORG_CONTRACT.bytecode, relayer.wallet);
+  const contract = await organizationFactory.deploy(adminAddress);
   console.log(`tx sent (deployOrganization) : ${contract.deployTransaction.hash}`); // display tx to firebase logging
   await contract.deployed();
   return contract.address;

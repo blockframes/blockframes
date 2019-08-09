@@ -29,7 +29,7 @@ export function onDocumentUpdate(docPath: string, fn: Function) {
   .onUpdate(backup.skipWhenRestoring(fn));
 }
 
-export function onOrgDocumentUpdate(docPath: string, fn: Function) {
+export function onOrganizationDocumentUpdate(docPath: string, fn: Function) {
   return functions.runWith({timeoutSeconds: 540}).firestore // same as above but with the max timout possible for blockchain txs
   .document(docPath)
   .onUpdate(backup.skipWhenRestoring(fn));

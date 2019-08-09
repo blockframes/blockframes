@@ -50,13 +50,11 @@ export async function onOrganizationUpdate(
   // Update algolia's index
   if (before.name !== after.name) {
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
-    // const orgID = context.params.orgID;
-    // await storeSearchableOrg(orgID, after.name); // update org name on algolia
   }
 
-  // console.log(before, '****************************' ,after);
   // Deploy org's smart-contract
-  if (before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted) {
+  const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
+  if (becomeAccepted) {
     const { userIds } = before as Organization;
     const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
 
@@ -67,7 +65,7 @@ export async function onOrganizationUpdate(
       throw new Error(`This organization has already an ENS name : ${adminENS}`);
     }
     const adminAddress = await precomputeAddress(emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain), RELAYER_CONFIG);
-    const orgAddress =  await relayerDeployOrganizationLogic(adminAddress, RELAYER_CONFIG); // TODO promise all
+    const orgAddress =  await relayerDeployOrganizationLogic(adminAddress, RELAYER_CONFIG);
     console.log(`org ${orgENS} deployed @ ${orgAddress} !`);
     const res = await relayerRegisterENSLogic({name: orgENS, address: orgAddress}, RELAYER_CONFIG);
     console.log('Org deployed and registred !', orgAddress, res['link'].transactionHash);
