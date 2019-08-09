@@ -1376,7 +1376,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "all",
@@ -1509,10 +1509,10 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 }
               ],
-              "serviceWorker": true
+              "serviceWorker": false
             },
             "ci": {
               "fileReplacements": [
@@ -1570,7 +1570,7 @@
                   "maximumError": "10mb"
                 }
               ],
-              "serviceWorker": true
+              "serviceWorker": false
             }
           }
         },
