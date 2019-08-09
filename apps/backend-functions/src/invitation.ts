@@ -34,9 +34,11 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
 }
 
 async function addUserToOrg(userId: string, organizationId: string) {
-  if (!organizationId) {
-    throw new Error('no organization id provided!');
+  if (!organizationId || !userId) {
+    throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }
+
+  console.debug("add user:", userId, "to org:", organizationId);
 
   const userRef = db.collection('users').doc(userId);
   const organizationRef = db.collection('orgs').doc(organizationId);
