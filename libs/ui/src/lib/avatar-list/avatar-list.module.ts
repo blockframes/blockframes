@@ -7,6 +7,5 @@ import { FlexLayoutModule } from "@angular/flex-layout";
   declarations: [AvatarListComponent],
   imports: [CommonModule, FlexLayoutModule],
   exports: [AvatarListComponent],
-  entryComponents: []
 })
 export class AvatarListModule { }

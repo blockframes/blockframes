@@ -49,7 +49,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     this.operationFormGroup$ = this.selectedOperationId$.pipe(
       filter(operationId => !!operationId),
       map(operationId => this.operationFormList.value.findIndex(operation => operation.id === operationId)),
-      map(index => this.operationFormList.controls[index]),
+      map(index => this.operationFormList.at(index)),
     );
 
 
@@ -61,7 +61,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     this.memberFormGroup$ = this.selectedMemberId$.pipe(
       filter(memberId => !!memberId),
       map(memberId => this.memberFormList.value.findIndex(member => member.uid === memberId)),
-      map(index => this.memberFormList.controls[index])
+      map(index => this.memberFormList.at(index))
     )
   }
 
