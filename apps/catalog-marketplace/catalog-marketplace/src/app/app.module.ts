@@ -11,10 +11,6 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
-// Components
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing-module';
-import { LayoutComponent } from './layout/layout.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
@@ -50,6 +46,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+
+// Components
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing-module';
+import { LayoutComponent } from './layout/layout.component';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],

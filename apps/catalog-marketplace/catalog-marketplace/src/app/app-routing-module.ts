@@ -59,6 +59,7 @@ export const routes: Routes = [
             path: 'home',
             loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
           },
+          // APP SPECIFIC
           {
             path: 'catalog',
             children: [
@@ -76,14 +77,10 @@ export const routes: Routes = [
             ]
           },
           {
-            path: 'templates',
-            loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
-          },
-          {
             path: ':movieId',
-            canActivate: [MovieActiveGuard],
-            canDeactivate: [MovieActiveGuard],
-            loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
+            // canActivate: [MovieActiveGuard],
+            // canDeactivate: [MovieActiveGuard],
+            loadChildren: () => import('./pages/movie-view/movie-view.module').then(m => m.MovieViewModule)
           }
         ]
       },
