@@ -11,7 +11,6 @@ import { MatSlideToggleChange } from '@angular/material';
 })
 export class OrganizationSignerFormComponent {
 
-  // @Input() operations: OrganizationOperation[];
   @Input() member: OrganizationMember;
 
   constructor(public controlContainer: ControlContainer) { }
@@ -20,18 +19,18 @@ export class OrganizationSignerFormComponent {
     return this.controlContainer.control;
   }
 
-  isSelected(id: string) { // TODO
-    return false;
-    // return this.control.get('operationIds').value.includes(id);
+  isSelected(operation: OrganizationOperation) {
+    return operation.members.some(operationMember => operationMember.uid === this.member.uid);
   }
 
-  public toggleSelection(toggle: MatSlideToggleChange, id: string) { // TODO
-    console.log(id, toggle.checked);
-    // const operationIds = this.control.get('operationIds').value.filter(operationId => operationId !== id);
-    // if (toggle.checked) {
-    //   operationIds.push(id);
-    // }
-
-    // this.control.get('operationIds').patchValue(operationIds);
+  public toggleSelection(toggle: MatSlideToggleChange, id: string) {
+    const operations: OrganizationOperation[] = this.control.value.filter(operation => operation.id !== id);
+    const currentOperation: OrganizationOperation = this.control.value.find(operation => operation.id === id);
+    const members: OrganizationMember[] = currentOperation.members.filter(operationMember => operationMember.uid !== this.member.uid);
+    if (toggle.checked) {
+      members.push(this.member);
+    }
+    currentOperation.members = members;
+    this.control.patchValue([...operations, currentOperation]);
   }
 }
