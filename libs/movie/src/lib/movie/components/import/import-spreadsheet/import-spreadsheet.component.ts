@@ -58,7 +58,7 @@ export class ImportSpreadsheetComponent {
     this.http.get(`/assets/templates/${fileName}`, { responseType: 'arraybuffer' })
       .subscribe(response => {
         const buffer = new Uint8Array(response);
-        let blob = new Blob([buffer], { type: "application/ms-excel" });
+        const blob = new Blob([buffer], { type: "application/ms-excel" });
         const url = URL.createObjectURL(blob);
         const element = document.createElement('a');
         element.setAttribute('href', url);
