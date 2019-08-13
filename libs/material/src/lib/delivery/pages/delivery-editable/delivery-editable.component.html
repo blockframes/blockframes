@@ -68,7 +68,7 @@
   <mat-sidenav-content class="delivery-form">
     <section>
       <article fxLayout="row" fxLayoutAlign="space-between center" class="title-block">
-        <h2 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h2>
+        <h2 *ngIf="(movie$ | async) as movie">{{ movie.main.title.original }}</h2>
         <span>
           <button
             [ngClass]="{ 'select-button-active': !!allChecked }"

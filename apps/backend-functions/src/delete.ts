@@ -100,7 +100,7 @@ export async function deleteFirestoreDelivery(
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId =>
       prepareNotification({
-        message: `${movie.title.original}'s delivery has been deleted.`,
+        message: `${movie.main.title.original}'s delivery has been deleted.`,
         userId,
         docInformations: { id: delivery.id, type: DocType.delivery }
       })

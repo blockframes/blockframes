@@ -66,9 +66,11 @@ export interface Delivery {
 
 export interface Movie {
   id: string;
-  title: {
-    original: string;
-  };
+  main: {
+    title: {
+      original: string;
+    };
+  }
   deliveryIds: string[];
 }
 

@@ -51,7 +51,7 @@
     </article>
     <article *ngIf="(movie$ | async) as movie" class="materials">
       <div class="materials" fxLayoutAlign="space-between center">
-        <h2>{{ movie.title.original }}</h2>
+        <h2>{{ movie.main.title.original }}</h2>
         <span fxLayoutAlign="end">
           <delivery-filters class="filters"></delivery-filters>
           <delivery-actions

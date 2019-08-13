@@ -146,8 +146,8 @@ function createSignatureNotifications(
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
       const message = (!!newStakeholderOrg)
-        ? `${newStakeholderOrg.name} just signed ${movie.title.original}'s delivery`
-        : `${movie.title.original}'s delivery has been approved by all stakeholders.`;
+        ? `${newStakeholderOrg.name} just signed ${movie.main.title.original}'s delivery`
+        : `${movie.main.title.original}'s delivery has been approved by all stakeholders.`;
       return prepareNotification({
         message,
         userId,

@@ -1,5 +1,5 @@
 <section *ngIf="(delivery$ | async) as delivery">
-  <h1 *ngIf="(movie$ | async) as movie">{{ movie.title.original }}</h1>
+  <h1 *ngIf="(movie$ | async) as movie">{{ movie.main.title.original }}</h1>
   <form [formGroup]="form">
     <h2>Delivery due date</h2>
     <div fxLayout="row" fxLayoutAlign="start center">

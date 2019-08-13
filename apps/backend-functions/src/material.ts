@@ -53,7 +53,7 @@ export const onMaterialUpdate = async (
         .map((userId: string) =>
           prepareNotification({
             message: `Material : ${material.value} from movie : ${
-              movie.title.original
+              movie.main.title.original
             } is now in state : ${material.state}`,
             userId,
             docInformations: { id: material.id, type: DocType.material },

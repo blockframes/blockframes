@@ -1,6 +1,6 @@
 <main *ngIf="(movie$ | async) as movie">
   <article fxLayoutAlign="space-between center">
-    <h2>{{ movie.title.original }}</h2>
+    <h2>{{ movie.main.title.original }}</h2>
     <button class="add-delivery mat-elevation-z0" mat-raised-button routerLink="../template-picker">
       Add a new delivery <mat-icon class="icon">add</mat-icon>
     </button>
