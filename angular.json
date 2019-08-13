@@ -1336,7 +1336,7 @@
       },
       "root": "apps/catalog-dashboard/catalog-dashboard",
       "sourceRoot": "apps/catalog-dashboard/catalog-dashboard/src",
-      "prefix": "blockframes",
+      "prefix": "catalog",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
