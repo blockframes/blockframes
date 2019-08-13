@@ -1346,10 +1346,17 @@
             "main": "apps/catalog-dashboard/catalog-dashboard/src/main.ts",
             "polyfills": "apps/catalog-dashboard/catalog-dashboard/src/polyfills.ts",
             "tsConfig": "apps/catalog-dashboard/catalog-dashboard/tsconfig.app.json",
-            "aot": false,
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
             "assets": [
               "apps/catalog-dashboard/catalog-dashboard/src/favicon.ico",
-              "apps/catalog-dashboard/catalog-dashboard/src/assets"
+              "apps/catalog-dashboard/catalog-dashboard/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/shared-assets/",
+                "output": "./assets"
+              }
             ],
             "styles": ["apps/catalog-dashboard/catalog-dashboard/src/styles.scss"],
             "scripts": []
@@ -1477,7 +1484,15 @@
             "stylePreprocessorOptions": {
               "includePaths": ["styles"]
             },
-            "assets": ["apps/catalog-marketplace/catalog-marketplace/src/favicon.ico"],
+            "assets": [
+              "apps/catalog-marketplace/catalog-marketplace/src/favicon.ico",
+              "apps/catalog-marketplace/catalog-marketplace/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/shared-assets/",
+                "output": "./assets"
+              }
+            ],
             "styles": ["apps/catalog-marketplace/catalog-marketplace/src/styles.scss"],
             "scripts": []
           },
