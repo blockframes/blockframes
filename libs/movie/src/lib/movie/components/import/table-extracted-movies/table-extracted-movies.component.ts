@@ -57,8 +57,9 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
+    const data = this.rows.data;
     await this.addMovie(importState);
-    this.rows.data = [...this.rows.data];
+    this.rows.data = data;
     this.snackBar.open('Movie created!', 'close', { duration: 3000 });
     return true;
   }
@@ -81,6 +82,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * @param importState 
    */
   private async addMovie(importState: MovieImportState) : Promise<boolean> {
+    const data = this.rows.data;
     await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
     importState.errors.push({
       type: 'error',
@@ -89,7 +91,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       reason: 'Movie already exists',
       hint: 'Movie already saved'
     } as SpreadsheetImportError)
-    this.rows.data = [...this.rows.data];
+    this.rows.data = data;
     return true;
   }
 

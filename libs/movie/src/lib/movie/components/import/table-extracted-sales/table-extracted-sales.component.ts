@@ -57,7 +57,7 @@ export class TableExtractedSalesComponent implements OnInit {
   async createSale(importState: SalesImportState): Promise<boolean> {
     const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
     const movie = createMovie(cleanModel(existingMovie));
-
+    const data = this.rows.data;
     movie.sales.push(importState.sale);
     await this.movieService.update(movie.id, movie);
     importState.errors.push({
@@ -67,13 +67,14 @@ export class TableExtractedSalesComponent implements OnInit {
       reason: 'Sale already added',
       hint: 'Sale already added'
     } as SpreadsheetImportError)
-    this.rows.data = [...this.rows.data];
+    this.rows.data = data;
     this.snackBar.open('Movie sale added!', 'close', { duration: 3000 });
     return true;
   }
 
   async createSelectedSales(): Promise<boolean> {
     try {
+      const data = this.rows.data;
       const movies = {};
       const sales = this.selection.selected
         .filter(importState => !hasImportErrors(importState))
@@ -93,8 +94,7 @@ export class TableExtractedSalesComponent implements OnInit {
           
           return movies[importState.movieInternalRef].sales.push(importState.sale);
         });
-
-      this.rows.data = [...this.rows.data];
+      this.rows.data = data;
       const promises = Object.keys(movies).map(k => this.movieService.update(movies[k].id, movies[k]))
 
       await Promise.all(promises);
