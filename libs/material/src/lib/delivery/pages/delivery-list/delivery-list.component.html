@@ -1,25 +1,61 @@
-<main *ngIf="(movie$ | async) as movie">
-  <article fxLayoutAlign="space-between center">
-    <h2>{{ movie.main.title.original }}</h2>
-    <button class="add-delivery mat-elevation-z0" mat-raised-button routerLink="../template-picker">
-      Add a new delivery <mat-icon class="icon">add</mat-icon>
-    </button>
+<section>
+  <article fxLayout="row" fxLayoutAlign="none center">
+    <h2>Deliveries</h2>
+    <mat-divider></mat-divider>
+    <a mat-button color="primary" (click)="addDelivery()">
+      <mat-icon>add</mat-icon> Add a delivery
+    </a>
   </article>
-  <section *ngIf="!!(deliveries$ | async); else empty">
-    <article
-      *ngFor="let delivery of (deliveries$ | async)"
-      fxLayout="column"
-      fxLayoutAlign="space-evenly center"
-      class="delivery"
-    >
-      <delivery-item
-        class="delivery-card"
-        [delivery]="delivery"
-        (isSelected)="selectDelivery(delivery, movie.id)"
-      ></delivery-item>
-    </article>
-  </section>
-  <ng-template #empty>
-    <delivery-empty></delivery-empty>
-  </ng-template>
-</main>
+  <article>
+    <span fxLayout="row" fxLayoutAlign="space-between center">
+      <h3>In progress</h3>
+      <button mat-raised-button color="primary">Actions</button>
+    </span>
+    <table mat-table [dataSource]="inProgressDataSource" matSort class="mat-elevation-z0">
+      <!-- Stakeholders Column -->
+      <ng-container matColumnDef="stakeholders">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let delivery">
+          <span *ngFor="let stakeholder of delivery.stakeholders">
+            {{ stakeholder.organization.name }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- State Column -->
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let delivery">{{ delivery.state }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="inProgressDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: inProgressDisplayedColumns"></tr>
+    </table>
+  </article>
+  <article>
+    <span fxLayout="row" fxLayoutAlign="space-between center">
+      <h3>Archived</h3>
+      <button mat-raised-button color="primary">Actions</button>
+    </span>
+    <table mat-table [dataSource]="archivedDataSource" matSort class="mat-elevation-z0">
+      <!-- Stakeholders Column -->
+      <ng-container matColumnDef="stakeholders">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let delivery">
+          <span *ngFor="let stakeholder of delivery.stakeholders">
+            {{ stakeholder.organization.name }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- State Column -->
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let delivery">{{ delivery.state }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="archivedDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: archivedDisplayedColumns"></tr>
+    </table>
+  </article>
+</section>

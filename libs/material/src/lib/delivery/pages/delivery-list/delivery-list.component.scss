@@ -1,35 +1,14 @@
-main {
-  margin: 100px 300px;
+section {
+  margin: 50px 300px;
 }
 
-.delivery-card {
-  margin: 1rem auto;
+table {
   width: 100%;
-  height: 5rem;
 }
 
-.add-delivery {
-  font-weight: bolder;
-  font-size: 13px;
-  height: 45px;
-  color: var(--primary);
-  border: solid 1px var(--primary);
-  cursor: pointer;
-}
-
-.add-delivery:hover {
-  color: white;
-  background-color: var(--primary);
-}
-
-.icon {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 6px;
-}
-
-.bottom-button {
-  margin-top: 35px;
+mat-divider {
+  width: 100%;
+  margin: 0 20px;
 }
 
 @media only screen

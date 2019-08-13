@@ -40,9 +40,10 @@ export interface OrgDocPermissions {
 }
 
 export const enum App {
-  mediaDelivering = 'MediaDelivering',
-  mediaFinanciers = 'MediaFinanciers',
-  storiesAndMore = 'StoriesAndMore'
+  mediaDelivering = 'delivery',
+  mediaFinanciers = 'movie-financing',
+  storiesAndMore = 'StoriesAndMore',
+  biggerBoat = 'catalog'
 }
 
 export function createPermissions(params: Partial<Permissions> = {}): Permissions {

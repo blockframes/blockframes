@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { App } from '@blockframes/organization';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
@@ -8,7 +9,6 @@ import { MovieEmptyComponent } from '@blockframes/movie';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
-import { MovieActiveGuard } from '@blockframes/movie';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 
 export const routes: Routes = [
@@ -20,6 +20,7 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
+    data: { app: App.mediaDelivering },
     canActivate: [AuthGuard],
     canDeactivate: [AuthGuard],
     children: [

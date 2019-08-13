@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryService, DeliveryQuery, Delivery } from '../../+state';
 import { Router } from '@angular/router';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { AnimationMetadataType } from '@angular/animations';
 
 
 @Component({
@@ -13,26 +16,31 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryListComponent implements OnInit {
-  public movie$: Observable<Movie>;
-  public deliveries$: Observable<Delivery[]>;
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  public inProgressDataSource: MatTableDataSource<Delivery>;
+  public inProgressDisplayedColumns: string[] = ['stakeholders', 'state'];
+
+  public archivedDataSource: MatTableDataSource<Delivery>;
+  public archivedDisplayedColumns: string[] = ['stakeholders', 'state'];
+
 
   constructor(
-    private movieQuery: MovieQuery,
-    private service: DeliveryService,
-    private router: Router,
     private query: DeliveryQuery,
+    private movieQuery: MovieQuery,
+    private router: Router,
   ) {}
 
   ngOnInit() {
-    this.movie$ = this.movieQuery.selectActive();
-    this.deliveries$ = this.query.selectAll();
+    this.inProgressDataSource = new MatTableDataSource(this.query.getAll({filterBy: entity => entity.state === 'pending'}));
+    this.archivedDataSource = new MatTableDataSource(this.query.getAll({filterBy: entity => entity.state === 'pending'}));
+    this.inProgressDataSource.sort = this.sort;
   }
 
-  public async selectDelivery(delivery: Delivery, movieId: string) {
-    const validated = await this.service.isDeliveryValidated(delivery.id);
-    validated
-      ? this.router.navigate([`layout/o/${movieId}/${delivery.id}/view`])
-      : this.router.navigate([`layout/o/${movieId}/${delivery.id}/edit`]);
+  public addDelivery() {
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
 
 }

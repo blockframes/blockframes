@@ -10,13 +10,13 @@
       <div class="img-container clickable-item">
 
         <ng-container *ngIf="movie.main.poster; else: defaultPoster">
-          <a [routerLink]="['/layout/o', movie.id]">
+          <a (click)="navigateToMovieApp(movie.id)">
             <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
           </a>
         </ng-container>
 
         <ng-template #defaultPoster>
-          <a [routerLink]="['/layout/o', movie.id]">
+          <a (click)="navigateToMovieApp(movie.id)">
             <img
               class="mat-card-image"
               src="/assets/images/default-movie-poster.png"

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'movie-list',
@@ -21,12 +23,19 @@ export class MovieListComponent implements OnInit {
     private service: MovieService,
     private query: MovieQuery,
     private dialog: MatDialog,
+    private routerQuery: RouterQuery,
+    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
     this.loading$ = this.query.selectLoading();
     this.movies$ = this.query.selectAll();
+  }
+
+  public navigateToMovieApp(movieId: string) {
+    const routeData = this.routerQuery.getValue().state.root.data;
+    this.router.navigate([`layout/o/${routeData.app}/${movieId}/list`]);
   }
 
   public addNewMovie() {
