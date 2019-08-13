@@ -171,6 +171,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // TERRITORIES (Mandate Territories)
+        // @todo #643 for territories: handle "World excl. USA, Japan, France, Germany and Belgium"
         if (spreadSheetRow[SpreadSheetMovie.territories]) {
           movie.salesAgentDeal.territories = [];
           spreadSheetRow[SpreadSheetMovie.territories].split(',').forEach((c: string) => {
@@ -971,6 +972,17 @@ export class ViewExtractedElementsComponent {
           // PRICE
           if (!isNaN(Number(spreadSheetRow[SpreadSheetSale.price]))) {
             sale.price = parseInt(spreadSheetRow[SpreadSheetSale.price], 10);
+          }
+
+          // Checks if sale already exists
+          if(this.movieQuery.existingSale(movie.main.internalRef, sale)) {
+            importErrors.errors.push({
+              type: 'error',
+              field: 'sale',
+              name: 'Sale',
+              reason: 'Sale already added',
+              hint: 'Sale already added'
+            } as SpreadsheetImportError)
           }
 
         } else {
