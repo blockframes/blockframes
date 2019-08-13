@@ -51,7 +51,7 @@ export class FireQuery extends AngularFirestore {
     if (Array.isArray(query)) {
       return this.fromDocList(query);
     }
-    // If path is event, this is a doc, else, this is a collection
+    // If the count of path parts is even, this is a doc, else, this is a collection
     const isEven = query.path.split('/').length % 2 === 0;
     return isEven
       ? this.fromDoc(query)

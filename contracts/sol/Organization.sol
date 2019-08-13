@@ -140,9 +140,9 @@ contract Organization {
     //-----------------------------
 
     /// @dev Simply add msg.sender as the first admin
-    constructor() public {
+    constructor(address admin) public {
         adminCount++;
-        adminList[msg.sender] = true;
+        adminList[admin] = true;
     }
 
     /// @dev in case someone want to lock ether in the organization's contract

@@ -24,5 +24,7 @@ export async function sendMail({ to, subject, text }: EmailRequest): Promise<any
     text,
     from: 'admin@blockframes.io'
   };
+
+  console.debug("sending mail:", msg);
   return SendGrid.send(msg);
 }

@@ -1,7 +1,5 @@
-import { ControlContainer } from '@angular/forms';
 import {
   Component,
-  OnInit,
   Input,
   Output,
   ViewChild,
@@ -18,35 +16,28 @@ import { OrganizationMember } from '../../+state';
   styleUrls: ['./organization-signer-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationSignerRepertoryComponent implements OnInit {
+export class OrganizationSignerRepertoryComponent {
   /** Headline of the columns in the material table. No Headline meanse no text.*/
-  public displayedColumns: string[] = ['User', 'Mail', 'Signatory on', 'No Headline'];
+  public displayedColumns: string[] = ['name', 'email', 'operations', 'action'];
 
   /** Variable to save the data source of the material table */
   public dataSource: MatTableDataSource<OrganizationMember>;
 
-  public actionsMapping: { [k: string]: string } = {
-    '=0': 'No actions',
-    '=1': '# action',
-    other: '# actions'
+  public operationMapping: { [k: string]: string } = {
+    '=0': 'No operations',
+    '=1': '# operation',
+    other: '# operations'
   };
 
-  @Input() signerList: OrganizationMember[];
+  @Input() set members(members: OrganizationMember[]) {
+    this.dataSource = new MatTableDataSource(members);
+    this.dataSource.sort = this.sort;
+  }
 
-  @Output() selected = new EventEmitter<OrganizationMember>();
+  @Output() selected = new EventEmitter<string>();
 
   /** Init code to work with the build in material sort function.
    * But maybe this will get taken care of by a function in the future.
    */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  
- /** TODO(PL): This component should take in a form that
-   *  that listen on the save icon button click event from the sidenav. 
-   */
-  // constructor(public container: ControlContainer){}
-
-  ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.signerList);
-    this.dataSource.sort = this.sort;
-  }
 }

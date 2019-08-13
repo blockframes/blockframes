@@ -1,0 +1,22 @@
+<form [formGroup]="control">
+  <!-- Operations -->
+  <mat-form-field>
+    <mat-label>How many members needed</mat-label>
+    <mat-select formControlName="quorum">
+      <mat-option *ngFor="let amount of amounts" [value]="amount">{{amount}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Members -->
+  <article>
+    <h2>Members</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let member of control.value.members">
+        <span>{{member.name}}</span>
+        <button mat-icon-button (click)="removeMember(member.uid)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </article>
+</form>

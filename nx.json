@@ -14,12 +14,6 @@
     "ip-upload-e2e": {
       "tags": []
     },
-    "catalog": {
-      "tags": ["catalog"]
-    },
-    "catalog-e2e": {
-      "tags": []
-    },
     "ip": {
       "tags": ["ip"]
     },
@@ -73,6 +67,21 @@
     },
     "backend-ops": {
       "tags": []
+    },
+    "catalog-dashboard-e2e": {
+      "tags": []
+    },
+    "catalog-dashboard": {
+      "tags": []
+    },
+    "catalog-marketplace-e2e": {
+      "tags": []
+    },
+    "catalog-marketplace": {
+      "tags": []
+    },
+    "catalog": {
+      "tags": ["catalog"]
     }
   }
 }

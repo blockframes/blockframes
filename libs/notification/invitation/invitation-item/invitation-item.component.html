@@ -4,8 +4,8 @@
     {{ message }}
   </span>
   <article fxLayoutAlign="space-around center">
-    <button mat-raised-button color="primary" (click)="acceptInvitation(invitation)">Accept</button>
-    <button mat-raised-button color="warn">Decline</button>
+    <button test-id="accept" mat-raised-button color="primary" (click)="acceptInvitation(invitation)">Accept</button>
+    <button test-id="decline" mat-raised-button color="warn">Decline</button>
   </article>
   <p class="date">
     Received {{ invitation.date.toDate() | date: 'MMM dd yyyy' }} at

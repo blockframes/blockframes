@@ -236,11 +236,30 @@ export class OrganizationService {
   }
 
   // TODO REMOVE THIS ASAP : issue 676
-  public instantiateMockData() {
+  public async instantiateMockData() {
 
-    const oldOrgMembers = this.query.getValue().org.members;
-    const newOrgMembers = mockOrgMembers.concat(oldOrgMembers);
+    const { org } = this.query.getValue();
+    const mockUser = await this.db.snapshot<OrganizationMember>('users/0');
+    if (!mockUser) {
+      const batch = this.db.firestore.batch();
 
-    return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
+      await Promise.all(
+        mockOrgMembers.map(async member => {
+          const memeberRef = await this.db.firestore.collection('users').doc(member.uid);
+          batch.set(memeberRef, {...member, orgId: org.id});
+        })
+      );
+      
+      const orgRef = await this.db.firestore.collection('orgs').doc(org.id);
+      const memberIds = mockOrgMembers.map(member => member.uid);
+      const userIds = [...org.userIds, ...memberIds];
+      batch.set(orgRef, {...org, userIds});
+
+      await batch.commit();
+
+      const newOrgMembers = mockOrgMembers.concat(org.members);
+      return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
+    }
+    return;
   }
 }

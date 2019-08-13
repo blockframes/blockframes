@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FireQuery, Query } from '@blockframes/utils';
-import { switchMap, tap, filter } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { InvitationStore } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import {
-  Invitation,
   createInvitationToJoinOrganization,
-  createInvitationToOrganization
+  createInvitationToOrganization,
+  Invitation
 } from './invitation.model';
-import { Organization } from '@blockframes/organization';
+import { of } from 'rxjs';
 
 export function getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
   return {
@@ -17,8 +17,20 @@ export function getInvitationsByOrgId(organizationId: string): Query<Invitation[
       ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
     user: (invitation: Invitation) => ({
       // TODO: use profiles collections instead of users, issue#693
-      // TODO: when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
+      // TODO(issue#740): when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
       path: `users/${invitation.userId}`
+    })
+  };
+}
+
+export function getInvitationsByUserId(userId: string): Query<Invitation[]> {
+  return {
+    path: `invitations`,
+    queryFn: ref => ref.where('userId', '==', userId).where('state', '==', 'pending'),
+    organization: (invitation: Invitation) => ({
+      // TODO: use profiles collections instead of users, issue#693
+      // TODO: when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
+      path: `orgs/${invitation.organizationId}`
     })
   };
 }
@@ -34,12 +46,34 @@ export class InvitationService {
     private authService: AuthService
   ) {}
 
+  // TODO : move this in /layout guard => ISSUE#641
+  public get organizationInvitations$() {
+    return this.authQuery.user$.pipe(
+      filter(user => !!user),
+      switchMap(user => this.db.fromQuery(getInvitationsByOrgId(user.orgId))),
+      catchError(err => {
+        console.error(err);
+        return of([]);
+      }),
+      tap((invitations: Invitation[]) => this.store.set(invitations))
+    );
+  }
+
+  // TODO : move this in /layout guard => ISSUE#641
+  public get userInvitations$() {
+    return this.authQuery.user$.pipe(
+      filter(user => !!user),
+      switchMap(user => this.db.fromQuery(getInvitationsByUserId(user.uid))),
+      tap((invitations: Invitation[]) => this.store.set(invitations))
+    );
+  }
+
   /** Create an invitation when a user asks to join an organization */
-  public sendInvitationToOrg(organization: Partial<Organization>): Promise<void> {
+  public sendInvitationToOrg(organizationId: string): Promise<void> {
     const userId = this.authQuery.userId;
     const invitation = createInvitationToJoinOrganization({
       id: this.db.createId(),
-      organizationId: organization.id,
+      organizationId: organizationId,
       userId
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
@@ -55,15 +89,6 @@ export class InvitationService {
       userId: uid
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
-  }
-
-  // TODO : move this in /layout guard => ISSUE#641
-  public get organizationInvitations$() {
-    return this.authQuery.user$.pipe(
-      filter(user => !!user),
-      switchMap(user => this.db.fromQuery(getInvitationsByOrgId(user.orgId))),
-      tap((invitations: Invitation[]) => this.store.set(invitations))
-    );
   }
 
   public acceptInvitation(invitationId: string) {

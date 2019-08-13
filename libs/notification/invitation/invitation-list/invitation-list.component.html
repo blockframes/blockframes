@@ -1,4 +1,4 @@
-<section testId="invitations" *ngFor="let invitation of (invitations$ | async)">
+<section test-id="invitations" *ngFor="let invitation of (invitations$ | async)">
   <invitation-item [invitation]="invitation"></invitation-item>
   <mat-divider></mat-divider>
 </section>

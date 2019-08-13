@@ -1,5 +1,24 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
+import { Invitation, InvitationService, InvitationType } from '@blockframes/notification';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
+  matIcon: 'alternate_email',
+  title: `Pending request to ${invitation.organization.name}`,
+  routerLink: '#',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+});
+
+const invitationActionFromOrgToUser = (invitation: Invitation) => ({
+  matIcon: 'alternate_email',
+  title: `Join ${invitation.organization.name}`,
+  action: () => this.acceptInvitation(invitation),
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+});
 
 @Component({
   selector: 'organization-home',
@@ -7,20 +26,48 @@ import { ActionItem } from '@blockframes/ui';
   styleUrls: ['./organization-home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-export class OrganizationHomeComponent {
-  items: ActionItem[] = [
+export class OrganizationHomeComponent implements OnInit {
+  defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
       icon: 'adjustableWrench',
       title: 'Create your organization',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
     },
     {
       routerLink: '../find',
       icon: 'magnifyingGlass',
       title: 'Find your organization',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
     }
-  ]
+  ];
+  public items$: Observable<ActionItem[]>;
+
+  constructor(private invitationService: InvitationService) {}
+
+  ngOnInit(): void {
+    this.items$ = this.invitationService.userInvitations$.pipe(
+      map(invitations => {
+        const actions = invitations.map(invitation => {
+          // Create the action item depending on which kind of invitation we have,
+          // - If the user created an invitation that is still pending, display with no action,
+          // - If an org sent them an invitation, display with an action that let them accept the invite.
+          switch (invitation.type) {
+            case InvitationType.fromUserToOrganization:
+              return invitationActionFromUserToOrganization(invitation);
+            case InvitationType.fromOrganizationToUser:
+              return invitationActionFromOrgToUser(invitation);
+          }
+        });
+
+        return [...actions, ...this.defaultItems];
+      })
+    );
+  }
+
+  private acceptInvitation(invitation) {
+    return this.invitationService.acceptInvitation(invitation.id);
+  }
 }

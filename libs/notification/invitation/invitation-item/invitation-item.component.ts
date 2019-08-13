@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationService } from '../+state';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Invitation, InvitationService, InvitationType } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -13,19 +13,15 @@ export class InvitationItemComponent {
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
-  acceptInvitation(invitation: Invitation) {
-    this.service.acceptInvitation(invitation.id);
-    this.snackBar.open(
-      `You accepted to join the delivery's teamwork. You will receive another notification when you'll be able to navigate to the document`,
-      'close',
-      { duration: 5000 }
-    );
-  }
-
   public get message(): string {
-    if (this.invitation.type === 'joinOrganization') {
-      return 'A user wants to join your organization.'
+    if (this.invitation.type === InvitationType.fromUserToOrganization) {
+      return 'A user wants to join your organization.';
     }
     return ''; // TODO: issue#576, implement one message by type of invitation
+  }
+
+  public async acceptInvitation(invitation: Invitation) {
+    await this.service.acceptInvitation(invitation.id);
+    this.snackBar.open(`You accepted the invitation!`, 'close', { duration: 5000 });
   }
 }

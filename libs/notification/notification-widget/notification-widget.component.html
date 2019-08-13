@@ -1,4 +1,4 @@
-<section *ngIf="(user$ | async) as user">
+<section *ngIf="(user$ | async) as user" test-id="notification-widget">
   <button
     mat-icon-button
     [matMenuTriggerFor]="notifications"
@@ -17,7 +17,7 @@
   </button>
 </section>
 <mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
-  <section class="notification-list">
+  <section class="notification-list" test-id="notification-list">
     <mat-list> <invitation-list></invitation-list> </mat-list>
     <mat-list> <notification-list></notification-list> </mat-list>
   </section>

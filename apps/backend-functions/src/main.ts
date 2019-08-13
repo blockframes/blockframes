@@ -24,10 +24,10 @@ import {
 import * as users from './users';
 import * as backup from './backup';
 import * as migrations from './migrations';
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite } from './utils';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite, onOrganizationDocumentUpdate } from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
-import { onInvitationUpdate } from './invitation';
+import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 
@@ -145,9 +145,9 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
 /**
  * Trigger: when an invitation is updated (e. g. when invitation.state change)
  */
-export const onInvitationUpdateEvent = onDocumentUpdate(
+export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
-  onInvitationUpdate
+  onInvitationWrite
 );
 
 //--------------------------------
@@ -177,7 +177,7 @@ export const onOrganizationCreateEvent = onDocumentCreate(
 /**
  * Trigger: when an organization is updated
  */
-export const onOrganizationUpdateEvent = onDocumentUpdate(
+export const onOrganizationUpdateEvent = onOrganizationDocumentUpdate( // using `onOrganizationDocumentUpdate` instead of `onDocument` for an increase timout of 540s
   'orgs/{orgID}',
   onOrganizationUpdate
 );

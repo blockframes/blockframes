@@ -1,28 +1,28 @@
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <ng-container matColumnDef="User">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let member"> {{member.name}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="Mail">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Mail </th>
-    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+    <td mat-cell *matCellDef="let member"> {{member.email}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="Signatory on">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Signatory on</th>
+  <ng-container matColumnDef="operations">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Authorized on</th>
     <!-- we have to check how many actions this signer is active on, so we can use the correct grammar-->
-    <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.activeOnActions">{{ element.activeOnActions.length | i18nPlural: actionsMapping }}
+    <td mat-cell *matCellDef="let member">
+      <ng-container *ngIf="member.operationsId">{{ member.operationsId.length | i18nPlural: operationMapping }}
       </ng-container>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="No Headline">
+  <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="selected.emit(element.uid)">
-        <mat-icon>edit</mat-icon>
+    <td mat-cell *matCellDef="let member">
+      <button mat-icon-button (click)="selected.emit(member.uid)">
+        <mat-icon svgIcon="edit"></mat-icon>
       </button>
     </td>
   </ng-container>

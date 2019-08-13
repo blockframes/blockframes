@@ -102,7 +102,7 @@ export class OrganizationQuery extends Query<OrganizationState> {
   }
 
   get approvedActions$() {
-    return this.select(state => state.org.actions.filter(action => !action.isApproved));
+    return this.select(state => state.org.actions.filter(action => action.isApproved));
   }
 
   getOperationById(id: string) {

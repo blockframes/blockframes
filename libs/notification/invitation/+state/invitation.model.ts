@@ -1,6 +1,7 @@
 import { firestore } from 'firebase/app';
 import { DocInformations } from 'libs/notification/notification/+state';
 import { User } from '@blockframes/auth';
+import { Organization } from '@blockframes/organization';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
@@ -9,6 +10,7 @@ export interface Invitation {
   type: InvitationType;
   userId?: string;
   user?: User;
+  organization?: Organization;
   organizationId: string;
   docInformations?: DocInformations;
   state: 'accepted' | 'declined' | 'pending';
@@ -16,8 +18,8 @@ export interface Invitation {
 }
 
 export const enum InvitationType {
-  joinOrganization = 'joinOrganization',
-  toOrganization = 'toOrganization'
+  fromUserToOrganization = 'fromUserToOrganization',
+  fromOrganizationToUser = 'fromOrganizationToUser'
 }
 
 /**
@@ -33,7 +35,7 @@ export function createInvitationToJoinOrganization(params: InvitationToJoinOrgan
   return {
     app: 'main',
     state: 'pending',
-    type: InvitationType.joinOrganization,
+    type: InvitationType.fromUserToOrganization,
     date: firestore.Timestamp.now(),
     ...params
   };
@@ -43,7 +45,7 @@ export function createInvitationToOrganization(params: InvitationToJoinOrganizat
   return {
     app: 'main',
     state: 'pending',
-    type: InvitationType.toOrganization,
+    type: InvitationType.fromOrganizationToUser,
     date: firestore.Timestamp.now(),
     ...params
   };

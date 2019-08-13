@@ -8,7 +8,8 @@ function createMemberFormGroup(member: OrganizationMember) {
     name: new FormControl(member.name),
     surname: new FormControl(member.surname),
     email: new FormControl(member.email),
-    role: new FormControl(member.role)
+    role: new FormControl(member.role),
+    operationIds: new FormControl(!!member.operationIds ? member.operationIds : [])
   });
 }
 

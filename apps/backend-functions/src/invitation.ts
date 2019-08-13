@@ -4,22 +4,29 @@
 import {
   createOrganizationDocPermissions,
   createUserDocPermissions,
-  getDocument
+  getDocument,
+  getSuperAdmins
 } from './data/internals';
 import { db, functions, getUserMail } from './internals/firebase';
 import {
   Delivery,
   Invitation,
+  InvitationFromOrganizationToUser,
+  InvitationFromUserToOrganization,
   InvitationOrUndefined,
   InvitationStakeholder,
   InvitationState,
-  InvitationToOrganization,
   InvitationType,
   Organization
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
-import { userInviteToOrg } from './assets/mail-templates';
+import {
+  userInviteToOrg,
+  userJoinedAnOrganization,
+  userJoinedYourOrganization,
+  userRequestedToJoinYourOrg
+} from './assets/mail-templates';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: Invitation, after: Invitation) {
@@ -31,19 +38,16 @@ function wasCreated(before: InvitationOrUndefined, after: Invitation) {
   return !before && !!after;
 }
 
-/** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
-  const { userId, organizationId } = invitation;
-
-  if (!organizationId) {
-    console.error('No orgId defined in the invitation', invitation);
-    return;
+async function addUserToOrg(userId: string, organizationId: string) {
+  if (!organizationId || !userId) {
+    throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }
+
+  console.debug('add user:', userId, 'to org:', organizationId);
 
   const userRef = db.collection('users').doc(userId);
   const organizationRef = db.collection('orgs').doc(organizationId);
   const permissionsRef = db.collection('permissions').doc(organizationId);
-  const invitationRef = db.collection('invitations').doc(invitation.id);
 
   return db.runTransaction(async tx => {
     const [user, organization, permission] = await Promise.all([
@@ -58,7 +62,7 @@ async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
 
     if (!userData || !organizationData || !permissionData) {
       console.error(
-        'Something went wrong with the invitation, a required document is not set\n',
+        'Something went wrong with the invitation, a required document is not set',
         userData,
         organizationData,
         permissionData
@@ -68,19 +72,44 @@ async function onInvitationToOrgAccept(invitation: InvitationToOrganization) {
 
     return Promise.all([
       // Update user's orgId
-      tx.set(userRef, { ...user, orgId: invitation.organizationId }),
+      tx.set(userRef, { ...userData, orgId: organizationId }),
       // Update organization
-      tx.set(organizationRef, { ...organizationData, userIds: [...organizationData.userIds, userId] }),
+      tx.set(organizationRef, {
+        ...organizationData,
+        userIds: [...organizationData.userIds, userId]
+      }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, invitation.userId] }),
-      // Remove the invitation
-      tx.delete(invitationRef)
+      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, userId] })
     ]);
   });
 }
 
+async function mailOnInvitationAccept(userId: string, organizationId: string) {
+  const userEmail = await getUserMail(userId);
+  const adminIds = await getSuperAdmins(organizationId);
+  const adminEmails = await Promise.all(adminIds.map(getUserMail));
+
+  const adminEmailPromises = adminEmails
+    .filter(mail => !!mail)
+    .map(adminEmail => sendMail(userJoinedYourOrganization(adminEmail!, userEmail!)));
+
+  return Promise.all([sendMail(userJoinedAnOrganization(userEmail!)), ...adminEmailPromises]);
+}
+
+/** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
+async function onInvitationToOrgAccept({
+  userId,
+  organizationId,
+  id
+}: InvitationFromOrganizationToUser) {
+  // TODO: When a user is added to an org, clear other invitations
+  await addUserToOrg(userId, organizationId);
+  await deleteInvitation(id);
+  return mailOnInvitationAccept(userId, organizationId);
+}
+
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ userId }: InvitationToOrganization) {
+async function onInvitationToOrgCreate({ userId }: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(userId);
 
   if (!userMail) {
@@ -171,13 +200,13 @@ async function onStakeholderInvitationAccept({
 }
 
 /**
- * Dispatch 'creation' and 'accepted' events when an invitation to
- * join an organization is updated.
+ * Dispatch the invitation update call depending on whether the invitation
+ * was 'created' or 'accepted'.
  */
 async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
-  invitation: InvitationToOrganization
+  invitation: InvitationFromOrganizationToUser
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToOrgCreate(invitation);
@@ -187,7 +216,67 @@ async function onInvitationToOrgUpdate(
   return;
 }
 
-/** Dispatch 'accepted' event when an invitation to join a document is accepted. */
+/** Sends an email when an organization invites a user to join. */
+async function onInvitationFromUserToJoinOrgCreate({
+  organizationId,
+  userId
+}: InvitationFromUserToOrganization) {
+  const userEmail = await getUserMail(userId);
+
+  if (!userEmail) {
+    throw new Error(`no email for userId: ${userId}`);
+  }
+
+  const superAdmins = await getSuperAdmins(organizationId);
+
+  const superAdminsMails = await Promise.all(superAdmins.map(getUserMail));
+  const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
+
+  return Promise.all(
+    validSuperAdminMails.map(adminEmail =>
+      sendMail(userRequestedToJoinYourOrg(adminEmail!, userEmail))
+    )
+  );
+}
+
+async function deleteInvitation(invitationId: string) {
+  // Delete the invitation
+  const invitationRef = db.collection('invitations').doc(invitationId);
+  await invitationRef.delete();
+}
+
+/** Send a mail and update the user, org and permission when the user was accepted. */
+async function onInvitationFromUserToJoinOrgAccept({
+  organizationId,
+  userId,
+  id
+}: InvitationFromUserToOrganization) {
+  // TODO(issue#739): When a user is added to an org, clear other invitations
+  await addUserToOrg(userId, organizationId);
+  await deleteInvitation(id);
+  return mailOnInvitationAccept(userId, organizationId);
+}
+
+/**
+ * Dispatch the invitation update call depending on whether the invitation
+ * was 'created' or 'accepted'.
+ */
+async function onInvitationFromUserToJoinOrgUpdate(
+  before: InvitationOrUndefined,
+  after: Invitation,
+  invitation: InvitationFromUserToOrganization
+): Promise<any> {
+  if (wasCreated(before, after)) {
+    return onInvitationFromUserToJoinOrgCreate(invitation);
+  } else if (wasAccepted(before!, after)) {
+    return onInvitationFromUserToJoinOrgAccept(invitation);
+  }
+  return;
+}
+
+/**
+ * Dispatch the invitation update call when the invitation was 'accepted'.
+ */
 async function onStakeholderInvitationUpdate(
   before: InvitationOrUndefined,
   after: Invitation,
@@ -209,7 +298,7 @@ async function onStakeholderInvitationUpdate(
  * Check the data, manage processed ids (to prevent duplicates events in functions),
  * and dispatch to the correct piece of code depending on the invitation type.
  */
-export async function onInvitationUpdate(
+export async function onInvitationWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ) {
@@ -246,8 +335,14 @@ export async function onInvitationUpdate(
     switch (invitation.type) {
       case InvitationType.stakeholder:
         return await onStakeholderInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.toOrganization:
+      case InvitationType.fromOrganizationToUser:
         return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+      case InvitationType.fromUserToOrganization:
+        return await onInvitationFromUserToJoinOrgUpdate(
+          invitationDocBefore,
+          invitationDoc,
+          invitation
+        );
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

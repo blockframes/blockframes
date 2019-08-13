@@ -1,4 +1,4 @@
-<nav mat-tab-nav-bar color="primary">
+<nav test-id="context-menu" mat-tab-nav-bar color="primary">
   <a mat-tab-link *ngFor="let item of (items$ | async)" [routerLink]="[item.path]" [active]="isActive([item.path], item.exact)">
     {{item.name}}
   </a>

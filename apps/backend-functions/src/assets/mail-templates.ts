@@ -85,3 +85,35 @@ export function organizationRequestedAccessToApp(orgId: string, appId: string): 
     text: organizationRequestAccessToAppTemplate(orgId, appId)
   };
 }
+
+const userRequestedToJoinYourOrgTemplate = (userMail: string): string =>
+  `
+  The user ${userMail} requested to join your app,
+
+  Visit your organization teamwork page to accept them.
+  `;
+
+/** Generates a transactional email to let an admin now that a user requested to join their org */
+export function userRequestedToJoinYourOrg(adminMail: string, userMail: string): EmailRequest {
+  return {
+    to: adminMail,
+    subject: 'A user requested to join your organization',
+    text: userRequestedToJoinYourOrgTemplate(userMail)
+  };
+}
+
+export function userJoinedAnOrganization(userEmail: string): EmailRequest {
+  return {
+    to: userEmail,
+    subject: 'You joined a new organization',
+    text: 'TODO'
+  };
+}
+
+export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailRequest {
+  return {
+    to: orgAdminEmail,
+    subject: 'A user joined the organization',
+    text: `user: ${userEmail}`
+  }
+}
