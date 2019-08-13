@@ -8,7 +8,11 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMember } from '../../+state';
+import { OrganizationMember, OrganizationOperation } from '../../+state';
+
+interface OperationMember extends OrganizationMember {
+  operationIds: string[];
+}
 
 @Component({
   selector: 'org-signer-repertory',
@@ -21,7 +25,7 @@ export class OrganizationSignerRepertoryComponent {
   public displayedColumns: string[] = ['name', 'email', 'operations', 'action'];
 
   /** Variable to save the data source of the material table */
-  public dataSource: MatTableDataSource<OrganizationMember>;
+  public dataSource: MatTableDataSource<OperationMember>;
 
   public operationMapping: { [k: string]: string } = {
     '=0': 'No operations',
@@ -29,10 +33,22 @@ export class OrganizationSignerRepertoryComponent {
     other: '# operations'
   };
 
-  @Input() set members(members: OrganizationMember[]) {
-    this.dataSource = new MatTableDataSource(members);
-    this.dataSource.sort = this.sort;
+  private _members: OrganizationMember[] = [];
+  private _operations: OrganizationOperation[] = [];
+
+  @Input()
+  set members(members: OrganizationMember[]) {
+    this._members = members;
+    this.joinMemberAndOperation();
   }
+  get members() { return this._members; }
+
+  @Input()
+  set operations(operations: OrganizationOperation[]) {
+    this._operations = operations;
+    this.joinMemberAndOperation();
+  }
+  get operations() { return this._operations; }
 
   @Output() selected = new EventEmitter<string>();
 
@@ -40,4 +56,17 @@ export class OrganizationSignerRepertoryComponent {
    * But maybe this will get taken care of by a function in the future.
    */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  private joinMemberAndOperation() {
+    this.dataSource = new MatTableDataSource(
+      this._members.map(member => {
+        const operationIds = this._operations.filter(operation =>
+          operation.members
+            .some(operationMember => member.uid === operationMember.uid))
+            .map(operation => operation.id);
+        return {...member, operationIds};
+      })
+    );
+    this.dataSource.sort = this.sort;
+  }
 }

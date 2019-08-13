@@ -1,11 +1,12 @@
 <form [formGroup]="control">
   <article>
-    <h2>{{control.value.name}}</h2>
-    <ng-container *ngFor="let operation of operations">
+    <h2>{{member.name}}</h2>
+    {{control.value | json}}
+    <!-- <ng-container *ngFor="let operation of operations">
       <div fxLayout="row">
         <span fxFlex>{{operation.name}}</span>
         <mat-slide-toggle fxFlex [checked]="isSelected(operation.id)" (change)="toggleSelection($event, operation.id)"></mat-slide-toggle>
       </div>
-    </ng-container>
+    </ng-container> -->
   </article>
 </form>

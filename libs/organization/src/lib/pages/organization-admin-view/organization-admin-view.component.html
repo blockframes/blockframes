@@ -1,45 +1,47 @@
 <!-- Main content -->
-<editable-sidenav *ngIf="operations$ | async as operations" (closed)="opened = false" [opened]="opened">
-  <ng-container content>
+<ng-container *ngIf="members$ | async as members">
+  <editable-sidenav *ngIf="operations$ | async as operations" (closed)="opened = false" [opened]="opened">
+    <ng-container content>
 
-    <!-- Admin Tab -->
-    <h1 fxLayout="row" fxLayoutAlign="start center">
-      <span fxFlex="noshrink">{{organizationName}}</span>
-      <mat-divider></mat-divider>
-    </h1>
-    <!-- Operations -->
-    <section>
-      <h2>Operations</h2>
-      <org-display-operations [operations]="operations" (editing)="openSidenav('operation', $event)" >
-      </org-display-operations>
-    </section>
+      <!-- Admin Tab -->
+      <h1 fxLayout="row" fxLayoutAlign="start center">
+        <span fxFlex="noshrink">{{organizationName}}</span>
+        <mat-divider></mat-divider>
+      </h1>
+      <!-- Operations -->
+      <section>
+        <h2>Operations</h2>
+        <org-display-operations [operations]="operations" (editing)="openSidenav('operation', $event)" >
+        </org-display-operations>
+      </section>
 
-    <!--Operation Perissions-->
-    <section *ngIf="members$ | async as members">
-      <h2>Users Operations Permissions</h2>
-      <org-signer-repertory [members]="members" (selected)="openSidenav('member', $event)" >
-      </org-signer-repertory>
-    </section>
+      <!--Operation Perissions-->
+      <section>
+        <h2>Users Operations Permissions</h2>
+        <org-signer-repertory [members]="members" [operations]="operations" (selected)="openSidenav('member', $event)" >
+        </org-signer-repertory>
+      </section>
 
-  </ng-container>
-  <ng-container sidenav>
-    <ng-container [ngSwitch]="editContent">
-      <ng-container *ngSwitchCase="'operation'">
-        <ng-container *ngIf="(operationFormGroup$ | async) as operationFormGroup" >
+    </ng-container>
+    <ng-container sidenav>
+      <ng-container [ngSwitch]="editContent">
+        <ng-container *ngSwitchCase="'operation'">
+          <ng-container *ngIf="(operationFormGroup$ | async) as operationFormGroup" >
 
-          <!-- Operation -->
-          <organization-form-operation [formGroup]="operationFormGroup"></organization-form-operation>
+            <!-- Operation -->
+            <organization-form-operation [formGroup]="operationFormGroup" [members]="members"></organization-form-operation>
 
+          </ng-container>
         </ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="'member'">
-        <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" >
+        <ng-container *ngSwitchCase="'member'">
+          <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" >
 
-          <!-- Members operation permission -->
-          <organization-signer-form [formGroup]="memberFormGroup" [operations]="operations"></organization-signer-form>
+            <!-- Members operation permission -->
+            <organization-signer-form [formGroup]="operationFormList" [member]="memberFormGroup.value"></organization-signer-form>
 
+          </ng-container>
         </ng-container>
       </ng-container>
     </ng-container>
-  </ng-container>
-</editable-sidenav>
+  </editable-sidenav>
+</ng-container>
