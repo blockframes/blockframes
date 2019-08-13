@@ -11,13 +11,11 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   selector: 'movie-list',
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class MovieListComponent implements OnInit {
-
   public loading$: Observable<boolean>;
-  public movies$: Observable<Movie[]>
+  public movies$: Observable<Movie[]>;
 
   constructor(
     private service: MovieService,

@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
-import { DeliveryService, DeliveryQuery, Delivery } from '../../+state';
+import { DeliveryQuery, Delivery } from '../../+state';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { AnimationMetadataType } from '@angular/animations';
-
+import { Observable, Subject } from 'rxjs';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-list',
@@ -15,32 +14,42 @@ import { AnimationMetadataType } from '@angular/animations';
   styleUrls: ['./delivery-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryListComponent implements OnInit {
-
+export class DeliveryListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
-  public inProgressDataSource: MatTableDataSource<Delivery>;
-  public inProgressDisplayedColumns: string[] = ['stakeholders', 'state'];
-
-  public archivedDataSource: MatTableDataSource<Delivery>;
-  public archivedDisplayedColumns: string[] = ['stakeholders', 'state'];
-
+  public userOrganization$: Observable<Organization>;
+  public dataSource: MatTableDataSource<Delivery>;
+  public displayedColumns: string[] = ['stakeholders', 'state'];
+  private destroyed$ = new Subject();
 
   constructor(
     private query: DeliveryQuery,
+    private organizationQuery: OrganizationQuery,
     private movieQuery: MovieQuery,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.inProgressDataSource = new MatTableDataSource(this.query.getAll({filterBy: entity => entity.state === 'pending'}));
-    this.archivedDataSource = new MatTableDataSource(this.query.getAll({filterBy: entity => entity.state === 'pending'}));
-    this.inProgressDataSource.sort = this.sort;
+    this.userOrganization$ = this.organizationQuery.select('org');
+    this.query
+      .selectAll()
+      .pipe(
+        takeUntil(this.destroyed$),
+        map(deliveries => this.dataSource = new MatTableDataSource(deliveries))
+      )
+      .subscribe();
+    this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Navigates directly to second step of delivery creation flow as we already are on a movie
+   */
   public addDelivery() {
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
 
+  ngOnDestroy() {
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
+  }
 }

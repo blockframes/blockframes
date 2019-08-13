@@ -1,3 +1,5 @@
+@import 'variables';
+
 section {
   margin: 50px 300px;
 }
@@ -6,16 +8,37 @@ table {
   width: 100%;
 }
 
+img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 10px;
+}
+
 mat-divider {
   width: 100%;
   margin: 0 20px;
 }
 
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1200px)
-and (orientation : landscape) {
-  main {
+tr.mat-row {
+  cursor: pointer;
+}
+
+
+@include medium {
+  section {
     margin: 50px;
+  }
+}
+
+@include tablet {
+  section {
+    margin: 50px;
+  }
+}
+
+@include mobile {
+  section {
+    margin: 10px;
   }
 }

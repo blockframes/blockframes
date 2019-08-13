@@ -68,6 +68,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSortModule } from '@angular/material/sort';
 
 // Guards
 import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
@@ -241,6 +242,7 @@ const routes: Routes = [
     EditableModule,
     DirectivesModule,
     TeamWorkModule,
+    OrganizationModule,
 
     // Material
     MatCardModule,
@@ -262,7 +264,7 @@ const routes: Routes = [
     MatNativeDateModule,
     MatTooltipModule,
     MatAutocompleteModule,
-    OrganizationModule,
+    MatSortModule,
 
     RouterModule.forChild(routes),
     MovieModule

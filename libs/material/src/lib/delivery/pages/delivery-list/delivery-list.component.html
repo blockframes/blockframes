@@ -3,59 +3,48 @@
     <h2>Deliveries</h2>
     <mat-divider></mat-divider>
     <a mat-button color="primary" (click)="addDelivery()">
-      <mat-icon>add</mat-icon> Add a delivery
+      <mat-icon>add</mat-icon> <span>Add a delivery</span>
     </a>
   </article>
   <article>
-    <span fxLayout="row" fxLayoutAlign="space-between center">
-      <h3>In progress</h3>
-      <button mat-raised-button color="primary">Actions</button>
-    </span>
-    <table mat-table [dataSource]="inProgressDataSource" matSort class="mat-elevation-z0">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
       <!-- Stakeholders Column -->
+      <!-- Only display other stakeholders. If we are the only stakeholder,
+      we get a placeholder with "No signers yet !" label -->
       <ng-container matColumnDef="stakeholders">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Signers</th>
         <td mat-cell *matCellDef="let delivery">
-          <span *ngFor="let stakeholder of delivery.stakeholders">
-            {{ stakeholder.organization.name }}
-          </span>
+          <article fxLayout="row">
+            <span
+              *ngFor="let stakeholder of delivery.stakeholders"
+              fxLayout="row"
+              fxLayoutAlign="start center">
+              <ng-container *ngIf="stakeholder.organization.id !== (userOrganization$ | async).id">
+                <img
+                  src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                  alt="Stakeholder Picture"/>
+                <b>{{ stakeholder.organization.name }}</b>
+              </ng-container>
+              <ng-container *ngIf="delivery.stakeholders.length === 1">
+                <img
+                  src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+                  alt="Stakeholder Picture"/>
+                <b>(No signers yet !)</b>
+              </ng-container>
+            </span>
+          </article>
         </td>
       </ng-container>
 
       <!-- State Column -->
       <ng-container matColumnDef="state">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
         <td mat-cell *matCellDef="let delivery">{{ delivery.state }}</td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="inProgressDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: inProgressDisplayedColumns"></tr>
-    </table>
-  </article>
-  <article>
-    <span fxLayout="row" fxLayoutAlign="space-between center">
-      <h3>Archived</h3>
-      <button mat-raised-button color="primary">Actions</button>
-    </span>
-    <table mat-table [dataSource]="archivedDataSource" matSort class="mat-elevation-z0">
-      <!-- Stakeholders Column -->
-      <ng-container matColumnDef="stakeholders">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let delivery">
-          <span *ngFor="let stakeholder of delivery.stakeholders">
-            {{ stakeholder.organization.name }}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- State Column -->
-      <ng-container matColumnDef="state">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let delivery">{{ delivery.state }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="archivedDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: archivedDisplayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Click on a row to navigate to the delivery edition page -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="['../', row.id, 'edit']"></tr>
     </table>
   </article>
 </section>
