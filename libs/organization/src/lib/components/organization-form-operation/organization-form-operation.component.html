@@ -23,14 +23,12 @@
   <!-- Add Member to Operation -->
   <article>
     <h2>Add a member</h2>
-    <form [formGroup]="addMemberFrom" (ngSubmit)="addMember()">
-      <mat-form-field>
-        <mat-label>Add a new member to this operation</mat-label>
-        <mat-select formControlName="members">
-          <mat-option *ngFor="let member of unauthorizedMembers" [value]="member">{{member.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button color="accent" type="submit">Add</button>
-    </form>
+    <mat-form-field>
+      <mat-label>Add a new member to this operation</mat-label>
+      <mat-select [formControl]="addMemberFrom">
+        <mat-option *ngFor="let member of unauthorizedMembers" [value]="member">{{member.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="accent" (click)="addMember()">Add</button>
   </article>
 </form>

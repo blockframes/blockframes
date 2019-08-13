@@ -12,13 +12,9 @@ export class OrganizationFormOperationComponent {
 
   @Input() members: OrganizationMember[];
 
-  addMemberFrom: FormGroup;
+  addMemberFrom = new FormControl('');
 
-  constructor(public controlContainer: ControlContainer) {
-    this.addMemberFrom = new FormGroup({
-      members: new FormControl('')
-    });
-  }
+  constructor(public controlContainer: ControlContainer) { }
 
   public get control() {
     return this.controlContainer.control;
@@ -40,7 +36,7 @@ export class OrganizationFormOperationComponent {
   }
 
   public addMember() {
-    const addedMember: OrganizationMember = this.addMemberFrom.get('members').value;
+    const addedMember: OrganizationMember = this.addMemberFrom.value;
     const members = this.control.get('members').value.filter(member => member.uid !== addedMember.uid);
     this.control.get('members').patchValue([...members, addedMember]);
     this.addMemberFrom.reset();

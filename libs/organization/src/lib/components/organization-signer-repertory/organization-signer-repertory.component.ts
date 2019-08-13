@@ -58,15 +58,14 @@ export class OrganizationSignerRepertoryComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private joinMemberAndOperation() {
-    this.dataSource = new MatTableDataSource(
-      this._members.map(member => {
-        const operationIds = this._operations.filter(operation =>
-          operation.members
-            .some(operationMember => member.uid === operationMember.uid))
-            .map(operation => operation.id);
-        return {...member, operationIds};
-      })
-    );
+
+    const getOperationIds = (member: OrganizationMember) => this._operations
+    .filter(operation => operation.members.some(operationMember => member.uid === operationMember.uid))
+    .map(operation => operation.id);
+
+    const operationMembers: OperationMember[] = this._members.map(member => ({...member, operationIds: getOperationIds(member)}));
+
+    this.dataSource = new MatTableDataSource(operationMembers);
     this.dataSource.sort = this.sort;
   }
 }
