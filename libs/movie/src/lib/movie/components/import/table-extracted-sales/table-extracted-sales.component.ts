@@ -75,8 +75,7 @@ export class TableExtractedSalesComponent implements OnInit {
   async createSelectedSales(): Promise<boolean> {
     try {
       const movies = {};
-      let salesCount = 0;
-      this.selection.selected
+      const sales = this.selection.selected
         .filter(importState => !hasImportErrors(importState))
         .map(importState => {
 
@@ -84,7 +83,6 @@ export class TableExtractedSalesComponent implements OnInit {
             const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
             movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
           }
-          salesCount++;
           importState.errors.push({
             type: 'error',
             field: 'sale',
@@ -100,7 +98,7 @@ export class TableExtractedSalesComponent implements OnInit {
       const promises = Object.keys(movies).map(k => this.movieService.update(movies[k].id, movies[k]))
 
       await Promise.all(promises);
-      this.snackBar.open(`${salesCount} sales inserted!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${sales.length} sales inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
       this.snackBar.open(`Could not insert sales`, 'close', { duration: 3000 });
