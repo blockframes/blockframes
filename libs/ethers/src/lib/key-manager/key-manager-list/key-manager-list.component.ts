@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { KeyManagerQuery, Key } from "../+state";
+import { KeyManagerQuery } from "../+state";
+import { Key } from "@blockframes/utils";
 
 @Component({
   selector: 'key-manager-list',

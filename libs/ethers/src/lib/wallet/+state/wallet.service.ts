@@ -5,11 +5,12 @@ import { toASCII } from 'punycode';
 import { baseEnsDomain, network, factoryContract } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
-import { KeyManagerService, Key } from '../../key-manager/+state';
+import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
 import { MetaTx, SignedMetaTx, LocalTx } from '../../types';
 import { WalletQuery } from './wallet.query';
 import { createDeleteKeyTx, createAddKeyTx } from './wallet-known-tx';
+import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -24,23 +25,9 @@ export class WalletService {
   ) {}
 
   public async updateFromEmail(email: string) {
-    const ensDomain = this.emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email);
     const address = await this.retreiveAddress(ensDomain);
     this.store.update({ensDomain, address});
-  }
-
-  /**
-   * Convert email to username and sanitize it:
-   * convert to lower case punycode and replace special chars by their ASCII code
-   * then add base ens domain
-   * @example `漢micHel+9@exemple.com` -> `xn--michel439-2c2s.blockframes.eth`
-   */
-  // TODO issue#714 (Laurent work on a way to get those functions in only one place)
-  public emailToEnsDomain(email: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
-    return toASCII(email.split('@')[0]).toLowerCase()
-      .split('')
-      .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
-      .join('') + '.' + baseEnsDomain;
   }
 
   /**
@@ -58,27 +45,10 @@ export class WalletService {
         return address;
       }
     }
-    return await this.precomputeAddress(ensDomain);
+    return await precomputeAddress(ensDomain, this.provider);
   }
 
-  /**
-   * This function precompute a contract address as defined in the EIP 1014 (Skinny Create 2)
-   * @param ensDomain this is use as a salt (salt need to be unique for each user)
-   * @param publicKey this is used in the smart-contract constructor argument
-   */
-  // TODO issue#714 (Laurent work on a way to get those functions in only one place)
-  public async precomputeAddress(ensDomain: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
-    this._requireProvider();
-
-    const factoryAddress = await this.provider.resolveName(factoryContract);
-
-    // CREATE2 address
-    let payload = '0xff';
-    payload += factoryAddress.substr(2);
-    payload += utils.keccak256(utils.toUtf8Bytes(this.getNameFromENS(ensDomain))).substr(2); // salt
-    payload += utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
-    return `0x${utils.keccak256(payload).slice(-40)}`;
-  }
+  
 
   private _requireProvider() {
     if(!this.provider) {
@@ -87,25 +57,21 @@ export class WalletService {
   }
 
   public async createRandomKeyFromEmail(keyName: string, email: string, password?: string) {
-    const ensDomain = this.emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email);
     const key = await this.keyManager.createFromRandom(keyName, ensDomain, password);
     this.keyManager.storeKey(key);
     return key;
   }
 
-  /** Get first part of an ens domain : `alice.blockframes.eth` -> `alice` */
-  public getNameFromENS(ensDomain: string) {
-    return ensDomain.split('.')[0];
-  }
-
   public async deployERC1077(ensDomain: string, pubKey: string) {
+    this._requireProvider();
     if (this.query.getValue().hasERC1077) {
       throw new Error('Your smart-wallet is already deployed');
     }
     this.store.setLoading(true);
     try {
-      const name =  this.getNameFromENS(ensDomain);
-      const erc1077Address = await this.precomputeAddress(ensDomain);
+      const name =  getNameFromENS(ensDomain);
+      const erc1077Address = await precomputeAddress(ensDomain, this.provider);
       const result = await this.relayer.deploy(name, pubKey, erc1077Address);
       this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
       this.store.update({hasERC1077: true})
@@ -198,7 +164,7 @@ export class WalletService {
   }
 
   public async sendSignedMetaTx(ensDomain: string, signedMetaTx: SignedMetaTx, ...args: any[]) {
-    const txReceipt = await this.relayer.send(await this.retreiveAddress(this.getNameFromENS(ensDomain)), signedMetaTx);
+    const txReceipt = await this.relayer.send(await this.retreiveAddress(getNameFromENS(ensDomain)), signedMetaTx);
     if (txReceipt.status === 0) {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
     }

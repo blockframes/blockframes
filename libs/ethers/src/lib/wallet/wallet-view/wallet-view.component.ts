@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, OnInit, Component } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { WalletQuery, WalletService } from "../+state";
-import { Key, KeyManagerService } from "../../key-manager/+state";
+import { KeyManagerService } from "../../key-manager/+state";
 import { Router } from "@angular/router";
 import { Wallet } from "../../types";
+import { Key } from "@blockframes/utils";
 
 
 @Component({

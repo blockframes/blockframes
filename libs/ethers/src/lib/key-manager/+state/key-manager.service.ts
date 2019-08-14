@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { KeyManagerStore, Key } from './key-manager.store';
+import { KeyManagerStore } from './key-manager.store';
 import { utils, Wallet as EthersWallet, getDefaultProvider, Contract } from 'ethers';
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
+import { Key } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {

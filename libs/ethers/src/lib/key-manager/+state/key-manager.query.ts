@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
-import { KeyManagerStore, Key, KeyState } from './key-manager.store';
+import { KeyManagerStore, KeyState } from './key-manager.store';
 import { map, filter, first } from 'rxjs/operators';
+import { Key } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerQuery extends QueryEntity<KeyState, Key> {

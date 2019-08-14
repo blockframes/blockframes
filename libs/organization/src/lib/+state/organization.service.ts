@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query } from '@blockframes/utils';
+import { FireQuery, Query, emailToEnsDomain } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions } from '../permissions/+state';
 import {
@@ -16,6 +16,9 @@ import {
 import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
+import { getDefaultProvider, providers, Contract } from 'ethers';
+import { network } from '@env';
+import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
@@ -39,6 +42,9 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
 export class OrganizationService {
   private organization$: Observable<Organization>;
 
+  private provider: providers.Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
+  private contract: Contract;
+
   constructor(
     private query: OrganizationQuery,
     private store: OrganizationStore,
@@ -46,7 +52,7 @@ export class OrganizationService {
     private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
-    private db: FireQuery
+    private db: FireQuery,
   ) {}
 
   /** Returns an observable over organization, to be reused when you need orgs without guards */
@@ -63,6 +69,9 @@ export class OrganizationService {
         }
         return this.db.fromQuery<Organization>(orgQuery(user.orgId));
       }),
+      
+      // TODO BLOCKCHAIN DATA
+
       tap(organization => this.store.updateOrganization(organization))
     );
 
@@ -163,6 +172,43 @@ export class OrganizationService {
   //            BLOCKCHAIN PART OF ORGS
   //-------------------------------------------------
 
+  private _requireProvider() {
+    if(!this.provider) {
+      this.provider = getDefaultProvider(network);
+    }
+  }
+
+  private async _requireContract() {
+    if(!this.contract) {
+      this._requireProvider();
+      const organizationENS = emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
+      const address = await this.provider.resolveName(organizationENS);
+      const organizationContract = new Contract(address, ORGANIZATION_ABI, this.provider);
+    }
+  }
+
+  private async addListeners() { // TODO
+    await this._requireContract();
+    
+    // retreive hardcoded operation(s)
+    const signingDelivery = this.getOperationfromContract('0x0');
+
+    // const newOperationFilter = {
+    //   address: this.contract.address,
+    //   fromBlock: 0,
+    //   toBlock: 'latest',
+    //   topics: [ '0x46e4d2a30e96e4ccf9e9a058230b32ce42ee291c0f641c93de894fe65c8814b0' ] // 'OperationCreated(uint256)' event
+    // }
+    // this.provider.on(newOperationFilter, async (log: providers.Log) => {
+    //   const operationId = log.topics[1];
+      
+    // });
+  }
+
+  public async getOperationfromContract(operationId: string) {
+    const rawOperation: {name: string, whitelistLength: string, quorum: string, } = await this.contract.getOperation(operationId);
+  }
+
   /** create a newOperation, or update it if it already exists */
   private async upsertOperation(newOperation: OrganizationOperation) {
     const { operations } = this.query.getValue().org // get every actions
@@ -237,7 +283,7 @@ export class OrganizationService {
 
   // TODO REMOVE THIS ASAP : issue 676
   public async instantiateMockData() {
-
+    return;
     const { org } = this.query.getValue();
     const mockUser = await this.db.snapshot<OrganizationMember>('users/0');
     if (!mockUser) {

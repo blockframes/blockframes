@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input } from "@angular/core";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Key } from "../../key-manager/+state";
 import { FormControl, Validators } from "@angular/forms";
-import { validMnemonic } from '@blockframes/utils';
+import { validMnemonic, Key } from '@blockframes/utils';
 
 @Component({
   selector: 'wallet-import-key-form',
