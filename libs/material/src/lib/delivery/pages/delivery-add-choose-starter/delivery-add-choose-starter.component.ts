@@ -24,7 +24,7 @@ export class DeliveryAddChooseStarterComponent {
       icon: 'order',
       title: 'Import specific delivery list',
       description: 'Lorem ipsum',
-      routerLink: 'import-delivery-list'
+      routerLink: '../3-pick-specific-delivery-list'
     },
     { icon: 'order', title: 'Blank', description: 'Lorem ipsum', routerLink: '#' }
   ];

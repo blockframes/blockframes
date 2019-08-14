@@ -80,6 +80,7 @@ import {
 } from '../material';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
+import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
 
 const routes: Routes = [
   {
@@ -113,6 +114,13 @@ const routes: Routes = [
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
             component: DeliveryAddTemplatePickerComponent
+          },
+          {
+            path: '3-pick-specific-delivery-list',
+            canActivate: [],
+            canDeactivate: [],
+            pathMatch: 'full',
+            component: DeliveryAddSpecificDeliveryListPickerComponent
           },
           {
             path: ':templateId',
@@ -200,6 +208,7 @@ const routes: Routes = [
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
     DeliveryAddTemplatePickerComponent,
+    DeliveryAddSpecificDeliveryListPickerComponent,
     DeliveryAddSettingsComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
