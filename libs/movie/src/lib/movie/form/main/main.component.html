@@ -92,10 +92,10 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <!-- ORIGIN COUNTRY -->
-  <h3> Origin Country </h3>
+  <!-- ORIGIN COUNTRIES -->
+  <h3> Origin Countries </h3>
   <mat-form-field class="full-width">
-    <mat-select formControlName="originCountry" placeholder="Origin Country">
+    <mat-select formControlName="originCountries" placeholder="Origin Countries" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching country found'"></ngx-mat-select-search>

@@ -11,7 +11,7 @@ const INPUTS_FORM = {
 const OPTIONS_FORM = {
   [MovieEditPage.OPTION_TYPES]: ['fiction', 'documentary'],
   [MovieEditPage.OPTION_GENRES]: ['thriller', 'horror'],
-  [MovieEditPage.OPTION_ORIGIN_COUNTRY]: ['france'],
+  [MovieEditPage.OPTION_ORIGIN_COUNTRIES]: ['france'],
   [MovieEditPage.OPTION_PRODUCER_COUNTRY]: ['france'],
   [MovieEditPage.OPTION_LANGUAGES]: ['french'],
   [MovieEditPage.OPTION_STATUS]: ['shooting']

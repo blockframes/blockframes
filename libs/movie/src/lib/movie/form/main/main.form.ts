@@ -32,7 +32,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     poster: new FormField(entity.poster),
     productionYear: new YearControl(entity.productionYear),
     genres: new FormField(entity.genres),
-    originCountry: new FormField(entity.originCountry),
+    originCountries: new FormField(entity.originCountries),
     languages: new FormField(entity.languages),
     status: new FormField(entity.status , [Validators.required]),
     length: new FormField<number>(entity.length),

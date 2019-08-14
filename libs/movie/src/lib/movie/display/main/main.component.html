@@ -39,11 +39,11 @@
         </span>
       </mat-card-subtitle>
     </ng-container>
-    <ng-container *ngIf="data.originCountry">
-      <mat-card-title>Origin Country</mat-card-title>
+    <ng-container *ngIf="data.originCountries.length > 0">
+      <mat-card-title>Origin Countries</mat-card-title>
       <mat-card-subtitle>
-        <span>
-          {{ getLabelByCode('TERRITORIES', data.originCountry) }}
+        <span *ngFor="let item of data.originCountries; let isLast=last">
+          {{ getLabelByCode('TERRITORIES', item) }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
