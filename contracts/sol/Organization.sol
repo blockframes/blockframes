@@ -57,6 +57,7 @@ contract Organization {
     event OperationCreated(uint256 indexed operationId);
     event MemberAdded(uint256 indexed operationId, address indexed member);
     event MemberRemoved(uint256 indexed operationId, address indexed member);
+    event QuorumUpdated(uint256 indexed operationId, uint256 indexed newQuorum);
     event ActionApproved(bytes32 indexed actionId, address indexed member);
     event ActionExecuted(bytes32 indexed actionId, bool indexed success, bytes data);
     event AdminAdded(address indexed newAdmin);
@@ -282,6 +283,8 @@ contract Organization {
     function admin_modifyQuorum(uint256 operationId, uint256 newQuorum) external
     onlyAdmin() operationShouldExists(operationId) operationIsActive(operationId) canModifyQuorum(operationId, newQuorum) {
         operations[operationId].quorum = newQuorum;
+
+        emit QuorumUpdated(operationId, newQuorum);
     }
 
     /// @dev Activate/Deactivate an action
