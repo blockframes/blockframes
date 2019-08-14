@@ -63,16 +63,12 @@ export const routes: Routes = [
             path: 'catalog',
             loadChildren: () => import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
           },
-          {
-            path: 'templates',
-            loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
-          },
-          {
+          /*{
             path: ':movieId',
             canActivate: [MovieActiveGuard],
             canDeactivate: [MovieActiveGuard],
             loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
-          }
+          }*/
         ]
       },
     ]
