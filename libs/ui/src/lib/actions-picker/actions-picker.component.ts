@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export interface ActionPickerItem<T> {
   title: string;
   payload: T;
+  img?: string;
 }
 
 @Component({
