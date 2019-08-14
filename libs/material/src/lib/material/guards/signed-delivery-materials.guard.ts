@@ -7,8 +7,7 @@ import { MovieQuery } from '@blockframes/movie';
 import { DeliveryQuery } from '../../delivery/+state';
 
 const deliveryMovieMaterialsQuery = (movieId: string, deliveryId: string): Query<Material[]> => ({
-  path: `movies/${movieId}/materials`,
-  queryFn: ref => ref.where('deliveriesIds', 'array-contains', deliveryId)
+  path: `deliveries/${deliveryId}/materials`,
 });
 
 @Injectable({ providedIn: 'root' })

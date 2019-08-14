@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { FireQuery } from '@blockframes/utils';
-import { MaterialQuery } from './material.query';
-import { Delivery } from '../../delivery/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +10,6 @@ export class MaterialService {
   constructor(
     private db: FireQuery,
     private deliveryQuery: DeliveryQuery,
-    private query: MaterialQuery
   ) {}
 
   /** Delete materials from a delivery
