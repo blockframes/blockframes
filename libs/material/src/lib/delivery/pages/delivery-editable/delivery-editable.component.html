@@ -4,6 +4,8 @@
     <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">
         <h2>{{ movie.main.title.original}}</h2>
         <mat-divider fxFlex></mat-divider>
+        <button mat-icon-button (click)="saveAsTemplate()"><mat-icon svgIcon="template"></mat-icon></button>
+        <button mat-icon-button (click)="deleteDelivery()"><mat-icon svgIcon="delete"></mat-icon></button>
         <a mat-button color="primary" (click)="addMaterial()">
           <mat-icon>add</mat-icon> <span>Add material</span>
         </a>
@@ -13,6 +15,6 @@
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav>
-    <delivery-material-form [formGroup]="materialInformationsForm"></delivery-material-form>
+    <delivery-material-form [formGroup]="materialInformationsForm" (delete)="openDeleteMaterial()"></delivery-material-form>
   </ng-container>
 </editable-sidenav>

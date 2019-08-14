@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
@@ -8,9 +8,15 @@ import { ControlContainer } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryMaterialFormFormComponent {
+  @Output() delete = new EventEmitter<void>();
+
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
     return this.controlContainer.control;
+  }
+
+  public deleteMaterial() {
+    this.delete.emit();
   }
 }

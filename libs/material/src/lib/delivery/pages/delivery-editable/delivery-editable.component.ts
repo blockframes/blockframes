@@ -79,9 +79,23 @@ export class DeliveryEditableComponent implements OnInit {
     this.dialog.open(NewTemplateComponent);
   }
 
-  public deleteMaterial(material: Material) {
+  public openDeleteMaterial() {
+    this.dialog.open(ConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete material',
+        question: 'Are you sure you want to delete this material ?',
+        buttonName: 'Delete',
+        onConfirm: () => this.deleteMaterial()
+      }
+    });
+  }
+
+  public deleteMaterial() {
+    const material = this.materialQuery.getActive();
     this.service.deleteMaterial(material.id);
     this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
+    this.opened = false;
   }
 
   public openDeleteDelivery() {
@@ -98,7 +112,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   private async deleteDelivery() {
     await this.service.deleteDelivery();
-    this.router.navigate([`/layout/o/${this.movieQuery.getActiveId()}/list`]);
+    this.router.navigate([`/layout/o/delivery/${this.movieQuery.getActiveId()}/list`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
 

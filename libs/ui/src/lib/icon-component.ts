@@ -178,6 +178,14 @@ const ICONS_SVG = [
   {
     name: 'keyIcon',
     url: 'assets/icons/keyIcon.svg'
+  },
+  {
+    name: 'template',
+    url: 'assets/icons/template.svg'
+  },
+  {
+    name: 'delete',
+    url: 'assets/icons/trash.svg'
   }
 ];
 
