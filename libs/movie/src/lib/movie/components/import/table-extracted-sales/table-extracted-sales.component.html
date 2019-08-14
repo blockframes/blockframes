@@ -43,14 +43,14 @@
     <td mat-cell *matCellDef="let element"> {{ element.movieInternalRef || '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="sale.rightsStart">
+  <ng-container matColumnDef="sale.rights.from">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
-    <td mat-cell *matCellDef="let element"> {{ element.sale.rightsStart | date:'shortDate'}} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.sale.rights.from | date:'shortDate'}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="sale.rightsEnd">
+  <ng-container matColumnDef="sale.rights.to">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-    <td mat-cell *matCellDef="let element"> {{ element.sale.rightsEnd | date:'shortDate' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.sale.rights.to | date:'shortDate' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="sale.exclusive">

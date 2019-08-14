@@ -36,8 +36,8 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
       return movie.sales.find(entity =>
         entity.operatorName === sale.operatorName &&
         entity.showOperatorName === sale.showOperatorName &&
-        new Date(entity.rightsStart).getTime() === sale.rightsStart.getTime() &&
-        new Date(entity.rightsEnd).getTime() === sale.rightsEnd.getTime() &&
+        new Date(entity.rights.from).getTime() === sale.rights.from.getTime() &&
+        new Date(entity.rights.to).getTime() === sale.rights.to.getTime() &&
         entity.exclusive === sale.exclusive &&
         entity.price === sale.price &&
         entity.dubbings.length === sale.medias.length && entity.medias.slice().sort().every((value, index) => value === sale.medias.sort()[index]) &&

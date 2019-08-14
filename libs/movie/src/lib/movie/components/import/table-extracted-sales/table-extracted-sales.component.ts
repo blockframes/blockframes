@@ -31,8 +31,8 @@ export class TableExtractedSalesComponent implements OnInit {
     'select',
     'movieInternalRef',
     'movieTitle',
-    'sale.rightsStart',
-    'sale.rightsEnd',
+    'sale.rights.from',
+    'sale.rights.to',
     'sale.exclusive',
     'errors',
     'warnings',
@@ -173,7 +173,7 @@ export class TableExtractedSalesComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: SalesImportState, filter) {
-    const dataStr = data.movieInternalRef + data.movieTitle + data.sale.rightsStart + data.sale.rightsEnd;
+    const dataStr = data.movieInternalRef + data.movieTitle + data.sale.rights.from + data.sale.rights.to;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
