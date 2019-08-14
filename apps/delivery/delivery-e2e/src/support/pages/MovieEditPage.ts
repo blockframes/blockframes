@@ -7,7 +7,7 @@ export default class MovieEditPage {
 
   public static OPTION_TYPES = 'types';
   public static OPTION_GENRES = 'genres';
-  public static OPTION_ORIGIN_COUNTRY = 'originCountry';
+  public static OPTION_ORIGIN_COUNTRIES = 'originCountries';
   public static OPTION_PRODUCER_COUNTRY = 'coProducerCountries';
   public static OPTION_LANGUAGES = 'languages';
   public static OPTION_STATUS = 'status';

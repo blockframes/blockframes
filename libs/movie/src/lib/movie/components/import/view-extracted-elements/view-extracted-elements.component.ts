@@ -58,7 +58,7 @@ enum SpreadSheetMovie {
   productionCompanies,
   broadcasterCoproducers,
   color,
-  originCountry,
+  originCountries,
   europeanQualification,
   rating,
   certifications,
@@ -287,21 +287,23 @@ export class ViewExtractedElementsComponent {
           }
         }
 
-        // ORIGIN COUNTRY (Country of Origin)
-        if (spreadSheetRow[SpreadSheetMovie.originCountry]) {
-          const country = getCodeIfExists('TERRITORIES', spreadSheetRow[SpreadSheetMovie.originCountry]);
-          if (country) {
-            movie.main.originCountry = country;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'main.originCountry',
-              name: "Country of origin",
-              reason: `${spreadSheetRow[SpreadSheetMovie.originCountry]} not found in territories list`,
-              hint: 'Edit corresponding sheet field.'
-            } as SpreadsheetImportError);
-
-          }
+        // ORIGIN COUNTRIES (Countries of Origin)
+        if (spreadSheetRow[SpreadSheetMovie.originCountries]) {
+          movie.main.originCountries = [];
+          spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: string) => {
+            const country = getCodeIfExists('TERRITORIES', c);
+            if (country) {
+              movie.main.originCountries.push(country);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'main.originCountries',
+                name: "Countries of origin",
+                reason: `${c} not found in territories list`,
+                hint: 'Edit corresponding sheet field.'
+              } as SpreadsheetImportError);
+            }
+          });
         }
 
         // CERTIFICATIONS (European Qualification)
@@ -667,11 +669,11 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.main.originCountry) {
+    if (movie.main.originCountries.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.originCountry',
-        name: "Country of origin",
+        field: 'main.originCountries',
+        name: "Countries of origin",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       } as SpreadsheetImportError);

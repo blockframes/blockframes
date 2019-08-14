@@ -40,7 +40,7 @@ export interface MovieMain {
   poster?: string,
   productionYear?: number,
   genres?: string[],
-  originCountry?: string,
+  originCountries?: string[],
   languages?: string[],
   status?: string,
   productionCompanies?: Credit[],
@@ -166,6 +166,7 @@ export function createMovieMain(params : Partial<MovieMain> = {}) : MovieMain{
     genres: [],
     languages: [],
     productionCompanies: [],
+    originCountries: [],
     ... params
   } as MovieMain;
 }
