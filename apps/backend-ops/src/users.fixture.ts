@@ -81,3 +81,5 @@ export const USERS: UserConfig[] = [
     password: 'blockframes'
   }
 ];
+
+export const USERS_IDS = USERS.map(x => x.uid);
