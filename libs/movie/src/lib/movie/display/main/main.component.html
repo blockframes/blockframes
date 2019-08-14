@@ -20,7 +20,7 @@
     </mat-card-subtitle>
   </mat-card-header>
   <img mat-card-image class="movie-poster" *ngIf="data.poster" [src]="data.poster">
-  <mat-card-content *ngIf="data.directors.length > 0" class="movie-card-section">
+  <mat-card-content *ngIf="data.directors.length" class="movie-card-section">
     <mat-card-title>Directors</mat-card-title>
     <mat-card-subtitle>
       <span *ngFor="let item of data.directors; let isLast=last">
@@ -31,7 +31,7 @@
   <mat-card-content *ngIf="shouldDisplayMainInformations" class="movie-card-section">
     <mat-divider></mat-divider>
     <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
-    <ng-container *ngIf="data.genres.length > 0">
+    <ng-container *ngIf="data.genres.length">
       <mat-card-title>Genres</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.genres; let isLast=last">
@@ -39,7 +39,7 @@
         </span>
       </mat-card-subtitle>
     </ng-container>
-    <ng-container *ngIf="data.originCountries.length > 0">
+    <ng-container *ngIf="data.originCountries.length">
       <mat-card-title>Origin Countries</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.originCountries; let isLast=last">
@@ -47,7 +47,7 @@
         </span>
       </mat-card-subtitle>
     </ng-container>
-    <ng-container *ngIf="data.languages.length > 0">
+    <ng-container *ngIf="data.languages.length">
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.languages; let isLast=last">
@@ -77,7 +77,7 @@
       </mat-card-subtitle>
     </ng-container>
 
-    <ng-container *ngIf="data.productionCompanies.length > 0">
+    <ng-container *ngIf="data.productionCompanies.length">
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.productionCompanies; let isLast=last">

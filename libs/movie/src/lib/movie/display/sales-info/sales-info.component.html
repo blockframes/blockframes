@@ -12,7 +12,7 @@
     <mat-list-item *ngIf="data.pegi">
       <strong>Rating (PEGI) :</strong> {{data.pegi}}
     </mat-list-item>
-    <mat-list-item *ngIf="data.certifications.length > 0">
+    <mat-list-item *ngIf="data.certifications.length">
       <strong>Certifications :</strong>
       <ul>
         <li *ngFor="let item of data.certifications">
@@ -26,7 +26,7 @@
     <mat-list-item *ngIf="data.originCountryReleaseDate">
       <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }}
     </mat-list-item>
-    <mat-list-item *ngIf="data.broadcasterCoproducers.length > 0">
+    <mat-list-item *ngIf="data.broadcasterCoproducers.length">
       <strong>TV / Platform coproducer(s) :</strong>
       <ul>
         <li *ngFor="let item of data.broadcasterCoproducers">

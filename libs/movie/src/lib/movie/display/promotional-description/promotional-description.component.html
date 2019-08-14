@@ -1,5 +1,5 @@
 <ng-container *ngIf="data">
-  <mat-card-content *ngIf="data.keywords.length > 0" class="movie-card-section">
+  <mat-card-content *ngIf="data.keywords.length" class="movie-card-section">
     <mat-card-title class="movie-card-meta-title">Keywords</mat-card-title>
     <mat-card-subtitle>
       <span *ngFor="let item of data.keywords; let isLast=last">
@@ -7,7 +7,7 @@
       </span>
     </mat-card-subtitle>
   </mat-card-content>
-  <mat-card-content *ngIf="data.keyAssets.length > 0" class="movie-card-section">
+  <mat-card-content *ngIf="data.keyAssets.length" class="movie-card-section">
     <mat-card-title class="movie-card-meta-title">Key Assets</mat-card-title>
     <mat-card-subtitle>
       <ul>

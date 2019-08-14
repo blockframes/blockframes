@@ -15,7 +15,7 @@
       <p><strong>{{ error.field }} : </strong> {{ error.hint }}</p>
       <mat-action-row>
         <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Previous</button>
-        <ng-container *ngIf="element.errors.length > 0">
+        <ng-container *ngIf="element.errors.length">
           <button mat-button color="primary"
             (click)="nextStep(i+1)">{{ i+1 === element.errors.length ? 'End' : 'Next' }}</button>
         </ng-container>
