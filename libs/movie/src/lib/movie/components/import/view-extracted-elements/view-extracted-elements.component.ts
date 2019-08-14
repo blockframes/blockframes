@@ -280,7 +280,7 @@ export class ViewExtractedElementsComponent {
               type: 'warning',
               field: 'salesInfo.color',
               name: "Color",
-              reason: `${g} not found in colors list`,
+              reason: `${spreadSheetRow[SpreadSheetMovie.color]} not found in colors list`,
               hint: 'Edit corresponding sheet field.'
             } as SpreadsheetImportError);
 
@@ -297,7 +297,7 @@ export class ViewExtractedElementsComponent {
               type: 'warning',
               field: 'main.originCountry',
               name: "Country of origin",
-              reason: `${g} not found in territories list`,
+              reason: `${spreadSheetRow[SpreadSheetMovie.originCountry]} not found in territories list`,
               hint: 'Edit corresponding sheet field.'
             } as SpreadsheetImportError);
 
@@ -326,7 +326,7 @@ export class ViewExtractedElementsComponent {
                 type: 'warning',
                 field: 'salesInfo.certifications',
                 name: "Certifications",
-                reason: `${g} not found in certifications list`,
+                reason: `${c} not found in certifications list`,
                 hint: 'Edit corresponding sheet field.'
               } as SpreadsheetImportError);
             }
