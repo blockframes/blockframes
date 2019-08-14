@@ -852,13 +852,13 @@ export class ViewExtractedElementsComponent {
           // BEGINNING OF RIGHTS
           if (spreadSheetRow[SpreadSheetSale.rightsStart]) {
             const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.rightsStart]);
-            sale.rightsStart = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+            sale.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
           }
 
           // END OF RIGHTS
           if (spreadSheetRow[SpreadSheetSale.rightsEnd]) {
             const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.rightsEnd]);
-            sale.rightsEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+            sale.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
           }
 
           // TERRITORIES (Mandate Territories)
@@ -1027,10 +1027,10 @@ export class ViewExtractedElementsComponent {
     }
 
     // BEGINNING OF RIGHTS
-    if (!sale.rightsStart) {
+    if (!sale.rights.from) {
       errors.push({
         type: 'error',
-        field: 'rightsStart',
+        field: 'rights.from',
         name: 'Beginning of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1038,10 +1038,10 @@ export class ViewExtractedElementsComponent {
     }
 
     // END OF RIGHTS
-    if (!sale.rightsEnd) {
+    if (!sale.rights.to) {
       errors.push({
         type: 'error',
-        field: 'rightsEnd',
+        field: 'rights.to',
         name: 'End of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1108,7 +1108,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // PRICE
-    if (sale.price) {
+    if (!sale.price) {
       errors.push({
         type: 'warning',
         field: 'price',

@@ -5,8 +5,7 @@ import { Stakeholder } from "../../stakeholder/+state";
 export interface MovieSale { 
   operatorName: string;
   showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
-  rightsStart: Date;
-  rightsEnd: Date;
+  rights: DateRange;
   territories: string[];
   medias: string[];
   dubbings: string[];
@@ -24,6 +23,11 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
+}
+
+export interface DateRange {
+  from: Date;
+  to: Date;
 }
 
 export interface Credit {
@@ -238,6 +242,10 @@ export function createMovieSalesAgentDeal(params : Partial<MovieSalesAgentDeal> 
 
 export function createMovieSale(params : Partial<MovieSale> = {}) : MovieSale{
   return {
+    rights: {
+      from: '',
+      to: '',
+    },
     territories: [],
     medias: [],
     dubbings: [],
