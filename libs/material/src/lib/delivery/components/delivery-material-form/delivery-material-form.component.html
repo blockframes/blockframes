@@ -1,0 +1,22 @@
+<h4>Edit material</h4>
+<!-- TODO: issue#579 import picture -->
+<article>
+  <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput placeholder="Title" type="text" formControlName="value"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Description" type="text" formControlName="description"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <input matInput placeholder="Category" type="text" formControlName="category" />
+    </mat-form-field>
+  </form>
+</article>
+<mat-divider></mat-divider>
+<article fxLayout="row" fxLayoutAlign="center center">
+  <button mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete this material</button>
+</article>

@@ -4,15 +4,17 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialDeliveryForm } from '../../../material/+state';
-import { MaterialStore, MaterialQuery, MaterialService } from '../../../material/+state';
+import { Material, MaterialDeliveryForm, MaterialService } from '../../../material/+state';
+import { MaterialStore, MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery, DeliveryStore } from '../../+state';
+import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { applyTransaction } from '@datorama/akita';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
+import { createMaterialFormList } from '../../forms/material.form';
+import { FormGroup } from '@angular/forms';
+import { MaterialInformationsForm } from '../../forms/material-edit.form';
 
 @Component({
   selector: 'delivery-editable',
@@ -22,12 +24,12 @@ import { map } from 'rxjs/operators';
 })
 export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
-  public materials$: Observable<TemplateView>;
+  public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
-  public form$: Observable<MaterialDeliveryForm>;
+  public materialInformationsForm: MaterialInformationsForm;
   public isDeliveryValidated$: Observable<boolean>;
   public materialId: string;
-  public allChecked: boolean;
+  public opened = false;
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -35,9 +37,8 @@ export class DeliveryEditableComponent implements OnInit {
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
     private materialStore: MaterialStore,
-    private store: DeliveryStore,
-    private service: DeliveryService,
     private materialService: MaterialService,
+    private service: DeliveryService,
     private snackBar: MatSnackBar,
     private router: Router,
   ) {}
@@ -46,35 +47,41 @@ export class DeliveryEditableComponent implements OnInit {
 
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.materials$ = this.materialQuery.materialsByDelivery$;
+    this.materials$ = this.materialQuery.selectAll();
     this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
-    this.form$ = this.materialQuery.deliveryForm$;
 
-    this.allChecked = false;
+    this.materialInformationsForm = new MaterialInformationsForm(this.query.getValue().org);
+  }
+
+  public openSidenav(materialId: string) {
+    this.materialStore.setActive(materialId);
+    this.opened = true;
+  }
+
+  public update() {
+    try {
+      if (this.materialInformationsForm.invalid)
+        throw new Error('Your material informations are not valid');
+      const materialId = this.materialQuery.getActiveId()
+      this.materialService.update(this.materialInformationsForm.value, materialId);
+      this.snackBar.open('Material updated succesfully', 'close', { duration: 2000 });
+      this.materialStore.removeActive(materialId)
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
+  }
+
+  public addMaterial() {
+
   }
 
   public saveAsTemplate() {
     this.dialog.open(NewTemplateComponent);
   }
 
-  public addMaterial(material: Material) {
-    this.service.saveMaterial(material);
-    this.materialStore.clearForm();
-    // TODO: Make it scroll to the form.
-  }
-
   public deleteMaterial(material: Material) {
     this.service.deleteMaterial(material.id);
     this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
-  }
-
-  public updateMaterial(material: Material) {
-    this.service.updateMaterial(material);
-  }
-
-  public addForm(category: string) {
-    this.materialStore.updateEmptyDeliveryForm(category);
-    delete this.materialId;
   }
 
   public openDeleteDelivery() {
@@ -123,29 +130,6 @@ export class DeliveryEditableComponent implements OnInit {
 
   public selectMaterial(isChecked: any, id: string) {
     isChecked ? this.materialStore.addActive(id) : this.materialStore.removeActive(id);
-  }
-
-  public selectAllMaterials() {
-    this.allChecked = !this.allChecked;
-    const process = this.allChecked
-      ? material => this.materialStore.addActive(material.id)
-      : material => this.materialStore.removeActive(material.id);
-      applyTransaction(() => this.materialQuery.getAll().forEach(process))
-  }
-
-  public deleteSelectedMaterials() {
-    const materials = this.materialQuery.getActive();
-    this.materialService.deleteMaterials(materials);
-    this.materialStore.returnToInitialState();
-    this.allChecked = false;
-    // TODO: Notify which and how much materials have been deleted with snackbar
-  }
-
-  public changeStep(stepId: string) {
-    const materials = this.materialQuery.getActive();
-    this.materialService.updateStep(materials, stepId);
-    this.materialStore.returnToInitialState();
-    this.allChecked = false;
   }
 
   public signDelivery() {

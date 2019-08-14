@@ -21,12 +21,13 @@ import { DeliveryFiltersComponent } from './components/delivery-filters/delivery
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
 import { DeliveryInformationsDatesFormComponent } from './components/delivery-informations-dates-form/delivery-informations-dates-form.component';
+import { DeliveryDisplayComponent } from './components/delivery-display/delivery-display.component';
+import { DeliveryMaterialFormComponent } from './components/delivery-material-form/delivery-material-form.component';
 
 // Pages
 import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
-import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
@@ -176,7 +177,7 @@ const routes: Routes = [
             path: 'view',
             canActivate: [SignedDeliveryMaterialsGuard],
             canDeactivate: [SignedDeliveryMaterialsGuard],
-            component: DeliveryViewComponent
+            component: DeliveryEditableComponent
           },
           {
             path: 'edit',
@@ -204,7 +205,7 @@ const routes: Routes = [
   declarations: [
     MovieMaterialsViewComponent,
     DeliveryListComponent,
-    DeliveryViewComponent,
+    DeliveryDisplayComponent,
     DeliveryEditableComponent,
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
@@ -228,7 +229,8 @@ const routes: Routes = [
     DeliveryEmptyComponent,
     DeliveryRepertoryComponent,
     DeliveryInformationsDatesDisplayComponent,
-    DeliveryInformationsDatesFormComponent
+    DeliveryInformationsDatesFormComponent,
+    DeliveryMaterialFormComponent
   ],
   imports: [
     CommonModule,

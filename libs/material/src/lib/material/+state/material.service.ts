@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
-import { MovieQuery } from '@blockframes/movie';
 import { FireQuery } from '@blockframes/utils';
+import { MaterialQuery } from './material.query';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class MaterialService {
   constructor(
     private db: FireQuery,
     private deliveryQuery: DeliveryQuery,
-    private movieQuery: MovieQuery,
+    private query: MaterialQuery,
   ) {}
 
   /** Delete materials from a delivery
@@ -39,6 +39,12 @@ export class MaterialService {
       return batch.update(materialRef, { stepId });
     });
     batch.commit();
+  }
+
+  /** Update a material */
+  public update(material: Partial<Material>, materialId: string) {
+    const delivery = this.deliveryQuery.getActive();
+    return this.db.doc(`deliveries/${delivery.id}/materials/${materialId}`).update(material);
   }
 }
 
