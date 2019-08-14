@@ -23,7 +23,9 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
   }
 
   /**
-   * Checks if a sale is already existing for a given movie and returns it
+   * Checks if a sale is already existing for a given movie and returns it.
+   * We use internalRef (ie: film code) to retreive movie since this ID is the one used in 
+   * spreadsheets files.
    * @param internalRef 
    * @param sale 
    */
