@@ -29,7 +29,7 @@ export class PermissionsQuery extends Query<PermissionsState> {
   }
 
   /** Checks if the user is SuperAdmin of his organization */
-  public isUserSuperAdmin(userId: string): Observable<boolean> {
-    return this.select(state => state.superAdmins.includes(userId));
+  public isUserSuperAdmin(userId: string) {
+    return this.getValue().superAdmins.includes(userId);
   }
 }

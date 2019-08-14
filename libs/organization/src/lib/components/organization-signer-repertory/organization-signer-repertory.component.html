@@ -13,8 +13,12 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Authorized on</th>
     <!-- we have to check how many actions this signer is active on, so we can use the correct grammar-->
     <td mat-cell *matCellDef="let member">
-      <ng-container *ngIf="member.operationIds">{{ member.operationIds.length | i18nPlural: operationMapping }}
+      <ng-container *ngIf="member.role === 'member'; else admin">
+        {{ member.operationIds.length | i18nPlural: operationMapping }}
       </ng-container>
+      <ng-template #admin>
+        Every operations (admin)
+      </ng-template>
     </td>
   </ng-container>
 

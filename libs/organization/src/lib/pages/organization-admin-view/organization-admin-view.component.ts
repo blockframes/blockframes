@@ -42,6 +42,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     /** Return the operationFormGroup linked to the selected operation.id */
     this.operations$ = this.query.select('org').pipe(
       tap(organization => this.organizationName = organization.name),
+      filter(organization => !!organization.operations),
       map(organization => organization.operations),
       tap(operations => this.operationFormList.patchValue(operations)),
       switchMap(operations => this.operationFormList.valueChanges.pipe(startWith(operations)))

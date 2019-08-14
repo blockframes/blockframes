@@ -2,9 +2,9 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query, emailToEnsDomain } from '@blockframes/utils';
+import { FireQuery, Query, emailToEnsDomain, precomputeAddress } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
-import { App, createAppPermissions, createPermissions } from '../permissions/+state';
+import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
   createOrganization,
   Organization,
@@ -16,7 +16,7 @@ import {
 import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
-import { getDefaultProvider, providers, Contract } from 'ethers';
+import { getDefaultProvider, providers, Contract, utils } from 'ethers';
 import { network } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
@@ -38,6 +38,13 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
   // })
 });
 
+const quorumUpdateFilter: providers.Filter = {
+  address: this.contract.address,
+  fromBlock: 0,
+  toBlock: 'latest',
+  topics: [ '0x6784e9bcb845caaa98267d7b0918f97d3d17f7cb35a05b52010f7eb587a0acb0' ] // 'QuorumUpdated(uint256,uint256)' event
+}
+
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
   private organization$: Observable<Organization>;
@@ -48,7 +55,7 @@ export class OrganizationService {
   constructor(
     private query: OrganizationQuery,
     private store: OrganizationStore,
-    // private permissionsQuery: PermissionsQuery,
+    private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
@@ -69,9 +76,6 @@ export class OrganizationService {
         }
         return this.db.fromQuery<Organization>(orgQuery(user.orgId));
       }),
-      
-      // TODO BLOCKCHAIN DATA
-
       tap(organization => this.store.updateOrganization(organization))
     );
 
@@ -183,35 +187,76 @@ export class OrganizationService {
       this._requireProvider();
       const organizationENS = emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
       const address = await this.provider.resolveName(organizationENS);
-      const organizationContract = new Contract(address, ORGANIZATION_ABI, this.provider);
+      this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
   }
 
-  private async addListeners() { // TODO
-    await this._requireContract();
-    
-    // retreive hardcoded operation(s)
-    const signingDelivery = this.getOperationfromContract('0x0');
+  public async removeAllListeners() {
+    this._requireProvider();
+    this.provider.removeAllListeners(quorumUpdateFilter);
+    // TODO remove add memeber listener
+    // TODO remove delete memeber listener
+  }
 
-    // const newOperationFilter = {
-    //   address: this.contract.address,
-    //   fromBlock: 0,
-    //   toBlock: 'latest',
-    //   topics: [ '0x46e4d2a30e96e4ccf9e9a058230b32ce42ee291c0f641c93de894fe65c8814b0' ] // 'OperationCreated(uint256)' event
-    // }
-    // this.provider.on(newOperationFilter, async (log: providers.Log) => {
-    //   const operationId = log.topics[1];
-      
-    // });
+  public async retreiveDataAndAddListeners() {
+    await this._requireContract();
+
+    if (this.provider.listenerCount() !== 0) {
+      return;
+    }
+
+    // retreive hardcoded operation(s)
+    const signingDelivery = await this.getOperationfromContract('0x0');
+    this.upsertOperation(signingDelivery);
+
+    // listen for quorum updates
+    
+    this.provider.on(quorumUpdateFilter, (log: providers.Log) => {
+      const operationId = log.topics[1];
+      const quorum = utils.bigNumberify(log.topics[2]).toNumber();
+      this.updateOperationQuorum(operationId, quorum);
+    });
+
+
+    // listen for member added
+    // TODO
+
+    // listen for member removed
+    // TODO
   }
 
   public async getOperationfromContract(operationId: string) {
-    const rawOperation: {name: string, whitelistLength: string, quorum: string, } = await this.contract.getOperation(operationId);
+    await this._requireContract();
+
+    const rawOperation: {name: string, whitelistLength: string, quorum: string, active: boolean} = await this.contract.getOperation(operationId);
+    const operation: OrganizationOperation = {
+      id: operationId,
+      name: rawOperation.name,
+      quorum: utils.bigNumberify(rawOperation.quorum).toNumber(),
+      members: [],
+    };
+
+    const promises: Promise<number>[] = [];
+    this.query.getValue().org.members
+      .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
+      .forEach(member => {
+        const promise = precomputeAddress(emailToEnsDomain(member.email), this.provider)
+          .then((address): boolean => this.contract.isWhitelisted(address, operationId))
+          .then(isWhiteListed => isWhiteListed ? operation.members.push(member) : -1);
+        promises.push(promise);
+      });
+    
+    await Promise.all(promises);
+    return operation;
   }
 
   /** create a newOperation, or update it if it already exists */
   private async upsertOperation(newOperation: OrganizationOperation) {
-    const { operations } = this.query.getValue().org // get every actions
+    let { operations } = this.query.getValue().org; // get every operations
+
+    if(!operations) {
+      operations = [];
+    }
 
     // add the updated action to the action list
     // we could not use `operations.push(newOperation)` direclty otherwise the operation will have been duplicated

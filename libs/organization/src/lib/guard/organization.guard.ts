@@ -19,6 +19,7 @@ export class OrganizationGuard {
           if (organization.status === OrganizationStatus.pending) {
             return res(this.router.parseUrl('layout/organization/congratulation'));
           }
+          this.orgService.retreiveDataAndAddListeners();
           return res(true);
         },
         error: err => {
@@ -31,6 +32,7 @@ export class OrganizationGuard {
 
   canDeactivate() {
     this.subscription.unsubscribe();
+    this.orgService.removeAllListeners();
     return true;
   }
 }

@@ -1,7 +1,8 @@
 import { ControlContainer } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationOperation, OrganizationMember } from '../../+state';
+import { OrganizationOperation, OrganizationMember, UserRole } from '../../+state';
 import { MatSlideToggleChange } from '@angular/material';
+import { PermissionsQuery } from '../../permissions/+state';
 
 @Component({
   selector: 'organization-signer-form',
@@ -13,14 +14,21 @@ export class OrganizationSignerFormComponent {
 
   @Input() member: OrganizationMember;
 
-  constructor(public controlContainer: ControlContainer) { }
+  constructor(
+    public controlContainer: ControlContainer,
+    private permissionQuery: PermissionsQuery,
+  ) { }
 
   public get control() {
     return this.controlContainer.control;
   }
 
+  public get isAdmin() {
+    return this.permissionQuery.isUserSuperAdmin(this.member.uid);
+  }
+
   isSelected(operation: OrganizationOperation) {
-    return operation.members.some(operationMember => operationMember.uid === this.member.uid);
+    return operation.members.some(operationMember => operationMember.uid === this.member.uid) || this.isAdmin;
   }
 
   public toggleSelection(toggle: MatSlideToggleChange, id: string) {

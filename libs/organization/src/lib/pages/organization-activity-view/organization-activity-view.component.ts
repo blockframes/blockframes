@@ -27,7 +27,7 @@ export class OrganizationActivityViewComponent implements OnInit {
   ){}
 
   ngOnInit() {
-    this.service.instantiateMockData(); // TODO delete that : issue 676
+    // this.service.instantiateMockData(); // TODO delete that : issue 676
     this.pendingActions$ = this.query.pendingActions$;
     this.approvedActions$ = this.query.approvedActions$;
   }
