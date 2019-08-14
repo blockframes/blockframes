@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { Router } from '@angular/router';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { Observable, Subject } from 'rxjs';
+import { Observable} from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
-import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-list',
@@ -14,12 +12,10 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./delivery-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryListComponent implements OnInit, OnDestroy {
+export class DeliveryListComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public userOrganization$: Observable<Organization>;
-  public dataSource: MatTableDataSource<Delivery>;
-  public displayedColumns: string[] = ['stakeholders', 'state'];
-  private destroyed$ = new Subject();
+  public deliveries$: Observable<Delivery[]>;
 
   constructor(
     private query: DeliveryQuery,
@@ -30,14 +26,7 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userOrganization$ = this.organizationQuery.select('org');
-    this.query
-      .selectAll()
-      .pipe(
-        takeUntil(this.destroyed$),
-        map(deliveries => this.dataSource = new MatTableDataSource(deliveries))
-      )
-      .subscribe();
-    this.dataSource.sort = this.sort;
+    this.deliveries$ = this.query.selectAll();
   }
 
   /**
@@ -46,10 +35,5 @@ export class DeliveryListComponent implements OnInit, OnDestroy {
   public addDelivery() {
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
   }
 }

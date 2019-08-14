@@ -4,26 +4,9 @@ section {
   margin: 50px 300px;
 }
 
-table {
-  width: 100%;
-}
-
-img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin: 10px;
-}
-
 mat-divider {
-  width: 100%;
   margin: 0 20px;
 }
-
-tr.mat-row {
-  cursor: pointer;
-}
-
 
 @include medium {
   section {

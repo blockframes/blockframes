@@ -20,6 +20,7 @@ import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.
 import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
+import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 
 // Pages
 import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
@@ -225,7 +226,8 @@ const routes: Routes = [
     DeliverySettingsFormComponent,
     DeliverySettingsEditableComponent,
     DeliverySignComponent,
-    DeliveryEmptyComponent
+    DeliveryEmptyComponent,
+    DeliveryRepertoryComponent,
   ],
   imports: [
     CommonModule,
