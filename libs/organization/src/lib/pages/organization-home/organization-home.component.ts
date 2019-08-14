@@ -12,10 +12,10 @@ const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
 });
 
-const invitationActionFromOrgToUser = (invitation: Invitation) => ({
+const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
   matIcon: 'alternate_email',
   title: `Join ${invitation.organization.name}`,
-  action: () => this.acceptInvitation(invitation),
+  action,
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
 });
@@ -58,7 +58,9 @@ export class OrganizationHomeComponent implements OnInit {
             case InvitationType.fromUserToOrganization:
               return invitationActionFromUserToOrganization(invitation);
             case InvitationType.fromOrganizationToUser:
-              return invitationActionFromOrgToUser(invitation);
+              return invitationActionFromOrgToUser(invitation, () =>
+                this.acceptInvitation(invitation)
+              );
           }
         });
 
