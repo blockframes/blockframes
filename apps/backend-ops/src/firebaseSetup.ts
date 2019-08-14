@@ -19,8 +19,10 @@ async function createUserIfItDoesntExists(
 ): Promise<UserRecord> {
   try {
     // await here to catch the error in the try / catch scope
+    console.log('trying to get user:', uid, email);
     return await auth.getUser(uid);
   } catch {
+    console.log('creating user:', uid, email);
     return await auth.createUser({ uid, email, password });
   }
 }
@@ -33,6 +35,44 @@ async function createUserIfItDoesntExists(
 export async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
   const ps = users.map(user => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
+}
+
+const sleep = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
+
+async function trashAllOtherUsers(
+  expectedUsers: UserConfig[],
+  auth: Auth,
+  fromPageToken?: string
+): Promise<any> {
+  const expectedUsersIds = expectedUsers.map(x => x.uid);
+
+  let { pageToken, users } = await auth.listUsers(1000, fromPageToken);
+
+  while (users.length > 0 && pageToken) {
+    const usersToRemove = users.filter(user => expectedUsersIds.indexOf(user.uid) === -1);
+
+    // Note: this is bad practice to await in a loop.
+    // In that case we just want to remove the users and wait for some
+    // time to avoid exploding Google's quotas. No need for more design,
+    // but do not reproduce in frontend / backend code.
+    for (const user of usersToRemove) {
+      console.log('removing user:', user.email, user.uid);
+      await auth.deleteUser(user.uid);
+      await sleep(100);
+    }
+
+    if (pageToken) {
+      const rest = await auth.listUsers(1000, pageToken);
+      pageToken = rest.pageToken;
+      users = rest.users;
+    }
+  }
+
+  return;
 }
 
 function getRestoreURL(projectID: string): string {
@@ -79,6 +119,8 @@ export async function prepareFirebase() {
   try {
     console.info('create all users...');
     await createAllUsers(USERS, auth);
+    console.info('clearing other users...');
+    await trashAllOtherUsers(USERS, auth);
     console.info('done.');
   } catch (e) {
     console.error(e);
