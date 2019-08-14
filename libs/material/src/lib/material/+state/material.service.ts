@@ -3,6 +3,7 @@ import { Material } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { FireQuery } from '@blockframes/utils';
 import { MaterialQuery } from './material.query';
+import { Delivery } from '../../delivery/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class MaterialService {
   constructor(
     private db: FireQuery,
     private deliveryQuery: DeliveryQuery,
-    private query: MaterialQuery,
+    private query: MaterialQuery
   ) {}
 
   /** Delete materials from a delivery
@@ -21,9 +22,8 @@ export class MaterialService {
     const batch = this.db.firestore.batch();
     const deliveryId = this.deliveryQuery.getActiveId();
     materials.forEach(material => {
-      const materialRef = this.db.doc<Material>(
-        `deliveries/${deliveryId}/materials/${material.id}`
-      ).ref;
+      const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
+        .ref;
       return batch.delete(materialRef);
     });
     batch.commit();
@@ -41,10 +41,13 @@ export class MaterialService {
     batch.commit();
   }
 
-  /** Update a material */
-  public update(material: Partial<Material>, materialId: string) {
-    const delivery = this.deliveryQuery.getActive();
-    return this.db.doc(`deliveries/${delivery.id}/materials/${materialId}`).update(material);
+  /** Update materials of a delivery */
+  public async updateMaterials(materials: Material[], deliveryId: string) {
+    return this.db.firestore.runTransaction(async tx => {
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        return tx.update(materialRef, material)
+      });
+    });
   }
 }
-

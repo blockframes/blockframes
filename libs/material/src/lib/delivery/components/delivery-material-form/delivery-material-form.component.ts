@@ -7,8 +7,8 @@ import { ControlContainer } from '@angular/forms';
   styleUrls: ['./delivery-material-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryMaterialFormFormComponent {
-  @Output() delete = new EventEmitter<void>();
+export class DeliveryMaterialFormComponent{
+  @Output() delete = new EventEmitter<string>();
 
   constructor(public controlContainer: ControlContainer) {}
 
@@ -16,7 +16,4 @@ export class DeliveryMaterialFormFormComponent {
     return this.controlContainer.control;
   }
 
-  public deleteMaterial() {
-    this.delete.emit();
-  }
 }

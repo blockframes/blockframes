@@ -186,6 +186,14 @@ const ICONS_SVG = [
   {
     name: 'delete',
     url: 'assets/icons/trash.svg'
+  },
+  {
+    name: 'signature',
+    url: 'assets/icons/signature.svg'
+  },
+  {
+    name: 'pdf',
+    url: 'assets/icons/pdf.svg'
   }
 ];
 

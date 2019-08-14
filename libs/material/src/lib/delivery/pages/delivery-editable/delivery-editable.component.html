@@ -5,16 +5,18 @@
         <h2>{{ movie.main.title.original}}</h2>
         <mat-divider fxFlex></mat-divider>
         <button mat-icon-button (click)="saveAsTemplate()"><mat-icon svgIcon="template"></mat-icon></button>
-        <button mat-icon-button (click)="deleteDelivery()"><mat-icon svgIcon="delete"></mat-icon></button>
+        <button mat-icon-button><mat-icon svgIcon="pdf"></mat-icon></button>
+        <button mat-icon-button (click)="signDelivery()"><mat-icon svgIcon="signature"></mat-icon></button>
+        <button mat-icon-button (click)="openDeleteDelivery()"><mat-icon svgIcon="delete"></mat-icon></button>
         <a mat-button color="primary" (click)="addMaterial()">
           <mat-icon>add</mat-icon> <span>Add material</span>
         </a>
       </article>
-    <delivery-display [materials]="materials$ | async" (editing)="openSidenav($event)">
+    <delivery-display [materials]="(materials$ | async)" (editing)="openSidenav($event)">
     </delivery-display>
   </ng-container>
   <!-- Sidenav -->
-  <ng-container sidenav>
-    <delivery-material-form [formGroup]="materialInformationsForm" (delete)="openDeleteMaterial()"></delivery-material-form>
+  <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
+    <delivery-material-form [formGroup]="materialFormGroup" (delete)="openDeleteMaterial($event)"></delivery-material-form>
   </ng-container>
 </editable-sidenav>
