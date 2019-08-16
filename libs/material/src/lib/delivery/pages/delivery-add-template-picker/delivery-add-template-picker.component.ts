@@ -42,7 +42,6 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
   }
 
   public selectTemplate(template: Template) {
-    console.log('select=', template);
     this.store.updateWizardState({kind: DeliveryWizardKind.useTemplate});
     this.currentTemplate = template;
   }
