@@ -335,7 +335,7 @@ export class DeliveryService {
         opts.templateId = templateId;
         return this.addDelivery(opts);
       case DeliveryWizardKind.specificDeliveryList:
-        // TODO
+        // TODO(issue#590): add the specific delivery template reference.
         return this.addDelivery(opts);
       case DeliveryWizardKind.blankList:
         return this.addDelivery(opts);
