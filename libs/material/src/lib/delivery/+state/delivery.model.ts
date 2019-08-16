@@ -12,6 +12,8 @@ interface AbstractDelivery {
   dueDate?: Date | Timestamp;
   state: State;
   isPaid: boolean;
+  materialsToBeCharged?: boolean;
+  deliveryListToBeSigned?: boolean;
   _type: 'deliveries';
 }
 

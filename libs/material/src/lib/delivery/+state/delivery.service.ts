@@ -7,7 +7,14 @@ import { OrganizationQuery, PermissionsService } from '@blockframes/organization
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { createMaterial, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { DeliveryWizard, DeliveryWizardKind } from './delivery.store';
+import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
+
+interface AddDeliveryOptions {
+  templateId?: string;
+  movieId?: string;
+  materialsToBeCharged?: boolean;
+  deliveryListToBeSigned?: boolean;
+}
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -101,14 +108,21 @@ export class DeliveryService {
 
   /** Initializes a new delivery in firebase
    *
-   * @param templateId if templateId is present, the materials sub-collection is populated with materials from this template
+   * @param opts if templateId is present, the materials sub-collection is populated with materials from this template
    */
-  public async addDelivery(templateId?: string) {
+  public async addDelivery(opts: AddDeliveryOptions) {
     const id = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
-    const movieId = this.movieQuery.getActiveId();
+    const movieId = opts.movieId || this.movieQuery.getActiveId();
     const movieDoc = this.db.doc(`movies/${movieId}`);
-    const delivery = createDelivery({ id, movieId, validated: [] });
+
+    const delivery = createDelivery({
+      id,
+      movieId,
+      validated: [],
+      materialsToBeCharged: opts.materialsToBeCharged || false,
+      deliveryListToBeSigned: opts.deliveryListToBeSigned || false
+    });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const movieSnap = await tx.get(movieDoc.ref);
@@ -118,8 +132,8 @@ export class DeliveryService {
       await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
       // If there is a templateId, copy template materials to the delivery
-      if (!!templateId) {
-        const template = this.templateQuery.getEntity(templateId);
+      if (!!opts.templateId) {
+        const template = this.templateQuery.getEntity(opts.templateId);
         this.copyMaterials(delivery, template);
       }
 
@@ -306,14 +320,25 @@ export class DeliveryService {
   }
 
   async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
+    const deliveryListToBeSigned =
+      wizard.options.indexOf(DeliveryOption.deliveryListToBeSigned) >= 0;
+    const materialsToBeCharged = wizard.options.indexOf(DeliveryOption.materialsToBeCharged) >= 0;
+
+    const opts: AddDeliveryOptions = {
+      movieId,
+      materialsToBeCharged,
+      deliveryListToBeSigned
+    };
+
     switch (wizard.kind) {
       case DeliveryWizardKind.useTemplate:
-        return this.addDelivery(templateId);
+        opts.templateId = templateId;
+        return this.addDelivery(opts);
       case DeliveryWizardKind.specificDeliveryList:
         // TODO
-        return this.addDelivery();
+        return this.addDelivery(opts);
       case DeliveryWizardKind.blankList:
-        return this.addDelivery();
+        return this.addDelivery(opts);
     }
   }
 }
