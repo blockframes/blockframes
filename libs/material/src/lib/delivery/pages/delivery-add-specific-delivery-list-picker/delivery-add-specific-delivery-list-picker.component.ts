@@ -4,12 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ActionPickerItem } from '@blockframes/ui';
 import { MovieQuery } from '@blockframes/movie';
 import { map } from 'rxjs/operators';
-
-interface IDeliveryList {
-  id: string;
-  name: string;
-  logo: string;
-}
+import { DeliveryStore, DeliveryWizardKind, IDeliveryList } from '../../+state';
 
 const ITEMS: IDeliveryList[] = [
   {
@@ -44,7 +39,11 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
   public items$: Observable<ActionPickerItem<IDeliveryList>[]>;
   public currentDeliveryList: IDeliveryList | undefined;
 
-  constructor(private router: Router, private movieQuery: MovieQuery) {}
+  constructor(
+    private router: Router,
+    private movieQuery: MovieQuery,
+    private store: DeliveryStore
+  ) {}
 
   public get continueURL(): string {
     if (!this.currentDeliveryList) {
@@ -71,6 +70,6 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
   }
 
   public selectDeliveryList(deliveryList: IDeliveryList) {
-    this.currentDeliveryList = deliveryList;
+    this.store.updateWizardState({ kind: DeliveryWizardKind.specificDeliveryList, deliveryList });
   }
 }

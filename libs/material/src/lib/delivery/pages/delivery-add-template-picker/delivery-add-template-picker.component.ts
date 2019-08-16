@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionPickerItem } from '@blockframes/ui';
-import { Template, TemplateQuery } from '../../../template/+state';
 import { MovieQuery } from '@blockframes/movie';
+import { Template, TemplateQuery } from '../../../template/+state';
+import { DeliveryStore, DeliveryWizardKind } from '../../+state';
 
 /** Turn an array of templates into a list of ActionPickerItem */
 const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
@@ -31,7 +32,8 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
   constructor(
     private templateQuery: TemplateQuery,
     private router: Router,
-    private movieQuery: MovieQuery
+    private movieQuery: MovieQuery,
+    private store: DeliveryStore
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +42,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
   }
 
   public selectTemplate(template: Template) {
+    this.store.updateWizardState({kind: DeliveryWizardKind.useTemplate, templateId: template.id});
     this.currentTemplate = template;
   }
 

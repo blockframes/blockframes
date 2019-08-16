@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DeliveryStore } from '../../+state';
 
 /**
  * Page for the flow: "create a delivery"
@@ -11,8 +12,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./delivery-add-find-movie.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryAddFindMovieComponent {
-  constructor(private router: Router) {}
+export class DeliveryAddFindMovieComponent implements OnInit {
+  constructor(private router: Router, private store: DeliveryStore) {}
+
+  ngOnInit(): void {
+    this.store.updateWizardState(undefined);
+  }
 
   public async selectMovie(movieId: string): Promise<boolean> {
     return this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);

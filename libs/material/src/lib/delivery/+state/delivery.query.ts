@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { Delivery } from './delivery.model';
-import { DeliveryState, DeliveryStore } from './delivery.store';
+import { DeliveryState, DeliveryStore, DeliveryWizard } from './delivery.store';
 import { MovieQuery } from '@blockframes/movie';
 import { Material } from '../../material/+state/material.model';
 import { switchMap, map, filter } from 'rxjs/operators';
@@ -15,7 +15,6 @@ import { FireQuery } from '@blockframes/utils';
   providedIn: 'root'
 })
 export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
-
   public isDeliveryValidated$ = combineLatest([
     this.selectActive(delivery => delivery.validated),
     this.selectActive(delivery => delivery.stakeholders)
@@ -27,9 +26,9 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
   public steps$ = this.selectActive(delivery => delivery.steps);
 
   /** Returns the active delivery materials sorted by category */
-  public currentTemplate$: Observable<TemplateView> = this.materialQuery.selectAll().pipe(
-    map(materials => materialsByCategory(materials))
-  );
+  public currentTemplate$: Observable<TemplateView> = this.materialQuery
+    .selectAll()
+    .pipe(map(materials => materialsByCategory(materials)));
 
   constructor(
     protected store: DeliveryStore,
@@ -84,10 +83,14 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
+  public get wizardState(): DeliveryWizard {
+    return this.getValue().deliveryWizard;
+  }
+
   /** Find the stakeholder from the movie and logged user organizations */
   public findActiveStakeholder() {
     const organizationId = this.organizationQuery.getValue().org.id;
     const stakeholders = this.movieQuery.getActive().stakeholders;
-    return stakeholders.find(({id}) => id === organizationId);
+    return stakeholders.find(({ id }) => id === organizationId);
   }
 }

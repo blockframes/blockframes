@@ -2,7 +2,34 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 import { Injectable } from '@angular/core';
 import { Delivery } from './delivery.model';
 
-export interface DeliveryState extends EntityState<Delivery>, ActiveState<string> {}
+export const enum DeliveryOption {
+  materialsToBeCharged = 'materialsToBeCharged',
+  deliveryListToBeSigned = 'deliveryListToBeSigned'
+}
+
+export interface IDeliveryList {
+  id: string;
+  name: string;
+  logo: string;
+}
+
+export const enum DeliveryWizardKind {
+  specificDeliveryList,
+  useTemplate,
+  blankList
+}
+
+export interface DeliveryWizard {
+  // movieId is stored in the URL, prevents having 2 source of truths that can desynchronize
+  kind: DeliveryWizardKind;
+  deliveryList?: IDeliveryList;
+  templateId?: string;
+  options: DeliveryOption[];
+}
+
+export interface DeliveryState extends EntityState<Delivery>, ActiveState<string> {
+  deliveryWizard?: DeliveryWizard;
+}
 
 const initialState = {
   active: null
@@ -17,4 +44,11 @@ export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
     super(initialState);
   }
 
+  public updateWizardState(content?: Partial<DeliveryWizard>) {
+    const updateNested = state => ({
+      ...state,
+      wizard: content ? { ...state.wizard, ...content } : undefined
+    });
+    this.update(updateNested);
+  }
 }
