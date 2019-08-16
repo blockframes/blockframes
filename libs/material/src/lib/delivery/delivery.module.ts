@@ -8,14 +8,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
 import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
-import { DeliveryItemComponent } from './components/delivery-item/delivery-item.component';
 import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
-import { DeliveryViewItemComponent } from './components/delivery-view-item/delivery-view-item.component';
 import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
 import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
-import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
@@ -79,8 +76,7 @@ import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
 import {
   DeliveryMaterialsGuard,
-  MovieMaterialsGuard,
-  SignedDeliveryMaterialsGuard
+  MovieMaterialsGuard
 } from '../material';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
@@ -174,12 +170,6 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
-            path: 'view',
-            canActivate: [SignedDeliveryMaterialsGuard],
-            canDeactivate: [SignedDeliveryMaterialsGuard],
-            component: DeliveryEditableComponent
-          },
-          {
             path: 'edit',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
@@ -216,17 +206,14 @@ const routes: Routes = [
     DeliveryTemplateListComponent,
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
-    DeliveryItemComponent,
     DeliveryFiltersComponent,
     DeliveryActionsComponent,
     MovieMaterialItemComponent,
-    DeliveryViewItemComponent,
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
-    DeliveryEmptyComponent,
     DeliveryRepertoryComponent,
     DeliveryInformationsDatesDisplayComponent,
     DeliveryInformationsDatesFormComponent,

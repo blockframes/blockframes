@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TemplateView } from '../../../template/+state';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialDeliveryForm, MaterialService, createMaterial } from '../../../material/+state';
-import { MaterialStore, MaterialQuery } from '../../../material/+state';
+import { Material, MaterialService, MaterialStore } from '../../../material/+state';
+import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
+import { map, startWith, tap, switchMap, filter, distinctUntilChanged } from 'rxjs/operators';
 import { createMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
-import { MaterialInformationsForm } from '../../forms/material-edit.form';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'delivery-editable',
@@ -41,7 +40,7 @@ export class DeliveryEditableComponent implements OnInit {
     private materialService: MaterialService,
     private service: DeliveryService,
     private snackBar: MatSnackBar,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -51,10 +50,16 @@ export class DeliveryEditableComponent implements OnInit {
     );
 
     /** Return the materialFormGroup linked to the selected materialId */
-    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
-      filter(materialId => !!materialId),
-      map(materialId => this.materialsFormList.value.findIndex(material => material.id === materialId)),
-      map(index => this.materialsFormList.controls[index])
+    this.materialFormGroup$ = combineLatest([
+      this.selectedMaterialId$,
+      this.materialsFormList.valueChanges.pipe(
+        startWith(this.materialsFormList.value)
+      )
+    ]).pipe(
+      filter(([materialId]) => !!materialId),
+      map(([materialId, materials]) => materials.findIndex(material => material.id === materialId)),
+      // Maybe a filter for index > -1
+      map(index => this.materialsFormList.at(index))
     );
 
     this.movie$ = this.movieQuery.selectActive();
@@ -77,14 +82,15 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   public addMaterial() {
-
+    const materialId = this.service.addMaterial();
+    this.openSidenav(materialId);
   }
 
   public saveAsTemplate() {
     this.dialog.open(NewTemplateComponent);
   }
 
-  public openDeleteMaterial(materialId) {
+  public openDeleteMaterial(materialId: string) {
     this.dialog.open(ConfirmComponent, {
       width: '400px',
       data: {
@@ -97,9 +103,14 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   public deleteMaterial(materialId: string) {
-    this.service.deleteMaterial(materialId);
-    this.snackBar.open('Material deleted.', 'close', { duration: 2000 });
-    this.opened = false;
+    try {
+      const deliveryId = this.query.getActiveId();
+      this.service.deleteMaterial(materialId, deliveryId);
+      this.snackBar.open('Material deleted', 'close', { duration: 2000 });
+      this.opened = false;
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public openDeleteDelivery() {
@@ -142,8 +153,6 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   public get deliveryContractURL$(): Observable<string> {
-    return this.delivery$.pipe(
-      map(({id}) => `/delivery/contract.pdf?deliveryId=${id}`)
-    )
+    return this.delivery$.pipe(map(({ id }) => `/delivery/contract.pdf?deliveryId=${id}`));
   }
 }

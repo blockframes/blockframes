@@ -72,10 +72,8 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
       }
     });
     // If there is more value than form controls, remove it.
-    if (this.length > value.length) {
-      for (let i = value.length + 1; i++; i < this.length) {
-        this.removeAt(i);
-      }
+    while (this.length > value.length) {
+      this.removeAt(this.length - 1);
     }
   }
 }

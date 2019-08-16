@@ -4,17 +4,27 @@
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
     <mat-form-field appearance="outline">
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" type="text" formControlName="value"/>
+      <input matInput placeholder="Title" type="text" formControlName="value" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
-      <textarea matInput placeholder="Description" type="text" formControlName="description"></textarea>
+      <textarea
+        matInput
+        placeholder="Description"
+        type="text"
+        formControlName="description">
+      </textarea>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Category</mat-label>
       <input matInput placeholder="Category" type="text" formControlName="category" />
     </mat-form-field>
-    <mat-divider></mat-divider>
-    <button mat-raised-button color="warn" (click)="delete.emit(control.value.id)"><mat-icon>delete</mat-icon> Delete this material</button>
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="delete.emit(control.value.id)"
+      fxFlexAlign="center">
+      <mat-icon>delete</mat-icon> Delete this material
+    </button>
   </form>
 </article>

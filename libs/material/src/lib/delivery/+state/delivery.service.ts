@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import { MovieQuery, Stakeholder, createDeliveryStakeholder, StakeholderService, Movie } from '@blockframes/movie';
+import {
+  MovieQuery,
+  Stakeholder,
+  createDeliveryStakeholder,
+  StakeholderService,
+} from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { FireQuery, BFDoc } from '@blockframes/utils';
-import { MaterialQuery } from '../../material/+state';
+import { MaterialQuery, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { DeliveryStore } from './delivery.store';
+import { filter } from 'rxjs/operators';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -38,27 +43,45 @@ export class DeliveryService {
   ///////////////////
 
   /** Adds material to the delivery sub-collection in firebase */
-  public saveMaterial(material: Material) {
+  public saveMaterial(material: Material): string {
     const deliveryId = this.query.getActiveId();
     const materialId = this.db.createId();
     this.db
       .doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`)
       .set({ ...material, id: materialId });
     this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
+    return materialId;
   }
 
-  /** Update material to the delivery sub-collection in firebase */
-  public updateMaterial(material: Material) {
+  /** Adds an empty material to the delivery sub-collection in firebase */
+  public addMaterial(): string {
     const deliveryId = this.query.getActiveId();
-    this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).update(material);
-    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
+    const materialId = this.db.createId();
+    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).ref;
+    const deliveryRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+
+    this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const newMaterial = createMaterial({ id: materialId });
+      tx.set(materialRef, newMaterial);
+      tx.update(deliveryRef, { validated: [] });
+    });
+
+    return materialId;
+  }
+
+  /** Update materials of a delivery */
+  public async updateMaterials(materials: Material[], deliveryId: string) {
+    return this.db.firestore.runTransaction(async tx => {
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        return tx.update(materialRef, material)
+      });
+    });
   }
 
   /** Deletes material of the delivery sub-collection in firebase */
-  public deleteMaterial(id: string) {
-    const deliveryId = this.query.getActiveId();
-    this.db.doc<Material>(`deliveries/${deliveryId}/materials/${id}`).delete();
-    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
+  public deleteMaterial(materialId: string, deliveryId: string) {
+    return this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).delete();
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */
@@ -111,8 +134,8 @@ export class DeliveryService {
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
-      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
-    })
+      tx.update(movieDoc.ref, { deliveryIds: nextDeliveryIds });
+    });
 
     return id;
   }
@@ -133,15 +156,15 @@ export class DeliveryService {
       await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
       // Copy movie materials to the delivery
-      this.copyMaterials(delivery, movie)
+      this.copyMaterials(delivery, movie);
 
       // Create the stakeholder in the sub-collection
       await this.shService.addStakeholder(delivery, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
-      tx.update(movieDoc.ref, {deliveryIds: nextDeliveryIds});
-    })
+      tx.update(movieDoc.ref, { deliveryIds: nextDeliveryIds });
+    });
 
     return id;
   }
@@ -240,11 +263,7 @@ export class DeliveryService {
   // CRUD STAKEHOLDERS //
   //////////////////////
 
-  private makeDeliveryStakeholder(
-    id: string,
-    authorizations: string[],
-    isAccepted: boolean
-  ) {
+  private makeDeliveryStakeholder(id: string, authorizations: string[], isAccepted: boolean) {
     return createDeliveryStakeholder({ id, authorizations, isAccepted });
   }
 

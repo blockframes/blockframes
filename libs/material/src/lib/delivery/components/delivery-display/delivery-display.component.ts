@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { Material } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./delivery-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryDisplayComponent implements OnInit {
+export class DeliveryDisplayComponent {
   @Input()
   set materials(materials: Material[]) {
     this.dataSource = new MatTableDataSource(materials);
@@ -21,9 +21,5 @@ export class DeliveryDisplayComponent implements OnInit {
 
   public dataSource: MatTableDataSource<Material>;
   public displayedColumns: string[] = ['title', 'description', 'step', 'category', 'action'];
-
-  ngOnInit() {
-    console.log(this.materials)
-  }
 
 }

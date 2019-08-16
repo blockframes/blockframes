@@ -63,8 +63,7 @@ export const CONTEXT_MENU = [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
+      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
@@ -73,8 +72,7 @@ export const CONTEXT_MENU = [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
+      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
@@ -83,8 +81,7 @@ export const CONTEXT_MENU = [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
+      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
@@ -93,8 +90,7 @@ export const CONTEXT_MENU = [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
+      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
