@@ -83,8 +83,8 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     );
   }
 
-  public get wizardState(): DeliveryWizard {
-    return this.getValue().deliveryWizard;
+  public get wizard(): DeliveryWizard {
+    return this.getValue().wizard;
   }
 
   /** Find the stakeholder from the movie and logged user organizations */

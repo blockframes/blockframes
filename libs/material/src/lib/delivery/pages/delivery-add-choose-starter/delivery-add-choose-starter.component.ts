@@ -15,28 +15,32 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddChooseStarterComponent {
-  items: ActionItem[] = [
-    {
-      icon: 'order',
-      title: 'Choose a template',
-      description: 'Lorem ipsum',
-      routerLink: '../3-pick-template'
-    },
-    { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: '#' },
-    {
-      icon: 'order',
-      title: 'Import specific delivery list',
-      description: 'Lorem ipsum',
-      routerLink: '../3-pick-specific-delivery-list'
-    },
-    { icon: 'order', title: 'Blank', description: 'Lorem ipsum', action: this.onPickBlank }
-  ];
+  items: ActionItem[];
 
   constructor(
     private store: DeliveryStore,
     private router: Router,
     private movieQuery: MovieQuery
-  ) {}
+  ) {
+    this.onPickBlank = this.onPickBlank.bind(this);
+
+    this.items = [
+      {
+        icon: 'order',
+        title: 'Choose a template',
+        description: 'Lorem ipsum',
+        routerLink: '../3-pick-template'
+      },
+      { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: '#' },
+      {
+        icon: 'order',
+        title: 'Import specific delivery list',
+        description: 'Lorem ipsum',
+        routerLink: '../3-pick-specific-delivery-list'
+      },
+      { icon: 'order', title: 'Blank', description: 'Lorem ipsum', action: this.onPickBlank }
+    ];
+  }
 
   public onPickBlank() {
     this.store.updateWizardState({ kind: DeliveryWizardKind.blankList });

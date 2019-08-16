@@ -43,11 +43,11 @@ export class DeliveryAddSettingsComponent {
   }
 
   public async onCompleteFlow() {
-    // TODO(#590): Implement the jump to the last page that creates the delivery
-    //  with all of our configuration.
+    const { wizard } = this.query;
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
-    const deliveryId = await this.service.addDelivery(templateId);
-    return this.router.navigate([`layout/o/delivery/${movieId}/${deliveryId}/edit`]);
+    const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
+    this.store.setActive(deliveryId);
+    return this.router.navigate([`layout/o/delivery/add/${movieId}/5-complete`]);
   }
 }

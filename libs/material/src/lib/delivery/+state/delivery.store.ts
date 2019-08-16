@@ -22,13 +22,12 @@ export const enum DeliveryWizardKind {
 export interface DeliveryWizard {
   // movieId is stored in the URL, prevents having 2 source of truths that can desynchronize
   kind: DeliveryWizardKind;
-  deliveryList?: IDeliveryList;
-  templateId?: string;
+  deliveryListId?: string;
   options: DeliveryOption[];
 }
 
 export interface DeliveryState extends EntityState<Delivery>, ActiveState<string> {
-  deliveryWizard?: DeliveryWizard;
+  wizard?: DeliveryWizard;
 }
 
 const initialState = {

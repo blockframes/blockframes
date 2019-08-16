@@ -41,6 +41,7 @@ import {
   ConfirmModule,
   DirectivesModule,
   EditableModule,
+  FeedbackMessageModule,
   TeamWorkModule,
   UiFormModule,
   EditableSidenavModule
@@ -81,6 +82,7 @@ import {
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
+import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 
 const routes: Routes = [
   {
@@ -121,6 +123,16 @@ const routes: Routes = [
             canDeactivate: [],
             pathMatch: 'full',
             component: DeliveryAddSpecificDeliveryListPickerComponent
+          },
+          {
+            path: '4-settings',
+            pathMatch: 'full',
+            component: DeliveryAddSettingsComponent
+          },
+          {
+            path: '5-complete',
+            pathMatch: 'full',
+            component: DeliveryAddCompleteComponent
           },
           {
             path: ':templateId',
@@ -210,6 +222,7 @@ const routes: Routes = [
     DeliveryAddTemplatePickerComponent,
     DeliveryAddSpecificDeliveryListPickerComponent,
     DeliveryAddSettingsComponent,
+    DeliveryAddCompleteComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
@@ -269,7 +282,8 @@ const routes: Routes = [
     MatSortModule,
 
     RouterModule.forChild(routes),
-    MovieModule
+    MovieModule,
+    FeedbackMessageModule
   ],
   entryComponents: [NewTemplateComponent, DeliverySignComponent]
 })

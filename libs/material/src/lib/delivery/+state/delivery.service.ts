@@ -1,18 +1,13 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, Step, DeliveryDB } from './delivery.model';
-import {
-  MovieQuery,
-  Stakeholder,
-  createDeliveryStakeholder,
-  StakeholderService,
-} from '@blockframes/movie';
+import { createDelivery, Delivery, DeliveryDB, Step } from './delivery.model';
+import { createDeliveryStakeholder, MovieQuery, Stakeholder, StakeholderService } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
-import { FireQuery, BFDoc } from '@blockframes/utils';
-import { MaterialQuery, createMaterial } from '../../material/+state';
+import { BFDoc, FireQuery } from '@blockframes/utils';
+import { createMaterial, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { filter } from 'rxjs/operators';
+import { DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
@@ -46,7 +41,8 @@ export class DeliveryService {
   public addMaterial(): string {
     const deliveryId = this.query.getActiveId();
     const materialId = this.db.createId();
-    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).ref;
+    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`)
+      .ref;
     const deliveryRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
 
     this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -62,15 +58,18 @@ export class DeliveryService {
   public async updateMaterials(materials: Material[], deliveryId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
-        const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
-        return tx.update(materialRef, material)
+        const materialRef = this.db.doc<Material>(
+          `deliveries/${deliveryId}/materials/${material.id}`
+        ).ref;
+        return tx.update(materialRef, material);
       });
     });
   }
 
   /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(materialId: string, deliveryId: string) {
-    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).ref;
+    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`)
+      .ref;
     const deliveryRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
 
     return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -164,7 +163,7 @@ export class DeliveryService {
     return id;
   }
 
-  public async updateDates(delivery : Partial<Delivery>) {
+  public async updateDates(delivery: Partial<Delivery>) {
     const deliveryId = this.query.getActiveId();
     return this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({
       dueDate: delivery.dueDate,
@@ -304,5 +303,17 @@ export class DeliveryService {
       .get()
       .toPromise();
     return delivery.validated.length === stakeholders.size;
+  }
+
+  async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
+    switch (wizard.kind) {
+      case DeliveryWizardKind.useTemplate:
+        return this.addDelivery(templateId);
+      case DeliveryWizardKind.specificDeliveryList:
+        // TODO
+        return this.addDelivery();
+      case DeliveryWizardKind.blankList:
+        return this.addDelivery();
+    }
   }
 }

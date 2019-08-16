@@ -53,7 +53,7 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
     const deliveryID = this.currentDeliveryList.id;
     const movieId = this.movieQuery.getActiveId();
     // TODO: refactor the other page to add template to the URL
-    return `/layout/o/delivery/add/${movieId}/specific-delivery/${deliveryID}/4-settings`;
+    return `/layout/o/delivery/add/${movieId}/4-settings`;
   }
 
   ngOnInit(): void {
@@ -70,6 +70,11 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
   }
 
   public selectDeliveryList(deliveryList: IDeliveryList) {
-    this.store.updateWizardState({ kind: DeliveryWizardKind.specificDeliveryList, deliveryList });
+    // TODO: move the variable to an observable in the query
+    this.store.updateWizardState({
+      kind: DeliveryWizardKind.specificDeliveryList,
+      deliveryListId: deliveryList.id
+    });
+    this.currentDeliveryList = deliveryList;
   }
 }
