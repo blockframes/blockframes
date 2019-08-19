@@ -14,7 +14,7 @@
     <!-- Step Column -->
     <ng-container matColumnDef="step">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
-      <td mat-cell *matCellDef="let material">{{ material.step }}</td>
+      <td mat-cell *matCellDef="let material"><span *ngIf="!!material.step">{{ material.step.name }}</span></td>
     </ng-container>
 
     <!-- Category Column -->
@@ -27,7 +27,7 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let material">
-        <button (click)="editing.emit(material.id)" color="primary" mat-icon-button>
+        <button matTooltip="Edit material" (click)="editing.emit(material.id)" color="primary" mat-icon-button>
           <mat-icon svgIcon="edit"></mat-icon>
         </button>
       </td>

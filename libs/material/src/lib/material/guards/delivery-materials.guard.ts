@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { MaterialStore, Material, getMaterialStep } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
+import { MaterialStore, Material } from '../+state';
+import { switchMap } from 'rxjs/operators';
 import { DeliveryQuery } from '../../delivery/+state';
 
 const deliveryMaterialsQuery = (deliveryId: string): Query<Material[]> => ({
@@ -26,9 +26,7 @@ export class DeliveryMaterialsGuard extends StateListGuard<Material> {
     return this.deliveryQuery.selectActive().pipe(
       switchMap(delivery => {
         const query = deliveryMaterialsQuery(delivery.id);
-        return this.fireQuery.fromQuery<Material[]>(query).pipe(
-          map(materials => materials.map(material => getMaterialStep(material, delivery)))
-        );
+        return this.fireQuery.fromQuery<Material[]>(query)
       })
     );
   }

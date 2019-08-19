@@ -7,6 +7,7 @@ function createMaterialFormGroup(material: Material) {
     id: new FormControl(material.id),
     value: new FormControl(material.value),
     description: new FormControl(material.description),
+    step: new FormControl(material.step),
     category: new FormControl(material.category),
   });
 }

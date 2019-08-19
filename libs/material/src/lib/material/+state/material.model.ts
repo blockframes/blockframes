@@ -22,7 +22,7 @@ export interface MaterialDeliveryForm {
   value: string;
   description: string;
   category: string;
-  stepId: string;
+  step: Step;
 }
 
 export function createMaterial(material: Partial<Material>) {
@@ -30,6 +30,7 @@ export function createMaterial(material: Partial<Material>) {
     category: '',
     value: '',
     description: '',
+    step: {},
     ...material
   } as Material : {} as Material
 }

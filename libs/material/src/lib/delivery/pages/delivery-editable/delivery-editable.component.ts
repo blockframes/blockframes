@@ -8,7 +8,7 @@ import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery } from '../../+state';
+import { DeliveryQuery, Delivery, Step } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
 import { createMaterialFormList } from '../../forms/material.form';
@@ -23,6 +23,7 @@ import { FormGroup } from '@angular/forms';
 export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
+  public steps$: Observable<Step[]>;
   public movie$: Observable<Movie>;
   public opened = false;
 
@@ -58,6 +59,7 @@ export class DeliveryEditableComponent implements OnInit {
 
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
+    this.steps$ = this.query.steps$;
   }
 
   public openSidenav(materialId: string) {
