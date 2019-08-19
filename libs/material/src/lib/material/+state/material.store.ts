@@ -1,25 +1,17 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 
-export interface MaterialState extends EntityState<Material>, ActiveState<string> {
+export interface MaterialState extends EntityState<Material> {
   materialTemplateForm: {
     value: string;
     description: string;
     category: string;
   };
-
-  materialDeliveryForm: {
-    value: string;
-    description: string;
-    category: string;
-    stepId: string;
-  };
 }
 
 const initialState = {
-  materialTemplateForm: null,
-  materialDeliveryForm: null
+  materialTemplateForm: null
 };
 
 @Injectable({
@@ -31,16 +23,12 @@ export class MaterialStore extends EntityStore<MaterialState, Material> {
     super(initialState);
   }
 
-  public updateEmptyDeliveryForm(category: string) {
-    this.update({ materialDeliveryForm: { value: '', description: '', category, stepId: '' } });
-  }
-
   public updateEmptyTemplateForm(category: string) {
     this.update({ materialTemplateForm: { value: '', description: '', category } });
   }
 
   public clearForm() {
-    this.update({ materialTemplateForm: null, materialDeliveryForm: null });
+    this.update({ materialTemplateForm: null });
   }
 
   public returnToInitialState() {

@@ -50,6 +50,6 @@ export class DeliveryAddSettingsComponent {
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDelivery(templateId);
-    this.router.navigate([`layout/o/delivery/${movieId}/${deliveryId}`]);
+    this.router.navigate([`layout/o/delivery/${movieId}/${deliveryId}/edit`]);
   }
 }

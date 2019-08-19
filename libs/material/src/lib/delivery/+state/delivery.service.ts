@@ -42,17 +42,6 @@ export class DeliveryService {
   // CRUD MATERIAL //
   ///////////////////
 
-  /** Adds material to the delivery sub-collection in firebase */
-  public saveMaterial(material: Material): string {
-    const deliveryId = this.query.getActiveId();
-    const materialId = this.db.createId();
-    this.db
-      .doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`)
-      .set({ ...material, id: materialId });
-    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ validated: [] });
-    return materialId;
-  }
-
   /** Adds an empty material to the delivery sub-collection in firebase */
   public addMaterial(): string {
     const deliveryId = this.query.getActiveId();
@@ -81,7 +70,13 @@ export class DeliveryService {
 
   /** Deletes material of the delivery sub-collection in firebase */
   public deleteMaterial(materialId: string, deliveryId: string) {
-    return this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).delete();
+    const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).ref;
+    const deliveryRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+
+    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      tx.delete(materialRef);
+      tx.update(deliveryRef, { validated: [] });
+    });
   }
 
   /** Changes material 'delivered' property value to true or false when triggered */

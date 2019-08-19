@@ -22,8 +22,9 @@ export class MaterialService {
     const batch = this.db.firestore.batch();
     const deliveryId = this.deliveryQuery.getActiveId();
     materials.forEach(material => {
-      const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`)
-        .ref;
+      const materialRef = this.db.doc<Material>(
+        `deliveries/${deliveryId}/materials/${material.id}`
+      ).ref;
       return batch.delete(materialRef);
     });
     batch.commit();
