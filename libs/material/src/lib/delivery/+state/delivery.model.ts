@@ -17,6 +17,8 @@ interface AbstractDelivery {
 
 export interface Delivery extends AbstractDelivery {
   dueDate?: Date;
+  acceptationPeriod?: Number,
+  reWorkingPeriod?: Number,
   steps: Step[];
 }
 

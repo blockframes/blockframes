@@ -35,9 +35,9 @@ export class DeliverySettingsEditableComponent implements OnInit {
     this.delivery$ = this.query.selectActive();
   }
 
-  public saveDueDate(dueDate: Date) {
-    this.service.updateDueDate(dueDate);
-  }
+  // public saveDueDate(dueDate: Date) {
+  //   this.service.updateDueDate(dueDate);
+  // }
 
   public openForm() {
     this.hasForm = true;

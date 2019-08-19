@@ -1,0 +1,15 @@
+<article>
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <h3>Delivery dates</h3>
+    <button mat-flat-button (click)="editing.emit()">Edit</button>
+  </div>
+  <p>
+    <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM dd yyyy' }}</span>
+  </p>
+  <p>
+    <b>Acceptation period </b><span>{{ delivery.acceptationPeriod }} days</span>
+  </p>
+  <p>
+    <b>Re-working period </b><span>{{ delivery.reWorkingPeriod }} days</span>
+  </p>
+</article>

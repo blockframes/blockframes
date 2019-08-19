@@ -146,9 +146,13 @@ export class DeliveryService {
     return id;
   }
 
-  public updateDueDate(dueDate: Date) {
+  public async updateDates(delivery : Partial<Delivery>) {
     const deliveryId = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ dueDate });
+    return this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({
+      dueDate: delivery.dueDate,
+      acceptationPeriod: delivery.acceptationPeriod,
+      reWorkingPeriod: delivery.reWorkingPeriod
+    });
   }
 
   /** Add step in array steps of delivery */

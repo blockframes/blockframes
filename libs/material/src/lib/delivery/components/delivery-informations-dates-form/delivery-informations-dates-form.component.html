@@ -1,0 +1,14 @@
+<form [formGroup]="control">
+  <h4>Delivery dates</h4>
+  <mat-form-field appearance="outline">
+    <input formControlName="dueDate" matInput [matDatepicker]="picker" placeholder="Date"/>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <input type="number" formControlName="acceptationPeriod" matInput/>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <input type="number" formControlName="reWorkingPeriod" matInput/>
+  </mat-form-field>
+</form>
