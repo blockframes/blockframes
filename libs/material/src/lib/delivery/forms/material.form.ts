@@ -1,5 +1,5 @@
 import { FormList } from "@blockframes/utils";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { Material } from '@blockframes/material';
 
 function createMaterialFormGroup(material: Material) {

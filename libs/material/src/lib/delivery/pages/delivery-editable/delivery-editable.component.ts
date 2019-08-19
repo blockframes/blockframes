@@ -1,19 +1,18 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialService, MaterialStore } from '../../../material/+state';
+import { Material, MaterialService } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, startWith, tap, switchMap, filter, distinctUntilChanged } from 'rxjs/operators';
+import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
 import { createMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
-import { isEqual } from 'lodash';
 
 @Component({
   selector: 'delivery-editable',
@@ -50,14 +49,9 @@ export class DeliveryEditableComponent implements OnInit {
     );
 
     /** Return the materialFormGroup linked to the selected materialId */
-    this.materialFormGroup$ = combineLatest([
-      this.selectedMaterialId$,
-      this.materialsFormList.valueChanges.pipe(
-        startWith(this.materialsFormList.value)
-      )
-    ]).pipe(
-      filter(([materialId]) => !!materialId),
-      map(([materialId, materials]) => materials.findIndex(material => material.id === materialId)),
+    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
+      filter((materialId) => !!materialId),
+      map((materialId) => this.materialsFormList.value.findIndex(material => material.id === materialId)),
       // Maybe a filter for index > -1
       map(index => this.materialsFormList.at(index))
     );
@@ -69,6 +63,7 @@ export class DeliveryEditableComponent implements OnInit {
   public openSidenav(materialId: string) {
     this.selectedMaterialId$.next(materialId);
     this.opened = true;
+
   }
 
   public async update() {
@@ -82,6 +77,7 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   public addMaterial() {
+    // Blank sidenav. User have to click again on new material edit icon to show inputs => ISSUE#760
     const materialId = this.service.addMaterial();
     this.openSidenav(materialId);
   }

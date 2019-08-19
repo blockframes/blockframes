@@ -61,36 +61,36 @@ export const CONTEXT_MENU = [
     route: '/layout/o/delivery/:movieId/:deliveryId/view',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
+      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
+      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
+      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
     route: '/layout/o/delivery/:movieId/:deliveryId/edit',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
+      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
+      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
+      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
     route: '/layout/o/delivery/:movieId/:deliveryId/informations',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
+      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
+      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
+      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {
     route: '/layout/o/delivery/:movieId/:deliveryId/teamwork',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
+      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
+      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
+      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/edit' }
     ]
   },
   {

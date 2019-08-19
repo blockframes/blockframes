@@ -1,23 +1,23 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
-    <!-- Name and Surname Column -->
+    <!-- Title Column -->
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
       <td mat-cell *matCellDef="let material">{{ material.value }}</td>
     </ng-container>
 
-    <!-- Email Column -->
+    <!-- Description Column -->
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
       <td mat-cell *matCellDef="let material">{{ material.description }}</td>
     </ng-container>
 
-    <!-- Role Column -->
+    <!-- Step Column -->
     <ng-container matColumnDef="step">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
       <td mat-cell *matCellDef="let material">{{ material.step }}</td>
     </ng-container>
 
-    <!-- Signer Column -->
+    <!-- Category Column -->
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
       <td mat-cell *matCellDef="let material">{{ material.category}}</td>
