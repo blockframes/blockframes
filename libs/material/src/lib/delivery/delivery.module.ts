@@ -34,6 +34,7 @@ import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/d
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
+import { DeliveryInformationsEditableComponent } from './pages/delivery-informations-editable/delivery-informations-editable.component';
 
 // Modules
 import {
@@ -188,6 +189,13 @@ const routes: Routes = [
             component: DeliveryTeamworkEditableComponent
           },
           {
+            path: 'informations',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliveryInformationsEditableComponent
+          },
+          // TODO: issue#758 delete settings path
+          {
             path: 'settings',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
@@ -225,6 +233,7 @@ const routes: Routes = [
     DeliverySettingsItemComponent,
     DeliverySettingsFormComponent,
     DeliverySettingsEditableComponent,
+    DeliveryInformationsEditableComponent,
     DeliverySignComponent,
     DeliveryEmptyComponent,
     DeliveryRepertoryComponent,
