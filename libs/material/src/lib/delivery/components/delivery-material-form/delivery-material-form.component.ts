@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { Step } from '../../+state';
+import { Delivery } from '../../+state';
 
 @Component({
   selector: '[formGroupName] delivery-material-form, [formGroup] delivery-material-form, delivery-material-form',
@@ -9,7 +9,7 @@ import { Step } from '../../+state';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DeliveryMaterialFormComponent{
-  @Input() steps: Step[];
+  @Input() delivery: Delivery;
   @Output() delete = new EventEmitter<string>();
 
   constructor(public controlContainer: ControlContainer) {}

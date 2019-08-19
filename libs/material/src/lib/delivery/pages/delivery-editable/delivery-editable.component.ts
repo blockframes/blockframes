@@ -8,7 +8,7 @@ import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery, Step } from '../../+state';
+import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
 import { createMaterialFormList } from '../../forms/material.form';
@@ -23,13 +23,12 @@ import { FormGroup } from '@angular/forms';
 export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
-  public steps$: Observable<Step[]>;
   public movie$: Observable<Movie>;
   public opened = false;
 
   public materialsFormList = createMaterialFormList();
   public materialFormGroup$: Observable<FormGroup>;
-  /** Observable of the selected memberId */
+
   private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
   constructor(
@@ -53,13 +52,11 @@ export class DeliveryEditableComponent implements OnInit {
     this.materialFormGroup$ = this.selectedMaterialId$.pipe(
       filter((materialId) => !!materialId),
       map((materialId) => this.materialsFormList.value.findIndex(material => material.id === materialId)),
-      // Maybe a filter for index > -1
       map(index => this.materialsFormList.at(index))
     );
 
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.steps$ = this.query.steps$;
   }
 
   public openSidenav(materialId: string) {
@@ -147,7 +144,7 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   public signDelivery() {
-    // this.service.signDelivery();
+    // Signing a delivery inside a transaction in the blockchain => ISSUE#761
   }
 
   public get deliveryContractURL$(): Observable<string> {

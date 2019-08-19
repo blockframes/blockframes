@@ -1,29 +1,36 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+
     <!-- Title Column -->
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-      <td mat-cell *matCellDef="let material">{{ material.value }}</td>
+      <td mat-cell *matCellDef="let material"><b>{{ material.value }}</b></td>
     </ng-container>
 
     <!-- Description Column -->
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-      <td mat-cell *matCellDef="let material">{{ material.description }}</td>
+      <td mat-cell *matCellDef="let material">
+        <span class="description">{{ material.description }}</span>
+      </td>
     </ng-container>
 
     <!-- Step Column -->
     <ng-container matColumnDef="step">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
-      <td mat-cell *matCellDef="let material"><span *ngIf="!!material.step">{{ material.step.name }}</span></td>
+      <td mat-cell *matCellDef="let material">
+        <span *ngIf="!!material.step">{{ material.step.name }}</span>
+      </td>
     </ng-container>
 
     <!-- Category Column -->
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
-      <td mat-cell *matCellDef="let material">{{ material.category}}</td>
+      <td mat-cell *matCellDef="let material">
+        <span [ngClass]="{'category-chip': !!material.category}">{{ material.category }}</span>
+      </td>
     </ng-container>
 
-    <!-- Action Column -->
+    <!-- Action Column (edit) -->
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let material">

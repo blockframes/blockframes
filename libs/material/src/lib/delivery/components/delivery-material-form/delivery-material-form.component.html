@@ -1,11 +1,14 @@
 <h4>Edit material</h4>
-<!-- TODO: issue#579 import picture -->
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+
+    <!-- Material Title/Value Input -->
     <mat-form-field appearance="outline">
       <mat-label>Title</mat-label>
       <input matInput placeholder="Title" type="text" formControlName="value" />
     </mat-form-field>
+
+    <!-- Material Description Input -->
     <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
       <textarea
@@ -15,15 +18,19 @@
         formControlName="description">
       </textarea>
     </mat-form-field>
+
+    <!-- Material Step Select -->
     <mat-form-field appearance="outline">
       <mat-label>Step</mat-label>
       <mat-select formControlName="step">
         <mat-option value="">None</mat-option>
-        <mat-option *ngFor="let step of steps" [value]="step">
+        <mat-option *ngFor="let step of delivery.steps" [value]="step">
           {{ step.name }} <i>({{ step.date | date: 'dd/MM/yyyy'}})</i>
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <!-- Material Category Input -->
     <mat-form-field appearance="outline">
       <mat-label>Category</mat-label>
       <input matInput placeholder="Category" type="text" formControlName="category" />
@@ -33,7 +40,8 @@
       color="warn"
       (click)="delete.emit(control.value.id)"
       fxFlexAlign="center">
-      <mat-icon>delete</mat-icon> Delete this material
+      <mat-icon>delete</mat-icon>
+      Delete this material
     </button>
   </form>
 </article>
