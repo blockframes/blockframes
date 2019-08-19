@@ -204,6 +204,13 @@ const routes: Routes = [
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
             component: DeliveryInformationsEditableComponent
+          },
+          // TODO: issue#758 delete settings path
+          {
+            path: 'settings',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliveryInformationsEditableComponent
           }
         ]
       }
@@ -234,6 +241,9 @@ const routes: Routes = [
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,
+    DeliverySettingsItemComponent,
+    DeliverySettingsFormComponent,
+    DeliverySettingsEditableComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
     DeliveryRepertoryComponent,
