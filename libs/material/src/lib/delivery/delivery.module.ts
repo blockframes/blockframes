@@ -21,6 +21,8 @@ import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-emp
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
+import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
+import { DeliveryInformationsDatesFormComponent } from './components/delivery-informations-dates-form/delivery-informations-dates-form.component';
 
 // Pages
 import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
@@ -45,7 +47,8 @@ import {
   DirectivesModule,
   EditableModule,
   TeamWorkModule,
-  UiFormModule
+  UiFormModule,
+  EditableSidenavModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
@@ -237,6 +240,8 @@ const routes: Routes = [
     DeliverySignComponent,
     DeliveryEmptyComponent,
     DeliveryRepertoryComponent,
+    DeliveryInformationsDatesDisplayComponent,
+    DeliveryInformationsDatesFormComponent
   ],
   imports: [
     CommonModule,
@@ -254,6 +259,7 @@ const routes: Routes = [
     DirectivesModule,
     TeamWorkModule,
     OrganizationModule,
+    EditableSidenavModule,
 
     // Material
     MatCardModule,

@@ -1,0 +1,10 @@
+<editable-sidenav test-id="content" page-id="delivery-informations" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
+  <!-- Content -->
+  <ng-container content>
+    <delivery-informations-dates-display (editing)="openSidenav($event)"></delivery-informations-dates-display>
+  </ng-container>
+  <!-- Sidenav -->
+  <ng-container *ngIf="(datesFormGroup$ | async) as datesFormGroup" sidenav>
+    <delivery-informations-dates-form [formGroup]="datesFormGroup"></delivery-informations-dates-form>
+  </ng-container>
+</editable-sidenav>
