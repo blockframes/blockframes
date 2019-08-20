@@ -75,7 +75,6 @@ export const CONTEXT_MENU = [
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
     ]
   },
-  // TODO: issue#758 delete settings path
   {
     route: '/layout/o/delivery/:movieId/:deliveryId/stakeholders',
     items: [
