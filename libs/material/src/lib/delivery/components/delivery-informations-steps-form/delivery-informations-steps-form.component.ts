@@ -15,15 +15,15 @@ export class DeliveryInformationsStepsFormComponent {
     return this.controlContainer.control;
   }
 
-  public get steps(): FormArray {
-    return this.controlContainer.control.get('steps') as FormArray;
+  public get deliverySteps(): FormArray {
+    return this.controlContainer.control.get('deliverySteps') as FormArray;
   }
 
   public addStep() {
-    this.steps.push(createStepFormGroup({ id: null, name: '', date: null }));
+    this.deliverySteps.push(createStepFormGroup({ id: '', name: '', date: null }));
   }
 
   public removeStep(index: number) {
-    this.steps.removeAt(index);
+    this.deliverySteps.removeAt(index);
   }
 }

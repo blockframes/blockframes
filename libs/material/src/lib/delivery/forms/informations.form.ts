@@ -14,12 +14,23 @@ function createStepsFormList() {
   return FormList.factory([], createStepFormGroup);
 }
 
+function createDeliveryDatesFormGroup() {
+  return new FormGroup({
+    id: new FormControl(step.id),
+    name: new FormControl(step.name),
+    date: new FormControl(step.date)
+  });
+}
+
+function createStepsFormList() {
+  return FormList.factory([], createStepFormGroup);
+}
+
 export function createInformationsFormGroup() {
   return new FormGroup({
-    dueDate: new FormControl(),
-    acceptationPeriod: new FormControl(),
-    reWorkingPeriod: new FormControl(),
-    steps: createStepsFormList()
+    deliveryDates: createDeliveryDatesFormGroup(),
+    deliverySteps: createStepsFormList()
+    // TODO: create formList for steps: issue#759
     // TODO: create formList for guaranteed minimum payment deadline: issue#764
   });
 }
