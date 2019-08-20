@@ -55,38 +55,6 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     return this.getActive().steps.length > 0;
   }
 
-  /** Returns the progression % of the delivery */
-  public get deliveryProgression$() {
-    return this.movieQuery.selectActive().pipe(
-      switchMap(movie =>
-        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
-      ),
-      map(materials => {
-        const id = this.getActiveId();
-        const totalMaterials = materials.filter(material => material.deliveriesIds.includes(id));
-        const acceptedMaterials = totalMaterials.filter(material => material.state === 'accepted');
-        const deliveryMaterialsProgress =
-          Math.round((acceptedMaterials.length / (totalMaterials.length / 100)) * 10) / 10;
-        return deliveryMaterialsProgress;
-      })
-    );
-  }
-
-  /** Returns the progression % of the movie's deliveries */
-  public get movieProgression$() {
-    return this.movieQuery.selectActive().pipe(
-      switchMap(movie =>
-        this.db.collection<Material>(`movies/${movie.id}/materials`).valueChanges()
-      ),
-      map(materials => {
-        const acceptedMaterials = materials.filter(material => material.state === 'accepted');
-        const movieMaterialsProgress =
-          Math.round((acceptedMaterials.length / (materials.length / 100)) * 10) / 10;
-        return movieMaterialsProgress;
-      })
-    );
-  }
-
   public hasStakeholderSigned$(id: string) {
     return this.selectActive().pipe(
       filter(delivery => !!delivery),

@@ -57,7 +57,7 @@ export class DeliveryMovieEditableComponent implements OnInit {
   public async update() {
     try {
       const deliveryId = this.query.getActiveId();
-      this.materialService.updateMaterials(this.materialsFormList.value, deliveryId);
+      this.materialService.updateMovieMaterials(this.materialsFormList.value, deliveryId);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

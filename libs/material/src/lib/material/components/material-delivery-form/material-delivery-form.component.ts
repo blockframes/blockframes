@@ -38,7 +38,7 @@ export class MaterialDeliveryFormComponent implements OnInit {
       value: new FormControl(this.material.value),
       description: new FormControl(this.material.description),
       category: new FormControl(this.material.category),
-      stepId: new FormControl(this.material.stepId)
+      step: new FormControl(this.material.step)
     });
   }
 

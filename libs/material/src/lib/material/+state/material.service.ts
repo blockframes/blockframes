@@ -40,10 +40,19 @@ export class MaterialService {
   }
 
   /** Update materials of a delivery */
-  public async updateMaterials(materials: Material[], deliveryId: string) {
+  public updateMaterials(materials: Material[], deliveryId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
         const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        return tx.update(materialRef, material)
+      });
+    });
+  }
+
+  public updateMovieMaterials(materials: Material[], movieId: string) {
+    return this.db.firestore.runTransaction(async tx => {
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`).ref;
         return tx.update(materialRef, material)
       });
     });

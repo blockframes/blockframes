@@ -27,8 +27,8 @@ interface DeliveryRaw<D> {
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
   stakeholders: Stakeholder[];
-  dueDate?: D;
-  state: State;
+  dueDate?: Date;
+  status: DeliveryStatus;
   isPaid: boolean;
   mustChargeMaterials?: boolean;
   mustBeSigned?: boolean;
@@ -57,12 +57,12 @@ export interface Step extends StepRaw<Date> {}
 /** Syntaxic Sugar: the Delivery Minumum Guaratee Deadline type used in the frontend. */
 export interface MGDeadline extends MGDeadlineRaw<Date> {}
 
-export enum State {
-  pending = 'pending',
-  available = 'available',
-  delivered = 'delivered',
-  accepted = 'accepted',
-  refused = 'refused'
+export const enum DeliveryStatus {
+  negociation = 'Delivery in negociation',
+  pending = 'Materials pending',
+  noa = 'NOA',
+  nod = 'NOD',
+  accepted = 'Materials accepted'
 }
 
 export const deliveryStatuses: State[] = [
@@ -77,7 +77,7 @@ export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],
     steps: [],
-    state: State.pending,
+    status: DeliveryStatus.pending,
     isPaid: false,
     _type: 'deliveries',
     mustChargeMaterials: params.mustChargeMaterials || false,
