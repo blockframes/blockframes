@@ -20,7 +20,7 @@ export class DeliveryInformationsStepsFormComponent {
   }
 
   public addStep() {
-    this.deliverySteps.push(createStepFormGroup({ id: '', name: '', date: null }));
+    this.deliverySteps.push(createStepFormGroup({ id: null, name: '', date: null }));
   }
 
   public removeStep(index: number) {

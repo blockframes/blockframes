@@ -206,12 +206,22 @@ export class DeliveryService {
   }
 
   /** Update step in array steps of delivery */
-  public updateStep(step: Step, form: Step) {
-    const delivery = this.query.getActive();
-    const steps = [...delivery.steps];
-    const index = steps.indexOf(step);
-    steps.splice(index, 1, { ...step, ...form });
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
+  public updateStep(steps: Step[]) {
+    const steps2 = [...steps];
+    steps2.map(step => ({ ...step, id: this.db.createId() }));
+    const deliveryId = this.query.getActiveId();
+    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ steps: steps2 });
+  }
+
+  public async updateSteps(steps: Step[]) {
+    const deliveryId = this.query.getActiveId();
+    const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+    return this.db.firestore.runTransaction(async tx => {
+      const stepsWithId = steps.map(
+        step => (step.id ? step : { ...step, id: this.db.createId() })
+      );
+      return tx.update(deliveryDocRef, { steps: stepsWithId });
+    });
   }
 
   /** Remove step in array steps of delivery */
