@@ -3,13 +3,13 @@
     <h3>Delivery dates</h3>
     <button mat-flat-button (click)="editing.emit()">Edit</button>
   </div>
-  <p>
+  <p *ngIf="delivery.dueDate">
     <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM dd yyyy' }}</span>
   </p>
-  <p>
+  <p *ngIf="delivery.acceptationPeriod">
     <b>Acceptation period </b><span>{{ delivery.acceptationPeriod }} days</span>
   </p>
-  <p>
+  <p *ngIf="delivery.reWorkingPeriod">
     <b>Re-working period </b><span>{{ delivery.reWorkingPeriod }} days</span>
   </p>
 </article>
