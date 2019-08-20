@@ -26,13 +26,20 @@ export class DeliveryInformationsEditableComponent implements OnInit {
 
   ngOnInit() {
     this.delivery$ = this.query.selectActive().pipe(
-      tap(delivery => this.deliveryDates.patchValue(delivery)),
+      tap(delivery => {
+        this.deliveryDates.patchValue(delivery);
+        this.deliverySteps.patchValue(delivery.steps);
+      }),
       switchMap(delivery => this.deliveryDates.valueChanges.pipe(startWith(delivery)))
     );
   }
 
   get deliveryDates() {
     return this.informationsFormGroup.get('deliveryDates');
+  }
+
+  get deliverySteps() {
+    return this.informationsFormGroup.get('deliverySteps');
   }
 
   public openSidenav() {
@@ -42,6 +49,7 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   public updateInformations() {
     // TODO: update steps informations: issue#759
     // TODO: update guaranteed minimum payment deadline informations: issue#764
+    console.log(this.informationsFormGroup);
     try {
       if (this.informationsFormGroup.invalid)
         throw new Error('Delivery informations are not valid');

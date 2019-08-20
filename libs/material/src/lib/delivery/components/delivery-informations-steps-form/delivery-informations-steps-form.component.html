@@ -1,0 +1,23 @@
+<button mat-button (click)="addStep()">Add a step</button>
+<form [formGroup]="control">
+  <div formArrayName="deliverySteps">
+    <div *ngFor="let step of deliverySteps.controls; let i = index">
+      <div [formGroupName]="i">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <p>Step <span>{{ i + 1 }}</span></p>
+          <button mat-button (click)="removeStep(i)">Delete</button>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input type="text" formControlName="name" matInput />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input formControlName="date" matInput [matDatepicker]="picker" placeholder="Date" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>
