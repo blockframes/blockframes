@@ -1,0 +1,30 @@
+.header-img {
+  // TODO: replace image when the real one is available.
+  background: url('/assets/fake-data/compare.png') no-repeat center center fixed;
+  background-size: cover;
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+mat-divider {
+  width: 100%;
+}
+
+.filter {
+  width: 500px;
+}
+
+.movies {
+  width: 100%;
+}
+
+.filter-checkboxes {
+  height: 270px;
+  flex-wrap: wrap;
+}
+
+.filter-checkboxes-media {
+  height: 260px;
+  flex-wrap: wrap;
+}

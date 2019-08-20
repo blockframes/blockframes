@@ -98,8 +98,8 @@ export interface MovieFestivalPrizes {
 
 export interface MovieSalesAgentDeal {
   rightsEnd: Date,
-  territories: String[],
-  medias: String[],
+  territories: string[],
+  medias: string[],
 }
 
 export interface Movie {

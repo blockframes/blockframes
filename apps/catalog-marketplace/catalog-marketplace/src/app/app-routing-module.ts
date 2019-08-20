@@ -67,7 +67,7 @@ export const routes: Routes = [
               },
               {
                 path: 'home',
-                loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
+                loadChildren: () => import('./pages/marketplace-home/marketplace-home.module').then(m => m.MarketplaceHomeModule)
               },
               {
                 path: 'search',
