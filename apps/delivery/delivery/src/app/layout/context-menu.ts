@@ -36,25 +36,17 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId',
+    route: '/layout/o/delivery/:movieId/list',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'material list', path: '/layout/o/delivery/:movieId/movie-materials' }
+      { name: 'material list', path: '/layout/o/delivery/:movieId/materials' }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/movie-materials',
+    route: '/layout/o/delivery/:movieId/materials',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'material list', path: '/layout/o/delivery/:movieId/movie-materials' }
-    ]
-  },
-  {
-    route: '/layout/o/:movieId/template-picker',
-    items: [
-      { name: 'deliveries', path: '/layout/o/:movieId/list' },
-      { name: 'movie materials', path: '/layout/o/:movieId/movie-materials' },
-      { name: 'template picker', path: '/layout/o/:movieId/template-picker' }
+      { name: 'material list', path: '/layout/o/delivery/:movieId/materials' }
     ]
   },
   {

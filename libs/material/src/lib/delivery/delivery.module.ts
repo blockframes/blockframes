@@ -18,15 +18,16 @@ import { DeliveryFiltersComponent } from './components/delivery-filters/delivery
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
 import { DeliveryInformationsDatesFormComponent } from './components/delivery-informations-dates-form/delivery-informations-dates-form.component';
-import { DeliveryDisplayComponent } from './components/delivery-display/delivery-display.component';
+import { DeliveryMaterialListComponent } from './components/delivery-material-list/delivery-material-list.component';
 import { DeliveryMaterialFormComponent } from './components/delivery-material-form/delivery-material-form.component';
 import { DeliveryInformationsStepsFormComponent } from './components/delivery-informations-steps-form/delivery-informations-steps-form.component';
 import { DeliveryInformationsStepsRepertoryComponent } from './components/delivery-informations-steps-repertory/delivery-informations-steps-repertory.component';
 import { DeliveryInformationsDeadlinesFormComponent } from './components/delivery-informations-deadlines-form/delivery-informations-deadlines-form.component';
 import { DeliveryInformationsDeadlinesRepertoryComponent } from './components/delivery-informations-deadlines-repertory/delivery-informations-deadlines-repertory.component';
+import { DeliveryMovieMaterialListComponent } from './components/delivery-movie-material-list/delivery-movie-material-list.component';
+import { DeliveryMovieMaterialFormComponent } from './components/delivery-movie-material-form/delivery-movie-material-form.component';
 
 // Pages
-import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
@@ -36,6 +37,7 @@ import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-s
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
 import { DeliveryInformationsEditableComponent } from './pages/delivery-informations-editable/delivery-informations-editable.component';
+import { DeliveryMovieEditableComponent } from './pages/delivery-movie-editable/delivery-movie-editable.component';
 
 // Modules
 import {
@@ -175,10 +177,10 @@ const routes: Routes = [
         component: DeliveryTemplateListComponent
       },
       {
-        path: 'movie-materials',
+        path: 'materials',
         canActivate: [MovieMaterialsGuard],
         canDeactivate: [MovieMaterialsGuard],
-        component: MovieMaterialsViewComponent
+        component: DeliveryMovieEditableComponent
       },
       {
         path: ':deliveryId',
@@ -214,9 +216,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    MovieMaterialsViewComponent,
     DeliveryListComponent,
-    DeliveryDisplayComponent,
+    DeliveryMaterialListComponent,
     DeliveryEditableComponent,
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
@@ -245,7 +246,10 @@ const routes: Routes = [
     DeliveryInformationsStepsRepertoryComponent,
     DeliveryStatusesComponent,
     DeliveryInformationsDeadlinesFormComponent,
-    DeliveryInformationsDeadlinesRepertoryComponent
+    DeliveryInformationsDeadlinesRepertoryComponent,
+    DeliveryMovieEditableComponent,
+    DeliveryMovieMaterialListComponent,
+    DeliveryMovieMaterialFormComponent
   ],
   imports: [
     CommonModule,

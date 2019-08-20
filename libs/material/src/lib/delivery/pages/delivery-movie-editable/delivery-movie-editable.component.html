@@ -1,0 +1,15 @@
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
+  <!-- Content -->
+  <ng-container content>
+    <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">
+      <h2>{{ movie.main.title.original }}</h2>
+      <mat-divider fxFlex></mat-divider>
+    </article>
+    <delivery-movie-material-list [materials]="materials$ | async" (editing)="openSidenav($event)">
+    </delivery-movie-material-list>
+  </ng-container>
+  <!-- Sidenav -->
+  <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
+    <delivery-movie-material-form [formGroup]="materialFormGroup"></delivery-movie-material-form>
+  </ng-container>
+</editable-sidenav>

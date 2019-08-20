@@ -3,21 +3,33 @@
   <ng-container content>
     <delivery-statuses></delivery-statuses>
     <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">
-        <h2>{{ movie.main.title.original}}</h2>
-        <mat-divider fxFlex></mat-divider>
-        <button mat-icon-button matTooltip="Save as a template" (click)="saveAsTemplate()"><mat-icon svgIcon="template"></mat-icon></button>
-        <button mat-icon-button matTooltip="Export material list in a .pdf file"><mat-icon svgIcon="pdf"></mat-icon></button>
-        <button mat-icon-button matTooltip="Sign delivery" (click)="signDelivery()"><mat-icon svgIcon="signature"></mat-icon></button>
-        <button mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()"><mat-icon svgIcon="delete"></mat-icon></button>
-        <a mat-button color="primary" (click)="addMaterial()">
-          <mat-icon>add</mat-icon> <span>Add material</span>
-        </a>
-      </article>
-    <delivery-display [materials]="(materials$ | async)" (editing)="openSidenav($event)">
-    </delivery-display>
+      <h2>{{ movie.main.title.original }}</h2>
+      <mat-divider fxFlex></mat-divider>
+      <button mat-icon-button matTooltip="Save as a template" (click)="saveAsTemplate()">
+        <mat-icon svgIcon="template"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Export material list in a .pdf file">
+        <mat-icon svgIcon="pdf"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Sign delivery" (click)="signDelivery()">
+        <mat-icon svgIcon="signature"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+      <a mat-button color="primary" (click)="addMaterial()">
+        <mat-icon>add</mat-icon> <span>Add material</span>
+      </a>
+    </article>
+    <delivery-material-list [materials]="materials$ | async" (editing)="openSidenav($event)">
+    </delivery-material-list>
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
-    <delivery-material-form [formGroup]="materialFormGroup" [delivery]="(delivery$ | async)" (delete)="openDeleteMaterial($event)"></delivery-material-form>
+    <delivery-material-form
+      [formGroup]="materialFormGroup"
+      [delivery]="delivery$ | async"
+      (delete)="openDeleteMaterial($event)"
+    ></delivery-material-form>
   </ng-container>
 </editable-sidenav>
