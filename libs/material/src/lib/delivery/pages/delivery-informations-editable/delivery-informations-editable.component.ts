@@ -13,6 +13,7 @@ import { createInformationsFormGroup } from '../../forms/informations.form';
 })
 export class DeliveryInformationsEditableComponent implements OnInit {
   public opened = false;
+  public editContent = 'dates';
 
   public informationsFormGroup = createInformationsFormGroup();
 
@@ -42,7 +43,8 @@ export class DeliveryInformationsEditableComponent implements OnInit {
     return this.informationsFormGroup.get('deliverySteps');
   }
 
-  public openSidenav() {
+  public openSidenav(name: string) {
+    this.editContent = name;
     this.opened = true;
   }
 
