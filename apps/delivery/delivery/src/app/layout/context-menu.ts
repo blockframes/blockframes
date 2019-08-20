@@ -62,7 +62,6 @@ export const CONTEXT_MENU = [
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'settings', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
       { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
@@ -73,7 +72,6 @@ export const CONTEXT_MENU = [
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'settings', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
       { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
@@ -84,19 +82,6 @@ export const CONTEXT_MENU = [
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'settings', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
-      { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
-      { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
-    ]
-  },
-  // TODO: issue#758 delete settings path
-  {
-    route: '/layout/o/delivery/:movieId/:deliveryId/settings',
-    items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'settings', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
       { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }
@@ -107,7 +92,6 @@ export const CONTEXT_MENU = [
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
       { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'settings', path: '/layout/o/delivery/:movieId/:deliveryId/settings' },
       { name: 'teamwork', path: '/layout/o/delivery/:movieId/:deliveryId/teamwork' },
       { name: 'edit', path: '/layout/o/delivery/:movieId/:deliveryId/edit' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/view' }

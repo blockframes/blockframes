@@ -14,8 +14,6 @@ import { DeliveryViewItemComponent } from './components/delivery-view-item/deliv
 import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
 import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
-import { DeliverySettingsItemComponent } from './components/delivery-settings-item/delivery-settings-item.component';
-import { DeliverySettingsFormComponent } from './components/delivery-settings-form/delivery-settings-form.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
 import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
@@ -31,7 +29,6 @@ import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-ed
 import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
-import { DeliverySettingsEditableComponent } from './pages/delivery-settings-editable/delivery-settings-editable.component';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
@@ -196,13 +193,6 @@ const routes: Routes = [
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
             component: DeliveryInformationsEditableComponent
-          },
-          // TODO: issue#758 delete settings path
-          {
-            path: 'settings',
-            canActivate: [DeliveryMaterialsGuard],
-            canDeactivate: [DeliveryMaterialsGuard],
-            component: DeliverySettingsEditableComponent
           }
         ]
       }
@@ -233,9 +223,6 @@ const routes: Routes = [
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,
-    DeliverySettingsItemComponent,
-    DeliverySettingsFormComponent,
-    DeliverySettingsEditableComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
     DeliveryEmptyComponent,
