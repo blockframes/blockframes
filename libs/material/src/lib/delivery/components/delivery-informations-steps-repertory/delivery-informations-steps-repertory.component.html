@@ -1,0 +1,22 @@
+<article>
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <h3>Steps</h3>
+    <button mat-flat-button (click)="editing.emit()">Edit</button>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let step">{{ step.name }}</td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let step">{{ step.date | date: 'MM dd yyyy' }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</article>

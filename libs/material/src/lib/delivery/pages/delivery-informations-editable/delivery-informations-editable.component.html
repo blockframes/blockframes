@@ -1,11 +1,12 @@
 <editable-sidenav test-id="content" page-id="delivery-informations" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
   <!-- Content -->
   <ng-container content>
-    <delivery-informations-dates-display [delivery]="delivery$ | async" (editing)="openSidenav()"></delivery-informations-dates-display>
+    <delivery-informations-dates-display [delivery]="delivery$ | async" (editing)="openSidenav('dates')"></delivery-informations-dates-display>
+    <delivery-informations-steps-repertory [steps]="deliverySteps.value" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
   </ng-container>
   <!-- Sidenav -->
-  <ng-container sidenav>
-    <delivery-informations-dates-form [formGroup]="deliveryDates"></delivery-informations-dates-form>
-    <delivery-informations-steps-form [formGroup]="informationsFormGroup"></delivery-informations-steps-form>
+  <ng-container sidenav [ngSwitch]="editContent">
+    <delivery-informations-dates-form [formGroup]="deliveryDates" *ngSwitchCase="'dates'"></delivery-informations-dates-form>
+    <delivery-informations-steps-form [formGroup]="informationsFormGroup" *ngSwitchCase="'steps'"></delivery-informations-steps-form>
   </ng-container>
 </editable-sidenav>
