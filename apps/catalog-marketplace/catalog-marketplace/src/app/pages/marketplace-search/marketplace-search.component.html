@@ -28,7 +28,7 @@
                                 <mat-form-field>
                                     <input matInput [matDatepicker]="pickerTo" formControlName="to" placeholder="To" />
                                     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerTo startView="multi-year" ></mat-datepicker>
+                                    <mat-datepicker #pickerTo startView="multi-year"></mat-datepicker>
                                 </mat-form-field>
                             </span>
                         </mat-expansion-panel>
@@ -189,9 +189,11 @@
                 <h3>Search</h3>
                 <mat-divider></mat-divider>
             </h3>
-       <!--      <ng-container *ngIf="movieSearchResults$ | async as searchResults">
-                <movie-display-card-item [movie]="searchResults.main"></movie-display-card-item>
-            </ng-container> -->
+            <ng-container *ngIf="movieSearchResults$ | async as searchResults">
+                <span fxLayout="row wrap" fxLayoutGap="30px">
+                    <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main"></movie-display-card-item>
+                </span>
+            </ng-container>
         </article>
     </article>
 </section>
