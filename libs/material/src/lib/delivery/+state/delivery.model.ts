@@ -17,8 +17,10 @@ interface AbstractDelivery {
 
 export interface Delivery extends AbstractDelivery {
   dueDate?: Date;
-  acceptationPeriod?: Number,
-  reWorkingPeriod?: Number,
+  // Time to accept a material
+  acceptationPeriod?: number,
+  // Time to return a refused material
+  reWorkingPeriod?: number,
   steps: Step[];
 }
 
