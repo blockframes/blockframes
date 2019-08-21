@@ -128,13 +128,13 @@
                                         placeholder="From" />
                                     <mat-datepicker-toggle matSuffix [for]="pickerAvailableFrom">
                                     </mat-datepicker-toggle>
-                                    <mat-datepicker #pickerAvailableFrom></mat-datepicker>
+                                    <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                                 </mat-form-field>
                                 <mat-form-field>
                                     <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo"
                                         placeholder="to" />
                                     <mat-datepicker-toggle matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerAvailableTo></mat-datepicker>
+                                    <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
                                 </mat-form-field>
                             </span>
                         </mat-expansion-panel>

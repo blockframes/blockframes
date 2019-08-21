@@ -6,15 +6,14 @@ import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild } fro
 import { Observable, combineLatest } from 'rxjs';
 import { Movie, staticModels } from '@blockframes/movie';
 import { FireQuery } from '@blockframes/utils';
-import { startWith, map, debounceTime, tap } from 'rxjs/operators';
+import { startWith, map, debounceTime } from 'rxjs/operators';
 import {
   MovieType,
   CatalogSearchForm,
   Language,
   Certifications,
   MovieMedias,
-  MovieTerritories,
-  CatalogSearch
+  MovieTerritories
 } from './marketplace-search.form';
 import { languageValidator } from './marketplace-search-validators.form';
 import { filterMovie } from './filter.util';
@@ -86,6 +85,7 @@ export class MarketplaceSearchComponent implements OnInit {
         return movies.filter(movie => filterMovie(movie, filterOptions));
       })
     );
+    this.movies$.subscribe(data => console.log(data))
   }
 
   private _territoriesFilter(territory: string): string[] {
