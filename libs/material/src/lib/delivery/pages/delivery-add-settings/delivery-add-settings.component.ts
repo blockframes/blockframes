@@ -38,7 +38,7 @@ export class DeliveryAddSettingsComponent {
   ) {}
 
   public picked(options: DeliveryOption[]) {
-    this.store.updateWizardState({ options });
+    this.store.updateWizard({ options });
     this.options = options;
   }
 

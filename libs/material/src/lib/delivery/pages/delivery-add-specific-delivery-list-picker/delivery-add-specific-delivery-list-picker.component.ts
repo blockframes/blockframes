@@ -37,7 +37,7 @@ const ITEMS: IDeliveryList[] = [
 export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
   public isLoading$: Observable<boolean>;
   public items$: Observable<ActionPickerItem<IDeliveryList>[]>;
-  public currentDeliveryList: IDeliveryList | undefined;
+  public currentDeliveryList?: IDeliveryList;
 
   constructor(
     private router: Router,
@@ -50,17 +50,18 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
       return '#';
     }
 
-    const deliveryID = this.currentDeliveryList.id;
     const movieId = this.movieQuery.getActiveId();
-    // TODO: refactor the other page to add template to the URL
+    // TODO(issue#590): refactor the other page to add template to the URL
+    // const deliveryID = this.currentDeliveryList.id;
     return `/layout/o/delivery/add/${movieId}/4-settings`;
   }
 
   ngOnInit(): void {
+    // TODO(issue#590): load the specific delivery list content and feed this variable accordingly
     this.isLoading$ = of(false);
     this.items$ = of(ITEMS).pipe(
-      map(xs => {
-        return xs.map(x => ({
+      map(items => {
+        return items.map(x => ({
           title: x.name,
           payload: x,
           img: x.logo
@@ -70,8 +71,9 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
   }
 
   public selectDeliveryList(deliveryList: IDeliveryList) {
-    // TODO: move the variable to an observable in the query
-    this.store.updateWizardState({
+    // TODO(issue#590): when we load specific deliveries from the server,
+    //   move the management of "current delivery list" to an observable in the query
+    this.store.updateWizard({
       kind: DeliveryWizardKind.specificDeliveryList,
       deliveryListId: deliveryList.id
     });

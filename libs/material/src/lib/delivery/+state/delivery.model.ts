@@ -60,6 +60,8 @@ export function createDelivery(params: Partial<Delivery>) {
     state: State.pending,
     isPaid: false,
     _type: 'deliveries',
+    materialsToBeCharged: params.materialsToBeCharged || false,
+    deliveryListToBeSigned: params.deliveryListToBeSigned || false,
     ...params
   } as Delivery;
 }

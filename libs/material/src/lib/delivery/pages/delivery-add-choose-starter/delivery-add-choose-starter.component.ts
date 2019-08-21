@@ -43,7 +43,7 @@ export class DeliveryAddChooseStarterComponent {
   }
 
   public onPickBlank() {
-    this.store.updateWizardState({ kind: DeliveryWizardKind.blankList });
+    this.store.updateWizard({ kind: DeliveryWizardKind.blankList });
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
   }

@@ -43,11 +43,14 @@ export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
     super(initialState);
   }
 
-  public updateWizardState(content?: Partial<DeliveryWizard>) {
-    const updateNested = state => ({
-      ...state,
-      wizard: content ? { ...state.wizard, ...content } : undefined
+  public updateWizard(content?: Partial<DeliveryWizard>) {
+    const updateNested = ({ wizard }) => ({
+      wizard: content ? { wizard, ...content } : undefined
     });
     this.update(updateNested);
+  }
+
+  public resetWizard() {
+    this.update({ wizard: undefined });
   }
 }

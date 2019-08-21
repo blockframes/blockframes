@@ -16,7 +16,7 @@ export class DeliveryAddFindMovieComponent implements OnInit {
   constructor(private router: Router, private store: DeliveryStore) {}
 
   ngOnInit(): void {
-    this.store.updateWizardState(undefined);
+    this.store.resetWizard();
   }
 
   public async selectMovie(movieId: string): Promise<boolean> {

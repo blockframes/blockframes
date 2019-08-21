@@ -120,8 +120,8 @@ export class DeliveryService {
       id,
       movieId,
       validated: [],
-      materialsToBeCharged: opts.materialsToBeCharged || false,
-      deliveryListToBeSigned: opts.deliveryListToBeSigned || false
+      materialsToBeCharged: opts.materialsToBeCharged,
+      deliveryListToBeSigned: opts.deliveryListToBeSigned
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -320,9 +320,8 @@ export class DeliveryService {
   }
 
   async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
-    const deliveryListToBeSigned =
-      wizard.options.indexOf(DeliveryOption.deliveryListToBeSigned) >= 0;
-    const materialsToBeCharged = wizard.options.indexOf(DeliveryOption.materialsToBeCharged) >= 0;
+    const deliveryListToBeSigned = wizard.options.includes(DeliveryOption.deliveryListToBeSigned);
+    const materialsToBeCharged = wizard.options.includes(DeliveryOption.materialsToBeCharged);
 
     const opts: AddDeliveryOptions = {
       movieId,

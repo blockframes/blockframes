@@ -119,8 +119,6 @@ const routes: Routes = [
           },
           {
             path: '3-pick-specific-delivery-list',
-            canActivate: [],
-            canDeactivate: [],
             pathMatch: 'full',
             component: DeliveryAddSpecificDeliveryListPickerComponent
           },
