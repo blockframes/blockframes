@@ -197,47 +197,36 @@ export class DeliveryService {
     });
   }
 
-  /** Add step in array steps of delivery */
-  public createStep(step: Step) {
-    const delivery = this.query.getActive();
-    step.id = this.db.createId();
-    const steps = [...delivery.steps, step];
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
-  }
-
-  /** Update step in array steps of delivery */
-  public updateStep(steps: Step[]) {
-    const steps2 = [...steps];
-    steps2.map(step => ({ ...step, id: this.db.createId() }));
-    const deliveryId = this.query.getActiveId();
-    this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({ steps: steps2 });
-  }
-
+  /** Update steps of delivery */
   public async updateSteps(steps: Step[]) {
     const deliveryId = this.query.getActiveId();
     const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+    const oldSteps = this.query.getActive().steps;
+
     return this.db.firestore.runTransaction(async tx => {
       const stepsWithId = steps.map(
         step => (step.id ? step : { ...step, id: this.db.createId() })
       );
+
+      const deletedSteps = [];
+      oldSteps.forEach(step => stepsWithId.some(newStep => newStep.id === step.id) ? null : deletedSteps.push(step));
+
+      this.removeMaterialsStepId(deletedSteps, deliveryId);
+
       return tx.update(deliveryDocRef, { steps: stepsWithId });
     });
   }
 
   /** Remove step in array steps of delivery */
-  public removeStep(step: Step) {
-    const delivery = this.query.getActive();
-    const steps = [...delivery.steps];
-    const index = steps.indexOf(step);
-    steps.splice(index, 1);
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
-
+  public removeMaterialsStepId(steps: Step[], deliveryId: string) {
     // We also set the concerned materials .step to an empty string
     const batch = this.db.firestore.batch();
-    const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
-    materials.forEach(material => {
-      const doc = this.db.doc(`deliveries/${delivery.id}/materials/${material.id}`);
-      return batch.update(doc.ref, { step: '' });
+    steps.forEach(step =>{
+      const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+      materials.forEach(material => {
+        const doc = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`);
+        return batch.update(doc.ref, { stepId: '' });
+      });
     });
     batch.commit();
   }
