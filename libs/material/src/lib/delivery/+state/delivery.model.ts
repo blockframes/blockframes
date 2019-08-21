@@ -1,6 +1,30 @@
 import { Stakeholder } from '@blockframes/movie';
 import { firestore } from 'firebase/app';
+
 type Timestamp = firestore.Timestamp;
+
+interface MGDeadline {
+  percent: number;
+  date?: Timestamp | Date;
+  label: string;
+}
+
+export const enum Currency {
+  EUROS = 'EUR',
+  DOLLAR = 'DOL',
+  YEN = 'YEN'
+}
+
+interface InternationalPrice {
+  currency: Currency;
+  value: number;
+}
+
+interface MGInfo {
+  currentDeadline: number;
+  price: InternationalPrice;
+  deadlines: MGDeadline[];
+}
 
 interface AbstractDelivery {
   id: string;
@@ -19,11 +43,11 @@ interface AbstractDelivery {
   mustChargeMaterials?: boolean;
   mustBeSigned?: boolean;
   _type: 'deliveries';
+  mgInfo: MGInfo;
 }
 
 export interface Delivery extends AbstractDelivery {
   dueDate?: Date;
-  steps: Step[];
 }
 
 export interface DeliveryDB extends AbstractDelivery {
