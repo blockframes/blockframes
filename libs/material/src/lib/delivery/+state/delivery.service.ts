@@ -23,10 +23,16 @@ interface AddDeliveryOptions {
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
+  const mgDeadlines = delivery.mgDeadlines || [];
+
   return {
     ...delivery,
     dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
-    steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
+    steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() })),
+    mgDeadlines: mgDeadlines.map(deadline => ({
+      ...deadline,
+      date: deadline.date ? deadline.date.toDate() : undefined
+    }))
   };
 }
 
