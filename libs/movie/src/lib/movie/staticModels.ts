@@ -21,7 +21,7 @@ const models = {
     { 'slug': 'tv-show', 'label': 'TV Show' },
     { 'slug': 'web-series', 'label': 'Web Series' },
     { 'slug': 'virtual-reality', 'label': 'Virtual Reality' }
-  ],
+  ] as const,
   'STAKEHOLDER_ROLES': [
     {
       'slug': 'executive-producer',
@@ -51,7 +51,7 @@ const models = {
       'slug': 'broadcaster-coproducer',
       'label': 'Broadcaster coproducer'
     }
-  ],
+  ] as const,
   'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
     {
       'slug': 'canValidateDelivery',
@@ -117,7 +117,7 @@ const models = {
       'slug': 'finished',
       'label': 'Finished'
     }
-  ],
+  ] as const,
   'LANGUAGES': [
     { 'slug': 'albanian', 'label': 'Albanian' },
     { 'slug': 'arabic', 'label': 'Arabic' },
@@ -201,7 +201,7 @@ const models = {
     { 'slug': 'valencian', 'label': 'Valencian' },
     { 'slug': 'vietnamese', 'label': 'Vietnamese' },
     { 'slug': 'welsh', 'label': 'Welsh' },
-  ],
+  ] as const,
   'MOVIE_CURRENCIES': [
     {
       'slug': 'us-dollar',
@@ -243,7 +243,7 @@ const models = {
       'slug': 'new-zealand-dollar',
       'label': 'New Zealand dollar'
     }
-  ],
+  ] as const,
   'SELECTION_CATEGORIES': [
     {
       'slug': 'prestige-directors',
@@ -269,7 +269,7 @@ const models = {
       'slug': 'vip-access',
       'label': 'VIP Access'
     }
-  ],
+  ] as const,
   'SCORING': [
     {
       'slug': 'a',
@@ -287,7 +287,7 @@ const models = {
       'slug': 'd',
       'label': 'D'
     },
-  ],
+  ] as const,
   'COLORS': [
     {
       'slug': 'c',
@@ -297,7 +297,7 @@ const models = {
       'slug': 'b',
       'label': 'Black & white'
     }
-  ],
+  ] as const,
   'CERTIFICATIONS': [
     {
       'slug': 'art-essai',
@@ -307,7 +307,7 @@ const models = {
       'slug': 'eof',
       'label': 'EOF'
     }
-  ],
+  ] as const,
   'TERRITORIES': [
     { 'slug': 'world', 'label': 'World' },
     { 'slug': 'afghanistan', 'label': 'Afghanistan' },
@@ -571,7 +571,7 @@ const models = {
     { 'slug': 'saint-kitts-&-nevis', 'label': 'Saint Kitts & Nevis' },
     { 'slug': 'saint-vincent-&-the-grenadines', 'label': 'Saint Vincent & The Grenadines' },
     { 'slug': 'sao-tome-&-principe', 'label': 'Sao Tome & Principe' }
-  ],
+  ] as const,
   'MEDIAS': [
     { 'slug': 'pay-tv', 'label': 'Pay TV' },
     { 'slug': 'pay-per-view', 'label': 'Pay Per View' },
@@ -593,14 +593,14 @@ const models = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
-  ]
+  ] as const
 };
 
 /**
  * Checks if given code (or slug) exists in above static models
  * @dev If it exists, return code else false
- * @param scope 
- * @param str 
+ * @param scope
+ * @param str
  */
 export const getCodeIfExists = (scope: string, str: string) => {
   let item = models[scope].find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
@@ -615,8 +615,8 @@ export const getCodeIfExists = (scope: string, str: string) => {
 /**
  * Returns the label corresponding to a slug (ie:code).
  * @dev Codes are used to store sanitized data in database
- * @param scope 
- * @param slug 
+ * @param scope
+ * @param slug
  */
 export const getLabelByCode = (scope: string, slug: string) => {
   const item = models[scope].find(i => i.slug === slug);
