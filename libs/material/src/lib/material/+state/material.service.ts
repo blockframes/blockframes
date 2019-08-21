@@ -40,11 +40,22 @@ export class MaterialService {
   }
 
   /** Update materials of a delivery */
-  public async updateMaterials(materials: Material[], deliveryId: string) {
+  public async updateMaterials(materials: Material[], deliveryId: string, movieId: string) {
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
         const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
-        return tx.update(materialRef, material)
+
+        // If this material already exists in movie materials, we need to merge
+        // both so we don't override specific fields (like owner and location)
+        const duplicateMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id)
+        if (!!duplicateMaterial) {
+          const updatedMaterial = {...duplicateMaterial, ...material};
+          return tx.update(materialRef, updatedMaterial)
+        }
+        else {
+          return tx.update(materialRef, material)
+        }
       });
     });
   }

@@ -4,9 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Material, MaterialService } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery } from '../../+state';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
-import { createMaterialFormList } from '../../forms/material.form';
+import { createMovieMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -20,14 +19,13 @@ export class DeliveryMovieEditableComponent implements OnInit {
   public movie$: Observable<Movie>;
   public opened = false;
 
-  public materialsFormList = createMaterialFormList();
+  public materialsFormList = createMovieMaterialFormList();
   public materialFormGroup$: Observable<FormGroup>;
 
   private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
   constructor(
     private materialQuery: MaterialQuery,
-    private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar,

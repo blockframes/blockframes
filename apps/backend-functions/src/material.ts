@@ -198,6 +198,7 @@ export function copyMaterialsToMovie(
     );
 
     if (!!duplicateMaterial) {
+      console.log(duplicateMaterial)
       // Check if delivery.id is already in material.deliveryIds before pushing it in.
       if (!duplicateMaterial.deliveryIds.includes(delivery.id)) {
         duplicateMaterial.deliveryIds.push(delivery.id);

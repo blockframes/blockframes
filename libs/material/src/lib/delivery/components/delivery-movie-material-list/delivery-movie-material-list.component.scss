@@ -6,14 +6,16 @@ td.mat-cell {
   padding: 10px;
 }
 
-td {
-  max-width: 200px;
-}
-
-.step-chip {
-  background-color: var(--redChipBackground);
+.step-text {
   color: var(--warn);
   font-weight: 500;
-  padding: 2px 10px;
-  border-radius: 5px;
+}
+
+// Limit description cell height to 4 lines
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

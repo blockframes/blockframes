@@ -4,16 +4,7 @@
     <h4>{{ control.value.value }}</h4>
 
     <!-- Material Description Input -->
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea
-        matInput
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="5"
-        formControlName="description">
-      </textarea>
-    </mat-form-field>
+    <p> {{ control.value.description }}</p>
 
     <!-- Material Owner Input -->
     <mat-form-field appearance="outline">
