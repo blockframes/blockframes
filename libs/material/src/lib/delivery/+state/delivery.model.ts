@@ -12,8 +12,8 @@ interface AbstractDelivery {
   dueDate?: Date | Timestamp;
   state: State;
   isPaid: boolean;
-  materialsToBeCharged?: boolean;
-  deliveryListToBeSigned?: boolean;
+  mustChargeMaterials?: boolean;
+  mustBeSigned?: boolean;
   _type: 'deliveries';
 }
 
@@ -60,8 +60,8 @@ export function createDelivery(params: Partial<Delivery>) {
     state: State.pending,
     isPaid: false,
     _type: 'deliveries',
-    materialsToBeCharged: params.materialsToBeCharged || false,
-    deliveryListToBeSigned: params.deliveryListToBeSigned || false,
+    mustChargeMaterials: params.mustChargeMaterials || false,
+    mustBeSigned: params.mustBeSigned || false,
     ...params
   } as Delivery;
 }

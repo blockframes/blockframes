@@ -17,8 +17,8 @@ import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.s
 interface AddDeliveryOptions {
   templateId?: string;
   movieId?: string;
-  materialsToBeCharged?: boolean;
-  deliveryListToBeSigned?: boolean;
+  mustChargeMaterials?: boolean;
+  mustBeSigned?: boolean;
 }
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
@@ -125,8 +125,8 @@ export class DeliveryService {
       id,
       movieId,
       validated: [],
-      materialsToBeCharged: opts.materialsToBeCharged,
-      deliveryListToBeSigned: opts.deliveryListToBeSigned
+      mustChargeMaterials: opts.mustChargeMaterials,
+      mustBeSigned: opts.mustBeSigned
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -154,7 +154,7 @@ export class DeliveryService {
   }
 
   /** Add a new delivery by copying the movie's materials */
-  public async addDeliveryWithMovieMaterials(opts: AddDeliveryOptions) {
+  public async addDeliveryWithMovieMaterials(opts?: AddDeliveryOptions) {
     const id = this.db.createId();
     const movie = this.movieQuery.getActive();
     const movieDoc = this.db.doc(`movies/${movie.id}`);
@@ -163,8 +163,8 @@ export class DeliveryService {
       id,
       movieId: movie.id,
       validated: [],
-      materialsToBeCharged: opts.materialsToBeCharged,
-      deliveryListToBeSigned: opts.deliveryListToBeSigned
+      mustChargeMaterials: opts.mustChargeMaterials,
+      mustBeSigned: opts.mustBeSigned
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -331,13 +331,13 @@ export class DeliveryService {
   }
 
   async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
-    const deliveryListToBeSigned = wizard.options.includes(DeliveryOption.deliveryListToBeSigned);
-    const materialsToBeCharged = wizard.options.includes(DeliveryOption.materialsToBeCharged);
+    const mustBeSigned = wizard.options.includes(DeliveryOption.mustBeSigned);
+    const mustChargeMaterials = wizard.options.includes(DeliveryOption.mustChargeMaterials);
 
     const opts: AddDeliveryOptions = {
       movieId,
-      materialsToBeCharged,
-      deliveryListToBeSigned
+      mustChargeMaterials,
+      mustBeSigned
     };
 
     switch (wizard.kind) {

@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Delivery } from './delivery.model';
 
 export const enum DeliveryOption {
-  materialsToBeCharged = 'materialsToBeCharged',
-  deliveryListToBeSigned = 'deliveryListToBeSigned'
+  mustChargeMaterials = 'mustChargeMaterials',
+  mustBeSigned = 'mustBeSigned'
 }
 
 export interface IDeliveryList {

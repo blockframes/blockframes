@@ -19,11 +19,11 @@ export class DeliveryAddSettingsComponent {
   public items: ActionPickerListItem<DeliveryOption>[] = [
     {
       title: 'Materials to be charged',
-      payload: DeliveryOption.materialsToBeCharged
+      payload: DeliveryOption.mustChargeMaterials
     },
     {
       title: 'Delivery list to be signed',
-      payload: DeliveryOption.deliveryListToBeSigned
+      payload: DeliveryOption.mustBeSigned
     }
   ];
   public options: DeliveryOption[] = [];
