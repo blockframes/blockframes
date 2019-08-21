@@ -4,14 +4,16 @@ import { firestore } from 'firebase/app';
 type Timestamp = firestore.Timestamp;
 
 export const enum Currency {
-  EUROS = 'EUR',
-  DOLLAR = 'DOL',
-  YEN = 'YEN'
-}
-
-interface InternationalPrice {
-  currency: Currency;
-  value: number;
+  EURO = 'EUR',
+  DOLLAR = 'USD',
+  JAPANESE_YEN = 'JPY',
+  POUND_STERLING = 'GBP',
+  DOLLAR_AUSTRALIAN = 'AUD',
+  DOLLAR_CANADIAN = 'CAD',
+  SWISS_FRANC = 'CHD',
+  CHINESE_RENMINBI = 'CNY',
+  SWEDISH_KRONA = 'SEK',
+  DOLLAR_NEW_ZEALAND = 'NZD'
 }
 
 /**
@@ -19,18 +21,9 @@ interface InternationalPrice {
  * can be used to interact with the frontend (D = Date) or backend (D = Timestamp).
  */
 interface MGDeadlineRaw<D> {
-  percent: number;
+  percentage: number;
   date?: D;
   label: string;
-}
-
-/**
- * This contains all the info regarding the Minimum Guarantee,
- * can be used to interact with the frontend (D = Date) or backend (D = Timestamp).
- */
-interface MGInfoRaw {
-  currentDeadline: number;
-  price: InternationalPrice;
 }
 
 /**
@@ -53,19 +46,22 @@ interface DeliveryRaw<D> {
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
   stakeholders: Stakeholder[];
-  // Time to accept a material
-  acceptationPeriod?: number;
-  // Time to return a refused material
-  reWorkingPeriod?: number;
   dueDate?: D;
   state: State;
   isPaid: boolean;
   mustChargeMaterials?: boolean;
   mustBeSigned?: boolean;
   _type: 'deliveries';
-  mgInfo?: MGInfoRaw;
-  mgDeadlines: MGDeadlineRaw<D>[];
   steps: StepRaw<D>[];
+  // Time to accept a material
+  acceptationPeriod?: number;
+  // Time to return a refused material
+  reWorkingPeriod?: number;
+  // Minimum Guarantee:
+  mgCurrentDeadline: number;
+  mgAmount: number;
+  mgCurrency: Currency;
+  mgDeadlines: MGDeadlineRaw<D>[];
 }
 
 /**

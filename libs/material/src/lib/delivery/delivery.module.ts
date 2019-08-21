@@ -77,14 +77,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
-import {
-  DeliveryMaterialsGuard,
-  MovieMaterialsGuard
-} from '../material';
+import { DeliveryMaterialsGuard, MovieMaterialsGuard } from '../material';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
 import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
+import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
 
 const routes: Routes = [
   {
@@ -241,7 +239,8 @@ const routes: Routes = [
     DeliveryInformationsDatesFormComponent,
     DeliveryMaterialFormComponent,
     DeliveryInformationsStepsFormComponent,
-    DeliveryInformationsStepsRepertoryComponent
+    DeliveryInformationsStepsRepertoryComponent,
+    DeliveryStatusesComponent
   ],
   imports: [
     CommonModule,
