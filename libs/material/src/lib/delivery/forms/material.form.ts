@@ -9,6 +9,10 @@ function createMaterialFormGroup(material: Material) {
     description: new FormControl(material.description),
     step: new FormControl(material.step),
     category: new FormControl(material.category),
+    price: new FormControl(material.price),
+    status: new FormControl(material.status),
+    owner: new FormControl(material.owner),
+    storage: new FormControl(material.storage)
   });
 }
 

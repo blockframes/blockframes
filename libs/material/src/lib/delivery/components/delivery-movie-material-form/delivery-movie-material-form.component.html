@@ -1,0 +1,30 @@
+<article>
+  <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+    <!-- Material Title/Value -->
+    <h4>{{ control.value.value }}</h4>
+
+    <!-- Material Description Input -->
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="5"
+        formControlName="description">
+      </textarea>
+    </mat-form-field>
+
+    <!-- Material Owner Input -->
+    <mat-form-field appearance="outline">
+      <mat-label>Owner</mat-label>
+      <input matInput placeholder="Owner" type="text" formControlName="owner" disabled/>
+    </mat-form-field>
+
+    <!-- Material Storage location Input -->
+    <mat-form-field appearance="outline">
+      <mat-label>Storage location</mat-label>
+      <input matInput placeholder="Storage location" type="text" formControlName="storage" />
+    </mat-form-field>
+  </form>
+</article>

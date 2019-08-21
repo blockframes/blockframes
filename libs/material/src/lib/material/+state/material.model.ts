@@ -6,10 +6,13 @@ export interface Material {
   value: string;
   description: string;
   owner: string;
-  step?: Step,
-  status?: MaterialStatus,
-  deliveriesIds?: string[];
-  price?: number;
+  step?: Step;
+  status?: MaterialStatus;
+  deliveryIds?: string[];
+  price?: {
+    amount: number;
+    currency: string;
+  };
   isOrdered?: boolean;
   isPaid?: boolean;
   storage?: string;
@@ -30,11 +33,11 @@ export interface MaterialTemplateForm {
 export function createMaterial(material: Partial<Material>): Material {
   return {
     id: material.id,
-    category: material.category || '',
-    value: material.value || '',
-    description: material.description || '',
-    owner: material.owner || '',
-    step: material.step || {id: '', date: null, name: ''},
+    category: material.category || null,
+    value: material.value || null,
+    description: material.description || null,
+    owner: material.owner || null,
+    step: material.step || {id: null, date: null, name: null},
     ...material
   }
 }

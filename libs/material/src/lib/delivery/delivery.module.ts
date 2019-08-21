@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 // Components
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
@@ -256,7 +257,7 @@ const routes: Routes = [
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    MatExpansionModule,
+    TextFieldModule,
     MaterialModule,
     ConfirmModule,
     UiFormModule,
@@ -270,6 +271,7 @@ const routes: Routes = [
     EditableSidenavModule,
 
     // Material
+    MatExpansionModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
