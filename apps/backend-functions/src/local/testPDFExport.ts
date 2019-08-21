@@ -1,6 +1,6 @@
 import { buildDeliveryPDF } from '../internals/pdf';
 import * as fs from 'fs';
-import { OrganizationStatus } from '../data/types';
+import { OrganizationStatus, MaterialStatus } from '../data/types';
 
 const testData = {
   txID: {
@@ -40,8 +40,8 @@ const testData = {
   },
   materials: [
     {
-      deliveriesIds: [],
-      state: '',
+      deliveryIds: [],
+      status: MaterialStatus.pending,
       value: 'My Second Material',
       category: 'Some Category',
       id: '0DL3qyDacTcsyIQUCU0R',
@@ -49,8 +49,8 @@ const testData = {
       stepId: 'i36vwU1eVdlNObEafOre'
     },
     {
-      deliveriesIds: [],
-      state: '',
+      deliveryIds: [],
+      status: MaterialStatus.pending,
       value: 'My Third Material',
       category: 'Another Category',
       id: 'Ci3RPg5qLLNTo1e5n7L0',
@@ -58,8 +58,8 @@ const testData = {
       stepId: 'i36vwU1eVdlNObEafOre'
     },
     {
-      deliveriesIds: [],
-      state: '',
+      deliveryIds: [],
+      status: MaterialStatus.available,
       description: 'Yet Another Material With a Description',
       stepId: 'P8uVlb5CD0i6NU8fegAf',
       value: 'Yet Another Material',
@@ -67,8 +67,8 @@ const testData = {
       id: 'OtTFuS6Lq3MdjfGicU8v'
     },
     {
-      deliveriesIds: [],
-      state: '',
+      deliveryIds: [],
+      status: MaterialStatus.pending,
       description: 'My Material No Step Description',
       stepId: '',
       value: 'My Material No Step',
@@ -76,8 +76,8 @@ const testData = {
       id: 'byVmOtNzxPNJZv8qs1OX'
     },
     {
-      deliveriesIds: [],
-      state: '',
+      deliveryIds: [],
+      status: MaterialStatus.delivered,
       description: 'My Material Description',
       stepId: 'i36vwU1eVdlNObEafOre',
       value: 'My Material',

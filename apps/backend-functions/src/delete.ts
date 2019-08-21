@@ -73,13 +73,13 @@ export async function deleteFirestoreDelivery(
 
   const movieMaterials = await db.collection(`movies/${delivery.movieId}/materials`).get();
   movieMaterials.forEach(doc => {
-    if (doc.data().deliveriesIds.includes(delivery.id)) {
-      if (doc.data().deliveriesIds.length === 1) batch.delete(doc.ref);
+    if (doc.data().deliveryIds.includes(delivery.id)) {
+      if (doc.data().deliveryIds.length === 1) batch.delete(doc.ref);
       else {
-        const newdeliveriesIds = doc
+        const newdeliveryIds = doc
           .data()
-          .deliveriesIds.filter((id: string) => id !== delivery.id);
-        batch.update(doc.ref, { deliveriesIds: newdeliveriesIds });
+          .deliveryIds.filter((id: string) => id !== delivery.id);
+        batch.update(doc.ref, { deliveryIds: newdeliveryIds });
       }
     }
   });
@@ -158,12 +158,12 @@ export async function deleteFirestoreMaterial(
     throw new Error(`This material doesn't exist on this movie`);
   }
 
-  if (movieMaterial.deliveriesIds.includes(delivery.id)) {
-    if (movieMaterial.deliveriesIds.length === 1) {
+  if (movieMaterial.deliveryIds.includes(delivery.id)) {
+    if (movieMaterial.deliveryIds.length === 1) {
       db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).delete();
     } else {
-      const deliveriesIds = movieMaterial.deliveriesIds.filter(id => id !== delivery.id);
-      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).update({ deliveriesIds });
+      const deliveryIds = movieMaterial.deliveryIds.filter(id => id !== delivery.id);
+      db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).update({ deliveryIds });
     }
   }
   return true;

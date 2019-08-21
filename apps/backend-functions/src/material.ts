@@ -2,7 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument, getCollection } from './data/internals';
-import { DocType, Material, Movie, Organization, Delivery } from './data/types';
+import { DocType, Material, Movie, Organization, Delivery, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
 export const onMovieMaterialUpdate = async (
@@ -16,7 +16,7 @@ export const onMovieMaterialUpdate = async (
   const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
   const material: Material = change.after.data() as Material;
   const materialBefore = change.before.data();
-  const orgsPromises = material.deliveriesIds.map((deliveryId: string) =>
+  const orgsPromises = material.deliveryIds.map((deliveryId: string) =>
     getOrganizationsOfDocument(deliveryId, 'deliveries')
   );
   const orgsPerDelivery = await Promise.all(orgsPromises);
@@ -27,7 +27,8 @@ export const onMovieMaterialUpdate = async (
     return;
   }
 
-  if (material.state === materialBefore.state) {
+
+  if (material.status === materialBefore.status) {
     console.info(`No changes detected on material.state property`);
     return;
   }
@@ -55,10 +56,10 @@ export const onMovieMaterialUpdate = async (
           prepareNotification({
             message: `Material : ${material.value} from movie : ${
               movie.main.title.original
-            } is now in state : ${material.state}`,
+            } is now in status : ${material.status}`,
             userId,
             docInformations: { id: material.id, type: DocType.material },
-            path: `/layout/${movie.id}/view/${material.deliveriesIds[0]}`
+            path: `/layout/${movie.id}/view/${material.deliveryIds[0]}`
             // mocked path using first delivery in array
           })
         );
@@ -184,7 +185,7 @@ export const onDeliveryMaterialCreate = async (
 
 /**
  * Copy each delivery Material into the movie materials sub-collection. This checks if the copied Material
- * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveriesIds.
+ * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveryIds.
  */
 export function copyMaterialsToMovie(
   deliveryMaterials: Material[],
@@ -197,21 +198,21 @@ export function copyMaterialsToMovie(
     );
 
     if (!!duplicateMaterial) {
-      // Check if delivery.id is already in material.deliveriesIds before pushing it in.
-      if (!duplicateMaterial.deliveriesIds.includes(delivery.id)) {
-        duplicateMaterial.deliveriesIds.push(delivery.id);
+      // Check if delivery.id is already in material.deliveryIds before pushing it in.
+      if (!duplicateMaterial.deliveryIds.includes(delivery.id)) {
+        duplicateMaterial.deliveryIds.push(delivery.id);
       }
 
       const updatedMaterial = {
         ...duplicateMaterial,
-        state: !!duplicateMaterial.state ? duplicateMaterial.state : 'pending'
+        status: !!duplicateMaterial.status ? duplicateMaterial.status : MaterialStatus.pending
       };
 
       return db
         .doc(`movies/${delivery.movieId}/materials/${updatedMaterial.id}`)
         .set(updatedMaterial);
     }
-    const material = { ...deliveryMaterial, deliveriesIds: [delivery.id], state: 'pending' };
+    const material = { ...deliveryMaterial, deliveryIds: [delivery.id], status: MaterialStatus.pending };
     return db.doc(`movies/${delivery.movieId}/materials/${material.id}`).set(material);
   });
 }

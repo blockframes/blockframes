@@ -80,9 +80,19 @@ export interface Material {
   value: string;
   description: string;
   category: string;
-  deliveriesIds: string[];
-  state: string;
+  deliveryIds: string[];
+  status: MaterialStatus;
   stepId: string;
+  price?: {
+    amount: number;
+    currency: string;
+  }
+}
+
+export const enum MaterialStatus {
+  pending = 'pending',
+  available = 'available',
+  delivered = 'delivered'
 }
 
 export interface OrganizationPermissions {
