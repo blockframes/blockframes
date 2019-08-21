@@ -1,21 +1,38 @@
-<button mat-button (click)="addStep()">Add a step</button>
+<div>
+  <h4>Steps</h4>
+  <button mat-flat-button (click)="addStep()"><mat-icon>add</mat-icon>Add a step</button>
+</div>
 <form [formGroup]="control">
   <div formArrayName="deliverySteps">
     <div *ngFor="let step of deliverySteps.controls; let i = index">
       <div [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="space-between">
-          <p>Step <span>{{ i + 1 }}</span></p>
-          <button mat-button (click)="removeStep(i)">Delete</button>
+          <p>
+            Step <span>{{ i + 1 }}</span>
+          </p>
+          <button mat-icon-button (click)="removeStep(i)"><mat-icon svgIcon="trash"></mat-icon></button>
         </div>
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
-          <input type="text" formControlName="name" matInput />
+          <input type="text" formControlName="name" matInput required />
+          <mat-error *ngIf="step.get('name').hasError('required')">
+            Name is <strong>required</strong>.
+          </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Date</mat-label>
-          <input formControlName="date" matInput [matDatepicker]="picker" placeholder="Date" />
+          <input
+            formControlName="date"
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Date"
+            required
+          />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="step.get('date').hasError('required')">
+            Date is <strong>required</strong>.
+          </mat-error>
         </mat-form-field>
       </div>
     </div>

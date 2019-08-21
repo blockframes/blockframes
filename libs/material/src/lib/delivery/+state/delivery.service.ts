@@ -25,7 +25,7 @@ interface AddDeliveryOptions {
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
     ...delivery,
-    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
     steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
   };
 }

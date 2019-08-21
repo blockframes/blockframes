@@ -4,6 +4,10 @@ import { Injectable } from '@angular/core';
 
 const ICONS_SVG = [
   {
+    name: 'trash',
+    url: 'assets/icons/trash.svg'
+  },
+  {
     name: 'accepted',
     url: 'assets/icons/accepted.svg'
   },
