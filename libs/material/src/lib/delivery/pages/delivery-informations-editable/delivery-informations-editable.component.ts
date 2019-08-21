@@ -43,19 +43,20 @@ export class DeliveryInformationsEditableComponent implements OnInit {
     return this.informationsFormGroup.get('deliverySteps');
   }
 
+  public get steps$() {
+    return this.deliverySteps.valueChanges.pipe(startWith(this.deliverySteps.value));
+  }
+
   public openSidenav(name: string) {
     this.editContent = name;
     this.opened = true;
   }
 
-  public updateInformations() {
-    // TODO: update steps informations: issue#759
+  public async updateInformations() {
     // TODO: update guaranteed minimum payment deadline informations: issue#764
-    console.log(this.informationsFormGroup);
     try {
       if (this.informationsFormGroup.invalid) throw new Error('Delivery informations are not valid');
-      this.service.updateDates(this.deliveryDates.value);
-      this.service.updateSteps(this.deliverySteps.value);
+      await this.service.updateInformations(this.deliveryDates.value, this.deliverySteps.value);
       this.snackBar.open('Informations updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

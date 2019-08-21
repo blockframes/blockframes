@@ -2,7 +2,7 @@
   <!-- Content -->
   <ng-container content>
     <delivery-informations-dates-display [delivery]="delivery$ | async" (editing)="openSidenav('dates')"></delivery-informations-dates-display>
-    <delivery-informations-steps-repertory [steps]="deliverySteps.value" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
+    <delivery-informations-steps-repertory [steps]="steps$ | async" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav [ngSwitch]="editContent">

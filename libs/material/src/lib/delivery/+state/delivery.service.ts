@@ -188,14 +188,13 @@ export class DeliveryService {
     return id;
   }
 
-  /** Update informations of delivery */
-  public updateInformations(delivery: Partial<Delivery>) {
+  public async updateInformations(delivery: Partial<Delivery>, steps: Step[]) {
     const batch = this.db.firestore.batch();
     const deliveryId = this.query.getActiveId();
     const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
 
-    this.updateDates(delivery, deliveryDocRef, batch);
-    this.updateSteps(delivery.steps, deliveryDocRef, batch);
+    await this.updateDates(delivery, deliveryDocRef, batch);
+    await this.updateSteps(steps, deliveryDocRef, batch);
     // TODO: Update Guaranteed Minimum Informations: issue#764
 
     return batch.commit();
@@ -215,30 +214,28 @@ export class DeliveryService {
   }
 
   /** Update steps of delivery */
-  public async updateSteps(steps: Step[]) {
-    const deliveryId = this.query.getActiveId();
-    const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+  private updateSteps(
+    steps: Step[],
+    deliveryDocRef: firebase.firestore.DocumentReference,
+    batch: firebase.firestore.WriteBatch
+  ) {
     const oldSteps = this.query.getActive().steps;
 
-    return this.db.firestore.runTransaction(async tx => {
-      const stepsWithId = steps.map(
-        step => (step.id ? step : { ...step, id: this.db.createId() })
-      );
+    const stepsWithId = steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
 
-      const deletedSteps = [];
-      oldSteps.forEach(step => stepsWithId.some(newStep => newStep.id === step.id) ? null : deletedSteps.push(step));
+    const deletedSteps = oldSteps.filter(
+      oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
+    );
 
-      this.removeMaterialsStepId(deletedSteps, deliveryId);
-
-      return tx.update(deliveryDocRef, { steps: stepsWithId });
-    });
+    this.removeMaterialsStepId(deletedSteps, batch);
+    return batch.update(deliveryDocRef, { steps: stepsWithId });
   }
 
-  /** Remove step in array steps of delivery */
-  public removeMaterialsStepId(steps: Step[], deliveryId: string) {
-    // We also set the concerned materials .step to an empty string
-    const batch = this.db.firestore.batch();
-    steps.forEach(step =>{
+  /** Remove stepId of materials of delivery for an array of steps */
+  private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
+    const deliveryId = this.query.getActiveId();
+    // We also set the concerned materials stepId to an empty string
+    steps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
       materials.forEach(material => {
         const doc = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`);
