@@ -16,9 +16,9 @@ function createStepsFormList() {
 
 function createDeliveryDatesFormGroup() {
   return new FormGroup({
-    id: new FormControl(step.id),
-    name: new FormControl(step.name),
-    date: new FormControl(step.date)
+    dueDate: new FormControl(),
+    acceptationPeriod: new FormControl(),
+    reWorkingPeriod: new FormControl()
   });
 }
 
