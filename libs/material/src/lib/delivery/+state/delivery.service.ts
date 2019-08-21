@@ -345,9 +345,11 @@ export class DeliveryService {
         opts.templateId = templateId;
         return this.addDelivery(opts);
       case DeliveryWizardKind.specificDeliveryList:
-        return this.addDeliveryWithMovieMaterials(opts);
+        return this.addDelivery(opts);
       case DeliveryWizardKind.blankList:
         return this.addDelivery(opts);
+      case DeliveryWizardKind.materialList:
+        return this.addDeliveryWithMovieMaterials(opts);
     }
   }
 }
