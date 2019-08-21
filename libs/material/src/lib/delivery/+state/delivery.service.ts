@@ -188,13 +188,14 @@ export class DeliveryService {
     return id;
   }
 
-  public async updateInformations(delivery: Partial<Delivery>, steps: Step[]) {
+  /** Update informations of delivery */
+  public updateInformations(delivery: Partial<Delivery>, steps: Step[]) {
     const batch = this.db.firestore.batch();
     const deliveryId = this.query.getActiveId();
     const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
 
-    await this.updateDates(delivery, deliveryDocRef, batch);
-    await this.updateSteps(steps, deliveryDocRef, batch);
+    this.updateDates(delivery, deliveryDocRef, batch);
+    this.updateSteps(steps, deliveryDocRef, batch);
     // TODO: Update Guaranteed Minimum Informations: issue#764
 
     return batch.commit();
@@ -221,13 +222,16 @@ export class DeliveryService {
   ) {
     const oldSteps = this.query.getActive().steps;
 
+    // Add an id for new steps
     const stepsWithId = steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
 
+    // Find steps that need to be removed
     const deletedSteps = oldSteps.filter(
       oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
     );
-
+    // Remove stepId from the materials according to this array
     this.removeMaterialsStepId(deletedSteps, batch);
+
     return batch.update(deliveryDocRef, { steps: stepsWithId });
   }
 
@@ -239,7 +243,7 @@ export class DeliveryService {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
       materials.forEach(material => {
         const doc = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`);
-        return batch.update(doc.ref, { stepId: '' });
+        batch.update(doc.ref, { stepId: '' });
       });
     });
   }

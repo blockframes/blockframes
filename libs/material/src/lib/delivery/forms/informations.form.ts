@@ -26,7 +26,6 @@ export function createInformationsFormGroup() {
   return new FormGroup({
     deliveryDates: createDeliveryDatesFormGroup(),
     deliverySteps: createStepsFormList()
-    // TODO: create formList for steps: issue#759
     // TODO: create formList for guaranteed minimum payment deadline: issue#764
   });
 }
