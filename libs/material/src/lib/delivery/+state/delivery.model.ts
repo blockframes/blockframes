@@ -3,9 +3,9 @@ import { firestore } from 'firebase/app';
 
 type Timestamp = firestore.Timestamp;
 
-interface MGDeadline {
+interface MGDeadline<D> {
   percent: number;
-  date?: Timestamp | Date;
+  date?: D;
   label: string;
 }
 
@@ -20,53 +20,38 @@ interface InternationalPrice {
   value: number;
 }
 
-interface MGInfo {
+interface MGInfo<D> {
   currentDeadline: number;
   price: InternationalPrice;
-  deadlines: MGDeadline[];
+  deadlines: MGDeadline<D>[];
 }
 
-interface AbstractDelivery {
+interface AbstractDelivery<D> {
   id: string;
   movieId: string;
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
   stakeholders: Stakeholder[];
-  steps: Step[] | StepDB[];
-  dueDate?: Date | Timestamp;
   // Time to accept a material
   acceptationPeriod?: number;
   // Time to return a refused material
   reWorkingPeriod?: number;
+  dueDate?: D;
   state: State;
   isPaid: boolean;
   mustChargeMaterials?: boolean;
   mustBeSigned?: boolean;
   _type: 'deliveries';
-  mgInfo: MGInfo;
+  mgInfo: MGInfo<D>;
+  steps: Step<D>[];
 }
 
-export interface Delivery extends AbstractDelivery {
-  dueDate?: Date;
-}
+export interface Delivery extends AbstractDelivery<Date> {}
 
-export interface DeliveryDB extends AbstractDelivery {
-  dueDate?: Timestamp;
-  steps: StepDB[];
-}
-
-interface AbstractStep {
+interface Step<D> {
   id: string;
   name: string;
-  date: Date | Timestamp;
-}
-
-export interface Step extends AbstractStep {
-  date: Date;
-}
-
-export interface StepDB extends AbstractStep {
-  date: Timestamp;
+  date: D;
 }
 
 export enum State {
