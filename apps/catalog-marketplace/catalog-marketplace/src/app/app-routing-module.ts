@@ -81,6 +81,10 @@ export const routes: Routes = [
             // canActivate: [MovieActiveGuard],
             // canDeactivate: [MovieActiveGuard],
             loadChildren: () => import('./pages/movie-view/movie-view.module').then(m => m.MovieViewModule)
+          },
+          {
+            path: 'create',
+            loadChildren: () => import('./pages/create/create.module').then(m => m.DistributionRightCreateModule)
           }
         ]
       },

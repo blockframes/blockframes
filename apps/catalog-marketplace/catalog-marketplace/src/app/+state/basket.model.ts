@@ -2,6 +2,7 @@ import { staticModels, Movie } from '@blockframes/movie';
 
 type Languages = ((typeof staticModels)['LANGUAGES'])[number]['slug'];
 type Currency = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['slug'];
+type Media = ((typeof staticModels)['MEDIAS'])[number]['slug'];
 
 export const enum BasketStatus {
   pending = 'pending',
@@ -15,17 +16,19 @@ export interface Price {
   currency: Currency
 }
 
+export interface DistributionLanguage {
+  original: boolean;
+  dubbed: boolean;
+  subtitle: boolean;
+}
+
 export interface DistributionRight {
   id: string;
   movieId: string;
-  medias: string[];
-  languages: {
-    [language in keyof Languages]: {
-      original: boolean;
-      dubbed: boolean;
-      subtitle: boolean;
-    }
-  };
+  medias: Media[];
+  languages: Partial<{
+    [language in keyof Languages]: DistributionLanguage
+  }>;
   duration: {
     from: Date,
     to: Date

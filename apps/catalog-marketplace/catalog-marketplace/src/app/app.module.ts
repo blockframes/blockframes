@@ -5,12 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
-
 // Akita
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
@@ -107,4 +105,3 @@ import { LayoutComponent } from './layout/layout.component';
   bootstrap: [AppComponent]
 })
 export class AppModule {}
-
