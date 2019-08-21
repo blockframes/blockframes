@@ -1,0 +1,13 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+aside {
+  width: 320px;
+}
+
+section {
+  flex: 1;
+}
