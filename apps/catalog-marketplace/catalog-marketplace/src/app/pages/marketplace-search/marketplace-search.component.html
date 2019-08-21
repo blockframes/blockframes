@@ -4,8 +4,8 @@
     </article>
 </section>
 <section>
-    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
-        <article fxLayout="column" class="filter">
+    <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
+        <aside fxLayout="column" class="filter">
             <article [formGroup]="filterForm">
                 <mat-card>
                     <h2 class="mat-h2">Filters</h2>
@@ -175,7 +175,7 @@
                     </mat-accordion>
                 </mat-card>
             </article>
-        </article>
+        </aside>
         <article>
             <h3 class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
                 <h3>Search</h3>
@@ -186,5 +186,5 @@
                 </movie-display-card-item>
             </div>
         </article>
-    </article>
+    </section>
 </section>
