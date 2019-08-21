@@ -20,15 +20,11 @@
                             <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px"
                                 formGroupName="productionYear">
                                 <mat-form-field apperance="outline">
-                                    <input matInput [matDatepicker]="pickerFrom" formControlName="from"
+                                    <input matInput formControlName="from"
                                         placeholder="From" />
-                                    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerFrom startView="multi-year"></mat-datepicker>
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <input matInput [matDatepicker]="pickerTo" formControlName="to" placeholder="To" />
-                                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerTo startView="multi-year"></mat-datepicker>
+                                    <input matInput formControlName="to" placeholder="To" />
                                 </mat-form-field>
                             </span>
                         </mat-expansion-panel>
@@ -177,9 +173,6 @@
                                 </mat-checkbox>
                             </mat-list>
                         </mat-expansion-panel>
-                        <span>
-                            <button mat-button color="accent" (click)="applyFilters()">Apply filters</button>
-                        </span>
                     </mat-accordion>
                 </mat-card>
             </article>
@@ -190,7 +183,7 @@
                 <mat-divider></mat-divider>
             </h3>
             <ng-container *ngIf="movieSearchResults$ | async as searchResults">
-                <span fxLayout="row wrap" fxLayoutGap="30px">
+                <span fxLayout="row wrap" fxLayoutGap="30px" class="movies">
                     <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main"></movie-display-card-item>
                 </span>
             </ng-container>

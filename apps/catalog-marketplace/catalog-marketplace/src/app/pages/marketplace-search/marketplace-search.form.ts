@@ -1,3 +1,4 @@
+import { Validator } from './../../../../../../../libs/utils/src/lib/form/forms/types';
 import { Validators, FormArray } from '@angular/forms';
 import { MovieMedias, MovieTerritories } from './marketplace-search.form';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -33,8 +34,8 @@ export interface MovieLanguage {
 
 export interface CatalogSearch {
   productionYear: {
-    from: Date;
-    to: Date;
+    from: number;
+    to: number;
   };
   availabilities: {
     from: Date;
@@ -81,7 +82,7 @@ function createLanguageControl(language: MovieLanguage) {
   return new FormGroup({
     original: new FormControl(language.original),
     dubbed: new FormControl(language.dubbed),
-    subtitle: new FormControl(language.subtitle),
+    subtitle: new FormControl(language.subtitle)
   });
 }
 function createCatalogSearchControl(search: CatalogSearch) {
@@ -95,8 +96,15 @@ function createCatalogSearchControl(search: CatalogSearch) {
   );
   return {
     productionYear: new FormGroup({
-      from: new FormControl(search.productionYear.from),
-      to: new FormControl(search.productionYear.to, [Validators.max(2019)])
+      from: new FormControl(search.productionYear.from, [
+        Validators.minLength(4),
+        Validators.maxLength(4)
+      ]),
+      to: new FormControl(search.productionYear.to, [
+        Validators.max(2019),
+        Validators.minLength(4),
+        Validators.maxLength(5)
+      ])
     }),
     availabilities: new FormGroup({
       from: new FormControl(search.availabilities.from, [Validators.min(2018)]),
@@ -206,6 +214,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
   }
 
   removeTerritory(index: number) {
-      this.get('territories').removeAt(index);
+    this.get('territories').removeAt(index);
   }
 }

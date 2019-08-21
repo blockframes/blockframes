@@ -41,7 +41,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public languagesFilter: Observable<string[]>;
   public movieCertifications: Certifications[];
   public movieMedias: MovieMedias[];
-  public movies$: Observable<Movie[]> = this.fireQuery.collection<Movie>('movies').valueChanges();
   // Observables on the languages selected
   public languages$ = this.filterForm.valueChanges.pipe(
     startWith(this.filterForm.value),
@@ -80,12 +79,12 @@ export class MarketplaceSearchComponent implements OnInit {
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
     );
-    this.movieSearchResults$ = combineLatest([this.movies$, this.filterForm.valueChanges]).pipe(
-      map(([movies, filterOptions]) => {
-        return movies.filter(movie => filterMovie(movie, filterOptions));
-      })
+    this.movieSearchResults$ = combineLatest([
+      this.fireQuery.collection<Movie>('movies').valueChanges(),
+      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
+    ]).pipe(
+     map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
     );
-    this.movies$.subscribe(data => console.log(data))
   }
 
   private _territoriesFilter(territory: string): string[] {
@@ -149,13 +148,5 @@ export class MarketplaceSearchComponent implements OnInit {
     }
     this.filterForm.addTerritory(territory.option.viewValue);
     this.territoryInput.nativeElement.value = '';
-  }
-
-  public applyFilters() {
-    this.movieSearchResults$ = combineLatest([this.movies$, this.filterForm.valueChanges]).pipe(
-      map(([movies, filterOptions]) => {
-        return movies.filter(movie => filterMovie(movie, filterOptions));
-      }),
-    );
   }
 }

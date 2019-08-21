@@ -1,23 +1,42 @@
 import { CatalogSearch } from './marketplace-search.form';
 import { Movie } from '@blockframes/movie/movie/+state';
 
-function productionYearBetween(movie: Movie, range: { from: Date; to: Date }): boolean {
+function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
+  if (!range || !(range.from && range.to)) {
+    return true;
+  }
   // prevent from default error that property is undefined
-  if (range.from instanceof Date && range.to instanceof Date) {
-    return (
-      movie.main.productionYear >= range.from.getFullYear() &&
-      movie.main.productionYear <= range.to.getFullYear()
-    );
+  if (typeof range.from && typeof range.to) {
+    return movie.main.productionYear >= range.from && movie.main.productionYear <= range.to;
   }
 }
 function hasLanguage(
   movie: Movie,
   language: { name: string; original: boolean; dubbed: boolean; subtitle: boolean }
 ): boolean {
-  const hasMovieLanguage = movie.main.languages.includes(language.name);
-  return hasMovieLanguage;
+  if (!language || !(language.name && language.original && language.dubbed && language.subtitle)) {
+    return true;
+  }
+  let original = true;
+  let dubbed = true;
+  let subtitle = true;
+  if (language.original) {
+    original = movie.main.languages.includes(language.name.toLowerCase());
+  }
+  if (language.dubbed) {
+    dubbed = movie.sales.every(sale => sale.dubbings.includes(language.name.toLowerCase()));
+  }
+  if (language.subtitle) {
+    subtitle = movie.sales.every(sale => sale.subtitles.includes(language.name.toLowerCase()));
+  }
+  console.log({original, dubbed, subtitle})
+  return (original && dubbed && subtitle);
 }
+
 function types(movie: Movie, movieGenre: string[]): boolean {
+  if (!movieGenre.length) {
+    return true;
+  }
   // we have to make it lowercase to make sure we are comapring correctly
   const movieGenreToLowerCase = movieGenre.map(type => type.toLowerCase());
   const movieTypesToLowerCase = movie.main.genres.map(genre => genre.toLowerCase());
@@ -30,6 +49,9 @@ function types(movie: Movie, movieGenre: string[]): boolean {
   }
 }
 function certifications(movie: Movie, movieCertification: string[]): boolean {
+  if (!movieCertification.length) {
+    return true;
+  }
   // we have to make it lowercase to make sure we are comapring correctly
   const movieFilterCertificationToLowerCase = movieCertification.map(certification =>
     certification.toLowerCase()
@@ -45,15 +67,40 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
     }
   }
 }
-// Parameter movie cant't be of type Movie cause mock data is wrong
-function availabilities(movie: any, range: { from: Date; to: Date }): boolean {
- return true;
+
+function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean {
+  if (!range || !(range.from && range.to)) {
+    return true;
+  }
+  return (
+    movie.sales.some(sale => {
+      if (sale.rights) {
+        const from: Date = (sale.rights.from as any).toDate();
+        return from.getTime() <= range.from.getTime();
+      }
+    }) &&
+    movie.sales.some(sale => {
+      if (sale.rights) {
+        const to: Date = (sale.rights.to as any).toDate();
+        return to.getTime() >= range.to.getTime();
+      }
+    })
+  );
 }
+
 function territories(movie: Movie, territory: string): boolean {
-  return movie.salesAgentDeal.territories.includes(territory);
+  if (!territory) {
+    return true;
+  }
+  const territoryToLowerCase = territory.toLowerCase();
+  return movie.salesAgentDeal.territories.includes(territoryToLowerCase);
 }
-function media(movie: Movie, moiveMediaType: string): boolean {
-  return movie.salesAgentDeal.medias.includes(moiveMediaType);
+function media(movie: Movie, movieMediaType: string): boolean {
+  if (!movieMediaType) {
+    return true;
+  }
+  const mediaToLowerCase = movieMediaType.toLowerCase();
+  return movie.salesAgentDeal.medias.includes(mediaToLowerCase);
 }
 
 export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
@@ -62,9 +109,9 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
       ...filter.languages[name],
       name
     }))
-    .some(language => hasLanguage(movie, language));
-    const hasMedia = filter.medias.some(movieMedia => media(movie, movieMedia));
-    const hasTerritory = filter.territories.some(territory => territories(movie, territory));
+    .every(language => hasLanguage(movie, language));
+  const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
+  const hasTerritory = filter.territories.every(territory => territories(movie, territory));
   return (
     productionYearBetween(movie, filter.productionYear) &&
     hasEveryLanguage &&
