@@ -25,16 +25,12 @@ export class CatalogMarketplaceHomeComponent implements OnInit {
   ngOnInit() {
     // TODO #721: look for query when data query model is done.
     const latest$ = this.fireQuery
-      .collection<Movie>('movies', ref => ref.limit(5).where('main.productionYear', '>=', 2019))
+      .collection<Movie>('movies', ref => ref.limit(5).where('main.productionYear', '>=', 2018))
       .valueChanges();
     const scoring$ = this.fireQuery
-      .collection<Movie>('movies', ref => ref.limit(5).where('salesInfo.scoring', '>', 4))
+      .collection<Movie>('movies', ref => ref.limit(5).where('salesInfo.scoring', '==', 'a'))
       .valueChanges();
-    const prizes$ = this.fireQuery
-      .collection<Movie>('movies', ref =>
-        ref.limit(5).where('festivalPrizes.prizes', '==', true)
-      )
-      .valueChanges();
+    const prizes$ = this.fireQuery.collection<Movie>('movies').valueChanges();
     this.moviesBySections$ = combineLatest([latest$, scoring$, prizes$]).pipe(
       map(([latest, scoring, prizes]) => {
         return [

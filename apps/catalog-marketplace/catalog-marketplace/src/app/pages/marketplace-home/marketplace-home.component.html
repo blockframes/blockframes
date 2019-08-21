@@ -19,7 +19,7 @@
             <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
                 <!-- We only want to use the first image in the promotinalElements.images array-->
                 <ng-container *ngFor="let movie of section.movies">
-                    <mat-carousel-slide #matCarouselSlide [image]="movie.promotionalElements.images[0]"
+                    <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster"
                         [hideOverlay]="true">
                         <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
                             <footer fxLayout="column" fxLayoutAlign="center center">
