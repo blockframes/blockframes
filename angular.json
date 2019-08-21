@@ -1564,7 +1564,7 @@
                 },
                 {
                   "replace": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.ts",
-                  "with": "app/catalog-marketplace/catalog-marketplace/src/environments/environment.staging.ts"
+                  "with": "apps/catalog-marketplace/catalog-marketplace/src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
