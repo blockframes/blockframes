@@ -19,6 +19,6 @@ export class DeliveryAddCompleteComponent {
   public navigate() {
     const movieId = this.movieQuery.getActiveId();
     const deliveryId = this.query.getActiveId();
-    this.router.navigate([`/layout/o/delivery/${movieId}/${deliveryId}`]);
+    this.router.navigate([`/layout/o/delivery/${movieId}/${deliveryId}/list`]);
   }
 }
