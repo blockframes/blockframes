@@ -1,4 +1,4 @@
-import { staticModels, Movie } from '@blockframes/movie';
+import { staticModels } from '@blockframes/movie';
 
 type Languages = ((typeof staticModels)['LANGUAGES'])[number]['slug'];
 type Currency = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['slug'];

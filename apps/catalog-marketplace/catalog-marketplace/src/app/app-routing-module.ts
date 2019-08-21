@@ -68,24 +68,29 @@ export const routes: Routes = [
               },
               {
                 path: 'home',
-                loadChildren: () => import('./pages/marketplace-home/marketplace-home.module').then(m => m.MarketplaceHomeModule)
+                loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
               },
               {
                 path: 'search',
                 loadChildren: () => import('./pages/marketplace-search/marketplace-search.module').then(m => m.MarketplaceSearchModule)
               },
+              {
+                path: ':movieId',
+                // canActivate: [MovieActiveGuard],
+                // canDeactivate: [MovieActiveGuard],
+                children: [
+                  {
+                    path: 'view',
+                    loadChildren: () => import('./movie/view/view.module').then(m => m.MovieViewModule)
+                  },
+                  {
+                    path: 'create',
+                    loadChildren: () => import('./distribution-right/create/create.module').then(m => m.DistributionRightCreateModule)
+                  }
+                ]
+              },
             ]
           },
-          {
-            path: ':movieId',
-            // canActivate: [MovieActiveGuard],
-            // canDeactivate: [MovieActiveGuard],
-            loadChildren: () => import('./pages/movie-view/movie-view.module').then(m => m.MovieViewModule)
-          },
-          {
-            path: 'create',
-            loadChildren: () => import('./pages/create/create.module').then(m => m.DistributionRightCreateModule)
-          }
         ]
       },
     ]

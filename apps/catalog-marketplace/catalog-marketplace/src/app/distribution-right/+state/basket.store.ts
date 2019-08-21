@@ -16,4 +16,3 @@ export class BasketStore extends EntityStore<BasketState, DistributionRight> {
   }
 
 }
-

@@ -11,7 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 // Pages
-import { CatalogMarketplaceHomeComponent } from './marketplace-home.component';
+import { CatalogMarketplaceHomeComponent } from './home.component';
 
 @NgModule({
   declarations: [CatalogMarketplaceHomeComponent],

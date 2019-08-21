@@ -7,11 +7,9 @@ import { DistributionRightForm } from './create.form';
   styleUrls: ['./create.component.scss']
 })
 export class DistributionRightCreateComponent implements OnInit {
-
   public form = new DistributionRightForm();
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
-
 }

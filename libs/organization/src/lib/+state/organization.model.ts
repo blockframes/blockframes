@@ -72,8 +72,6 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-
-  catalog: CatalogBasket;
 }
 
 export interface OrganizationForm {

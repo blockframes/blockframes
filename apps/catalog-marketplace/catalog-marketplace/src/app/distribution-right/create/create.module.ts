@@ -18,9 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSidenavModule,
     MatInputModule,
     MatFormFieldModule,
-    RouterModule.forChild([
-      { path: '', component: DistributionRightCreateComponent }
-    ])
-  ],
+    RouterModule.forChild([{ path: '', component: DistributionRightCreateComponent }])
+  ]
 })
 export class DistributionRightCreateModule {}

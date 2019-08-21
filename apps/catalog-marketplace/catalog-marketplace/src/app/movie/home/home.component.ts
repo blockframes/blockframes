@@ -11,9 +11,9 @@ interface CarouselSection {
   movies: Movie[];
 }
 @Component({
-  selector: 'catalog-marketplace-home',
-  templateUrl: './marketplace-home.component.html',
-  styleUrls: ['./marketplace-home.component.scss'],
+  selector: 'catalog-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogMarketplaceHomeComponent implements OnInit {
