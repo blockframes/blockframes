@@ -66,11 +66,8 @@ export const routes: Routes = [
               { path: '', redirectTo: 'home', pathMatch: 'full' },
               {
                 path: 'home',
-                loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
-              },
-              {
-                path: 'search',
-                loadChildren: () => import('./pages/marketplace-search/marketplace-search.module').then(m => m.MarketplaceSearchModule)
+                loadChildren: () =>
+                  import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
               },
               {
                 path: ':movieId',
@@ -79,18 +76,41 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'view',
-                    loadChildren: () => import('./movie/view/view.module').then(m => m.MovieViewModule)
+                    loadChildren: () =>
+                      import('./movie/view/view.module').then(m => m.MovieViewModule)
                   },
                   {
                     path: 'create',
-                    loadChildren: () => import('./distribution-right/create/create.module').then(m => m.DistributionRightCreateModule)
+                    loadChildren: () =>
+                      import('./distribution-right/create/create.module').then(
+                        m => m.DistributionRightCreateModule
+                      )
                   }
                 ]
               },
+              {
+                path: ':movieId',
+                // canActivate: [MovieActiveGuard],
+                // canDeactivate: [MovieActiveGuard],
+                children: [
+                  {
+                    path: 'view',
+                    loadChildren: () =>
+                      import('./movie/view/view.module').then(m => m.MovieViewModule)
+                  },
+                  {
+                    path: 'create',
+                    loadChildren: () =>
+                      import('./distribution-right/create/create.module').then(
+                        m => m.DistributionRightCreateModule
+                      )
+                  }
+                ]
+              }
             ]
           }
         ]
-      },
+      }
     ]
   },
   {
