@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
 import { Delivery, DocType, Material, Movie, Organization, Stakeholder } from './data/types';
-import { isTheSame } from './utils';
+import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -59,50 +59,19 @@ export async function onDeliveryUpdate(
     ]);
 
     const promises = copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
-    // When delivery is signed, we create notifications for each stakeholder
-    const notifications = createSignatureNotifications(organizations, movie, delivery);
 
-    promises.push(triggerNotifications(notifications));
+    // When delivery is signed, we create notifications for each stakeholder
+    if (delivery.deliveryListToBeSigned) {
+      const notifications = createSignatureNotifications(organizations, movie, delivery);
+      promises.push(triggerNotifications(notifications));
+    }
+
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });
     throw e;
   }
   return true;
-}
-
-/**
- * Copy each delivery Material into the movie materials sub-collection. This checks if the copied Material
- * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveriesIds.
- */
-function copyMaterialsToMovie(
-  deliveryMaterials: Material[],
-  movieMaterials: Material[],
-  delivery: Delivery
-) {
-  return deliveryMaterials.map(deliveryMaterial => {
-    const duplicateMaterial = movieMaterials.find(
-      movieMaterial => isTheSame(movieMaterial, deliveryMaterial)
-    );
-
-    if (!!duplicateMaterial) {
-      // Check if delivery.id is already in material.deliveriesIds before pushing it in.
-      if (!duplicateMaterial.deliveriesIds.includes(delivery.id)) {
-        duplicateMaterial.deliveriesIds.push(delivery.id);
-      }
-
-      const updatedMaterial = {
-        ...duplicateMaterial,
-        state: !!duplicateMaterial.state ? duplicateMaterial.state : 'pending'
-      };
-
-      return db
-        .doc(`movies/${delivery.movieId}/materials/${updatedMaterial.id}`)
-        .set(updatedMaterial);
-    }
-    const material = { ...deliveryMaterial, deliveriesIds: [delivery.id], state: 'pending' };
-    return db.doc(`movies/${delivery.movieId}/materials/${material.id}`).set(material);
-  });
 }
 
 /**

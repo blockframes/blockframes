@@ -62,6 +62,7 @@ export interface Delivery {
   stakeholders: string[];
   materials: string[];
   steps: Step[];
+  deliveryListToBeSigned: boolean;
 }
 
 export interface Movie {

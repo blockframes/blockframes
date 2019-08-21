@@ -30,6 +30,7 @@ import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { onMovieMaterialUpdate, onDeliveryMaterialUpdate } from './material';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -109,6 +110,19 @@ export const admin = functions.https
  * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
  */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
+
+/**
+ * Trigger: when material state (`state`) is modified
+ */
+export const onMovieMaterialUpdateEvent = onDocumentUpdate('movies/{movieID}', onMovieMaterialUpdate);
+
+/**
+ *
+ */
+export const onDeliveryMaterialUpdateEvent = onDocumentUpdate(
+  'deliveries/{deliveryID}/materials/{materialID}',
+  onDeliveryMaterialUpdate
+);
 
 /**
  * Trigger: when a stakeholder is added to a delivery
