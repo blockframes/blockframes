@@ -40,7 +40,7 @@ export class MaterialService {
   }
 
   /** Update materials of a delivery */
-  public updateMaterials(materials: Material[], deliveryId: string) {
+  public async updateMaterials(materials: Material[], deliveryId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
         const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
@@ -49,6 +49,7 @@ export class MaterialService {
     });
   }
 
+  /** Update materials of a movie (specific fields like 'owner' and 'storage') */
   public updateMovieMaterials(materials: Material[], movieId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {

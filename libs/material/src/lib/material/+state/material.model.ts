@@ -7,7 +7,7 @@ export interface Material {
   description: string;
   owner: string;
   step?: Step,
-  state?: State,
+  status?: MaterialStatus,
   deliveriesIds?: string[];
   price?: number;
   isOrdered?: boolean;
@@ -15,7 +15,7 @@ export interface Material {
   storage?: string;
 }
 
-export const enum State {
+export const enum MaterialStatus {
   pending = 'pending',
   available = 'available',
   delivered = 'delivered'
@@ -33,8 +33,8 @@ export function createMaterial(material: Partial<Material>): Material {
     category: material.category || '',
     value: material.value || '',
     description: material.description || '',
-    owner: material.owner,
-    step: material.step || {id: '', date: undefined, name: ''},
+    owner: material.owner || '',
+    step: material.step || {id: '', date: null, name: ''},
     ...material
   }
 }

@@ -27,7 +27,7 @@ interface DeliveryRaw<D> {
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
   stakeholders: Stakeholder[];
-  dueDate?: Date;
+  dueDate?: Date | Timestamp;
   status: DeliveryStatus;
   isPaid: boolean;
   mustChargeMaterials?: boolean;
@@ -60,17 +60,17 @@ export interface MGDeadline extends MGDeadlineRaw<Date> {}
 export const enum DeliveryStatus {
   negociation = 'Delivery in negociation',
   pending = 'Materials pending',
-  noa = 'NOA',
-  nod = 'NOD',
+  noa = 'Notice of Availability',
+  nod = 'Notice of Delivery',
   accepted = 'Materials accepted'
 }
 
-export const deliveryStatuses: State[] = [
-  State.pending,
-  State.available,
-  State.accepted,
-  State.refused,
-  State.delivered
+export const deliveryStatuses: DeliveryStatus[] = [
+  DeliveryStatus.negociation,
+  DeliveryStatus.pending,
+  DeliveryStatus.noa,
+  DeliveryStatus.nod,
+  DeliveryStatus.accepted
 ];
 
 export function createDelivery(params: Partial<Delivery>) {
