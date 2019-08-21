@@ -13,6 +13,7 @@ export class DeliveryDisplayComponent {
   @Input()
   set materials(materials: Material[]) {
     this.dataSource = new MatTableDataSource(materials);
+    this.dataSource.sort = this.sort;
   }
 
   @Output() editing = new EventEmitter<string>();

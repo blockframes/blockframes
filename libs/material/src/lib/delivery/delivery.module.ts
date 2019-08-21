@@ -170,13 +170,13 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
-            path: 'edit',
+            path: 'list',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
             component: DeliveryEditableComponent
           },
           {
-            path: 'teamwork',
+            path: 'stakeholders',
             component: DeliveryTeamworkEditableComponent
           },
           {
