@@ -239,8 +239,8 @@ const routes: Routes = [
     DeliveryRepertoryComponent,
     DeliveryInformationsDatesDisplayComponent,
     DeliveryInformationsDatesFormComponent,
-    DeliveryMaterialFormComponent
-    DeliveryInformationsStepsFormComponent
+    DeliveryMaterialFormComponent,
+    DeliveryInformationsStepsFormComponent,
     DeliveryInformationsStepsRepertoryComponent
   ],
   imports: [
