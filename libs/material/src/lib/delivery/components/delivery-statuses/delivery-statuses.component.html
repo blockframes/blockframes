@@ -1,1 +1,21 @@
+<h3>Delivery State</h3>
 
+<mat-horizontal-stepper
+  (selectionChange)="onDeliveryStatusPick($event)"
+  [selectedIndex]="currentStatus$ | async"
+>
+  <mat-step *ngFor="let state of (deliveryStatuses$ | async)">
+    <ng-template matStepLabel>{{ state.label }}</ng-template>
+  </mat-step>
+</mat-horizontal-stepper>
+
+<h3>MG Payement</h3>
+
+<mat-horizontal-stepper
+  (selectionChange)="onMGDeadlinePick($event)"
+  [selectedIndex]="currentDeadline$ | async"
+>
+  <mat-step *ngFor="let deadline of (mgDeadlines$ | async)">
+    <ng-template matStepLabel>{{ deadline.label }}</ng-template>
+  </mat-step>
+</mat-horizontal-stepper>

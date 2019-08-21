@@ -83,6 +83,7 @@ import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
 import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 const routes: Routes = [
   {
@@ -284,7 +285,8 @@ const routes: Routes = [
 
     RouterModule.forChild(routes),
     MovieModule,
-    FeedbackMessageModule
+    FeedbackMessageModule,
+    MatStepperModule
   ],
   entryComponents: [NewTemplateComponent, DeliverySignComponent]
 })
