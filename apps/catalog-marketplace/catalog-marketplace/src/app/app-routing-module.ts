@@ -63,9 +63,7 @@ export const routes: Routes = [
           {
             path: 'catalog',
             children: [
-              {
-                path: '', redirectTo: 'home', pathMatch: 'full'
-              },
+              { path: '', redirectTo: 'home', pathMatch: 'full' },
               {
                 path: 'home',
                 loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
