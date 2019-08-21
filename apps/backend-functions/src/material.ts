@@ -130,6 +130,58 @@ export const onDeliveryMaterialUpdate = async (
   return true;
 };
 
+export const onDeliveryMaterialCreate = async (
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  const material = snap.data() as Material | undefined;
+
+  if (!material) {
+    throw new Error(`New stakeholder not found !`);
+  }
+
+  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
+
+  if (delivery.deliveryListToBeSigned) {
+    console.warn('Can\'t copy materials from a delivery to be signed');
+    return;
+  }
+
+  /**
+   * Note: Google Cloud Function enforces "at least once" delivery for events.
+   * This means that an event may processed twice by this function, with the same Before and After data.
+   * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
+   * betweeen two runs to enforce "only once delivery".
+   */
+  if (!!delivery && !!material) {
+    const materialDoc = await db.doc(`deliveries/${delivery.id}/materials/${material.id}`).get();
+    const processedId = materialDoc.data()!.processedId;
+
+    if (processedId === context.eventId) {
+      console.warn('Document already processed with this context');
+      return;
+    }
+
+    try {
+
+      const [materialsMovie, materialsDelivery] = await Promise.all([
+        getCollection<Material>(`movies/${delivery.movieId}/materials`),
+        getCollection<Material>(`deliveries/${delivery.id}/materials`)
+      ]);
+
+      copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
+
+    } catch (error) {
+      await db
+        .doc(`deliveries/${delivery.id}/materials/${material.id}`)
+        .update({ processedId: null });
+      throw error;
+    }
+    return true;
+  }
+  return true;
+};
+
 /**
  * Copy each delivery Material into the movie materials sub-collection. This checks if the copied Material
  * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveriesIds.

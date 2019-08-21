@@ -128,6 +128,10 @@ export async function deleteFirestoreTemplate(
   return batch.commit();
 }
 
+/**
+ * When a delivery material is deleted, this function will also delete the
+ * corresponding material in movie materials if it exists.
+ */
 export async function deleteFirestoreMaterial(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
