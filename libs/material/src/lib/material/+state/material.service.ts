@@ -9,7 +9,7 @@ import { FireQuery } from '@blockframes/utils';
 export class MaterialService {
   constructor(
     private db: FireQuery,
-    private deliveryQuery: DeliveryQuery,
+    private deliveryQuery: DeliveryQuery
   ) {}
 
   /** Delete materials from a delivery
