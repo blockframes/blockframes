@@ -16,7 +16,8 @@ export interface IDeliveryList {
 export const enum DeliveryWizardKind {
   specificDeliveryList,
   useTemplate,
-  blankList
+  blankList,
+  materialList
 }
 
 export interface DeliveryWizard {

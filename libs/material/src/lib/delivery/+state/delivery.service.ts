@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, DeliveryDB, Step } from './delivery.model';
-import { createDeliveryStakeholder, MovieQuery, Stakeholder, StakeholderService } from '@blockframes/movie';
+import {
+  createDeliveryStakeholder,
+  MovieQuery,
+  Stakeholder,
+  StakeholderService
+} from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { createMaterial, MaterialQuery } from '../../material/+state';
@@ -149,12 +154,18 @@ export class DeliveryService {
   }
 
   /** Add a new delivery by copying the movie's materials */
-  public async addDeliveryWithMovieMaterials() {
+  public async addDeliveryWithMovieMaterials(opts: AddDeliveryOptions) {
     const id = this.db.createId();
     const movie = this.movieQuery.getActive();
     const movieDoc = this.db.doc(`movies/${movie.id}`);
     const organization = this.organizationQuery.getValue().org;
-    const delivery = createDelivery({ id, movieId: movie.id, validated: [] });
+    const delivery = createDelivery({
+      id,
+      movieId: movie.id,
+      validated: [],
+      materialsToBeCharged: opts.materialsToBeCharged,
+      deliveryListToBeSigned: opts.deliveryListToBeSigned
+    });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const movieSnap = await tx.get(movieDoc.ref);
@@ -334,8 +345,7 @@ export class DeliveryService {
         opts.templateId = templateId;
         return this.addDelivery(opts);
       case DeliveryWizardKind.specificDeliveryList:
-        // TODO(issue#590): add the specific delivery template reference.
-        return this.addDelivery(opts);
+        return this.addDeliveryWithMovieMaterials(opts);
       case DeliveryWizardKind.blankList:
         return this.addDelivery(opts);
     }

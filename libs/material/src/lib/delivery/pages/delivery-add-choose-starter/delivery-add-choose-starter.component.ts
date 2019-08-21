@@ -23,6 +23,7 @@ export class DeliveryAddChooseStarterComponent {
     private movieQuery: MovieQuery
   ) {
     this.onPickBlank = this.onPickBlank.bind(this);
+    this.onPickMaterialList = this.onPickMaterialList.bind(this);
 
     this.items = [
       {
@@ -31,7 +32,12 @@ export class DeliveryAddChooseStarterComponent {
         description: 'Lorem ipsum',
         routerLink: '../3-pick-template'
       },
-      { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: '#' },
+      {
+        icon: 'order',
+        title: 'Import material list',
+        description: 'Lorem ipsum',
+        action: this.onPickMaterialList
+      },
       {
         icon: 'order',
         title: 'Import specific delivery list',
@@ -40,6 +46,12 @@ export class DeliveryAddChooseStarterComponent {
       },
       { icon: 'order', title: 'Blank', description: 'Lorem ipsum', action: this.onPickBlank }
     ];
+  }
+
+  public onPickMaterialList() {
+    this.store.updateWizard({ kind: DeliveryWizardKind.materialList });
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
   }
 
   public onPickBlank() {
