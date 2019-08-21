@@ -10,21 +10,14 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
         <mat-card-title-group>
           <mat-card-title>{{ movie.title.original }}</mat-card-title>
           <mat-card-subtitle *ngFor="let director of movie.directors">
-          {{ director.firstName }} {{ director.lastName }}</mat-card-subtitle>
+          {{ director.firstName }} {{ director.lastName }}
+          </mat-card-subtitle>
         </mat-card-title-group>
 
         <span>Production Year</span><span>{{ movie.productionYear }}</span>
       </mat-card-content>
     </mat-card>
   `,
-  styles: [
-    `
-      mat-card {
-        height: 310px;
-        width: 312px;
-      }
-    `
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayCardItemComponent {

@@ -20,8 +20,7 @@
                             <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px"
                                 formGroupName="productionYear">
                                 <mat-form-field apperance="outline">
-                                    <input matInput formControlName="from"
-                                        placeholder="From" />
+                                    <input matInput formControlName="from" placeholder="From" />
                                 </mat-form-field>
                                 <mat-form-field>
                                     <input matInput formControlName="to" placeholder="To" />
@@ -182,11 +181,10 @@
                 <h3>Search</h3>
                 <mat-divider></mat-divider>
             </h3>
-            <ng-container *ngIf="movieSearchResults$ | async as searchResults">
-                <span fxLayout="row wrap" fxLayoutGap="30px" class="movies">
-                    <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main"></movie-display-card-item>
-                </span>
-            </ng-container>
+            <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
+                <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main">
+                </movie-display-card-item>
+            </div>
         </article>
     </article>
 </section>

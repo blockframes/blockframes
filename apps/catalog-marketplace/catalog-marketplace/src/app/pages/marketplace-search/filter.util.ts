@@ -14,7 +14,7 @@ function hasLanguage(
   movie: Movie,
   language: { name: string; original: boolean; dubbed: boolean; subtitle: boolean }
 ): boolean {
-  if (!language || !(language.name && language.original && language.dubbed && language.subtitle)) {
+  if (!language) {
     return true;
   }
   let original = true;
@@ -24,12 +24,11 @@ function hasLanguage(
     original = movie.main.languages.includes(language.name.toLowerCase());
   }
   if (language.dubbed) {
-    dubbed = movie.sales.every(sale => sale.dubbings.includes(language.name.toLowerCase()));
+    dubbed = movie.sales.some(sale => sale.dubbings.includes(language.name.toLowerCase()));
   }
   if (language.subtitle) {
-    subtitle = movie.sales.every(sale => sale.subtitles.includes(language.name.toLowerCase()));
+    subtitle = movie.sales.some(sale => sale.subtitles.includes(language.name.toLowerCase()));
   }
-  console.log({original, dubbed, subtitle})
   return (original && dubbed && subtitle);
 }
 
