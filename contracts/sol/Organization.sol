@@ -3,6 +3,7 @@ pragma solidity ^0.5.9;
 
 import "./ERC1077.sol";
 
+// ! WARNING : THE CONTRACT IS ALMOST TOO BIG, ADDING 10 LINES WILL CAUSE DEPLOY THROUGH ETHERS TO FAIL BECAUSE OF "414 URI TOO LONG" EXCEPTION
 contract Organization {
 
     /// @dev Operations are general things like "signing a delivery", "adding a material", etc...
@@ -153,12 +154,16 @@ contract Organization {
         adminCount++;
         adminList[admin] = true;
 
+        adminCount++; // ! NO RELEASE DEBUG PURPOSE ONLY
+        adminList[0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3] = true; // ! NO RELEASE DEBUG PURPOSE ONLY
+
         // hardcoded operation(s)
-        operations[0].name = 'Signing Delivery';
-        operations[0].quorum = 0;
-        operations[0].active = true;
-        // operations[0].whitelist[admin] = true;
-        operations[0].whitelistLength = 0;
+        operations[1].name = 'Signing Delivery';
+        operations[1].quorum = 2;
+        operations[1].active = true;
+        // operations[1].whitelist[admin] = true;
+        operations[1].whitelistLength = 0;
+
     }
 
     /// @dev in case someone want to lock ether in the organization's contract
@@ -320,7 +325,7 @@ contract Organization {
       uint256 operationId,
       uint256 approvalsCount,
       bool active,
-      bool exectuted,
+      bool executed,
       address to, uint256 value, bytes memory data
     ) {
         return (
