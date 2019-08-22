@@ -98,13 +98,13 @@ export class MarketplaceSearchComponent implements OnInit {
     return this.movieLanguages.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
-  public addLanguage(language: string) {
+  public addLanguage(language: Language) {
     if (this.movieLanguages.includes(language)) {
       this.filterForm.addLanguage(language);
     }
   }
 
-  public removeLanguage(language: string) {
+  public removeLanguage(language: Language) {
     this.filterForm.removeLanguage(language);
   }
 
@@ -116,19 +116,19 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public checkCertification(certification: string) {
+  public checkCertification(certification: Certifications) {
     if (this.movieCertifications.includes(certification)) {
       this.filterForm.checkCertification(certification);
     }
   }
 
-  public checkMedia(media: string) {
+  public checkMedia(media: MovieMedias) {
     if (this.movieMedias.includes(media)) {
       this.filterForm.checkMedia(media);
     }
   }
 
-  public deleteLanguage(language: string) {
+  public deleteLanguage(language: Language) {
     this.filterForm.removeLanguage(language);
   }
 
@@ -145,7 +145,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (!this.selectedMovieTerritories.includes(territory.option.viewValue)) {
       this.selectedMovieTerritories.push(territory.option.value);
     }
-    this.filterForm.addTerritory(territory.option.viewValue);
+    this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
   }
 }

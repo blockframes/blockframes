@@ -1,4 +1,3 @@
-import { Validator } from './../../../../../../../libs/utils/src/lib/form/forms/types';
 import { Validators, FormArray } from '@angular/forms';
 import { MovieMedias, MovieTerritories } from './marketplace-search.form';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -139,7 +138,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 
-  removeLanguage(language: string) {
+  removeLanguage(language: Language) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
   }
@@ -183,7 +182,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  checkMedia(mediaChecked: string) {
+  checkMedia(mediaChecked: MovieMedias) {
     // check if media is already checked by the user
     if (movieMedias.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
       this.get('medias').setValue([...this.get('medias').value, mediaChecked]);
@@ -200,7 +199,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  addTerritory(territory: string) {
+  addTerritory(territory: MovieTerritories) {
     // Check it's part of the list available
     if (!movieTerritories.includes(territory)) {
       throw new Error(`Territory ${territory} is not part of the list`);
