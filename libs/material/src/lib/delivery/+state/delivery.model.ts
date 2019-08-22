@@ -10,6 +10,10 @@ interface AbstractDelivery {
   stakeholders: Stakeholder[];
   steps: Step[] | StepDB[];
   dueDate?: Date | Timestamp;
+  // Time to accept a material
+  acceptationPeriod?: number;
+  // Time to return a refused material
+  reWorkingPeriod?: number;
   state: State;
   isPaid: boolean;
   mustChargeMaterials?: boolean;
@@ -19,10 +23,6 @@ interface AbstractDelivery {
 
 export interface Delivery extends AbstractDelivery {
   dueDate?: Date;
-  // Time to accept a material
-  acceptationPeriod?: number,
-  // Time to return a refused material
-  reWorkingPeriod?: number,
   steps: Step[];
 }
 

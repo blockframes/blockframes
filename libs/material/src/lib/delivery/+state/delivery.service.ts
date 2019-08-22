@@ -237,13 +237,14 @@ export class DeliveryService {
 
   /** Remove stepId of materials of delivery for an array of steps */
   private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
+    // TODO : Use a transaction for be sure to don't loose datas: issue#773
     const deliveryId = this.query.getActiveId();
     // We also set the concerned materials stepId to an empty string
     steps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
       materials.forEach(material => {
-        const doc = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`);
-        batch.update(doc.ref, { stepId: '' });
+        const docRef = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        batch.update(docRef, { stepId: '' });
       });
     });
   }
