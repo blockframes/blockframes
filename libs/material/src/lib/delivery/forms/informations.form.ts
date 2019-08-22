@@ -11,7 +11,7 @@ export function createStepFormGroup(step: Step) {
 }
 
 function createStepsFormList() {
-  return FormList.factory([], createDeadlineFormGroup);
+  return FormList.factory([], createStepFormGroup);
 }
 
 export function createDeadlineFormGroup(deadline: any) {
@@ -32,9 +32,9 @@ export function createInformationsFormGroup() {
     acceptationPeriod: new FormControl(),
     reWorkingPeriod: new FormControl(),
     steps: createStepsFormList(),
-    amount: new FormControl(),
-    currency: new FormControl(),
-    deadlines: createDeadlinesFormList()
+    mgAmount: new FormControl(),
+    mgCurrency: new FormControl(),
+    mgDeadlines: createDeadlinesFormList()
     // TODO: create formList for guaranteed minimum payment deadline: issue#764
   });
 }

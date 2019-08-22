@@ -27,7 +27,7 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
     ...delivery,
     dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
     steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() })),
-    deadlines: delivery.deadlines.map(deadline => ({ ...deadline, date: deadline.date.toDate() }))
+    mgDeadlines: delivery.mgDeadlines ? delivery.mgDeadlines.map(deadline => ({ ...deadline, date: deadline.date.toDate() })) : []
   };
 }
 
@@ -209,9 +209,9 @@ export class DeliveryService {
     batch: firebase.firestore.WriteBatch
   ) {
     return batch.update(deliveryDocRef, {
-      amount: delivery.amount,
-      currency: delivery.currency,
-      deadlines: delivery.deadlines
+      mgAmount: delivery.mgAmount,
+      mgCurrency: delivery.mgCurrency,
+      mgDeadlines: delivery.mgDeadlines
     });
   }
 

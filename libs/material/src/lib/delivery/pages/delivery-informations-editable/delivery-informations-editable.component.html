@@ -1,7 +1,7 @@
 <editable-sidenav test-id="content" page-id="delivery-informations" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
   <!-- Content -->
   <ng-container content>
-    <delivery-informations-deadlines-repertory [deadlines]="(delivery$ | async).deadlines" (editing)="openSidenav('deadlines')"></delivery-informations-deadlines-repertory>
+    <delivery-informations-deadlines-repertory [delivery]="(delivery$ | async)" (editing)="openSidenav('deadlines')"></delivery-informations-deadlines-repertory>
     <delivery-informations-dates-display [delivery]="delivery$ | async" (editing)="openSidenav('dates')"></delivery-informations-dates-display>
     <delivery-informations-steps-repertory [steps]="(delivery$ | async).steps" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
   </ng-container>

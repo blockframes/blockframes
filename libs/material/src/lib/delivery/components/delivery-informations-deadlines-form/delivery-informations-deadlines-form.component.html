@@ -2,22 +2,21 @@
   <h4>Guaranted minimum amount</h4>
   <mat-form-field appearance="outline">
     <mat-label>Amount</mat-label>
-    <input type="number" min="0" formControlName="amount" matInput />
+    <input type="number" min="0" formControlName="mgAmount" matInput />
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Currency</mat-label>
-    <mat-select formControlName="currency">
-      <mat-option value="$">$</mat-option>
-      <mat-option value="€">€</mat-option>
+    <mat-select formControlName="mgCurrency">
+      <mat-option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</mat-option>
     </mat-select>
   </mat-form-field>
-  <div formArrayName="deadlines">
+  <div formArrayName="mgDeadlines">
     <h4>Guaranteed minimum payment deadlines</h4>
     <button mat-flat-button (click)="addDeadline()">
       <mat-icon>add</mat-icon>
       Add a deadline
     </button>
-    <ng-container *ngFor="let deadline of deadlines.controls; let i = index">
+    <ng-container *ngFor="let deadline of mgDeadlines.controls; let i = index">
       <div [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="space-between">
           <p>

@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { ControlContainer, FormArray } from '@angular/forms';
 import { createDeadlineFormGroup } from '../../forms/informations.form';
+import { Currency } from '../../+state';
 
 @Component({
   selector: '[formGroup] delivery-informations-deadlines-form',
@@ -14,27 +15,29 @@ import { createDeadlineFormGroup } from '../../forms/informations.form';
 export class DeliveryInformationsDeadlinesFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 
+  public currencies = Object.values(Currency);
+
   public get control() {
     return this.controlContainer.control;
   }
 
-  public get deadlines(): FormArray {
-    return this.controlContainer.control.get('deadlines') as FormArray;
+  public get mgDeadlines(): FormArray {
+    return this.controlContainer.control.get('mgDeadlines') as FormArray;
   }
 
   public get deliveryAmount(): number {
-    return this.controlContainer.control.get('amount').value;
+    return this.controlContainer.control.get('mgAmount').value;
   }
 
   public calculAmountWithPercentage(index: number) {
-    return this.deliveryAmount * this.deadlines.controls[index].get('percentage').value / 100;
+    return this.deliveryAmount * this.mgDeadlines.controls[index].get('percentage').value / 100;
   }
 
   public addDeadline() {
-    this.deadlines.push(createDeadlineFormGroup({ label: null, percentage: null, date: null }));
+    this.mgDeadlines.push(createDeadlineFormGroup({ label: null, percentage: null, date: null }));
   }
 
   public removeDeadline(index: number) {
-    this.deadlines.removeAt(index);
+    this.mgDeadlines.removeAt(index);
   }
 }

@@ -1,11 +1,5 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
-} from '@angular/core';
-import { Step } from '../../+state';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { MGDeadline, Delivery } from '../../+state';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -15,13 +9,19 @@ import { MatTableDataSource } from '@angular/material/table';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryInformationsDeadlinesRepertoryComponent {
-
-  @Input() set deadlines(deadlines: any[]) {
+  @Input()
+  set delivery(delivery: Delivery) {
+    const deadlines = delivery.mgDeadlines.map(deadline => ({
+      ...deadline,
+      amount: (delivery.mgAmount && deadline.percentage) ? (delivery.mgAmount * deadline.percentage / 100) : null
+    }));
     this.dataSource = new MatTableDataSource(deadlines);
+    this.mgCurrency = delivery.mgCurrency;
   }
 
   @Output() editing = new EventEmitter();
 
-  public dataSource: MatTableDataSource<any>;
-  public displayedColumns: string[] = ['label', 'percentage', 'date'];
+  public mgCurrency: string;
+  public dataSource: MatTableDataSource<MGDeadline>;
+  public displayedColumns: string[] = ['label', 'percentage', 'amount', 'date'];
 }

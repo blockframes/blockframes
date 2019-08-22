@@ -16,6 +16,12 @@
       <td mat-cell *matCellDef="let deadline">{{ deadline.percentage }}</td>
     </ng-container>
 
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let deadline"><span *ngIf="deadline.amount">{{ deadline.amount | currency: mgCurrency }}</span></td>
+    </ng-container>
+
     <!-- Date Column -->
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
