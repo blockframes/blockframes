@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Template, TemplateStore, TemplateQuery } from '../../../template/+state';
+import { Template, TemplateQuery, TemplateStore } from '../../../template/+state';
 import { DeliveryService } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
 import { Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryTemplateListComponent implements OnInit {
-
   public movieId = this.movieQuery.getActiveId();
   public templates$: Observable<Template[]>;
 
@@ -29,8 +28,7 @@ export class DeliveryTemplateListComponent implements OnInit {
   }
 
   public async createDelivery(templateId?: string) {
-
-    const deliveryId = await this.deliveryService.addDelivery(templateId);
+    const deliveryId = await this.deliveryService.addDelivery({ templateId });
     this.router.navigate([`layout/o/${this.movieId}/${deliveryId}/settings`]);
   }
 
@@ -38,5 +36,4 @@ export class DeliveryTemplateListComponent implements OnInit {
     const deliveryId = await this.deliveryService.addDeliveryWithMovieMaterials();
     this.router.navigate([`layout/o/${this.movieId}/${deliveryId}/settings`]);
   }
-
 }

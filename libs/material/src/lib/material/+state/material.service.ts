@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
-import { MovieQuery } from '@blockframes/movie';
 import { FireQuery } from '@blockframes/utils';
+import { MaterialQuery } from './material.query';
+import { Delivery } from '../../delivery/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class MaterialService {
   constructor(
     private db: FireQuery,
     private deliveryQuery: DeliveryQuery,
-    private movieQuery: MovieQuery,
+    private query: MaterialQuery
   ) {}
 
   /** Delete materials from a delivery
@@ -40,5 +41,14 @@ export class MaterialService {
     });
     batch.commit();
   }
-}
 
+  /** Update materials of a delivery */
+  public async updateMaterials(materials: Material[], deliveryId: string) {
+    return this.db.firestore.runTransaction(async tx => {
+      materials.forEach(material => {
+        const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        return tx.update(materialRef, material)
+      });
+    });
+  }
+}

@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+}
+
+td.mat-cell {
+  padding: 10px;
+}
+
+td {
+  max-width: 200px;
+}
+
+.category-text {
+  color: var(--warn);
+  font-weight: 500;
+}

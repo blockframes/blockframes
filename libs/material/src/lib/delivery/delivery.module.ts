@@ -8,25 +8,23 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
 import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
-import { DeliveryItemComponent } from './components/delivery-item/delivery-item.component';
 import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
-import { DeliveryViewItemComponent } from './components/delivery-view-item/delivery-view-item.component';
 import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
 import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
-import { DeliveryEmptyComponent } from './components/delivery-empty/delivery-empty.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
 import { DeliveryInformationsDatesFormComponent } from './components/delivery-informations-dates-form/delivery-informations-dates-form.component';
+import { DeliveryDisplayComponent } from './components/delivery-display/delivery-display.component';
+import { DeliveryMaterialFormComponent } from './components/delivery-material-form/delivery-material-form.component';
 
 // Pages
 import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
-import { DeliveryViewComponent } from './pages/delivery-view/delivery-view.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
@@ -43,6 +41,7 @@ import {
   ConfirmModule,
   DirectivesModule,
   EditableModule,
+  FeedbackMessageModule,
   TeamWorkModule,
   UiFormModule,
   EditableSidenavModule
@@ -78,11 +77,12 @@ import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
 import {
   DeliveryMaterialsGuard,
-  MovieMaterialsGuard,
-  SignedDeliveryMaterialsGuard
+  MovieMaterialsGuard
 } from '../material';
 import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
+import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
+import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 
 const routes: Routes = [
   {
@@ -116,6 +116,21 @@ const routes: Routes = [
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
             component: DeliveryAddTemplatePickerComponent
+          },
+          {
+            path: '3-pick-specific-delivery-list',
+            pathMatch: 'full',
+            component: DeliveryAddSpecificDeliveryListPickerComponent
+          },
+          {
+            path: '4-settings',
+            pathMatch: 'full',
+            component: DeliveryAddSettingsComponent
+          },
+          {
+            path: '5-complete',
+            pathMatch: 'full',
+            component: DeliveryAddCompleteComponent
           },
           {
             path: ':templateId',
@@ -173,19 +188,13 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
-            path: 'view',
-            canActivate: [SignedDeliveryMaterialsGuard],
-            canDeactivate: [SignedDeliveryMaterialsGuard],
-            component: DeliveryViewComponent
-          },
-          {
-            path: 'edit',
+            path: 'list',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
             component: DeliveryEditableComponent
           },
           {
-            path: 'teamwork',
+            path: 'stakeholders',
             component: DeliveryTeamworkEditableComponent
           },
           {
@@ -204,31 +213,31 @@ const routes: Routes = [
   declarations: [
     MovieMaterialsViewComponent,
     DeliveryListComponent,
-    DeliveryViewComponent,
+    DeliveryDisplayComponent,
     DeliveryEditableComponent,
     DeliveryAddFindMovieComponent,
     DeliveryAddChooseStarterComponent,
     DeliveryAddTemplatePickerComponent,
+    DeliveryAddSpecificDeliveryListPickerComponent,
     DeliveryAddSettingsComponent,
+    DeliveryAddCompleteComponent,
     NewTemplateComponent,
     DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
-    DeliveryItemComponent,
     DeliveryFiltersComponent,
     DeliveryActionsComponent,
     MovieMaterialItemComponent,
-    DeliveryViewItemComponent,
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
-    DeliveryEmptyComponent,
     DeliveryRepertoryComponent,
     DeliveryInformationsDatesDisplayComponent,
-    DeliveryInformationsDatesFormComponent
+    DeliveryInformationsDatesFormComponent,
+    DeliveryMaterialFormComponent
   ],
   imports: [
     CommonModule,
@@ -271,7 +280,8 @@ const routes: Routes = [
     MatSortModule,
 
     RouterModule.forChild(routes),
-    MovieModule
+    MovieModule,
+    FeedbackMessageModule
   ],
   entryComponents: [NewTemplateComponent, DeliverySignComponent]
 })

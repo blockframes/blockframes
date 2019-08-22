@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TemplateView } from '../../../template/+state';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialDeliveryForm } from '../../../material/+state';
-import { MaterialStore, MaterialQuery, MaterialService } from '../../../material/+state';
+import { Material, MaterialService } from '../../../material/+state';
+import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery, DeliveryStore } from '../../+state';
+import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { applyTransaction } from '@datorama/akita';
-import { map } from 'rxjs/operators';
+import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
+import { createMaterialFormList } from '../../forms/material.form';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'delivery-editable',
@@ -22,59 +22,90 @@ import { map } from 'rxjs/operators';
 })
 export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
-  public materials$: Observable<TemplateView>;
+  public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
-  public form$: Observable<MaterialDeliveryForm>;
-  public isDeliveryValidated$: Observable<boolean>;
-  public materialId: string;
-  public allChecked: boolean;
+  public opened = false;
+
+  public materialsFormList = createMaterialFormList();
+  public materialFormGroup$: Observable<FormGroup>;
+
+  private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
   constructor(
     private materialQuery: MaterialQuery,
     private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
-    private materialStore: MaterialStore,
-    private store: DeliveryStore,
-    private service: DeliveryService,
     private materialService: MaterialService,
+    private service: DeliveryService,
     private snackBar: MatSnackBar,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.materials$ = this.materialQuery.selectAll().pipe(
+      tap(materials => this.materialsFormList.patchValue(materials)),
+      switchMap(materials => this.materialsFormList.valueChanges.pipe(startWith(materials)))
+    );
+
+    /** Return the materialFormGroup linked to the selected materialId */
+    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
+      filter((materialId) => !!materialId),
+      map((materialId) => this.materialsFormList.value.findIndex(material => material.id === materialId)),
+      map(index => this.materialsFormList.at(index))
+    );
 
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.materials$ = this.materialQuery.materialsByDelivery$;
-    this.isDeliveryValidated$ = this.query.isDeliveryValidated$;
-    this.form$ = this.materialQuery.deliveryForm$;
+  }
 
-    this.allChecked = false;
+  public openSidenav(materialId: string) {
+    this.selectedMaterialId$.next(materialId);
+    this.opened = true;
+
+  }
+
+  public async update() {
+    try {
+      const deliveryId = this.query.getActiveId();
+      this.materialService.updateMaterials(this.materialsFormList.value, deliveryId);
+      this.snackBar.open('Material updated', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
+  }
+
+  public addMaterial() {
+    // Blank sidenav. User have to click again on new material edit icon to show inputs => ISSUE#760
+    const materialId = this.service.addMaterial();
+    this.openSidenav(materialId);
   }
 
   public saveAsTemplate() {
     this.dialog.open(NewTemplateComponent);
   }
 
-  public addMaterial(material: Material) {
-    this.service.saveMaterial(material);
-    this.materialStore.clearForm();
-    // TODO: Make it scroll to the form.
+  public openDeleteMaterial(materialId: string) {
+    this.dialog.open(ConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete material',
+        question: 'Are you sure you want to delete this material ?',
+        buttonName: 'Delete',
+        onConfirm: () => this.deleteMaterial(materialId)
+      }
+    });
   }
 
-  public deleteMaterial(material: Material) {
-    this.service.deleteMaterial(material.id);
-    this.snackBar.open('Deleted material "' + material.value + '".', 'close', { duration: 2000 });
-  }
-
-  public updateMaterial(material: Material) {
-    this.service.updateMaterial(material);
-  }
-
-  public addForm(category: string) {
-    this.materialStore.updateEmptyDeliveryForm(category);
-    delete this.materialId;
+  public deleteMaterial(materialId: string) {
+    try {
+      const deliveryId = this.query.getActiveId();
+      this.service.deleteMaterial(materialId, deliveryId);
+      this.snackBar.open('Material deleted', 'close', { duration: 2000 });
+      this.opened = false;
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public openDeleteDelivery() {
@@ -91,7 +122,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   private async deleteDelivery() {
     await this.service.deleteDelivery();
-    this.router.navigate([`/layout/o/${this.movieQuery.getActiveId()}/list`]);
+    this.router.navigate([`/layout/o/delivery/${this.movieQuery.getActiveId()}/list`]);
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
 
@@ -112,49 +143,11 @@ export class DeliveryEditableComponent implements OnInit {
     this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
   }
 
-  openUpdateForm(material) {
-    this.materialId = material.id;
-    this.materialStore.clearForm();
-  }
-
-  cancelUpdateForm() {
-    delete this.materialId;
-  }
-
-  public selectMaterial(isChecked: any, id: string) {
-    isChecked ? this.materialStore.addActive(id) : this.materialStore.removeActive(id);
-  }
-
-  public selectAllMaterials() {
-    this.allChecked = !this.allChecked;
-    const process = this.allChecked
-      ? material => this.materialStore.addActive(material.id)
-      : material => this.materialStore.removeActive(material.id);
-      applyTransaction(() => this.materialQuery.getAll().forEach(process))
-  }
-
-  public deleteSelectedMaterials() {
-    const materials = this.materialQuery.getActive();
-    this.materialService.deleteMaterials(materials);
-    this.materialStore.returnToInitialState();
-    this.allChecked = false;
-    // TODO: Notify which and how much materials have been deleted with snackbar
-  }
-
-  public changeStep(stepId: string) {
-    const materials = this.materialQuery.getActive();
-    this.materialService.updateStep(materials, stepId);
-    this.materialStore.returnToInitialState();
-    this.allChecked = false;
-  }
-
   public signDelivery() {
-    this.service.signDelivery();
+    // Signing a delivery inside a transaction in the blockchain => ISSUE#761
   }
 
   public get deliveryContractURL$(): Observable<string> {
-    return this.delivery$.pipe(
-      map(({id}) => `/delivery/contract.pdf?deliveryId=${id}`)
-    )
+    return this.delivery$.pipe(map(({ id }) => `/delivery/contract.pdf?deliveryId=${id}`));
   }
 }

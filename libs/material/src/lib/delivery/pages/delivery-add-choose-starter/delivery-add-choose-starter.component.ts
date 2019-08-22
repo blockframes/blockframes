@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
+import { DeliveryStore, DeliveryWizardKind } from '../../+state';
+import { Router } from '@angular/router';
+import { MovieQuery } from '@blockframes/movie';
 
 /**
  * Page for the flow: "create a delivery"
@@ -12,20 +15,50 @@ import { ActionItem } from '@blockframes/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddChooseStarterComponent {
-  items: ActionItem[] = [
-    {
-      icon: 'order',
-      title: 'Choose a template',
-      description: 'Lorem ipsum',
-      routerLink: '../3-pick-template'
-    },
-    { icon: 'order', title: 'Import material list', description: 'Lorem ipsum', routerLink: '#' },
-    {
-      icon: 'order',
-      title: 'Import specific delivery list',
-      description: 'Lorem ipsum',
-      routerLink: 'import-delivery-list'
-    },
-    { icon: 'order', title: 'Blank', description: 'Lorem ipsum', routerLink: '#' }
-  ];
+  items: ActionItem[];
+
+  constructor(
+    private store: DeliveryStore,
+    private router: Router,
+    private movieQuery: MovieQuery
+  ) {
+    this.items = [
+      {
+        icon: 'order',
+        title: 'Choose a template',
+        description: 'Lorem ipsum',
+        routerLink: '../3-pick-template'
+      },
+      {
+        icon: 'order',
+        title: 'Import material list',
+        description: 'Lorem ipsum',
+        action: () => this.onPickMaterialList()
+      },
+      {
+        icon: 'order',
+        title: 'Import specific delivery list',
+        description: 'Lorem ipsum',
+        routerLink: '../3-pick-specific-delivery-list'
+      },
+      {
+        icon: 'order',
+        title: 'Blank',
+        description: 'Lorem ipsum',
+        action: () => this.onPickBlank()
+      }
+    ];
+  }
+
+  public onPickMaterialList() {
+    this.store.updateWizard({ kind: DeliveryWizardKind.materialList });
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
+  }
+
+  public onPickBlank() {
+    this.store.updateWizard({ kind: DeliveryWizardKind.blankList });
+    const movieId = this.movieQuery.getActiveId();
+    this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
+  }
 }
