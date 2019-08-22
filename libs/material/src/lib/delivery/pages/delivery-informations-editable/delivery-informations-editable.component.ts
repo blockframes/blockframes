@@ -40,6 +40,7 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   }
 
   public async updateInformations() {
+    console.log(this.informationsFormGroup)
     // TODO: update guaranteed minimum payment deadline informations: issue#764
     try {
       if (this.informationsFormGroup.invalid) {

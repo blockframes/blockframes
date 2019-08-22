@@ -19,6 +19,8 @@ interface AbstractDelivery {
   mustChargeMaterials?: boolean;
   mustBeSigned?: boolean;
   _type: 'deliveries';
+  amount?: number;
+  currency: string;
 }
 
 export interface Delivery extends AbstractDelivery {

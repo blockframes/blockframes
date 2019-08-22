@@ -1,0 +1,62 @@
+<form [formGroup]="control">
+  <h4>Guaranted minimum amount</h4>
+  <mat-form-field appearance="outline">
+    <mat-label>Amount</mat-label>
+    <input type="number" min="0" formControlName="amount" matInput />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Currency</mat-label>
+    <mat-select formControlName="currency">
+      <mat-option value="$">$</mat-option>
+      <mat-option value="€">€</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div formArrayName="deadlines">
+    <h4>Guaranted minimum payment deadlines</h4>
+    <button mat-flat-button (click)="addDeadline()">
+      <mat-icon>add</mat-icon>
+      Add a deadline
+    </button>
+    <ng-container *ngFor="let deadline of deadlines.controls; let i = index">
+      <div [formGroupName]="i">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <p>
+            Deadline <span>{{ i + 1 }}</span>
+          </p>
+          <button mat-icon-button (click)="removeDeadline(i)">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Label</mat-label>
+          <input type="text" formControlName="label" matInput required />
+          <mat-error *ngIf="deadline.get('label').hasError('required')">
+            Label is <strong>required</strong>.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Percentage</mat-label>
+          <input type="number" min="0" formControlName="percentage" matInput required />
+          <mat-error *ngIf="deadline.get('percentage').hasError('required')">
+            Percentage is <strong>required</strong>.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input
+            formControlName="date"
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Date"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="deadline.get('date').hasError('required')">
+            Date is <strong>required</strong>.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
+</form>

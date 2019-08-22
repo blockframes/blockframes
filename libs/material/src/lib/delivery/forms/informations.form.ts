@@ -11,7 +11,19 @@ export function createStepFormGroup(step: Step) {
 }
 
 function createStepsFormList() {
-  return FormList.factory([], createStepFormGroup);
+  return FormList.factory([], createDeadlineFormGroup);
+}
+
+export function createDeadlineFormGroup(deadline: any) {
+  return new FormGroup({
+    label: new FormControl(deadline.label),
+    percentage: new FormControl(deadline.percentage),
+    date: new FormControl(deadline.date)
+  });
+}
+
+function createDeadlinesFormList() {
+  return FormList.factory([], createDeadlineFormGroup);
 }
 
 export function createInformationsFormGroup() {
@@ -19,7 +31,10 @@ export function createInformationsFormGroup() {
     dueDate: new FormControl(),
     acceptationPeriod: new FormControl(),
     reWorkingPeriod: new FormControl(),
-    steps: createStepsFormList()
+    steps: createStepsFormList(),
+    amount: new FormControl(),
+    currency: new FormControl(),
+    deadlines: createDeadlinesFormList()
     // TODO: create formList for guaranteed minimum payment deadline: issue#764
   });
 }
