@@ -1,8 +1,8 @@
 <article>
-  <div fxLayout="row" fxLayoutAlign="space-between">
+  <header fxLayout="row" fxLayoutAlign="space-between">
     <h3>Delivery dates</h3>
     <button mat-flat-button (click)="editing.emit()">Edit</button>
-  </div>
+  </header>
   <p *ngIf="delivery.dueDate">
     <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM dd yyyy' }}</span>
   </p>

@@ -1,8 +1,8 @@
 <article>
-  <div fxLayout="row" fxLayoutAlign="space-between">
+  <header fxLayout="row" fxLayoutAlign="space-between">
     <h3>Steps</h3>
     <button mat-flat-button (click)="editing.emit()">Edit</button>
-  </div>
+  </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- Name Column -->
     <ng-container matColumnDef="name">

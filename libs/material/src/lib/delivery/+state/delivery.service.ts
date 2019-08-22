@@ -189,13 +189,13 @@ export class DeliveryService {
   }
 
   /** Update informations of delivery */
-  public updateInformations(delivery: Partial<Delivery>, steps: Step[]) {
+  public updateInformations(delivery: Partial<Delivery>) {
     const batch = this.db.firestore.batch();
     const deliveryId = this.query.getActiveId();
     const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
 
     this.updateDates(delivery, deliveryDocRef, batch);
-    this.updateSteps(steps, deliveryDocRef, batch);
+    this.updateSteps(delivery.steps, deliveryDocRef, batch);
     // TODO: Update Guaranteed Minimum Informations: issue#764
 
     return batch.commit();
