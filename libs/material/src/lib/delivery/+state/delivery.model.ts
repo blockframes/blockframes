@@ -92,6 +92,14 @@ export enum State {
   refused = 'refused'
 }
 
+export const deliveryStatuses: State[] = [
+  State.pending,
+  State.available,
+  State.accepted,
+  State.refused,
+  State.delivered,
+]
+
 export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],

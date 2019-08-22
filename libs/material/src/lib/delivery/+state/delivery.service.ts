@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryDB, State, Step } from './delivery.model';
+import { createDelivery, Delivery, DeliveryDB, deliveryStatuses, State, Step } from './delivery.model';
 import {
   createDeliveryStakeholder,
   Movie,
@@ -167,8 +167,8 @@ export class DeliveryService {
   // CRUD DELIVERY //
   ///////////////////
 
-  public updateDeliveryStatus(newState: State): Promise<any> {
-    return this.currentDeliveryDoc.update({ state: newState });
+  public updateDeliveryStatus(index: number): Promise<any> {
+    return this.currentDeliveryDoc.update({ state: deliveryStatuses[index] });
   }
 
   public updateCurrentMGDeadline(index: number): Promise<any> {

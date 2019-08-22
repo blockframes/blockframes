@@ -5,7 +5,7 @@
   [selectedIndex]="currentStatus$ | async"
 >
   <mat-step *ngFor="let state of (deliveryStatuses$ | async)">
-    <ng-template matStepLabel>{{ state.label }}</ng-template>
+    <ng-template matStepLabel>{{ state }}</ng-template>
   </mat-step>
 </mat-horizontal-stepper>
 

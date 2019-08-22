@@ -1,25 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { DeliveryQuery, MGDeadline } from '../../+state';
+import { DeliveryQuery, DeliveryService, MGDeadline, State } from '../../+state';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-
-const mgValues = [
-  { label: 'CM Signature', percent: 10 },
-  { label: 'NOA', percent: 60 },
-  { label: 'NOD', percent: 30 }
-];
-
-interface DeliveryStatus {
-  label: string;
-}
-
-const statusValues: DeliveryStatus[] = [
-  { label: 'In Negociation' },
-  { label: 'Material Pending' },
-  { label: 'NOA' },
-  { label: 'NOD' },
-  { label: 'Materials Accepted' }
-];
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'delivery-statuses',
@@ -31,24 +14,32 @@ export class DeliveryStatusesComponent implements OnInit {
   public mgDeadlines$: Observable<MGDeadline[]>;
   public currentDeadline$: Observable<number>;
 
-  public deliveryStatuses$: Observable<DeliveryStatus[]>;
+  public deliveryStatuses$: Observable<State[]>;
   public currentStatus$: Observable<number>;
 
-  public constructor(private query: DeliveryQuery) {}
+  public constructor(private query: DeliveryQuery, private service: DeliveryService) {
+  }
 
   ngOnInit(): void {
-    this.mgDeadlines$ = of(mgValues);
-    this.currentDeadline$ = new BehaviorSubject(0);
+    this.mgDeadlines$ = this.query.mgDeadlines$;
+    this.currentDeadline$ = this.query.currentDeadline$;
 
-    this.deliveryStatuses$ = of(statusValues);
-    this.currentStatus$ = new BehaviorSubject(1);
+    this.deliveryStatuses$ = this.query.statuses$;
+    this.currentStatus$ = combineLatest(
+      this.query.statuses$,
+      this.query.currentStatus$,
+    ).pipe(
+      map(([statuses, currentStatus]) => {
+        return statuses.indexOf(currentStatus);
+      })
+    )
   }
 
   public onMGDeadlinePick(event: StepperSelectionEvent) {
-    (this.currentDeadline$ as BehaviorSubject<number>).next(event.selectedIndex);
+    return this.service.updateCurrentMGDeadline(event.selectedIndex);
   }
 
   public onDeliveryStatusPick(event: StepperSelectionEvent) {
-    (this.currentStatus$ as BehaviorSubject<number>).next(event.selectedIndex);
+    return this.service.updateDeliveryStatus(event.selectedIndex);
   }
 }
