@@ -55,7 +55,9 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   public async updateInformations() {
     // TODO: update guaranteed minimum payment deadline informations: issue#764
     try {
-      if (this.informationsFormGroup.invalid) throw new Error('Delivery informations are not valid');
+      if (this.informationsFormGroup.invalid) {
+        throw new Error('Delivery informations are not valid');
+      }
       await this.service.updateInformations(this.deliveryDates.value, this.deliverySteps.value);
       this.snackBar.open('Informations updated', 'close', { duration: 2000 });
     } catch (error) {
