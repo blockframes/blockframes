@@ -1,10 +1,13 @@
-<div>
+<header>
   <h4>Steps</h4>
-  <button mat-flat-button (click)="addStep()"><mat-icon>add</mat-icon>Add a step</button>
-</div>
+  <button mat-flat-button (click)="addStep()">
+    <mat-icon>add</mat-icon>
+    Add a step
+  </button>
+</header>
 <form [formGroup]="control">
   <div formArrayName="deliverySteps">
-    <div *ngFor="let step of deliverySteps.controls; let i = index">
+    <ng-container *ngFor="let step of deliverySteps.controls; let i = index">
       <div [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="space-between">
           <p>
@@ -35,6 +38,6 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </div>
+    </ng-container>
   </div>
 </form>
