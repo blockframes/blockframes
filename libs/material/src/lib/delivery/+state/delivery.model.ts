@@ -58,9 +58,9 @@ interface DeliveryRaw<D> {
   // Time to return a refused material
   reWorkingPeriod?: number;
   // Minimum Guarantee:
-  mgCurrentDeadline: number;
-  mgAmount: number;
-  mgCurrency: Currency;
+  mgCurrentDeadline?: number;
+  mgAmount?: number;
+  mgCurrency?: Currency;
   mgDeadlines: MGDeadlineRaw<D>[];
 }
 
