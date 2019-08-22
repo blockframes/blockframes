@@ -17,10 +17,12 @@ export class DeliveryInformationsDeadlinesRepertoryComponent {
     }));
     this.dataSource = new MatTableDataSource(deadlines);
     this.mgCurrency = delivery.mgCurrency;
+    this.mgAmount = delivery.mgAmount;
   }
 
   @Output() editing = new EventEmitter();
 
+  public mgAmount: number;
   public mgCurrency: string;
   public dataSource: MatTableDataSource<MGDeadline>;
   public displayedColumns: string[] = ['label', 'percentage', 'amount', 'date'];
