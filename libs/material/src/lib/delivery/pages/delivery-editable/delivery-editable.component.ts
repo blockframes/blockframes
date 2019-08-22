@@ -75,9 +75,9 @@ export class DeliveryEditableComponent implements OnInit {
     }
   }
 
-  public addMaterial() {
+  public async addMaterial() {
     // Blank sidenav. User have to click again on new material edit icon to show inputs => ISSUE#760
-    const materialId = this.service.addMaterial();
+    const materialId = await this.service.addMaterial();
     this.openSidenav(materialId);
   }
 
