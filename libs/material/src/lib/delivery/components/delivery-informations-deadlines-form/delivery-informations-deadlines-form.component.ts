@@ -6,6 +6,10 @@ import { ControlContainer, FormArray } from '@angular/forms';
 import { createDeadlineFormGroup } from '../../forms/informations.form';
 import { Currency } from '../../+state';
 
+export function calculAmount(total: number, percentage: number): number {
+  return total * percentage / 100;
+}
+
 @Component({
   selector: '[formGroup] delivery-informations-deadlines-form',
   templateUrl: './delivery-informations-deadlines-form.component.html',
@@ -25,12 +29,16 @@ export class DeliveryInformationsDeadlinesFormComponent {
     return this.controlContainer.control.get('mgDeadlines') as FormArray;
   }
 
-  public get deliveryAmount(): number {
+  public get mgAmount(): number {
     return this.controlContainer.control.get('mgAmount').value;
   }
 
+  public getPercentage(index: number) {
+    return this.mgDeadlines.controls[index].get('percentage').value;
+  }
+
   public calculAmountWithPercentage(index: number) {
-    return this.deliveryAmount * this.mgDeadlines.controls[index].get('percentage').value / 100;
+    return calculAmount(this.mgAmount, this.getPercentage(index));
   }
 
   public addDeadline() {

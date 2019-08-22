@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
 import { MGDeadline, Delivery } from '../../+state';
 import { MatTableDataSource } from '@angular/material/table';
+import { calculAmount } from '../delivery-informations-deadlines-form/delivery-informations-deadlines-form.component';
 
 @Component({
   selector: 'delivery-informations-deadlines-repertory',
@@ -13,7 +14,7 @@ export class DeliveryInformationsDeadlinesRepertoryComponent {
   set delivery(delivery: Delivery) {
     const deadlines = delivery.mgDeadlines.map(deadline => ({
       ...deadline,
-      amount: (delivery.mgAmount && deadline.percentage) ? (delivery.mgAmount * deadline.percentage / 100) : null
+      amount: (delivery.mgAmount && deadline.percentage) ? calculAmount(delivery.mgAmount, deadline.percentage) : null
     }));
     this.dataSource = new MatTableDataSource(deadlines);
     this.mgCurrency = delivery.mgCurrency;
