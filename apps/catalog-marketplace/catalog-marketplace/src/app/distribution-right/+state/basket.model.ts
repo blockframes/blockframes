@@ -34,7 +34,7 @@ export interface DistributionRight {
     from: Date,
     to: Date
   };
-  territories: string[]
+  territories: Territories[]
 }
 
 export interface CatalogBasket {

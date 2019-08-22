@@ -10,7 +10,8 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
       duration: new FormGroup({
         from: new FormControl(),
         to: new FormControl()
-      })
+      }),
+      territories: new FormArray([])
     });
   }
 
