@@ -13,6 +13,7 @@ import { createInformationsFormGroup } from '../../forms/informations.form';
 })
 export class DeliveryInformationsEditableComponent implements OnInit {
   public opened = false;
+  public editContent = 'dates';
 
   public informationsFormGroup = createInformationsFormGroup();
 
@@ -26,26 +27,25 @@ export class DeliveryInformationsEditableComponent implements OnInit {
 
   ngOnInit() {
     this.delivery$ = this.query.selectActive().pipe(
-      tap(delivery => this.deliveryDates.patchValue(delivery)),
-      switchMap(delivery => this.deliveryDates.valueChanges.pipe(startWith(delivery)))
+      tap(delivery => {
+        this.informationsFormGroup.patchValue(delivery);
+      }),
+      switchMap(delivery => this.informationsFormGroup.valueChanges.pipe(startWith(delivery)))
     );
   }
 
-  get deliveryDates() {
-    return this.informationsFormGroup.get('deliveryDates');
-  }
-
-  public openSidenav() {
+  public openSidenav(name: string) {
+    this.editContent = name;
     this.opened = true;
   }
 
-  public updateInformations() {
-    // TODO: update steps informations: issue#759
+  public async updateInformations() {
     // TODO: update guaranteed minimum payment deadline informations: issue#764
     try {
-      if (this.informationsFormGroup.invalid)
+      if (this.informationsFormGroup.invalid) {
         throw new Error('Delivery informations are not valid');
-      this.service.updateDates(this.deliveryDates.value);
+      }
+      await this.service.updateInformations(this.informationsFormGroup.value);
       this.snackBar.open('Informations updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

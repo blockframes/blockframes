@@ -25,7 +25,7 @@ interface AddDeliveryOptions {
 export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
     ...delivery,
-    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
     steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() }))
   };
 }
@@ -188,48 +188,65 @@ export class DeliveryService {
     return id;
   }
 
-  public async updateDates(delivery: Partial<Delivery>) {
+  /** Update informations of delivery */
+  public updateInformations(delivery: Partial<Delivery>) {
+    const batch = this.db.firestore.batch();
     const deliveryId = this.query.getActiveId();
-    return this.db.doc<Delivery>(`deliveries/${deliveryId}`).update({
+    const deliveryDocRef = this.db.doc<Delivery>(`deliveries/${deliveryId}`).ref;
+
+    this.updateDates(delivery, deliveryDocRef, batch);
+    this.updateSteps(delivery.steps, deliveryDocRef, batch);
+    // TODO: Update Guaranteed Minimum Informations: issue#764
+
+    return batch.commit();
+  }
+
+  /** Update dates of delivery */
+  private updateDates(
+    delivery: Partial<Delivery>,
+    deliveryDocRef: firebase.firestore.DocumentReference,
+    batch: firebase.firestore.WriteBatch
+  ) {
+    return batch.update(deliveryDocRef, {
       dueDate: delivery.dueDate,
       acceptationPeriod: delivery.acceptationPeriod,
       reWorkingPeriod: delivery.reWorkingPeriod
     });
   }
 
-  /** Add step in array steps of delivery */
-  public createStep(step: Step) {
-    const delivery = this.query.getActive();
-    step.id = this.db.createId();
-    const steps = [...delivery.steps, step];
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
+  /** Update steps of delivery */
+  private updateSteps(
+    steps: Step[],
+    deliveryDocRef: firebase.firestore.DocumentReference,
+    batch: firebase.firestore.WriteBatch
+  ) {
+    const oldSteps = this.query.getActive().steps;
+
+    // Add an id for new steps
+    const stepsWithId = steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
+
+    // Find steps that need to be removed
+    const deletedSteps = oldSteps.filter(
+      oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
+    );
+    // Remove stepId from the materials according to this array
+    this.removeMaterialsStepId(deletedSteps, batch);
+
+    return batch.update(deliveryDocRef, { steps: stepsWithId });
   }
 
-  /** Update step in array steps of delivery */
-  public updateStep(step: Step, form: Step) {
-    const delivery = this.query.getActive();
-    const steps = [...delivery.steps];
-    const index = steps.indexOf(step);
-    steps.splice(index, 1, { ...step, ...form });
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
-  }
-
-  /** Remove step in array steps of delivery */
-  public removeStep(step: Step) {
-    const delivery = this.query.getActive();
-    const steps = [...delivery.steps];
-    const index = steps.indexOf(step);
-    steps.splice(index, 1);
-    this.db.doc<Delivery>(`deliveries/${delivery.id}`).update({ steps });
-
-    // We also set the concerned materials .step to an empty string
-    const batch = this.db.firestore.batch();
-    const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
-    materials.forEach(material => {
-      const doc = this.db.doc(`deliveries/${delivery.id}/materials/${material.id}`);
-      return batch.update(doc.ref, { step: '' });
+  /** Remove stepId of materials of delivery for an array of steps */
+  private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
+    // TODO : Use a transaction for be sure to don't loose datas: issue#773
+    const deliveryId = this.query.getActiveId();
+    // We also set the concerned materials stepId to an empty string
+    steps.forEach(step => {
+      const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+      materials.forEach(material => {
+        const docRef = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`).ref;
+        batch.update(docRef, { stepId: '' });
+      });
     });
-    batch.commit();
   }
 
   /** Remove signatures in array validated of delivery */
