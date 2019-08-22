@@ -7,7 +7,6 @@ import { LayoutComponent } from './layout/layout.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
-import { MovieActiveGuard } from '@blockframes/movie';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 
@@ -70,23 +69,11 @@ export const routes: Routes = [
                   import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
               },
               {
-                path: ':movieId',
-                // canActivate: [MovieActiveGuard],
-                // canDeactivate: [MovieActiveGuard],
-                children: [
-                  {
-                    path: 'view',
-                    loadChildren: () =>
-                      import('./movie/view/view.module').then(m => m.MovieViewModule)
-                  },
-                  {
-                    path: 'create',
-                    loadChildren: () =>
-                      import('./distribution-right/create/create.module').then(
-                        m => m.DistributionRightCreateModule
-                      )
-                  }
-                ]
+                path: 'search',
+                loadChildren: () =>
+                  import('./pages/marketplace-search/marketplace-search.module').then(
+                    m => m.MarketplaceSearchModule
+                  )
               },
               {
                 path: ':movieId',
