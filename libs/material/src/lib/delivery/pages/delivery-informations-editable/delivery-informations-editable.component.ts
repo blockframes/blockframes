@@ -28,23 +28,10 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   ngOnInit() {
     this.delivery$ = this.query.selectActive().pipe(
       tap(delivery => {
-        this.deliveryDates.patchValue(delivery);
-        this.deliverySteps.patchValue(delivery.steps);
+        this.informationsFormGroup.patchValue(delivery);
       }),
-      switchMap(delivery => this.deliveryDates.valueChanges.pipe(startWith(delivery)))
+      switchMap(delivery => this.informationsFormGroup.valueChanges.pipe(startWith(delivery)))
     );
-  }
-
-  get deliveryDates() {
-    return this.informationsFormGroup.get('deliveryDates');
-  }
-
-  get deliverySteps() {
-    return this.informationsFormGroup.get('deliverySteps');
-  }
-
-  public get steps$() {
-    return this.deliverySteps.valueChanges.pipe(startWith(this.deliverySteps.value));
   }
 
   public openSidenav(name: string) {
@@ -58,7 +45,7 @@ export class DeliveryInformationsEditableComponent implements OnInit {
       if (this.informationsFormGroup.invalid) {
         throw new Error('Delivery informations are not valid');
       }
-      await this.service.updateInformations(this.deliveryDates.value, this.deliverySteps.value);
+      await this.service.updateInformations(this.informationsFormGroup.value);
       this.snackBar.open('Informations updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

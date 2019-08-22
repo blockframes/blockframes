@@ -6,8 +6,8 @@
   </button>
 </header>
 <form [formGroup]="control">
-  <div formArrayName="deliverySteps">
-    <ng-container *ngFor="let step of deliverySteps.controls; let i = index">
+  <div formArrayName="steps">
+    <ng-container *ngFor="let step of steps.controls; let i = index">
       <div [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="space-between">
           <p>
