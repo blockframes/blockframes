@@ -91,15 +91,13 @@ function territories(movie: Movie, territory: string): boolean {
   if (!territory) {
     return true;
   }
-  const territoryToLowerCase = territory.toLowerCase();
-  return movie.salesAgentDeal.territories.includes(territoryToLowerCase);
+  return movie.salesAgentDeal.territories.includes(territory.toLowerCase());
 }
 function media(movie: Movie, movieMediaType: string): boolean {
   if (!movieMediaType) {
     return true;
   }
-  const mediaToLowerCase = movieMediaType.toLowerCase();
-  return movie.salesAgentDeal.medias.includes(mediaToLowerCase);
+  return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
 export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {

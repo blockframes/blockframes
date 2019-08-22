@@ -33,6 +33,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
     // Material
     MatIconModule,
     MatDividerModule,
@@ -45,10 +47,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatAutocompleteModule,
     MatListModule,
     MatChipsModule,
-    FormsModule,
-    HttpClientModule,
     MatNativeDateModule,
-    ReactiveFormsModule,
     MatCardModule,
     MatDatepickerModule,
 

@@ -95,8 +95,7 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   private _languageFilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.movieLanguages.filter(language => language.toLowerCase().includes(filterValue));
+    return this.movieLanguages.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
   public addLanguage(language: string) {
