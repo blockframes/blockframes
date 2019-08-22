@@ -20,7 +20,8 @@ interface AbstractDelivery {
   mustBeSigned?: boolean;
   _type: 'deliveries';
   amount?: number;
-  currency: string;
+  currency?: string;
+  deadlines?: any[];
 }
 
 export interface Delivery extends AbstractDelivery {

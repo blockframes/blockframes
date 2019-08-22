@@ -23,6 +23,7 @@ import { DeliveryMaterialFormComponent } from './components/delivery-material-fo
 import { DeliveryInformationsStepsFormComponent } from './components/delivery-informations-steps-form/delivery-informations-steps-form.component';
 import { DeliveryInformationsStepsRepertoryComponent } from './components/delivery-informations-steps-repertory/delivery-informations-steps-repertory.component';
 import { DeliveryInformationsDeadlinesFormComponent } from './components/delivery-informations-deadlines-form/delivery-informations-deadlines-form.component';
+import { DeliveryInformationsDeadlinesRepertoryComponent } from './components/delivery-informations-deadlines-repertory/delivery-informations-deadlines-repertory.component';
 
 // Pages
 import { MovieMaterialsViewComponent } from './pages/movie-materials-view/movie-materials-view.component';
@@ -243,7 +244,8 @@ const routes: Routes = [
     DeliveryMaterialFormComponent,
     DeliveryInformationsStepsFormComponent,
     DeliveryInformationsStepsRepertoryComponent,
-    DeliveryInformationsDeadlinesFormComponent
+    DeliveryInformationsDeadlinesFormComponent,
+    DeliveryInformationsDeadlinesRepertoryComponent
   ],
   imports: [
     CommonModule,

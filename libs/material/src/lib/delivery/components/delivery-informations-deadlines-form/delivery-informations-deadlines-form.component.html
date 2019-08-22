@@ -12,7 +12,7 @@
     </mat-select>
   </mat-form-field>
   <div formArrayName="deadlines">
-    <h4>Guaranted minimum payment deadlines</h4>
+    <h4>Guaranteed minimum payment deadlines</h4>
     <button mat-flat-button (click)="addDeadline()">
       <mat-icon>add</mat-icon>
       Add a deadline
@@ -36,10 +36,14 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Percentage</mat-label>
-          <input type="number" min="0" formControlName="percentage" matInput required />
+          <input type="number" min="0" max="100" formControlName="percentage" matInput required />
           <mat-error *ngIf="deadline.get('percentage').hasError('required')">
             Percentage is <strong>required</strong>.
           </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input type="number" min="0" [value]="calculAmountWithPercentage(i)" matInput disabled />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Date</mat-label>

@@ -22,6 +22,14 @@ export class DeliveryInformationsDeadlinesFormComponent {
     return this.controlContainer.control.get('deadlines') as FormArray;
   }
 
+  public get deliveryAmount(): number {
+    return this.controlContainer.control.get('amount').value;
+  }
+
+  public calculAmountWithPercentage(index: number) {
+    return this.deliveryAmount * this.deadlines.controls[index].get('percentage').value / 100;
+  }
+
   public addDeadline() {
     this.deadlines.push(createDeadlineFormGroup({ label: null, percentage: null, date: null }));
   }
