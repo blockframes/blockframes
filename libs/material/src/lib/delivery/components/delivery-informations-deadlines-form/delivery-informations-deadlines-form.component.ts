@@ -37,7 +37,7 @@ export class DeliveryInformationsDeadlinesFormComponent {
     return this.mgDeadlines.controls[index].get('percentage').value;
   }
 
-  public calculAmountWithPercentage(index: number) {
+  public calculDeadlineAmount(index: number) {
     return calculAmount(this.mgAmount, this.getPercentage(index));
   }
 

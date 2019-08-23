@@ -28,13 +28,15 @@ function createDeadlinesFormList() {
 
 export function createInformationsFormGroup() {
   return new FormGroup({
+    // Delivery minimum guaranteed
+    mgAmount: new FormControl(),
+    mgCurrency: new FormControl(),
+    mgDeadlines: createDeadlinesFormList(),
+    // Delivery dates
     dueDate: new FormControl(),
     acceptationPeriod: new FormControl(),
     reWorkingPeriod: new FormControl(),
-    steps: createStepsFormList(),
-    mgAmount: new FormControl(),
-    mgCurrency: new FormControl(),
-    mgDeadlines: createDeadlinesFormList()
-    // TODO: create formList for guaranteed minimum payment deadline: issue#764
+    // Delivery steps
+    steps: createStepsFormList()
   });
 }

@@ -27,7 +27,9 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
     ...delivery,
     dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
     steps: delivery.steps.map(step => ({ ...step, date: step.date.toDate() })),
-    mgDeadlines: delivery.mgDeadlines ? delivery.mgDeadlines.map(deadline => ({ ...deadline, date: deadline.date.toDate() })) : []
+    mgDeadlines: delivery.mgDeadlines
+      ? delivery.mgDeadlines.map(deadline => ({ ...deadline, date: deadline.date.toDate() }))
+      : []
   };
 }
 
@@ -198,7 +200,6 @@ export class DeliveryService {
     this.updateMGDeadlines(delivery, deliveryDocRef, batch);
     this.updateDates(delivery, deliveryDocRef, batch);
     this.updateSteps(delivery.steps, deliveryDocRef, batch);
-    // TODO: Update Guaranteed Minimum Informations: issue#764
 
     return batch.commit();
   }
