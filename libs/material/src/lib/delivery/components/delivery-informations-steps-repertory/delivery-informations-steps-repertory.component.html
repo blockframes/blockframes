@@ -13,7 +13,7 @@
     <!-- Date Column -->
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let step">{{ step.date | date: 'MM dd yyyy' }}</td>
+      <td mat-cell *matCellDef="let step">{{ step.date | date: 'MM/dd/yyyy' }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

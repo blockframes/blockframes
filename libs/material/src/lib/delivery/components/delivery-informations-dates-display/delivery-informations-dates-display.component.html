@@ -4,7 +4,7 @@
     <button mat-flat-button (click)="editing.emit()">Edit</button>
   </header>
   <p *ngIf="delivery.dueDate">
-    <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM dd yyyy' }}</span>
+    <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM/dd/yyyy' }}</span>
   </p>
   <p *ngIf="delivery.acceptationPeriod">
     <b>Acceptation period </b><span>{{ delivery.acceptationPeriod }} days</span>
