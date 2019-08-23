@@ -1,6 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /{documents=**} {
+      allow read, write;
+    }
 
     // Note: Add a verification of each document ID => {id: ID_SHOULD_BE_EQUAL_TO_PATH}
 
