@@ -30,7 +30,7 @@ export function createMaterial(material: Partial<Material>) {
     category: '',
     value: '',
     description: '',
-    step: {},
+    stepId: '',
     ...material
   } as Material : {} as Material
 }

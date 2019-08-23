@@ -46,8 +46,12 @@ export class MaterialService {
   public async updateMaterials(materials: Material[], deliveryId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
+        // We need to have stepId instead of entire step to save the material in the back end
+        const materialWithStepId = {...material, stepId: material.step ? material.step.id : ''};
+        delete materialWithStepId.step;
+
         const materialRef = this.db.doc<Material>(`deliveries/${deliveryId}/materials/${material.id}`).ref;
-        return tx.update(materialRef, material)
+        return tx.update(materialRef, materialWithStepId)
       });
     });
   }
