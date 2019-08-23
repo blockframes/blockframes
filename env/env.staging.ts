@@ -32,7 +32,7 @@ export const algolia = {
 // Ethereum
 // ========
 
-export const network = 'ropsten';
+export const network = 'goerli';
 export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
