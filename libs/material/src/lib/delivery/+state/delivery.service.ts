@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryDB, deliveryStatuses, State, Step } from './delivery.model';
+import {
+  createDelivery,
+  Delivery,
+  DeliveryDB,
+  deliveryStatuses,
+  State,
+  Step
+} from './delivery.model';
 import {
   createDeliveryStakeholder,
   Movie,
@@ -35,7 +42,7 @@ export function dateObjectsToTimestamp(docs) {
     }
   });
 }
-export function timestampObectsToDate(docs) {
+export function timestampObjectsToDate(docs) {
   return docs.map(doc => {
     if (doc.date) {
       return { ...doc, date: doc.date.toDate() };
@@ -52,8 +59,8 @@ export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
   return {
     ...delivery,
     dueDate: delivery.dueDate ? delivery.dueDate.toDate() : undefined,
-    steps: delivery.steps.map(timestampObectsToDate),
-    mgDeadlines: mgDeadlines.map(timestampObectsToDate)
+    steps: delivery.steps.map(timestampObjectsToDate),
+    mgDeadlines: mgDeadlines.map(timestampObjectsToDate)
   };
 }
 
@@ -284,7 +291,7 @@ export class DeliveryService {
 
     this.updateDates(delivery, deliveryDocRef, batch);
     this.updateSteps(delivery.steps, deliveryDocRef, batch);
-    // TODO: Update Guaranteed Minimum Informations: issue#764
+    // TODO: Update Guaranteed Minimum Information: issue#764
 
     return batch.commit();
   }
@@ -362,19 +369,21 @@ export class DeliveryService {
     materials.forEach(material => {
       return batch.update(this.materialDoc(delivery.id, material.id).ref, { step: '' });
     });
+
     return batch.commit();
   }
 
   /** Remove stepId of materials of delivery for an array of steps */
   private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
-    // TODO : Use a transaction for be sure to don't loose datas: issue#773
+    // TODO : Use a transaction to make sure we don't lose data: issue#773
     const deliveryId = this.query.getActiveId();
+
     // We also set the concerned materials stepId to an empty string
     steps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+
       materials.forEach(material => {
-        const docRef = this.db.doc(`deliveries/${deliveryId}/materials/${material.id}`).ref;
-        batch.update(docRef, { stepId: '' });
+        batch.update(this.materialDoc(deliveryId, material.id).ref, { stepId: '' });
       });
     });
   }
@@ -415,11 +424,13 @@ export class DeliveryService {
     );
 
     materials.forEach(material => {
-      const materialRef = this.db.doc<Material>(
-        `deliveries/${delivery.id}/materials/${material.id}`
-      ).ref;
-      tx.set(materialRef, { ...material, state: '', stepId: '' });
+      tx.set(this.materialDoc(delivery.id, material.id).ref, {
+        ...material,
+        state: '',
+        stepId: ''
+      });
     });
+
     return tx;
   }
 
