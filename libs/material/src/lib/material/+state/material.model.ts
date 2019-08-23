@@ -1,13 +1,14 @@
 import { Step } from "../../delivery/+state";
+import { utils } from "ethers";
 
 export interface Material {
   id: string;
   category: string;
   value: string;
   description: string;
-  owner: string;
+  owner?: string;
   step?: Step;
-  status?: MaterialStatus;
+  status: MaterialStatus;
   deliveryIds?: string[];
   price?: {
     amount: number;
@@ -30,14 +31,14 @@ export interface MaterialTemplateForm {
   category: string;
 }
 
+// TODO: Type safety => ISSUE#774
 export function createMaterial(material: Partial<Material>): Material {
   return {
     id: material.id,
-    category: material.category || null,
-    value: material.value || null,
-    description: material.description || null,
-    owner: material.owner || null,
-    step: material.step || {id: null, date: null, name: null},
+    category: '',
+    value: '',
+    description: '',
+    status: material.status || MaterialStatus.pending,
     ...material
   }
 }

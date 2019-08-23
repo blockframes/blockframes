@@ -30,7 +30,7 @@ import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
-import { onMovieMaterialUpdate, onDeliveryMaterialUpdate, onDeliveryMaterialCreate } from './material';
+import { onMovieMaterialUpdate } from './material';
 
 /**
  * Trigger: when eth-events-server pushes contract events.
@@ -115,22 +115,6 @@ export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}',
  * Trigger: when material state (`state`) is modified
  */
 export const onMovieMaterialUpdateEvent = onDocumentUpdate('movies/{movieID}', onMovieMaterialUpdate);
-
-/**
- * Trigger: when material property is modified
- */
-export const onDeliveryMaterialUpdateEvent = onDocumentUpdate(
-  'deliveries/{deliveryID}/materials/{materialID}',
-  onDeliveryMaterialUpdate
-);
-
-/**
- * Trigger: when a material is added to a delivery
- */
-export const onDeliveryMaterialCreateEvent = onDocumentCreate(
-  'deliveries/{deliveryID}/materials/{materialID}',
-  onDeliveryMaterialCreate
-);
 
 /**
  * Trigger: when a stakeholder is added to a delivery

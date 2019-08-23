@@ -1,7 +1,7 @@
 import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
-import { getDocument, getOrganizationsOfDocument, getCollection } from './data/internals';
+import { getDocument, getOrganizationsOfDocument } from './data/internals';
 import { DocType, Material, Movie, Organization, Delivery, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
@@ -26,7 +26,6 @@ export const onMovieMaterialUpdate = async (
     console.info(`No changes detected on this document`);
     return;
   }
-
 
   if (material.status === materialBefore.status) {
     console.info(`No changes detected on material.state property`);
@@ -74,115 +73,6 @@ export const onMovieMaterialUpdate = async (
   return true;
 };
 
-export const onDeliveryMaterialUpdate = async (
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-) => {
-  if (!change.after || !change.before) {
-    throw new Error(`Parameter 'change' not found`);
-  }
-
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
-  const material: Material = change.after.data() as Material;
-  const materialBefore = change.before.data();
-
-  if (delivery.deliveryListToBeSigned) {
-    console.warn('Can\'t copy materials from a delivery to be signed');
-    return;
-  }
-
-  if (!material || !materialBefore) {
-    console.info(`No changes detected on this document`);
-    return;
-  }
-
-  /**
-   * Note: Google Cloud Function enforces "at least once" delivery for events.
-   * This means that an event may processed twice by this function, with the same Before and After data.
-   * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
-   * betweeen two runs to enforce "only once delivery".
-   */
-  if (!!delivery && !!material) {
-    const materialDoc = await db.doc(`deliveries/${delivery.id}/materials/${material.id}`).get();
-    const processedId = materialDoc.data()!.processedId;
-
-    if (processedId === context.eventId) {
-      console.warn('Document already processed with this context');
-      return;
-    }
-
-    try {
-
-      const [materialsMovie, materialsDelivery] = await Promise.all([
-        getCollection<Material>(`movies/${delivery.movieId}/materials`),
-        getCollection<Material>(`deliveries/${delivery.id}/materials`)
-      ]);
-
-      copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
-
-    } catch (error) {
-      await db
-        .doc(`deliveries/${delivery.id}/materials/${material.id}`)
-        .update({ processedId: null });
-      throw error;
-    }
-    return true;
-  }
-  return true;
-};
-
-export const onDeliveryMaterialCreate = async (
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
-) => {
-  const material = snap.data() as Material | undefined;
-
-  if (!material) {
-    throw new Error(`New stakeholder not found !`);
-  }
-
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryID}`);
-
-  if (delivery.deliveryListToBeSigned) {
-    console.warn('Can\'t copy materials from a delivery to be signed');
-    return;
-  }
-
-  /**
-   * Note: Google Cloud Function enforces "at least once" delivery for events.
-   * This means that an event may processed twice by this function, with the same Before and After data.
-   * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
-   * betweeen two runs to enforce "only once delivery".
-   */
-  if (!!delivery && !!material) {
-    const materialDoc = await db.doc(`deliveries/${delivery.id}/materials/${material.id}`).get();
-    const processedId = materialDoc.data()!.processedId;
-
-    if (processedId === context.eventId) {
-      console.warn('Document already processed with this context');
-      return;
-    }
-
-    try {
-
-      const [materialsMovie, materialsDelivery] = await Promise.all([
-        getCollection<Material>(`movies/${delivery.movieId}/materials`),
-        getCollection<Material>(`deliveries/${delivery.id}/materials`)
-      ]);
-
-      copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
-
-    } catch (error) {
-      await db
-        .doc(`deliveries/${delivery.id}/materials/${material.id}`)
-        .update({ processedId: null });
-      throw error;
-    }
-    return true;
-  }
-  return true;
-};
-
 /**
  * Copy each delivery Material into the movie materials sub-collection. This checks if the copied Material
  * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveryIds.
@@ -192,28 +82,36 @@ export function copyMaterialsToMovie(
   movieMaterials: Material[],
   delivery: Delivery
 ) {
-  return deliveryMaterials.map(deliveryMaterial => {
-    const duplicateMaterial = movieMaterials.find(movieMaterial =>
-      isTheSame(movieMaterial, deliveryMaterial)
-    );
+  const promises = deliveryMaterials.map(deliveryMaterial =>
+    copyMaterialToMovie(deliveryMaterial, movieMaterials, delivery)
+  );
+  return Promise.all(promises);
+}
 
-    if (!!duplicateMaterial) {
-      console.log(duplicateMaterial)
-      // Check if delivery.id is already in material.deliveryIds before pushing it in.
-      if (!duplicateMaterial.deliveryIds.includes(delivery.id)) {
-        duplicateMaterial.deliveryIds.push(delivery.id);
-      }
+function copyMaterialToMovie(
+  deliveryMaterial: Material,
+  movieMaterials: Material[],
+  delivery: Delivery
+) {
+  const duplicateMaterial = movieMaterials.find(movieMaterial =>
+    isTheSame(movieMaterial, deliveryMaterial)
+  );
 
-      const updatedMaterial = {
-        ...duplicateMaterial,
-        status: !!duplicateMaterial.status ? duplicateMaterial.status : MaterialStatus.pending
-      };
-
-      return db
-        .doc(`movies/${delivery.movieId}/materials/${updatedMaterial.id}`)
-        .set(updatedMaterial);
+  if (!!duplicateMaterial) {
+    // Check if delivery.id is already in material.deliveriesIds before pushing it in.
+    if (!duplicateMaterial.deliveryIds.includes(delivery.id)) {
+      duplicateMaterial.deliveryIds.push(delivery.id);
     }
-    const material = { ...deliveryMaterial, deliveryIds: [delivery.id], status: MaterialStatus.pending };
-    return db.doc(`movies/${delivery.movieId}/materials/${material.id}`).set(material);
-  });
+
+    const updatedMaterial = {
+      ...duplicateMaterial,
+      status: !!duplicateMaterial.status ? duplicateMaterial.status : MaterialStatus.pending
+    };
+
+    return db
+      .doc(`movies/${delivery.movieId}/materials/${updatedMaterial.id}`)
+      .set(updatedMaterial);
+  }
+  const material = { ...deliveryMaterial, deliveryIds: [delivery.id], status: 'pending' };
+  return db.doc(`movies/${delivery.movieId}/materials/${material.id}`).set(material);
 }

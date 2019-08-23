@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
 import { MaterialStore, Material } from '../+state';
 import { switchMap } from 'rxjs/operators';
-import { DeliveryQuery } from '../../delivery/+state';
+import { DeliveryQuery, Delivery } from '../../delivery/+state';
 
-const deliveryMaterialsQuery = (deliveryId: string): Query<Material[]> => ({
-  path: `deliveries/${deliveryId}/materials`
+const deliveryMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
+  path: `movies/${delivery.movieId}/materials`,
+  queryFn: ref => ref.where('deliveryIds', 'array-contains', delivery.id )
 });
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +27,7 @@ export class DeliveryMaterialsGuard extends StateListGuard<Material> {
   get query() {
     return this.deliveryQuery.selectActive().pipe(
       switchMap(delivery => {
-        const query = deliveryMaterialsQuery(delivery.id);
+        const query = deliveryMaterialsQuery(delivery);
         return this.fireQuery.fromQuery<Material[]>(query)
       })
     );

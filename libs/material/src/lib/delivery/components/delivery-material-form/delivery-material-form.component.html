@@ -13,11 +13,11 @@
       <mat-label>Description</mat-label>
       <textarea
         matInput
-        rows="5"
-        placeholder="Description"
-        type="text"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
         formControlName="description">
       </textarea>
+      <mat-hint>Only the first 4 lines will be visible on the list</mat-hint>
     </mat-form-field>
 
     <!-- Material Step Select -->

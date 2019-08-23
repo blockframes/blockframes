@@ -11,7 +11,7 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
-import { createMaterial, MaterialQuery, MaterialStatus } from '../../material/+state';
+import { createMaterial, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
@@ -122,14 +122,15 @@ export class DeliveryService {
   // CRUD MATERIAL //
   ///////////////////
 
-  /** Adds an empty material to the delivery sub-collection in firebase */
-  public async addMaterial(): Promise<string> {
-    const deliveryRef = this.currentDeliveryDoc.ref;
+  /** Adds an empty material to the movie sub-collection in firebase */
+  public addMaterial(): string {
+    const delivery = this.query.getActive();
     const materialId = this.db.createId();
-    const materialRef = this.materialDoc(this.query.getActiveId(), materialId).ref;
+    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`).ref;
+    const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const newMaterial = createMaterial({ id: materialId });
+    this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+      const newMaterial = createMaterial({ id: materialId, deliveryIds: [delivery.id] });
       tx.set(materialRef, newMaterial);
       tx.update(deliveryRef, { validated: [] });
     });
@@ -137,10 +138,10 @@ export class DeliveryService {
     return materialId;
   }
 
-  /** Deletes material of the delivery sub-collection in firebase */
-  public deleteMaterial(materialId: string, deliveryId: string) {
-    const deliveryRef = this.deliveryDoc(deliveryId).ref;
-    const materialRef = this.materialDoc(deliveryId, materialId).ref;
+  /** Deletes material of the movie sub-collection in firebase */
+  public deleteMaterial(materialId: string, delivery: Delivery) {
+    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`).ref;
+    const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
 
     return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       tx.delete(materialRef);
@@ -167,7 +168,7 @@ export class DeliveryService {
   ///////////////////
 
   public updateDeliveryStatus(index: number): Promise<any> {
-    return this.currentDeliveryDoc.update({ state: deliveryStatuses[index] });
+    return this.currentDeliveryDoc.update({ status: deliveryStatuses[index] });
   }
 
   public updateCurrentMGDeadline(index: number): Promise<any> {

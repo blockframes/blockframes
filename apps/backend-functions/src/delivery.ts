@@ -58,10 +58,10 @@ export async function onDeliveryUpdate(
       getCollection<Material>(`deliveries/${delivery.id}/materials`)
     ]);
 
-    const promises = copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery);
+    const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];
 
     // When delivery is signed, we create notifications for each stakeholder
-    if (delivery.deliveryListToBeSigned) {
+    if (delivery.mustBeSigned) {
       const notifications = createSignatureNotifications(organizations, movie, delivery);
       promises.push(triggerNotifications(notifications));
     }

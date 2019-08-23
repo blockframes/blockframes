@@ -1,6 +1,6 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
   <!-- Title Column -->
-  <ng-container matColumnDef="title">
+  <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
     <td mat-cell *matCellDef="let material">
       <b>{{ material.value }}</b>
@@ -19,7 +19,7 @@
   <ng-container matColumnDef="step">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
     <td mat-cell *matCellDef="let material">
-      <span class="step-text">
+      <span *ngIf="!!material.step" class="step-text">
         {{ material.step.name }}
       </span>
     </td>
