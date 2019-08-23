@@ -11,13 +11,14 @@ import {
   OrganizationMember,
   OrganizationMemberRequest,
   OrganizationOperation,
-  OrganizationStatus
+  OrganizationStatus,
+  OrganizationAction
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
 import { getDefaultProvider, providers, Contract, utils } from 'ethers';
-import { network } from '@env';
+import { network, relayer } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
@@ -38,11 +39,46 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
   // })
 });
 
-const quorumUpdateFilter: providers.Filter = {
-  address: this.contract.address,
-  fromBlock: 0,
-  toBlock: 'latest',
-  topics: [ '0x6784e9bcb845caaa98267d7b0918f97d3d17f7cb35a05b52010f7eb587a0acb0' ] // 'QuorumUpdated(uint256,uint256)' event
+//--------------------------------------
+//        ETHEREUM ORG'S TYPES
+//--------------------------------------
+interface RawOperation {
+  name: string;
+  whitelistLength: string;
+  quorum: string;
+  active: boolean
+}
+
+interface RawAction {
+  operationId: string;
+  approvalsCount: string;
+  active: boolean;
+  executed: boolean;
+  to: string;
+  value: string;
+  data: string;
+}
+
+//--------------------------------------
+//           ETHEREUM TOPICS
+//--------------------------------------
+const addrChangedTopic      = '0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2'; // 'AddrChanged(byte32,address)' event
+const operationCreatedTopic = '0x46e4d2a30e96e4ccf9e9a058230b32ce42ee291c0f641c93de894fe65c8814b0'; // 'OperationCreated(uint256)' event
+const quorumUpdatedTopic    = '0x6784e9bcb845caaa98267d7b0918f97d3d17f7cb35a05b52010f7eb587a0acb0'; // 'QuorumUpdated(uint256,uint256)' event
+const memberAddedTopic      = '0xf328ac0f8bcae00933fe87ba0aa2d0d505c1df94bc9c1aa05b8441c28b74032c'; // 'MemberAdded(uint256,address)' event
+const memberRemovedTopic    = '0x1c4c9d2e56d0635d11bc47c997c6909a0d7061f55cbb8f4b27386db37553191c'; // 'MemberRemoved(uint256,address)' event
+const actionApprovedTopic   = '0x4eb2529dfaf5a7847cb1209edb2e7d95cf4c91f833762c3b7234771db8539f9b'; // 'ActionApproved(bytes32,address)' event
+const actionExecutedTopic   = '0x27bfac0e8b79713f577faf36f24c58597bacaa93ef1b54da177e07bf10b32cb9'; // 'ActionExecuted(bytes32,bool,bytes)' event
+
+//--------------------------------------
+//     ETHEREUM ORG'S EVENT FILTERS
+//--------------------------------------
+function getFilterFromTopics(address: string, topics: string[]): providers.Filter {
+  return {
+    address,
+    fromBlock: 0, toBlock: 'latest',
+    topics
+  }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -176,59 +212,156 @@ export class OrganizationService {
   //            BLOCKCHAIN PART OF ORGS
   //-------------------------------------------------
 
+  //------------------------------
+  // TUTORIAL on Ethereum events :
+  //------------------------------
+  // in solidity an event is declared like that :
+  //    'event MemberAdded(uint256 indexed operationId, address indexed member);'
+  //                ^                  ^                          ^
+  //              topics[0]        topics[1]                   topics[2]
+  //
+  // the event name (topics[0]) is the hash of the ABI signature of the event :
+  // for the previous event the ABI signature is : 'MemberAdded(uint256,address)'
+  // so topics[0] is : ethers.utils.id('MemberAdded(uint256, address)') = '0x471e6d760efa350fb57b30e3eeb04f591c4442767864740e6e67f2f3df2a942b'
+  // then every "indexed" params are putted into topics[1], topics[2], etc ... with a max of 4 indexed params (topics[4])
+  // the others params are putted in the data field.
+
+  //----------------------------------
+  //          CHECKS/INIT
+  //----------------------------------
+
+  /** ensure that the provider exist */
   private _requireProvider() {
     if(!this.provider) {
       this.provider = getDefaultProvider(network);
     }
   }
 
+  /** ensure that the org contract exist, (if not it waits until deploy) */
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
       const organizationENS = emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
-      const address = await this.provider.resolveName(organizationENS);
+      let address = await this.provider.resolveName(organizationENS);
+      await new Promise(resolve => {
+        if (!address) {
+          this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]), (log: providers.Log) => {
+            address = `0x${log.data.slice(-40)}`; // extract address
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      });
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
   }
 
+  //----------------------------------
+  //          LISTENERS
+  //----------------------------------
+
+  /** remove all Blockchain event listeners */
   public async removeAllListeners() {
-    this._requireProvider();
-    this.provider.removeAllListeners(quorumUpdateFilter);
-    // TODO remove add memeber listener
-    // TODO remove delete memeber listener
+    await this._requireContract();
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [operationCreatedTopic]));
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]));
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [memberAddedTopic]));
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [memberRemovedTopic]));
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [actionApprovedTopic]));
+    this.provider.removeAllListeners(getFilterFromTopics(this.contract.address, [actionExecutedTopic]));
   }
 
+  /**
+   * Main function of the Blockchain part of Org,
+   * it will retreive the list of operations, pending & approved action
+   * and store them in the state, it will also register Blockchain event listeners
+   * to ensure that the org data stays up to date.
+   */
   public async retreiveDataAndAddListeners() {
     await this._requireContract();
 
+    // check if the listeners were already registered
     if (this.provider.listenerCount() !== 0) {
       return;
     }
 
+
+    // OPERATIONS -----------------------------
+
     // retreive hardcoded operation(s)
-    const signingDelivery = await this.getOperationfromContract('0x0');
+    const signingDelivery = await this.getOperationfromContract('0x0000000000000000000000000000000000000000000000000000000000000001');
     this.upsertOperation(signingDelivery);
 
+    // retreive every other operation
+    this.provider.getLogs(getFilterFromTopics(this.contract.address, [operationCreatedTopic])).then(operationLogs =>
+      operationLogs.map(operationLog => operationLog.topics[1])
+      .forEach(operationId => 
+        this.getOperationfromContract(operationId).then(operation => this.upsertOperation(operation))
+      )
+    );
+
+    // listen for operation created
+    this.provider.on(getFilterFromTopics(this.contract.address, [operationCreatedTopic]), (log: providers.Log) => 
+      this.getOperationfromContract(log.topics[1]).then(operation => this.upsertOperation(operation))
+    );
+
     // listen for quorum updates
-    
-    this.provider.on(quorumUpdateFilter, (log: providers.Log) => {
+    this.provider.on(getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]), (log: providers.Log) => {
       const operationId = log.topics[1];
       const quorum = utils.bigNumberify(log.topics[2]).toNumber();
       this.updateOperationQuorum(operationId, quorum);
     });
 
-
     // listen for member added
-    // TODO
+    this.provider.on(getFilterFromTopics(this.contract.address, [memberAddedTopic]), (log: providers.Log) => {
+      const operationId = log.topics[1];
+      const memberAddress = log.topics[2];
+      console.log(`member ${memberAddress} added to op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'addOperationMember()'
+    });
 
     // listen for member removed
-    // TODO
+    this.provider.on(getFilterFromTopics(this.contract.address, [memberRemovedTopic]), (log: providers.Log) => {
+      const operationId = log.topics[1];
+      const memberAddress = log.topics[2];
+      console.log(`member ${memberAddress} removed from op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'removeOperationMember()'
+    });
+
+    
+    // ACTIONS -----------------------------
+
+    // get all actions
+    this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionApprovedTopic])).then(pendingActionLogs =>
+      pendingActionLogs
+        .map(log => log.topics[1]) // topics[1] contain the actions ids : "ActionApproved( **bytes32 indexed actionId**, address indexed member);"
+        .reduce((acc, curr) => acc.includes(curr) ? acc : [...acc, curr], [])
+        .forEach(actionId => this.getActionFromContract(actionId).then(action => this.upsertAction(action)))
+    );
+
+    // listen for approvals
+    this.provider.on(getFilterFromTopics(this.contract.address, [actionApprovedTopic]), (log: providers.Log) => 
+      this.getActionFromContract(log.topics[1]).then(action => this.upsertAction(action))
+    );
+
+    // listen for execution
+    this.provider.on(getFilterFromTopics(this.contract.address, [actionExecutedTopic]), (log: providers.Log) => 
+      this.getActionFromContract(log.topics[1]).then(action => this.upsertAction(action))
+    );
   }
 
+  //----------------------------------
+  //          OPERATIONS
+  //----------------------------------
+
+  /**
+   * Retreive the minimal infos of an operation from the blockchain,
+   * then enrich those infos to return a full `OrganizationOperation` object
+   */
   public async getOperationfromContract(operationId: string) {
     await this._requireContract();
 
-    const rawOperation: {name: string, whitelistLength: string, quorum: string, active: boolean} = await this.contract.getOperation(operationId);
+    const rawOperation: RawOperation = await this.contract.getOperation(operationId);
     const operation: OrganizationOperation = {
       id: operationId,
       name: rawOperation.name,
@@ -236,6 +369,7 @@ export class OrganizationService {
       members: [],
     };
 
+    // re construct members list
     const promises: Promise<number>[] = [];
     this.query.getValue().org.members
       .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
@@ -250,7 +384,7 @@ export class OrganizationService {
     return operation;
   }
 
-  /** create a newOperation, or update it if it already exists */
+  /** create a newOperation in the state, or update it if it already exists */
   private async upsertOperation(newOperation: OrganizationOperation) {
     let { operations } = this.query.getValue().org; // get every operations
 
@@ -258,27 +392,22 @@ export class OrganizationService {
       operations = [];
     }
 
-    // add the updated action to the action list
+    // add the updated operation to the operations list
     // we could not use `operations.push(newOperation)` direclty otherwise the operation will have been duplicated
     const newOperations = [
       ...operations.filter(currentOperation => currentOperation.id !== newOperation.id),// get all operations except the one we want to upsert
       newOperation
     ]
-    try {
-      // send tx to the org smart-contract and wait for result // TODO replace with the real implemntation : issue 676
-
-      // update the store
-      this.store.update(state => {
-        return {
-          ...state, // keep everything of the state
-          org: { ...state.org, operations: newOperations }, // update only the operations array
-        }
-      });
-    } catch(err) {
-      console.error('The transaction has failed :', err); // TODO better error handling : issue 671
-    }
+    // update the store
+    this.store.update(state => {
+      return {
+        ...state, // keep everything of the state
+        org: { ...state.org, operations: newOperations }, // update only the operations array
+      }
+    });
   }
 
+  /** modify the quorum of an org in the state */
   updateOperationQuorum(id: string, newQuorum: number) {
     const operation = this.query.getOperationById(id);
     if (!operation) throw new Error('This operation doesn\'t exists');
@@ -288,6 +417,7 @@ export class OrganizationService {
     });
   }
 
+  /** add a member to an operation in the state */
   addOperationMember(id: string, newMember: OrganizationMember) {
     const operation = this.query.getOperationById(id);
     if (!operation) throw new Error('This operation doesn\'t exists');
@@ -298,6 +428,98 @@ export class OrganizationService {
     return this.upsertOperation({
       ...operation,
       members: [...operation.members, newMember]
+    });
+  }
+
+  /** remove a member form an operation in the state */
+  removeOperationMember(id: string, memberToRemove: OrganizationMember) {
+    const operation = this.query.getOperationById(id);
+    if (!operation) throw new Error('This operation doesn\'t exists');
+
+    const members = operation.members.filter(member => member.uid !== memberToRemove.uid);
+    const newOperation = { ...operation, members };
+
+    return this.upsertOperation(newOperation);
+  }
+
+  //----------------------------------
+  //              ACTIONS
+  //----------------------------------
+
+  public async getActionFromContract(actionId: string) {
+    await this._requireContract();
+
+    const rawAction: RawAction = await this.contract.getAction(actionId);
+    const action: OrganizationAction = {
+      id: actionId,
+      opid: rawAction.operationId,
+      name: '[Unknown Action]',
+      isApproved: rawAction.executed,
+      signers: [],
+    };
+
+    // retreive approval date if the action was executed
+    const approvalDate = await this.getActionApprovalDate(actionId);
+    if (!! approvalDate) {
+      action.approvalDate = approvalDate;
+    }
+    
+    // retreive the name from firestore
+    const fireAction = await this.db.collection('actions').doc(actionId).get().toPromise();
+    if (!!fireAction.data() && !!fireAction.data().name) {
+      action.name = fireAction.data().name;
+    }
+
+    // re construct signer list
+    const promises: Promise<number>[] = [];
+    this.query.getValue().org.members
+      .forEach(member => {
+        const promise = precomputeAddress(emailToEnsDomain(member.email), this.provider)
+          .then((address): boolean => this.contract.hasApprovedAction(address, actionId))
+          .then(hasApproved => hasApproved ? action.signers.push(member) : -1);
+        promises.push(promise);
+      });
+    
+    await Promise.all(promises);
+    return action;
+  }
+
+  /** retreive approval date if the action was executed */
+  public async getActionApprovalDate(actionId: string) {
+    await this._requireContract();
+    return this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId])).then(logs => {
+      if (!!logs[0]) {
+        return this.provider.getBlock(logs[0].blockHash);
+      }
+    }).then(block => {
+      if (!!block) {
+        const date = new Date(block.timestamp * 1000);
+        const month = date.getMonth() + 1;
+         return `${date.getFullYear()}/${month < 10 ? '0' + month : month}/${date.getDate()}`
+      }
+    });
+  }
+
+  /** create a newOperation in the state, or update it if it already exists */
+  public upsertAction(newAction: OrganizationAction) {
+    let { actions } = this.query.getValue().org; // get every actions
+
+    if(!actions) {
+      actions = [];
+    }
+
+    // add the updated action to the actions list
+    // we could not use `actions.push(newOperation)` direclty otherwise the action will have been duplicated
+    const newActions = [
+      ...actions.filter(currentAction => currentAction.id !== newAction.id),// get all actions except the one we want to upsert
+      newAction
+    ]
+    // update the store
+    this.store.update(state => {
+      return {
+        ...state, // keep everything of the state
+        org: { ...state.org, actions: newActions }, // update only the actions array
+      }
     });
   }
 
@@ -314,43 +536,5 @@ export class OrganizationService {
         return tx.update(docRef, { [appId]: 'requested' });
       }
     });
-  }
-
-  removeOperationMember(id: string, memberToRemove: OrganizationMember) {
-    const operation = this.query.getOperationById(id);
-    if (!operation) throw new Error('This operation doesn\'t exists');
-
-    const members = operation.members.filter(member => member.uid !== memberToRemove.uid);
-    const newOperation = { ...operation, members };
-
-    return this.upsertOperation(newOperation);
-  }
-
-  // TODO REMOVE THIS ASAP : issue 676
-  public async instantiateMockData() {
-    return;
-    const { org } = this.query.getValue();
-    const mockUser = await this.db.snapshot<OrganizationMember>('users/0');
-    if (!mockUser) {
-      const batch = this.db.firestore.batch();
-
-      await Promise.all(
-        mockOrgMembers.map(async member => {
-          const memeberRef = await this.db.firestore.collection('users').doc(member.uid);
-          batch.set(memeberRef, {...member, orgId: org.id});
-        })
-      );
-      
-      const orgRef = await this.db.firestore.collection('orgs').doc(org.id);
-      const memberIds = mockOrgMembers.map(member => member.uid);
-      const userIds = [...org.userIds, ...memberIds];
-      batch.set(orgRef, {...org, userIds});
-
-      await batch.commit();
-
-      const newOrgMembers = mockOrgMembers.concat(org.members);
-      return this.update({actions: mockActions, operations: mockOperations, members: newOrgMembers});
-    }
-    return;
   }
 }
