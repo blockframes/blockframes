@@ -24,6 +24,7 @@ export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
+  public pdfLink: string;
   public opened = false;
 
   public materialsFormList = createMaterialFormList();
@@ -57,6 +58,7 @@ export class DeliveryEditableComponent implements OnInit {
 
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
+    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`
   }
 
   public openSidenav(materialId: string) {

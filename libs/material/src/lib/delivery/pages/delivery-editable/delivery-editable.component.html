@@ -1,17 +1,24 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
   <!-- Content -->
-  <ng-container content>
-    <delivery-statuses></delivery-statuses>
+  <ng-container content *ngIf="(delivery$ | async) as delivery">
     <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">
       <h2>{{ movie.main.title.original }}</h2>
       <mat-divider fxFlex></mat-divider>
       <button mat-icon-button matTooltip="Save as a template" (click)="saveAsTemplate()">
         <mat-icon svgIcon="template"></mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Export material list in a .pdf file">
+      <a
+        mat-icon-button
+        matTooltip="Export material list in a .pdf file"
+        href="{{pdfLink}}"
+        target="_blank">
         <mat-icon svgIcon="pdf"></mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Sign delivery" (click)="signDelivery()">
+      </a>
+      <button
+        *ngIf="delivery.mustBeSigned"
+        mat-icon-button
+        matTooltip="Sign delivery"
+        (click)="signDelivery()">
         <mat-icon svgIcon="signature"></mat-icon>
       </button>
       <button mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">

@@ -27,43 +27,54 @@ export class MaterialService {
     // TODO: (ISSUE#773) We should load an update the data within a transaction
     const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
-      const promises = [];
       materials.forEach(material => {
         const materialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`).ref;
-        const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
-        const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
+        const sameIdMaterial = movieMaterials.find(
+          movieMaterial => movieMaterial.id === material.id
+        );
+        const sameValuesMaterial = movieMaterials.find(movieMaterial =>
+          this.isTheSame(movieMaterial, material)
+        );
 
-        if (!!sameIdMaterial && isEqual(sameIdMaterial, material)) {
+        if (
+          !!sameIdMaterial &&
+          !!sameValuesMaterial &&
+          sameIdMaterial.id === sameValuesMaterial.id
+        ) {
           return;
         }
 
         if (!!sameValuesMaterial) {
-          const newDeliveryIds = [...sameValuesMaterial.deliveryIds, deliveryId];
-          promises.push(tx.update(materialRef, { deliveryIds: newDeliveryIds}));
-          return;
-        }
+          const target = sameValuesMaterial;
 
-        if (!!sameIdMaterial) {
-          if (sameIdMaterial.deliveryIds.length === 1 && sameIdMaterial.deliveryIds.includes(deliveryId)) {
-            promises.push(tx.delete(materialRef));
-          }
-          else {
-            const index = sameIdMaterial.deliveryIds.indexOf(deliveryId);
-            const newDeliveryIds = sameIdMaterial.deliveryIds.splice(index, 1);
-            promises.push(tx.update(materialRef, {deliveryIds : newDeliveryIds}));
+          if (!target.deliveryIds.includes(deliveryId)) {
+            const targetRef = this.db.doc<Material>(`movies/${movieId}/materials/${target.id}`).ref;
+
+            tx.update(targetRef, { deliveryIds: [...target.deliveryIds, deliveryId] });
           }
 
-          const newMaterial = createMaterial({
+        } else {
+          const target = createMaterial({
             ...material,
             id: this.db.createId(),
-            deliveryIds: [deliveryId],
-          })
-          const newMaterialRef = this.db.doc<Material>(`movies/${movieId}/materials/${newMaterial.id}`).ref;
-          promises.push(tx.set(newMaterialRef, newMaterial));
+            deliveryIds: [deliveryId]
+          });
+          const targetRef = this.db.doc<Material>(`movies/${movieId}/materials/${target.id}`).ref;
+
+          tx.set(targetRef, target);
         }
-      })
-      return Promise.all(promises)
-    })
+
+        const source = sameIdMaterial;
+
+        if (source.deliveryIds.length === 1) {
+          tx.delete(materialRef);
+        } else {
+          tx.update(materialRef, {
+            deliveryIds: source.deliveryIds.filter(id => id !== deliveryId)
+          });
+        }
+      });
+    });
   }
 
   /** Update materials of a movie (specific fields like 'owner' and 'storage') */
@@ -77,10 +88,14 @@ export class MaterialService {
   }
 
   /**
- * Checks properties of two material to tell if they are the same or not.
- */
-public isTheSame(matA: Material, matB: Material): boolean {
-  const getProperties = ({value, description, category}: Material) => ({ value, description, category });
-  return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
-}
+   * Checks properties of two material to tell if they are the same or not.
+   */
+  public isTheSame(matA: Material, matB: Material): boolean {
+    const getProperties = ({ value, description, category }: Material) => ({
+      value,
+      description,
+      category
+    });
+    return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
+  }
 }
