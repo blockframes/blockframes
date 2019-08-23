@@ -65,11 +65,18 @@ export interface SignDeliveryParams {
 export function initRelayer(config: RelayerConfig): Relayer {
   let wallet = Wallet.fromMnemonic(config.mnemonic);
   const provider = getDefaultProvider(config.network);
+
   wallet = wallet.connect(provider);
+
   const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY.abi, wallet);
   const namehash = utils.namehash(config.baseEnsDomain);
   const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
   const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
+
+  // await Promise.all([
+  //   resolver.supportsInterface('0x01ffc9a7'),
+  //   registry.owner('0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae')
+  // ])
 
   return <Relayer>{
     wallet,
@@ -78,13 +85,13 @@ export function initRelayer(config: RelayerConfig): Relayer {
     registry,
     resolver,
   };
-};
+}
 
 interface DeployParams {
   username: string;
   key: string;
   erc1077address: string;
-};
+}
 
 interface RegisterParams {
   name: string;
@@ -98,6 +105,7 @@ export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!!
     .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
     .join('') + '.' + baseEnsDomain;
 }
+
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
 export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
   const relayer = initRelayer(config);

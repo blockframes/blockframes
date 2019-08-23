@@ -54,21 +54,27 @@ export async function onOrganizationUpdate(
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
+
   if (becomeAccepted) {
     const { userIds } = before as Organization;
     const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
 
     const adminENS = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
     const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
-    const isOrgRegistred = await isENSNameRegistred(adminENS, RELAYER_CONFIG);
-    if (isOrgRegistred) {
-      throw new Error(`This organization has already an ENS name : ${adminENS}`);
+
+    // TODO: use orgENS
+    const isOrgRegistered = await isENSNameRegistred(adminENS, RELAYER_CONFIG);
+
+    if (isOrgRegistered) {
+      throw new Error(`This organization has already an ENS name: ${adminENS}`);
     }
+
     const adminAddress = await precomputeAddress(emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain), RELAYER_CONFIG);
     const orgAddress =  await relayerDeployOrganizationLogic(adminAddress, RELAYER_CONFIG);
-    console.log(`org ${orgENS} deployed @ ${orgAddress} !`);
+
+    console.log(`org ${orgENS} deployed @ ${orgAddress}!`);
     const res = await relayerRegisterENSLogic({name: orgENS, address: orgAddress}, RELAYER_CONFIG);
-    console.log('Org deployed and registred !', orgAddress, res['link'].transactionHash);
+    console.log('Org deployed and registered!', orgAddress, res['link'].transactionHash);
   }
 
   return Promise.resolve(true); // no-op by default
