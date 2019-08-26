@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+}
+
+.header {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  .header-img {
+    background: no-repeat center center fixed;
+    background-size: cover;
+  }
+}
+
+aside {
+  width: 25%;
+  padding: 10px;
+}
+
+.informations {
+  width: 70%;
+  padding: 10px;
+}
+
+article {
+  padding: 10px;
+}
+
+mat-divider {
+  margin-left: 20px;
+  width: 100%;
+}
+h2 {
+  white-space: nowrap;
+}
+
+:host {
+  display: flex;
+}
+
+nav {
+  width: 25%;
+  padding: 10px;
+}
+
+b {
+  margin: 0px 15px 0px 0px;
+}

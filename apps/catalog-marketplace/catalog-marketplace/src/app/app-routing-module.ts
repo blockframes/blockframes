@@ -80,11 +80,13 @@ export const routes: Routes = [
                 // canActivate: [MovieActiveGuard],
                 // canDeactivate: [MovieActiveGuard],
                 children: [
+                  { path: '', redirectTo: 'view', pathMatch: 'full' },
                   {
                     path: 'view',
                     loadChildren: () =>
                       import('./movie/view/view.module').then(m => m.MovieViewModule)
                   },
+                  // @TODO#798: create a guard, that creates an distribution right
                   {
                     path: 'create',
                     loadChildren: () =>

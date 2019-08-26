@@ -17,6 +17,7 @@ import {
 } from './marketplace-search.form';
 import { languageValidator } from './marketplace-search-validators.form';
 import { filterMovie } from './filter.util';
+import { Router } from '@angular/router';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -61,7 +62,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public movieTerritories: MovieTerritories[];
   public territoryControl: FormControl = new FormControl();
 
-  constructor(private fireQuery: FireQuery) {}
+  constructor(private fireQuery: FireQuery, private router: Router) {}
 
   ngOnInit() {
     this.movieGenres = staticModels['GENRES'].map(key => key.label);
@@ -147,5 +148,9 @@ export class MarketplaceSearchComponent implements OnInit {
     }
     this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
+  }
+
+  public goToMovieInformation(movieId: string){
+    this.router.navigateByUrl(`/layout/o/catalog/${movieId}`);
   }
 }

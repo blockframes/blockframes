@@ -3,7 +3,7 @@ import { staticModels } from '@blockframes/movie';
 type Languages = ((typeof staticModels)['LANGUAGES'])[number]['slug'];
 type Currency = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['slug'];
 type Media = ((typeof staticModels)['MEDIAS'])[number]['slug'];
-type Territories = ((typeof staticModels)['TERRITORIES'])[number]['slug'];
+export type Territories = ((typeof staticModels)['TERRITORIES'])[number]['slug'];
 
 export const enum BasketStatus {
   pending = 'pending',
