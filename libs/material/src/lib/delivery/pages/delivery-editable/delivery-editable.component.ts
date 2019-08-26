@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialService } from '../../../material/+state';
+import { Material, MaterialService, createMaterial } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
@@ -11,8 +11,9 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
-import { createMaterialFormList } from '../../forms/material.form';
+import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
+import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-editable',
@@ -40,6 +41,7 @@ export class DeliveryEditableComponent implements OnInit {
     private materialService: MaterialService,
     private service: DeliveryService,
     private snackBar: MatSnackBar,
+    private db: FireQuery,
     private router: Router
   ) {}
 
@@ -78,10 +80,10 @@ export class DeliveryEditableComponent implements OnInit {
     }
   }
 
-  public async addMaterial() {
-    // Blank sidenav. User have to click again on new material edit icon to show inputs => ISSUE#760
-    const materialId = this.materialService.addMaterial();
-    this.openSidenav(materialId);
+  public addMaterial() {
+    const newMaterial = this.materialService.addMaterial();
+    this.materialsFormList.push(createMaterialFormGroup(newMaterial));
+    this.openSidenav(newMaterial.id);
   }
 
   public saveAsTemplate() {

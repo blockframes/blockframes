@@ -9,7 +9,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
 import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
-import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
 import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
 import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
@@ -233,7 +232,6 @@ const routes: Routes = [
     StakeholderItemComponent,
     DeliveryFiltersComponent,
     DeliveryActionsComponent,
-    MovieMaterialItemComponent,
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,

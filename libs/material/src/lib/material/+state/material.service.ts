@@ -22,21 +22,11 @@ export class MaterialService {
   // CRUD MATERIAL (DELIVERY) //
   //////////////////////////////
 
-  /** Adds an empty material to the movie sub-collection in firebase */
-  public addMaterial(): string {
-    const delivery = this.deliveryQuery.getActive();
-    const materialId = this.db.createId();
-    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`)
-      .ref;
-    const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
-
-    this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const newMaterial = createMaterial({ id: materialId, deliveryIds: [delivery.id] });
-      tx.set(materialRef, newMaterial);
-      tx.update(deliveryRef, { validated: [] });
-    });
-
-    return materialId;
+  /** Returns a material to be pushed in a formGroup */
+  public addMaterial(): Material {
+    const id = this.db.createId();
+    const newMaterial = createMaterial({ id });
+    return newMaterial;
   }
 
   /** Deletes material of the movie sub-collection in firebase */
@@ -61,11 +51,19 @@ export class MaterialService {
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
 
+        // If material from the list have no change and already exists, just return
         if (
           !!sameIdMaterial &&
           !!sameValuesMaterial &&
           sameIdMaterial.id === sameValuesMaterial.id
         ) {
+          return;
+        }
+
+        if (!movieMaterials.find(movieMaterial => movieMaterial.id === material.id)) {
+          const newMaterialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`).ref;
+
+          tx.set(newMaterialRef, { ...material, deliveryIds: [deliveryId] });
           return;
         }
 
@@ -90,6 +88,8 @@ export class MaterialService {
 
         const source = sameIdMaterial;
 
+        // Checks if this material belongs to multiple delivery.
+        // If so, update the deliveryIds, otherwise just delete it.
         if (source.deliveryIds.length === 1) {
           tx.delete(materialRef);
         } else {
