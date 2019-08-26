@@ -26,6 +26,7 @@ import { MovieMaterialListComponent } from './components/movie-material-list/mov
 import { MovieMaterialFormComponent } from './components/movie-material-form/movie-material-form.component';
 import { DeliveryInformationsStakeholdersComponent } from './components/delivery-informations-stakeholders/delivery-informations-stakeholders.component';
 import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
+import { DeliveryStakeholdersRepertoryComponent } from './components/delivery-stakeholders-repertory/delivery-stakeholders-repertory.component';
 
 // Pages
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
@@ -40,6 +41,8 @@ import { DeliveryInformationsEditableComponent } from './pages/delivery-informat
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
 import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
+import { DeliveryStakeholdersEditableComponent } from './pages/delivery-stakeholders-editable/delivery-stakeholders-editable.component';
+
 
 // Modules
 import {
@@ -117,6 +120,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MovieEditableComponent,
     MovieMaterialListComponent,
     MovieMaterialFormComponent
+    DeliveryInformationsDeadlinesRepertoryComponent,
+    DeliveryStakeholdersEditableComponent,
+    DeliveryStakeholdersRepertoryComponent
   ],
   imports: [
     CommonModule,

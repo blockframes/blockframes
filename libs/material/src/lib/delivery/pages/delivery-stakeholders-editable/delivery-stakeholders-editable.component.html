@@ -1,0 +1,9 @@
+<editable-sidenav test-id="content" page-id="delivery-stakeholders" (closed)="opened = false" [opened]="opened">
+    <!-- Content -->
+    <ng-container content>
+      <delivery-stakeholders-repertory [stakeholders]="(delivery$ | async).stakeholders"></delivery-stakeholders-repertory>
+    </ng-container>
+    <!-- Sidenav -->
+    <ng-container sidenav>
+    </ng-container>
+  </editable-sidenav>
