@@ -36,7 +36,15 @@ export class MaterialService {
     const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
 
     return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      tx.delete(materialRef);
+      const materialDoc = await tx.get(materialRef)
+      const material = materialDoc.data();
+      // Checks if this material belongs to multiple delivery.
+      // If so, update the deliveryIds, otherwise just delete it.
+      if (material.deliveryIds.length === 1) {
+        tx.delete(materialRef);
+      } else {
+        tx.update(materialRef, { deliveryIds: material.deliveryIds.filter(id => id !== delivery.id) });
+      }
       tx.update(deliveryRef, { validated: [] });
     });
   }
@@ -50,23 +58,24 @@ export class MaterialService {
         const materialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`).ref;
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
+        const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
-        // If material from the list have no change and already exists, just return
-        if (
-          !!sameIdMaterial &&
-          !!sameValuesMaterial &&
-          sameIdMaterial.id === sameValuesMaterial.id
-        ) {
+        // If material from the list have no change and already exists, just return.
+        const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
+        if (isPristine) {
           return;
         }
 
-        if (!movieMaterials.find(movieMaterial => movieMaterial.id === material.id)) {
+        // We check if material is brand new. If so, we just add it to database and return.
+        if (isNewMaterial) {
           const newMaterialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`).ref;
 
           tx.set(newMaterialRef, { ...material, deliveryIds: [deliveryId] });
           return;
         }
 
+        // If there already is a material with same properties (but different id), we merge this
+        // material with existing one, and push the new deliveryId into deliveryIds.
         if (!!sameValuesMaterial) {
           const target = sameValuesMaterial;
 
@@ -75,6 +84,8 @@ export class MaterialService {
 
             tx.update(targetRef, { deliveryIds: [...target.deliveryIds, deliveryId] });
           }
+        // If values are not the same, this material is considered as new and we have to create
+        // and set a new material with updated fields.
         } else {
           const target = createMaterial({
             ...material,

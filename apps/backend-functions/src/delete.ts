@@ -74,7 +74,9 @@ export async function deleteFirestoreDelivery(
   const movieMaterials = await db.collection(`movies/${delivery.movieId}/materials`).get();
   movieMaterials.forEach(doc => {
     if (doc.data().deliveryIds.includes(delivery.id)) {
-      if (doc.data().deliveryIds.length === 1) batch.delete(doc.ref);
+      if (doc.data().deliveryIds.length === 1) {
+        batch.delete(doc.ref)
+      }
       else {
         const newdeliveryIds = doc
           .data()

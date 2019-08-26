@@ -11,7 +11,7 @@ export interface Material {
   step?: Step;
   status: MaterialStatus;
   deliveryIds?: string[];
-  price?: {
+  price?: { // TODO: Create "Price" type with currencies from static-models => ISSUE#816
     amount: number;
     currency: string;
   };

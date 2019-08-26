@@ -32,9 +32,7 @@ import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieMaterialUpdate } from './material';
 
-/**
- * Trigger: when eth-events-server pushes contract events.
- */
+/** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
 
 /**
@@ -57,39 +55,27 @@ export const onUserCreate = functions.auth
   .user()
   .onCreate(users.onUserCreate);
 
-/**
- * Trigger: REST call to find a list of users by email.
- */
+/** Trigger: REST call to find a list of users by email. */
 export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
-/**
- * Trigger: REST call to find a list of organizations by name.
- */
+/** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);
 
-/**
- * Trigger: REST call to get or create a user.
- */
+/** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https
   .onCall(users.getOrCreateUserByMail);
 
-/**
- * Trigger: REST call to backup firestore
- */
+/** Trigger: REST call to backup firestore. */
 export const backupFirestore = functions.https
   .onRequest(backup.freeze);
 
-/**
- * Trigger: REST call to restore firestore
- */
+/** Trigger: REST call to restore firestore. */
 export const restoreFirestore = functions.https
   .onRequest(backup.restore);
 
-/**
- * Trigger: REST call to migrate the database to V2
- */
+/** Trigger: REST call to migrate the database to V2. */
 export const updateToV2 = functions.https
   .onRequest(migrations.updateToV2);
 
@@ -106,51 +92,37 @@ export const updateToV2 = functions.https
 export const admin = functions.https
   .onRequest(adminApp);
 
-/**
- * Trigger: when signature (`orgId`) is added to or removed from `validated[]`
- */
+/** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
 
-/**
- * Trigger: when material state (`state`) is modified
- */
+/** Trigger: when material state (`state`) is modified. */
 export const onMovieMaterialUpdateEvent = onDocumentUpdate('movies/{movieID}', onMovieMaterialUpdate);
 
-/**
- * Trigger: when a stakeholder is added to a delivery
- */
+/** Trigger: when a stakeholder is added to a delivery. */
 export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
   onDeliveryStakeholderCreate
 );
 
-/**
- * Trigger: when a stakeholder is removed from a delivery
- */
+/** Trigger: when a stakeholder is removed from a delivery. */
 export const onDeliveryStakeholderDeleteEvent = onDocumentDelete(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
   onDeliveryStakeholderDelete
 );
 
-/**
- * Trigger: when a stakeholder is added to a movie
- */
+/** Trigger: when a stakeholder is added to a movie. */
 export const onMovieStakeholderCreateEvent = onDocumentCreate(
   'movies/{movieID}/stakeholders/{stakeholerID}',
   onMovieStakeholderCreate
 );
 
-/**
- * Trigger: when a stakeholder is removed from a movie
- */
+/** Trigger: when a stakeholder is removed from a movie. */
 export const onMovieStakeholderDeleteEvent = onDocumentDelete(
   'movies/{movieID}/stakeholders/{stakeholerID}',
   onMovieStakeholderDelete
 );
 
-/**
- * Trigger: when an invitation is updated (e. g. when invitation.state change)
- */
+/** Trigger: when an invitation is updated (e. g. when invitation.state change). */
 export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
@@ -160,9 +132,7 @@ export const onInvitationUpdateEvent = onDocumentWrite(
 //       Apps Management        //
 //--------------------------------
 
-/**
- * Trigger: when an organization requests access to apps
- */
+/** Trigger: when an organization requests access to apps. */
 export const onAccessToApp= onDocumentWrite(
   'app-requests/{orgId}',
   onRequestAccessToAppWrite
@@ -172,25 +142,19 @@ export const onAccessToApp= onDocumentWrite(
 //       Orgs Management        //
 //--------------------------------
 
-/**
- * Trigger: when an organization is created
- */
+/** Trigger: when an organization is created. */
 export const onOrganizationCreateEvent = onDocumentCreate(
   'orgs/{orgID}',
   onOrganizationCreate
 );
 
-/**
- * Trigger: when an organization is updated
- */
+/** Trigger: when an organization is updated. */
 export const onOrganizationUpdateEvent = onOrganizationDocumentUpdate( // using `onOrganizationDocumentUpdate` instead of `onDocument` for an increase timout of 540s
   'orgs/{orgID}',
   onOrganizationUpdate
 );
 
-/**
- * Trigger: when an organization is removed
- */
+/** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete(
   'orgs/{orgID}',
   onOrganizationDelete
@@ -201,9 +165,7 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //        GENERATE PDF          //
 //--------------------------------
 
-/**
- * Trigger: REST call to generate a delivery PDF
- */
+/** Trigger: REST call to generate a delivery PDF. */
 export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
 
 

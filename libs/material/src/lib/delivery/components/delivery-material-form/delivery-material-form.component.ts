@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { Delivery } from '../../+state';
+import { Material } from '../../../material/+state';
 
 @Component({
   selector: '[formGroupName] delivery-material-form, [formGroup] delivery-material-form, delivery-material-form',
@@ -10,7 +11,7 @@ import { Delivery } from '../../+state';
 })
 export class DeliveryMaterialFormComponent{
   @Input() delivery: Delivery;
-  @Output() delete = new EventEmitter<string>();
+  @Output() delete = new EventEmitter<Material>();
 
   constructor(public controlContainer: ControlContainer) {}
 

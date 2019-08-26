@@ -10,7 +10,7 @@ export const onMovieMaterialUpdate = async (
   context: functions.EventContext
 ) => {
   if (!change.after || !change.before) {
-    throw new Error(`Parameter 'change' not found`);
+    throw new Error('Parameter "change" not found');
   }
 
   const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
@@ -23,12 +23,12 @@ export const onMovieMaterialUpdate = async (
   const organizations: Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
 
   if (!material || !materialBefore) {
-    console.info(`No changes detected on this document`);
+    console.info('No changes detected on this document');
     return;
   }
 
   if (material.status === materialBefore.status) {
-    console.info(`No changes detected on material.status property`);
+    console.info('No changes detected on material.status property');
     return;
   }
 
@@ -43,7 +43,7 @@ export const onMovieMaterialUpdate = async (
     const processedId = materialDoc.data()!.processedId;
 
     if (processedId === context.eventId) {
-      console.warn(`Document already processed with this context`);
+      console.warn('Document already processed with this context');
       return;
     }
 
@@ -80,10 +80,11 @@ export function copyMaterialsToMovie(
   movieMaterials: Material[],
   delivery: Delivery
 ) {
-  const promises = deliveryMaterials.map(deliveryMaterial =>
-    copyMaterialToMovie(deliveryMaterial, movieMaterials, delivery)
+  return Promise.all(
+    deliveryMaterials.map(deliveryMaterial => {
+      return copyMaterialToMovie(deliveryMaterial, movieMaterials, delivery);
+    })
   );
-  return Promise.all(promises);
 }
 
 function copyMaterialToMovie(
@@ -91,9 +92,7 @@ function copyMaterialToMovie(
   movieMaterials: Material[],
   delivery: Delivery
 ) {
-  const duplicateMaterial = movieMaterials.find(movieMaterial =>
-    isTheSame(movieMaterial, deliveryMaterial)
-  );
+  const duplicateMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, deliveryMaterial));
 
   if (!!duplicateMaterial) {
     // Check if delivery.id is already in material.deliveriesIds before pushing it in.
