@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { FireQuery, Query, emailToEnsDomain, precomputeAddress } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
@@ -295,34 +295,38 @@ export class OrganizationService {
     this.upsertOperation(signingDelivery);
 
     // retreive every other operation
-    this.provider.getLogs(getFilterFromTopics(this.contract.address, [operationCreatedTopic])).then(operationLogs =>
-      operationLogs.map(operationLog => operationLog.topics[1])
-      .forEach(operationId => 
-        this.getOperationfromContract(operationId).then(operation => this.upsertOperation(operation))
-      )
+    const operationsFilter = getFilterFromTopics(this.contract.address, [operationCreatedTopic]);
+    const operationLogs = await this.provider.getLogs(operationsFilter);
+    const operationIds = operationLogs.map(operationLog => operationLog.topics[1]);
+    operationIds.forEach(operationId => 
+      this.getOperationfromContract(operationId).then(operation => this.upsertOperation(operation))
     );
 
     // listen for operation created
-    this.provider.on(getFilterFromTopics(this.contract.address, [operationCreatedTopic]), (log: providers.Log) => 
-      this.getOperationfromContract(log.topics[1]).then(operation => this.upsertOperation(operation))
-    );
+    this.provider.on(operationsFilter, async (log: providers.Log) => {
+      const operation = await this.getOperationfromContract(log.topics[1]);
+      this.upsertOperation(operation);
+    });
 
     // listen for quorum updates
-    this.provider.on(getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]), (log: providers.Log) => {
+    const quorumFilter = getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]);
+    this.provider.on(quorumFilter,(log: providers.Log) => {
       const operationId = log.topics[1];
       const quorum = utils.bigNumberify(log.topics[2]).toNumber();
       this.updateOperationQuorum(operationId, quorum);
     });
 
     // listen for member added
-    this.provider.on(getFilterFromTopics(this.contract.address, [memberAddedTopic]), (log: providers.Log) => {
+    const memberAddedFilter = getFilterFromTopics(this.contract.address, [memberAddedTopic]);
+    this.provider.on(memberAddedFilter, (log: providers.Log) => {
       const operationId = log.topics[1];
       const memberAddress = log.topics[2];
       console.log(`member ${memberAddress} added to op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'addOperationMember()'
     });
 
     // listen for member removed
-    this.provider.on(getFilterFromTopics(this.contract.address, [memberRemovedTopic]), (log: providers.Log) => {
+    const memberRemovedFilter = getFilterFromTopics(this.contract.address, [memberRemovedTopic]);
+    this.provider.on(memberRemovedFilter, (log: providers.Log) => {
       const operationId = log.topics[1];
       const memberAddress = log.topics[2];
       console.log(`member ${memberAddress} removed from op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'removeOperationMember()'
@@ -332,22 +336,25 @@ export class OrganizationService {
     // ACTIONS -----------------------------
 
     // get all actions
-    this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionApprovedTopic])).then(pendingActionLogs =>
-      pendingActionLogs
-        .map(log => log.topics[1]) // topics[1] contain the actions ids : "ActionApproved( **bytes32 indexed actionId**, address indexed member);"
-        .reduce((acc, curr) => acc.includes(curr) ? acc : [...acc, curr], [])
-        .forEach(actionId => this.getActionFromContract(actionId).then(action => this.upsertAction(action)))
-    );
+    const actionsFilter = getFilterFromTopics(this.contract.address, [actionApprovedTopic]);
+    const actionLogs = await this.provider.getLogs(actionsFilter);
+    const actionIds = actionLogs.map(log => log.topics[1]); // topics[1] contain the actions ids : "ActionApproved( **bytes32 indexed actionId**, address indexed member);"
+    actionIds
+      .reduce((acc, curr) => acc.includes(curr) ? acc : [...acc, curr], []) // remove duplicate entries
+      .forEach(actionId => this.getActionFromContract(actionId).then(action => this.upsertAction(action)));
 
     // listen for approvals
-    this.provider.on(getFilterFromTopics(this.contract.address, [actionApprovedTopic]), (log: providers.Log) => 
-      this.getActionFromContract(log.topics[1]).then(action => this.upsertAction(action))
-    );
+    this.provider.on(actionsFilter, async(log: providers.Log) => {
+      const action = await this.getActionFromContract(log.topics[1]);
+      this.upsertAction(action);
+    });
 
     // listen for execution
-    this.provider.on(getFilterFromTopics(this.contract.address, [actionExecutedTopic]), (log: providers.Log) => 
-      this.getActionFromContract(log.topics[1]).then(action => this.upsertAction(action))
-    );
+    const executeFilter = getFilterFromTopics(this.contract.address, [actionExecutedTopic]);
+    this.provider.on(executeFilter, async(log: providers.Log) => {
+      const action = await this.getActionFromContract(log.topics[1]);
+      this.upsertAction(action);
+    });
   }
 
   //----------------------------------

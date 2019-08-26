@@ -45,7 +45,7 @@ export class WalletService {
         return address;
       }
     }
-    return await precomputeAddress(ensDomain, this.provider);
+    return precomputeAddress(ensDomain, this.provider);
   }
 
   
@@ -164,7 +164,8 @@ export class WalletService {
   }
 
   public async sendSignedMetaTx(ensDomain: string, signedMetaTx: SignedMetaTx, ...args: any[]) {
-    const txReceipt = await this.relayer.send(await this.retreiveAddress(getNameFromENS(ensDomain)), signedMetaTx);
+    const address = await this.retreiveAddress(getNameFromENS(ensDomain));
+    const txReceipt = await this.relayer.send(address, signedMetaTx);
     if (txReceipt.status === 0) {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
     }

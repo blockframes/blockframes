@@ -67,8 +67,10 @@ export class OrganizationSignerRepertoryComponent {
     .map(operation => operation.id);
 
     const operationMembers: OperationMember[] = this._members.map(member => {
+      const operationIds = getOperationIds(member);
       const isAdmin = this.permissionQuery.isUserSuperAdmin(member.uid);
-      return { ...member, operationIds: getOperationIds(member), role: isAdmin ? UserRole.admin : UserRole.member }
+      const role = isAdmin ? UserRole.admin : UserRole.member;
+      return { ...member, operationIds, role };
     });
 
     this.dataSource = new MatTableDataSource(operationMembers);

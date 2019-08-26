@@ -1,7 +1,7 @@
 <form [formGroup]="control">
   <article>
     <h2>{{member.name}}</h2>
-    {{ isAdmin ? '(Admin)' : '' }}
+    <span *ngIf="isAdmin">(Admin)</span>
     <ng-container *ngFor="let operation of control.value ">
       <div fxLayout="row">
         <span fxFlex>{{operation.name}}</span>

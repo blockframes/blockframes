@@ -15,7 +15,8 @@ export interface Key {
   keyStore: string,
   address: string,
   isMainKey: boolean,
-  isLinked: boolean, // does the key also exists inside the ERC1077
+  /** Does the key also exists inside the ERC1077 */
+  isLinked: boolean,
 }
 
 export function keyToAddressPart(key: Key, length: number): AddressParts {
@@ -60,12 +61,11 @@ export function emailToEnsDomain(email: string) { // !!!! there is a copy of thi
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
 export async function precomputeAddress(ensDomain: string, provider: providers.Provider) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
 
-  const factoryAddress = await provider.resolveName(factoryContract);
+  const factoryAddress = await provider.resolveName(factoryContract).then(address => address.substr(2));
+  const salt = utils.keccak256(utils.toUtf8Bytes(getNameFromENS(ensDomain))).substr(2);
+  const byteCodeHash = utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
 
-  // CREATE2 address
-  let payload = '0xff';
-  payload += factoryAddress.substr(2);
-  payload += utils.keccak256(utils.toUtf8Bytes(getNameFromENS(ensDomain))).substr(2); // salt
-  payload += utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
-  return `0x${utils.keccak256(payload).slice(-40)}`;
+  const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
+  
+  return `0x${utils.keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
 }

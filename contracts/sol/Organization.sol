@@ -159,11 +159,9 @@ contract Organization {
 
         // hardcoded operation(s)
         operations[1].name = 'Signing Delivery';
-        operations[1].quorum = 2;
+        operations[1].quorum = 0;
         operations[1].active = true;
-        // operations[1].whitelist[admin] = true;
         operations[1].whitelistLength = 0;
-
     }
 
     /// @dev in case someone want to lock ether in the organization's contract
