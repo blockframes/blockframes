@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmComponent } from '@blockframes/ui';
 import { Router } from '@angular/router';
+import { MaterialService } from '../../../material/+state';
 
 @Component({
   selector: 'template-editable',
@@ -28,6 +29,7 @@ export class TemplateEditableComponent implements OnInit {
     private query: TemplateQuery,
     private service: TemplateService,
     private materialStore: MaterialStore,
+    private materialService: MaterialService,
     private materialQuery: MaterialQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -41,16 +43,16 @@ export class TemplateEditableComponent implements OnInit {
   }
 
   public addMaterial(material: Material) {
-    this.service.saveMaterial(material);
+    this.materialService.saveTemplateMaterial(material);
     this.materialStore.clearForm();
   }
 
   public updateMaterial(material: Material) {
-    this.service.updateMaterial(material);
+    this.materialService.updateTemplateMaterial(material);
   }
 
   public deleteMaterial(material: Material) {
-    this.service.deleteMaterial(material.id);
+    this.materialService.deleteTemplateMaterial(material.id);
     this.snackBar.open(`Deleted material "${material.value}".`, 'close', { duration: 2000 });
   }
 

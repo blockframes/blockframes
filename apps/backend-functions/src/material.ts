@@ -28,7 +28,7 @@ export const onMovieMaterialUpdate = async (
   }
 
   if (material.status === materialBefore.status) {
-    console.info(`No changes detected on material.state property`);
+    console.info(`No changes detected on material.status property`);
     return;
   }
 
@@ -43,7 +43,7 @@ export const onMovieMaterialUpdate = async (
     const processedId = materialDoc.data()!.processedId;
 
     if (processedId === context.eventId) {
-      console.warn('Document already processed with this context');
+      console.warn(`Document already processed with this context`);
       return;
     }
 
@@ -57,9 +57,7 @@ export const onMovieMaterialUpdate = async (
               movie.main.title.original
             } is now in status : ${material.status}`,
             userId,
-            docInformations: { id: material.id, type: DocType.material },
-            path: `/layout/${movie.id}/view/${material.deliveryIds[0]}`
-            // mocked path using first delivery in array
+            docInformations: { id: material.id, type: DocType.material }
           })
         );
 

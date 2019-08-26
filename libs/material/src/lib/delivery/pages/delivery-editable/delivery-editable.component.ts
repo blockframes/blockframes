@@ -80,7 +80,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   public async addMaterial() {
     // Blank sidenav. User have to click again on new material edit icon to show inputs => ISSUE#760
-    const materialId = await this.service.addMaterial();
+    const materialId = this.materialService.addMaterial();
     this.openSidenav(materialId);
   }
 
@@ -103,7 +103,7 @@ export class DeliveryEditableComponent implements OnInit {
   public deleteMaterial(materialId: string) {
     try {
       const delivery = this.query.getActive();
-      this.service.deleteMaterial(materialId, delivery);
+      this.materialService.deleteMaterial(materialId, delivery);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {

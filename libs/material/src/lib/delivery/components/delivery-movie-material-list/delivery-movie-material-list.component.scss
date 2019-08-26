@@ -6,13 +6,14 @@ td.mat-cell {
   padding: 10px;
 }
 
-.step-text {
+.category-text {
   color: var(--warn);
   font-weight: 500;
 }
 
 // Limit description cell height to 4 lines
 .description {
+  max-width: 300px;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;

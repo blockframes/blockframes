@@ -119,51 +119,6 @@ export class DeliveryService {
   }
 
   ///////////////////
-  // CRUD MATERIAL //
-  ///////////////////
-
-  /** Adds an empty material to the movie sub-collection in firebase */
-  public addMaterial(): string {
-    const delivery = this.query.getActive();
-    const materialId = this.db.createId();
-    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`).ref;
-    const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
-
-    this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const newMaterial = createMaterial({ id: materialId, deliveryIds: [delivery.id] });
-      tx.set(materialRef, newMaterial);
-      tx.update(deliveryRef, { validated: [] });
-    });
-
-    return materialId;
-  }
-
-  /** Deletes material of the movie sub-collection in firebase */
-  public deleteMaterial(materialId: string, delivery: Delivery) {
-    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`).ref;
-    const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
-
-    return this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      tx.delete(materialRef);
-      tx.update(deliveryRef, { validated: [] });
-    });
-  }
-
-  /** Update the property state of movie's materials */
-  public updateMaterialState(materials: Material[], state: string) {
-    const batch = this.db.firestore.batch();
-
-    const movieId = this.movieQuery.getActiveId();
-
-    materials.forEach(material => {
-      const materialRef = this.movieMaterialDoc(movieId, material.id).ref;
-      return batch.update(materialRef, { state });
-    });
-
-    return batch.commit();
-  }
-
-  ///////////////////
   // CRUD DELIVERY //
   ///////////////////
 

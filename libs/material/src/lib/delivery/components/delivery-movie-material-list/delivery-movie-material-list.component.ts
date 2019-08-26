@@ -21,6 +21,6 @@ export class DeliveryMovieMaterialListComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<Material>;
-  public displayedColumns: string[] = ['value', 'description', 'step', 'price', 'owner', 'storage', 'action'];
+  public displayedColumns: string[] = ['value', 'description', 'category', 'price', 'owner', 'storage', 'action'];
 
 }

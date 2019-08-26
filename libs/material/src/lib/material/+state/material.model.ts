@@ -1,5 +1,5 @@
-import { Step } from "../../delivery/+state";
-import { utils } from "ethers";
+import { Step, Delivery } from '../../delivery/+state';
+import { utils } from 'ethers';
 
 export interface Material {
   id: string;
@@ -7,6 +7,7 @@ export interface Material {
   value: string;
   description: string;
   owner?: string;
+  stepId?: string;
   step?: Step;
   status: MaterialStatus;
   deliveryIds?: string[];
@@ -40,5 +41,12 @@ export function createMaterial(material: Partial<Material>): Material {
     description: '',
     status: material.status || MaterialStatus.pending,
     ...material
-  }
+  };
+}
+
+export function getMaterialStep(material: Material, delivery: Delivery) {
+  return {
+    ...material,
+    step: delivery.steps.find(step => step.id === material.stepId)
+  };
 }

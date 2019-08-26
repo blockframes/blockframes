@@ -55,24 +55,6 @@ export class TemplateService {
     })
   }
 
-  public deleteMaterial(id: string) {
-    const templateId = this.query.getActiveId();
-    this.db.doc<Material>(`templates/${templateId}/materials/${id}`).delete();
-  }
-
-  public saveMaterial(material: Material) {
-    const templateId = this.query.getActiveId();
-    const materialId = this.db.createId();
-    this.db
-      .doc<Material>(`templates/${templateId}/materials/${materialId}`)
-      .set({ ...material, id: materialId });
-  }
-
-  public updateMaterial(material: Material) {
-    const templateId = this.query.getActiveId();
-    this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`).update(material);
-  }
-
   /** Save a delivery as new template */
   public async saveAsTemplate(templateName: string) {
     const materials = this.materialQuery.getAll();
