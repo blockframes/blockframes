@@ -6,7 +6,7 @@ import { DistributionRightForm } from './create.form';
 import { staticModels } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime } from 'rxjs/operators';
-import { MovieTerritories } from '../../pages/marketplace-search/marketplace-search.form';
+
 
 @Component({
   selector: 'distribution-right-create',
@@ -56,6 +56,7 @@ export class DistributionRightCreateComponent implements OnInit {
       this.selectedMovieTerritories.splice(i, 1);
     }
     // this.form.removeTerritory(index);
+
   }
 
   public hasTerritory(territory: string) {
@@ -69,4 +70,5 @@ export class DistributionRightCreateComponent implements OnInit {
     // this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
   }
+
 }

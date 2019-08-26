@@ -28,6 +28,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatAutocompleteModule,
     MatCheckboxModule,
     MatIconModule,
+    MatCheckboxModule,
     RouterModule.forChild([{ path: '', component: DistributionRightCreateComponent }])
   ]
 })
