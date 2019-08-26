@@ -7,7 +7,6 @@ import { staticModels } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime } from 'rxjs/operators';
 
-
 @Component({
   selector: 'distribution-right-create',
   templateUrl: './create.component.html',
@@ -28,7 +27,6 @@ export class DistributionRightCreateComponent implements OnInit {
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
   constructor() {}
-
 
   ngOnInit() {
     this.movieTerritories = staticModels['TERRITORIES'].map(key => key.label);
@@ -56,8 +54,7 @@ export class DistributionRightCreateComponent implements OnInit {
     if (i >= 0) {
       this.selectedMovieTerritories.splice(i, 1);
     }
-    // this.form.removeTerritory(index);
-
+    // this.form.removeTerritory(index);ging branches
   }
 
   public hasTerritory(territory: string) {
@@ -71,6 +68,4 @@ export class DistributionRightCreateComponent implements OnInit {
     // this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
   }
-
 }
-
