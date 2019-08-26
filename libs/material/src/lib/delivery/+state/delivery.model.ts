@@ -16,30 +16,21 @@ export enum Currency {
   DOLLAR_NEW_ZEALAND = 'NZD'
 }
 
-/**
- * This is a Minimum Guarantee deadline,
- * can be used to interact with the frontend (D = Date) or backend (D = Timestamp).
- */
+/** This is a Minimum Guarantee deadline, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 interface MGDeadlineRaw<D> {
   percentage: number;
   date?: D;
   label: string;
 }
 
-/**
- * The Step of a given delivery,
- * can be used to interact with the frontend (D = Date) or backend (D = Timestamp).
- */
+/** The Step of a given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 interface StepRaw<D> {
   id: string;
   name: string;
   date: D;
 }
 
-/**
- * A given delivery,
- * can be used to interact with the frontend (D = Date) or backend (D = Timestamp).
- */
+/** A given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 interface DeliveryRaw<D> {
   id: string;
   movieId: string;
@@ -53,35 +44,27 @@ interface DeliveryRaw<D> {
   mustBeSigned?: boolean;
   _type: 'deliveries';
   steps: StepRaw<D>[];
-  // Time to accept a material
+  /** Time to accept a material */
   acceptationPeriod?: number;
-  // Time to return a refused material
+  /** Time to return a refused material */
   reWorkingPeriod?: number;
-  // Minimum Guarantee:
+  /** Minimum Guarantee: */
   mgCurrentDeadline?: number;
   mgAmount?: number;
   mgCurrency?: Currency;
   mgDeadlines: MGDeadlineRaw<D>[];
 }
 
-/**
- * Extends a Raw Delivery with fields that are specific to the local data model.
- */
+/** Extends a Raw Delivery with fields that are specific to the local data model. */
 export interface Delivery extends DeliveryRaw<Date> {}
 
-/**
- * Syntaxic Sugar: the Delivery type in firestore.
- */
+/** Syntaxic Sugar: the Delivery type in firestore. */
 export interface DeliveryDB extends DeliveryRaw<Timestamp> {}
 
-/**
- * Syntaxic Sugar: the Delivery Step type used in the frontend.
- */
+/** Syntaxic Sugar: the Delivery Step type used in the frontend. */
 export interface Step extends StepRaw<Date> {}
 
-/**
- * Syntaxic Sugar: the Delivery Minumum Guaratee Deadline type used in the frontend.
- */
+/** Syntaxic Sugar: the Delivery Minumum Guaratee Deadline type used in the frontend. */
 export interface MGDeadline extends MGDeadlineRaw<Date> {}
 
 export enum State {

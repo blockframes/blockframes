@@ -26,11 +26,11 @@ export class DeliveryInformationsDeadlinesFormComponent {
   }
 
   public get mgDeadlines(): FormArray {
-    return this.controlContainer.control.get('mgDeadlines') as FormArray;
+    return this.control.get('mgDeadlines') as FormArray;
   }
 
   public get mgAmount(): number {
-    return this.controlContainer.control.get('mgAmount').value;
+    return this.control.get('mgAmount').value;
   }
 
   public getPercentage(index: number) {

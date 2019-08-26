@@ -29,9 +29,7 @@ export class DeliveryStatusesComponent implements OnInit {
       this.query.statuses$,
       this.query.currentStatus$
     ]).pipe(
-      map(([statuses, currentStatus]) => {
-        return statuses.indexOf(currentStatus);
-      })
+      map(([statuses, currentStatus]) => statuses.indexOf(currentStatus))
     )
   }
 
