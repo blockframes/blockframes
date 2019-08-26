@@ -29,6 +29,7 @@ export class DistributionRightCreateComponent implements OnInit {
 
   constructor() {}
 
+
   ngOnInit() {
     this.movieTerritories = staticModels['TERRITORIES'].map(key => key.label);
     this.territoriesFilter = this.territoriesControl.valueChanges.pipe(
@@ -72,3 +73,4 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
 }
+
