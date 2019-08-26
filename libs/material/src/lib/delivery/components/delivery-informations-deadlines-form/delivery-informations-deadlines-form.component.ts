@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ControlContainer, FormArray } from '@angular/forms';
 import { createDeadlineFormGroup } from '../../forms/informations.form';
-import { Currency } from '../../+state';
+import { Currencies } from '../../+state';
 
 export function calculAmount(total: number, percentage: number): number {
   return total * percentage / 100;
@@ -19,7 +19,7 @@ export function calculAmount(total: number, percentage: number): number {
 export class DeliveryInformationsDeadlinesFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 
-  public currencies = Object.values(Currency);
+  public currencies = Currencies;
 
   public get control() {
     return this.controlContainer.control;

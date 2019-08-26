@@ -7,7 +7,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Currency</mat-label>
     <mat-select formControlName="mgCurrency">
-      <mat-option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</mat-option>
+      <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
     </mat-select>
   </mat-form-field>
   <div formArrayName="mgDeadlines">

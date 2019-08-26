@@ -1,20 +1,10 @@
-import { Stakeholder } from '@blockframes/movie';
+import { Stakeholder, staticModels } from '@blockframes/movie';
 import { firestore } from 'firebase/app';
 
 type Timestamp = firestore.Timestamp;
 
-export enum Currency {
-  EURO = 'EUR',
-  DOLLAR = 'USD',
-  JAPANESE_YEN = 'JPY',
-  POUND_STERLING = 'GBP',
-  DOLLAR_AUSTRALIAN = 'AUD',
-  DOLLAR_CANADIAN = 'CAD',
-  SWISS_FRANC = 'CHD',
-  CHINESE_RENMINBI = 'CNY',
-  SWEDISH_KRONA = 'SEK',
-  DOLLAR_NEW_ZEALAND = 'NZD'
-}
+export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
+type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
 /** This is a Minimum Guarantee deadline, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 interface MGDeadlineRaw<D> {
@@ -51,7 +41,7 @@ interface DeliveryRaw<D> {
   /** Minimum Guarantee: */
   mgCurrentDeadline?: number;
   mgAmount?: number;
-  mgCurrency?: Currency;
+  mgCurrency?: CurrencyCode;
   mgDeadlines: MGDeadlineRaw<D>[];
 }
 
