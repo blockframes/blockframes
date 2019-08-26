@@ -1,5 +1,5 @@
 import { MovieMain } from './../../+state/movie.model';
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: '[movie] movie-display-card-item',

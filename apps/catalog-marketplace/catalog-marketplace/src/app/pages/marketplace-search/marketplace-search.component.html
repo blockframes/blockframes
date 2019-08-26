@@ -182,7 +182,7 @@
                 <mat-divider></mat-divider>
             </h3>
             <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
-                <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main">
+                <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main" (click)="goToMovieInformation(movie.id)">
                 </movie-display-card-item>
             </div>
         </article>
