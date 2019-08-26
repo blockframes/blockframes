@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
-import { Delivery, deliveryStatuses, MGDeadline, State } from './delivery.model';
+import { Delivery, deliveryStatuses } from './delivery.model';
 import { DeliveryState, DeliveryStore, DeliveryWizard } from './delivery.store';
 import { MovieQuery } from '@blockframes/movie';
-import { Material } from '../../material/+state/material.model';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { MaterialQuery, materialsByCategory } from '../../material/+state/material.query';
 import { combineLatest, Observable, of } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
@@ -29,7 +28,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
 
   public currentDeadline$ = this.selectActive(delivery => delivery.mgCurrentDeadline);
 
-  public currentStatus$ = this.selectActive(delivery => delivery.state);
+  public currentStatus$ = this.selectActive(delivery => delivery.status);
 
   // Note: this code uses an observable to match other states systems,
   // this would be the right place to edit if deliveries statuses can be

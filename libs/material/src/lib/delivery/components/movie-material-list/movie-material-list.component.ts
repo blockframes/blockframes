@@ -4,12 +4,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'delivery-movie-material-list',
-  templateUrl: './delivery-movie-material-list.component.html',
-  styleUrls: ['./delivery-movie-material-list.component.scss'],
+  selector: 'movie-material-list',
+  templateUrl: './movie-material-list.component.html',
+  styleUrls: ['./movie-material-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryMovieMaterialListComponent {
+export class MovieMaterialListComponent {
   @Input()
   set materials(materials: Material[]) {
     this.dataSource = new MatTableDataSource(materials);

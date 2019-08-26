@@ -2,13 +2,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector:
-    '[formGroupName] delivery-movie-material-form,[formGroup] delivery-movie-material-form, delivery-movie-material-form',
-  templateUrl: './delivery-movie-material-form.component.html',
-  styleUrls: ['./delivery-movie-material-form.component.scss'],
+  selector: '[formGroupName] movie-material-form,[formGroup] movie-material-form, movie-material-form',
+  templateUrl: './movie-material-form.component.html',
+  styleUrls: ['./movie-material-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class DeliveryMovieMaterialFormComponent {
+export class MovieMaterialFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {

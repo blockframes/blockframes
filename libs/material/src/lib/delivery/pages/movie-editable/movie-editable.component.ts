@@ -9,12 +9,12 @@ import { createMovieMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'delivery-movie-editable',
-  templateUrl: './delivery-movie-editable.component.html',
-  styleUrls: ['./delivery-movie-editable.component.scss'],
+  selector: 'movie-editable',
+  templateUrl: './movie-editable.component.html',
+  styleUrls: ['./movie-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryMovieEditableComponent implements OnInit {
+export class MovieEditableComponent implements OnInit {
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public opened = false;

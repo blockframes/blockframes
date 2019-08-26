@@ -24,8 +24,8 @@ import { DeliveryInformationsStepsFormComponent } from './components/delivery-in
 import { DeliveryInformationsStepsRepertoryComponent } from './components/delivery-informations-steps-repertory/delivery-informations-steps-repertory.component';
 import { DeliveryInformationsDeadlinesFormComponent } from './components/delivery-informations-deadlines-form/delivery-informations-deadlines-form.component';
 import { DeliveryInformationsDeadlinesRepertoryComponent } from './components/delivery-informations-deadlines-repertory/delivery-informations-deadlines-repertory.component';
-import { DeliveryMovieMaterialListComponent } from './components/delivery-movie-material-list/delivery-movie-material-list.component';
-import { DeliveryMovieMaterialFormComponent } from './components/delivery-movie-material-form/delivery-movie-material-form.component';
+import { MovieMaterialListComponent } from './components/movie-material-list/movie-material-list.component';
+import { MovieMaterialFormComponent } from './components/movie-material-form/movie-material-form.component';
 
 // Pages
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
@@ -37,7 +37,7 @@ import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-s
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
 import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
 import { DeliveryInformationsEditableComponent } from './pages/delivery-informations-editable/delivery-informations-editable.component';
-import { DeliveryMovieEditableComponent } from './pages/delivery-movie-editable/delivery-movie-editable.component';
+import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 
 // Modules
 import {
@@ -180,7 +180,7 @@ const routes: Routes = [
         path: 'materials',
         canActivate: [MovieMaterialsGuard],
         canDeactivate: [MovieMaterialsGuard],
-        component: DeliveryMovieEditableComponent
+        component: MovieEditableComponent
       },
       {
         path: ':deliveryId',
@@ -246,9 +246,9 @@ const routes: Routes = [
     DeliveryStatusesComponent,
     DeliveryInformationsDeadlinesFormComponent,
     DeliveryInformationsDeadlinesRepertoryComponent,
-    DeliveryMovieEditableComponent,
-    DeliveryMovieMaterialListComponent,
-    DeliveryMovieMaterialFormComponent
+    MovieEditableComponent,
+    MovieMaterialListComponent,
+    MovieMaterialFormComponent
   ],
   imports: [
     CommonModule,

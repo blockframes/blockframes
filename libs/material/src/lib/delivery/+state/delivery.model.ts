@@ -27,7 +27,7 @@ interface DeliveryRaw<D> {
   validated: string[]; // Stakeholder.id[];
   delivered: boolean;
   stakeholders: Stakeholder[];
-  dueDate?: Date | Timestamp;
+  dueDate?: D;
   status: DeliveryStatus;
   isPaid: boolean;
   mustChargeMaterials?: boolean;

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { DeliveryQuery, DeliveryService, MGDeadline, State } from '../../+state';
+import { DeliveryQuery, DeliveryService, MGDeadline, DeliveryStatus } from '../../+state';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +14,7 @@ export class DeliveryStatusesComponent implements OnInit {
   public mgDeadlines$: Observable<MGDeadline[]>;
   public currentDeadline$: Observable<number>;
 
-  public deliveryStatuses$: Observable<State[]>;
+  public deliveryStatuses$: Observable<DeliveryStatus[]>;
   public currentStatus$: Observable<number>;
 
   public constructor(private query: DeliveryQuery, private service: DeliveryService) {
