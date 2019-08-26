@@ -20,10 +20,10 @@
                             <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px"
                                 formGroupName="productionYear">
                                 <mat-form-field apperance="outline">
-                                    <input matInput formControlName="from" placeholder="From" />
+                                    <input matInput formControlName="from" placeholder="From" autocomplete="off" />
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <input matInput formControlName="to" placeholder="To" />
+                                    <input matInput formControlName="to" placeholder="To" autocomplete="off"/>
                                 </mat-form-field>
                             </span>
                         </mat-expansion-panel>
@@ -120,14 +120,14 @@
                                 formGroupName="availabilities">
                                 <mat-form-field apperance="outline">
                                     <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom"
-                                        placeholder="From" />
+                                        placeholder="From" autocomplete="off"/>
                                     <mat-datepicker-toggle matSuffix [for]="pickerAvailableFrom">
                                     </mat-datepicker-toggle>
                                     <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                                 </mat-form-field>
                                 <mat-form-field>
                                     <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo"
-                                        placeholder="to" />
+                                        placeholder="to" autocomplete="off"/>
                                     <mat-datepicker-toggle matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
                                     <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
                                 </mat-form-field>

@@ -1,6 +1,7 @@
 <aside>
   <form [formGroup]="form">
     <mat-accordion>
+      <!-- Dates -->
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -8,20 +9,31 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <span formGroupName="duration">
-          <input matInput type="text" formControlName="from" placeholder="From">
-          <input matInput type="text" formControlName="to" placeholder="To">
+          <input matInput type="text" formControlName="from" placeholder="From" autocomplete="off">
+          <input matInput type="text" formControlName="to" placeholder="To" autocomplete="off">
         </span>
       </mat-expansion-panel>
       <mat-expansion-panel>
+        <!-- Territories -->
         <mat-expansion-panel-header>
           <mat-panel-title>
             Territories
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <span>
-          <mat-checkbox *ngFor="let territory of movieTerritories" (change)="hasTerritory(territory)">{{territory}}
-          </mat-checkbox>
-        </span>
+        <mat-chip-list #chipList>
+          <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" selectable removable
+            (removed)="removeTerritory(territory, i)">
+            {{territory}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Territories available" #territoryInput [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [formControl]="territoriesControl">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
+          <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
+            {{territory}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
