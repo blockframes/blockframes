@@ -5,7 +5,7 @@ import { Material, MaterialService } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
-import { createMovieMaterialFormList } from '../../forms/material.form';
+import { createMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ export class MovieEditableComponent implements OnInit {
   public movie$: Observable<Movie>;
   public opened = false;
 
-  public materialsFormList = createMovieMaterialFormList();
+  public materialsFormList = createMaterialFormList();
   public materialFormGroup$: Observable<FormGroup>;
 
   private selectedMaterialId$ = new BehaviorSubject<string>(null);

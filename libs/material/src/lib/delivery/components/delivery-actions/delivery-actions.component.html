@@ -1,80 +1,19 @@
-<button class="action mat-elevation-z0" mat-raised-button [matMenuTriggerFor]="actions">
+<a mat-flat-button [matMenuTriggerFor]="actions">
   Actions <mat-icon class="action-icon">expand_more</mat-icon>
-</button>
+</a>
 <mat-menu #actions="matMenu" xPosition="before">
-  <button [ngClass]="{ 'select-button-active': !!allChecked }" mat-menu-item (click)="selectAll($event)" class="select-button">
-    <span *ngIf="!allChecked">Select all materials</span>
-    <span *ngIf="!!allChecked">Unselect materials</span>
+  <button mat-menu-item (click)="ordered.emit()">
+    <span>Ordered</span>
   </button>
   <mat-divider></mat-divider>
-  <button mat-menu-item [matMenuTriggerFor]="steps">
-    <span>Change step</span>
+  <button mat-menu-item (click)="paid.emit()">
+    <span>Paid</span>
   </button>
-  <mat-menu #steps="matMenu" xPosition="after">
-    <ng-container *ngIf="deliverySteps.length > 0; else noStep">
-      <button mat-menu-item *ngFor="let step of deliverySteps">{{step.name}}</button>
-    </ng-container>
-    <ng-template #noStep>
-      <button mat-menu-item>(No steps yet)</button>
-    </ng-template>
-  </mat-menu>
   <mat-divider></mat-divider>
-  <button mat-menu-item [matMenuTriggerFor]="exports">
-    <span>Export in</span>
-  </button>
-  <mat-menu #exports="matMenu" xPosition="after">
-    <button mat-menu-item>
-      <mat-icon svgIcon="libraryBooks"></mat-icon>
-      <span>Excel</span>
+  <ng-container *ngFor="let status of statuses; let isLast = last">
+    <button mat-menu-item (click)="changeStatus(status)">
+      <span>{{ status }}</span>
     </button>
-    <button mat-menu-item>
-      <mat-icon svgIcon="pictureAsPdf"></mat-icon>
-      <span>PDF</span>
-    </button>
-  </mat-menu>
-  <mat-divider></mat-divider>
-  <button mat-menu-item [matMenuTriggerFor]="status">
-    <span>Status</span>
-  </button>
-  <mat-menu #status="matMenu" xPosition="after">
-    <button mat-menu-item (click)="changeState('pending')">
-      <mat-icon svgIcon="pending"></mat-icon>
-      <span>Pending</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item (click)="changeState('available')">
-      <mat-icon svgIcon="available"></mat-icon>
-      <span>Available</span>
-    </button>
-    <button mat-menu-item (click)="changeState('delivered')">
-      <mat-icon svgIcon="delivered"></mat-icon>
-      <span>Delivered</span>
-    </button>
-    <button mat-menu-item (click)="changeState('accepted')">
-      <mat-icon svgIcon="accepted"></mat-icon>
-      <span>Accepted</span>
-    </button>
-    <button mat-menu-item (click)="changeState('refused')">
-      <mat-icon svgIcon="refused"></mat-icon>
-      <span>Refused</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item>
-      <mat-icon svgIcon="payed"></mat-icon>
-      <span>Payed</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon svgIcon="notPayed"></mat-icon>
-      <span>Not payed</span>
-    </button>
-  </mat-menu>
-  <mat-divider></mat-divider>
-  <button mat-menu-item>
-    <mat-icon svgIcon="disabled"></mat-icon>
-    <span>Disable</span>
-  </button>
-  <button mat-menu-item>
-    <mat-icon svgIcon="enabled"></mat-icon>
-    <span>Enable</span>
-  </button>
+    <mat-divider *ngIf="!isLast"></mat-divider>
+  </ng-container>
 </mat-menu>

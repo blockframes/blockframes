@@ -13,41 +13,12 @@ export function createMaterialFormGroup(material: Material) {
     currency: new FormControl(material.currency),
     isOrdered: new FormControl(material.isOrdered),
     isPaid: new FormControl(material.isPaid),
-    status: new FormControl(material.status)
-  });
-}
-
-export function createMaterialFormList() {
-  return FormList.factory([], createMaterialFormGroup);
-}
-
-function createMovieMaterialFormGroup(material: Material) {
-  return new FormGroup({
-    id: new FormControl(material.id),
-    value: new FormControl(material.value),
-    description: new FormControl(material.description),
-    category: new FormControl(material.category),
-    price: new FormControl(material.price),
+    status: new FormControl(material.status),
     owner: new FormControl(material.owner),
     storage: new FormControl(material.storage)
   });
 }
 
-export function createMovieMaterialFormList() {
-  return FormList.factory([], createMovieMaterialFormGroup);
-}
-
-export function createChargedMaterialFormGroup(material: Material) {
-  return new FormGroup({
-    id: new FormControl(material.id),
-    value: new FormControl(material.value),
-    description: new FormControl(material.description),
-    step: new FormControl(material.step),
-    category: new FormControl(material.category),
-    status: new FormControl(material.status),
-  });
-}
-
-export function createChargedMaterialFormList() {
-  return FormList.factory([], createChargedMaterialFormGroup);
+export function createMaterialFormList() {
+  return FormList.factory([], createMaterialFormGroup);
 }

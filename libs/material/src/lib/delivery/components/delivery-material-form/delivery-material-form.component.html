@@ -14,8 +14,7 @@
         matInput
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
-        formControlName="description"
-      >
+        formControlName="description">
       </textarea>
       <mat-hint>Only the first 4 lines will be visible on the list</mat-hint>
     </mat-form-field>
@@ -37,25 +36,28 @@
       <input matInput placeholder="Category" type="text" formControlName="category" />
     </mat-form-field>
 
-    <!-- Material Price Input -->
-    <mat-form-field appearance="outline">
-      <mat-label>Price</mat-label>
-      <input type="number" min="0" formControlName="price" matInput />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Currency</mat-label>
-      <mat-select formControlName="currency">
-        <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- Price and Currency Inputs only appears when delivery materials must be charged -->
+    <ng-container *ngIf="delivery.mustChargeMaterials">
+
+      <!-- Material Price Input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input type="number" min="0" formControlName="price" matInput />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <mat-select formControlName="currency">
+          <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
 
     <mat-divider inset></mat-divider>
     <button
       mat-raised-button
       color="warn"
       (click)="delete.emit(control.value.id)"
-      fxFlexAlign="center"
-    >
+      fxFlexAlign="center">
       <span>
         <mat-icon>delete</mat-icon>
         Delete this material

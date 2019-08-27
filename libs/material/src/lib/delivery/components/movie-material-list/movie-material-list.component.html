@@ -27,7 +27,7 @@
   <ng-container matColumnDef="price">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
     <td mat-cell *matCellDef="let material">
-      <span *ngIf="!!material.price">{{ material.price }} {{ material.currency | currency }}</span>
+      <span *ngIf="!!material.price">{{ material.price | currency: material.currency }}</span>
     </td>
   </ng-container>
 

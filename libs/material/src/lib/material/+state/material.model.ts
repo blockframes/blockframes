@@ -25,6 +25,12 @@ export const enum MaterialStatus {
   delivered = 'Delivered'
 }
 
+export const materialStatuses: MaterialStatus[] = [
+  MaterialStatus.pending,
+  MaterialStatus.available,
+  MaterialStatus.delivered
+]
+
 export interface MaterialTemplateForm {
   value: string;
   description: string;
@@ -39,6 +45,8 @@ export function createMaterial(material: Partial<Material>): Material {
     value: '',
     description: '',
     status: (!!material.status) ? material.status : MaterialStatus.pending,
+    isOrdered: false,
+    isPaid: false,
     ...material
   };
 }

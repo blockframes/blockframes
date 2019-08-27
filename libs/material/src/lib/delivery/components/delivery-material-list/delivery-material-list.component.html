@@ -4,6 +4,8 @@
   <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox
+        color="primary"
+        (click)="selectAll()"
         (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()"
         [indeterminate]="selection.hasValue() && !isAllSelected()">
@@ -11,7 +13,8 @@
     </th>
     <td mat-cell *matCellDef="let row">
       <mat-checkbox
-        (click)="selectMaterial(row, $event)"
+        color="primary"
+        (click)="selectMaterial(row)"
         (change)="$event ? selection.toggle(row) : null"
         [checked]="selection.isSelected(row)">
       </mat-checkbox>
@@ -50,7 +53,9 @@
     </td>
   </ng-container>
 
+  <!-- Display Price, Ordered and Paid columns only if delivery have materials to be charged -->
   <ng-container *ngIf="delivery.mustChargeMaterials">
+
     <!-- Price Column -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
@@ -63,7 +68,7 @@
     <ng-container matColumnDef="isOrdered">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="material.isOrdered"> <mat-icon svgIcon="ordered"></mat-icon> </span>
+        <mat-icon *ngIf="material.isOrdered" svgIcon="ordered"></mat-icon>
       </td>
     </ng-container>
 
@@ -71,9 +76,10 @@
     <ng-container matColumnDef="isPaid">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="material.isPaid"> <mat-icon svgIcon="paid"></mat-icon> </span>
+        <mat-icon *ngIf="material.isPaid" svgIcon="paid"></mat-icon>
       </td>
     </ng-container>
+
   </ng-container>
 
   <!-- Status Column -->

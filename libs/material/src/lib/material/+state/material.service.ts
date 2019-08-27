@@ -111,12 +111,29 @@ export class MaterialService {
   }
 
   /** Update the property status of materials */
-  public updateStatus(materials: Material[], status: string) {
+  public updateStatus(materials: Material[], status: MaterialStatus, movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
-      const movieId = this.movieQuery.getActiveId();
       const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
       return batch.update(doc.ref, { status });
+    });
+    batch.commit();
+  }
+
+  public updateIsOrdered(materials: Material[], movieId: string) {
+    const batch = this.db.firestore.batch();
+    materials.forEach(async material => {
+      const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
+      return batch.update(doc.ref, { isOrdered: !material.isOrdered });
+    });
+    batch.commit();
+  }
+
+  public updateIsPaid(materials: Material[], movieId: string) {
+    const batch = this.db.firestore.batch();
+    materials.forEach(async material => {
+      const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
+      return batch.update(doc.ref, { isPaid: !material.isPaid });
     });
     batch.commit();
   }
@@ -144,7 +161,7 @@ export class MaterialService {
   }
 
   //////////////////////////////
-  // CRUD MATERIAL (DELIVERY) //
+  // CRUD MATERIAL (TEMPLATE) //
   //////////////////////////////
 
   public deleteTemplateMaterial(id: string) {

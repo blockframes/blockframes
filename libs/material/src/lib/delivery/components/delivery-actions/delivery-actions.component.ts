@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
-import { Step } from '../../+state';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { materialStatuses, MaterialStatus } from '../../../material/+state';
 
 @Component({
   selector: 'delivery-actions',
@@ -8,20 +8,15 @@ import { Step } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryActionsComponent{
-  @Output() newState : EventEmitter<string> = new EventEmitter();
-  @Output() selectAllMaterials: EventEmitter<void> = new EventEmitter();
-  @Input() allChecked: boolean;
-  @Input() deliverySteps: Step[];
+  @Output() status = new EventEmitter<MaterialStatus>();
+  @Output() paid = new EventEmitter<void>();
+  @Output() ordered = new EventEmitter<void>();
 
-  constructor() { }
+  public statuses = materialStatuses;
 
-  public selectAll(event: MouseEvent) {
-    event.stopPropagation();
-    this.selectAllMaterials.emit();
+  public changeStatus(newStatus: MaterialStatus) {
+    this.status.emit(newStatus);
   }
 
-  public changeState(state: string) {
-    this.newState.emit(state);
-  }
 
 }

@@ -24,15 +24,27 @@
       <button mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
-      <a mat-button color="primary" (click)="addMaterial()">
-        <mat-icon>add</mat-icon> <span>Add material</span>
+      <a mat-flat-button color="primary" (click)="addMaterial()">
+        <span>
+          <mat-icon>add</mat-icon>
+          Add material
+        </span>
       </a>
+    </article>
+    <article fxLayout="row" fxLayoutAlign="end center">
+      <delivery-actions
+        (status)="updateStatus($event)"
+        (ordered)="materialIsOrdered()"
+        (paid)="materialsIsPaid()">
+      </delivery-actions>
     </article>
     <delivery-material-list
       [materials]="materials$ | async"
       [delivery]="delivery"
+      [displayedColumns]="displayedColumns"
       (editing)="openSidenav($event)"
-      (selectedMaterial)="selectMaterial($event)">
+      (selectedMaterial)="selectMaterial($event)"
+      (selectAllMaterials)="selectAllMaterials($event)">
     </delivery-material-list>
   </ng-container>
   <!-- Sidenav -->
