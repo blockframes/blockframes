@@ -1,5 +1,6 @@
 <mat-selection-list (selectionChange)="selectItem($event)">
-  <mat-list-option *ngFor="let item of items" [value]="item.payload">
+  <mat-list-option *ngFor="let item of items; last as last" [value]="item.payload" checkboxPosition="before" color="primary" >
     <b>{{ item.title }}</b>
+    <mat-divider *ngIf="!last"></mat-divider>
   </mat-list-option>
 </mat-selection-list>

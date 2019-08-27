@@ -1,8 +1,11 @@
-<mat-radio-group fxLayout="column" (change)="picked.emit($event.value.payload)">
-  <mat-radio-button *ngFor="let item of items" [value]="item">
-    <ng-container *ngIf="item.img">
-      <img [src]="item.img" [alt]="item.title" />
-    </ng-container>
-    <b>{{ item.title }}</b>
-  </mat-radio-button>
-</mat-radio-group>
+<mat-list role="list" fxLayout="column" >
+  <mat-list-item role="listitem" *ngFor="let item of items ; last as last">
+    <mat-radio-button color="primary" [value]="item" (change)="picked.emit($event.value.payload)">
+        <ng-container *ngIf="item.img">
+            <img [src]="item.img" [alt]="item.title" />
+          </ng-container>
+          <b>{{ item.title }}</b>
+    </mat-radio-button>
+    <mat-divider *ngIf="!last"></mat-divider>
+  </mat-list-item>
+</mat-list>

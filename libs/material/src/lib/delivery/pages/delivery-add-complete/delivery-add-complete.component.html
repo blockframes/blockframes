@@ -1,8 +1,10 @@
-<section fxLayout="row" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
+<section fxLayout="column" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
   <feedback-message
     title="Congratulation!"
     subTitle="Your delivery is ready to use!"
     imageUrl="/assets/images/congratulation.png"
-    (redirectUser)="navigate()">
+    (redirectUser)="navigate()"
+    buttonMessage="Edit your delivery">
   </feedback-message>
+  <a button mat-button color="primary" routerLink="/">Return to home page</a>
 </section>

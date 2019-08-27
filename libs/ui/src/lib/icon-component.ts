@@ -198,6 +198,14 @@ const ICONS_SVG = [
   {
     name: 'pdf',
     url: 'assets/icons/pdf.svg'
+  },
+  {
+    name: 'listMaterial',
+    url: 'assets/icons/listMaterial.svg'
+  },
+  {
+    name: 'blank',
+    url: 'assets/icons/blank.svg'
   }
 ];
 

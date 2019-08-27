@@ -4,7 +4,7 @@
     <p>Lorem ipsum dolor sit amet</p>
 
     <actions-picker-list [items]="items" (picked)="picked($event)"></actions-picker-list>
-    <button (click)="onCompleteFlow()" mat-button color="primary" [disabled]="options.length === 0">
+    <button (click)="onCompleteFlow()" mat-raised-button color="accent" [disabled]="options.length === 0">
       Continue
     </button>
   </article>
