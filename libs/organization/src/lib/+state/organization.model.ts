@@ -72,7 +72,9 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
+  logo?: string;
 }
+
 
 export interface OrganizationForm {
   name: string;
@@ -94,9 +96,11 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     updated: Date.now(),
     actions: [],
     members: [],
+    logo: '',
     ...params
   } as Organization;
 }
+
 
 export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
   return {

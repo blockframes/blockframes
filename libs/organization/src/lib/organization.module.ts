@@ -9,6 +9,7 @@ import { AuthModule } from '@blockframes/auth';
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
+import { UploadModule, UiFormModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -84,6 +85,8 @@ export const organizationRoutes: Routes = [
     FeedbackMessageModule,
     AvatarListModule,
     WalletModule,
+    UploadModule, 
+    UiFormModule,
 
     // Material
     MatFormFieldModule,

@@ -4,12 +4,14 @@ import { FormEntity } from '@blockframes/utils';
 export interface OrganizationProfile {
   address: string;
   phoneNumber: string;
+  logo?: string;
 }
 
 function createOrganizationProfile(params: Partial<OrganizationProfile> = {}): OrganizationProfile {
   return {
     address: '',
     phoneNumber: '',
+    logo: '',
     ...params
   };
 }
@@ -19,6 +21,7 @@ function createOrganizationProfileControls(entity: Partial<OrganizationProfile>)
   return {
     address: new FormControl(organizationProfile.address),
     phoneNumber: new FormControl(organizationProfile.phoneNumber),
+    logo: new FormControl(organizationProfile.logo),
   };
 }
 
