@@ -164,22 +164,35 @@ export class MaterialService {
   // CRUD MATERIAL (TEMPLATE) //
   //////////////////////////////
 
+  /** Remove material of template */
   public deleteTemplateMaterial(id: string) {
     const templateId = this.templateQuery.getActiveId();
-    this.db.doc<Material>(`templates/${templateId}/materials/${id}`).delete();
+    return this.db.doc<Material>(`templates/${templateId}/materials/${id}`).delete();
   }
 
-  public saveTemplateMaterial(material: Material) {
-    const templateId = this.templateQuery.getActiveId();
-    const materialId = this.db.createId();
-    this.db
-      .doc<Material>(`templates/${templateId}/materials/${materialId}`)
-      .set({ ...material, id: materialId });
+  /** Returns a material of template to be pushed in a formGroup */
+  public addTemplateMaterial(): Material {
+    const id = this.db.createId();
+    const newMaterial = createTemplateMaterial({ id });
+    return newMaterial;
   }
 
-  public updateTemplateMaterial(material: Material) {
-    const templateId = this.templateQuery.getActiveId();
-    this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`).update(material);
+  /** Update all materials of template */
+  public updateTemplateMaterials(materials: Material[]) {
+    const batch = this.db.firestore.batch();
+    const oldMaterials = this.templateQuery.getActive().materials;
+    materials.forEach(material => {
+      const materialRef = this.db.doc<Material>(
+        `templates/${this.templateQuery.getActiveId()}/materials/${material.id}`
+      ).ref;
+      // If material is already exists we update, if not we create it
+      if (!oldMaterials.find(oldMaterial => oldMaterial.id === material.id)) {
+        return batch.set(materialRef, material);
+      } else {
+        return batch.update(materialRef, material);
+      }
+    });
+    return batch.commit();
   }
 
   ////////////////////

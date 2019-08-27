@@ -8,9 +8,12 @@ import { TemplateListComponent } from './pages/template-list/template-list.compo
 import { TemplateActiveGuard } from './guards/template-active.guard';
 import { TemplateItemComponent } from './components/template-item/template-item.component';
 import { TemplateAddComponent } from './components/template-add/template-add.component';
-import { EditableModule } from '@blockframes/ui';
+import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 import { TemplateCreateComponent } from './pages/template-create/template-create.component';
+import { TemplateMaterialRepertoryComponent } from './components/template-material-repertory/template-material-repertory.component';
+import { TemplateMaterialFormComponent } from './components/template-material-form/template-material-form.component';
+
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -26,6 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { TemplateListGuard } from './guards/template-list.guard';
+import { MatTableModule, MatSelectModule, MatSortModule } from '@angular/material';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -53,7 +57,9 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateItemComponent,
     TemplateAddComponent,
-    TemplateCreateComponent
+    TemplateCreateComponent,
+    TemplateMaterialRepertoryComponent,
+    TemplateMaterialFormComponent
   ],
   imports: [
     CommonModule,
@@ -72,6 +78,10 @@ const routes: Routes = [
     MaterialModule,
     ConfirmModule,
     EditableModule,
+    EditableSidenavModule,
+    MatTableModule,
+    MatSelectModule,
+    MatSortModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]
