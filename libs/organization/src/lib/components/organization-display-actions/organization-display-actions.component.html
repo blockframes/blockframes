@@ -1,8 +1,14 @@
 <table mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="Icon">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> App </th>
+    <td matRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)">
+      <mat-icon svgIcon="media_delivering">list</mat-icon>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="Document name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Action name </th>
     <td matRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)">
-      <mat-icon>list</mat-icon>
       {{action.name}}
     </td>
   </ng-container>
