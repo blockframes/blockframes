@@ -14,6 +14,8 @@ import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
 import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
 import { applyTransaction } from '@datorama/akita';
+import { utils } from 'ethers';
+import { OrganizationService } from '@blockframes/organization';
 
 @Component({
   selector: 'delivery-editable',
@@ -42,6 +44,7 @@ export class DeliveryEditableComponent implements OnInit {
     private materialService: MaterialService,
     private service: DeliveryService,
     private materialStore: MaterialStore,
+    private orgaizationService: OrganizationService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -200,8 +203,18 @@ export class DeliveryEditableComponent implements OnInit {
     this.snackBar.open('Delivery unsealed', 'close', { duration: 2000 });
   }
 
-  public signDelivery() {
-    // Signing a delivery inside a transaction in the blockchain => ISSUE#761
+  public async signDelivery() {
+    const delivery = this.query.getActive();
+    const jsonDelivery = JSON.stringify(delivery);
+    
+    const materials = this.materialQuery.getAll();
+    const jsonMaterials = JSON.stringify(materials);
+    
+    const deliveryHash = utils.id(jsonDelivery + jsonMaterials);
+
+    const orgAddress = await this.orgaizationService.getAddress(); // TODO this should exist after merge of PR #822
+
+    console.log(orgAddress, deliveryHash); // TODO set Tx and redirect to send tunnel
   }
 
   /* Define an array of columns to be displayed in the list depending on delivery settings **/
