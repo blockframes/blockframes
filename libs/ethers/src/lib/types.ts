@@ -33,7 +33,7 @@ export interface SignedMetaTx extends MetaTx {
   signatures: string; // bytes
 }
 
-export interface LocalTx extends Tx {
+export interface ActionTx extends Tx {
   callback?: (...args) => void;
 }
 
@@ -45,5 +45,5 @@ export interface Wallet {
   ensDomain: string,
   address: string,
   hasERC1077: boolean,
-  tx: LocalTx,
+  tx: ActionTx,
 }
