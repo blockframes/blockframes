@@ -48,7 +48,7 @@
     "contracts:build": "npx waffle ./waffle-config.json",
     "affected": "./node_modules/.bin/nx affected",
     "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
-    "ci": "npm run build:main --prod && npm run build:delivery --prod && npm run build:catalog-marketplace --prod && npm run build:movie-financing --prod && npm run build:ip-upload --prod && npm run build:functions --prod && npm run build:root --prod && npx ng test && npx ng lint"
+    "ci": "npm run build:main --prod && npm run build:delivery --prod && npm run build:catalog-marketplace --prod && npm run build:catalog-dashboard --prod && npm run build:movie-financing --prod && npm run build:ip-upload --prod && npm run build:functions --prod && npm run build:root --prod && npx ng test && npx ng lint"
   },
   "private": true,
   "dependencies": {
