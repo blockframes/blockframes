@@ -1,8 +1,10 @@
 import { ControlContainer } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationOperation, OrganizationMember, UserRole } from '../../+state';
+import { OrganizationOperation, OrganizationMember, OrganizationService } from '../../+state';
 import { MatSlideToggleChange } from '@angular/material';
 import { PermissionsQuery } from '../../permissions/+state';
+import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'organization-signer-form',
@@ -17,6 +19,9 @@ export class OrganizationSignerFormComponent {
   constructor(
     public controlContainer: ControlContainer,
     private permissionQuery: PermissionsQuery,
+    private service: OrganizationService,
+    private walletService: WalletService,
+    private router: Router,
   ) { }
 
   public get control() {
@@ -31,7 +36,7 @@ export class OrganizationSignerFormComponent {
     return operation.members.some(operationMember => operationMember.uid === this.member.uid) || this.isAdmin;
   }
 
-  public toggleSelection(toggle: MatSlideToggleChange, id: string) {
+  public async toggleSelection(toggle: MatSlideToggleChange, id: string) {
     const operations: OrganizationOperation[] = this.control.value.filter(operation => operation.id !== id);
     const currentOperation: OrganizationOperation = this.control.value.find(operation => operation.id === id);
     const members: OrganizationMember[] = currentOperation.members.filter(operationMember => operationMember.uid !== this.member.uid);
@@ -40,5 +45,15 @@ export class OrganizationSignerFormComponent {
     }
     currentOperation.members = members;
     this.control.patchValue([...operations, currentOperation]);
+
+    const memberAddress = await this.service.getMemberAddress(this.member.email);
+    const orgAddress = await this.service.getAddress();
+
+    if(toggle.checked) {
+      this.walletService.setAddMemeberTx(orgAddress, id, memberAddress);
+    } else {
+      this.walletService.setRemoveMemeberTx(orgAddress, id, memberAddress);
+    }
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

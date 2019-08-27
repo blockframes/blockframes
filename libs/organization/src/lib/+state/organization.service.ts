@@ -241,8 +241,8 @@ export class OrganizationService {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const organizationENS = emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
-      let address = await this.provider.resolveName(organizationENS);
+      const organizationENS = this.getENSName();
+      let address = await this.getAddress();
       await new Promise(resolve => {
         if (!address) {
           this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]), (log: providers.Log) => {
@@ -256,6 +256,25 @@ export class OrganizationService {
       this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
+  }
+
+  //----------------------------------
+  //             GETTERS
+  //----------------------------------
+
+  public getENSName() {
+    return emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
+  }
+
+  public async getAddress() {
+    this._requireProvider();
+    const organizationENS = this.getENSName();
+    return this.provider.resolveName(organizationENS);
+  }
+
+  public async getMemberAddress(email: string) {
+    this._requireProvider();
+    return precomputeAddress(emailToEnsDomain(email), this.provider);
   }
 
   //----------------------------------

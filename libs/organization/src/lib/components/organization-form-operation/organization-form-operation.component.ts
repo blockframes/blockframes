@@ -1,6 +1,8 @@
-import { ControlContainer, FormGroup, FormControl } from '@angular/forms';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationMember } from '../../+state';
+import { OrganizationMember, OrganizationQuery, OrganizationService } from '../../+state';
+import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: '[formGroup] organization-form-operation, [formGroupName] organization-form-operation',
@@ -14,7 +16,13 @@ export class OrganizationFormOperationComponent {
 
   addMemberFrom = new FormControl('');
 
-  constructor(public controlContainer: ControlContainer) { }
+  constructor(
+    public router: Router,
+    public controlContainer: ControlContainer,
+    public serv: OrganizationQuery,
+    public service: OrganizationService,
+    public walletService: WalletService,
+  ) { }
 
   public get control() {
     return this.controlContainer.control;
@@ -30,15 +38,36 @@ export class OrganizationFormOperationComponent {
     );
   }
 
-  public removeMember(id: string) {
+  public async removeMember(id: string) {
+    const removedMember = this.control.get('members').value.find(member => member.uid === id);
     const members = this.control.get('members').value.filter(member => member.uid !== id);
     this.control.get('members').patchValue(members);
+
+    const memberAddress = await this.service.getMemberAddress(removedMember.email);
+    const orgAddress = await this.service.getAddress();
+    const operationId = this.control.get('id').value;
+    this.walletService.setRemoveMemeberTx(orgAddress, operationId, memberAddress);
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
-  public addMember() {
+  public async addMember() {
     const addedMember: OrganizationMember = this.addMemberFrom.value;
     const members = this.control.get('members').value.filter(member => member.uid !== addedMember.uid);
     this.control.get('members').patchValue([...members, addedMember]);
     this.addMemberFrom.reset();
+
+    const memberAddress = await this.service.getMemberAddress(addedMember.email);
+    const orgAddress = await this.service.getAddress();
+    const operationId = this.control.get('id').value;
+    this.walletService.setAddMemeberTx(orgAddress, operationId, memberAddress);
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
+  }
+
+  public async updateQuorum() {
+    const orgAddress = await this.service.getAddress();
+    const operationId = this.control.get('id').value;
+    const newQuorum = this.control.get('quorum').value;
+    this.walletService.setUpdateQuorumTx(orgAddress, operationId, newQuorum);
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

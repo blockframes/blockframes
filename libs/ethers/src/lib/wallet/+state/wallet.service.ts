@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 
 import { providers, getDefaultProvider, utils, Contract, Wallet as EthersWallet } from 'ethers';
-import { toASCII } from 'punycode';
-import { baseEnsDomain, network, factoryContract } from '@env';
+import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
 import { MetaTx, SignedMetaTx, LocalTx } from '../../types';
 import { WalletQuery } from './wallet.query';
-import { createDeleteKeyTx, createAddKeyTx } from './wallet-known-tx';
+import {
+  createDeleteKeyTx,
+  createAddKeyTx,
+  createModifyQuorumTx,
+  createAddMemberTx,
+  createRemoveMemberTx
+} from './wallet-known-tx';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 
 @Injectable({ providedIn: 'root' })
@@ -90,12 +95,24 @@ export class WalletService {
     return new Contract(ensDomainOrAddress, ERC1077.abi, this.provider);
   }
 
-  public async setDeleteKeyTx(erc1077Address: string, key: Key) {
+  public setDeleteKeyTx(erc1077Address: string, key: Key) {
     this.setTx(createDeleteKeyTx(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
   }
 
-  public async setLinkKeyTx(erc1077Address: string, key: Key) {
+  public setLinkKeyTx(erc1077Address: string, key: Key) {
     this.setTx(createAddKeyTx(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
+  }
+
+  public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuroum: number) {
+    this.setTx(createModifyQuorumTx(orgAddress, operationId, newQuroum));
+  }
+
+  public setAddMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
+    this.setTx(createAddMemberTx(orgAddress, operationId, memberAddress));
+  }
+
+  public setRemoveMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
+    this.setTx(createRemoveMemberTx(orgAddress, operationId, memberAddress));
   }
 
   public setTx(tx: LocalTx) {
@@ -169,7 +186,9 @@ export class WalletService {
     if (txReceipt.status === 0) {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
     }
-    this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
+    if(!!this.query.getValue().tx.callback) {
+      this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
+    }
     return txReceipt;
   }
 

@@ -34,7 +34,7 @@ export interface SignedMetaTx extends MetaTx {
 }
 
 export interface LocalTx extends Tx {
-  callback: (...args) => void;
+  callback?: (...args) => void;
 }
 
 /** The Wallet structure in the state
