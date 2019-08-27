@@ -6,6 +6,10 @@ td.mat-cell {
   padding: 10px;
 }
 
+th.mat-header-cell {
+  background-color: var(--whiteBackground);
+}
+
 .category-text {
   color: var(--warn);
   font-weight: 500;

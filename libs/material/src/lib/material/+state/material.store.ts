@@ -1,8 +1,8 @@
-import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
+import { EntityState, EntityStore, StoreConfig, MultiActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 
-export interface MaterialState extends EntityState<Material> {
+export interface MaterialState extends EntityState<Material>, MultiActiveState {
   materialTemplateForm: {
     value: string;
     description: string;
@@ -11,6 +11,7 @@ export interface MaterialState extends EntityState<Material> {
 }
 
 const initialState = {
+  active: [],
   materialTemplateForm: null
 };
 

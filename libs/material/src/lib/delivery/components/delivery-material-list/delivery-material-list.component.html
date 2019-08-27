@@ -1,4 +1,23 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+
+  <!-- Select Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox
+        (change)="$event ? masterToggle() : null"
+        [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox
+        (click)="selectMaterial(row, $event)"
+        (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
   <!-- Title Column -->
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
@@ -32,14 +51,11 @@
   </ng-container>
 
   <ng-container *ngIf="delivery.mustChargeMaterials">
-
     <!-- Price Column -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="!!material.price">
-          {{ material.price.amount }} {{ material.price.currency }}
-        </span>
+        <span *ngIf="!!material.price"> {{ material.price | currency: material.currency }} </span>
       </td>
     </ng-container>
 
@@ -47,7 +63,7 @@
     <ng-container matColumnDef="isOrdered">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="material.isOrdered"> <mat-icon svgIcon="edit"></mat-icon> </span>
+        <span *ngIf="material.isOrdered"> <mat-icon svgIcon="ordered"></mat-icon> </span>
       </td>
     </ng-container>
 
@@ -55,10 +71,9 @@
     <ng-container matColumnDef="isPaid">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="material.isPaid"> <mat-icon svgIcon="edit"></mat-icon> </span>
+        <span *ngIf="material.isPaid"> <mat-icon svgIcon="paid"></mat-icon> </span>
       </td>
     </ng-container>
-
   </ng-container>
 
   <!-- Status Column -->
@@ -75,8 +90,7 @@
         matTooltip="Edit material"
         (click)="editing.emit(material.id)"
         color="primary"
-        mat-icon-button
-      >
+        mat-icon-button>
         <mat-icon svgIcon="edit"></mat-icon>
       </button>
     </td>

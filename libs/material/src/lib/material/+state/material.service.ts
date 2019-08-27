@@ -25,7 +25,7 @@ export class MaterialService {
   /** Returns a material to be pushed in a formGroup */
   public addMaterial(): Material {
     const id = this.db.createId();
-    const newMaterial = createMaterial({ id, status: MaterialStatus.pending });
+    const newMaterial = createMaterial({ id });
     return newMaterial;
   }
 

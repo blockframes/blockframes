@@ -3,7 +3,11 @@ table {
 }
 
 td.mat-cell {
-  padding: 10px;
+  padding: 10px 5px;
+}
+
+th.mat-header-cell {
+  background-color: var(--whiteBackground);
 }
 
 .category-text {

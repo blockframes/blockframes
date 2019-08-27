@@ -31,7 +31,8 @@
     <delivery-material-list
       [materials]="materials$ | async"
       [delivery]="delivery"
-      (editing)="openSidenav($event)">
+      (editing)="openSidenav($event)"
+      (selectedMaterial)="selectMaterial($event)">
     </delivery-material-list>
   </ng-container>
   <!-- Sidenav -->

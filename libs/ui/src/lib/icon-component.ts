@@ -206,6 +206,14 @@ const ICONS_SVG = [
   {
     name: 'blank',
     url: 'assets/icons/blank.svg'
+  },
+  {
+    name: 'ordered',
+    url: 'assets/icons/ordered.svg'
+  },
+  {
+    name: 'paid',
+    url: 'assets/icons/paid.svg'
   }
 ];
 

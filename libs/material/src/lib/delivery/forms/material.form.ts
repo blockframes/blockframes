@@ -10,6 +10,7 @@ export function createMaterialFormGroup(material: Material) {
     step: new FormControl(material.step),
     category: new FormControl(material.category),
     price: new FormControl(material.price),
+    currency: new FormControl(material.currency),
     isOrdered: new FormControl(material.isOrdered),
     isPaid: new FormControl(material.isPaid),
     status: new FormControl(material.status)

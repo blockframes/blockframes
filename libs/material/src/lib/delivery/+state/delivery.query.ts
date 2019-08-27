@@ -8,7 +8,6 @@ import { MaterialQuery, materialsByCategory } from '../../material/+state/materi
 import { combineLatest, Observable, of } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { TemplateView } from '../../template/+state';
-import { FireQuery } from '@blockframes/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +43,7 @@ export class DeliveryQuery extends QueryEntity<DeliveryState, Delivery> {
     protected store: DeliveryStore,
     private movieQuery: MovieQuery,
     private materialQuery: MaterialQuery,
-    private organizationQuery: OrganizationQuery,
-    private db: FireQuery
+    private organizationQuery: OrganizationQuery
   ) {
     super(store);
   }

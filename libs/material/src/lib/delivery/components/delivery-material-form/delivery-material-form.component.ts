@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { Delivery } from '../../+state';
+import { Delivery, Currencies } from '../../+state';
 import { Material } from '../../../material/+state';
 
 @Component({
@@ -12,6 +12,8 @@ import { Material } from '../../../material/+state';
 export class DeliveryMaterialFormComponent{
   @Input() delivery: Delivery;
   @Output() delete = new EventEmitter<Material>();
+
+  public currencies = Currencies;
 
   constructor(public controlContainer: ControlContainer) {}
 

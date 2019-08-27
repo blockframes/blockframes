@@ -12,10 +12,8 @@ export interface Material {
   step?: Step;
   status: MaterialStatus;
   deliveryIds?: string[];
-  price?: { // TODO: Create "Price" type with currencies from static-models => ISSUE#816
-    amount?: number;
-    currency?: CurrencyCode;
-  };
+  price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#816
+  currency?: CurrencyCode;
   isOrdered?: boolean;
   isPaid?: boolean;
   storage?: string;
@@ -40,7 +38,7 @@ export function createMaterial(material: Partial<Material>): Material {
     category: '',
     value: '',
     description: '',
-    status: material.status || MaterialStatus.pending,
+    status: (!!material.status) ? material.status : MaterialStatus.pending,
     ...material
   };
 }

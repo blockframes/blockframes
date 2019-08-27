@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialService, createMaterial } from '../../../material/+state';
+import { Material, MaterialService, createMaterial, MaterialStore } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
 import { Router } from '@angular/router';
@@ -40,8 +40,8 @@ export class DeliveryEditableComponent implements OnInit {
     private dialog: MatDialog,
     private materialService: MaterialService,
     private service: DeliveryService,
+    private materialStore: MaterialStore,
     private snackBar: MatSnackBar,
-    private db: FireQuery,
     private router: Router
   ) {}
 
@@ -84,6 +84,12 @@ export class DeliveryEditableComponent implements OnInit {
     const newMaterial = this.materialService.addMaterial();
     this.materialsFormList.push(createMaterialFormGroup(newMaterial));
     this.openSidenav(newMaterial.id);
+  }
+
+  public selectMaterial(material: Material) {
+    this.materialQuery.hasActive(material.id)
+     ? this.materialStore.removeActive(material.id)
+     : this.materialStore.addActive(material.id)
   }
 
   public saveAsTemplate() {
