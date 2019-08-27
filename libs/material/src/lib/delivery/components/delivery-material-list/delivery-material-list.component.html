@@ -1,44 +1,87 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
-    <!-- Title Column -->
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-      <td mat-cell *matCellDef="let material"><b>{{ material.value }}</b></td>
-    </ng-container>
+  <!-- Title Column -->
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+    <td mat-cell *matCellDef="let material">
+      <b>{{ material.value }}</b>
+    </td>
+  </ng-container>
 
-    <!-- Description Column -->
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+    <td mat-cell *matCellDef="let material">
+      <span class="description">{{ material.description }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Step Column -->
+  <ng-container matColumnDef="step">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
+    <td mat-cell *matCellDef="let material">
+      <span *ngIf="!!material.step">{{ material.step.name }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Category Column -->
+  <ng-container matColumnDef="category">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+    <td mat-cell *matCellDef="let material">
+      <span class="category-text">{{ material.category }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container *ngIf="delivery.mustChargeMaterials">
+
+    <!-- Price Column -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
       <td mat-cell *matCellDef="let material">
-        <span class="description">{{ material.description }}</span>
+        <span *ngIf="!!material.price">
+          {{ material.price.amount }} {{ material.price.currency }}
+        </span>
       </td>
     </ng-container>
 
-    <!-- Step Column -->
-    <ng-container matColumnDef="step">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Step</th>
+    <!-- Ordered Column -->
+    <ng-container matColumnDef="isOrdered">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
       <td mat-cell *matCellDef="let material">
-        <span *ngIf="!!material.step">{{ material.step.name }}</span>
+        <span *ngIf="material.isOrdered"> <mat-icon svgIcon="edit"></mat-icon> </span>
       </td>
     </ng-container>
 
-    <!-- Category Column -->
-    <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+    <!-- Paid Column -->
+    <ng-container matColumnDef="isPaid">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
       <td mat-cell *matCellDef="let material">
-        <span class="category-text">{{ material.category }}</span>
+        <span *ngIf="material.isPaid"> <mat-icon svgIcon="edit"></mat-icon> </span>
       </td>
     </ng-container>
 
-    <!-- Action Column (edit) -->
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let material">
-        <button matTooltip="Edit material" (click)="editing.emit(material.id)" color="primary" mat-icon-button>
-          <mat-icon svgIcon="edit"></mat-icon>
-        </button>
-      </td>
-    </ng-container>
+  </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+    <td mat-cell *matCellDef="let material">{{ material.status }}</td>
+  </ng-container>
+
+  <!-- Action Column (edit) -->
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let material">
+      <button
+        matTooltip="Edit material"
+        (click)="editing.emit(material.id)"
+        color="primary"
+        mat-icon-button
+      >
+        <mat-icon svgIcon="edit"></mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

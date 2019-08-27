@@ -78,10 +78,10 @@ export async function deleteFirestoreDelivery(
         batch.delete(doc.ref)
       }
       else {
-        const newdeliveryIds = doc
+        const newDeliveryIds = doc
           .data()
           .deliveryIds.filter((id: string) => id !== delivery.id);
-        batch.update(doc.ref, { deliveryIds: newdeliveryIds });
+        batch.update(doc.ref, { deliveryIds: newDeliveryIds });
       }
     }
   });
@@ -90,7 +90,7 @@ export async function deleteFirestoreDelivery(
   const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
   const index = movie.deliveryIds.indexOf(delivery.id);
   if (index !== -1) {
-    const deliveryIds = [ ...movie.deliveryIds.slice(0, index), ...movie.deliveryIds.slice(index + 1) ]
+    const deliveryIds = [ ...movie.deliveryIds.slice(index, 1) ]
     batch.update(movieDoc.ref, { deliveryIds });
   }
 

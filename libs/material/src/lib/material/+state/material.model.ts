@@ -1,5 +1,6 @@
 import { Step, Delivery } from '../../delivery/+state';
-import * as firebase from 'firebase/app';
+import { staticModels } from '@blockframes/movie';
+type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
 export interface Material {
   id: string;
@@ -12,8 +13,8 @@ export interface Material {
   status: MaterialStatus;
   deliveryIds?: string[];
   price?: { // TODO: Create "Price" type with currencies from static-models => ISSUE#816
-    amount: number;
-    currency: string;
+    amount?: number;
+    currency?: CurrencyCode;
   };
   isOrdered?: boolean;
   isPaid?: boolean;
@@ -21,9 +22,9 @@ export interface Material {
 }
 
 export const enum MaterialStatus {
-  pending = 'pending',
-  available = 'available',
-  delivered = 'delivered'
+  pending = 'Pending',
+  available = 'Available',
+  delivered = 'Delivered'
 }
 
 export interface MaterialTemplateForm {

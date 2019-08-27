@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { Material } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { Delivery } from '../../+state';
 
 @Component({
   selector: 'delivery-material-list',
@@ -16,11 +24,22 @@ export class DeliveryMaterialListComponent {
     this.dataSource.sort = this.sort;
   }
 
+  @Input() delivery: Delivery;
+
   @Output() editing = new EventEmitter<string>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<Material>;
-  public displayedColumns: string[] = ['value', 'description', 'step', 'category', 'action'];
-
+  public displayedColumns: string[] = [
+    'value',
+    'description',
+    'step',
+    'category',
+    'price',
+    'isOrdered',
+    'isPaid',
+    'status',
+    'action'
+  ];
 }

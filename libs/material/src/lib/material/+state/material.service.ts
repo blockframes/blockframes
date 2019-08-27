@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Material, createMaterial } from './material.model';
+import { Material, createMaterial, MaterialStatus } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '../../delivery/+state';
@@ -25,7 +25,7 @@ export class MaterialService {
   /** Returns a material to be pushed in a formGroup */
   public addMaterial(): Material {
     const id = this.db.createId();
-    const newMaterial = createMaterial({ id });
+    const newMaterial = createMaterial({ id, status: MaterialStatus.pending });
     return newMaterial;
   }
 

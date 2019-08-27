@@ -30,6 +30,7 @@
     </article>
     <delivery-material-list
       [materials]="materials$ | async"
+      [delivery]="delivery"
       (editing)="openSidenav($event)">
     </delivery-material-list>
   </ng-container>
