@@ -6,7 +6,7 @@ import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
-import { MetaTx, SignedMetaTx, LocalTx } from '../../types';
+import { MetaTx, SignedMetaTx, ActionTx } from '../../types';
 import { WalletQuery } from './wallet.query';
 import {
   createDeleteKeyTx,
@@ -115,7 +115,7 @@ export class WalletService {
     this.setTx(createRemoveMemberTx(orgAddress, operationId, memberAddress));
   }
 
-  public setTx(tx: LocalTx) {
+  public setTx(tx: ActionTx) {
     this.store.update({tx});
   }
 
