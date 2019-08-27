@@ -1,12 +1,22 @@
+<<<<<<< HEAD
 import { MovieQuery } from '@blockframes/movie/movie/+state';
+=======
+>>>>>>> 58246fd8010f5b5500080ed10d32da635192f35f
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DistributionRightForm } from './create.form';
+<<<<<<< HEAD
 import { staticModels, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime } from 'rxjs/operators';
+=======
+import { staticModels } from '@blockframes/movie';
+import { Observable } from 'rxjs';
+import { startWith, debounceTime } from 'rxjs/operators';
+import { MovieTerritories } from '../../pages/marketplace-search/marketplace-search.form';
+>>>>>>> 58246fd8010f5b5500080ed10d32da635192f35f
 
 @Component({
   selector: 'distribution-right-create',
@@ -20,6 +30,7 @@ export class DistributionRightCreateComponent implements OnInit {
 
   // Medias
   public movieMedias: string[];
+<<<<<<< HEAD
 
   // Territories
   public movieTerritories: string[];
@@ -35,6 +46,19 @@ export class DistributionRightCreateComponent implements OnInit {
     this.movie$.subscribe(console.log)
     // Get the available territories on this movie
     this.movie$.subscribe(territories => this.movieTerritories = territories.salesAgentDeal.territories);
+=======
+
+  // Territories
+  public movieTerritories: string[];
+  public territoriesFilter: Observable<string[]>;
+  public selectedMovieTerritories: string[] = [];
+  public territoriesControl: FormControl = new FormControl();
+  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+
+  constructor() {}
+
+  ngOnInit() {
+>>>>>>> 58246fd8010f5b5500080ed10d32da635192f35f
     this.movieTerritories = staticModels['TERRITORIES'].map(key => key.label);
     this.territoriesFilter = this.territoriesControl.valueChanges.pipe(
       startWith(''),
@@ -60,7 +84,11 @@ export class DistributionRightCreateComponent implements OnInit {
     if (i >= 0) {
       this.selectedMovieTerritories.splice(i, 1);
     }
+<<<<<<< HEAD
     // this.form.removeTerritory(index);ging branches
+=======
+    // this.form.removeTerritory(index);
+>>>>>>> 58246fd8010f5b5500080ed10d32da635192f35f
   }
 
   public hasTerritory(territory: string) {
@@ -74,4 +102,8 @@ export class DistributionRightCreateComponent implements OnInit {
     // this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 58246fd8010f5b5500080ed10d32da635192f35f
