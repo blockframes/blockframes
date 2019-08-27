@@ -18,7 +18,7 @@ import { OrganizationAction } from '../../+state';
 })
 export class OrganizationDisplayActionsComponent implements OnInit {
   // The columns we want to display
-  public displayedColumns: string[] = ['Document name', 'Signers'];
+  public displayedColumns: string[] = ['Icon', 'Document name', 'Signers'];
 
   public dataSource;
 
