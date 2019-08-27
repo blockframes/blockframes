@@ -1,9 +1,10 @@
+import { MovieQuery } from '@blockframes/movie/movie/+state';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DistributionRightForm } from './create.form';
-import { staticModels } from '@blockframes/movie';
+import { staticModels, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime } from 'rxjs/operators';
 
@@ -15,6 +16,7 @@ import { startWith, debounceTime } from 'rxjs/operators';
 export class DistributionRightCreateComponent implements OnInit {
   // Basic
   public form = new DistributionRightForm();
+  public movie$: Observable<Movie>;
 
   // Medias
   public movieMedias: string[];
@@ -26,9 +28,13 @@ export class DistributionRightCreateComponent implements OnInit {
   public territoriesControl: FormControl = new FormControl();
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
-  constructor() {}
+  constructor(private query: MovieQuery) {}
 
   ngOnInit() {
+    this.movie$ = this.query.selectActive();
+    this.movie$.subscribe(console.log)
+    // Get the available territories on this movie
+    this.movie$.subscribe(territories => this.movieTerritories = territories.salesAgentDeal.territories);
     this.movieTerritories = staticModels['TERRITORIES'].map(key => key.label);
     this.territoriesFilter = this.territoriesControl.valueChanges.pipe(
       startWith(''),

@@ -8,10 +8,14 @@
             Dates
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <span formGroupName="duration">
-          <input matInput type="text" formControlName="from" placeholder="From" autocomplete="off">
-          <input matInput type="text" formControlName="to" placeholder="To" autocomplete="off">
-        </span>
+        <form formGroupName="duration">
+          <mat-form-field>
+            <input matInput type="number" formControlName="from" placeholder="From" autocomplete="off">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="number" formControlName="to" placeholder="To" autocomplete="off">
+          </mat-form-field>
+        </form>
       </mat-expansion-panel>
       <mat-expansion-panel>
         <!-- Territories -->
