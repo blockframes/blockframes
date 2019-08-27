@@ -2,17 +2,19 @@
     <header>
       <h3>Organizations</h3>
     </header>
+    <organization-search (picked)="added.emit($event)" ></organization-search>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
       <!-- Name Column -->
+      <!-- TODO: add organization avatar -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let stakeholder">{{ stakeholder.organization.name }}</td>
+        <td [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">{{ stakeholder.organization.name }}</td>
       </ng-container>
 
-      <!-- Date Column -->
-      <ng-container matColumnDef="actions">
+      <!-- Actions Column -->
+      <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let stakeholder"><button mat-icon-button><mat-icon>delete</mat-icon></button></td>
+        <td [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder"><button mat-icon-button (click)="removed.emit(stakeholder.id)"><mat-icon svgIcon="trash"></mat-icon></button></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { Stakeholder } from '@blockframes/movie';
 import { MatTableDataSource } from '@angular/material/table';
+import { OrganizationAlgoliaResult } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-stakeholders-repertory',
@@ -9,10 +10,13 @@ import { MatTableDataSource } from '@angular/material/table';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryStakeholdersRepertoryComponent {
+  @Output() removed = new EventEmitter<string>();
+  @Output() added = new EventEmitter<OrganizationAlgoliaResult>();
+
   @Input() set stakeholders(stakeholders: Stakeholder[]) {
     this.dataSource = new MatTableDataSource(stakeholders);
   }
 
   public dataSource: MatTableDataSource<Stakeholder>;
-  public displayedColumns: string[] = ['name', 'actions'];
+  public displayedColumns: string[] = ['name', 'action'];
 }

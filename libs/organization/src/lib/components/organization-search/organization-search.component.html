@@ -1,5 +1,5 @@
 <form fxLayout="row" fxLayoutAlign="space-between center">
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Search an organization</mat-label>
     <input
       type="text"
@@ -8,6 +8,7 @@
       [formControl]="organizationForm"
       [matAutocomplete]="autoName"
     />
+    <mat-icon color="primary" matSuffix>search</mat-icon>
   </mat-form-field>
   <mat-autocomplete
     #autoName="matAutocomplete"
@@ -19,5 +20,4 @@
       <mat-icon color="primary">add_circle</mat-icon>
     </mat-option>
   </mat-autocomplete>
-  <mat-icon color="primary" matPrefix>search</mat-icon>
 </form>
