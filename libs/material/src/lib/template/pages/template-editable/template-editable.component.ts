@@ -1,16 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { TemplateView, Template } from '../../+state/template.model';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
-import { TemplateService } from '../../+state/template.service';
-import { MaterialStore } from '../../../material/+state/material.store';
-import { MaterialQuery } from '../../../material/+state/material.query';
-import { MaterialTemplateForm, Material } from '../../../material/+state/material.model';
-import { MatDialog } from '@angular/material/dialog';
+import { Material } from '../../../material/+state/material.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmComponent } from '@blockframes/ui';
-import { Router } from '@angular/router';
 import { MaterialService } from '../../../material/+state';
+import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
+import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { Template } from '../../+state';
 
 @Component({
   selector: 'template-editable',
@@ -19,77 +16,67 @@ import { MaterialService } from '../../../material/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateEditableComponent implements OnInit {
-  public template$: Observable<TemplateView>;
-  public form$: Observable<MaterialTemplateForm>;
-  public templateActive$ : Observable<Template>;
-  public categories: string[];
-  public materialId: string;
+  public template$: Observable<Template>;
+  public materials$: Observable<Material[]>;
+
+  public opened = false;
+
+  public materialsFormList = createMaterialFormList();
+  public materialFormGroup$: Observable<FormGroup>;
+
+  private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
   constructor(
     private query: TemplateQuery,
-    private service: TemplateService,
-    private materialStore: MaterialStore,
     private materialService: MaterialService,
-    private materialQuery: MaterialQuery,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    this.templateActive$ = this.query.selectActive();
-    this.template$ = this.query.materialsByTemplate$;
-    this.form$ = this.materialQuery.templateForm$;
+    this.template$ = this.query.selectActive();
+    this.materials$ = this.query.selectActive().pipe(
+      filter(template => !!template.materials),
+      tap(template => this.materialsFormList.patchValue(template.materials)),
+      switchMap(template => this.materialsFormList.valueChanges.pipe(startWith(template.materials)))
+    );
+
+    /** Return the materialFormGroup linked to the selected materialId */
+    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
+      filter(materialId => !!materialId),
+      map(materialId =>
+        this.materialsFormList.value.findIndex(material => material.id === materialId)
+      ),
+      map(index => this.materialsFormList.at(index))
+    );
   }
 
-  public addMaterial(material: Material) {
-    this.materialService.saveTemplateMaterial(material);
-    this.materialStore.clearForm();
+  public openSidenav(materialId: string) {
+    this.selectedMaterialId$.next(materialId);
+    this.opened = true;
   }
 
-  public updateMaterial(material: Material) {
-    this.materialService.updateTemplateMaterial(material);
+  public async updateMaterials() {
+    try {
+      this.materialService.updateTemplateMaterials(this.materialsFormList.value);
+      this.snackBar.open('Materials updated', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
-  public deleteMaterial(material: Material) {
-    this.materialService.deleteTemplateMaterial(material.id);
-    this.snackBar.open(`Deleted material "${material.value}".`, 'close', { duration: 2000 });
+  public addMaterial() {
+    const newMaterial = this.materialService.addTemplateMaterial();
+    this.materialsFormList.push(createMaterialFormGroup(newMaterial));
+    this.openSidenav(newMaterial.id);
   }
 
-  public addForm(category: string) {
-    this.materialStore.updateEmptyTemplateForm(category);
-    delete this.materialId;
+  public deleteMaterial(materialId: string) {
+    try {
+      this.materialService.deleteTemplateMaterial(materialId);
+      this.snackBar.open('Material deleted', 'close', { duration: 2000 });
+      this.opened = false;
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
-
-  public openDeleteTemplate(id: string, name: string) {
-    this.dialog.open(ConfirmComponent, {
-      width: '400px',
-      data: {
-        title: 'Delete template',
-        question: 'Are you sure you want to delete this template ?',
-        buttonName: 'Delete',
-        onConfirm: () => this.deleteTemplate(id, name)
-      }
-    });
-  }
-
-  private deleteTemplate(id: string, name: string) {
-    this.service.deleteTemplate(id);
-    this.snackBar.open(`Template "${name}" has been deleted.`, 'close', { duration: 2000 });
-    this.router.navigate(['layout/o/templates/list']);
-  }
-
-  public openUpdateForm(material) {
-    this.materialId = material.id;
-    this.materialStore.clearForm();
-  }
-
-  public cancelUpdateForm() {
-    delete this.materialId;
-  }
-
-  public cancelAddForm() {
-    this.materialStore.clearForm()
-  }
-
 }
