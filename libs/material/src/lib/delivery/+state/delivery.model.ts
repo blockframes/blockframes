@@ -4,7 +4,7 @@ import { firestore } from 'firebase/app';
 type Timestamp = firestore.Timestamp;
 
 export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
-type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+export type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
 /** This is a Minimum Guarantee deadline, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 interface MGDeadlineRaw<D> {
