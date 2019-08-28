@@ -47,7 +47,6 @@ import { HomeEmptyComponent } from './components/home-empty/home-empty.component
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
-import { MovieForm } from './form/movie.form';
 import { MoviePickerComponent } from '@blockframes/movie/movie/components/movie-picker/movie-picker.component';
 
 @NgModule({

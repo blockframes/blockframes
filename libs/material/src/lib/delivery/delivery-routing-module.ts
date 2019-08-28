@@ -1,0 +1,155 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+// Pages
+import { DeliveryAddFindMovieComponent } from "./pages/delivery-add-find-movie/delivery-add-find-movie.component";
+import { DeliveryAddChooseStarterComponent } from "./pages/delivery-add-choose-starter/delivery-add-choose-starter.component";
+import { DeliveryAddTemplatePickerComponent } from "./pages/delivery-add-template-picker/delivery-add-template-picker.component";
+import { DeliveryAddSpecificDeliveryListPickerComponent } from "./pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component";
+import { DeliveryAddSettingsComponent } from "./pages/delivery-add-settings/delivery-add-settings.component";
+import { DeliveryAddCompleteComponent } from "./pages/delivery-add-complete/delivery-add-complete.component";
+import { DeliveryListComponent } from "./pages/delivery-list/delivery-list.component";
+import { DeliveryTemplateListComponent } from "./pages/delivery-template-list/delivery-template-list.component";
+import { DeliveryEditableComponent } from "./pages/delivery-editable/delivery-editable.component";
+import { DeliveryTeamworkEditableComponent } from "./pages/delivery-teamwork-editable/delivery-teamwork-editable.component";
+import { DeliveryInformationsEditableComponent } from "./pages/delivery-informations-editable/delivery-informations-editable.component";
+import { MovieEditableComponent } from "./pages/movie-editable/movie-editable.component";
+
+// Guards
+import { MovieListGuard, MovieActiveGuard } from "@blockframes/movie";
+import { MovieMaterialsGuard, DeliveryMaterialsGuard } from "../material";
+import { DeliveryListGuard } from "./guards/delivery-list.guard";
+import { DeliveryActiveGuard } from "./guards/delivery-active.guard";
+import { TemplateListGuard } from "../template/guards/template-list.guard";
+import { TemplateActiveGuard } from "../template/guards/template-active.guard";
+
+const routes: Routes = [
+  {
+    path: 'add',
+    canActivate: [MovieListGuard],
+    canDeactivate: [MovieListGuard],
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '1-find-movie'
+      },
+      {
+        path: '1-find-movie',
+        pathMatch: 'full',
+        component: DeliveryAddFindMovieComponent
+      },
+      {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
+        children: [
+          {
+            path: '2-choose-starter',
+            pathMatch: 'full',
+            component: DeliveryAddChooseStarterComponent
+          },
+          {
+            path: '3-pick-template',
+            canActivate: [TemplateListGuard],
+            canDeactivate: [TemplateListGuard],
+            pathMatch: 'full',
+            component: DeliveryAddTemplatePickerComponent
+          },
+          {
+            path: '3-pick-specific-delivery-list',
+            pathMatch: 'full',
+            component: DeliveryAddSpecificDeliveryListPickerComponent
+          },
+          {
+            path: '4-settings',
+            pathMatch: 'full',
+            component: DeliveryAddSettingsComponent
+          },
+          {
+            path: '5-complete',
+            pathMatch: 'full',
+            component: DeliveryAddCompleteComponent
+          },
+          {
+            path: ':templateId',
+            canActivate: [TemplateActiveGuard],
+            canDeactivate: [TemplateActiveGuard],
+            children: [
+              {
+                path: '4-settings',
+                pathMatch: 'full',
+                component: DeliveryAddSettingsComponent
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: ':movieId',
+    canActivate: [MovieActiveGuard],
+    canDeactivate: [MovieActiveGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        canActivate: [DeliveryListGuard],
+        canDeactivate: [DeliveryListGuard],
+        component: DeliveryListComponent
+      },
+      {
+        path: 'template-picker',
+        // TODO: Getting redirected to templates/list if there is no template to load => ISSUE#648
+        canActivate: [TemplateListGuard],
+        canDeactivate: [TemplateListGuard],
+        component: DeliveryTemplateListComponent
+      },
+      {
+        path: 'materials',
+        canActivate: [MovieMaterialsGuard],
+        canDeactivate: [MovieMaterialsGuard],
+        component: MovieEditableComponent
+      },
+      {
+        path: ':deliveryId',
+        canActivate: [DeliveryActiveGuard],
+        canDeactivate: [DeliveryActiveGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'view',
+            pathMatch: 'full'
+          },
+          {
+            path: 'list',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliveryEditableComponent
+          },
+          {
+            path: 'stakeholders',
+            component: DeliveryTeamworkEditableComponent
+          },
+          {
+            path: 'informations',
+            canActivate: [DeliveryMaterialsGuard],
+            canDeactivate: [DeliveryMaterialsGuard],
+            component: DeliveryInformationsEditableComponent
+          }
+        ]
+      }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class DeliveryRoutingModule {}
