@@ -43,7 +43,7 @@ export class OrganizationSearchComponent implements OnInit {
     return organization ? organization.name : undefined;
   }
 
-  submit(event: MatAutocompleteSelectedEvent) {
+  public submit(event: MatAutocompleteSelectedEvent) {
     const result: OrganizationAlgoliaResult = event.option.value;
     this.picked.emit(result);
     this.organizationForm.reset();
