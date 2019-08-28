@@ -21,7 +21,6 @@ export class OrganizationFormOperationComponent {
     public controlContainer: ControlContainer,
     public serv: OrganizationQuery,
     public service: OrganizationService,
-    public walletService: WalletService,
   ) { }
 
   public get control() {
@@ -46,7 +45,7 @@ export class OrganizationFormOperationComponent {
     const memberAddress = await this.service.getMemberAddress(removedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.walletService.setRemoveMemeberTx(orgAddress, operationId, memberAddress);
+    this.service.setRemoveMemeberTx(orgAddress, operationId, memberAddress);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -59,7 +58,7 @@ export class OrganizationFormOperationComponent {
     const memberAddress = await this.service.getMemberAddress(addedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.walletService.setAddMemeberTx(orgAddress, operationId, memberAddress);
+    this.service.setAddMemeberTx(orgAddress, operationId, memberAddress);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -67,7 +66,7 @@ export class OrganizationFormOperationComponent {
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
-    this.walletService.setUpdateQuorumTx(orgAddress, operationId, newQuorum);
+    this.service.setUpdateQuorumTx(orgAddress, operationId, newQuorum);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

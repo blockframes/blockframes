@@ -211,10 +211,10 @@ export class DeliveryEditableComponent implements OnInit {
     const jsonMaterials = JSON.stringify(materials);
     
     const deliveryHash = utils.id(jsonDelivery + jsonMaterials);
+    const orgAddress = await this.orgaizationService.getAddress();
 
-    const orgAddress = await this.orgaizationService.getAddress(); // TODO this should exist after merge of PR #822
-
-    console.log(orgAddress, deliveryHash); // TODO set Tx and redirect to send tunnel
+    this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash);
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
   /* Define an array of columns to be displayed in the list depending on delivery settings **/

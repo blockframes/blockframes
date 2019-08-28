@@ -16,6 +16,8 @@ import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
+import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
+import { createTx_ApproveDelivery } from 'libs/ethers/src/lib/wallet/+state/wallet-known-tx';
 
 const Timestamp = firebase.firestore.Timestamp;
 
@@ -73,6 +75,7 @@ export class DeliveryService {
     private query: DeliveryQuery,
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
+    private walletService: WalletService,
     private db: FireQuery
   ) {}
 
@@ -329,6 +332,14 @@ export class DeliveryService {
       const updatedValidated = [...validated, stakeholderSignee.id];
       return this.deliveryDoc(deliveryId).update({ validated: updatedValidated });
     }
+  }
+
+  public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string) {
+    const callback = () => {
+      this.db.collection('actions').doc(deliveryHash).set({name: `Delivery #${deliveryId}`});
+      this.signDelivery();
+    };
+    this.walletService.setTx(createTx_ApproveDelivery(orgAddress, deliveryHash, callback));
   }
 
   /** Create a transaction to copy the template/movie materials into the delivery materials */

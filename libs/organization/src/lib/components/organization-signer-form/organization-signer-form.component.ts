@@ -20,7 +20,6 @@ export class OrganizationSignerFormComponent {
     public controlContainer: ControlContainer,
     private permissionQuery: PermissionsQuery,
     private service: OrganizationService,
-    private walletService: WalletService,
     private router: Router,
   ) { }
 
@@ -50,8 +49,8 @@ export class OrganizationSignerFormComponent {
     const orgAddress = await this.service.getAddress();
 
     toggle.checked
-      ? this.walletService.setAddMemeberTx(orgAddress, id, memberAddress)
-      : this.walletService.setRemoveMemeberTx(orgAddress, id, memberAddress);
+      ? this.service.setAddMemeberTx(orgAddress, id, memberAddress)
+      : this.service.setRemoveMemeberTx(orgAddress, id, memberAddress);
 
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }

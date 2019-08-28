@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FireQuery, Query, emailToEnsDomain, precomputeAddress } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
@@ -16,10 +16,11 @@ import {
 } from './organization.model';
 import { OrganizationStore } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { mockActions, mockOperations, mockOrgMembers } from './organization.mock';
 import { getDefaultProvider, providers, Contract, utils } from 'ethers';
 import { network, relayer } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
+import { createTx_ModifyQuorum, createTx_AddMember, createTx_RemoveMember } from 'libs/ethers/src/lib/wallet/+state/wallet-known-tx';
+import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
@@ -94,6 +95,7 @@ export class OrganizationService {
     private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
+    private walletService: WalletService,
     private authQuery: AuthQuery,
     private db: FireQuery,
   ) {}
@@ -379,6 +381,18 @@ export class OrganizationService {
   //----------------------------------
   //          OPERATIONS
   //----------------------------------
+
+  public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuroum: number) {
+    this.walletService.setTx(createTx_ModifyQuorum(orgAddress, operationId, newQuroum));
+  }
+
+  public setAddMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
+    this.walletService.setTx(createTx_AddMember(orgAddress, operationId, memberAddress));
+  }
+
+  public setRemoveMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
+    this.walletService.setTx(createTx_RemoveMember(orgAddress, operationId, memberAddress));
+  }
 
   /**
    * Retreive the minimal infos of an operation from the blockchain,

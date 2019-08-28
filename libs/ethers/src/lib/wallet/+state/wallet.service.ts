@@ -10,10 +10,7 @@ import { MetaTx, SignedMetaTx, ActionTx } from '../../types';
 import { WalletQuery } from './wallet.query';
 import {
   createTx_DeleteKey,
-  createTx_AddKey,
-  createTx_ModifyQuorum,
-  createTx_AddMember,
-  createTx_RemoveMember
+  createTx_AddKey
 } from './wallet-known-tx';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 
@@ -101,18 +98,6 @@ export class WalletService {
 
   public setLinkKeyTx(erc1077Address: string, key: Key) {
     this.setTx(createTx_AddKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
-  }
-
-  public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuroum: number) {
-    this.setTx(createTx_ModifyQuorum(orgAddress, operationId, newQuroum));
-  }
-
-  public setAddMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.setTx(createTx_AddMember(orgAddress, operationId, memberAddress));
-  }
-
-  public setRemoveMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.setTx(createTx_RemoveMember(orgAddress, operationId, memberAddress));
   }
 
   public setTx(tx: ActionTx) {
