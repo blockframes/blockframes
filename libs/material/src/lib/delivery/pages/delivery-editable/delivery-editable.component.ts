@@ -72,11 +72,11 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   /* Update a list of materials **/
-  public async update() {
+  public update() {
     try {
       const deliveryId = this.query.getActiveId();
       const movieId = this.movieQuery.getActiveId();
-      await this.materialService.updateMaterials(this.materialsFormList.value, deliveryId, movieId);
+      this.materialService.updateMaterials(this.materialsFormList.value, deliveryId, movieId);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -102,7 +102,7 @@ export class DeliveryEditableComponent implements OnInit {
     const process = isAllSelected
       ? material => this.materialStore.addActive(material.id)
       : material => this.materialStore.removeActive(material.id);
-      applyTransaction(() => this.materialQuery.getAll().forEach(process))
+    applyTransaction(() => this.materialQuery.getAll().forEach(process))
   }
 
   /* Update status of selected materials **/
@@ -153,6 +153,8 @@ export class DeliveryEditableComponent implements OnInit {
       if (!this.materialQuery.hasEntity(materialId)) {
         const index = this.materialsFormList.value.findIndex(material => material.id === materialId);
         this.materialsFormList.removeAt(index);
+        this.opened = false;
+        return;
       }
       const delivery = this.query.getActive();
       this.materialService.deleteMaterial(materialId, delivery);

@@ -46,6 +46,7 @@ export class DeliveryMaterialListComponent {
     this.selectAllMaterials.emit(!this.isAllSelected());
   }
 
+  // TODO: Create a reusable table component for our lists => ISSUE#827
   /** Whether the number of selected elements matches the total number of rows. */
   public isAllSelected() {
     const numSelected = this.selection.selected.length;

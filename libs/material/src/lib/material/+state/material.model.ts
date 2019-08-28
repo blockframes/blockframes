@@ -1,6 +1,7 @@
 import { Step, Delivery } from '../../delivery/+state';
 import { staticModels } from '@blockframes/movie';
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+// TODO: Create "Price" type with currencies from static-models => ISSUE#818
 
 export interface Material {
   id: string;
@@ -12,7 +13,7 @@ export interface Material {
   step?: Step;
   status: MaterialStatus;
   deliveryIds?: string[];
-  price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#816
+  price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
   currency?: CurrencyCode;
   isOrdered?: boolean;
   isPaid?: boolean;
@@ -44,7 +45,7 @@ export function createMaterial(material: Partial<Material>): Material {
     category: '',
     value: '',
     description: '',
-    status: (!!material.status) ? material.status : MaterialStatus.pending,
+    status: material.status|| MaterialStatus.pending,
     isOrdered: false,
     isPaid: false,
     ...material
