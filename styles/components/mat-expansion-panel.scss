@@ -2,6 +2,7 @@
 .light-theme .mat-accordion .mat-expansion-panel {
   box-shadow: none;
   border-radius: 0;
+  background-color: transparent;
 }
 
 .dark-theme .mat-accordion .mat-expansion-panel {
@@ -16,6 +17,7 @@
   border-bottom: none;
 }
 
+/*
 .mat-expansion-indicator:before {
   color: var(--primary) !important;
 }
@@ -23,3 +25,4 @@
 .mat-expansion-indicator:after {
   color: var(--primary) !important;
 }
+*/

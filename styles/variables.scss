@@ -7,9 +7,9 @@ $accent: mat-color($blockframes-theme-accent);
 $warn: mat-color($blockframes-theme-warn);
 
 // Dark-theme
-$dark-primary: mat-color($blockframes-dark-theme-primary);
-$dark-accent: mat-color($blockframes-dark-theme-accent);
-$dark-warn: mat-color($blockframes-dark-theme-warn);
+$dark-primary: mat-color($bf-dark-primary);
+$dark-accent: mat-color($bf-dark-accent);
+$dark-warn: mat-color($bf-dark-warn);
 
 @mixin mobile {
   @media screen and (max-width: 599px) { @content; }

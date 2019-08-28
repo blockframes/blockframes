@@ -1,0 +1,146 @@
+//////////////
+// PALETTES //
+//////////////
+
+$mat-dark-bf-orange: (
+  50 : #FFEEF1,
+  100 : #FFD5D9,
+  200 : #F8A8A5,
+  300 : #F28882,
+  400 : #FF6E61,
+  500 : #FF6247,
+  600 : #F75B48,
+  700 : #E45141,
+  800 : #D74B3B,
+  900 : #C8412F,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #24374E,
+    300 : #F9F8FF,
+    400 : #F9F8FF,
+    500 : #F9F8FF,
+    600 : #F9F8FF,
+    700 : #F9F8FF,
+    800 : #F9F8FF,
+    900 : #F9F8FF,
+  )
+);
+$mat-dark-bf-blue: (
+  50 : #E9ECFF,
+  100 : #C6D0FF,
+  200 : #9EB1FF,
+  300 : #7492FA,
+  400 : #5679F0,
+  500 : #3560E6,
+  600 : #2E57DB,
+  700 : #234CCE,
+  800 : #1A41C1,
+  900 : #092DAA,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #24374E,
+    300 : #F9F8FF,
+    400 : #F9F8FF,
+    500 : #F9F8FF,
+    600 : #F9F8FF,
+    700 : #F9F8FF,
+    800 : #F9F8FF,
+    900 : #F9F8FF,
+  )
+);
+
+$mat-dark-bf-red: (
+  50 : #ffecef,
+  100 : #ffcfd5,
+  200 : #f49c9f,
+  300 : #ec7679,
+  400 : #f75557,
+  500 : #fe453e,
+  600 : #ef3a3d,
+  700 : #dc3036,
+  800 : #cf292f,
+  900 : #c01c23,
+  A100 : #ffffff,
+  A200 : #fffdfd,
+  A400 : #ffcbca,
+  A700 : #ffb2b1,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #FFFFFF,
+    300 : #FFFFFF,
+    400 : #FFFFFF,
+    500 : #FFFFFF,
+    600 : #FFFFFF,
+    700 : #FFFFFF,
+    800 : #FFFFFF,
+    900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+////////////////
+// BACKGROUND //
+////////////////
+// Background palette for dark themes.
+$bf-dark-background: (
+  status-bar: black,
+  app-bar:    map_get($mat-grey, 900),
+  background: #02000F,
+  hover:      rgba(white, 0.04),
+  card:       rgba(250,250,255,0.05),
+  dialog:     map_get($mat-grey, 800),
+  disabled-button: rgba(white, 0.12),
+  raised-button: map-get($mat-grey, 800),
+  focused-button: $light-focused,
+  selected-button: map_get($mat-grey, 900),
+  selected-disabled-button: map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
+
+////////////////
+// FOREGROUND //
+////////////////
+// Foreground palette for dark themes.
+$bf-dark-foreground: (
+  base:              white,
+  divider:           $light-dividers,
+  dividers:          $light-dividers,
+  disabled:          $light-disabled-text,
+  disabled-button:   rgba(white, 0.3),
+  disabled-text:     $light-disabled-text,
+  elevation:         black,
+  hint-text:         $light-disabled-text,
+  secondary-text:    $light-secondary-text,
+  icon:              white,
+  icons:             white,
+  text:              white,
+  slider-min:        white,
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(white, 0.3),
+);
+
+///////////
+// THEME //
+///////////
+
+$bf-dark-primary: mat-palette($mat-dark-bf-orange);
+$bf-dark-accent: mat-palette($mat-dark-bf-blue);
+$bf-dark-warn: mat-palette($mat-dark-bf-red);
+
+$bf-dark-theme: (
+  // Standard
+  primary: $bf-dark-primary,
+  accent: $bf-dark-accent,
+  warn: $bf-dark-warn,
+  is-dark: true,
+  foreground: $bf-dark-foreground,
+  background: $bf-dark-background,
+);
