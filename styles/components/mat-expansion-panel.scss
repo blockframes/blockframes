@@ -1,3 +1,14 @@
+.mat-accordion .mat-expansion-panel,
+.dark-theme .mat-accordion .mat-expansion-panel {
+  box-shadow: none;
+  border-bottom: solid 1px #292929;
+  border-radius: 0;
+}
+
+.mat-accordion .mat-expansion-panel:last-of-type {
+  border-bottom: none;
+}
+
 .mat-expansion-indicator:before {
   color: var(--primary) !important;
 }
