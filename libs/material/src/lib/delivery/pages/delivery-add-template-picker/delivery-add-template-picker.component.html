@@ -1,18 +1,14 @@
 <section fxLayout="row" fxLayoutAlign="center center">
   <article fxLayout="column" fxLayoutAlign="center center">
     <h2>Choose a template</h2>
-    <p>Lorem ipsum dolor sit amet</p>
+    <p>Select a template</p>
 
     <ng-container *ngIf="(isLoading$ | async); else: loaded">Loading</ng-container>
     <ng-template #loaded>
       <actions-picker [items]="items$ | async" (picked)="selectTemplate($event)"></actions-picker>
     </ng-template>
-
-    <ng-container *ngIf="currentTemplate; else: disabled">
-      <a mat-raised-button color="accent" [routerLink]="[continueURL]">Continue</a>
-    </ng-container>
-    <ng-template #disabled><span>Select a template</span></ng-template>
-
+    
+    <a mat-raised-button color="accent" [routerLink]="[continueURL]" [disabled]="!currentTemplate">Continue</a>
     <a button mat-button color="primary" routerLink="../2-choose-starter">Cancel</a>
   </article>
 </section>
