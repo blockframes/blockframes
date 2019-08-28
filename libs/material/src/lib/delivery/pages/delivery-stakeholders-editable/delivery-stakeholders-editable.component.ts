@@ -18,7 +18,12 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
 
   public delivery$: Observable<Delivery>;
 
-  constructor(private deliveryQuery: DeliveryQuery, private service: DeliveryService, private stakeholderService: StakeholderService, private query: DeliveryQuery) {}
+  constructor(
+    private deliveryQuery: DeliveryQuery,
+    private service: DeliveryService,
+    private stakeholderService: StakeholderService,
+    private query: DeliveryQuery
+  ) {}
 
   ngOnInit() {
     this.delivery$ = this.deliveryQuery.selectActive();

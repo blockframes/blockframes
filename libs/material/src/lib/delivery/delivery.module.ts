@@ -11,6 +11,7 @@ import { StakeholderItemComponent } from './components/stakeholder-item/stakehol
 import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
 import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
+import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
@@ -32,7 +33,6 @@ import { DeliveryStakeholdersRepertoryComponent } from './components/delivery-st
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
 import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
-import { DeliveryTeamworkEditableComponent } from './pages/delivery-teamwork-editable/delivery-teamwork-editable.component';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
@@ -97,7 +97,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryAddSettingsComponent,
     DeliveryAddCompleteComponent,
     NewTemplateComponent,
-    DeliveryTeamworkEditableComponent,
     DeliveryTemplateListComponent,
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
@@ -105,6 +104,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,
     DeliveryTeamworkRepertoryComponent,
+    MovieMaterialItemComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
     DeliveryRepertoryComponent,
