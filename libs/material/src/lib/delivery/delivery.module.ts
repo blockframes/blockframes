@@ -8,10 +8,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
 import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
 import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
-import { DeliveryTeamworkFormComponent } from './components/delivery-teamwork-form/delivery-teamwork-form.component';
-import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-item/delivery-teamwork-item.component';
-import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
-import { MovieMaterialItemComponent } from './components/movie-material-item/movie-material-item.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
@@ -101,10 +97,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
     DeliveryActionsComponent,
-    DeliveryTeamworkFormComponent,
-    DeliveryTeamworkItemComponent,
-    DeliveryTeamworkRepertoryComponent,
-    MovieMaterialItemComponent,
     DeliveryInformationsEditableComponent,
     DeliverySignComponent,
     DeliveryRepertoryComponent,
@@ -119,8 +111,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryInformationsStakeholdersComponent,
     MovieEditableComponent,
     MovieMaterialListComponent,
-    MovieMaterialFormComponent
-    DeliveryInformationsDeadlinesRepertoryComponent,
+    MovieMaterialFormComponent,
     DeliveryStakeholdersEditableComponent,
     DeliveryStakeholdersRepertoryComponent
   ],
