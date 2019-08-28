@@ -1,38 +1,41 @@
-<section test-id="content" page-id="catalog-homepage">
-    <article fxLayout="column" fxLayoutAlign="center center" class="header-img">
-        <h1 class="mat-display-3">Welcome to Bigger Boat</h1>
-        <p class="mat-body-1">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur.</p>
-        <button mat-button color="accent" test-id="discover">Discover our films</button>
-    </article>
+<div test-id="content" page-id="catalog-homepage">
+
+  <header fxLayout="column" fxLayoutAlign="center center">
+    <h1 class="mat-display-3">Welcome to Bigger Boat</h1>
+    <p class="mat-body-1">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+      ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+      nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur.</p>
+    <button mat-raised-button color="primary" test-id="discover">Discover our films</button>
+  </header>
+
+  <section fxLayout="column" fxLayoutAlign="start center">
     <ng-container *ngFor="let section of moviesBySections$ | async; let i = index">
-        <!-- We want by every iteration of the keys array that the text switches side-->
-        <article [fxLayout]="i%2 === 0? 'row': 'row-reverse'" fxLayoutAlign="center center" fxLayoutGap="200px">
-            <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
-                <h4 class="mat-display-2">{{ section.title }}</h4>
-                <span>{{ section.subline}} </span>
-                <a mat-button test-id="seeMore1" color="accent" [href]="section.link">See more</a>
-            </div>
-            <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-                <!-- We only want to use the first image in the promotinalElements.images array-->
-                <ng-container *ngFor="let movie of section.movies">
-                    <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster"
-                        [hideOverlay]="true">
-                        <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
-                            <footer fxLayout="column" fxLayoutAlign="center center">
-                                <h2 class="mat-h2">{{ movie.main.title.original }}</h2>
-                                <span class="mat-body-1"
-                                    *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                                    {{ director.lastName }}</span>
-                                <span class="mat-body-2">Production year: {{ movie.main.productionYear }}</span>
-                            </footer>
-                        </div>
-                    </mat-carousel-slide>
-                </ng-container>
-            </mat-carousel>
-        </article>
+      <!-- We want by every iteration of the keys array that the text switches side-->
+      <article [fxLayout]="layout(i)" fxLayoutAlign="center start">
+        <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutGap="20px">
+          <h4 class="mat-display-2">{{ section.title }}</h4>
+          <span>{{ section.subline}} </span>
+          <a mat-raised-button test-id="seeMore1" color="primary" [href]="section.link">See more</a>
+        </aside>
+        <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
+          <!-- We only want to use the first image in the promotinalElements.images array-->
+          <ng-container *ngFor="let movie of section.movies">
+            <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster" [hideOverlay]="true">
+              <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+                <footer fxLayout="column" fxLayoutAlign="center start">
+                  <h2 class="mat-h2">{{ movie.main.title.original }}</h2>
+                  <span class="mat-body-1" *ngFor="let director of movie.main.directors">{{ director.firstName }}
+                    {{ director.lastName }}</span>
+                  <span class="mat-body-2">Production year: {{ movie.main.productionYear }}</span>
+                </footer>
+              </div>
+            </mat-carousel-slide>
+          </ng-container>
+        </mat-carousel>
+      </article>
     </ng-container>
-</section>
+  </section>
+
+</div>

@@ -1,6 +1,6 @@
 import { Observable, combineLatest } from 'rxjs';
 import { Movie } from '@blockframes/movie/movie/+state';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { FireQuery } from '@blockframes/utils';
 import { map } from 'rxjs/operators';
 
@@ -17,6 +17,7 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogMarketplaceHomeComponent implements OnInit {
+
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
 
@@ -50,5 +51,13 @@ export class CatalogMarketplaceHomeComponent implements OnInit {
         ];
       })
     );
+  }
+
+  layout(index: number) {
+    return index%2 === 0? 'row': 'row-reverse';
+  }
+
+  alignment(index: number) {
+    return index%2 === 0? 'start start': 'start end';
   }
 }
