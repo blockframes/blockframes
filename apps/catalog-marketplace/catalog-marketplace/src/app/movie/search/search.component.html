@@ -35,10 +35,11 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <span>You can choose multiple types</span>
-              <mat-list fxLayout="column" fxLayoutAlign="start start" class="filter-checkboxes">
-                <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">{{genre}}
+              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
+                <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
+                  {{genre}}
                 </mat-checkbox>
-              </mat-list>
+              </div>
             </mat-expansion-panel>
 
             <!-- Languages -->
@@ -158,10 +159,11 @@
                   Mandate Medias
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-list fxLayout="column" fxLayoutAlign="start start" class="filter-checkboxes-media">
-                <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">{{media}}
+              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
+                <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
+                  {{media}}
                 </mat-checkbox>
-              </mat-list>
+              </div>
             </mat-expansion-panel>
           </mat-accordion>
         </mat-card-content>

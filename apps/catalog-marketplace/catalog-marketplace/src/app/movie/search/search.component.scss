@@ -10,6 +10,16 @@ header {
 
 section {
   padding: 20px 100px;
+
+  aside {
+    position: sticky;
+    top: calc(var(--toolbarHeight) + 20px);
+
+    mat-card {
+      max-height: calc(100vh - var(--toolbarHeight) - 40px);
+      overflow: auto;
+    }
+  }
 }
 
 mat-divider {
