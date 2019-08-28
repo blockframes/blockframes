@@ -15,7 +15,10 @@ $blockframes-theme: mat-light-theme(
 );
 
 @include sat-datepicker-theme($blockframes-theme);
-@include angular-material-theme($blockframes-theme);
+
+.light-theme {
+  @include angular-material-theme($blockframes-theme);
+}
 
 // Dark theme
 $blockframes-dark-theme-primary: mat-palette($mat-darkbf-orange);

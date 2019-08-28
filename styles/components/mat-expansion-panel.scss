@@ -1,8 +1,15 @@
-.mat-accordion .mat-expansion-panel,
-.dark-theme .mat-accordion .mat-expansion-panel {
+.dark-theme .mat-accordion .mat-expansion-panel,
+.light-theme .mat-accordion .mat-expansion-panel {
   box-shadow: none;
-  border-bottom: solid 1px #292929;
   border-radius: 0;
+}
+
+.dark-theme .mat-accordion .mat-expansion-panel {
+  border-bottom: solid 1px #292929;
+}
+
+.light-theme .mat-accordion .mat-expansion-panel {
+  border-bottom: solid 1px #D8D8D8;
 }
 
 .mat-accordion .mat-expansion-panel:last-of-type {
