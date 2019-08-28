@@ -26,6 +26,8 @@ import { DeliveryInformationsDeadlinesFormComponent } from './components/deliver
 import { DeliveryInformationsDeadlinesRepertoryComponent } from './components/delivery-informations-deadlines-repertory/delivery-informations-deadlines-repertory.component';
 import { MovieMaterialListComponent } from './components/movie-material-list/movie-material-list.component';
 import { MovieMaterialFormComponent } from './components/movie-material-form/movie-material-form.component';
+import { DeliveryInformationsStakeholdersComponent } from './components/delivery-informations-stakeholders/delivery-informations-stakeholders.component';
+
 
 // Pages
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
@@ -76,6 +78,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
+import { MatStepperModule } from '@angular/material/stepper';
 
 // Guards
 import { MovieActiveGuard, MovieListGuard, MovieModule } from '@blockframes/movie';
@@ -87,8 +90,6 @@ import { TemplateListGuard } from '../template/guards/template-list.guard';
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
 import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
-import { MatStepperModule } from '@angular/material/stepper';
-import { DeliveryInformationsStakeholdersComponent } from './components/delivery-informations-stakeholders/delivery-informations-stakeholders.component';
 
 const routes: Routes = [
   {

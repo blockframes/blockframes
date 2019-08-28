@@ -11,6 +11,10 @@ const deliveryMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
   queryFn: ref => ref.where('deliveryIds', 'array-contains', delivery.id )
 });
 
+const deliveryToBeSignedMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
+  path: `deliveries/${delivery.id}/materials`
+});
+
 @Injectable({ providedIn: 'root' })
 export class DeliveryMaterialsGuard extends StateListGuard<Material> {
   urlFallback = 'layout';
@@ -27,7 +31,9 @@ export class DeliveryMaterialsGuard extends StateListGuard<Material> {
   get query() {
     return this.deliveryQuery.selectActive().pipe(
       switchMap(delivery => {
-        const query = deliveryMaterialsQuery(delivery);
+        const query = delivery.mustBeSigned
+          ? deliveryToBeSignedMaterialsQuery(delivery)
+          : deliveryMaterialsQuery(delivery);
         return this.fireQuery.fromQuery<Material[]>(query)
       })
     );
