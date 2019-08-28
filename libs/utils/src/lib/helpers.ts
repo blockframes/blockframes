@@ -69,3 +69,34 @@ export async function precomputeAddress(ensDomain: string, provider: providers.P
   
   return `0x${utils.keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
 }
+
+/**
+ * Transform a number into an hex string with a `0x` prefix
+ * @example numberToHexString(1337) = '0x539'
+ */
+export function numberToHexString(num: number) {
+  return utils.bigNumberify(num).toHexString();
+}
+
+/**
+ * Transform a `0x` prefixed hex string into a 256 bits paded with 0
+ * @param hexString a `0x` prefixed hex string
+ */
+export function padTo256Bits(hexString: string) {
+  let hex = hexString;
+  if (hex.includes('0x')) {
+    hex = hex.slice(2);
+  }
+  if (hex.length > 64) {
+    throw new Error('The hex string cannot be more than 256 bits (\'0x\' + 64 hex chars)');
+  }
+  return `0x${hex.padStart(64, '0')}`; // pad with '0' until it has a length of 64 nibbles (32 bytes) (256 bits)
+}
+
+/**
+ * Transform a number into an hex string with a `0x` prefix and pad it to 256bit
+ */
+export function numberTo256Bits(num: number) {
+  const hex = numberToHexString(num);
+  return padTo256Bits(hex);
+}

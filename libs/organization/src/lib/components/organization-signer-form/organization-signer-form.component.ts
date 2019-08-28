@@ -49,11 +49,10 @@ export class OrganizationSignerFormComponent {
     const memberAddress = await this.service.getMemberAddress(this.member.email);
     const orgAddress = await this.service.getAddress();
 
-    if(toggle.checked) {
-      this.walletService.setAddMemeberTx(orgAddress, id, memberAddress);
-    } else {
-      this.walletService.setRemoveMemeberTx(orgAddress, id, memberAddress);
-    }
+    toggle.checked
+      ? this.walletService.setAddMemeberTx(orgAddress, id, memberAddress)
+      : this.walletService.setRemoveMemeberTx(orgAddress, id, memberAddress);
+
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

@@ -9,11 +9,11 @@ import { Relayer } from '../../relayer/relayer';
 import { MetaTx, SignedMetaTx, ActionTx } from '../../types';
 import { WalletQuery } from './wallet.query';
 import {
-  createDeleteKeyTx,
-  createAddKeyTx,
-  createModifyQuorumTx,
-  createAddMemberTx,
-  createRemoveMemberTx
+  createTx_DeleteKey,
+  createTx_AddKey,
+  createTx_ModifyQuorum,
+  createTx_AddMember,
+  createTx_RemoveMember
 } from './wallet-known-tx';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 
@@ -96,23 +96,23 @@ export class WalletService {
   }
 
   public setDeleteKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(createDeleteKeyTx(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
+    this.setTx(createTx_DeleteKey(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
   }
 
   public setLinkKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(createAddKeyTx(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
+    this.setTx(createTx_AddKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
   }
 
   public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuroum: number) {
-    this.setTx(createModifyQuorumTx(orgAddress, operationId, newQuroum));
+    this.setTx(createTx_ModifyQuorum(orgAddress, operationId, newQuroum));
   }
 
   public setAddMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.setTx(createAddMemberTx(orgAddress, operationId, memberAddress));
+    this.setTx(createTx_AddMember(orgAddress, operationId, memberAddress));
   }
 
   public setRemoveMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.setTx(createRemoveMemberTx(orgAddress, operationId, memberAddress));
+    this.setTx(createTx_RemoveMember(orgAddress, operationId, memberAddress));
   }
 
   public setTx(tx: ActionTx) {
@@ -186,7 +186,9 @@ export class WalletService {
     if (txReceipt.status === 0) {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
     }
-    if(!!this.query.getValue().tx.callback) {
+
+    const hasCallback = !!this.query.getValue().tx.callback;
+    if(hasCallback) {
       this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
     }
     return txReceipt;

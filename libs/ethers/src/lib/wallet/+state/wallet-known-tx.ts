@@ -1,8 +1,8 @@
 import { ActionTx, Tx } from "../../types";
-import { utils } from "ethers";
+import { numberTo256Bits, padTo256Bits } from "@blockframes/utils";
 
 /** Craft a transaction that will trigger the user ERC1077.deleteKey() function */
-export function createDeleteKeyTx(erc1077Address:string, pubKey: string, callback?: (...args) => void): ActionTx {
+export function createTx_DeleteKey(erc1077Address:string, pubKey: string, callback?: (...args) => void): ActionTx {
   const tx: Tx = {
     to: erc1077Address,
     value: '0x0',
@@ -14,7 +14,7 @@ export function createDeleteKeyTx(erc1077Address:string, pubKey: string, callbac
 }
 
 /** Craft a transaction that will trigger the user ERC1077.addKey() function */
-export function createAddKeyTx(erc1077Address:string, pubKey: string, callback?: (...args) => void): ActionTx {
+export function createTx_AddKey(erc1077Address:string, pubKey: string, callback?: (...args) => void): ActionTx {
   const tx: Tx = {
     to: erc1077Address,
     value: '0x0',
@@ -25,15 +25,11 @@ export function createAddKeyTx(erc1077Address:string, pubKey: string, callback?:
   return {...tx, callback};
 }
 
-/** create the ModifyQuorum transaction */
-export function createModifyQuorumTx(orgAddress: string, operationId: string, newQuorum: number, callback?: (...args) => void): ActionTx {
+/** Craft a transaction that will trigger the Organization.admin_modifyQuorum() function */
+export function createTx_ModifyQuorum(orgAddress: string, operationId: string, newQuorum: number, callback?: (...args) => void): ActionTx {
 
-  const hexOperationId = utils.bigNumberify(operationId).toHexString();
-  const extendedOperationId = hexOperationId.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
-  const hexQuorum = utils.bigNumberify(newQuorum).toHexString();
-  const extendedQuorum = hexQuorum.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
+  const extendedOperationId = padTo256Bits(operationId).slice(2);
+  const extendedQuorum = numberTo256Bits(newQuorum).slice(2);
   const payload = `${extendedOperationId}${extendedQuorum}`;
 
   const tx: Tx = {
@@ -45,13 +41,11 @@ export function createModifyQuorumTx(orgAddress: string, operationId: string, ne
   return {...tx, callback};
 }
 
-export function createAddMemberTx(orgAddress: string, operationId: string, memberAddress: string, callback?: (...args) => void): ActionTx {
+/** Craft a transaction that will trigger the Organization.admin_addUserToWhitelist() function */
+export function createTx_AddMember(orgAddress: string, operationId: string, memberAddress: string, callback?: (...args) => void): ActionTx {
 
-  const hexOperationId = utils.bigNumberify(operationId).toHexString();
-  const extendedOperationId = hexOperationId.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
-  const extendedMemberAddress = memberAddress.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
+  const extendedOperationId = padTo256Bits(operationId).slice(2);
+  const extendedMemberAddress = padTo256Bits(memberAddress).slice(2);
   const payload = `${extendedOperationId}${extendedMemberAddress}`;
 
   const tx: Tx = {
@@ -63,13 +57,11 @@ export function createAddMemberTx(orgAddress: string, operationId: string, membe
   return {...tx, callback};
 }
 
-export function createRemoveMemberTx(orgAddress: string, operationId: string, memberAddress: string, callback?: (...args) => void): ActionTx {
+/** Craft a transaction that will trigger the Organization.admin_removeUserFromWhitelist() function */
+export function createTx_RemoveMember(orgAddress: string, operationId: string, memberAddress: string, callback?: (...args) => void): ActionTx {
 
-  const hexOperationId = utils.bigNumberify(operationId).toHexString();
-  const extendedOperationId = hexOperationId.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
-  const extendedMemberAddress = memberAddress.slice(2).padStart(64, '0'); // remove leading '0x' and pad with '0' until it has a length of 64
-
+  const extendedOperationId = padTo256Bits(operationId).slice(2);
+  const extendedMemberAddress = padTo256Bits(memberAddress).slice(2);
   const payload = `${extendedOperationId}${extendedMemberAddress}`;
 
   const tx: Tx = {
@@ -81,7 +73,8 @@ export function createRemoveMemberTx(orgAddress: string, operationId: string, me
   return {...tx, callback};
 }
 
-export function createApproveDeliveryTx(orgAddress: string, deliveryId: string, callback?: (...args) => void): ActionTx {
+/** Craft a transaction that will trigger the Organization.approve() function with the sign delivery operation parameters*/
+export function createTx_ApproveDelivery(orgAddress: string, deliveryId: string, callback?: (...args) => void): ActionTx {
   const tx: Tx = {
     to: orgAddress,
     value: '0x0',
