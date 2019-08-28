@@ -60,6 +60,10 @@ export class MaterialService {
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
         const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
+        // We need to have stepId instead of entire step to save the material in the back end
+        material = {...material, stepId: material.step ? material.step.id : ''};
+        delete material.step;
+
         // If material from the list have no change and already exists, just return.
         const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
         if (isPristine) {
@@ -190,10 +194,11 @@ export class MaterialService {
    * Checks properties of two material to tell if they are the same or not.
    */
   public isTheSame(matA: Material, matB: Material): boolean {
-    const getProperties = ({ value, description, category }: Material) => ({
+    const getProperties = ({ value, description, category, stepId }: Material) => ({
       value,
       description,
-      category
+      category,
+      stepId
     });
     return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
   }
