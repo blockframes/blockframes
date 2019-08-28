@@ -35,7 +35,7 @@ export const routes: Routes = [
       },
       {
         path: 'o',
-        canActivate: [PermissionsGuard, OrganizationGuard],
+        // canActivate: [PermissionsGuard, OrganizationGuard],
         canDeactivate: [PermissionsGuard, OrganizationGuard],
         children: [
           {

@@ -4,8 +4,8 @@
 @import '~saturn-datepicker/theming';
 
 // Main theme
-$blockframes-theme-primary: mat-palette($mat-bf-blue);
-$blockframes-theme-accent: mat-palette($mat-bf-orange);
+$blockframes-theme-primary: mat-palette($mat-lightbf-red);
+$blockframes-theme-accent: mat-palette($mat-lightbf-blue);
 $blockframes-theme-warn: mat-palette($mat-bf-red);
 
 $blockframes-theme: mat-light-theme(
@@ -18,8 +18,8 @@ $blockframes-theme: mat-light-theme(
 @include angular-material-theme($blockframes-theme);
 
 // Dark theme
-$blockframes-dark-theme-primary: mat-palette($mat-bf-darkblue);
-$blockframes-dark-theme-accent: mat-palette($mat-bf-darkblack);
+$blockframes-dark-theme-primary: mat-palette($mat-darkbf-orange);
+$blockframes-dark-theme-accent: mat-palette($mat-darkbf-blue);
 $blockframes-dark-theme-warn: mat-palette($mat-bf-darkgreen);
 
 $blockframes-dark-theme: mat-dark-theme(

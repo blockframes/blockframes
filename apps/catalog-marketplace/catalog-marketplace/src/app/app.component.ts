@@ -4,8 +4,7 @@ import { IconComponent } from '@blockframes/ui';
 
 @Component({
   selector: 'catalog-root',
-  template: `
-    <router-outlet></router-outlet>`,
+  template: `<router-outlet></router-outlet>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
