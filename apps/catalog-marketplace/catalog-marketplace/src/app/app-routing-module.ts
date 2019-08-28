@@ -35,7 +35,7 @@ export const routes: Routes = [
       },
       {
         path: 'o',
-        // canActivate: [PermissionsGuard, OrganizationGuard],
+        canActivate: [PermissionsGuard, OrganizationGuard],
         canDeactivate: [PermissionsGuard, OrganizationGuard],
         children: [
           {
@@ -72,7 +72,7 @@ export const routes: Routes = [
               {
                 path: 'search',
                 loadChildren: () =>
-                  import('./pages/marketplace-search/marketplace-search.module').then(
+                  import('./movie/search/search.module').then(
                     m => m.MarketplaceSearchModule
                   )
               },
