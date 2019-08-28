@@ -1,5 +1,5 @@
 import { Validators, FormArray } from '@angular/forms';
-import { MovieMedias, MovieTerritories } from './marketplace-search.form';
+import { MovieMedias, MovieTerritories } from './search.form';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
 import { staticModels } from '@blockframes/movie';

@@ -14,8 +14,8 @@ import {
   Certifications,
   MovieMedias,
   MovieTerritories
-} from './marketplace-search.form';
-import { languageValidator } from './marketplace-search-validators.form';
+} from './search.form';
+import { languageValidator } from './search-validators.form';
 import { filterMovie } from './filter.util';
 import { Router } from '@angular/router';
 
@@ -27,9 +27,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'catalog-marketplace-search',
-  templateUrl: './marketplace-search.component.html',
-  styleUrls: ['./marketplace-search.component.scss'],
+  selector: 'catalog-movie-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MarketplaceSearchComponent implements OnInit {

@@ -2,7 +2,7 @@
 import { MovieDisplayCardItemComponent } from '@blockframes/movie/movie/components/display-card-item/display-card-item.component';
 
 // Pages
-import { MarketplaceSearchComponent } from './marketplace-search.component';
+import { MarketplaceSearchComponent } from './search.component';
 
 // Material
 import { MatNativeDateModule } from '@angular/material/core';

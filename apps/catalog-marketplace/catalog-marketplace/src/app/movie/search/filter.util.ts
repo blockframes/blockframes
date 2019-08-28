@@ -1,4 +1,4 @@
-import { CatalogSearch } from './marketplace-search.form';
+import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
