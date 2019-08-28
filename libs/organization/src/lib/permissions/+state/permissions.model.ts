@@ -39,6 +39,9 @@ export interface OrgDocPermissions {
   canDelete: boolean;
 }
 
+// TODO(#714): Synchronize data types with the frontend
+// Do not change these values without upgrading the backend too!
+// You'll find relevant spots by searching for the issue number.
 export const enum App {
   mediaDelivering = 'delivery',
   mediaFinanciers = 'movie-financing',
