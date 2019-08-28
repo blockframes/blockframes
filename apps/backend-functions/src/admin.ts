@@ -23,7 +23,7 @@ import {
 import { getSuperAdmins } from './data/internals';
 
 // TODO(#714): Synchronize data types with the frontend
-const APPS = ['MediaDelivering', 'MediaFinanciers', 'StoriesAndMore'];
+const APPS = ['MediaDelivering', 'MediaFinanciers', 'StoriesAndMore', 'catalog'];
 
 /**
  * Handles firestore update on request to application access,
@@ -42,7 +42,7 @@ export async function onRequestAccessToAppWrite(
   }
 
   const requestedApps = APPS.filter(appId => {
-    return after && after[appId] === 'requested' && (!before || !before[appId]);
+    return after && after[appId] === 'requested' && (!before || before[appId] !== 'requested');
   });
 
   return Promise.all(

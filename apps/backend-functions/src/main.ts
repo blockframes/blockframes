@@ -133,7 +133,7 @@ export const onInvitationUpdateEvent = onDocumentWrite(
 //--------------------------------
 
 /** Trigger: when an organization requests access to apps. */
-export const onAccessToApp= onDocumentWrite(
+export const onAccessToApp = onDocumentWrite(
   'app-requests/{orgId}',
   onRequestAccessToAppWrite
 );
