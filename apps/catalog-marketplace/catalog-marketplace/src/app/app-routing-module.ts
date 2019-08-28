@@ -72,9 +72,7 @@ export const routes: Routes = [
               {
                 path: 'search',
                 loadChildren: () =>
-                  import('./movie/search/search.module').then(
-                    m => m.MarketplaceSearchModule
-                  )
+                  import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
               },
               {
                 path: ':movieId',
