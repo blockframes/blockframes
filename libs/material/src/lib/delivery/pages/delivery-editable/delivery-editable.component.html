@@ -14,15 +14,15 @@
         target="_blank">
         <mat-icon svgIcon="pdf"></mat-icon>
       </a>
-      <button mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">
+      <button disabled="isDeliverySigned" mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
-      <a mat-flat-button color="primary" (click)="addMaterial()">
+      <button disabled="isDeliverySigned" mat-flat-button color="primary" (click)="addMaterial()">
         <span>
           <mat-icon>add</mat-icon>
           Add material
         </span>
-      </a>
+      </button>
     </article>
     <article fxLayout="row" fxLayoutAlign="end center">
       <delivery-actions
@@ -32,6 +32,16 @@
       </delivery-actions>
     </article>
     <delivery-material-list
+      *ngIf="isDeliverySigned"
+      [materials]="signedMaterials$ | async"
+      [delivery]="delivery"
+      [displayedColumns]="displayedColumns"
+      (editing)="openSidenav($event)"
+      (selectedMaterial)="selectMaterial($event)"
+      (selectAllMaterials)="selectAllMaterials($event)">
+    </delivery-material-list>
+    <delivery-material-list
+      *ngIf="!isDeliverySigned"
       [materials]="materials$ | async"
       [delivery]="delivery"
       [displayedColumns]="displayedColumns"
@@ -41,11 +51,23 @@
     </delivery-material-list>
   </ng-container>
   <!-- Sidenav -->
-  <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
-    <delivery-material-form
-      [formGroup]="materialFormGroup"
-      [delivery]="delivery$ | async"
-      (delete)="openDeleteMaterial($event)"
-    ></delivery-material-form>
+  <ng-container sidenav>
+    <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup">
+      <delivery-material-form
+        *ngIf="!isDeliverySigned"
+        [formGroup]="materialFormGroup"
+        [delivery]="delivery$ | async"
+        (delete)="openDeleteMaterial($event)">
+      </delivery-material-form>
+    </ng-container>
+    <ng-container *ngIf="(signedMaterialFormGroup$ | async) as signedMaterialFormGroup">
+      <delivery-material-form
+        *ngIf="isDeliverySigned"
+        [isDeliverySigned]="isDeliverySigned"
+        [formGroup]="signedMaterialFormGroup"
+        [delivery]="delivery$ | async"
+        (delete)="openDeleteMaterial($event)">
+      </delivery-material-form>
+    </ng-container>
   </ng-container>
 </editable-sidenav>

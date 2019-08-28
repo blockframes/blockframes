@@ -416,13 +416,8 @@ export class DeliveryService {
   }
 
   /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public async isDeliveryValidated(deliveryId: string): Promise<boolean> {
+  public isDeliveryValidated(deliveryId: string): boolean {
     const delivery = this.query.getEntity(deliveryId);
-
-    const stakeholders = await this.deliverStakeholdersDoc(delivery.id)
-      .get()
-      .toPromise();
-
-    return delivery.validated.length === stakeholders.size;
+    return delivery.validated.length === delivery.stakeholders.length;
   }
 }

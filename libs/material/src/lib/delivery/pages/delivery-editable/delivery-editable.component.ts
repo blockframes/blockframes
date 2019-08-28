@@ -11,7 +11,7 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { map, startWith, tap, switchMap, filter } from 'rxjs/operators';
-import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
+import { createMaterialFormList, createMaterialFormGroup, createSignedMaterialFormList } from '../../forms/material.form';
 import { FormGroup } from '@angular/forms';
 import { applyTransaction } from '@datorama/akita';
 import { utils } from 'ethers';
@@ -26,13 +26,17 @@ import { OrganizationService } from '@blockframes/organization';
 export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
+  public signedMaterials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public pdfLink: string;
   public opened = false;
   public displayedColumns: string[];
+  public isDeliverySigned: boolean;
 
   public materialsFormList = createMaterialFormList();
+  public signedMaterialsFormList = createSignedMaterialFormList();
   public materialFormGroup$: Observable<FormGroup>;
+  public signedMaterialFormGroup$: Observable<FormGroup>;
 
   private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
@@ -55,11 +59,24 @@ export class DeliveryEditableComponent implements OnInit {
       switchMap(materials => this.materialsFormList.valueChanges.pipe(startWith(materials)))
     );
 
+    this.signedMaterials$ = this.materialQuery.selectAll().pipe(
+      tap(materials => this.signedMaterialsFormList.patchValue(materials)),
+      switchMap(materials => this.signedMaterialsFormList.valueChanges.pipe(startWith(materials)))
+    );
+
+    this.isDeliverySigned = this.service.isDeliveryValidated(this.query.getActiveId());
+
     /** Return the materialFormGroup linked to the selected materialId */
     this.materialFormGroup$ = this.selectedMaterialId$.pipe(
       filter((materialId) => !!materialId),
       map((materialId) => this.materialsFormList.value.findIndex(material => material.id === materialId)),
       map(index => this.materialsFormList.at(index))
+    );
+
+    this.signedMaterialFormGroup$ = this.selectedMaterialId$.pipe(
+      filter((materialId) => !!materialId),
+      map((materialId) => this.signedMaterialsFormList.value.findIndex(material => material.id === materialId)),
+      map(index => this.signedMaterialsFormList.at(index))
     );
 
     this.movie$ = this.movieQuery.selectActive();
@@ -77,9 +94,10 @@ export class DeliveryEditableComponent implements OnInit {
   /* Update a list of materials **/
   public update() {
     try {
-      const deliveryId = this.query.getActiveId();
-      const movieId = this.movieQuery.getActiveId();
-      this.materialService.updateMaterials(this.materialsFormList.value, deliveryId, movieId);
+      const delivery = this.query.getActive();
+      delivery.mustBeSigned
+        ? this.materialService.updateDeliveryMaterials(this.materialsFormList.value, delivery)
+        : this.materialService.updateMaterials(this.materialsFormList.value, delivery);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -111,8 +129,10 @@ export class DeliveryEditableComponent implements OnInit {
   /* Update status of selected materials **/
   public updateStatus(status: MaterialStatus) {
     const materials = this.materialQuery.getActive();
-    const movieId = this.movieQuery.getActiveId();
-    this.materialService.updateStatus(materials, status, movieId);
+    const delivery = this.query.getActive();
+    delivery.mustBeSigned
+      ? this.materialService.updateDeliveryMaterialStatus(materials, status, delivery.id)
+      : this.materialService.updateMaterialStatus(materials, status, delivery.movieId);
     this.snackBar.open(`Material status updated to ${status}` , 'close', { duration: 2000 });
     this.materialStore.returnToInitialState()
   }
@@ -120,16 +140,20 @@ export class DeliveryEditableComponent implements OnInit {
   /* Switch isOrdered boolean value of selected materials **/
   public materialIsOrdered() {
     const materials = this.materialQuery.getActive();
-    const movieId = this.movieQuery.getActiveId();
-    this.materialService.updateIsOrdered(materials, movieId);
+    const delivery = this.query.getActive();
+    delivery.mustBeSigned
+      ? this.materialService.updateDeliveryMaterialIsOrdered(materials, delivery.id)
+      : this.materialService.updateMaterialIsOrdered(materials, delivery.movieId);
     this.materialStore.returnToInitialState()
   }
 
   /* Switch isPaid boolean value of selected materials **/
   public materialsIsPaid() {
     const materials = this.materialQuery.getActive();
-    const movieId = this.movieQuery.getActiveId();
-    this.materialService.updateIsPaid(materials, movieId);
+    const delivery = this.query.getActive();
+    delivery.mustBeSigned
+      ? this.materialService.updateDeliveryMaterialIsPaid(materials, delivery.id)
+      : this.materialService.updateMaterialIsPaid(materials, delivery.movieId);
     this.materialStore.returnToInitialState()
   }
 
@@ -160,7 +184,9 @@ export class DeliveryEditableComponent implements OnInit {
         return;
       }
       const delivery = this.query.getActive();
-      this.materialService.deleteMaterial(materialId, delivery);
+      delivery.mustBeSigned
+        ? this.materialService.deleteDeliveryMaterial(materialId, delivery.id)
+        : this.materialService.deleteMaterial(materialId, delivery);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {

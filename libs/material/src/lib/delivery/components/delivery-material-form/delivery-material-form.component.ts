@@ -11,6 +11,7 @@ import { Material } from '../../../material/+state';
 })
 export class DeliveryMaterialFormComponent{
   @Input() delivery: Delivery;
+  @Input() isDeliverySigned: boolean;
   @Output() delete = new EventEmitter<Material>();
 
   public currencies = Currencies;

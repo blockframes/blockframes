@@ -9,7 +9,6 @@ import { DeliveryAddSpecificDeliveryListPickerComponent } from "./pages/delivery
 import { DeliveryAddSettingsComponent } from "./pages/delivery-add-settings/delivery-add-settings.component";
 import { DeliveryAddCompleteComponent } from "./pages/delivery-add-complete/delivery-add-complete.component";
 import { DeliveryListComponent } from "./pages/delivery-list/delivery-list.component";
-import { DeliveryTemplateListComponent } from "./pages/delivery-template-list/delivery-template-list.component";
 import { DeliveryEditableComponent } from "./pages/delivery-editable/delivery-editable.component";
 import { DeliveryTeamworkEditableComponent } from "./pages/delivery-teamwork-editable/delivery-teamwork-editable.component";
 import { DeliveryInformationsEditableComponent } from "./pages/delivery-informations-editable/delivery-informations-editable.component";
@@ -102,13 +101,6 @@ const routes: Routes = [
         canActivate: [DeliveryListGuard],
         canDeactivate: [DeliveryListGuard],
         component: DeliveryListComponent
-      },
-      {
-        path: 'template-picker',
-        // TODO: Getting redirected to templates/list if there is no template to load => ISSUE#648
-        canActivate: [TemplateListGuard],
-        canDeactivate: [TemplateListGuard],
-        component: DeliveryTemplateListComponent
       },
       {
         path: 'materials',
