@@ -18,7 +18,7 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-                <mat-form-field apperance="outline">
+                <mat-form-field apperance="outline" color="accent">
                   <input matInput formControlName="from" placeholder="From" />
                 </mat-form-field>
                 <mat-form-field>
@@ -51,7 +51,7 @@
               </mat-expansion-panel-header>
               <form formGroupName="languages" fxLayout="column">
                 <span fxLayout="row" fxLayoutAlign="start start">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field color="accent" appearance="outline">
                     <input matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
                       placeholder="Add new language" [errorStateMatcher]="matcher" />
                     <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
@@ -69,7 +69,8 @@
                   </mat-form-field>
                   <button mat-button [disabled]="!languageControl.valid" color="accent"
                     (click)="addLanguage(languageControl.value)">Add
-                    language</button>
+                    language
+                  </button>
                 </span>
                 <ng-container *ngIf="filterForm.get('languages').value">
                   <mat-list [formGroup]="filterForm.get('languages')" role="list">
@@ -113,13 +114,13 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
-                <mat-form-field apperance="outline">
+                <mat-form-field apperance="outline" color="accent">
                   <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
                   <mat-datepicker-toggle matSuffix [for]="pickerAvailableFrom">
                   </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field color="accent">
                   <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
                   <mat-datepicker-toggle matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
