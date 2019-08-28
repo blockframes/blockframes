@@ -32,6 +32,12 @@ const APPS_DETAILS: AppDetails[] = [
     logo: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
     href: '/delivery',
     id: App.mediaDelivering
+  },
+  {
+    name: 'Catalog Marketplace',
+    logo: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
+    href: '/catalog',
+    id: App.biggerBoat
   }
 ];
 
