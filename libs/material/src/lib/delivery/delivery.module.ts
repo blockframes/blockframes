@@ -13,7 +13,6 @@ import { DeliveryTeamworkItemComponent } from './components/delivery-teamwork-it
 import { DeliveryTeamworkRepertoryComponent } from './components/delivery-teamwork-repertory/delivery-teamwork-repertory.component';
 import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
-import { DeliveryFiltersComponent } from './components/delivery-filters/delivery-filters.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
 import { DeliveryInformationsDatesFormComponent } from './components/delivery-informations-dates-form/delivery-informations-dates-form.component';
@@ -100,7 +99,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryTemplateListComponent,
     StakeholderRepertoryComponent,
     StakeholderItemComponent,
-    DeliveryFiltersComponent,
     DeliveryActionsComponent,
     DeliveryTeamworkFormComponent,
     DeliveryTeamworkItemComponent,

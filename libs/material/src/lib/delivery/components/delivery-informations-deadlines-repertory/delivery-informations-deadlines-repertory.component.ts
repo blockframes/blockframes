@@ -3,10 +3,10 @@ import { MGDeadline, Delivery } from '../../+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { calculAmount } from '../delivery-informations-deadlines-form/delivery-informations-deadlines-form.component';
 
-function deliveryAmount(delivery: Delivery, deadline: MGDeadline) {
-  return (delivery.mgAmount && deadline.percentage)
+function deliveryAmount(delivery: Partial<Delivery>, deadline: MGDeadline) {
+  return delivery.mgAmount && deadline.percentage
     ? calculAmount(delivery.mgAmount, deadline.percentage)
-    : null
+    : null;
 }
 
 @Component({
@@ -17,7 +17,7 @@ function deliveryAmount(delivery: Delivery, deadline: MGDeadline) {
 })
 export class DeliveryInformationsDeadlinesRepertoryComponent {
   @Input()
-  set deliveryInformations(delivery: Delivery) {
+  set deliveryInformations(delivery: Partial<Delivery>) {
     // Calcul deadline amount for each deadline
     const deadlines = delivery.mgDeadlines.map(deadline => ({
       ...deadline,

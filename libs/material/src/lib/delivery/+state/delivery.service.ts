@@ -310,7 +310,7 @@ export class DeliveryService {
   }
 
   /** Remove signatures in array validated of delivery */
-  public unsealDelivery(): Promise<any> {
+  public unsealDelivery(): Promise<void> {
     // TODO(issue#775): ask all stakeholders for permission to re-open the delivery form
     return this.currentDeliveryDoc.update({ validated: [], isSigned: false });
   }
@@ -413,11 +413,5 @@ export class DeliveryService {
   public removeStakeholder(stakeholderId: string) {
     const deliveryId = this.query.getActiveId();
     return this.deliveryStakeholderDoc(deliveryId, stakeholderId).delete();
-  }
-
-  /** Returns true if number of signatures in validated equals number of stakeholders in delivery sub-collection */
-  public isDeliveryValidated(deliveryId: string): boolean {
-    const delivery = this.query.getEntity(deliveryId);
-    return delivery.validated.length === delivery.stakeholders.length;
   }
 }

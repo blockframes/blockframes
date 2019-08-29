@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
@@ -28,7 +28,6 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
-  public pdfLink: string;
   public opened = false;
   public displayedColumns: string[];
   private selectedMaterialId$ = new BehaviorSubject<string>(null);
@@ -53,7 +52,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // This generate a formList with disabled fields (or not) depending on delivery isSigned
+    // Generate a formList with disabled fields (or not) depending on delivery isSigned property
     this.query.selectActive()
       .pipe(
         takeUntil(this.destroyed$),
@@ -81,7 +80,6 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
     this.displayedColumns = this.setDisplayedColumns();
-    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
   }
 
   /* Open the sidenav with selected material form **/

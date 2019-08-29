@@ -1,11 +1,5 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
-} from '@angular/core';
-import { Step, Delivery } from '../../+state';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Step } from '../../+state';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -15,8 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryInformationsStepsRepertoryComponent {
-
-  @Input() set steps(steps: Step[]) {
+  @Input()
+  set steps(steps: Step[]) {
     this.dataSource = new MatTableDataSource(steps);
   }
   @Input() isSigned: boolean;
@@ -25,5 +19,4 @@ export class DeliveryInformationsStepsRepertoryComponent {
 
   public dataSource: MatTableDataSource<Step>;
   public displayedColumns: string[] = ['name', 'date'];
-
 }
