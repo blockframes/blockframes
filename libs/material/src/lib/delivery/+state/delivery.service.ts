@@ -91,10 +91,14 @@ export class DeliveryService {
     return this.deliveryDoc(this.query.getActiveId());
   }
 
-  private materialDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
+  private materialDeliveryDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
     return this.deliveryDoc(deliveryId)
       .collection('materials')
       .doc(materialId);
+  }
+
+  private materialMovieDoc(movieId: string, materialId: string): AngularFirestoreDocument {
+    return this.db.doc(`movies/${movieId}`).collection('materials').doc(materialId);
   }
 
   private deliveryDoc(id: string): AngularFirestoreDocument<DeliveryDB> {
@@ -158,10 +162,17 @@ export class DeliveryService {
       // Create document and permissions
       await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
-      // If there is a templateId, copy template materials to the delivery
-      if (!!opts.templateId) {
+      // If there is a templateId, and mustBeSigned is true, copy template materials to the delivery
+      if (!!opts.templateId && delivery.mustBeSigned) {
         const template = this.templateQuery.getEntity(opts.templateId);
-        this.copyMaterials(delivery, template, tx);
+        await this.copyMaterialsInDelivery(delivery, template, tx);
+      }
+
+      // If there is a templateId, and mustBeSigned is false, copy template materials to the movie
+      if (!!opts.templateId && !delivery.mustBeSigned) {
+        const template = this.templateQuery.getEntity(opts.templateId);
+        const movie = this.movieQuery.getActive();
+        await this.copyMaterialsInMovie(movie, delivery, template, tx);
       }
 
       // Create the stakeholder in the sub-collection
@@ -197,8 +208,8 @@ export class DeliveryService {
       // Create document and permissions
       await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
-      // Copy movie materials to the delivery
-      await this.copyMaterials(delivery, movieSnap.data() as Movie, tx);
+      // Copy movie materials in the delivery
+      await this.copyMaterialsInDelivery(delivery, movieSnap.data() as Movie, tx);
 
       // Create the stakeholder in the sub-collection
       await this.shService.addStakeholder(delivery, organization.id, true, tx);
@@ -303,7 +314,7 @@ export class DeliveryService {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
 
       materials.forEach(material => {
-        const ref = this.materialDoc(deliveryId, material.id).ref;
+        const ref = this.materialDeliveryDoc(deliveryId, material.id).ref;
         batch.update(ref, { stepId: '' });
       });
     });
@@ -322,7 +333,6 @@ export class DeliveryService {
 
   /** Sign array validated of delivery with stakeholder logged */
   public signDelivery(deliveryId?: string): Promise<any> {
-
     let delivery: Delivery;
 
     if (!!deliveryId) {
@@ -334,7 +344,9 @@ export class DeliveryService {
     const organizationId = this.organizationQuery.getValue().org.id;
     const { id, validated, stakeholders } = delivery;
 
-    const stakeholderSignee = stakeholders.find(({ id: stakeholderId }) => organizationId === stakeholderId);
+    const stakeholderSignee = stakeholders.find(
+      ({ id: stakeholderId }) => organizationId === stakeholderId
+    );
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
@@ -345,15 +357,18 @@ export class DeliveryService {
   public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string) {
     const callback = async () => {
       await Promise.all([
-        this.db.collection('actions').doc(deliveryHash).set({name: `Delivery #${deliveryId}`}),
-        this.signDelivery(deliveryId),
+        this.db
+          .collection('actions')
+          .doc(deliveryHash)
+          .set({ name: `Delivery #${deliveryId}` }),
+        this.signDelivery(deliveryId)
       ]);
     };
     this.walletService.setTx(CreateTx.approveDelivery(orgAddress, deliveryHash, callback));
   }
 
   /** Create a transaction to copy the template/movie materials into the delivery materials */
-  public async copyMaterials(
+  public async copyMaterialsInDelivery(
     delivery: Delivery,
     document: BFDoc,
     tx: firebase.firestore.Transaction
@@ -363,10 +378,34 @@ export class DeliveryService {
     );
 
     materials.forEach(material => {
-      tx.set(this.materialDoc(delivery.id, material.id).ref, {
+      tx.set(this.materialDeliveryDoc(delivery.id, material.id).ref, {
         ...material,
         state: '',
         stepId: ''
+      });
+    });
+
+    return tx;
+  }
+
+  /** Create a transaction to copy the template materials into the movie materials */
+  public async copyMaterialsInMovie(
+    movie: Movie,
+    delivery: Delivery,
+    document: BFDoc,
+    tx: firebase.firestore.Transaction
+  ) {
+    const materials = await this.db.snapshot<Material[]>(
+      `${document._type}/${document.id}/materials`
+    );
+
+    materials.forEach(material => {
+      // TODO: Check is deliveryID exists
+      tx.set(this.materialMovieDoc(movie.id, material.id).ref, {
+        ...material,
+        state: '',
+        stepId: '',
+        deliveryIds: [delivery.id]
       });
     });
 
