@@ -1,15 +1,18 @@
 <article>
   <header fxLayout="row" fxLayoutAlign="space-between">
     <h3>Delivery dates</h3>
-    <button mat-flat-button (click)="editing.emit()">Edit</button>
+    <button [disabled]="isSigned" mat-flat-button (click)="editing.emit()">Edit</button>
   </header>
-  <p *ngIf="delivery.dueDate">
-    <b>Delivery Due Date </b><span>{{ delivery.dueDate | date: 'MM/dd/yyyy' }}</span>
+  <p>
+    <b>Delivery Due Date </b>
+    <span *ngIf="deliveryInformations.dueDate">{{ deliveryInformations.dueDate | date: 'MM/dd/yyyy' }}</span>
   </p>
-  <p *ngIf="delivery.acceptationPeriod">
-    <b>Acceptation period </b><span>{{ delivery.acceptationPeriod }} days</span>
+  <p>
+    <b>Acceptation period </b>
+    <span *ngIf="deliveryInformations.acceptationPeriod">{{ deliveryInformations.acceptationPeriod }} days</span>
   </p>
-  <p *ngIf="delivery.reWorkingPeriod">
-    <b>Re-working period </b><span>{{ delivery.reWorkingPeriod }} days</span>
+  <p>
+    <b>Re-working period </b>
+    <span *ngIf="deliveryInformations.reWorkingPeriod">{{ deliveryInformations.reWorkingPeriod }} days</span>
   </p>
 </article>

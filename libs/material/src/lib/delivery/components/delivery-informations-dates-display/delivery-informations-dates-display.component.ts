@@ -14,6 +14,8 @@ import { Delivery } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryInformationsDatesDisplayComponent {
-  @Input() delivery: Delivery;
+  @Input() deliveryInformations: Partial<Delivery>;
+  @Input() isSigned: boolean;
+
   @Output() editing = new EventEmitter();
 }

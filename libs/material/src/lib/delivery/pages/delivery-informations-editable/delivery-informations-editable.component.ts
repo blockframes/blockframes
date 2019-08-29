@@ -17,6 +17,7 @@ export class DeliveryInformationsEditableComponent implements OnInit {
 
   public informationsFormGroup = createInformationsFormGroup();
 
+  public deliveryInformations$: Observable<Partial<Delivery>>;
   public delivery$: Observable<Delivery>;
 
   constructor(
@@ -26,12 +27,14 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.delivery$ = this.query.selectActive().pipe(
+    this.deliveryInformations$ = this.query.selectActive().pipe(
       tap(delivery => {
         this.informationsFormGroup.patchValue(delivery);
       }),
       switchMap(delivery => this.informationsFormGroup.valueChanges.pipe(startWith(delivery)))
     );
+
+    this.delivery$ = this.query.selectActive();
   }
 
   public openSidenav(name: string) {

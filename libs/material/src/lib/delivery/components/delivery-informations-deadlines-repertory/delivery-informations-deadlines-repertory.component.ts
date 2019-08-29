@@ -17,7 +17,7 @@ function deliveryAmount(delivery: Delivery, deadline: MGDeadline) {
 })
 export class DeliveryInformationsDeadlinesRepertoryComponent {
   @Input()
-  set delivery(delivery: Delivery) {
+  set deliveryInformations(delivery: Delivery) {
     // Calcul deadline amount for each deadline
     const deadlines = delivery.mgDeadlines.map(deadline => ({
       ...deadline,
@@ -27,6 +27,7 @@ export class DeliveryInformationsDeadlinesRepertoryComponent {
     this.mgCurrency = delivery.mgCurrency;
     this.mgAmount = delivery.mgAmount;
   }
+  @Input() isSigned: boolean;
 
   @Output() editing = new EventEmitter();
 

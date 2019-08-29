@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import { Step } from '../../+state';
+import { Step, Delivery } from '../../+state';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -19,9 +19,11 @@ export class DeliveryInformationsStepsRepertoryComponent {
   @Input() set steps(steps: Step[]) {
     this.dataSource = new MatTableDataSource(steps);
   }
+  @Input() isSigned: boolean;
 
   @Output() editing = new EventEmitter();
 
   public dataSource: MatTableDataSource<Step>;
   public displayedColumns: string[] = ['name', 'date'];
+
 }

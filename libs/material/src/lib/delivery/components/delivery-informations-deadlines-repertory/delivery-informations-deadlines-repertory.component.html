@@ -11,7 +11,7 @@
 <article>
   <header fxLayout="row" fxLayoutAlign="space-between">
     <h4>Guaranteed minimum payment deadlines</h4>
-    <button mat-flat-button (click)="editing.emit()">Edit</button>
+    <button [disabled]="isSigned" mat-flat-button (click)="editing.emit()">Edit</button>
   </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- Label Column -->
