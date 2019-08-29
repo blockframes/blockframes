@@ -18,14 +18,14 @@
                   Production Year
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
                 <mat-form-field apperance="outline" color="accent">
                   <input matInput formControlName="from" placeholder="From" />
                 </mat-form-field>
                 <mat-form-field>
                   <input matInput formControlName="to" placeholder="To" />
                 </mat-form-field>
-              </span>
+              </div>
             </mat-expansion-panel>
 
             <!-- Genre Types -->
@@ -114,7 +114,7 @@
                   Availabilities
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <span fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
                 <mat-form-field apperance="outline" color="accent">
                   <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
                   <mat-datepicker-toggle matSuffix [for]="pickerAvailableFrom">
@@ -126,7 +126,7 @@
                   <mat-datepicker-toggle matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
                 </mat-form-field>
-              </span>
+              </div>
             </mat-expansion-panel>
 
             <!-- Territories -->
