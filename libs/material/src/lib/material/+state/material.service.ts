@@ -165,7 +165,7 @@ export class MaterialService {
   //////////////////////////////
 
   /** Remove material of template */
-  public deleteTemplateMaterial(id: string) {
+  public deleteTemplateMaterial(id: string): Promise<void> {
     const templateId = this.templateQuery.getActiveId();
     return this.db.doc<Material>(`templates/${templateId}/materials/${id}`).delete();
   }
@@ -173,8 +173,7 @@ export class MaterialService {
   /** Returns a material of template to be pushed in a formGroup */
   public addTemplateMaterial(): Material {
     const id = this.db.createId();
-    const newMaterial = createTemplateMaterial({ id });
-    return newMaterial;
+    return createTemplateMaterial({ id });
   }
 
   /** Update all materials of template */

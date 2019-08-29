@@ -35,6 +35,7 @@ export class TemplateEditableComponent implements OnInit {
   ngOnInit() {
     this.template$ = this.query.selectActive();
     this.materials$ = this.query.selectActive().pipe(
+      // We need to filter materials because when we go into the template list, the guard does not load materials in templates
       filter(template => !!template.materials),
       tap(template => this.materialsFormList.patchValue(template.materials)),
       switchMap(template => this.materialsFormList.valueChanges.pipe(startWith(template.materials)))
@@ -57,7 +58,7 @@ export class TemplateEditableComponent implements OnInit {
 
   public async updateMaterials() {
     try {
-      this.materialService.updateTemplateMaterials(this.materialsFormList.value);
+      await this.materialService.updateTemplateMaterials(this.materialsFormList.value);
       this.snackBar.open('Materials updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -70,9 +71,9 @@ export class TemplateEditableComponent implements OnInit {
     this.openSidenav(newMaterial.id);
   }
 
-  public deleteMaterial(materialId: string) {
+  public async deleteMaterial(materialId: string) {
     try {
-      this.materialService.deleteTemplateMaterial(materialId);
+      await this.materialService.deleteTemplateMaterial(materialId);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {
