@@ -1,19 +1,16 @@
 
 <div fxLayout="row" fxLayoutAlign="start center">
   
-  <img *ngIf="!!urls[0]; else unknown0" [src]="urls[0]">
-  <ng-template #unknown0>
-    <mat-icon>help_outline</mat-icon>
-  </ng-template>
+  <ng-container *ngFor="let url of _urls">
 
-  <ng-container *ngIf="urls.length > 1">
-      <img *ngIf="!!urls[1]; else unknown1" [src]="urls[1]">
-      <ng-template #unknown0>
-        <mat-icon>help_outline</mat-icon>
-      </ng-template>
+    <img *ngIf="!!url; else unknown" [src]="url">
+    <ng-template #unknown>
+      <mat-icon>help_outline</mat-icon>
+    </ng-template>
+    
   </ng-container>
 
-  <ng-container *ngIf="urls.length > 2">
-    +{{urls.length - 2}}
+  <ng-container *ngIf="_morDetails > 0">
+    +{{_morDetails}}
   </ng-container>
 </div>

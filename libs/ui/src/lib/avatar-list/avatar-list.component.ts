@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { min } from 'rxjs/operators';
 
 @Component({
   selector: 'avatar-list',
@@ -8,5 +9,18 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 })
 export class AvatarListComponent {
 
-  @Input() urls: string[];
+  _urls: string[];
+  _moreDetails = 0;
+
+  @Input()
+  set urls(newUrls: string[]) {
+    this._urls = [];
+    for(let i = 0 ; i < Math.min(2, newUrls.length) ; i++) {
+      this._urls.push(newUrls[i]);
+    }
+    const more = newUrls.length - 2;
+    if (more > 0) {
+      this._moreDetails = more;
+    }
+  }
 }
