@@ -15,7 +15,7 @@ export class DeliveryInformationsStakeholdersComponent {
 
   constructor() {}
 
-  hasSigned(stakeholderId: string) {
+  public hasSigned(stakeholderId: string) {
     return this.delivery.validated.some(id => id === stakeholderId) ? 'signed' : 'not signed';
   }
 }

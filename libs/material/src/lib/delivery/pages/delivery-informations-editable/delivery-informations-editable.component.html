@@ -1,10 +1,12 @@
 <editable-sidenav test-id="content" page-id="delivery-informations" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
   <!-- Content -->
   <ng-container content>
-    <delivery-informations-deadlines-repertory [delivery]="delivery$ | async" (editing)="openSidenav('deadlines')"></delivery-informations-deadlines-repertory>
-    <delivery-informations-dates-display [delivery]="delivery$ | async" (editing)="openSidenav('dates')"></delivery-informations-dates-display>
-    <delivery-informations-steps-repertory [steps]="(delivery$ | async).steps" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
-    <delivery-informations-stakeholders [delivery]="delivery$ | async"></delivery-informations-stakeholders>
+    <ng-container *ngIf="(delivery$ | async) as delivery">
+      <delivery-informations-deadlines-repertory [delivery]="delivery" (editing)="openSidenav('deadlines')"></delivery-informations-deadlines-repertory>
+      <delivery-informations-dates-display [delivery]="delivery" (editing)="openSidenav('dates')"></delivery-informations-dates-display>
+      <delivery-informations-steps-repertory [steps]="delivery.steps" (editing)="openSidenav('steps')"></delivery-informations-steps-repertory>
+      <delivery-informations-stakeholders [delivery]="delivery"></delivery-informations-stakeholders>
+    </ng-container>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav [ngSwitch]="editContent">
