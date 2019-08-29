@@ -1,5 +1,5 @@
-<h4>Edit material</h4>
-<article>
+<section>
+  <h4>Edit material</h4>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
     <!-- Material Title/Value Input -->
     <mat-form-field appearance="outline">
@@ -53,16 +53,24 @@
     </ng-container>
 
     <mat-divider inset></mat-divider>
-    <button
-      disabled="isDeliverySigned"
-      mat-flat-button
-      color="warn"
-      (click)="delete.emit(control.value.id)"
-      fxFlexAlign="center">
-      <span>
-        <mat-icon>delete</mat-icon>
-        Delete this material
-      </span>
+    <article *ngIf="!delivery.isSigned" fxLayout="row" fxLayoutAlign="center center">
+      <button
+        mat-flat-button
+        color="warn"
+        (click)="delete.emit(control.value.id)">
+        <span>
+          <mat-icon>delete</mat-icon>
+          Delete this material
+        </span>
     </button>
+    </article>
+    <article *ngIf="delivery.isSigned" fxLayout="row" fxLayoutAlign="center center">
+      <button mat-raised-button color="primary" (click)="enable.emit()">
+        Enable
+      </button>
+      <button mat-button color="primary" (click)="disable.emit()">
+        Disable
+      </button>
+    </article>
   </form>
-</article>
+</section>

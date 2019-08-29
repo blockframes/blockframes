@@ -11,8 +11,10 @@ import { Material } from '../../../material/+state';
 })
 export class DeliveryMaterialFormComponent{
   @Input() delivery: Delivery;
-  @Input() isDeliverySigned: boolean;
+
   @Output() delete = new EventEmitter<Material>();
+  @Output() enable = new EventEmitter<void>();
+  @Output() disable = new EventEmitter<void>();
 
   public currencies = Currencies;
 
@@ -21,4 +23,5 @@ export class DeliveryMaterialFormComponent{
   public get control() {
     return this.controlContainer.control;
   }
+
 }

@@ -25,6 +25,7 @@ interface DeliveryRaw<D> {
   id: string;
   movieId: string;
   validated: string[]; // Stakeholder.id[];
+  isSigned?: boolean;
   delivered: boolean;
   stakeholders: Stakeholder[];
   dueDate?: D;

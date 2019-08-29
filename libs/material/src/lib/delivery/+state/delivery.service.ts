@@ -312,7 +312,7 @@ export class DeliveryService {
   /** Remove signatures in array validated of delivery */
   public unsealDelivery(): Promise<any> {
     // TODO(issue#775): ask all stakeholders for permission to re-open the delivery form
-    return this.currentDeliveryDoc.update({ validated: [] });
+    return this.currentDeliveryDoc.update({ validated: [], isSigned: false });
   }
 
   /** Deletes delivery and all the sub-collections in firebase */
