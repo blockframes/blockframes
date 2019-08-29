@@ -88,6 +88,7 @@ import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery
 import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { DeliveryInformationsStakeholdersComponent } from './components/delivery-informations-stakeholders/delivery-informations-stakeholders.component';
 
 const routes: Routes = [
   {
@@ -246,6 +247,7 @@ const routes: Routes = [
     DeliveryStatusesComponent,
     DeliveryInformationsDeadlinesFormComponent,
     DeliveryInformationsDeadlinesRepertoryComponent,
+    DeliveryInformationsStakeholdersComponent,
     MovieEditableComponent,
     MovieMaterialListComponent,
     MovieMaterialFormComponent
