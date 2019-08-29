@@ -45,7 +45,7 @@ export interface OrgDocPermissions {
 export const enum App {
   mediaDelivering = 'delivery',
   mediaFinanciers = 'movie-financing',
-  storiesAndMore = 'StoriesAndMore',
+  storiesAndMore = 'stories-and-more',
   biggerBoat = 'catalog'
 }
 

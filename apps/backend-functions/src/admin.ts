@@ -23,7 +23,7 @@ import {
 import { getSuperAdmins } from './data/internals';
 
 // TODO(#714): Synchronize data types with the frontend
-const APPS = ['delivery', 'movie-financing', 'StoriesAndMore', 'catalog'];
+const APPS = ['delivery', 'movie-financing', 'stories-and-more', 'catalog'];
 
 /**
  * Handles firestore update on request to application access,
