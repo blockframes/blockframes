@@ -1,3 +1,4 @@
+<!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content" page-id="catalog-search">
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1 class="mat-display-3">Search what you want</h1>
@@ -50,7 +51,7 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <form formGroupName="languages" fxLayout="column">
-                <span fxLayout="row" fxLayoutAlign="start start">
+                <div fxLayout="row" fxLayoutAlign="start start">
                   <mat-form-field color="accent" appearance="outline">
                     <input matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
                       placeholder="Add new language" [errorStateMatcher]="matcher" />
@@ -71,7 +72,7 @@
                     (click)="addLanguage(languageControl.value)">Add
                     language
                   </button>
-                </span>
+                </div>
                 <ng-container *ngIf="filterForm.get('languages').value">
                   <mat-list [formGroup]="filterForm.get('languages')" role="list">
                     <ng-container *ngFor="let language of languages$ | async">
@@ -173,10 +174,10 @@
 
     <!-- List of result -->
     <article>
-      <h3 class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <header class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <h3>Search</h3>
         <mat-divider></mat-divider>
-      </h3>
+      </header>
       <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
         <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main">
         </movie-display-card-item>

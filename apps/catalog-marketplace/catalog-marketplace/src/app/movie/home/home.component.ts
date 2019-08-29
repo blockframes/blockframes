@@ -53,11 +53,11 @@ export class CatalogMarketplaceHomeComponent implements OnInit {
     );
   }
 
-  layout(index: number) {
+  public layout(index: number) {
     return index%2 === 0? 'row': 'row-reverse';
   }
 
-  alignment(index: number) {
+  public alignment(index: number) {
     return index%2 === 0? 'start start': 'start end';
   }
 }
