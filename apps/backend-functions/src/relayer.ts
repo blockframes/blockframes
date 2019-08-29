@@ -73,11 +73,6 @@ export function initRelayer(config: RelayerConfig): Relayer {
   const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
   const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
 
-  // await Promise.all([
-  //   resolver.supportsInterface('0x01ffc9a7'),
-  //   registry.owner('0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae')
-  // ])
-
   return <Relayer>{
     wallet,
     contractFactory,
