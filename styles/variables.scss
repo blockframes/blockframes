@@ -46,9 +46,17 @@ $dark-warn: mat-color($bf-dark-warn);
 }
 
 // CSS dark-theme color variables
-.dark-theme {
+// .dark-theme {
+//   @extend :root;
+//   --primary: #{$dark-primary};
+//   --warn: #{$dark-warn};
+//   --accent: #{$dark-accent};
+// }
+
+// CSS light-theme color variables
+.light-theme {
   @extend :root;
-  --primary: #{$dark-primary};
-  --warn: #{$dark-warn};
-  --accent: #{$dark-accent};
+  --primary: #{$primary};
+  --warn: #{$warn};
+  --accent: #{$accent};
 }

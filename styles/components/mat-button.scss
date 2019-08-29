@@ -1,3 +1,7 @@
+.light-theme .mat-raised-button {
+  background-color: var(--accent)
+}
+
 button { // TODO: Get rid of the !important and apply this on mat-raised-button
   padding: 8px 24px !important;
   font-size: 12px !important;

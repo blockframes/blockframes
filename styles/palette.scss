@@ -30,7 +30,6 @@ $mat-bf-blue: (
         A700 : #000000,
     )
 );
-
 $mat-bf-orange: (
     50 : #ffeeec,
     100 : #ffd4d0,
@@ -63,7 +62,6 @@ $mat-bf-orange: (
         A700 : #000000,
     )
 );
-
 $mat-bf-red: (
     50 : #fee3e5,
     100 : #fcb9bf,
@@ -96,7 +94,6 @@ $mat-bf-red: (
         A700 : #000000,
     )
 );
-
 $mat-bf-darkblue: (
     50 : #e4e3ea,
     100 : #bcb8ca,
@@ -129,7 +126,6 @@ $mat-bf-darkblue: (
         A700 : #ffffff,
     )
 );
-
 $mat-bf-darkblack: (
     50 : #e1e1e1,
     100 : #b5b5b5,
@@ -162,7 +158,6 @@ $mat-bf-darkblack: (
         A700 : #ffffff,
     )
 );
-
 $mat-bf-darkgreen: (
     50 : #e4e7e5,
     100 : #bcc3be,
@@ -210,6 +205,10 @@ $mat-lightbf-red: (
   700 : #E45141,
   800 : #D74B3B,
   900 : #C8412F,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #ffd3cf,
+  A700 : #ffbbb6,
   contrast: (
     50 : #24374E,
     100 : #24374E,
@@ -221,6 +220,10 @@ $mat-lightbf-red: (
     700 : #FFFFFF,
     800 : #FFFFFF,
     900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
 $mat-lightbf-blue: (
@@ -234,6 +237,10 @@ $mat-lightbf-blue: (
   700 : #0035DC,
   800 : #0028D2,
   900 : #0004C1,
+  A100 : #ffffff,
+  A200 : #e3e5ff,
+  A400 : #b0b6ff,
+  A700 : #969fff,
   contrast: (
     50 : #24374E,
     100 : #24374E,
@@ -245,6 +252,10 @@ $mat-lightbf-blue: (
     700 : #FFFFFF,
     800 : #FFFFFF,
     900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
 
@@ -264,6 +275,10 @@ $mat-darkbf-orange: (
   700 : #E45141,
   800 : #D74B3B,
   900 : #C8412F,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #ffd3cf,
+  A700 : #ffbbb6,
   contrast: (
     50 : #24374E,
     100 : #24374E,
@@ -275,6 +290,10 @@ $mat-darkbf-orange: (
     700 : #F9F8FF,
     800 : #F9F8FF,
     900 : #F9F8FF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
 $mat-darkbf-blue: (
@@ -288,10 +307,14 @@ $mat-darkbf-blue: (
   700 : #234CCE,
   800 : #1A41C1,
   900 : #092DAA,
+  A100 : #ffffff,
+  A200 : #d3d8ff,
+  A400 : #a0acff,
+  A700 : #8696ff,
   contrast: (
     50 : #24374E,
     100 : #24374E,
-    200 : #24374E,
+    200 : #F9F8FF,
     300 : #F9F8FF,
     400 : #F9F8FF,
     500 : #F9F8FF,
@@ -299,5 +322,9 @@ $mat-darkbf-blue: (
     700 : #F9F8FF,
     800 : #F9F8FF,
     900 : #F9F8FF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );

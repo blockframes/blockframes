@@ -13,7 +13,7 @@
   <button
     *ngIf="!isUpdateTemplate"
     mat-raised-button
-    color="primary"
+    color="accent"
     (click)="saveTemplate(templateName.value)"
     [disabled]="!templateName.value"
     class="mat-elevation-z0"
@@ -23,7 +23,7 @@
   <button
     *ngIf="isUpdateTemplate"
     mat-raised-button
-    color="primary"
+    color="accent"
     (click)="updateTemplate(templateName.value)"
     [disabled]="!templateName.value"
     class="mat-elevation-z0"

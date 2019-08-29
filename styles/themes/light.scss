@@ -1,0 +1,155 @@
+
+//////////////
+// PALETTES //
+//////////////
+
+$mat-light-bf-orange: (
+  50 : #FFEEF1,
+  100 : #FFD5D9,
+  200 : #F8A8A5,
+  300 : #F28882,
+  400 : #FF6E61,
+  500 : #FF6247,
+  600 : #F75B48,
+  700 : #E45141,
+  800 : #D74B3B,
+  900 : #C8412F,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #24374E,
+    300 : #F9F8FF,
+    400 : #F9F8FF,
+    500 : #F9F8FF,
+    600 : #F9F8FF,
+    700 : #F9F8FF,
+    800 : #F9F8FF,
+    900 : #F9F8FF,
+  )
+);
+$mat-light-bf-blue: (
+  50 : #E9EAFF,
+  100 : #C7CAFD,
+  200 : #9FA8FC,
+  300 : #7385FB,
+  400 : #4E67F9,
+  500 : #1A49F5,
+  600 : #1440E9,
+  700 : #0035DC,
+  800 : #0028D2,
+  900 : #0004C1,
+  A100 : #ffffff,
+  A200 : #e3e5ff,
+  A400 : #b0b6ff,
+  A700 : #969fff,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #FFFFFF,
+    300 : #FFFFFF,
+    400 : #FFFFFF,
+    500 : #FFFFFF,
+    600 : #FFFFFF,
+    700 : #FFFFFF,
+    800 : #FFFFFF,
+    900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$mat-light-bf-red: (
+  50 : #FFEEF1,
+  100 : #FFD5D9,
+  200 : #F8A8A5,
+  300 : #F28882,
+  400 : #FF6E61,
+  500 : #FF6247,
+  600 : #F75B48,
+  700 : #E45141,
+  800 : #D74B3B,
+  900 : #C8412F,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #ffd3cf,
+  A700 : #ffbbb6,
+  contrast: (
+    50 : #24374E,
+    100 : #24374E,
+    200 : #FFFFFF,
+    300 : #FFFFFF,
+    400 : #FFFFFF,
+    500 : #FFFFFF,
+    600 : #FFFFFF,
+    700 : #FFFFFF,
+    800 : #FFFFFF,
+    900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+////////////////
+// BACKGROUND //
+////////////////
+// Background palette for light themes.
+$bf-light-background: (
+  status-bar: white,
+  app-bar:    map_get($mat-grey, 900),
+  background: #FAFAFA,
+  hover:      rgba(white, 0.04),
+  card:       #FFFFFF,
+  dialog:     map_get($mat-grey, 800),
+  disabled-button: rgba(#B9C2CB, 0.12),
+  raised-button: map-get($mat-grey, 800),
+  focused-button: $light-focused,
+  selected-button: map_get($mat-grey, 900),
+  selected-disabled-button: map-get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
+
+////////////////
+// FOREGROUND //
+////////////////
+// Foreground palette for light themes.
+$bf-light-foreground: (
+  base:              black,
+  divider:           $dark-dividers,
+  dividers:          $dark-dividers,
+  disabled:          $dark-disabled-text,
+  disabled-button:   rgba(black, 0.26),
+  disabled-text:     $dark-disabled-text,
+  elevation:         black,
+  hint-text:         $dark-disabled-text,
+  secondary-text:    $dark-secondary-text,
+  icon:              rgba(black, 0.54),
+  icons:             rgba(black, 0.54),
+  text:              rgba(black, 0.87),
+  slider-min:        rgba(black, 0.87),
+  slider-off:        rgba(black, 0.26),
+  slider-off-active: rgba(black, 0.38),
+);
+
+///////////
+// THEME //
+///////////
+
+$bf-light-primary: mat-palette($mat-light-bf-red, 400, 50, 700);
+$bf-light-accent: mat-palette($mat-light-bf-blue, 200, 50, 500);
+$bf-light-warn: mat-palette($mat-light-bf-orange, 200);
+
+$bf-light-theme: (
+  // Standard
+  primary: $bf-light-primary,
+  accent: $bf-light-accent,
+  warn: $bf-light-warn,
+  is-dark: false,
+  foreground: $bf-light-foreground,
+  background: $bf-light-background,
+);
