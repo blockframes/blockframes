@@ -10,8 +10,7 @@
   height: calc(var(--toolbarHeight) - 2px);
 }
 
-mat-toolbar {
-  background-color: white;
+.light-theme .mat-toolbar {
   padding: 0 50px;
 }
 
