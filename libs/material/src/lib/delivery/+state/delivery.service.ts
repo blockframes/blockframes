@@ -17,7 +17,7 @@ import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.s
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { createTx_ApproveDelivery } from 'libs/ethers/src/lib/wallet/+state/wallet-known-tx';
+import { CreateTx } from '@blockframes/ethers';
 
 const Timestamp = firebase.firestore.Timestamp;
 
@@ -321,25 +321,35 @@ export class DeliveryService {
   }
 
   /** Sign array validated of delivery with stakeholder logged */
-  public signDelivery(): Promise<any> {
-    const delivery = this.query.getActive();
-    const organizationId = this.organizationQuery.getValue().org.id;
-    const { id: deliveryId, validated, stakeholders } = delivery;
+  public signDelivery(deliveryId?: string): Promise<any> {
 
-    const stakeholderSignee = stakeholders.find(({ id }) => organizationId === id);
+    let delivery: Delivery;
+
+    if (!!deliveryId) {
+      delivery = this.query.getEntity(deliveryId);
+    } else {
+      delivery = this.query.getActive();
+    }
+
+    const organizationId = this.organizationQuery.getValue().org.id;
+    const { id, validated, stakeholders } = delivery;
+
+    const stakeholderSignee = stakeholders.find(({ id: stakeholderId }) => organizationId === stakeholderId);
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
-      return this.deliveryDoc(deliveryId).update({ validated: updatedValidated });
+      return this.deliveryDoc(id).update({ validated: updatedValidated });
     }
   }
 
   public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string) {
-    const callback = () => {
-      this.db.collection('actions').doc(deliveryHash).set({name: `Delivery #${deliveryId}`});
-      this.signDelivery();
+    const callback = async () => {
+      await Promise.all([
+        this.db.collection('actions').doc(deliveryHash).set({name: `Delivery #${deliveryId}`}),
+        this.signDelivery(deliveryId),
+      ]);
     };
-    this.walletService.setTx(createTx_ApproveDelivery(orgAddress, deliveryHash, callback));
+    this.walletService.setTx(CreateTx.approveDelivery(orgAddress, deliveryHash, callback));
   }
 
   /** Create a transaction to copy the template/movie materials into the delivery materials */

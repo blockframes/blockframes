@@ -51,7 +51,7 @@ export interface OrganizationOperation {
 
 export interface OrganizationAction {
   id: string;
-  opid: string;
+  opId: string;
   name: string;
   signers: OrganizationMember[];
   isApproved: boolean;

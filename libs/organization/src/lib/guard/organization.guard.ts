@@ -19,7 +19,7 @@ export class OrganizationGuard {
           if (organization.status === OrganizationStatus.pending) {
             return res(this.router.parseUrl('layout/organization/congratulation'));
           }
-          this.orgService.retreiveDataAndAddListeners();
+          this.orgService.retrieveDataAndAddListeners();
           return res(true);
         },
         error: err => {

@@ -44,7 +44,7 @@ export class DeliveryEditableComponent implements OnInit {
     private materialService: MaterialService,
     private service: DeliveryService,
     private materialStore: MaterialStore,
-    private orgaizationService: OrganizationService,
+    private organizationService: OrganizationService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -211,7 +211,7 @@ export class DeliveryEditableComponent implements OnInit {
     const jsonMaterials = JSON.stringify(materials);
     
     const deliveryHash = utils.id(jsonDelivery + jsonMaterials);
-    const orgAddress = await this.orgaizationService.getAddress();
+    const orgAddress = await this.organizationService.getAddress();
 
     this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash);
     this.router.navigateByUrl('/layout/o/account/wallet/send');

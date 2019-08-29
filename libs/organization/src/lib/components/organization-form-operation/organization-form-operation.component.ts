@@ -1,8 +1,9 @@
 import { ControlContainer, FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationMember, OrganizationQuery, OrganizationService } from '../../+state';
-import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
+import { OrganizationMember, OrganizationService } from '../../+state';
 import { Router } from '@angular/router';
+import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
+import { CreateTx } from '@blockframes/ethers';
 
 @Component({
   selector: '[formGroup] organization-form-operation, [formGroupName] organization-form-operation',
@@ -19,7 +20,7 @@ export class OrganizationFormOperationComponent {
   constructor(
     public router: Router,
     public controlContainer: ControlContainer,
-    public serv: OrganizationQuery,
+    public walletService: WalletService,
     public service: OrganizationService,
   ) { }
 
@@ -45,7 +46,7 @@ export class OrganizationFormOperationComponent {
     const memberAddress = await this.service.getMemberAddress(removedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.service.setRemoveMemeberTx(orgAddress, operationId, memberAddress);
+    this.walletService.setTx(CreateTx.removeMember(orgAddress, operationId, memberAddress));
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -58,7 +59,7 @@ export class OrganizationFormOperationComponent {
     const memberAddress = await this.service.getMemberAddress(addedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.service.setAddMemeberTx(orgAddress, operationId, memberAddress);
+    this.walletService.setTx(CreateTx.addMember(orgAddress, operationId, memberAddress));
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -66,7 +67,7 @@ export class OrganizationFormOperationComponent {
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
-    this.service.setUpdateQuorumTx(orgAddress, operationId, newQuorum);
+    this.walletService.setTx(CreateTx.modifyQuorum(orgAddress, operationId, newQuorum));
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

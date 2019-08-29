@@ -8,11 +8,8 @@ import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
 import { MetaTx, SignedMetaTx, ActionTx } from '../../types';
 import { WalletQuery } from './wallet.query';
-import {
-  createTx_DeleteKey,
-  createTx_AddKey
-} from './wallet-known-tx';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
+import { CreateTx } from '../../create-tx';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -28,7 +25,7 @@ export class WalletService {
 
   public async updateFromEmail(email: string) {
     const ensDomain = emailToEnsDomain(email);
-    const address = await this.retreiveAddress(ensDomain);
+    const address = await this.retrieveAddress(ensDomain);
     this.store.update({ensDomain, address});
   }
 
@@ -37,7 +34,7 @@ export class WalletService {
    * (i.e. the ERC1077 is not yet deployed) we precompute the address with CREATE2
    * @param ensDomain the full ENS domain : `alice.blockframes.eth`
    */
-  public async retreiveAddress(ensDomain: string) {
+  public async retrieveAddress(ensDomain: string) {
     this._requireProvider();
     const address = await this.provider.resolveName(ensDomain);
     if (!!address){
@@ -93,11 +90,11 @@ export class WalletService {
   }
 
   public setDeleteKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(createTx_DeleteKey(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
+    this.setTx(CreateTx.deleteKey(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
   }
 
   public setLinkKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(createTx_AddKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
+    this.setTx(CreateTx.addKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
   }
 
   public setTx(tx: ActionTx) {
@@ -166,7 +163,7 @@ export class WalletService {
   }
 
   public async sendSignedMetaTx(ensDomain: string, signedMetaTx: SignedMetaTx, ...args: any[]) {
-    const address = await this.retreiveAddress(getNameFromENS(ensDomain));
+    const address = await this.retrieveAddress(getNameFromENS(ensDomain));
     const txReceipt = await this.relayer.send(address, signedMetaTx);
     if (txReceipt.status === 0) {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);

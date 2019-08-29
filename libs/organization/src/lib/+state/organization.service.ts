@@ -19,7 +19,6 @@ import { OrganizationQuery } from './organization.query';
 import { getDefaultProvider, providers, Contract, utils } from 'ethers';
 import { network, relayer } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
-import { createTx_ModifyQuorum, createTx_AddMember, createTx_RemoveMember } from 'libs/ethers/src/lib/wallet/+state/wallet-known-tx';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
@@ -296,11 +295,11 @@ export class OrganizationService {
 
   /**
    * Main function of the Blockchain part of Org,
-   * it will retreive the list of operations, pending & approved action
+   * it will retrieve the list of operations, pending & approved action
    * and store them in the state, it will also register Blockchain event listeners
    * to ensure that the org data stays up to date.
    */
-  public async retreiveDataAndAddListeners() {
+  public async retrieveDataAndAddListeners() {
     await this._requireContract();
 
     // check if the listeners were already registered
@@ -311,21 +310,21 @@ export class OrganizationService {
 
     // OPERATIONS -----------------------------
 
-    // retreive hardcoded operation(s)
-    const signingDelivery = await this.getOperationfromContract('0x0000000000000000000000000000000000000000000000000000000000000001');
+    // retrieve hardcoded operation(s)
+    const signingDelivery = await this.getOperationFromContract('0x0000000000000000000000000000000000000000000000000000000000000001');
     this.upsertOperation(signingDelivery);
 
-    // retreive every other operation
+    // retrieve every other operation
     const operationsFilter = getFilterFromTopics(this.contract.address, [operationCreatedTopic]);
     const operationLogs = await this.provider.getLogs(operationsFilter);
     const operationIds = operationLogs.map(operationLog => operationLog.topics[1]);
     operationIds.forEach(operationId => 
-      this.getOperationfromContract(operationId).then(operation => this.upsertOperation(operation))
+      this.getOperationFromContract(operationId).then(operation => this.upsertOperation(operation))
     );
 
     // listen for operation created
     this.provider.on(operationsFilter, async (log: providers.Log) => {
-      const operation = await this.getOperationfromContract(log.topics[1]);
+      const operation = await this.getOperationFromContract(log.topics[1]);
       this.upsertOperation(operation);
     });
 
@@ -382,23 +381,23 @@ export class OrganizationService {
   //          OPERATIONS
   //----------------------------------
 
-  public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuroum: number) {
-    this.walletService.setTx(createTx_ModifyQuorum(orgAddress, operationId, newQuroum));
-  }
+  // public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuorum: number) {
+  //   this.walletService.setTx(CreateTx.modifyQuorum(orgAddress, operationId, newQuorum));
+  // }
 
-  public setAddMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.walletService.setTx(createTx_AddMember(orgAddress, operationId, memberAddress));
-  }
+  // public setAddMemberTx(orgAddress: string, operationId: string, memberAddress: string) {
+  //   this.walletService.setTx(CreateTx.addMember(orgAddress, operationId, memberAddress));
+  // }
 
-  public setRemoveMemeberTx(orgAddress: string, operationId: string, memberAddress: string) {
-    this.walletService.setTx(createTx_RemoveMember(orgAddress, operationId, memberAddress));
-  }
+  // public setRemoveMemberTx(orgAddress: string, operationId: string, memberAddress: string) {
+  //   this.walletService.setTx(CreateTx.removeMember(orgAddress, operationId, memberAddress));
+  // }
 
   /**
-   * Retreive the minimal infos of an operation from the blockchain,
+   * Retrieve the minimal infos of an operation from the blockchain,
    * then enrich those infos to return a full `OrganizationOperation` object
    */
-  public async getOperationfromContract(operationId: string) {
+  public async getOperationFromContract(operationId: string) {
     await this._requireContract();
 
     const rawOperation: RawOperation = await this.contract.getOperation(operationId);
@@ -433,7 +432,7 @@ export class OrganizationService {
     }
 
     // add the updated operation to the operations list
-    // we could not use `operations.push(newOperation)` direclty otherwise the operation will have been duplicated
+    // we could not use `operations.push(newOperation)` directly otherwise the operation will have been duplicated
     const newOperations = [
       ...operations.filter(currentOperation => currentOperation.id !== newOperation.id),// get all operations except the one we want to upsert
       newOperation
@@ -492,19 +491,19 @@ export class OrganizationService {
     const rawAction: RawAction = await this.contract.getAction(actionId);
     const action: OrganizationAction = {
       id: actionId,
-      opid: rawAction.operationId,
+      opId: rawAction.operationId,
       name: '[Unknown Action]',
       isApproved: rawAction.executed,
       signers: [],
     };
 
-    // retreive approval date if the action was executed
+    // retrieve approval date if the action was executed
     const approvalDate = await this.getActionApprovalDate(actionId);
     if (!! approvalDate) {
       action.approvalDate = approvalDate;
     }
     
-    // retreive the name from firestore
+    // retrieve the name from firestore
     const fireAction = await this.db.collection('actions').doc(actionId).get().toPromise();
     if (!!fireAction.data() && !!fireAction.data().name) {
       action.name = fireAction.data().name;
@@ -524,7 +523,7 @@ export class OrganizationService {
     return action;
   }
 
-  /** retreive approval date if the action was executed */
+  /** retrieve approval date if the action was executed */
   public async getActionApprovalDate(actionId: string) {
     await this._requireContract();
     return this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId])).then(logs => {
@@ -549,7 +548,7 @@ export class OrganizationService {
     }
 
     // add the updated action to the actions list
-    // we could not use `actions.push(newOperation)` direclty otherwise the action will have been duplicated
+    // we could not use `actions.push(newOperation)` directly otherwise the action will have been duplicated
     const newActions = [
       ...actions.filter(currentAction => currentAction.id !== newAction.id),// get all actions except the one we want to upsert
       newAction
