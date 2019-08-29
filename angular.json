@@ -63,7 +63,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -92,7 +92,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -121,7 +121,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -258,7 +258,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -287,7 +287,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -316,7 +316,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -654,7 +654,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ]
             },
@@ -682,7 +682,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ]
             },
@@ -710,7 +710,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ]
             }
@@ -937,7 +937,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -966,7 +966,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -995,7 +995,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": true
@@ -1383,7 +1383,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 },
                 {
                   "type": "all",
@@ -1522,7 +1522,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": false
@@ -1551,7 +1551,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": false
@@ -1580,7 +1580,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 }
               ],
               "serviceWorker": false
