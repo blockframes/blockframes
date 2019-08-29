@@ -15,22 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 
-// Components
-import { MaterialTemplateItemComponent } from './components/material-template-item/material-template-item.component';
-import { MaterialTemplateFormComponent } from './components/material-template-form/material-template-form.component';
-import { MaterialTemplateAddFormComponent } from './components/material-template-form/material-template-add-form.component';
-
 @NgModule({
-  declarations: [
-    MaterialTemplateItemComponent,
-    MaterialTemplateFormComponent,
-    MaterialTemplateAddFormComponent
-  ],
-  exports: [
-    MaterialTemplateItemComponent,
-    MaterialTemplateFormComponent,
-    MaterialTemplateAddFormComponent
-  ],
+  declarations: [],
+  exports: [],
   imports: [
     CommonModule,
     RouterModule,

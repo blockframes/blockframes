@@ -1,23 +1,21 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateMaterials()">
-    <!-- Content -->
-    <ng-container content>
-      <article fxLayout="row" fxLayoutAlign="none center">
-        <h2 *ngIf="(template$ | async) as template">{{ template.name }}</h2>
-        <mat-divider fxFlex></mat-divider>
-        <button mat-button color="primary" (click)="addMaterial()">
-          <mat-icon>add</mat-icon> <span>Add material</span>
-        </button>
-      </article>
-      <template-material-repertory
-        [materials]="materials$ | async"
-        (editing)="openSidenav($event)">
-      </template-material-repertory>
-    </ng-container>
-    <!-- Sidenav -->
-    <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
-        <template-material-form
-          [formGroup]="materialFormGroup"
-          (delete)="deleteMaterial($event)"
-      ></template-material-form>
-    </ng-container>
-  </editable-sidenav>
+  <!-- Content -->
+  <ng-container content>
+    <article fxLayout="row" fxLayoutAlign="none center">
+      <h2 *ngIf="(template$ | async) as template">{{ template.name }}</h2>
+      <mat-divider fxFlex></mat-divider>
+      <button mat-button color="primary" (click)="addMaterial()">
+        <mat-icon>add</mat-icon> <span>Add material</span>
+      </button>
+    </article>
+    <template-material-repertory [materials]="materials$ | async" (editing)="openSidenav($event)">
+    </template-material-repertory>
+  </ng-container>
+  <!-- Sidenav -->
+  <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
+    <template-material-form
+      [formGroup]="materialFormGroup"
+      (delete)="deleteMaterial($event)"
+    ></template-material-form>
+  </ng-container>
+</editable-sidenav>

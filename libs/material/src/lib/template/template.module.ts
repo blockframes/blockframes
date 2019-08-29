@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+
 // Components
 import { TemplateEditableComponent } from './pages/template-editable/template-editable.component';
 import { TemplateListComponent } from './pages/template-list/template-list.component';
