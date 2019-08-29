@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { createOrganizationFormList } from '../../forms/stakeholders.form';
 import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { Observable } from 'rxjs';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
@@ -14,19 +13,16 @@ import { StakeholderService } from '@blockframes/movie';
 export class DeliveryStakeholdersEditableComponent implements OnInit {
   public opened = false;
 
-  public membersFormList = createOrganizationFormList();
-
   public delivery$: Observable<Delivery>;
 
   constructor(
-    private deliveryQuery: DeliveryQuery,
     private service: DeliveryService,
     private stakeholderService: StakeholderService,
     private query: DeliveryQuery
   ) {}
 
   ngOnInit() {
-    this.delivery$ = this.deliveryQuery.selectActive();
+    this.delivery$ = this.query.selectActive();
   }
 
   public removeStakeholder(stakeholderId: string) {
