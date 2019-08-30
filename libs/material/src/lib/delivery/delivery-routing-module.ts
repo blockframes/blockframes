@@ -10,7 +10,7 @@ import { DeliveryAddSettingsComponent } from "./pages/delivery-add-settings/deli
 import { DeliveryAddCompleteComponent } from "./pages/delivery-add-complete/delivery-add-complete.component";
 import { DeliveryListComponent } from "./pages/delivery-list/delivery-list.component";
 import { DeliveryEditableComponent } from "./pages/delivery-editable/delivery-editable.component";
-import { DeliveryTeamworkEditableComponent } from "./pages/delivery-teamwork-editable/delivery-teamwork-editable.component";
+import { DeliveryStakeholdersEditableComponent } from './pages/delivery-stakeholders-editable/delivery-stakeholders-editable.component';
 import { DeliveryInformationsEditableComponent } from "./pages/delivery-informations-editable/delivery-informations-editable.component";
 import { MovieEditableComponent } from "./pages/movie-editable/movie-editable.component";
 
@@ -126,7 +126,7 @@ const routes: Routes = [
           },
           {
             path: 'stakeholders',
-            component: DeliveryTeamworkEditableComponent
+            component: DeliveryStakeholdersEditableComponent
           },
           {
             path: 'informations',

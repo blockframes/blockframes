@@ -6,10 +6,9 @@
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td fxLayout="row" fxLayoutAlign="start center" [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">
-        <!-- TODO: issue#795 add organization logo -->
         <img
-          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-          alt="Stakeholder Picture"
+          [src]="stakeholder.organization.logo"
+          alt="Logo of organization"
         />
         <span>{{ stakeholder.organization.name }}</span>
       </td>
