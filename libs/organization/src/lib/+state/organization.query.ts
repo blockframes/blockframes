@@ -18,7 +18,7 @@ const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Media Financiers',
     logo: 'http://graphouille.g.r.pic.centerblog.net/6c2aaddd.png',
-    href: '/movie-financing',
+    href: '/movie-financing/explorer',
     id: App.mediaFinanciers
   },
   {
