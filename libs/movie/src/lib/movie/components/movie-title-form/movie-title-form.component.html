@@ -1,13 +1,18 @@
-<section fxLayout="column">
-  <h2>Add a movie</h2>
+<section>
   <form [formGroup]="titleForm" (ngSubmit)="newMovie()">
-    <mat-form-field appearance="outline">
-      <mat-label>Orginal title</mat-label>
-      <input matInput type="string" placeholder="Original Title" formControlName="title"/>
-    </mat-form-field>
-    <div class="margin-top">
-      <button mat-button type="button" (click)="cancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit">Create</button>
-    </div>
+    <article mat-dialog-content fxLayout="column" fxLayoutAlign="space-between center">
+      <h3>New movie title</h3>
+      <span>Choose a title for your movie</span>
+      <mat-form-field appearance="outline" fxLayoutAlign="center">
+        <mat-label>Movie title</mat-label>
+        <input matInput #movieName testId="movieName" type="string" placeholder="Movie title"/>
+      </mat-form-field>
+      <img src="http://via.placeholder.com/300" />
+    </article>
+
+    <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
+      <a mat-raised-button color="primary" [disabled]="!movieName.value" type="submit">Next</a>
+      <a testId="templateCreate" mat-button color="warn" (click)="cancel()">Cancel</a>
+    </article>
   </form>
 </section>

@@ -4,24 +4,19 @@
     <span>Choose a title for your template</span>
     <mat-form-field appearance="outline" fxLayoutAlign="center">
       <mat-label>Template title</mat-label>
-      <input
-        matInput
-        testId="templateName"
-        class="input-field"
-        #templateName
-        placeholder="Template title"/>
-      </mat-form-field>
+      <input matInput testId="templateName" #templateName placeholder="Template title" />
+    </mat-form-field>
     <img src="http://via.placeholder.com/300" />
   </article>
 
   <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
     <a
       mat-raised-button
-      color="warn"
+      color="primary"
       (click)="addTemplate(templateName.value)"
       [disabled]="!templateName.value">
       Next
     </a>
-    <a testId="templateCreate" mat-button color="primary" (click)="close()">Cancel</a>
+    <a testId="templateCreate" mat-button color="warn" (click)="close()">Cancel</a>
   </article>
 </section>
