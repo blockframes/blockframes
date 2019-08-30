@@ -3,13 +3,9 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import * as admin from 'firebase-admin';
 import request from 'request';
 import { UserConfig, USERS } from './users.fixture';
-import { firebase } from './environments/environment';
-
-type UserRecord = admin.auth.UserRecord;
-type Auth = admin.auth.Auth;
+import { Auth, loadAdminServices, UserRecord } from './admin';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -25,7 +21,7 @@ async function createUserIfItDoesntExists(
     // await here to catch the error in the try / catch scope
     return await auth.getUser(uid);
   } catch {
-    return auth.createUser({ uid, email, password });
+    return await auth.createUser({ uid, email, password });
   }
 }
 
@@ -40,7 +36,7 @@ async function createAllUsers(auth: Auth): Promise<any> {
 }
 
 function getRestoreURL(projectID: string): string {
-  return `https://us-central1-${projectID}.cloudfunctions.net/restoreFirestore`;
+  return `https://us-central1-${projectID}.cloudfunctions.net/admin/data/restore`;
 }
 
 /**
@@ -53,7 +49,7 @@ async function restore(projectID: string) {
 
   // promisified request
   return new Promise((resolve, reject) => {
-    request(url, (error, response) => {
+    request.post(url, (error, response) => {
       if (error) {
         reject(error);
       } else {
@@ -70,17 +66,11 @@ async function restore(projectID: string) {
  * TODO: we should be able to disable this operation during certain tests, use an env variable for example.
  */
 export async function prepareFirebase() {
-  admin.initializeApp({
-    // credential: admin.credential.cert(serviceAccount),
-    credential: admin.credential.applicationDefault(),
-    databaseURL: firebase.databaseURL
-  });
-
-  const auth = admin.auth();
+  const { auth, firebaseConfig } = loadAdminServices();
 
   try {
     console.info('restoring...');
-    await restore(firebase.projectId);
+    await restore(firebaseConfig.projectId);
     console.info('done.');
   } catch (e) {
     console.error(e);
