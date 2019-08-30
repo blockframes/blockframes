@@ -20,7 +20,6 @@ export class OrganizationFormComponent {
   }
 
   public set logo(logoPath: string | undefined){
-    console.log(logoPath);
     this.control.get('logo').patchValue(logoPath || PLACEHOLDER_LOGO);
   }
 }

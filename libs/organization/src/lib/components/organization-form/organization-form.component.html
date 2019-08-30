@@ -1,5 +1,4 @@
 <h4>Picture</h4>
-<!-- TODO: issue#579 import picture -->
 <article class="actions" fxLayout="column" fxLayoutAlign="center center">
   <img mat-card-image [src]="logo">
   <mat-card-actions>
@@ -10,7 +9,6 @@
       [uploadOnFirestore]="true" 
       (storeUploaded)="logo = $event">
     </button-upload>
-    <!-- TODO change the defautl logo  -->
     <button mat-button color="primary" (click)="logo = undefined">
       Delete this picture 
     </button>
