@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+
 
 @Component({
   selector: 'template-list',
@@ -15,6 +18,11 @@ export class TemplateListComponent implements OnInit {
   public loading$: Observable<boolean>;
   public templates$: Observable<Template[]>;
 
+  columnsToDisplay = ['checkBox', 'template-name', 'delete'];
+  dataSource: MatTableDataSource<Template>;
+  selection = new SelectionModel<Template>(true, []);
+
+
   constructor(
     private query: TemplateQuery,
     public dialog: MatDialog,
@@ -25,6 +33,7 @@ export class TemplateListComponent implements OnInit {
   ngOnInit() {
     this.loading$ = this.query.selectLoading();
     this.templates$ = this.query.selectAll();
+    this.dataSource = new MatTableDataSource([]);
   }
 
   public deleteTemplate(template: Template) {
@@ -39,4 +48,19 @@ export class TemplateListComponent implements OnInit {
       width: '400px'
     });
   }
+
+    /** Whether the number of selected elements matches the total number of rows. */
+    isAllSelected() {
+      return this.selection.selected.length === this.dataSource.data.length;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+      this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+    /** The label for the checkbox on the passed row */
+    toggle(element: Template) {
+      this.selection.toggle(element);
+    }
 }
