@@ -14,7 +14,7 @@ rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/web
     }
     stage('build') {
       steps {
-        sh '''cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
+        sh '''cp env/env.ci.ts env/env.ts # required for typechecking & file rewrite to work
 npm run build:all'''
       }
     }
