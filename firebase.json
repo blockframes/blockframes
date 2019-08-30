@@ -21,7 +21,7 @@
       },
       {
         "source": "/catalog{,/**}",
-        "destination": "/catalog/index.html"
+        "destination": "/catalog-marketplace/index.html"
       },
       {
         "source": "/movie-financing{,/**}",
