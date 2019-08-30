@@ -17,11 +17,7 @@ for i in {1..5}; do
   ENV=prod npx ng lint
   ENV=prod npm run build:all
 
-  cp ./package.json dist/apps/backend-functions/
-
   firebase use demo${i}
-  ./secrets.sh demo${i}
-  ./ops/deploy_secrets.sh
 
   # we deploy everything but functions, they tend to crash
   firebase deploy --except functions
