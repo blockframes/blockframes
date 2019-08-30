@@ -2,7 +2,7 @@ export const production = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
 export const persistenceSettings = {
-  // TODO : change to synchronizeTabs when available (angularFire 5.2)
+  // TODO(issue#846): change to synchronizeTabs when available (angularFire 5.2)
   experimentalTabSynchronization: true
 };
 
@@ -37,7 +37,7 @@ export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
-// TODO : change the address
+// TODO(issue#847): change the address
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
