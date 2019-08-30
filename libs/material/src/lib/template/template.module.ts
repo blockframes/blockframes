@@ -31,8 +31,8 @@ import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { TemplateListGuard } from './guards/template-list.guard';
 import { MatSelectModule, MatSortModule } from '@angular/material';
-import {MatTableModule} from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table'
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },

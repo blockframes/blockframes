@@ -11,7 +11,7 @@
           <mat-checkbox (change)="masterToggle()"
           [checked]="selection.hasValue() && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()"
-          aria-label="select all movies">
+          aria-label="Select all templates">
           </mat-checkbox>
         </th>
         <td mat-cell *matCellDef="let element">
@@ -19,27 +19,31 @@
           (click)="$event.stopPropagation()"
           (change)="toggle(element)"
           [checked]="selection.isSelected(element)"
-          aria-label="Select one Movie">
+          aria-label="Select one template">
           </mat-checkbox>
         </td>
       </ng-container>
 
       <!-- Template name -->
       <ng-container matColumnDef="template-name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Template name</th>
+        <th mat-header-cell *matHeaderCellDef>Template name</th>
         <td mat-cell *matCellDef="let element">{{element.name | titlecase}}</td>
       </ng-container>
 
-      <!-- Date
+      <!-- Date -->
       <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-        <td mat-cell *matCellDef="let element">{{element.name | titlecase}}</td>
-      </ng-container> -->
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.created.toDate() | date: 'MMM dd yyyy' }}</td>
+      </ng-container>
 
       <!-- Trash Icon -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let element"><button mat-button (click)="deleteTemplate(element)"><mat-icon>delete</mat-icon></button></td>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button (click)="deleteTemplate(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
