@@ -25,7 +25,4 @@ $blockframes-theme: mat-light-theme(
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
 }
-// .dark-theme {
-//   @include angular-material-theme($bf-dark-theme);
-// }
 
