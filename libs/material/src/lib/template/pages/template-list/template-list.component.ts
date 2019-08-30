@@ -18,7 +18,7 @@ export class TemplateListComponent implements OnInit {
   public loading$: Observable<boolean>;
   public templates$: Observable<Template[]>;
 
-  columnsToDisplay = ['checkBox', 'template name', 'delete'];
+  columnsToDisplay = ['checkBox', 'template-name', 'delete'];
   dataSource: MatTableDataSource<Template>;
   selection = new SelectionModel<Template>(true, []);
 

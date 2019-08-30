@@ -1,14 +1,6 @@
 <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
 
 <ng-template #loaded>
-  <div fxLayout="row wrap" fxLayoutAlign="start space-between">
-    <template-item
-      *ngFor="let template of (templates$ | async)"
-      class="mat-cards"
-      [template]="template"
-      (deleted)="deleteTemplate(template)"
-    ></template-item>
-  </div>
 
   <section *ngIf="(templates$ | async) as template">
     <table mat-table [dataSource]="template" class="mat-elevation-z8">
@@ -47,7 +39,7 @@
       <!-- Trash Icon -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let element"><button mat-button (click)="deleteTemplate(template)"><mat-icon>delete</mat-icon></button></td>
+        <td mat-cell *matCellDef="let element"><button mat-button (click)="deleteTemplate(element)"><mat-icon>delete</mat-icon></button></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

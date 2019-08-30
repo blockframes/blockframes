@@ -85,6 +85,7 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatSortModule,
+    MatCheckboxModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]
