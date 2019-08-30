@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { WalletQuery } from "../+state";
 import { Router, UrlTree, CanActivate } from "@angular/router";
 import { KeyManagerQuery } from '../../key-manager/+state';
-import { filter, tap, switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WalletKeyGuard implements CanActivate {
 
-  urlFallback = 'layout/o/account/wallet/add';
+  urlFallback = 'layout/o/account/wallet/no-key';
   subscription: Subscription;
 
   constructor(
@@ -20,7 +20,7 @@ export class WalletKeyGuard implements CanActivate {
   canActivate(): Promise<boolean | UrlTree> | UrlTree {
     return new Promise(async (res, rej) => {
       this.subscription = this.keyQuery.selectLoading().pipe(
-        filter(loading => !loading), // ensure keys are retreived from local storage
+        filter(loading => !loading), // ensure keys are retrieved from local storage
         switchMap(() => this.walletQuery.select()),
         filter(wallet => !!wallet.ensDomain), // ensure that wallet has ensDomain value
       ).subscribe({

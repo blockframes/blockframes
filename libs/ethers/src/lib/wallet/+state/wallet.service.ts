@@ -173,6 +173,7 @@ export class WalletService {
     if(hasCallback) {
       this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
     }
+    this.store.update({tx: undefined});
     return txReceipt;
   }
 

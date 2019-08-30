@@ -6,14 +6,14 @@
     ></wallet-import-key-form>
   </article>
   <article *ngSwitchCase="steps.password">
-    <ng-container *ngIf="(isEncrypting$ | async); else dispalyPassword">
+    <ng-container *ngIf="(isEncrypting$ | async); else displayPassword">
       <div fxLayout="column" fxLayoutAlign="start center">
         <h2>Encrypting...</h2>
         <p>We are encrypting your key in realy strong and secure way, that's why it can takes 20-30sec.</p>
         <mat-progress-spinner color="accent" mode="indeterminate"></mat-progress-spinner>
       </div>
     </ng-container>
-    <ng-template #dispalyPassword>
+    <ng-template #displayPassword>
       <wallet-create-password-form (userPassword)="handlePassword($event)"></wallet-create-password-form>
     </ng-template>
   </article>

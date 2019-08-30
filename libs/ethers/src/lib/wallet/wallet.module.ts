@@ -32,6 +32,7 @@ import { WalletCreatePasswordFormComponent } from './wallet-create-password-form
 import { WalletBlockieComponent } from './wallet-blockie/wallet-blockie.component';
 import { WalletAddressViewComponent } from './wallet-address-view/wallet-address-view.component';
 import { WalletImportKeyComponent } from './wallet-import-key/wallet-import-key.component';
+import { WalletNoKeyComponent } from './wallet-no-key/wallet-no-key.component';
 
 
 export const walletRoutes: Routes = [
@@ -45,6 +46,7 @@ export const walletRoutes: Routes = [
         canActivate: [WalletKeyGuard],
         component: WalletViewComponent,
       },
+      { path: 'no-key', component: WalletNoKeyComponent },
       { path: 'add', component: WalletAddKeyTunnelComponent },
       { path: 'import', component: WalletImportKeyComponent },
       {
@@ -89,7 +91,8 @@ export const walletRoutes: Routes = [
     WalletCreatePasswordFormComponent,
     WalletBlockieComponent,
     WalletAddressViewComponent,
-    WalletImportKeyComponent
+    WalletImportKeyComponent,
+    WalletNoKeyComponent
   ],
   exports: [
     WalletWidgetComponent,

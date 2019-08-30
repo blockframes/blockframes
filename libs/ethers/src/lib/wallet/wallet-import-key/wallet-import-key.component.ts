@@ -54,6 +54,10 @@ export class WalletImportKeyComponent implements OnInit {
   }
 
   handleRedirection() {
-    this.router.navigateByUrl('/layout/o/account/wallet'); // TODO handle dynamic redirect from state : issue#617
+    if (!!this.walletQuery.getValue().tx) {
+      this.router.navigateByUrl('/layout/o/account/wallet/send');
+    } else {
+      this.router.navigateByUrl('/layout/o/account/wallet');
+    }
   }
 }

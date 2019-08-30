@@ -15,7 +15,7 @@
   </header>
   <section>
     <h3>My Profile</h3>
-    <article fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center">
+    <article fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center" *ngIf="!!wallet.address">
       <wallet-blockie fxFlex="noshrink" [address]="wallet.address"></wallet-blockie>
       <wallet-address-view fxFlex="grow" [ethAddress]="wallet.address" [ensName]="wallet.ensDomain"></wallet-address-view>
     </article>
