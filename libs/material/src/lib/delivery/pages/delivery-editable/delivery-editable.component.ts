@@ -30,6 +30,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
   public opened = false;
   public displayedColumns: string[];
+  public pdfLink: string;
   private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
   public materialFormGroup$: Observable<FormGroup>;
@@ -77,6 +78,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
     this.displayedColumns = this.setDisplayedColumns();
@@ -94,7 +96,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
       const delivery = this.query.getActive();
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(this.currentFormList.value, delivery)
-        : this.materialService.updateMaterials(this.currentFormList.value, delivery);
+        : this.materialService.update(this.currentFormList.value, delivery);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -103,7 +105,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   /* Add a material formGroup to the formList **/
   public addMaterial() {
-    const newMaterial = this.materialService.addMaterial();
+    const newMaterial = this.materialService.add();
     this.currentFormList.push(createMaterialFormGroup(newMaterial));
     this.openSidenav(newMaterial.id);
   }
@@ -129,7 +131,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialStatus(materials, status, delivery.id)
-      : this.materialService.updateMaterialStatus(materials, status, delivery.movieId);
+      : this.materialService.updateStatus(materials, status, delivery.movieId);
     this.snackBar.open(`Material status updated to ${status}`, 'close', { duration: 2000 });
     this.materialStore.returnToInitialState();
   }
@@ -140,7 +142,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialIsOrdered(materials, delivery.id)
-      : this.materialService.updateMaterialIsOrdered(materials, delivery.movieId);
+      : this.materialService.updateIsOrdered(materials, delivery.movieId);
     this.materialStore.returnToInitialState();
   }
 
@@ -150,7 +152,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialIsPaid(materials, delivery.id)
-      : this.materialService.updateMaterialIsPaid(materials, delivery.movieId);
+      : this.materialService.updateIsPaid(materials, delivery.movieId);
     this.materialStore.returnToInitialState();
   }
 
@@ -183,7 +185,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
       const delivery = this.query.getActive();
       delivery.mustBeSigned
         ? this.materialService.deleteDeliveryMaterial(materialId, delivery.id)
-        : this.materialService.deleteMaterial(materialId, delivery);
+        : this.materialService.delete(materialId, delivery);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {

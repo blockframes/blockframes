@@ -25,7 +25,6 @@ import { DeliveryInformationsDeadlinesRepertoryComponent } from './components/de
 import { MovieMaterialListComponent } from './components/movie-material-list/movie-material-list.component';
 import { MovieMaterialFormComponent } from './components/movie-material-form/movie-material-form.component';
 import { DeliveryInformationsStakeholdersComponent } from './components/delivery-informations-stakeholders/delivery-informations-stakeholders.component';
-
 import { DeliveryStatusesComponent } from './components/delivery-statuses/delivery-statuses.component';
 
 // Pages

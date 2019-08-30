@@ -21,14 +21,14 @@ export class MaterialService {
   //////////////////////////////
 
   /** Returns a material to be pushed in a formGroup */
-  public addMaterial(): Material {
+  public add(): Material {
     const id = this.db.createId();
     const newMaterial = createMaterial({ id });
     return newMaterial;
   }
 
   /** Deletes material of the movie sub-collection in firebase */
-  public deleteMaterial(materialId: string, delivery: Delivery) {
+  public delete(materialId: string, delivery: Delivery) {
     const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`)
       .ref;
     const deliveryRef = this.db.doc<Delivery>(`deliveries/${delivery.id}`).ref;
@@ -48,7 +48,7 @@ export class MaterialService {
   }
 
   /** Update materials of a delivery (materials loaded from movie) */
-  public async updateMaterials(materials: Material[], delivery: Delivery) {
+  public async update(materials: Material[], delivery: Delivery) {
     // TODO: (ISSUE#773) We should load an update the data within a transaction
     const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
@@ -109,7 +109,7 @@ export class MaterialService {
   }
 
   /** Update the property status of materials */
-  public updateMaterialStatus(materials: Material[], status: MaterialStatus, movieId: string) {
+  public updateStatus(materials: Material[], status: MaterialStatus, movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
       const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
@@ -118,7 +118,7 @@ export class MaterialService {
     batch.commit();
   }
 
-  public updateMaterialIsOrdered(materials: Material[], movieId: string) {
+  public updateIsOrdered(materials: Material[], movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(async material => {
       const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
@@ -127,7 +127,7 @@ export class MaterialService {
     batch.commit();
   }
 
-  public updateMaterialIsPaid(materials: Material[], movieId: string) {
+  public updateIsPaid(materials: Material[], movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(async material => {
       const doc = this.db.doc(`movies/${movieId}/materials/${material.id}`);
