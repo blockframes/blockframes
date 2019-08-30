@@ -9,13 +9,12 @@ TAG="demo-$(date +'%Y%m%d%H%M')"
 
 for i in {1..5}; do
   echo $i
-  export ENV=prod
+  export ENV=production
 
   cp ./env/demo/env.demo${i}.ts ./env/env.ts
   cp ./env/demo/env.demo${i}.ts ./env/env.prod.ts
 
-  ENV=prod npx ng lint
-  ENV=prod npm run build:all
+  npm run build:all
 
   firebase use demo${i}
 
