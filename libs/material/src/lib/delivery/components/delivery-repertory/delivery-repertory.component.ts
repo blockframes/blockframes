@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { Delivery } from '../../+state/delivery.model';
-import { Organization } from '@blockframes/organization';
+import { Organization, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -22,4 +22,5 @@ export class DeliveryRepertoryComponent {
 
   public dataSource: MatTableDataSource<Delivery>;
   public displayedColumns: string[] = ['signers', 'status', 'mgCurrentDeadline'];
+  public placeholderLogo = PLACEHOLDER_LOGO
 }

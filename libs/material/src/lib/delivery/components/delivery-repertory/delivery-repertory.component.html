@@ -13,14 +13,14 @@
             <!--TODO use <avatar-list> component from ui when orgs will have avatar property => ISSUE#746-->
             <!--TODO find a way to sort signers by stakeholder name => ISSUE#750 -->
             <img
-              src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-              alt="Stakeholder Picture"/>
+              [src]="stakeholder.organization.logo"
+              alt="Organization logo"/>
             <b>{{ stakeholder.organization.name }}</b>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="delivery.stakeholders.length === 1">
           <img
-            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+            [src]="placeholderLogo"
             alt="Stakeholder Picture"/>
           <b>(No signers yet !)</b>
         </ng-container>
