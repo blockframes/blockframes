@@ -30,7 +30,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { TemplateListGuard } from './guards/template-list.guard';
-import { MatTableModule, MatSelectModule, MatSortModule } from '@angular/material';
+import { MatSelectModule, MatSortModule } from '@angular/material';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table'
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -83,6 +85,7 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatSortModule,
+    MatCheckboxModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]
