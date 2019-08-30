@@ -98,24 +98,8 @@ export class DeliveryService {
       .doc(materialId);
   }
 
-  private materialMovieDoc(movieId: string, materialId: string): AngularFirestoreDocument {
-    return this.db
-      .doc(`movies/${movieId}`)
-      .collection('materials')
-      .doc(materialId);
-  }
-
   private deliveryDoc(id: string): AngularFirestoreDocument<DeliveryDB> {
     return this.db.doc(`deliveries/${id}`);
-  }
-
-  private movieMaterialDoc(
-    movieId: string,
-    materialId: string
-  ): AngularFirestoreDocument<Material> {
-    return this.movieDoc(movieId)
-      .collection('materials')
-      .doc(materialId);
   }
 
   private deliveryStakeholderDoc(
@@ -211,8 +195,15 @@ export class DeliveryService {
       // Create document and permissions
       await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
 
-      // Copy movie materials in the delivery
-      await this.copyMaterialsInDelivery(delivery, movieSnap.data() as Movie, tx);
+      // If mustBeSigned is true, copy materials to the delivery
+      if (delivery.mustBeSigned) {
+        await this.copyMaterialsInDelivery(delivery, movieSnap.data() as Movie, tx);
+      }
+
+      // If mustBeSigned is false, add deliveryId in deliveryIds of each material
+      if (!delivery.mustBeSigned) {
+        await this.copyDeliveryId(delivery.id, movieSnap.data() as Movie, tx);
+      }
 
       // Create the stakeholder in the sub-collection
       await this.shService.addStakeholder(delivery, organization.id, true, tx);
@@ -384,8 +375,27 @@ export class DeliveryService {
       tx.set(this.materialDeliveryDoc(delivery.id, material.id).ref, {
         ...material,
         state: '',
+        deliveryIds: null,
         stepId: ''
       });
+    });
+
+    return tx;
+  }
+
+  /** Add a new deliveryId in each materials of a movie */
+  public async copyDeliveryId(
+    deliveryId: string,
+    document: BFDoc,
+    tx: firebase.firestore.Transaction
+  ) {
+    const materials = await this.db.snapshot<Material[]>(
+      `${document._type}/${document.id}/materials`
+    );
+
+    materials.forEach(material => {
+      const targetRef = this.db.doc<Material>(`movies/${document.id}/materials/${material.id}`).ref;
+      tx.update(targetRef, { deliveryIds: [...material.deliveryIds, deliveryId] });
     });
 
     return tx;
@@ -406,8 +416,12 @@ export class DeliveryService {
     // TODO: issue#844, refactor this function and use updateMaterials() (material service)
 
     materials.forEach(material => {
-      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.materialService.isTheSame(movieMaterial, material));
-      const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
+      const sameValuesMaterial = movieMaterials.find(movieMaterial =>
+        this.materialService.isTheSame(movieMaterial, material)
+      );
+      const isNewMaterial =
+        !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) &&
+        !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
@@ -428,8 +442,8 @@ export class DeliveryService {
 
           tx.update(targetRef, { deliveryIds: [...target.deliveryIds, deliveryId] });
         }
-      // If values are not the same, this material is considered as new and we have to create
-      // and set a new material with updated fields.
+        // If values are not the same, this material is considered as new and we have to create
+        // and set a new material with updated fields.
       } else {
         const target = createMaterial({
           ...material,
