@@ -11,7 +11,7 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
-import { MaterialQuery, MaterialService } from '../../material/+state';
+import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
@@ -175,8 +175,7 @@ export class DeliveryService {
       // If there is a templateId, and mustBeSigned is false, copy template materials to the movie
       if (!!opts.templateId && !delivery.mustBeSigned) {
         const template = this.templateQuery.getEntity(opts.templateId);
-        const movie = this.movieQuery.getActive();
-        await this.copyMaterialsInMovie(movie, delivery, template, tx);
+        await this.copyMaterialsInMovie(movieId, delivery.id, template, tx);
       }
 
       // Create the stakeholder in the sub-collection
@@ -392,44 +391,56 @@ export class DeliveryService {
     return tx;
   }
 
-  /** Create a transaction to copy the template materials into the movie materials */
+  /** Copy the template materials into the movie materials */
   public async copyMaterialsInMovie(
-    movie: Movie,
-    delivery: Delivery,
+    movieId: string,
+    deliveryId: string,
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
     const materials = await this.db.snapshot<Material[]>(
       `${document._type}/${document.id}/materials`
     );
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movie.id}/materials`);
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movieId}/materials`);
+
+    // TODO: issue#844, refactor this function and use updateMaterials() (material service)
 
     materials.forEach(material => {
-      const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
-      const sameValuesMaterial = movieMaterials.find(movieMaterial =>
-        this.materialService.isTheSame(movieMaterial, material)
-      );
+      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.materialService.isTheSame(movieMaterial, material));
       const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
-        const newMaterialRef = this.db.doc<Material>(`movies/${movie.id}/materials/${material.id}`)
+        const newMaterialRef = this.db.doc<Material>(`movies/${movieId}/materials/${material.id}`)
           .ref;
 
-        tx.set(newMaterialRef, { ...material, deliveryIds: [delivery.id] });
+        tx.set(newMaterialRef, { ...material, deliveryIds: [deliveryId] });
         return;
       }
-    });
 
-    // materials.forEach(material => {
-    //   // TODO: Check is deliveryID exists
-    //   tx.set(this.materialMovieDoc(movie.id, material.id).ref, {
-    //     ...material,
-    //     state: '',
-    //     stepId: '',
-    //     deliveryIds: [delivery.id]
-    //   });
-    // });
+      // If there already is a material with same properties (but different id), we merge this
+      // material with existing one, and push the new deliveryId into deliveryIds.
+      if (!!sameValuesMaterial) {
+        const target = sameValuesMaterial;
+
+        if (!target.deliveryIds.includes(deliveryId)) {
+          const targetRef = this.db.doc<Material>(`movies/${movieId}/materials/${target.id}`).ref;
+
+          tx.update(targetRef, { deliveryIds: [...target.deliveryIds, deliveryId] });
+        }
+      // If values are not the same, this material is considered as new and we have to create
+      // and set a new material with updated fields.
+      } else {
+        const target = createMaterial({
+          ...material,
+          id: this.db.createId(),
+          deliveryIds: [deliveryId]
+        });
+        const targetRef = this.db.doc<Material>(`movies/${movieId}/materials/${target.id}`).ref;
+
+        tx.set(targetRef, target);
+      }
+    });
 
     return tx;
   }
