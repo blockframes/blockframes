@@ -202,7 +202,7 @@ export class DeliveryService {
 
       // If mustBeSigned is false, add deliveryId in deliveryIds of each material
       if (!delivery.mustBeSigned) {
-        await this.copyDeliveryId(delivery.id, movieSnap.data() as Movie, tx);
+        await this.pushDeliveryId(delivery.id, movieSnap.data() as Movie, tx);
       }
 
       // Create the stakeholder in the sub-collection
@@ -384,7 +384,7 @@ export class DeliveryService {
   }
 
   /** Add a new deliveryId in each materials of a movie */
-  public async copyDeliveryId(
+  public async pushDeliveryId(
     deliveryId: string,
     document: BFDoc,
     tx: firebase.firestore.Transaction
@@ -419,9 +419,7 @@ export class DeliveryService {
       const sameValuesMaterial = movieMaterials.find(movieMaterial =>
         this.materialService.isTheSame(movieMaterial, material)
       );
-      const isNewMaterial =
-        !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) &&
-        !sameValuesMaterial;
+      const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
