@@ -36,7 +36,7 @@ const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Catalog Marketplace',
     logo: 'http://recueil-de-png.r.e.pic.centerblog.net/22f09c18.png',
-    href: '/catalog',
+    href: '/catalog-marketplace',
     id: App.biggerBoat
   }
 ];

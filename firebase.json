@@ -20,7 +20,7 @@
         "destination": "/delivery/index.html"
       },
       {
-        "source": "/catalog{,/**}",
+        "source": "/catalog-marketplace{,/**}",
         "destination": "/catalog-marketplace/index.html"
       },
       {
