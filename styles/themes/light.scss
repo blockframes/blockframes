@@ -99,7 +99,7 @@ $mat-light-bf-red: (
 // Background palette for light themes.
 $bf-light-background: (
   status-bar: white,
-  app-bar:    map_get($mat-grey, 900),
+  app-bar:    white,
   background: #FAFAFA,
   hover:      rgba(white, 0.04),
   card:       #FFFFFF,
