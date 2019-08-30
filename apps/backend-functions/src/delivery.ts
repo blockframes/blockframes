@@ -66,6 +66,7 @@ export async function onDeliveryUpdate(
       promises.push(triggerNotifications(notifications));
     }
 
+    await db.doc(`deliveries/${delivery.id}`).update({ isSigned: true })
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });
@@ -86,13 +87,13 @@ async function notifyOnNewSignee(delivery: any, organizations: Organization[], m
   );
 
   if (!newStakeholder) {
-    throw new Error(`This stakeholder doesn't exist !`);
+    throw new Error('This stakeholder doesn\'t exist !');
   }
 
   const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
-    throw new Error(`This organization doesn't exist !`);
+    throw new Error('This organization doesn\'t exist !');
   }
 
   const notifications = createSignatureNotifications(organizations, movie, delivery, newStakeholderOrg);
@@ -120,7 +121,7 @@ function createSignatureNotifications(
       return prepareNotification({
         message,
         userId,
-        path: `/layout/o/${delivery.movieId}/${delivery.id}/view`,
+        path: `/layout/o/delivery/${delivery.movieId}/${delivery.id}/list`,
         docInformations: { id: delivery.id, type: DocType.delivery }
       });
     });
