@@ -9,6 +9,8 @@ export const persistenceSettings = {
 // Firebase
 // ========
 
+export const appUrl = 'https://demo5.blockframes.io';
+
 export const firebase = {
   apiKey: 'AIzaSyBF8-76Sf4oOJfL-fwASGx8R51w9UkG0rw',
   authDomain: 'blockframes-demo-5.firebaseapp.com',
@@ -16,6 +18,15 @@ export const firebase = {
   projectId: 'blockframes-demo-5',
   storageBucket: 'blockframes-demo-5.appspot.com',
   messagingSenderId: '671401949747'
+};
+
+// Algolia
+// =======
+
+export const algolia = {
+  appId: 'W5ACHF3Z7Z',
+  searchKey: '102e09194402cf082527d84476c5fc25',
+  indexNameOrganizations: 'orgs'
 };
 
 // Ethereum
@@ -44,5 +55,5 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'backups';
-export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
+export const backupBucket = 'demo5-backups';
+export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
