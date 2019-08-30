@@ -34,6 +34,12 @@
     <td mat-cell *matCellDef="let delivery">{{ delivery.status }}</td>
   </ng-container>
 
+  <!-- MG Current Deadline Column -->
+  <ng-container matColumnDef="mgCurrentDeadline">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>MG Current Deadline</th>
+    <td mat-cell *matCellDef="let delivery">{{ delivery.mgDeadlines[delivery.mgCurrentDeadline].label }}</td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <!-- Click on a row to navigate to the delivery edition page -->
   <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="['../', row.id, 'list']"></tr>

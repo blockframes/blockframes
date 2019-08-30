@@ -45,7 +45,7 @@ export interface OrgDocPermissions {
 export const enum App {
   mediaDelivering = 'delivery',
   mediaFinanciers = 'movie-financing',
-  storiesAndMore = 'stories-and-more',
+  storiesAndMore = 'https://projects.invisionapp.com/d/main?origin=v7#/console/17462680/361964437/preview',
   biggerBoat = 'catalog'
 }
 

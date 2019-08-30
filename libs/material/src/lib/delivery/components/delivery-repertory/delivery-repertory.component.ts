@@ -21,5 +21,5 @@ export class DeliveryRepertoryComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<Delivery>;
-  public displayedColumns: string[] = ['signers', 'status'];
+  public displayedColumns: string[] = ['signers', 'status', 'mgCurrentDeadline'];
 }
