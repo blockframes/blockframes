@@ -52,11 +52,3 @@ $dark-warn: mat-color($bf-dark-warn);
   --warn: #{$dark-warn};
   --accent: #{$dark-accent};
 }
-
-// CSS light-theme color variables
-.light-theme {
-  @extend :root;
-  --primary: #{$primary};
-  --warn: #{$warn};
-  --accent: #{$accent};
-}

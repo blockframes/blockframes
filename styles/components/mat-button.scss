@@ -1,5 +1,5 @@
 .light-theme .mat-raised-button {
-  background-color: var(--accent)
+  background: mat-color($bf-light-background, raised-button);;
 }
 
 button { // TODO: Get rid of the !important and apply this on mat-raised-button

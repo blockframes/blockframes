@@ -105,7 +105,7 @@ $bf-light-background: (
   card:       #FFFFFF,
   dialog:     map_get($mat-grey, 800),
   disabled-button: rgba(#B9C2CB, 0.12),
-  raised-button: map-get($mat-grey, 800),
+  raised-button: map-get($mat-light-bf-red, 500),
   focused-button: $light-focused,
   selected-button: map_get($mat-grey, 900),
   selected-disabled-button: map-get($mat-grey, 800),
@@ -140,9 +140,9 @@ $bf-light-foreground: (
 // THEME //
 ///////////
 
-$bf-light-primary: mat-palette($mat-light-bf-red, 400, 50, 700);
-$bf-light-accent: mat-palette($mat-light-bf-blue, 500, 50, 800);
-$bf-light-warn: mat-palette($mat-light-bf-orange, 200);
+$bf-light-primary: mat-palette($mat-light-bf-blue, 400, 50, 700);
+$bf-light-accent: mat-palette($mat-light-bf-red, 500, 50, 800);
+$bf-light-warn: mat-palette($mat-light-bf-red, 200);
 
 $bf-light-theme: (
   // Standard
