@@ -11,7 +11,7 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
-import { MaterialQuery } from '../../material/+state';
+import { MaterialQuery, MaterialService } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
@@ -71,6 +71,7 @@ export class DeliveryService {
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
+    private materialService: MaterialService,
     private organizationQuery: OrganizationQuery,
     private query: DeliveryQuery,
     private permissionsService: PermissionsService,
@@ -98,7 +99,10 @@ export class DeliveryService {
   }
 
   private materialMovieDoc(movieId: string, materialId: string): AngularFirestoreDocument {
-    return this.db.doc(`movies/${movieId}`).collection('materials').doc(materialId);
+    return this.db
+      .doc(`movies/${movieId}`)
+      .collection('materials')
+      .doc(materialId);
   }
 
   private deliveryDoc(id: string): AngularFirestoreDocument<DeliveryDB> {
@@ -398,16 +402,34 @@ export class DeliveryService {
     const materials = await this.db.snapshot<Material[]>(
       `${document._type}/${document.id}/materials`
     );
+    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${movie.id}/materials`);
 
     materials.forEach(material => {
-      // TODO: Check is deliveryID exists
-      tx.set(this.materialMovieDoc(movie.id, material.id).ref, {
-        ...material,
-        state: '',
-        stepId: '',
-        deliveryIds: [delivery.id]
-      });
+      const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
+      const sameValuesMaterial = movieMaterials.find(movieMaterial =>
+        this.materialService.isTheSame(movieMaterial, material)
+      );
+      const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
+
+      // We check if material is brand new. If so, we just add it to database and return.
+      if (isNewMaterial) {
+        const newMaterialRef = this.db.doc<Material>(`movies/${movie.id}/materials/${material.id}`)
+          .ref;
+
+        tx.set(newMaterialRef, { ...material, deliveryIds: [delivery.id] });
+        return;
+      }
     });
+
+    // materials.forEach(material => {
+    //   // TODO: Check is deliveryID exists
+    //   tx.set(this.materialMovieDoc(movie.id, material.id).ref, {
+    //     ...material,
+    //     state: '',
+    //     stepId: '',
+    //     deliveryIds: [delivery.id]
+    //   });
+    // });
 
     return tx;
   }
