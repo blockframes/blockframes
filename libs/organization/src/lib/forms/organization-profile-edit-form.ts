@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
+import { PLACEHOLDER_LOGO } from '../+state';
 
 export interface OrganizationProfile {
   address: string;
@@ -11,7 +12,7 @@ function createOrganizationProfile(params: Partial<OrganizationProfile> = {}): O
   return {
     address: '',
     phoneNumber: '',
-    logo: '',
+    logo: PLACEHOLDER_LOGO,
     ...params
   };
 }

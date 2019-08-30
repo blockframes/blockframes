@@ -1,0 +1,6 @@
+<section>
+    <label>
+      <input [accept]="accept" type="file" (change)="upload($event.target.files)" #file />
+    </label>
+    <button mat-raised-button color="accent" (click)="file.click()">Import a picture</button>
+</section>

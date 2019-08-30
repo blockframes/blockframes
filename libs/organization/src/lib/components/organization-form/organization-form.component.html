@@ -1,27 +1,22 @@
 <h4>Picture</h4>
 <!-- TODO: issue#579 import picture -->
 <article class="actions" fxLayout="column" fxLayoutAlign="center center">
-  
-    <ng-container *ngIf="control.get('logo').value; else fileUpload">
-      <img mat-card-image [src]="control.get('logo').value">
-      <mat-card-actions>
-          <button-upload accept="['.jpg', '.png']" path='logo' [types]="['image/jpeg', 'image/png']"
-          [uploadOnFirestore]="true" (storeUploaded)="logo = $event">
-        </button-upload>
-        <!-- TODO change the defautl logo  -->
-        <button mat-button color="primary" (click)="logo = undefined">
-          Delete this picture 
-        </button>
-      </mat-card-actions>
-    </ng-container>
-    
-    <ng-template #fileUpload>
-      <file-upload accept="['.jpg', '.png']" path='logo' [types]="['image/jpeg', 'image/png']"
-        [uploadOnFirestore]="true" (storeUploaded)="control.get('logo').patchValue($event)">
-      </file-upload>
-    </ng-template>
-
+  <img mat-card-image [src]="logo">
+  <mat-card-actions>
+    <button-upload 
+      accept="['.jpg', '.png']" 
+      path='logo' 
+      [types]="['image/jpeg', 'image/png']" 
+      [uploadOnFirestore]="true" 
+      (storeUploaded)="logo = $event">
+    </button-upload>
+    <!-- TODO change the defautl logo  -->
+    <button mat-button color="primary" (click)="logo = undefined">
+      Delete this picture 
+    </button>
+  </mat-card-actions>
 </article>
+
 <mat-divider></mat-divider>
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
