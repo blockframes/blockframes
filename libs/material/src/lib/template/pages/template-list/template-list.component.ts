@@ -42,8 +42,6 @@ export class TemplateListComponent implements OnInit {
   }
 
   public addTemplateDialog(): void {
-    this.dialog.open(TemplateAddComponent, {
-      width: '400px'
-    });
+    this.dialog.open(TemplateAddComponent, { width: '500px' });
   }
 }

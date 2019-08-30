@@ -1,17 +1,4 @@
-.cancel-button {
-  font-weight: bold;
-  color: var(--primary);
-  border: none;
-}
-
-.add-button {
-  font-weight: bold;
-}
-
-p {
-  color: rgba(0, 0, 0, 0.514);
-}
-
-h2 {
-  font-weight: bold;
+mat-form-field {
+  width: 100%;
+  margin-top: 10px;
 }
