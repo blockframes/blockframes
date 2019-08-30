@@ -1476,7 +1476,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/catalog-marketplace/catalog-marketplace/",
+            "outputPath": "dist/apps/catalog-marketplace",
             "index": "apps/catalog-marketplace/catalog-marketplace/src/index.html",
             "main": "apps/catalog-marketplace/catalog-marketplace/src/main.ts",
             "polyfills": "apps/catalog-marketplace/catalog-marketplace/src/polyfills.ts",
