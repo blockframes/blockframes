@@ -94,7 +94,6 @@ export class OrganizationService {
     private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
-    private walletService: WalletService,
     private authQuery: AuthQuery,
     private db: FireQuery,
   ) {}

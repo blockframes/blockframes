@@ -20,7 +20,9 @@
   <!-- Signer Column -->
   <ng-container matColumnDef="signer">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Signer</th>
-    <td mat-cell *matCellDef="let member"></td>
+    <td mat-cell *matCellDef="let member">
+      <avatar-list [urls]="[member.avatar]"></avatar-list>
+    </td>
   </ng-container>
 
   <!-- Action Column -->

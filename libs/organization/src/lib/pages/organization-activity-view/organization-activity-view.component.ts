@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { of, Observable } from 'rxjs';
-import { OrganizationService, OrganizationAction, OrganizationQuery } from '../../+state';
+import { Observable } from 'rxjs';
+import { OrganizationAction, OrganizationQuery } from '../../+state';
 
 @Component({
   selector: 'org-activity-view',
@@ -13,7 +13,7 @@ export class OrganizationActivityViewComponent implements OnInit {
   /** Observable which contains pending actions */
   public pendingActions$ = new Observable<OrganizationAction[]>();
 
-  /** Observable which contains approved actinos */
+  /** Observable which contains approved actions */
   public approvedActions$ = new Observable<OrganizationAction[]>();
 
   public selectedAction: OrganizationAction;
@@ -22,12 +22,10 @@ export class OrganizationActivityViewComponent implements OnInit {
   public opened = false;
 
   constructor(
-    private service: OrganizationService,
     private query: OrganizationQuery
   ){}
 
   ngOnInit() {
-    // this.service.instantiateMockData(); // TODO delete that : issue 676
     this.pendingActions$ = this.query.pendingActions$;
     this.approvedActions$ = this.query.approvedActions$;
   }

@@ -14,7 +14,7 @@
     <ng-container sidenav>
       <section *ngIf="!!selectedAction">
         <h3>{{selectedAction.name}}</h3>
-        <h4>{{selectedAction.isApproved ? 'aprroved on ' + selectedAction.approvalDate : 'Pending'}}</h4>
+        <h4>{{selectedAction.isApproved ? 'approved on ' + selectedAction.approvalDate : 'Pending'}}</h4>
         <article *ngFor="let signer of selectedAction.signers" fxLayout="row" fxLayoutAlign="start center">
           <img [src]="signer.avatar">
           {{signer.name}}

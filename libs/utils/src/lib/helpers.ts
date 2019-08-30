@@ -43,7 +43,7 @@ export function getNameFromENS(ensDomain: string) {
  * Convert email to username and sanitize it:
  * convert to lower case punycode and replace special chars by their ASCII code
  * then add base ens domain
- * @example `漢micHel+9@exemple.com` -> `xn--michel439-2c2s.blockframes.eth`
+ * @example `漢micHel+9@example.com` -> `xn--michel439-2c2s.blockframes.eth`
  */
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
 export function emailToEnsDomain(email: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
@@ -79,7 +79,7 @@ export function numberToHexString(num: number) {
 }
 
 /**
- * Transform a `0x` prefixed hex string into a 256 bits paded with 0
+ * Transform a `0x` prefixed hex string into a 256 bits padded with 0
  * @param hexString a `0x` prefixed hex string
  */
 export function padTo256Bits(hexString: string) {
