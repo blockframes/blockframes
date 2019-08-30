@@ -29,9 +29,7 @@
       <ng-container matColumnDef="template-name">
         <th mat-header-cell *matHeaderCellDef>Template name</th>
 
-          <td mat-cell *matCellDef="let element">
-            <a [routerLink]="['../', element.id]">{{element.name | titlecase}}</a>
-          </td>
+          <td mat-cell *matCellDef="let element">{{element.name | titlecase}}</td>
 
       </ng-container>
 
@@ -48,7 +46,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" [routerLink]="['../', row.id]"></tr>
     </table>
   </section>
 
