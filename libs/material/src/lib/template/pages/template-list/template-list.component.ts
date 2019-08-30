@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+
 
 
 @Component({
@@ -16,6 +19,11 @@ export class TemplateListComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'template-list';
   public templates$: Observable<Template[]>;
 
+  public columnsToDisplay = [ 'template-name', 'date', 'delete'];
+  public dataSource: MatTableDataSource<Template>;
+  public selection = new SelectionModel<Template>(true, []);
+
+
   constructor(
     private query: TemplateQuery,
     public dialog: MatDialog,
@@ -25,6 +33,7 @@ export class TemplateListComponent implements OnInit {
 
   ngOnInit() {
     this.templates$ = this.query.selectAll();
+    this.dataSource = new MatTableDataSource([]);
   }
 
   public deleteTemplate(template: Template) {
