@@ -81,6 +81,7 @@ export interface OrganizationForm {
   adress: string;
 }
 
+export const PLACEHOLDER_LOGO = 'https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg';
 /**
  * A factory function that creates an Organization
  */
@@ -96,7 +97,8 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     updated: Date.now(),
     actions: [],
     members: [],
-    logo: '',
+    // TODO get a good initial logo 
+    logo: PLACEHOLDER_LOGO, 
     ...params
   } as Organization;
 }

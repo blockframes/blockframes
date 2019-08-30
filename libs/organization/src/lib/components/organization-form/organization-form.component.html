@@ -5,8 +5,12 @@
     <ng-container *ngIf="control.get('logo').value; else fileUpload">
       <img mat-card-image [src]="control.get('logo').value">
       <mat-card-actions>
-        <button mat-button color="primary" (click)="control.get('logo').patchValue('')">
-          <mat-icon>delete_circle</mat-icon> Delete this picture 
+          <button-upload accept="['.jpg', '.png']" path='logo' [types]="['image/jpeg', 'image/png']"
+          [uploadOnFirestore]="true" (storeUploaded)="logo = $event">
+        </button-upload>
+        <!-- TODO change the defautl logo  -->
+        <button mat-button color="primary" (click)="logo = undefined">
+          Delete this picture 
         </button>
       </mat-card-actions>
     </ng-container>
