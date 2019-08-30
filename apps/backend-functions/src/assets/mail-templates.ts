@@ -7,6 +7,7 @@ import { EmailRequest } from '../internals/email';
 const USER_WELCOME_PATH = '/auth/welcome';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
+export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 
 const userInviteTemplate = ({ email, password }: { email: string; password: string }) =>
   `

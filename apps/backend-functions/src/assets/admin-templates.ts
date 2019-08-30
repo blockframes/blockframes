@@ -48,3 +48,29 @@ export function allowAccessToAppPageComplete(orgId: string, appId: string): stri
      </html>
      `;
 }
+
+/** The simple page that we use to let an admin trigger a database backup. */
+export function dataBackupPage(): string {
+  return `
+     <html>
+     Trigger a backup:
+
+     <form method="post">
+         <button type="submit">Backup</button>
+     </form>
+     </html>
+     `;
+}
+
+/** The simple form that we use to let an admin trigger a database restore */
+export function dataRestorePage(): string {
+  return `
+     <html>
+     Trigger a restore, ⚠️ this will ERASE all changes since the last backup.
+
+     <form method="post">
+         <button type="submit">Restore</button>
+     </form>
+     </html>
+     `;
+}

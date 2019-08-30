@@ -10,6 +10,7 @@ import { AppAccessStatus, OrganizationStatus } from './data/types';
 import {
   ADMIN_ACCEPT_ORG_PATH,
   ADMIN_ACCESS_TO_APP_PATH,
+  ADMIN_DATA_PATH,
   organizationCanAccessApp,
   organizationRequestedAccessToApp,
   organizationWasAccepted
@@ -18,9 +19,12 @@ import {
   acceptNewOrgPage,
   acceptNewOrgPageComplete,
   allowAccessToAppPage,
-  allowAccessToAppPageComplete
+  allowAccessToAppPageComplete,
+  dataBackupPage,
+  dataRestorePage
 } from './assets/admin-templates';
 import { getSuperAdmins } from './data/internals';
+import * as backup from './backup';
 
 // TODO(#714): Synchronize data types with the frontend
 const APPS = ['delivery', 'movie-financing', 'stories-and-more', 'catalog'];
@@ -141,3 +145,18 @@ adminApp.post(
     return res.send(allowAccessToAppPageComplete(orgId, appId));
   }
 );
+
+// Backups / Restore the database
+// ==============================
+
+adminApp.get(`${ADMIN_DATA_PATH}/backup`, async (req: express.Request, res: express.Response) => {
+  return res.send(dataBackupPage());
+});
+
+adminApp.post(`${ADMIN_DATA_PATH}/backup`, backup.freeze);
+
+adminApp.get(`${ADMIN_DATA_PATH}/restore`, async (req: express.Request, res: express.Response) => {
+  return res.send(dataRestorePage());
+});
+
+adminApp.post(`${ADMIN_DATA_PATH}/restore`, backup.restore);

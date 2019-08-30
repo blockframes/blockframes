@@ -22,9 +22,14 @@ import {
   onMovieStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
-import * as backup from './backup';
 import * as migrations from './migrations';
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate, onDocumentWrite, onOrganizationDocumentUpdate } from './utils';
+import {
+  onDocumentCreate,
+  onDocumentDelete,
+  onDocumentUpdate,
+  onDocumentWrite,
+  onOrganizationDocumentUpdate
+} from './utils';
 import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
@@ -64,16 +69,7 @@ export const findOrgByName = functions.https
   .onCall(users.findOrgByName);
 
 /** Trigger: REST call to get or create a user. */
-export const getOrCreateUserByMail = functions.https
-  .onCall(users.getOrCreateUserByMail);
-
-/** Trigger: REST call to backup firestore. */
-export const backupFirestore = functions.https
-  .onRequest(backup.freeze);
-
-/** Trigger: REST call to restore firestore. */
-export const restoreFirestore = functions.https
-  .onRequest(backup.restore);
+export const getOrCreateUserByMail = functions.https.onCall(users.getOrCreateUserByMail);
 
 /** Trigger: REST call to migrate the database to V2. */
 export const updateToV2 = functions.https
