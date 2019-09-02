@@ -65,6 +65,8 @@ export function createTemplateMaterial(material: Partial<Material>): Material {
 }
 
 export function getMaterialStep(material: Material, delivery: Delivery) {
+  // Change the step of a material by the step of delivery
+  // TODO: issue #779, juste save the stepId in the database
   return {
     ...material,
     step: delivery.steps.find(step =>
