@@ -26,18 +26,18 @@
       <input matInput placeholder="Category" type="text" formControlName="category" />
     </mat-form-field>
 
+    <!-- Material Price Input -->
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput placeholder="Price" type="number" min="0" formControlName="price" />
+    </mat-form-field>
+
     <!-- Material Currency Input -->
     <mat-form-field appearance="outline">
       <mat-label>Currency</mat-label>
       <mat-select formControlName="currency">
         <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
       </mat-select>
-    </mat-form-field>
-
-    <!-- Material Price Input -->
-    <mat-form-field appearance="outline">
-      <mat-label>Price</mat-label>
-      <input matInput placeholder="Price" type="number" min="0" formControlName="price" />
     </mat-form-field>
 
     <mat-divider inset></mat-divider>

@@ -1,8 +1,9 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User, AuthQuery, AuthService } from '@blockframes/auth';
+import { AuthQuery, AuthService, User } from '@blockframes/auth';
 import { Router } from '@angular/router';
+import { Profile, createProfile } from '../forms/profile-edit.form';
 
 @Component({
   selector: 'account-profile-menu',
@@ -25,6 +26,10 @@ export class ProfileMenuComponent implements OnInit{
 
   public async logout() {
     await this.service.logout();
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/layout']);
+  }
+
+  public get profile() {
+    return createProfile(this.auth.getValue().user)
   }
 }
