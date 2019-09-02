@@ -7,11 +7,13 @@
 aside {
   min-width: 450px;
   width: 25%;
+  padding: 10px;
 }
 
 section {
   width: 65%;
   flex: 1;
+  padding: 10px;
 }
 
 .capitalized {
@@ -20,4 +22,21 @@ section {
 
 month-calendar {
   width: 100%;
+}
+
+header {
+  padding: 100px 0;
+  // TODO: replace image when the real one is available.
+  background-image: url('/assets/images/catalog-marketplace-banner.png');
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  text-align: center;
+  div {
+    h1,
+    b {
+      margin: 0;
+      padding: 0;
+    }
+  }
 }

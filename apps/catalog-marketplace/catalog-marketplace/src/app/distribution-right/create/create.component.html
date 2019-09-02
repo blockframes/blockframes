@@ -1,12 +1,13 @@
 <main *ngIf="(movie$ | async) as movie">
-  <article>
-    <h1 class="mat-h1">{{movie.main.title.original}}</h1>
-    <img [src]="movie.main.poster" />
-    <span *ngFor="let director of movie.main.directors; let isLast = last">
-      <h3 class="mat-h3">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
-      </h3>
-    </span>
-  </article>
+  <header>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <h1 class="mat-h1">{{movie.main.title.original}}</h1>
+        <b *ngFor="let director of movie.main.directors; let isLast = last">
+          <h3 class="mat-h3">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
+          </h3>
+        </b>
+      </div>
+  </header>
   <article fxLayout="row">
     <aside>
       <mat-card>
@@ -158,7 +159,7 @@
                     </mat-list-item>
                   </mat-list>
                 </ng-container>
-                
+
                 <!-- Subtitles -->
                 <span fxLayout="row" fxLayoutAlign="start start">
                   <ng-container *ngIf="!(movie.versionInfo.subtitles.length === 0); else noSubtitles">
