@@ -5,9 +5,10 @@
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
-      <b class="mat-body-1" *ngFor="let director of movie.main.directors">
-        a film by {{director.firstName}} {{director.lastName}}
-      </b>
+      <b *ngFor="let director of movie.main.directors; let isLast = last">
+          <h3 class="mat-body-1">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
+          </h3>
+        </b>
     </div>
   </header>
   <section fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="50px">
