@@ -1,4 +1,4 @@
-import { createAllUsers, prepareFirebase } from './firebaseSetup';
+import { createAllUsers, prepareFirebase, trashAllOtherUsers } from './firebaseSetup';
 import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
@@ -24,6 +24,8 @@ async function prepareToronto() {
   const { auth } = loadAdminServices();
   console.info('create all users...');
   await createAllUsers(USERS, auth);
+  console.info('clearing other users...');
+  await trashAllOtherUsers(USERS, auth);
   console.info('done.');
   process.exit(0);
 }

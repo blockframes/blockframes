@@ -43,7 +43,7 @@ const sleep = ms => {
   });
 };
 
-async function trashAllOtherUsers(
+export async function trashAllOtherUsers(
   expectedUsers: UserConfig[],
   auth: Auth,
   fromPageToken?: string
