@@ -20,7 +20,6 @@ export class TemplateListComponent implements OnInit {
 
   public columnsToDisplay = [ 'template-name', 'date', 'delete'];
   public dataSource: MatTableDataSource<Template>;
-  public selection = new SelectionModel<Template>(true, []);
 
 
   constructor(

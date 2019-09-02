@@ -31,7 +31,6 @@ import { MaterialModule } from '../material/material.module';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { TemplateListGuard } from './guards/template-list.guard';
 import { MatSelectModule, MatSortModule } from '@angular/material';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table'
 
 const routes: Routes = [
@@ -85,7 +84,6 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatSortModule,
-    MatCheckboxModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [TemplateAddComponent]
