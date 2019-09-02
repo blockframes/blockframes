@@ -52,7 +52,7 @@ export async function trashAllOtherUsers(
 
   let { pageToken, users } = await auth.listUsers(1000, fromPageToken);
 
-  while (users.length > 0 && pageToken) {
+  while (users.length > 0) {
     const usersToRemove = users.filter(user => expectedUsersIds.indexOf(user.uid) === -1);
 
     // Note: this is bad practice to await in a loop.
@@ -69,6 +69,8 @@ export async function trashAllOtherUsers(
       const rest = await auth.listUsers(1000, pageToken);
       pageToken = rest.pageToken;
       users = rest.users;
+    } else {
+      break; // Quick fix, looks like there was an API upgrade. Refactor.
     }
   }
 
