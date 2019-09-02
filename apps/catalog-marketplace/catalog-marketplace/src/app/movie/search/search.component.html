@@ -179,8 +179,9 @@
         <mat-divider></mat-divider>
       </header>
       <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
-        <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main" (click)="goToMovieInformation(movie.id)">
-        </movie-display-card-item>
+        <ng-container *ngFor="let movie of searchResults">
+            <movie-display-card-item  [movie]="movie.main" [routerLink]="['/layout/o/catalog', movie.id]"></movie-display-card-item>
+        </ng-container>
       </div>
     </article>
   </section>
