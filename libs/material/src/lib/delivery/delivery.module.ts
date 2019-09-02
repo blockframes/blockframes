@@ -51,7 +51,8 @@ import {
   FeedbackMessageModule,
   TeamWorkModule,
   UiFormModule,
-  EditableSidenavModule
+  EditableSidenavModule,
+  AvatarListModule
 } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
@@ -135,6 +136,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryRoutingModule,
     MovieModule,
     FeedbackMessageModule,
+    AvatarListModule,
 
     // Material
     MatExpansionModule,

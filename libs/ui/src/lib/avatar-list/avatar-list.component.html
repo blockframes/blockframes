@@ -1,13 +1,13 @@
 
 <div fxLayout="row" fxLayoutAlign="start center">
-  
+
   <ng-container *ngFor="let url of _urls">
 
     <img *ngIf="!!url; else unknown" [src]="url">
     <ng-template #unknown>
-      <mat-icon>help_outline</mat-icon>
+      <img [src]="placeholderLogo" alt="Placeholder Logo">
     </ng-template>
-    
+
   </ng-container>
 
   <ng-container *ngIf="_moreDetails > 0">
