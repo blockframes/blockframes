@@ -41,9 +41,12 @@ mat-icon {
 // medium
  @include medium {
   .mat-sidenav {
-    padding: 25px 50px;
+    width: 50%;
+    height: 100%;
+    padding: 0;
   }
   mat-sidenav-content {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     width: 100%;
@@ -56,9 +59,21 @@ mat-icon {
 =======
     padding-left: 50px;
 >>>>>>> reset sidenav
+=======
+    width: 95%;
+    padding-left: 0;
+
+>>>>>>> sidenav modified
   }
   mat-sidenav-container {
+    width: 100%;
     padding-top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .mat-card {
+    width: 100%;
   }
  }
 
@@ -78,6 +93,7 @@ mat-icon {
 // extra small
 @include mobile {
   .mat-sidenav {
+    width: 100%;
     padding: 10px 10px;
     width: 100%;
   }
