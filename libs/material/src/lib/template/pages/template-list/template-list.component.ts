@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 
 
 @Component({
@@ -15,12 +13,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit {
-  public loading$: Observable<boolean>;
   public templates$: Observable<Template[]>;
-
-  public columnsToDisplay = [ 'template-name', 'date', 'delete'];
-  public dataSource: MatTableDataSource<Template>;
-
 
   constructor(
     private query: TemplateQuery,
@@ -30,7 +23,6 @@ export class TemplateListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loading$ = this.query.selectLoading();
     this.templates$ = this.query.selectAll();
   }
 

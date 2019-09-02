@@ -6,13 +6,13 @@
       <mat-label>Template title</mat-label>
       <input matInput testId="templateName" #templateName placeholder="Template title" />
     </mat-form-field>
-    <img src="http://via.placeholder.com/300" />
+    <img src="/assets/images/add-template.png" />
   </article>
 
   <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
     <a
       mat-raised-button
-      color="primary"
+      color="warn"
       (click)="addTemplate(templateName.value)"
       [disabled]="!templateName.value">
       Next

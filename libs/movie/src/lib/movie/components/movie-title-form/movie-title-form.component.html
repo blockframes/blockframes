@@ -5,14 +5,14 @@
       <span>Choose a title for your movie</span>
       <mat-form-field appearance="outline" fxLayoutAlign="center">
         <mat-label>Movie title</mat-label>
-        <input matInput #movieName testId="movieName" type="string" placeholder="Movie title"/>
+        <input matInput #movieName testId="movieName" type="string" placeholder="Movie title" formControlName="title"/>
       </mat-form-field>
-      <img src="http://via.placeholder.com/300" />
+      <img src="/assets/images/add-movie.png" />
     </article>
 
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
-      <a mat-raised-button color="primary" [disabled]="!movieName.value" type="submit">Next</a>
-      <a testId="templateCreate" mat-button color="warn" (click)="cancel()">Cancel</a>
+      <button mat-raised-button color="warn" [disabled]="!movieName.value" type="submit">Next</button>
+      <button testId="templateCreate" mat-button color="warn" (click)="cancel()">Cancel</button>
     </article>
   </form>
 </section>

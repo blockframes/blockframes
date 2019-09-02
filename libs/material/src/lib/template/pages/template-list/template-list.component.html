@@ -1,47 +1,13 @@
-
-
-<ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
-
-<ng-template #loaded>
-
-  <section *ngIf="(templates$ | async) as templates">
-
-    <header fxLayout="row" fxLayoutAlign="none center">
-      <h2>Templates</h2>
-      <mat-divider fxFlex></mat-divider>
-    </header>
-
-    <table mat-table [dataSource]="templates" class="mat-elevation-z0">
-
-      <!-- Template name -->
-      <ng-container matColumnDef="template-name">
-        <th mat-header-cell *matHeaderCellDef>Template name</th>
-        <td mat-cell *matCellDef="let template">{{template.name | titlecase}}</td>
-      </ng-container>
-
-      <!-- Date -->
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Creation date</th>
-        <td mat-cell *matCellDef="let template">{{ template.created.toDate() | date: 'dd/MM/yyyy' }}</td>
-      </ng-container>
-
-      <!-- Trash Icon -->
-      <ng-container matColumnDef="delete">
-        <th mat-header-cell *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let template">
-          <button mat-button (click)="deleteTemplate(template)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" [routerLink]="['../', row.id]"></tr>
-    </table>
-  </section>
-
-  <div fxLayoutAlign="center center">
-    <button mat-raised-button (click)="addTemplateDialog()">Create template</button>
-  </div>
-
-</ng-template>
+<section>
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <h2>Templates</h2>
+    <mat-divider fxFlex></mat-divider>
+    <a mat-button color="primary" (click)="addTemplateDialog()">
+      <mat-icon>add</mat-icon>
+      <span>Add a template</span>
+    </a>
+  </article>
+  <article>
+    <template-repertory [templates]="(templates$ | async)" (delete)="deleteTemplate($event)"></template-repertory>
+  </article>
+</section>
