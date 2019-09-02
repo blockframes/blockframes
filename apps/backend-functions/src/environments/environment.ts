@@ -7,6 +7,7 @@
  */
 import * as functions from 'firebase-functions';
 
+import { algolia as algoliaClient } from '@env';
 export { factoryContract, backupBucket, relayer, appUrl } from '@env';
 
 /**
@@ -23,8 +24,9 @@ const mockConfigIfNeeded = (...path: string[]): any =>
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
-export const algoliaId = mockConfigIfNeeded('algolia', 'app_id');
-export const algoliaAdminKey = mockConfigIfNeeded('algolia', 'api_key');
-export const algoliaSearchKey = mockConfigIfNeeded('algolia', 'search_key');
+export const algolia = {
+  ...algoliaClient,
+  adminKey: mockConfigIfNeeded('algolia', 'api_key')
+};
 
 export const adminEmail = mockConfigIfNeeded('admin', 'email');

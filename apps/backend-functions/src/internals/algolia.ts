@@ -1,15 +1,15 @@
 import algoliasearch from 'algoliasearch';
 
-import { algoliaAdminKey, algoliaId } from '../environments/environment';
+import { algolia } from '../environments/environment';
 
 const indexOrganizationsBuilder = () => {
-  const client = algoliasearch(algoliaId, algoliaAdminKey);
-  const INDEX_NAME_ORGANIZATIONS = 'orgs';
+  const client = algoliasearch(algolia.appId, algolia.adminKey);
+  const INDEX_NAME_ORGANIZATIONS = algolia.indexNameOrganizations;
   return client.initIndex(INDEX_NAME_ORGANIZATIONS);
 };
 
 export function storeSearchableOrg(orgId: string, name: string): Promise<any> {
-  if (algoliaId === '') {
+  if (!algolia.adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
@@ -18,7 +18,7 @@ export function storeSearchableOrg(orgId: string, name: string): Promise<any> {
 }
 
 export function deleteSearchableOrg(orgId: string): Promise<any> {
-  if (algoliaId === '') {
+  if (!algolia.adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }

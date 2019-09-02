@@ -24,9 +24,9 @@ export const firebase = {
 // =======
 
 export const algolia = {
-  appId: 'W5ACHF3Z7Z',
-  searchKey: '102e09194402cf082527d84476c5fc25',
-  indexNameOrganizations: 'orgs'
+  appId: '8E9YO1I9HB',
+  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
+  indexNameOrganizations: 'prod_orgs'
 };
 
 // Ethereum

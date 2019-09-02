@@ -3,13 +3,15 @@
  */
 import * as functions from 'firebase-functions';
 
+import { algolia as algoliaClient } from '@env';
 export { backupBucket, relayer, firebase, appUrl } from '@env';
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
 
-export const algoliaId = functions.config().algolia.app_id;
-export const algoliaAdminKey = functions.config().algolia.api_key;
-export const algoliaSearchKey = functions.config().algolia.search_key;
+export const algolia = {
+  ...algoliaClient,
+  adminKey: functions.config().algolia.api_key
+};
 
 export const adminEmail = functions.config().admin.email;
