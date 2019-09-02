@@ -3,6 +3,7 @@ import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
 import { USERS } from './users.toronto.fixture';
+import { storeSearchableOrg } from '../../backend-functions/src/internals/algolia';
 
 async function prepareForTesting() {
   console.info('Preparing firebase...');
@@ -18,6 +19,19 @@ async function migrateToV1() {
   await MIGRATIONS['1'].upgrade(db);
   await updateDBVersion(db, 1);
   process.exit(0);
+}
+
+async function upgradeAlgoliaOrgs() {
+  const { db } = loadAdminServices();
+  const orgs = await db.collection('orgs').get();
+
+  const promises = [];
+  orgs.forEach(org => {
+    const { id, name } = org.data();
+    promises.push(storeSearchableOrg(id, name, process.env['ALGOLIA_API_KEY']));
+  });
+
+  return Promise.all(promises);
 }
 
 async function prepareToronto() {
@@ -39,4 +53,6 @@ if (cmd === 'prepareForTesting') {
   migrateToV1();
 } else if (cmd === 'prepareToronto') {
   prepareToronto();
+} else if (cmd === 'upgradeAlgoliaOrgs') {
+  upgradeAlgoliaOrgs();
 }
