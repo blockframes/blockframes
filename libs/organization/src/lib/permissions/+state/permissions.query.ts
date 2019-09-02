@@ -21,6 +21,10 @@ export class PermissionsQuery extends Query<PermissionsState> {
     return this.select(state => state.superAdmins.includes(this.auth.userId));
   }
 
+  public get superAdminCount() {
+    return this.getValue().superAdmins.length;
+  }
+
   /** Checks if the connected user is either SuperAdmin or Admin of his organization */
   public get isOrgAdmin$(): Observable<boolean> {
     return this.isSuperAdmin$.pipe(
