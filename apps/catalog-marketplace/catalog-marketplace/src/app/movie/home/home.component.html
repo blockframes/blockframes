@@ -8,7 +8,7 @@
       ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
       nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehcentererit in voluptate velit
       esse cillum dolore eu fugiat nulla pariatur.</p>
-    <button mat-raised-button color="primary" test-id="discover">Discover our films</button>
+    <button mat-raised-button color="primary" test-id="discover" routerLink="/layout/o/catalog/search">Discover our films</button>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -18,7 +18,7 @@
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutGap="20px">
           <h4 class="mat-display-2">{{ section.title }}</h4>
           <span>{{ section.subline}} </span>
-          <a mat-raised-button test-id="seeMore1" color="primary" [href]="section.link">See more</a>
+          <a mat-raised-button test-id="seeMore1" color="primary" routerLink="/layout/o/catalog/search">See more</a>
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
