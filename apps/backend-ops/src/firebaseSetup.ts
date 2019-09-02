@@ -30,8 +30,8 @@ async function createUserIfItDoesntExists(
  *
  * @param auth  Firestore Admin Auth object
  */
-async function createAllUsers(auth: Auth): Promise<any> {
-  const ps = USERS.map(user => createUserIfItDoesntExists(auth, user));
+export async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
+  const ps = users.map(user => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
 }
 
@@ -78,7 +78,7 @@ export async function prepareFirebase() {
 
   try {
     console.info('create all users...');
-    await createAllUsers(auth);
+    await createAllUsers(USERS, auth);
     console.info('done.');
   } catch (e) {
     console.error(e);
