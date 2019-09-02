@@ -84,7 +84,6 @@ async function upgradeOrgPermissions(
   // First update the permission doc for the delivery
   const { id: orgId, userIds: superAdmins } = org.data();
 
-  const permissionDoc = await tx.get(permissionRef);
   const defaultValues = {
     admins: [],
     canCreate: [],
@@ -95,7 +94,7 @@ async function upgradeOrgPermissions(
     superAdmins
   };
 
-  const currentData = permissionDoc.exists ? permissionDoc.data() : {};
+  const currentData = {}; // assume empty permissions.
 
   const newData = selectAndMergeValues(currentData, defaultValues);
   tx.update(permissionRef, newData);
@@ -164,18 +163,19 @@ export async function upgrade(db: Firestore) {
   const permissionRef = (orgId: string) => db.collection('permissions').doc(orgId);
 
   return db.runTransaction(async tx => {
-    // Upgrade deliveries
     const deliveries = await tx.get(deliveriesQuery);
+    const movies = await tx.get(moviesQuery);
+    const orgs = await tx.get(orgsQuery);
+    const movieIdsToDeliveryIds = buildMovieToDeliveryIdsMap(deliveries);
+    const stakeholdersMapping = await gatherStakeholders(deliveries, tx);
+
+    // Upgrade deliveries
     deliveries.forEach(doc => upgradeDelivery(doc, tx));
-    const stakeholdersMapping = gatherStakeholders(deliveries, tx);
 
     // Upgrade movies
-    const movieIdsToDeliveryIds = buildMovieToDeliveryIdsMap(deliveries);
-    const movies = await tx.get(moviesQuery);
     movies.forEach(doc => upgradeMovie(doc, movieIdsToDeliveryIds[doc.id], tx));
 
     // Upgrade orgs
-    const orgs = await tx.get(orgsQuery);
     orgs.forEach(doc => upgradeOrg(doc, tx));
 
     // Upgrade permissions
