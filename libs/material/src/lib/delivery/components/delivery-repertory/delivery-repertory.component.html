@@ -9,8 +9,16 @@
     <td mat-cell *matCellDef="let delivery">
       <span fxLayout="row" fxLayoutAlign="start center">
         <ng-container *ngFor="let stakeholder of delivery.stakeholders">
+          <ng-container *ngIf="stakeholder.id !== userOrganization.id">
             <avatar-list [urls]="[stakeholder.organization.logo]"></avatar-list>
             <b>{{ stakeholder.organization.name }}</b>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="delivery.stakeholders.length === 1">
+          <img
+            [src]="placeholderLogo"
+            alt="Stakeholder Picture"/>
+          <b>(No signers yet !)</b>
         </ng-container>
       </span>
     </td>
