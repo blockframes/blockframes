@@ -1,9 +1,9 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthQuery, AuthService, User } from '@blockframes/auth';
 import { Router } from '@angular/router';
-import { Profile, createProfile } from '../forms/profile-edit.form';
+import { createProfile } from '../forms/profile-edit.form';
 
 @Component({
   selector: 'account-profile-menu',
