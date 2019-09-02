@@ -179,7 +179,7 @@
         <mat-divider></mat-divider>
       </header>
       <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
-        <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main" (click)="goToMovieInformation(searchResults.id)">
+        <movie-display-card-item *ngFor="let movie of searchResults" [movie]="movie.main" (click)="goToMovieInformation(movie.id)">
         </movie-display-card-item>
       </div>
     </article>
