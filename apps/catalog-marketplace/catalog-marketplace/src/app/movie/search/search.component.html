@@ -174,10 +174,10 @@
 
     <!-- List of result -->
     <article>
-      <header class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <h3>Search</h3>
         <mat-divider></mat-divider>
-      </header>
+      </div>
       <div *ngIf="movieSearchResults$ | async as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
         <ng-container *ngFor="let movie of searchResults">
             <movie-display-card-item  [movie]="movie.main" [routerLink]="['/layout/o/catalog', movie.id]"></movie-display-card-item>
