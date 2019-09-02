@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from 
 import { Stakeholder } from '@blockframes/movie';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization';
 
 @Component({
   selector: 'delivery-stakeholders-repertory',
@@ -19,4 +20,5 @@ export class DeliveryStakeholdersRepertoryComponent {
 
   public dataSource: MatTableDataSource<Stakeholder>;
   public displayedColumns: string[] = ['name', 'action'];
+  public placeholderLogo = PLACEHOLDER_LOGO
 }
