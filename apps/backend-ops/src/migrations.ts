@@ -20,6 +20,14 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
 }
 
 export async function updateDBVersion(db: Firestore, version: number): Promise<any> {
+  // Note: this should go into the migration operation so that the whole thing is a transaction
   const versionRef = await db.collection('_META').doc('_VERSION');
-  return versionRef.update({ currentVersion: version });
+
+  const doc = await versionRef.get();
+
+  if (!doc.exists) {
+    return versionRef.set({ currentVersion: version });
+  } else {
+    return versionRef.update({ currentVersion: version });
+  }
 }
