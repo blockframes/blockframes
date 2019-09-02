@@ -1,4 +1,3 @@
-import { MyErrorStateMatcher } from './../../movie/search/search.component';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
 import {
@@ -19,7 +18,6 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
 import uuid from 'uuid/v4';
-import { createLanguageValidator } from './create-validators.form';
 import { MovieTerritories } from '../../movie/search/search.form';
 
 @Component({
@@ -35,6 +33,8 @@ export class DistributionRightCreateComponent implements OnInit {
   public catalogBasket: CatalogBasket;
   // This variable is going to be injected in catalog-form-selection and gets updated by the form
   public movieDetails: MovieData[];
+  // A flag to indicate if datepicker is open
+  public opened = false;
   /*  
     This variable will be input the dates inside of the datepicker 
     if the users types it in manually
@@ -45,9 +45,9 @@ export class DistributionRightCreateComponent implements OnInit {
 
   // Language section
   // TODO(MF): Think of a slim solution
-  public languageControl = new FormControl(null, [createLanguageValidator]);
-  public dubbingsControl = new FormControl(null, [createLanguageValidator]);
-  public subtitlesControl = new FormControl(null, [createLanguageValidator]);
+  public languageControl = new FormControl(null);
+  public dubbingsControl = new FormControl(null);
+  public subtitlesControl = new FormControl(null);
   public movieLanguages: string[] = [];
   public movieDubbings: string[] = [];
   public movieSubtitles: string[] = [];
@@ -60,7 +60,6 @@ export class DistributionRightCreateComponent implements OnInit {
 
   // Datepicker section
   public disabledDates: Date;
-  public matcher = new MyErrorStateMatcher();
 
   // Territory section
   public territoriesFilter: Observable<string[]>;
@@ -165,6 +164,7 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public changeDateFocus(dates: DateRange) {
+    this.opened = true;
     this.choosenDateRange.to = dates.to;
     this.choosenDateRange.from = dates.from;
   }
@@ -187,7 +187,8 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public setWantedRange(date: DateRange) {
-    this.form.get('duration').setValue({ to: date.to, from: date.from });
+    this.form.get('duration').setValue({ to: date.to, from: date.from });    
+    this.opened = false;
   }
 
   public checkMedia(media: string) {

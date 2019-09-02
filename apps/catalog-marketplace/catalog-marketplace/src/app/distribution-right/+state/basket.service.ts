@@ -9,7 +9,12 @@ export class BasketService {
   constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {}
 
   public add(basket: CatalogBasket) {
-    const organizationId = this.organizationQuery.getValue().org.id;
-    this.db.doc<Organization>(`orgs/${organizationId}`).update( { catalog:  basket } )
+    const organization = this.organizationQuery.getValue().org;
+    if (typeof organization.catalog === 'undefined') {
+      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: [basket] });
+    } else {
+      const newCatalogArray = [...organization.catalog, basket];
+      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: newCatalogArray });
+    }
   }
 }

@@ -15,7 +15,7 @@
           <mat-accordion multi="true">
 
             <!-- Dates -->
-            <mat-expansion-panel>
+            <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
                 <mat-panel-title class="mat-h4">
                   Dates
@@ -23,7 +23,7 @@
               </mat-expansion-panel-header>
               <span formGroupName="duration">
                 <datepicker-range [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
-                  (wantedRange)="setWantedRange($event)">
+                  (wantedRange)="setWantedRange($event)" [opened]="opened">
                 </datepicker-range>
               </span>
             </mat-expansion-panel>
@@ -80,10 +80,7 @@
                   <ng-container *ngIf="!(movie.main.languages.length === 0); else noLanguages">
                     <mat-form-field appearance="outline">
                       <input matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
-                        placeholder="Add available languages" [errorStateMatcher]="matcher" class="capitalized" />
-                      <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-                        Please enter a valid language or choose from the dropdown menu!
-                      </mat-error>
+                        placeholder="Add available languages" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                         [disabled]="!languageControl.valid">
                         <mat-icon>search</mat-icon>
@@ -123,10 +120,7 @@
                   <ng-container *ngIf="!(movie.versionInfo.dubbings.length === 0); else noDubbings">
                     <mat-form-field appearance="outline">
                       <input matInput type="text" [matAutocomplete]="dubbings" [formControl]="dubbingsControl"
-                        placeholder="Add available dubbings" [errorStateMatcher]="matcher" class="capitalized" />
-                      <mat-error *ngIf="dubbingsControl.hasError('languageNotSupported')">
-                        Please enter a valid language or choose from the dropdown menu!
-                      </mat-error>
+                        placeholder="Add available dubbings" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addDubbing(dubbingsControl.value)"
                         [disabled]="!dubbingsControl.valid">
                         <mat-icon>search</mat-icon>
@@ -165,10 +159,7 @@
                   <ng-container *ngIf="!(movie.versionInfo.subtitles.length === 0); else noSubtitles">
                     <mat-form-field appearance="outline">
                       <input matInput type="text" [matAutocomplete]="subtitles" [formControl]="subtitlesControl"
-                        placeholder="Add available subtitles" [errorStateMatcher]="matcher" class="capitalized" />
-                      <mat-error *ngIf="subtitlesControl.hasError('languageNotSupported')">
-                        Please enter a valid language or choose from the dropdown menu!
-                      </mat-error>
+                        placeholder="Add available subtitles" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addSubtitle(subtitlesControl.value)"
                         [disabled]="!subtitlesControl.valid">
                         <mat-icon>search</mat-icon>
