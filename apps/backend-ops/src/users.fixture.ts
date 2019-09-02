@@ -27,57 +27,72 @@ export const USERS: UserConfig[] = [
   },
   {
     uid: '1cDhS7rdLeZARDuRDixCxtPBUe42',
-    email: 'hello@clockworks.blockframes.com',
+    email: 'hello@clockworks.com',
     password: 'blockframes'
   },
   {
     uid: '3MjmItCZi2Nghuvks91frDP8hQ03',
-    email: 'hello@syncopatedfilms.blockframes.com',
+    email: 'hello@syncopatedfilms.com',
     password: 'blockframes'
   },
   {
     uid: 'CART4GbCHPTrpWgAbZtsmUyfwly1',
-    email: 'dazdad@gmail.blockframes.com',
+    email: 'dazdad@gmail.com',
     password: 'blockframes'
   },
   {
     uid: 'CVE2GVi44SgwtKA0YUaOe5nfamy2',
-    email: 'hello@netflix.blockframes.com',
+    email: 'hello@netflix.com',
     password: 'blockframes'
   },
   {
     uid: 'EDIWkg04UeTBgAEyVA88RtTJmUr1',
-    email: 'ddada@test.blockframes.com',
+    email: 'ddada@test.com',
     password: 'blockframes'
   },
   {
     uid: 'LKKobibLhCXxlPuDJwrxqDalSjg2',
-    email: 'hello@barunsonea.blockframes.com',
+    email: 'hello@barunsonea.com',
     password: 'blockframes'
   },
   {
     uid: 'UCcHMvd398TTc3wsJ3KKewdy3t63',
-    email: 'hello@empire.blockframes.com',
+    email: 'hello@empire.com',
     password: 'blockframes'
   },
   {
     uid: 'UsYWmseMoOQVN2hWrJ8oxlaQm0C2',
-    email: 'hello@wearefabula.blockframes.com',
+    email: 'hello@wearefabula.com',
     password: 'blockframes'
   },
   {
-    uid: 'slexAVVDbJOLTrBorXrl1yhD1bj2',
-    email: 'hello@logicalpictures.blockframes.com',
+    uid: 'bPpo9XhbhpZ1Ic1RGkWKYzP7WBJ2',
+    email: 'hello@logicalpictures.com',
     password: 'blockframes'
   },
   {
-    uid: 'MecXTc1Yj2ha00TW5Rx6h7YDmmF2',
-    email: 'hello@charades.blockframes.com',
+    uid: 'fqK319OtikZsW4TbV3tnVXVC6hs1',
+    email: 'hello@charades.com',
     password: 'blockframes'
   },
   {
     uid: 'jJKxS7Ix2VP1fYeTCaLVSR3sk4F3',
-    email: 'hello@volgafilms.blockframes.com',
+    email: 'hello@volgafilms.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'qMywJAW4VtY4uG5iv44AAxCLK9D3',
+    email: 'hello@thejokers.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'XfE8uBoeFRToxrPipXOHPgZJG9U2',
+    email: 'hello@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'rjcV3BfLGlPalqUrbRX91zWqwqB2',
+    email: 'cjentertainment@blockframes.com',
     password: 'blockframes'
   }
 ];
