@@ -1,5 +1,6 @@
 <section>
   <form [formGroup]="titleForm" (ngSubmit)="newMovie()">
+<<<<<<< HEAD
     <article mat-dialog-content fxLayout="column" fxLayoutAlign="space-between center">
       <h3>New movie title</h3>
       <span>Choose a title for your movie</span>
@@ -14,5 +15,15 @@
       <button mat-raised-button color="warn" [disabled]="!movieName.value" type="submit">Next</button>
       <button testId="templateCreate" mat-button color="warn" (click)="cancel()">Cancel</button>
     </article>
+=======
+    <mat-form-field appearance="outline">
+      <mat-label>Orginal title</mat-label>
+      <input matInput type="string" placeholder="Original Title" formControlName="title"/>
+    </mat-form-field>
+    <div class="margin-top">
+      <button mat-button color="basic" type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="accent" type="submit">Create</button>
+    </div>
+>>>>>>> basic palette
   </form>
 </section>

@@ -143,12 +143,14 @@ $bf-light-foreground: (
 $bf-light-primary: mat-palette($mat-light-bf-blue, 400, 50, 700);
 $bf-light-accent: mat-palette($mat-light-bf-red, 500, 50, 800);
 $bf-light-warn: mat-palette($mat-light-bf-red, 200);
+$bf-light-basic: mat-palette($mat-light-bf-orange, 50);
 
 $bf-light-theme: (
   // Standard
   primary: $bf-light-primary,
   accent: $bf-light-accent,
   warn: $bf-light-warn,
+  basic: $bf-light-basic,
   is-dark: false,
   foreground: $bf-light-foreground,
   background: $bf-light-background,
