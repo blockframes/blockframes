@@ -67,6 +67,9 @@ export function createTemplateMaterial(material: Partial<Material>): Material {
 export function getMaterialStep(material: Material, delivery: Delivery) {
   return {
     ...material,
-    step: delivery.steps.find(step => step.id === material.stepId)
+    step: delivery.steps.find(step =>
+      material.step ? step.id === material.step.id : null)
+      ? delivery.steps.find(step => material.step ? step.id === material.step.id : null)
+      : null
   };
 }

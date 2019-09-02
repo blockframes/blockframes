@@ -190,7 +190,6 @@ export class MaterialService {
           tx.set(newMaterialRef, material);
           return;
         }
-
         return tx.update(materialRef, material);
       });
     });
@@ -266,10 +265,11 @@ export class MaterialService {
    * Checks properties of two material to tell if they are the same or not.
    */
   public isTheSame(matA: Material, matB: Material): boolean {
-    const getProperties = ({ value, description, category }: Material) => ({
+    const getProperties = ({ value, description, category, step }: Material) => ({
       value,
       description,
-      category
+      category,
+      step
     });
     return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
   }
