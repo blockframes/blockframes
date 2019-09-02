@@ -1,5 +1,12 @@
+@import 'variables';
+
 section {
   margin: 100px 240px;
+}
+@include tablet {
+  section {
+    margin:10px 40px;
+  }
 }
 
 table {
