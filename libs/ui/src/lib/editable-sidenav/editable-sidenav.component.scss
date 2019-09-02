@@ -50,7 +50,14 @@ mat-icon {
     padding: 0 5%;
   }
   mat-sidenav-container {
+    width: 100%;
     padding-top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .mat-card {
+    width: 100%;
   }
   .mat-card {
     width: 100%;
