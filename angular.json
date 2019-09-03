@@ -1366,6 +1366,10 @@
             "production": {
               "fileReplacements": [
                 {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                },
+                {
                   "replace": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.ts",
                   "with": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.prod.ts"
                 }
@@ -1384,11 +1388,6 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "12mb"
-                },
-                {
-                  "type": "all",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
                 }
               ]
             },
