@@ -260,8 +260,7 @@
                           {{ movie.artistic.directorName }}
                         </mat-panel-title>
                       </mat-expansion-panel-header>
-                      <div class="producer-history-sub-container"
-                            *ngFor="let movie of movie.artistic.directorFilmography">
+                      <div class="producer-history-sub-container" *ngFor="let movie of movie.artistic.directorFilmography">
                         <div class="poster-container">
                           <img [src]="movie.posterUrl">
                         </div>
@@ -414,11 +413,11 @@
                   <span class="value">{{ movie.waterfall.mg | currency:'EUR':'symbol' }}</span>
                 </p>
                 <p>
-                  <span class="key">Maxium fees</span>
+                  <span class="key">Maximum fees</span>
                   <span class="value">{{ movie.waterfall.fees | currency:'EUR':'symbol' }}</span>
                 </p>
                 <p>
-                  <span class="key">Commision</span>
+                  <span class="key">Commission</span>
                   <span class="value">{{ movie.waterfall.commission | number : '1.2-2' }} %</span>
                 </p>
 

@@ -3,11 +3,10 @@ import { CANNE_DATA } from '../../canne-data';
 
 // TODO: define this type completely and move it to a regular lib / model definition.
 
-export type FinancingRank = 'sliver' | 'gold' | 'platinium'
 export interface FinancingMovie {
   id: string;
   title: string;
-  minRankRequired: any;
+  minRankRequired: string;
   logline: string;
   principalInformations: any; // TBD, we'll probably flatten the model in firestore
   artistic: any; // TBD, we'll probably flatten...

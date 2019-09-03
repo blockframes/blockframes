@@ -36,8 +36,8 @@ export class FinancingExplorerDetailsComponent {
 
   public get userRank() {
     return (!!this.query.getValue().user.financing && !!this.query.getValue().user.financing.rank)
-    ? this.query.getValue().user.financing.rank
-    : 'silver';
+      ? this.query.getValue().user.financing.rank
+      : 'silver';
   }
 
   public get isUserEnoughRanked() {
