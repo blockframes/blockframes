@@ -48,7 +48,8 @@ export async function trashAllOtherUsers(
   auth: Auth,
   fromPageToken?: string
 ): Promise<any> {
-  const expectedUsersIds = expectedUsers.map(x => x.uid);
+  // const expectedUsersIds = expectedUsers.map(x => x.uid);
+  const expectedUsersIds = [];
 
   let { pageToken, users } = await auth.listUsers(1000, fromPageToken);
 
