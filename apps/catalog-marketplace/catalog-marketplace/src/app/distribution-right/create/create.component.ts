@@ -240,8 +240,7 @@ export class DistributionRightCreateComponent implements OnInit {
 
   public startResearch() {
     if (
-      this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
-        .rightsEnd as any) &&
+      this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal.rights) &&
       this.hasTerritoriesInCommon(
         this.form.get('territories').value,
         this.query.getActive().salesAgentDeal.territories
@@ -269,8 +268,9 @@ export class DistributionRightCreateComponent implements OnInit {
    * @param salesAgentDates
    */
   private isInRange(formDates: DateRange, salesAgentDates: DateRange): boolean {
-    const salesAgentDateFrom: Date = (salesAgentDates.from as any).toDate();
-    const salesAgentDateTo: Date = (salesAgentDates.to as any).toDate();
+    const salesAgentDateFrom: Date = new Date(salesAgentDates.from);
+    const salesAgentDateTo: Date = new Date(salesAgentDates.to);
+
     // If 'from' date is between sales agent date 'from' and 'to', it is in range
     if (
       formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
