@@ -1,7 +1,9 @@
 <ng-container *ngIf="data">
   <mat-list>
-    <mat-list-item *ngIf="data.rightsEnd">
-      <strong>Mandate End of rights :</strong> {{data.rightsEnd | date: 'dd MMM yyyy' }}
+    <mat-list-item *ngIf="data.rights">
+      <strong>Mandate rights date range : </strong>
+      <span>from : {{data.rights.from | date: 'dd MMM yyyy' }}</span>
+      <span>to:  {{data.rights.to | date: 'dd MMM yyyy' }}</span>
     </mat-list-item>
     <mat-list-item *ngIf="data.territories.length">
       <strong>Territories :</strong>
