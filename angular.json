@@ -1341,7 +1341,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/catalog-dashboard/catalog-dashboard",
+            "outputPath": "dist/apps/catalog-dashboard",
             "index": "apps/catalog-dashboard/catalog-dashboard/src/index.html",
             "main": "apps/catalog-dashboard/catalog-dashboard/src/main.ts",
             "polyfills": "apps/catalog-dashboard/catalog-dashboard/src/polyfills.ts",
