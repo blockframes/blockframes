@@ -7,7 +7,7 @@ import { MovieStore } from './movie.store';
 
 /**
  * @see #483
- * This method is used before pushing data on db 
+ * This method is used before pushing data on db
  * to prevent "Unsupported field value: undefined" errors.
  * Doing JSON.parse(JSON.stringify(data)) clones object and
  * removes undefined fields and empty arrays.
@@ -26,8 +26,7 @@ export class MovieService {
   private shService: StakeholderService,
   private organizationQuery: OrganizationQuery,
   private permissionsService: PermissionsService,
-  private store: MovieStore,
-  private fireQuery: FireQuery
+  private store: MovieStore
   ) {}
 
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
@@ -77,4 +76,5 @@ export class MovieService {
       this.store.remove(movieId);
     })
   }
+
 }

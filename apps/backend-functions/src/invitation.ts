@@ -163,6 +163,16 @@ async function onStakeholderInvitationAccept({
   const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
 
   return db.runTransaction(tx => {
+    const promises = [];
+
+    // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
+    // Only if organization doesn't already have access to this movie.
+    if (!organization.movieIds.includes(delivery.movieId)) {
+      promises.push(tx.update(organizationSnap.ref, {
+        movieIds: [...organization.movieIds, delivery.movieId]
+      }),)
+    }
+
     return Promise.all([
       // Initialize organization permissions on a document owned by another organization
       tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
@@ -182,6 +192,8 @@ async function onStakeholderInvitationAccept({
       tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
       tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
 
+      ...promises,
+
       // Now that permissions are in the database, notify organization users with direct link to the document
       triggerNotifications(
         organization.userIds.map(userId => {
@@ -191,7 +203,7 @@ async function onStakeholderInvitationAccept({
               `Click on the link below to go to the ${docType}`,
             userId,
             docInformations: { id: docId, type: docType },
-            path: '/TODO/redefine/path' // TODO: redefine paths correctly
+            path: `/layout/o/delivery/${delivery.movieId}/${docId}/list`
           });
         })
       )

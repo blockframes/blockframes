@@ -3,6 +3,7 @@ import { InvitationQuery, InvitationService, Invitation } from '../+state';
 import { Order } from '@datorama/akita';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MovieService, Movie } from '@blockframes/movie';
 
 @Component({
   selector: 'invitation-list',

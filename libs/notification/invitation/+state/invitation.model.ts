@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
-import { DocInformations } from 'libs/notification/notification/+state';
 import { User } from '@blockframes/auth';
 import { Organization } from '@blockframes/organization';
+import { Delivery } from '@blockframes/material';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
@@ -12,19 +12,19 @@ export interface Invitation {
   user?: User;
   organization?: Organization;
   organizationId: string;
-  docInformations?: DocInformations;
+  docId?: string;
+  document?: Delivery;
   state: 'accepted' | 'declined' | 'pending';
   date: Timestamp;
 }
 
 export const enum InvitationType {
   fromUserToOrganization = 'fromUserToOrganization',
-  fromOrganizationToUser = 'fromOrganizationToUser'
+  fromOrganizationToUser = 'fromOrganizationToUser',
+  stakeholder = 'stakeholder'
 }
 
-/**
- * Required options to create an invitation to join organization
- */
+/** Required options to create an invitation to join organization. */
 export interface InvitationToJoinOrganizationOptions {
   id: string;
   organizationId: string;

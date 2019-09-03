@@ -88,6 +88,7 @@ async function stakeholdersCollectionEvent(
     // TODO: set processed Id to prevent duplicates firebase functions events.
 
     try {
+      await db.doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`).update({ processedId: context.eventId });
       const [organizations, stakeholderCount] = await Promise.all([
         getOrganizationsOfDocument(document.id, collection),
         getCount(`${collection}/${document.id}/stakeholders`)
@@ -113,14 +114,14 @@ async function stakeholdersCollectionEvent(
       };
 
       const notifications = createNotifications(organizations, snapInformations);
-      const invitation = createInvitation(organizations, snapInformations);
+      const invitation = createInvitation(snapInformations);
 
       return await Promise.all([
         triggerInvitations([invitation]),
         triggerNotifications(notifications)
       ]);
     } catch (e) {
-      await db.doc(`${collection}/${document.id}`).update({ processedId: null });
+      await db.doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`).update({ processedId: null });
       throw e;
     }
   }
@@ -174,8 +175,9 @@ function extractApp(snap: SnapObject): App {
  * Takes a list of Organization and a SnapObject to generate one invitation for each users
  * invited to work on the new document, with custom path and message.
  */
-function createInvitation(organizations: Organization[], snap: SnapObject): InvitationStakeholder {
+function createInvitation(snap: SnapObject): InvitationStakeholder {
   const app = extractApp(snap);
+  console.log('CREATE INVIT')
 
   if (!snap.count || snap.count <= 1) {
     throw new Error('No invitation needed for document owner.');

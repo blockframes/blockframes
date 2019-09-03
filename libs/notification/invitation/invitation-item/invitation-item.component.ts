@@ -17,7 +17,9 @@ export class InvitationItemComponent {
     if (this.invitation.type === InvitationType.fromUserToOrganization) {
       return 'A user wants to join your organization.';
     }
-    return ''; // TODO: issue#576, implement one message by type of invitation
+    if (this.invitation.type === InvitationType.stakeholder) {
+      return `You have been invited to work on ${this.invitation.document.movie.main.title.original}'s delivery`; // TODO: issue#576, implement one message by type of invitation
+    }
   }
 
   public async acceptInvitation(invitation: Invitation) {
