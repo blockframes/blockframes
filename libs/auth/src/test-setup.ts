@@ -3,5 +3,6 @@ import 'jest';
 
 // Mock DragEvent until jsdom provide a valid implementation
 Object.defineProperty(window, 'DragEvent', {
-  value: class DragEvent {}
+  // TODO: issue#875, use DragEvent type
+  value: class Any {}
 });

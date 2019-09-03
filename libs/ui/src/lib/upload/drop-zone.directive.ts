@@ -10,20 +10,23 @@ export class DropZoneDirective {
   constructor() {}
 
   @HostListener('drop', ['$event'])
-  onDrop($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDrop($event: any) {
     $event.preventDefault();
     this.dropped.emit($event.dataTransfer.files);
     this.hovered.emit(false);
   }
 
   @HostListener('dragover', ['$event'])
-  onDragOver($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDragOver($event: any) {
     $event.preventDefault();
     this.hovered.emit(true);
   }
 
   @HostListener('dragleave', ['$event'])
-  onDragLeave($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDragLeave($event: any) {
     $event.preventDefault();
     this.hovered.emit(false);
   }

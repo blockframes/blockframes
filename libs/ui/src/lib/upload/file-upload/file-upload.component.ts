@@ -29,7 +29,7 @@ export class FileUploadComponent {
   @Output() public uploaded = new EventEmitter<Uint8Array>();
   /** event emited when the firestore upload is complete */
   @Output() public storeUploaded = new EventEmitter<string>();
-  
+
   public task: AngularFireUploadTask;
   public percentage: Observable<number>;
   public downloadURL: string;
@@ -39,19 +39,22 @@ export class FileUploadComponent {
   constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar) {}
 
   @HostListener('drop', ['$event'])
-  onDrop($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDrop($event: any) {
     $event.preventDefault();
     this.upload($event.dataTransfer.files);
   }
 
   @HostListener('dragover', ['$event'])
-  onDragOver($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDragOver($event: any) {
     $event.preventDefault();
     this.state = 'hovering';
   }
 
   @HostListener('dragleave', ['$event'])
-  onDragLeave($event: DragEvent) {
+  // TODO: issue#875, use DragEvent type
+  onDragLeave($event: any) {
     $event.preventDefault();
     this.state = 'waiting';
   }
