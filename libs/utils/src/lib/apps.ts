@@ -25,7 +25,7 @@ export const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Stories and More',
     logo: 'stories-and-more',
-    href: 'https://invis.io/ZKRW20VCWTU#/361964437_IP_Center_-_Home',
+    href: 'https://projects.invisionapp.com/d/main#/console/17462680/361964437/preview',
     id: App.storiesAndMore
   },
   {
