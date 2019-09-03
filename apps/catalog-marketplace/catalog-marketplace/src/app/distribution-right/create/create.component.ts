@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
 import { CatalogBasket, createBasket } from './../+state/basket.model';
@@ -32,6 +33,8 @@ export class DistributionRightCreateComponent implements OnInit {
   public opened = false;
   // A flag to indicate if results should be shown
   public showResults = false;
+  // A flag to indicate if a distribution right is possible
+  public noResults = false;
   /*  
     This variable will be input the dates inside of the datepicker 
     if the users types it in manually
@@ -68,7 +71,11 @@ export class DistributionRightCreateComponent implements OnInit {
   public selectedTerritories: string[] = [];
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
-  constructor(private query: MovieQuery, private basketService: BasketService) {}
+  constructor(
+    private query: MovieQuery,
+    private basketService: BasketService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.movie$ = this.query.selectActive();
@@ -226,6 +233,7 @@ export class DistributionRightCreateComponent implements OnInit {
   public addDistributionRight() {
     const newDistribtutionRight = this.catalogBasket.rights[0];
     this.basketService.add(newDistribtutionRight);
+    this.router.navigateByUrl('layout/o/catalog/selection');
   }
 
   // Research section
@@ -234,22 +242,39 @@ export class DistributionRightCreateComponent implements OnInit {
     //@todo Max PR#866 be carefull when updating model (rightsEnd daterange)
     // this is not compatible with excel import nor current model on draw.io
     // production data may be broken.
-
-    if (
+    console.log(
       this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
         .rightsEnd as any) &&
-      this.hasTerritoriesInCommon(
-        this.form.get('territories').value,
-        this.query.getActive().salesAgentDeal.territories
-      ) &&
-      this.hasMediaInCommon(
-        this.form.get('medias').value,
-        this.query.getActive().salesAgentDeal.medias
+        this.hasTerritoriesInCommon(
+          this.form.get('territories').value,
+          this.query.getActive().salesAgentDeal.territories
+        ) &&
+        this.hasMediaInCommon(
+          this.form.get('medias').value,
+          this.query.getActive().salesAgentDeal.medias
+        )
+    );
+    if (
+      !(
+        this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
+          .rightsEnd as any) &&
+        this.hasTerritoriesInCommon(
+          this.form.get('territories').value,
+          this.query.getActive().salesAgentDeal.territories
+        ) &&
+        this.hasMediaInCommon(
+          this.form.get('medias').value,
+          this.query.getActive().salesAgentDeal.medias
+        )
       )
     ) {
+      // can't create distribution right
       this.showResults = false;
+      this.noResults = true;
     } else {
+      // create distribution right
       this.showResults = true;
+      this.noResults = false;
       this.choosenDateRange.to = this.form.get('duration').value.to;
       this.choosenDateRange.from = this.form.get('duration').value.from;
     }

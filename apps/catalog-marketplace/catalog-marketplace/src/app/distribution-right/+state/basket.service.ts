@@ -13,7 +13,7 @@ export class BasketService {
     const organization = this.organizationQuery.getValue().org;
     const newDistributionRight = [...organization.catalog.rights, distributionRight];
     console.log(newDistributionRight);
-    this.db.doc<any>(`orgs/${organization.id}/`).update({
+    this.db.doc<Organization>(`orgs/${organization.id}/`).update({
       catalog: {
         price: { amount: 0, currency: 'us-dollar' },
         status: BasketStatus.pending,
