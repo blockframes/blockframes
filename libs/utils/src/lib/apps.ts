@@ -18,31 +18,31 @@ export interface AppDetails {
 export const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Media Financiers',
-    logo: 'movie-financing',
+    logo: '/assets/logo/mediaFinanciersLogo.png',
     href: '/movie-financing/explorer',
     id: App.mediaFinanciers
   },
   {
     name: 'Stories and More',
-    logo: 'stories-and-more',
+    logo: '/assets/logo/storiesAndMoreLogo.png',
     href: 'https://projects.invisionapp.com/d/main#/console/17462680/361964437/preview',
     id: App.storiesAndMore
   },
   {
     name: 'Media Delivering',
-    logo: 'delivery',
+    logo: '/assets/logo/mediaDeliveringLogo.png',
     href: '/delivery',
     id: App.mediaDelivering
   },
   {
     name: 'Bigger Boat - Marketplace',
-    logo: 'catalog-marketplace',
+    logo: '/assets/logo/biggerBoatMarketplaceLogo.png',
     href: '/catalog-marketplace',
     id: App.biggerBoat
   },
   {
     name: 'Bigger Boat - Dashboard',
-    logo: 'catalog-dashboard',
+    logo: '/assets/logo/biggerBoatDashboard.png',
     href: '/catalog-dashboard',
     id: App.biggerBoat
   }

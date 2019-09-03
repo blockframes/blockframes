@@ -16,7 +16,7 @@
       <mat-list>
         <h3 mat-subheader>DApps</h3>
         <a *ngFor="let app of apps" mat-list-item [href]="app.href">
-          <mat-icon mat-list-icon [svgIcon]="app.logo"></mat-icon>
+          <img mat-list-icon [src]="app.logo">
           <h4 mat-line>{{ app.name }}</h4>
         </a>
       </mat-list>

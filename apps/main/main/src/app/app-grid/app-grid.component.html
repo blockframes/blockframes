@@ -1,14 +1,14 @@
 <article test-id="apps-grid">
   <h3>My DApps</h3>
-  <article fxLayout="row wrap"  fxLayoutAlign="space-between center">
+  <article fxLayout="row wrap"  fxLayoutAlign="space-around center">
     <mat-card *ngFor="let app of (apps$ | async)">
       <a [href]="app.href">
         <mat-card-content fxLayoutAlign="center center" fxLayout="row">
-          <mat-icon [svgIcon]="app.logo"></mat-icon>
+          <img [src]="app.logo">
         </mat-card-content>
       </a>
       <mat-divider></mat-divider>
-      <mat-card-actions [ngSwitch]="app.status">
+      <mat-card-actions [ngSwitch]="app.status" fxLayout="row" fxLayoutAlign="center">
         <button *ngSwitchCase="'none'" mat-button (click)="requestAccess(app.id)">
           Request Access To App
         </button>

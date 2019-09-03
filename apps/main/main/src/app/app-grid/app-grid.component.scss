@@ -1,6 +1,8 @@
-mat-icon {
-  width: 57px;
-  height: 57px;
+@import 'variables';
+
+img {
+  width: 200px;
+  height: 200px;
 }
 
 mat-divider {
@@ -17,9 +19,40 @@ mat-card-footer {
 
 mat-card {
   width: 23%;
+  margin-top: 20px;
 }
 
 h3 {
   font-size: 20px;
   color: #4D5664;
+}
+
+@include medium {
+  img {
+    width: 150px;
+    height: 150px;
+  }
+  mat-card {
+    width: 30%;
+  }
+}
+
+@include tablet {
+  img {
+    width: 100px;
+    height: 100px;
+  }
+  mat-card {
+    width: 46%;
+  }
+}
+
+@include mobile {
+  img {
+    width: 100px;
+    height: 100px;
+  }
+  mat-card {
+    width: 80%;
+  }
 }
