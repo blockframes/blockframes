@@ -33,8 +33,8 @@ export class DistributionRightCreateComponent implements OnInit {
   public opened = false;
   // A flag to indicate if results should be shown
   public showResults = false;
-  // A flag to indicate if a distribution right is possible
-  public noResults = false;
+  // A variable to indicate if a distribution right is possible
+  public instructions = 'Please use the form on the left to create your distribution right';
   /*  
     This variable will be input the dates inside of the datepicker 
     if the users types it in manually
@@ -239,42 +239,24 @@ export class DistributionRightCreateComponent implements OnInit {
   // Research section
 
   public startResearch() {
-    //@todo Max PR#866 be carefull when updating model (rightsEnd daterange)
-    // this is not compatible with excel import nor current model on draw.io
-    // production data may be broken.
-    console.log(
+    if (
       this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
         .rightsEnd as any) &&
-        this.hasTerritoriesInCommon(
-          this.form.get('territories').value,
-          this.query.getActive().salesAgentDeal.territories
-        ) &&
-        this.hasMediaInCommon(
-          this.form.get('medias').value,
-          this.query.getActive().salesAgentDeal.medias
-        )
-    );
-    if (
-      !(
-        this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
-          .rightsEnd as any) &&
-        this.hasTerritoriesInCommon(
-          this.form.get('territories').value,
-          this.query.getActive().salesAgentDeal.territories
-        ) &&
-        this.hasMediaInCommon(
-          this.form.get('medias').value,
-          this.query.getActive().salesAgentDeal.medias
-        )
+      this.hasTerritoriesInCommon(
+        this.form.get('territories').value,
+        this.query.getActive().salesAgentDeal.territories
+      ) &&
+      this.hasMediaInCommon(
+        this.form.get('medias').value,
+        this.query.getActive().salesAgentDeal.medias
       )
     ) {
       // can't create distribution right
       this.showResults = false;
-      this.noResults = true;
+      this.instructions = 'The distribution rights for your choosen value are already taken!';
     } else {
       // create distribution right
       this.showResults = true;
-      this.noResults = false;
       this.choosenDateRange.to = this.form.get('duration').value.to;
       this.choosenDateRange.from = this.form.get('duration').value.from;
     }

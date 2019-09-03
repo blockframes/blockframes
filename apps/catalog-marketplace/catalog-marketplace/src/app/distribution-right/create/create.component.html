@@ -216,10 +216,7 @@
         distribution right</a>
     </section>
     <ng-template #enterRights>
-        <h3>Pleaser use the form on the left to start your research!</h3>
-        <ng-container *ngIf="noResults">
-            <h3>There no distribution rights available for the choosen values!</h3>
-          </ng-container>
+      <h3>{{instructions}}</h3>
     </ng-template>
   </article>
 </main>
