@@ -22,5 +22,5 @@ export class DeliveryRepertoryComponent {
 
   public dataSource: MatTableDataSource<Delivery>;
   public displayedColumns: string[] = ['signers', 'status', 'mgCurrentDeadline'];
-  public placeholderLogo = PLACEHOLDER_LOGO
+  public placeholderLogo = PLACEHOLDER_LOGO;
 }

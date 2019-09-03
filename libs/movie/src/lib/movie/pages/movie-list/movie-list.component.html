@@ -27,8 +27,7 @@
                 <img
                   class="mat-card-image"
                   src="/assets/images/default-movie-poster.png"
-                  alt="Movie poster link"
-                />
+                  alt="Movie poster link"/>
               </a>
             </ng-template>
 
@@ -51,7 +50,7 @@
               </button>
             </mat-menu>
             <mat-menu #subMenu="matMenu">
-              <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
+              <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
             </mat-menu>
           </div>
 

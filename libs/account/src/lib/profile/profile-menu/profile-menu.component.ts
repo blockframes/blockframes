@@ -26,7 +26,7 @@ export class ProfileMenuComponent implements OnInit{
 
   public async logout() {
     await this.service.logout();
-    this.router.navigate(['/layout']);
+    this.router.navigate(['/auth']);
   }
 
   public get profile() {

@@ -20,5 +20,5 @@ export class DeliveryStakeholdersRepertoryComponent {
 
   public dataSource: MatTableDataSource<Stakeholder>;
   public displayedColumns: string[] = ['name', 'action'];
-  public placeholderLogo = PLACEHOLDER_LOGO
+  public placeholderLogo = PLACEHOLDER_LOGO;
 }

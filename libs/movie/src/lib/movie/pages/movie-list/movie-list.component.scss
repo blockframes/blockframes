@@ -48,15 +48,3 @@ a {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
 }
-
-.icon-container {
-  border: solid 1px var(--primary);
-  margin-right: 15px;
-  padding: 0 2px;
-
-  mat-icon {
-    font-size: 13px;
-    height: 13px;
-    width: 13px;
-  }
-}
