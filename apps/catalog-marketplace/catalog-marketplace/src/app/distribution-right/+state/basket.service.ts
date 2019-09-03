@@ -9,7 +9,7 @@ export class BasketService {
   constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {}
 
   public add(basket: CatalogBasket) {
-
-    }
+    const organization = this.organizationQuery.getValue().org;
+      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: basket });
   }
 }

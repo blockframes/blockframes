@@ -30,7 +30,6 @@ export class DistributionRightCreateComponent implements OnInit {
   public opened = false;
   // A flag to indicate if results should be shown
   public showResults = false;
-
   /*  
     This variable will be input the dates inside of the datepicker 
     if the users types it in manually
