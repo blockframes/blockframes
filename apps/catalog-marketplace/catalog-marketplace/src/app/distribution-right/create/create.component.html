@@ -1,12 +1,12 @@
 <main *ngIf="(movie$ | async) as movie">
   <header>
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
-        <b *ngFor="let director of movie.main.directors; let isLast = last">
-          <h3 class="mat-body-1">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
-          </h3>
-        </b>
-      </div>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
+      <b *ngFor="let director of movie.main.directors; let isLast = last">
+        <h3 class="mat-body-1">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
+        </h3>
+      </b>
+    </div>
   </header>
   <article fxLayout="row">
     <aside>
@@ -60,8 +60,8 @@
                 <mat-panel-title class="mat-h4">Mandate Media</mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
-                <mat-checkbox mat-list-item *ngFor="let media of movie.salesAgentDeal.medias"
-                  (change)="checkMedia(media)" class="capitalized">{{media}}
+                <mat-checkbox mat-list-item *ngFor="let media of movieMedia" (change)="checkMedia(media)"
+                  class="capitalized">{{media}}
                 </mat-checkbox>
               </div>
             </mat-expansion-panel>
@@ -212,7 +212,7 @@
     <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
-      <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Finalize your
+      <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
   </article>

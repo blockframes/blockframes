@@ -9,7 +9,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { DistributionRightForm } from './create.form';
-import { MovieQuery, Movie } from '@blockframes/movie';
+import { MovieQuery, Movie, staticModels } from '@blockframes/movie';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
 import uuid from 'uuid/v4';
@@ -22,7 +22,9 @@ import { MovieTerritories } from '../../movie/search/search.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DistributionRightCreateComponent implements OnInit {
+  // Form for holding users distribution rights choice
   public form = new DistributionRightForm();
+  // Movie for information to display
   public movie$: Observable<Movie>;
   // This variable is going to be passed down to the catalog-form-selection table component
   public catalogBasket: CatalogBasket;
@@ -35,8 +37,11 @@ export class DistributionRightCreateComponent implements OnInit {
     if the users types it in manually
  */
   public choosenDateRange: DateRange = { to: new Date(), from: new Date() };
-  /* This variable contains the dates which the movie is already bought */
+  // This variable contains the dates which the movie is already bought
   public occupiedDateRanges: DateRange[] = [];
+
+  // Media section
+  public movieMedia = staticModels['MEDIAS'].map(key => key.slug);
 
   // Language section
   // TODO(MF): Think of a slim solution
@@ -59,7 +64,7 @@ export class DistributionRightCreateComponent implements OnInit {
   // Territory section
   public territoriesFilter: Observable<string[]>;
   public territoryControl = new FormControl();
-  public availableTerritories: string[] = [];
+  public movieTerritories: string[] = staticModels['TERRITORIES'].map(key => key.slug);
   public selectedTerritories: string[] = [];
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
@@ -68,11 +73,9 @@ export class DistributionRightCreateComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.query.selectActive();
     this.query.selectActive().subscribe(movie => {
-      this.availableTerritories = movie.salesAgentDeal.territories;
       this.movieLanguages = movie.main.languages;
       this.movieDubbings = movie.versionInfo.dubbings;
       this.movieSubtitles = movie.versionInfo.subtitles;
-      this.disabledDates = movie.salesAgentDeal.rightsEnd;
     });
 
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
@@ -116,10 +119,10 @@ export class DistributionRightCreateComponent implements OnInit {
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
     });
-    this.occupiedDateRanges.push({
+    /*     this.occupiedDateRanges.push({
       to: new Date(),
       from: new Date()
-    });
+    }); */
   }
 
   private _languageFilter(value: string): string[] {
@@ -142,7 +145,7 @@ export class DistributionRightCreateComponent implements OnInit {
 
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
-    return this.availableTerritories.filter(movieTerritory => {
+    return this.movieTerritories.filter(movieTerritory => {
       return movieTerritory.toLowerCase().includes(filterValue);
     });
   }
@@ -221,15 +224,11 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public addDistributionRight() {
-    const findDistribution = this.catalogBasket.rights.findIndex(
-      index => index.movieId === this.query.getActive().id
-    );
-    if (findDistribution === -1) {
-      throw new Error('Distribution rights not found');
-    } else {
-      this.basketService.add(this.catalogBasket);
-    }
+    const newDistribtutionRight = this.catalogBasket.rights[0];
+    this.basketService.add(newDistribtutionRight);
   }
+
+  // Research section
 
   public startResearch() {
     //@todo Max PR#866 be carefull when updating model (rightsEnd daterange)
