@@ -10,8 +10,13 @@
 </article>
 <article>
   <header fxLayout="row" fxLayoutAlign="space-between">
+<<<<<<< HEAD
     <h4>Payment deadlines</h4>
     <button [disabled]="isSigned" mat-flat-button (click)="editing.emit()">Edit</button>
+=======
+    <h4>Guaranteed minimum payment deadlines</h4>
+    <button [disabled]="isSigned" mat-stroked-button (click)="editing.emit()">Edit</button>
+>>>>>>> button changed for stroked-button
   </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- Label Column -->
