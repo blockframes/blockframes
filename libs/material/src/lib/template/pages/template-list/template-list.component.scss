@@ -1,14 +1,27 @@
 @import 'variables';
 
 section {
-  margin: 100px 240px;
+  margin: 50px 300px;
 }
-@include tablet {
+
+mat-divider {
+  margin: 0 20px;
+}
+
+@include medium {
   section {
-    margin:10px 40px;
+    margin: 50px;
   }
 }
 
-table {
-  width: 100%;
+@include tablet {
+  section {
+    margin: 50px;
+  }
+}
+
+@include mobile {
+  section {
+    margin: 10px;
+  }
 }

@@ -1,9 +1,11 @@
+@import 'variables';
+
 .context-menu {
   height: var(--toolbarHeight);
   border: none;
 
   // ::ng-deep is deprecated but did'nt found any workaround
-  ::ng-deep .mat-tab-links { 
+  ::ng-deep .mat-tab-links {
     height: 100%;
 
     .mat-tab-link {
@@ -25,19 +27,12 @@
   opacity: 1;
 }
 
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1200px)
-and (orientation : landscape) {
-  .mat-tab-link {
-    text-transform: uppercase;
-    font-size: 10px;
-    height: 64px;
-    padding: 0;
-  }
+@include medium {
+  .context-menu {
 
-  .mat-tab-label {
-    width: 100px;
+    .mat-tab-link {
+      padding: 0;
+      min-width: 135px;
+    }
   }
-
 }

@@ -1,14 +1,22 @@
-<div mat-dialog-content>
-  <h2>Add a new template</h2>
-  <p>Choose a name for this new template (example: Films d'auteur français)</p>
-  <mat-form-field appearance="outline" fxLayoutAlign="center">
-    <mat-label>Template name</mat-label>
-    <input testId="templateName" class="input-field" #templateName matInput placeholder="Template name" />
-  </mat-form-field>
-</div>
-<div mat-dialog-actions fxLayoutAlign="center">
-  <button mat-raised-button color="basic" class="cancel-button mat-elevation-z0" (click)="close()">Cancel</button>
-  <button testId="templateCreate" mat-raised-button color="accent" class="add-button mat-elevation-z0" (click)="addTemplate(templateName.value)" [disabled]="!templateName.value">
-    Create
-  </button>
-</div>
+<section>
+  <article mat-dialog-content fxLayout="column" fxLayoutAlign="space-between center">
+    <h3>New template title</h3>
+    <span>Choose a title for your template</span>
+    <mat-form-field appearance="outline">
+      <mat-label>Template title</mat-label>
+      <input matInput testId="templateName" #templateName placeholder="Template title" />
+    </mat-form-field>
+    <img src="/assets/images/add-template.png" />
+  </article>
+
+  <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
+    <a
+      mat-raised-button
+      color="warn"
+      (click)="addTemplate(templateName.value)"
+      [disabled]="!templateName.value">
+      Next
+    </a>
+    <a testId="templateCreate" mat-button color="warn" (click)="close()">Cancel</a>
+  </article>
+</section>

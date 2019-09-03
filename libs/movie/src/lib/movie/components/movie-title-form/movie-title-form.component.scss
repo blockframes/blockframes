@@ -1,12 +1,21 @@
-section {
-  width: 300px;
+mat-form-field {
+  width: 100%;
+  margin-top: 10px;
 }
 
-p {
-  color: #D3D3D3;
-  font-size: 13px;
+form {
+  width: 100%;
 }
 
-.margin-top {
-  margin-top: 20px;
+article {
+  margin: 10px 0;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+img {
+  width: 100%;
+  height: 100%;
 }

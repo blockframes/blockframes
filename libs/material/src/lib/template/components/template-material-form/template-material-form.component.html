@@ -17,7 +17,7 @@
         #autosize="cdkTextareaAutosize"
         formControlName="description">
       </textarea>
-      <mat-hint>Only the first 4 lines will be visible on the list</mat-hint>
+      <mat-hint>Only 4 lines will be visible on the list</mat-hint>
     </mat-form-field>
 
     <!-- Material Category Input -->
@@ -26,18 +26,18 @@
       <input matInput placeholder="Category" type="text" formControlName="category" />
     </mat-form-field>
 
+    <!-- Material Price Input -->
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput placeholder="Price" type="number" min="0" formControlName="price" />
+    </mat-form-field>
+
     <!-- Material Currency Input -->
     <mat-form-field appearance="outline">
       <mat-label>Currency</mat-label>
       <mat-select formControlName="currency">
         <mat-option *ngFor="let currency of currencies" [value]="currency.code">{{ currency.code }}</mat-option>
       </mat-select>
-    </mat-form-field>
-
-    <!-- Material Price Input -->
-    <mat-form-field appearance="outline">
-      <mat-label>Price</mat-label>
-      <input matInput placeholder="Price" type="number" min="0" formControlName="price" />
     </mat-form-field>
 
     <mat-divider inset></mat-divider>

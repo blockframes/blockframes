@@ -10,7 +10,7 @@ export interface Profile {
   avatar: string;
 }
 
-function createProfile(params: Partial<Profile> = {}): Profile {
+export function createProfile(params: Partial<Profile> = {}): Profile {
   return {
     name: '',
     surname: '',

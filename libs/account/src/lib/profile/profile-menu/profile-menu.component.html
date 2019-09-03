@@ -1,9 +1,7 @@
 <ng-container *ngIf="(user$ | async) as user">
   <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
     <!-- TODO: issue#579 import picture -->
-    <img class="profile-picture-menu" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Profile picture" />
-  </button>
-  <button mat-icon-button [matMenuTriggerFor]="menu" class="profile-button" test-id="profile-button"> <!--merge buttons ?-->
+    <img class="profile-picture-menu" [src]="profile.avatar" alt="Profile picture" />
     <mat-icon svgIcon="arrowOpen" class="account-icon"></mat-icon>
   </button>
   <mat-menu #menu="matMenu" class="mat-elevation-z6">

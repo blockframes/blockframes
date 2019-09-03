@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { Material } from '../../../material/+state/material.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService } from '../../../material/+state';
+import { MaterialService, MaterialQuery } from '../../../material/+state';
 import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
@@ -28,6 +28,7 @@ export class TemplateEditableComponent implements OnInit {
 
   constructor(
     private query: TemplateQuery,
+    private materialQuery: MaterialQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar
   ) {}
@@ -73,6 +74,13 @@ export class TemplateEditableComponent implements OnInit {
 
   public async deleteMaterial(materialId: string) {
     try {
+      // If material exist in formList but not in database
+      if (!this.materialQuery.hasEntity(materialId)) {
+        const index = this.materialsFormList.value.findIndex(material => material.id === materialId);
+        this.materialsFormList.removeAt(index);
+        this.opened = false;
+        return;
+      }
       await this.materialService.deleteTemplateMaterial(materialId);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;

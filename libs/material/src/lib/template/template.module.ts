@@ -3,17 +3,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-// Components
-import { TemplateEditableComponent } from './pages/template-editable/template-editable.component';
-import { TemplateListComponent } from './pages/template-list/template-list.component';
-import { TemplateActiveGuard } from './guards/template-active.guard';
-import { TemplateItemComponent } from './components/template-item/template-item.component';
-import { TemplateAddComponent } from './components/template-add/template-add.component';
+// Modules
 import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
-import { TemplateCreateComponent } from './pages/template-create/template-create.component';
+
+// Components
+import { TemplateItemComponent } from './components/template-item/template-item.component';
+import { TemplateAddComponent } from './components/template-add/template-add.component';
 import { TemplateMaterialRepertoryComponent } from './components/template-material-repertory/template-material-repertory.component';
 import { TemplateMaterialFormComponent } from './components/template-material-form/template-material-form.component';
+import { TemplateRepertoryComponent } from './components/template-repertory/template-repertory.component';
+
+// Pages
+import { TemplateEditableComponent } from './pages/template-editable/template-editable.component';
+import { TemplateListComponent } from './pages/template-list/template-list.component';
+import { TemplateCreateComponent } from './pages/template-create/template-create.component';
+
+// Guards
+import { TemplateActiveGuard } from './guards/template-active.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -61,7 +68,8 @@ const routes: Routes = [
     TemplateAddComponent,
     TemplateCreateComponent,
     TemplateMaterialRepertoryComponent,
-    TemplateMaterialFormComponent
+    TemplateMaterialFormComponent,
+    TemplateRepertoryComponent
   ],
   imports: [
     CommonModule,

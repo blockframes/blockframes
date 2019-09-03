@@ -58,7 +58,7 @@ import { MoviePickerComponent } from '@blockframes/movie/movie/components/movie-
     MovieEmptyComponent,
     MovieCreateComponent,
     MovieViewComponent,
-    MoviePickerComponent,
+    MoviePickerComponent
   ],
   imports: [
     CommonModule,

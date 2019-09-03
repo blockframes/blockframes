@@ -1,10 +1,9 @@
 section {
-  margin: 100px 240px;
+  width: 60%;
 }
 
-.organization {
-  font-size: 30px;
-  font-weight: 800;
+mat-divider {
+  margin: 0 20px;
 }
 
 a {
@@ -32,10 +31,6 @@ a {
   }
 }
 
-.center {
-  text-align: center;
-}
-
 .img-container {
   position: relative;
   width: 100%;
@@ -52,53 +47,4 @@ a {
   left: calc(100%-16px);
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
-}
-
-.icon-container {
-  border: solid 1px var(--primary);
-  margin-right: 15px;
-  padding: 0 2px;
-
-  mat-icon {
-    font-size: 13px;
-    height: 13px;
-    width: 13px;
-  }
-}
-
-.divider {
-  height: 2px;
-  border: solid 1px #e5e5e5;
-  flex: 1;
-  margin: 0 20px;
-}
-
-.add-movie {
-  font-weight: 700;
-  font-size: 13px;
-  height: 45px;
-  color: var(--primary);
-  border: solid 1px var(--primary);
-  cursor: pointer;
-  margin-right: 24px;
-}
-
-.add-icon {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 6px;
-}
-
-.add-movie:hover {
-  color: white;
-  background-color: var(--primary);
-}
-
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1200px)
-and (orientation : landscape) {
-  section {
-    margin: 50px;
-  }
 }
