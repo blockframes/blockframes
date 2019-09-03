@@ -63,7 +63,7 @@ export class DistributionRightCreateComponent implements OnInit {
   public selectedTerritories: string[] = [];
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
-  constructor(private query: MovieQuery, private basketService: BasketService) {}
+  constructor(private query: MovieQuery, private basketService: BasketService) { }
 
   ngOnInit() {
     this.movie$ = this.query.selectActive();
@@ -232,14 +232,19 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public startResearch() {
+
+    //@todo Max PR#866 be carefull when updating model (rightsEnd daterange)
+    // this is not compatible with excel import nor current model on draw.io
+    // production data may be broken.
+
     if (
       this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
         .rightsEnd as any) &&
-      this.hasTerritories(
+      this.hasTerritoriesInCommon(
         this.form.get('territories').value,
         this.query.getActive().salesAgentDeal.territories
       ) &&
-      this.hasMedia(this.form.get('medias').value, this.query.getActive().salesAgentDeal.medias)
+      this.hasMediaInCommon(this.form.get('medias').value, this.query.getActive().salesAgentDeal.medias)
     ) {
       this.showResults = false;
     } else {
@@ -249,32 +254,70 @@ export class DistributionRightCreateComponent implements OnInit {
     }
   }
 
+  /**
+   * We want to check if selected range is overlapping with salesAgent daterange
+   * @returns true if in salesAgent daterange
+   * @param formDates 
+   * @param salesAgentDates 
+   */
   private isInRange(formDates: DateRange, salesAgentDates: DateRange): boolean {
     const salesAgentDateFrom: Date = (salesAgentDates.from as any).toDate();
     const salesAgentDateTo: Date = (salesAgentDates.to as any).toDate();
-    return (
-      formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
-      formDates.to.getTime() <= salesAgentDateTo.getTime()
-    );
+
+    // If 'from' date is between sales agent date 'from' and 'to', it is in range
+    if (formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
+      formDates.from.getTime() <= salesAgentDateTo.getTime()
+    ) {
+      return true;
+    }
+
+    // If 'to' date is older than sales agent 'to' date
+    // and 'to' date is younger than sales agent 'from' date, it is in range
+    if (formDates.to.getTime() <= salesAgentDateTo.getTime() &&
+      formDates.to.getTime() >= salesAgentDateFrom.getTime()
+    ) {
+      return true;
+    }
+
+    // If 'from' date is older than sales agent 'from' date and
+    // 'to' date if younger than sales agent 'to' date and
+    if (formDates.from.getTime() <= salesAgentDateFrom.getTime() &&
+      formDates.to.getTime() >= salesAgentDateTo.getTime()
+    ) {
+      return true;
+    }
+
+    // Not in range
+    return false;
   }
 
-  private hasTerritories(formTerritories: string[], salesAgentTerritories: string[]): boolean {
+  /**
+   * We want to check if formTerritories and salesAgentTerritories have territories in common
+   * @param formTerritories
+   * @param salesAgentTerritories 
+   */
+  private hasTerritoriesInCommon(formTerritories: string[], salesAgentTerritories: string[]): boolean {
     const checkedTerritories: string[] = [];
     formTerritories.forEach(territoriy => {
       if (salesAgentTerritories.includes(territoriy)) {
         checkedTerritories.push(territoriy);
       }
     });
-    return !(checkedTerritories.length === formTerritories.length);
+    return checkedTerritories.length > 0;
   }
 
-  private hasMedia(formMedias: string[], salesAgentMedias: string[]): boolean {
+  /**
+   * We want to check if formMedias and salesAgentMedias have medias in common
+   * @param formMedias 
+   * @param salesAgentMedias 
+   */
+  private hasMediaInCommon(formMedias: string[], salesAgentMedias: string[]): boolean {
     const checkedMedia: string[] = [];
     formMedias.forEach(media => {
       if (salesAgentMedias.includes(media)) {
         checkedMedia.push(media);
       }
     });
-    return !(checkedMedia.length === formMedias.length);
+    return checkedMedia.length > 0;
   }
 }
