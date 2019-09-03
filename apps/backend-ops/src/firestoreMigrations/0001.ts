@@ -251,6 +251,51 @@ function gatherMovieIdMapping(orgs) {
   return movieToOrgs;
 }
 
+export async function upgradeBis(db: Firestore) {
+  // Out of transaction for ease of implem, this script is growing too fast.
+  // move movies/stakeholder to use the org id as id
+
+  const movies = await db.collection('movies').get();
+
+  const ps = movies.docs.map(async movieDoc => {
+    const stakeholders = await movieDoc.ref.collection('stakeholders').get();
+
+    return stakeholders.docs.map(async stakeholderDoc => {
+      const { orgId, orgMovieRole, role, isAccepted } = stakeholderDoc.data();
+      await stakeholderDoc.ref.delete();
+      await movieDoc.ref
+        .collection('stakeholders')
+        .doc(orgId)
+        .set({ id: orgId, orgMovieRole, role, isAccepted: isAccepted || false });
+    });
+  });
+
+  await Promise.all(ps);
+
+  // Out of transaction for ease of implem, this script is growing too fast.
+  // move deliveries/stakeholder to use the org id as id
+
+  const deliveries = await db.collection('deliveries').get();
+
+  const ps2 = deliveries.docs.map(async doc => {
+    const stakeholders = await doc.ref.collection('stakeholders').get();
+
+    return stakeholders.docs.map(async stakeholderDoc => {
+      const { orgId, tx, authorizations, isAccepted } = stakeholderDoc.data();
+      console.log('stakeholder:', orgId);
+
+      await stakeholderDoc.ref.delete();
+
+      await doc.ref
+        .collection('stakeholders')
+        .doc(orgId)
+        .set(withoutUndefined({ id: orgId, isAccepted: isAccepted || false, tx, authorizations }));
+    });
+  });
+
+  await Promise.all(ps2);
+}
+
 export async function upgrade(db: Firestore) {
   // NOTE: you need to get ALL the data before making an update,
   // it might be more sensible to update document per document (tricky for x-document info)
@@ -298,46 +343,5 @@ export async function upgrade(db: Firestore) {
     );
   });
 
-  // Out of transaction for ease of implem, this script is growing too fast.
-  // move movies/stakeholder to use the org id as id
-
-  const movies = await db.collection('movies').get();
-
-  const ps = movies.docs.map(async movieDoc => {
-    const stakeholders = await movieDoc.ref.collection('stakeholders').get();
-
-    return stakeholders.docs.map(async stakeholderDoc => {
-      const { orgId, orgMovieRole, role, isAccepted } = stakeholderDoc.data();
-      await stakeholderDoc.ref.delete();
-      await movieDoc.ref
-        .collection('stakeholders')
-        .doc(orgId)
-        .set({ id: orgId, orgMovieRole, role, isAccepted: isAccepted || false });
-    });
-  });
-
-  await Promise.all(ps);
-
-  // Out of transaction for ease of implem, this script is growing too fast.
-  // move deliveries/stakeholder to use the org id as id
-
-  const deliveries = await db.collection('deliveries').get();
-
-  const ps2 = deliveries.docs.map(async doc => {
-    const stakeholders = await doc.ref.collection('stakeholders').get();
-
-    return stakeholders.docs.map(async stakeholderDoc => {
-      const { orgId, tx, authorizations, isAccepted } = stakeholderDoc.data();
-      console.log('stakeholder:', orgId);
-
-      await stakeholderDoc.ref.delete();
-
-      await doc.ref
-        .collection('stakeholders')
-        .doc(orgId)
-        .set(withoutUndefined({ id: orgId, isAccepted: isAccepted || false, tx, authorizations }));
-    });
-  });
-
-  await Promise.all(ps2);
+  return upgradeBis(db);
 }
