@@ -94,7 +94,7 @@ export interface MovieFestivalPrizes {
 }
 
 export interface MovieSalesAgentDeal {
-  rightsEnd: Date,
+  rights: DateRange;
   territories: string[],
   medias: string[],
 }
@@ -232,6 +232,10 @@ export function createMovieFestivalPrizes(params : Partial<MovieFestivalPrizes> 
 
 export function createMovieSalesAgentDeal(params : Partial<MovieSalesAgentDeal> = {}) : MovieSalesAgentDeal{
   return {
+    rights: {
+      from: '',
+      to: '',
+    },
     territories: [],
     medias: [],
     ... params

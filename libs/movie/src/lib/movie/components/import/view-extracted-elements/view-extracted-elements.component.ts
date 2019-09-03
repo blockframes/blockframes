@@ -47,6 +47,7 @@ enum SpreadSheetMovie {
   originalTitle,
   productionYear,
   scoring,
+  rightsStart,
   rightsEnd,
   territories,
   medias,
@@ -125,7 +126,7 @@ export class ViewExtractedElementsComponent {
           versionInfo: createMovieVersionInfo(),
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
-          ... existingMovie ? cleanModel(existingMovie) : undefined
+          ...existingMovie ? cleanModel(existingMovie) : undefined
         } as Movie;
 
         movie.main.status = 'finished'; // all imported movies are in finished state
@@ -165,10 +166,16 @@ export class ViewExtractedElementsComponent {
           }
         }
 
+        // BEGINNING OF RIGHTS (Mandate beginning of rights)
+        if (spreadSheetRow[SpreadSheetMovie.rightsStart]) {
+          const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsStart]);
+          movie.salesAgentDeal.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+        }
+
         // END OF RIGHTS (Mandate End of rights)
         if (spreadSheetRow[SpreadSheetMovie.rightsEnd]) {
           const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsEnd]);
-          movie.salesAgentDeal.rightsEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+          movie.salesAgentDeal.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
         }
 
         // TERRITORIES (Mandate Territories)
@@ -555,10 +562,20 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
-    if (!movie.salesAgentDeal.rightsEnd) {
+    if (!movie.salesAgentDeal.rights.from) {
       errors.push({
         type: 'error',
-        field: 'salesAgentDeal.rightsEnd',
+        field: 'salesAgentDeal.rights.from',
+        name: 'Mandate Beginning of rights',
+        reason: 'Required field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
+
+    if (!movie.salesAgentDeal.rights.to) {
+      errors.push({
+        type: 'error',
+        field: 'salesAgentDeal.rights.to',
         name: 'Mandate End of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -831,11 +848,11 @@ export class ViewExtractedElementsComponent {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]);
         const sale = createMovieSale();
-        const importErrors = { 
+        const importErrors = {
           sale,
           errors: [],
-          movieInternalRef: spreadSheetRow[SpreadSheetSale.internalRef], 
-          movieTitle : movie ? movie.main.title.original : undefined
+          movieInternalRef: spreadSheetRow[SpreadSheetSale.internalRef],
+          movieTitle: movie ? movie.main.title.original : undefined
         } as SalesImportState;
 
         if (movie) {
@@ -950,7 +967,7 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if(this.movieQuery.existingSale(movie.main.internalRef, sale)) {
+          if (this.movieQuery.existingSale(movie.main.internalRef, sale)) {
             importErrors.errors.push({
               type: 'error',
               field: 'sale',
