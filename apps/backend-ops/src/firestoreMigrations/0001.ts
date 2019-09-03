@@ -5,7 +5,10 @@ import {
   Transaction,
   DocumentReference
 } from '../admin';
-import { union } from 'lodash';
+import { union, pickBy, identity } from 'lodash';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization';
+
+const withoutUndefined = x => pickBy(x, identity);
 
 /**
  * Lets you select values from an item while configuring default values.
@@ -61,27 +64,73 @@ function upgradeUser(user: QueryDocumentSnapshot, orgRights: any, tx: Transactio
 
 function upgradeDelivery(delivery: QueryDocumentSnapshot, tx: Transaction) {
   const defaultValues = {
+    _type: 'deliveries',
     mustBeSigned: true,
     mustChargeMaterials: false,
     isPaid: false,
     steps: [],
-    validated: []
+    validated: [],
+    status: delivery.data().state || 'pending'
   };
 
   const newData = selectAndMergeValues(delivery.data(), defaultValues);
   tx.update(delivery.ref, newData);
 }
 
-function upgradeMovie(movie: QueryDocumentSnapshot, otherDeliveryIds: string[], tx: Transaction) {
-  const deliveryIds = union(movie.data().deliveryIds, otherDeliveryIds);
-  tx.update(movie.ref, { deliveryIds });
+function upgradeMovie(
+  movie: QueryDocumentSnapshot,
+  otherDeliveryIds: string[],
+  orgIds: string[],
+  tx: Transaction
+) {
+  const data = movie.data();
+
+  const defaultValues = {
+    // organization: data.org,
+    main: withoutUndefined({
+      // isan: data.isan,
+      title: data.title,
+      poster: data.poster,
+      productionYear: data.productionYear,
+      genres: data.genres,
+      originCountries: [data.originCountry, ...data.coProducerCountries].filter(identity),
+      status: data.status
+    }),
+    story: withoutUndefined({
+      logline: data.logline,
+      synopsis: data.synopsis
+    }),
+    promotionalElements: withoutUndefined({
+      images: data.images,
+      promotionalElements: data.promotionalElements
+    }),
+    promotionalDescription: withoutUndefined({
+      keyAssets: [],
+      keywords: data.keywords
+    }),
+    salesCast: {},
+    salesInfo: {},
+    versionInfo: {},
+    festivalPrizes: {},
+    salesAgentDeal: {},
+    sales: [],
+    distributionRights: []
+  };
+
+  const newData = selectAndMergeValues(data, defaultValues);
+  const deliveryIds = union(data.deliveryIds, otherDeliveryIds);
+
+  console.log('update with:', newData);
+
+  tx.update(movie.ref, { ...newData, deliveryIds });
 }
 
 function upgradeOrg(org: QueryDocumentSnapshot, tx: Transaction) {
   const defaultValues = {
     status: 'pending',
     templateIds: [],
-    members: []
+    members: [],
+    logo: PLACEHOLDER_LOGO
   };
   const newData = selectAndMergeValues(org.data(), defaultValues);
   tx.update(org.ref, newData);
@@ -184,6 +233,24 @@ async function gatherOrgRights(users: QuerySnapshot, tx: Transaction) {
   return orgRights;
 }
 
+function gatherMovieIdMapping(orgs) {
+  const movieToOrgs = {};
+
+  orgs.docs.forEach(org => {
+    const data = org.data();
+    const movieIds = data.movieIds;
+
+    movieIds.forEach(movieId => {
+      if (movieToOrgs[movieId] === undefined) {
+        movieToOrgs[movieId] = [];
+      }
+      movieToOrgs[movieId] = [...movieToOrgs[movieId], org.id];
+    });
+  });
+
+  return movieToOrgs;
+}
+
 export async function upgrade(db: Firestore) {
   // NOTE: you need to get ALL the data before making an update,
   // it might be more sensible to update document per document (tricky for x-document info)
@@ -194,7 +261,7 @@ export async function upgrade(db: Firestore) {
   const orgsQuery = db.collection('orgs');
   const permissionRef = (orgId: string) => db.collection('permissions').doc(orgId);
 
-  return db.runTransaction(async tx => {
+  await db.runTransaction(async tx => {
     const users = await tx.get(usersQuery);
     const deliveries = await tx.get(deliveriesQuery);
     const movies = await tx.get(moviesQuery);
@@ -202,6 +269,7 @@ export async function upgrade(db: Firestore) {
     const movieIdsToDeliveryIds = buildMovieToDeliveryIdsMap(deliveries);
     const stakeholdersMapping = await gatherStakeholders(deliveries, tx);
     const orgRightsMapping = await gatherOrgRights(users, tx);
+    const movieIdOrgsMapping = await gatherMovieIdMapping(orgs);
 
     // Upgrade users
     console.log('upgrading users');
@@ -215,7 +283,9 @@ export async function upgrade(db: Firestore) {
 
     // Upgrade movies
     console.log('upgrading movies');
-    movies.forEach(doc => upgradeMovie(doc, movieIdsToDeliveryIds[doc.id], tx));
+    movies.forEach(doc =>
+      upgradeMovie(doc, movieIdsToDeliveryIds[doc.id], movieIdOrgsMapping[doc.id], tx)
+    );
 
     // Upgrade orgs
     console.log('upgrading orgs');
@@ -227,4 +297,47 @@ export async function upgrade(db: Firestore) {
       upgradeOrgPermissions(doc, permissionRef(doc.id), stakeholdersMapping[doc.id] || [], tx)
     );
   });
+
+  // Out of transaction for ease of implem, this script is growing too fast.
+  // move movies/stakeholder to use the org id as id
+
+  const movies = await db.collection('movies').get();
+
+  const ps = movies.docs.map(async movieDoc => {
+    const stakeholders = await movieDoc.ref.collection('stakeholders').get();
+
+    return stakeholders.docs.map(async stakeholderDoc => {
+      const { orgId, orgMovieRole, role, isAccepted } = stakeholderDoc.data();
+      await stakeholderDoc.ref.delete();
+      await movieDoc.ref
+        .collection('stakeholders')
+        .doc(orgId)
+        .set({ id: orgId, orgMovieRole, role, isAccepted: isAccepted || false });
+    });
+  });
+
+  await Promise.all(ps);
+
+  // Out of transaction for ease of implem, this script is growing too fast.
+  // move deliveries/stakeholder to use the org id as id
+
+  const deliveries = await db.collection('deliveries').get();
+
+  const ps2 = deliveries.docs.map(async doc => {
+    const stakeholders = await doc.ref.collection('stakeholders').get();
+
+    return stakeholders.docs.map(async stakeholderDoc => {
+      const { orgId, tx, authorizations, isAccepted } = stakeholderDoc.data();
+      console.log('stakeholder:', orgId);
+
+      await stakeholderDoc.ref.delete();
+
+      await doc.ref
+        .collection('stakeholders')
+        .doc(orgId)
+        .set(withoutUndefined({ id: orgId, isAccepted: isAccepted || false, tx, authorizations }));
+    });
+  });
+
+  await Promise.all(ps2);
 }
