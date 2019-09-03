@@ -12,7 +12,6 @@ export class BasketService {
   public add(distributionRight: DistributionRight) {
     const organization = this.organizationQuery.getValue().org;
     const newDistributionRight = [...organization.catalog.rights, distributionRight];
-    console.log(newDistributionRight);
     this.db.doc<Organization>(`orgs/${organization.id}/`).update({
       catalog: {
         price: { amount: 0, currency: 'us-dollar' },
