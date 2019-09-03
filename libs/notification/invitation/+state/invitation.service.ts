@@ -6,10 +6,10 @@ import { AuthQuery, AuthService } from '@blockframes/auth';
 import {
   createInvitationToJoinOrganization,
   createInvitationToOrganization,
-  Invitation
+  Invitation,
+  createInvitationToDocument
 } from './invitation.model';
 import { of } from 'rxjs';
-import { Delivery } from '@blockframes/material';
 
 export function getInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
   return {
@@ -20,20 +20,6 @@ export function getInvitationsByOrgId(organizationId: string): Query<Invitation[
       // TODO: use profiles collections instead of users, issue#693
       // TODO(issue#740): when we create an invitation, the userDoc doesn't exist directly, so the doc is not found
       path: `users/${invitation.userId}`
-    })
-  };
-}
-
-export function getDocumentInvitationsByOrgId(organizationId: string): Query<Invitation[]> {
-  return {
-    path: `invitations`,
-    queryFn: ref =>
-      ref.where('organizationId', '==', organizationId).where('state', '==', 'pending'),
-    document: (invitation: Invitation) => ({
-      path: `deliveries/${invitation.docId}`,
-      movie: (document: Delivery) => ({
-        path: `movies/${document.movieId}`
-      })
     })
   };
 }
@@ -65,7 +51,7 @@ export class InvitationService {
   public get organizationInvitations$() {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.db.fromQuery(getDocumentInvitationsByOrgId(user.orgId))),
+      switchMap(user => this.db.fromQuery(getInvitationsByOrgId(user.orgId))),
       catchError(err => {
         console.error(err);
         return of([]);
@@ -79,19 +65,6 @@ export class InvitationService {
     return this.authQuery.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.db.fromQuery(getInvitationsByUserId(user.uid))),
-      tap((invitations: Invitation[]) => this.store.set(invitations))
-    );
-  }
-
-  // TODO : move this in /layout guard => ISSUE#641
-  public get documentInvitations$() {
-    return this.authQuery.user$.pipe(
-      filter(user => !!user),
-      switchMap(user => this.db.fromQuery(getInvitationsByOrgId(user.orgId))),
-      catchError(err => {
-        console.error(err);
-        return of([]);
-      }),
       tap((invitations: Invitation[]) => this.store.set(invitations))
     );
   }
@@ -115,6 +88,18 @@ export class InvitationService {
       id: this.db.createId(),
       organizationId: organizationId,
       userId: uid
+    });
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+  }
+
+  /** Create an invitation when an organization is invited to work on a document */
+  public sendDocInvitationToOrg(organizationId: string, docId: string): Promise<void> {
+    const userId = this.authQuery.userId;
+    const invitation = createInvitationToDocument({
+      id: this.db.createId(),
+      organizationId,
+      docId,
+      userId
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }

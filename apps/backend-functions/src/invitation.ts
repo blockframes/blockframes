@@ -127,7 +127,6 @@ async function onInvitationToOrgCreate({ userId }: InvitationFromOrganizationToU
 async function onStakeholderInvitationAccept({
   docId,
   organizationId,
-  docType
 }: InvitationStakeholder): Promise<any> {
   // If the stakeholder accept the invitation, we create all permissions and notifications
   // we need to get the new users on the documents with their own (and limited) permissions.
@@ -165,12 +164,13 @@ async function onStakeholderInvitationAccept({
   return db.runTransaction(tx => {
     const promises = [];
 
+    // TODO: Seems we never enter here, need to do fix it asap, as we got duplicated ids in organization.movieIds
     // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
     // Only if organization doesn't already have access to this movie.
     if (!organization.movieIds.includes(delivery.movieId)) {
       promises.push(tx.update(organizationSnap.ref, {
         movieIds: [...organization.movieIds, delivery.movieId]
-      }),)
+      }))
     }
 
     return Promise.all([
@@ -199,10 +199,10 @@ async function onStakeholderInvitationAccept({
         organization.userIds.map(userId => {
           return prepareNotification({
             message:
-              `You can now work on ${docType} ${docId}.\n` +
-              `Click on the link below to go to the ${docType}`,
+              `You can now work on the delivery.\n` +
+              `Click on the link below to go to the delivery's page`,
             userId,
-            docInformations: { id: docId, type: docType },
+            docInformations: { id: docId, type: null },
             path: `/layout/o/delivery/${delivery.movieId}/${docId}/list`
           });
         })

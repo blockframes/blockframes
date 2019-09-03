@@ -8,7 +8,6 @@ import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 
 // Components
-import { TemplateItemComponent } from './components/template-item/template-item.component';
 import { TemplateAddComponent } from './components/template-add/template-add.component';
 import { TemplateMaterialRepertoryComponent } from './components/template-material-repertory/template-material-repertory.component';
 import { TemplateMaterialFormComponent } from './components/template-material-form/template-material-form.component';
@@ -64,7 +63,6 @@ const routes: Routes = [
   declarations: [
     TemplateEditableComponent,
     TemplateListComponent,
-    TemplateItemComponent,
     TemplateAddComponent,
     TemplateCreateComponent,
     TemplateMaterialRepertoryComponent,

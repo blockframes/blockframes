@@ -60,4 +60,9 @@ export class DeliveryMaterialListComponent {
       ? this.selection.clear()
       : this.dataSource.data.forEach(row => this.selection.select(row));
   }
+
+  /** Filtering function for the table. */
+  public applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }

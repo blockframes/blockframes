@@ -1,6 +1,5 @@
 import { Stakeholder, staticModels } from '@blockframes/movie';
 import { firestore } from 'firebase/app';
-import { Movie } from 'apps/backend-functions/src/data/types';
 
 type Timestamp = firestore.Timestamp;
 
@@ -25,7 +24,6 @@ interface StepRaw<D> {
 interface DeliveryRaw<D> {
   id: string;
   movieId: string;
-  movie?: Movie;
   validated: string[]; // Stakeholder.id[];
   isSigned?: boolean;
   delivered: boolean;
