@@ -234,13 +234,15 @@ export class DistributionRightCreateComponent implements OnInit {
   public startResearch() {
     if (
       this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
-        .rightsEnd as any) ||
+        .rightsEnd as any) &&
       this.hasTerritories(
         this.form.get('territories').value,
         this.query.getActive().salesAgentDeal.territories
-      ) ||
+      ) &&
       this.hasMedia(this.form.get('medias').value, this.query.getActive().salesAgentDeal.medias)
     ) {
+      this.showResults = false;
+    } else {
       this.showResults = true;
       this.choosenDateRange.to = this.form.get('duration').value.to;
       this.choosenDateRange.from = this.form.get('duration').value.from;
@@ -250,7 +252,7 @@ export class DistributionRightCreateComponent implements OnInit {
   private isInRange(formDates: DateRange, salesAgentDates: DateRange): boolean {
     const salesAgentDateFrom: Date = (salesAgentDates.from as any).toDate();
     const salesAgentDateTo: Date = (salesAgentDates.to as any).toDate();
-    return !(
+    return (
       formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
       formDates.to.getTime() <= salesAgentDateTo.getTime()
     );

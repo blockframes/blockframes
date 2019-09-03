@@ -133,6 +133,7 @@
     "cypress": "^3.1.5",
     "dotenv": "6.2.0",
     "ethereum-waffle": "^2.0.9",
+    "husky": "^3.0.5",
     "jest": "24.1.0",
     "jest-preset-angular": "7.0.0",
     "ng-packagr": "^5.2.0",
