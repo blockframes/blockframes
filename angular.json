@@ -1391,6 +1391,64 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.ts",
+                  "with": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "12mb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.ts",
+                  "with": "apps/catalog-dashboard/catalog-dashboard/src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "12mb"
+                }
+              ],
+              "serviceWorker": false
             }
           }
         },
