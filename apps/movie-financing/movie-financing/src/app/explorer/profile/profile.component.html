@@ -1,98 +1,61 @@
-<financing-explorer-header>
-  <h3>Welcome Home</h3>
-  <h1>CASCADE8</h1>
-</financing-explorer-header>
+<ng-container *ngIf="(user$ | async) as user">
+  <financing-explorer-header>
+    <h3>Welcome Home</h3>
+    <h1>{{user.name}}</h1>
+  </financing-explorer-header>
+  <main>
+    <article fxLayout="row" fxLayoutAlign="center">
+      <div class="col-1">
+        <img [src]="user.avatar" alt="user avatar"/>
 
-<main fxLayout="row" fxLayoutAlign="center">
-  <div class="col-1">
-    <img src="https://fakeimg.pl/410x418/" alt="user avatar"/>
-
-    <div class="rank bordered" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
-      <span class="key" fxFlex>
-        Rank Position
-      </span>
-      <span class="value" fxFlex>
-        Platinium
-      </span>
-    </div>
-
-    <div fxLayout="column" fxLayoutGap="30px" *ngIf="(user$ | async) as user">
-      <div fxFlex>
-        <div class="key">Ethereum Address</div>
-        <div class="eth-address">{{user.identity.address}}</div>
-      </div>
-      <div fxFlex>
-        <div>
-          <span class="key">Sold Address</span>
-          <mat-icon matTooltip="Info about the action" matTooltipPosition="right">info_outline</mat-icon>
+        <div class="rank bordered" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+          <span class="key" fxFlex>Rank</span>
+          <span class="value" fxFlex>{{userRank}}</span>
         </div>
-        <ng-container *ngIf="!(isBalanceLoading$ | async); else isLoading">
-
-            <!-- TODO FIX IN ISSUE #315 -->
-            <!-- <span class="sold" (click)="refreshBalance()" matTooltip="Click to refresh" matTooltipPosition="right">{{user.balance}}</span> -->
-            <span class="sold" matTooltip="Click to refresh" matTooltipPosition="right">{{user.balance}}</span>
-
-        </ng-container>
-        <ng-template #isLoading>
-          <button mat-button [disabled]="true">
-            <mat-spinner [diameter]="24" [strokeWidth]="2"></mat-spinner>
-          </button>
-        </ng-template>
-        <div class="caption">
-          <span>Correspond To</span>
-          <span class="price">$1M</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="col-2">
-
-    <h1>My Profile</h1>
-
-    <section fxLayout="row" fxLayoutGap="20px">
-      <mat-form-field fxFlex appearance="outline" floatLabel="always">
-        <mat-label>First name</mat-label>
-        <input matInput type="text" placeholder="Input text"/>
-      </mat-form-field>
-      <mat-form-field fxFlex appearance="outline" floatLabel="always">
-          <mat-label>Last name</mat-label>
-          <input matInput type="text" placeholder="Input text"/>
-        </mat-form-field>
-    </section>
-    <section fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field fxFlex appearance="outline" floatLabel="always">
-          <mat-label>Society</mat-label>
-          <input matInput type="text" placeholder="Input text"/>
-        </mat-form-field>
-      <span fxFlex><!--spacer--></span>
-    </section>
-
-    <section>
-      <h1>Buy Tokens</h1>
-
-      <label>How much do you want to buy ?</label>
-      <div fxLayout="row" fxLayoutGap="20px">
-        <financing-range-slider min="0.01" max="0.1" step="0.001" unit="ETH" (rangeValue)="handleChange($event)"></financing-range-slider>
-
-        <!-- TODO FIX IN ISSUE #315 -->
-        <!-- <button fxFlex mat-button (click)="requestTokens()" [disabled]="(isBalanceLoading$ | async)">Buy Tokens</button> -->
-        <button mat-button [disabled]="(isBalanceLoading$ | async)">Buy Tokens</button>
 
       </div>
-    </section>
+      <div class="col-2">
 
-    <section>
-      <h1>Favorites List</h1>
-      <financing-movie-card></financing-movie-card>
-      <financing-movie-card></financing-movie-card>
-    </section>
-    <section>
-      <h1>Movie List</h1>
-      <financing-movie-card></financing-movie-card>
-      <financing-movie-card></financing-movie-card>
-    </section>
-  </div>
-</main>
+        <h1>My Profile</h1>
 
-<financing-explorer-footer></financing-explorer-footer>
+        <section fxLayout="row" fxLayoutGap="20px">
+          <mat-form-field fxFlex appearance="outline" floatLabel="always">
+            <mat-label>First name</mat-label>
+            <input matInput type="text" placeholder="Input text" [value]="user.name" disabled/>
+          </mat-form-field>
+          <mat-form-field fxFlex appearance="outline" floatLabel="always">
+              <mat-label>Last name</mat-label>
+              <input matInput type="text" placeholder="Input text" [value]="user.surname" disabled/>
+            </mat-form-field>
+        </section>
+
+        <section>
+          <h1>Request a higher Rank</h1>
+
+          <label>Chose a Rank</label>
+          <div fxLayout="row" fxLayoutGap="20px">
+            <mat-radio-group aria-label="Chose a Rank" [formControl]="rank">
+              <mat-radio-button value="silver">Silver</mat-radio-button><br/>
+              <mat-radio-button value="gold">Gold</mat-radio-button><br/>
+              <mat-radio-button value="platinium">Platinium</mat-radio-button><br/>
+            </mat-radio-group>
+            <button mat-button (click)="updateRank()">Request</button>
+          </div>
+        </section>
+
+        <section>
+          <h1>Favorites List</h1>
+          <financing-movie-card></financing-movie-card>
+          <financing-movie-card></financing-movie-card>
+        </section>
+        <section>
+          <h1>Movie List</h1>
+          <financing-movie-card></financing-movie-card>
+          <financing-movie-card></financing-movie-card>
+        </section>
+      </div>
+    </article>
+
+    <financing-explorer-footer></financing-explorer-footer>
+  </main>
+</ng-container>

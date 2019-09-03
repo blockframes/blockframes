@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AuthQuery, User, AuthService } from '@blockframes/auth';
 import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'financing-explorer-profile',
@@ -11,27 +13,22 @@ import { Observable } from 'rxjs';
 export class FinancingExplorerProfileComponent implements OnInit {
 
   public user$: Observable<User>;
-  public isBalanceLoading$: Observable<boolean>;
-  public amount: number;
 
-  constructor(private authQuery: AuthQuery, private authService: AuthService) { }
+  userRank: string;
+  rank = new FormControl();
+
+  constructor(
+    private authQuery: AuthQuery,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
-    this.user$ = this.authQuery.user$;
-    this.isBalanceLoading$ = this.authQuery.isBalanceLoading$;
-    this.amount = 0.01;
+    this.user$ = this.authQuery.user$.pipe(
+      tap(user => this.userRank = (!!user.financing && !!user.financing.rank) ? user.financing.rank : 'silver'),
+    );
   }
 
-  handleChange(value) {
-    this.amount = value;
+  updateRank() {
+    this.authService.changeRank(this.rank.value);
   }
-
-  // refreshBalance() { // TODO FIX IN ISSUE #315
-  //   this.authService.refreshBalance();
-  // }
-
-  // requestTokens() { // TODO FIX IN ISSUE #315
-  //   this.authService.requestTokens(this.amount);
-  // }
-
 }

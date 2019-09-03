@@ -9,7 +9,7 @@ import { hmrBootstrap } from './hmr';
 
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
-// persistState({ // TODO UNCOMENT THAT DURING THE REFACTORING AFTER CANNES
+// persistState({ // TODO UNCOMMENT THAT DURING THE REFACTORING AFTER CANNES
 //   exclude: ['router'],
 //   key: 'movie-financing'
 // });
@@ -20,7 +20,7 @@ if (environment.production) {
   enableAkitaProdMode();
 }
 
-// Hot Module Reload Envionment
+// Hot Module Reload Environment
 if (environment.hmr) {
   if (module['hot']) {
     hmrBootstrap(module, bootstrap);

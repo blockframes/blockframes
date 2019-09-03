@@ -5,11 +5,9 @@ export const PLACEHOLDER_AVATAR = '/assets/images/placeHolder_avatar.png';
 
 export interface User {
   uid: string;
-  identity: {
-    domain: string,
-    address: string
+  financing: {
+    rank: string
   };
-  balance: string;
   email: string;
   name: string;
   surname: string;
@@ -30,7 +28,6 @@ export interface AuthState {
   form: UserForm;
   requestedRoute?: string;
   isEncrypting: boolean;
-  isBalanceLoading: boolean;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -47,7 +44,6 @@ const initialState: AuthState = {
     pwd: ''
   },
   isEncrypting: false,
-  isBalanceLoading: false,
 }
 
 @Injectable({ providedIn: 'root' })

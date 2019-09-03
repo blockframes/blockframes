@@ -7,11 +7,11 @@
   <a href="#">About</a>
   <a href="#">Contact</a>
 
-  <table class="userInfos">
+  <table class="userInfos" *ngIf="(user$ | async) as user">
     <tbody>
     <tr>
-      <td class="name"><a routerLink="/profile">Cascade8</a></td>
-      <td class="membership-level"><a routerLink="/profile">Platinium</a></td>
+      <td class="name"><a routerLink="/profile">{{user.name}}</a></td>
+      <td class="membership-level"><a routerLink="/profile">{{userRank}}</a></td>
       <td class="account-icon">
         <a routerLink="/profile">
           <mat-icon>account_circle</mat-icon>

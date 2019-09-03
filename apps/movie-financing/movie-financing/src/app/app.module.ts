@@ -61,6 +61,8 @@ import { FinancingExplorerCompareComponent } from './explorer/compare/compare.co
 import { UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
 import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
+import { MatRadioModule } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 registerLocaleData(localeFr)
 
@@ -85,6 +87,8 @@ registerLocaleData(localeFr)
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     MovieModule,
     RouterModule,
     AuthModule,
@@ -111,6 +115,7 @@ registerLocaleData(localeFr)
     MatExpansionModule,
     MatBadgeModule,
     MatMenuModule,
+    MatRadioModule,
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
     environment.production ? [] : [AkitaNgDevtools.forRoot()],

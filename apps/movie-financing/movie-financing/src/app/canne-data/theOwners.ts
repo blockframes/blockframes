@@ -3,7 +3,7 @@ const DATA = {
   title: 'The Owners',
   selectionCategory: 'Producer\'s Network',
   editorialStatus: 'Almost Closed',
-  minTokensRequired: 0.01,
+  minRankRequired: 'gold',
   logline: 'A group of friends plot a burglary that spirals out of control.',
   principalInformations: {
     'moviePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/owners_poster.Jpg?alt=media&token=10bfb14c-0a79-4012-aabc-544e2039b336',

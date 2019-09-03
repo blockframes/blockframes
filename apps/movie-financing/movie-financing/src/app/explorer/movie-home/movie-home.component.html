@@ -31,6 +31,11 @@
     <p>{{ this.progress }}% Completed</p>
   </div>
 
+  <div>
+    <span class="key">Rank</span>
+    <span class="value">{{movie.minRankRequired}}</span>
+  </div>
+
   <div class="cta">
     <button [routerLink]="['/explorer/movie/', movie?.id || '42']" class="full-width" mat-button>
       <span>See This Movie</span>

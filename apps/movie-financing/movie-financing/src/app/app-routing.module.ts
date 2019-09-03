@@ -14,7 +14,7 @@ import { FinancingExplorerCompareComponent } from './explorer/compare/compare.co
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'layout',
+    redirectTo: 'explorer',
     pathMatch: 'full'
   },
   {
