@@ -36,10 +36,10 @@ async function upgradeAlgoliaOrgs() {
 
 async function prepareToronto() {
   const { auth } = loadAdminServices();
-  console.info('create all users...');
-  await createAllUsers(USERS, auth);
   console.info('clearing other users...');
   await trashAllOtherUsers(USERS, auth);
+  console.info('create all users...');
+  await createAllUsers(USERS, auth);
   console.info('done.');
   process.exit(0);
 }
