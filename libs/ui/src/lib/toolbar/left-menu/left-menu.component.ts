@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material';
+import { Observable } from 'rxjs';
+import { AppDetailsWithStatus, OrganizationQuery } from '@blockframes/organization';
+import { APPS_DETAILS, AppDetails } from '@blockframes/utils';
 
 @Component({
   selector: 'toolbar-left-menu',
@@ -8,9 +11,6 @@ import { MatSidenav } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LeftMenuComponent {
-
-  @Input() sidenav: MatSidenav
-
-  constructor() {}
-
+  @Input() sidenav: MatSidenav;
+  public apps: AppDetails[] = APPS_DETAILS;
 }

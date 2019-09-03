@@ -15,30 +15,14 @@
     <section>
       <mat-list>
         <h3 mat-subheader>DApps</h3>
-        <a mat-list-item href="/delivery">
-          <mat-icon mat-list-icon svgIcon="delivery"></mat-icon>
-          <h4 mat-line>Media Delivering</h4>
-        </a>
-        <a mat-list-item href="/movie-financing">
-          <mat-icon mat-list-icon svgIcon="movie-financing"></mat-icon>
-          <h4 mat-line>Media Financiers</h4>
-        </a>
-        <a mat-list-item href="https://invis.io/ZKRW20VCWTU#/361964437_IP_Center_-_Home" target="_blank">
-          <mat-icon mat-list-icon svgIcon="stories-and-more"></mat-icon>
-          <h4 mat-line>Home Of Scripts</h4>
-        </a>
-        <a mat-list-item href="/catalog-dashboard">
-          <mat-icon mat-list-icon svgIcon="catalog-dashboard"></mat-icon>
-          <h4 mat-line>Bigger Boat - Dashboard</h4>
-        </a>
-        <a mat-list-item href="/catalog-marketplace">
-          <mat-icon mat-list-icon svgIcon="catalog-marketplace"></mat-icon>
-          <h4 mat-line>Bigger Boat - Marketplace</h4>
+        <a *ngFor="let app of apps" mat-list-item [href]="app.href">
+          <mat-icon mat-list-icon [svgIcon]="app.logo"></mat-icon>
+          <h4 mat-line>{{ app.name }}</h4>
         </a>
       </mat-list>
     </section>
     <div class="see-all-link">
-      <a href="/main"><span>See all DApps</span><mat-icon svgIcon="arrowRight"></mat-icon></a>
+      <a href="/"><span>See all DApps</span><mat-icon svgIcon="arrowRight"></mat-icon></a>
     </div>
   </div>
 </div>

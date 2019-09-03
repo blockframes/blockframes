@@ -2,50 +2,15 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import {
-  AppDetails,
   AppDetailsWithStatus,
   AppStatus,
   OrganizationStatus
 } from './organization.model';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { FireQuery } from '@blockframes/utils';
-import { App } from '../permissions/+state';
+import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
 import { PermissionsQuery } from '../permissions/+state';
 import { combineLatest, Observable } from 'rxjs';
 import { OrganizationMember, UserRole } from './organization.model';
-
-const APPS_DETAILS: AppDetails[] = [
-  {
-    name: 'Media Financiers',
-    logo: 'movie-financing',
-    href: '/movie-financing/explorer',
-    id: App.mediaFinanciers
-  },
-  {
-    name: 'Stories and More',
-    logo: 'stories-and-more',
-    href: '/stories-and-more',
-    id: App.storiesAndMore
-  },
-  {
-    name: 'Media Delivering',
-    logo: 'delivery',
-    href: '/delivery',
-    id: App.mediaDelivering
-  },
-  {
-    name: 'Bigger Boat - Marketplace',
-    logo: 'catalog-marketplace',
-    href: '/catalog-marketplace',
-    id: App.biggerBoat
-  },
-  {
-    name: 'Bigger Boat - Dashboard',
-    logo: 'catalog-dashboard',
-    href: '/catalog-dashboard',
-    id: App.biggerBoat
-  }
-];
 
 @Injectable({
   providedIn: 'root'

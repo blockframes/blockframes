@@ -1,13 +1,6 @@
 /** Gives information about an application */
-import { App } from '../permissions/+state';
 import { CatalogBasket } from '@blockframes/catalog-marketplace';
-
-export interface AppDetails {
-  name: string;
-  logo: string;
-  href: string;
-  id: App;
-}
+import { AppDetails } from '@blockframes/utils';
 
 export const enum AppStatus {
   none = 'none', // no request nor accept.
@@ -100,7 +93,7 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     updated: Date.now(),
     actions: [],
     members: [],
-    logo: PLACEHOLDER_LOGO, 
+    logo: PLACEHOLDER_LOGO,
     ...params
   } as Organization;
 }
