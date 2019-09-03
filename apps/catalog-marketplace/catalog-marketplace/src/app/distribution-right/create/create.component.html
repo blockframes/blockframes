@@ -195,15 +195,14 @@
               </article>
             </mat-expansion-panel>
           </mat-accordion>
+          <button mat-button color="accent" (click)="startResearch()">Search</button>
         </form>
       </mat-card>
     </aside>
 
-    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
-      <catalog-form-selection [selectedMovieDetail]="movieDetails" (delete)="resetMovieDistribution()">
-      </catalog-form-selection>
       <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Finalize your
         distribution right</a>
     </section>

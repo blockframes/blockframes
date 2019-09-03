@@ -10,11 +10,6 @@ export class BasketService {
 
   public add(basket: CatalogBasket) {
     const organization = this.organizationQuery.getValue().org;
-    if (typeof organization.catalog === 'undefined') {
-      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: [basket] });
-    } else {
-      const newCatalogArray = [...organization.catalog, basket];
-      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: newCatalogArray });
-    }
+      this.db.doc<Organization>(`orgs/${organization.id}`).update({ catalog: basket });
   }
 }

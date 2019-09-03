@@ -1,11 +1,6 @@
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
-import {
-  CatalogBasket,
-  createBasket,
-  createMovieDetails,
-  MovieData
-} from './../+state/basket.model';
+import { CatalogBasket, createBasket } from './../+state/basket.model';
 import { ViewChild } from '@angular/core';
 import { DateRange } from '@blockframes/utils';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -31,10 +26,10 @@ export class DistributionRightCreateComponent implements OnInit {
   public movie$: Observable<Movie>;
   // This variable is going to be passed down to the catalog-form-selection table component
   public catalogBasket: CatalogBasket;
-  // This variable is going to be injected in catalog-form-selection and gets updated by the form
-  public movieDetails: MovieData[];
   // A flag to indicate if datepicker is open
   public opened = false;
+  // A flag to indicate if results should be shown
+  public showResults = false;
   /*  
     This variable will be input the dates inside of the datepicker 
     if the users types it in manually
@@ -118,23 +113,12 @@ export class DistributionRightCreateComponent implements OnInit {
           }
         ]
       });
-      this.movieDetails = createMovieDetails({
-        id: this.query.getActive().id,
-        movieName: this.query.getActive().main.title.original,
-        // We only want to display the first value
-        territory: data.territories[0],
-        rights: data.medias[0],
-        endRights: data.duration.to.toDateString(),
-        languages: data.languages[0],
-        dubbed: data.dubbings[0],
-        subtitle: data.subtitles[0]
-      });
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
     });
     this.occupiedDateRanges.push({
-      to: (this.query.getActive().salesAgentDeal.rightsEnd as any).to.toDate(),
-      from: (this.query.getActive().salesAgentDeal.rightsEnd as any).from.toDate()
+      to: new Date(),
+      from: new Date()
     });
   }
 
@@ -179,7 +163,6 @@ export class DistributionRightCreateComponent implements OnInit {
 
   public removeTerritory(territory: string, index: number) {
     const i = this.selectedTerritories.indexOf(territory);
-
     if (i >= 0) {
       this.selectedTerritories.splice(i, 1);
     }
@@ -187,7 +170,7 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public setWantedRange(date: DateRange) {
-    this.form.get('duration').setValue({ to: date.to, from: date.from });    
+    this.form.get('duration').setValue({ to: date.to, from: date.from });
     this.opened = false;
   }
 
@@ -248,10 +231,48 @@ export class DistributionRightCreateComponent implements OnInit {
     }
   }
 
-  public resetMovieDistribution() {
-    this.movieDetails = createMovieDetails({
-      id: this.query.getActive().id,
-      movieName: this.query.getActive().main.title.original
+  public startResearch() {
+    if (
+      this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal
+        .rightsEnd as any) ||
+      this.hasTerritories(
+        this.form.get('territories').value,
+        this.query.getActive().salesAgentDeal.territories
+      ) ||
+      this.hasMedia(this.form.get('medias').value, this.query.getActive().salesAgentDeal.medias)
+    ) {
+      this.showResults = true;
+      this.choosenDateRange.to = this.form.get('duration').value.to;
+      this.choosenDateRange.from = this.form.get('duration').value.from;
+    }
+  }
+
+  private isInRange(formDates: DateRange, salesAgentDates: DateRange): boolean {
+    const salesAgentDateFrom: Date = (salesAgentDates.from as any).toDate();
+    const salesAgentDateTo: Date = (salesAgentDates.to as any).toDate();
+    return !(
+      formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
+      formDates.to.getTime() <= salesAgentDateTo.getTime()
+    );
+  }
+
+  private hasTerritories(formTerritories: string[], salesAgentTerritories: string[]): boolean {
+    const checkedTerritories: string[] = [];
+    formTerritories.forEach(territoriy => {
+      if (salesAgentTerritories.includes(territoriy)) {
+        checkedTerritories.push(territoriy);
+      }
     });
+    return !(checkedTerritories.length === formTerritories.length);
+  }
+
+  private hasMedia(formMedias: string[], salesAgentMedias: string[]): boolean {
+    const checkedMedia: string[] = [];
+    formMedias.forEach(media => {
+      if (salesAgentMedias.includes(media)) {
+        checkedMedia.push(media);
+      }
+    });
+    return !(checkedMedia.length === formMedias.length);
   }
 }
