@@ -1,6 +1,12 @@
 <nav test-id="context-menu" class="context-menu" mat-tab-nav-bar mat-align-tabs="center" color="primary">
-  <a mat-tab-link *ngFor="let item of (items$ | async)" [routerLink]="[item.path]"
-    [active]="isActive(item.path, item.exact, (nextRoute$ | async))">
-    {{item.name}}
-  </a>
+  <ng-container *ngFor="let item of (items$ | async)">
+    <a mat-tab-link *ngIf="item.external else applink" [href]="item.path" target="_blank">
+      {{item.name}}
+    </a>
+    <ng-template #applink>
+      <a mat-tab-link [routerLink]="[item.path]" [active]="isActive(item.path, item.exact, (nextRoute$ | async))">
+        {{item.name}}
+      </a>
+    </ng-template>
+  </ng-container>
 </nav>

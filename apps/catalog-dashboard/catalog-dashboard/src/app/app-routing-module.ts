@@ -7,7 +7,6 @@ import { LayoutComponent } from './layout/layout.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
-import { MovieActiveGuard } from '@blockframes/movie';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 
@@ -40,7 +39,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'catalog',
+            redirectTo: 'home',
             pathMatch: 'full'
           },
           {
@@ -63,12 +62,6 @@ export const routes: Routes = [
             path: 'catalog',
             loadChildren: () => import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
           },
-          /*{
-            path: ':movieId',
-            canActivate: [MovieActiveGuard],
-            canDeactivate: [MovieActiveGuard],
-            loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
-          }*/
         ]
       },
     ]
