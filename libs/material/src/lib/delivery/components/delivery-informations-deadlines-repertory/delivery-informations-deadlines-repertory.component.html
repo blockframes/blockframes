@@ -1,16 +1,16 @@
 <header fxLayout="row" fxLayoutAlign="none center">
-  <h2>Informations</h2>
+  <h2>Information</h2>
   <mat-divider fxFlex></mat-divider>
 </header>
 <article>
-  <h3>Guaranteed minimum</h3>
+  <h3>Minimum guarantee</h3>
   <h4 *ngIf="mgAmount">
-    Guaranteed minimum amount <span>{{ mgAmount | currency: mgCurrency }}</span>
+    Minimum guarantee amount <span>{{ mgAmount | currency: mgCurrency }}</span>
   </h4>
 </article>
 <article>
   <header fxLayout="row" fxLayoutAlign="space-between">
-    <h4>Guaranteed minimum payment deadlines</h4>
+    <h4>Payment deadlines</h4>
     <button [disabled]="isSigned" mat-flat-button (click)="editing.emit()">Edit</button>
   </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">

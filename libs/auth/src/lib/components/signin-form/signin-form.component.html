@@ -2,7 +2,7 @@
   <h2>Sign in</h2>
   <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
     <mat-form-field appearance="outline">
-      <input matInput type="email" placeholder="Email" formControlName="email" required />
+      <input matInput type="email" placeholder="Email address" formControlName="email" required />
       <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
         Please enter a <strong>valid</strong> email address.
       </mat-error>
@@ -24,7 +24,7 @@
       </mat-error>
     </mat-form-field>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <button id="submit" type="submit" mat-raised-button color="accent">Let's go to work !</button>
+      <button id="submit" type="submit" mat-raised-button color="accent">Sign in</button>
       <button id="tosignup" type="button" color="primary" mat-button (click)="opened.emit()">I don't have an account</button>
     </div>
   </form>

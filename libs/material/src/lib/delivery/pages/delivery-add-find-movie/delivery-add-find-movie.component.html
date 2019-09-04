@@ -1,7 +1,9 @@
 <main>
-  <section>
-    <h2>Find a movie</h2>
-    <p>You must first choose a film to attach to your delivery</p>
-    <movie-picker (selected)="selectMovie($event)"></movie-picker>
+  <section fxLayout="row" fxLayoutAlign="center center">
+    <article fxLayout="column" fxLayoutAlign="center center">
+      <h2>Choose a film for your delivery</h2>
+      <p>You must first choose a film to attach to your delivery</p>
+      <movie-picker (selected)="selectMovie($event)"></movie-picker>
+    </article>
   </section>
 </main>

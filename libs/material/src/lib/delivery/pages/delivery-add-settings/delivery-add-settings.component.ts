@@ -18,11 +18,11 @@ import { MovieQuery } from '@blockframes/movie';
 export class DeliveryAddSettingsComponent {
   public items: ActionPickerListItem<DeliveryOption>[] = [
     {
-      title: 'Materials to be charged',
+      title: 'Materials price list',
       payload: DeliveryOption.mustChargeMaterials
     },
     {
-      title: 'Delivery list to be signed',
+      title: 'Signature of the delivery',
       payload: DeliveryOption.mustBeSigned
     }
   ];
@@ -41,13 +41,13 @@ export class DeliveryAddSettingsComponent {
     this.store.updateWizard({ options });
     this.options = options;
   }
-
+  //TODO: remove dead code from delivery-add-complete
   public async onCompleteFlow() {
     const { wizard } = this.query;
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
     this.store.setActive(deliveryId);
-    return this.router.navigate([`layout/o/delivery/add/${movieId}/5-complete`]);
+    return this.router.navigate([`/layout/o/delivery/${movieId}/${deliveryId}/list`]);
   }
 }

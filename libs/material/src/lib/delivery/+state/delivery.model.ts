@@ -59,7 +59,7 @@ export interface Step extends StepRaw<Date> {}
 export interface MGDeadline extends MGDeadlineRaw<Date> {}
 
 export const enum DeliveryStatus {
-  negociation = 'Delivery in negociation',
+  negociation = 'Delivery in negotiation',
   pending = 'Materials pending',
   noa = 'Notice of Availability',
   nod = 'Notice of Delivery',

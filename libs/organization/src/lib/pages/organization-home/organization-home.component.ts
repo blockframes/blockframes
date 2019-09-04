@@ -33,14 +33,14 @@ export class OrganizationHomeComponent implements OnInit {
       icon: 'adjustableWrench',
       title: 'Create your organization',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+        ''
     },
     {
       routerLink: '../find',
       icon: 'magnifyingGlass',
       title: 'Find your organization',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+        ''
     }
   ];
   public items$: Observable<ActionItem[]>;

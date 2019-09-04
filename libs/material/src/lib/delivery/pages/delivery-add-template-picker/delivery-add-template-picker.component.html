@@ -1,7 +1,6 @@
 <section fxLayout="row" fxLayoutAlign="center center">
   <article fxLayout="column" fxLayoutAlign="center center">
     <h2>Choose a template</h2>
-    <p>Select a template</p>
 
     <ng-container *ngIf="(isLoading$ | async); else: loaded">Loading</ng-container>
     <ng-template #loaded>

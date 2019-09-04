@@ -25,20 +25,20 @@ export class DeliveryAddChooseStarterComponent {
     this.items = [
       {
         icon: 'template',
-        title: 'Choose a template',
-        description: 'Lorem ipsum',
+        title: 'From an existing template',
+        description: 'Template you created earlier',
         routerLink: '../3-pick-template'
       },
       {
         icon: 'listMaterial',
-        title: 'Import material list',
-        description: 'Lorem ipsum',
+        title: 'From existing materials',
+        description: 'Use materials from other deliveries',
         action: () => this.onPickMaterialList()
       },
       {
         icon: 'blank',
-        title: 'Blank',
-        description: 'Lorem ipsum',
+        title: 'From scratch',
+        description: 'Create a brand new delivery',
         action: () => this.onPickBlank()
       }
     ];

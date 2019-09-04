@@ -1,8 +1,8 @@
 <section test-id="signup" fxLayout="column" fxLayoutAlign="center center">
-  <h2>Sign Up</h2>
+  <h2>Create an account</h2>
   <form [formGroup]="signupForm" (ngSubmit)="submited.emit(signupForm)" fxLayout="column">
     <mat-form-field appearance="outline">
-      <input matInput type="email" placeholder="Email" formControlName="email" required />
+      <input matInput type="email" placeholder="Email address" formControlName="email" required />
       <mat-error *ngIf="signupForm.get('email').hasError('email') && !signupForm.get('email').hasError('required')">
         Please enter a <strong>valid</strong> email address.
       </mat-error>
@@ -11,22 +11,22 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput type="text" placeholder="Name" formControlName="name" required />
+      <mat-label>First name</mat-label>
+      <input matInput type="text" placeholder="First name" formControlName="name" required />
       <mat-error *ngIf="signupForm.get('name').hasError('required')">
-        Name is <strong>required</strong>
+        First name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Surname</mat-label>
-      <input matInput type="text" placeholder="Surname" formControlName="surname" required />
+      <mat-label>Last name</mat-label>
+      <input matInput type="text" placeholder="Last name" formControlName="surname" required />
       <mat-error *ngIf="signupForm.get('surname').hasError('required')">
-        Surname is <strong>required</strong>
+        Last name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <password-confirm formControlName="password"></password-confirm>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <button id="submit" type="submit" mat-raised-button color="accent">Let's begin</button>
+      <button id="submit" type="submit" mat-raised-button color="accent">Sign up</button>
       <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an account</button>
     </div>
   </form>

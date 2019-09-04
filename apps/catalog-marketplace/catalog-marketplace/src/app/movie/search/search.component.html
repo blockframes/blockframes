@@ -1,7 +1,7 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content" page-id="catalog-search">
   <header fxLayout="column" fxLayoutAlign="center center">
-    <h1 class="mat-display-3">Search what you want</h1>
+    <h1 class="mat-display-3">Discover our selection</h1>
   </header>
 
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
@@ -32,10 +32,10 @@
             <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  Types
+                  Genres
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <span>You can choose multiple types</span>
+              <span>You can choose multiple genres</span>
               <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
                 <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
                   {{genre}}
@@ -175,7 +175,7 @@
     <!-- List of result -->
     <article>
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <h3>Search</h3>
+        <h3>Films</h3>
         <mat-divider></mat-divider>
       </div>
       <div *ngIf="(movieSearchResults$ | async) as searchResults" fxLayout="row wrap" fxLayoutGap="30px">

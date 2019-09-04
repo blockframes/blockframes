@@ -43,21 +43,21 @@ export const CONTEXT_MENU = [
     route: '/layout/o/delivery/:movieId/list',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'material list', path: '/layout/o/delivery/:movieId/materials' }
+      { name: 'existing materials', path: '/layout/o/delivery/:movieId/materials' }
     ]
   },
   {
     route: '/layout/o/delivery/:movieId/materials',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'material list', path: '/layout/o/delivery/:movieId/materials' }
+      { name: 'existing materials', path: '/layout/o/delivery/:movieId/materials' }
     ]
   },
   {
     route: '/layout/o/delivery/:movieId/:deliveryId/list',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
+      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
     ]
@@ -66,7 +66,7 @@ export const CONTEXT_MENU = [
     route: '/layout/o/delivery/:movieId/:deliveryId/informations',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
+      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
     ]
@@ -75,7 +75,7 @@ export const CONTEXT_MENU = [
     route: '/layout/o/delivery/:movieId/:deliveryId/stakeholders',
     items: [
       { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'informations', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
+      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
       { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
       { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
     ]
@@ -90,7 +90,7 @@ export const CONTEXT_MENU = [
   {
     route: '/layout/o/organization/:orgId/activityreports',
     items: [
-      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
       { name: 'members', path: '/layout/o/organization/:orgId/members' },
       { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
       { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
@@ -99,7 +99,7 @@ export const CONTEXT_MENU = [
   {
     route: '/layout/o/organization/:orgId/members',
     items: [
-      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
       { name: 'members', path: '/layout/o/organization/:orgId/members' },
       { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
       { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
@@ -108,7 +108,7 @@ export const CONTEXT_MENU = [
   {
     route: '/layout/o/organization/:orgId/edit',
     items: [
-      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
       { name: 'members', path: '/layout/o/organization/:orgId/members' },
       { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
       { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
@@ -117,7 +117,7 @@ export const CONTEXT_MENU = [
   {
     route: '/layout/o/organization/:orgId/administration',
     items: [
-      { name: 'informations', path: '/layout/o/organization/:orgId/edit' },
+      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
       { name: 'members', path: '/layout/o/organization/:orgId/members' },
       { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
       { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }

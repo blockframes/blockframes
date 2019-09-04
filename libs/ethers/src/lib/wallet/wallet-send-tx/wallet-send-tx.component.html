@@ -38,7 +38,7 @@
       </ng-template>
     </section>
     <section *ngSwitchCase="steps.end">
-      
+
       <ng-container *ngIf="(isPending$ | async); else txMined">
         <div fxLayout="column" fxLayoutAlign="start center">
           <h2>Sending...</h2>
@@ -47,15 +47,15 @@
         </div>
       </ng-container>
       <ng-template #txMined>
-
-        <!-- TODO DO NOT HARDCODE FEEDBACK MESSAGE : ISSUE 671 -->
-        <feedback-message
-          title="Congratulation !"
-          subTitle="Your transaction was successfully sent to the Blockchain !"
-          buttonMessage="Back to wallet"
-          (redirectUser)="handleRedirection()">
-        ></feedback-message>
-
+        <div fxLayout="column" fxLayoutAlign="start center">
+          <!-- TODO DO NOT HARDCODE FEEDBACK MESSAGE : ISSUE 671 -->
+          <feedback-message
+            title="Congratulations !"
+            subTitle="Your transaction was successfully sent to the Blockchain !"
+            buttonMessage="Back to wallet"
+            (redirectUser)="handleRedirect()">
+          ></feedback-message>
+        </div>
       </ng-template>
     </section>
   </ng-container>

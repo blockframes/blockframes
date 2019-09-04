@@ -1,5 +1,5 @@
 <form [formGroup]="control">
-  <h4>Guaranted minimum amount</h4>
+  <h4>Minimum guarantee amount</h4>
   <mat-form-field appearance="outline">
     <mat-label>Amount</mat-label>
     <input type="number" min="0" formControlName="mgAmount" matInput />
@@ -11,7 +11,7 @@
     </mat-select>
   </mat-form-field>
   <div formArrayName="mgDeadlines">
-    <h4>Guaranteed minimum payment deadlines</h4>
+    <h4>Minimum guarantee payment deadlines</h4>
     <button mat-flat-button (click)="addDeadline()">
       <mat-icon>add</mat-icon>
       Add a deadline

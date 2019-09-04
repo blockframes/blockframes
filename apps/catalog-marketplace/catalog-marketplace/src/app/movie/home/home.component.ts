@@ -35,16 +35,16 @@ export class CatalogMarketplaceHomeComponent implements OnInit {
     this.moviesBySections$ = combineLatest([latest$, scoring$, prizes$]).pipe(
       map(([latest, scoring, prizes]) => {
         return [
-          { title: 'New Films', subline: 'Lorem Ipsum', link: '#', movies: latest },
+          { title: 'New Films', subline: '', link: '#', movies: latest },
           {
             title: 'Best Sellers',
-            subline: 'Lorem Ipsum',
+            subline: '',
             link: '#',
             movies: scoring
           },
           {
             title: 'Awarded Films',
-            subline: 'Lorem Ipsum',
+            subline: '',
             link: '#',
             movies: prizes
           }
