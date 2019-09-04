@@ -1,6 +1,7 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
   <ng-container content>
     <organization-display
+      [opened]="opened"
       [organizationInformations]="organizationInformations$ | async"
       [organization]="organization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async"

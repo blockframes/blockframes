@@ -1,7 +1,7 @@
 @import 'variables';
 
 mat-card {
-  height: 350px;
+  height: 380px;
 }
 
 mat-card-content {
@@ -23,13 +23,13 @@ img {
   height: 250px;
 }
 
-@include mobile {
-  mat-card {
-    height: 100%;
+@include medium {
+  .mat-card-opened {
+    height: 95%;
   }
 }
 
-@include medium {
+@include mobile {
   mat-card {
     height: 100%;
   }

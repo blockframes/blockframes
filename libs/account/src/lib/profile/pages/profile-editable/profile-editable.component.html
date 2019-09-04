@@ -1,6 +1,7 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()">
   <ng-container content>
     <profile-display
+      [opened]="opened"
       [userEmail]="userEmail"
       [organization]="organization$ | async"
       [user]="user$ | async"
