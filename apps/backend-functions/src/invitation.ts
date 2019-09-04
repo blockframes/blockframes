@@ -318,7 +318,7 @@ export async function onInvitationWrite(
   const after = change.after;
 
   if (!before || !after) {
-    throw new Error(`Parameter 'change' not found`);
+    throw new Error('Parameter "change" not found');
   }
 
   const invitationDocBefore = before.data() as InvitationOrUndefined;
@@ -359,7 +359,7 @@ export async function onInvitationWrite(
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }
   } catch (e) {
-    console.error('invitation management thrown:', e);
+    console.error('Invitation management thrown: ', e);
     await db.doc(`invitations/${invitation.id}`).update({ processedId: null });
     throw e;
   }

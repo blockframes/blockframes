@@ -77,7 +77,6 @@ async function stakeholdersCollectionEvent(
     if (processedId === context.eventId) {
       throw new Error(`Document already processed with this context`);
     }
-    // TODO: set processed Id to prevent duplicates firebase functions events.
 
     try {
       await db
@@ -109,11 +108,9 @@ async function stakeholdersCollectionEvent(
 
       const notifications = createNotifications(organizations, snapInformations);
 
-      return await Promise.all([triggerNotifications(notifications)]);
+      return Promise.all([triggerNotifications(notifications)]);
     } catch (e) {
-      await db
-        .doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`)
-        .update({ processedId: null });
+      await db.doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`).update({ processedId: null });
       throw e;
     }
   }
