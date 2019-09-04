@@ -13,3 +13,4 @@ export * from './lib/spreadsheet/export';
 export * from './lib/spreadsheet/import';
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
+export * from './lib/imdb/service';
