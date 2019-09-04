@@ -13,6 +13,7 @@
 @import './components/mat-card';
 @import './components/mat-list';
 @import './components/mat-toolbar';
+@import './components/mat-divider';
 
 * {
   box-sizing: border-box;
@@ -29,6 +30,7 @@ body {
 
 h1 {
   font-size: 45px;
+  font-weight: 800;
 }
 
 h2 {
@@ -37,17 +39,19 @@ h2 {
 }
 
 h3 {
-  font-size: 25px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
+  color: mat-color($bf-light-foreground, subheading);
 }
 
 h4 {
   font-size: 16px;
   font-weight: 700;
+  color: mat-color($bf-light-foreground, subheading);
 }
 
 p {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 main {

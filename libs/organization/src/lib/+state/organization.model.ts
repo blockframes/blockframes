@@ -76,7 +76,7 @@ export interface OrganizationForm {
   adress: string;
 }
 
-export const PLACEHOLDER_LOGO = '/assets/images/placeHolder_logo.png';
+export const PLACEHOLDER_LOGO = '/assets/images/organisation_avatar_250.svg';
 
 /**
  * A factory function that creates an Organization

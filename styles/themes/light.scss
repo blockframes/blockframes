@@ -120,11 +120,12 @@ $bf-light-background: (
 // Foreground palette for light themes.
 $bf-light-foreground: (
   base:              black,
-  divider:           $dark-dividers,
+  divider:           #D8D8D8,
   dividers:          $dark-dividers,
   disabled:          $dark-disabled-text,
   disabled-button:   rgba(black, 0.26),
   disabled-text:     $dark-disabled-text,
+  dynamic:           #5F697A,
   elevation:         black,
   hint-text:         $dark-disabled-text,
   secondary-text:    $dark-secondary-text,
@@ -134,6 +135,7 @@ $bf-light-foreground: (
   slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
+  subheading:        #4D5664,
 );
 
 ///////////

@@ -1,3 +1,5 @@
 .light-theme .mat-toolbar {
   background: mat-color($bf-light-background, app-bar);
+  box-shadow: none;
+  border-bottom: 1px solid mat-color($bf-light-foreground, divider);
 }

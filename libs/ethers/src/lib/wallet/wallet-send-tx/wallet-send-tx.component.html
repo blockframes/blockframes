@@ -31,9 +31,14 @@
           </div>
         </ng-container>
         <ng-template #isDeployed>
-          <h2>Are you sure ?</h2>
-          <button mat-raised-button color="accent" (click)="handleConfirmation()">Yes</button>
-          <a mat-button routerLink="/layout/o/account/wallet">No</a>
+          <article>
+            <h2>Are you sure ?</h2>
+            <img src="/assets/images/wait_380.png">
+          </article>
+          <article>
+            <button mat-flat-button color="accent" (click)="handleConfirmation()">Yes</button>
+            <a mat-button routerLink="/layout/o/account/wallet">No</a>
+          </article>
         </ng-template>
       </ng-template>
     </section>

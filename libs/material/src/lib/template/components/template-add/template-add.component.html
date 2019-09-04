@@ -6,17 +6,17 @@
       <mat-label>Template title</mat-label>
       <input matInput testId="templateName" #templateName placeholder="Template title" />
     </mat-form-field>
-    <img src="/assets/images/add-template.png" />
+    <img src="/assets/images/create_template_380.png" />
   </article>
 
   <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
     <a
-      mat-raised-button
-      color="warn"
+      mat-flat-button
+      color="accent"
       (click)="addTemplate(templateName.value)"
       [disabled]="!templateName.value">
       Next
     </a>
-    <a testId="templateCreate" mat-button color="warn" (click)="close()">Cancel</a>
+    <a testId="templateCreate" mat-button color="primary" (click)="close()">Cancel</a>
   </article>
 </section>

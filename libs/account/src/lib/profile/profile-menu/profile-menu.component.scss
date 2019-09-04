@@ -1,23 +1,5 @@
-@import 'variables';
-
 .profile-picture-menu {
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
 }
-
-.mat-icon-button .mat-icon.account-icon {
-    line-height: 12px;
-    height: 12px;
-    width: 12px;
-}
-
-span.logout{
-    color: var(--accent);
-}
-
-mat-divider{
-    margin-left: 25px;
-    margin-right: 25px;
-    width: 230px;
-  }

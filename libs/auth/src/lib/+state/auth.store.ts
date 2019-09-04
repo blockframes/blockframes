@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
-export const PLACEHOLDER_AVATAR = '/assets/images/placeHolder_avatar.png';
+export const PLACEHOLDER_AVATAR = '/assets/images/profil_avatar_250.svg';
 
 export interface User {
   uid: string;
