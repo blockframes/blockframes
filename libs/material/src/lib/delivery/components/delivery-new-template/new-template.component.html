@@ -9,7 +9,7 @@
 </div>
 <p *ngIf="isUpdateTemplate">This template already exists, you will update it.</p>
 <div mat-dialog-actions fxLayoutAlign="center">
-  <button mat-stroked-button color="basic" (click)="close()" class="cancel-button mat-elevation-z0">Cancel</button>
+  <button mat-raised-button color="basic" (click)="close()" class="cancel-button mat-elevation-z0">Cancel</button>
   <button
     *ngIf="!isUpdateTemplate"
     mat-raised-button

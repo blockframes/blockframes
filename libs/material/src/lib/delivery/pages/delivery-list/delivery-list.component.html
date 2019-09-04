@@ -2,10 +2,10 @@
   <article fxLayout="row" fxLayoutAlign="space-between center">
     <h2>Deliveries</h2>
     <mat-divider fxFlex></mat-divider>
-    <a mat-button color="primary" (click)="addDelivery()">
+    <button mat-stroked-button color="primary" (click)="addDelivery()">
       <mat-icon>add</mat-icon>
-      <span>Add a delivery</span>
-    </a>
+      Add a delivery
+    </button>
   </article>
   <article>
     <delivery-repertory [deliveries]="(deliveries$ | async)" [userOrganization]="(userOrganization$ | async)"></delivery-repertory>
