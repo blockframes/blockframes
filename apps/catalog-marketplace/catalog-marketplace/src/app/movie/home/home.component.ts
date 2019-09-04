@@ -1,4 +1,5 @@
-import { Observable, combineLatest } from 'rxjs';
+import { latest, scoring, prizes } from './movies';
+import { Observable, combineLatest, of } from 'rxjs';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { FireQuery } from '@blockframes/utils';
@@ -8,7 +9,7 @@ interface CarouselSection {
   title: string;
   subline: string;
   link: string;
-  movies: Movie[];
+  movies: Partial<Movie>[];
 }
 @Component({
   selector: 'catalog-home',
@@ -16,12 +17,38 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogMarketplaceHomeComponent implements OnInit {
+export class CatalogMarketplaceHomeComponent {
+  public moviesBySections$: Observable<CarouselSection[]> = of([
+    { title: 'New Films', subline: '', link: '/layout/o/catalog/search', movies: latest },
+    {
+      title: 'Best Sellers',
+      subline: '',
+      link: '/layout/o/catalog/search',
+      movies: scoring
+    },
+    {
+      title: 'Awarded Films',
+      subline: '',
+      link: '/layout/o/catalog/search',
+      movies: prizes
+    }
+  ]);
 
-  /** Observable to fetch all movies from the store */
+  public layout(index: number) {
+    return index%2 === 0? 'row': 'row-reverse';
+  }
+
+  public alignment(index: number) {
+    return index%2 === 0? 'start start': 'start end';
+  }
+}
+
+// Code stashed away for Toronto
+
+/** Observable to fetch all movies from the store 
   public moviesBySections$: Observable<CarouselSection[]>;
 
-  constructor(private fireQuery: FireQuery) {}
+ /*  constructor(private fireQuery: FireQuery) {}
 
   ngOnInit() {
     // TODO #721: look for query when data query model is done.
@@ -61,3 +88,4 @@ export class CatalogMarketplaceHomeComponent implements OnInit {
     return index%2 === 0? 'start start': 'start end';
   }
 }
+ */
