@@ -78,7 +78,7 @@ export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],
     steps: [],
-    status: DeliveryStatus.pending,
+    status: DeliveryStatus.negociation,
     isPaid: false,
     _type: 'deliveries',
     mustChargeMaterials: params.mustChargeMaterials || false,
