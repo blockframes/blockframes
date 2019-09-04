@@ -1,3 +1,5 @@
+@import 'variables';
+
 .profile-picture-menu {
     height: 30px;
     width: 30px;
@@ -8,4 +10,8 @@
     line-height: 12px;
     height: 12px;
     width: 12px;
+}
+
+span.logout{
+    color: var(--warn);
 }

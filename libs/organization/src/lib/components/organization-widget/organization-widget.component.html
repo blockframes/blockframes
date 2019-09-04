@@ -1,10 +1,9 @@
 <button
-  matSubheader
   mat-menu-item
   *ngIf="(organization$ | async) as organization; else: noOrg"
   [routerLink]="['o/organization/', organization.id]">
-  <mat-icon>domain</mat-icon>
-  <span>Organization</span>
+  <mat-icon color="primary">domain</mat-icon>
+    <span>Manage my organization</span>
 </button>
 
 <ng-template #noOrg>

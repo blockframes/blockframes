@@ -9,7 +9,9 @@
       <ng-content select="[widgets]"></ng-content>
       <mat-divider></mat-divider>
       <ng-container>
-        <button testId="logout" mat-menu-item (click)="logout()">Logout</button>
+        <button testId="logout" mat-menu-item (click)="logout()"><mat-icon color="warn">exit_to_app</mat-icon>
+          <span class="logout">Log out</span>
+        </button>
       </ng-container>
     </mat-list>
   </mat-menu>
