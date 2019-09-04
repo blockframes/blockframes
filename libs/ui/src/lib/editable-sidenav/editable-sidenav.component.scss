@@ -41,34 +41,23 @@ mat-icon {
 // medium
  @include medium {
   .mat-sidenav {
-    padding: 25px 50px;
+    width: 50%;
+    height: 100%;
+    padding: 0;
   }
   mat-sidenav-content {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     width: 100%;
     padding: 0 5%;
-=======
-    width: 95%;
-    padding-left: 0;
-
->>>>>>> sidenav modified
-=======
-    padding-left: 50px;
->>>>>>> reset sidenav
-=======
-    width: 95%;
-    padding-left: 0;
-
->>>>>>> sidenav modified
-=======
-    padding-left: 50px;
->>>>>>> reset sidenav
   }
   mat-sidenav-container {
+    width: 100%;
     padding-top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .mat-card {
+    width: 100%;
   }
  }
 
@@ -88,8 +77,8 @@ mat-icon {
 // extra small
 @include mobile {
   .mat-sidenav {
-    padding: 10px 10px;
     width: 100%;
+    padding: 10px 10px;
   }
   mat-sidenav-container {
     padding: 10px 10px;
