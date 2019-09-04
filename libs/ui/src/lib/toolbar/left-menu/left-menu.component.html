@@ -6,10 +6,14 @@
         <mat-icon svgIcon="logoBFblue" class="app-icon"></mat-icon>
       </button>
       <span class="fill-remaining-space"></span>
-      <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
-        <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
-        <mat-icon svgIcon="applications"></mat-icon>
-      </button>
+      <div>
+        <button mat-icon-button (click)="sidenav.toggle();">
+          <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
+          <mat-icon svgIcon="applications"></mat-icon>
+        </button>
+      </div>
     </mat-toolbar>
     <mat-divider></mat-divider>
     <section>

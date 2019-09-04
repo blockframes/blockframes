@@ -1,5 +1,5 @@
 .sidenav_container {
-  min-width: 60px; 
+  min-width: 60px;
   height: calc(100vh - 200px);
 }
 
@@ -13,7 +13,7 @@ mat-toolbar {
 
 .app-icon,
 .app-icon-button {
-  height: 32px;
+  border-radius: 0;
   width: 157px;
 }
 
@@ -28,6 +28,7 @@ mat-toolbar {
 
 .apps-button {
   margin-right: 10px;
+  border-radius: 0;
 }
 
 mat-list {
@@ -45,7 +46,7 @@ mat-list {
 .see-all-link {
   padding-left: 20px;
   margin-top: 30px;
-  a { 
+  a {
     color: var(--primary);
     font-weight: 600;
     text-decoration: none;
