@@ -215,8 +215,8 @@
       <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
-    <ng-template #enterRights>
-      <h3>{{instructions}}</h3>
-    </ng-template>
+    <section>
+        <img src='assets/images/availabilities.png' *ngIf="!showResults"/>
+    </section>
   </article>
 </main>

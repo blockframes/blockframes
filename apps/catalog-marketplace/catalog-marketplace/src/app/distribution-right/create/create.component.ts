@@ -15,6 +15,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
 import uuid from 'uuid/v4';
 import { MovieTerritories } from '../../movie/search/search.form';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'distribution-right-create',
@@ -33,10 +34,8 @@ export class DistributionRightCreateComponent implements OnInit {
   public opened = false;
   // A flag to indicate if results should be shown
   public showResults = false;
-  // A variable to indicate if a distribution right is possible
-  public instructions = 'Please use the form on the left to create your distribution right';
-  /*  
-    This variable will be input the dates inside of the datepicker 
+  /*
+    This variable will be input the dates inside of the datepicker
     if the users types it in manually
  */
   public choosenDateRange: DateRange = { to: new Date(), from: new Date() };
@@ -74,7 +73,8 @@ export class DistributionRightCreateComponent implements OnInit {
   constructor(
     private query: MovieQuery,
     private basketService: BasketService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -249,7 +249,9 @@ export class DistributionRightCreateComponent implements OnInit {
     ) {
       // can't create distribution right
       this.showResults = false;
-      this.instructions = 'The distribution rights for your choosen value are already taken!';
+      this._snackBar.open('can\'t find any available movies', null, {
+        duration: 2000,
+      });
     } else {
       // create distribution right
       this.showResults = true;

@@ -20,6 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @NgModule({
   declarations: [DistributionRightCreateComponent],
@@ -29,7 +31,7 @@ import { MatTableModule } from '@angular/material/table';
     DatepickerModule,
     MonthCalendarModule,
     FlexLayoutModule,
-    
+
     // Material
     MatInputModule,
     MatButtonModule,
@@ -43,6 +45,7 @@ import { MatTableModule } from '@angular/material/table';
     MatListModule,
     MatCheckboxModule,
     MatIconModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([{ path: '', component: DistributionRightCreateComponent }])
   ]
