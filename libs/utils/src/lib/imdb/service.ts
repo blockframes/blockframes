@@ -365,3 +365,13 @@ export class ImdbService {
 
     return this.http.get(this.omdbapi, { params })
       .toPromise()
+      .then((data: OmdbSearch | OmdbError) => {
+        if (isError(data)) {
+          throw new ImdbError(`${data.Error}: ${req.name}`);
+        }
+
+        return Promise.resolve(new SearchResults(data, page));
+      });
+  }
+
+}

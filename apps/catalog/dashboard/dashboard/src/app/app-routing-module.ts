@@ -62,6 +62,10 @@ export const routes: Routes = [
             path: 'catalog',
             loadChildren: () => import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
           },
+          {
+            path: 'api',
+            loadChildren: () => import('./pages/imdb-api-test/imdb-api-test.module').then(m => m.ImdbApiTestModule)
+          },
         ]
       },
     ]
