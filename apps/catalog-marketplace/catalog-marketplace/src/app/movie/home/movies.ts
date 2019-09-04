@@ -172,21 +172,6 @@ export const scoring: Partial<Movie>[] = [
     main: {
       directors: [
         {
-          firstName: 'Melanie',
-          lastName: 'Laurent'
-        }
-      ],
-      poster: '/assets/carrousel/Galvestone_MELANIE_LAURENT_2018.png',
-      title: {
-        original: 'Galvestone'
-      },
-      productionYear: 2018
-    }
-  },
-  {
-    main: {
-      directors: [
-        {
           firstName: 'Jaume',
           lastName: 'Balaguero'
         }
@@ -257,21 +242,6 @@ export const prizes: Partial<Movie>[] = [
       poster: '/assets/carrousel/CopCar_JON_WATTS_2015.png',
       title: {
         original: 'Cop Car'
-      },
-      productionYear: 2015
-    }
-  },
-  {
-    main: {
-      directors: [
-        {
-          firstName: 'Jeremy',
-          lastName: 'Saulnier'
-        }
-      ],
-      poster: '/assets/carrousel/GreenRoom_JEREMY_SAULNIER_2015.png',
-      title: {
-        original: 'Green Room'
       },
       productionYear: 2015
     }
