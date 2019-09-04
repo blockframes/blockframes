@@ -1,7 +1,3 @@
-.light-theme .mat-raised-button {
-  background: mat-color($bf-light-background, raised-button);;
-}
-
 button { // TODO: Get rid of the !important and apply this on mat-raised-button
   padding: 8px 24px !important;
   font-size: 12px !important;
@@ -12,21 +8,26 @@ button { // TODO: Get rid of the !important and apply this on mat-raised-button
   padding: 0 !important;
 }
 
-.mat-raised-button {
-  color: white !important;
-}
-
 button:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
   color: var(--lightGrey)!important;
   border: none!important;
 }
 
 .mat-flat-button {
-  border-radius: 20px !important;
+  border-radius: 50px !important;
+  border-color: transparent !important;
   background-color: var(--flatButtonGrey) !important;
   color: var(--primary) !important;
   mat-icon {
     font-size: 18px;
     font-weight: 600;
   }
+}
+
+.mat-stroked-button {
+  border-radius: 50px !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  background-color: var(--flatButtonGrey) !important;
 }

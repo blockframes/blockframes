@@ -4,8 +4,9 @@
     <article fxLayout="row" fxLayoutAlign="none center">
       <h2 *ngIf="(template$ | async) as template">{{ template.name }}</h2>
       <mat-divider fxFlex></mat-divider>
-      <button mat-button color="primary" (click)="addMaterial()">
-        <mat-icon>add</mat-icon> <span>Add material</span>
+      <button mat-stroked-button color="primary" (click)="addMaterial()">
+        <mat-icon>add</mat-icon>
+        Add material
       </button>
     </article>
     <template-material-repertory [materials]="materials$ | async" (editing)="openSidenav($event)">

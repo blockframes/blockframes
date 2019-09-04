@@ -20,11 +20,9 @@
       <button *ngIf="!delivery.isSigned" mat-icon-button matTooltip="Delete delivery" (click)="openDeleteDelivery()">
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
-      <button [disabled]="delivery.isSigned" mat-flat-button color="primary" (click)="addMaterial()">
-        <span>
+      <button [disabled]="delivery.isSigned" mat-stroked-button color="primary" (click)="addMaterial()">
           <mat-icon>add</mat-icon>
           Add material
-        </span>
       </button>
     </article>
     <article fxLayout="row" fxLayoutAlign="end center">
