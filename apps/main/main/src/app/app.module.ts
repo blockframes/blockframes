@@ -51,6 +51,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
 
+import { ImdbApiTestModule } from './pages/imdb-api-test/imdb-api-test.module';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
   imports: [
@@ -91,7 +93,8 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
-
+    ImdbApiTestModule,
+    
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
