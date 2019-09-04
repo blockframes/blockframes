@@ -22,7 +22,7 @@ export enum DocType {
 
 export interface DocInformations {
   id: string;
-  type: DocType | null;
+  type: DocType | null; // TODO: We don't want type to be null => ISSUE#884
 }
 
 // Core Application Types

@@ -9,10 +9,11 @@ import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '@blockframes/material';
 import { Movie } from '../../movie/+state/movie.model';
 import { InvitationService } from '@blockframes/notification';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class StakeholderService {
-  constructor(private db: FireQuery, private invitationService: InvitationService) {}
+  constructor(private db: FireQuery, private invitationService: InvitationService, private authQuery: AuthQuery) {}
 
   /** Add a stakeholder into movies or deliveries sub-collection */
   public async addStakeholder(
@@ -36,7 +37,9 @@ export class StakeholderService {
       ? tx.set(stakeholderDoc.ref, stakeholder)
       : stakeholderDoc.set(stakeholder);
 
-    this.invitationService.sendDocInvitationToOrg(organizationId, doc.id);
+    if (organizationId !== this.authQuery.orgId) {
+      this.invitationService.sendDocInvitationToOrg(organizationId, doc.id);
+    }
 
     return stakeholder.id;
   }

@@ -16,6 +16,10 @@
       [isSigned]="delivery.isSigned"
       (editing)="openSidenav('steps')">
     </delivery-informations-steps-repertory>
+    <delivery-informations-stakeholders
+      *ngIf="delivery.mustBeSigned"
+      [delivery]="delivery">
+    </delivery-informations-stakeholders>
   </ng-container>
   <!-- Sidenav -->
   <ng-container sidenav [ngSwitch]="editContent">

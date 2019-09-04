@@ -2,10 +2,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Modules
 import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
+import { MaterialModule } from '../material/material.module';
 
 // Components
 import { TemplateAddComponent } from './components/template-add/template-add.component';
@@ -20,10 +23,10 @@ import { TemplateCreateComponent } from './pages/template-create/template-create
 
 // Guards
 import { TemplateActiveGuard } from './guards/template-active.guard';
+import { TemplateListGuard } from './guards/template-list.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -32,12 +35,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../material/material.module';
-import {MatExpansionModule} from '@angular/material/expansion';
-import { TemplateListGuard } from './guards/template-list.guard';
-import { MatSelectModule, MatSortModule } from '@angular/material';
-import { MatTableModule } from '@angular/material/table'
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -49,15 +50,15 @@ const routes: Routes = [
     path: 'list',
     component: TemplateListComponent,
     canActivate: [TemplateListGuard],
-    canDeactivate: [TemplateListGuard],
+    canDeactivate: [TemplateListGuard]
   },
   {
     path: ':templateId',
     component: TemplateEditableComponent,
     canActivate: [TemplateActiveGuard],
-    canDeactivate: [TemplateActiveGuard],
+    canDeactivate: [TemplateActiveGuard]
   }
-]
+];
 
 @NgModule({
   declarations: [
