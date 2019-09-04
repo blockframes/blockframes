@@ -12,7 +12,12 @@ import { Profile } from '../../forms/profile-edit.form';
 export class ProfileDisplayComponent {
   public email: string;
   @Output() editing = new EventEmitter<string>();
+  @Input() opened: boolean;
   @Input() user: Profile;
   @Input() userEmail: string;
   @Input() organization: Organization;
+
+  get layout() {
+    return this.opened ? 'column' : 'row';
+  }
 }

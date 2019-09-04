@@ -19,7 +19,6 @@ import { OrganizationQuery } from './organization.query';
 import { getDefaultProvider, providers, Contract, utils } from 'ethers';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
-import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
@@ -527,6 +526,7 @@ export class OrganizationService {
       });
 
     await Promise.all(promises);
+
     return action;
   }
 

@@ -42,8 +42,9 @@ mat-icon {
  @include medium {
   .mat-sidenav {
     width: 50%;
-    height: 100%;
+    height: calc(100% - var(--toolbarHeight));
     padding: 0;
+    top: var(--toolbarHeight);
   }
   mat-sidenav-content {
     width: 100%;
