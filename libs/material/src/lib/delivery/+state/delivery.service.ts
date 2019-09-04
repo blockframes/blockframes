@@ -117,6 +117,10 @@ export class DeliveryService {
   // CRUD DELIVERY //
   ///////////////////
 
+  public getDelivery(id: string): Delivery {
+    return this.query.getEntity(id);
+  }
+
   public updateDeliveryStatus(index: number): Promise<any> {
     return this.currentDeliveryDoc.update({ status: deliveryStatuses[index] });
   }
