@@ -354,7 +354,6 @@ export class ImdbService {
    */
   public search(req: SearchRequest, page: number = 1): Promise<SearchResults> {
 
-    const params = {
       apikey: this.apiKey,
       page: page.toString(), // page number
       r: "json", // expected response type
@@ -365,13 +364,3 @@ export class ImdbService {
 
     return this.http.get(this.omdbapi, { params })
       .toPromise()
-      .then((data: OmdbSearch | OmdbError) => {
-        if (isError(data)) {
-          throw new ImdbError(`${data.Error}: ${req.name}`);
-        }
-
-        return Promise.resolve(new SearchResults(data, page));
-      });
-  }
-
-}
