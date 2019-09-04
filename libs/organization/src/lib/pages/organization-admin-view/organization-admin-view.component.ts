@@ -1,6 +1,6 @@
 import { OrganizationOperation, OrganizationMember } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '../../+state';
+import { OrganizationQuery, DeploySteps } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
@@ -33,11 +33,25 @@ export class OrganizationAdminViewComponent implements OnInit {
   /** Variable to indicate whether to show an action in the sidenav or a member */
   public editContent: 'operation' | 'member';
 
+  public deployStep$: Observable<string>;
+
   constructor(
     private query: OrganizationQuery,
   ) {}
 
   ngOnInit() {
+
+    this.deployStep$ = this.query.select().pipe(
+      map(state => state.deployStep),
+      map(step => {
+        switch(step) {
+          case DeploySteps.registered: return 'Registered (1/3)';
+          case DeploySteps.resolved: return 'Resolved (2/3)';
+          case DeploySteps.ready: return 'Retrieving information (3/3)';
+          default: return 'Not deployed (0/3)';
+        }
+      })
+    );
 
     /** Return the operationFormGroup linked to the selected operation.id */
     this.operations$ = this.query.select('org').pipe(

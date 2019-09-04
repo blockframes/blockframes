@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query, emailToEnsDomain, precomputeAddress } from '@blockframes/utils';
+import { FireQuery, Query, emailToEnsDomain, precomputeAddress, getNameFromENS } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -14,10 +14,10 @@ import {
   OrganizationStatus,
   OrganizationAction
 } from './organization.model';
-import { OrganizationStore } from './organization.store';
+import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { getDefaultProvider, providers, Contract, utils } from 'ethers';
-import { network, relayer } from '@env';
+import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 
@@ -62,6 +62,8 @@ interface RawAction {
 //--------------------------------------
 //           ETHEREUM TOPICS
 //--------------------------------------
+const newOwnerTopic         = '0xce0457fe73731f824cc272376169235128c118b49d344817417c6d108d155e82';// 'NewOwner (index_topic_1 bytes32 node, index_topic_2 bytes32 label, address owner)' event
+const newResolverTopic      = '0x335721b01866dc23fbee8b6b2c7b1e14d6f05c28cd35a2c934239f94095602a0';// 'NewResolver (index_topic_1 bytes32 node, address resolver)' event
 const addrChangedTopic      = '0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2'; // 'AddrChanged(byte32,address)' event
 const operationCreatedTopic = '0x46e4d2a30e96e4ccf9e9a058230b32ce42ee291c0f641c93de894fe65c8814b0'; // 'OperationCreated(uint256)' event
 const quorumUpdatedTopic    = '0x6784e9bcb845caaa98267d7b0918f97d3d17f7cb35a05b52010f7eb587a0acb0'; // 'QuorumUpdated(uint256,uint256)' event
@@ -245,14 +247,32 @@ export class OrganizationService {
       let address = await this.getAddress();
       await new Promise(resolve => {
         if (!address) {
+          // registered
+          this.provider.on(getFilterFromTopics(relayer.registryAddress, [
+            newOwnerTopic,
+            utils.namehash(baseEnsDomain),
+            utils.id(getNameFromENS(organizationENS))
+          ]), () => {
+            this.store.update({deployStep: DeploySteps.registered});
+          });
+
+          // resolved
+          this.provider.on(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]), () => {
+            this.store.update({deployStep: DeploySteps.resolved});
+          });
+
+          // ready
           this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]), (log: providers.Log) => {
             address = `0x${log.data.slice(-40)}`; // extract address
+            this.store.update({deployStep: DeploySteps.ready});
             resolve();
           });
         } else {
           resolve();
         }
       });
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, utils.namehash(baseEnsDomain), utils.id(getNameFromENS(organizationENS))]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]));
       this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
@@ -317,7 +337,7 @@ export class OrganizationService {
     const operationsFilter = getFilterFromTopics(this.contract.address, [operationCreatedTopic]);
     const operationLogs = await this.provider.getLogs(operationsFilter);
     const operationIds = operationLogs.map(operationLog => operationLog.topics[1]);
-    operationIds.forEach(operationId => 
+    operationIds.forEach(operationId =>
       this.getOperationFromContract(operationId).then(operation => this.upsertOperation(operation))
     );
 
@@ -351,7 +371,7 @@ export class OrganizationService {
       console.log(`member ${memberAddress} removed from op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'removeOperationMember()'
     });
 
-    
+
     // ACTIONS -----------------------------
 
     // get all actions
@@ -380,18 +400,6 @@ export class OrganizationService {
   //          OPERATIONS
   //----------------------------------
 
-  // public setUpdateQuorumTx(orgAddress: string, operationId: string, newQuorum: number) {
-  //   this.walletService.setTx(CreateTx.modifyQuorum(orgAddress, operationId, newQuorum));
-  // }
-
-  // public setAddMemberTx(orgAddress: string, operationId: string, memberAddress: string) {
-  //   this.walletService.setTx(CreateTx.addMember(orgAddress, operationId, memberAddress));
-  // }
-
-  // public setRemoveMemberTx(orgAddress: string, operationId: string, memberAddress: string) {
-  //   this.walletService.setTx(CreateTx.removeMember(orgAddress, operationId, memberAddress));
-  // }
-
   /**
    * Retrieve the minimal infos of an operation from the blockchain,
    * then enrich those infos to return a full `OrganizationOperation` object
@@ -417,7 +425,7 @@ export class OrganizationService {
           .then(isWhiteListed => isWhiteListed ? operation.members.push(member) : -1);
         promises.push(promise);
       });
-    
+
     await Promise.all(promises);
     return operation;
   }
@@ -501,7 +509,7 @@ export class OrganizationService {
     if (!! approvalDate) {
       action.approvalDate = approvalDate;
     }
-    
+
     // retrieve the name from firestore
     const fireAction = await this.db.collection('actions').doc(actionId).get().toPromise();
     if (!!fireAction.data() && !!fireAction.data().name) {
@@ -517,7 +525,7 @@ export class OrganizationService {
           .then(hasApproved => hasApproved ? action.signers.push(member) : -1);
         promises.push(promise);
       });
-    
+
     await Promise.all(promises);
     return action;
   }
