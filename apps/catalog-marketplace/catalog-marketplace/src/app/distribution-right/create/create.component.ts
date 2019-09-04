@@ -248,8 +248,8 @@ export class DistributionRightCreateComponent implements OnInit {
     ) {
       // can't create distribution right
       this.showResults = false;
-      this._snackBar.open('can\'t find any available movies', null, {
-        duration: 2000,
+      this._snackBar.open('There is no availability matching your research', null, {
+        duration: 5000,
       });
     } else {
       // create distribution right

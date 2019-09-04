@@ -100,12 +100,12 @@ const ICONS_SVG = [
     url: 'assets/icons/logical.svg'
   },
   {
-    name: 'logoBF',
-    url: 'assets/logo/logoBF.svg'
+    name: 'logoBFdark',
+    url: 'assets/logo/logoBFdark.svg'
   },
   {
-    name: 'logoBFblue',
-    url: 'assets/logo/logoBFblue.svg'
+    name: 'logoBFlight',
+    url: 'assets/logo/logoBFlight.svg'
   },
   {
     name: 'media_delivering',
