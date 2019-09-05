@@ -66,7 +66,7 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  catalog: CatalogBasket;
+  catalog?: CatalogBasket;
   logo?: string;
 }
 
@@ -105,5 +105,5 @@ export function createOperation(operation: Partial<OrganizationOperation> = {}):
     quorum: 0,
     members: [],
     ...operation,
-  } as OrganizationOperation
+  } as OrganizationOperation;
 }

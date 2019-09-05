@@ -209,7 +209,7 @@
       </mat-card>
     </aside>
 
-    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults; else enterRights">
+    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
       <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add

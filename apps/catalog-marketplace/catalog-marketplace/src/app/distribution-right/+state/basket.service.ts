@@ -6,30 +6,28 @@ import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({ providedIn: 'root' })
 export class BasketService {
-  private organization: Organization;
   constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {
-    this.organization = this.organizationQuery.getValue().org;
   }
 
   public add(distributionRight: DistributionRight) {
-    const newDistributionRight = [...this.organization.catalog.rights, distributionRight];
     // check if the default value has already been set
-    if (this.organization.catalog.price.amount > 0) {
-      this.db.doc<Organization>(`orgs/${this.organization.id}/`).update({
+    if (this.organizationQuery.getValue().org.catalog === null) {
+      this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({
         catalog: {
           price: {
-            amount: this.organization.catalog.price.amount,
-            currency: this.organization.catalog.price.currency
+            amount: 0,
+            currency: 'us-dollar'
           },
           status: BasketStatus.pending,
-          rights: newDistributionRight
+          rights: [distributionRight]
         }
       });
     } else {
-      this.db.doc<Organization>(`orgs/${this.organization.id}/`).update({
+      const newDistributionRight = [...this.organizationQuery.getValue().org.catalog.rights, distributionRight];
+      this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({
         catalog: {
-          price: { amount: 0, currency: 'us-dollar' },
-          status: BasketStatus.pending,
+          price: this.organizationQuery.getValue().org.catalog.price,
+          status: this.organizationQuery.getValue().org.catalog.status,
           rights: newDistributionRight
         }
       });
@@ -39,18 +37,18 @@ export class BasketService {
   public addBid(price: Price) {
     const updatedCatalog: CatalogBasket = {
       price: { amount: price.amount, currency: price.currency },
-      status: this.organization.catalog.status,
-      rights: this.organization.catalog.rights
+      status: this.organizationQuery.getValue().org.catalog.status,
+      rights: this.organizationQuery.getValue().org.catalog.rights
     };
-    this.db.doc<Organization>(`orgs/${this.organization.id}/`).update({ catalog: updatedCatalog });
+    this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({ catalog: updatedCatalog });
   }
 
   public removeRight(id: string) {
     const updatedCatalog: CatalogBasket = {
-      price: this.organization.catalog.price,
-      status: this.organization.catalog.status,
-      rights: this.organization.catalog.rights.filter(right => right.id !== id)
+      price: this.organizationQuery.getValue().org.catalog.price,
+      status: this.organizationQuery.getValue().org.catalog.status,
+      rights: this.organizationQuery.getValue().org.catalog.rights.filter(right => right.id !== id)
     };
-    this.db.doc<Organization>(`orgs/${this.organization.id}/`).update({ catalog: updatedCatalog });
+    this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({ catalog: updatedCatalog });
   }
 }
