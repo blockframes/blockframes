@@ -66,7 +66,7 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  catalog?: CatalogBasket;
+  catalog: CatalogBasket[]; // distribution rights which belongs to this organization
   logo?: string;
 }
 

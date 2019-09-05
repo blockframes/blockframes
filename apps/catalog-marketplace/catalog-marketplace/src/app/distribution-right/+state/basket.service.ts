@@ -6,8 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({ providedIn: 'root' })
 export class BasketService {
-  constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {
-  }
+  constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {}
 
   public add(distributionRight: DistributionRight) {
     // check if the default value has already been set
@@ -23,7 +22,10 @@ export class BasketService {
         }
       });
     } else {
-      const newDistributionRight = [...this.organizationQuery.getValue().org.catalog.rights, distributionRight];
+      const newDistributionRight = [
+        ...this.organizationQuery.getValue().org.catalog.rights,
+        distributionRight
+      ];
       this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({
         catalog: {
           price: this.organizationQuery.getValue().org.catalog.price,
@@ -40,7 +42,9 @@ export class BasketService {
       status: this.organizationQuery.getValue().org.catalog.status,
       rights: this.organizationQuery.getValue().org.catalog.rights
     };
-    this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({ catalog: updatedCatalog });
+    this.db
+      .doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`)
+      .update({ catalog: updatedCatalog });
   }
 
   public removeRight(id: string) {
@@ -49,6 +53,8 @@ export class BasketService {
       status: this.organizationQuery.getValue().org.catalog.status,
       rights: this.organizationQuery.getValue().org.catalog.rights.filter(right => right.id !== id)
     };
-    this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({ catalog: updatedCatalog });
+    this.db
+      .doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`)
+      .update({ catalog: updatedCatalog });
   }
 }

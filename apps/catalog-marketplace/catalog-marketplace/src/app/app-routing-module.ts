@@ -5,13 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { CatalogCompletionComponent } from './components/completion.component';
 
 // Guards
 import { CatalogMarketPlaceGuard } from './guards/catalog-marketplace.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
+import { CatalogBasketGuard } from './guards/catalog-basket.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -78,9 +78,8 @@ export const routes: Routes = [
               },
               {
                 path: 'selection',
-                // TODO #855 add this guard
-                // canActivate: [CatalogMarketBasketGuard],
-                canActivate: [MovieListGuard, OrganizationGuard],
+                // TODO MF delete OrganizationGuard, when CatalogMarketplaceBasketGuard is ready
+                canActivate: [MovieListGuard, OrganizationGuard, CatalogBasketGuard],
                 loadChildren: () =>
                   import('./pages/selection/selection.module').then(m => m.SelectionModule)
               },

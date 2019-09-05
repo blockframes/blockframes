@@ -10,8 +10,8 @@ export interface BasketState extends EntityState<DistributionRight> {
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'basket', idKey: 'id' })
-export class BasketStore extends EntityStore<BasketState, DistributionRight> {
-
+export class BasketStore extends EntityStore<BasketState, any> {
+// TODO (MF,FG): any should be DistributionRight, but it is alreay in the BasketState
   constructor() {
     super();
   }

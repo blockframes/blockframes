@@ -5,6 +5,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { staticModels, MovieQuery } from '@blockframes/movie';
 import { FormControl } from '@angular/forms';
 import { BasketService } from '../../distribution-right/+state/basket.service';
+import { BasketQuery } from '../../distribution-right/+state/basket.query';
 
 @Component({
   selector: 'catalog-selection',
@@ -13,7 +14,6 @@ import { BasketService } from '../../distribution-right/+state/basket.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogSelectionComponent implements OnInit {
-  public movieDistributionRights: MovieData[];
   public priceControl: FormControl = new FormControl(null);
   public currencyList: string[];
   public selectedCurrency: string; 
@@ -21,13 +21,12 @@ export class CatalogSelectionComponent implements OnInit {
   constructor(
     private orgQuery: OrganizationQuery,
     private basketService: BasketService,
-    private movieQuery: MovieQuery
+    private movieQuery: MovieQuery,
+    private basketQuery: BasketQuery
   ) {}
   ngOnInit() {
     this.currencyList = staticModels['MOVIE_CURRENCIES'].map(key => key.slug);
-    this.movieDistributionRights = this.orgQuery
-      .getValue()
-      .org.catalog.rights.map(right => this.createRightDetail(right));
+    console.log(this.basketQuery.getBasket())
   }
 
   private createRightDetail(detail: DistributionRight) {
@@ -50,9 +49,6 @@ export class CatalogSelectionComponent implements OnInit {
 
   public deleteDistributionRight(rightId: string) {
     this.basketService.removeRight(rightId);
-    this.movieDistributionRights = this.movieDistributionRights.filter(
-      right => right.id !== rightId
-    );
   }
 
   public setPriceCurrency() {

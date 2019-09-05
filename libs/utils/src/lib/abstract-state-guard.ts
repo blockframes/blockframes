@@ -82,5 +82,4 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
     this.subscription.unsubscribe();
     return true;
   }
-
 }
