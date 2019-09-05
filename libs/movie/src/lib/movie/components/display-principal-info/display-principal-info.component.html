@@ -1,0 +1,49 @@
+<h3 class="mat-title">Principal Informations</h3>
+<article fxLayout="row" fxLayoutAlign="space-between start">
+  <!-- First Column -->
+  <ng-container *ngIf="movie.main as main">
+    <ul class="first-column">
+      <li fxLayout="row">
+        <b>Production Year</b>
+        <span>{{ main.productionYear }}</span>
+      </li>
+      <li fxLayout="row">
+        <b>International Title</b>
+        <span>{{ main.title.international }}</span>
+      </li>
+      <li fxLayout="row">
+        <b>Original Title</b>
+        <span>{{ main.title.original }}</span>
+      </li>
+      <li fxLayout="row">
+        <b>Director</b>
+        <span *ngFor="let director of main.directors; let isLast=last">
+          {{ director.lastName }} {{ director.firstName }} {{isLast ? '' : ', '}}
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+  <!-- Second Column -->
+  <ul class="second-column">
+    <ng-container *ngIf="movie.salesCast as salesCast">
+      <li fxLayout="row">
+        <b>Principal Cast</b>
+        <span *ngFor="let cast of salesCast.credits; let isLast=last">
+          {{ cast.lastName }}{{ cast.firstName }} {{isLast ? '' : ', '}}
+        </span>
+      </li>
+    </ng-container>
+    <ng-container *ngIf="movie.main as main">
+      <li fxLayout="row">
+        <b>Genre</b>
+        <span *ngFor="let genre of main.genres; let isLast=last">
+          {{ genre }}{{isLast ? '' : ', '}}
+        </span>
+      </li>
+      <li fxLayout="row">
+        <b>Country of Origin</b>
+        {{ main.originCountry }}
+      </li>
+    </ng-container>
+  </ul>
+</article>

@@ -1,0 +1,6 @@
+<ng-container *ngIf="movie.promotionalDescription as promotionalDescription">
+  <h3 class="mat-title">Key Assets</h3>
+  <article *ngFor="let keyAsset of promotionalDescription.keyAssets">
+    <p>{{ keyAsset }}</p>
+  </article>
+</ng-container>

@@ -1,0 +1,30 @@
+<h3 class="mat-title">Film details</h3>
+<article fxLayout="row" fxLayoutAlign="space-between start">
+  <!-- First Column -->
+  <ul class="first-column">
+    <ng-container *ngIf="movie.main as main">
+      <li fxLayout="row"><b>Length</b> <span>{{ main.length }} min</span></li>
+      <li fxLayout="row"><b>ISAN Number</b> <span>{{ main.isan }}</span></li>
+    </ng-container>
+    <ng-container>
+      <li fxLayout="row"><b>Color / Black & White</b> <span>{{ color }}</span></li>
+      <li fxLayout="row"><b>European Qualification</b><span>{{ europeanQualification }}</span></li>
+    </ng-container>
+  </ul>
+  <!-- Second Column -->
+  <ul class="second-column">
+    <ng-container *ngIf="movie.salesInfo as salesInfo">
+      <li fxLayout="row">
+        <b>Certifications</b>
+        <span *ngFor="let certification of salesInfo.certifications; let isLast=last">
+          {{ certification }} {{isLast ? '' : ', '}}
+        </span>
+      </li>
+      <li fxLayout="row" class="overflow"><b>Rating</b> <span>{{ salesInfo.pegi }}</span></li>
+      <li fxLayout="row"><b>International Premiere</b> <span>{{ internationalPremiere }}</span></li>
+      <li fxLayout="row">
+        <b>Release date in Origin Country</b>
+        <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span></li>
+    </ng-container>
+  </ul>
+</article>
