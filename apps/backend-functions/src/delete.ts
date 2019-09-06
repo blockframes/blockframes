@@ -2,9 +2,9 @@ import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie } from './data/types';
+import { Delivery, DocType, Material, Movie, Organization } from './data/types';
 
-export async function deleteFirestoreMovie (
+export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) {
@@ -21,34 +21,33 @@ export async function deleteFirestoreMovie (
    */
 
   const batch = db.batch();
-  const stakeholders = await db.collection(`movies/${movie.id}/stakeholders`).get();
-  stakeholders.forEach(doc => {
-    batch.delete(doc.ref);
-  });
-  console.log(`${stakeholders.size} stakeholder(s) deleted`);
-  const organizations = await db.collection(`orgs`).get();
-  organizations.forEach(doc => {
-    if (doc.data().movieIds.includes(movie.id)) {
+
+  const organizations = await db.collection(`orgs`).get()
+  // TODO: .where('movieIds', 'array-contains', movie.id) doesn't seem to work. => ISSUE#908
+
+  organizations.forEach(async doc => {
+    const organization = await getDocument<Organization>(`orgs/${doc.id}`);
+
+    if (organization.movieIds.includes(movie.id)) {
       console.log(`delete movie id reference in organization ${doc.data().id}`);
-      const newMovieIds: string[] = doc
-        .data()
-        .movieIds.filter((movieId: string) => movieId !== movie.id);
-      batch.update(doc.ref, { movieIds: newMovieIds });
+      batch.update(doc.ref, {
+        movieIds: doc.data().movieIds.filter((movieId: string) => movieId !== movie.id)
+      });
+    }
+  }
+  );
+
+  const deliveries = await db.collection(`deliveries`).get()
+  // TODO: .where(movie.deliveryIds, 'array-contains', 'id') doesn't seem to work. => ISSUE#908
+
+  deliveries.forEach(doc => {
+    if (movie.deliveryIds.includes(doc.data().id)) {
+      console.log(`delivery ${doc.id} deleted`);
+      batch.delete(doc.ref);
     }
   });
 
-  const deliveries = await db
-    .collection(`deliveries`)
-    .where(movie.deliveryIds, 'array-contains', 'id')
-    .get();
-  deliveries.forEach(doc => {
-    console.log(`delivery ${doc.id} deleted`);
-    batch.delete(doc.ref);
-  });
-
-  await batch.commit();
-
-  return true;
+  return batch.commit();
 }
 
 export async function deleteFirestoreDelivery(
@@ -75,24 +74,20 @@ export async function deleteFirestoreDelivery(
   movieMaterials.forEach(doc => {
     if (doc.data().deliveryIds.includes(delivery.id)) {
       if (doc.data().deliveryIds.length === 1) {
-        batch.delete(doc.ref)
-      }
-      else {
-        const newDeliveryIds = doc
-          .data()
-          .deliveryIds.filter((id: string) => id !== delivery.id);
-        batch.update(doc.ref, { deliveryIds: newDeliveryIds });
+        batch.delete(doc.ref);
+      } else {
+        batch.update(doc.ref, { deliveryIds: doc.data().deliveryIds.filter((id: string) => id !== delivery.id) });
       }
     }
   });
 
   const movieDoc = await db.doc(`movies/${delivery.movieId}`).get();
   const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
-  const index = movie.deliveryIds.indexOf(delivery.id);
-  if (index !== -1) {
-    const deliveryIds = [ ...movie.deliveryIds.slice(index, 1) ]
-    batch.update(movieDoc.ref, { deliveryIds });
+
+  if (!!movieDoc) {
+    batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });
   }
+
 
   await batch.commit();
 
