@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   selector: 'movie-display-principal-info',
   templateUrl: './display-principal-info.component.html',
   styleUrls: ['./display-principal-info.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MovieDisplayPrincipalInfoComponent {

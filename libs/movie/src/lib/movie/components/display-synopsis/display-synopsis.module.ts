@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
-import { MovieDisplaySynopsisComponent } from "./header.component";
+import { MovieDisplaySynopsisComponent } from "./display-synopsis.component";
 import { CommonModule } from "@angular/common";
 
 @NgModule({
-  imports: [CommonModule]
+  imports: [CommonModule],
   declarations: [MovieDisplaySynopsisComponent],
   exports: [MovieDisplaySynopsisComponent]
 })

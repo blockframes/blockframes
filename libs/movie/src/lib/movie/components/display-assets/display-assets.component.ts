@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   selector: '[assets] movie-display-assets',
   templateUrl: './display-assets.component.html',
   styleUrls: ['./display-assets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MovieDisplayAssetsComponent {

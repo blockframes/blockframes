@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   selector: '[rights] movie-display-availabilities',
   templateUrl: './display-availabilities.component.html',
   styleUrls: ['./display-availabilities.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MovieDisplayAvailabilitiesComponent {

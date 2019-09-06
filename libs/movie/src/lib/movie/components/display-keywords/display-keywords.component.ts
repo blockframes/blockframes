@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   selector: '[keywords] movie-display-keywords',
   templateUrl: './display-keywords.component.html',
   styleUrls: ['./display-keywords.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MovieDisplayKeywordsComponent {

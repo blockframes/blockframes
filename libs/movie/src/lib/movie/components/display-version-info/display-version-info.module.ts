@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
-import { MovieDisplayVersionInfoComponent } from "./header.component";
+import { MovieDisplayVersionInfoComponent } from "./display-version-info.component";
 import { CommonModule } from "@angular/common";
 
 @NgModule({
-  imports: [CommonModule]
+  imports: [CommonModule],
   declarations: [MovieDisplayVersionInfoComponent],
   exports: [MovieDisplayVersionInfoComponent]
 })

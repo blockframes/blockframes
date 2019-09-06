@@ -6,15 +6,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MovieViewComponent } from './view.component';
-import { MovieDisplayAvailabilitiesComponent } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.component'
-import { MovieDisplayProductionComponent } from '@blockframes/movie/movie/components/display-production/display-production.component'
-import { MovieDisplayPrincipalInfoComponent } from '@blockframes/movie/movie/components/display-principal-info/display-principal-info.component'
-import { MovieDisplaySynopsisComponent } from '@blockframes/movie/movie/components/display-synopsis/display-synopsis.component'
-import { MovieDisplayFilmDetailsComponent } from '@blockframes/movie/movie/components/display-film-details/display-film-details.component'
-import { MovieDisplayPrizesComponent } from '@blockframes/movie/movie/components/display-prizes/display-prizes.component'
-import { MovieDisplayAssetsComponent } from '@blockframes/movie/movie/components/display-assets/display-assets.component'
-import { MovieDisplayKeywordsComponent } from '@blockframes/movie/movie/components/display-keywords/display-keywords.component'
-import { MovieDisplayVersionInfoComponent } from '@blockframes/movie/movie/components/display-version-info/display-version-info.component'
+import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
+import { MovieDisplayProductionModule } from '@blockframes/movie/movie/components/display-production/display-production.module';
+import { MovieDisplayPrincipalInfoModule } from '@blockframes/movie/movie/components/display-principal-info/display-principal-info.module';
+import { MovieDisplaySynopsisModule } from '@blockframes/movie/movie/components/display-synopsis/display-synopsis.module';
+import { MovieDisplayFilmDetailsModule } from '@blockframes/movie/movie/components/display-film-details/display-film-details.module';
+import { MovieDisplayPrizesModule } from '@blockframes/movie/movie/components/display-prizes/display-prizes.module';
+import { MovieDisplayAssetsModule } from '@blockframes/movie/movie/components/display-assets/display-assets.module';
+import { MovieDisplayKeywordsModule } from '@blockframes/movie/movie/components/display-keywords/display-keywords.module';
+import { MovieDisplayVersionInfoModule } from '@blockframes/movie/movie/components/display-version-info/display-version-info.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -25,19 +25,19 @@ import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
-  declarations: [MovieViewComponent,
-    MovieDisplayAvailabilitiesComponent,
-    MovieDisplayProductionComponent,
-    MovieDisplayPrincipalInfoComponent,
-    MovieDisplaySynopsisComponent,
-    MovieDisplayFilmDetailsComponent,
-    MovieDisplayPrizesComponent,
-    MovieDisplayAssetsComponent,
-    MovieDisplayKeywordsComponent,
-    MovieDisplayVersionInfoComponent],
+  declarations: [MovieViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    MovieDisplayAvailabilitiesModule,
+    MovieDisplayProductionModule,
+    MovieDisplayPrincipalInfoModule,
+    MovieDisplaySynopsisModule,
+    MovieDisplayFilmDetailsModule,
+    MovieDisplayPrizesModule,
+    MovieDisplayAssetsModule,
+    MovieDisplayKeywordsModule,
+    MovieDisplayVersionInfoModule,
     MatCardModule,
     MatChipsModule,
     MatDividerModule,

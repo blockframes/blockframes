@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   selector: 'movie-display-version-info',
   templateUrl: './display-version-info.component.html',
   styleUrls: ['./display-version-info.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MovieDisplayVersionInfoComponent {
