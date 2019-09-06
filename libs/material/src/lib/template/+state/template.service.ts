@@ -3,8 +3,14 @@ import { Organization, PermissionsService, OrganizationQuery } from '@blockframe
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialQuery } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery, Query } from '@blockframes/utils';
 import { TemplateStore } from './template.store';
+import { switchMap, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+
+const templateQuery = (id: string): Query<Template> => ({
+  path: `templates/${id}`
+});
 
 @Injectable({ providedIn: 'root' })
 export class TemplateService {
@@ -56,11 +62,10 @@ export class TemplateService {
   }
 
   /** Save a delivery as new template */
-  public async saveAsTemplate(templateName: string) {
-    const materials = this.materialQuery.getAll();
+  public async saveAsTemplate(materials: Material[], templateName: string) {
     if (materials.length > 0) {
       // Add a new template
-      const templateId = this.addTemplate(templateName);
+      const templateId = await this.addTemplate(templateName);
 
       // Add the delivery's materials in the template
       const batch = this.db.firestore.batch();
@@ -70,38 +75,50 @@ export class TemplateService {
         const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialWithoutStep);
       });
-      batch.commit();
+      return batch.commit();
     }
   }
 
   /** Update template with delivery's materials */
-  public async updateTemplate(name: string) {
-    const organizationId = this.organizationQuery.getValue().org.id;
-    const template = this.query
-      .getAll()
-      .find(entity => entity.name === name && entity.orgId === organizationId);
-    const templateMaterials = await this.db.snapshot<any>(`templates/${template.id}/materials`);
-    const deliveryMaterials = this.materialQuery.getAll();
-    if (deliveryMaterials.length > 0) {
+  public async updateTemplate(materials: Material[], name: string) {
+    const templates = this.query.getAll();
+    const selectedTemplate = templates.find(template => template.name === name);
+    const templateMaterials = await this.db.snapshot<Material[]>(`templates/${selectedTemplate.id}/materials`);
+
+    if (materials.length > 0) {
       const batch = this.db.firestore.batch();
       // Delete all materials of template
       templateMaterials.forEach(material => {
-        const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
+        const materialDoc = this.db.doc<Material>(`templates/${selectedTemplate.id}/materials/${material.id}`);
         return batch.delete(materialDoc.ref);
       });
       // Add delivery's materials in template
-      deliveryMaterials.forEach(material => {
+      materials.forEach(material => {
         const materialWithoutStep = { ...material, step: null };
         delete materialWithoutStep.step;
-        const materialDoc = this.db.doc<Material>(`templates/${template.id}/materials/${material.id}`);
+        const materialDoc = this.db.doc<Material>(`templates/${selectedTemplate.id}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialWithoutStep);
       });
-      batch.commit();
+      return batch.commit();
     }
   }
 
   /** Check if name is already used in an already template */
-  public nameExists(name: string, organization: Organization) {
-    return this.query.hasEntity(entity => entity.name === name && entity.orgId === organization.id);
+  public nameExists(name: string) {
+    const templates = this.query.getAll();
+    return templates.find(template => template.name === name);
+  }
+
+  public subscribeOnTemplates() {
+    return this.organizationQuery
+      .select(state => state.org.templateIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No template yet')
+          const queries = ids.map(id => this.db.fromQuery<Template>(templateQuery(id)))
+          return combineLatest(queries);
+        }),
+        tap(templates => this.store.set(templates))
+      );
   }
 }

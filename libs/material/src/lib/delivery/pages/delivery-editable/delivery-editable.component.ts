@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
 import { Material, MaterialService, MaterialStore, MaterialStatus } from '../../../material/+state';
@@ -158,7 +158,9 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   /* Create a new template from delivery materials **/
   public saveAsTemplate() {
-    this.dialog.open(NewTemplateComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = this.currentFormList.value;
+    this.dialog.open(NewTemplateComponent, dialogConfig);
   }
 
   public openDeleteMaterial(materialId: string) {
