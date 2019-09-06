@@ -10,7 +10,7 @@ import { MovieViewComponent } from './view.component';
 // Custom Modules
 import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
 import { MovieDisplayProductionModule } from '@blockframes/movie/movie/components/display-production/display-production.module';
-import { MovieDisplayPrincipalInfoModule } from '@blockframes/movie/movie/components/display-principal-info/display-principal-info.module';
+import { MovieDisplayPrincipalInformationsModule } from '@blockframes/movie/movie/components/display-principal-informations/display-principal-informations.module';
 import { MovieDisplaySynopsisModule } from '@blockframes/movie/movie/components/display-synopsis/display-synopsis.module';
 import { MovieDisplayFilmDetailsModule } from '@blockframes/movie/movie/components/display-film-details/display-film-details.module';
 import { MovieDisplayPrizesModule } from '@blockframes/movie/movie/components/display-prizes/display-prizes.module';
@@ -33,7 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     // Custom Modules
     MovieDisplayAvailabilitiesModule,
     MovieDisplayProductionModule,
-    MovieDisplayPrincipalInfoModule,
+    MovieDisplayPrincipalInformationsModule,
     MovieDisplaySynopsisModule,
     MovieDisplayFilmDetailsModule,
     MovieDisplayPrizesModule,
