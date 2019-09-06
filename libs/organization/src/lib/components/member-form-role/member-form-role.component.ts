@@ -40,7 +40,7 @@ export class MemberFormRoleComponent {
 
   public async changeRole(role: UserRole) {
     if (!this.canChangeRole) {
-      throw new Error('You can not change the role of the only Admin of an organization');
+      throw new Error('You can not change the role of the last Admin of an organization');
     }
     const uid = this.controlContainer.control.get('uid').value;
     const userEmail = this.controlContainer.control.get('email').value;
@@ -67,8 +67,6 @@ export class MemberFormRoleComponent {
       tx = CreateTx.addAdmin(orgAddress, userAddress, callback)
     } else if (role === UserRole.member && this.permissionsQuery.superAdminCount >= 2) {
       tx = CreateTx.removeAdmin(orgAddress, userAddress, callback);
-    } else {
-      throw new Error('You cannot remove the last Admin');
     }
 
     this.walletService.setTx(tx);
