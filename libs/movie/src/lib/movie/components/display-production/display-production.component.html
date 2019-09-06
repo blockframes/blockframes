@@ -2,18 +2,18 @@
   <h3 class="mat-title">Production</h3>
   <article>
     <ul>
-      <ng-container *ngIf="movie.main as main">
+      <ng-container *ngIf="productionCompanies">
         <li fxLayout="row">
           <b>Production Companie(s)</b>
-          <span *ngFor="let productionCompanies of movie.main.productionCompanies">
-            {{ productionCompanies.firstName }}
+          <span *ngFor="let productionCompany of productionCompanies">
+            {{ productionCompany.firstName }}
           </span>
         </li>
       </ng-container>
-      <ng-container *ngIf="movie.salesInfo as salesInfo">
+      <ng-container *ngIf="broadcasterCoproducers">
         <li fxLayout="row">
           <b>TV / Platform coproducer(s)</b>
-          <span *ngFor="let broadcasterCoproducer of movie.salesInfo.broadcasterCoproducers">
+          <span *ngFor="let broadcasterCoproducer of broadcasterCoproducers">
             {{ broadcasterCoproducer }}
           </span>
         </li>

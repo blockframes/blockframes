@@ -2,7 +2,7 @@
 <article fxLayout="row" fxLayoutAlign="space-between start">
   <!-- First Column -->
   <ul class="first-column">
-    <ng-container *ngIf="movie.main as main">
+    <ng-container *ngIf="main">
       <li fxLayout="row"><b>Length</b> <span>{{ main.length }} min</span></li>
       <li fxLayout="row"><b>ISAN Number</b> <span>{{ main.isan }}</span></li>
     </ng-container>
@@ -13,7 +13,7 @@
   </ul>
   <!-- Second Column -->
   <ul class="second-column">
-    <ng-container *ngIf="movie.salesInfo as salesInfo">
+    <ng-container *ngIf="salesInfo">
       <li fxLayout="row">
         <b>Certifications</b>
         <span *ngFor="let certification of salesInfo.certifications; let isLast=last">

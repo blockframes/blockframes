@@ -1,7 +1,7 @@
 <h3 class="mat-title">Principal Informations</h3>
 <article fxLayout="row" fxLayoutAlign="space-between start">
   <!-- First Column -->
-  <ng-container *ngIf="movie.main as main">
+  <ng-container *ngIf="main">
     <ul class="first-column">
       <li fxLayout="row">
         <b>Production Year</b>
@@ -25,7 +25,7 @@
   </ng-container>
   <!-- Second Column -->
   <ul class="second-column">
-    <ng-container *ngIf="movie.salesCast as salesCast">
+    <ng-container *ngIf="salesCast">
       <li fxLayout="row">
         <b>Principal Cast</b>
         <span *ngFor="let cast of salesCast.credits; let isLast=last">
@@ -33,7 +33,7 @@
         </span>
       </li>
     </ng-container>
-    <ng-container *ngIf="movie.main as main">
+    <ng-container *ngIf="main">
       <li fxLayout="row">
         <b>Genre</b>
         <span *ngFor="let genre of main.genres; let isLast=last">

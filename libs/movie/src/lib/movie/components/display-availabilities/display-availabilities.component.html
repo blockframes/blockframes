@@ -1,11 +1,11 @@
-<ng-container *ngIf="movie.salesAgentDeal.rights.from && movie.salesAgentDeal.rights.to">
+<ng-container *ngIf="rights.from && rights.to">
     <h3 class="mat-title">Availabilities</h3>
     <article>
       <ul>
         <li fxLayout="row"><b>Beginning of
-            rights</b><span>{{ movie.salesAgentDeal.rights.from | date:'LLL-dd, yyyy' }}</span></li>
+            rights</b><span>{{ rights.from | date:'LLL-dd, yyyy' }}</span></li>
         <li fxLayout="row"><b>End of
-            rights</b><span>{{ movie.salesAgentDeal.rights.to | date:'LLL-dd, yyyy' }}</span></li>
+            rights</b><span>{{ rights.to | date:'LLL-dd, yyyy' }}</span></li>
       </ul>
     </article>
     <mat-divider [inset]="true"></mat-divider>

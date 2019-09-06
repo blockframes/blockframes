@@ -20,10 +20,10 @@
         </ng-container>
         <mat-card-content>
           <!-- Availabilities -->
-          <movie-display-availabilities [movie]="movie"></movie-display-availabilities>
+          <movie-display-availabilities [rights]="movie.salesAgentDeal.rights"></movie-display-availabilities>
 
           <!-- Production -->
-          <movie-display-production [movie]="movie"></movie-display-production>
+          <movie-display-production [productionCompanies]="movie.main.productionCompanies" [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
         </mat-card-content>
       </mat-card>
 
@@ -35,25 +35,25 @@
       </span>
       <mat-card>
         <!-- Principal Informations -->
-        <movie-display-principal-info [movie]="movie"></movie-display-principal-info>
+        <movie-display-principal-info [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-info>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Synopsis -->
-        <movie-display-synopsis [movie]="movie"></movie-display-synopsis>
+        <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Film details -->
-        <movie-display-film-details [movie]="movie"></movie-display-film-details>
+        <movie-display-film-details [main]="movie.amin" [salesInfo]="movie.salesInfo" [color]="color" [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere"></movie-display-film-details>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Festival Prizes -->
-        <movie-display-prizes [movie]="movie"></movie-display-prizes>
+        <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Key Assets -->
-        <movie-display-assets [movie]="movie"></movie-display-assets>
+        <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Keywords -->
-        <movie-display-keywords [movie]="movie"></movie-display-keywords>
+        <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Languages -->
-        <movie-display-version-info [movie]="movie"></movie-display-version-info>
+        <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo"></movie-display-version-info>
       </mat-card>
     </section>
   </section>
