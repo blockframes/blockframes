@@ -5,11 +5,11 @@
     <input [formControl]="templateNameControl" #templateName matInput placeholder="New template name"  required />
   </mat-form-field>
 </div>
-<p *ngIf="isUpdateTemplate">This template already exists, you will update it.</p>
+<p *ngIf="isTemplateUpdate">This template already exists, you will update it.</p>
 <div mat-dialog-actions fxLayoutAlign="center">
   <button mat-raised-button color="basic" (click)="close()" class="cancel-button mat-elevation-z0">Cancel</button>
   <button
-    *ngIf="!isUpdateTemplate"
+    *ngIf="!isTemplateUpdate"
     mat-raised-button
     color="accent"
     (click)="saveTemplate(templateName.value)"
@@ -19,7 +19,7 @@
     Save Template
   </button>
   <button
-    *ngIf="isUpdateTemplate"
+    *ngIf="isTemplateUpdate"
     mat-raised-button
     color="accent"
     (click)="updateTemplate(templateName.value)"

@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTemplateComponent implements OnInit, OnDestroy {
-  public isUpdateTemplate = false;
+  public isTemplateUpdate = false;
   private materials: Material[];
   private destroyed$ = new Subject();
   public templateNameControl = new FormControl();
@@ -34,8 +34,8 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
     // Check if the name already exists in the selected organization
     this.templateNameControl.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(templateName =>
       this.templateService.nameExists(templateName)
-        ? (this.isUpdateTemplate = true)
-        : (this.isUpdateTemplate = false)
+        ? (this.isTemplateUpdate = true)
+        : (this.isTemplateUpdate = false)
     );
   }
 
@@ -43,7 +43,7 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
     try {
       await this.templateService.saveAsTemplate(this.materials, this.templateNameControl.value);
       this.dialogRef.close();
-      this.snackBar.open('Saved template : ' + name + ' !', 'close', { duration: 2000 });
+      this.snackBar.open(`Saved template: ${name} !`, 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
@@ -53,7 +53,7 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
     try {
       await this.templateService.updateTemplate(this.materials, this.templateNameControl.value);
       this.dialogRef.close();
-      this.snackBar.open('Updated template : ' + name + ' !', 'close', { duration: 2000 });
+      this.snackBar.open(`Updated template: ${name} !`, 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
