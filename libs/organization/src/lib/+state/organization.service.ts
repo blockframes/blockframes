@@ -26,20 +26,10 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
     organization.userIds.map(id => ({
       path: `users/${id}`
     }))
-  // TODO(#681): refactoring
-  // actions: (organization: Organization) => ({
-  //   path: `orgs/${organization.id}/actions`,
-  //   // TODO(#681): remove activeMembers subscription
-  //   activeMembers: (action: OrganizationAction) => {
-  //     return action.activeMembers.map(id => ({
-  //       path: `users/${id}`
-  //     }))
-  //   }
-  // })
 });
 
 //--------------------------------------
-//        ETHEREUM ORG'S TYPES
+//        ETHEREUM ORGS TYPES
 //--------------------------------------
 interface RawOperation {
   name: string;
@@ -72,7 +62,7 @@ const actionApprovedTopic   = '0x4eb2529dfaf5a7847cb1209edb2e7d95cf4c91f833762c3
 const actionExecutedTopic   = '0x27bfac0e8b79713f577faf36f24c58597bacaa93ef1b54da177e07bf10b32cb9'; // 'ActionExecuted(bytes32,bool,bytes)' event
 
 //--------------------------------------
-//     ETHEREUM ORG'S EVENT FILTERS
+//     ETHEREUM ORGS EVENT FILTERS
 //--------------------------------------
 function getFilterFromTopics(address: string, topics: string[]): providers.Filter {
   return {

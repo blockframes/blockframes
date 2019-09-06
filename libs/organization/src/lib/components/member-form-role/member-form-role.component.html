@@ -1,7 +1,13 @@
-<mat-form-field appearance="outline">
+<h2>{{name}}</h2>
+<mat-form-field appearance="outline" *ngIf="canChangeRole; else cannotChangeRole">
   <mat-label>Role</mat-label>
   <mat-select [formControl]="role" (valueChange)="changeRole($event)">
     <mat-option value="member"> Member </mat-option>
     <mat-option value="admin"> Admin </mat-option>
   </mat-select>
 </mat-form-field>
+<ng-template #cannotChangeRole>
+  <div><mat-icon>error_outline</mat-icon></div>
+  <p>You can't change the role of the last Admin because an organization always need at least one Admin.</p>
+  <p>If you want to change the role of this Admin, please add another Admin before.</p>
+</ng-template>
