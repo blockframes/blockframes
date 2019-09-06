@@ -2,7 +2,6 @@ import { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeam
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('.account-icon', {timeout: 60000}).contains('account_circle');
   }
 
   public assertIsEncrypting() {

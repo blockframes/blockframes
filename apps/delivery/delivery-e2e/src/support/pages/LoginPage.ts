@@ -11,6 +11,8 @@ export default class LoginPage {
 
   public fillSignup({ email, password, passwordConfirm }) {
     cy.get('[test-id=signup] input[type="email"]').type(email);
+    cy.get('[test-id=signup] input[test-id="name"]').type('hugo');
+    cy.get('[test-id=signup] input[test-id="surname"]').type('boss');
     cy.get('[test-id=signup] input[test-id="password"]').type(password);
     cy.get('[test-id=signup] input[test-id="password-confirm"]').type(password);
   }
