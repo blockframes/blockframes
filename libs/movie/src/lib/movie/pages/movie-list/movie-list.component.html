@@ -30,27 +30,6 @@
               </a>
             </ng-template>
 
-            <!-- Movie Menu -->
-            <button test-id="movie-menu" mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon color="primary">more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                <mat-icon color="primary">control_camera</mat-icon>
-                <span>Open in...</span>
-              </button>
-              <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-                <mat-icon color="primary">edit</mat-icon>
-                <span>Edit</span>
-              </a>
-              <button mat-menu-item (click)="delete(movie)">
-                <mat-icon color="primary">delete_outline</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-            <mat-menu #subMenu="matMenu">
-              <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-            </mat-menu>
           </div>
 
           <a (click)="navigateToMovieApp(movie.id)">
