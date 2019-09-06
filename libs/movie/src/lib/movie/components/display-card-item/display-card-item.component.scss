@@ -1,0 +1,25 @@
+mat-card {
+  height: 329px;
+  width: 228px;
+  margin: 12px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.clickable-item {
+  cursor: pointer;
+}
+
+.img-container {
+  position: relative;
+  width: 100%;
+}
+
+.img-container img {
+  min-width: 150px;
+  max-height: 230px;
+  border-radius: 10px 10px 0 0;
+}

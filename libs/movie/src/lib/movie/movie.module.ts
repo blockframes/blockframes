@@ -47,6 +47,7 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 import { MoviePickerComponent } from '@blockframes/movie/movie/components/movie-picker/movie-picker.component';
+import { MovieDisplayCardItemModule } from './components/display-card-item/display-card-item.module';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { MoviePickerComponent } from '@blockframes/movie/movie/components/movie-
     ImportMovieModule,
     MovieDisplayModule,
     MovieFormModule,
+    MovieDisplayCardItemModule,
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated

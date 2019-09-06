@@ -9,4 +9,6 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class MovieDisplayCardItemComponent {
   @Input() movie: MovieMain;
+  @Input() movieLink: string;
+  @Input() productionYear: false;
 }

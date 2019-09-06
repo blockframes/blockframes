@@ -1,32 +1,36 @@
 <mat-card>
-  <!-- Movie Poster -->
-  <div class="img-container clickable-item">
-    <ng-container *ngIf="movie.poster; else: defaultPoster">
-      <a>
-        <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
-      </a>
-    </ng-container>
+    <a [routerLink]="movieLink" >
 
-    <ng-template #defaultPoster>
-      <a>
-        <img
-          class="mat-card-image"
-          src="/assets/images/default-movie-poster.png"
-          alt="Movie poster link"/>
-      </a>
-    </ng-template>
-  </div>
+      <!-- Movie Poster -->
+      <div class="img-container clickable-item">
+        <ng-container *ngIf="movie.poster; else: defaultPoster">
+            <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
+        </ng-container>
 
-  <mat-card-content>
-    <mat-card-title-group>
-      <mat-card-title>{{ movie.title.original }}</mat-card-title>
-      <mat-card-subtitle *ngFor="let director of movie.directors">
-      {{ director.firstName }} {{ director.lastName }}
-      </mat-card-subtitle>
-    </mat-card-title-group>
-    <span>Production Year {{ movie.productionYear }}</span>
-  </mat-card-content>
-  <mat-card-actions>
-    <ng-content></ng-content>
-  </mat-card-actions>
+        <ng-template #defaultPoster>
+            <img
+              class="mat-card-image"
+              src="/assets/images/default-movie-poster.png"
+              alt="Movie poster link"/>
+        </ng-template>
+      </div>
+    </a>
+
+    <!-- Movie Informations -->
+    <mat-card-content>
+      <mat-card-title-group>
+        <mat-card-title>{{ movie.title.original }}</mat-card-title>
+        <mat-card-subtitle *ngFor="let director of movie.directors">
+        {{ director.firstName }} {{ director.lastName }}
+        </mat-card-subtitle>
+      </mat-card-title-group>
+      <span *ngIf="productionYear">Production Year {{ movie.productionYear }}</span>
+    </mat-card-content>
+
+    <!-- Movie action button -->
+    <mat-card-actions>
+      <ng-content></ng-content>
+    </mat-card-actions>
+
 </mat-card>
+
