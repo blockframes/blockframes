@@ -1,8 +1,8 @@
 <h3 class="mat-title">Principal Informations</h3>
-<article fxLayout="row" fxLayoutAlign="space-between start">
+<article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
   <!-- First Column -->
-  <ng-container *ngIf="main">
-    <ul class="first-column">
+  <ul class="first-column">
+    <ng-container *ngIf="main">
       <li fxLayout="row">
         <b>Production Year</b>
         <span>{{ main.productionYear }}</span>
@@ -21,8 +21,8 @@
           {{ director.lastName }} {{ director.firstName }} {{isLast ? '' : ', '}}
         </span>
       </li>
-    </ul>
-  </ng-container>
+    </ng-container>
+  </ul>
   <!-- Second Column -->
   <ul class="second-column">
     <ng-container *ngIf="salesCast">

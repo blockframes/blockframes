@@ -6,6 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MovieViewComponent } from './view.component';
+
+// Custom Modules
 import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
 import { MovieDisplayProductionModule } from '@blockframes/movie/movie/components/display-production/display-production.module';
 import { MovieDisplayPrincipalInfoModule } from '@blockframes/movie/movie/components/display-principal-info/display-principal-info.module';
@@ -18,7 +20,6 @@ import { MovieDisplayVersionInfoModule } from '@blockframes/movie/movie/componen
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    // Custom Modules
     MovieDisplayAvailabilitiesModule,
     MovieDisplayProductionModule,
     MovieDisplayPrincipalInfoModule,
@@ -38,8 +40,8 @@ import { MatButtonModule } from '@angular/material/button';
     MovieDisplayAssetsModule,
     MovieDisplayKeywordsModule,
     MovieDisplayVersionInfoModule,
+    //Material
     MatCardModule,
-    MatChipsModule,
     MatDividerModule,
     MatProgressSpinnerModule,
     MatButtonModule,
