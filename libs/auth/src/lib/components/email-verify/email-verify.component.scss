@@ -1,5 +1,7 @@
+@import 'variables';
+
 .mat-icon {
-  color: #5F697A;
+  color: mat-color($bf-light-foreground, navbar-icon);
   font-size: 22px;
   margin-right: 12px;
   margin-left: 12px;
