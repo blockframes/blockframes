@@ -1,8 +1,15 @@
 // Movie exports
-export * from './lib/movie/+state';
+// Movie State
+export * from './lib/movie/+state/movie.model';
+export * from './lib/movie/+state/movie.query';
+export * from './lib/movie/+state/movie.service';
+export * from './lib/movie/+state/movie.store';
+// Movie Guards
 export * from './lib/movie/guards/movie-active.guard';
 export * from './lib/movie/guards/movie-list.guard';
+// Movie Modules
 export * from './lib/movie/movie.module';
+// Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
