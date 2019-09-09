@@ -1,15 +1,12 @@
 /// <reference types="cypress" />
 import {
-  HomePage,
   LandingPage,
   LoginPage
 } from '../support/pages';
+import { createUser } from '../support/utils/type';
+import OrganizationHomePage from '../support/pages/OrganizationHomePage';
 
-function randomEmail(): string {
-  return `cypress${Math.floor(Math.random() * 10000) + 1}@blockframes.com`;
-}
-
-const randomPassword = (): string => `${new Date().toISOString()}`;
+const USER = createUser();
 
 beforeEach(() => {
   cy.clearCookies();
@@ -20,15 +17,12 @@ beforeEach(() => {
 
 describe('story #529 - account creation', () => {
   it('should let me create a user account and send me to the organization creation page', () => {
-    const email = randomEmail();
-    const password = randomPassword();
-
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();
 
     p2.switchMode();
-    p2.fillSignup({ email, password, passwordConfirm: password });
-    const p3: HomePage = p2.clickSignup();
+    p2.fillSignup(USER);
+    const p3: OrganizationHomePage = p2.clickSignup();
     const p4: LoginPage = p3.logout();
   });
 });

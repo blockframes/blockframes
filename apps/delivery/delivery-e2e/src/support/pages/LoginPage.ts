@@ -1,4 +1,5 @@
-import HomePage from './HomePage';
+import OrganizationHomePage from './HomePage';
+import { User } from '../utils/type';
 
 export default class LoginPage {
   constructor() {
@@ -9,16 +10,16 @@ export default class LoginPage {
     cy.get('[test-id=switch-mode] button').click();
   }
 
-  public fillSignup({ email, password, passwordConfirm }) {
-    cy.get('[test-id=signup] input[type="email"]').type(email);
-    cy.get('[test-id=signup] input[test-id="name"]').type('hugo');
-    cy.get('[test-id=signup] input[test-id="surname"]').type('boss');
-    cy.get('[test-id=signup] input[test-id="password"]').type(password);
-    cy.get('[test-id=signup] input[test-id="password-confirm"]').type(password);
+  public fillSignup(user: User) {
+    cy.get('[test-id=signup] input[type="email"]').type(user.email);
+    cy.get('[test-id=signup] input[test-id="name"]').type(user.name);
+    cy.get('[test-id=signup] input[test-id="surname"]').type(user.surname);
+    cy.get('[test-id=signup] input[test-id="password"]').type(user.password);
+    cy.get('[test-id=signup] input[test-id="password-confirm"]').type(user.password);
   }
 
-  public clickSignup(): any {
+  public clickSignup() {
     cy.get('[test-id=signup] button[type=submit]').click();
-    return new HomePage();
+    return new OrganizationHomePage();
   }
 }

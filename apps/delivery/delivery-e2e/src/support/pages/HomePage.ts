@@ -8,7 +8,6 @@ import DeliveryListPage from "./DeliveryListPage";
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=join-the-community]');
   }
 
   public clickAddMovie(orgName: string) {
