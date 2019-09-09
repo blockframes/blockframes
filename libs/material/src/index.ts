@@ -21,4 +21,4 @@ export * from './lib/material/material.module';
 export * from './lib/material/+state/material.query';
 export * from './lib/material/+state/material.store';
 export * from './lib/material/+state/material.service';
-export * from './lib/material/+state/material.query';
+export * from './lib/material/+state/material.model';
