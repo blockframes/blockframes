@@ -8,6 +8,7 @@
       [satDatepicker]="picker"
       (dateChange)="rangeChange($event.value)"
       (blur)="rangeChange($event.value)"
+      (focus)="picker.open()"
     >
     <mat-error *ngIf="rangeForm.invalid">{{getErrorMessage()}}</mat-error>
     <sat-datepicker 
