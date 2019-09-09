@@ -21,4 +21,3 @@ export * from './lib/stakeholder/+state/stakeholder.model';
 export * from './lib/stakeholder/+state/stakeholder.query';
 export * from './lib/stakeholder/+state/stakeholder.service';
 export * from './lib/stakeholder/+state/stakeholder.store';
-export * from './lib/stakeholder/stakeholder.module';
