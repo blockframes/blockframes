@@ -111,7 +111,7 @@ export class OrganizationService {
 
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
     // get a user or create a ghost user when needed:
     const { uid } = await this.authService.getOrCreateUserByMail(member.email); // TODO: limit the number of requests per organizations!
 
@@ -173,7 +173,7 @@ export class OrganizationService {
   }
 
   public update(organization: Partial<Organization>) {
-    const organizationId = this.query.getValue().org.id;
+    const organizationId = this.query.id;
     return this.db.doc(`orgs/${organizationId}`).update(organization);
   }
 
@@ -187,7 +187,7 @@ export class OrganizationService {
   // the id out of the activeMembersArray.
   /* public async deleteActiveSigner(member: OrganizationMember) {
   public async deleteActiveSigner(member: OrganizationMember, action: OrganizationActionOld) {
-    const organizationId = this.query.getValue().org.id;
+    const organizationId = this.query.id;
     const actionData = await this.db.snapshot<OrganizationActionOld>(
       `orgs/${organizationId}/actions/${action.id}`
     );

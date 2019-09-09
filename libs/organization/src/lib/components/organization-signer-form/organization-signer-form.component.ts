@@ -52,7 +52,7 @@ export class OrganizationSignerFormComponent {
     const orgAddress = await this.service.getAddress();
     const memberName = this.member.name;
     const operationName = currentOperation.name;
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
 
     let tx: ActionTx;
     let feedback: TxFeedback;

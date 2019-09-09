@@ -48,7 +48,7 @@ export class OrganizationFormOperationComponent {
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
     const tx = CreateTx.addMember(orgAddress, operationId, memberAddress);
     const feedback = {
       confirmation: `You are about to blacklist ${removedMember.name} for ${operationName}`,
@@ -71,7 +71,7 @@ export class OrganizationFormOperationComponent {
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
     const tx = CreateTx.addMember(orgAddress, operationId, memberAddress);
     const feedback = {
       confirmation: `You are about to whitelist ${addedMember.name} for ${operationName}`,
@@ -89,7 +89,7 @@ export class OrganizationFormOperationComponent {
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
     const tx = CreateTx.modifyQuorum(orgAddress, operationId, newQuorum);
     const feedback = {
       confirmation: `You are about to set the quorum for ${operationName} to ${newQuorum}`,

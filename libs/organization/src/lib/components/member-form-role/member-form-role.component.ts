@@ -64,7 +64,7 @@ export class MemberFormRoleComponent {
     };
 
     const orgName = this.query.getValue().org.name;
-    const orgId = this.query.getValue().org.id;
+    const orgId = this.query.id;
     let feedback: TxFeedback;
     if (role === UserRole.admin){
       tx = CreateTx.addAdmin(orgAddress, userAddress, callback);
