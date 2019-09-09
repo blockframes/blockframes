@@ -8,12 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "ip-upload": {
-      "tags": ["ip", "upload"]
-    },
-    "ip-upload-e2e": {
-      "tags": []
-    },
     "ip": {
       "tags": ["ip"]
     },
@@ -28,9 +22,6 @@
     },
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
-    },
-    "eth-events-server": {
-      "tags": []
     },
     "movie-financing": {
       "tags": []
