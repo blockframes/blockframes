@@ -25,7 +25,6 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   step = this.steps.password;
   key: Key;
   encrypting$: Observable<boolean>;
-  redirectRoute: string;
   @ViewChild('downloadLink', {static: false}) downloadLink: ElementRef<HTMLAnchorElement>;
 
   constructor(
@@ -39,12 +38,6 @@ export class WalletAddKeyTunnelComponent implements OnInit {
 
   ngOnInit() {
     this.encrypting$ = this.keyQuery.selectLoading();
-
-    // TODO remove this ASAP see issue #617
-    // check if there is a ?redirect=<redirect url> in the route, otherwise use default redirect
-    this.route.queryParams.pipe(map(params => 'redirect' in params ? params.redirect : '/layout/o/account/wallet'))
-      .subscribe(redirectRoute => this.redirectRoute = redirectRoute);
-
   }
 
   async setPassword(password: string) {
@@ -90,7 +83,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
     if (!!this.walletQuery.getValue().tx) {
       this.router.navigateByUrl('/layout/o/account/wallet/send');
     } else {
-      this.router.navigateByUrl(this.redirectRoute);
+      this.router.navigateByUrl('/layout/o/account/wallet');
     }
   }
 }

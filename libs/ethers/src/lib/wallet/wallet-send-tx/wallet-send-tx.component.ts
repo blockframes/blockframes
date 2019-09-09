@@ -5,7 +5,7 @@ import { KeyManagerQuery, KeyManagerService } from "../../key-manager/+state";
 import { Wallet as EthersWallet } from "ethers";
 import { Router, ActivatedRoute } from "@angular/router";
 import { map } from "rxjs/operators";
-import { Wallet } from "../../types";
+import { Wallet, ActionTx } from "../../types";
 import { Key } from "@blockframes/utils";
 
 enum steps {
@@ -29,10 +29,9 @@ export class WalletSendTxTunnelComponent implements OnInit {
   activeKey: EthersWallet;
   wallet$: Observable<Wallet>;
   isDecrypting$: Observable<boolean>;
-  redirectRoute: string;
   isDeploying$ = new BehaviorSubject(false);
   isPending$ = new BehaviorSubject(false);
-  
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -45,11 +44,6 @@ export class WalletSendTxTunnelComponent implements OnInit {
   ngOnInit(){
     this.wallet$ = this.query.select();
     this.isDecrypting$ = this.keyManagerQuery.selectLoading();
-
-    // TODO remove this ASAP see issue #617
-    // check if there is a ?redirect=<redirect url> in the route, otherwise use default redirect
-    this.route.queryParams.pipe(map(params => 'redirect' in params ? params.redirect : '/layout/o/account/wallet'))
-      .subscribe(redirectRoute => this.redirectRoute = redirectRoute);
   }
 
   handleKeySelection(key: Key) {
@@ -90,7 +84,8 @@ export class WalletSendTxTunnelComponent implements OnInit {
     }
   }
 
-  handleRedirect() {
-    this.router.navigateByUrl(this.redirectRoute);
+  handleRedirect(route: string) {
+    this.walletService.deleteTxFeedback();
+    this.router.navigateByUrl(route);
   }
 }

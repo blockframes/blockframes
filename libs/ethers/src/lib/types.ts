@@ -37,13 +37,21 @@ export interface ActionTx extends Tx {
   callback?: (...args) => void;
 }
 
+export interface TxFeedback {
+  confirmation: string;
+  success: string;
+  redirectName: string;
+  redirectRoute: string;
+}
+
 /** The Wallet structure in the state
 * (**DO NOT CONFUSE WITH ETHERS'S WALLET**,
 * in Blockframes ethers's wallet will always be called `EthersWallet`)
 */
 export interface Wallet {
-  ensDomain: string,
-  address: string,
-  hasERC1077: boolean,
-  tx: ActionTx,
+  ensDomain: string;
+  address: string;
+  hasERC1077: boolean;
+  tx: ActionTx;
+  feedback: TxFeedback;
 }

@@ -17,7 +17,7 @@ import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.s
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx } from '@blockframes/ethers';
+import { CreateTx, TxFeedback } from '@blockframes/ethers';
 
 const Timestamp = firebase.firestore.Timestamp;
 
@@ -348,17 +348,25 @@ export class DeliveryService {
     }
   }
 
-  public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string) {
+  public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string, orgId: string) {
+    const name = `Delivery #${deliveryId}`; // TODO better delivery name (see with @ioaNikas)
     const callback = async () => {
       await Promise.all([
         this.db
           .collection('actions')
           .doc(deliveryHash)
-          .set({ name: `Delivery #${deliveryId}` }),
+          .set({ name }),
         this.signDelivery(deliveryId)
       ]);
     };
+    const feedback: TxFeedback = {
+      confirmation: `You are about to sign the delivery ${name}`,
+      success: `The delivery has been successfully signed !`,
+      redirectName: 'Back to Administration',
+      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+    }
     this.walletService.setTx(CreateTx.approveDelivery(orgAddress, deliveryHash, callback));
+    this.walletService.setTxFeedback(feedback);
   }
 
   /** Create a transaction to copy the template/movie materials into the delivery materials */

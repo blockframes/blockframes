@@ -1,6 +1,6 @@
 import { ControlContainer, FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationMember, OrganizationService } from '../../+state';
+import { OrganizationMember, OrganizationService, OrganizationQuery } from '../../+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
@@ -22,6 +22,7 @@ export class OrganizationFormOperationComponent {
     public controlContainer: ControlContainer,
     public walletService: WalletService,
     public service: OrganizationService,
+    public query: OrganizationQuery,
   ) { }
 
   public get control() {
@@ -39,14 +40,24 @@ export class OrganizationFormOperationComponent {
   }
 
   public async removeMember(id: string) {
-    const removedMember = this.control.get('members').value.find(member => member.uid === id);
+    const removedMember = this.control.get('members').value.find(member => member.uid === id) as OrganizationMember;
     const members = this.control.get('members').value.filter(member => member.uid !== id);
     this.control.get('members').patchValue(members);
 
     const memberAddress = await this.service.getMemberAddress(removedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.walletService.setTx(CreateTx.removeMember(orgAddress, operationId, memberAddress));
+    const operationName = this.control.get('name').value;
+    const orgId = this.query.getValue().org.id;
+    const tx = CreateTx.addMember(orgAddress, operationId, memberAddress);
+    const feedback = {
+      confirmation: `You are about to blacklist ${removedMember.name} for ${operationName}`,
+      success: `${removedMember.name} has been successfully blacklisted !`,
+      redirectName: 'Back to Administration',
+      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+    }
+    this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -59,7 +70,17 @@ export class OrganizationFormOperationComponent {
     const memberAddress = await this.service.getMemberAddress(addedMember.email);
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
-    this.walletService.setTx(CreateTx.addMember(orgAddress, operationId, memberAddress));
+    const operationName = this.control.get('name').value;
+    const orgId = this.query.getValue().org.id;
+    const tx = CreateTx.addMember(orgAddress, operationId, memberAddress);
+    const feedback = {
+      confirmation: `You are about to whitelist ${addedMember.name} for ${operationName}`,
+      success: `${addedMember.name} has been successfully whitelisted !`,
+      redirectName: 'Back to Administration',
+      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+    }
+    this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 
@@ -67,7 +88,17 @@ export class OrganizationFormOperationComponent {
     const orgAddress = await this.service.getAddress();
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
-    this.walletService.setTx(CreateTx.modifyQuorum(orgAddress, operationId, newQuorum));
+    const operationName = this.control.get('name').value;
+    const orgId = this.query.getValue().org.id;
+    const tx = CreateTx.modifyQuorum(orgAddress, operationId, newQuorum);
+    const feedback = {
+      confirmation: `You are about to set the quorum for ${operationName} to ${newQuorum}`,
+      success: 'The quorum has been successfully updated !',
+      redirectName: 'Back to Administration',
+      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+    }
+    this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

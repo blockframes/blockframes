@@ -31,14 +31,11 @@
           </div>
         </ng-container>
         <ng-template #isDeployed>
-          <article>
-            <h2>Are you sure ?</h2>
-            <img src="/assets/images/wait_380.png">
-          </article>
-          <article>
-            <button mat-flat-button color="accent" (click)="handleConfirmation()">Yes</button>
-            <a mat-button routerLink="/layout/o/account/wallet">No</a>
-          </article>
+          <h2>Are you sure ?</h2>
+          <img src="/assets/images/wait_380.png">
+          <p>{{wallet.feedback.confirmation}}</p>
+          <button mat-raised-button color="accent" (click)="handleConfirmation()">Yes</button>
+          <a mat-button [routerLink]="wallet.feedback.redirectRoute">No</a>
         </ng-template>
       </ng-template>
     </section>
@@ -53,12 +50,11 @@
       </ng-container>
       <ng-template #txMined>
         <div fxLayout="column" fxLayoutAlign="start center">
-          <!-- TODO DO NOT HARDCODE FEEDBACK MESSAGE : ISSUE 671 -->
           <feedback-message
             title="Congratulations !"
-            subTitle="Your transaction was successfully sent to the Blockchain !"
-            buttonMessage="Back to wallet"
-            (redirectUser)="handleRedirect()">
+            [subTitle]="wallet.feedback.success"
+            [buttonMessage]="wallet.feedback.redirectName"
+            (redirectUser)="handleRedirect(wallet.feedback.redirectRoute)">
           ></feedback-message>
         </div>
       </ng-template>
@@ -67,7 +63,7 @@
 </ng-container>
 <ng-template #walletLoading>
   <div class="wallet-loading">
-    <p>We are loading your informations...</p>
+    <p>We are loading your information...</p>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </div>
 </ng-template>

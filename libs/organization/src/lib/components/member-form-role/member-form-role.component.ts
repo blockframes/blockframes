@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { UserRole, OrganizationService, OrganizationQuery, OrganizationMember } from '../../+state';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx, ActionTx } from '@blockframes/ethers';
+import { CreateTx, ActionTx, TxFeedback } from '@blockframes/ethers';
 import { Router } from '@angular/router';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 
@@ -63,13 +63,29 @@ export class MemberFormRoleComponent {
       this.permissionsService.updateMembersRole(members);
     };
 
+    const orgName = this.query.getValue().org.name;
+    const orgId = this.query.getValue().org.id;
+    let feedback: TxFeedback;
     if (role === UserRole.admin){
-      tx = CreateTx.addAdmin(orgAddress, userAddress, callback)
+      tx = CreateTx.addAdmin(orgAddress, userAddress, callback);
+      feedback = {
+        confirmation: `You are about to promote ${this.name} as an Admin of ${orgName}`,
+        success: `${this.name} has been successfully promoted to the Admin role !`,
+        redirectName: 'Back to Administration',
+        redirectRoute: `/layout/o/organization/${orgId}/members`,
+      }
     } else if (role === UserRole.member && this.permissionsQuery.superAdminCount >= 2) {
       tx = CreateTx.removeAdmin(orgAddress, userAddress, callback);
+      feedback = {
+        confirmation: `You are about to revoke ${this.name} as an Admin of ${orgName}`,
+        success: `${this.name} has been successfully revoked from the Admin role !`,
+        redirectName: 'Back to Administration',
+        redirectRoute: `/layout/o/organization/${orgId}/members`,
+      }
     }
 
     this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }

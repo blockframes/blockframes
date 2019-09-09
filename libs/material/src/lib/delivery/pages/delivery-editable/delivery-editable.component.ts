@@ -15,7 +15,7 @@ import { createMaterialFormList, createMaterialFormGroup } from '../../forms/mat
 import { FormGroup } from '@angular/forms';
 import { applyTransaction } from '@datorama/akita';
 import { utils } from 'ethers';
-import { OrganizationService } from '@blockframes/organization';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormList } from '@blockframes/utils';
 
 @Component({
@@ -48,6 +48,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     private service: DeliveryService,
     private materialStore: MaterialStore,
     private organizationService: OrganizationService,
+    private organizationQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -240,8 +241,9 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
     const deliveryHash = utils.id(jsonDelivery + jsonMaterials);
     const orgAddress = await this.organizationService.getAddress();
+    const orgId = this.organizationQuery.getValue().org.id;
 
-    this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash);
+    this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash, orgId);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 

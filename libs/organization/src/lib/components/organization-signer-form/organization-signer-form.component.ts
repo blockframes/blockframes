@@ -1,11 +1,11 @@
 import { ControlContainer } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationOperation, OrganizationMember, OrganizationService } from '../../+state';
+import { OrganizationOperation, OrganizationMember, OrganizationService, OrganizationQuery } from '../../+state';
 import { MatSlideToggleChange } from '@angular/material';
 import { PermissionsQuery } from '../../permissions/+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx } from '@blockframes/ethers';
+import { CreateTx, ActionTx, TxFeedback } from '@blockframes/ethers';
 
 @Component({
   selector: 'organization-signer-form',
@@ -21,6 +21,7 @@ export class OrganizationSignerFormComponent {
     public controlContainer: ControlContainer,
     private permissionQuery: PermissionsQuery,
     private service: OrganizationService,
+    private query: OrganizationQuery,
     private router: Router,
     private walletService: WalletService,
   ) { }
@@ -49,11 +50,32 @@ export class OrganizationSignerFormComponent {
 
     const memberAddress = await this.service.getMemberAddress(this.member.email);
     const orgAddress = await this.service.getAddress();
+    const memberName = this.member.name;
+    const operationName = currentOperation.name;
+    const orgId = this.query.getValue().org.id;
 
-    toggle.checked
-      ? this.walletService.setTx(CreateTx.addMember(orgAddress, id, memberAddress))
-      : this.walletService.setTx(CreateTx.removeMember(orgAddress, id, memberAddress));
+    let tx: ActionTx;
+    let feedback: TxFeedback;
+    if(toggle.checked) {
+      tx = CreateTx.addMember(orgAddress, id, memberAddress);
+      feedback = {
+        confirmation: `You are about to whitelist ${memberName} for ${operationName}`,
+        success: `${memberName} has been successfully whitelisted !`,
+        redirectName: 'Back to Administration',
+        redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      }
+    } else {
+      tx = CreateTx.removeMember(orgAddress, id, memberAddress);
+      feedback = {
+        confirmation: `You are about to blacklist ${memberName} for ${operationName}`,
+        success: `${memberName} has been successfully blacklisted !`,
+        redirectName: 'Back to Administration',
+        redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      }
+    }
 
+    this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 }
