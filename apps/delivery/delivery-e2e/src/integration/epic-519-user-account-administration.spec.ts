@@ -1,11 +1,8 @@
 /// <reference types="cypress" />
 import {
-  EditProfilePage,
   HomePage,
   LandingPage,
-  LoginPage,
-  OrganizationFormPage,
-  ViewProfilePage
+  LoginPage
 } from '../support/pages';
 
 function randomEmail(): string {
@@ -32,5 +29,6 @@ describe('story #529 - account creation', () => {
     p2.switchMode();
     p2.fillSignup({ email, password, passwordConfirm: password });
     const p3: HomePage = p2.clickSignup();
+    const p4: LoginPage = p3.logout();
   });
 });

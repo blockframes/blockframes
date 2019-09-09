@@ -1,7 +1,8 @@
-import { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeamWorkPage, DeliveryTeamWorkPage } from ".";
+import { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeamWorkPage, DeliveryTeamWorkPage, LoginPage } from ".";
 
 export default abstract class NavbarPage {
   constructor() {
+    cy.get('[page-id=navbar]');
   }
 
   public assertIsEncrypting() {
@@ -13,13 +14,14 @@ export default abstract class NavbarPage {
     return new OrganizationFormPage();
   }
 
-  public openLogout() {
-    cy.get('mat-toolbar button.profile-button').click();
+  public openProfileMenu() {
+    cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
   }
 
-  public clickLogout() {
-    cy.get('button[testId=logout]').click();
-    return new LandingPage();
+  public logout() {
+    this.openProfileMenu();
+    cy.get('button[test-id=logout]').click();
+    return new LoginPage();
   }
 
   public clickHome() {
@@ -40,10 +42,6 @@ export default abstract class NavbarPage {
   public openNotifications() {
     cy.wait(2000);
     cy.get('.notification-button').click();
-  }
-
-  public openUserMenu() {
-    cy.get('mat-icon').should('contain', 'account_circle').contains('account_circle').click();
   }
 
   public clickProfile() {

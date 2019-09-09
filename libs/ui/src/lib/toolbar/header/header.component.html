@@ -1,9 +1,9 @@
-<mat-toolbar class="mat-elevation-z2 top-mat-toolbar" fxLayout="row-reverse" fxLayoutAlign="space-between center">
+<mat-toolbar page-id="navbar" class="mat-elevation-z2 top-mat-toolbar" fxLayout="row-reverse" fxLayoutAlign="space-between center">
   <!-- Applications panel-->
   <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
     <mat-icon svgIcon="applications"></mat-icon>
   </button>
-  
+
   <!-- Dynamic content -->
   <section class="app-icon-container-toolbar">
     <ng-content select="[app-icon]"></ng-content>
