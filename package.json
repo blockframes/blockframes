@@ -48,7 +48,8 @@
     "help": "./node_modules/.bin/nx help",
     "contracts:build": "npx waffle ./waffle-config.json",
     "affected": "./node_modules/.bin/nx affected",
-    "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000"
+    "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
+    "analyze:catalog-marketplace": "webpack-bundle-analyzer dist/apps/catalog-marketplace/stats.json --port=8000"
   },
   "private": true,
   "dependencies": {
