@@ -1,36 +1,59 @@
 <mat-card>
-    <a [routerLink]="movieLink" >
+  <a [routerLink]="[movieLink]" >
 
-      <!-- Movie Poster -->
-      <div class="img-container clickable-item">
-        <ng-container *ngIf="movie.poster; else: defaultPoster">
-            <img mat-card-image [src]="movie.poster" alt="Movie poster link" />
-        </ng-container>
+    <!-- Movie Poster -->
+    <div class="img-container clickable-item">
+      <ng-container *ngIf="movie.main.poster; else: defaultPoster">
+        <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
+      </ng-container>
 
-        <ng-template #defaultPoster>
-            <img
-              class="mat-card-image"
-              src="/assets/images/default-movie-poster.png"
-              alt="Movie poster link"/>
-        </ng-template>
-      </div>
-    </a>
+      <ng-template #defaultPoster>
+        <img
+          class="mat-card-image"
+          src="/assets/images/default-movie-poster.png"
+          alt="Movie poster link"/>
+      </ng-template>
 
-    <!-- Movie Informations -->
-    <mat-card-content>
-      <mat-card-title-group>
-        <mat-card-title>{{ movie.title.original }}</mat-card-title>
-        <mat-card-subtitle *ngFor="let director of movie.directors">
-        {{ director.firstName }} {{ director.lastName }}
-        </mat-card-subtitle>
-      </mat-card-title-group>
-      <span *ngIf="productionYear">Production Year {{ movie.productionYear }}</span>
-    </mat-card-content>
+        <!-- Movie Menu -->
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon color="primary">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item [matMenuTriggerFor]="subMenu">
+          <mat-icon color="primary">control_camera</mat-icon>
+          <span>Open in...</span>
+        </button>
+        <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
+          <mat-icon color="primary">edit</mat-icon>
+          <span>Edit</span>
+        </a>
+        <button mat-menu-item (click)="delete(movie)">
+          <mat-icon color="primary">delete_outline</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+      <mat-menu #subMenu="matMenu">
+        <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
+      </mat-menu>
+    </div>
+  </a>
 
-    <!-- Movie action button -->
-    <mat-card-actions>
-      <ng-content></ng-content>
-    </mat-card-actions>
+
+
+  <!-- Movie Informations -->
+  <mat-card-content>
+    <mat-card-title-group>
+      <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+      <mat-card-subtitle *ngFor="let director of movie.main.directors">
+      {{ director.firstName }} {{ director.lastName }}
+      </mat-card-subtitle>
+    </mat-card-title-group>
+    <span *ngIf="productionYear">Production Year {{ movie.main.productionYear }}</span>
+  </mat-card-content>
+
+  <!-- Movie action button -->
+  <mat-card-actions>
+    <ng-content></ng-content>
+  </mat-card-actions>
 
 </mat-card>
-

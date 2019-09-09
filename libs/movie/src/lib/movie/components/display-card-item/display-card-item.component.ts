@@ -1,4 +1,4 @@
-import { MovieMain } from './../../+state/movie.model';
+import { Movie } from './../../+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
@@ -8,7 +8,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayCardItemComponent {
-  @Input() movie: MovieMain;
+  @Input() movie: Movie;
   @Input() movieLink: string;
   @Input() productionYear: false;
 }

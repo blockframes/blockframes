@@ -11,9 +11,12 @@
         </a>
       </article>
       <article fxLayout="row wrap" fxLayoutAlign="start space-between">
-
         <!-- Movie Card -->
-       <movie-display-card-item *ngFor="let movie of (movies$ | async)" [movie]="movie.main"></movie-display-card-item>
+       <movie-display-card-item
+        *ngFor="let movie of (movies$ | async)"
+        [movie]="movie"
+        [movieLink]="appName(movie.id)">
+      </movie-display-card-item>
       </article>
     </ng-template>
   </section>
