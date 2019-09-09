@@ -12,7 +12,6 @@ import { Movie } from '../../+state/movie.model';
 export class MoviePickerComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public isLoading$: Observable<boolean>;
-  @Output() selected = new EventEmitter<string>();
   @Output() selectedMovieId = new EventEmitter<string>();
 
   constructor(private query: MovieQuery) {}
@@ -23,7 +22,6 @@ export class MoviePickerComponent implements OnInit {
   }
 
   public selectedId(movieId: string) {
-    console.log(movieId);
     this.selectedMovieId.emit(movieId);
   }
 }

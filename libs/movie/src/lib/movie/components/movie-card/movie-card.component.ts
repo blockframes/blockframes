@@ -1,16 +1,16 @@
-import { Movie } from './../../+state/movie.model';
+import { Movie } from '../../+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: '[movie] movie-display-card-item',
-  templateUrl: './display-card-item.component.html',
-  styleUrls: ['./display-card-item.component.scss'],
+  selector: '[movie] movie-card',
+  templateUrl: './movie-card.component.html',
+  styleUrls: ['./movie-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieDisplayCardItemComponent {
+export class MovieCardComponent {
   @Input() movie: Movie;
   @Output() navigate = new EventEmitter<string>();
-  @Input() productionYear: false;
+  @Input() displayProductionYear: false;
 
   public navigateTo(movieId: string) {
     this.navigate.emit(movieId);

@@ -1,6 +1,5 @@
 // Components
-import { MovieDisplayCardItemComponent } from '@blockframes/movie/movie/components/display-card-item/display-card-item.component';
-
+import { MovieCardModule } from '@blockframes/movie'
 // Pages
 import { MarketplaceSearchComponent } from './search.component';
 
@@ -32,14 +31,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
 
 @NgModule({
-  declarations: [MarketplaceSearchComponent, MovieDisplayCardItemComponent],
+  declarations: [MarketplaceSearchComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    MovieDisplayListModule,
+    MovieCardModule,
+
     // Material
     MatIconModule,
     MatDividerModule,

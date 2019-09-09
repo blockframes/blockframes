@@ -14,7 +14,7 @@
         </ng-template>
       </a>
 
-        <!-- Movie Menu -->
+        <!-- Movie Menu
       <a mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon color="primary">more_vert</mat-icon>
       </a>
@@ -34,7 +34,7 @@
       </mat-menu>
       <mat-menu #subMenu="matMenu">
         <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-      </mat-menu>
+      </mat-menu> -->
     </div>
 
 
@@ -46,7 +46,7 @@
       {{ director.firstName }} {{ director.lastName }}
       </mat-card-subtitle>
     </mat-card-title-group>
-    <span *ngIf="productionYear">Production Year {{ movie.main.productionYear }}</span>
+    <span *ngIf="displayProductionYear">Production Year {{ movie.main.productionYear }}</span>
   </mat-card-content>
 
   <!-- Movie action button -->

@@ -19,7 +19,7 @@ export class DeliveryAddFindMovieComponent implements OnInit {
     this.store.resetWizard();
   }
 
-  public async selectMovie(movieId: string): Promise<boolean> {
-    return this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
+  public async selectMovie(movieId: string) {
+     this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
 }
