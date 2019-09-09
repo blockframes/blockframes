@@ -4,12 +4,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'template-material-repertory',
-  templateUrl: './template-material-repertory.component.html',
-  styleUrls: ['./template-material-repertory.component.scss'],
+  selector: 'template-material-list',
+  templateUrl: './template-material-list.component.html',
+  styleUrls: ['./template-material-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateMaterialRepertoryComponent {
+export class TemplateMaterialListComponent {
   @Input()
   set materials(materials: Material[]) {
     this.dataSource = new MatTableDataSource(materials);

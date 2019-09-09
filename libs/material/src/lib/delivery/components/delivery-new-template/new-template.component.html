@@ -1,31 +1,36 @@
-<div mat-dialog-content>
-  <h2>Save as a new template</h2>
-  <mat-form-field appearance="outline" fxLayoutAlign="center">
-    <mat-label>Template name</mat-label>
-    <input [formControl]="templateNameControl" #templateName matInput placeholder="New template name"  required />
-  </mat-form-field>
-</div>
-<p *ngIf="isTemplateUpdate">This template already exists, you will update it.</p>
-<div mat-dialog-actions fxLayoutAlign="center">
-  <button mat-raised-button color="basic" (click)="close()" class="cancel-button mat-elevation-z0">Cancel</button>
-  <button
-    *ngIf="!isTemplateUpdate"
-    mat-raised-button
-    color="accent"
-    (click)="saveTemplate(templateName.value)"
-    [disabled]="!templateName.value"
-    class="mat-elevation-z0"
-  >
-    Save Template
-  </button>
-  <button
-    *ngIf="isTemplateUpdate"
-    mat-raised-button
-    color="accent"
-    (click)="updateTemplate(templateName.value)"
-    [disabled]="!templateName.value"
-    class="mat-elevation-z0"
-  >
-    Update Template
-  </button>
-</div>
+<section>
+  <article mat-dialog-content fxLayout="column" fxLayoutAlign="space-between center">
+    <h3>Save as a new template</h3>
+    <span>Choose a title for your template</span>
+    <mat-form-field appearance="outline">
+      <mat-label>Template title</mat-label>
+      <input [formControl]="templateNameControl"
+      #templateName
+      matInput
+      placeholder="Template title"
+      required />
+    </mat-form-field>
+    <img src="/assets/images/create_template_380.png" alt="Add Template Illustration" />
+  </article>
+
+  <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
+    <button
+      *ngIf="!isTemplateUpdate; else: updating"
+      mat-flat-button
+      color="accent"
+      (click)="saveTemplate(templateName.value)"
+      [disabled]="!templateName.value">
+      Save Template
+    </button>
+    <ng-template #updating>
+      <button
+        mat-flat-button
+        color="accent"
+        (click)="updateTemplate(templateName.value)"
+        [disabled]="!templateName.value">
+        Update Template
+      </button>
+    </ng-template>
+    <a testId="templateCreate" mat-button color="primary" (click)="close()">Cancel</a>
+  </article>
+</section>

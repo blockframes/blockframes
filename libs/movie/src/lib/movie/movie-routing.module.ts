@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
-import { StakeholderViewComponent } from '../stakeholder/pages/stakeholder-view/stakeholder-view.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { ImportStepperComponent } from './components/import/import-stepper/import-stepper.component';
@@ -43,7 +42,6 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', component: MovieViewComponent },
-      { path: 'teamwork', component: StakeholderViewComponent },
       { path: 'edit', component: MovieEditableComponent }
     ]
   }

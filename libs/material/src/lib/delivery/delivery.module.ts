@@ -6,9 +6,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 
 // Components
 import { NewTemplateComponent } from './components/delivery-new-template/new-template.component';
-import { StakeholderRepertoryComponent } from './components/stakeholder-repertory/stakeholder-repertory.component';
-import { StakeholderItemComponent } from './components/stakeholder-item/stakeholder-item.component';
-import { DeliverySignComponent } from './components/delivery-sign/delivery-sign.component';
 import { DeliveryActionsComponent } from './components/delivery-actions/delivery-actions.component';
 import { DeliveryRepertoryComponent } from './components/delivery-repertory/delivery-repertory.component';
 import { DeliveryInformationsDatesDisplayComponent } from './components/delivery-informations-dates-display/delivery-informations-dates-display.component';
@@ -28,7 +25,6 @@ import { DeliveryStakeholdersRepertoryComponent } from './components/delivery-st
 // Pages
 import { DeliveryListComponent } from './pages/delivery-list/delivery-list.component';
 import { DeliveryEditableComponent } from './pages/delivery-editable/delivery-editable.component';
-import { DeliveryTemplateListComponent } from './pages/delivery-template-list/delivery-template-list.component';
 import { DeliveryAddFindMovieComponent } from './pages/delivery-add-find-movie/delivery-add-find-movie.component';
 import { DeliveryAddChooseStarterComponent } from './pages/delivery-add-choose-starter/delivery-add-choose-starter.component';
 import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-template-picker/delivery-add-template-picker.component';
@@ -94,12 +90,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryAddSettingsComponent,
     DeliveryAddCompleteComponent,
     NewTemplateComponent,
-    DeliveryTemplateListComponent,
-    StakeholderRepertoryComponent,
-    StakeholderItemComponent,
     DeliveryActionsComponent,
     DeliveryInformationsEditableComponent,
-    DeliverySignComponent,
     DeliveryRepertoryComponent,
     DeliveryInformationsDatesDisplayComponent,
     DeliveryInformationsDatesFormComponent,
@@ -162,6 +154,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatSortModule,
     MatStepperModule
   ],
-  entryComponents: [NewTemplateComponent, DeliverySignComponent]
+  entryComponents: [NewTemplateComponent]
 })
 export class DeliveryModule {}
