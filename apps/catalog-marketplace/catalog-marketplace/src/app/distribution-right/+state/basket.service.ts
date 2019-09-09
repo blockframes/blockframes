@@ -1,60 +1,54 @@
-import { Organization } from '@blockframes/organization';
+import { BasketQuery } from './basket.query';
 import { FireQuery } from '@blockframes/utils';
 import { Injectable } from '@angular/core';
-import { DistributionRight, BasketStatus, Price, CatalogBasket } from './basket.model';
+import {
+  CatalogBasket,
+  DistributionRight,
+  createBasket
+} from './basket.model';
 import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({ providedIn: 'root' })
 export class BasketService {
-  constructor(private db: FireQuery, private organizationQuery: OrganizationQuery) {}
+  constructor(
+    private db: FireQuery,
+    private organizationQuery: OrganizationQuery,
+    private basketQuery: BasketQuery
+  ) {}
 
-  public add(distributionRight: DistributionRight) {
-    // check if the default value has already been set
-    if (this.organizationQuery.getValue().org.catalog === null) {
-      this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({
-        catalog: {
-          price: {
-            amount: 0,
-            currency: 'us-dollar'
-          },
-          status: BasketStatus.pending,
-          rights: [distributionRight]
-        }
-      });
-    } else {
-      const newDistributionRight = [
-        ...this.organizationQuery.getValue().org.catalog.rights,
-        distributionRight
-      ];
-      this.db.doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`).update({
-        catalog: {
-          price: this.organizationQuery.getValue().org.catalog.price,
-          status: this.organizationQuery.getValue().org.catalog.status,
-          rights: newDistributionRight
-        }
-      });
-    }
+  public addBasket(catalogBasket: CatalogBasket) {
+    const id = this.db.createId();
+    const orgId = this.organizationQuery.id;
+    const newBasket: CatalogBasket = createBasket({
+      id,
+      orgId,
+      ...catalogBasket
+    });
+    this.db.doc<CatalogBasket>(`baskets/${id}`).set(newBasket);
   }
 
-  public addBid(price: Price) {
-    const updatedCatalog: CatalogBasket = {
-      price: { amount: price.amount, currency: price.currency },
-      status: this.organizationQuery.getValue().org.catalog.status,
-      rights: this.organizationQuery.getValue().org.catalog.rights
+  createDistributionRight(right: Partial<DistributionRight> = {}) {
+    return {
+      id: this.db.createId(),
+      movieId: right.movieId,
+      medias: right.medias,
+      languages: right.languages,
+      dubbings: right.dubbings,
+      subtitles: right.subtitles,
+      duration: {
+        from: right.duration.from,
+        to: right.duration.to
+      },
+      territories: right.territories
     };
+  }
+
+  /*   public removeRight(id: string) {
+    const rightsToRemove: CatalogBasket[] = this.organizationQuery
+      .getValue()
+      .org.catalog.filter(catalog => catalog.rights.id !== id);
     this.db
       .doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`)
-      .update({ catalog: updatedCatalog });
-  }
-
-  public removeRight(id: string) {
-    const updatedCatalog: CatalogBasket = {
-      price: this.organizationQuery.getValue().org.catalog.price,
-      status: this.organizationQuery.getValue().org.catalog.status,
-      rights: this.organizationQuery.getValue().org.catalog.rights.filter(right => right.id !== id)
-    };
-    this.db
-      .doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`)
-      .update({ catalog: updatedCatalog });
-  }
+      .update({ catalog: rightsToRemove });
+  } */
 }

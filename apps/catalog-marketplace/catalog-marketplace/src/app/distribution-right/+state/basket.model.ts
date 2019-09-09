@@ -39,8 +39,10 @@ export interface DistributionRight {
 }
 
 export interface CatalogBasket {
+  id: string;
+  orgId: string;
   status: BasketStatus;
-  rights: DistributionRight[];
+  rights: DistributionRight;
   price: Price;
 }
 
@@ -60,9 +62,11 @@ export interface MovieData {
  */
 export function createBasket(basket: Partial<CatalogBasket> = {}) {
   return {
+    id: basket.id,
+    orgId: basket.orgId,
     status: BasketStatus.pending,
     price: 0,
-    rights: [],
+    rights: basket.rights,
     ...basket
   } as CatalogBasket;
 }
@@ -81,4 +85,13 @@ export function createMovieDetails(details: Partial<MovieData> = {}) {
       ...details
     } as MovieData
   ];
+}
+
+export function createBaseBasket(basket: Partial<CatalogBasket>) {
+  return {
+    status: BasketStatus.pending,
+    price: 0,
+    rights: basket.rights,
+    ...basket
+  } as CatalogBasket;
 }

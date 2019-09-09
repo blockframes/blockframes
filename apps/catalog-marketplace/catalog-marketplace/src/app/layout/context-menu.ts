@@ -38,7 +38,7 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/o/catalog/selection',
+    route: '/layout/o/catalog/:basketId/selection',
     items: [
       {
         name: 'home',

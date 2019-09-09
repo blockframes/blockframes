@@ -57,7 +57,7 @@ export abstract class StateActiveGuard<T> implements CanActivate, CanDeactivate<
       console.error(`Parameter ${paramNotFound} has not been found`);
       return this.router.parseUrl(this.urlFallback);
     }
-
+    
     return new Promise((res, rej) => {
       this.subscription = this.query(route.params).pipe(
         tap(entity => applyTransaction(() => {

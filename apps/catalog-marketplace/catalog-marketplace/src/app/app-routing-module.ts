@@ -1,4 +1,3 @@
-import { MovieListGuard } from '@blockframes/movie';
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -78,15 +77,23 @@ export const routes: Routes = [
               },
               {
                 path: 'selection',
-                // TODO MF delete OrganizationGuard, when CatalogMarketplaceBasketGuard is ready
-                canActivate: [MovieListGuard, OrganizationGuard, CatalogBasketGuard],
-                loadChildren: () =>
-                  import('./pages/selection/selection.module').then(m => m.SelectionModule)
-              },
-              {
-                path: 'success',
-                loadChildren: () =>
-                import('./components/completion.module').then(m => m.CatalogCompletionModule)
+                canActivate: [CatalogBasketGuard],
+                canDeactivate: [CatalogBasketGuard],
+                children: [
+                  {
+                    path: '', redirectTo: 'overview', pathMatch: 'full'
+                  },
+                  {
+                    path: 'overview',
+                    loadChildren: () =>
+                      import('./movie/selection/selection.module').then(m => m.SelectionModule)
+                  },
+                  {
+                    path: 'success',
+                    loadChildren: () =>
+                      import('./components/completion.module').then(m => m.CatalogCompletionModule)
+                  }
+                ]
               },
               {
                 path: ':movieId',

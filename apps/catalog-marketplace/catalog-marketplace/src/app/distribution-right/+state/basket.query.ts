@@ -1,7 +1,8 @@
+import { Observable } from 'rxjs/internal/Observable';
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { BasketStore, BasketState } from './basket.store';
-import { DistributionRight, CatalogBasket } from './basket.model';
+import { DistributionRight } from './basket.model';
 
 @Injectable({ providedIn: 'root' })
 export class BasketQuery extends QueryEntity<BasketState, DistributionRight> {
@@ -10,9 +11,7 @@ export class BasketQuery extends QueryEntity<BasketState, DistributionRight> {
     super(store);
   }
 
-  getBasket(): CatalogBasket {
-    const rights = this.getAll();
-    const { status, price } = this.getValue();
-    return { rights, status, price };
+  get distributionRight(): Observable<DistributionRight> | Observable<DistributionRight[]> {
+    return this.selectActive()
   }
 }

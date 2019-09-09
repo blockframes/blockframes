@@ -1,11 +1,10 @@
+import { BasketQuery } from '../../distribution-right/+state/basket.query';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { MovieData, DistributionRight } from './../../distribution-right/+state/basket.model';
+import { MovieData, DistributionRight } from '../../distribution-right/+state/basket.model';
 import { Component, OnInit } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
 import { staticModels, MovieQuery } from '@blockframes/movie';
 import { FormControl } from '@angular/forms';
 import { BasketService } from '../../distribution-right/+state/basket.service';
-import { BasketQuery } from '../../distribution-right/+state/basket.query';
 
 @Component({
   selector: 'catalog-selection',
@@ -16,18 +15,23 @@ import { BasketQuery } from '../../distribution-right/+state/basket.query';
 export class CatalogSelectionComponent implements OnInit {
   public priceControl: FormControl = new FormControl(null);
   public currencyList: string[];
-  public selectedCurrency: string; 
+  public selectedCurrency: string;
+  public movieDistributionRights: MovieData;
 
   constructor(
-    private orgQuery: OrganizationQuery,
     private basketService: BasketService,
     private movieQuery: MovieQuery,
     private basketQuery: BasketQuery
   ) {}
   ngOnInit() {
     this.currencyList = staticModels['MOVIE_CURRENCIES'].map(key => key.slug);
-    console.log(this.basketQuery.getBasket())
+/*     this.basketQuery.distributionRight.subscribe(right => {
+      this.movieDistributionRights = this.createRightDetail(right)
+    }; */
+    console.log(this.basketQuery.getAll())
+    console.log(this.basketQuery.selectActive())
   }
+  // TTHERE IS NO ACTIVE STATE CAUSE WE ARE FILTERING IT WITH THE QUERY, SEE THE GURAD FOR EXAMPLE
 
   private createRightDetail(detail: DistributionRight) {
     return {
@@ -48,13 +52,10 @@ export class CatalogSelectionComponent implements OnInit {
   }
 
   public deleteDistributionRight(rightId: string) {
-    this.basketService.removeRight(rightId);
+/*     this.basketService.removeRight(rightId); */
   }
 
   public setPriceCurrency() {
-    this.basketService.addBid({
-      amount: this.priceControl.value,
-      currency: 'euro'
-    });
+    console.log('not implemented yet, modeling not clear');
   }
 }

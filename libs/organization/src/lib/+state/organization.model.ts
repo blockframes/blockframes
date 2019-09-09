@@ -1,5 +1,5 @@
+import { CatalogBasket } from './../../../../../apps/catalog-marketplace/catalog-marketplace/src/app/distribution-right/+state/basket.model';
 /** Gives information about an application */
-import { CatalogBasket } from '@blockframes/catalog-marketplace';
 import { AppDetails } from '@blockframes/utils';
 
 export const enum AppStatus {
@@ -66,7 +66,7 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  catalog: CatalogBasket[]; // distribution rights which belongs to this organization
+  catalog: CatalogBasket[],
   logo?: string;
 }
 
