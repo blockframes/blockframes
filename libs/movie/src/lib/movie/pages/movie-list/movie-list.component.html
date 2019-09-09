@@ -15,7 +15,7 @@
        <movie-display-card-item
         *ngFor="let movie of (movies$ | async)"
         [movie]="movie"
-        [movieLink]="appName(movie.id)">
+        (navigate)="navigateToDeliveries($event)">
       </movie-display-card-item>
       </article>
     </ng-template>

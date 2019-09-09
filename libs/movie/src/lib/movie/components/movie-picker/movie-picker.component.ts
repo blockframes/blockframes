@@ -13,12 +13,17 @@ export class MoviePickerComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public isLoading$: Observable<boolean>;
   @Output() selected = new EventEmitter<string>();
-  @Input() movieLink: string;
+  @Output() selectedMovieId = new EventEmitter<string>();
 
   constructor(private query: MovieQuery) {}
 
   ngOnInit() {
     this.movies$ = this.query.selectAll();
     this.isLoading$ = this.query.selectLoading();
+  }
+
+  public selectedId(movieId: string) {
+    console.log(movieId);
+    this.selectedMovieId.emit(movieId);
   }
 }
