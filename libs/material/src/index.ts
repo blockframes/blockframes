@@ -10,9 +10,15 @@ export * from './lib/delivery/guards/delivery-list.guard';
 // Template
 export * from './lib/template/template.module';
 // Template State
-export * from './lib/template/+state';
+export * from './lib/template/+state/template.query';
+export * from './lib/template/+state/template.store';
+export * from './lib/template/+state/template.service';
+export * from './lib/template/+state/template.model';
 
 // Material
 export * from './lib/material/material.module';
 // Material State
-export * from './lib/material/+state';
+export * from './lib/material/+state/material.query';
+export * from './lib/material/+state/material.store';
+export * from './lib/material/+state/material.service';
+export * from './lib/material/+state/material.query';

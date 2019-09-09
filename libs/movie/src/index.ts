@@ -17,6 +17,9 @@ export { default as staticModels } from './lib/movie/staticModels';
 export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';
 
 // Stakeholder exports
-export * from './lib/stakeholder/+state';
+export * from './lib/stakeholder/+state/stakeholder.model';
+export * from './lib/stakeholder/+state/stakeholder.query';
+export * from './lib/stakeholder/+state/stakeholder.service';
+export * from './lib/stakeholder/+state/stakeholder.store';
 export * from './lib/stakeholder/stakeholder.module';
 export { StakeholderRepertoryComponent } from './lib/stakeholder/components/stakeholder-repertory/stakeholder-repertory.component';
