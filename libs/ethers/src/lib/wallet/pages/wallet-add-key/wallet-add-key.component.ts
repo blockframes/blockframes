@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from "@angular/core";
-import { KeyManagerService, KeyManagerQuery } from "../../key-manager/+state";
-import { WalletQuery } from "../+state";
+import { KeyManagerService, KeyManagerQuery } from "../../../key-manager/+state";
+import { WalletQuery } from "../../+state";
 import { Observable } from "rxjs";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
-import { map } from "rxjs/operators";
 import { Key } from "@blockframes/utils";
 
 enum steps {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { KeyManagerService, KeyManagerQuery } from "../../key-manager/+state";
-import { WalletQuery } from "../+state";
+import { KeyManagerService, KeyManagerQuery } from "../../../key-manager/+state";
+import { WalletQuery } from "../../+state";
 import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { Key } from "@blockframes/utils";
