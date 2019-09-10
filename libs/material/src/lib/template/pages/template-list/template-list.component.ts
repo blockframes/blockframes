@@ -23,7 +23,6 @@ export class TemplateListComponent implements OnInit {
   public dataSource: MatTableDataSource<Template>;
   public selection = new SelectionModel<Template>(true, []);
 
-
   constructor(
     private query: TemplateQuery,
     public dialog: MatDialog,
