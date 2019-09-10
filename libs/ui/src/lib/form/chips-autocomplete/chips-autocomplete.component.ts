@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl, FormArray } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
