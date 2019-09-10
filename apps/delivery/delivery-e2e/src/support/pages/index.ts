@@ -2,7 +2,7 @@ import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import LandingPage from './LandingPage';
 import ViewProfilePage from './ViewProfilePage';
-import MovieTeamWorkPage from './MovieTeamWorkPage';
+import MovieCreatePage from './MovieCreatePage';
 import DeliveryTeamWorkPage from './DeliveryTeamWorkPage';
 import EditProfilePage from './EditProfilePage';
 import TemplateDeleteModal from './TemplateDeleteModal';
@@ -23,7 +23,7 @@ export {
   OrganizationFormPage,
   LandingPage,
   ViewProfilePage,
-  MovieTeamWorkPage,
+  MovieCreatePage,
   DeliveryTeamWorkPage,
   EditProfilePage,
   TemplateDeleteModal,

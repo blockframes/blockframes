@@ -1,4 +1,4 @@
-import { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeamWorkPage, DeliveryTeamWorkPage, LoginPage } from ".";
+import { HomePage, OrganizationFormPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage } from ".";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -27,11 +27,6 @@ export default abstract class NavbarPage {
   public clickHome() {
     cy.get('button[testId=home]').click();
     return new HomePage();
-  }
-
-  public clickAcceptInvitationToMovie() {
-    cy.get('div[testId=notifications] button.mat-primary').first().click();
-    return new MovieTeamWorkPage();
   }
 
   public clickAcceptInvitationToDelivery() {

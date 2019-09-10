@@ -1,5 +1,6 @@
 import OrganizationHomePage from './HomePage';
 import { User } from '../utils/type';
+import { MovieCreatePage } from '.';
 
 export default class LoginPage {
   constructor() {
@@ -21,5 +22,15 @@ export default class LoginPage {
   public clickSignup() {
     cy.get('[test-id=signup] button[type=submit]').click();
     return new OrganizationHomePage();
+  }
+
+  public fillSignin(user: Partial<User>) {
+    cy.get('[page-id=signin] input[type="email"]').type(user.email);
+    cy.get('[page-id=signin] input[type="password"]').type(user.password);
+  }
+
+  public clickSignin() {
+    cy.get('[page-id=signin] button[type=submit]').click();
+    return new MovieCreatePage();
   }
 }

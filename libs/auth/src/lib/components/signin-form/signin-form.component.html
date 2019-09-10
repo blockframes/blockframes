@@ -1,8 +1,8 @@
-<section test-id="signin" fxLayout="column" fxLayoutAlign="center center">
+<section page-id="signin" fxLayout="column" fxLayoutAlign="center center">
   <h2>Sign in</h2>
   <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
     <mat-form-field appearance="outline">
-      <input matInput type="email" placeholder="Email address" formControlName="email" required />
+      <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
       <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
         Please enter a <strong>valid</strong> email address.
       </mat-error>
