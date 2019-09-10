@@ -7,7 +7,6 @@ export const CONTEXT_MENU = [
       { name: 'Upload avails & films doc', path: '/layout/o/home/import' }, // temp until good place for this route is found
       { name: 'New Deals', path: 'https://projects.invisionapp.com/share/KWTO3NFHQCZ#/screens/381254658', external: true},
       { name: 'Sales', path: 'https://projects.invisionapp.com/share/KWTO3NFHQCZ#/screens/381254662', external: true},
-      { name: 'api', path: '/layout/o/api/home' }, // temp #420
     ]
   }
 ];
