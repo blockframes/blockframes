@@ -23,4 +23,8 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   ) {
     super(store);
   }
+
+  public hasMaterial(materialId: string): boolean {
+    return this.getActive().materials.find(material => material.id === materialId) ? true : false;
+  }
 }
