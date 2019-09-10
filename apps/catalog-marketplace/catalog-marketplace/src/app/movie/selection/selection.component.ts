@@ -1,3 +1,4 @@
+import { DistributionRight, MovieData } from './../../distribution-right/+state/basket.model';
 import { CatalogBasket } from '@blockframes/catalog-marketplace';
 import { BasketQuery } from '../../distribution-right/+state/basket.query';
 import { ChangeDetectionStrategy } from '@angular/core';
@@ -17,6 +18,7 @@ export class CatalogSelectionComponent implements OnInit {
   public priceControl: FormControl = new FormControl(null);
   public currencyList: string[];
   public selectedCurrency;
+  public movieDistributionRights: MovieData[] = [];
 
   constructor(
     private basketService: BasketService,
@@ -27,6 +29,24 @@ export class CatalogSelectionComponent implements OnInit {
   ngOnInit() {
     this.currencyList = staticModels['MOVIE_CURRENCIES'].map(key => key.slug);
     // TODO #922: make an observable out of the basketquery
+    this.basketQuery.getAll().forEach(basket =>
+      basket.rights.forEach(right => {
+        this.movieDistributionRights.push(this.createRightDetail(right));
+      })
+    );
+  }
+
+  private createRightDetail(detail: DistributionRight) {
+    return {
+      id: detail.id,
+      movieName: this.getMovieTitle(detail.movieId),
+      territory: detail.territories[0],
+      rights: detail.medias[0],
+      endRights: (detail.duration as any).to.toDate().toDateString(),
+      languages: detail.languages[0],
+      dubbed: detail.dubbings[0],
+      subtitle: detail.subtitles[0]
+    } as MovieData;
   }
 
   private getMovieTitle(id: string): string {
