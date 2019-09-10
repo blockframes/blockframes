@@ -1,5 +1,5 @@
 import { CatalogSearch } from './search.form';
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {

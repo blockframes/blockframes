@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { MovieData, DistributionRight } from './../../distribution-right/+state/basket.model';
 import { Component, OnInit } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
-import { staticModels, MovieQuery } from '@blockframes/movie';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { staticModels } from '@blockframes/movie';
 import { FormControl } from '@angular/forms';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 
@@ -16,7 +17,7 @@ export class CatalogSelectionComponent implements OnInit {
   public movieDistributionRights: MovieData[];
   public priceControl: FormControl = new FormControl(null);
   public currencyList: string[];
-  public selectedCurrency: string; 
+  public selectedCurrency: string;
 
   constructor(
     private orgQuery: OrganizationQuery,

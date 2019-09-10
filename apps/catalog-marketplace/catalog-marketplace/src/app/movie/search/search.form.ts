@@ -1,7 +1,7 @@
 import { Validators, FormArray } from '@angular/forms';
 import { MovieMedias, MovieTerritories } from './search.form';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { staticModels } from '@blockframes/movie';
 
 /////////////////////////

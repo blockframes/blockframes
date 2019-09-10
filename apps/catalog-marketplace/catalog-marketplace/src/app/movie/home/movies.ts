@@ -1,4 +1,4 @@
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 export const latest: Partial<Movie>[] = [
   {
     main: {

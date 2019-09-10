@@ -4,8 +4,9 @@ import { Validators, FormGroupDirective, NgForm } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { Movie, staticModels } from '@blockframes/movie';
-import { FireQuery } from '@blockframes/utils';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { staticModels } from '@blockframes/movie';
+import { FireQuery } from '@blockframes/utils/firequery/firequery';
 import { startWith, map, debounceTime } from 'rxjs/operators';
 import {
   MovieType,

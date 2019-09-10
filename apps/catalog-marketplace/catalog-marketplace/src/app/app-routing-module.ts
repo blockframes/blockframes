@@ -1,16 +1,16 @@
-import { MovieListGuard } from '@blockframes/movie';
+import { MovieListGuard } from '@blockframes/movie/movie/guards/movie-list.guard';
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { CatalogCompletionComponent } from './components/completion.component';
 
 // Guards
 import { CatalogMarketPlaceGuard } from './guards/catalog-marketplace.guard';
 import { AuthGuard } from '@blockframes/auth';
-import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
+import { PermissionsGuard } from '@blockframes/organization/permissions/guard/permissions.guard';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 
 export const routes: Routes = [

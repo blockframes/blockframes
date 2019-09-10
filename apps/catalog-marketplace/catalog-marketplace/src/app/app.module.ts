@@ -16,12 +16,14 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 // Libraries
-import { AuthModule } from '@blockframes/auth';
-import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { MovieModule } from '@blockframes/movie';
-import { OrganizationModule } from '@blockframes/organization';
-import { ProfileModule } from '@blockframes/account';
-import { AccountModule } from '@blockframes/account';
+import { AuthModule } from '@blockframes/auth/auth.module';
+import { UiFormModule } from '@blockframes/ui/form/form.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { ToolbarModule } from '@blockframes/ui/toolbar/toolbar.module';
+import { MovieModule } from '@blockframes/movie/movie/movie.module';
+import { OrganizationModule } from '@blockframes/organization/organization.module';
+import { ProfileModule } from '@blockframes/account/profile/profile.module';
+import { AccountModule } from '@blockframes/account/account/account.module';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationModule } from 'libs/notification/notification.module';

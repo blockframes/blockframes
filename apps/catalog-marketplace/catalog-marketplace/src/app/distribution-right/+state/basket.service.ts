@@ -1,8 +1,8 @@
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { FireQuery } from '@blockframes/utils';
+import { FireQuery } from '@blockframes/utils/firequery/firequery';
 import { Injectable } from '@angular/core';
 import { DistributionRight, BasketStatus, Price, CatalogBasket } from './basket.model';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Injectable({ providedIn: 'root' })
 export class BasketService {

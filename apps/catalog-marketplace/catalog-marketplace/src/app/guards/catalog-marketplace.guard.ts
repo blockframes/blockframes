@@ -1,7 +1,10 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Movie, MovieStore } from '@blockframes/movie';
-import { Query, StateActiveGuard, FireQuery } from '@blockframes/utils';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { MovieStore } from '@blockframes/movie/movie/+state/movie.store';
+import { Query } from '@blockframes/utils/firequery/types';
+import { StateActiveGuard } from '@blockframes/utils/abstract-state-guard';
+import { FireQuery } from '@blockframes/utils/firequery/firequery';
 
 export const catalogMarketplaceActiveMovie = (id: string): Query<Movie> => ({
   path: `movies/${id}`

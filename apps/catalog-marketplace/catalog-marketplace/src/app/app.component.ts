@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth';
-import { IconComponent } from '@blockframes/ui';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { IconComponent } from '@blockframes/ui/icon-component';
 
 @Component({
   selector: 'catalog-root',

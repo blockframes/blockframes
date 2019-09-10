@@ -1,9 +1,7 @@
 import { latest, scoring, prizes } from './movies';
-import { Observable, combineLatest, of } from 'rxjs';
-import { Movie } from '@blockframes/movie/movie/+state';
-import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
-import { FireQuery } from '@blockframes/utils';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 interface CarouselSection {
   title: string;
@@ -45,7 +43,7 @@ export class CatalogMarketplaceHomeComponent {
 
 // Code stashed away for Toronto
 
-/** Observable to fetch all movies from the store 
+/** Observable to fetch all movies from the store
   public moviesBySections$: Observable<CarouselSection[]>;
 
  /*  constructor(private fireQuery: FireQuery) {}

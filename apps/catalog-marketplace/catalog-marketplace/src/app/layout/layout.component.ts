@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ContextMenuService } from '@blockframes/ui';
+import { ContextMenuService } from '@blockframes/ui/toolbar/+state/context-menu.service';
 import { CONTEXT_MENU } from './context-menu';
 
 @Component({

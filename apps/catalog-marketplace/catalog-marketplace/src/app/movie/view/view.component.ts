@@ -1,7 +1,7 @@
-import { Movie } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Component({
   selector: 'catalog-movie-view',
