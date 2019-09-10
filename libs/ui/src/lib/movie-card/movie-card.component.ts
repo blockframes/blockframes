@@ -1,4 +1,4 @@
-import { Movie } from '../../+state/movie.model';
+import { Movie } from '/movie/src/lib/movie/+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -11,9 +11,5 @@ export class MovieCardComponent {
   @Input() movie: Movie;
   @Output() navigate = new EventEmitter<string>();
   @Input() displayProductionYear: false;
-
-  public navigateTo(movieId: string) {
-    this.navigate.emit(movieId);
-  }
 
 }

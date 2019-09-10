@@ -33,7 +33,6 @@ export class TemplateListComponent implements OnInit {
 
   ngOnInit() {
     this.templates$ = this.query.selectAll();
-    this.dataSource = new MatTableDataSource([]);
   }
 
   public deleteTemplate(template: Template) {

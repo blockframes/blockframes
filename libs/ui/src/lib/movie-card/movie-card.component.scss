@@ -1,12 +1,13 @@
 mat-card {
   height: auto;
   width: 228px;
+  margin: 15px;
 }
 
 a .mat-icon-button {
   position: absolute;
-  top: 0%;
-  left: calc(100%-16px);
+  top: 0px;
+  right: 16px;
 }
 
 .clickable-item {

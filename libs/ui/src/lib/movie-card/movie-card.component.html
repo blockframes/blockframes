@@ -1,7 +1,7 @@
 <mat-card>
     <!-- Movie Poster -->
     <div class="img-container clickable-item">
-      <a (click)="navigateTo(movie.id)">
+      <a (click)="navigate.emit(movie.id)">
         <ng-container *ngIf="movie.main.poster; else: defaultPoster">
           <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
         </ng-container>
@@ -51,7 +51,7 @@
 
   <!-- Movie action button -->
   <mat-card-actions>
-    <ng-content></ng-content>
+    <ng-content select="[movieCardAction]"></ng-content>
   </mat-card-actions>
 
 </mat-card>

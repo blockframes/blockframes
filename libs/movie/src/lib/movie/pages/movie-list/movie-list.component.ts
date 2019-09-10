@@ -50,7 +50,6 @@ export class MovieListComponent implements OnInit {
 
   public navigateToDeliveries(movieId: string) {
     const appName = this.routerQuery.getValue().state.root.data.app;
-    console.log("/layout/o/" + appName + "/" + movieId + "/list");
     this.router.navigate([`/layout/o/${appName}/${movieId}/list`]);
   }
 }
