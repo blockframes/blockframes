@@ -3,7 +3,7 @@
     <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
     <ng-template #loaded>
       <article fxLayout="row" fxLayoutAlign="space-between center">
-        <h2>Movies</h2>
+        <h2>Welcome to Delivery</h2>
         <mat-divider fxFlex></mat-divider>
         <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
           <mat-icon>add</mat-icon>

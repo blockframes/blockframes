@@ -16,7 +16,7 @@
 
   <!-- Trash Icon -->
   <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef>Delete</th>
+    <th mat-header-cell *matHeaderCellDef><mat-icon>delete_outline</mat-icon></th>
     <td mat-cell *matCellDef="let template">
       <button mat-button (click)="delete.emit(template)"><mat-icon>delete_outline</mat-icon></button>
     </td>
