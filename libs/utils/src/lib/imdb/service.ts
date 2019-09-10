@@ -12,6 +12,30 @@
  * To get a omdbapi key (1000 daily limit):
  * http://www.omdbapi.com/apikey.aspx 
  * 
+ * 
+ * EXAMPLE USAGE:
+ * 
+ * import { ImdbService } from '@blockframes/utils';
+ * 
+ * constructor(private imdbService: ImdbService) {}
+ * 
+ * const apiKey = '4d1be897';
+ * this.imdbService.setApiKey(apiKey)
+ * 
+ * // Get movie by name
+ * this.imdbService.get({name: 'Parasite'}).then(console.log).catch(console.log);
+ * 
+ * // Get movie by name and year
+ * this.imdbService.get({name: 'The Toxic Avenger', year: 1984}).then(console.log).catch(console.log);
+ * 
+ * // Get movie by id
+ * this.imdbService.get({id: 'tt0120338'}).then(console.log).catch(console.log);
+ * 
+ * // Search by title
+ * this.imdbService.search({name: 'titanic' }).then(console.log).catch(console.log);
+ * 
+ *  // Search by title and year
+ * this.imdbService.search({name: 'titanic', year: 1997}).then(console.log).catch(console.log);
 */
 
 import { Injectable } from '@angular/core';
@@ -158,7 +182,7 @@ export class SearchResults {
  * from {@link Client}. This is not meant to be created directly by consumers of
  * this lib, but instead through querying omdb.
  */
-export class Movie {
+export class ImdbMovie {
   /** id of the movie on imdb */
   public imdbid: string;
   /** direct URL to the movie on imdb */
@@ -283,7 +307,7 @@ export class ImdbService {
    *
    * @return a promise yielding a movie
    */
-  public get(req: MovieRequest): Promise<Movie> {
+  public get(req: MovieRequest): Promise<ImdbMovie> {
 
     const qs = {
       apikey: this.apiKey,
@@ -307,13 +331,13 @@ export class ImdbService {
     return this.http.get(this.omdbapi, { params: qs })
       .toPromise()
       .then((data: OmdbMovie | OmdbError) => {
-        let ret: Movie;
+        let ret: ImdbMovie;
         if (isError(data)) {
           throw new ImdbError(`${data.Error}: ${(req.name ? req.name : req.id)}`);
         }
 
         if (isMovie(data)) {
-          ret = new Movie(data);
+          ret = new ImdbMovie(data);
         } else {
           throw new ImdbError('fetched data is not a movie');
         }
