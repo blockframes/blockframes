@@ -1,4 +1,4 @@
-import { Organization } from '@blockframes/organization';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { FireQuery } from '@blockframes/utils';
 import { Injectable } from '@angular/core';
 import { DistributionRight, BasketStatus, Price, CatalogBasket } from './basket.model';
