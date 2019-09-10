@@ -18,5 +18,13 @@ button:disabled { // TODO: Get rid of the !important and apply this on mat-raise
   color: var(--primary) !important;
   box-shadow: none !important;
   border-color: transparent !important;
+  background-color: mat-color($bf-light-background, raised-button);
+}
+
+.mat-flat-button {
+  border-radius: 50px !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
   background-color: var(--flatButtonGrey) !important;
 }

@@ -1,4 +1,4 @@
-import { Movie } from '/movie/src/lib/movie/+state/movie.model';
+import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({

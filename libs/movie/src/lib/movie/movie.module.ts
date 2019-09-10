@@ -47,7 +47,7 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 import { MoviePickerComponent } from './components/movie-picker/movie-picker.component';
-import { MovieCardModule } from './components/movie-card/movie-card.module';
+import { MovieCardModule } from 'libs/ui/src/lib/movie-card/movie-card.module';
 
 @NgModule({
   declarations: [
