@@ -629,7 +629,7 @@ export const getCodeIfExists = (scope: string, str: string) => {
  */
 export const getLabelByCode = (scope: string, slug: string) => {
   const item = models[scope].find(i => i.slug === slug);
-  return item.label || '';
+  return item ? item.label : '';
 };
 
 export default models;
