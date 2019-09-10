@@ -91,7 +91,7 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
-    
+
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
