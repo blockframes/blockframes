@@ -1,32 +1,34 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content" page-id="catalog-selection">
-    <header fxLayout="column" fxLayoutAlign="center center">
-        <h1 class="mat-display-3">Global Selection</h1>
-    </header>
-    <section>
-        <article>
-            <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-                <h4 class="mat-h4">My films selection</h4>
-                <mat-divider></mat-divider>
-            </span>
-        </article>
-        <article>
-            <catalog-form-selection [selectedMovieDetail]="movieDistributionRights" (delete)="deleteDistributionRight($event)">
-            </catalog-form-selection>
-        </article>
-        <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px" class="input">
-          <mat-form-field appearance="outline">
-            <input type="number" matInput placeholder="Enter your offer..." [formControl]="priceControl" autocomplete="off">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-              <mat-label>Currency</mat-label>
-              <mat-select>
-                <mat-option *ngFor="let currency of currencyList" [value]="currency">
-                  {{currency}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          <button mat-raised-button color="accent" (click)="setPriceCurrency()" [routerLink]="['/layout/o/catalog/success']">Send your offer</button>
-        </div>
-    </section>
+  <header fxLayout="column" fxLayoutAlign="center center">
+    <h3 class="mat-display-3">Global Selection</h3>
+  </header>
+  <section>
+    <article>
+      <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <h4 class="mat-h4">My films selection</h4>
+        <mat-divider></mat-divider>
+      </span>
+    </article>
+    <article>
+      <catalog-form-selection [selectedMovieDetail]="movieDistributionRights$"
+        (delete)="deleteDistributionRight($event)">
+      </catalog-form-selection>
+    </article>
+    <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px" class="input">
+      <mat-form-field appearance="outline">
+        <input type="number" matInput placeholder="Enter your offer..." [formControl]="priceControl" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <mat-select  [(value)]="selectedCurrency">
+          <mat-option *ngFor="let currency of currencyList" [value]="currency">
+            {{currency}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="accent" (click)="setPriceCurrency()"
+        [routerLink]="['/layout/o/catalog/selection/success']">Send your offer</button>
+    </div>
+  </section>
 </div>

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { DistributionRight, Price, BasketStatus } from './basket.model';
+import { DistributionRight, Price, BasketStatus, CatalogBasket } from './basket.model';
 
-export interface BasketState extends EntityState<DistributionRight> {
+export interface BasketState extends EntityState<CatalogBasket> {
+  id: string;
   price: Price;
   status: BasketStatus;
-  right: DistributionRight;
+  rights: DistributionRight;
 }
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'basket', idKey: 'id' })
-export class BasketStore extends EntityStore<BasketState, any> {
-// TODO (MF,FG): any should be DistributionRight, but it is alreay in the BasketState
+export class BasketStore extends EntityStore<BasketState, CatalogBasket> {
   constructor() {
     super();
   }
-
 }

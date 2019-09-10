@@ -16,7 +16,7 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'selection',
-        path: '/layout/o/catalog/selection'
+        path: '/layout/o/catalog/selection/overview'
       }
     ]
   },
@@ -33,12 +33,12 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'selection',
-        path: '/layout/o/catalog/selection'
+        path: '/layout/o/catalog/selection/overview'
       }
     ]
   },
   {
-    route: '/layout/o/catalog/:basketId/selection',
+    route: '/layout/o/catalog/selection/overview',
     items: [
       {
         name: 'home',
@@ -50,7 +50,7 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'selection',
-        path: '/layout/o/catalog/selection'
+        path: '/layout/o/catalog/selection/overview'
       }
     ]
   },

@@ -1,11 +1,8 @@
+import { FireQuery } from './../../../../../../../libs/utils/src/lib/firequery/firequery';
 import { Router } from '@angular/router';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
-import {
-  CatalogBasket,
-  createBasket,
-  createBaseBasket
-} from './../+state/basket.model';
+import { CatalogBasket, createBaseBasket, createDistributionRight } from './../+state/basket.model';
 import { ViewChild } from '@angular/core';
 import { DateRange } from '@blockframes/utils';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -17,7 +14,6 @@ import { DistributionRightForm } from './create.form';
 import { MovieQuery, Movie, staticModels } from '@blockframes/movie';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
-import uuid from 'uuid/v4';
 import { MovieTerritories } from '../../movie/search/search.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -78,7 +74,8 @@ export class DistributionRightCreateComponent implements OnInit {
     private query: MovieQuery,
     private basketService: BasketService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private db: FireQuery
   ) {}
 
   ngOnInit() {
@@ -88,7 +85,6 @@ export class DistributionRightCreateComponent implements OnInit {
       this.movieDubbings = movie.versionInfo.dubbings;
       this.movieSubtitles = movie.versionInfo.subtitles;
     });
-
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -111,18 +107,21 @@ export class DistributionRightCreateComponent implements OnInit {
     );
     this.form.valueChanges.subscribe(data => {
       this.catalogBasket = createBaseBasket({
-        rights: this.basketService.createDistributionRight({
-          movieId: this.query.getActive().id,
-          medias: data.medias,
-          languages: data.languages,
-          dubbings: data.dubbings,
-          subtitles: data.subtitles,
-          duration: {
-            from: data.duration.from,
-            to: data.duration.to
-          },
-          territories: data.territories
-        })
+        rights: [
+          createDistributionRight({
+            id: this.db.createId(),
+            movieId: this.query.getActive().id,
+            medias: data.medias,
+            languages: data.languages,
+            dubbings: data.dubbings,
+            subtitles: data.subtitles,
+            duration: {
+              from: data.duration.from,
+              to: data.duration.to
+            },
+            territories: data.territories
+          })
+        ]
       });
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
@@ -229,7 +228,7 @@ export class DistributionRightCreateComponent implements OnInit {
 
   public addDistributionRight() {
     this.basketService.addBasket(this.catalogBasket);
-    this.router.navigateByUrl(`layout/o/catalog/selection/${this.catalogBasket.id}`);
+    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   // Research section

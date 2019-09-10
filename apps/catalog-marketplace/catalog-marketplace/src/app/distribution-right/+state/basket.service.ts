@@ -1,11 +1,7 @@
 import { BasketQuery } from './basket.query';
 import { FireQuery } from '@blockframes/utils';
 import { Injectable } from '@angular/core';
-import {
-  CatalogBasket,
-  DistributionRight,
-  createBasket
-} from './basket.model';
+import { CatalogBasket, createBasket, DistributionRight, Price } from './basket.model';
 import { OrganizationQuery } from '@blockframes/organization';
 
 @Injectable({ providedIn: 'root' })
@@ -16,39 +12,44 @@ export class BasketService {
     private basketQuery: BasketQuery
   ) {}
 
-  public addBasket(catalogBasket: CatalogBasket) {
+  public addBasket(basket: CatalogBasket) {
     const id = this.db.createId();
-    const orgId = this.organizationQuery.id;
     const newBasket: CatalogBasket = createBasket({
       id,
-      orgId,
-      ...catalogBasket
+      price: { amount: 0, currency: 'euro' },
+      rights: basket.rights
     });
-    this.db.doc<CatalogBasket>(`baskets/${id}`).set(newBasket);
+    this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${id}`).set(newBasket);
   }
 
-  createDistributionRight(right: Partial<DistributionRight> = {}) {
-    return {
-      id: this.db.createId(),
-      movieId: right.movieId,
-      medias: right.medias,
-      languages: right.languages,
-      dubbings: right.dubbings,
-      subtitles: right.subtitles,
-      duration: {
-        from: right.duration.from,
-        to: right.duration.to
-      },
-      territories: right.territories
-    };
+  public removeDistributionRight(rightId: string, basketId: string) {
+    const findDistributionRight: DistributionRight[] = [];
+    this.basketQuery.getAll().forEach(baskets =>
+      baskets.rights.forEach(right => {
+        if (right.id === rightId) {
+          findDistributionRight.push(right);
+        }
+      })
+    );
+    // if there is only one distribution right in the basket, delete the basket
+    if (findDistributionRight.length <= 1) {
+      this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`).delete();
+    } else {
+      let updatedBasket: CatalogBasket;
+      this.basketQuery.getAll().forEach(baskets =>
+        baskets.rights.forEach(right => {
+          if (right.id === rightId) {
+            updatedBasket = baskets;
+          }
+        })
+      );
+      this.db
+        .doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`)
+        .update(updatedBasket);
+    }
   }
 
-  /*   public removeRight(id: string) {
-    const rightsToRemove: CatalogBasket[] = this.organizationQuery
-      .getValue()
-      .org.catalog.filter(catalog => catalog.rights.id !== id);
-    this.db
-      .doc<Organization>(`orgs/${this.organizationQuery.getValue().org.id}/`)
-      .update({ catalog: rightsToRemove });
-  } */
+  public setPrice(basket: CatalogBasket) {
+    this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basket.id}`).update(basket);
+  }
 }

@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 // Guards
+import { MovieListGuard } from '@blockframes/movie';
 import { CatalogMarketPlaceGuard } from './guards/catalog-marketplace.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
@@ -77,11 +78,13 @@ export const routes: Routes = [
               },
               {
                 path: 'selection',
-                canActivate: [CatalogBasketGuard],
-                canDeactivate: [CatalogBasketGuard],
+                canActivate: [CatalogBasketGuard, MovieListGuard],
+                canDeactivate: [CatalogBasketGuard, MovieListGuard],
                 children: [
                   {
-                    path: '', redirectTo: 'overview', pathMatch: 'full'
+                    path: '',
+                    redirectTo: 'overview',
+                    pathMatch: 'full'
                   },
                   {
                     path: 'overview',
