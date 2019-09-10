@@ -51,8 +51,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
 
-import { ImdbApiTestModule } from './pages/imdb-api-test/imdb-api-test.module';
-
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
   imports: [
@@ -93,7 +91,6 @@ import { ImdbApiTestModule } from './pages/imdb-api-test/imdb-api-test.module';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
-    ImdbApiTestModule,
     
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
