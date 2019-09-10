@@ -28,7 +28,6 @@ export class TableExtractedMoviesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public defaultPoster = 'https://cdn.wpformation.com/wp-content/uploads/2014/03/todo1.jpg';
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
     'movie.main.internalRef',
