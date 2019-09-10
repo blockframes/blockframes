@@ -6,7 +6,7 @@ export interface BasketState extends EntityState<CatalogBasket> {
   id: string;
   price: Price;
   status: BasketStatus;
-  rights: DistributionRight;
+  rights: DistributionRight[];
 }
 
 @Injectable({ providedIn: 'root' })

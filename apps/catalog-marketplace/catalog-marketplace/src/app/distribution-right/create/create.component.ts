@@ -1,4 +1,3 @@
-import { FireQuery } from './../../../../../../../libs/utils/src/lib/firequery/firequery';
 import { Router } from '@angular/router';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
@@ -74,8 +73,7 @@ export class DistributionRightCreateComponent implements OnInit {
     private query: MovieQuery,
     private basketService: BasketService,
     private router: Router,
-    private _snackBar: MatSnackBar,
-    private db: FireQuery
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -109,7 +107,7 @@ export class DistributionRightCreateComponent implements OnInit {
       this.catalogBasket = createBaseBasket({
         rights: [
           createDistributionRight({
-            id: this.db.createId(),
+            id: this.basketService.createFireStoreId,
             movieId: this.query.getActive().id,
             medias: data.medias,
             languages: data.languages,
@@ -250,7 +248,7 @@ export class DistributionRightCreateComponent implements OnInit {
     ) {
       // can't create distribution right
       this.showResults = false;
-      this._snackBar.open('There is no availability matching your research', null, {
+      this.snackBar.open('There is no availability matching your research', null, {
         duration: 5000
       });
     } else {
