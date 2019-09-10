@@ -21,6 +21,13 @@ a .mat-icon-button {
 
 .img-container img {
   min-width: 150px;
-  max-height: 230px;
-  border-radius: 10px 10px 0 0;
+  min-height: 182px;
+}
+
+.img-container button {
+  position: absolute;
+  top: 0%;
+  left: calc(100%-16px);
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 }

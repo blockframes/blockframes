@@ -27,7 +27,7 @@ import { MatMenuModule} from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { UploadModule, UiFormModule, MovieCardModule } from '@blockframes/ui';
 import { MovieDisplayModule } from './display/display.module';
 import { ImportMovieModule } from './components/import/import-movie.module';
 
@@ -47,7 +47,6 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 import { MoviePickerComponent } from './components/movie-picker/movie-picker.component';
-import { MovieCardModule } from 'libs/ui/src/lib/movie-card/movie-card.module';
 
 @NgModule({
   declarations: [

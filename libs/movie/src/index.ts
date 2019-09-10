@@ -15,7 +15,6 @@ export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-e
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
 export { default as staticModels } from './lib/movie/staticModels';
 export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';
-import { MovieCardModule } from 'libs/ui/src/lib/movie-card/movie-card.module';
 
 // Stakeholder exports
 export * from './lib/stakeholder/+state/stakeholder.model';
