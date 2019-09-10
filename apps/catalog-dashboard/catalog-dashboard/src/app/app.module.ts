@@ -92,7 +92,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     WalletModule,
     KeyManagerModule,
     NotificationModule,
-    
+
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
