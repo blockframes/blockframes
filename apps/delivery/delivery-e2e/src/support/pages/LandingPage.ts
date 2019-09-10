@@ -1,4 +1,3 @@
-import HomePage from './HomePage';
 import LoginPage from './LoginPage';
 
 export default class LandingPage {
