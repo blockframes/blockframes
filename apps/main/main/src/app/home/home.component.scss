@@ -1,7 +1,7 @@
 @import 'variables';
 
 section {
-  background-color: var(--whiteBackground);
+  background-color: mat-color($bf-light-background, white-bg);
   height: 100%;
   margin: 0 200px;
 }
