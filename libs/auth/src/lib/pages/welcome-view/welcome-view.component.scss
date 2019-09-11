@@ -2,7 +2,7 @@
 
 section {
   height: 100%;
-  background-color: var(--whiteBackground);
+  background-color: mat-color($bf-light-background, white-bg);
 }
 
 h1 {
