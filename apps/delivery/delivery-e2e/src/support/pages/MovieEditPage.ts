@@ -1,6 +1,7 @@
 import HomePage from "./HomePage";
+import NavbarPage from './NavbarPage';
 
-export default class MovieEditPage {
+export default class MovieEditPage extends NavbarPage {
   public static FIELD_INTERNATIONAL_TITLE = 'internationalTitle'
   public static FIELD_DIRECTORS = 'directors';
   public static FIELD_PRODUCTION_YEAR = 'productionYear';

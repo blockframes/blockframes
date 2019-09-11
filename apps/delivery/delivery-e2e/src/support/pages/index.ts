@@ -1,3 +1,4 @@
+import { OrganizationMemberPage } from './OrganizationMemberPage';
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import LandingPage from './LandingPage';
@@ -37,5 +38,6 @@ export {
   NewTemplatePage,
   TemplatePickerPage,
   DeliverySettingsFormPage,
-  LoginPage
+  LoginPage,
+  OrganizationMemberPage
 };

@@ -4,6 +4,7 @@ import AddMovieModal from "./AddMovieModal";
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
+    cy.get('[page-id=movie-create]')
   }
 
   public clickAddMovie() {

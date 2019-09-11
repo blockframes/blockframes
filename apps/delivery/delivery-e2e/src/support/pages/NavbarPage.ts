@@ -1,7 +1,8 @@
-import { HomePage, OrganizationFormPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage } from ".";
+import { HomePage, OrganizationFormPage, OrganizationMemberPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage } from ".";
 
 export default abstract class NavbarPage {
   constructor() {
+    cy.wait(5000);
     cy.get('[page-id=navbar]');
   }
 
@@ -9,13 +10,13 @@ export default abstract class NavbarPage {
     cy.get('mat-chip').contains('ENCRYPTING');
   }
 
-  public clickOnOrganization(orgName: string) {
-    cy.get('button').contains(orgName).click();
-    return new OrganizationFormPage();
-  }
-
   public openProfileMenu() {
     cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
+  }
+
+  public clickOnOrganization() {
+    cy.get('[page-id=navbar]').get('button[test-id=manage-organization]').click();
+    return new OrganizationFormPage();
   }
 
   public logout() {
@@ -42,5 +43,10 @@ export default abstract class NavbarPage {
   public clickProfile() {
     cy.get('button[testId=buttonProfile]').click();
     return new ViewProfilePage();
+  }
+
+    public clickContextMenuMember() {
+    cy.get('[page-id=navbar]').contains('member').click();
+    return new OrganizationMemberPage();
   }
 }

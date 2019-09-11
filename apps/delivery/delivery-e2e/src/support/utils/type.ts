@@ -1,10 +1,15 @@
-import { randomString, randomEmail } from "./functions";
+import { randomString, randomEmail } from './functions';
 
 export interface User {
   email: string;
   password: string;
   name: string;
   surname: string;
+}
+
+export interface Organization {
+  address: string;
+  phoneNumber: string;
 }
 
 export function createUser(): User {
@@ -14,4 +19,8 @@ export function createUser(): User {
     name: randomString(),
     surname: randomString()
   };
+}
+
+export function createOrganization(): Organization {
+  return { address: randomString(), phoneNumber: randomString() };
 }
