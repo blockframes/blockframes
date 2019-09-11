@@ -1,5 +1,5 @@
-/** Gives information about an application */
 import { CatalogBasket } from '@blockframes/catalog-marketplace';
+/** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
 
 export const enum AppStatus {
@@ -66,7 +66,7 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  catalog?: CatalogBasket;
+  baskets: CatalogBasket[],
   logo?: string;
 }
 

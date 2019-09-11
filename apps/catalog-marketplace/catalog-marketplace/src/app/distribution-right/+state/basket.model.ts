@@ -1,3 +1,4 @@
+import { DistributionRight } from './basket.model';
 import { staticModels } from '@blockframes/movie';
 
 // TODO #818
@@ -17,12 +18,6 @@ export interface Price {
   amount: number;
   currency: Currency;
 }
-// @TODO(MF): Going to be needed in the slim version?
-/* export interface DistributionLanguage {
-  original: boolean;
-  dubbed: boolean;
-  subtitle: boolean;
-} */
 
 export interface DistributionRight {
   id: string;
@@ -39,6 +34,7 @@ export interface DistributionRight {
 }
 
 export interface CatalogBasket {
+  id: string;
   status: BasketStatus;
   rights: DistributionRight[];
   price: Price;
@@ -60,9 +56,10 @@ export interface MovieData {
  */
 export function createBasket(basket: Partial<CatalogBasket> = {}) {
   return {
+    id: basket.id,
     status: BasketStatus.pending,
     price: 0,
-    rights: [],
+    rights: basket.rights,
     ...basket
   } as CatalogBasket;
 }
@@ -82,3 +79,28 @@ export function createMovieDetails(details: Partial<MovieData> = {}) {
     } as MovieData
   ];
 }
+
+export function createBaseBasket(basket: Partial<CatalogBasket>) {
+  return {
+    status: BasketStatus.pending,
+    price: 0,
+    rights: basket.rights,
+    ...basket
+  } as CatalogBasket;
+}
+
+export function createDistributionRight(right: Partial<DistributionRight> = {}) {
+  return {
+    id: right.id,
+    movieId: right.movieId,
+    medias: right.medias,
+    languages: right.languages,
+    dubbings: right.dubbings,
+    subtitles: right.subtitles,
+    duration: {
+      from: right.duration.from,
+      to: right.duration.to
+    },
+    territories: right.territories
+  } as DistributionRight;
+} 

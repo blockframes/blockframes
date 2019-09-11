@@ -1,17 +1,17 @@
-import { MovieListGuard } from '@blockframes/movie';
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { CatalogCompletionComponent } from './components/completion.component';
 
 // Guards
+import { MovieListGuard } from '@blockframes/movie';
 import { CatalogMarketPlaceGuard } from './guards/catalog-marketplace.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
+import { CatalogBasketGuard } from './guards/catalog-basket.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -78,16 +78,25 @@ export const routes: Routes = [
               },
               {
                 path: 'selection',
-                // TODO #855 add this guard
-                // canActivate: [CatalogMarketBasketGuard],
-                canActivate: [MovieListGuard, OrganizationGuard],
-                loadChildren: () =>
-                  import('./pages/selection/selection.module').then(m => m.SelectionModule)
-              },
-              {
-                path: 'success',
-                loadChildren: () =>
-                import('./components/completion.module').then(m => m.CatalogCompletionModule)
+                canActivate: [CatalogBasketGuard, MovieListGuard],
+                canDeactivate: [CatalogBasketGuard, MovieListGuard],
+                children: [
+                  {
+                    path: '',
+                    redirectTo: 'overview',
+                    pathMatch: 'full'
+                  },
+                  {
+                    path: 'overview',
+                    loadChildren: () =>
+                      import('./movie/selection/selection.module').then(m => m.SelectionModule)
+                  },
+                  {
+                    path: 'success',
+                    loadChildren: () =>
+                      import('./components/completion.module').then(m => m.CatalogCompletionModule)
+                  }
+                ]
               },
               {
                 path: ':movieId',

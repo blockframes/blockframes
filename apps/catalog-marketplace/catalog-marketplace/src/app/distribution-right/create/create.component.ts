@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
-import { CatalogBasket, createBasket } from './../+state/basket.model';
+import { CatalogBasket, createBaseBasket, createDistributionRight } from './../+state/basket.model';
 import { ViewChild } from '@angular/core';
 import { DateRange } from '@blockframes/utils';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -13,7 +13,6 @@ import { DistributionRightForm } from './create.form';
 import { MovieQuery, Movie, staticModels } from '@blockframes/movie';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
-import uuid from 'uuid/v4';
 import { MovieTerritories } from '../../movie/search/search.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -74,7 +73,7 @@ export class DistributionRightCreateComponent implements OnInit {
     private query: MovieQuery,
     private basketService: BasketService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -84,7 +83,6 @@ export class DistributionRightCreateComponent implements OnInit {
       this.movieDubbings = movie.versionInfo.dubbings;
       this.movieSubtitles = movie.versionInfo.subtitles;
     });
-
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -106,10 +104,10 @@ export class DistributionRightCreateComponent implements OnInit {
       map(value => this._subtitlesFilter(value))
     );
     this.form.valueChanges.subscribe(data => {
-      this.catalogBasket = createBasket({
+      this.catalogBasket = createBaseBasket({
         rights: [
-          {
-            id: uuid(),
+          createDistributionRight({
+            id: this.basketService.createFireStoreId,
             movieId: this.query.getActive().id,
             medias: data.medias,
             languages: data.languages,
@@ -120,7 +118,7 @@ export class DistributionRightCreateComponent implements OnInit {
               to: data.duration.to
             },
             territories: data.territories
-          }
+          })
         ]
       });
       this.choosenDateRange.to = data.duration.to;
@@ -227,16 +225,18 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public addDistributionRight() {
-    const newDistribtutionRight = this.catalogBasket.rights[0];
-    this.basketService.add(newDistribtutionRight);
-    this.router.navigateByUrl('layout/o/catalog/selection');
+    this.basketService.addBasket(this.catalogBasket);
+    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   // Research section
 
   public startResearch() {
     if (
-      this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal.rights) &&
+      this.isInRange(
+        this.form.get('duration').value,
+        this.query.getActive().salesAgentDeal.rights
+      ) &&
       this.hasTerritoriesInCommon(
         this.form.get('territories').value,
         this.query.getActive().salesAgentDeal.territories
@@ -248,8 +248,8 @@ export class DistributionRightCreateComponent implements OnInit {
     ) {
       // can't create distribution right
       this.showResults = false;
-      this._snackBar.open('There is no availability matching your research', null, {
-        duration: 5000,
+      this.snackBar.open('There is no availability matching your research', null, {
+        duration: 5000
       });
     } else {
       // create distribution right
