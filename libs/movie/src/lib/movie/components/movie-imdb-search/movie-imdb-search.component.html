@@ -1,0 +1,78 @@
+<mat-dialog-content>
+  <form [formGroup]="searchForm" *ngIf="!formValid else displayResults">
+    <article fxLayout="column" fxLayoutAlign="space-between center">
+      <h3>Search movie on IMDB</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Movie title</mat-label>
+        <input matInput #movieName type="string" placeholder="Movie title" formControlName="name" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Production year</mat-label>
+        <input matInput #movieYear type="string" placeholder="Production year" formControlName="year" />
+      </mat-form-field>
+      <mat-checkbox formControlName="exact">Exact search</mat-checkbox>
+    </article>
+
+    <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
+      <button mat-raised-button color="warn" [disabled]="!movieName.value" (click)="imdbSearch()">Next</button>
+      <button mat-button color="warn" (click)="cancel()">Cancel</button>
+    </article>
+  </form>
+  <ng-template #displayResults>
+    <table mat-table [dataSource]="rows">
+
+      <ng-container matColumnDef="imdbid">
+        <th mat-header-cell *matHeaderCellDef> #IMDB id </th>
+        <td mat-cell *matCellDef="let element"> {{ element.imdbid }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Title </th>
+        <td mat-cell *matCellDef="let element"> {{ element.title }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="poster">
+        <th mat-header-cell *matHeaderCellDef> Poster </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.poster && element.poster !=='N/A'; else: defaultPoster">
+            <img class="poster" [src]="element.poster" alt="Movie poster link" />
+          </ng-container>
+          <ng-template #defaultPoster>
+            <img class="poster" src="/assets/images/default-movie-poster.png" alt="Movie poster link" />
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef> Production Year </th>
+        <td mat-cell *matCellDef="let element"> {{ element.year }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+
+          <button mat-raised-button color="primary" (click)="importMovie(element)">
+            <span>Fill form</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator 
+    pageSize="10"
+    [pageSizeOptions]="[10]"
+    showFirstLastButtons
+    [length]="resultsCount"
+    (page)="changePage($event)"
+    >
+  </mat-paginator>
+    <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
+      <button mat-raised-button color="warn" (click)="searchAgain()">Previous</button>
+      <button mat-button color="warn" (click)="cancel()">Cancel</button>
+    </article>
+  </ng-template>
+</mat-dialog-content>

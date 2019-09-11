@@ -15,7 +15,7 @@ import {
   cleanModel,
   createMovieSale
 } from '../../../+state';
-import { SheetTab } from '@blockframes/utils';
+import { SheetTab, formatCredits } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
@@ -217,19 +217,7 @@ export class ViewExtractedElementsComponent {
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = [];
-          spreadSheetRow[SpreadSheetMovie.directors].split(this.separator).forEach((a: string) => {
-            const director = { firstName: '', lastName: '' };
-
-            if (a.split("\\s+").length > 1) {
-              director.firstName = a.split("\\s+")[0];
-              director.lastName = a.split("\\s+")[1];
-            } else {
-              director.lastName = a.split("\\s+")[0];
-            }
-
-            movie.main.directors.push(director);
-          });
+          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator);
         }
 
         // POSTER (Poster)
@@ -338,19 +326,8 @@ export class ViewExtractedElementsComponent {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.salesCast.credits = [];
-          spreadSheetRow[SpreadSheetMovie.cast].split(this.separator).forEach((a: string) => {
-            const credit = { firstName: '', lastName: '', creditRole: 'actor' };
-
-            if (a.split("\\s+").length > 1) {
-              credit.firstName = a.split("\\s+")[0];
-              credit.lastName = a.split("\\s+")[1];
-            } else {
-              credit.lastName = a.split("\\s+")[0];
-            }
-
-            movie.salesCast.credits.push(credit);
-          });
+          movie.salesCast.credits = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
+            .map(credit => { return { ...credit, creditRole: 'actor' } });
         }
 
         // SYNOPSIS (Short Synopsis)

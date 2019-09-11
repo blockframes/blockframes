@@ -21,11 +21,11 @@ export class MovieSalesCastForm extends FormEntity<Partial<MovieSalesCast>, Movi
     return this.get('credits');
   }
 
-  public addCredit(): void {
+  public addCredit(entity?: Partial<Credit>): void {
     const credit = new FormEntity<Credit>({
-      firstName: new FormControl(''),
-      lastName: new FormControl(''),
-      creditRole: new FormControl(''),
+      firstName: new FormControl(entity && entity.firstName ? entity.firstName : ''),
+      lastName: new FormControl(entity && entity.lastName ? entity.lastName : ''),
+      creditRole: new FormControl(entity && entity.creditRole ? entity.creditRole : ''),
     });
     this.credits.push(credit);
   }
