@@ -96,7 +96,7 @@ export interface SearchRequest {
 }
 
 export class ImdbError {
-  public name: string = "imdb api error";
+  public name = "imdb api error";
 
   constructor(public message: string) { }
 }
