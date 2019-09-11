@@ -33,12 +33,12 @@
       </mat-tab-group>
     </mat-card-content>
     <mat-card-actions class="movie-card-actions">
-      <button mat-flat-button color="basic" (click)="cancel()">Cancel</button>
+      <button mat-button color="primary" (click)="cancel()">Cancel</button>
       <button testId="saveMovie" color="accent" class="save-btn" mat-flat-button (click)="submit()" type="submit">
         <span>Save movie</span>
         <mat-icon>save</mat-icon>
       </button>
-      <button mat-flat-button color="primary" (click)="fillForm()">
+      <button mat-flat-button color="accent" (click)="fillForm()">
         <span>Search on IMDB</span>
         <mat-icon>search</mat-icon>
       </button>

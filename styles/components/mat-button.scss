@@ -1,4 +1,4 @@
-button { // TODO: Get rid of the !important and apply this on mat-raised-button
+mat-button { // TODO: Get rid of the !important and apply this on mat-raised-button
   padding: 8px 24px !important;
   font-size: 12px !important;
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
@@ -15,7 +15,6 @@ button:disabled { // TODO: Get rid of the !important and apply this on mat-raise
 
 .mat-stroked-button {
   border-radius: 50px !important;
-  color: var(--primary) !important;
   box-shadow: none !important;
   border-color: transparent !important;
   background-color: mat-color($bf-light-background, raised-button);
@@ -28,3 +27,5 @@ button:disabled { // TODO: Get rid of the !important and apply this on mat-raise
   border-color: transparent !important;
   background-color: var(--flatButtonGrey) !important;
 }
+
+

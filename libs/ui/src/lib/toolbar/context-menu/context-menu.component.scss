@@ -23,12 +23,12 @@
 }
 
 .mat-tab-link:hover {
-  color: var(--primary);
+  color: mat-color($blockframes-theme-primary);
   opacity: 1;
 }
 
 .mat-tab-label-active {
-  color: var(--primary);
+  color: mat-color($blockframes-theme-primary);
   opacity: 1;
 }
 
