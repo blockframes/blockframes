@@ -1227,7 +1227,7 @@
           "options": {
             "linter": "tslint",
             "tsConfig": ["apps/catalog/dashboard/dashboard-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/dashboard/dashboard-e2e/**"]
+            "exclude": ["**/node_modules/**", "!apps/catalog/dashboard/dashboard-e2e/**"]
           }
         }
       }
@@ -1363,18 +1363,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "marketplace:build"
+            "browserTarget": "catalog-marketplace:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "marketplace:build:production"
+              "browserTarget": "catalog-marketplace:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "marketplace:build"
+            "browserTarget": "catalog-marketplace:build"
           }
         },
         "lint": {
@@ -1384,7 +1384,7 @@
               "apps/catalog/marketplace/marketplace/tsconfig.app.json",
               "apps/catalog/marketplace/marketplace/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/marketplace/marketplace/**"]
+            "exclude": ["**/node_modules/**", "!apps/catalog/marketplace/marketplace/**"]
           }
         },
         "test": {
