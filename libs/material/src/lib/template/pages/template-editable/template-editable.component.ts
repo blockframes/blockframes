@@ -59,7 +59,7 @@ export class TemplateEditableComponent implements OnInit {
 
   public async deleteMaterial(materialId: string) {
     try {
-      // If material exist in materialsFormRepertory but not in database
+      // If material exist in materialsFormBatch but not in database
       if (!this.query.hasMaterial(materialId)) {
         this.materialsFormBatch.removeControl(materialId);
         this.opened = false;

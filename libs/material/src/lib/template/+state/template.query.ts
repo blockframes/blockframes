@@ -25,6 +25,6 @@ export class TemplateQuery extends QueryEntity<TemplateState, Template> {
   }
 
   public hasMaterial(materialId: string): boolean {
-    return this.getActive().materials.find(material => material.id === materialId) ? true : false;
+    return this.getActive().materials.some(material => material.id === materialId);
   }
 }
