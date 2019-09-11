@@ -10,6 +10,6 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 export class MovieCardComponent {
   @Input() movie: Movie;
   @Output() navigate = new EventEmitter<string>();
-  @Input() displayProductionYear: false;
+  @Input() displayProductionYear = false;
 
 }

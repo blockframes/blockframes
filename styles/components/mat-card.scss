@@ -1,7 +1,7 @@
 .dark-theme mat-card {
+  border-radius: 10px !important;
   background-color: rgba(249,248,255,0.05);
   border: 1px solid mat-color($bf-dark-foreground, divider);
-  margin: 15px;
 }
 
 .light-theme mat-card {

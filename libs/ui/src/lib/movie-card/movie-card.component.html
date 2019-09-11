@@ -1,42 +1,41 @@
 <mat-card>
-    <!-- Movie Poster -->
-    <div class="img-container clickable-item">
-      <a (click)="navigate.emit(movie.id)">
-        <ng-container *ngIf="movie.main.poster; else: defaultPoster">
-          <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
-        </ng-container>
+  <!-- Movie Poster -->
+  <div class="img-container clickable-item">
+    <a (click)="navigate.emit(movie.id)">
+      <ng-container *ngIf="movie.main.poster; else: defaultPoster">
+        <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
+      </ng-container>
 
-        <ng-template #defaultPoster>
-          <img
-            class="mat-card-image"
-            src="/assets/images/default-movie-poster.png"
-            alt="Movie poster link"/>
-        </ng-template>
-      </a>
+      <ng-template #defaultPoster>
+        <img
+          class="mat-card-image"
+          src="/assets/images/default-movie-poster.png"
+          alt="Movie poster link"/>
+      </ng-template>
+    </a>
 
-        <!-- Movie Menu -->
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon color="primary">more_vert</mat-icon>
+      <!-- Movie Menu -->
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon color="primary">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item [matMenuTriggerFor]="subMenu">
+        <mat-icon color="primary">control_camera</mat-icon>
+        <span>Open in...</span>
       </button>
-      <mat-menu #menu="matMenu" xPosition="before">
-        <button mat-menu-item [matMenuTriggerFor]="subMenu">
-          <mat-icon color="primary">control_camera</mat-icon>
-          <span>Open in...</span>
-        </button>
-        <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-          <mat-icon color="primary">edit</mat-icon>
-          <span>Edit</span>
-        </a>
-        <button mat-menu-item>
-          <mat-icon color="primary">delete_outline</mat-icon>
-          <span>Delete</span>
-        </button>
-      </mat-menu>
-      <mat-menu #subMenu="matMenu">
-        <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-      </mat-menu>
-    </div>
-
+      <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
+        <mat-icon color="primary">edit</mat-icon>
+        <span>Edit</span>
+      </a>
+      <button mat-menu-item>
+        <mat-icon color="primary">delete_outline</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+    <mat-menu #subMenu="matMenu">
+      <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
+    </mat-menu>
+  </div>
 
   <!-- Movie Informations -->
   <mat-card-content>

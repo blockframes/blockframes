@@ -4,12 +4,6 @@ mat-card {
   margin: 15px;
 }
 
-a .mat-icon-button {
-  position: absolute;
-  top: 0px;
-  right: 16px;
-}
-
 .clickable-item {
   cursor: pointer;
 }
@@ -22,12 +16,11 @@ a .mat-icon-button {
 .img-container img {
   min-width: 150px;
   min-height: 182px;
+  border-radius: 10px 10px 0 0;
 }
 
 .img-container button {
   position: absolute;
-  top: 0%;
-  left: calc(100%-16px);
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  top: 0;
+  right: 16px;
 }
