@@ -18,5 +18,5 @@
 }
 
 .active-list-item mat-icon {
-  color: var(--primary) !important;
+  color: mat-color($blockframes-theme-primary) !important;
 }
