@@ -20,7 +20,8 @@ const models = {
     { 'slug': 'erotic', 'label': 'Erotic' },
     { 'slug': 'tv-show', 'label': 'TV Show' },
     { 'slug': 'web-series', 'label': 'Web Series' },
-    { 'slug': 'virtual-reality', 'label': 'Virtual Reality' }
+    { 'slug': 'virtual-reality', 'label': 'Virtual Reality' },
+    { 'slug': 'family', 'label': 'Family' }
   ] as const,
   'STAKEHOLDER_ROLES': [
     {
