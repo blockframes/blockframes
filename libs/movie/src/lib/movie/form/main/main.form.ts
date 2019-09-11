@@ -64,10 +64,10 @@ export class MovieMainForm extends FormEntity<Partial<MovieMain>, MovieMainContr
     return this.get('shortSynopsis');
   }
 
-  public addDirector(): void {
+  public addDirector(entity?: Partial<Credit>): void {
     const credit = new FormEntity<Credit>({
-      firstName: new FormControl(''),
-      lastName: new FormControl(''),
+      firstName: new FormControl(entity && entity.firstName ? entity.firstName : ''),
+      lastName: new FormControl(entity && entity.lastName ? entity.lastName : ''),
     });
     this.directors.push(credit);
   }
