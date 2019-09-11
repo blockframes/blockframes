@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query, emailToEnsDomain, precomputeAddress, getNameFromENS } from '@blockframes/utils';
+import { FireQuery, Query, emailToEnsDomain, precomputeAddress, getNameFromENS, orgNameToEnsDomain } from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -232,7 +232,7 @@ export class OrganizationService {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const organizationENS = this.getENSName();
+      const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
       let address = await this.getAddress();
       await new Promise(resolve => {
         if (!address) {
@@ -271,13 +271,9 @@ export class OrganizationService {
   //             GETTERS
   //----------------------------------
 
-  public getENSName() {
-    return emailToEnsDomain(this.query.getValue().org.name.replace(' ', '-'));
-  }
-
   public async getAddress() {
     this._requireProvider();
-    const organizationENS = this.getENSName();
+    const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
     return this.provider.resolveName(organizationENS);
   }
 

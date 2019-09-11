@@ -7,6 +7,8 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { ethers } from 'ethers';
+import { orgNameToEnsDomain } from '../../helpers';
+import { network } from '@env';
 
 export const emailValidators = [Validators.required, Validators.email];
 
@@ -45,7 +47,14 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
   if (size !== 24) {
     return { mnemonic: true };
   }
-  // Use ethersjs build in function to check for a correct Mnemonic
+  // Use ethers.js build in function to check for a correct Mnemonic
   const isValidMnemonic = ethers.utils.HDNode.isValidMnemonic(control.value);
   return isValidMnemonic ? null : { mnemonic: true };
+}
+
+/** Check if the `name` field of an Organization create form already exists as an ENS domain */
+export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
+  const orgENS = orgNameToEnsDomain(control.value);
+  const orgAddress = await ethers.getDefaultProvider(network).resolveName(orgENS);
+  return !orgAddress ? null : { notUnique: true};
 }

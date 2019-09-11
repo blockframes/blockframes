@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -66,6 +67,7 @@ export const noOrganizationRoutes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
 
     // UI
     ActionsListModule,

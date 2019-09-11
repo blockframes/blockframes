@@ -53,6 +53,13 @@ export function emailToEnsDomain(email: string) { // !!!! there is a copy of thi
     .join('') + '.' + baseEnsDomain;
 }
 
+/** same as `emailToEnsDomain` but for org name
+ * @see `emailToEnsDomain(email: string): string`
+ */
+export function orgNameToEnsDomain(orgName: string) {
+  return emailToEnsDomain(orgName.replace(' ', '-'));
+}
+
 /**
  * This function precompute a contract address as defined in the EIP 1014 (Skinny Create 2)
  * @param ensDomain this is use as a salt (salt need to be unique for each user)
@@ -66,7 +73,7 @@ export async function precomputeAddress(ensDomain: string, provider: providers.P
   const byteCodeHash = utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
 
   const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
-  
+
   return `0x${utils.keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
 }
 

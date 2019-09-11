@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery, User } from '@blockframes/auth';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { first, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../../+state';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { UniqueOrgName } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-create',
@@ -19,6 +20,8 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
   public user: User;
   public form: FormGroup;
   private destroyed$ = new Subject();
+
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private service: OrganizationService,
@@ -35,10 +38,21 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
     this.user = this.auth.user;
     this.form = this.builder.group({
       'id': [''],
-      'name': ['', [Validators.required]],
+      'name': new FormControl('', {
+        validators: [Validators.required],
+        asyncValidators: [UniqueOrgName],
+        updateOn: 'blur',
+      }),
       'address': ['', [Validators.required]]
     });
 
+    this.form.statusChanges.subscribe(status => {
+      if (status === 'PENDING') {
+        this.loading$.next(true);
+      } else {
+        this.loading$.next(false);
+      }
+    });
     this.persistForm = new PersistNgFormPlugin(this.query, 'form');
     this.persistForm.setForm(this.form);
     this.route.data
@@ -56,19 +70,33 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
   // ACTIONS //
   /////////////
 
+  public get name() {
+    return this.form.get('name').value;
+  }
+
+  public get notProvided() {
+    return this.form.get('name').hasError('required');
+  }
+
+  public get notUnique() {
+    return this.form.get('name').hasError('notUnique');
+  }
+
   /** Add a new Organization */
   public async addOrganization() {
+    this.loading$.next(true);
+
     if (!this.form.valid) {
       this.snackBar.open('Form invalid', 'close', { duration: 1000 });
+      this.loading$.next(false);
       return;
     }
 
     const id = await this.service.add(this.form.value, await this.user);
 
-    this.router.navigate(['layout/o/organization', id])
     this.snackBar.open(`Created ${this.form.get('name').value}`, 'close', { duration: 1000 });
-    this.form.reset();
     this.persistForm.reset();
+    this.router.navigate(['layout/o/organization', id]);
   }
 
   /** Clear current form with cancellation */
