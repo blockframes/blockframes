@@ -1,11 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
-import { WalletQuery, WalletService } from "../+state";
+import { WalletQuery, WalletService } from "../../+state";
 import { Observable, BehaviorSubject } from "rxjs";
-import { KeyManagerQuery, KeyManagerService } from "../../key-manager/+state";
+import { KeyManagerQuery, KeyManagerService } from "../../../key-manager/+state";
 import { Wallet as EthersWallet } from "ethers";
 import { Router, ActivatedRoute } from "@angular/router";
-import { map } from "rxjs/operators";
-import { Wallet, ActionTx } from "../../types";
+import { Wallet } from "../../../types";
 import { Key } from "@blockframes/utils";
 
 enum steps {
