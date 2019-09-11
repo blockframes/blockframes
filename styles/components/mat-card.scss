@@ -4,4 +4,8 @@
 
 mat-card {
   border-radius: 10px !important;
+  box-shadow: none !important;
+  .light-theme {
+    border: 1px solid mat-color($bf-light-foreground, divider);
+  }
 }
