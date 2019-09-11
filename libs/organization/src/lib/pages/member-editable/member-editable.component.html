@@ -10,6 +10,7 @@
     <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
     <member-invitation
+      test-id="invitations-pending"
       [invitations]="invitationsFromOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">

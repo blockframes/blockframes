@@ -13,4 +13,10 @@ export default class OrganizationMemberPage extends NavbarPage{
     public sendInvitationToMember() {
         cy.get('[page-id=organization-members] button[test-id=add]').click();
     }
+
+    public assertInvitationPending(email: string) {
+      cy.get('[test-id=invitations-pending]').get('[mat-list-item]').should(($element) => {
+        expect($element).to.have.length(1)
+      })
+    }
 }

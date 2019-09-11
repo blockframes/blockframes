@@ -12,9 +12,9 @@ import { OrganizationMemberPage } from '../support/pages/OrganizationMemberPage'
 import { createOrganization } from '../support/utils/type';
 import { randomString } from '../support/utils/functions';
 
-const USER = { email: 'test@gmx.de', password: '123123' };
+const USER = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
 const ORGANIZATION = createOrganization();
-const INVITEDUSER = { email: 'hello@blockframes.com' };
+const INVITEDUSER = { email: 'cypressorg2@blockframes.com' };
 const MOVIE = { name: randomString() };
 
 beforeEach(() => {
@@ -31,9 +31,10 @@ describe('Test CRUD org', () => {
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
     const p3: MovieCreatePage = p2.clickSignin();
-    const p4: AddMovieModal = p3.clickAddMovie();
-    p4.fillMovieName(MOVIE.name);
-    const p5: MovieEditPage = p4.clickCreate();
+    const p5 = p3;
+    // const p4: AddMovieModal = p3.clickAddMovie();
+    // p4.fillMovieName(MOVIE.name);
+    // const p5: MovieEditPage = p4.clickCreate();
     p5.openProfileMenu();
     const p6: OrganizationFormPage = p5.clickOnOrganization();
     p6.clickEditButtion();
@@ -45,6 +46,7 @@ describe('Test CRUD org', () => {
     p7.addMemberToOrganization(INVITEDUSER.email);
     p7.sendInvitationToMember();
     // TODO(HH): assert new member in the pending member list
+    p7.assertInvitationPending(INVITEDUSER.email);
     const p8 = p7.logout();
   });
 });

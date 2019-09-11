@@ -2,7 +2,6 @@ import { HomePage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage, Organizatio
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.wait(5000);
     cy.get('[page-id=navbar]');
   }
 
