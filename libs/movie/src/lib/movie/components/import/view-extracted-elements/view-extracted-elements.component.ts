@@ -21,6 +21,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
+import { HttpUpload } from '@blockframes/ui';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -106,8 +107,7 @@ export class ViewExtractedElementsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private afStorage: AngularFireStorage,
-    private httpClient: HttpClient,
+    private httpUpload: HttpUpload,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -235,12 +235,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // POSTER (Poster)
-        const data = await this.getImage(spreadSheetRow[SpreadSheetMovie.poster]);
-        if (data !== false) {
-          const snapshot = await this.afStorage.upload(`movies/${spreadSheetRow[SpreadSheetMovie.poster].split('/')[spreadSheetRow[SpreadSheetMovie.poster].split('/').length - 1]}`, data)
-          const url = await snapshot.ref.getDownloadURL();
-          movie.main.poster = url;
-        }
+        movie.main.poster = await this.httpUpload.uploadImageToFirestore(spreadSheetRow[SpreadSheetMovie.poster]);
 
         //////////////////
         // OPTIONAL FIELDS
@@ -502,17 +497,6 @@ export class ViewExtractedElementsComponent {
         this.cdRef.detectChanges();
       }
     });
-  }
-
-  private getImage(imageUrl: string): Promise<Blob | boolean> {
-    if (imageUrl) {
-      return this.httpClient
-        .get(imageUrl, { responseType: 'blob' })
-        .toPromise()
-        .catch(_ => new Promise((resolve) => resolve(false)))
-    } else {
-      return new Promise((resolve) => resolve(false));
-    }
   }
 
   private validateMovie(importErrors: MovieImportState): MovieImportState {
