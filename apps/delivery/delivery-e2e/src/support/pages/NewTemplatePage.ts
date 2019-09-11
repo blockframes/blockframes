@@ -1,24 +1,17 @@
-import DeliveryFormPage from "./DeliveryMaterialsPage";
+import DeliveryFormPage from "./DeliveryFormPage";
+import { TemplateFormPage } from ".";
 
 export default class NewTemplatePage {
   constructor() {
-    cy.contains('Save as a new template');
-  }
-
-  public openSelect() {
-    cy.get('mat-select').click();
-  }
-
-  public pickOrganization(orgName: string) {
-    cy.get('mat-option').contains(orgName).click();
+    cy.get('[page-id=template-add]');
   }
 
   public fillName(templateName: string) {
-    cy.get('input[formcontrolname=name]').type(templateName);
+    cy.get('[page-id=template-add] input').type(templateName);
   }
 
-  public clickSave() {
-    cy.get('button').contains('Save Template').click();
-    return new DeliveryFormPage();
+  public clickNext() {
+    cy.get('[page-id=template-add] button[test-id=next]').click();
+    return new TemplateFormPage();
   }
 }

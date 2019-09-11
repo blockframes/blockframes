@@ -1,4 +1,5 @@
-import { HomePage, ViewProfilePage, TemplateListPage, DeliveryTeamWorkPage, LoginPage, OrganizationMemberPage, OrganizationFormPage } from "./index";
+import { HomePage, OrganizationFormPage, OrganizationMemberPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage, NewTemplatePage } from ".";
+import TemplateCreatePage from "./TemplateCreatePage";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -52,5 +53,10 @@ export default abstract class NavbarPage {
   public clickOnOrganization() {
     cy.get('button[test-id=manage-organization]').click();
     return new OrganizationFormPage();
+  }
+
+  public clickContextMenuTemplate() {
+    cy.get('[page-id=navbar]').contains('templates').click();
+    return new TemplateCreatePage();
   }
 }

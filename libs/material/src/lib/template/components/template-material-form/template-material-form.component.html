@@ -5,7 +5,7 @@
     <!-- Material Title/Value Input -->
     <mat-form-field appearance="outline">
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" type="text" formControlName="value" />
+      <input matInput placeholder="Title" type="text" formControlName="value" test-id="title" />
     </mat-form-field>
 
     <!-- Material Description Input -->
@@ -15,7 +15,8 @@
         matInput
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
-        formControlName="description">
+        formControlName="description"
+      >
       </textarea>
       <mat-hint>Only 4 lines will be visible on the list</mat-hint>
     </mat-form-field>
@@ -23,7 +24,7 @@
     <!-- Material Category Input -->
     <mat-form-field appearance="outline">
       <mat-label>Category</mat-label>
-      <input matInput placeholder="Category" type="text" formControlName="category" />
+      <input matInput placeholder="Category" type="text" formControlName="category" test-id="category" />
     </mat-form-field>
 
     <!-- Material Price Input -->
