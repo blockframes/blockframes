@@ -1,5 +1,5 @@
 import { DistributionRight, MovieData } from '../../distribution-right/+state/basket.model';
-import { CatalogBasket } from '@blockframes/catalog-marketplace';
+import { CatalogBasket } from '@blockframes/marketplace';
 import { BasketQuery } from '../../distribution-right/+state/basket.query';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { BasketStatus } from '../../distribution-right/+state/basket.model';

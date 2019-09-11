@@ -1,4 +1,4 @@
-import { CatalogBasket } from '@blockframes/catalog-marketplace';
+import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
 
