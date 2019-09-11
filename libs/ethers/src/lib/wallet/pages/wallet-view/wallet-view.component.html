@@ -1,13 +1,13 @@
 <ng-container *ngIf="(wallet$ | async) as wallet; else walletLoading">
   <header fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center">
     <h2 fxFlex="noshrink" fxFlex.lt-md="grow">Wallet and Keyring</h2>
-    <hr fxFlex="grow" />
+    <mat-divider></mat-divider>
     <div fxFlex="noshrink">
-      <a mat-stroked-button routerLink="/layout/o/account/wallet/import">
+      <a mat-stroked-button color="primary" routerLink="/layout/o/account/wallet/import">
         <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
         Import Key
       </a>
-      <a mat-stroked-button routerLink="/layout/o/account/wallet/add">
+      <a mat-stroked-button color="primary" routerLink="/layout/o/account/wallet/add">
         <mat-icon>add</mat-icon>
         Create a Key
       </a>

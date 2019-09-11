@@ -8,24 +8,17 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
   padding: 0 !important;
 }
 
-button:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
-  color: var(--lightGrey)!important;
-  border: none!important;
+button:disabled, a:disabled { // TODO: Get rid of the !important and apply this on mat-raised-button
+  color: mat-color($bf-light-foreground, disabled-button) !important;
+  background: mat-color($bf-light-background, disabled-button) !important;
+  border: none !important;
 }
 
 .mat-stroked-button {
   border-radius: 50px !important;
   box-shadow: none !important;
   border-color: transparent !important;
-  background-color: mat-color($bf-light-background, raised-button);
-}
-
-.mat-flat-button {
-  border-radius: 50px !important;
-  color: var(--primary) !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-  background-color: var(--flatButtonGrey) !important;
+  background-color: mat-color($bf-light-background, stroked-button) !important;
 }
 
 

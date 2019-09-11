@@ -16,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { UploadModule, UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
 import { KeyManagerModule } from '../key-manager/key-manager.module';
@@ -82,6 +83,7 @@ export const walletRoutes: Routes = [
     RouterModule.forChild(walletRoutes),
     UiFormModule,
     FeedbackMessageModule,
+    MatDividerModule
   ],
   declarations: [
     WalletViewComponent,
