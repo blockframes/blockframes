@@ -18,7 +18,6 @@ export * from './lib/month-calendar/month-calendar.module';
 export * from './lib/datepicker/datepicker.module';
 export * from './lib/icon-component';
 export * from './lib/movie-card/movie-card.module';
-
 // toolbar State
 export * from './lib/toolbar/+state/context-menu.model';
 export * from './lib/toolbar/+state/context-menu.query';
