@@ -5,6 +5,7 @@
 }
 
 .light-theme mat-card {
-  border-radius: 10px;
-  border: 1px solid mat-color($bf-light-foreground, divider);
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  border: 1px solid mat-color($bf-light-foreground, divider) !important;
 }
