@@ -226,6 +226,8 @@ export class ImdbMovie {
   public released?: Date;
   /** title of the movie */
   public name: string;
+  /** production company of the movie */
+  public production: string;
 
   /**
    * @hidden
