@@ -1,3 +1,5 @@
+@import 'variables';
+
 .sidenav_container {
   min-width: 60px;
   height: calc(100vh - 200px);
@@ -47,7 +49,7 @@ mat-list {
   padding-left: 20px;
   margin-top: 30px;
   a {
-    color: var(--primary);
+    color: mat-color($blockframes-theme-primary);
     font-weight: 600;
     text-decoration: none;
   }
