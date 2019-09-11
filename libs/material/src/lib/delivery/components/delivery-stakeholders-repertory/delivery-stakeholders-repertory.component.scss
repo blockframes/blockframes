@@ -1,10 +1,11 @@
+@import 'variables';
 table {
   width: 100%;
 }
 
 .disabled {
-  background-color: var(--backgroundDisabled);
-  color: var(--textDisabled);
+  background: mat-color($bf-light-background, whitebg);
+  color: mat-color($bf-light-foreground, disabled-text);
 }
 
 img {

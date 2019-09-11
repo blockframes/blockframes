@@ -1,8 +1,4 @@
-.mat-nav-list {
-  border-radius: 10px;
-}
-
-.mat-list {
+.mat-nav-list, .mat-list, .mat-selection-list {
   border-radius: 10px;
 }
 
@@ -10,11 +6,7 @@
 .light-theme .mat-list,
 .light-theme .mat-selection-list {
   background-color: mat-color($bf-light-background, app-bar);
-  border: 1px solid var(--borderGrey);
-}
-
-.mat-selection-list{
-  border-radius: 10px;
+  border: 1px solid mat-color($bf-light-background, border);
 }
 
 .active-list-item mat-icon {
