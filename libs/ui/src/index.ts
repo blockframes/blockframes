@@ -20,5 +20,6 @@ export * from './lib/editable-sidenav/editable-sidenav.module';
 export * from './lib/avatar-list/avatar-list.module';
 export * from './lib/month-calendar/month-calendar.module';
 export * from './lib/datepicker/datepicker.module';
+export * from './lib/upload/http-upload';
 
 
