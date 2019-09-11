@@ -20,15 +20,18 @@ import { SatDatepickerRangeValue } from 'saturn-datepicker';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerRangeComponent {
+  /** The month selected on the month calendar */
   @Input() selectedRange: DateRange;
+  /** An array of reserved rights dates */
   @Input() disabledDates: DateRange[];
   @Input()
   set opened(isOpen: boolean) {
     if (isOpen) {
-      this.initDatePicker();
+      this.initDatepicker();
     }
   }
 
+  /** The range chosen by the user */
   @Output() wantedRange = new EventEmitter<DateRange>();
 
   @ViewChild('picker', { static: false }) picker: MatDatepicker<Date>;
@@ -41,20 +44,23 @@ export class DatepickerRangeComponent {
   isValidRange = false;
   rangeForm = new FormControl('', [Validators.required]);
 
-  disableDates = (date: Date) => {
-    return !this.disabledDates.some(range => isBetween(date, range.from, range.to));
-  };
-
   constructor(private _snackBar: MatSnackBar) {}
 
   public addRange() {
     this.wantedRange.emit(this.range);
   }
 
-  initDatePicker() {
+  /** Open the datepicker */
+  initDatepicker() {
     this.picker.open();
   }
 
+  /** Function used by the datepicker to determine which dates need to be disabled */
+  disableDates = (date: Date) => {
+    return !this.disabledDates.some(range => isBetween(date, range.from, range.to));
+  };
+
+  /** Reversed start and end date if end < start */
   rangeChange(range: SatDatepickerRangeValue<Date>) {
     if (range) {
       this.range =
@@ -65,6 +71,7 @@ export class DatepickerRangeComponent {
     }
   }
 
+  /** Determines if the chosen date includes a deactivated date */
   validateDatepickerInput(range: DateRange) {
     const isInvalid = (disabledDate: DateRange) => {
       return (
@@ -88,7 +95,7 @@ export class DatepickerRangeComponent {
         duration: 5000
       }
     );
-    snackBarRef.onAction().subscribe(() => this.initDatePicker());
+    snackBarRef.onAction().subscribe(() => this.initDatepicker());
   }
 
   getErrorMessage() {

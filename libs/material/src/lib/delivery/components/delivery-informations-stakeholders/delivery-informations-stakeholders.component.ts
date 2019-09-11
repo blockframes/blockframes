@@ -8,14 +8,14 @@ import { Delivery } from "../../+state";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryInformationsStakeholdersComponent {
-  
+
   @Input() delivery: Delivery;
 
-  public displayedColumns: string[] = ['logo', 'stakeholder', 'hasSigned'];
+  public displayedColumns: string[] = ['stakeholder', 'hasSigned'];
 
   constructor() {}
 
   public hasSigned(stakeholderId: string) {
-    return this.delivery.validated.some(id => id === stakeholderId) ? 'signed' : 'not signed';
+    return this.delivery.validated.some(id => id === stakeholderId) ? 'Signed' : 'Not signed';
   }
 }

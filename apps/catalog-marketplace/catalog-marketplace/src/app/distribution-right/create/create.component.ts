@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Language } from './../../movie/search/search.form';
 import { BasketService } from './../+state/basket.service';
-import { CatalogBasket, createBasket } from './../+state/basket.model';
+import { CatalogBasket, createBaseBasket, createDistributionRight } from './../+state/basket.model';
 import { ViewChild } from '@angular/core';
 import { DateRange } from '@blockframes/utils';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -13,8 +13,8 @@ import { DistributionRightForm } from './create.form';
 import { MovieQuery, Movie, staticModels } from '@blockframes/movie';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { startWith, debounceTime } from 'rxjs/operators';
-import uuid from 'uuid/v4';
 import { MovieTerritories } from '../../movie/search/search.form';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'distribution-right-create',
@@ -33,10 +33,8 @@ export class DistributionRightCreateComponent implements OnInit {
   public opened = false;
   // A flag to indicate if results should be shown
   public showResults = false;
-  // A variable to indicate if a distribution right is possible
-  public instructions = 'Please use the form on the left to create your distribution right';
-  /*  
-    This variable will be input the dates inside of the datepicker 
+  /*
+    This variable will be input the dates inside of the datepicker
     if the users types it in manually
  */
   public choosenDateRange: DateRange = { to: new Date(), from: new Date() };
@@ -74,7 +72,8 @@ export class DistributionRightCreateComponent implements OnInit {
   constructor(
     private query: MovieQuery,
     private basketService: BasketService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -84,7 +83,6 @@ export class DistributionRightCreateComponent implements OnInit {
       this.movieDubbings = movie.versionInfo.dubbings;
       this.movieSubtitles = movie.versionInfo.subtitles;
     });
-
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -106,10 +104,10 @@ export class DistributionRightCreateComponent implements OnInit {
       map(value => this._subtitlesFilter(value))
     );
     this.form.valueChanges.subscribe(data => {
-      this.catalogBasket = createBasket({
+      this.catalogBasket = createBaseBasket({
         rights: [
-          {
-            id: uuid(),
+          createDistributionRight({
+            id: this.basketService.createFireStoreId,
             movieId: this.query.getActive().id,
             medias: data.medias,
             languages: data.languages,
@@ -120,7 +118,7 @@ export class DistributionRightCreateComponent implements OnInit {
               to: data.duration.to
             },
             territories: data.territories
-          }
+          })
         ]
       });
       this.choosenDateRange.to = data.duration.to;
@@ -227,16 +225,18 @@ export class DistributionRightCreateComponent implements OnInit {
   }
 
   public addDistributionRight() {
-    const newDistribtutionRight = this.catalogBasket.rights[0];
-    this.basketService.add(newDistribtutionRight);
-    this.router.navigateByUrl('layout/o/catalog/selection');
+    this.basketService.addBasket(this.catalogBasket);
+    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   // Research section
 
   public startResearch() {
     if (
-      this.isInRange(this.form.get('duration').value, this.query.getActive().salesAgentDeal.rights) &&
+      this.isInRange(
+        this.form.get('duration').value,
+        this.query.getActive().salesAgentDeal.rights
+      ) &&
       this.hasTerritoriesInCommon(
         this.form.get('territories').value,
         this.query.getActive().salesAgentDeal.territories
@@ -248,7 +248,9 @@ export class DistributionRightCreateComponent implements OnInit {
     ) {
       // can't create distribution right
       this.showResults = false;
-      this.instructions = 'The distribution rights for your choosen value are already taken!';
+      this.snackBar.open('There is no availability matching your research', null, {
+        duration: 5000
+      });
     } else {
       // create distribution right
       this.showResults = true;

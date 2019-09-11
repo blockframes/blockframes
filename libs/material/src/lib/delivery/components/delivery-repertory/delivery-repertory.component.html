@@ -23,8 +23,11 @@
   <ng-container matColumnDef="mgCurrentDeadline">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>MG Current Deadline</th>
     <td mat-cell *matCellDef="let delivery">
-      <span *ngIf="!!delivery.mgDeadLines && delivery.mgDeadLines.length > 0">
+      <span *ngIf="!!delivery.mgDeadlines && delivery.mgDeadlines.length > 0 && !!delivery.mgCurrentDeadline">
         {{ delivery.mgDeadlines[delivery.mgCurrentDeadline].label }}
+      </span>
+      <span *ngIf="!delivery.mgCurrentDeadline && !!delivery.mgDeadlines && delivery.mgDeadlines.length > 0">
+        {{ delivery.mgDeadlines[0].label }}
       </span>
     </td>
   </ng-container>

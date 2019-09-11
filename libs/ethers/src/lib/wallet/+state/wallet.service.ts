@@ -6,7 +6,7 @@ import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
-import { MetaTx, SignedMetaTx, ActionTx } from '../../types';
+import { MetaTx, SignedMetaTx, ActionTx, TxFeedback } from '../../types';
 import { WalletQuery } from './wallet.query';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 import { CreateTx } from '../../create-tx';
@@ -47,7 +47,7 @@ export class WalletService {
     return precomputeAddress(ensDomain, this.provider);
   }
 
-  
+
 
   private _requireProvider() {
     if(!this.provider) {
@@ -90,15 +90,39 @@ export class WalletService {
   }
 
   public setDeleteKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(CreateTx.deleteKey(erc1077Address, key.address, () => this.keyManager.deleteKey(key)));
+    const tx = CreateTx.deleteKey(erc1077Address, key.address, () => this.keyManager.deleteKey(key));
+    const feedback = {
+      confirmation: 'You are about to delete a key from your smart-wallet',
+      success: 'Your key has been successfully deleted !',
+      redirectName: 'Back to Wallet',
+      redirectRoute: '/layout/o/account/wallet',
+    }
+    this.setTx(tx);
+    this.setTxFeedback(feedback);
   }
 
   public setLinkKeyTx(erc1077Address: string, key: Key) {
-    this.setTx(CreateTx.addKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true})));
+    const tx = CreateTx.addKey(erc1077Address, key.address, () => this.keyManager.storeKey({...key, isLinked: true}));
+    const feedback = {
+      confirmation: 'You are about add a new key to your smart-wallet',
+      success: 'Your key has been successfully added !',
+      redirectName: 'Back to Wallet',
+      redirectRoute: '/layout/o/account/wallet',
+    }
+    this.setTx(tx);
+    this.setTxFeedback(feedback);
   }
 
   public setTx(tx: ActionTx) {
     this.store.update({tx});
+  }
+
+  public setTxFeedback(feedback: TxFeedback) {
+    this.store.update({feedback});
+  }
+
+  public deleteTxFeedback() {
+    this.store.update({feedback: undefined});
   }
 
   private hashMetaTx(from: string, metaTx: MetaTx) {
@@ -169,9 +193,10 @@ export class WalletService {
       throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
     }
 
-    const hasCallback = !!this.query.getValue().tx.callback;
+    const actionTx = this.query.getValue().tx;
+    const hasCallback = !!actionTx.callback;
     if(hasCallback) {
-      this.query.getValue().tx.callback(...args); // execute tx callback (ex: delete local key)
+      actionTx.callback(...args); // execute tx callback (ex: delete local key)
     }
     this.store.update({tx: undefined});
     return txReceipt;

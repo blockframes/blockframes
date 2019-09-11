@@ -11,6 +11,7 @@ const initialState: Wallet = {
   address: null,
   hasERC1077: false,
   tx: null,
+  feedback: null,
 };
 
 @Injectable({ providedIn: 'root' })

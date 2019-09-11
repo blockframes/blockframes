@@ -1,7 +1,7 @@
 <section class="mat-typography" fxLayout="row" fxLayoutAlign="center center" test-id="content" page-id="organization-create">
   <mat-card fxLayout="column" fxLayoutAlign="center none">
     <mat-card-header>
-      <h1>Principal Informations</h1>
+      <h1>Principal Information</h1>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="addOrganization()">
@@ -9,6 +9,8 @@
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input matInput placeholder="Name" aria-label="name" formControlName="name" />
+          <mat-error *ngIf="notProvided">You must enter a name</mat-error>
+          <mat-error *ngIf="notUnique">{{name}} is already taken, please use another name</mat-error>
         </mat-form-field>
 
         <h2>Organization Address</h2>
@@ -24,7 +26,12 @@
         <mat-toolbar>
           <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-around center">
             <button mat-button type="button" (click)="clear()">Cancel</button>
-            <button mat-raised-button type="submit" color="primary">Next</button>
+            <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
+              <ng-container *ngIf="(loading$ | async); else notLoading">
+                <mat-progress-spinner mode="indeterminate" color="accent" diameter="20"></mat-progress-spinner>
+              </ng-container>
+              <ng-template #notLoading>Next</ng-template>
+            </button>
           </mat-toolbar-row>
         </mat-toolbar>
       </form>

@@ -5,7 +5,7 @@
 
 ```bash
 # nvm use v9.10
-ng generate @nrwl/schematics:node-application eth-events-server
+ng generate @nrwl/schematics:node-application catalog-marketplace
 # directory: leave empty
 # tags: leave empty
 ```

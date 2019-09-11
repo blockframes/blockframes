@@ -36,4 +36,8 @@ export class DeliveryListComponent implements OnInit {
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
+
+  public get movieName() {
+    return this.movieQuery.getActive().main.title.original;
+  }
 }

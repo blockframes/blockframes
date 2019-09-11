@@ -1,36 +1,33 @@
-import { HomePage, OrganizationFormPage, LandingPage, ViewProfilePage, MovieTeamWorkPage, DeliveryTeamWorkPage } from ".";
+import { HomePage, OrganizationFormPage, OrganizationMemberPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage } from ".";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('.account-icon', {timeout: 60000}).contains('account_circle');
+    cy.wait(5000);
+    cy.get('[page-id=navbar]');
   }
 
   public assertIsEncrypting() {
     cy.get('mat-chip').contains('ENCRYPTING');
   }
 
-  public clickOnOrganization(orgName: string) {
-    cy.get('button').contains(orgName).click();
+  public openProfileMenu() {
+    cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
+  }
+
+  public clickOnOrganization() {
+    cy.get('[page-id=navbar]').get('button[test-id=manage-organization]').click();
     return new OrganizationFormPage();
   }
 
-  public openLogout() {
-    cy.get('mat-toolbar button.profile-button').click();
-  }
-
-  public clickLogout() {
-    cy.get('button[testId=logout]').click();
-    return new LandingPage();
+  public logout() {
+    this.openProfileMenu();
+    cy.get('button[test-id=logout]').click();
+    return new LoginPage();
   }
 
   public clickHome() {
     cy.get('button[testId=home]').click();
     return new HomePage();
-  }
-
-  public clickAcceptInvitationToMovie() {
-    cy.get('div[testId=notifications] button.mat-primary').first().click();
-    return new MovieTeamWorkPage();
   }
 
   public clickAcceptInvitationToDelivery() {
@@ -43,12 +40,13 @@ export default abstract class NavbarPage {
     cy.get('.notification-button').click();
   }
 
-  public openUserMenu() {
-    cy.get('mat-icon').should('contain', 'account_circle').contains('account_circle').click();
-  }
-
   public clickProfile() {
     cy.get('button[testId=buttonProfile]').click();
     return new ViewProfilePage();
+  }
+
+    public clickContextMenuMember() {
+    cy.get('[page-id=navbar]').contains('member').click();
+    return new OrganizationMemberPage();
   }
 }

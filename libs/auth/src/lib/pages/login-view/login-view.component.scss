@@ -48,12 +48,22 @@ mat-sidenav {
   mat-sidenav {
     width: 400px;
   }
+  mat-sidenav-content {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
+  }
 }
 
 // small
 @include tablet {
   mat-sidenav {
     width: 300px;
+  }
+  mat-sidenav-content {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
   }
 }
 

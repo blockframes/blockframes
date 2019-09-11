@@ -12,7 +12,7 @@ import { MaterialModule } from '../material/material.module';
 
 // Components
 import { TemplateAddComponent } from './components/template-add/template-add.component';
-import { TemplateMaterialRepertoryComponent } from './components/template-material-repertory/template-material-repertory.component';
+import { TemplateMaterialListComponent } from './components/template-material-list/template-material-list.component';
 import { TemplateMaterialFormComponent } from './components/template-material-form/template-material-form.component';
 import { TemplateRepertoryComponent } from './components/template-repertory/template-repertory.component';
 
@@ -66,7 +66,7 @@ const routes: Routes = [
     TemplateListComponent,
     TemplateAddComponent,
     TemplateCreateComponent,
-    TemplateMaterialRepertoryComponent,
+    TemplateMaterialListComponent,
     TemplateMaterialFormComponent,
     TemplateRepertoryComponent
   ],

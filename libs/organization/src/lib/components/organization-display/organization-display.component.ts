@@ -10,7 +10,12 @@ import { OrganizationProfile } from '../../forms/organization-profile-edit-form'
 })
 export class OrganizationDisplayComponent {
   @Output() editing = new EventEmitter<void>();
+  @Input() opened: boolean;
   @Input() organization: Organization;
   @Input() organizationInformations: OrganizationProfile;
   @Input() isSuperAdmin: boolean;
+
+  get layout() {
+    return this.opened ? 'column' : 'row';
+  }
 }

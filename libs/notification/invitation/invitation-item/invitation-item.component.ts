@@ -31,4 +31,9 @@ export class InvitationItemComponent {
     await this.service.acceptInvitation(invitation.id);
     this.snackBar.open(`You accepted the invitation!`, 'close', { duration: 5000 });
   }
+
+  public async declineInvitation(invitation: Invitation) {
+    await this.service.declineInvitation(invitation.id);
+    this.snackBar.open(`You declined the invitation.`, 'close', { duration: 5000 });
+  }
 }

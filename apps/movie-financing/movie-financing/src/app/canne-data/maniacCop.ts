@@ -1,25 +1,24 @@
 const DATA = {
   id: '6j2AoXvdn2sNKx8JxAiT',
   title: 'Maniac Cop',
-  selectionCategory: 'Producer\'s Network',
-  editorialStatus: 'Almost Closed',
+  selectionCategory: 'Prestige Directors',
+  editorialStatus: 'Pre Production',
   minRankRequired: 'platinium',
   logline: 'A killer dressed in a police uniform begins murdering innocent people on the streets of Los Angeles.',
   principalInformations: {
-    'moviePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/owners_poster.Jpg?alt=media&token=10bfb14c-0a79-4012-aabc-544e2039b336',
-    'cardPoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/owners_carte.jpg?alt=media&token=f2bc38dc-7651-43e0-be23-3c1a306bdbea',
-    'homePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/owners_home.jpg?alt=media&token=3cbe18eb-4ff4-4736-8183-9883de555985',
-    'backgroundPoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/owners_titrePageFilm.jpg?alt=media&token=c9803bf0-5538-4d0d-a6f0-429e228ed84b',
+    'moviePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Maniac_Poster.jpg?alt=media&token=5e5c241a-3678-47e7-9246-0d4529ab8c1f',
+    'cardPoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Maniac_card.jpg?alt=media&token=3b0ccf42-1b35-4ab0-b96e-943fcd15d564',
+    'homePoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Maniac_FullScreen.jpg?alt=media&token=7b38cbc2-7b11-4cc2-9e15-05d601b841cb',
+    'backgroundPoster': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/Maniac_Banner.jpg?alt=media&token=4b0b8e7e-e463-465a-99a4-8b4bed9c3d67',
     'director': 'Nicolas Winding Refn & John Hyams',
     'producedBy': 'Space Rocket Nation, Bold Films, Logical Pictures',
     'cinematographyBy': '',
-    'productionStage': 'Pre-production',
+    'productionStage': 'Pre Production',
     'internationalSales': 'Pulsar',
     'synopsis': 'The first season of Maniac Cop will take a bold approach to telling an action-horror story. Focusing as much on character and suspense as on visceral thrills, and experimenting with structure to continually peel back the layers of mystery at the heart of the story. This will also allow us to tell a wider story, about the breakdown of society, from the streets of urban America to the residential sprawl. It holds a mirror to the tinderbox of a world we know — a place where cops kill kids and snipers kill cops — and imagines what happens when someone, or something, sets fire to it all. This is not just a story of a killer cop — it’s the story of what happens when we lose trust in our institutions. It’s about the progressive corruption of a society’s soul, the abandonment of ideals, fear leading to fascism. It’s about becoming your enemies. That’s the world our show takes place in. A world much like our own – Los Angeles actually had its own “Maniac Cop” a few years ago that went on a rampage against the city – but taken to a darker place and with elements of the supernatural. Gritty and realistic, this is a world where avenging spirits of rage can bring dead men back to life to stalk the city streets. It’s a genre hybrid — film noir mixed with slasher horror — told in a Rashoman structure that allows us to unlock the mystery through a non-linear timeline.',
     'keyAssets': [
       'A modern adaptation of William Lustig’s 1988 cult classic.',
-      'Winding Refn as Director.',
-      ''
+      'Winding Refn as Director.'
     ],
     'keywords': [
       'Killer cop',
@@ -39,7 +38,7 @@ const DATA = {
       'Action',
       ''
     ],
-    'directorsCategory': 'First Feature',
+    'directorsCategory': 'Prestige',
     'fundedBudget': '€200K',
     'goalBudget': '€400K',
     'percentage': 0.5,
@@ -53,33 +52,33 @@ const DATA = {
     producersHistory: {
       'Space Rocket Nation': [
         {
-          'title': 'Neds',
-          'productionYear': 2010,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/neds.jpg?alt=media&token=7de237ce-3f4d-45ee-b03d-4b85d6baec52',
-          'logline': 'Encompassed by violent street gangs, neglectful parents, bullying teachers and a dearth of positive role models, a studious but emotionally abandoned kid turns thug.',
-          'imdbUrl': 'https://www.imdb.com/title/tt1560970/',
+          'title': 'The Neon Demon',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/neon-demon.jpg?alt=media&token=24681cf2-9158-49bd-88fc-a3c8eb4e92ca',
+          'logline': 'An aspiring model, Jesse, is new to Los Angeles. However, her beauty and youth, which generate intense fascination and jealousy within the fashion industry, may prove themselves sinister.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1974419/',
           'bestDistinctions': [
             '',
             ''
           ]
         },
         {
-          'title': 'Un Lac',
-          'productionYear': 2008,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/unLac.jpg?alt=media&token=b83bf045-705c-4830-80c5-5694b45c76e0',
-          'logline': 'The story takes place in a country about which we know nothing: a country of snow and dense forests somewhere in the North. A family lives in an isolated house near a lake.',
-          'imdbUrl': 'https://www.imdb.com/title/tt1270702',
+          'title': 'My Life Directed by Nicolas Winding Refn',
+          'productionYear': 2014,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/my-life-directed-by-nicolas.jpg?alt=media&token=87508598-fea4-4c62-a202-eb18dbfee673',
+          'logline': 'Liv Corfixen documents her husband, filmmaker Nicolas Winding Refn, during the production and release of his movie Only God Forgives (2013).',
+          'imdbUrl': 'https://www.imdb.com/title/tt4029998/',
           'bestDistinctions': [
             '',
             ''
           ]
         },
         {
-          'title': 'Le Visiteur',
-          'productionYear': 2008,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/le_visiteur.jpg?alt=media&token=f34ec180-ba7f-463a-98ac-27a1c3f67706',
-          'logline': 'A stranger arrives into a remote farm where a mute boy is living with his mother.',
-          'imdbUrl': 'https://www.imdb.com/title/tt0969307',
+          'title': 'Only God Forgives',
+          'productionYear': 2013,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/only-god-forgives.jpg?alt=media&token=b85728ab-47b9-4c1a-8d5d-ba4320f65fb0',
+          'logline': 'Julian, a drug-smuggler thriving in Bangkok\'s criminal underworld, sees his life get even more complicated when his mother compels him to find and kill whoever is responsible for his brother\'s recent death.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1602613/',
           'bestDistinctions': [
             '',
             ''
@@ -88,33 +87,77 @@ const DATA = {
       ],
       'Bold Films': [
         {
-          'title': 'High Life',
+          'title': 'Vox Lux',
           'productionYear': 2018,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/high_life.jpg?alt=media&token=8393e8cc-6860-456d-8ce9-243740cfc555',
-          'logline': 'A father and his daughter struggle to survive in deep space where they live in isolation.',
-          'imdbUrl': 'https://www.imdb.com/title/tt4827558',
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/vox-lux.jpg?alt=media&token=02a28ca4-9ba3-4e6d-b3be-25ea6d3a249d',
+          'logline': 'An unusual set of circumstances brings unexpected success to a pop star.',
+          'imdbUrl': 'https://www.imdb.com/title/tt5960374/',
           'bestDistinctions': [
             '',
             ''
           ]
         },
         {
-          'title': 'Love',
+          'title': 'Colette',
+          'productionYear': 2018,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/colette.jpg?alt=media&token=bf0c8580-0666-419c-be7f-6cf03bf7bb32',
+          'logline': 'Colette is pushed by her husband to write novels under his name. Upon their success, she fights to make her talents known, challenging gender norms.',
+          'imdbUrl': 'https://www.imdb.com/title/tt5437928/',
+          'bestDistinctions': [
+            '',
+            ''
+          ]
+        },
+        {
+          'title': 'Stronger',
+          'productionYear': 2017,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/strength-defines-us.jpg?alt=media&token=14925b8a-ffd3-42dc-bf34-cbfa85e666c5',
+          'logline': 'Stronger is the inspiring real life story of Jeff Bauman, an ordinary man who captured the hearts of his city and the world to become a symbol of hope after surviving the 2013 Boston Marathon bombing.',
+          'imdbUrl': 'https://www.imdb.com/title/tt3881784/',
+          'bestDistinctions': [
+            '',
+            ''
+          ]
+        },
+        {
+          'title': 'Shot Caller',
+          'productionYear': 2017,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/shot-caller.jpg?alt=media&token=97ea3603-29c0-473b-9842-d88bfb2f115d',
+          'logline': 'A newly released prisoner is forced by the leaders of his gang to orchestrate a major crime with a brutal rival gang on the streets of Southern California.',
+          'imdbUrl': 'https://www.imdb.com/title/tt4633690/',
+          'bestDistinctions': [
+            '',
+            ''
+          ]
+        },
+        {
+          'title': 'The Neon Demon',
+          'productionYear': 2016,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/neon-demon.jpg?alt=media&token=24681cf2-9158-49bd-88fc-a3c8eb4e92ca',
+          'logline': 'An aspiring model, Jesse, is new to Los Angeles. However, her beauty and youth, which generate intense fascination and jealousy within the fashion industry, may prove themselves sinister.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1974419/',
+          'bestDistinctions': [
+            '',
+            ''
+          ]
+        },
+        {
+          'title': 'No Escape',
           'productionYear': 2015,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/love.jpg?alt=media&token=6586ee9a-814c-40f0-8779-aaa2b7b9929b',
-          'logline': 'Murphy is an American living in Paris who enters a highly sexually and emotionally charged relationship with the unstable Electra. Unaware of the effect it will have on their relationship, they invite their pretty neighbor into their bed.',
-          'imdbUrl': 'https://www.imdb.com/title/tt3774694/',
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/no-escape.jpg?alt=media&token=c040572a-7c1f-4f49-af6b-3d1758e9f94e',
+          'logline': 'In their new overseas house, an American family soon finds themselves caught in the middle of a coup, and they frantically look for a safe escape from an environment where foreigners are being immediately executed.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1781922/',
           'bestDistinctions': [
             '',
             ''
           ]
         },
         {
-          'title': 'Capharnaüm',
-          'productionYear': 2018,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/capernaum.jpg?alt=media&token=0a5ac4ef-ceba-49e1-867d-f0a6ee14900c',
-          'logline': 'While serving a five-year sentence for a violent crime, a 12-year-old boy sues his parents for neglect.',
-          'imdbUrl': 'https://www.imdb.com/title/tt8267604',
+          'title': 'Lost River',
+          'productionYear': 2015,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/lost-river.jpg?alt=media&token=e94d9b81-29cd-401c-a495-8e51bd2f5003',
+          'logline': 'A single mother is swept into a dark underworld, while her teenage son discovers a road that leads him to a secret underwater town.',
+          'imdbUrl': 'https://www.imdb.com/title/tt2366608/',
           'bestDistinctions': [
             '',
             ''
@@ -123,31 +166,31 @@ const DATA = {
       ],
       'Logical Pictures': [
         {
-          'title': 'Arctic',
-          'productionYear': 2018,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/arctic.jpg?alt=media&token=3dbe7326-0608-4402-93ee-2ac6a0dc9cc9',
-          'logline': 'A man stranded in the Arctic after a helicopter crash must decide whether to remain in the relative safety of his makeshift camp or to embark on a deadly trek through the unknown.',
-          'imdbUrl': 'https://www.imdb.com/title/tt6820256/?ref_=adv_li_tt',
-          'bestDistinctions': [
-            ''
-          ]
-        },
-        {
-          'title': 'The Prodigy',
-          'productionYear': 2019,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/prodigy.jpg?alt=media&token=3594f7e4-524d-4fa2-9529-410a637e9121',
-          'logline': 'A mother concerned about her young son\'s disturbing behavior thinks something supernatural may be affecting him.',
-          'imdbUrl': 'https://www.imdb.com/title/tt4504044',
-          'bestDistinctions': [
-            ''
-          ]
-        },
-        {
-          'title': 'Section 99',
+          'title': 'Revenge',
           'productionYear': 2017,
-          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/section99.jpg?alt=media&token=83e24074-b3c5-4d2f-a336-5dcf87a06797',
-          'logline': 'A former boxer-turned-drug runner lands in a prison battleground after a deal gets deadly.',
-          'imdbUrl': 'https://www.imdb.com/title/tt5657856',
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/revenge-poster.jpg?alt=media&token=3c6b4ba3-2473-42b0-8561-95e3764c09e4',
+          'logline': 'Never take your mistress on an annual guys\' getaway, especially one devoted to hunting - a violent lesson for three wealthy married men.',
+          'imdbUrl': 'https://www.imdb.com/title/tt6738136',
+          'bestDistinctions': [
+            ''
+          ]
+        },
+        {
+          'title': 'Ghostland',
+          'productionYear': 2018,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/ghostland.jpg?alt=media&token=0aa66617-2100-4299-977f-092d933ac8eb',
+          'logline': 'A mother of two who inherits a house is confronted with murderous intruders on the first night in their new home and fights for her daughters\' lives. Sixteen years later when the daughters reunite at the house, things get really strange.',
+          'imdbUrl': 'https://www.imdb.com/title/tt6195094',
+          'bestDistinctions': [
+            ''
+          ]
+        },
+        {
+          'title': 'Never Grow Old',
+          'productionYear': 2019,
+          'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/never_grow_old.jpg?alt=media&token=da73ff97-03de-419e-a7d1-311302ed1dea',
+          'logline': 'An Irish undertaker profits when outlaws take over a peaceful American frontier town, but his family comes under threat as the death toll rises.',
+          'imdbUrl': 'https://www.imdb.com/title/tt1158939',
           'bestDistinctions': [
             ''
           ]
@@ -243,7 +286,7 @@ const DATA = {
       }
     ],
     'directorName': 'Nicolas Winding Refn & John Hyams',
-    'directorPic': 'https://m.media-amazon.com/images/M/MV5BOTI3NzAzMTAwMl5BMl5BanBnXkFtZTcwNzM5MjQxNw@@._V1_SY1000_CR0,0,699,1000_AL_.jpg',
+    'directorPic': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/refn.jpg?alt=media&token=c1d6e408-cad2-436e-91e4-ea57c2aee22a',
     'directorBio': 'Nicolas Winding Refn was born in Copenhagen, Denmark, and grew up in New York. He is best known for his work on THE PUSHER TRILOGY, BRONSON, VALHALLA RISING, DRIVE, ONLY GOD FORGIVES, THE NEON DEMON, and his upcoming TV series, TOO OLD TO DIE YOUNG.',
     'directorSelectiveFilmo': [
       'Tool Old To Die Young',
@@ -251,18 +294,17 @@ const DATA = {
       'Only God Forgives',
       'Drive',
       'Valhalla Rising',
-      'Bronson',
-      'The Pusher Trilogy'
+      'Bronson'
     ],
     'directorNote': 'I’ve always been attracted to neon, specifically pink neon, going so far as to christen the term “Neon Noir” during DRIVE and fusing the aesthetic into ONLY GOD FORGIVES and THE NEON DEMON. It is an enigmatic collision between realism and the supernatural that is both analogue and digital at the same time. I view MANIAC COP as an extension of this sensibility, wanting to create a genre show around a slasher concept in a relevant setting. Honing in on the collapse of society, the show challenges our sense of safety and security, unmasking us and allowing our animalistic instincts to take control. Set in Los Angeles, this is a story of society’s rage embodied. Even though the landscape is urban realism, the tone is the neon glow of my heightened sensibilities. The characters will be compositionally linked to their geography, dwarfed by their environment, simultaneously surrounded and alone. The killer is not clean or surgical, nor is he slow or bullet proof – he is savage, ferocious, a master of excessive force, riding a tenuous line of reality. Is he flesh and bone or a curse born from the sins of our past? And who is the real enemy? The Maniac Cop or the darkness he unleashes in all of us? Similar to a fairy tale, as chaos ensues, the true hero rises to fight the forces of evil. In this story it all falls back on a young female African American uniform cop who defies all odds to discover apocalyptic truths she never thought possible.',
     'producerNote': '',
     'directorFilmography': [
       {
-        'title': 'Osmosis (Netflix Series)',
+        'title': 'Too Old To Die Young (TV Mini-Series)',
         'productionYear': 2019,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/osmosis.jpg?alt=media&token=59b9b217-2af2-49de-a0ac-acb1ac1efdc7',
-        'logline': 'In near future Paris, a dating app matches singles with their soulmates by mining their brain data, but decoding true love comes at a price.',
-        'imdbUrl': 'https://www.imdb.com/title/tt7043380',
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/too-old-to-die-young.jpg?alt=media&token=df28704f-a91e-4fef-811f-ba6abbf85da8',
+        'logline': 'Detective Martin Jones, who leads a double life as a killer for hire in Los Angeles\' deadly underground, suffers an existential crisis which leads him deeper into a blood splattered world of violence.',
+        'imdbUrl': 'https://www.imdb.com/title/tt6517320/',
         'bestDistinctions': [
           '',
           '',
@@ -270,23 +312,59 @@ const DATA = {
         ]
       },
       {
-        'title': 'The Forest (Netflix Series)',
-        'productionYear': 2017,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/forest.jpg?alt=media&token=a8b19d57-813b-4900-91b6-5cc0b8c8faa6',
-        'logline': 'Sixteen-year-old Jennifer disappears one night from her village in the Ardennes. Captain Gaspard Deker leads the investigation with local cop Virginie Musso, who knew the girl well. They are helped by Eve, a lonely and mysterious woman.',
-        'imdbUrl': 'https://www.imdb.com/title/tt6560040',
-        'bestDistinctions': [
-          '',
-          '',
-          ''
-        ]
-      },
-      {
-        'title': 'Mata Hari (TV Series)',
+        'title': 'The Neon Demon',
         'productionYear': 2016,
-        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/mata_hari.jpg?alt=media&token=e1d48e67-fd96-48e2-9ee5-bde12d86a149',
-        'logline': 'A sex icon becomes a spy during one of the most important wars of the 20th century.',
-        'imdbUrl': 'https://www.imdb.com/title/tt4110246',
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/neon-demon.jpg?alt=media&token=24681cf2-9158-49bd-88fc-a3c8eb4e92ca',
+        'logline': 'An aspiring model, Jesse, is new to Los Angeles. However, her beauty and youth, which generate intense fascination and jealousy within the fashion industry, may prove themselves sinister.',
+        'imdbUrl': 'https://www.imdb.com/title/tt1974419/',
+        'bestDistinctions': [
+          '',
+          '',
+          ''
+        ]
+      },
+      {
+        'title': 'Only God Forgives',
+        'productionYear': 2013,
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/only-god-forgives.jpg?alt=media&token=b85728ab-47b9-4c1a-8d5d-ba4320f65fb0',
+        'logline': 'Julian, a drug-smuggler thriving in Bangkok\'s criminal underworld, sees his life get even more complicated when his mother compels him to find and kill whoever is responsible for his brother\'s recent death.',
+        'imdbUrl': 'https://www.imdb.com/title/tt1602613/',
+        'bestDistinctions': [
+          '',
+          '',
+          ''
+        ]
+      },
+      {
+        'title': 'Drive',
+        'productionYear': 2011,
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/drive.jpg?alt=media&token=6a4a133d-75a9-46d7-8306-cc3832f8bae9',
+        'logline': 'A mysterious Hollywood stuntman and mechanic moonlights as a getaway driver and finds himself in trouble when he helps out his neighbor.',
+        'imdbUrl': 'https://www.imdb.com/title/tt0780504/',
+        'bestDistinctions': [
+          '',
+          '',
+          ''
+        ]
+      },
+      {
+        'title': 'Valhalla Rising',
+        'productionYear': 2009,
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/valhalla_rising.jpg?alt=media&token=c8194948-fc46-4349-b855-2cc825e77c28',
+        'logline': 'Forced for some time to be a fighting slave, a pagan warrior escapes his captors with a boy and joins a group of Crusaders on their quest to the Holy Land.',
+        'imdbUrl': 'https://www.imdb.com/title/tt0862467/',
+        'bestDistinctions': [
+          '',
+          '',
+          ''
+        ]
+      },
+      {
+        'title': 'Bronson',
+        'productionYear': 2008,
+        'posterUrl': 'https://firebasestorage.googleapis.com/v0/b/blockframes-vincent.appspot.com/o/bronson.jpg?alt=media&token=1a00b0bf-6f6f-4fb5-9d31-9a58e755d533',
+        'logline': 'A young man who was sentenced to seven years in prison for robbing a post office ends up spending three decades in solitary confinement. During this time, his own personality is supplanted by his alter-ego, Charles Bronson.',
+        'imdbUrl': 'https://www.imdb.com/title/tt1172570/',
         'bestDistinctions': [
           '',
           ''
@@ -374,39 +452,39 @@ const DATA = {
     'estimatedBudget': [
       {
         'category': '1. ABOVE THE LINE',
-        'total': 517991
+        'total': 206588
       },
       {
         'category': '2. BELOW THE LINE PRODUCTION',
-        'total': 625345
+        'total': 3438646
       },
       {
         'category': '3. BELOW THE LINE POST',
-        'total': 174710
+        'total': 1119533
       },
       {
         'category': '4. BELOW THE LINE OTHER',
-        'total': 56600
+        'total': 380432
       },
       {
         'category': '5. FEES & CHARGES',
-        'total': 60000
+        'total': ''
       },
       {
         'category': '6. CONTINGENCY',
-        'total': 126638
+        'total': ''
       },
       {
         'category': '7. INSURANCE',
-        'total': 26943
+        'total': ''
       },
       {
         'category': '8. FRINGES',
-        'total': 62193
+        'total': ''
       },
       {
         'category': 'GRAND TOTAL',
-        'total': 1650420
+        'total': 5145199
       }
     ]
   },

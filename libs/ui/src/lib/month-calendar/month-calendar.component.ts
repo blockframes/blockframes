@@ -37,7 +37,6 @@ export class CalendarComponent implements OnInit {
     this.generateCalendar();
   }
 
- 
   // actions from calendar
 
   prevYear() {
@@ -52,17 +51,11 @@ export class CalendarComponent implements OnInit {
     this.generateCalendar();
   }
 
+  /** get the first and the last day of the month clicking by the user */
   getMonthRange(month:number){
     const from = new Date(this.currentDate.getFullYear(), month, 1);
     const to = new Date(this.currentDate.getFullYear(), month + 1, 0);
     this.rangeSelected.emit({from, to});
-    
-  }
-
-  getRange(month: number): DateRange{
-    this.from = new Date(this.currentDate.getFullYear(), month, 1);
-    this.to = new Date(this.currentDate.getFullYear(), month + 1, 0);
-    return {from: this.from, to: this.to};
   }
 
   /** generate the calendar grid */
@@ -72,6 +65,7 @@ export class CalendarComponent implements OnInit {
     this.monthClass(this.displayedDates);
   }
 
+  /** give to each month the first day of the displayed year */
   fillDates() {
     const dates: Date[] = [];
     const displayedDates = [];
@@ -92,7 +86,6 @@ export class CalendarComponent implements OnInit {
   monthClass(dates: Date[]){
     dates.forEach((_, i) => {
       this.disabledDates.forEach(disableRange => {
-        this.getRange(i);
 
         if(this.checkRangeInclusion(disableRange)){
           this.monthTiles[i].state = 'full';

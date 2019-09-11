@@ -23,6 +23,12 @@ img {
   height: 250px;
 }
 
+@include medium {
+  .mat-card-opened {
+    height: 90%;
+  }
+}
+
 @include mobile {
   mat-card {
     height: 100%;

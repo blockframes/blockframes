@@ -1,5 +1,5 @@
-/** Gives information about an application */
 import { CatalogBasket } from '@blockframes/catalog-marketplace';
+/** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
 
 export const enum AppStatus {
@@ -66,7 +66,7 @@ export interface Organization {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  catalog?: CatalogBasket;
+  baskets: CatalogBasket[],
   logo?: string;
 }
 
@@ -76,7 +76,7 @@ export interface OrganizationForm {
   adress: string;
 }
 
-export const PLACEHOLDER_LOGO = '/assets/images/placeHolder_logo.png';
+export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
 
 /**
  * A factory function that creates an Organization
@@ -94,6 +94,7 @@ export function createOrganization(params: Partial<Organization> = {}): Organiza
     actions: [],
     members: [],
     logo: PLACEHOLDER_LOGO,
+    catalog: null,
     ...params
   } as Organization;
 }
@@ -104,5 +105,5 @@ export function createOperation(operation: Partial<OrganizationOperation> = {}):
     quorum: 0,
     members: [],
     ...operation,
-  } as OrganizationOperation
+  } as OrganizationOperation;
 }

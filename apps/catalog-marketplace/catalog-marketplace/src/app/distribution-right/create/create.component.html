@@ -209,14 +209,14 @@
       </mat-card>
     </aside>
 
-    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults; else enterRights">
+    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
       <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
-    <ng-template #enterRights>
-      <h3>{{instructions}}</h3>
-    </ng-template>
+    <section>
+        <img src='assets/images/availabilities.png' *ngIf="!showResults"/>
+    </section>
   </article>
 </main>

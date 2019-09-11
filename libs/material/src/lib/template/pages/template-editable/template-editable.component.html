@@ -9,8 +9,8 @@
         Add material
       </button>
     </article>
-    <template-material-repertory [materials]="materials$ | async" (editing)="openSidenav($event)">
-    </template-material-repertory>
+    <template-material-list [materials]="materials$ | async" (editing)="openSidenav($event)">
+    </template-material-list>
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>

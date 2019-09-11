@@ -49,6 +49,7 @@
       <h2>Please Wait</h2>
       <p>We are preparing this space for you, it can take between 30 sec and 10 min to be ready.</p>
       <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+      <strong>{{deployStep$ | async}}</strong>
     </section>
   </ng-template>
 </ng-container>

@@ -12,10 +12,6 @@
         "function": "admin"
       },
       {
-        "source": "/ip-upload{,/**}",
-        "destination": "/ip-upload/index.html"
-      },
-      {
         "source": "/delivery{,/**}",
         "destination": "/delivery/index.html"
       },

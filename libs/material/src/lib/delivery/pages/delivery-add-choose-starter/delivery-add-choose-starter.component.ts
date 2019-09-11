@@ -55,4 +55,8 @@ export class DeliveryAddChooseStarterComponent {
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
   }
+
+  public get movieName() {
+    return this.movieQuery.getActive().main.title.original;
+  }
 }

@@ -28,7 +28,6 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
-import { StakeholderModule } from '../stakeholder/stakeholder.module';
 import { MovieDisplayModule } from './display/display.module';
 import { ImportMovieModule } from './components/import/import-movie.module';
 
@@ -94,7 +93,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     // Librairies
     UploadModule,
     UiFormModule,
-    StakeholderModule,
     ImportMovieModule,
     MovieDisplayModule,
     MovieFormModule,

@@ -13,17 +13,6 @@ button:disabled { // TODO: Get rid of the !important and apply this on mat-raise
   border: none!important;
 }
 
-.mat-flat-button {
-  border-radius: 50px !important;
-  border-color: transparent !important;
-  background-color: var(--flatButtonGrey) !important;
-  color: var(--primary) !important;
-  mat-icon {
-    font-size: 18px;
-    font-weight: 600;
-  }
-}
-
 .mat-stroked-button {
   border-radius: 50px !important;
   color: var(--primary) !important;

@@ -9,7 +9,7 @@ main {
 
 .app-icon,
 .app-icon-button {
-  height: 32px;
+  border-radius: 0;
   width: 157px;
 }
 
@@ -31,4 +31,10 @@ mat-sidenav {
 
 mat-sidenav-container {
   height: 100%;
+}
+
+mat-divider{
+  margin-left: 25px;
+  margin-right: 25px;
+  width: 230px;
 }
