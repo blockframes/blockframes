@@ -9,11 +9,11 @@ import { KeyManagerQuery } from "../+state";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EncryptingChipsComponent implements OnInit {
-  public encryting$: Observable<boolean>;
+  public encrypting$: Observable<boolean>;
 
   constructor(private query: KeyManagerQuery) {}
 
   ngOnInit() {
-    this.encryting$ = this.query.selectLoading();
+    this.encrypting$ = this.query.selectLoading();
   }
 }

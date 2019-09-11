@@ -23,7 +23,7 @@ export class KeyManagerItemComponent implements OnInit {
     this.backgroundColor = this.setBackgroundColor(key.address);
   }
 
-  /** Flag to indicate how to presentate the key card */
+  /** Flag to indicate how to display the key card */
   @Input() isSmall = false;
 
   /** Event to indicate the parent component which key is selected */
