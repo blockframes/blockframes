@@ -1,4 +1,4 @@
-import { HomePage, OrganizationFormPage, OrganizationMemberPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage } from ".";
+import { HomePage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage, OrganizationMemberPage } from ".";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -14,12 +14,7 @@ export default abstract class NavbarPage {
     cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
   }
 
-  public clickOnOrganization() {
-    cy.get('[page-id=navbar]').get('button[test-id=manage-organization]').click();
-    return new OrganizationFormPage();
-  }
-
-  public logout() {
+  public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
     return new LoginPage();

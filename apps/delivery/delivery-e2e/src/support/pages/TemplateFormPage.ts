@@ -70,6 +70,6 @@ export default class TemplateFormPage {
 
   public selectTemplates() {
     cy.get('a').contains('templates').click();
-    return new TemplateListPage;
+    return new TemplateListPage();
   }
 }

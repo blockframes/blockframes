@@ -1,6 +1,6 @@
 import NavbarPage from './NavbarPage';
 
-export class OrganizationMemberPage extends NavbarPage{
+export default class OrganizationMemberPage extends NavbarPage{
     constructor(){
         super();
         cy.get('[page-id=organization-members]')

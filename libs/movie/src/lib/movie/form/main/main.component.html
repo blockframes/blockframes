@@ -1,4 +1,4 @@
-<form [formGroup]="main">
+<form page-id="movie-form-main" [formGroup]="main">
   <!-- INTERNAL REF -->
   <mat-form-field class="full-width">
     <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" required />
@@ -19,7 +19,7 @@
     <!-- TITLES -->
     <h3> Titles </h3>
     <mat-form-field class="full-width">
-      <input matInput type="text" placeholder="Original title" formControlName="original" required />
+      <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
       <mat-error *ngIf="main.title.get('original').hasError('required')">
         Original title is <strong>required</strong>
       </mat-error>

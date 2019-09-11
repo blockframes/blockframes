@@ -1,18 +1,22 @@
 import NavbarPage from "./NavbarPage";
 import OrganizationFormPage from "./OrganizationFormPage";
-import AddMovieModal from "./AddMovieModal";
 import MovieEditPage from "./MovieEditPage";
 import TemplateListPage from "./TemplateListPage";
 import DeliveryListPage from "./DeliveryListPage";
+import AddMovieModal from "./AddMovieModal";
 
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
   }
 
-  public clickAddMovie(orgName: string) {
-    cy.get('mat-expansion-panel').should('contain', orgName).find('button.add-movie').click();
-    return new AddMovieModal();
+  public clickAddMovie() {
+    cy.get('[page-id=movie-home] a[test-id=add-movie]').click();
+    return new AddMovieModal()
+  }
+
+  public assertMovieExists(movieName: string) {
+    cy.contains(movieName).should('have.length', 1);
   }
 
   public assertMovieNotExists(movieName: string) {
@@ -36,8 +40,7 @@ export default class HomePage extends NavbarPage {
   }
 
   public displayMovieMenu(movieName: string) {
-    cy.wait(2500);
-    cy.get('mat-card-title').contains(movieName).parent().parent().parent().find('button mat-icon').should('contain', 'more_vert').contains('more_vert').click();
+    cy.get('div').contains(movieName).parent().find('button').click();
   }
 
   public clickOpenIn() {
@@ -56,7 +59,6 @@ export default class HomePage extends NavbarPage {
 
   public clickDelete() {
     cy.get('button').should('contain', 'Delete').contains('Delete').click();
-    return new MovieEditPage();
   }
 
   public selectTemplates() {

@@ -14,6 +14,8 @@ export default class MovieEditPage extends NavbarPage {
   public static OPTION_STATUS = 'status';
 
   constructor() {
+    super();
+    cy.get('[page-id=movie-edit]');
   }
 
   public clickHome() {
@@ -26,8 +28,9 @@ export default class MovieEditPage extends NavbarPage {
   }
 
   public assertMovieTitleExists(movieName: string) {
-    cy.wait(1000);
-    cy.get('mat-card').contains(movieName);
+    cy.get('[page-id=movie-form-main] input[test-id=movie-add]').should(input => {
+      expect(input.val()).to.contain(movieName);
+    });
   }
 
   public assertInputAndViewValueExists(controlName: string, value: string) {
