@@ -1,8 +1,8 @@
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, startWith } from 'rxjs/operators';
 
-export abstract class FormRepertory<E> extends FormGroup {
+export abstract class FormBatch<E> extends FormGroup {
   protected idKey = 'id';
   private active = new BehaviorSubject<string>(null);
   public active$ = this.active.asObservable();
@@ -12,9 +12,10 @@ export abstract class FormRepertory<E> extends FormGroup {
   // Read
   public selectAll(): Observable<E[]> {
     return this.valueChanges.pipe(
-      filter(entities => Object.keys(entities).length > 0),
+      startWith(this.value),
+      filter(entities => !!entities),
       map(entities => Object.keys(entities).map(key => entities[key]))
-    );
+    )
   }
 
   public getAll(): E[] {
@@ -49,7 +50,7 @@ export abstract class FormRepertory<E> extends FormGroup {
       // If there is a form already patch it
       if (this.get(newValue[this.idKey])) {
         this.get(newValue[this.idKey]).patchValue(newValue, {
-          onlySelf: true,
+          onlySelf: false,
           emitEvent: options.emitEvent
         });
         // Else create one
