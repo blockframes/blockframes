@@ -15,8 +15,15 @@ export default class OrganizationMemberPage extends NavbarPage{
     }
 
     public assertInvitationPending(email: string) {
-      cy.get('[test-id=invitations-pending]').get('[mat-list-item]').should(($element) => {
-        expect($element).to.have.length(1)
-      })
+      cy.get('[test-id=invitations-pending] mat-list-item').should((item) => expect(item).to.contain(email).length(1));
+    }
+
+    public removeInvitation(email: string) {
+      cy.get('[test-id=invitations-pending] mat-list-item').should((item) => expect(item).to.contain(email).length(1)).find('button').click();
+    }
+
+    public assertInvitationNotExists() {
+      cy.wait(1000);
+      cy.get('[test-id=invitations-pending] mat-list-item').should((item) => expect(item).to.have.length(0));
     }
 }
