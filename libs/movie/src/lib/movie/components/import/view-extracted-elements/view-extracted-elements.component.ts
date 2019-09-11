@@ -329,7 +329,7 @@ export class ViewExtractedElementsComponent {
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
           movie.salesCast.credits = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
-            .map(credit => { return { ...credit, creditRole: 'actor' } });
+            .map(credit => ({ ...credit, creditRole: 'actor' }));
         }
 
         // SYNOPSIS (Short Synopsis)

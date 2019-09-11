@@ -23,7 +23,7 @@ export class MovieImdbSearchComponent implements OnInit {
     'actions',
   ];
   public rows = new MatTableDataSource<ImdbMovie | SearchResult>([]);
-  public resultsCount : number = 0;
+  public resultsCount = 0;
   public formValid = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
