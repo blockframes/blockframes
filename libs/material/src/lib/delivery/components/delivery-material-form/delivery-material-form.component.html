@@ -55,7 +55,7 @@
     <mat-divider inset></mat-divider>
     <article *ngIf="!delivery.isSigned" fxLayout="row" fxLayoutAlign="center center">
       <button
-        mat-raised-button
+        mat-flat-button
         color="warn"
         (click)="delete.emit(control.value.id)">
           <mat-icon>delete</mat-icon>
@@ -63,7 +63,7 @@
     </button>
     </article>
     <article *ngIf="delivery.isSigned" fxLayout="row" fxLayoutAlign="center center">
-      <button mat-raised-button color="primary" (click)="enable.emit()">
+      <button mat-button color="primary" (click)="enable.emit()">
         Enable
       </button>
       <button mat-button color="primary" (click)="disable.emit()">

@@ -1,7 +1,10 @@
 <article page-id="steps-table">
   <header fxLayout="row" fxLayoutAlign="space-between">
     <h3>Steps</h3>
-    <button test-id="edit-steps-button" [disabled]="isSigned" mat-stroked-button (click)="editing.emit()">Edit</button>
+    <button test-id="edit-steps-button" [disabled]="isSigned" mat-stroked-button color="primary" (click)="editing.emit()">
+      <mat-icon>create_outline</mat-icon>
+      Edit
+    </button>
   </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- Name Column -->

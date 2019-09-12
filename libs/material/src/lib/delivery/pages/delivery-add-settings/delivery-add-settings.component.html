@@ -4,7 +4,7 @@
     <p>Choose if your delivery needs one or both options:</p>
 
     <actions-picker-list [items]="items" (picked)="picked($event)"></actions-picker-list>
-    <button test-id="continue" (click)="onCompleteFlow()" mat-raised-button color="accent" [disabled]="options.length === 0">
+    <button test-id="continue" (click)="onCompleteFlow()" mat-flat-button color="accent" [disabled]="options.length === 0">
       Continue
     </button>
   </article>
