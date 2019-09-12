@@ -43,15 +43,16 @@ export class KeyManagerItemComponent implements OnInit {
     this.address = keyToAddressPart(this.keyObject, 6);
   }
 
+  /** create a name for the downloadable file */
   get keyName() {
-    return `key_${this.keyObject.ensDomain}_${this.address.start}_${this.address.end}.json`;
+    return `${this.keyObject.ensDomain}_${this.keyObject.name}.json`;
   }
 
   /** create a downloadable data blob (json file) from this key */
-  get jsonKeystore() {
-    const res = new Blob([JSON.stringify(this.key)], { type: 'application/octet-stream' });
-    // here we bypass security to prevent angular from escaping our data
-    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(res));
+  public jsonKeystore() {
+    const data = new Blob([JSON.stringify(this.keyObject)], { type: 'application/octet-stream' });
+    const url = window.URL.createObjectURL(data);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   /** Get the 6 digits after the second index of the ethereum address to set the background color  */

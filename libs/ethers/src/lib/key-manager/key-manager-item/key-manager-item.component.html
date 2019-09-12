@@ -22,7 +22,7 @@
             <mat-icon class="material-icons">cloud_upload</mat-icon>
           </button>
         </ng-container>
-        <a mat-icon-button [href]="jsonKeystore">
+        <a mat-icon-button [href]="jsonKeystore()" [download]="keyName">
           <mat-icon class="material-icons-outlined">cloud_download</mat-icon>
         </a>
         <button mat-icon-button (click)="deleteKey.emit(keyObject)">
