@@ -2,7 +2,7 @@ import { HomePage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage, Organizatio
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('[page-id=navbar]');
+    cy.get('[page-id=navbar]', { timeout: 10000 });
   }
 
   public assertIsEncrypting() {

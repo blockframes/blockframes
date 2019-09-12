@@ -4,15 +4,33 @@ import MovieEditPage from "./MovieEditPage";
 import TemplateListPage from "./TemplateListPage";
 import DeliveryListPage from "./DeliveryListPage";
 import AddMovieModal from "./AddMovieModal";
+import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
+import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
 
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
+    cy.get('[page-id=movie-home]');
   }
 
-  public clickAddMovie() {
+  public clickAddMovie(): AddMovieModal {
     cy.get('[page-id=movie-home] a[test-id=add-movie]').click();
     return new AddMovieModal()
+  }
+
+  public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {
+    cy.get('mat-card-title').contains(movieName).parent().click();
+    return new StarterPickerPage();
+  }
+
+  public clickOnMovieWithDeliveries(movieName: string): DeliveryListPage {
+    cy.get('mat-card-title').contains(movieName).parent().click();
+    return new DeliveryListPage();
+  }
+
+  public selectAddDeliveryTab(): MoviePickerPage {
+    cy.get('.mat-tab-links').get('a').contains('add a delivery').click();
+    return new MoviePickerPage();
   }
 
   public assertMovieExists(movieName: string) {
@@ -34,7 +52,6 @@ export default class HomePage extends NavbarPage {
   }
 
   public clickOnMovie(movieName: string) {
-    cy.wait(3000);
     cy.get('mat-card').contains(movieName).click();
     return new DeliveryListPage();
   }

@@ -8,10 +8,10 @@
     Minimum guarantee amount <span>{{ mgAmount | currency: mgCurrency }}</span>
   </h4>
 </article>
-<article>
+<article page-id="deadlines-table">
   <header fxLayout="row" fxLayoutAlign="space-between">
     <h4>Guaranteed minimum payment deadlines</h4>
-    <button [disabled]="isSigned" mat-stroked-button (click)="editing.emit()">Edit</button>
+    <button test-id="edit-MG-button" [disabled]="isSigned" mat-stroked-button (click)="editing.emit()">Edit</button>
   </header>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- Label Column -->
