@@ -39,7 +39,7 @@ export abstract class FormBatch<E> extends FormGroup {
     this.active.next(id);
   }
 
-  public patchValue(
+  public upsertValue(
     value: E[],
     options: {
       onlySelf?: boolean;

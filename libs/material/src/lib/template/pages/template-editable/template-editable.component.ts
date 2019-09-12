@@ -6,7 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialService } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
-import { MaterialsFormBatch } from '../../forms/material.form';
+import { MaterialFormBatch } from '../../forms/material.form';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'template-editable',
@@ -17,9 +18,10 @@ import { MaterialsFormBatch } from '../../forms/material.form';
 export class TemplateEditableComponent implements OnInit {
   public template$: Observable<Template>;
   public materials$: Observable<Material[]>;
+  public activeForm$: Observable<AbstractControl>;
 
   public opened = false;
-  public materialsFormBatch = new MaterialsFormBatch({});
+  public materialsFormBatch = new MaterialFormBatch();
 
   constructor(
     private query: TemplateQuery,
@@ -32,9 +34,10 @@ export class TemplateEditableComponent implements OnInit {
     this.materials$ = this.query.selectActive().pipe(
       // We need to filter materials because when we go into the template list, the guard does not load materials in templates
       filter(template => !!template.materials),
-      tap(template => this.materialsFormBatch.patchValue(template.materials)),
+      tap(template => this.materialsFormBatch.upsertValue(template.materials)),
       switchMap(template => this.materialsFormBatch.selectAll())
     );
+    this.activeForm$ = this.materialsFormBatch.selectActive();
   }
 
   public openSidenav(materialId: string) {
@@ -44,7 +47,8 @@ export class TemplateEditableComponent implements OnInit {
 
   public async updateMaterials() {
     try {
-      await this.materialService.updateTemplateMaterials(this.materialsFormBatch.getAll());
+      const materials = this.materialsFormBatch.getAll();
+      await this.materialService.updateTemplateMaterials(materials);
       this.snackBar.open('Materials updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -59,7 +63,7 @@ export class TemplateEditableComponent implements OnInit {
 
   public async deleteMaterial(materialId: string) {
     try {
-      // If material exist in materialsFormBatch but not in database
+      // If material exist in materialFormBatch but not in database
       if (!this.query.hasMaterial(materialId)) {
         this.materialsFormBatch.removeControl(materialId);
         this.opened = false;

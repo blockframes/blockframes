@@ -13,7 +13,7 @@
     </template-material-list>
   </ng-container>
   <!-- Sidenav -->
-  <ng-container *ngIf="(materialsFormBatch.selectActive() | async) as materialFormGroup" sidenav>
+  <ng-container *ngIf="(activeForm$ | async) as materialFormGroup" sidenav>
     <template-material-form
       [formGroup]="materialFormGroup"
       (delete)="deleteMaterial($event)"
