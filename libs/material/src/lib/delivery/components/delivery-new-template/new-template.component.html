@@ -16,7 +16,7 @@
   <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
     <button
       *ngIf="!isTemplateUpdate; else: updating"
-      mat-raised-button
+      mat-flat-button
       color="accent"
       (click)="saveTemplate(templateName.value)"
       [disabled]="!templateName.value">
@@ -24,7 +24,7 @@
     </button>
     <ng-template #updating>
       <button
-        mat-raised-button
+        mat-flat-button
         color="accent"
         (click)="updateTemplate(templateName.value)"
         [disabled]="!templateName.value">
