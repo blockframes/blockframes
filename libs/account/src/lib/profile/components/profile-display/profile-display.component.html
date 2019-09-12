@@ -20,16 +20,16 @@
           <span *ngIf="organization"><b>Organization:</b> {{ organization.name }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="flex-end">
+          <button mat-icon-button (click)="editing.emit('password')" color="primary">
+            <mat-icon svgIcon="changePass"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="editing.emit('profile')" color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
       </article>
     </mat-card-content>
-    <mat-card-actions fxLayout="row" fxLayoutAlign="end">
-      <button mat-icon-button test-id="change-password" (click)="editing.emit('password')" color="primary">
-        <mat-icon svgIcon="changePass"></mat-icon>
-      </button>
-      <button mat-icon-button test-id="edit-profile" (click)="editing.emit('profile')" color="primary">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </mat-card-actions>
   </mat-card>
 </ng-container>
 <ng-template #loading>

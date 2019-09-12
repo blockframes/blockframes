@@ -1,12 +1,12 @@
 <section>
   <div mat-dialog-content>
-    <h3>{{ data.title || 'Confirm' }}</h3>
-    <p>{{ data.question || 'Do you confirm ?' }}</p>
+    <h3>{{ data.title || "Confirm" }}</h3>
+    <p>{{ data.question || "Do you confirm ?" }}</p>
   </div>
   <div mat-dialog-actions fxLayoutAlign="space-around">
-    <button mat-button (click)="close()">Cancel</button>
-    <button test-id="confirm" mat-button color="warn" (click)="confirm()">
-      {{ data.buttonName || 'Confirm' }}
+    <button mat-button color="primary" (click)="close()">Cancel</button>
+    <button testId="confirm" mat-flat-button color="warn" (click)="confirm()">
+      {{ data.buttonName || "Confirm" }}
     </button>
   </div>
 </section>

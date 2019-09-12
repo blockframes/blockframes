@@ -1,16 +1,15 @@
-<form [formGroup]="control">
+<form [formGroup]="control" fxLayout="column">
   <!-- Operations -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>How many members needed</mat-label>
     <mat-select formControlName="quorum">
       <mat-option *ngFor="let amount of amounts" [value]="amount">{{amount}}</mat-option>
     </mat-select>
   </mat-form-field>
-  <button mat-raised-button color="accent" (click)="updateQuorum()">Update</button>
 
   <!-- Members -->
   <article>
-    <h2>Members</h2>
+    <p>Members</p>
     <mat-list>
       <mat-list-item *ngFor="let member of control.value.members">
         <span>{{member.name}}</span>
@@ -23,7 +22,7 @@
 
   <!-- Add Member to Operation -->
   <article>
-    <h2>Add a member</h2>
+    <p>Add a member</p>
     <mat-form-field>
       <mat-label>Add a new member to this operation</mat-label>
       <mat-select [formControl]="addMemberFrom">
@@ -32,4 +31,5 @@
     </mat-form-field>
     <button mat-raised-button color="accent" (click)="addMember()">Add</button>
   </article>
+
 </form>
