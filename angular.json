@@ -1420,10 +1420,7 @@
           "options": {
             "linter": "tslint",
             "tsConfig": ["apps/catalog/marketplace/marketplace-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/catalog/marketplace/marketplace-e2e/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/catalog/marketplace/marketplace-e2e/**"]
           }
         }
       }
