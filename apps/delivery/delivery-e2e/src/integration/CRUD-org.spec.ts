@@ -7,11 +7,11 @@ import {
   LoginPage,
   OrganizationMemberPage
 } from '../support/pages';
-import { createOrganization } from '../support/utils/type';
+import { createOrganization, User } from '../support/utils/type';
 
-const USER = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
+const USER: Partial<User> = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
 const ORGANIZATION = createOrganization();
-const INVITEDUSER = { email: 'cypressorg2@blockframes.com' };
+const INVITEDUSER: Partial<User> = { email: 'cypressorg2@blockframes.com' };
 
 beforeEach(() => {
   cy.clearCookies();
@@ -26,7 +26,7 @@ describe('Test CRUD org', () => {
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
-    const p3: MovieCreatePage = p2.clickSignin();
+    const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
     // Edit user's organization
     p3.openProfileMenu();
@@ -46,6 +46,6 @@ describe('Test CRUD org', () => {
     p5.assertInvitationNotExists();
 
     // Logout
-    const p6 = p5.logout();
+    const p6: LoginPage = p5.clickLogout();
   });
 });
