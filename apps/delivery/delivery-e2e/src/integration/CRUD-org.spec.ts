@@ -5,8 +5,8 @@ import {
   OrganizationFormPage,
   MovieCreatePage,
   LoginPage,
+  OrganizationMemberPage
 } from '../support/pages';
-import { OrganizationMemberPage } from '../support/pages/OrganizationMemberPage';
 import { createOrganization } from '../support/utils/type';
 
 const USER = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
