@@ -4,20 +4,20 @@
     <ng-container content>
 
       <!-- Admin Tab -->
-      <h1 fxLayout="row" fxLayoutAlign="start center">
+      <h2 fxLayout="row" fxLayoutAlign="start center">
         <span fxFlex="noshrink">{{organizationName}}</span>
         <mat-divider></mat-divider>
-      </h1>
+      </h2>
       <!-- Operations -->
       <section>
-        <h2>Operations</h2>
+        <h3>Operations</h3>
         <org-display-operations [operations]="operations" (editing)="openSidenav('operation', $event)" >
         </org-display-operations>
       </section>
 
       <!--Operation Permissions-->
       <section>
-        <h2>Users Operations Permissions</h2>
+        <h3>Users Operations Permissions</h3>
         <org-signer-repertory [members]="members" [operations]="operations" (selected)="openSidenav('member', $event)" >
         </org-signer-repertory>
       </section>

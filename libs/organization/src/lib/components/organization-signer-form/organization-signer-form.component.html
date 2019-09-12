@@ -1,11 +1,11 @@
 <form [formGroup]="control">
   <article>
-    <h2>{{member.name}}</h2>
+    <h4>{{member.name}}</h4>
     <span *ngIf="isAdmin">(Admin)</span>
     <ng-container *ngFor="let operation of control.value ">
       <div fxLayout="row">
         <span fxFlex>{{operation.name}}</span>
-        <mat-slide-toggle fxFlex [checked]="isSelected(operation)" [disabled]="isAdmin" (change)="toggleSelection($event, operation.id)"></mat-slide-toggle>
+        <mat-slide-toggle fxFlex [checked]="isSelected(operation)" color="primary" [disabled]="isAdmin" (change)="toggleSelection($event, operation.id)"></mat-slide-toggle>
       </div>
     </ng-container>
   </article>

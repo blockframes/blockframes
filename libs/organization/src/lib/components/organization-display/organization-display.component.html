@@ -19,13 +19,13 @@
           <span><b>Activity:</b> Distribution company</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
+        <div fxLayoutAlign="end">
+          <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
       </article>
     </mat-card-content>
-    <mat-card-actions fxLayout="row" fxLayoutAlign="end">
-      <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </mat-card-actions>
   </mat-card>
 </ng-container>
 <ng-template #loading>
