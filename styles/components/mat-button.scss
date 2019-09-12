@@ -1,7 +1,6 @@
 mat-button { // TODO: Get rid of the !important and apply this on mat-raised-button
   padding: 8px 24px !important;
   font-size: 12px !important;
-  font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important; // Only for menu in movie card, WHY?
 }
 
 .mat-icon-button {
@@ -20,5 +19,3 @@ button:disabled, a:disabled { // TODO: Get rid of the !important and apply this 
   border-color: transparent !important;
   background-color: mat-color($bf-light-background, stroked-button) !important;
 }
-
-
