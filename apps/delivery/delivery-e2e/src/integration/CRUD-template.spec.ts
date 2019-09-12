@@ -6,32 +6,26 @@ import {
   NewTemplatePage,
   TemplateFormPage
 } from '../support/pages';
-import { User } from '../support/utils/type';
+import { User, Material } from '../support/utils/type';
 import TemplateCreatePage from '../support/pages/TemplateCreatePage';
 
-const MATERIALS = [
+const MATERIALS: Material[] = [
   {
-    value: 'First Material Value',
+    title: 'First Material Value',
     description: 'First Material Description',
     category: 'Category#1'
   },
   {
-    value: 'Second Material Value',
+    title: 'Second Material Value',
     description: 'Second Material Description',
     category: 'Category#2'
   },
   {
-    value: 'Third Material Value',
+    title: 'Third Material Value',
     description: 'Third Material Description',
     category: 'Category#3'
   }
 ];
-
-const MATERIAL_CHANGED = {
-  value: 'Value Changed',
-  description: 'Description Changed',
-  category: 'Category#Changed'
-};
 
 const TEMPLATE_NAME_1 = 'CRUD template';
 
@@ -55,19 +49,41 @@ describe('Test CRUD template', () => {
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSigning(USER);
-    const p3: MovieCreatePage = p2.clickSigning();
+    const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
-    // Go to template list and create a new template
+    // Go to template list
     const p4: TemplateCreatePage = p3.clickContextMenuTemplate();
     const p5: NewTemplatePage = p4.clickNewTemplate();
+
+    // create a new template
     p5.fillName(TEMPLATE_NAME_1);
     const p6: TemplateFormPage = p5.clickNext();
-    p6.addMaterial();
-    p6.fillTitle(MATERIALS[0].value);
-    p6.fillCategory(MATERIALS[0].category);
-    p6.fillDescription(MATERIALS[0].description);
-    p6.assertValues(MATERIALS[0].value, MATERIALS[0].category, 'Hugo le brave');
 
+    // create a new material
+    p6.addMaterial();
+    p6.fillMaterial(MATERIALS[0]);
+    p6.assertMaterial(MATERIALS[0]);
+    p6.saveMaterial();
+
+    // create another one
+    p6.addMaterial();
+    p6.fillMaterial(MATERIALS[1]);
+    p6.assertMaterial(MATERIALS[1]);
+    p6.saveMaterial();
+
+    // edit the first one
+    p6.editMaterial(MATERIALS[0]);
+    p6.clearMaterial();
+    p6.fillMaterial(MATERIALS[2]);
+    p6.assertMaterial(MATERIALS[2]);
+    p6.saveMaterial();
+
+    // delete both
+    p6.editMaterial(MATERIALS[1]);
+    p6.deleteMaterial();
+    p6.editMaterial(MATERIALS[2]);
+    p6.deleteMaterial();
+    p6.assertNoMaterials();
 
   //   // Add materials
   //   MATERIALS.forEach(material => {
