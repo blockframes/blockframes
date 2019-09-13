@@ -12,11 +12,9 @@
       </article>
       <article fxLayout="row wrap" fxLayoutAlign="start space-between">
         <!-- Movie Card -->
-       <movie-card
-        *ngFor="let movie of (movies$ | async)"
-        [movie]="movie"
-        [link]="linkToDeliveryList(movie.id)">
-      </movie-card>
+      <ng-container *ngFor="let movie of (movies$ | async)">
+        <movie-card [movie]="movie" [link]="linkToDeliveryList(movie.id)"></movie-card>
+      </ng-container>
       </article>
     </ng-template>
   </section>
