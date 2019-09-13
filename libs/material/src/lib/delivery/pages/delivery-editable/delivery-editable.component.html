@@ -51,7 +51,7 @@
   </ng-container>
   <!-- Sidenav (with form) -->
   <ng-container sidenav>
-    <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup">
+    <ng-container *ngIf="(activeForm$ | async) as materialFormGroup">
       <delivery-material-form
         [formGroup]="materialFormGroup"
         [delivery]="delivery$ | async"

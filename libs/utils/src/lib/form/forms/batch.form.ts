@@ -15,7 +15,7 @@ export abstract class FormBatch<E> extends FormGroup {
       startWith(this.value),
       filter(entities => !!entities),
       map(entities => Object.keys(entities).map(key => entities[key]))
-    )
+    );
   }
 
   public getAll(): E[] {
@@ -23,12 +23,16 @@ export abstract class FormBatch<E> extends FormGroup {
   }
 
   public selectActive(): Observable<AbstractControl> {
-    return this.active$.pipe(
-      map(active => this.get(active))
-    );
+    return this.active$.pipe(map(active => this.get(active)));
   }
 
   // Write
+  public switchForm(status: boolean) {
+    this.getAll().forEach(form =>
+      status ? this.get(form[this.idKey]).disable() : this.get(form[this.idKey]).enable()
+    );
+  }
+
   public add(entity: Partial<E>) {
     const id = entity[this.idKey];
     const control = this.createControl(entity);
