@@ -6,8 +6,13 @@ import { LandingPage, LoginPage, HomePage, ViewProfilePage, EditProfilePage } fr
 
 const USER: Partial<User> = {
   email: 'pouetbis7@pouet.fr',
-  password: 'pouetbis7'
+  password: 'pouetbis7',
+  name: 'Clélia',
+  surname: 'Mussy',
 };
+
+const PHONE = "0102030405";
+const POSITION = "Web Developper";
 
 beforeEach(() => {
   cy.clearCookies();
@@ -24,10 +29,10 @@ describe('Test profil', () => {
     p3.openProfileMenu();
     const p4: ViewProfilePage = p3.clickProfile();
     const p5: EditProfilePage = p4.clickEdit();
-    p5.fillName('Mussy');
-    p5.fillSurname('Clelia');
-    p5.fillPhoneNumber('0102030405');
-    p5.fillPosition('Web Developper');
+    p5.fillName(USER.name);
+    p5.fillSurname(USER.surname);
+    p5.fillPhoneNumber(PHONE);
+    p5.fillPosition(POSITION);
     p5.clickSave();
     p5.clickClose();
   });
