@@ -175,6 +175,6 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public linkToMovie(movieId: string) {
-    return "/layout/o/catalog/" + movieId;
+    return `/layout/o/catalog/${movieId}`;
   }
 }

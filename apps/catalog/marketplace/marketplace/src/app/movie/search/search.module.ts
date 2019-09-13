@@ -1,5 +1,5 @@
 // Components
-import { MovieCardModule } from '@blockframes/ui'
+import { MovieCardModule } from '@blockframes/ui';
 // Pages
 import { MarketplaceSearchComponent } from './search.component';
 

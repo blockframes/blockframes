@@ -15,7 +15,7 @@
        <movie-card
         *ngFor="let movie of (movies$ | async)"
         [movie]="movie"
-        [movieLink]="linkToMovie(movie.id)">
+        [link]="linkToDeliveryList(movie.id)">
       </movie-card>
       </article>
     </ng-template>

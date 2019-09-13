@@ -1,7 +1,7 @@
 <mat-card class="mat-elevation-z0">
   <!-- Movie Poster -->
   <div class="img-container">
-    <a [routerLink]="movieLink">
+    <a [routerLink]="link">
       <ng-container *ngIf="movie.main.poster; else: defaultPoster">
         <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
       </ng-container>
