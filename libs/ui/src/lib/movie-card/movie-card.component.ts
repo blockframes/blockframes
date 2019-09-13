@@ -10,6 +10,4 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class MovieCardComponent {
   @Input() movie: Movie;
   @Input() movieLink: string;
-  @Input() displayProductionYear = false;
-
 }

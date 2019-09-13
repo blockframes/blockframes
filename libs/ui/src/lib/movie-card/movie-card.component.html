@@ -1,6 +1,6 @@
-<mat-card>
+<mat-card class="mat-elevation-z0">
   <!-- Movie Poster -->
-  <div class="img-container clickable-item">
+  <div class="img-container">
     <a [routerLink]="movieLink">
       <ng-container *ngIf="movie.main.poster; else: defaultPoster">
         <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
@@ -45,7 +45,7 @@
       {{ director.firstName }} {{ director.lastName }}
       </mat-card-subtitle>
     </mat-card-title-group>
-    <span *ngIf="displayProductionYear">Production Year {{ movie.main.productionYear }}</span>
+    <ng-content select="[displayProductionYear]"></ng-content>
   </mat-card-content>
 
   <!-- Movie action button -->

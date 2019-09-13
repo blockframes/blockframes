@@ -4,23 +4,17 @@ mat-card {
   margin: 15px;
 }
 
-.clickable-item {
-  cursor: pointer;
-}
-
 .img-container {
   position: relative;
   width: 100%;
 }
 
 .img-container img {
-  min-width: 150px;
-  min-height: 182px;
   border-radius: 10px 10px 0 0;
 }
 
 .img-container button {
   position: absolute;
   top: 0;
-  right: 16px;
+  right: 5px;
 }
