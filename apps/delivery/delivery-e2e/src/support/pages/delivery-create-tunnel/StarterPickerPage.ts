@@ -2,7 +2,7 @@ import { SettingsPage, TemplatePickerPage } from "..";
 
 export default class StarterPickerPage {
   constructor() {
-    cy.get('[page-id=starter-picker]', { timeout: 5000 });
+    cy.get('[page-id=starter-picker]', { timeout: 10000 });
   }
 
   public clickFromScratchStarter(): SettingsPage {

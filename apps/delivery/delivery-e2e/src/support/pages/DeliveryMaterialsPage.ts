@@ -11,25 +11,25 @@ export default class DeliveryMaterialsPage extends NavbarPage {
   }
 
   public clickDeliveriesTab(): DeliveryListPage {
-    cy.get('.mat-tab-links').get('a').contains('deliveries').click();
+    cy.get('[page-id=navbar] .mat-tab-links').get('a').contains('deliveries').click();
     return new DeliveryListPage();
   }
 
   public clickInformationTab(): DeliveryInformationPage {
-    cy.get('.mat-tab-links').get('a').contains('information').click();
+    cy.get('[page-id=navbar] .mat-tab-links').get('a').contains('information').click();
     return new DeliveryInformationPage();
   }
 
   public assertDeliveryMustBeSigned() {
-    cy.get('[test-id=sign-icon]');
+    cy.get('[page-id=delivery-materials] [test-id=sign-icon]');
   }
 
   public assertTableDisplayPrice() {
-    cy.get('th[test-id=material-price]');
+    cy.get('[page-id=delivery-materials] th[test-id=material-price]');
   }
 
-  public assertMaterialsExists(material: Material) {
-    cy.get('tr').should((tr) =>
+  public assertMaterialExists(material: Material) {
+    cy.get('[page-id=delivery-materials] tr').should((tr) =>
       expect(tr)
         .to.contain(material.title)
         .to.contain(material.category)
@@ -38,7 +38,7 @@ export default class DeliveryMaterialsPage extends NavbarPage {
   }
 
   public clickDeleteDelivery(): DeleteDeliveryModal {
-    cy.get('mat-icon[svgIcon=delete]').click();
+    cy.get('[page-id=delivery-materials] mat-icon[svgIcon=delete]').click();
     return new DeleteDeliveryModal();
   }
 }

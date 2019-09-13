@@ -4,20 +4,20 @@
     <button test-id="edit-dates-button" [disabled]="isSigned" mat-stroked-button (click)="editing.emit()">Edit</button>
   </header>
   <p>
-    <span *ngIf="deliveryInformations.dueDate">
-      <b>Delivery Due Date </b>
+    <span test-id="due-date" *ngIf="deliveryInformations.dueDate">
+      <b>Delivery Due Date</b>
       {{ deliveryInformations.dueDate | date: 'MM/dd/yyyy' }}
     </span>
   </p>
   <p>
-    <span *ngIf="deliveryInformations.acceptationPeriod">
-      <b>Approval period </b>
+    <span test-id="approval-period" *ngIf="deliveryInformations.acceptationPeriod">
+      <b>Approval period</b>
       {{ deliveryInformations.acceptationPeriod }} days
     </span>
   </p>
   <p>
-    <span *ngIf="deliveryInformations.reWorkingPeriod">
-      <b>Re-working period </b>
+    <span test-id="reworking-period" *ngIf="deliveryInformations.reWorkingPeriod">
+      <b>Re-working period</b>
       {{ deliveryInformations.reWorkingPeriod }} days
     </span>
   </p>

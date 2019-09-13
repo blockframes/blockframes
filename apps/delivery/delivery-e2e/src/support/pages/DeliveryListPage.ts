@@ -1,5 +1,5 @@
-import DeliveryFormPage from "./DeliveryMaterialsPage";
 import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
+import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
 
 export default class DeliveryListPage {
   constructor() {
@@ -7,22 +7,18 @@ export default class DeliveryListPage {
   }
 
   public clickAddDelivery(): StarterPickerPage {
-    cy.get('button').contains('Add a delivery').click();
+    cy.get('[page-id=delivery-list] button[test-id=add-delivery]').click();
     return new StarterPickerPage();
   }
 
-  public assertDeliveryExists(orgName: string) {
-    cy.get('.delivery-card').should('contain', orgName);
-  }
-
-  public clickFirstDelivery(orgName1: string, orgName2?: string) {
+  public clickFirstDelivery(orgName1: string, orgName2?: string): DeliveryMaterialsPage {
     orgName2
-      ? cy.get('tr[test-id=delivery-row]').contains(orgName1 && orgName2).first().click()
-      : cy.get('tr[test-id=delivery-row]').contains(orgName1).first().click()
-    return new DeliveryFormPage();
+      ? cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1 && orgName2).first().click()
+      : cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1).first().click()
+    return new DeliveryMaterialsPage();
   }
 
   public assertDeliveryIsDeleted() {
-    cy.get('tr[test-id=delivery-row]').should('have.length', 1);
+    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').should('have.length', 1);
   }
 }

@@ -11,12 +11,12 @@ export default class DeliveryInformationPage {
   }
 
   public openMGDeadlinesEditPanel() {
-    cy.get('[test-id=edit-MG-button]').click();
+    cy.get('[page-id=delivery-information] [test-id=edit-MG-button]').click();
   }
 
   public fillMGAmount(information: DeliveryInformation) {
-    cy.get('input[type=number]').type(information.minimumGuarantee.amount);
-    cy.get('mat-select').click();
+    cy.get('[page-id=delivery-information] input[type=number]').type(information.minimumGuarantee.amount);
+    cy.get('[page-id=delivery-information] mat-select').click();
     cy.get('mat-option')
       .contains(information.minimumGuarantee.currency)
       .click();
@@ -24,16 +24,14 @@ export default class DeliveryInformationPage {
 
   public addDeadlines(information: DeliveryInformation) {
     information.minimumGuarantee.deadlines.forEach(deadline => {
-      cy.get('button')
-        .contains('Add a deadline')
-        .click();
-      cy.get('input[formControlName=label]')
+      cy.get('[page-id=delivery-information] button[test-id=add-deadline]').click();
+      cy.get('[page-id=delivery-information] input[formControlName=label]')
         .last()
         .type(deadline.label);
-      cy.get('input[formControlName=percentage]')
+      cy.get('[page-id=delivery-information] input[formControlName=percentage]')
         .last()
         .type(deadline.percentage);
-      cy.get('input[formControlName=date]')
+      cy.get('[page-id=delivery-information] input[formControlName=date]')
         .last()
         .type(deadline.date);
     });
@@ -45,43 +43,41 @@ export default class DeliveryInformationPage {
   }
 
   public openDatesEditPanel() {
-    cy.get('[test-id=edit-dates-button]').click();
+    cy.get('[page-id=delivery-information] [test-id=edit-dates-button]').click();
   }
 
   public fillDates(information: DeliveryInformation) {
-    cy.get('input[formControlName=dueDate]')
+    cy.get('[page-id=delivery-information] input[formControlName=dueDate]')
       .last()
       .type(information.dates.dueDate);
-    cy.get('input[formControlName=acceptationPeriod]')
+    cy.get('[page-id=delivery-information] input[formControlName=acceptationPeriod]')
       .last()
       .type(information.dates.approvalPeriod);
-    cy.get('input[formControlName=reWorkingPeriod]')
+    cy.get('[page-id=delivery-information] input[formControlName=reWorkingPeriod]')
       .last()
       .type(information.dates.reworkingPeriod);
   }
 
   public openStepsEditPanel() {
-    cy.get('[test-id=edit-steps-button]').click();
+    cy.get('[page-id=delivery-information] [test-id=edit-steps-button]').click();
   }
 
   public addSteps(information: DeliveryInformation) {
     this.openStepsEditPanel();
     information.steps.forEach(step => {
-      cy.get('button')
-        .contains('Add a step')
-        .click();
-      cy.get('input[formControlName=name]')
+      cy.get('[page-id=delivery-information] button[test-id=add-step]').click();
+      cy.get('[page-id=delivery-information] input[formControlName=name]')
         .last()
         .type(step.name);
-      cy.get('input[formControlName=date]')
+      cy.get('[page-id=delivery-information] input[formControlName=date]')
         .last()
         .type(step.date);
     });
   }
 
   public clickUpdateChanges() {
-    cy.get('button[test-id=save]').click();
-    cy.get('button[test-id=close]').click();
+    cy.get('[page-id=delivery-information] button[test-id=save]').click();
+    cy.get('[page-id=delivery-information] button[test-id=close]').click();
   }
 
   public assertAllInformationFieldsExists(information: DeliveryInformation) {
@@ -102,17 +98,11 @@ export default class DeliveryInformationPage {
   }
 
   public assertDatesExist(information: DeliveryInformation) {
-    cy.get('span')
-      .contains('Delivery Due Date')
-      .parent()
+    cy.get('[page-id=delivery-information] span[test-id=due-date]')
       .should(span => expect(span).to.contain(information.dates.dueDate));
-    cy.get('span')
-      .contains('Approval period')
-      .parent()
+    cy.get('[page-id=delivery-information] span[test-id=approval-period]')
       .should(span => expect(span).to.contain(information.dates.approvalPeriod));
-    cy.get('span')
-      .contains('Re-working period')
-      .parent()
+    cy.get('[page-id=delivery-information] span[test-id=reworking-period]')
       .should(span => expect(span).to.contain(information.dates.reworkingPeriod));
   }
 

@@ -119,7 +119,7 @@ describe('User create a delivery from context-menu item', () => {
     p5.selectSetting(DELIVERY_SETTINGS[0]);
     const p6: DeliveryMaterialsPage = p5.clickContinue();
     p6.assertTableDisplayPrice();
-    DELIVERY_MATERIALS.forEach(material => p6.assertMaterialsExists(material));
+    DELIVERY_MATERIALS.forEach(material => p6.assertMaterialExists(material));
   });
 });
 
@@ -133,7 +133,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
     const p5: DeliveryMaterialsPage = p4.clickContinue();
     p5.assertDeliveryMustBeSigned();
     p5.assertTableDisplayPrice();
-    DELIVERY_MATERIALS.forEach(material => p5.assertMaterialsExists(material));
+    DELIVERY_MATERIALS.forEach(material => p5.assertMaterialExists(material));
   });
 });
 
@@ -147,7 +147,12 @@ describe('User update deliveries informations', () => {
     p4.addDeadlines(DELIVERY_INFORMATION);
     p4.addDates(DELIVERY_INFORMATION);
     p4.addSteps(DELIVERY_INFORMATION);
+
+    // Checks if every informations appear in the view before updating
+    p4.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
     p4.clickUpdateChanges();
+
+    // Checks informations are displayed in view after updating
     p4.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
   })
 });

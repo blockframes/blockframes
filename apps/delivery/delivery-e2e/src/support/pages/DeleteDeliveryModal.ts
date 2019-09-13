@@ -6,7 +6,7 @@ export default class DeleteDeliveryModal {
   }
 
   public confirmDelete(): DeliveryListPage {
-    cy.get('button[test-id=confirm]').click();
+    cy.get('[page-id=confirm-modal] button[test-id=confirm]').click();
     return new DeliveryListPage();
   }
 }

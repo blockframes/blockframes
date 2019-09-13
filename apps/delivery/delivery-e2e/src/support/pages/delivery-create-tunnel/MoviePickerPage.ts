@@ -2,7 +2,7 @@ import StarterPickerPage from "./StarterPickerPage";
 
 export default class MoviePickerPage {
   constructor() {
-    cy.get('[page-id=movie-picker]');
+    cy.get('[page-id=movie-picker]', { timeout: 10000 });
   }
 
   public pickMovie(movieName: string): StarterPickerPage {
