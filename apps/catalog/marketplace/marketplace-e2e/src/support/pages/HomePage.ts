@@ -1,7 +1,13 @@
-import { NavbarPage } from './NavbarPage';
+import NavbarPage from './NavbarPage';
+import SearchPage from './SearchPage';
 
-export class HomePage extends NavbarPage {
+export default class HomePage extends NavbarPage {
   constructor() {
     super();
+  }
+
+  public clickDiscover() {
+    cy.get('[page-id=catalog-homepage] a[test-id=discover]').click();
+    return new SearchPage();
   }
 }

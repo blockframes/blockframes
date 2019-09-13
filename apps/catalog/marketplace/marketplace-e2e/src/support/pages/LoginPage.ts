@@ -1,9 +1,5 @@
-import { HomePage } from './HomePage';
+import HomePage from './HomePage';
 export default class LoginPage {
-  user = {
-    email: 'hello2@cascade8.com',
-    password: 'blockframes'
-  };
 
   constructor() {
     cy.get('[test-id=content][page-id=login]');

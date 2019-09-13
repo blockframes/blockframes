@@ -1,13 +1,16 @@
-export abstract class NavbarPage {
+import HomePage from './HomePage';
+
+export default abstract class NavbarPage {
   constructor() {
-      cy.get('[id=navbar]')
+    cy.get('[page-id=navbar]', { timeout: 10000 });
   }
 
-  openProfileMenu(){
-    cy.get('[id=navbar] button[test-id=profile-avatar]').click();
+  public openProfileMenu(){
+    cy.get('[page-id=navbar] button[test-id=profile-avatar]').click();
   }
 
-  clickLogout() {
+  public clickLogout() {
     cy.get('button[test-id=logout]').click();
+    return new HomePage();
   }
 }
