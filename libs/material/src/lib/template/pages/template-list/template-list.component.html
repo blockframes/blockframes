@@ -1,4 +1,4 @@
-<section>
+<section page-id="template-list">
   <article fxLayout="row" fxLayoutAlign="space-between center">
     <h2>Templates</h2>
     <mat-divider fxFlex></mat-divider>
@@ -8,6 +8,6 @@
     </a>
   </article>
   <article>
-    <template-repertory [templates]="(templates$ | async)" (delete)="deleteTemplate($event)"></template-repertory>
+    <template-repertory [templates]="(templates$ | async)" (delete)="deleteTemplate($event)" page-id="template-repertory"></template-repertory>
   </article>
 </section>

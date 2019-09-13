@@ -2,10 +2,10 @@ import TemplateListPage from "./TemplateListPage";
 import { Material } from "../utils/type";
 import NavbarPage from "./NavbarPage";
 
-export default class TemplateFormPage extends NavbarPage {
+export default class TemplateFormPage extends NavbarPage{
   constructor() {
     super();
-    cy.wait(7000);
+    cy.wait(1000);
     cy.get('[page-id=template-editable]');
   }
 
@@ -31,7 +31,7 @@ export default class TemplateFormPage extends NavbarPage {
   }
 
   //-------------------------------------
-  //               FILL
+  //              FILL/CLEAR
   //-------------------------------------
 
   public fillMaterial(material: Material) {
@@ -88,30 +88,6 @@ export default class TemplateFormPage extends NavbarPage {
       expect(tr).length(1)
     );
   }
-
-  // public fillDescription(materialDescription: string) {
-  //   cy.get('textarea.description').type(materialDescription);
-  // }
-
-  // public clearDescription() {
-  //   cy.get('textarea.description').clear();
-  // }
-
-  // public fillCategory(materialCategory: string) {
-  //   cy.get('input.category').type(materialCategory);
-  // }
-
-  // public clearCategory() {
-  //   cy.get('input.category').clear();
-  // }
-
-  // public clickSaveMaterial() {
-  //   cy.get('button.add-button').click();
-  // }
-
-  // public assertMaterialsCount(materialsLength: number) {
-  //   cy.get('mat-card').should('have.length', materialsLength);
-  // }
 
   public selectTemplates() {
     cy.get('a').contains('templates').click();

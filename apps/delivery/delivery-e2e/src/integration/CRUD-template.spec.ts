@@ -4,7 +4,8 @@ import {
   LoginPage,
   MovieCreatePage,
   NewTemplatePage,
-  TemplateFormPage
+  TemplateFormPage,
+  TemplateListPage
 } from '../support/pages';
 import { User, Material } from '../support/utils/type';
 import TemplateCreatePage from '../support/pages/TemplateCreatePage';
@@ -27,7 +28,7 @@ const MATERIALS: Material[] = [
   }
 ];
 
-const TEMPLATE_NAME_1 = 'CRUD template';
+const TEMPLATE_NAME_1 = 'Crud Template';
 
 const USER: User = {
   email: 'cypress@pl.com',
@@ -52,18 +53,25 @@ describe('Test CRUD template', () => {
     const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
     // Go to template list
-    const p4: TemplateCreatePage = p3.clickContextMenuTemplate();
+    const p4: TemplateCreatePage = p3.clickContextMenuTemplate(false) as TemplateCreatePage;
     const p5: NewTemplatePage = p4.clickNewTemplate();
 
     // create a new template
     p5.fillName(TEMPLATE_NAME_1);
-    const p6: TemplateFormPage = p5.clickNext();
+    let p6: TemplateFormPage = p5.clickNext();
 
     // create a new material
     p6.addMaterial();
     p6.fillMaterial(MATERIALS[0]);
     p6.assertMaterial(MATERIALS[0]);
     p6.saveMaterial();
+
+    // go back to template list
+    let p7: TemplateListPage = p6.clickContextMenuTemplate(true) as TemplateListPage;
+    p7.assertTemplate(TEMPLATE_NAME_1);
+
+    // re-open previous template
+    p6 = p7.editTemplate(TEMPLATE_NAME_1);
 
     // create another one
     p6.addMaterial();
@@ -85,41 +93,13 @@ describe('Test CRUD template', () => {
     p6.deleteMaterial();
     p6.assertNoMaterials();
 
-  //   // Add materials
-  //   MATERIALS.forEach(material => {
-  //     p5.clickAdd();
-  //     p5.fillValue(material.value);
-  //     p5.fillDescription(material.description);
-  //     p5.fillCategory(material.category);
-  //     p5.clickSaveMaterial();
-  //   });
-  //   p5.assertMaterialsCount(MATERIALS.length);
+    // go back to template list
+    p7 = p6.clickContextMenuTemplate(true) as TemplateListPage;
 
-  //   // Delete one material
-  //   p5.clickDeleteMaterial(MATERIALS[0].value);
-  //   p5.assertMaterialsCount(MATERIALS.length - 1);
+    // delete the template
+    p7.deleteTemplate(TEMPLATE_NAME_1);
 
-  //   // Edit a material
-  //   p5.clickEditMaterial(MATERIALS[1].value);
-  //   p5.clearValue();
-  //   p5.fillValue(MATERIAL_CHANGED.value);
-  //   p5.clearDescription();
-  //   p5.fillDescription(MATERIAL_CHANGED.description);
-  //   p5.clearCategory();
-  //   p5.fillCategory(MATERIAL_CHANGED.category);
-  //   p5.clickSaveMaterial();
-  //   p5.assertMaterialsCount(MATERIALS.length - 1);
-  //   p5.assertMaterialExists(
-  //     MATERIAL_CHANGED.value,
-  //     MATERIAL_CHANGED.description,
-  //     MATERIAL_CHANGED.category
-  //   );
-
-  //   // Go to template list and delete the template
-  //   const p6: TemplateListPage = p5.selectTemplates();
-  //   p6.assertTemplateExists(TEMPLATE_NAME_1);
-  //   p6.displayTemplateMenu(TEMPLATE_NAME_1);
-  //   p6.deleteTemplate();
-  //   p6.assertTemplateDoesNotExists(TEMPLATE_NAME_1);
+    // assert that the list is empty
+    p7.assertNoTemplates();
    });
 });
