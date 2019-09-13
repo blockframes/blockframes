@@ -3,6 +3,6 @@
 <ng-template #loaded>
   <article class="movie-picker-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
     <!-- Movie Card -->
-    <movie-card *ngFor="let movie of (movies$ | async)" [movie]="movie" (navigate)="selectedId($event)"></movie-card>
+    <movie-card *ngFor="let movie of (movies$ | async)" [movie]="movie" [movieLink]="linkToMovie(movie.id)"></movie-card>
   </article>
 </ng-template>

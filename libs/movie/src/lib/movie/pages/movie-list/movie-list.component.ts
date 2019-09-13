@@ -48,8 +48,8 @@ export class MovieListComponent implements OnInit {
     });
   }
 
-  public linkToMovie(movieId) {
+  public linkToMovie(movieId: string) {
     const appName = this.routerQuery.getValue().state.root.data.app;
-    return "/layout/o/" + appName + "/" + movieId + "/list";
+    return `/layout/o/${appName}/${movieId}/list`;
   }
 }

@@ -174,7 +174,7 @@ export class MarketplaceSearchComponent implements OnInit {
     this.territoryInput.nativeElement.value = '';
   }
 
-  public navigateToMovieView(movieId: string) {
-    this.router.navigate([`/layout/o/catalog/${movieId}`])
+  public linkToMovie(movieId: string) {
+    return "/layout/o/catalog/" + movieId;
   }
 }

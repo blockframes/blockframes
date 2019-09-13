@@ -196,7 +196,7 @@
       </div>
       <div *ngIf="(movieSearchResults$ | async) as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
         <ng-container *ngFor="let movie of searchResults">
-          <movie-card [movie]="movie" displayProductionYear></movie-card>
+          <movie-card [movie]="movie" displayProductionYear [movieLink]="linkToMovie(movie.id)"></movie-card>
         </ng-container>
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
         <movie-display-list [movie]="searchResults" *ngIf="listView"></movie-display-list>
