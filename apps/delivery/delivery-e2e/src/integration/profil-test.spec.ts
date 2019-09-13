@@ -26,6 +26,8 @@ describe('Test profil', () => {
     const p5: EditProfilePage = p4.clickEdit();
     p5.fillName('Mussy');
     p5.fillSurname('Clelia');
+    p5.fillPhoneNumber('0102030405');
+    p5.fillPosition('Web Developper');
     p5.clickSave();
     p5.clickClose();
   });

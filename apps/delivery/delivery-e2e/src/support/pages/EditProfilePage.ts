@@ -2,23 +2,23 @@ import ViewProfilePage from "./ViewProfilePage";
 
 export default class EditProfilePage {
   constructor() {
-    cy.get('[page-id=profileEdit]');
+    cy.get('[page-id=profile-editable]');
   }
 
   public fillName(value: string) {
-    cy.get(`input[formControlName="name"]`).type(value);
+    cy.get(`[page-id=profileEdit] input[formControlName="name"]`).clear().type(value);
   }
 
   public fillSurname(value: string) {
-    cy.get(`input[formControlName="surname"]`).type(value);
+    cy.get(`[page-id=profileEdit] input[formControlName="surname"]`).clear().type(value);
   }
 
   public fillPhoneNumber(value: string) {
-    cy.get(`input[formControlName="phoneNumber"]`).type(value);
+    cy.get(`[page-id=profileEdit] input[formControlName="phoneNumber"]`).clear().type(value);
   }
 
   public fillPosition(value: string) {
-    cy.get(`input[formControlName="position"]`).type(value);
+    cy.get(`[page-id=profileEdit] input[formControlName="position"]`).clear().type(value);
   }
 
   public assertEmailExists(value: string) {
@@ -40,11 +40,11 @@ export default class EditProfilePage {
   }
 
   public clickSave() {
-    cy.get(`[test-id=action-button]`).find('button').contains('svgIcon="save"').click();
+    cy.get(`[page-id=profile-editable] [test-id=action-button]`).find(`button[test-id=save]`).click();
   }
 
   public clickClose() {
-    cy.get(`[test-id=action-button]`).find('button').contains('cross').click();
+    cy.get(`[page-id=profile-editable] [test-id=action-button]`).find('button[test-id=close]').click();
     return new ViewProfilePage();
   }
 }
