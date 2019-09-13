@@ -1,5 +1,5 @@
 <ng-container *ngIf="user; else: loading">
-  <mat-card [ngClass]="{ 'mat-card-opened': opened }">
+  <mat-card page-id="profileView" [ngClass]="{ 'mat-card-opened': opened }">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" [fxLayout.lt-lg]="layout">
       <img mat-card-avatar [src]="[user.avatar]" alt="Profile picture" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">

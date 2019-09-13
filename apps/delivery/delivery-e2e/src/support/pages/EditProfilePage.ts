@@ -2,20 +2,23 @@ import ViewProfilePage from "./ViewProfilePage";
 
 export default class EditProfilePage {
   constructor() {
-    cy.get('[testId=profileEdit]');
+    cy.get('[page-id=profileEdit]');
   }
 
-  public fillFirstName(value: string) {
-    cy.get(`input[formControlName=first_name]`).type(value);
+  public fillName(value: string) {
+    cy.get(`input[formControlName="name"]`).type(value);
   }
 
-  public fillLastName(value: string) {
-    cy.get(`input[formControlName=last_name]`).type(value);
+  public fillSurname(value: string) {
+    cy.get(`input[formControlName="surname"]`).type(value);
   }
 
-  public fillBiography(value: string) {
-    cy.get(`textarea[formControlName=biography]`).type(value);
-    cy.wait(200);
+  public fillPhoneNumber(value: string) {
+    cy.get(`input[formControlName="phoneNumber"]`).type(value);
+  }
+
+  public fillPosition(value: string) {
+    cy.get(`input[formControlName="position"]`).type(value);
   }
 
   public assertEmailExists(value: string) {
@@ -36,18 +39,12 @@ export default class EditProfilePage {
     })
   }
 
-  public clickArrowBack() {
-    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('arrow_back').click();
-    return new ViewProfilePage();
-  }
-
-  public assertBiographyExists(value: string) {
-    cy.get(`textarea[formControlName=biography]`).should(input => {
-      expect(input.val()).to.contain(value);
-    })
-  }
-
   public clickSave() {
-    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('Save').click();
+    cy.get(`[test-id=action-button]`).find('button').contains('svgIcon="save"').click();
+  }
+
+  public clickClose() {
+    cy.get(`[test-id=action-button]`).find('button').contains('cross').click();
+    return new ViewProfilePage();
   }
 }

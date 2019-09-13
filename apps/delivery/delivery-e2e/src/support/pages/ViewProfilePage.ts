@@ -4,11 +4,11 @@ import EditProfilePage from "./EditProfilePage";
 export default class ViewProfilePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('main[testId=profileView]');
+    cy.get('[page-id=profileView]');
   }
 
   public clickEdit() {
-    cy.get('main[testId=profileView]').find('button').click();
+    cy.get('button').contains('edit').click();
     return new EditProfilePage();
   }
 
