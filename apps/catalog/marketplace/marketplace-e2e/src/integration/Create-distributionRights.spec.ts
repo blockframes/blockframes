@@ -25,7 +25,8 @@ describe('test select movie from catalog', () => {
     const p3: HomePage = p2.clickSignIn();
     const p4: SearchPage = p3.clickDiscover();
     p4.fillProductionYear();
-    p4.selectGenre('Action');
+    p4.selectGenres('Romance');
+    p4.selectLanguages();
     // GENRE_ARRAY.forEach(genre => p.selectGenre(genre)); // will check each checkbox with genres in the array
   });
 });
