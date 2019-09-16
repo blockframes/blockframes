@@ -6,6 +6,7 @@ import { Movie, MovieStore } from '@blockframes/movie';
 export const catalogMovieListQuery = (): Query<Movie> => ({
   path: `movies`
 });
+
 @Injectable({ providedIn: 'root' })
 export class CatalogMovieListGuard extends StateListGuard<Movie> {
   public params = [];

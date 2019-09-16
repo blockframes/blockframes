@@ -47,7 +47,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
-  public cardOrList: boolean;
+  public listView: boolean;
 
   // TODO#748: split up into compoennts
   public movieGenres: MovieType[];

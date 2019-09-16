@@ -14,6 +14,5 @@ export class MovieDisplayListComponent {
   @Input()
   set movie(movie: Movie[]) {
     this.dataSource = new MatTableDataSource(movie);
-    console.log(this.dataSource);  
   }
 }

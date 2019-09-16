@@ -177,16 +177,18 @@
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <h3>Films</h3>
         <mat-divider></mat-divider>
-        <button mat-icon-button (click)="cardOrList = !cardOrList" *ngIf="!cardOrList">
-          <mat-icon>list</mat-icon>
-        </button>
-        <button mat-icon-button (click)="cardOrList = !cardOrList" *ngIf="cardOrList">
-          <mat-icon>grid_on</mat-icon>
+        <button mat-icon-button (click)="listView = !listView">
+          <ng-container *ngIf="!listView">
+            <mat-icon>list</mat-icon>
+          </ng-container>
+          <ng-container *ngIf="listView">
+            <mat-icon>grid_on</mat-icon>
+          </ng-container>
         </button>
         <mat-form-field>
           <mat-label>Sort by</mat-label>
           <mat-select>
-            <mat-option *ngFor="let option of sortOptions" [value]="option" (click)="sortMovies(option)">
+            <mat-option *ngFor="let option of sortOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
@@ -195,12 +197,10 @@
       <div *ngIf="(movieSearchResults$ | async) as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
         <ng-container *ngFor="let movie of searchResults">
           <movie-display-card-item [movie]="movie.main" [routerLink]="['/layout/o/catalog', movie.id]"
-            *ngIf="!cardOrList"></movie-display-card-item>
-          <div *ngIf="cardOrList" fxLayout="column" class="movie-list">
-            <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-            <movie-display-list [movie]="searchResults"></movie-display-list>
-          </div>
+            *ngIf="!listView"></movie-display-card-item>
         </ng-container>
+        <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
+        <movie-display-list [movie]="searchResults" *ngIf="listView"></movie-display-list>
       </div>
     </article>
   </section>
