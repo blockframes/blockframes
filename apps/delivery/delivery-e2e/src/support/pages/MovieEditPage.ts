@@ -1,5 +1,6 @@
 import HomePage from "./HomePage";
 import NavbarPage from './NavbarPage';
+import OrganizationFormPage from "./OrganizationFormPage";
 
 export default class MovieEditPage extends NavbarPage {
   public static FIELD_INTERNATIONAL_TITLE = 'internationalTitle'
@@ -54,5 +55,9 @@ export default class MovieEditPage extends NavbarPage {
       value = value[0].toLocaleUpperCase() + value.substring(1);
       cy.get('mat-card').contains(value);
     });
+  }
+
+  public clickOnOrganization() {
+    return new OrganizationFormPage();
   }
 }

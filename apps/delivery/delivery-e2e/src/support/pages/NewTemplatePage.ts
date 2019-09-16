@@ -1,4 +1,4 @@
-import DeliveryFormPage from "./DeliveryFormPage";
+import DeliveryFormPage from "./DeliveryMaterialsPage";
 
 export default class NewTemplatePage {
   constructor() {

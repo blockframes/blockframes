@@ -54,7 +54,7 @@
             </mat-menu>
           </div>
 
-          <a [routerLink]="['/layout/o', movie.id]">
+          <a (click)="navigateToMovieApp(movie.id)">
             <!-- Movie Informations (title, year, director) -->
             <mat-card-header class="clickable-item">
               <mat-card-title>

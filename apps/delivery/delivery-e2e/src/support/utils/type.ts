@@ -1,5 +1,34 @@
 import { randomString, randomEmail } from './functions';
 
+export interface DeliveryInformation {
+  minimumGuarantee: {
+    amount: string;
+    currency: string;
+    deadlines: Deadline[];
+  };
+  dates: {
+    dueDate: string;
+    approvalPeriod: string;
+    reworkingPeriod: string;
+  };
+  steps: Step[];
+}
+
+export interface Deadline {
+  label: string;
+  percentage: string;
+  date: string;
+}
+
+export interface Step {
+  name: string;
+  date: string;
+}
+export interface Material {
+  title: string;
+  category: string;
+  description: string;
+}
 export interface User {
   email: string;
   password: string;

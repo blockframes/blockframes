@@ -1,8 +1,8 @@
-<section>
+<section page-id="delivery-list">
   <article fxLayout="row" fxLayoutAlign="space-between center">
     <h2>Deliveries for {{ movieName }}</h2>
     <mat-divider fxFlex></mat-divider>
-    <button mat-stroked-button color="primary" (click)="addDelivery()">
+    <button test-id="add-delivery" mat-stroked-button color="primary" (click)="addDelivery()">
       <mat-icon>add</mat-icon>
       Add a delivery
     </button>

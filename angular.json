@@ -1398,15 +1398,15 @@
       }
     },
     "catalog-marketplace-e2e": {
-      "root": "apps/catalog/marketpalce/marketpalce-e2e",
-      "sourceRoot": "apps/catalog/marketpalce/marketpalce-e2e/src",
+      "root": "apps/catalog/marketplace/marketplace-e2e",
+      "sourceRoot": "apps/catalog/marketplace/marketplace-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/catalog/marketpalce/marketpalce-e2e/cypress.json",
-            "tsConfig": "apps/catalog/marketpalce/marketpalce-e2e/tsconfig.e2e.json",
+            "cypressConfig": "apps/catalog/marketplace/marketplace-e2e/cypress.json",
+            "tsConfig": "apps/catalog/marketplace/marketplace-e2e/tsconfig.e2e.json",
             "devServerTarget": "catalog-marketplace:serve"
           },
           "configurations": {
