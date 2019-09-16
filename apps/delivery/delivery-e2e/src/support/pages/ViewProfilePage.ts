@@ -35,4 +35,9 @@ export default class ViewProfilePage extends NavbarPage {
       expect($input.val()).to.match(/0x[a-zA-Z\d]{40}/); // ethereum address regex
     });
   }
+
+  public editPassword() {
+    cy.get('button[test-id="changePassword"]').click();
+    return new EditProfilePage;
+  }
 }

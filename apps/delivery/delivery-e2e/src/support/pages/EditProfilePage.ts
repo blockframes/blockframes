@@ -39,6 +39,18 @@ export default class EditProfilePage {
     })
   }
 
+  public currentPassword(value: string) {
+    cy.get(`[page-id=passwordEdit] input[formControlName="current"]`).clear().type(value);
+  }
+
+  public newPassword(value: string) {
+    cy.get(`[page-id=passwordEdit] input[formControlName="password"]`).clear().type(value);
+  }
+
+  public confirmPassword(value: string) {
+    cy.get(`[page-id=passwordEdit] input[formControlName="confirm"]`).clear().type(value);
+  }
+
   public clickSave() {
     cy.get(`[page-id=profile-editable] [test-id=action-button]`).find(`button[test-id=save]`).click();
   }

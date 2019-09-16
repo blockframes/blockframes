@@ -38,4 +38,5 @@ export default class LoginPage {
     cy.get('[page-id=signin] button[type=submit]').click();
     return new HomePage();
   }
+
 }
