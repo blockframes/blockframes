@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({

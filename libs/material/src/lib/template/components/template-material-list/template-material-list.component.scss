@@ -1,4 +1,3 @@
-@import 'variables';
 
 table {
   width: 100%;
@@ -9,7 +8,7 @@ td.mat-cell {
 }
 
 .category-text {
-  color: mat-color($blockframes-theme-warn);
+  color: white;
   font-weight: 500;
 }
 

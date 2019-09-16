@@ -1,4 +1,3 @@
-@import 'variables';
 
 .container {
   padding: 10px;
@@ -20,6 +19,6 @@ mat-icon {
 .date {
   font-weight: 700;
   font-size: 10px;
-  color: mat-color($bf-light-foreground, subheading);
+  color: white;
   margin-bottom: 0;
 }
