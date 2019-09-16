@@ -4,7 +4,7 @@
     <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">
       <h2>{{ movie.main.title.original }}</h2>
       <mat-divider fxFlex></mat-divider>
-      <button mat-icon-button matTooltip="Save as a template" (click)="saveAsTemplate()">
+      <button test-id="save-as-template" mat-icon-button matTooltip="Save as a template" (click)="saveAsTemplate()">
         <mat-icon svgIcon="template"></mat-icon>
       </button>
       <a

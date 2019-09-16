@@ -3,6 +3,7 @@ import DeliveryListPage from "./DeliveryListPage";
 import { Material } from "../utils/type";
 import DeliveryInformationPage from "./DeliveryInformationPage";
 import DeleteDeliveryModal from "./DeleteDeliveryModal";
+import SaveAsTemplateModal from "./SaveAsTemplateModal";
 
 export default class DeliveryMaterialsPage extends NavbarPage {
   constructor() {
@@ -40,5 +41,10 @@ export default class DeliveryMaterialsPage extends NavbarPage {
   public clickDeleteDelivery(): DeleteDeliveryModal {
     cy.get('[page-id=delivery-materials] mat-icon[svgIcon=delete]').click();
     return new DeleteDeliveryModal();
+  }
+
+  public clickSaveAsTemplate() {
+    cy.get('[page-id=delivery-materials] [test-id=save-as-template]').click();
+    return new SaveAsTemplateModal();
   }
 }

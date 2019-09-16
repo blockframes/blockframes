@@ -41,7 +41,7 @@ export default class HomePage extends NavbarPage {
 }
 
   public clickOnMovie(movieName: string) {
-    cy.get('[page-id=movie-home] mat-card').contains(movieName).click();
+    cy.get('[page-id=movie-home] mat-card').contains(movieName).parent().click();
     return new DeliveryListPage();
   }
 

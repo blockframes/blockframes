@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 import {
-  DeliveryFormPage,
   DeliveryListPage,
   HomePage,
   LandingPage,
@@ -8,23 +7,25 @@ import {
   TemplateDeleteModal,
   TemplateFormPage,
   TemplateListPage,
-  LoginPage
+  LoginPage,
+  DeliveryMaterialsPage
 } from '../support/pages';
-import { User } from '../support/utils/type';
+import { User, Material } from '../support/utils/type';
+import SaveAsTemplateModal from '../support/pages/SaveAsTemplateModal';
 
-const MATERIALS = [
+const MATERIALS: Material[] = [
   {
-    value: 'First Material Value',
+    title: 'First Material Value',
     description: 'First Material Description',
     category: 'Category#1'
   },
   {
-    value: 'Second Material Value',
+    title: 'Second Material Value',
     description: 'Second Material Description',
     category: 'Category#2'
   },
   {
-    value: 'Third Material Value',
+    title: 'Third Material Value',
     description: 'Third Material Description',
     category: 'Category#3'
   }
@@ -38,7 +39,7 @@ const MATERIAL_CHANGED = {
 
 const USER: Partial<User> = {email: 'cytest@blockframes.com', password: 'azerty'}
 
-const TEMPLATE_NAME_1 = 'SaveAsTemplate';
+const TEMPLATE_NAME_1 = 'Saveastemplate';
 const MOVIE_CYTEST = 'I, robot';
 const ORG_CYTEST = 'cytestorg';
 
@@ -57,44 +58,29 @@ describe('I m a user and I can save a delivery as template', () => {
     p2.fillSignin(USER);
     const p3: HomePage = p2.clickSigninWithMovies();
     const p4: DeliveryListPage = p3.clickOnMovie(MOVIE_CYTEST);
-    const p5: DeliveryFormPage = p4.clickDelivery(ORG_CYTEST);
-    const p6: NewTemplatePage = p5.clickSaveAsTemplate();
+    const p5: DeliveryMaterialsPage = p4.clickFirstDelivery(ORG_CYTEST);
+    const p6: SaveAsTemplateModal = p5.clickSaveAsTemplate();
     p6.fillName(TEMPLATE_NAME_1);
-    p6.clickSave();
+    const p7: DeliveryMaterialsPage = p6.clickSave();
+    const p8: HomePage = p7.clickHome();
+    const p9: TemplateListPage = p8.clickContextMenuTemplates();
+    const p10: TemplateFormPage = p9.editTemplate(TEMPLATE_NAME_1);
+    p10.assertMaterial(MATERIALS[0]);
 
-    // // Save delivery as new template
-    // const p5: NewTemplatePage = p4.clickSaveAsTemplate();
-    // p5.openSelect();
-    // p5.pickOrganization(ORG_CYTEST);
-    // p5.fillName(TEMPLATE_NAME_1);
-    // const p6: DeliveryFormPage = p5.clickSave();
-    // p6.assertMaterialsCount(MATERIALS.length);
 
-    // // GO to template-list
-    // const p7: HomePage = p6.clickHome();
-    // const p8: TemplateListPage = p7.selectTemplates();
-    // const p9: TemplateFormPage = p8.selectTemplate(TEMPLATE_NAME_1);
-    // p9.assertMaterialsCount(MATERIALS.length);
 
-    // // Edit a material
-    // p9.clickEditMaterial(MATERIALS[1].value);
-    // p9.clearValue();
-    // p9.fillValue(MATERIAL_CHANGED.value);
-    // p9.clearDescription();
-    // p9.fillDescription(MATERIAL_CHANGED.description);
-    // p9.clearCategory();
-    // p9.fillCategory(MATERIAL_CHANGED.category);
-    // p9.clickSaveMaterial();
-    // p9.assertMaterialsCount(MATERIALS.length);
-    // p9.assertMaterialExists(
-    //   MATERIAL_CHANGED.value,
-    //   MATERIAL_CHANGED.description,
-    //   MATERIAL_CHANGED.category
-    // );
+    const p11: HomePage = p10.clickHome();
+    const p12: DeliveryListPage = p11.clickOnMovie(MOVIE_CYTEST);
+    const p13: DeliveryMaterialsPage = p12.clickLastDelivery(ORG_CYTEST);
+    const p14: SaveAsTemplateModal = p13.clickSaveAsTemplate();
+    p14.fillName(TEMPLATE_NAME_1);
+    const p15: DeliveryMaterialsPage = p14.clickUpdate();
+    const p16: HomePage = p15.clickHome();
+    const p17: TemplateListPage = p16.clickContextMenuTemplates();
+    const p18: TemplateFormPage = p17.editTemplate(TEMPLATE_NAME_1);
+    p18.assertMaterial(MATERIALS[1]);
+    p18.assertMaterial(MATERIALS[2]);
 
-    // // Delete template
-    // const p10: TemplateDeleteModal = p9.deleteTemplate();
-    // const p11: TemplateListPage = p10.clickConfirm();
-    // p11.assertTemplateDoesNotExists(TEMPLATE_NAME_1);
+    // TODO : updateTEmplate
   });
 });

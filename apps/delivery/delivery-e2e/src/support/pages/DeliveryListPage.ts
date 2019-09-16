@@ -18,6 +18,11 @@ export default class DeliveryListPage {
     return new DeliveryMaterialsPage();
   }
 
+  public clickLastDelivery(orgName) {
+    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName).last().click();
+    return new DeliveryMaterialsPage();
+  }
+
   public assertDeliveryIsDeleted() {
     cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').should('have.length', 1);
   }

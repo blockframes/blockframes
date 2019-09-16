@@ -22,6 +22,7 @@ import SettingsPage from './delivery-create-tunnel/SettingsPage';
 import MoviePickerPage from './delivery-create-tunnel/MoviePickerPage';
 import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
 import DeleteDeliveryModal from './DeleteDeliveryModal';
+import SaveAsTemplateModal from './SaveAsTemplateModal';
 
 export {
   HomePage,

@@ -1,9 +1,20 @@
 import TemplateDeleteModal from "./TemplateDeleteModal";
 import TemplateListPage from "./TemplateListPage";
+import { Material } from "../utils/type";
+import NavbarPage from "./NavbarPage";
 
-export default class TemplateFormPage {
+export default class TemplateFormPage extends NavbarPage {
   constructor() {
-    cy.contains('Add a material')
+    super();
+  }
+
+  public assertMaterial(material: Material) {
+    cy.get('[page-id=template-material-list] tr').should( tr =>
+      expect(tr)
+        .to.contain(material.title)
+        .to.contain(material.category)
+        .to.contain(material.description)
+    );
   }
 
   public deleteTemplate() {

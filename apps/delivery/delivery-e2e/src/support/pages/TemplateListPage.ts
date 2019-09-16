@@ -4,11 +4,12 @@ import AddTemplateModal from "./AddTemplateModal";
 
 export default class TemplateListPage {
   constructor() {
+    cy.get('[page-id=template-list]', {timeout: 10000});
   }
 
-  public selectTemplate(templateName: string) {
-    cy.wait(500);
-    cy.get('mat-card').contains(templateName).click();
+  public editTemplate(name: string) {
+    cy.get('[page-id=template-repertory] tr')
+    .contains(name).click();
     return new TemplateFormPage();
   }
 
