@@ -28,9 +28,10 @@ export abstract class FormBatch<E> extends FormGroup {
 
   // Write
   public switchForm(status: boolean) {
-    this.getAll().forEach(form =>
-      status ? this.get(form[this.idKey]).disable() : this.get(form[this.idKey]).enable()
-    );
+    this.disable();
+    // this.getAll().forEach(form =>
+    //   status ? this.get(form[this.idKey]).disable() : this.get(form[this.idKey]).enable()
+    // );
   }
 
   public add(entity: Partial<E>) {

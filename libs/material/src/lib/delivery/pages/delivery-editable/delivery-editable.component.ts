@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, tap, switchMap, takeUntil } from 'rxjs/operators';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { MaterialForm } from '../../forms/material.form';
 import { AbstractControl } from '@angular/forms';
 import { applyTransaction } from '@datorama/akita';
@@ -24,6 +24,7 @@ import { OrganizationService, OrganizationQuery } from '@blockframes/organizatio
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryEditableComponent implements OnInit, OnDestroy {
+  private destroyed$ = new Subject();
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
@@ -31,12 +32,8 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[];
   public pdfLink: string;
 
-  // TODO: use it
   public form = new MaterialForm();
   public activeForm$: Observable<AbstractControl>;
-
-  private destroyed$ = new Subject();
-
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -53,35 +50,18 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    //Generate a formList with disabled fields (or not) depending on delivery isSigned property
-    // this.query.selectActive()
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //     //tap(delivery => this.form = !!delivery.isSigned ? new MaterialForm(delivery.isSigned) : new MaterialForm()),
-    //   ).subscribe(delivery => !!delivery.isSigned ? this.form.disableForm() : null);
-
-    // this.materials$ = this.materialQuery.selectAll().pipe(
-    //   tap(materials => this.form.upsertValue(materials)),
-    //   switchMap(materials => this.form.selectAll())
-    // );
-
-    // this.query.selectActive()
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //     //tap(delivery => this.form = !!delivery.isSigned ? new MaterialForm(delivery.isSigned) : new MaterialForm()),
-    //   ).subscribe(delivery => !!delivery.isSigned ? this.form.disableForm() : null);
-
     this.materials$ = combineLatest([this.query.selectActive(), this.materialQuery.selectAll()]).pipe(
       switchMap(([delivery, materials]) => {
         this.form.upsertValue(materials);
-        this.form.switchForm(delivery.isSigned);
+        // Disable or enable form depending on delivery isSigned property
+        delivery.isSigned ? this.form.disable() : this.form.enable();
         return this.form.selectAll();
       })
     )
 
     this.activeForm$ = this.form.selectActive();
 
-    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`
+    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
     this.displayedColumns = this.setDisplayedColumns();
@@ -247,6 +227,10 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
     this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash, orgId);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
+  }
+
+  public disableDelivery() {
+    // No clue about what to do here
   }
 
   /* Define an array of columns to be displayed in the list depending on delivery settings **/
