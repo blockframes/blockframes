@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { StakeholderService } from '../../stakeholder/+state';
 import { Movie, createMovie } from './movie.model';
 import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
-import { MovieStore } from './movie.store';
+import { MovieStore, MovieState } from './movie.store';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 
 /**
  * @see #483
@@ -17,61 +17,66 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
+// TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
-
-export class MovieService {
-
+@CollectionConfig({ path: 'movies' })
+export class MovieService extends CollectionService<MovieState> {
   constructor(
-  private db: FireQuery,
-  private shService: StakeholderService,
-  private organizationQuery: OrganizationQuery,
-  private permissionsService: PermissionsService,
-  private store: MovieStore
-  ) {}
+    private fireQuery: FireQuery,
+    private organizationQuery: OrganizationQuery,
+    private permissionsService: PermissionsService,
+    store: MovieStore
+  ) {
+    super(store);
+  }
 
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
-    const id = this.db.createId();
+    const id = this.fireQuery.createId();
     const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
+    const organizationDoc = this.fireQuery.doc<Organization>(`orgs/${organization.id}`);
 
-    if(!movie) { // create empty movie
-      movie = createMovie({ id, main: {title: { original }}});
-    } else { // we set an id for this new movie
+    if (!movie) {
+      // create empty movie
+      movie = createMovie({ id, main: { title: { original } } });
+    } else {
+      // we set an id for this new movie
       movie = createMovie({ id, ...movie });
     }
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+    await this.fireQuery.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const organizationSnap = await tx.get(organizationDoc.ref);
       const movieIds = organizationSnap.data().movieIds || [];
 
       // Create movie document and permissions
-      await this.permissionsService.createDocAndPermissions<Movie>(cleanModel(movie), organization, tx);
+      await this.permissionsService.createDocAndPermissions<Movie>(
+        cleanModel(movie),
+        organization,
+        tx
+      );
 
       // Update the org movieIds
       const nextMovieIds = [...movieIds, movie.id];
-      tx.update(organizationDoc.ref, { movieIds: nextMovieIds })
-
+      tx.update(organizationDoc.ref, { movieIds: nextMovieIds });
     });
     return movie;
   }
 
-  public update(id: string, movie: any) : Promise<void>{
+  public updateById(id: string, movie: any): Promise<void> {
     // we don't want to keep orgId in our Movie object
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
-  }
+    return this.fireQuery.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
+  } 
 
   public async remove(movieId: string): Promise<void> {
-    const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
+    const movieDoc = this.fireQuery.doc<Movie>(`movies/${movieId}`);
 
-    await this.db.firestore.runTransaction(async(tx: firebase.firestore.Transaction) => {
+    await this.fireQuery.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       // Delete the movie in movies collection
       tx.delete(movieDoc.ref);
       // Remove the movie from the movies store
       this.store.remove(movieId);
-    })
+    });
   }
-
 }

@@ -6,12 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 // Guards
-import { CatalogMovieListGuard } from './guards/catalog-movie-list.guard';
 import { CatalogMovieActiveGuard } from './guards/catalog-movie-active.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
+import { MovieCollectionGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -73,13 +73,15 @@ export const routes: Routes = [
               },
               {
                 path: 'search',
+                canActivate: [MovieCollectionGuard],
+                canDeactivate: [MovieCollectionGuard],
                 loadChildren: () =>
                   import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
               },
               {
                 path: 'selection',
-                canActivate: [CatalogBasketGuard, CatalogMovieListGuard],
-                canDeactivate: [CatalogBasketGuard, CatalogMovieListGuard],
+                canActivate: [CatalogBasketGuard, MovieCollectionGuard],
+                canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
                 children: [
                   {
                     path: '',

@@ -59,7 +59,7 @@ export class TableExtractedSalesComponent implements OnInit {
     const movie = createMovie(cleanModel(existingMovie));
     const data = this.rows.data;
     movie.sales.push(importState.sale);
-    await this.movieService.update(movie.id, movie);
+    await this.movieService.updateById(movie.id, movie);
     importState.errors.push({
       type: 'error',
       field: 'sale',
@@ -95,7 +95,7 @@ export class TableExtractedSalesComponent implements OnInit {
           return movies[importState.movieInternalRef].sales.push(importState.sale);
         });
       this.rows.data = data;
-      const promises = Object.keys(movies).map(k => this.movieService.update(movies[k].id, movies[k]))
+      const promises = Object.keys(movies).map(k => this.movieService.updateById(movies[k].id, movies[k]))
 
       await Promise.all(promises);
       this.snackBar.open(`${sales.length} sales inserted!`, 'close', { duration: 3000 });

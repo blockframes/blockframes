@@ -1,12 +1,13 @@
+import { CollectionState } from 'akita-ng-fire';
 import { Injectable } from '@angular/core';
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { EntityStore, StoreConfig } from '@datorama/akita';
 import { Movie } from './movie.model';
 
-export interface MovieState extends EntityState<Movie>, ActiveState<string> {}
+export interface MovieState extends CollectionState<Movie> {}
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movies', idKey: 'id' })
-export class MovieStore extends EntityStore<MovieState, Movie> {
+export class MovieStore extends EntityStore<MovieState> {
 
   constructor() {
     super();

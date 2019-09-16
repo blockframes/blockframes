@@ -4,13 +4,12 @@ import { ErrorStateMatcher, MatAccordion } from '@angular/material';
 import { Validators, FormGroupDirective, NgForm } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 // Blockframes
 import { Movie, staticModels } from '@blockframes/movie';
-import { FireQuery } from '@blockframes/utils';
+import { MovieQuery } from '@blockframes/movie';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
-import { startWith, map, debounceTime } from 'rxjs/operators';
+import { startWith, map, debounceTime, switchMap } from 'rxjs/operators';
 // Others
 import {
   MovieType,
@@ -49,6 +48,8 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
 
+  public sortedMovies$: Observable<Movie[]>;
+
   // TODO#748: split up into compoennts
   public movieGenres: MovieType[];
   public movieLanguages: Language[];
@@ -76,7 +77,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public movieTerritories: MovieTerritories[];
   public territoryControl: FormControl = new FormControl();
 
-  constructor(private fireQuery: FireQuery, private router: Router) {}
+  constructor(private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.movieGenres = staticModels['GENRES'].map(key => key.label);
@@ -95,11 +96,13 @@ export class MarketplaceSearchComponent implements OnInit {
       map(territory => this._territoriesFilter(territory))
     );
     this.movieSearchResults$ = combineLatest([
-      this.fireQuery.collection<Movie>('movies').valueChanges(),
+     this.movieQuery.selectAll(),
       this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
     ]).pipe(
       map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
     );
+   /*  this.sortedMovies$ = this.movieSearchResults$.pipe(startWith('All films'),
+    switchMap((sortBy) => this.)) */
   }
 
   ////////////////////
