@@ -25,10 +25,20 @@ describe('test select movie from catalog', () => {
     const p3: HomePage = p2.clickSignIn();
     const p4: SearchPage = p3.clickDiscover();
     p4.fillProductionYear('2000', '2004');
-    p4.selectGenres('Romance');
-    // GENRE_ARRAY.forEach(genre => p.selectGenre(genre)); // will check each checkbox with genres in the array
+    const GENRE_ARRAY = ['Romance', 'Drama'];
+    p4.selectGenres(GENRE_ARRAY);
     p4.selectLanguages('English');
-    p4.selectCertifications();
-    p4.selectAvailabilities();
+    p4.selectCertifications('EOF');
+    p4.selectAvailabilities({
+      yearFrom: '2019',
+      monthFrom: 'September',
+      dayFrom: '1',
+      yearTo: '2019',
+      monthTo: 'September',
+      dayTo: '10'
+    });
+    p4.selectTerritories('World');
+    const MEDIA_ARRAY = ['Pay TV', 'Free TV'];
+    p4.selectMandateMedias(MEDIA_ARRAY);
   });
 });

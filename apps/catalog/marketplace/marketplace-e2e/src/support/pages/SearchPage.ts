@@ -10,9 +10,9 @@ export default class SearchPage {
     cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(to);
   }
 
-  public selectGenres(genre: string) {
+  public selectGenres(genres: string[]) {
     cy.get('[page-id=catalog-search] [test-id=genres-panel]').click();
-    cy.get('[page-id=catalog-search] mat-checkbox').contains(genre).click();
+    genres.forEach(genre => cy.get('[page-id=catalog-search] mat-checkbox').contains(genre).click());
   }
 
   public selectLanguages(language: string) {
@@ -23,21 +23,32 @@ export default class SearchPage {
     cy.get('[page-id=catalog-search] button[test-id=languages]').click();
   }
 
-  public selectCertifications() {
+  public selectCertifications(certification: string) {
     cy.get('[page-id=catalog-search] [test-id=certifications-panel]').click();
-    cy.get('[page-id=catalog-search] mat-checkbox').contains('EOF').click();
+    cy.get('[page-id=catalog-search] mat-checkbox').contains(certification).click();
   }
 
-  public selectAvailabilities() {
+  public selectAvailabilities(date) {
     cy.get('[page-id=catalog-search] [test-id=availabilities-panel]').click();
     cy.get('[test-id=datepicker-from]').click();
-    cy.get('[aria-label=2019]').click();
-    cy.get('[aria-label="September 2019"]').click();
-    cy.get('[aria-label="September 1, 2019"]').click();
+    cy.get(`[aria-label=${date.yearFrom}]`).click();
+    cy.get(`[aria-label="${date.monthFrom} ${date.yearFrom}"]`).click();
+    cy.get(`[aria-label="${date.monthFrom} ${date.dayFrom}, ${date.yearFrom}"]`).click();
     cy.get('[test-id=datepicker-to]').click();
-    cy.get('[aria-label=2019]').click();
-    cy.get('[aria-label="September 2019"]').click();
-    cy.get('[aria-label="September 10, 2019"]').click();
+    cy.get(`[aria-label=${date.yearTo}]`).click();
+    cy.get(`[aria-label="${date.monthTo} ${date.yearTo}"]`).click();
+    cy.get(`[aria-label="${date.monthTo} ${date.dayTo}, ${date.yearTo}"]`).click();
+  }
+
+  public selectTerritories(territory: string) {
+    cy.get('[page-id=catalog-search] [test-id=territories-panel]').click();
+    cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').click();
+    cy.get('mat-option').contains(territory).click();
+  }
+
+  public selectMandateMedias(medias: string[]) {
+    cy.get('[page-id=catalog-search] [test-id=mandate-medias-panel]').click();
+    medias.forEach(media => cy.get('[page-id=catalog-search] mat-checkbox').contains(media).click());
   }
 }
 
