@@ -4,7 +4,7 @@ import EditProfilePage from "./EditProfilePage";
 export default class ViewProfilePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=profile-display]');
+    cy.get('[page-id=profileDisplay]');
   }
 
   public clickEdit() {

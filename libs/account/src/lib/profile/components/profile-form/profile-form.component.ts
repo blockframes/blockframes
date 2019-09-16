@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
 
@@ -9,12 +9,14 @@ import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
+  @HostBinding('attr.page-id') pageId = 'profileEdit';
+
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
     return this.controlContainer.control;
   }
-  
+
   public get avatar() {
     return this.control.get('avatar').value;
   }

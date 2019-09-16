@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,9 @@ import { ControlContainer } from '@angular/forms';
 })
 
 export class PasswordFormComponent {
+
+  @HostBinding('attr.page-id') pageId = 'passwordEdit';
+
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {

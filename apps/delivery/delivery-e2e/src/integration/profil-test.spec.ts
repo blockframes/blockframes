@@ -19,7 +19,7 @@ const USERBIS: Partial<User> = {
 };
 
 const PHONE = "0102030405";
-const POSITION = "Web Developper";
+const POSITION = "Biggest junior Web Developper";
 const CURRENT_PASSWORD = "pouetbis7";
 const NEW_PASSWORD = "pouetpouetbis7";
 
@@ -48,7 +48,7 @@ describe('Test profil', () => {
 });
 
 describe('Test profil', () => {
-  it.skip('should login, navigate to profil, change password', () => {
+  it('should login, navigate to profil, change password', () => {
     const p1: LandingPage = new LandingPage;
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
