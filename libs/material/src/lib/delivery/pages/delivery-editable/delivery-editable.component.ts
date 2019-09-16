@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { MaterialForm } from '../../forms/material.form';
 import { AbstractControl } from '@angular/forms';
 import { applyTransaction } from '@datorama/akita';
@@ -23,8 +23,7 @@ import { OrganizationService, OrganizationQuery } from '@blockframes/organizatio
   styleUrls: ['./delivery-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryEditableComponent implements OnInit, OnDestroy {
-  private destroyed$ = new Subject();
+export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
@@ -51,13 +50,15 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.materials$ = combineLatest([this.query.selectActive(), this.materialQuery.selectAll()]).pipe(
-      switchMap(([delivery, materials]) => {
+      tap(([delivery, materials]) => {
         this.form.upsertValue(materials);
         // Disable or enable form depending on delivery isSigned property
         delivery.isSigned ? this.form.disable() : this.form.enable();
+      }),
+      switchMap(([delivery, materials]) => {
         return this.form.selectAll();
       })
-    )
+    );
 
     this.activeForm$ = this.form.selectActive();
 
@@ -87,7 +88,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Add a material formGroup to the formList **/
+  /* Add a material formGroup to the form **/
   public addMaterial() {
     const newMaterial = this.materialService.add();
     this.form.add(newMaterial);
@@ -254,10 +255,5 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   public get deliveryContractURL$(): Observable<string> {
     return this.delivery$.pipe(map(({ id }) => `/delivery/contract.pdf?deliveryId=${id}`));
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
   }
 }
