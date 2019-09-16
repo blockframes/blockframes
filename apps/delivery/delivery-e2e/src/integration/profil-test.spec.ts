@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 describe('Test profil', () => {
-  it.skip('should login, navigate to profil, change several information', () => {
+  it('should login, navigate to profil, change several information', () => {
     const p1: LandingPage = new LandingPage;
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -48,7 +48,7 @@ describe('Test profil', () => {
 });
 
 describe('Test profil', () => {
-  it('should login, navigate to profil, change password', () => {
+  it.skip('should login, navigate to profil, change password', () => {
     const p1: LandingPage = new LandingPage;
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
