@@ -3,7 +3,7 @@ import { ViewPage } from ".";
 export default class SearchPage {
 
   constructor() {
-    cy.get('[page-id=catalog-search]');
+    cy.get('[page-id=catalog-search]', { timeout: 10000 });
   }
 
   public fillProductionYear(from: string, to: string) {
@@ -59,7 +59,7 @@ export default class SearchPage {
   }
 
   public selectMovie() {
-    cy.get('[page-id=display-card] [test-id=movie-card-title]').contains('Eternal Sunshine of the Spotless Mind').click()
+    cy.get('[page-id=display-card] [test-id=movie-card-title]', { timeout: 10000 }).contains('Eternal Sunshine of the Spotless Mind').click()
     return new ViewPage();
   }
 }

@@ -40,10 +40,16 @@ describe('test select movie from catalog', () => {
     // TODO: looping array
     // const TERRITORY_ARRAY = ['World', 'France', 'Germany']
     p4.selectTerritories('World');
-    const MEDIA_ARRAY = ['Pay TV', 'Free TV'];
-    p4.selectMandateMedias(MEDIA_ARRAY);
+    const SEARCH_MEDIA_ARRAY = ['Pay TV', 'Free TV'];
+    p4.selectMandateMedias(SEARCH_MEDIA_ARRAY);
     const p5: ViewPage = p4.selectMovie();
     const p6: DistributionPage = p5.clickDistributionRights();
     p6.selectDates();
+    p6.selectTerritory();
+    const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv']; // key.slug
+    p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);
+    p6.selectLanguage();
+    p6.clickDistributionSearch();
+    p6.clickAddDistribution();
   });
 });
