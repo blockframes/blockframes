@@ -1,3 +1,5 @@
+import { SelectionPage } from ".";
+
 export default class DistributionPage {
   constructor() {
     cy.get('[page-id=distribution-right]');
@@ -36,6 +38,7 @@ export default class DistributionPage {
   }
 
   public clickAddDistribution() {
-    cy.get('[page-id=distribution-right] a[test-id=add-distribution-button]').click();
+    cy.get('[page-id=distribution-right] a[test-id=add-distribution-button]').click()
+    return new SelectionPage();
   }
 }

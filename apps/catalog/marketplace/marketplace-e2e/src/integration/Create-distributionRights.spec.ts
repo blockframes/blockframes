@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, LoginPage, HomePage, SearchPage, ViewPage, DistributionPage } from '../support/pages';
+import { LandingPage, LoginPage, HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../support/pages';
 import { User } from "../support/utils/type";
 
 const LOGIN_CREDENTIALS: Partial<User> = {
@@ -50,6 +50,10 @@ describe('test select movie from catalog', () => {
     p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);
     p6.selectLanguage();
     p6.clickDistributionSearch();
-    p6.clickAddDistribution();
+    const p7: SelectionPage = p6.clickAddDistribution();
+    p7.fillOffer();
+    p7.selectCurrency();
+    const p8: FeedbackPage = p7.clickSend();
+    p8.clickRedirect();
   });
 });

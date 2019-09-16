@@ -5,6 +5,8 @@ import NavbarPage from './NavbarPage';
 import SearchPage from './SearchPage'
 import ViewPage from './ViewPage';
 import DistributionPage from './DistributionPage';
+import SelectionPage from './SelectionPage';
+import FeedbackPage from './FeedbackPage';
 
 export {
   LandingPage,
@@ -13,5 +15,7 @@ export {
   NavbarPage,
   SearchPage,
   ViewPage,
-  DistributionPage
+  DistributionPage,
+  SelectionPage,
+  FeedbackPage
 };
