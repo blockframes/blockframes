@@ -1,7 +1,7 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<main *ngIf="(movie$ | async) as movie;">
+<main *ngIf="(movie$ | async) as movie;" test-id="content" page-id="catalog-movie-view">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
@@ -57,7 +57,7 @@
     </section>
   </section>
   <div fxLayout="row" fxLayoutAlign="center end">
-    <a class="distribution-button" mat-raised-button color="accent"
+    <a test-id="distribution-right-link" class="distribution-button" mat-raised-button color="accent"
       [routerLink]="['/layout/o/catalog', movie.id, 'create']">
       Create distribution right
     </a>

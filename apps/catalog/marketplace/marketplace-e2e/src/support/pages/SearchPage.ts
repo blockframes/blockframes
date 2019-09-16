@@ -1,3 +1,5 @@
+import { ViewPage } from ".";
+
 export default class SearchPage {
 
   constructor() {
@@ -42,13 +44,23 @@ export default class SearchPage {
 
   public selectTerritories(territory: string) {
     cy.get('[page-id=catalog-search] [test-id=territories-panel]').click();
-    cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').click();
+    cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').type(territory);
     cy.get('mat-option').contains(territory).click();
+    // TODO: fixing mat-option referencing first input
+    // territories.forEach(territory => {
+    //   cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').type(territory);
+    //   cy.get('mat-option', {timeout: 5000}).contains(territory).click();
+    // });
   }
 
   public selectMandateMedias(medias: string[]) {
     cy.get('[page-id=catalog-search] [test-id=mandate-medias-panel]').click();
     medias.forEach(media => cy.get('[page-id=catalog-search] mat-checkbox').contains(media).click());
+  }
+
+  public selectMovie() {
+    cy.get('[page-id=display-card] [test-id=movie-card-title]').contains('Eternal Sunshine of the Spotless Mind').click()
+    return new ViewPage();
   }
 }
 

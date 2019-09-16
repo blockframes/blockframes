@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, LoginPage, HomePage, SearchPage } from '../support/pages';
+import { LandingPage, LoginPage, HomePage, SearchPage, ViewPage, DistributionPage } from '../support/pages';
 import { User } from "../support/utils/type";
 
 const LOGIN_CREDENTIALS: Partial<User> = {
@@ -37,8 +37,13 @@ describe('test select movie from catalog', () => {
       monthTo: 'September',
       dayTo: '10'
     });
+    // TODO: looping array
+    // const TERRITORY_ARRAY = ['World', 'France', 'Germany']
     p4.selectTerritories('World');
     const MEDIA_ARRAY = ['Pay TV', 'Free TV'];
     p4.selectMandateMedias(MEDIA_ARRAY);
+    const p5: ViewPage = p4.selectMovie();
+    const p6: DistributionPage = p5.clickDistributionRights();
+    p6.selectDates();
   });
 });

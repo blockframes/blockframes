@@ -1,4 +1,4 @@
-<main *ngIf="(movie$ | async) as movie">
+<main *ngIf="(movie$ | async) as movie" page-id="distribution-right">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
@@ -17,7 +17,7 @@
             <!-- Dates -->
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
-                <mat-panel-title class="mat-h4">
+                <mat-panel-title test-id="distribution-date-panel" class="mat-h4">
                   Dates
                 </mat-panel-title>
               </mat-expansion-panel-header>
