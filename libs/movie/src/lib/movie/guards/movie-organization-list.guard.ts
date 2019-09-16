@@ -6,12 +6,12 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const movieQuery = (id: string): Query<Movie> => ({
+const movieOrganizationQuery = (id: string): Query<Movie> => ({
   path: `movies/${id}`
 });
 
 @Injectable({ providedIn: 'root' })
-export class MovieListGuard extends StateListGuard<Movie> {
+export class MovieOrganizationListGuard extends StateListGuard<Movie> {
   urlFallback = '/layout/o/home/create';
 
   constructor(
@@ -29,7 +29,7 @@ export class MovieListGuard extends StateListGuard<Movie> {
       .pipe(
         switchMap(ids => {
           if (!ids || ids.length === 0) throw new Error('No movie yet')
-          const queries = ids.map(id => this.fireQuery.fromQuery<Movie>(movieQuery(id)))
+          const queries = ids.map(id => this.fireQuery.fromQuery<Movie>(movieOrganizationQuery(id)))
           return combineLatest(queries)
         })
       );

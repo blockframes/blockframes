@@ -6,12 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 // Guards
-import { MovieListGuard } from '@blockframes/movie';
-import { CatalogMarketPlaceGuard } from './guards/catalog-marketplace.guard';
+import { CatalogMovieListGuard } from './guards/catalog-movie-list.guard';
+import { CatalogMovieActiveGuard } from './guards/catalog-movie-active.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
-import { CatalogBasketGuard } from './guards/catalog-basket.guard';
+import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -78,8 +78,8 @@ export const routes: Routes = [
               },
               {
                 path: 'selection',
-                canActivate: [CatalogBasketGuard, MovieListGuard],
-                canDeactivate: [CatalogBasketGuard, MovieListGuard],
+                canActivate: [CatalogBasketGuard, CatalogMovieListGuard],
+                canDeactivate: [CatalogBasketGuard, CatalogMovieListGuard],
                 children: [
                   {
                     path: '',
@@ -100,8 +100,8 @@ export const routes: Routes = [
               },
               {
                 path: ':movieId',
-                canActivate: [CatalogMarketPlaceGuard],
-                canDeactivate: [CatalogMarketPlaceGuard],
+                canActivate: [CatalogMovieActiveGuard],
+                canDeactivate: [CatalogMovieActiveGuard],
                 children: [
                   { path: '', redirectTo: 'view', pathMatch: 'full' },
                   {

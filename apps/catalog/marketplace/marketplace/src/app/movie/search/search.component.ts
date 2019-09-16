@@ -1,12 +1,17 @@
+// Angular
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { ErrorStateMatcher, MatAccordion } from '@angular/material';
 import { Validators, FormGroupDirective, NgForm } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
+import { Router } from '@angular/router';
+// Blockframes
 import { Movie, staticModels } from '@blockframes/movie';
 import { FireQuery } from '@blockframes/utils';
+// RxJs
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime } from 'rxjs/operators';
+// Others
 import {
   MovieType,
   CatalogSearchForm,
@@ -17,7 +22,6 @@ import {
 } from './search.form';
 import { languageValidator } from './search-validators.form';
 import { filterMovie } from './filter.util';
-import { Router } from '@angular/router';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -30,11 +34,21 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'catalog-movie-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSearchComponent implements OnInit {
+  /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
+
+  /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
+
+  /* Array of sorting options */
+  public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
+
+  /* Flag to indicate either the movies should be presented as a card or a list */
+  public cardOrList: boolean;
+
   // TODO#748: split up into compoennts
   public movieGenres: MovieType[];
   public movieLanguages: Language[];
@@ -84,9 +98,13 @@ export class MarketplaceSearchComponent implements OnInit {
       this.fireQuery.collection<Movie>('movies').valueChanges(),
       this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
     ]).pipe(
-     map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
+      map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
     );
   }
+
+  ////////////////////
+  // Filter section //
+  ////////////////////
 
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
@@ -96,8 +114,14 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   private _languageFilter(value: string): string[] {
-    return this.movieLanguages.filter(language => language.toLowerCase().includes(value.toLowerCase()));
+    return this.movieLanguages.filter(language =>
+      language.toLowerCase().includes(value.toLowerCase())
+    );
   }
+
+  //////////////////
+  // Form section //
+  //////////////////
 
   public addLanguage(language: Language) {
     if (this.movieLanguages.includes(language)) {

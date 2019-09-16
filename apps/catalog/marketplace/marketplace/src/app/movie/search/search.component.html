@@ -177,13 +177,31 @@
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <h3>Films</h3>
         <mat-divider></mat-divider>
+        <button mat-icon-button (click)="cardOrList = !cardOrList" *ngIf="!cardOrList">
+          <mat-icon>list</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cardOrList = !cardOrList" *ngIf="cardOrList">
+          <mat-icon>grid_on</mat-icon>
+        </button>
+        <mat-form-field>
+          <mat-label>Sort by</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let option of sortOptions" [value]="option" (click)="sortMovies(option)">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div *ngIf="(movieSearchResults$ | async) as searchResults" fxLayout="row wrap" fxLayoutGap="30px">
         <ng-container *ngFor="let movie of searchResults">
-            <movie-display-card-item  [movie]="movie.main" [routerLink]="['/layout/o/catalog', movie.id]"></movie-display-card-item>
+          <movie-display-card-item [movie]="movie.main" [routerLink]="['/layout/o/catalog', movie.id]"
+            *ngIf="!cardOrList"></movie-display-card-item>
+          <div *ngIf="cardOrList" fxLayout="column" class="movie-list">
+            <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
+            <movie-display-list [movie]="searchResults"></movie-display-list>
+          </div>
         </ng-container>
       </div>
     </article>
   </section>
-
 </div>

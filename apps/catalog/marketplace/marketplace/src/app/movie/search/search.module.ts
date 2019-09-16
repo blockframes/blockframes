@@ -9,6 +9,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -27,6 +28,9 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
+// Custom modules
+import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
+
 @NgModule({
   declarations: [MarketplaceSearchComponent, MovieDisplayCardItemComponent],
   imports: [
@@ -35,6 +39,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    MovieDisplayListModule,
     // Material
     MatIconModule,
     MatDividerModule,
@@ -49,6 +54,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatChipsModule,
     MatNativeDateModule,
     MatCardModule,
+    MatSelectModule,
     MatDatepickerModule,
 
     RouterModule.forChild([

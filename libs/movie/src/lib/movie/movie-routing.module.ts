@@ -9,8 +9,8 @@ import { MovieCreateComponent } from './pages/movie-create/movie-create.componen
 import { ImportStepperComponent } from './components/import/import-stepper/import-stepper.component';
 
 // Guards
-import { MovieActiveGuard } from './guards/movie-active.guard';
-import { MovieListGuard } from './guards/movie-list.guard';
+import { MovieOrganizationActiveGuard } from './guards/movie-organization-active.guard';
+import { MovieOrganizationListGuard } from './guards/movie-organization-list.guard';
 
 export const routes: Routes = [
 
@@ -26,19 +26,19 @@ export const routes: Routes = [
   {
     path: 'list',
     component: MovieListComponent,
-    canActivate: [MovieListGuard],
-    canDeactivate: [MovieListGuard],
+    canActivate: [MovieOrganizationListGuard],
+    canDeactivate: [MovieOrganizationListGuard],
   },
   {
     path: 'import',
     component: ImportStepperComponent,
-    canActivate: [MovieListGuard], // @todo #643 not working if user does not have at least one movie in his list
-    canDeactivate: [MovieListGuard],
+    canActivate: [MovieOrganizationListGuard], // @todo #643 not working if user does not have at least one movie in his list
+    canDeactivate: [MovieOrganizationListGuard],
   },
   {
     path: ':movieId',
-    canActivate: [MovieActiveGuard],
-    canDeactivate: [MovieActiveGuard],
+    canActivate: [MovieOrganizationActiveGuard],
+    canDeactivate: [MovieOrganizationActiveGuard],
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', component: MovieViewComponent },

@@ -1,5 +1,4 @@
 import { CatalogBasket } from '@blockframes/marketplace';
-import { DistributionRight } from '../distribution-right/+state/basket.model';
 import { OrganizationQuery } from '@blockframes/organization';
 import { BasketStore } from '../distribution-right/+state/basket.store';
 import { Router } from '@angular/router';
