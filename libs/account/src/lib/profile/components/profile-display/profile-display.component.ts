@@ -1,7 +1,8 @@
 
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { Organization } from '@blockframes/organization';
 import { Profile } from '../../forms/profile-edit.form';
+
 
 @Component({
   selector: 'profile-display',
@@ -10,6 +11,8 @@ import { Profile } from '../../forms/profile-edit.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileDisplayComponent {
+  // @HostBinding('page-id') pageId = 'profile-display';
+
   public email: string;
   @Output() editing = new EventEmitter<string>();
   @Input() opened: boolean;

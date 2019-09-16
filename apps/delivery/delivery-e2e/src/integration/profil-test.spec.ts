@@ -11,6 +11,13 @@ const USER: Partial<User> = {
   surname: 'Mussy',
 };
 
+const USERBIS: Partial<User> = {
+  email: 'pouetbis7@pouet.fr',
+  password: 'pouetpouetbis7',
+  name: 'Clélia',
+  surname: 'Mussy',
+};
+
 const PHONE = "0102030405";
 const POSITION = "Web Developper";
 const CURRENT_PASSWORD = "pouetbis7";
@@ -54,7 +61,8 @@ describe('Test profil', () => {
     p5.confirmPassword(NEW_PASSWORD);
     p5.clickSave();
     p5.clickClose();
-
-
+    p4.clickLogout();
+    p2.fillSignin(USERBIS);
+    p2.clickSigninWithMovies();
   });
 });
