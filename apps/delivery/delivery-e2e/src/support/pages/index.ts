@@ -23,6 +23,7 @@ import MoviePickerPage from './delivery-create-tunnel/MoviePickerPage';
 import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
 import DeleteDeliveryModal from './DeleteDeliveryModal';
 import SaveAsTemplateModal from './SaveAsTemplateModal';
+import OrganizationHomePage from './OrganizationHomePage';
 
 export {
   HomePage,
@@ -49,5 +50,6 @@ export {
   MoviePickerPage,
   TemplatePickerPage,
   DeleteDeliveryModal,
-  SaveAsTemplateModal
+  SaveAsTemplateModal,
+  OrganizationHomePage,
 };

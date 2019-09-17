@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 import {
   LandingPage,
-  LoginPage
+  LoginPage,
+  OrganizationHomePage
 } from '../support/pages';
 import { createUser } from '../support/utils/type';
-import OrganizationHomePage from '../support/pages/OrganizationHomePage';
 
 const USER = createUser();
 

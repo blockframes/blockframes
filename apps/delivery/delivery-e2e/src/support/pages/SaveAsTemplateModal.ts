@@ -1,4 +1,4 @@
-import { DeliveryMaterialsPage } from ".";
+import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
 
 export default class SaveAsTemplateModal {
   constructor() {

@@ -1,6 +1,7 @@
-import OrganizationHomePage from './HomePage';
 import { User } from '../utils/type';
-import { MovieCreatePage, HomePage } from '.';
+import OrganizationHomePage from './OrganizationHomePage';
+import MovieCreatePage from './MovieCreatePage';
+import HomePage from './HomePage';
 
 export default class LoginPage {
   constructor() {

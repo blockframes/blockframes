@@ -1,4 +1,4 @@
-import { HomePage, ViewProfilePage, TemplateListPage, DeliveryTeamWorkPage, LoginPage, OrganizationMemberPage, OrganizationFormPage, DeliveryListPage } from ".";
+import { HomePage, ViewProfilePage, TemplateListPage, DeliveryTeamWorkPage, LoginPage, OrganizationMemberPage, OrganizationFormPage } from "./index";
 
 export default abstract class NavbarPage {
   constructor() {
