@@ -64,11 +64,11 @@ export default class EditProfilePage {
   }
 
   public clickSave() {
-    cy.get(`[page-id=profile-editable] [test-id=action-button]`).find(`button[test-id=save]`).click();
+    cy.get(`[page-id=profile-editable]`).find(`button[test-id=save]`).click();
   }
 
   public clickClose() {
-    cy.get(`[page-id=profile-editable] [test-id=action-button]`).find('button[test-id=close]').click();
+    cy.get(`[page-id=profile-editable]`).find('button[test-id=close]').click();
     return new ViewProfilePage();
   }
 }

@@ -5,25 +5,20 @@ import { LandingPage, LoginPage, HomePage, ViewProfilePage, EditProfilePage } fr
 
 
 const USER: Partial<User> = {
-  email: 'pouetbis7@pouet.fr',
-  password: 'pouetbis7',
+  email: 'c8test@ctest.com',
+  password: 'c8test',
   name: 'Clélia',
   surname: 'Mussy',
   phoneNumber: '0102030405',
   position: 'Biggest junior Web Developper'
 };
 
-const USERBIS: Partial<User> = {
-  email: 'pouetbis7@pouet.fr',
-  password: 'pouetpouetbis7',
-  name: 'Clélia',
-  surname: 'Mussy',
-  phoneNumber: '0102030405',
-  position: 'Biggest junior Web Developper'
+const USER_UPDATED: Partial<User> = {
+  email: 'c8test@ctest.com',
+  password: 'c8testbis',
 };
 
-const CURRENT_PASSWORD = "pouetbis7";
-const NEW_PASSWORD = "pouetpouetbis7";
+const NEW_PASSWORD = "c8testbis";
 
 beforeEach(() => {
   cy.clearCookies();
@@ -45,6 +40,11 @@ describe('Test profil', () => {
     p5.fillPhoneNumber(USER.phoneNumber);
     p5.fillPosition(USER.position);
 
+    p4.assertDisplayNameExists(USER.name);
+    p4.assertDisplaySurnameExists(USER.surname);
+    p4.assertDisplayPhoneExists(USER.phoneNumber);
+    p4.assertDisplayPositionExists(USER.position);
+
     p5.clickSave();
 
     p5.assertNameExists(USER.name);
@@ -62,7 +62,7 @@ describe('Test profil', () => {
 });
 
 describe('Test profil', () => {
-  it.skip('should login, navigate to profil, change password', () => {
+  it('should login, navigate to profil, change password', () => {
     const p1: LandingPage = new LandingPage;
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -70,13 +70,13 @@ describe('Test profil', () => {
     p3.openProfileMenu();
     const p4: ViewProfilePage = p3.clickProfile();
     const p5: EditProfilePage = p4.editPassword();
-    p5.currentPassword(CURRENT_PASSWORD);
+    p5.currentPassword(USER.password);
     p5.newPassword(NEW_PASSWORD);
     p5.confirmPassword(NEW_PASSWORD);
     p5.clickSave();
     p5.clickClose();
     p4.clickLogout();
-    p2.fillSignin(USERBIS);
+    p2.fillSignin(USER_UPDATED);
     p2.clickSigninWithMovies();
   });
 });

@@ -4,7 +4,7 @@
   </mat-sidenav-content>
   <mat-sidenav #sidenav fxLayout="row" fxLayoutAlign="center center" [opened]="opened" mode="side" position="end">
     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="end center" test-id="action-button">
+      <mat-card-header fxLayout="row" fxLayoutAlign="end center">
         <button (click)="saved.emit()" color="primary" mat-icon-button test-id="save">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
