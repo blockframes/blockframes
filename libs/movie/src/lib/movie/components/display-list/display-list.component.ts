@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: '[movie] movie-display-list',
+  selector: '[movies] movie-display-list',
   templateUrl: './display-list.component.html',
   styleUrls: ['./display-list.component.scss']
 })
@@ -12,7 +12,7 @@ export class MovieDisplayListComponent {
   public dataSource;
 
   @Input()
-  set movie(movie: Movie[]) {
-    this.dataSource = new MatTableDataSource(movie);
+  set movie(movies: Movie[]) {
+    this.dataSource = new MatTableDataSource(movies);
   }
 }

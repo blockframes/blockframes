@@ -205,7 +205,7 @@
           </ng-container>
         </ng-container>
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-        <movie-display-list [movie]="sortByOptionMovies" *ngIf="listView"></movie-display-list>
+        <movie-display-list [movies]="sortedMovies" *ngIf="listView"></movie-display-list>
       </div>
     </article>
   </section>

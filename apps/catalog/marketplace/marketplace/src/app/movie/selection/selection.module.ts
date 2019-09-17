@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CatalogSelectionComponent } from './selection.component';
+import { MarketplaceSelectionComponent } from './selection.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CatalogFormSelectionModule } from '../../distribution-right/selection-table/form-selection.module';
 
 @NgModule({
-  declarations: [CatalogSelectionComponent],
+  declarations: [MarketplaceSelectionComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -35,7 +34,7 @@ import { CatalogFormSelectionModule } from '../../distribution-right/selection-t
     RouterModule.forChild([
       {
         path: '',
-        component: CatalogSelectionComponent
+        component: MarketplaceSelectionComponent
       }
     ])
   ]

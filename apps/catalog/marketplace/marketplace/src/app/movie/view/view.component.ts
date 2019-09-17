@@ -9,7 +9,7 @@ import { MovieQuery } from '@blockframes/movie';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class CatalogMovieViewComponent implements OnInit {
+export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
 

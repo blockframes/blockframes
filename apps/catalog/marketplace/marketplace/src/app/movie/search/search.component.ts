@@ -49,7 +49,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public listView: boolean;
 
   /* Array to hold the movies sorted by parameters */
-  public sortByOptionMovies: Movie[];
+  public sortedMovies: Movie[];
 
   // TODO#748: split up into compoennts
   public movieGenres: MovieGenres[];
@@ -115,14 +115,8 @@ export class MarketplaceSearchComponent implements OnInit {
         this.movieSearchResults$
           .pipe(
             tap(movies => {
-              this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
-                if (b.main.directors[0].lastName < a.main.directors[0].lastName) {
-                  return -1;
-                }
-                if (b.main.directors[0].lastName > a.main.directors[0].lastName) {
-                  return 1;
-                }
-                return 0;
+              this.sortedMovies = movies.sort((a: Movie, b: Movie) => {
+                return b.main.directors[0].lastName.localeCompare(a.main.directors[0].lastName);
               });
             })
           )
@@ -133,14 +127,8 @@ export class MarketplaceSearchComponent implements OnInit {
           .pipe(
             tap(
               movies =>
-                (this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
-                  if (a.main.title.original < b.main.title.original) {
-                    return -1;
-                  }
-                  if (a.main.title.original > b.main.title.original) {
-                    return 1;
-                  }
-                  return 0;
+                (this.sortedMovies = movies.sort((a: Movie, b: Movie) => {
+                  return b.main.title.original.localeCompare(a.main.title.original);
                 }))
             )
           )
@@ -151,7 +139,7 @@ export class MarketplaceSearchComponent implements OnInit {
           .pipe(
             tap(
               movies =>
-                (this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
+                (this.sortedMovies = movies.sort((a: Movie, b: Movie) => {
                   if (b.main.productionYear < a.main.productionYear) {
                     return -1;
                   }
@@ -165,7 +153,7 @@ export class MarketplaceSearchComponent implements OnInit {
           .subscribe();
         break;
       default:
-        this.movieSearchResults$.subscribe(movies => (this.sortByOptionMovies = movies));
+        this.movieSearchResults$.subscribe(movies => (this.sortedMovies = movies));
     }
   }
 

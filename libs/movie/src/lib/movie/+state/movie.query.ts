@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity, QueryConfig, Order } from '@datorama/akita';
+import { QueryEntity } from '@datorama/akita';
 import { MovieStore, MovieState } from './movie.store';
 import { Movie, MovieSale } from './movie.model';
 
