@@ -232,7 +232,7 @@ export class ImdbMovie {
   /**
    * @hidden
    */
-  protected _year_data: string;
+  protected _yearData: string;
 
   /**
    * This takes a result from omdb, and transforms it into an
@@ -247,8 +247,8 @@ export class ImdbMovie {
   constructor(obj: OmdbMovie) {
     for (const attr of Object.getOwnPropertyNames(obj)) {
       if (attr === "Year") {
-        this._year_data = obj[attr];
-        // check for emdash as well
+        this._yearData = obj[attr];
+        // check for emdash (ie: - or –) possibly comming from omdb
         if (!obj[attr].match(/\d{4}[\-–](?:\d{4})?/)) {
           const val = parseInt(obj[attr], 10);
           if (isNaN(val)) {
@@ -290,13 +290,9 @@ export class ImdbService {
    */
   private apiKey: string;
 
-  private http: HttpClient;
-
   private omdbapi = "https://www.omdbapi.com/";
 
-  constructor(http: HttpClient) {
-    this.http = http;
-  }
+  constructor(private http: HttpClient) {}
 
   public setApiKey(apiKey: string) {
     this.apiKey = apiKey;
@@ -311,26 +307,26 @@ export class ImdbService {
    */
   public get(req: MovieRequest): Promise<ImdbMovie> {
 
-    const qs = {
+    const params = {
       apikey: this.apiKey,
-      i: undefined,
-      plot: 'full',
-      r: 'json',
-      t: undefined,
-      y: req.year ? req.year.toString() : undefined
+      i: undefined, // imdb id if any
+      plot: 'full', // we want to retreive full movie plot
+      r: 'json', // expected response type
+      t: undefined, // movie title if any
+      y: req.year ? req.year.toString() : undefined // movie year
     };
 
     if (req.name) {
-      qs.t = req.name;
-      delete qs.i;
+      params.t = req.name.trim();
+      delete params.i;
     } else if (req.id) {
-      qs.i = req.id;
-      delete qs.t;
+      params.i = req.id;
+      delete params.t;
     } else {
       return Promise.reject(new ImdbError("Missing one of req.id or req.name"));
     }
 
-    return this.http.get(this.omdbapi, { params: qs })
+    return this.http.get(this.omdbapi, { params })
       .toPromise()
       .then((data: OmdbMovie | OmdbError) => {
         let ret: ImdbMovie;
@@ -358,16 +354,16 @@ export class ImdbService {
    */
   public search(req: SearchRequest, page: number = 1): Promise<SearchResults> {
 
-    const qs = {
+    const params = {
       apikey: this.apiKey,
-      page: page.toString(),
-      r: "json",
-      s: req.name,
-      type: "movie",
-      y: req.year ? req.year.toString() : undefined,
+      page: page.toString(), // page number
+      r: "json", // expected response type
+      s: req.name.trim(), // our search string
+      type: "movie", // exptected item type since api can retreive series, movies, episodes ..
+      y: req.year ? req.year.toString() : undefined // movie year
     };
 
-    return this.http.get(this.omdbapi, { params: qs })
+    return this.http.get(this.omdbapi, { params })
       .toPromise()
       .then((data: OmdbSearch | OmdbError) => {
         if (isError(data)) {

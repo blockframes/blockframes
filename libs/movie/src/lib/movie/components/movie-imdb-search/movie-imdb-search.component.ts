@@ -23,8 +23,7 @@ export class MovieImdbSearchComponent implements OnInit {
     'actions',
   ];
   public rows = new MatTableDataSource<ImdbMovie | SearchResult>([]);
-  public resultsCount = 0;
-  public formValid = false;
+  public formSubmitted = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -54,32 +53,24 @@ export class MovieImdbSearchComponent implements OnInit {
       return
     }
 
-    this.formValid = true;
-    this.data.name = this.searchForm.value.name;
-    this.data.year = this.searchForm.value.year
-
-    let method = 'search';
-    if (this.searchForm.value.exact) {
-      method = 'get';
-    }
-
+    this.formSubmitted = true;
+    const { name, year, exact } = this.searchForm.value;
+    const method = exact ? 'get' : 'search';
+    
     try {
-      const search: ImdbMovie | SearchResults = await this.imdbService[method](this.data);
+      const search: ImdbMovie | SearchResults = await this.imdbService[method]({ name, year });
       if (search instanceof ImdbMovie) {
-        this.rows.data.push(search);
-        this.resultsCount = 1;
+        this.rows.data = [search];
       } else if (search instanceof SearchResults) {
-        search.results.map((result: SearchResult) => this.rows.data.push(result));
-        this.resultsCount = search.totalresults;
+        this.rows.data = [...search.results];
       }
-      this.rows.data = [...this.rows.data];
     } catch (e) {
       this.snackBar.open(`An error occured : ${e.message}`, 'close', { duration: 1000 });
     }
   }
 
   public searchAgain() {
-    this.formValid = false;
+    this.formSubmitted = false;
     this.rows.data = [];
   }
 
@@ -104,10 +95,7 @@ export class MovieImdbSearchComponent implements OnInit {
   public async changePage(event){
     try {
       const search: ImdbMovie | SearchResults = await this.imdbService.search(this.data, event.pageIndex + 1);
-      this.rows.data = [];
-      search.results.map((result: SearchResult) => this.rows.data.push(result));
-      this.resultsCount = search.totalresults;
-      this.rows.data = [...this.rows.data];
+      this.rows.data = [...search.results];
     } catch (e) {
       this.snackBar.open(`An error occured : ${e.message}`, 'close', { duration: 1000 });
     }
