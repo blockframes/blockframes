@@ -4,7 +4,7 @@
   <article class="movie-picker-container" fxLayout="row wrap" fxLayoutAlign="start space-between">
     <!-- Movie Card -->
     <ng-container *ngFor="let movie of (movies$ | async)">
-      <movie-card [movie]="movie" [link]="getLink(movie.id)"></movie-card>
+      <movie-card [movie]="movie" [link]="['../', movie.id, '2-choose-starter']"></movie-card>
     </ng-container>
   </article>
 </ng-template>

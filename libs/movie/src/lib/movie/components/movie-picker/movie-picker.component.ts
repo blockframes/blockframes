@@ -19,8 +19,4 @@ export class MoviePickerComponent implements OnInit {
     this.movies$ = this.query.selectAll();
     this.isLoading$ = this.query.selectLoading();
   }
-
-  public getLink(movieId: string) {
-    return `/layout/o/delivery/add/${movieId}/2-choose-starter`;
-  }
 }

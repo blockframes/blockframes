@@ -10,4 +10,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class MovieCardComponent {
   @Input() movie: Movie;
   @Input() link: string;
+
+  get posterSrc() {
+    return this.movie.main.poster || '/assets/images/default-movie-poster.png';
+  }
 }

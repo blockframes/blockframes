@@ -173,8 +173,4 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addTerritory(territory.option.viewValue as MovieTerritories);
     this.territoryInput.nativeElement.value = '';
   }
-
-  public linkToMovie(movieId: string) {
-    return `/layout/o/catalog/${movieId}`;
-  }
 }
