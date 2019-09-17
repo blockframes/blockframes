@@ -34,6 +34,6 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <!-- Click on a row to navigate to the delivery edition page -->
-  <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="['../', row.id, 'list']"></tr>
+  <tr test-id="delivery-row" mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="['../', row.id, 'list']"></tr>
 
 </table>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieListComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'movie-list';
   public loading$: Observable<boolean>;
   public movies$: Observable<Movie[]>;
 

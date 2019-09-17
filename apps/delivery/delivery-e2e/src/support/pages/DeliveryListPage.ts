@@ -1,28 +1,29 @@
-import TemplatePickerPage from "./TemplatePickerPage";
-import DeliveryFormPage from "./DeliveryFormPage";
+import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
+import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
 
 export default class DeliveryListPage {
   constructor() {
+    cy.get('[page-id=delivery-list]', { timeout: 20000 });
   }
 
-  public clickAddDelivery() {
-    cy.get('button.add-delivery').click();
-    return new TemplatePickerPage();
+  public clickAddDelivery(): StarterPickerPage {
+    cy.get('[page-id=delivery-list] button[test-id=add-delivery]').click();
+    return new StarterPickerPage();
   }
 
-  public assertDeliveryExists(orgName: string) {
-    cy.get('.delivery-card').should('contain', orgName);
-  }
-
-  public clickDelivery(orgName1: string, orgName2?: string) {
-    cy.wait(1000);
+  public clickFirstDelivery(orgName1: string, orgName2?: string): DeliveryMaterialsPage {
     orgName2
-      ? cy.get('.delivery-card').contains(orgName1 && orgName2).click()
-      : cy.get('.delivery-card').contains(orgName1).click()
-    return new DeliveryFormPage();
+      ? cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1 && orgName2).first().click()
+      : cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1).first().click()
+    return new DeliveryMaterialsPage();
+  }
+
+  public clickLastDelivery(orgName) {
+    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').last().contains(orgName).click();
+    return new DeliveryMaterialsPage();
   }
 
   public assertDeliveryIsDeleted() {
-    cy.get('.delivery-card').should('have.length', 0);
+    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').should('have.length', 1);
   }
 }

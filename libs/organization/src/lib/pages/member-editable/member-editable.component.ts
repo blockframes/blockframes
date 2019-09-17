@@ -63,7 +63,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
     // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
-    this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
+    this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$));
     this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
     this.invitationsFromOrganization$ = this.invitationQuery.invitationsFromOrganization$;
   }

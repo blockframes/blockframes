@@ -1,5 +1,6 @@
 import HomePage from "./HomePage";
 import NavbarPage from './NavbarPage';
+import OrganizationFormPage from "./OrganizationFormPage";
 
 export default class MovieEditPage extends NavbarPage {
   public static FIELD_INTERNATIONAL_TITLE = 'internationalTitle'
@@ -14,6 +15,8 @@ export default class MovieEditPage extends NavbarPage {
   public static OPTION_STATUS = 'status';
 
   constructor() {
+    super();
+    cy.get('[page-id=movie-edit]');
   }
 
   public clickHome() {
@@ -26,8 +29,9 @@ export default class MovieEditPage extends NavbarPage {
   }
 
   public assertMovieTitleExists(movieName: string) {
-    cy.wait(1000);
-    cy.get('mat-card').contains(movieName);
+    cy.get('[page-id=movie-form-main] input[test-id=movie-add]').should(input => {
+      expect(input.val()).to.contain(movieName);
+    });
   }
 
   public assertInputAndViewValueExists(controlName: string, value: string) {
@@ -51,5 +55,9 @@ export default class MovieEditPage extends NavbarPage {
       value = value[0].toLocaleUpperCase() + value.substring(1);
       cy.get('mat-card').contains(value);
     });
+  }
+
+  public clickOnOrganization() {
+    return new OrganizationFormPage();
   }
 }

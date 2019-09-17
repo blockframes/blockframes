@@ -1,4 +1,4 @@
-import DeliveryFormPage from "./DeliveryFormPage";
+import DeliveryFormPage from "./DeliveryMaterialsPage";
 
 export default class DeliveryTeamWorkPage {
   constructor() {}
@@ -13,6 +13,6 @@ export default class DeliveryTeamWorkPage {
 
     public clickDelivery() {
       cy.get('a').contains('edit').click();
-      return new DeliveryFormPage;
+      return new DeliveryFormPage();
     }
   }

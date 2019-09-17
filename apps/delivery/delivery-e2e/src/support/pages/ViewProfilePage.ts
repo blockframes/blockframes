@@ -4,11 +4,11 @@ import EditProfilePage from "./EditProfilePage";
 export default class ViewProfilePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('main[testId=profileView]');
+    cy.get('[page-id=profile-display]');
   }
 
   public clickEdit() {
-    cy.get('main[testId=profileView]').find('button').click();
+    cy.get('[page-id=profile-display] button[test-id="edit-profile"]').click();
     return new EditProfilePage();
   }
 
@@ -16,16 +16,20 @@ export default class ViewProfilePage extends NavbarPage {
     cy.get('div').contains('Email').parent().find('span').contains(email);
   }
 
-  public assertFirstNameExists(value: string) {
-    cy.get('div').contains('First Name').parent().find('span').contains(value);
+  public assertDisplayNameExists(value: string) {
+    cy.get(`[page-id=profile-display] mat-card`).find('h4').contains(value);
   }
 
-  public assertLastNameExists(value: string) {
-    cy.get('div').contains('Last Name').parent().find('span').contains(value);
+  public assertDisplaySurnameExists(value: string) {
+    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
   }
 
-  public assertBiographyExists(value: string) {
-    cy.get('div').contains('Biography').parent().find('p').contains(value);
+  public assertDisplayPhoneExists(value: string) {
+    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
+  }
+
+  public assertDisplayPositionExists(value: string) {
+    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
   }
 
   public assertIdIsAddress() {
@@ -34,5 +38,10 @@ export default class ViewProfilePage extends NavbarPage {
     cy.get('#mat-input-5', {timeout: 60000}).should(($input) => {
       expect($input.val()).to.match(/0x[a-zA-Z\d]{40}/); // ethereum address regex
     });
+  }
+
+  public editPassword() {
+    cy.get('[page-id=profile-display] button[test-id="change-password"]').click();
+    return new EditProfilePage;
   }
 }

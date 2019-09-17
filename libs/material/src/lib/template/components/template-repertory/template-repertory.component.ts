@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, Output, EventEmitter, HostBinding } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Template } from '../../+state';
@@ -10,6 +10,7 @@ import { Template } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateRepertoryComponent {
+  @HostBinding('attr.page-id') pageId = 'template-repertory';
   @Input()
   set templates(templates: Template[]) {
     this.dataSource = new MatTableDataSource(templates);

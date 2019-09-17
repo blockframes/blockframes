@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 import {
   LandingPage,
-  LoginPage
+  LoginPage,
+  OrganizationHomePage
 } from '../support/pages';
 import { createUser } from '../support/utils/type';
-import OrganizationHomePage from '../support/pages/OrganizationHomePage';
 
 const USER = createUser();
 
@@ -23,6 +23,6 @@ describe('story #529 - account creation', () => {
     p2.switchMode();
     p2.fillSignup(USER);
     const p3: OrganizationHomePage = p2.clickSignup();
-    const p4: LoginPage = p3.logout();
+    const p4: LoginPage = p3.clickLogout();
   });
 });

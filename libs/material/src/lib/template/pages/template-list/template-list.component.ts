@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { TemplateQuery, TemplateService, Template } from '../../+state';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { TemplateAddComponent } from '../../components/template-add/template-add
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateListComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'template-list';
   public templates$: Observable<Template[]>;
 
   constructor(

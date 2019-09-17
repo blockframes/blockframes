@@ -2,20 +2,23 @@ import ViewProfilePage from "./ViewProfilePage";
 
 export default class EditProfilePage {
   constructor() {
-    cy.get('[testId=profileEdit]');
+    cy.get('[page-id=profile-editable]');
   }
 
-  public fillFirstName(value: string) {
-    cy.get(`input[formControlName=first_name]`).type(value);
+  public fillName(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="name-form"]`).clear().type(value);
   }
 
-  public fillLastName(value: string) {
-    cy.get(`input[formControlName=last_name]`).type(value);
+  public fillSurname(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="surname-form"]`).clear().type(value);
   }
 
-  public fillBiography(value: string) {
-    cy.get(`textarea[formControlName=biography]`).type(value);
-    cy.wait(200);
+  public fillPhoneNumber(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="phone-form"]`).clear().type(value);
+  }
+
+  public fillPosition(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="position-form"]`).clear().type(value);
   }
 
   public assertEmailExists(value: string) {
@@ -24,30 +27,48 @@ export default class EditProfilePage {
     })
   }
 
-  public assertFirstNameExists(value: string) {
-    cy.get(`input[formControlName=first_name]`).should(input => {
+  public assertNameExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="name-form"]`).should(input => {
       expect(input.val()).to.contain(value);
     })
   }
 
-  public assertLastNameExists(value: string) {
-    cy.get(`input[formControlName=last_name]`).should(input => {
+  public assertSurnameExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="surname-form"]`).should(input => {
       expect(input.val()).to.contain(value);
     })
   }
 
-  public clickArrowBack() {
-    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('arrow_back').click();
-    return new ViewProfilePage();
-  }
-
-  public assertBiographyExists(value: string) {
-    cy.get(`textarea[formControlName=biography]`).should(input => {
+  public assertPhoneExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="phone-form"]`).should(input => {
       expect(input.val()).to.contain(value);
     })
+  }
+
+  public assertPositionExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="position-form"]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public currentPassword(value: string) {
+    cy.get(`[page-id=password-edit] input[test-id="current-password"]`).clear().type(value);
+  }
+
+  public newPassword(value: string) {
+    cy.get(`[page-id=password-edit] input[test-id="password"]`).clear().type(value);
+  }
+
+  public confirmPassword(value: string) {
+    cy.get(`[page-id=password-edit] input[test-id="password-confirm"]`).clear().type(value);
   }
 
   public clickSave() {
-    cy.get('[testId=profileEdit]').find('button.mat-primary').contains('Save').click();
+    cy.get(`[page-id=profile-editable]`).find(`button[test-id=save]`).click();
+  }
+
+  public clickClose() {
+    cy.get(`[page-id=profile-editable]`).find('button[test-id=close]').click();
+    return new ViewProfilePage();
   }
 }

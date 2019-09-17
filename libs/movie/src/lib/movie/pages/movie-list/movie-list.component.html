@@ -1,12 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="center">
   <section>
     <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
-
     <ng-template #loaded>
       <article fxLayout="row" fxLayoutAlign="space-between center">
         <h2>Movies</h2>
         <mat-divider fxFlex></mat-divider>
-        <a mat-stroked-button color="primary" (click)="addNewMovie()">
+        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
           <mat-icon>add</mat-icon>
           <span>Add a movie</span>
         </a>
@@ -32,7 +31,7 @@
             </ng-template>
 
             <!-- Movie Menu -->
-            <button mat-icon-button [matMenuTriggerFor]="menu">
+            <button test-id="movie-menu" mat-icon-button [matMenuTriggerFor]="menu">
               <mat-icon color="primary">more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
@@ -54,7 +53,7 @@
             </mat-menu>
           </div>
 
-          <a [routerLink]="['/layout/o', movie.id]">
+          <a (click)="navigateToMovieApp(movie.id)">
             <!-- Movie Informations (title, year, director) -->
             <mat-card-header class="clickable-item">
               <mat-card-title>

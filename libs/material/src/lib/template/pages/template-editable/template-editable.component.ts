@@ -1,13 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { Material } from '../../../material/+state/material.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService, MaterialQuery } from '../../../material/+state';
-import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
-import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
+import { MaterialService } from '../../../material/+state';
+import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
+import { MaterialForm } from '../../forms/material.form';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'template-editable',
@@ -16,19 +16,16 @@ import { Template } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'template-editable';
   public template$: Observable<Template>;
   public materials$: Observable<Material[]>;
+  public activeForm$: Observable<AbstractControl>;
 
   public opened = false;
-
-  public materialsFormList = createMaterialFormList();
-  public materialFormGroup$: Observable<FormGroup>;
-
-  private selectedMaterialId$ = new BehaviorSubject<string>(null);
+  public form = new MaterialForm();
 
   constructor(
     private query: TemplateQuery,
-    private materialQuery: MaterialQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar
   ) {}
@@ -38,28 +35,21 @@ export class TemplateEditableComponent implements OnInit {
     this.materials$ = this.query.selectActive().pipe(
       // We need to filter materials because when we go into the template list, the guard does not load materials in templates
       filter(template => !!template.materials),
-      tap(template => this.materialsFormList.patchValue(template.materials)),
-      switchMap(template => this.materialsFormList.valueChanges.pipe(startWith(template.materials)))
+      tap(template => this.form.upsertValue(template.materials)),
+      switchMap(template => this.form.selectAll())
     );
-
-    /** Return the materialFormGroup linked to the selected materialId */
-    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
-      filter(materialId => !!materialId),
-      map(materialId =>
-        this.materialsFormList.value.findIndex(material => material.id === materialId)
-      ),
-      map(index => this.materialsFormList.at(index))
-    );
+    this.activeForm$ = this.form.selectActive();
   }
 
   public openSidenav(materialId: string) {
-    this.selectedMaterialId$.next(materialId);
+    this.form.setActive(materialId);
     this.opened = true;
   }
 
   public async updateMaterials() {
     try {
-      await this.materialService.updateTemplateMaterials(this.materialsFormList.value);
+      const materials = this.form.getAll();
+      await this.materialService.updateTemplateMaterials(materials);
       this.snackBar.open('Materials updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -68,16 +58,15 @@ export class TemplateEditableComponent implements OnInit {
 
   public addMaterial() {
     const newMaterial = this.materialService.addTemplateMaterial();
-    this.materialsFormList.push(createMaterialFormGroup(newMaterial));
+    this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }
 
   public async deleteMaterial(materialId: string) {
     try {
-      // If material exist in formList but not in database
-      if (!this.materialQuery.hasEntity(materialId)) {
-        const index = this.materialsFormList.value.findIndex(material => material.id === materialId);
-        this.materialsFormList.removeAt(index);
+      // If material exist in materialFormBatch but not in database
+      if (!this.query.hasMaterial(materialId)) {
+        this.form.removeControl(materialId);
         this.opened = false;
         return;
       }

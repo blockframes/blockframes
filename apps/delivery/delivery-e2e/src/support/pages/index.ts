@@ -1,4 +1,3 @@
-import { OrganizationMemberPage } from './OrganizationMemberPage';
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import LandingPage from './LandingPage';
@@ -13,11 +12,18 @@ import MovieEditPage from './MovieEditPage';
 import TemplateListPage from './TemplateListPage';
 import AddTemplateModal from './AddTemplateModal';
 import DeliveryListPage from './DeliveryListPage';
-import DeliveryFormPage from './DeliveryFormPage';
+import DeliveryMaterialsPage from './DeliveryMaterialsPage';
 import NewTemplatePage from './NewTemplatePage';
-import TemplatePickerPage from './TemplatePickerPage';
-import DeliverySettingsFormPage from './DeliverySettingsFormPage';
+import DeliveryInformationPage from './DeliveryInformationPage';
 import LoginPage from './LoginPage';
+import OrganizationMemberPage from './OrganizationMemberPage';
+import StarterPickerPage from './delivery-create-tunnel/StarterPickerPage';
+import SettingsPage from './delivery-create-tunnel/SettingsPage';
+import MoviePickerPage from './delivery-create-tunnel/MoviePickerPage';
+import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
+import DeleteDeliveryModal from './DeleteDeliveryModal';
+import SaveAsTemplateModal from './SaveAsTemplateModal';
+import OrganizationHomePage from './OrganizationHomePage';
 
 export {
   HomePage,
@@ -34,10 +40,16 @@ export {
   TemplateListPage,
   AddTemplateModal,
   DeliveryListPage,
-  DeliveryFormPage,
+  DeliveryMaterialsPage,
   NewTemplatePage,
-  TemplatePickerPage,
-  DeliverySettingsFormPage,
+  DeliveryInformationPage,
   LoginPage,
-  OrganizationMemberPage
+  OrganizationMemberPage,
+  StarterPickerPage,
+  SettingsPage,
+  MoviePickerPage,
+  TemplatePickerPage,
+  DeleteDeliveryModal,
+  SaveAsTemplateModal,
+  OrganizationHomePage,
 };

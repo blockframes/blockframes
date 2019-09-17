@@ -1,18 +1,29 @@
-import { FormList } from '@blockframes/utils';
+import { FormBatch } from '@blockframes/utils';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Material } from '@blockframes/material';
+import { createTemplateMaterial, Material } from '../../material/+state';
 
-export function createMaterialFormGroup(material: Material) {
-  return new FormGroup({
-    id: new FormControl(material.id),
-    value: new FormControl(material.value),
-    description: new FormControl(material.description),
-    price: new FormControl(material.price),
-    currency: new FormControl(material.currency),
-    category: new FormControl(material.category)
-  });
+function createMaterialControl(material: Partial<Material> = {}) {
+  const entity = createTemplateMaterial(material);
+  return {
+    id: new FormControl(entity.id),
+    value: new FormControl(entity.value),
+    description: new FormControl(entity.description),
+    price: new FormControl(entity.price),
+    currency: new FormControl(entity.currency),
+    category: new FormControl(entity.category)
+  };
 }
 
-export function createMaterialFormList() {
-  return FormList.factory([], createMaterialFormGroup);
+type MaterialControl = ReturnType<typeof createMaterialControl>;
+
+export class MaterialForm extends FormBatch<Material> {
+  constructor(material?: Partial<Material>) {
+    const controls: MaterialControl = createMaterialControl(material);
+    super(controls);
+  }
+
+  createControl(material?: Partial<Material>) {
+    const controls = createMaterialControl(material);
+    return new FormGroup(controls);
+  }
 }
