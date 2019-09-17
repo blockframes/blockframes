@@ -21,7 +21,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Currency</mat-label>
-        <mat-select [(value)]="selectedCurrency">
+        <mat-select test-id="selection-currency" [(value)]="selectedCurrency">
           <mat-option *ngFor="let currency of currencyList" [value]="currency">
             {{currency}}
           </mat-option>

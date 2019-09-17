@@ -1,4 +1,4 @@
-import { SearchPage } from ".";
+import { HomePage } from ".";
 
 export default class FeedbackPage {
   constructor() {
@@ -6,7 +6,7 @@ export default class FeedbackPage {
   }
 
   public clickRedirect() {
-    cy.get('[page-id=feedback-message] a[test-id=feedback-link]').click()
-    return new SearchPage();
+    cy.get('[page-id=feedback-message] a[test-id=feedback-link]', { timeout: 1000 }).click()
+    return new HomePage();
   }
 }

@@ -19,6 +19,6 @@ export class CatalogCompletionComponent {
   constructor(private router: Router) {}
 
   public navigate() {
-    this.router.navigateByUrl('layout/o/catalog/search');
+    this.router.navigateByUrl('layout/o/catalog/home');
   }
 }

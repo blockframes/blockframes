@@ -55,5 +55,7 @@ describe('test select movie from catalog', () => {
     p7.selectCurrency();
     const p8: FeedbackPage = p7.clickSend();
     p8.clickRedirect();
+    p3.openProfileMenu();
+    p3.clickLogout();
   });
 });

@@ -11,6 +11,5 @@ export default abstract class NavbarPage {
 
   public clickLogout() {
     cy.get('button[test-id=logout]').click();
-    return new HomePage();
   }
 }
