@@ -52,7 +52,7 @@ export default class EditProfilePage {
   }
 
   public currentPassword(value: string) {
-    cy.get(`[page-id=password-edit] input[test-id="currentPassword"]`).clear().type(value);
+    cy.get(`[page-id=password-edit] input[test-id="current-password"]`).clear().type(value);
   }
 
   public newPassword(value: string) {
