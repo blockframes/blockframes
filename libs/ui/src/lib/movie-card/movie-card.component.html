@@ -34,9 +34,6 @@
   <mat-card-content>
     <mat-card-title-group>
       <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
-      <mat-card-subtitle *ngFor="let director of movie.main.directors">
-      {{ director.firstName }} {{ director.lastName }}
-      </mat-card-subtitle>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>
   </mat-card-content>
