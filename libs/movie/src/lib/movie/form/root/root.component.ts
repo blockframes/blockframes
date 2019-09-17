@@ -6,9 +6,8 @@ import { Router } from '@angular/router';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
 import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/movie-imdb-search.component';
-import { SearchRequest, ImdbMovie, FormEntity, formatCredit, formatCredits } from '@blockframes/utils';
+import { SearchRequest, ImdbMovie, FormEntity, formatCredit, formatCredits, ImageUploader } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { HttpUpload } from '@blockframes/ui';
 import { getCodeIfExists } from '../../staticModels';
 
 @Component({
@@ -28,7 +27,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private dialog: MatDialog,
-    private httpUpload: HttpUpload,
+    private imageUploader: ImageUploader,
   ) { }
 
 
@@ -90,7 +89,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
         this.form.get('main').get('productionYear').setValue(movie.year);
 
         // POSTER
-        const poster = await this.httpUpload.uploadImageToFirestore(movie.poster);
+        const poster = await this.imageUploader.uploadImageToFirestore(movie.poster);
         if (poster) {
           this.form.get('main').get('poster').setValue(poster);
         }

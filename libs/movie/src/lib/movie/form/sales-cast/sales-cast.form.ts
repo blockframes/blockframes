@@ -1,4 +1,4 @@
-import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
+import { MovieSalesCast, Credit, createMovieSalesCast, createCredit } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MovieCreditForm } from '../main/main.form';
@@ -21,13 +21,14 @@ export class MovieSalesCastForm extends FormEntity<Partial<MovieSalesCast>, Movi
     return this.get('credits');
   }
 
-  public addCredit(entity?: Partial<Credit>): void {
-    const credit = new FormEntity<Credit>({
-      firstName: new FormControl(entity && entity.firstName ? entity.firstName : ''),
-      lastName: new FormControl(entity && entity.lastName ? entity.lastName : ''),
-      creditRole: new FormControl(entity && entity.creditRole ? entity.creditRole : ''),
+  public addCredit(credit?: Partial<Credit>): void {
+    const entity = createCredit(credit);
+    const creditControl = new FormEntity<Credit>({
+      firstName: new FormControl(entity.firstName),
+      lastName: new FormControl(entity.lastName),
+      creditRole: new FormControl(entity.creditRole),
     });
-    this.credits.push(credit);
+    this.credits.push(creditControl);
   }
 
   public removeCredit(i: number): void {
