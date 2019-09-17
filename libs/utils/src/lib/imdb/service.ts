@@ -354,6 +354,7 @@ export class ImdbService {
    */
   public search(req: SearchRequest, page: number = 1): Promise<SearchResults> {
 
+    const params = {
       apikey: this.apiKey,
       page: page.toString(), // page number
       r: "json", // expected response type
