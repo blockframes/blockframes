@@ -34,6 +34,8 @@ export interface User {
   password: string;
   name: string;
   surname: string;
+  phoneNumber?: string;
+  position?: string;
 }
 
 export interface Organization {

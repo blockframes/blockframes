@@ -6,19 +6,19 @@ export default class EditProfilePage {
   }
 
   public fillName(value: string) {
-    cy.get(`[page-id=profileEdit] input[test-id="name-form"]`).clear().type(value);
+    cy.get(`[page-id=profile-edit] input[test-id="name-form"]`).clear().type(value);
   }
 
   public fillSurname(value: string) {
-    cy.get(`[page-id=profileEdit] input[test-id="surname-form"]`).clear().type(value);
+    cy.get(`[page-id=profile-edit] input[test-id="surname-form"]`).clear().type(value);
   }
 
   public fillPhoneNumber(value: string) {
-    cy.get(`[page-id=profileEdit] input[test-id="phone-form"]`).clear().type(value);
+    cy.get(`[page-id=profile-edit] input[test-id="phone-form"]`).clear().type(value);
   }
 
   public fillPosition(value: string) {
-    cy.get(`[page-id=profileEdit] input[test-id="position-form"]`).clear().type(value);
+    cy.get(`[page-id=profile-edit] input[test-id="position-form"]`).clear().type(value);
   }
 
   public assertEmailExists(value: string) {
@@ -27,28 +27,40 @@ export default class EditProfilePage {
     })
   }
 
-  public assertFirstNameExists(value: string) {
-    cy.get(`input[formControlName=first_name]`).should(input => {
+  public assertNameExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="name-form"]`).should(input => {
       expect(input.val()).to.contain(value);
     })
   }
 
-  public assertLastNameExists(value: string) {
-    cy.get(`input[formControlName=last_name]`).should(input => {
+  public assertSurnameExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="surname-form"]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public assertPhoneExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="phone-form"]`).should(input => {
+      expect(input.val()).to.contain(value);
+    })
+  }
+
+  public assertPositionExists(value: string) {
+    cy.get(`[page-id=profile-edit] input[test-id="position-form"]`).should(input => {
       expect(input.val()).to.contain(value);
     })
   }
 
   public currentPassword(value: string) {
-    cy.get(`[page-id=passwordEdit] input[test-id="currentPassword"]`).clear().type(value);
+    cy.get(`[page-id=password-edit] input[test-id="currentPassword"]`).clear().type(value);
   }
 
   public newPassword(value: string) {
-    cy.get(`[page-id=passwordEdit] input[test-id="password"]`).clear().type(value);
+    cy.get(`[page-id=password-edit] input[test-id="password"]`).clear().type(value);
   }
 
   public confirmPassword(value: string) {
-    cy.get(`[page-id=passwordEdit] input[test-id="password-confirm"]`).clear().type(value);
+    cy.get(`[page-id=password-edit] input[test-id="password-confirm"]`).clear().type(value);
   }
 
   public clickSave() {

@@ -11,7 +11,7 @@ import { ControlContainer } from '@angular/forms';
 
 export class PasswordFormComponent {
 
-  @HostBinding('attr.page-id') pageId = 'passwordEdit';
+  @HostBinding('attr.page-id') pageId = 'password-edit';
 
   constructor(public controlContainer: ControlContainer) {}
 

@@ -9,6 +9,8 @@ const USER: Partial<User> = {
   password: 'pouetbis7',
   name: 'Clélia',
   surname: 'Mussy',
+  phoneNumber: '0102030405',
+  position: 'Biggest junior Web Developper'
 };
 
 const USERBIS: Partial<User> = {
@@ -16,10 +18,10 @@ const USERBIS: Partial<User> = {
   password: 'pouetpouetbis7',
   name: 'Clélia',
   surname: 'Mussy',
+  phoneNumber: '0102030405',
+  position: 'Biggest junior Web Developper'
 };
 
-const PHONE = "0102030405";
-const POSITION = "Biggest junior Web Developper";
 const CURRENT_PASSWORD = "pouetbis7";
 const NEW_PASSWORD = "pouetpouetbis7";
 
@@ -40,15 +42,27 @@ describe('Test profil', () => {
     const p5: EditProfilePage = p4.clickEdit();
     p5.fillName(USER.name);
     p5.fillSurname(USER.surname);
-    p5.fillPhoneNumber(PHONE);
-    p5.fillPosition(POSITION);
+    p5.fillPhoneNumber(USER.phoneNumber);
+    p5.fillPosition(USER.position);
+
     p5.clickSave();
+
+    p5.assertNameExists(USER.name);
+    p5.assertSurnameExists(USER.surname);
+    p5.assertPhoneExists(USER.phoneNumber);
+    p5.assertPositionExists(USER.position);
+
+    p4.assertDisplayNameExists(USER.name);
+    p4.assertDisplaySurnameExists(USER.surname);
+    p4.assertDisplayPhoneExists(USER.phoneNumber);
+    p4.assertDisplayPositionExists(USER.position);
+
     p5.clickClose();
   });
 });
 
 describe('Test profil', () => {
-  it('should login, navigate to profil, change password', () => {
+  it.skip('should login, navigate to profil, change password', () => {
     const p1: LandingPage = new LandingPage;
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(USER);

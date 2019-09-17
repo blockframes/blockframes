@@ -10,7 +10,7 @@ import { Profile } from '../../forms/profile-edit.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileDisplayComponent {
-  @HostBinding('attr.page-id') pageId = 'profileDisplay';
+  @HostBinding('attr.page-id') pageId = 'profile-display';
 
   public email: string;
   @Output() editing = new EventEmitter<string>();

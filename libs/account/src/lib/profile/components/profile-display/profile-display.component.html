@@ -23,10 +23,10 @@
       </article>
     </mat-card-content>
     <mat-card-actions fxLayout="row" fxLayoutAlign="end">
-      <button mat-icon-button test-id="changePassword" (click)="editing.emit('password')" color="primary">
+      <button mat-icon-button test-id="change-password" (click)="editing.emit('password')" color="primary">
         <mat-icon svgIcon="changePass"></mat-icon>
       </button>
-      <button mat-icon-button (click)="editing.emit('profile')" color="primary">
+      <button mat-icon-button test-id="edit-profile" (click)="editing.emit('profile')" color="primary">
         <mat-icon>edit</mat-icon>
       </button>
     </mat-card-actions>
