@@ -19,7 +19,7 @@ const Availabilities: Partial<Availabilities> = {
   monthTo: 'September',
   dayTo: '10'
 }
-const movieName = 'Eternal Sunshine of the Spotless Mind';
+const MOVIE_NAME = 'Eternal Sunshine of the Spotless Mind';
 
 beforeEach(() => {
   cy.clearCookies();
@@ -31,10 +31,12 @@ beforeEach(() => {
 
 describe('test select movie from catalog', () => {
   it('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
+    // Connexion
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();
     p2.fillSignin(LOGIN_CREDENTIALS);
     const p3: HomePage = p2.clickSignIn();
+    // Go to search page and apply filters
     const p4: SearchPage = p3.clickDiscover();
     p4.fillProductionYear(PRODUCTION_YEAR);
     p4.selectGenres(GENRE_ARRAY);
@@ -43,16 +45,20 @@ describe('test select movie from catalog', () => {
     p4.selectAvailabilities(Availabilities);
     p4.selectTerritories('World');
     p4.selectMandateMedias(SEARCH_MEDIA_ARRAY);
-    const p5: ViewPage = p4.selectMovie(movieName);
+    // select one movie
+    const p5: ViewPage = p4.selectMovie(MOVIE_NAME);
+    // create distribution right for one movie
     const p6: DistributionPage = p5.clickDistributionRights();
     p6.selectDates();
     p6.selectTerritory();
     p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);
     p6.selectLanguage();
     p6.clickDistributionSearch();
+    // select distribution rights from table and make offer
     const p7: SelectionPage = p6.clickAddDistribution();
     p7.fillOffer();
     p7.selectCurrency();
+    // send offer and go back to homepage
     const p8: FeedbackPage = p7.clickSend();
     p8.clickRedirect();
     p3.openProfileMenu();
