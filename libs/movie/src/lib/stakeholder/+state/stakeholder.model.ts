@@ -3,7 +3,6 @@ import { Organization } from "@blockframes/organization";
 export interface Stakeholder {
   id: string;
   organization?: Organization;
-  authorizations?: string[];
   orgMovieRole: string;
   role: string
   isAccepted: boolean;
