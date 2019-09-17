@@ -1,7 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="center">
   <section>
     <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
-
     <ng-template #loaded>
       <article fxLayout="row" fxLayoutAlign="space-between center">
         <h2>Movies</h2>

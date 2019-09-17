@@ -13,17 +13,17 @@ export default class HomePage extends NavbarPage {
   }
 
   public clickAddMovie(): AddMovieModal {
-    cy.get('[page-id=movie-home] a[test-id=add-movie]').click();
+    cy.get('[page-id=movie-list] a[test-id=add-movie]').click();
     return new AddMovieModal()
   }
 
   public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {
-    cy.get('[page-id=movie-home] mat-card-title').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card-title').contains(movieName).parent().click();
     return new StarterPickerPage();
   }
 
   public clickOnMovieWithDeliveries(movieName: string): DeliveryListPage {
-    cy.get('[page-id=movie-home] mat-card-title').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card-title').contains(movieName).parent().click();
     return new DeliveryListPage();
   }
 
@@ -46,20 +46,20 @@ export default class HomePage extends NavbarPage {
   }
 
   public displayMovieMenu(movieName: string) {
-    cy.get('[page-id=movie-home] div').contains(movieName).parent().find('button').click();
+    cy.get('[page-id=movie-list] div').contains(movieName).parent().find('button').click();
   }
 
   public clickOpenIn() {
-    cy.get('[page-id=movie-home] button span').should('contain', 'Open in...').contains('Open in...').click();
+    cy.get('[page-id=movie-list] button span').should('contain', 'Open in...').contains('Open in...').click();
   }
 
   public clickEdit() {
-    cy.get('[page-id=movie-home] button').should('contain', 'Edit').contains('Edit').click();
+    cy.get('[page-id=movie-list] button').should('contain', 'Edit').contains('Edit').click();
     return new MovieEditPage();
   }
 
   public clickDelete() {
-    cy.get('[page-id=movie-home] button').should('contain', 'Delete').contains('Delete').click();
+    cy.get('[page-id=movie-list] button').should('contain', 'Delete').contains('Delete').click();
   }
 
   public selectTemplates() {
