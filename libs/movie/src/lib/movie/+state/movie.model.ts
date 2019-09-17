@@ -253,3 +253,12 @@ export function createMovieSale(params : Partial<MovieSale> = {}) : MovieSale{
     ... params
   } as MovieSale;
 }
+
+export function createCredit(params : Partial<Credit> = {}) : Credit {
+  return {
+    firstName: '',
+    lastName: '',
+    creditRole: '',
+    ... params
+  } as Credit;
+}
