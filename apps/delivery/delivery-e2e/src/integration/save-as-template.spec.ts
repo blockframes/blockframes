@@ -29,12 +29,6 @@ const MATERIALS: Material[] = [
   }
 ];
 
-const MATERIAL_CHANGED = {
-  value: 'Value Changed',
-  description: 'Description Changed',
-  category: 'Category#Changed'
-};
-
 const USER: Partial<User> = {email: 'cytest@blockframes.com', password: 'azerty'}
 
 const TEMPLATE_NAME_1 = 'Saveastemplate';
@@ -66,7 +60,7 @@ describe('I m a user and I can save a delivery as template', () => {
     const p6: HomePage = p5.clickHome();
     const p7: TemplateListPage = p6.clickContextMenuTemplates();
     const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
-    p8.assertMaterial(MATERIALS[0]);
+    p8.assertMaterialExists(MATERIALS[0]);
 
     // Go to an other delivery and save it as overwriting the existing template
     const p9: HomePage = p8.clickHome();
@@ -80,7 +74,7 @@ describe('I m a user and I can save a delivery as template', () => {
     const p14: HomePage = p13.clickHome();
     const p15: TemplateListPage = p14.clickContextMenuTemplates();
     const p16: TemplateFormPage = p15.editTemplate(TEMPLATE_NAME_1);
-    p16.assertMaterial(MATERIALS[1]);
-    p16.assertMaterial(MATERIALS[2]);
+    p16.assertMaterialExists(MATERIALS[1]);
+    p16.assertMaterialExists(MATERIALS[2]);
   });
 });

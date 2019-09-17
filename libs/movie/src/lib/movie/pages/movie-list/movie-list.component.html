@@ -1,5 +1,5 @@
-<div page-id="movie-list" fxLayout="row" fxLayoutAlign="center">
-  <section page-id="movie-home">
+<div fxLayout="row" fxLayoutAlign="center">
+  <section>
     <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
 
     <ng-template #loaded>

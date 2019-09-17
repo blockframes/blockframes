@@ -9,7 +9,7 @@ import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=movie-home]', {timeout: 10000});
+    cy.get('[page-id=movie-list]', {timeout: 10000});
   }
 
   public clickAddMovie(): AddMovieModal {
@@ -41,7 +41,7 @@ export default class HomePage extends NavbarPage {
 }
 
   public clickOnMovie(movieName: string) {
-    cy.get('[page-id=movie-home] mat-card').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().click();
     return new DeliveryListPage();
   }
 

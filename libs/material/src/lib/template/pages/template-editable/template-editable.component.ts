@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { Material } from '../../../material/+state/material.model';
@@ -16,6 +16,7 @@ import { AbstractControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'template-editable';
   public template$: Observable<Template>;
   public materials$: Observable<Material[]>;
   public activeForm$: Observable<AbstractControl>;

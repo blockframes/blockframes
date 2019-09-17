@@ -1,4 +1,3 @@
-import TemplateDeleteModal from "./TemplateDeleteModal";
 import TemplateListPage from "./TemplateListPage";
 import { Material } from "../utils/type";
 import NavbarPage from "./NavbarPage";
@@ -6,45 +5,16 @@ import NavbarPage from "./NavbarPage";
 export default class TemplateFormPage extends NavbarPage {
   constructor() {
     super();
+    cy.get('[page-id=template-editable]');
   }
 
-  public assertMaterial(material: Material) {
+  public assertMaterialExists(material: Material) {
     cy.get('[page-id=template-material-list] tr').should( tr =>
       expect(tr)
         .to.contain(material.title)
         .to.contain(material.category)
         .to.contain(material.description)
     );
-  }
-
-  public deleteTemplate() {
-    cy.get('button.delete-template').click();
-    return new TemplateDeleteModal();
-  }
-
-  public clickDeleteMaterial(value: string) {
-    cy.get('[testId=materialItem]')
-    .contains(value)
-    .parent().parent()
-    .trigger('mouseover')
-    .find('button').contains('DELETE').click({force: true});
-  }
-
-  public clickEditMaterial(value: string) {
-    cy.get('mat-card')
-    .contains(value)
-    .parent().parent()
-    .trigger('mouseover')
-    .find('button').contains('EDIT').click({force: true});
-  }
-
-  public assertMaterialExists(value: string, description: string, category: string) {
-    cy.get('mat-card').should((card) => expect(card).to.contain(value).to.contain(description));
-    cy.get('h3').contains(category).should('have.length', '1');
-  }
-
-  public clickAdd() {
-    cy.get('mat-sidenav button.create-material').click();
   }
 
   public fillValue(materialValue: string) {
