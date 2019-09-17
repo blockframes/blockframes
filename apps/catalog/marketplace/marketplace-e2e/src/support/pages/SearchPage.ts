@@ -1,4 +1,4 @@
-import { ViewPage } from ".";
+import ViewPage from "./ViewPage";
 
 export default class SearchPage {
 
@@ -6,10 +6,10 @@ export default class SearchPage {
     cy.get('[page-id=catalog-search]', { timeout: 10000 });
   }
 
-  public fillProductionYear(from: string, to: string) {
+  public fillProductionYear(years) {
     cy.get('[page-id=catalog-search] [test-id=production-year-panel]').click();
-    cy.get('[page-id=catalog-search] input[test-id=production-year-input-from]').type(from);
-    cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(to);
+    cy.get('[page-id=catalog-search] input[test-id=production-year-input-from]').type(years.from);
+    cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(years.to);
   }
 
   public selectGenres(genres: string[]) {
@@ -42,15 +42,11 @@ export default class SearchPage {
     cy.get(`[aria-label="${date.monthTo} ${date.dayTo}, ${date.yearTo}"]`).click();
   }
 
+  // TODO: fixing mat-option referencing first input => ISSUE#950
   public selectTerritories(territory: string) {
     cy.get('[page-id=catalog-search] [test-id=territories-panel]').click();
     cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').type(territory);
     cy.get('mat-option').contains(territory).click();
-    // TODO: fixing mat-option referencing first input
-    // territories.forEach(territory => {
-    //   cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').type(territory);
-    //   cy.get('mat-option', {timeout: 5000}).contains(territory).click();
-    // });
   }
 
   public selectMandateMedias(medias: string[]) {
@@ -58,8 +54,8 @@ export default class SearchPage {
     medias.forEach(media => cy.get('[page-id=catalog-search] mat-checkbox').contains(media).click());
   }
 
-  public selectMovie() {
-    cy.get('[page-id=display-card] [test-id=movie-card-title]', { timeout: 10000 }).contains('Eternal Sunshine of the Spotless Mind').click()
+  public selectMovie(movieName: string) {
+    cy.get('[page-id=display-card] [test-id=movie-card-title]', { timeout: 10000 }).contains(movieName).click()
     return new ViewPage();
   }
 }

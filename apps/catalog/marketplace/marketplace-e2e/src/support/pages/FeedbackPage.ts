@@ -1,4 +1,4 @@
-import { HomePage } from ".";
+import HomePage from "./HomePage";
 
 export default class FeedbackPage {
   constructor() {

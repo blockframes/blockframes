@@ -1,4 +1,4 @@
-import { FeedbackPage } from ".";
+import FeedbackPage from "./FeedbackPage";
 
 export default class SelectionPage {
   constructor() {

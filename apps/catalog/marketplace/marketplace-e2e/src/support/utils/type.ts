@@ -4,3 +4,12 @@ export interface User {
   name: string;
   surname: string;
 }
+
+export interface Availabilities {
+  yearFrom: string;
+  monthFrom: string;
+  dayFrom: string;
+  yearTo: string;
+  monthTo: string;
+  dayTo: string;
+}

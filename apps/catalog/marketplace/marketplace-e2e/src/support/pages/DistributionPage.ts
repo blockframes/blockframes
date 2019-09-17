@@ -1,8 +1,8 @@
-import { SelectionPage } from ".";
+import SelectionPage from "./SelectionPage";
 
 export default class DistributionPage {
   constructor() {
-    cy.get('[page-id=distribution-right]');
+    cy.get('[page-id=distribution-right]', { timeout: 10000 });
   }
 
   public selectDates() {
@@ -12,11 +12,10 @@ export default class DistributionPage {
     cy.get('button[test-id=add-selection]', { timeout: 10000 }).click();
   }
 
+  // TODO: fixing mat-option referencing first input => ISSUE#950
   public selectTerritory() {
     cy.get('[page-id=distribution-right] [test-id=distribution-territory-panel]').click();
     cy.get('[page-id=distribution-right] input[test-id=distribution-territory-input]').type('World');
-    // TODO: can't click mat-option
-    // cy.get('mat-option', { timeout: 10000 }).contains('World').click();
   }
 
   public selectMedias(medias: string[]) {
@@ -24,13 +23,11 @@ export default class DistributionPage {
     medias.forEach(media => cy.get('[page-id=distribution-right] mat-checkbox').contains(media).click());
   }
 
-  // TODO: can't click mat-option
+// TODO: fixing mat-option referencing first input => ISSUE#950
   public selectLanguage() {
     cy.get('[page-id=distribution-right] [test-id=distribution-language-panel]').click();
     cy.get('[page-id=distribution-right] [test-id=distribution-language-input]').click();
-    // cy.get('mat-option').contains('English').click();
     cy.get('[page-id=distribution-right] [test-id=distribution-dubbing-input]').click();
-    // cy.get('mat-option').contains('French').click();
   }
 
   public clickDistributionSearch() {
