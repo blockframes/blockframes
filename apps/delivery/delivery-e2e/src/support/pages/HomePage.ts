@@ -9,7 +9,7 @@ import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=movie-home]');
+    cy.get('[page-id=movie-home]', {timeout: 10000});
   }
 
   public clickAddMovie(): AddMovieModal {

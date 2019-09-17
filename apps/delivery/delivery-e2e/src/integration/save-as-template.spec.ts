@@ -3,15 +3,13 @@ import {
   DeliveryListPage,
   HomePage,
   LandingPage,
-  NewTemplatePage,
-  TemplateDeleteModal,
   TemplateFormPage,
   TemplateListPage,
   LoginPage,
-  DeliveryMaterialsPage
+  DeliveryMaterialsPage,
+  SaveAsTemplateModal
 } from '../support/pages';
 import { User, Material } from '../support/utils/type';
-import SaveAsTemplateModal from '../support/pages/SaveAsTemplateModal';
 
 const MATERIALS: Material[] = [
   {
@@ -48,39 +46,41 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
+  const p1: LandingPage = new LandingPage();
+  const p2: LoginPage = p1.clickCallToAction();
+  p2.fillSignin(USER);
+  p2.clickSigninWithMovies();
 });
 
 describe('I m a user and I can save a delivery as template', () => {
-  it('should login, go to a delivery, save it as a new template, edit a material in template', () => {
-    // Connexion
-    const p1: LandingPage = new LandingPage();
-    const p2: LoginPage = p1.clickCallToAction();
-    p2.fillSignin(USER);
-    const p3: HomePage = p2.clickSigninWithMovies();
-    const p4: DeliveryListPage = p3.clickOnMovie(MOVIE_CYTEST);
-    const p5: DeliveryMaterialsPage = p4.clickFirstDelivery(ORG_CYTEST);
-    const p6: SaveAsTemplateModal = p5.clickSaveAsTemplate();
-    p6.fillName(TEMPLATE_NAME_1);
-    const p7: DeliveryMaterialsPage = p6.clickSave();
-    const p8: HomePage = p7.clickHome();
-    const p9: TemplateListPage = p8.clickContextMenuTemplates();
-    const p10: TemplateFormPage = p9.editTemplate(TEMPLATE_NAME_1);
-    p10.assertMaterial(MATERIALS[0]);
+  it('should login, go to a delivery, save it as a new template, go to an other delivery and save it as uptade existing template', () => {
+    // Go to the first delivery and save it as new template
+    const p1 = new HomePage();
+    const p2: DeliveryListPage = p1.clickOnMovie(MOVIE_CYTEST);
+    const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORG_CYTEST);
+    const p4: SaveAsTemplateModal = p3.clickSaveAsTemplate();
+    p4.fillName(TEMPLATE_NAME_1);
+    const p5: DeliveryMaterialsPage = p4.clickSave();
 
+    // Verify if the template exists and contains the right materials
+    const p6: HomePage = p5.clickHome();
+    const p7: TemplateListPage = p6.clickContextMenuTemplates();
+    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
+    p8.assertMaterial(MATERIALS[0]);
 
+    // Go to an other delivery and save it as overwriting the existing template
+    const p9: HomePage = p8.clickHome();
+    const p10: DeliveryListPage = p9.clickOnMovie(MOVIE_CYTEST);
+    const p11: DeliveryMaterialsPage = p10.clickLastDelivery(ORG_CYTEST);
+    const p12: SaveAsTemplateModal = p11.clickSaveAsTemplate();
+    p12.fillName(TEMPLATE_NAME_1);
+    const p13: DeliveryMaterialsPage = p12.clickUpdate();
 
-    const p11: HomePage = p10.clickHome();
-    const p12: DeliveryListPage = p11.clickOnMovie(MOVIE_CYTEST);
-    const p13: DeliveryMaterialsPage = p12.clickLastDelivery(ORG_CYTEST);
-    const p14: SaveAsTemplateModal = p13.clickSaveAsTemplate();
-    p14.fillName(TEMPLATE_NAME_1);
-    const p15: DeliveryMaterialsPage = p14.clickUpdate();
-    const p16: HomePage = p15.clickHome();
-    const p17: TemplateListPage = p16.clickContextMenuTemplates();
-    const p18: TemplateFormPage = p17.editTemplate(TEMPLATE_NAME_1);
-    p18.assertMaterial(MATERIALS[1]);
-    p18.assertMaterial(MATERIALS[2]);
-
-    // TODO : updateTEmplate
+    // Verify if the template is overwrote with right materials
+    const p14: HomePage = p13.clickHome();
+    const p15: TemplateListPage = p14.clickContextMenuTemplates();
+    const p16: TemplateFormPage = p15.editTemplate(TEMPLATE_NAME_1);
+    p16.assertMaterial(MATERIALS[1]);
+    p16.assertMaterial(MATERIALS[2]);
   });
 });

@@ -3,7 +3,7 @@ import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
 
 export default class DeliveryListPage {
   constructor() {
-    cy.get('[page-id=delivery-list]', { timeout: 10000 });
+    cy.get('[page-id=delivery-list]', { timeout: 20000 });
   }
 
   public clickAddDelivery(): StarterPickerPage {
@@ -19,7 +19,7 @@ export default class DeliveryListPage {
   }
 
   public clickLastDelivery(orgName) {
-    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName).last().click();
+    cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').last().contains(orgName).click();
     return new DeliveryMaterialsPage();
   }
 

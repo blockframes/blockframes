@@ -48,5 +48,6 @@ export {
   SettingsPage,
   MoviePickerPage,
   TemplatePickerPage,
-  DeleteDeliveryModal
+  DeleteDeliveryModal,
+  SaveAsTemplateModal
 };

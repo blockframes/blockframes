@@ -8,7 +8,7 @@ import SaveAsTemplateModal from "./SaveAsTemplateModal";
 export default class DeliveryMaterialsPage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=delivery-materials]', { timeout: 10000 });
+    cy.get('[page-id=delivery-materials]', { timeout: 20000 });
   }
 
   public clickDeliveriesTab(): DeliveryListPage {
