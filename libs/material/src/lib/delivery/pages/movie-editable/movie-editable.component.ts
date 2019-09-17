@@ -5,8 +5,8 @@ import { Material, MaterialService } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { tap, switchMap } from 'rxjs/operators';
-import { MaterialForm } from '../../forms/material.form';
-import { AbstractControl } from '@angular/forms';
+import { MaterialForm, MaterialControl } from '../../forms/material.form';
+import { FormParty } from '@blockframes/utils';
 
 @Component({
   selector: 'movie-editable',
@@ -20,7 +20,7 @@ export class MovieEditableComponent implements OnInit {
   public opened = false;
 
   public form = new MaterialForm();
-  public activeForm$: Observable<AbstractControl>;
+  public activeForm$: Observable<FormParty<MaterialControl>>;
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -35,7 +35,7 @@ export class MovieEditableComponent implements OnInit {
       switchMap(materials => this.form.selectAll())
     );
 
-    this.activeForm$ = this.form.selectActive();
+    this.activeForm$ = this.form.selectActiveForm();
 
     this.movie$ = this.movieQuery.selectActive();
   }

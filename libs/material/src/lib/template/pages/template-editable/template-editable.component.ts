@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialService } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
-import { MaterialForm } from '../../forms/material.form';
-import { AbstractControl } from '@angular/forms';
+import { MaterialForm, MaterialControl } from '../../forms/material.form';
+import { FormParty } from '@blockframes/utils';
 
 @Component({
   selector: 'template-editable',
@@ -19,7 +19,7 @@ export class TemplateEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'template-editable';
   public template$: Observable<Template>;
   public materials$: Observable<Material[]>;
-  public activeForm$: Observable<AbstractControl>;
+  public activeForm$: Observable<FormParty<MaterialControl>>;
 
   public opened = false;
   public form = new MaterialForm();
@@ -38,7 +38,7 @@ export class TemplateEditableComponent implements OnInit {
       tap(template => this.form.upsertValue(template.materials)),
       switchMap(template => this.form.selectAll())
     );
-    this.activeForm$ = this.form.selectActive();
+    this.activeForm$ = this.form.selectActiveForm();
   }
 
   public openSidenav(materialId: string) {

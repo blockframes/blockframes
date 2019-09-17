@@ -2,7 +2,17 @@ import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, filter, startWith } from 'rxjs/operators';
 
-export abstract class FormBatch<E> extends FormGroup {
+type BatchControl<E = any> = {
+  [key in keyof Partial<E>]: AbstractControl;
+}
+
+export class FormParty<C extends BatchControl> extends FormGroup {
+  get<K extends keyof C>(path: Extract<K, string>): C[K] {
+    return super.get(path) as C[K];
+  }
+}
+
+export abstract class FormBatch<E, C extends BatchControl<E>> extends FormGroup {
   protected idKey = 'id';
   private active = new BehaviorSubject<string>(null);
   public active$ = this.active.asObservable();
@@ -10,7 +20,7 @@ export abstract class FormBatch<E> extends FormGroup {
   abstract createControl(entity: Partial<E>): FormGroup;
 
   // Read
-  public selectAll(): Observable<E[]> {
+  public selectAll(): Observable<Partial<E[]>> {
     return this.valueChanges.pipe(
       startWith(this.value),
       filter(entities => !!entities),
@@ -22,9 +32,9 @@ export abstract class FormBatch<E> extends FormGroup {
     return Object.values(this.value);
   }
 
-  public selectActive(): Observable<AbstractControl> {
+  public selectActiveForm(): Observable<FormParty<C>> {
     return this.active$.pipe(
-      map(active => this.get(active))
+      map(active => this.get(active) as FormParty<C>)
     );
   }
 
@@ -64,3 +74,35 @@ export abstract class FormBatch<E> extends FormGroup {
     });
   }
 }
+
+// TODO: remove it
+// type BatchControl<E = any> = {
+//   [key in keyof Partial<E>]: AbstractControl;
+// }
+
+
+// class BatchTest<C extends BatchControl<E>, E> {
+//   selectActiveForm(): Observable<FormEntity<C>>;
+//   selectAll(): Observable<Partial<E>[]>;
+// }
+
+
+
+// function getControl() {
+//   return {
+//     name: new FormControl(''),
+//     list: new FormArray([])
+//   }
+// }
+
+// interface MyMovie {
+//   id: string;
+//   name: string;
+//   list: string[];
+//   displayName: string;
+// }
+
+// type MyControl = ReturnType<typeof getControl>;
+// const form = new BatchTest<MyControl, MyMovie>();
+
+// form.selectActiveForm().subscribe(formEntity => formEntity.get('name'));

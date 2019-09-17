@@ -11,11 +11,11 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { MaterialForm } from '../../forms/material.form';
-import { AbstractControl } from '@angular/forms';
+import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { utils } from 'ethers';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
+import { FormParty } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-editable',
@@ -32,7 +32,7 @@ export class DeliveryEditableComponent implements OnInit {
   public pdfLink: string;
 
   public form = new MaterialForm();
-  public activeForm$: Observable<AbstractControl>;
+  public activeForm$: Observable<FormParty<MaterialControl>>;
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -55,12 +55,10 @@ export class DeliveryEditableComponent implements OnInit {
         // Disable or enable form depending on delivery isSigned property
         delivery.isSigned ? this.form.disable() : this.form.enable();
       }),
-      switchMap(([delivery, materials]) => {
-        return this.form.selectAll();
-      })
+      switchMap(([delivery, materials]) => this.form.selectAll())
     );
 
-    this.activeForm$ = this.form.selectActive();
+    this.activeForm$ = this.form.selectActiveForm();
 
     this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
     this.movie$ = this.movieQuery.selectActive();
