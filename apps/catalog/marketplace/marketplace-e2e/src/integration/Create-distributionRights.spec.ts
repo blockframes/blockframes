@@ -7,15 +7,12 @@ const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',
   password: 'blockframes'
 };
+// SearchPage
+const PRODUCTION_YEAR = { from: '2000', to: '2004'};
 const GENRE_ARRAY = ['Romance', 'Drama'];
 const LANGUAGE = 'English';
 const CERTIFICATIONS = 'EOF'
-const PRODUCTION_YEAR = { from: '2000', to: '2004'};
-const SEARCH_MEDIA_ARRAY = ['Pay TV', 'Free TV'];
-// DistributionPage
-const DISTRIBUTION_DATES = { from: '1', to: '10'};
-const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv']; // key.slug
-const AVAILAILITIES: Partial<Availabilities> = {
+const AVAILAILITIES: Availabilities = {
   yearFrom: '2019',
   monthFrom: 'September',
   dayFrom: '1',
@@ -24,7 +21,13 @@ const AVAILAILITIES: Partial<Availabilities> = {
   dayTo: '10'
 }
 const TERRITORIES = 'World';
+const SEARCH_MEDIA_ARRAY = ['Pay TV', 'Free TV'];
+// ViewPage
 const MOVIE_NAME = 'Eternal Sunshine of the Spotless Mind';
+// DistributionPage
+const DISTRIBUTION_DATES = { from: '1', to: '10'};
+const DISTRIBUTION_TERRITORY = 'World';
+const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv']; // key.slug
 
 beforeEach(() => {
   cy.clearCookies();
@@ -55,7 +58,7 @@ describe('test select movie from catalog', () => {
     // create distribution right for one movie
     const p6: DistributionPage = p5.clickDistributionRights();
     p6.selectDates(DISTRIBUTION_DATES);
-    p6.selectTerritory();
+    p6.selectTerritory(DISTRIBUTION_TERRITORY);
     p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);
     p6.selectLanguage();
     p6.clickDistributionSearch();
@@ -66,7 +69,5 @@ describe('test select movie from catalog', () => {
     // send offer and go back to homepage
     const p8: FeedbackPage = p7.clickSend();
     p8.clickRedirect();
-    // p3.openProfileMenu();
-    // p3.clickLogout();
   });
 });

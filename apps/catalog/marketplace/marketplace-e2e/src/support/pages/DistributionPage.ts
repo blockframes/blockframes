@@ -1,11 +1,12 @@
 import SelectionPage from "./SelectionPage";
+import { Dates } from "../utils/type";
 
 export default class DistributionPage {
   constructor() {
     cy.get('[page-id=distribution-right]', { timeout: 10000 });
   }
 
-  public selectDates(dates) {
+  public selectDates(dates: Dates) {
     cy.get('[test-id=datepicker-input]').click();
     cy.wait(2000);
     cy.get('div[class=mat-calendar-body-cell-content]').contains(dates.from).click();
@@ -14,9 +15,9 @@ export default class DistributionPage {
   }
 
   // TODO: fixing mat-option referencing first input => ISSUE#950
-  public selectTerritory() {
+  public selectTerritory(territory: string) {
     cy.get('[page-id=distribution-right] [test-id=distribution-territory-panel]').click();
-    cy.get('[page-id=distribution-right] input[test-id=distribution-territory-input]').type('World');
+    cy.get('[page-id=distribution-right] input[test-id=distribution-territory-input]').type(territory);
   }
 
   public selectMedias(medias: string[]) {

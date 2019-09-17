@@ -1,4 +1,4 @@
-import { DistributionPage } from ".";
+import DistributionPage from "./DistributionPage";
 
 export default class ViewPage {
 

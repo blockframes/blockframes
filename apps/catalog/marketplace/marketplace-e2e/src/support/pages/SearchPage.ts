@@ -1,4 +1,5 @@
 import ViewPage from "./ViewPage";
+import { Dates, Availabilities } from "../utils/type";
 
 export default class SearchPage {
 
@@ -6,7 +7,7 @@ export default class SearchPage {
     cy.get('[page-id=catalog-search]', { timeout: 10000 });
   }
 
-  public fillProductionYear(years) {
+  public fillProductionYear(years: Dates) {
     cy.get('[page-id=catalog-search] [test-id=production-year-panel]').click();
     cy.get('[page-id=catalog-search] input[test-id=production-year-input-from]').type(years.from);
     cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(years.to);
@@ -30,7 +31,7 @@ export default class SearchPage {
     cy.get('[page-id=catalog-search] mat-checkbox').contains(certification).click();
   }
 
-  public selectAvailabilities(date) {
+  public selectAvailabilities(date: Availabilities) {
     cy.get('[page-id=catalog-search] [test-id=availabilities-panel]').click();
     cy.get('[test-id=datepicker-from]').click();
     cy.get(`[aria-label=${date.yearFrom}]`).click();

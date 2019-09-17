@@ -13,3 +13,8 @@ export interface Availabilities {
   monthTo: string;
   dayTo: string;
 }
+
+export interface Dates {
+  from: string;
+  to: string;
+}
