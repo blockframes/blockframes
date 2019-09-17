@@ -1,7 +1,7 @@
 import { DistributionRight, MovieData } from '../../distribution-right/+state/basket.model';
 import { CatalogBasket } from '@blockframes/marketplace';
 import { BasketQuery } from '../../distribution-right/+state/basket.query';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { BasketStatus } from '../../distribution-right/+state/basket.model';
 import { Component, OnInit } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie';
@@ -16,6 +16,7 @@ import { BasketService } from '../../distribution-right/+state/basket.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'catalog-selection';
   public priceControl: FormControl = new FormControl(null);
   public currencyList: MovieCurrenciesSlug[];
   public selectedCurrency;

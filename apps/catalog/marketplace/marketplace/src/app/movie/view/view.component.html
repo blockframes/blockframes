@@ -1,7 +1,7 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<main *ngIf="(movie$ | async) as movie;" test-id="content" page-id="catalog-movie-view">
+<main *ngIf="(movie$ | async) as movie;" test-id="content">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-display-3">{{movie.main.title.original}}</h1>

@@ -1,5 +1,5 @@
 import { Movie } from '@blockframes/movie';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 
@@ -10,6 +10,7 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MarketplaceMovieViewComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
 

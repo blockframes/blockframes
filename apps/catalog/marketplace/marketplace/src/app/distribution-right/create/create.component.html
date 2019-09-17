@@ -1,4 +1,4 @@
-<main *ngIf="(movie$ | async) as movie" page-id="distribution-right">
+<main *ngIf="(movie$ | async) as movie">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
