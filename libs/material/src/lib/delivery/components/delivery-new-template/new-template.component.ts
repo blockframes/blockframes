@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, Inject, HostBinding } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateService } from '../../../template/+state/template.service';
@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTemplateComponent implements OnInit, OnDestroy {
+  @HostBinding('attr.page-id') pageId = 'save-as-template';
   public isTemplateUpdate = false;
   private materials: Material[];
   private destroyed$ = new Subject();

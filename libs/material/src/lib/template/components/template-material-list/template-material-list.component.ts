@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, HostBinding } from '@angular/core';
 import { Material } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +10,7 @@ import { MatSort } from '@angular/material/sort';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateMaterialListComponent {
+  @HostBinding('attr.page-id') pageId = 'template-material-list';
   @Input()
   set materials(materials: Material[]) {
     this.dataSource = new MatTableDataSource(materials);
