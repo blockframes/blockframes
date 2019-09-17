@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Language } from '../../movie/search/search.form';
+import { Languages } from '../../movie/search/search.form';
 import { BasketService } from '../+state/basket.service';
 import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
 import { ViewChild } from '@angular/core';
@@ -182,42 +182,42 @@ export class DistributionRightCreateComponent implements OnInit {
     this.form.checkMedia(media);
   }
 
-  public addLanguage(language: Language) {
+  public addLanguage(language: Languages) {
     if (!this.selectedLanguages.includes(language) && this.movieLanguages.includes(language)) {
       this.selectedLanguages.push(language);
       this.form.addLanguage(language);
     }
   }
 
-  public removeLanguage(language: Language, index: number) {
+  public removeLanguage(language: Languages, index: number) {
     if (this.selectedLanguages.includes(language)) {
       this.selectedLanguages.splice(index, 1);
       this.form.removeLanguage(language);
     }
   }
 
-  public addDubbing(language: Language) {
+  public addDubbing(language: Languages) {
     if (!this.selectedDubbings.includes(language) && this.movieDubbings.includes(language)) {
       this.selectedDubbings.push(language);
       this.form.addDubbings(language);
     }
   }
 
-  public removeDubbing(language: Language, index: number) {
+  public removeDubbing(language: Languages, index: number) {
     if (this.selectedDubbings.includes(language)) {
       this.selectedDubbings.splice(index, 1);
       this.form.removeDubbings(language);
     }
   }
 
-  public addSubtitle(language: Language) {
+  public addSubtitle(language: Languages) {
     if (!this.selectedSubtitles.includes(language) && this.movieSubtitles.includes(language)) {
       this.selectedSubtitles.push(language);
       this.form.addSubtitles(language);
     }
   }
 
-  public removeSubtitle(language: Language, index: number) {
+  public removeSubtitle(language: Languages, index: number) {
     if (this.selectedSubtitles.includes(language)) {
       this.selectedSubtitles.splice(index, 1);
       this.form.removeSubtitles(language);

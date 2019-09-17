@@ -18,6 +18,7 @@ import { MatAutocompleteModule, MatListModule } from '@angular/material';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
+import { MatOptionModule } from '@angular/material/core';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -25,7 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Custom modules
 import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
@@ -36,7 +37,6 @@ import { MovieDisplayListModule } from '@blockframes/movie/movie/components/disp
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    FormsModule,
     HttpClientModule,
     MovieCardModule,
     MovieDisplayListModule,
@@ -57,6 +57,7 @@ import { MovieDisplayListModule } from '@blockframes/movie/movie/components/disp
     MatCardModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatOptionModule,
 
     RouterModule.forChild([
       {

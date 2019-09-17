@@ -9,15 +9,15 @@ import { Movie, staticModels } from '@blockframes/movie';
 import { MovieQuery } from '@blockframes/movie';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
-import { startWith, map, debounceTime, switchMap } from 'rxjs/operators';
+import { startWith, map, debounceTime, tap } from 'rxjs/operators';
 // Others
 import {
-  MovieType,
   CatalogSearchForm,
-  Language,
+  Languages,
   Certifications,
   MovieMedias,
-  MovieTerritories
+  MovieTerritories,
+  MovieGenres
 } from './search.form';
 import { languageValidator } from './search-validators.form';
 import { filterMovie } from './filter.util';
@@ -48,11 +48,12 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
 
-  public sortedMovies$: Observable<Movie[]>;
+  /* Array to hold the movies sorted by parameters */
+  public sortByOptionMovies: Movie[];
 
   // TODO#748: split up into compoennts
-  public movieGenres: MovieType[];
-  public movieLanguages: Language[];
+  public movieGenres: MovieGenres[];
+  public movieLanguages: Languages[];
   public languageControl = new FormControl('', [Validators.required, languageValidator]);
   public languagesFilter: Observable<string[]>;
   public movieCertifications: Certifications[];
@@ -96,18 +97,77 @@ export class MarketplaceSearchComponent implements OnInit {
       map(territory => this._territoriesFilter(territory))
     );
     this.movieSearchResults$ = combineLatest([
-     this.movieQuery.selectAll(),
+      this.movieQuery.selectAll({}),
       this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
     ]).pipe(
       map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
     );
-   /*  this.sortedMovies$ = this.movieSearchResults$.pipe(startWith('All films'),
-    switchMap((sortBy) => this.)) */
+    this.sortBy();
   }
 
   ////////////////////
   // Filter section //
   ////////////////////
+
+  public sortBy(option?: string) {
+    switch (option) {
+      case 'Director':
+        this.movieSearchResults$
+          .pipe(
+            tap(movies => {
+              this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
+                if (b.main.directors[0].lastName < a.main.directors[0].lastName) {
+                  return -1;
+                }
+                if (b.main.directors[0].lastName > a.main.directors[0].lastName) {
+                  return 1;
+                }
+                return 0;
+              });
+            })
+          )
+          .subscribe();
+        break;
+      case 'Title':
+        this.movieSearchResults$
+          .pipe(
+            tap(
+              movies =>
+                (this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
+                  if (a.main.title.original < b.main.title.original) {
+                    return -1;
+                  }
+                  if (a.main.title.original > b.main.title.original) {
+                    return 1;
+                  }
+                  return 0;
+                }))
+            )
+          )
+          .subscribe();
+        break;
+      case 'Production Year':
+        this.movieSearchResults$
+          .pipe(
+            tap(
+              movies =>
+                (this.sortByOptionMovies = movies.sort((a: Movie, b: Movie) => {
+                  if (b.main.productionYear < a.main.productionYear) {
+                    return -1;
+                  }
+                  if (b.main.productionYear > a.main.productionYear) {
+                    return 1;
+                  }
+                  return 0;
+                }))
+            )
+          )
+          .subscribe();
+        break;
+      default:
+        this.movieSearchResults$.subscribe(movies => (this.sortByOptionMovies = movies));
+    }
+  }
 
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
@@ -126,17 +186,17 @@ export class MarketplaceSearchComponent implements OnInit {
   // Form section //
   //////////////////
 
-  public addLanguage(language: Language) {
+  public addLanguage(language: Languages) {
     if (this.movieLanguages.includes(language)) {
       this.filterForm.addLanguage(language);
     }
   }
 
-  public removeLanguage(language: Language) {
+  public removeLanguage(language: Languages) {
     this.filterForm.removeLanguage(language);
   }
 
-  public hasGenre(genre: MovieType) {
+  public hasGenre(genre: MovieGenres) {
     if (this.movieGenres.includes(genre) && !this.filterForm.get('type').value.includes(genre)) {
       this.filterForm.addType(genre);
     } else {
@@ -156,7 +216,7 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public deleteLanguage(language: Language) {
+  public deleteLanguage(language: Languages) {
     this.filterForm.removeLanguage(language);
   }
 

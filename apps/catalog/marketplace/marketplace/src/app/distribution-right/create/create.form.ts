@@ -1,4 +1,4 @@
-import { Language } from '../../movie/search/search.form';
+import { Languages } from '../../movie/search/search.form';
 import { Territories } from '../+state/basket.model';
 import { FormEntity } from '@blockframes/utils';
 import { DistributionRight } from '../+state/basket.model';
@@ -55,33 +55,33 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
     }
   }
 
-  addLanguage(language: Language) {
+  addLanguage(language: Languages) {
     this.get('languages').setValue([...this.get('languages').value, language]);
   }
 
-  addDubbings(language: Language) {
+  addDubbings(language: Languages) {
     this.get('dubbings').setValue([...this.get('dubbings').value, language]);
   }
 
-  addSubtitles(language: Language) {
+  addSubtitles(language: Languages) {
     this.get('subtitles').setValue([...this.get('subtitles').value, language]);
   }
 
-  removeLanguage(language: Language) {
+  removeLanguage(language: Languages) {
     const updatedLanguage = this.get('languages').value.filter(newLanguages => {
       return newLanguages !== language;
     });
     this.get('languages').setValue(updatedLanguage);
   }
 
-  removeDubbings(language: Language) {
+  removeDubbings(language: Languages) {
     const updatedLanguage = this.get('languages').value.filter(newLanguages => {
       return newLanguages !== language;
     });
     this.get('languages').setValue(updatedLanguage);
   }
 
-  removeSubtitles(language: Language) {
+  removeSubtitles(language: Languages) {
     const updatedLanguage = this.get('languages').value.filter(newLanguages => {
       return newLanguages !== language;
     });
