@@ -31,7 +31,6 @@ import { DeliveryAddTemplatePickerComponent } from './pages/delivery-add-templat
 import { DeliveryAddSettingsComponent } from './pages/delivery-add-settings/delivery-add-settings.component';
 import { DeliveryInformationsEditableComponent } from './pages/delivery-informations-editable/delivery-informations-editable.component';
 import { DeliveryAddSpecificDeliveryListPickerComponent } from './pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component';
-import { DeliveryAddCompleteComponent } from './pages/delivery-add-complete/delivery-add-complete.component';
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { DeliveryStakeholdersEditableComponent } from './pages/delivery-stakeholders-editable/delivery-stakeholders-editable.component';
 
@@ -86,7 +85,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     DeliveryAddTemplatePickerComponent,
     DeliveryAddSpecificDeliveryListPickerComponent,
     DeliveryAddSettingsComponent,
-    DeliveryAddCompleteComponent,
     NewTemplateComponent,
     DeliveryActionsComponent,
     DeliveryInformationsEditableComponent,

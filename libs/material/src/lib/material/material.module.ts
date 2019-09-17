@@ -5,15 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [],
@@ -23,17 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
-
-    // Material
-    MatCardModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatListModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatCheckboxModule,
+    FlexLayoutModule
   ]
 })
 export class MaterialModule {}

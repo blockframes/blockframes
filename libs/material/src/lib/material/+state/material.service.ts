@@ -20,14 +20,14 @@ export class MaterialService {
   // CRUD MATERIAL (DELIVERY) //
   //////////////////////////////
 
-  /** Returns a material to be pushed in a formGroup */
+  /** Returns a material to be pushed in a formGroup. */
   public add(): Material {
     const id = this.db.createId();
     const newMaterial = createMaterial({ id });
     return newMaterial;
   }
 
-  /** Deletes material of the movie sub-collection in firebase */
+  /** Deletes material of the movie sub-collection in firebase. */
   public delete(materialId: string, delivery: Delivery) {
     const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${materialId}`)
       .ref;
@@ -47,9 +47,9 @@ export class MaterialService {
     });
   }
 
-  /** Update materials of a delivery (materials loaded from movie) */
+  /** Update materials of a delivery (materials loaded from movie). */
   public async update(materials: Material[], delivery: Delivery) {
-    // TODO: (ISSUE#773) We should load an update the data within a transaction
+    // TODO: (ISSUE#773) We should load an update the data within a transaction.
     const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
@@ -108,7 +108,7 @@ export class MaterialService {
     });
   }
 
-  /** Update the property status of materials */
+  /** Update the property status of selected materials. */
   public updateStatus(materials: Material[], status: MaterialStatus, movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
@@ -118,6 +118,7 @@ export class MaterialService {
     batch.commit();
   }
 
+  /** Update the property isOrdered of selected materials. */
   public updateIsOrdered(materials: Material[], movieId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(async material => {
@@ -136,7 +137,7 @@ export class MaterialService {
     batch.commit();
   }
 
-  /** Update stepId of delivery's materials */
+  /** Update stepId of delivery's materials. */
   public updateStep(materials: Material[], stepId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
@@ -148,7 +149,7 @@ export class MaterialService {
     batch.commit();
   }
 
-  /** Update materials of a movie (specific fields like 'owner' and 'storage') */
+  /** Update materials of a movie (specific fields like 'owner' and 'storage'). */
   public updateMovieMaterials(materials: Material[], movieId: string) {
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
@@ -162,14 +163,14 @@ export class MaterialService {
   // CRUD MATERIAL (DELIVERY TO BE SIGNED) //
   ///////////////////////////////////////////
 
-  /** Deletes material of the delivery sub-collection in firebase */
+  /** Deletes material of the delivery sub-collection in firebase. */
   public deleteDeliveryMaterial(materialId: string, deliveryId: string) {
     return this.db.doc<Material>(`deliveries/${deliveryId}/materials/${materialId}`).delete()
   }
 
-  /** Update materials of a delivery (materials loaded from delivery) */
+  /** Update materials of a delivery (materials loaded from delivery). */
   public async updateDeliveryMaterials(materials: Material[], delivery: Delivery) {
-    // TODO: (ISSUE#773) We should load an update the data within a transaction
+    // TODO: (ISSUE#773) We should load an update the data within a transaction.
     const deliveryMaterials = await this.db.snapshot<Material[]>(`deliveries/${delivery.id}/materials`);
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
@@ -195,7 +196,7 @@ export class MaterialService {
     });
   }
 
-  /** Update the property status of materials from delivery sub-collection */
+  /** Update the property status of selected materials from delivery sub-collection. */
   public updateDeliveryMaterialStatus(materials: Material[], status: MaterialStatus, deliveryId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(material => {
@@ -205,6 +206,7 @@ export class MaterialService {
     batch.commit();
   }
 
+  /** Update the property isOrdered of selected materials from delivery sub-collection. */
   public updateDeliveryMaterialIsOrdered(materials: Material[], deliveryId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(async material => {
@@ -214,6 +216,7 @@ export class MaterialService {
     batch.commit();
   }
 
+  /** Update the property isPaid of selected materials from delivery sub-collection. */
   public updateDeliveryMaterialIsPaid(materials: Material[], deliveryId: string) {
     const batch = this.db.firestore.batch();
     materials.forEach(async material => {
@@ -227,19 +230,19 @@ export class MaterialService {
   // CRUD MATERIAL (TEMPLATE) //
   //////////////////////////////
 
-  /** Remove material of template */
+  /** Remove material from a template. */
   public deleteTemplateMaterial(id: string): Promise<void> {
     const templateId = this.templateQuery.getActiveId();
     return this.db.doc<Material>(`templates/${templateId}/materials/${id}`).delete();
   }
 
-  /** Returns a material of template to be pushed in a formGroup */
+  /** Returns a template material to be pushed in a formGroup. */
   public addTemplateMaterial(): Material {
     const id = this.db.createId();
     return createTemplateMaterial({ id });
   }
 
-  /** Update all materials of template */
+  /** Update all materials of a template. */
   public updateTemplateMaterials(materials: Material[]) {
     const batch = this.db.firestore.batch();
     const oldMaterials = this.templateQuery.getActive().materials;
@@ -247,7 +250,7 @@ export class MaterialService {
       const materialRef = this.db.doc<Material>(
         `templates/${this.templateQuery.getActiveId()}/materials/${material.id}`
       ).ref;
-      // If material is already exists we update, if not we create it
+      // If material is already exists we update, if not we create it.
       if (!oldMaterials.find(oldMaterial => oldMaterial.id === material.id)) {
         return batch.set(materialRef, material);
       } else {
@@ -261,9 +264,7 @@ export class MaterialService {
   // MATERIAL UTILS //
   ////////////////////
 
-  /**
-   * Checks properties of two material to tell if they are the same or not.
-   */
+  /**  Checks properties of two material to tell if they are the same or not. */
   public isTheSame(matA: Material, matB: Material): boolean {
     const getProperties = ({ value, description, category, step }: Material) => ({
       value,

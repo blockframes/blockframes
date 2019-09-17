@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { TemplateService, TemplateQuery } from '../../+state';
+import { TemplateService } from '../../+state';
 import { Router } from '@angular/router';
 
 @Component({

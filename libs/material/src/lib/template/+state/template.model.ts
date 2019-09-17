@@ -13,11 +13,6 @@ export interface Template extends BaseTemplate {
   _type: 'templates';
 }
 
-export interface TemplateView {
-  category: string;
-  materials: Material[];
-}
-
 /**
  * A factory function that creates Template
  */
