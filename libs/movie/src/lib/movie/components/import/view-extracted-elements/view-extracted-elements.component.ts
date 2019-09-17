@@ -15,13 +15,12 @@ import {
   cleanModel,
   createMovieSale
 } from '../../../+state';
-import { SheetTab, formatCredits } from '@blockframes/utils';
+import { SheetTab, formatCredits, ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
-import { HttpUpload } from '@blockframes/ui';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -107,10 +106,9 @@ export class ViewExtractedElementsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private httpUpload: HttpUpload,
+    private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
   ) { }
-
 
   public formatMovies(sheetTab: SheetTab) {
     this.clearDataSources();
@@ -223,7 +221,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // POSTER (Poster)
-        movie.main.poster = await this.httpUpload.uploadImageToFirestore(spreadSheetRow[SpreadSheetMovie.poster]);
+        movie.main.poster = await this.imageUploader.uploadImageToFirestore(spreadSheetRow[SpreadSheetMovie.poster]);
 
         //////////////////
         // OPTIONAL FIELDS
