@@ -5,10 +5,11 @@ export default class DistributionPage {
     cy.get('[page-id=distribution-right]', { timeout: 10000 });
   }
 
-  public selectDates() {
+  public selectDates(dates) {
     cy.get('[test-id=datepicker-input]').click();
-    cy.get('[aria-label="September 1, 2019"]').click();
-    cy.get('[aria-label="September 10, 2019"]').click();
+    cy.wait(2000);
+    cy.get('div[class=mat-calendar-body-cell-content]').contains(dates.from).click();
+    cy.get('div[class=mat-calendar-body-cell-content]').contains(dates.to).click();
     cy.get('button[test-id=add-selection]', { timeout: 10000 }).click();
   }
 

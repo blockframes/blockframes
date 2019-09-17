@@ -8,10 +8,14 @@ const LOGIN_CREDENTIALS: Partial<User> = {
   password: 'blockframes'
 };
 const GENRE_ARRAY = ['Romance', 'Drama'];
+const LANGUAGE = 'English';
+const CERTIFICATIONS = 'EOF'
 const PRODUCTION_YEAR = { from: '2000', to: '2004'};
 const SEARCH_MEDIA_ARRAY = ['Pay TV', 'Free TV'];
+// DistributionPage
+const DISTRIBUTION_DATES = { from: '1', to: '10'};
 const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv']; // key.slug
-const Availabilities: Partial<Availabilities> = {
+const AVAILAILITIES: Partial<Availabilities> = {
   yearFrom: '2019',
   monthFrom: 'September',
   dayFrom: '1',
@@ -19,6 +23,7 @@ const Availabilities: Partial<Availabilities> = {
   monthTo: 'September',
   dayTo: '10'
 }
+const TERRITORIES = 'World';
 const MOVIE_NAME = 'Eternal Sunshine of the Spotless Mind';
 
 beforeEach(() => {
@@ -40,16 +45,16 @@ describe('test select movie from catalog', () => {
     const p4: SearchPage = p3.clickDiscover();
     p4.fillProductionYear(PRODUCTION_YEAR);
     p4.selectGenres(GENRE_ARRAY);
-    p4.selectLanguages('English');
-    p4.selectCertifications('EOF');
-    p4.selectAvailabilities(Availabilities);
-    p4.selectTerritories('World');
+    p4.selectLanguages(LANGUAGE);
+    p4.selectCertifications(CERTIFICATIONS);
+    p4.selectAvailabilities(AVAILAILITIES);
+    p4.selectTerritories(TERRITORIES);
     p4.selectMandateMedias(SEARCH_MEDIA_ARRAY);
     // select one movie
     const p5: ViewPage = p4.selectMovie(MOVIE_NAME);
     // create distribution right for one movie
     const p6: DistributionPage = p5.clickDistributionRights();
-    p6.selectDates();
+    p6.selectDates(DISTRIBUTION_DATES);
     p6.selectTerritory();
     p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);
     p6.selectLanguage();
@@ -61,7 +66,7 @@ describe('test select movie from catalog', () => {
     // send offer and go back to homepage
     const p8: FeedbackPage = p7.clickSend();
     p8.clickRedirect();
-    p3.openProfileMenu();
-    p3.clickLogout();
+    // p3.openProfileMenu();
+    // p3.clickLogout();
   });
 });
