@@ -1,4 +1,4 @@
-import { MovieMain, Movie, Credit, createMovieMain } from '../../+state';
+import { MovieMain, Movie, Credit, createMovieMain, createCredit } from '../../+state';
 import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
 import { Validators, FormControl } from '@angular/forms';
 
@@ -64,12 +64,13 @@ export class MovieMainForm extends FormEntity<Partial<MovieMain>, MovieMainContr
     return this.get('shortSynopsis');
   }
 
-  public addDirector(entity?: Partial<Credit>): void {
-    const credit = new FormEntity<Credit>({
-      firstName: new FormControl(entity && entity.firstName ? entity.firstName : ''),
-      lastName: new FormControl(entity && entity.lastName ? entity.lastName : ''),
+  public addDirector(credit?: Partial<Credit>): void {
+    const entity = createCredit(credit);
+    const creditControl = new FormEntity<Credit>({
+      firstName: new FormControl(entity.firstName),
+      lastName: new FormControl(entity.lastName),
     });
-    this.directors.push(credit);
+    this.directors.push(creditControl);
   }
 
   public removeDirector(i: number): void {
