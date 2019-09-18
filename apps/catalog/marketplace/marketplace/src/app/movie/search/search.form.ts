@@ -4,10 +4,10 @@ import {
   MediasLabel,
   TerritoriesLabel,
   GenresLabel,
-  GENRESLABEL,
-  CERTIFICATIONSLABEL,
-  MEDIASLABEL,
-  TERRITORIESLABEL
+  GENRES_LABEL,
+  CERTIFICATIONS_LABEL,
+  MEDIAS_LABEL,
+  TERRITORIES_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -137,9 +137,9 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
   }
 
   addType(type: GenresLabel) {
-    if (!GENRESLABEL.includes(type)) {
+    if (!GENRES_LABEL.includes(type)) {
       throw new Error(
-        `Type ${type} is not part of the defined types, here is the complete list currently available: ${GENRESLABEL}`
+        `Type ${type} is not part of the defined types, here is the complete list currently available: ${GENRES_LABEL}`
       );
     } else {
       this.get('type').setValue([...this.get('type').value, type]);
@@ -147,7 +147,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
   }
 
   removeType(type: GenresLabel) {
-    if (GENRESLABEL.includes(type)) {
+    if (GENRES_LABEL.includes(type)) {
       const newControls = this.get('type').value.filter(typeToRemove => typeToRemove !== type);
       this.get('type').setValue(newControls);
     } else {
@@ -158,14 +158,14 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
   checkCertification(certificationChecked: CertificationsLabel) {
     // check if certification is already checked by the user
     if (
-      CERTIFICATIONSLABEL.includes(certificationChecked) &&
+      CERTIFICATIONS_LABEL.includes(certificationChecked) &&
       !this.get('certifications').value.includes(certificationChecked)
     ) {
       this.get('certifications').setValue([
         ...this.get('certifications').value,
         certificationChecked
       ]);
-    } else if (CERTIFICATIONSLABEL.includes(certificationChecked)) {
+    } else if (CERTIFICATIONS_LABEL.includes(certificationChecked)) {
       const uncheckCertification = this.get('certifications').value.filter(
         removeCef => removeCef !== certificationChecked
       );
@@ -177,10 +177,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
 
   checkMedia(mediaChecked: MediasLabel) {
     // check if media is already checked by the user
-    if (MEDIASLABEL.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
+    if (MEDIAS_LABEL.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
       this.get('medias').setValue([...this.get('medias').value, mediaChecked]);
     } else if (
-      MEDIASLABEL.includes(mediaChecked) &&
+      MEDIAS_LABEL.includes(mediaChecked) &&
       this.get('medias').value.includes(mediaChecked)
     ) {
       const uncheckMedia = this.get('medias').value.filter(
@@ -194,7 +194,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
 
   addTerritory(territory: TerritoriesLabel) {
     // Check it's part of the list available
-    if (!TERRITORIESLABEL.includes(territory)) {
+    if (!TERRITORIES_LABEL.includes(territory)) {
       throw new Error(`Territory ${territory} is not part of the list`);
     }
     // Check it's not already in the form control

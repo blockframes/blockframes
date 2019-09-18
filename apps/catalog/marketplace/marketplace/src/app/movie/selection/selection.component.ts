@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { BasketStatus } from '../../distribution-right/+state/basket.model';
 import { Component, OnInit } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie';
-import { MOVIECURRENCIESSLUG, MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types'
+import { MOVIE_CURRENCIES_SLUG, MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types'
 import { FormControl } from '@angular/forms';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 
@@ -28,7 +28,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currencyList = MOVIECURRENCIESSLUG
+    this.currencyList = MOVIE_CURRENCIES_SLUG
     // TODO #922: make an observable out of the basketquery
     this.basketQuery.getAll().forEach(basket =>
       basket.rights.forEach(right => {

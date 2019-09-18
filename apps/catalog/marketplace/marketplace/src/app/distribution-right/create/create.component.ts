@@ -2,8 +2,8 @@ import {
   TerritoriesSlug,
   LanguagesLabel,
   MediasSlug,
-  MEDIASSLUG,
-  TERRITORIESSLUG
+  MEDIAS_SLUG,
+  TERRITORIES_SLUG
 } from '@blockframes/movie/movie/static-model/types';
 import { Router } from '@angular/router';
 import { BasketService } from '../+state/basket.service';
@@ -48,7 +48,7 @@ export class DistributionRightCreateComponent implements OnInit {
   public occupiedDateRanges: DateRange[] = [];
 
   // Media section
-  public movieMedia: MediasSlug[] = MEDIASSLUG;
+  public movieMedia: MediasSlug[] = MEDIAS_SLUG;
 
   // Language section
   // TODO(MF): Think of a slim solution
@@ -71,7 +71,7 @@ export class DistributionRightCreateComponent implements OnInit {
   // Territory section
   public territoriesFilter: Observable<string[]>;
   public territoryControl = new FormControl();
-  public movieTerritories: TerritoriesSlug[] = TERRITORIESSLUG;
+  public movieTerritories: TerritoriesSlug[] = TERRITORIES_SLUG;
   public selectedTerritories: string[] = [];
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
