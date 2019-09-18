@@ -16,7 +16,7 @@ export default class MovieEditPage extends NavbarPage {
 
   constructor() {
     super();
-    cy.get('[page-id=movie-edit]');
+    cy.get('[page-id=movie-edit]', {timeout: 10000});
   }
 
   public clickHome() {

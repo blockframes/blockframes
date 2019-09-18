@@ -1,7 +1,9 @@
 import MovieEditPage from "./MovieEditPage";
 
 export default class AddMovieModal {
-  constructor() {}
+  constructor() {
+    cy.get('[page-id=movie-create]', {timeout: 10000});
+  }
 
   public fillMovieName(movieName: string) {
     cy.get('[page-id=movie-create] input[test-id=movie-name]').type(movieName);

@@ -25,11 +25,6 @@ export default abstract class NavbarPage {
     return new HomePage();
   }
 
-  public clickAcceptInvitationToDelivery() {
-    cy.get('div[testId=notifications] button.mat-primary').first().click();
-    return new DeliveryTeamWorkPage();
-  }
-
   public openNotifications() {
     cy.wait(2000);
     cy.get('.notification-button').click();

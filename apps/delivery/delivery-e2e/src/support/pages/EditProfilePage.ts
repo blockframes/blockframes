@@ -3,7 +3,7 @@ import NavbarPage from "./NavbarPage";
 export default class EditProfilePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=profile-editable]');
+    cy.get('[page-id=profile-editable]', {timeout: 10000});
   }
 
   //////////////////
