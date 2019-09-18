@@ -9,25 +9,8 @@ import {
   DeliveryMaterialsPage,
   SaveAsTemplateModal
 } from '../support/pages';
-import { User, Material } from '../support/utils/type';
-
-const MATERIALS: Material[] = [
-  {
-    title: 'First Material Value',
-    description: 'First Material Description',
-    category: 'Category#1'
-  },
-  {
-    title: 'Second Material Value',
-    description: 'Second Material Description',
-    category: 'Category#2'
-  },
-  {
-    title: 'Third Material Value',
-    description: 'Third Material Description',
-    category: 'Category#3'
-  }
-];
+import { User } from '../support/utils/type';
+import { MATERIALS } from '../support/utils/data';
 
 const USER: Partial<User> = {email: 'cytest@blockframes.com', password: 'azerty'}
 

@@ -4,7 +4,7 @@ import AddMovieModal from "./AddMovieModal";
 export default class MovieCreatePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=movie-create]', {timeout: 1000})
+    cy.get('[page-id=movie-create]', {timeout: 10000})
   }
 
   public clickAddMovie() {

@@ -9,7 +9,7 @@ import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
-  @HostBinding('attr.page-id') pageId = 'profile-edit';
+  @HostBinding('attr.page-id') pageId = 'profile-form';
 
   constructor(public controlContainer: ControlContainer) {}
 

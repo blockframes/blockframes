@@ -1,5 +1,4 @@
-import { HomePage, OrganizationFormPage, OrganizationMemberPage, ViewProfilePage, DeliveryTeamWorkPage, LoginPage, TemplateListPage } from ".";
-import TemplateCreatePage from "./TemplateCreatePage";
+import { HomePage, OrganizationFormPage, OrganizationMemberPage, LoginPage, TemplateListPage, TemplateCreatePage, EditProfilePage } from "./index";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -25,11 +24,6 @@ export default abstract class NavbarPage {
     return new HomePage();
   }
 
-  public clickAcceptInvitationToDelivery() {
-    cy.get('div[testId=notifications] button.mat-primary').first().click();
-    return new DeliveryTeamWorkPage();
-  }
-
   public openNotifications() {
     cy.wait(2000);
     cy.get('.notification-button').click();
@@ -37,7 +31,7 @@ export default abstract class NavbarPage {
 
   public clickProfile() {
     cy.get('button[testId=buttonProfile]').click();
-    return new ViewProfilePage();
+    return new EditProfilePage();
   }
 
   public clickContextMenuMember() {
