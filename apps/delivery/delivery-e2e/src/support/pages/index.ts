@@ -22,6 +22,7 @@ import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
 import DeleteDeliveryModal from './DeleteDeliveryModal';
 import SaveAsTemplateModal from './SaveAsTemplateModal';
 import OrganizationHomePage from './OrganizationHomePage';
+import TemplateCreatePage from './TemplateCreatePage';
 
 export {
   HomePage,
@@ -48,4 +49,5 @@ export {
   DeleteDeliveryModal,
   SaveAsTemplateModal,
   OrganizationHomePage,
+  TemplateCreatePage
 };
