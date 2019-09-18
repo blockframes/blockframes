@@ -44,7 +44,7 @@ export class KeyManagerService {
     const wallet = EthersWallet.createRandom();
     return await this.encrypt(keyName, wallet, ensDomain, password);
   }
-  
+
   /** create / encrypt / from mnemonic
   * @param keyName the name of the new key
   * @param ensDomain the ens name of the new key owner
@@ -85,7 +85,10 @@ export class KeyManagerService {
     this.store.add({name, address, ensDomain, keyStore, isMainKey, isLinked});
   }
 
-  /** load key (retreive / decrypt, set into process memory) */
+  /**
+   * load key (retrieve / decrypt, set into process memory).
+   * Set the KeyManager loading flag to `true` during decryption.
+   */
   async unlockKey(key: Key, encryptionPassword: string) {
 
     this.store.setLoading(true);
@@ -129,5 +132,12 @@ export class KeyManagerService {
   /** get the default name of the next key to create : `Key_1`, `Key_2`, `Key_3`, etc... */
   getDefaultKeyName(ensDomain: string) {
     return `Key_${this.query.getKeyCountOfUser(ensDomain) + 1}`;
+  }
+
+  /** extract the Mnemonic from a wallet */
+  extractMnemonic(wallet: EthersWallet) {
+    const privateKey = wallet.privateKey;
+    const mnemonic = utils.HDNode.entropyToMnemonic(privateKey);
+    return mnemonic;
   }
 }
