@@ -5,7 +5,7 @@ import HomePage from './HomePage';
 
 export default class LoginPage {
   constructor() {
-    cy.get('[test-id=content][page-id=login]');
+    cy.get('[test-id=content][page-id=login]', {timeout: 10000});
   }
 
   public switchMode() {

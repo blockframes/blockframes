@@ -5,8 +5,7 @@ import AddTemplateModal from "./AddTemplateModal";
 export default class TemplateListPage {
 
   constructor() {
-    cy.wait(1000);
-    cy.get('[page-id=template-list]');
+    cy.get('[page-id=template-list]', {timeout: 10000});
   }
 
   //-------------------------------------

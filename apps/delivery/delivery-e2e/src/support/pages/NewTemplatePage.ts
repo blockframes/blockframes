@@ -1,9 +1,8 @@
-import DeliveryFormPage from "./DeliveryFormPage";
 import { TemplateFormPage } from ".";
 
 export default class NewTemplatePage {
   constructor() {
-    cy.get('[page-id=template-add]');
+    cy.get('[page-id=template-add]', {timeout: 10000});
   }
 
   public fillName(templateName: string) {

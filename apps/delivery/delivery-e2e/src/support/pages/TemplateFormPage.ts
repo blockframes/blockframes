@@ -5,8 +5,7 @@ import NavbarPage from "./NavbarPage";
 export default class TemplateFormPage extends NavbarPage{
   constructor() {
     super();
-    cy.wait(1000);
-    cy.get('[page-id=template-editable]');
+    cy.get('[page-id=template-editable]', {timeout: 10000});
   }
 
   //-------------------------------------

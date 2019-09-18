@@ -53,53 +53,56 @@ describe('Test CRUD template', () => {
     const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
     // Go to template list
-    const p4: TemplateCreatePage = p3.clickContextMenuTemplate(false) as TemplateCreatePage;
+    const p4: TemplateCreatePage = p3.clickContextMenuTemplatesCreate();
     const p5: NewTemplatePage = p4.clickNewTemplate();
 
     // create a new template
     p5.fillName(TEMPLATE_NAME_1);
-    let p6: TemplateFormPage = p5.clickNext();
+    const p6: TemplateFormPage = p5.clickNext();
 
     // create a new material
     p6.addMaterial();
     p6.fillMaterial(MATERIALS[0]);
     p6.assertMaterial(MATERIALS[0]);
     p6.saveMaterial();
+    p6.assertMaterial(MATERIALS[0]);
 
     // go back to template list
-    let p7: TemplateListPage = p6.clickContextMenuTemplate(true) as TemplateListPage;
+    const p7: TemplateListPage = p6.clickContextMenuTemplates();
     p7.assertTemplate(TEMPLATE_NAME_1);
 
     // re-open previous template
-    p6 = p7.editTemplate(TEMPLATE_NAME_1);
+    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
 
     // create another one
-    p6.addMaterial();
-    p6.fillMaterial(MATERIALS[1]);
+    p8.addMaterial();
+    p8.fillMaterial(MATERIALS[1]);
+    p8.assertMaterial(MATERIALS[1]);
+    p8.saveMaterial();
     p6.assertMaterial(MATERIALS[1]);
-    p6.saveMaterial();
 
     // edit the first one
-    p6.editMaterial(MATERIALS[0]);
-    p6.clearMaterial();
-    p6.fillMaterial(MATERIALS[2]);
+    p8.editMaterial(MATERIALS[0]);
+    p8.clearMaterial();
+    p8.fillMaterial(MATERIALS[2]);
+    p8.assertMaterial(MATERIALS[2]);
+    p8.saveMaterial();
     p6.assertMaterial(MATERIALS[2]);
-    p6.saveMaterial();
 
     // delete both
-    p6.editMaterial(MATERIALS[1]);
-    p6.deleteMaterial();
-    p6.editMaterial(MATERIALS[2]);
-    p6.deleteMaterial();
-    p6.assertNoMaterials();
+    p8.editMaterial(MATERIALS[1]);
+    p8.deleteMaterial();
+    p8.editMaterial(MATERIALS[2]);
+    p8.deleteMaterial();
+    p8.assertNoMaterials();
 
     // go back to template list
-    p7 = p6.clickContextMenuTemplate(true) as TemplateListPage;
+    const p9: TemplateListPage = p6.clickContextMenuTemplates();
 
     // delete the template
-    p7.deleteTemplate(TEMPLATE_NAME_1);
+    p9.deleteTemplate(TEMPLATE_NAME_1);
 
     // assert that the list is empty
-    p7.assertNoTemplates();
+    p9.assertNoTemplates();
    });
 });

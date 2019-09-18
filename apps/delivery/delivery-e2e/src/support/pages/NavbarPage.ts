@@ -55,9 +55,8 @@ export default abstract class NavbarPage {
     return new OrganizationFormPage();
   }
 
-  public clickContextMenuTemplate(isList: boolean) {
+  public clickContextMenuTemplatesCreate() {
     cy.get('[page-id=navbar]').contains('templates').click();
-    if (isList) return new TemplateListPage();
-    else return new TemplateCreatePage();
+    return new TemplateCreatePage();
   }
 }

@@ -2,7 +2,7 @@ import LoginPage from './LoginPage';
 
 export default class LandingPage {
   constructor() {
-    cy.get('[test-id=content][page-id=landing]');
+    cy.get('[test-id=content][page-id=landing]', {timeout: 10000});
   }
 
   public clickCallToAction(): LoginPage {
