@@ -15,7 +15,7 @@ export class ImageUploader {
    * @param imageUrl 
    * @param afPath 
    */
-  public async uploadImageToFirestore(imageUrl: string, afPath: string = 'movies'): Promise<string> {
+  public async upload(imageUrl: string, afPath: string = 'movies'): Promise<string> {
     try {
       const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
       const snapshot = await this.afStorage.upload(`${afPath}/${imageUrl.split('/')[imageUrl.split('/').length - 1]}`, data)
