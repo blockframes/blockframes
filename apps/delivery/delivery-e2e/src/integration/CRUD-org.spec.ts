@@ -18,34 +18,33 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
+  const p1: LandingPage = new LandingPage();
+  const p2: LoginPage = p1.clickCallToAction();
+  p2.fillSignin(USER);
+  p2.clickSigninWithNoMovies();
 });
 
 describe('Test CRUD org', () => {
   it('login into an existing account, edit an organization, add member to organization, remove him, then logout', () => {
-    // Signin with existing account
-    const p1: LandingPage = new LandingPage();
-    const p2: LoginPage = p1.clickCallToAction();
-    p2.fillSignin(USER);
-    const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
-
+    const p1 = new MovieCreatePage();
     // Edit user's organization
-    p3.openProfileMenu();
-    const p4: OrganizationFormPage = p3.clickOnOrganization();
-    p4.clickEditButtion();
-    p4.fillAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
-    p4.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
-    p4.clickSaveButton();
-    p4.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
+    p1.openProfileMenu();
+    const p2: OrganizationFormPage = p1.clickOnOrganization();
+    p2.clickEditButtion();
+    p2.fillAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
+    p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
+    p2.clickSaveButton();
+    p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
 
     // Add a new member in user's organization and remove him
-    const p5: OrganizationMemberPage = p4.clickContextMenuMember();
-    p5.addMemberToOrganization(INVITEDUSER.email);
-    p5.sendInvitationToMember();
-    p5.assertInvitationPending(INVITEDUSER.email);
-    p5.removeInvitation(INVITEDUSER.email);
-    p5.assertInvitationNotExists();
+    const p3: OrganizationMemberPage = p2.clickContextMenuMember();
+    p3.addMemberToOrganization(INVITEDUSER.email);
+    p3.sendInvitationToMember();
+    p3.assertInvitationPending(INVITEDUSER.email);
+    p3.removeInvitation(INVITEDUSER.email);
+    p3.assertInvitationNotExists();
 
     // Logout
-    const p6: LoginPage = p5.clickLogout();
+    const p6: LoginPage = p3.clickLogout();
   });
 });

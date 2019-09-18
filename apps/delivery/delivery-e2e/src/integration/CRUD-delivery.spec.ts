@@ -13,13 +13,14 @@ import {
   TemplatePickerPage,
   DeleteDeliveryModal
 } from '../support/pages';
-import { User, Material, DeliveryInformation } from '../support/utils/type';
+import { User, DeliveryInformation } from '../support/utils/type';
+import { MATERIALS } from '../support/utils/data';
 
 //////////
 // DATA //
 //////////
 
-const LOGIN_CREDENTIALS: Partial<User> = {
+const USER: Partial<User> = {
   email: 'cypressCRUDdelivery@blockframes.com',
   password: 'blockframes'
 };
@@ -30,23 +31,6 @@ const MOVIES_CYTEST = ['Starship Troopers', 'Anchorman'];
 
 const DELIVERY_SETTINGS = ['Materials price list', 'Signature of the delivery'];
 const TEMPLATE = 'Test assets'
-const DELIVERY_MATERIALS: Material[] = [
-  {
-    title: 'First material',
-    description: 'This is the first material',
-    category: 'Category 1'
-  },
-  {
-    title: 'Second material',
-    description: 'This is another material',
-    category: 'Category 1'
-  },
-  {
-    title: 'Third material',
-    description : 'And yet a material again',
-    category: 'Category 2'
-  }
-]
 
 const DELIVERY_INFORMATION: DeliveryInformation = {
   minimumGuarantee: {
@@ -93,7 +77,7 @@ beforeEach(() => {
   cy.viewport('ipad-2', 'landscape');
   const p1: LandingPage = new LandingPage();
   const p2: LoginPage = p1.clickCallToAction();
-  p2.fillSignin(LOGIN_CREDENTIALS);
+  p2.fillSignin(USER);
   p2.clickSigninWithMovies();
 });
 
@@ -119,7 +103,7 @@ describe('User create a delivery from context-menu item', () => {
     p5.selectSetting(DELIVERY_SETTINGS[0]);
     const p6: DeliveryMaterialsPage = p5.clickContinue();
     p6.assertTableDisplayPrice();
-    DELIVERY_MATERIALS.forEach(material => p6.assertMaterialExists(material));
+    MATERIALS.forEach(material => p6.assertMaterialExists(material));
   });
 });
 
@@ -133,7 +117,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
     const p5: DeliveryMaterialsPage = p4.clickContinue();
     p5.assertDeliveryMustBeSigned();
     p5.assertTableDisplayPrice();
-    DELIVERY_MATERIALS.forEach(material => p5.assertMaterialExists(material));
+    MATERIALS.forEach(material => p5.assertMaterialExists(material));
   });
 });
 
