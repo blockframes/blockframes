@@ -3,7 +3,7 @@ import NavbarPage from './NavbarPage';
 export default class OrganizationMemberPage extends NavbarPage{
     constructor(){
         super();
-        cy.get('[page-id=organization-members]')
+        cy.get('[page-id=organization-members]', {timeout: 10000})
     }
 
     public addMemberToOrganization(email: string) {

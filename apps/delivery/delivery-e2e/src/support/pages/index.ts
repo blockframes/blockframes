@@ -1,9 +1,7 @@
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import LandingPage from './LandingPage';
-import ViewProfilePage from './ViewProfilePage';
 import MovieCreatePage from './MovieCreatePage';
-import DeliveryTeamWorkPage from './DeliveryTeamWorkPage';
 import EditProfilePage from './EditProfilePage';
 import TemplateDeleteModal from './TemplateDeleteModal';
 import TemplateFormPage from './TemplateFormPage';
@@ -24,14 +22,13 @@ import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
 import DeleteDeliveryModal from './DeleteDeliveryModal';
 import SaveAsTemplateModal from './SaveAsTemplateModal';
 import OrganizationHomePage from './OrganizationHomePage';
+import TemplateCreatePage from './TemplateCreatePage';
 
 export {
   HomePage,
   OrganizationFormPage,
   LandingPage,
-  ViewProfilePage,
   MovieCreatePage,
-  DeliveryTeamWorkPage,
   EditProfilePage,
   TemplateDeleteModal,
   TemplateFormPage,
@@ -52,4 +49,5 @@ export {
   DeleteDeliveryModal,
   SaveAsTemplateModal,
   OrganizationHomePage,
+  TemplateCreatePage
 };

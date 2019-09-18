@@ -24,14 +24,14 @@ export default class TemplateListPage {
   //               ASSERT
   //-------------------------------------
 
-  public assertTemplateExist(name: string) {
+  public assertTemplateExists(name: string) {
     cy.get('[page-id=template-repertory] tr').should( tr =>
       expect(tr)
         .to.contain(name)
     );
   }
 
-  public assertNoTemplatesExist() {
+  public assertNoTemplatesExists() {
     cy.get('[page-id=template-repertory] tr').should( tr =>
       expect(tr).length(1)
     );

@@ -23,6 +23,6 @@ describe('story #529 - account creation', () => {
     p2.switchMode();
     p2.fillSignup(USER);
     const p3: OrganizationHomePage = p2.clickSignup();
-    const p4: LoginPage = p3.clickLogout();
+    p3.clickLogout();
   });
 });

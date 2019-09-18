@@ -25,7 +25,7 @@ export default class LoginPage {
     return new OrganizationHomePage();
   }
 
-  public fillSigning(user: Partial<User>) {
+  public fillSignin(user: Partial<User>) {
     cy.get('[page-id=signin] input[type="email"]').type(user.email);
     cy.get('[page-id=signin] input[type="password"]').type(user.password);
   }
