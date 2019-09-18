@@ -4,7 +4,7 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { ErrorStateMatcher, MatAccordion } from '@angular/material';
 import { Validators, FormGroupDirective, NgForm } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild, HostBinding } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery } from '@blockframes/movie';
 import {
@@ -41,6 +41,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSearchComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'catalog-search';
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
 
@@ -112,7 +113,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public goToDetails(id: string) {
     this.router.navigateByUrl(`layout/o/catalog/${id}`);
-  } 
+  }
 
   ////////////////////
   // Filter section //

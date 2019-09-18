@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'feedback-message',
@@ -7,6 +7,7 @@ import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy } from 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeedbackMessageComponent {
+  @HostBinding('attr.page-id') pageId = 'feedback-message';
   /** The title which should be displayed when this component is called. */
   @Input() public title: string;
 
