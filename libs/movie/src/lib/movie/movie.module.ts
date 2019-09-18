@@ -96,6 +96,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     ImportMovieModule,
     MovieDisplayModule,
     MovieFormModule,
+    MovieImdbSearchModule,
     MovieCardModule,
     MovieImdbSearchModule,
   ],
