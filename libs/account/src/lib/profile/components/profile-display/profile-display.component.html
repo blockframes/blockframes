@@ -20,7 +20,7 @@
           <span *ngIf="organization"><b>Organization:</b> {{ organization.name }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="row" fxLayoutAlign="flex-end">
+        <div class="action-button">
           <button mat-icon-button (click)="editing.emit('password')" color="primary">
             <mat-icon svgIcon="changePass"></mat-icon>
           </button>

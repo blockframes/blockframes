@@ -18,6 +18,16 @@ mat-card-content {
   padding: 16px 0;
 }
 
+.action-button {
+  position: relative;
+  left: 90%;
+  bottom: 10px;
+}
+
+mat-chip:hover {
+  text-decoration: none;
+}
+
 img {
   width: 250px;
   height: 250px;
