@@ -3,8 +3,7 @@
 section {
   text-align: center;
   .mnemonic {
-    padding-left: 200px;
-    padding-right: 200px;
+    padding: 0 200px;
     .bordered {
       color: var(--accent);
       border: solid var(--borderGrey) 1px;
@@ -25,8 +24,7 @@ section {
 @include tablet {
   section {
     .mnemonic {
-      padding-left: 100px;
-      padding-right: 100px;
+      padding: 0 100px;
       a {
         margin: 50px;
       }
@@ -37,8 +35,7 @@ section {
 @include mobile {
   section {
     .mnemonic {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding: 0 10px;
       img {
         width: 150px;
       }

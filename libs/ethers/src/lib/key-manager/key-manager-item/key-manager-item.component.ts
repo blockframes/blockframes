@@ -61,8 +61,4 @@ export class KeyManagerItemComponent implements OnInit {
     const secondIndexIsF = this.keyObject.address.substring(2, 8).charAt(2) === 'f';
     return firstIndexIsF && secondIndexIsF ? '#0f17ff' : '#' + ethAddress.substring(2, 8);
   }
-
-  get revealMnemonic() {
-    return `/layout/o/account/wallet/reveal/${this.keyObject.address}`;
-  }
 }

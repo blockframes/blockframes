@@ -19,7 +19,7 @@ enum steps {
 export class WalletRevealMnemonicComponent implements OnInit {
 
   steps = steps;
-  step = this.steps.password;
+  step = steps.password;
   key: Key;
   activeKey: EthersWallet;
   mnemonic: string;
@@ -34,11 +34,11 @@ export class WalletRevealMnemonicComponent implements OnInit {
   ngOnInit() {
     this.key = this.keyQuery.getEntity(this.route.snapshot.paramMap.get('address'));
     this.isLoading$ = this.keyQuery.selectLoading();
-    this.mnemonic = 'Loading ...';
+    this.mnemonic = '';
   }
 
   async setPassword(password: string) {
-    this.step = this.steps.end;
+    this.step = steps.end;
     const wallet = await this.keyService.unlockKey(this.key, password);
     this.mnemonic = this.keyService.extractMnemonic(wallet);
   }
