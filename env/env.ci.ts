@@ -37,6 +37,10 @@ export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
+// OMDB
+// =======
+export const omdbApiKey = '4d1be897';
+
 // TODO(issue#847): change the address
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
