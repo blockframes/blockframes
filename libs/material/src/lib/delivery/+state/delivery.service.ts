@@ -93,10 +93,10 @@ export class DeliveryService {
     deliveryId: string,
     stakeholderId: string
   ): AngularFirestoreDocument<Stakeholder> {
-    return this.deliveryStakeholdersDoc(deliveryId).doc(stakeholderId);
+    return this.deliveryStakeholdersCollection(deliveryId).doc(stakeholderId);
   }
 
-  private deliveryStakeholdersDoc(deliveryId: string): AngularFirestoreCollection<Stakeholder> {
+  private deliveryStakeholdersCollection(deliveryId: string): AngularFirestoreCollection<Stakeholder> {
     return this.deliveryDoc(deliveryId).collection('stakeholders');
   }
 
