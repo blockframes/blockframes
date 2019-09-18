@@ -1,7 +1,6 @@
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import LandingPage from './LandingPage';
-import ViewProfilePage from './ViewProfilePage';
 import MovieCreatePage from './MovieCreatePage';
 import DeliveryTeamWorkPage from './DeliveryTeamWorkPage';
 import EditProfilePage from './EditProfilePage';
@@ -29,7 +28,6 @@ export {
   HomePage,
   OrganizationFormPage,
   LandingPage,
-  ViewProfilePage,
   MovieCreatePage,
   DeliveryTeamWorkPage,
   EditProfilePage,

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { ProfileForm } from '../../forms/profile-edit.form';
 import { startWith } from 'rxjs/operators';
@@ -15,6 +15,8 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'profile-editable';
+
   public opened = false;
   public editContent = 'profile';
   public profileForm: ProfileForm;

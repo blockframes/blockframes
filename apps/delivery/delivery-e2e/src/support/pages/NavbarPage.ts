@@ -37,7 +37,7 @@ export default abstract class NavbarPage {
 
   public clickProfile() {
     cy.get('button[testId=buttonProfile]').click();
-    return new ViewProfilePage();
+    return new EditProfilePage();
   }
 
   public clickContextMenuMember() {

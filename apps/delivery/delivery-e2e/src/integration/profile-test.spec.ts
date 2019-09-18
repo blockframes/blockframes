@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { User } from "../support/utils/type";
-import { LandingPage, LoginPage, HomePage, ViewProfilePage, EditProfilePage } from "../support/pages";
+import { LandingPage, LoginPage, HomePage, EditProfilePage } from "../support/pages";
 
 
 const USER: Partial<User> = {
@@ -33,31 +33,31 @@ describe('Test profil', () => {
     const p1: HomePage = new HomePage();
 
     p1.openProfileMenu();
-    const p2: ViewProfilePage = p1.clickProfile();
-    const p3: EditProfilePage = p2.clickEdit();
-    p3.fillName(USER.name);
-    p3.fillSurname(USER.surname);
-    p3.fillPhoneNumber(USER.phoneNumber);
-    p3.fillPosition(USER.position);
+    const p2: EditProfilePage = p1.clickProfile();
+    p2.clickEdit();
+    p2.fillName(USER.name);
+    p2.fillSurname(USER.surname);
+    p2.fillPhoneNumber(USER.phoneNumber);
+    p2.fillPosition(USER.position);
 
     p2.assertDisplayNameExists(USER.name);
     p2.assertDisplaySurnameExists(USER.surname);
     p2.assertDisplayPhoneExists(USER.phoneNumber);
     p2.assertDisplayPositionExists(USER.position);
 
-    p3.clickSave();
+    p2.clickSave();
 
-    p3.assertNameExists(USER.name);
-    p3.assertSurnameExists(USER.surname);
-    p3.assertPhoneExists(USER.phoneNumber);
-    p3.assertPositionExists(USER.position);
+    p2.assertNameExists(USER.name);
+    p2.assertSurnameExists(USER.surname);
+    p2.assertPhoneExists(USER.phoneNumber);
+    p2.assertPositionExists(USER.position);
 
     p2.assertDisplayNameExists(USER.name);
     p2.assertDisplaySurnameExists(USER.surname);
     p2.assertDisplayPhoneExists(USER.phoneNumber);
     p2.assertDisplayPositionExists(USER.position);
 
-    p3.clickClose();
+    p2.clickClose();
   });
 });
 
@@ -66,15 +66,15 @@ describe('Test profil', () => {
     const p1: HomePage = new HomePage();
 
     p1.openProfileMenu();
-    const p2: ViewProfilePage = p1.clickProfile();
-    const p3: EditProfilePage = p2.editPassword();
-    p3.currentPassword(USER.password);
-    p3.newPassword(USER_UPDATED.password);
-    p3.confirmPassword(USER_UPDATED.password);
-    p3.clickSave();
-    const p4: ViewProfilePage =  p3.clickClose();
-    const p5: LoginPage = p4.clickLogout();
-    p5.fillSignin(USER_UPDATED);
-    const p6: HomePage = p5.clickSigninWithMovies();
+    const p2: EditProfilePage = p1.clickProfile();
+    p2.editPassword();
+    p2.currentPassword(USER.password);
+    p2.newPassword(USER_UPDATED.password);
+    p2.confirmPassword(USER_UPDATED.password);
+    p2.clickSave();
+    p2.clickClose();
+    const p3: LoginPage = p2.clickLogout();
+    p3.fillSignin(USER_UPDATED);
+    const p4: HomePage = p3.clickSigninWithMovies();
   });
 });
