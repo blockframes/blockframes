@@ -212,7 +212,7 @@
     <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
-      <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
+        <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
     <section>

@@ -1,5 +1,5 @@
 import { MovieMain } from './../../+state/movie.model';
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
 
 @Component({
   selector: '[movie] movie-display-card-item',
@@ -22,4 +22,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class MovieDisplayCardItemComponent {
   @Input() movie: MovieMain;
+  @HostBinding('attr.page-id') pageId = 'display-card';
 }
