@@ -16,7 +16,10 @@ import {
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { getDefaultProvider, providers, Contract, utils } from 'ethers';
+import { getDefaultProvider, utils } from 'ethers';
+import { Provider } from '@ethersproject/providers';
+import { Contract } from '@ethersproject/contracts';
+import { BigNumber } from '@ethersproject/bignumber';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
@@ -76,7 +79,7 @@ function getFilterFromTopics(address: string, topics: string[]): providers.Filte
 export class OrganizationService {
   private organization$: Observable<Organization>;
 
-  private provider: providers.Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
+  private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
   private contract: Contract;
 
   constructor(
@@ -336,7 +339,7 @@ export class OrganizationService {
     const quorumFilter = getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]);
     this.provider.on(quorumFilter,(log: providers.Log) => {
       const operationId = log.topics[1];
-      const quorum = utils.bigNumberify(log.topics[2]).toNumber();
+      const quorum = BigNumber.bigNumberify(log.topics[2]).toNumber();
       this.updateOperationQuorum(operationId, quorum);
     });
 
@@ -396,7 +399,7 @@ export class OrganizationService {
     const operation: OrganizationOperation = {
       id: operationId,
       name: rawOperation.name,
-      quorum: utils.bigNumberify(rawOperation.quorum).toNumber(),
+      quorum: BigNumber.bigNumberify(rawOperation.quorum).toNumber(),
       members: [],
     };
 
