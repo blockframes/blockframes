@@ -9,17 +9,17 @@ import { staticModels } from '@blockframes/movie';
 /////////////////////////
 
 // TODO#748: split up the foorms
-const movieTypes = staticModels['GENRES'].map(key => key.label);
+const movieGenres = staticModels['GENRES'].map(key => key.label);
 export const movieLanguages = staticModels['LANGUAGES'].map(key => key.label);
 const movieCertifications = staticModels['CERTIFICATIONS'].map(key => key.label);
 const movieMedias = staticModels['MEDIAS'].map(key => key.label);
 const movieTerritories = staticModels['TERRITORIES'].map(key => key.label);
 
-export type MovieType = typeof movieTypes[number];
+export type MovieGenres = typeof movieGenres[number];
 
 export type Certifications = typeof movieCertifications[number];
 
-export type Language = typeof movieLanguages[number];
+export type Languages = typeof movieLanguages[number];
 
 export type MovieMedias = typeof movieMedias[number];
 
@@ -40,8 +40,8 @@ export interface CatalogSearch {
     from: Date;
     to: Date;
   };
-  type: MovieType[];
-  languages: { [language in Language]: MovieLanguage };
+  type: MovieGenres[];
+  languages: { [language in Languages]: MovieLanguage };
   certifications: Certifications[];
   medias: MovieMedias[];
   territories: MovieTerritories[];
@@ -133,28 +133,28 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     return this.get('languages') as FormGroup;
   }
 
-  addLanguage(language: Language, value: Partial<MovieLanguage> = {}) {
+  addLanguage(language: Languages, value: Partial<MovieLanguage> = {}) {
     const movieLanguage = createMovieLanguage(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 
-  removeLanguage(language: Language) {
+  removeLanguage(language: Languages) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
   }
 
-  addType(type: MovieType) {
-    if (!movieTypes.includes(type)) {
+  addType(type: MovieGenres) {
+    if (!movieGenres.includes(type)) {
       throw new Error(
-        `Type ${type} is not part of the defined types, here is the complete list currently available: ${movieTypes}`
+        `Type ${type} is not part of the defined types, here is the complete list currently available: ${movieGenres}`
       );
     } else {
       this.get('type').setValue([...this.get('type').value, type]);
     }
   }
 
-  removeType(type: MovieType) {
-    if (movieTypes.includes(type)) {
+  removeType(type: MovieGenres) {
+    if (movieGenres.includes(type)) {
       const newControls = this.get('type').value.filter(typeToRemove => typeToRemove !== type);
       this.get('type').setValue(newControls);
     } else {

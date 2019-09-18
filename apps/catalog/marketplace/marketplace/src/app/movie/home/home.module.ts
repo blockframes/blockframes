@@ -11,10 +11,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 // Pages
-import { CatalogMarketplaceHomeComponent } from './home.component';
+import { MarketplaceHomeComponent } from './home.component';
 
 @NgModule({
-  declarations: [CatalogMarketplaceHomeComponent],
+  declarations: [MarketplaceHomeComponent],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -23,7 +23,7 @@ import { CatalogMarketplaceHomeComponent } from './home.component';
     RouterModule.forChild([
       {
         path: '',
-        component: CatalogMarketplaceHomeComponent
+        component: MarketplaceHomeComponent
       }
     ])
   ]

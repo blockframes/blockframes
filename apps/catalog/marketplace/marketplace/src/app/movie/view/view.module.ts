@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { MovieViewComponent } from './view.component';
+import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
 import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
-  declarations: [MovieViewComponent],
+  declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -46,7 +46,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MatButtonModule,
     RouterModule.forChild([
-      { path: '', component: MovieViewComponent }
+      { path: '', component: MarketplaceMovieViewComponent }
     ])
   ],
 })

@@ -95,7 +95,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async updateMovie(importState: MovieImportState) {
-    await this.movieService.update(importState.movie.id, importState.movie)
+    await this.movieService.updateById(importState.movie.id, importState.movie)
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
@@ -104,7 +104,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const updates = this.selection.selected
         .filter(importState => importState.movie.id && !hasImportErrors(importState))
-        .map(importState => this.movieService.update(importState.movie.id, importState.movie));
+        .map(importState => this.movieService.updateById(importState.movie.id, importState.movie));
       await Promise.all(updates);
       this.snackBar.open(`${updates.length} movies updated!`, 'close', { duration: 3000 });
       return true;

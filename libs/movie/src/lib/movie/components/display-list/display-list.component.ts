@@ -1,18 +1,23 @@
+import { Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from './../../+state/movie.model';
 import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: '[movie] movie-display-list',
+  selector: '[movies] movie-display-list',
   templateUrl: './display-list.component.html',
-  styleUrls: ['./display-list.component.scss']
+  styleUrls: ['./display-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayListComponent {
   public displayedColumns: string[] = ['picture', 'title', 'director', 'productionYear'];
-  public dataSource;
+  public dataSource: MatTableDataSource<Movie>;
 
   @Input()
-  set movie(movie: Movie[]) {
-    this.dataSource = new MatTableDataSource(movie);
+  set movies(movies: Movie[]) {
+    this.dataSource = new MatTableDataSource(movies);
   }
+
+  @Output() navigate = new EventEmitter<string>();
 }

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatButtonModule } from "@angular/material/button";
@@ -24,6 +25,7 @@ import { UploadModule } from "@blockframes/ui";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
     FlexLayoutModule,
     MatProgressSpinnerModule,
     MatButtonModule,

@@ -33,6 +33,7 @@ import { WalletBlockieComponent } from './components/wallet-blockie/wallet-block
 import { WalletAddressViewComponent } from './components/wallet-address-view/wallet-address-view.component';
 import { WalletImportKeyComponent } from './components/wallet-import-key/wallet-import-key.component';
 import { WalletNoKeyComponent } from './pages/wallet-no-key/wallet-no-key.component';
+import { WalletRevealMnemonicComponent } from './pages/wallet-reveal-mnemonic/wallet-reveal-mnemonic.component';
 
 
 export const walletRoutes: Routes = [
@@ -54,6 +55,7 @@ export const walletRoutes: Routes = [
         canActivate: [WalletKeyGuard],
         component: WalletSendTxTunnelComponent
       },
+      { path: 'reveal/:address', component: WalletRevealMnemonicComponent }
     ]
   },
 ];
@@ -92,7 +94,8 @@ export const walletRoutes: Routes = [
     WalletBlockieComponent,
     WalletAddressViewComponent,
     WalletImportKeyComponent,
-    WalletNoKeyComponent
+    WalletNoKeyComponent,
+    WalletRevealMnemonicComponent,
   ],
   exports: [
     WalletWidgetComponent,

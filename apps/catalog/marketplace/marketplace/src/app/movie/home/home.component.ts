@@ -17,7 +17,7 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogMarketplaceHomeComponent {
+export class MarketplaceHomeComponent {
   public moviesBySections$: Observable<CarouselSection[]> = of([
     { title: 'New Films', subline: '', link: '/layout/o/catalog/search', movies: latest },
     {

@@ -14,7 +14,7 @@ import { BasketService } from '../../distribution-right/+state/basket.service';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogSelectionComponent implements OnInit {
+export class MarketplaceSelectionComponent implements OnInit {
   public priceControl: FormControl = new FormControl(null);
   public currencyList: string[];
   public selectedCurrency;

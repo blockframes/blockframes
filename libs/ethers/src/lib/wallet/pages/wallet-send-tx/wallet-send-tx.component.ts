@@ -33,7 +33,6 @@ export class WalletSendTxTunnelComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private query: WalletQuery,
     private walletService: WalletService,
     private keyManagerQuery: KeyManagerQuery,

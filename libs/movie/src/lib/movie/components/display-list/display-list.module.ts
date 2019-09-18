@@ -5,8 +5,8 @@ import { NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
-  declarations: [MovieDisplayListComponent],
   imports: [CommonModule, MatTableModule],
+  declarations: [MovieDisplayListComponent],
   exports: [MovieDisplayListComponent]
 })
 export class MovieDisplayListModule {}
