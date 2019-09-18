@@ -13,7 +13,7 @@
       <article fxLayout="row wrap" fxLayoutAlign="start space-between">
         <!-- Movie Card -->
       <ng-container *ngFor="let movie of (movies$ | async)">
-        <movie-card [movie]="movie" [link]="linkToDeliveryList(movie.id)"></movie-card>
+        <movie-card [movie]="movie" (delete)="delete($event)" [link]="linkToDeliveryList(movie.id)"></movie-card>
       </ng-container>
       </article>
     </ng-template>
