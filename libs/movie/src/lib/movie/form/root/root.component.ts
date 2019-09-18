@@ -80,7 +80,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(MovieImdbSearchComponent, { data, width: '700px' });
 
     dialogRef.afterClosed().subscribe(async (movie: ImdbMovie) => {
-      if (movie !== undefined) {
+      if (movie !== undefined && movie !== null) {
 
         // TITLE
         this.form.get('main').get('title').get('original').setValue(movie.title);
@@ -89,7 +89,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
         this.form.get('main').get('productionYear').setValue(movie.year);
 
         // POSTER
-        const poster = await this.imageUploader.uploadImageToFirestore(movie.poster);
+        const poster = await this.imageUploader.upload(movie.poster);
         if (poster) {
           this.form.get('main').get('poster').setValue(poster);
         }

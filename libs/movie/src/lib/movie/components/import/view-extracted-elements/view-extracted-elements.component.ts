@@ -219,7 +219,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // POSTER (Poster)
-        movie.main.poster = await this.imageUploader.uploadImageToFirestore(spreadSheetRow[SpreadSheetMovie.poster]);
+        movie.main.poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
 
         //////////////////
         // OPTIONAL FIELDS
