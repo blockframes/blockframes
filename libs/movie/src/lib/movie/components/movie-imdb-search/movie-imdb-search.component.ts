@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { omdbApiKey } from "@env";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, YearControl } from '@blockframes/utils';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
@@ -13,7 +14,6 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
 })
 export class MovieImdbSearchComponent implements OnInit {
   public searchForm: FormGroup;
-  private apiKey = '4d1be897';
 
   public displayedColumns: string[] = [
     'imdbid',
@@ -34,7 +34,7 @@ export class MovieImdbSearchComponent implements OnInit {
     private imdbService: ImdbService,
     @Inject(MAT_DIALOG_DATA) public data: SearchRequest
   ) {
-    this.imdbService.setApiKey(this.apiKey);
+    this.imdbService.setApiKey(omdbApiKey);
   }
 
   ngOnInit() {
@@ -72,10 +72,6 @@ export class MovieImdbSearchComponent implements OnInit {
   public searchAgain() {
     this.formSubmitted = false;
     this.rows.data = [];
-  }
-
-  public cancel(): void {
-    this.dialogRef.close();
   }
 
   public onNoClick(): void {

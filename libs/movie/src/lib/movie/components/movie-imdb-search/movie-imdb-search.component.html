@@ -15,7 +15,7 @@
 
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
       <button mat-flat-button color="warn" [disabled]="!movieName.value" (click)="imdbSearch()">Next</button>
-      <button mat-button color="warn" (click)="cancel()">Cancel</button>
+      <button mat-button color="warn" (click)="onNoClick()">Cancel</button>
     </article>
   </form>
   <ng-template #displayResults>
@@ -72,7 +72,7 @@
   </mat-paginator>
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
       <button mat-flat-button color="warn" (click)="searchAgain()">Previous</button>
-      <button mat-button color="warn" (click)="cancel()">Cancel</button>
+      <button mat-button color="warn" (click)="onNoClick()">Cancel</button>
     </article>
   </ng-template>
 </mat-dialog-content>
