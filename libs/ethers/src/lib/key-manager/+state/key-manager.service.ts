@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore } from './key-manager.store';
-import { utils, Wallet as EthersWallet, getDefaultProvider, Contract } from 'ethers';
+import { getDefaultProvider } from 'ethers';
+import { Contract } from '@ethersproject/contracts';
+import { Wallet as EthersWallet } from '@ethersproject/wallet';
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { Key } from '@blockframes/utils';
+import { SigningKey } from '@ethersproject/signing-key';
+import { mnemonicToEntropy, entropyToMnemonic } from '@ethersproject/hdnode';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {
 
-  private signingKey: utils.SigningKey;
+  private signingKey: SigningKey;
 
   constructor(
     private store: KeyManagerStore,
@@ -18,7 +22,7 @@ export class KeyManagerService {
 
   /** Set signing key into process memory */
   private setSigningKey(wallet: EthersWallet) {
-    this.signingKey = new utils.SigningKey(wallet.privateKey);
+    this.signingKey = new SigningKey(wallet.privateKey);
   }
 
   private requireSigningKey() {
@@ -52,7 +56,7 @@ export class KeyManagerService {
   * @param encryptionPassword a password to encrypt the new key
   */
   async importFromMnemonic(keyName:string, ensDomain: string, mnemonic: string, encryptionPassword: string) {
-    const privateKey = utils.HDNode.mnemonicToEntropy(mnemonic); // mnemonic is a 24 word phrase corresponding to private key !== BIP32/39 seed phrase
+    const privateKey = mnemonicToEntropy(mnemonic); // mnemonic is a 24 word phrase corresponding to private key !== BIP32/39 seed phrase
     return this.importFromPrivateKey(keyName, ensDomain, privateKey, encryptionPassword);
   }
 
@@ -103,10 +107,6 @@ export class KeyManagerService {
     };
   }
 
-  private activateKey(id: string, wallet: EthersWallet){
-    this.setSigningKey(wallet);
-    this.store.setActive(id);
-  }
   /** clean process memory */
   deactivateKey() {
     this.store.setActive(null);
@@ -118,17 +118,6 @@ export class KeyManagerService {
     this.store.remove(key.address);
   }
 
-  /** export key : expose it's mnemonic/private key */
-  async exportActiveKey() {
-    this.requireSigningKey();
-    const wallet = new EthersWallet(this.signingKey);
-    // TODO add a way to show the mnemonic
-  }
-
-  signMessage(message: utils.Arrayish): Promise<string> {
-    throw new Error("Method not implemented.");
-  }
-
   /** get the default name of the next key to create : `Key_1`, `Key_2`, `Key_3`, etc... */
   getDefaultKeyName(ensDomain: string) {
     return `Key_${this.query.getKeyCountOfUser(ensDomain) + 1}`;
@@ -137,7 +126,7 @@ export class KeyManagerService {
   /** extract the Mnemonic from a wallet */
   extractMnemonic(wallet: EthersWallet) {
     const privateKey = wallet.privateKey;
-    const mnemonic = utils.HDNode.entropyToMnemonic(privateKey);
+    const mnemonic = entropyToMnemonic(privateKey);
     return mnemonic;
   }
 }
