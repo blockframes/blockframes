@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material';
 import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/movie-imdb-search.component';
 import { SearchRequest, ImdbMovie, FormEntity, formatCredit, formatCredits, ImageUploader } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { getCodeIfExists } from '../../staticModels';
+import { getCodeIfExists } from '../../static-model/staticModels';
 
 @Component({
   selector: 'movie-form-root',
