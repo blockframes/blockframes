@@ -1,3 +1,4 @@
+import { Output, EventEmitter } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from './../../+state/movie.model';
 import { Component, Input } from '@angular/core';
@@ -17,4 +18,6 @@ export class MovieDisplayListComponent {
   set movies(movies: Movie[]) {
     this.dataSource = new MatTableDataSource(movies);
   }
+
+  @Output() navigate = new EventEmitter<string>();
 }

@@ -172,7 +172,7 @@
       </mat-card>
     </aside>
 
-    <!-- List of result -->
+    <!-- List || card of result -->
     <article>
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <h3>Films</h3>
@@ -195,19 +195,19 @@
         </mat-form-field>
       </div>
       <div fxLayout="row wrap" fxLayoutGap="30px">
-        <ng-container *ngIf="!listView">
-          <ng-container *ngFor="let movie of sortedMovies">
-            <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]">
-              <ng-container movieInformation>
-                <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}
-                </mat-card-subtitle>
-                <span >Production Year {{ movie.main.productionYear }}</span>
-              </ng-container>
-            </movie-card>
-          </ng-container>
+        <ng-container *ngFor="let movie of sortedMovies">
+          <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
+            <ng-container movieInformation>
+              <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
+                {{ director.lastName }}
+              </mat-card-subtitle>
+              <span>Production Year {{ movie.main.productionYear }}</span>
+            </ng-container>
+          </movie-card>
         </ng-container>
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-        <movie-display-list [movies]="sortedMovies" *ngIf="listView"></movie-display-list>
+        <movie-display-list [movies]="sortedMovies" *ngIf="listView" (navigate)="goToDetails($event)">
+        </movie-display-list>
       </div>
     </article>
   </section>

@@ -1,4 +1,5 @@
 // Angular
+import { Router } from '@angular/router';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { ErrorStateMatcher, MatAccordion } from '@angular/material';
 import { Validators, FormGroupDirective, NgForm } from '@angular/forms';
@@ -78,7 +79,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public movieTerritories: MovieTerritories[];
   public territoryControl: FormControl = new FormControl();
 
-  constructor(private movieQuery: MovieQuery) {}
+  constructor(private movieQuery: MovieQuery, private router: Router) {}
 
   ngOnInit() {
     this.movieGenres = staticModels['GENRES'].map(key => key.label);
@@ -97,7 +98,7 @@ export class MarketplaceSearchComponent implements OnInit {
       map(territory => this._territoriesFilter(territory))
     );
     this.movieSearchResults$ = combineLatest([
-      this.movieQuery.selectAll({}),
+      this.movieQuery.selectAll(),
       this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
     ]).pipe(
       map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
@@ -105,10 +106,15 @@ export class MarketplaceSearchComponent implements OnInit {
     this.sortBy();
   }
 
+  public goToDetails(id: string) {
+    this.router.navigateByUrl(`layout/o/catalog/${id}`);
+  } 
+
   ////////////////////
   // Filter section //
   ////////////////////
 
+  // TODO#952
   public sortBy(option?: string) {
     switch (option) {
       case 'Director':
@@ -128,7 +134,7 @@ export class MarketplaceSearchComponent implements OnInit {
             tap(
               movies =>
                 (this.sortedMovies = movies.sort((a: Movie, b: Movie) => {
-                  return b.main.title.original.localeCompare(a.main.title.original);
+                  return a.main.title.original.localeCompare(b.main.title.original);
                 }))
             )
           )
