@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { Material } from '../../../material/+state';
 import { Currencies } from '../../../delivery/+state';
@@ -10,6 +10,9 @@ import { Currencies } from '../../../delivery/+state';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class TemplateMaterialFormComponent{
+
+  @HostBinding('attr.page-id') pageId = 'template-form';
+
   @Output() delete = new EventEmitter<Material>();
 
   public currencies = Currencies;

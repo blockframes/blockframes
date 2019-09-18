@@ -1,4 +1,4 @@
-<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateMaterials()" page-id="template-editable">
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateMaterials()">
   <!-- Content -->
   <ng-container content>
     <article fxLayout="row" fxLayoutAlign="none center">
@@ -9,13 +9,12 @@
         Add material
       </button>
     </article>
-    <template-material-list [materials]="materials$ | async" (editing)="openSidenav($event)" page-id="template-material-list">
+    <template-material-list [materials]="materials$ | async" (editing)="openSidenav($event)">
     </template-material-list>
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(activeForm$ | async) as materialFormGroup" sidenav>
     <template-material-form
-      page-id="template-form"
       [formGroup]="materialFormGroup"
       (delete)="deleteMaterial($event)"
     ></template-material-form>

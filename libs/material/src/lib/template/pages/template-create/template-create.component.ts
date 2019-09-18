@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 
@@ -9,6 +9,8 @@ import { TemplateAddComponent } from '../../components/template-add/template-add
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateCreateComponent {
+
+  @HostBinding('attr.page-id') pageId = 'template-create';
 
   constructor(private dialog: MatDialog) { }
 

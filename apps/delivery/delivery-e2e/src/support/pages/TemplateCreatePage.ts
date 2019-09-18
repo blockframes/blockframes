@@ -1,4 +1,4 @@
-import { NewTemplatePage } from ".";
+import NewTemplatePage from './NewTemplatePage';
 
 export default class TemplateCreatePage {
   constructor() {
