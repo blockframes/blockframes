@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '../../+state/movie.query';
 import { Movie } from '../../+state/movie.model';
@@ -12,7 +12,6 @@ import { Movie } from '../../+state/movie.model';
 export class MoviePickerComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public isLoading$: Observable<boolean>;
-  @Output() selected = new EventEmitter<string>();
 
   constructor(private query: MovieQuery) {}
 

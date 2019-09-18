@@ -47,4 +47,9 @@ export class MovieListComponent implements OnInit {
       duration: 2000
     });
   }
+
+  public linkToDeliveryList(movieId: string) {
+    const appName = this.routerQuery.getValue().state.root.data.app;
+    return `/layout/o/${appName}/${movieId}/list`;
+  }
 }

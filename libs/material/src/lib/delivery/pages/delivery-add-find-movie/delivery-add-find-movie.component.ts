@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeliveryStore } from '../../+state';
+import { MovieQuery } from '@blockframes/movie';
 
 /**
  * Page for the flow: "create a delivery"
@@ -13,13 +14,13 @@ import { DeliveryStore } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddFindMovieComponent implements OnInit {
-  constructor(private router: Router, private store: DeliveryStore) {}
+  constructor(
+    private router: Router,
+    private store: DeliveryStore,
+    private query: MovieQuery
+  ) {}
 
   ngOnInit(): void {
     this.store.resetWizard();
-  }
-
-  public async selectMovie(movieId: string): Promise<boolean> {
-    return this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
   }
 }

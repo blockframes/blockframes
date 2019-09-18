@@ -1,0 +1,14 @@
+.img-container {
+  position: relative;
+  width: 100%;
+}
+
+.img-container img {
+  border-radius: 10px 10px 0 0;
+}
+
+.img-container button {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}

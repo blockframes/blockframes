@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 
-
 @Component({
   selector: 'template-list',
   templateUrl: './template-list.component.html',

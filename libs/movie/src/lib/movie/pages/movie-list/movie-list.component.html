@@ -12,62 +12,9 @@
       </article>
       <article fxLayout="row wrap" fxLayoutAlign="start space-between">
         <!-- Movie Card -->
-        <mat-card *ngFor="let movie of (movies$ | async)" class="movie-card">
-          <!-- Movie Poster -->
-          <div class="img-container clickable-item">
-            <ng-container *ngIf="movie.main.poster; else: defaultPoster">
-              <a (click)="navigateToMovieApp(movie.id)">
-                <img mat-card-image [src]="movie.main.poster" alt="Movie poster link" />
-              </a>
-            </ng-container>
-
-            <ng-template #defaultPoster>
-              <a (click)="navigateToMovieApp(movie.id)">
-                <img
-                  class="mat-card-image"
-                  src="/assets/images/default-movie-poster.png"
-                  alt="Movie poster link"/>
-              </a>
-            </ng-template>
-
-            <!-- Movie Menu -->
-            <button test-id="movie-menu" mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon color="primary">more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                <mat-icon color="primary">control_camera</mat-icon>
-                <span>Open in...</span>
-              </button>
-              <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-                <mat-icon color="primary">edit</mat-icon>
-                <span>Edit</span>
-              </a>
-              <button mat-menu-item (click)="delete(movie)">
-                <mat-icon color="primary">delete_outline</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-            <mat-menu #subMenu="matMenu">
-              <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-            </mat-menu>
-          </div>
-
-          <a (click)="navigateToMovieApp(movie.id)">
-            <!-- Movie Informations (title, year, director) -->
-            <mat-card-header class="clickable-item">
-              <mat-card-title>
-                {{ movie.main.title.original }}
-                <span *ngIf="movie.main.productionYear"> ({{ movie.main.productionYear }})</span>
-              </mat-card-title>
-              <mat-card-subtitle *ngIf="movie.main.directors">
-                <span *ngFor="let director of movie.main.directors; let isLast = last"
-                  >{{ director.firstName }} {{ director.lastName }} {{ isLast ? '' : '-' }}</span
-                >
-              </mat-card-subtitle>
-            </mat-card-header>
-          </a>
-        </mat-card>
+      <ng-container *ngFor="let movie of (movies$ | async)">
+        <movie-card [movie]="movie" [link]="linkToDeliveryList(movie.id)"></movie-card>
+      </ng-container>
       </article>
     </ng-template>
   </section>

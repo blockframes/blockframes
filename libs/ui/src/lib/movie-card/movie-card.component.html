@@ -1,0 +1,46 @@
+<mat-card class="mat-elevation-z0">
+  <!-- Movie Poster -->
+  <div class="img-container">
+    <a [routerLink]="link">
+      <ng-container >
+        <img mat-card-image [src]="posterSrc" alt="Movie poster link" />
+      </ng-container>
+    </a>
+
+      <!-- Movie Menu -->
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon color="primary">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item [matMenuTriggerFor]="subMenu">
+        <mat-icon color="primary">control_camera</mat-icon>
+        <span>Open in...</span>
+      </button>
+      <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
+        <mat-icon color="primary">edit</mat-icon>
+        <span>Edit</span>
+      </a>
+      <button mat-menu-item>
+        <mat-icon color="primary">delete_outline</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+    <mat-menu #subMenu="matMenu">
+      <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
+    </mat-menu>
+  </div>
+
+  <!-- Movie Informations -->
+  <mat-card-content>
+    <mat-card-title-group>
+      <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+    </mat-card-title-group>
+    <ng-content select="[movieInformation]"></ng-content>
+  </mat-card-content>
+
+  <!-- Movie action button -->
+  <mat-card-actions>
+    <ng-content select="[movieCardAction]"></ng-content>
+  </mat-card-actions>
+
+</mat-card>
