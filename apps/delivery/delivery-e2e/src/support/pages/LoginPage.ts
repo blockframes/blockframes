@@ -5,7 +5,7 @@ import HomePage from './HomePage';
 
 export default class LoginPage {
   constructor() {
-    cy.get('[test-id=content][page-id=login]');
+    cy.get('[test-id=content][page-id=login]', {timeout: 10000});
   }
 
   public switchMode() {
@@ -25,7 +25,7 @@ export default class LoginPage {
     return new OrganizationHomePage();
   }
 
-  public fillSignin(user: Partial<User>) {
+  public fillSigning(user: Partial<User>) {
     cy.get('[page-id=signin] input[type="email"]').type(user.email);
     cy.get('[page-id=signin] input[type="password"]').type(user.password);
   }

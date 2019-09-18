@@ -1,37 +1,41 @@
 /// <reference types="cypress" />
-import { AddTemplateModal, HomePage, LandingPage, TemplateFormPage, TemplateListPage, LoginPage } from '../support/pages';
-import { User } from '../support/utils/type';
+import {
+  LandingPage,
+  LoginPage,
+  MovieCreatePage,
+  NewTemplatePage,
+  TemplateFormPage,
+  TemplateListPage
+} from '../support/pages';
+import { User, Material } from '../support/utils/type';
+import TemplateCreatePage from '../support/pages/TemplateCreatePage';
 
-const MATERIALS = [
+const MATERIALS: Material[] = [
   {
-    value: 'First Material Value',
+    title: 'First Material Value',
     description: 'First Material Description',
     category: 'Category#1'
   },
   {
-    value: 'Second Material Value',
+    title: 'Second Material Value',
     description: 'Second Material Description',
     category: 'Category#2'
   },
   {
-    value: 'Third Material Value',
+    title: 'Third Material Value',
     description: 'Third Material Description',
     category: 'Category#3'
   }
 ];
 
-const MATERIAL_CHANGED = {
-  value: 'Value Changed',
-  description: 'Description Changed',
-  category: 'Category#Changed'
+const TEMPLATE_NAME_1 = 'Crud Template';
+
+const USER: User = {
+  email: 'cypress@pl.com',
+  surname: 'cypress',
+  name: 'pl',
+  password: 'blockframes'
 };
-
-const TEMPLATE_NAME_1 = 'CRUD template';
-
-const USER: Partial<User> = {
-  email: 'cytest@blockframes.com',
-  password: 'azerty'
-}
 
 beforeEach(() => {
   cy.clearCookies();
@@ -41,53 +45,64 @@ beforeEach(() => {
 });
 
 describe('Test CRUD template', () => {
-  it.skip('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
-    // Connexion
+  it('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
+    // Connection
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();
-    p2.fillSignin(USER);
-    const p3: HomePage = p2.clickSigninWithMovies();
-    // Go to template list and create a new template
-    const p4: TemplateListPage = p3.selectTemplates();
-    const p5: AddTemplateModal = p4.createTemplate();
-    p5.fillTemplateName(TEMPLATE_NAME_1);
-    const p6: TemplateFormPage = p5.clickCreate();
+    p2.fillSigning(USER);
+    const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
-    // Add materials
-    MATERIALS.forEach(material => {
-      p6.clickAdd();
-      p6.fillValue(material.value);
-      p6.fillDescription(material.description);
-      p6.fillCategory(material.category);
-      p6.clickSaveMaterial();
-    });
-    p6.assertMaterialsCount(MATERIALS.length);
+    // Go to template list
+    const p4: TemplateCreatePage = p3.clickContextMenuTemplatesCreate();
+    const p5: NewTemplatePage = p4.clickNewTemplate();
 
-    // Delete one material
-    p6.clickDeleteMaterial(MATERIALS[0].value);
-    p6.assertMaterialsCount(MATERIALS.length - 1);
+    // create a new template
+    p5.fillName(TEMPLATE_NAME_1);
+    const p6: TemplateFormPage = p5.clickNext();
 
-    // Edit a material
-    p6.clickEditMaterial(MATERIALS[1].value);
-    p6.clearValue();
-    p6.fillValue(MATERIAL_CHANGED.value);
-    p6.clearDescription();
-    p6.fillDescription(MATERIAL_CHANGED.description);
-    p6.clearCategory();
-    p6.fillCategory(MATERIAL_CHANGED.category);
-    p6.clickSaveMaterial();
-    p6.assertMaterialsCount(MATERIALS.length - 1);
-    p6.assertMaterialExists(
-      MATERIAL_CHANGED.value,
-      MATERIAL_CHANGED.description,
-      MATERIAL_CHANGED.category
-    );
+    // create a new material
+    p6.addMaterial();
+    p6.fillMaterial(MATERIALS[0]);
+    p6.assertMaterial(MATERIALS[0]);
+    p6.saveMaterial();
+    p6.assertMaterial(MATERIALS[0]);
 
-    // Go to template list and delete the template
-    const p7: TemplateListPage = p6.selectTemplates();
-    p7.assertTemplateExists(TEMPLATE_NAME_1);
-    p7.displayTemplateMenu(TEMPLATE_NAME_1);
-    p7.deleteTemplate();
-    p7.assertTemplateDoesNotExists(TEMPLATE_NAME_1);
-  });
+    // go back to template list
+    const p7: TemplateListPage = p6.clickContextMenuTemplates();
+    p7.assertTemplate(TEMPLATE_NAME_1);
+
+    // re-open previous template
+    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
+
+    // create another one
+    p8.addMaterial();
+    p8.fillMaterial(MATERIALS[1]);
+    p8.assertMaterial(MATERIALS[1]);
+    p8.saveMaterial();
+    p6.assertMaterial(MATERIALS[1]);
+
+    // edit the first one
+    p8.editMaterial(MATERIALS[0]);
+    p8.clearMaterial();
+    p8.fillMaterial(MATERIALS[2]);
+    p8.assertMaterial(MATERIALS[2]);
+    p8.saveMaterial();
+    p6.assertMaterial(MATERIALS[2]);
+
+    // delete both
+    p8.editMaterial(MATERIALS[1]);
+    p8.deleteMaterial();
+    p8.editMaterial(MATERIALS[2]);
+    p8.deleteMaterial();
+    p8.assertNoMaterials();
+
+    // go back to template list
+    const p9: TemplateListPage = p6.clickContextMenuTemplates();
+
+    // delete the template
+    p9.deleteTemplate(TEMPLATE_NAME_1);
+
+    // assert that the list is empty
+    p9.assertNoTemplates();
+   });
 });

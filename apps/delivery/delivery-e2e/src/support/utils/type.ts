@@ -55,3 +55,9 @@ export function createUser(): User {
 export function createOrganization(): Organization {
   return { address: randomString(), phoneNumber: randomString() };
 }
+
+export interface Material {
+  title: string;
+  category: string;
+  description: string;
+}
