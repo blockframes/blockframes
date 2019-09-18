@@ -9,15 +9,15 @@ import { Component, ChangeDetectionStrategy, OnInit, ElementRef, ViewChild, Host
 import { Movie, MovieQuery } from '@blockframes/movie';
 import {
   GenresLabel,
-  GENRESLABEL,
-  LANGUAGESLABEL,
+  GENRES_LABEL,
+  LANGUAGES_LABEL,
   LanguagesLabel,
   CertificationsLabel,
   MediasLabel,
   TerritoriesLabel,
-  CERTIFICATIONSLABEL,
-  MEDIASLABEL,
-  TERRITORIESLABEL
+  CERTIFICATIONS_LABEL,
+  MEDIAS_LABEL,
+  TERRITORIES_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
@@ -87,11 +87,11 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(private movieQuery: MovieQuery, private router: Router) {}
 
   ngOnInit() {
-    this.movieGenres = GENRESLABEL;
-    this.movieLanguages = LANGUAGESLABEL;
-    this.movieCertifications = CERTIFICATIONSLABEL;
-    this.movieMedias = MEDIASLABEL;
-    this.movieTerritories = TERRITORIESLABEL;
+    this.movieGenres = GENRES_LABEL;
+    this.movieLanguages = LANGUAGES_LABEL;
+    this.movieCertifications = CERTIFICATIONS_LABEL;
+    this.movieMedias = MEDIAS_LABEL;
+    this.movieTerritories = TERRITORIES_LABEL;
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),

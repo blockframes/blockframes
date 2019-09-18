@@ -4,7 +4,7 @@ import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {
   TerritoriesSlug,
   LanguagesLabel,
-  TERRITORIESSLUG
+  TERRITORIES_SLUG
 } from '@blockframes/movie/movie/static-model/types';
 
 export class DistributionRightForm extends FormEntity<DistributionRight> {
@@ -24,7 +24,7 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
 
   addTerritory(territory: string) {
     // Check it's part of the list available
-    if (!TERRITORIESSLUG.includes(territory as TerritoriesSlug)) {
+    if (!TERRITORIES_SLUG.includes(territory as TerritoriesSlug)) {
       throw new Error(`Territory ${territory} is not part of the list`);
     }
     // Check it's not already in the form control
