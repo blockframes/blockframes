@@ -42,14 +42,14 @@
     <img src='/assets/images/import-spreadsheet.png'><!-- @todo #581 temporary image -->
     <section fxLayout="row" fxLayoutAlign="end center">
       <ng-container *ngIf="sheets.length">
-        <button mat-raised-button color="warn" (click)="removeFile()">
+        <button mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon>delete_circle</mat-icon>
         </button>
-        <button mat-raised-button color="primary" (click)="previewFile()">
+        <button mat-flat-button color="primary" (click)="previewFile()">
           <mat-icon>open_in_new</mat-icon>
         </button>
       </ng-container>
-      <button mat-raised-button color="primary" matStepperNext (click)="next()" [disabled]="sheets.length === 0">Import
+      <button mat-flat-button color="primary" matStepperNext (click)="next()" [disabled]="sheets.length === 0">Import
         your doc
         <mat-icon>arrow_downward</mat-icon></button>
     </section>

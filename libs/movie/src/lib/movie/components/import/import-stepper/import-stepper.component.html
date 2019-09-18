@@ -7,16 +7,16 @@
     <ng-template matStepLabel>Extracted data</ng-template>
     <movie-view-extracted-elements #viewExtractedElementsComponent></movie-view-extracted-elements>
     <div class="stepper-buttons">
-      <button mat-raised-button color="warn" matStepperPrevious>Back</button>
-      <button mat-raised-button color="primary" matStepperNext>Next</button>
+      <button mat-flat-button color="warn" matStepperPrevious>Back</button>
+      <button mat-flat-button color="primary" matStepperNext>Next</button>
     </div>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
     You are now done.
     <div class="stepper-buttons">
-      <button mat-raised-button color="warn" matStepperPrevious>Back</button>
-      <button mat-raised-button color="primary" (click)="stepper.reset()">Start Again</button>
+      <button mat-flat-button color="warn" matStepperPrevious>Back</button>
+      <button mat-flat-button color="primary" (click)="stepper.reset()">Start Again</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>
