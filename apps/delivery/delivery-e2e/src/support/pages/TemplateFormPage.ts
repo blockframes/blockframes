@@ -73,7 +73,7 @@ export default class TemplateFormPage extends NavbarPage{
   //               ASSERT
   //-------------------------------------
 
-  public assertMaterial(material: Material) {
+  public assertMaterialExist(material: Material) {
     cy.get('[page-id=template-material-list] tr').should( tr =>
       expect(tr)
         .to.contain(material.title)
@@ -82,7 +82,7 @@ export default class TemplateFormPage extends NavbarPage{
     );
   }
 
-  public assertNoMaterials() {
+  public assertNoMaterialsExist() {
     cy.get('[page-id=template-material-list] tr').should( tr =>
       expect(tr).length(1)
     );

@@ -4,7 +4,7 @@
     <article fxLayout="row" fxLayoutAlign="none center">
       <h2 *ngIf="(template$ | async) as template">{{ template.name }}</h2>
       <mat-divider fxFlex></mat-divider>
-      <button mat-stroked-button color="primary" (click)="addMaterial()" test-id="add">
+      <button test-id="add" mat-stroked-button color="primary" (click)="addMaterial()">
         <mat-icon>add</mat-icon>
         Add material
       </button>
