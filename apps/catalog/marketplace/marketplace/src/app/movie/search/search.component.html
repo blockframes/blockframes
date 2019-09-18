@@ -196,11 +196,13 @@
       </div>
       <div fxLayout="row wrap" fxLayoutGap="30px">
         <ng-container *ngIf="!listView">
-          <ng-container *ngFor="let movie of sortByOptionMovies">
-            <movie-card [movie]="movie" [link]="['./', movie.id]">
-              <mat-card-subtitle>{{ movie.main.directors[0].firstName }} {{ movie.main.directors[0].lastName }}
-              </mat-card-subtitle>
-              <span movieInformation>Production Year {{ movie.main.productionYear }}</span>
+          <ng-container *ngFor="let movie of sortedMovies">
+            <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]">
+              <ng-container movieInformation>
+                <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}
+                </mat-card-subtitle>
+                <span >Production Year {{ movie.main.productionYear }}</span>
+              </ng-container>
             </movie-card>
           </ng-container>
         </ng-container>
