@@ -1,5 +1,5 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
-<div test-id="content" page-id="catalog-selection">
+<div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center center">
     <h3 class="mat-display-3">Global Selection</h3>
   </header>
@@ -17,17 +17,17 @@
     </article>
     <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px" class="input">
       <mat-form-field appearance="outline">
-        <input type="number" matInput placeholder="Enter your offer..." [formControl]="priceControl" autocomplete="off">
+        <input test-id="selection-offer" type="number" matInput placeholder="Enter your offer..." [formControl]="priceControl" autocomplete="off">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Currency</mat-label>
-        <mat-select [(value)]="selectedCurrency">
+        <mat-select test-id="selection-currency" [(value)]="selectedCurrency">
           <mat-option *ngFor="let currency of currencyList" [value]="currency">
             {{currency}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button color="accent" (click)="setPriceCurrency()"
+      <button test-id="selection-send" mat-raised-button color="accent" (click)="setPriceCurrency()"
         [routerLink]="['/layout/o/catalog/selection/success']">Send your offer</button>
     </div>
   </section>

@@ -18,6 +18,8 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceHomeComponent {
+  @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
+
   public moviesBySections$: Observable<CarouselSection[]> = of([
     { title: 'New Films', subline: '', link: '/layout/o/catalog/search', movies: latest },
     {
@@ -45,7 +47,7 @@ export class MarketplaceHomeComponent {
 
 // Code stashed away for Toronto
 
-/** Observable to fetch all movies from the store 
+/** Observable to fetch all movies from the store
   public moviesBySections$: Observable<CarouselSection[]>;
 
  /*  constructor(private fireQuery: FireQuery) {}

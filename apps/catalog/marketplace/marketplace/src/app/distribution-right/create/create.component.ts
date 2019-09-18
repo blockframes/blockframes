@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { BasketService } from '../+state/basket.service';
 import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
-import { ViewChild } from '@angular/core';
+import { ViewChild, HostBinding } from '@angular/core';
 import { DateRange } from '@blockframes/utils';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map } from 'rxjs/operators';
@@ -28,6 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DistributionRightCreateComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'distribution-right';
   // Form for holding users distribution rights choice
   public form = new DistributionRightForm();
   // Movie for information to display

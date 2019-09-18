@@ -17,7 +17,7 @@
             <!-- Dates -->
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
-                <mat-panel-title class="mat-h4">
+                <mat-panel-title test-id="distribution-date-panel" class="mat-h4">
                   Dates
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -31,7 +31,7 @@
             <!-- Territories -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title class="mat-h4">
+                <mat-panel-title test-id="distribution-territory-panel" class="mat-h4">
                   Territories
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -42,7 +42,7 @@
                     {{territory}}
                     <mat-icon matChipRemove>cancel</mat-icon>
                   </mat-chip>
-                  <input placeholder="Territories available" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                  <input test-id="distribution-territory-input" placeholder="Territories available" [matAutocomplete]="auto" [matChipInputFor]="chipList"
                     [formControl]="territoryControl" #territoryInput>
                 </mat-chip-list>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
@@ -57,7 +57,7 @@
             <!-- Media -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title class="mat-h4">Mandate Media</mat-panel-title>
+                <mat-panel-title test-id="distribution-media-panel" class="mat-h4">Mandate Media</mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
                 <mat-checkbox mat-list-item *ngFor="let media of movieMedia" (change)="checkMedia(media)"
@@ -69,7 +69,7 @@
             <!-- Language -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title class="mat-h4">
+                <mat-panel-title test-id="distribution-language-panel" class="mat-h4">
                   Languages, Dubbings, Subtitles
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -81,7 +81,7 @@
                     <h6 class="mat-h4">Languages</h6>
                     <span fxLayout="row">
                       <mat-form-field appearance="outline">
-                        <input matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
+                        <input test-id="distribution-language-input" matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
                           placeholder="Add available languages" class="capitalized" />
                         <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                           [disabled]="!languageControl.valid">
@@ -124,7 +124,7 @@
                     <h6 class="mat-h4">Dubbings</h6>
                     <span fxLayout="row">
                       <mat-form-field appearance="outline">
-                        <input matInput type="text" [matAutocomplete]="dubbings" [formControl]="dubbingsControl"
+                        <input test-id="distribution-dubbing-input" matInput type="text" [matAutocomplete]="dubbings" [formControl]="dubbingsControl"
                           placeholder="Add available dubbings" class="capitalized" />
                         <button mat-button matSuffix mat-icon-button (click)="addDubbing(dubbingsControl.value)"
                           [disabled]="!dubbingsControl.valid">
@@ -204,7 +204,7 @@
               </article>
             </mat-expansion-panel>
           </mat-accordion>
-          <button mat-button color="accent" (click)="startResearch()">Search</button>
+          <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()">Search</button>
         </form>
       </mat-card>
     </aside>
@@ -212,7 +212,7 @@
     <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
-      <a mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
+        <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
     <section>

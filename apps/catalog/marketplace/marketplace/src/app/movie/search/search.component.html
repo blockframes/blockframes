@@ -1,5 +1,5 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
-<div test-id="content" page-id="catalog-search">
+<div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1 class="mat-display-3">Discover our selection</h1>
   </header>
@@ -14,16 +14,16 @@
             <!-- Production Year -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="production-year-panel">
                   Production Year
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
                 <mat-form-field apperance="outline" color="accent">
-                  <input matInput formControlName="from" placeholder="From" />
+                  <input test-id="production-year-input-from" matInput formControlName="from" placeholder="From" />
                 </mat-form-field>
                 <mat-form-field>
-                  <input matInput formControlName="to" placeholder="To" />
+                  <input test-id="production-year-input-to" matInput formControlName="to" placeholder="To" />
                 </mat-form-field>
               </div>
             </mat-expansion-panel>
@@ -31,7 +31,7 @@
             <!-- Genre Types -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="genres-panel">
                   Genres
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -46,14 +46,14 @@
             <!-- Languages -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="languages-panel">
                   Languages
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <form formGroupName="languages" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="start start">
                   <mat-form-field color="accent" appearance="outline">
-                    <input matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
+                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
                       placeholder="Add new language" [errorStateMatcher]="matcher" />
                     <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
                       Please enter a valid language or choose from the dropdown menu!
@@ -68,7 +68,7 @@
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
-                  <button mat-button [disabled]="!languageControl.valid" color="accent"
+                  <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
                     (click)="addLanguage(languageControl.value)">Add
                     language
                   </button>
@@ -78,10 +78,10 @@
                     <ng-container *ngFor="let language of languages$ | async">
                       <mat-list-item [formGroupName]="language">
                         <h3 class="mat-h3" mat-line>{{language}}</h3>
-                        <mat-checkbox mat-line formControlName="original">Original
+                        <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
-                        <mat-checkbox mat-line formControlName="dubbed">Dubbed</mat-checkbox>
-                        <mat-checkbox mat-line formControlName="subtitle">Subtitles
+                        <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed</mat-checkbox>
+                        <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">Subtitles
                         </mat-checkbox>
                         <button mat-icon-button (click)="removeLanguage(language)">
                           <mat-icon>delete</mat-icon>
@@ -95,7 +95,7 @@
             <!-- Certifications -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="certifications-panel">
                   Certifications
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -110,20 +110,20 @@
             <!-- Availabilities -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="availabilities-panel">
                   Availabilities
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
                 <mat-form-field apperance="outline" color="accent">
                   <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
-                  <mat-datepicker-toggle matSuffix [for]="pickerAvailableFrom">
+                  <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
                   </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field color="accent">
                   <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
-                  <mat-datepicker-toggle matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
+                  <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
                 </mat-form-field>
               </div>
@@ -132,7 +132,7 @@
             <!-- Territories -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="territories-panel">
                   Territories
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -143,7 +143,7 @@
                     {{territory}}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                   </mat-chip>
-                  <input placeholder="Territories available" #territoryInput [matAutocomplete]="auto"
+                  <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput [matAutocomplete]="auto"
                     [matChipInputFor]="chipList" [formControl]="territoryControl">
                 </mat-chip-list>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
@@ -157,7 +157,7 @@
             <!-- Mandate Medias -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title test-id="mandate-medias-panel">
                   Mandate Medias
                 </mat-panel-title>
               </mat-expansion-panel-header>
