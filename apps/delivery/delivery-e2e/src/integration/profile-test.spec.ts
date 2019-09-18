@@ -28,8 +28,8 @@ beforeEach(() => {
   p2.clickSigninWithMovies();
 });
 
-describe('Test profil', () => {
-  it('should login, navigate to profil, change several information', () => {
+describe('Test profile', () => {
+  it('should login, navigate to profile, change several information', () => {
     const p1: HomePage = new HomePage();
 
     p1.openProfileMenu();
@@ -61,8 +61,8 @@ describe('Test profil', () => {
   });
 });
 
-describe('Test profil', () => {
-  it('should login, navigate to profil, change password', () => {
+describe('Test change password', () => {
+  it('should login, navigate to profile, change password', () => {
     const p1: HomePage = new HomePage();
 
     p1.openProfileMenu();
@@ -75,6 +75,6 @@ describe('Test profil', () => {
     p2.clickClose();
     const p3: LoginPage = p2.clickLogout();
     p3.fillSignin(USER_UPDATED);
-    const p4: HomePage = p3.clickSigninWithMovies();
+    p3.clickSigninWithMovies();
   });
 });

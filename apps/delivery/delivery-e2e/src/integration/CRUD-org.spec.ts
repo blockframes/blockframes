@@ -45,6 +45,6 @@ describe('Test CRUD org', () => {
     p3.assertInvitationNotExists();
 
     // Logout
-    const p6: LoginPage = p3.clickLogout();
+    p3.clickLogout();
   });
 });

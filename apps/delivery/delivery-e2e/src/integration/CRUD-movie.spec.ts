@@ -65,7 +65,7 @@ describe('User create and update another movie', () => {
     p3.fillMovieName(MOVIES_CYTEST[1]);
     p3.clickCreate();
 
-    // Let Master Bruce do it
+    // Let God Bruce do it
   });
 });
 
