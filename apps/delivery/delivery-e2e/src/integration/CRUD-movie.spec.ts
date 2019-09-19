@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, AddMovieModal, MovieEditPage, LandingPage, MovieCreatePage, HomePage } from "../support/pages";
+import { LoginViewPage, AddMovieModal, MovieEditPage, WelcomeViewPAge, MovieCreatePage, HomePage } from "../support/pages";
 import { User } from "../support/utils/type";
 
 // CONSTS
@@ -34,7 +34,7 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
-  const p1: LandingPage = new LandingPage();
+  const p1: WelcomeViewPAge = new WelcomeViewPAge();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
 });

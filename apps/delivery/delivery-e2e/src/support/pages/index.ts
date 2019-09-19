@@ -1,6 +1,6 @@
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
-import LandingPage from './LandingPage';
+import WelcomeViewPAge from './WelcomeViewPage';
 import MovieCreatePage from './MovieCreatePage';
 import EditProfilePage from './EditProfilePage';
 import TemplateDeleteModal from './TemplateDeleteModal';
@@ -27,7 +27,7 @@ import TemplateCreatePage from './TemplateCreatePage';
 export {
   HomePage,
   OrganizationFormPage,
-  LandingPage,
+  WelcomeViewPAge,
   MovieCreatePage,
   EditProfilePage,
   TemplateDeleteModal,

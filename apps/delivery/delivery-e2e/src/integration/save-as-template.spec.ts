@@ -2,7 +2,7 @@
 import {
   DeliveryListPage,
   HomePage,
-  LandingPage,
+  WelcomeViewPAge,
   TemplateFormPage,
   TemplateListPage,
   LoginViewPage,
@@ -23,7 +23,7 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
-  const p1: LandingPage = new LandingPage();
+  const p1: WelcomeViewPAge = new WelcomeViewPAge();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();

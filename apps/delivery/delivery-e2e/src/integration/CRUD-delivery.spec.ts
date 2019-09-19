@@ -2,7 +2,7 @@
 
 import {
   LoginViewPage,
-  LandingPage,
+  WelcomeViewPAge,
   HomePage,
   DeliveryInformationPage,
   StarterPickerPage,
@@ -75,7 +75,7 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
-  const p1: LandingPage = new LandingPage();
+  const p1: WelcomeViewPAge = new WelcomeViewPAge();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();

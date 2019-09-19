@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { User } from "../support/utils/type";
-import { LandingPage, LoginViewPage, HomePage, EditProfilePage } from "../support/pages";
+import { WelcomeViewPAge, LoginViewPage, HomePage, EditProfilePage } from "../support/pages";
 
 
 const USER: Partial<User> = {
@@ -22,7 +22,7 @@ beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
   cy.visit('/auth');
-  const p1: LandingPage = new LandingPage();
+  const p1: WelcomeViewPAge = new WelcomeViewPAge();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();
