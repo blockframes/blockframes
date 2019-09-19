@@ -9,7 +9,7 @@
     </movie-material-list>
   </ng-container>
   <!-- Sidenav -->
-  <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup" sidenav>
+  <ng-container *ngIf="(activeForm$ | async) as materialFormGroup" sidenav>
     <movie-material-form [formGroup]="materialFormGroup"></movie-material-form>
   </ng-container>
 </editable-sidenav>

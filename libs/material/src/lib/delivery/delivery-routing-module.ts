@@ -7,7 +7,6 @@ import { DeliveryAddChooseStarterComponent } from "./pages/delivery-add-choose-s
 import { DeliveryAddTemplatePickerComponent } from "./pages/delivery-add-template-picker/delivery-add-template-picker.component";
 import { DeliveryAddSpecificDeliveryListPickerComponent } from "./pages/delivery-add-specific-delivery-list-picker/delivery-add-specific-delivery-list-picker.component";
 import { DeliveryAddSettingsComponent } from "./pages/delivery-add-settings/delivery-add-settings.component";
-import { DeliveryAddCompleteComponent } from "./pages/delivery-add-complete/delivery-add-complete.component";
 import { DeliveryListComponent } from "./pages/delivery-list/delivery-list.component";
 import { DeliveryEditableComponent } from "./pages/delivery-editable/delivery-editable.component";
 import { DeliveryStakeholdersEditableComponent } from './pages/delivery-stakeholders-editable/delivery-stakeholders-editable.component';
@@ -64,11 +63,6 @@ const routes: Routes = [
             path: '4-settings',
             pathMatch: 'full',
             component: DeliveryAddSettingsComponent
-          },
-          {
-            path: '5-complete',
-            pathMatch: 'full',
-            component: DeliveryAddCompleteComponent
           },
           {
             path: ':templateId',

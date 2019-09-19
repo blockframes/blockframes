@@ -2,17 +2,10 @@ import { EntityState, EntityStore, StoreConfig, MultiActiveState } from '@datora
 import { Injectable } from '@angular/core';
 import { Material } from './material.model';
 
-export interface MaterialState extends EntityState<Material>, MultiActiveState {
-  materialTemplateForm: {
-    value: string;
-    description: string;
-    category: string;
-  };
-}
+export interface MaterialState extends EntityState<Material>, MultiActiveState {}
 
 const initialState = {
-  active: [],
-  materialTemplateForm: null
+  active: null,
 };
 
 @Injectable({
@@ -22,14 +15,6 @@ const initialState = {
 export class MaterialStore extends EntityStore<MaterialState, Material> {
   constructor() {
     super(initialState);
-  }
-
-  public updateEmptyTemplateForm(category: string) {
-    this.update({ materialTemplateForm: { value: '', description: '', category } });
-  }
-
-  public clearForm() {
-    this.update({ materialTemplateForm: null });
   }
 
   public returnToInitialState() {

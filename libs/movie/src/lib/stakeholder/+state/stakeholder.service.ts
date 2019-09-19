@@ -27,8 +27,7 @@ export class StakeholderService {
       ? createMovieStakeholder({ id: organizationId, isAccepted })
       : createDeliveryStakeholder({
         id: organizationId,
-        isAccepted,
-        authorizations: isAccepted ? ['canUpdateDelivery'] : []
+        isAccepted
       });
 
     const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`);

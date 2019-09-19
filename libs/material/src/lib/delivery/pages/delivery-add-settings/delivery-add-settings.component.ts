@@ -7,7 +7,7 @@ import { MovieQuery } from '@blockframes/movie';
 
 /**
  * Page for the flow: "create a delivery"
- * fourth step, select its mode.
+ * final step, select its mode.
  */
 @Component({
   selector: 'delivery-add-settings',

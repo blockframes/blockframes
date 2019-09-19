@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
-import { Material, MaterialQuery } from '../../material/+state';
+import { Material } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery, Query } from '@blockframes/utils';
 import { TemplateStore } from './template.store';
@@ -18,11 +18,11 @@ export class TemplateService {
     private db: FireQuery,
     private query: TemplateQuery,
     private store: TemplateStore,
-    private materialQuery: MaterialQuery,
     private organizationQuery: OrganizationQuery,
     private permissionsService: PermissionsService
   ) {}
 
+  /** Create a template without materials. */
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
@@ -48,6 +48,7 @@ export class TemplateService {
     return templateId;
   }
 
+  /** Delete a template and materials subcollection. */
   public async deleteTemplate(templateId: string): Promise<void> {
     const org = this.organizationQuery.getValue().org;
     const templateIds = org.templateIds.filter(id => id !== templateId);
@@ -61,7 +62,7 @@ export class TemplateService {
     })
   }
 
-  /** Save a delivery as new template */
+  /** Save a delivery as new template. */
   public async saveAsTemplate(materials: Material[], templateName: string) {
     if (materials.length > 0) {
       // Add a new template
@@ -79,7 +80,7 @@ export class TemplateService {
     }
   }
 
-  /** Update template with delivery's materials */
+  /** Update template with delivery's materials. */
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
@@ -109,6 +110,7 @@ export class TemplateService {
     return templates.find(template => template.name === name);
   }
 
+  /** Subscribe on organization templates (outside the TemplateListGuard) and set the template store. */
   public subscribeOnTemplates() {
     return this.organizationQuery
       .select(state => state.org.templateIds)

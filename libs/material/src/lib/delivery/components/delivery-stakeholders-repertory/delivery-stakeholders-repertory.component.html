@@ -7,15 +7,9 @@
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td fxLayout="row" fxLayoutAlign="start center" [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">
         <img
-          *ngIf="!!stakeholder.organization.logo; else placeholder"
           [src]="stakeholder.organization.logo"
           alt="Organization Logo"/>
-        <ng-template #placeholder>
-          <img
-          [src]="placeholderLogo"
-          alt="Placeholder Logo"/>
-        </ng-template>
-        <span>{{ stakeholder.organization.name }}</span>
+        <b>{{ stakeholder.organization.name }}</b>
       </td>
     </ng-container>
 

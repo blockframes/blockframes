@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from 
 import { ControlContainer } from '@angular/forms';
 import { Delivery, Currencies } from '../../+state';
 import { Material } from '../../../material/+state';
+import { FormElement } from '@blockframes/utils';
+import { MaterialControl } from '../../forms/material.form';
 
 @Component({
   selector: '[formGroupName] delivery-material-form, [formGroup] delivery-material-form, delivery-material-form',
@@ -21,7 +23,6 @@ export class DeliveryMaterialFormComponent{
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
-    return this.controlContainer.control;
+    return this.controlContainer.control as FormElement<MaterialControl>;
   }
-
 }

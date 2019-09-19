@@ -25,6 +25,8 @@
           Add material
       </button>
     </article>
+
+    <!-- Actions button -->
     <article fxLayout="row" fxLayoutAlign="end center">
       <delivery-actions
         (status)="updateStatus($event)"
@@ -32,6 +34,8 @@
         (paid)="materialsIsPaid()">
       </delivery-actions>
     </article>
+
+    <!-- Materials table -->
     <ng-container *ngIf="(materials$ | async) as materials">
       <delivery-material-list
         [materials]="materials"
@@ -45,9 +49,9 @@
       <delivery-statuses></delivery-statuses>
     </ng-container>
   </ng-container>
-  <!-- Sidenav -->
+  <!-- Sidenav (with form) -->
   <ng-container sidenav>
-    <ng-container *ngIf="(materialFormGroup$ | async) as materialFormGroup">
+    <ng-container *ngIf="(activeForm$ | async) as materialFormGroup">
       <delivery-material-form
         [formGroup]="materialFormGroup"
         [delivery]="delivery$ | async"

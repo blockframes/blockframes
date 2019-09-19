@@ -30,7 +30,7 @@
               "apps/main/main/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/shared-assets/",
+                "input": "./libs/ui/src/lib/assets",
                 "output": "./assets"
               }
             ],
@@ -337,7 +337,7 @@
               "apps/movie-financing/movie-financing/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/shared-assets/",
+                "input": "./libs/ui/src/lib/assets",
                 "output": "./assets"
               }
             ],
@@ -620,7 +620,7 @@
               "apps/delivery/delivery/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/shared-assets/",
+                "input": "./libs/ui/src/lib/assets",
                 "output": "./assets"
               }
             ],
@@ -1070,7 +1070,7 @@
               "apps/catalog/dashboard/dashboard/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/shared-assets/",
+                "input": "./libs/ui/src/lib/assets",
                 "output": "./assets"
               }
             ],
@@ -1262,7 +1262,7 @@
               "apps/catalog/marketplace/marketplace/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/shared-assets/",
+                "input": "./libs/ui/src/lib/assets",
                 "output": "./assets"
               }
             ],

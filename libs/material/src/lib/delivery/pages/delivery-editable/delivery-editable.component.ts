@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
@@ -10,13 +10,12 @@ import { Router } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, startWith, tap, switchMap, filter, takeUntil } from 'rxjs/operators';
-import { createMaterialFormList, createMaterialFormGroup } from '../../forms/material.form';
-import { FormGroup } from '@angular/forms';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { utils } from 'ethers';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
-import { FormList } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-editable',
@@ -24,20 +23,16 @@ import { FormList } from '@blockframes/utils';
   styleUrls: ['./delivery-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryEditableComponent implements OnInit, OnDestroy {
+export class DeliveryEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public opened = false;
   public displayedColumns: string[];
   public pdfLink: string;
-  private selectedMaterialId$ = new BehaviorSubject<string>(null);
 
-  public materialFormGroup$: Observable<FormGroup>;
-  public currentFormList: FormList<Material, any> = createMaterialFormList();
-
-  private destroyed$ = new Subject();
-
+  public form = new MaterialForm();
+  public activeForm$: Observable<FormElement<MaterialControl>>;
 
   constructor(
     private materialQuery: MaterialQuery,
@@ -54,32 +49,18 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Generate a formList with disabled fields (or not) depending on delivery isSigned property
-    this.query.selectActive()
-      .pipe(
-        takeUntil(this.destroyed$),
-        map(delivery =>  createMaterialFormList(delivery.isSigned))
-      )
-      .subscribe(formList => this.currentFormList = formList);
-
-    this.materials$ = this.materialQuery.selectAll().pipe(
-      tap(materials => this.currentFormList.patchValue(materials)),
-      switchMap(materials => this.currentFormList.valueChanges.pipe(startWith(materials))
-      )
-    );
-
-    // Return the materialFormGroup linked to the selected materialId
-    this.materialFormGroup$ = this.selectedMaterialId$.pipe(
-      filter(materialId => !!materialId),
-      map(materialId => {
-        return this.currentFormList.value.findIndex(material => material.id === materialId);
+    this.materials$ = combineLatest([this.query.selectActive(), this.materialQuery.selectAll()]).pipe(
+      tap(([delivery, materials]) => {
+        this.form.upsertValue(materials);
+        // Disable or enable form depending on delivery isSigned property
+        delivery.isSigned ? this.form.disable() : this.form.enable();
       }),
-      map(index => {
-        return this.currentFormList.at(index);
-      })
+      switchMap(([delivery, materials]) => this.form.selectAll())
     );
 
-    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`
+    this.activeForm$ = this.form.selectActiveForm();
+
+    this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
     this.displayedColumns = this.setDisplayedColumns();
@@ -87,7 +68,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   /* Open the sidenav with selected material form **/
   public openSidenav(materialId: string) {
-    this.selectedMaterialId$.next(materialId);
+    this.form.setActive(materialId);
     this.opened = true;
   }
 
@@ -95,19 +76,20 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   public update() {
     try {
       const delivery = this.query.getActive();
+      const materials = this.form.getAll();
       delivery.mustBeSigned
-        ? this.materialService.updateDeliveryMaterials(this.currentFormList.value, delivery)
-        : this.materialService.update(this.currentFormList.value, delivery);
+        ? this.materialService.updateDeliveryMaterials(materials, delivery)
+        : this.materialService.update(materials, delivery);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
 
-  /* Add a material formGroup to the formList **/
+  /* Add a material formGroup to the form **/
   public addMaterial() {
     const newMaterial = this.materialService.add();
-    this.currentFormList.push(createMaterialFormGroup(newMaterial));
+    this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }
 
@@ -160,7 +142,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
   /* Create a new template from delivery materials **/
   public saveAsTemplate() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = this.currentFormList.value;
+    dialogConfig.data = this.form.getAll();
     this.dialog.open(NewTemplateComponent, dialogConfig);
   }
 
@@ -180,8 +162,7 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
     try {
       // If material exist in formList but not in database
       if (!this.materialQuery.hasEntity(materialId)) {
-        const index = this.currentFormList.value.findIndex(material => material.id === materialId);
-        this.currentFormList.removeAt(index);
+        this.form.removeControl(materialId);
         this.opened = false;
         return;
       }
@@ -272,10 +253,5 @@ export class DeliveryEditableComponent implements OnInit, OnDestroy {
 
   public get deliveryContractURL$(): Observable<string> {
     return this.delivery$.pipe(map(({ id }) => `/delivery/contract.pdf?deliveryId=${id}`));
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
   }
 }

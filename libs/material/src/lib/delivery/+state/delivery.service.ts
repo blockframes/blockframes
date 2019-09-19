@@ -19,8 +19,6 @@ import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx, TxFeedback } from '@blockframes/ethers';
 
-const Timestamp = firebase.firestore.Timestamp;
-
 interface AddDeliveryOptions {
   templateId?: string;
   movieId?: string;
@@ -28,15 +26,6 @@ interface AddDeliveryOptions {
   mustBeSigned?: boolean;
 }
 
-export function dateObjectsToTimestamp(docs) {
-  return docs.map(doc => {
-    if (doc.date) {
-      return { ...doc, date: Timestamp.fromDate(doc.date) };
-    } else {
-      return doc;
-    }
-  });
-}
 export function timestampObjectsToDate(docs: any[]) {
   if (!docs) {
     return [];
@@ -85,7 +74,7 @@ export class DeliveryService {
   ///////////////////////////
 
   private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
-    return this.db.collection('movies').doc(movieId);
+    return this.db.doc<Movie>(`movies/${movieId}`);
   }
 
   private get currentDeliveryDoc() {
@@ -93,23 +82,21 @@ export class DeliveryService {
   }
 
   private materialDeliveryDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
-    return this.deliveryDoc(deliveryId)
-      .collection('materials')
-      .doc(materialId);
+    return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
   }
 
-  private deliveryDoc(id: string): AngularFirestoreDocument<DeliveryDB> {
-    return this.db.doc(`deliveries/${id}`);
+  private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryDB> {
+    return this.db.doc(`deliveries/${deliveryId}`);
   }
 
   private deliveryStakeholderDoc(
     deliveryId: string,
     stakeholderId: string
   ): AngularFirestoreDocument<Stakeholder> {
-    return this.deliverStakeholdersDoc(deliveryId).doc(stakeholderId);
+    return this.deliveryStakeholdersCollection(deliveryId).doc(stakeholderId);
   }
 
-  private deliverStakeholdersDoc(deliveryId: string): AngularFirestoreCollection<Stakeholder> {
+  private deliveryStakeholdersCollection(deliveryId: string): AngularFirestoreCollection<Stakeholder> {
     return this.deliveryDoc(deliveryId).collection('stakeholders');
   }
 
@@ -216,6 +203,7 @@ export class DeliveryService {
     return id;
   }
 
+  /** Add a delivery using all the settings picked in the creation tunnel */
   public async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
     const mustBeSigned = wizard.options.includes(DeliveryOption.mustBeSigned);
     const mustChargeMaterials = wizard.options.includes(DeliveryOption.mustChargeMaterials);
@@ -293,6 +281,7 @@ export class DeliveryService {
     const deletedSteps = oldSteps.filter(
       oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
     );
+
     // Remove stepId from the materials according to this array
     this.removeMaterialsStepId(deletedSteps, batch);
 
@@ -303,6 +292,7 @@ export class DeliveryService {
   private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
     // TODO(issue#773): Use a transaction to make sure we don't lose data
     const deliveryId = this.query.getActiveId();
+
     // We also set the concerned materials stepId to an empty string
     steps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
@@ -325,7 +315,7 @@ export class DeliveryService {
     return this.currentDeliveryDoc.delete();
   }
 
-  /** Sign array validated of delivery with stakeholder logged */
+  /** Push stakeholder id into validated array as a signature */
   public signDelivery(deliveryId?: string): Promise<any> {
     let delivery: Delivery;
 
@@ -348,6 +338,7 @@ export class DeliveryService {
     }
   }
 
+  /** Sign the delivery and save this action into active organization logs */
   public setSignDeliveryTx(orgAddress: string, deliveryId: string, deliveryHash: string, orgId: string) {
     const name = `Delivery #${deliveryId}`; // TODO better delivery name (see with @ioaNikas)
     const callback = async () => {
@@ -469,8 +460,8 @@ export class DeliveryService {
   // CRUD STAKEHOLDERS //
   //////////////////////
 
-  private makeDeliveryStakeholder(id: string, authorizations: string[], isAccepted: boolean) {
-    return createDeliveryStakeholder({ id, authorizations, isAccepted });
+  private makeDeliveryStakeholder(id: string, isAccepted: boolean) {
+    return createDeliveryStakeholder({ id, isAccepted });
   }
 
   /** Add a stakeholder to the delivery */
@@ -482,10 +473,8 @@ export class DeliveryService {
 
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
-      const authorizations = [];
       const newDeliveryStakeholder = this.makeDeliveryStakeholder(
         movieStakeholder.id,
-        authorizations,
         false
       );
 
@@ -493,12 +482,6 @@ export class DeliveryService {
         newDeliveryStakeholder
       );
     }
-  }
-
-  /** Update authorizations of stakeholder delivery */
-  public updateStakeholderAuthorizations(stakeholderId: string, authorizations: string[]) {
-    const deliveryId = this.query.getActiveId();
-    return this.deliveryStakeholderDoc(deliveryId, stakeholderId).update({ authorizations });
   }
 
   /** Delete stakeholder delivery */

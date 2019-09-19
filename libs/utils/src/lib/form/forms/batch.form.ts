@@ -2,27 +2,61 @@ import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, filter, startWith } from 'rxjs/operators';
 
-export abstract class FormBatch<E> extends FormGroup {
+type ElementControl<E = any> = {
+  [key in keyof Partial<E>]: AbstractControl;
+}
+
+export class FormElement<C extends ElementControl> extends FormGroup {
+  get<K extends keyof C>(path: Extract<K, string>): C[K] {
+    return super.get(path) as C[K];
+  }
+
+  addControl<K extends keyof C>(name: Extract<K, string>, control: C[K]) {
+    super.addControl(name, control);
+  }
+
+  removeControl(name: Extract<keyof C, string>) {
+    super.removeControl(name);
+  }
+
+  setControl<K extends keyof C>(name: Extract<K, string>, control: C[K]) {
+    super.setControl(name, control);
+  }
+
+  setValue(value: Partial<C>, options?: { onlySelf?: boolean; emitEvent?: boolean }) {
+    super.setValue(value, options);
+  }
+
+  patchValue(entity: Partial<C>, options?: { onlySelf?: boolean; emitEvent?: boolean }) {
+    super.patchValue(entity, options);
+  }
+}
+
+export abstract class FormBatch<E, C extends ElementControl<E>> extends FormGroup {
   protected idKey = 'id';
   private active = new BehaviorSubject<string>(null);
   public active$ = this.active.asObservable();
 
-  abstract createControl(entity: Partial<E>): FormGroup;
+  abstract createControl(entity: Partial<E>): FormElement<C>;
+
+  get(path: string): FormElement<C> {
+    return super.get(path) as FormElement<C>;
+  }
 
   // Read
-  public selectAll(): Observable<E[]> {
+  public selectAll(): Observable<Partial<E[]>> {
     return this.valueChanges.pipe(
       startWith(this.value),
       filter(entities => !!entities),
       map(entities => Object.keys(entities).map(key => entities[key]))
-    )
+    );
   }
 
   public getAll(): E[] {
     return Object.values(this.value);
   }
 
-  public selectActive(): Observable<AbstractControl> {
+  public selectActiveForm(): Observable<FormElement<C>> {
     return this.active$.pipe(
       map(active => this.get(active))
     );
