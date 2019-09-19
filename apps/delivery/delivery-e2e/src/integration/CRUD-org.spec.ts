@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import {
-  WelcomeViewPAge,
+  WelcomeViewPage,
   OrganizationEditablePage,
   MovieCreatePage,
   LoginViewPage,
@@ -18,7 +18,7 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
-  const p1: WelcomeViewPAge = new WelcomeViewPAge();
+  const p1: WelcomeViewPage = new WelcomeViewPage();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithNoMovies();

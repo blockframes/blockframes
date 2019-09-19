@@ -1,6 +1,6 @@
 import HomePage from './HomePage';
 import OrganizationEditablePage from './organization/OrganizationEditablePage';
-import WelcomeViewPAge from './auth/WelcomeViewPage';
+import WelcomeViewPage from './auth/WelcomeViewPage';
 import MovieCreatePage from './movie/MovieCreatePage';
 import EditProfilePage from './EditProfilePage';
 import TemplateEditablePage from './template/TemplateEditablePage';
@@ -25,7 +25,7 @@ import TemplateCreatePage from './template/TemplateCreatePage';
 export {
   HomePage,
   OrganizationEditablePage,
-  WelcomeViewPAge,
+  WelcomeViewPage,
   MovieCreatePage,
   EditProfilePage,
   TemplateEditablePage,

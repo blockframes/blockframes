@@ -13,7 +13,7 @@ import { startWith, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationEditableComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'template-editable';
+  @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
   public organizationProfileForm: OrganizationProfileForm;
   public organization$: Observable<Organization>;

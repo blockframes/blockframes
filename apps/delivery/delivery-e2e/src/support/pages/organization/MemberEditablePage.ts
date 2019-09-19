@@ -15,15 +15,15 @@ export default class MemberEditablePage extends NavbarPage{
     }
 
     public assertInvitationPending(email: string) {
-      cy.get('[test-id=member-invitation] mat-list-item', {timeout: 5000}).should((item) => expect(item).to.contain(email).length(1));
+      cy.get('[page-id=member-invitation] mat-list-item', {timeout: 5000}).should((item) => expect(item).to.contain(email).length(1));
     }
 
     public removeInvitation(email: string) {
-      cy.get('[test-id=member-invitation] mat-list-item').should((item) => expect(item).to.contain(email).length(1)).find('button').click();
+      cy.get('[page-id=member-invitation] mat-list-item').should((item) => expect(item).to.contain(email).length(1)).find('button').click();
     }
 
     public assertInvitationNotExists() {
       cy.wait(1000);
-      cy.get('[test-id=member-invitation] mat-list-item').should((item) => expect(item).to.have.length(0));
+      cy.get('[page-id=member-invitation] mat-list-item').should((item) => expect(item).to.have.length(0));
     }
 }

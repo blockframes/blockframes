@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import {
-  WelcomeViewPAge,
+  WelcomeViewPage,
   LoginViewPage,
   OrganizationHomePage
 } from '../support/pages';
@@ -17,7 +17,7 @@ beforeEach(() => {
 
 describe('story #529 - account creation', () => {
   it('should let me create a user account and send me to the organization creation page', () => {
-    const p1: WelcomeViewPAge = new WelcomeViewPAge();
+    const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
 
     p2.switchMode();

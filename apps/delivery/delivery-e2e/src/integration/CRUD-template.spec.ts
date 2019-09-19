@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import {
-  WelcomeViewPAge,
+  WelcomeViewPage,
   LoginViewPage,
   MovieCreatePage,
   TemplateAddModal,
@@ -30,7 +30,7 @@ beforeEach(() => {
 describe('Test CRUD template', () => {
   it('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
     // Connection
-    const p1: WelcomeViewPAge = new WelcomeViewPAge();
+    const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
     const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
