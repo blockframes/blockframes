@@ -1,14 +1,12 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center center">
-    <h3 class="mat-display-3">Global Selection</h3>
+    <h1>Global Selection</h1>
   </header>
   <section>
-    <article>
-      <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <h4 class="mat-h4">My films selection</h4>
-        <mat-divider></mat-divider>
-      </span>
+    <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <h2>My films selection</h2>
+        <mat-divider fxFlex></mat-divider>
     </article>
     <article>
       <catalog-form-selection [selectedMovieDetail]="movieDistributionRights"
@@ -27,7 +25,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <button test-id="selection-send" mat-raised-button color="accent" (click)="setPriceCurrency()"
+      <button test-id="selection-send" mat-flat-button color="primary" (click)="setPriceCurrency()"
         [routerLink]="['/layout/o/catalog/selection/success']">Send your offer</button>
     </div>
   </section>

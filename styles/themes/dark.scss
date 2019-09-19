@@ -89,8 +89,7 @@ $mat-dark-bf-red: (
 ////////////////
 // Background palette for dark themes.
 $bf-dark-background: (
-  status-bar: black,
-  app-bar:    map_get($mat-grey, 900),
+  app-bar:    #02000F,
   background: #02000F,
   hover:      rgba(white, 0.04),
   card:       map_get($mat-grey, 800),
@@ -111,7 +110,7 @@ $bf-dark-background: (
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
   base:              white,
-  divider:           #292929,
+  divider:           #2C2C2C,
   dividers:          $light-dividers,
   disabled:          $light-disabled-text,
   disabled-button:   rgba(white, 0.3),
@@ -125,6 +124,7 @@ $bf-dark-foreground: (
   slider-min:        white,
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
+  subheading:        #BEBEBE,
 );
 
 ///////////

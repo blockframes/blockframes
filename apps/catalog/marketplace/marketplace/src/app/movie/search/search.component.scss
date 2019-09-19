@@ -6,6 +6,12 @@ header {
   background-size: cover;
 }
 
+movie-card {
+  height: 390px;
+  width: 310px;
+  margin: 15px;
+}
+
 section {
   padding: 20px 100px;
 
@@ -45,7 +51,7 @@ section {
 
     movie-card {
       height: auto;
-      width: 228px;
+      width: 310px;
       margin: 15px;
     }
 
@@ -53,10 +59,6 @@ section {
       width: 100%;
       cursor: pointer;
     }
-
-    .movies {
-      width: 100%;
-      height: auto;
-    }
   }
+
 }

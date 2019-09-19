@@ -3,3 +3,9 @@
   box-shadow: none;
   border-bottom: 1px solid mat-color($bf-light-foreground, divider);
 }
+
+.dark-theme .mat-toolbar {
+  background: mat-color($bf-dark-background, app-bar);
+  box-shadow: none;
+  border-bottom: 1px solid mat-color($bf-dark-foreground, divider);
+}

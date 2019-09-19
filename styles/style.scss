@@ -44,10 +44,16 @@ h3 {
   color: mat-color($bf-light-foreground, subheading);
 }
 
-h4 {
+.light-theme h4 {
   font-size: 16px;
   font-weight: 700;
   color: mat-color($bf-light-foreground, subheading);
+}
+
+.dark-theme h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: mat-color($bf-dark-foreground, subheading);
 }
 
 p {
