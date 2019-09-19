@@ -2,62 +2,67 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <main *ngIf="(movie$ | async) as movie;" test-id="content">
-  <header>
-    <div fxLayout="column" fxLayoutAlign="center center">
-      <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
-      <b *ngFor="let director of movie.main.directors; let isLast = last">
-        <h3 class="mat-body-1">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
-        </h3>
-      </b>
+  <header fxLayout="column">
+    <h1>{{movie.main.title.original}}</h1>
+    <div *ngFor="let director of movie.main.directors; let isLast = last">
+      <span>a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
+      </span>
     </div>
   </header>
-  <section fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="50px">
-    <aside fxLayout="column">
-      <mat-card>
+
+  <section fxLayout="row" fxLayoutAlign="space-around">
+
+    <div fxLayout="column">
+      <section class="movie-presentation mat-elevation-z2">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
-          <img mat-card-image [src]="poster" alt="movie poster" />
+          <img class="movie-poster" [src]="poster" alt="movie poster" />
         </ng-container>
-        <mat-card-content>
+        <article>
           <!-- Availabilities -->
           <movie-display-availabilities [rights]="movie.salesAgentDeal.rights"></movie-display-availabilities>
           <!-- Production -->
           <movie-display-production [productionCompanies]="movie.main.productionCompanies" [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
-        </mat-card-content>
-      </mat-card>
+        </article>
+      </section>
+    </div>
 
-    </aside>
-    <section class="informations">
-      <span fxLayout="row" fxLayoutAlign="start baseline">
-        <h2 class="mat-display-1">Film Information</h2>
-        <mat-divider></mat-divider>
-      </span>
-      <mat-card>
-        <!-- Principal Informations -->
-        <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-informations>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Synopsis -->
-        <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Film details -->
-        <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color" [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere"></movie-display-film-details>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Festival Prizes -->
-        <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Key Assets -->
-        <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Keywords -->
-        <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
-        <mat-divider [inset]="true"></mat-divider>
-        <!-- Languages -->
-        <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo"></movie-display-version-info>
-      </mat-card>
-    </section>
+    <div fxLayout="column">
+      <section fxLayout="row" fxLayoutAlign="start center" class="margin-top">
+        <h2>Film Information</h2>
+        <mat-divider fxFlex></mat-divider>
+      </section>
+
+      <section class="informations">
+        <article fxLayout="column">
+          <!-- Principal Informations -->
+          <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-informations>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Synopsis -->
+          <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Film details -->
+          <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color" [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere"></movie-display-film-details>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Festival Prizes -->
+          <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Key Assets -->
+          <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Keywords -->
+          <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
+          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <!-- Languages -->
+          <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo"></movie-display-version-info>
+        </article>
+      </section>
+    </div>
   </section>
+
+
   <div fxLayout="row" fxLayoutAlign="center end">
-    <a test-id="distribution-right-link" class="distribution-button" mat-raised-button color="accent"
+    <a test-id="distribution-right-link" mat-flat-button color="accent"
       [routerLink]="['/layout/o/catalog', movie.id, 'create']">
       Create distribution right
     </a>

@@ -1,7 +1,3 @@
-:host {
-  display: flex;
-}
-
 header {
   padding: 100px 0;
   // TODO: replace image when the real one is available.
@@ -10,73 +6,42 @@ header {
   background-attachment: fixed;
   background-size: cover;
   text-align: center;
-  div {
-    h1,
-    b {
-      margin: 0;
-      padding: 0;
-    }
-  }
 }
 
-aside {
-  width: 25%;
-  padding: 10px;
-  margin-top: 100px;
-  img {
-    padding: 10px;
-  }
+.mat-divider {
+  margin: 0 20px;
+}
+
+.large-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+
+.margin-top {
+  margin-top: 15px;
+}
+
+.movie-poster {
+  width: 410px;
+  height: 545px;;
+}
+
+.movie-presentation {
+  margin-top: 40px;
+  padding: 50px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #292929;
+  border-radius: 10px;
 }
 
 .informations {
-  width: 60%;
-  padding: 10px;
+  padding: 50px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #292929;
+  border-radius: 10px;
 }
 
-article {
-  padding: 10px 10px 10px 0px;
-}
-
-mat-divider {
-  margin-left: 20px;
-  width: 100%;
-}
-
-h2 {
-  white-space: nowrap;
-}
-
-h3 {
-  margin-bottom: 10px;
-}
-
-b {
-  margin: 0px 15px 5px 0px;
-}
-
-span {
-  white-space: nowrap;
-}
-
-ul {
-  padding: 0;
-  margin: 0;
-}
-
-.overflow {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.first-column {
-  width: 450px;
-}
-
-.second-column {
-  width: 450px;
-}
-
-.distribution-button {
-  margin: 0 auto;
+.mat-flat-button {
+  margin: 10px;
 }
