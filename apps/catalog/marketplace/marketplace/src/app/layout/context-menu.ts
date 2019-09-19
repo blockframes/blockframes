@@ -45,7 +45,7 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/home'
       },
       {
-        name: 'search',
+        name: 'catalogue',
         path: '/layout/o/catalog/search'
       },
       {
