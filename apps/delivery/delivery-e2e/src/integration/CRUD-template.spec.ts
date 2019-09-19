@@ -3,12 +3,12 @@ import {
   WelcomeViewPAge,
   LoginViewPage,
   MovieCreatePage,
-  NewTemplatePage,
+  TemplateAddModal,
   TemplateEditablePage,
   TemplateListPage
 } from '../support/pages';
 import { User } from '../support/utils/type';
-import TemplateCreatePage from '../support/pages/TemplateCreatePage';
+import TemplateCreatePage from '../support/pages/template/TemplateCreatePage';
 import { MATERIALS } from '../support/utils/data';
 
 const TEMPLATE_NAME_1 = 'Crud Template';
@@ -37,7 +37,7 @@ describe('Test CRUD template', () => {
 
     // Go to template list
     const p4: TemplateCreatePage = p3.clickContextMenuTemplatesCreate();
-    const p5: NewTemplatePage = p4.clickNewTemplate();
+    const p5: TemplateAddModal = p4.clickNewTemplate();
 
     // create a new template
     p5.fillName(TEMPLATE_NAME_1);

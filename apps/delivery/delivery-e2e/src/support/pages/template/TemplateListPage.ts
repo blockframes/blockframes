@@ -1,4 +1,4 @@
-import TemplateEditablePage from "../TemplateEditablePage";
+import TemplateEditablePage from "./TemplateEditablePage";
 
 export default class TemplateListPage {
 
