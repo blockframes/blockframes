@@ -13,7 +13,7 @@ import DeliveryListPage from './DeliveryListPage';
 import DeliveryMaterialsPage from './DeliveryMaterialsPage';
 import NewTemplatePage from './NewTemplatePage';
 import DeliveryInformationPage from './DeliveryInformationPage';
-import LoginPage from './LoginPage';
+import LoginViewPage from './LoginViewPage';
 import OrganizationMemberPage from './OrganizationMemberPage';
 import StarterPickerPage from './delivery-create-tunnel/StarterPickerPage';
 import SettingsPage from './delivery-create-tunnel/SettingsPage';
@@ -40,7 +40,7 @@ export {
   DeliveryMaterialsPage,
   NewTemplatePage,
   DeliveryInformationPage,
-  LoginPage,
+  LoginViewPage,
   OrganizationMemberPage,
   StarterPickerPage,
   SettingsPage,

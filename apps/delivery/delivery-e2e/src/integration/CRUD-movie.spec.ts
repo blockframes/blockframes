@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LoginPage, AddMovieModal, MovieEditPage, LandingPage, MovieCreatePage, HomePage } from "../support/pages";
+import { LoginViewPage, AddMovieModal, MovieEditPage, LandingPage, MovieCreatePage, HomePage } from "../support/pages";
 import { User } from "../support/utils/type";
 
 // CONSTS
@@ -35,13 +35,13 @@ beforeEach(() => {
   cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
   const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
 });
 
 describe('User create a movie', () => {
   it('should login, open the movie title form, and add a movie', () => {
-    const p1 = new LoginPage();
+    const p1 = new LoginViewPage();
     const p2: MovieCreatePage = p1.clickSigninWithNoMovies();
 
     // Create a movie
@@ -54,7 +54,7 @@ describe('User create a movie', () => {
 
 describe('User create and update another movie', () => {
   it('should login, open the movie title form, add movie, then update it', () => {
-    const p1 = new LoginPage();
+    const p1 = new LoginViewPage();
     const p2: HomePage = p1.clickSigninWithMovies();
 
     // Assert movie from previous test exists
@@ -71,7 +71,7 @@ describe('User create and update another movie', () => {
 
 describe('User delete two movies', () => {
   it('should login, delete two movies, then assert that they are deleted', () => {
-    const p1 = new LoginPage();
+    const p1 = new LoginViewPage();
     const p2: HomePage = p1.clickSigninWithMovies();
 
     // Assert movies from previous test exist, delete them,

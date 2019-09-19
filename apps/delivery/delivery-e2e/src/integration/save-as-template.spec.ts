@@ -5,7 +5,7 @@ import {
   LandingPage,
   TemplateFormPage,
   TemplateListPage,
-  LoginPage,
+  LoginViewPage,
   DeliveryMaterialsPage,
   SaveAsTemplateModal
 } from '../support/pages';
@@ -24,7 +24,7 @@ beforeEach(() => {
   cy.visit('/auth');
   cy.viewport('macbook-15');
   const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();
 });

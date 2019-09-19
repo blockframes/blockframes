@@ -4,7 +4,7 @@ import {
   LandingPage,
   OrganizationFormPage,
   MovieCreatePage,
-  LoginPage,
+  LoginViewPage,
   OrganizationMemberPage
 } from '../support/pages';
 import { createOrganization, User } from '../support/utils/type';
@@ -19,7 +19,7 @@ beforeEach(() => {
   cy.visit('/auth');
   cy.viewport('macbook-15');
   const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithNoMovies();
 });

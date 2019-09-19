@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { User } from "../support/utils/type";
-import { LandingPage, LoginPage, HomePage, EditProfilePage } from "../support/pages";
+import { LandingPage, LoginViewPage, HomePage, EditProfilePage } from "../support/pages";
 
 
 const USER: Partial<User> = {
@@ -23,7 +23,7 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();
 });
@@ -73,7 +73,7 @@ describe('Test change password', () => {
     p2.confirmPassword(USER_UPDATED.password);
     p2.clickSave();
     p2.clickClose();
-    const p3: LoginPage = p2.clickLogout();
+    const p3: LoginViewPage = p2.clickLogout();
     p3.fillSignin(USER_UPDATED);
     p3.clickSigninWithMovies();
   });
