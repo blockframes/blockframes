@@ -1,5 +1,5 @@
 import HomePage from './HomePage';
-import OrganizationFormPage from './OrganizationFormPage';
+import OrganizationEditablePage from './organization/OrganizationEditablePage';
 import WelcomeViewPAge from './auth/WelcomeViewPage';
 import MovieCreatePage from './movie/MovieCreatePage';
 import EditProfilePage from './EditProfilePage';
@@ -24,7 +24,7 @@ import TemplateCreatePage from './template/TemplateCreatePage';
 
 export {
   HomePage,
-  OrganizationFormPage,
+  OrganizationEditablePage,
   WelcomeViewPAge,
   MovieCreatePage,
   EditProfilePage,

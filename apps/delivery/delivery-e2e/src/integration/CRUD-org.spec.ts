@@ -2,7 +2,7 @@
 
 import {
   WelcomeViewPAge,
-  OrganizationFormPage,
+  OrganizationEditablePage,
   MovieCreatePage,
   LoginViewPage,
   OrganizationMemberPage
@@ -29,7 +29,7 @@ describe('Test CRUD org', () => {
     const p1 = new MovieCreatePage();
     // Edit user's organization
     p1.openProfileMenu();
-    const p2: OrganizationFormPage = p1.clickOnOrganization();
+    const p2: OrganizationEditablePage = p1.clickOnOrganization();
     p2.clickEditButtion();
     p2.fillAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
     p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
