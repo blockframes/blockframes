@@ -1,22 +1,22 @@
-<h3 class="mat-title">Principal Informations</h3>
-<article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+<h3>Principal Informations</h3>
+<article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
   <!-- First Column -->
   <ul class="first-column">
     <ng-container *ngIf="main">
       <li fxLayout="row">
-        <b>Production Year</b>
+        <span><b>Production Year</b></span>
         <span>{{ main.productionYear }}</span>
       </li>
       <li fxLayout="row">
-        <b>International Title</b>
+        <span><b>International Title</b></span>
         <span>{{ main.title.international }}</span>
       </li>
       <li fxLayout="row">
-        <b>Original Title</b>
+        <span><b>Original Title</b></span>
         <span>{{ main.title.original }}</span>
       </li>
       <li fxLayout="row">
-        <b>Director</b>
+        <span><b>Director</b></span>
         <span *ngFor="let director of main.directors; let isLast=last">
           {{ director.lastName }} {{ director.firstName }} {{isLast ? '' : ', '}}
         </span>
@@ -27,7 +27,7 @@
   <ul class="second-column">
     <ng-container *ngIf="salesCast">
       <li fxLayout="row">
-        <b>Principal Cast</b>
+        <span><b>Principal Cast</b></span>
         <span *ngFor="let cast of salesCast.credits; let isLast=last">
           {{ cast.lastName }}{{ cast.firstName }} {{isLast ? '' : ', '}}
         </span>
@@ -35,14 +35,14 @@
     </ng-container>
     <ng-container *ngIf="main">
       <li fxLayout="row">
-        <b>Genre</b>
+        <span><b>Genre</b></span>
         <span *ngFor="let genre of main.genres; let isLast=last">
           {{ genre }}{{isLast ? '' : ', '}}
         </span>
       </li>
       <li fxLayout="row">
-        <b>Country of Origin</b>
-        {{ main.originCountry }}
+        <span><b>Country of Origin</b></span>
+        <span>{{ main.originCountry }}</span>
       </li>
     </ng-container>
   </ul>

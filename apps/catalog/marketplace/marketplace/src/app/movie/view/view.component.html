@@ -10,9 +10,9 @@
     </div>
   </header>
 
-  <section fxLayout="row" fxLayoutAlign="space-around">
+  <section fxLayout="row">
 
-    <div fxLayout="column">
+    <div fxLayout="column" class="poster-column">
       <section class="movie-presentation mat-elevation-z2">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
@@ -27,7 +27,7 @@
       </section>
     </div>
 
-    <div fxLayout="column">
+    <div fxLayout="column" class="information-column">
       <section fxLayout="row" fxLayoutAlign="start center" class="margin-top">
         <h2>Film Information</h2>
         <mat-divider fxFlex></mat-divider>
@@ -62,7 +62,7 @@
 
 
   <div fxLayout="row" fxLayoutAlign="center end">
-    <a test-id="distribution-right-link" mat-flat-button color="accent"
+    <a test-id="distribution-right-link" mat-flat-button color="primary"
       [routerLink]="['/layout/o/catalog', movie.id, 'create']">
       Create distribution right
     </a>
