@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 
@@ -9,6 +9,7 @@ import { MovieTitleFormComponent } from '../../components/movie-title-form/movie
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCreateComponent {
+  @HostBinding('attr.page-id') pageId = 'movie-create';
 
   constructor(private dialog: MatDialog) { }
 

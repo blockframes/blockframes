@@ -1,8 +1,8 @@
 import NavbarPage from "./NavbarPage";
-import MovieEditPage from "./MovieEditPage";
-import TemplateListPage from "./TemplateListPage";
+import MovieEditablePage from "./movie/MovieEditablePage";
+import TemplateListPage from "./template/TemplateListPage";
 import DeliveryListPage from "./DeliveryListPage";
-import AddMovieModal from "./AddMovieModal";
+import MovieTitleFormModal from "./movie/MovieTitleFormModal";
 import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
 import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
 
@@ -12,9 +12,9 @@ export default class HomePage extends NavbarPage {
     cy.get('[page-id=movie-list]', {timeout: 10000});
   }
 
-  public clickAddMovie(): AddMovieModal {
+  public clickAddMovie(): MovieTitleFormModal {
     cy.get('[page-id=movie-list] a[test-id=add-movie]').click();
-    return new AddMovieModal()
+    return new MovieTitleFormModal()
   }
 
   public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {
@@ -41,7 +41,7 @@ export default class HomePage extends NavbarPage {
 }
 
   public clickOnMovie(movieName: string) {
-    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
     return new DeliveryListPage();
   }
 
@@ -55,7 +55,7 @@ export default class HomePage extends NavbarPage {
 
   public clickEdit() {
     cy.get('[page-id=movie-list] button').should('contain', 'Edit').contains('Edit').click();
-    return new MovieEditPage();
+    return new MovieEditablePage();
   }
 
   public clickDelete() {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'auth-welcome-view',
@@ -9,4 +9,5 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 
 export class WelcomeViewComponent {
+  @HostBinding('attr.page-id') pageId = 'welcome-view';
 }

@@ -1,8 +1,8 @@
 import TemplateListPage from "./TemplateListPage";
-import { Material } from "../utils/type";
-import NavbarPage from "./NavbarPage";
+import { Material } from "../../utils/type";
+import NavbarPage from "../NavbarPage";
 
-export default class TemplateFormPage extends NavbarPage{
+export default class TemplateEditablePage extends NavbarPage{
   constructor() {
     super();
     cy.get('[page-id=template-editable]', {timeout: 10000});
@@ -86,10 +86,5 @@ export default class TemplateFormPage extends NavbarPage{
     cy.get('[page-id=template-material-list] tr').should( tr =>
       expect(tr).length(1)
     );
-  }
-
-  public selectTemplates() {
-    cy.get('a').contains('templates').click();
-    return new TemplateListPage();
   }
 }

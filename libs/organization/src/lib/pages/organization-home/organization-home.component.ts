@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
 import { Invitation, InvitationService, InvitationType } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
@@ -27,6 +27,7 @@ const invitationActionFromOrgToUser = (invitation: Invitation, action: () => voi
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHomeComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'organization-home';
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',

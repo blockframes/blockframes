@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieTitleFormComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'movie-create';
+  @HostBinding('attr.page-id') pageId = 'movie-title-form';
   public titleForm: FormGroup;
 
   constructor(

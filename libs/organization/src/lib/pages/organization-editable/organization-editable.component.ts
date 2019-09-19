@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { OrganizationQuery, OrganizationService, Organization } from '../../+state';
 import { PermissionsQuery } from '../../permissions/+state';
 import { OrganizationProfileForm } from '../../forms/organization-profile-edit-form';
@@ -13,6 +13,7 @@ import { startWith, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
   public organizationProfileForm: OrganizationProfileForm;
   public organization$: Observable<Organization>;

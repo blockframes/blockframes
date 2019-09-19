@@ -1,4 +1,4 @@
-import NewTemplatePage from './NewTemplatePage';
+import TemplateAddModal from './TemplateAddModal';
 
 export default class TemplateCreatePage {
   constructor() {
@@ -7,7 +7,6 @@ export default class TemplateCreatePage {
 
   public clickNewTemplate() {
     cy.get('[page-id=template-create] button').click();
-    return new NewTemplatePage();
+    return new TemplateAddModal();
   }
-
 }
