@@ -20,10 +20,12 @@
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
                 <mat-form-field apperance="outline" color="accent">
-                  <input test-id="production-year-input-from" matInput formControlName="from" placeholder="From" />
+                  <input test-id="production-year-input-from" matInput type="number" formControlName="from"
+                    placeholder="From" autocomplete="off" />
                 </mat-form-field>
                 <mat-form-field>
-                  <input test-id="production-year-input-to" matInput formControlName="to" placeholder="To" />
+                  <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
+                    autocomplete="off" />
                 </mat-form-field>
               </div>
             </mat-expansion-panel>
@@ -53,8 +55,8 @@
               <form formGroupName="languages" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="start start">
                   <mat-form-field color="accent" appearance="outline">
-                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
-                      placeholder="Add new language" [errorStateMatcher]="matcher" />
+                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
+                      [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
                     <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
                       Please enter a valid language or choose from the dropdown menu!
                     </mat-error>
@@ -80,8 +82,10 @@
                         <h3 class="mat-h3" mat-line>{{language}}</h3>
                         <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed</mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">Subtitles
+                        <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
+                        </mat-checkbox>
+                        <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                          Subtitles
                         </mat-checkbox>
                         <button mat-icon-button (click)="removeLanguage(language)">
                           <mat-icon>delete</mat-icon>
@@ -123,7 +127,8 @@
                 </mat-form-field>
                 <mat-form-field color="accent">
                   <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
-                  <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo"></mat-datepicker-toggle>
+                  <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
+                  </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
                 </mat-form-field>
               </div>
@@ -143,8 +148,8 @@
                     {{territory}}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                   </mat-chip>
-                  <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList" [formControl]="territoryControl">
+                  <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
+                    [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl">
                 </mat-chip-list>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
                   <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
@@ -187,15 +192,15 @@
         </button>
         <mat-form-field>
           <mat-label>Sort by</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let option of sortOptions" [value]="option" (click)="sortBy(option)">
+          <mat-select [formControl]="sortByControl">
+            <mat-option *ngFor="let option of sortOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="30px">
-        <ng-container *ngFor="let movie of sortedMovies">
+      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
+        <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
               <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
@@ -206,7 +211,7 @@
           </movie-card>
         </ng-container>
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-        <movie-display-list [movies]="sortedMovies" *ngIf="listView" (navigate)="goToDetails($event)">
+        <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
         </movie-display-list>
       </div>
     </article>
