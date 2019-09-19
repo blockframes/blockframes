@@ -87,9 +87,4 @@ export default class TemplateEditablePage extends NavbarPage{
       expect(tr).length(1)
     );
   }
-
-  public selectTemplates() {
-    cy.get('a').contains('templates').click();
-    return new TemplateListPage();
-  }
 }
