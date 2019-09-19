@@ -1,8 +1,8 @@
 import NavbarPage from "./NavbarPage";
 import MovieEditPage from "./MovieEditPage";
-import TemplateListPage from "./TemplateListPage";
+import TemplateListPage from "./template/TemplateListPage";
 import DeliveryListPage from "./DeliveryListPage";
-import AddMovieModal from "./AddMovieModal";
+import MovieTitleFormModal from "./movie/MovieTitleFormModal";
 import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
 import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
 
@@ -12,9 +12,9 @@ export default class HomePage extends NavbarPage {
     cy.get('[page-id=movie-list]', {timeout: 10000});
   }
 
-  public clickAddMovie(): AddMovieModal {
+  public clickAddMovie(): MovieTitleFormModal {
     cy.get('[page-id=movie-list] a[test-id=add-movie]').click();
-    return new AddMovieModal()
+    return new MovieTitleFormModal()
   }
 
   public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {

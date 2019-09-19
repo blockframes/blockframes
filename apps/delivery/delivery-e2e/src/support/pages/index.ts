@@ -1,10 +1,10 @@
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
 import WelcomeViewPAge from './auth/WelcomeViewPage';
-import MovieCreatePage from './MovieCreatePage';
+import MovieCreatePage from './movie/MovieCreatePage';
 import EditProfilePage from './EditProfilePage';
 import TemplateEditablePage from './template/TemplateEditablePage';
-import AddMovieModal from './AddMovieModal';
+import MovieTitleFormModal from './movie/MovieTitleFormModal';
 import MovieEditPage from './MovieEditPage';
 import TemplateListPage from './template/TemplateListPage';
 import DeliveryListPage from './DeliveryListPage';
@@ -29,7 +29,7 @@ export {
   MovieCreatePage,
   EditProfilePage,
   TemplateEditablePage,
-  AddMovieModal,
+  MovieTitleFormModal,
   MovieEditPage,
   TemplateListPage,
   DeliveryListPage,

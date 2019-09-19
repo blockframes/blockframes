@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, AddMovieModal, MovieEditPage, WelcomeViewPAge, MovieCreatePage, HomePage } from "../support/pages";
+import { LoginViewPage, MovieTitleFormModal, MovieEditPage, WelcomeViewPAge, MovieCreatePage, HomePage } from "../support/pages";
 import { User } from "../support/utils/type";
 
 // CONSTS
@@ -45,7 +45,7 @@ describe('User create a movie', () => {
     const p2: MovieCreatePage = p1.clickSigninWithNoMovies();
 
     // Create a movie
-    const p4: AddMovieModal = p2.clickAddMovie();
+    const p4: MovieTitleFormModal = p2.clickAddMovie();
     p4.fillMovieName(MOVIES_CYTEST[0]);
     const p5: MovieEditPage = p4.clickCreate();
     p5.assertMovieTitleExists(MOVIES_CYTEST[0])
@@ -61,7 +61,7 @@ describe('User create and update another movie', () => {
     p2.assertMovieExists(MOVIES_CYTEST[0])
 
     // Create a movie
-    const p3: AddMovieModal = p2.clickAddMovie();
+    const p3: MovieTitleFormModal = p2.clickAddMovie();
     p3.fillMovieName(MOVIES_CYTEST[1]);
     p3.clickCreate();
 
