@@ -1,9 +1,8 @@
 // Angular
 import { Router } from '@angular/router';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { MatAccordion } from '@angular/material';
 import { Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {
   Component,
   ChangeDetectionStrategy,
