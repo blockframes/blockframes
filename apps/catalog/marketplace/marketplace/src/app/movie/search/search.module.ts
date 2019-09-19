@@ -21,8 +21,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
-import { MatAutocomplete } from '@angular/material/autocomplete';
-import { MatAccordion } from '@angular/material/expansion';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -60,8 +58,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatDatepickerModule,
     MatOptionModule,
-    MatAccordion,
-    MatAutocomplete,
 
     RouterModule.forChild([
       {

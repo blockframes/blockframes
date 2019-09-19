@@ -2,14 +2,16 @@
 import { Router } from '@angular/router';
 import { Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAccordion } from '@angular/material/expansion';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding
+  HostBinding,
+  OnDestroy
 } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery } from '@blockframes/movie';
@@ -25,9 +27,9 @@ import {
   MEDIAS_LABEL,
   TERRITORIES_LABEL
 } from '@blockframes/movie/movie/static-model/types';
-import { languageValidator, StandardErrorStateMatcher } from '@blockframes/utils';
+import { languageValidator, StandardErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -39,8 +41,11 @@ import { filterMovie } from './filter.util';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit {
+export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
+
+  private subscription: Subscription;
+
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
 
@@ -62,8 +67,6 @@ export class MarketplaceSearchComponent implements OnInit {
 
   /* Data for UI */
   public movieGenres: GenresLabel[] = GENRES_LABEL;
-  public movieLanguages: LanguagesLabel[] = LANGUAGES_LABEL;
-  public movieTerritories: TerritoriesLabel[] = TERRITORIES_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
@@ -78,6 +81,19 @@ export class MarketplaceSearchComponent implements OnInit {
   ]);
   public territoryControl: FormControl = new FormControl();
   public sortByControl: FormControl = new FormControl('');
+
+  /* Observable to combine for the UI */
+  private sortBy$ = this.sortByControl.valueChanges.pipe(
+    startWith('All films'),
+    switchMap(sortIdentifier =>
+      this.movieQuery.selectAll({
+        sortBy: (a: Movie, b: Movie) => {
+          return sortMovieBy(a, b, sortIdentifier);
+        }
+      })
+    )
+  );
+  private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
 
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
@@ -99,36 +115,9 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(private movieQuery: MovieQuery, private router: Router) {}
 
   ngOnInit() {
-    this.movieSearchResults$ = combineLatest([
-      this.sortByControl.valueChanges.pipe(
-        startWith('All films'),
-        switchMap(sortIdentifier =>
-          this.movieQuery.selectAll({
-            sortBy: (a, b) => {
-              switch (sortIdentifier) {
-                case 'Title':
-                  return a.main.title.original.localeCompare(b.main.title.original);
-                case 'Director':
-                  return a.main.directors[0].lastName.localeCompare(b.main.directors[0].lastName);
-                case 'Production Year':
-                  if (b.main.productionYear < a.main.productionYear) {
-                    return -1;
-                  }
-                  if (b.main.productionYear > a.main.productionYear) {
-                    return 1;
-                  }
-                  return 0;
-              }
-            }
-          })
-        )
-      ),
-      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
-    ]).pipe(
+    this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
       map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
     );
-
-    this.movieSearchResults$.subscribe(movies => (this.availableMovies = movies.length));
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -140,6 +129,10 @@ export class MarketplaceSearchComponent implements OnInit {
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
+    );
+
+    this.subscription = this.movieSearchResults$.subscribe(
+      movies => (this.availableMovies = movies.length)
     );
   }
 
@@ -153,15 +146,13 @@ export class MarketplaceSearchComponent implements OnInit {
 
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
-    return this.movieTerritories.filter(movieTerritory => {
+    return TERRITORIES_LABEL.filter(movieTerritory => {
       return movieTerritory.toLowerCase().includes(filterValue);
     });
   }
 
   private _languageFilter(value: string): string[] {
-    return this.movieLanguages.filter(language =>
-      language.toLowerCase().includes(value.toLowerCase())
-    );
+    return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
   //////////////////
@@ -169,7 +160,7 @@ export class MarketplaceSearchComponent implements OnInit {
   //////////////////
 
   public addLanguage(language: LanguagesLabel) {
-    if (this.movieLanguages.includes(language)) {
+    if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(language);
     }
   }
@@ -217,5 +208,9 @@ export class MarketplaceSearchComponent implements OnInit {
     }
     this.filterForm.addTerritory(territory.option.viewValue as TerritoriesLabel);
     this.territoryInput.nativeElement.value = '';
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

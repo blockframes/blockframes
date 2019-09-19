@@ -10,7 +10,7 @@ import {
   NgForm
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LANGUAGES_LABEL } from '@blockframes/movie/movie/static-model/types';
+import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
 import { network } from '@env';
 import { orgNameToEnsDomain } from '../../helpers';
 
@@ -63,10 +63,15 @@ export async function UniqueOrgName(control: AbstractControl): Promise<Validatio
   return !orgAddress ? null : { notUnique: true };
 }
 
+  /* Checks if the language exists */
 export function languageValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  return !LANGUAGES_LABEL.includes(control.value) ? { languageNotSupported: true } : null;
+  return !LANGUAGES_SLUG.includes(control.value.trim().toLowerCase()) ? { languageNotSupported: true } : null;
 }
 
+/*
+ * Error state matcher which is just like in the docs from angular material.
+ * Basic usage for invalid, dirty and toched checks.
+ */
 export class StandardErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;

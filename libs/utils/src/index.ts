@@ -15,6 +15,7 @@ export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
 export * from './lib/imdb/service';
 export * from './lib/image-uploader';
+export * from './lib/akita-helper/sort-movie-by';
 // forms
 export * from './lib/form/forms/types';
 export * from './lib/form/forms/field.form';
