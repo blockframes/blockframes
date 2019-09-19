@@ -21,7 +21,7 @@ export class TemplateMaterialFormComponent{
 
   constructor(public controlContainer: ControlContainer) {}
 
-  public get control(): FormElement<MaterialControl> {
+  public get control() {
     return this.controlContainer.control as FormElement<MaterialControl>;
   }
 }
