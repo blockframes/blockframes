@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { DeliveryStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
 
 /**
  * Page for the flow: "create a delivery"
@@ -14,10 +12,10 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddFindMovieComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'movie-picker';
+
   constructor(
-    private router: Router,
-    private store: DeliveryStore,
-    private query: MovieQuery
+    private store: DeliveryStore
   ) {}
 
   ngOnInit(): void {

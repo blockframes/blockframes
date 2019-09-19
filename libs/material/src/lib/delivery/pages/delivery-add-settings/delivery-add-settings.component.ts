@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActionPickerListItem } from '@blockframes/ui';
 import { DeliveryOption, DeliveryQuery, DeliveryService, DeliveryStore } from '../../+state';
 import { TemplateQuery } from '../../../template/+state';
@@ -16,6 +16,8 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddSettingsComponent {
+  @HostBinding('attr.page-id') pageId = 'delivery-settings';
+
   public items: ActionPickerListItem<DeliveryOption>[] = [
     {
       title: 'Materials price list',
