@@ -1,4 +1,4 @@
-import { TemplateFormPage } from ".";
+import { TemplateEditablePage } from ".";
 
 export default class NewTemplatePage {
   constructor() {
@@ -11,6 +11,6 @@ export default class NewTemplatePage {
 
   public clickNext() {
     cy.get('[page-id=template-add] button[test-id=next]').click();
-    return new TemplateFormPage();
+    return new TemplateEditablePage();
   }
 }

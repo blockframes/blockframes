@@ -1,19 +1,19 @@
 import HomePage from './HomePage';
 import OrganizationFormPage from './OrganizationFormPage';
-import WelcomeViewPAge from './WelcomeViewPage';
+import WelcomeViewPAge from './auth/WelcomeViewPage';
 import MovieCreatePage from './MovieCreatePage';
 import EditProfilePage from './EditProfilePage';
 import TemplateDeleteModal from './TemplateDeleteModal';
-import TemplateFormPage from './TemplateFormPage';
+import TemplateEditablePage from './template/TemplateEditablePage';
 import AddMovieModal from './AddMovieModal';
 import MovieEditPage from './MovieEditPage';
-import TemplateListPage from './TemplateListPage';
+import TemplateListPage from './template/TemplateListPage';
 import AddTemplateModal from './AddTemplateModal';
 import DeliveryListPage from './DeliveryListPage';
 import DeliveryMaterialsPage from './DeliveryMaterialsPage';
 import NewTemplatePage from './NewTemplatePage';
 import DeliveryInformationPage from './DeliveryInformationPage';
-import LoginViewPage from './LoginViewPage';
+import LoginViewPage from './auth/LoginViewPage';
 import OrganizationMemberPage from './OrganizationMemberPage';
 import StarterPickerPage from './delivery-create-tunnel/StarterPickerPage';
 import SettingsPage from './delivery-create-tunnel/SettingsPage';
@@ -31,7 +31,7 @@ export {
   MovieCreatePage,
   EditProfilePage,
   TemplateDeleteModal,
-  TemplateFormPage,
+  TemplateEditablePage,
   AddMovieModal,
   MovieEditPage,
   TemplateListPage,

@@ -4,7 +4,7 @@ import {
   LoginViewPage,
   MovieCreatePage,
   NewTemplatePage,
-  TemplateFormPage,
+  TemplateEditablePage,
   TemplateListPage
 } from '../support/pages';
 import { User } from '../support/utils/type';
@@ -41,7 +41,7 @@ describe('Test CRUD template', () => {
 
     // create a new template
     p5.fillName(TEMPLATE_NAME_1);
-    const p6: TemplateFormPage = p5.clickNext();
+    const p6: TemplateEditablePage = p5.clickNext();
 
     // create a new material
     p6.addMaterial();
@@ -55,7 +55,7 @@ describe('Test CRUD template', () => {
     p7.assertTemplateExists(TEMPLATE_NAME_1);
 
     // re-open previous template
-    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
+    const p8: TemplateEditablePage = p7.editTemplate(TEMPLATE_NAME_1);
 
     // create another one
     p8.addMaterial();

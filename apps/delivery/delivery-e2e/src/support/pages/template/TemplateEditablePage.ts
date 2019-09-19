@@ -1,8 +1,8 @@
 import TemplateListPage from "./TemplateListPage";
-import { Material } from "../utils/type";
-import NavbarPage from "./NavbarPage";
+import { Material } from "../../utils/type";
+import NavbarPage from "../NavbarPage";
 
-export default class TemplateFormPage extends NavbarPage{
+export default class TemplateEditablePage extends NavbarPage{
   constructor() {
     super();
     cy.get('[page-id=template-editable]', {timeout: 10000});

@@ -1,4 +1,4 @@
-import TemplateFormPage from "./TemplateFormPage";
+import TemplateEditablePage from "./template/TemplateEditablePage";
 
 export default class AddTemplateModal {
   constructor() {
@@ -11,6 +11,6 @@ export default class AddTemplateModal {
 
   public clickCreate() {
     cy.get('[testId=templateCreate]').click();
-    return new TemplateFormPage();
+    return new TemplateEditablePage();
   }
 }

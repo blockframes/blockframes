@@ -3,7 +3,7 @@ import {
   DeliveryListPage,
   HomePage,
   WelcomeViewPAge,
-  TemplateFormPage,
+  TemplateEditablePage,
   TemplateListPage,
   LoginViewPage,
   DeliveryMaterialsPage,
@@ -42,7 +42,7 @@ describe('I m a user and I can save a delivery as template', () => {
     // Verify if the template exists and contains the right materials
     const p6: HomePage = p5.clickHome();
     const p7: TemplateListPage = p6.clickContextMenuTemplates();
-    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
+    const p8: TemplateEditablePage = p7.editTemplate(TEMPLATE_NAME_1);
     p8.assertMaterialExists(MATERIALS[0]);
 
     // Go to an other delivery and save it as overwriting the existing template
@@ -56,7 +56,7 @@ describe('I m a user and I can save a delivery as template', () => {
     // Verify if the template is overwrote with right materials
     const p14: HomePage = p13.clickHome();
     const p15: TemplateListPage = p14.clickContextMenuTemplates();
-    const p16: TemplateFormPage = p15.editTemplate(TEMPLATE_NAME_1);
+    const p16: TemplateEditablePage = p15.editTemplate(TEMPLATE_NAME_1);
     p16.assertMaterialExists(MATERIALS[1]);
     p16.assertMaterialExists(MATERIALS[2]);
   });
