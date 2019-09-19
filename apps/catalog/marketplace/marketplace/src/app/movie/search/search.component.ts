@@ -30,7 +30,7 @@ import {
 import { languageValidator, StandardErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest, Subscription } from 'rxjs';
-import { startWith, map, debounceTime, switchMap } from 'rxjs/operators';
+import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
@@ -60,7 +60,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   /* Array of sorting options */
   public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
-  public availableLimits: number[] = [18, 36, 54, 72];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
@@ -86,11 +85,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   private sortBy$ = this.sortByControl.valueChanges.pipe(
     startWith('All films'),
     switchMap(sortIdentifier =>
-      this.movieQuery.selectAll({
-        sortBy: (a: Movie, b: Movie) => {
-          return sortMovieBy(a, b, sortIdentifier);
-        }
-      })
+      this.movieQuery.selectAll({ sortBy: (a, b) => sortMovieBy(a, b, sortIdentifier) })
     )
   );
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
@@ -116,7 +111,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions)))
+      map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions))),
+      tap(movies => (this.availableMovies = movies.length))
     );
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
@@ -129,10 +125,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
-    );
-
-    this.subscription = this.movieSearchResults$.subscribe(
-      movies => (this.availableMovies = movies.length)
     );
   }
 

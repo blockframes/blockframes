@@ -1,219 +1,219 @@
-<!-- TODO(#838): Use HostBinding instead of root div -->
-<div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1 class="mat-display-3">Discover our selection</h1>
-  </header>
+<header fxLayout="column" fxLayoutAlign="center center">
+  <h1 class="mat-display-3">Discover our selection</h1>
+</header>
 
-  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
-    <!-- Search -->
-    <aside fxLayout="column" class="filter" [formGroup]="filterForm">
-      <mat-card>
-        <mat-card-title class="mat-h2">Filters</mat-card-title>
-        <mat-card-content>
-          <mat-accordion multi="true">
-            <!-- Production Year -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="production-year-panel">
-                  Production Year
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-                <mat-form-field apperance="outline" color="accent">
-                  <input test-id="production-year-input-from" matInput type="number" formControlName="from"
-                    placeholder="From" autocomplete="off" />
-                </mat-form-field>
-                <mat-form-field>
-                  <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
-                    autocomplete="off" />
-                </mat-form-field>
-              </div>
-            </mat-expansion-panel>
-
-            <!-- Genre Types -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="genres-panel">
-                  Genres
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <span>You can choose multiple genres</span>
-              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
-                <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
-                  {{genre}}
-                </mat-checkbox>
-              </div>
-            </mat-expansion-panel>
-
-            <!-- Languages -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="languages-panel">
-                  Languages
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <form formGroupName="languages" fxLayout="column">
-                <div fxLayout="row" fxLayoutAlign="start start">
-                  <mat-form-field color="accent" appearance="outline">
-                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-                      [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
-                    <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-                      Please enter a valid language or choose from the dropdown menu!
-                    </mat-error>
-                    <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-                      [disabled]="!languageControl.valid">
-                      <mat-icon>search</mat-icon>
-                    </button>
-                    <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
-                      <mat-option *ngFor="let language of languagesFilter | async" [value]="language">
-                        {{language}}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                  <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                    (click)="addLanguage(languageControl.value)">Add
-                    language
-                  </button>
-                </div>
-                <ng-container *ngIf="filterForm.get('languages').value">
-                  <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                    <ng-container *ngFor="let language of languages$ | async">
-                      <mat-list-item [formGroupName]="language">
-                        <h3 class="mat-h3" mat-line>{{language}}</h3>
-                        <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
-                        </mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
-                        </mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                          Subtitles
-                        </mat-checkbox>
-                        <button mat-icon-button (click)="removeLanguage(language)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </mat-list-item>
-                    </ng-container>
-                  </mat-list>
-                </ng-container>
-              </form>
-            </mat-expansion-panel>
-            <!-- Certifications -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="certifications-panel">
-                  Certifications
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <h6>You can choose multiple certifications</h6>
-              <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <mat-checkbox *ngFor="let certification of movieCertifications"
-                  (change)="checkCertification(certification)">{{certification}}
-                </mat-checkbox>
-              </span>
-            </mat-expansion-panel>
-
-            <!-- Availabilities -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="availabilities-panel">
-                  Availabilities
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
-                <mat-form-field apperance="outline" color="accent">
-                  <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
-                  <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
-                </mat-form-field>
-                <mat-form-field color="accent">
-                  <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
-                  <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
-                </mat-form-field>
-              </div>
-            </mat-expansion-panel>
-
-            <!-- Territories -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="territories-panel">
-                  Territories
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-form-field>
-                <mat-chip-list #chipList>
-                  <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectable"
-                    [removable]="removable" (removed)="removeTerritory(territory, i)">
-                    {{territory}}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                  </mat-chip>
-                  <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
-                    [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl">
-                </mat-chip-list>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
-                  <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
-                    {{territory}}
-                  </mat-option>
-                </mat-autocomplete>
+<section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
+  <!-- Search -->
+  <aside fxLayout="column" class="filter" [formGroup]="filterForm">
+    <mat-card>
+      <mat-card-title class="mat-h2">Filters</mat-card-title>
+      <mat-card-content>
+        <mat-accordion multi="true">
+          <!-- Production Year -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="production-year-panel">
+                Production Year
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
+              <mat-form-field apperance="outline" color="accent">
+                <input test-id="production-year-input-from" matInput type="number" formControlName="from"
+                  placeholder="From" autocomplete="off" />
               </mat-form-field>
-            </mat-expansion-panel>
+              <mat-form-field>
+                <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
+                  autocomplete="off" />
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
 
-            <!-- Mandate Medias -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="mandate-medias-panel">
-                  Mandate Medias
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
-                <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
-                  {{media}}
-                </mat-checkbox>
+          <!-- Genre Types -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="genres-panel">
+                Genres
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3 class="mat-h3">You can choose multiple genres</h3>
+            <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
+              <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
+                {{genre}}
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Languages -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="languages-panel">
+                Languages
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form formGroupName="languages" fxLayout="column">
+              <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field color="accent" appearance="outline">
+                  <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
+                    [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
+                    Please enter a valid language or choose from the dropdown menu!
+                  </mat-error>
+                  <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
+                    [disabled]="!languageControl.valid">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
+                    <mat-option *ngFor="let language of languagesFilter | async" [value]="language">
+                      {{language}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
+                  (click)="addLanguage(languageControl.value)">Add
+                  language
+                </button>
               </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </mat-card-content>
-      </mat-card>
-    </aside>
+              <ng-container *ngIf="filterForm.get('languages').value">
+                <mat-list [formGroup]="filterForm.get('languages')" role="list">
+                  <ng-container *ngFor="let language of languages$ | async">
+                    <mat-list-item [formGroupName]="language">
+                      <h3 class="mat-h3" mat-line>{{language}}</h3>
+                      <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
+                      </mat-checkbox>
+                      <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
+                      </mat-checkbox>
+                      <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                        Subtitles
+                      </mat-checkbox>
+                      <button mat-icon-button (click)="removeLanguage(language)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-list-item>
+                  </ng-container>
+                </mat-list>
+              </ng-container>
+            </form>
+          </mat-expansion-panel>
+          <!-- Certifications -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="certifications-panel">
+                Certifications
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h6 class="mat-h3">You can choose multiple certifications</h6>
+            <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-checkbox *ngFor="let certification of movieCertifications"
+                (change)="checkCertification(certification)">{{certification}}
+              </mat-checkbox>
+            </span>
+          </mat-expansion-panel>
 
-    <!-- List || card of result -->
-    <article>
-      <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <h3>Films</h3>
-        <mat-divider></mat-divider>
-        <button mat-icon-button (click)="listView = !listView">
-          <ng-container *ngIf="!listView">
-            <mat-icon>list</mat-icon>
-          </ng-container>
-          <ng-container *ngIf="listView">
-            <mat-icon>grid_on</mat-icon>
-          </ng-container>
-        </button>
-        <mat-form-field>
-          <mat-label>Sort by</mat-label>
-          <mat-select [formControl]="sortByControl">
-            <mat-option *ngFor="let option of sortOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
-        <ng-container *ngFor="let movie of movies">
-          <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
-            <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                {{ director.lastName }}
-              </mat-card-subtitle>
-              <span>Production Year {{ movie.main.productionYear }}</span>
-            </ng-container>
-          </movie-card>
+          <!-- Availabilities -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="availabilities-panel">
+                Availabilities
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
+              <mat-form-field apperance="outline" color="accent">
+                <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
+                <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field color="accent">
+                <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
+                <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Territories -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="territories-panel">
+                Territories
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-form-field>
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectable"
+                  [removable]="removable" (removed)="removeTerritory(territory, i)">
+                  {{territory}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
+                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl">
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
+                <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
+                  {{territory}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </mat-expansion-panel>
+
+          <!-- Mandate Medias -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="mandate-medias-panel">
+                Mandate Medias
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
+              <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
+                {{media}}
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+  </aside>
+
+  <!-- List || card of result -->
+  <article>
+    <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <h3 class="mat-h3">Films</h3>
+      <mat-divider></mat-divider>
+      <button mat-icon-button (click)="listView = !listView">
+        <ng-container *ngIf="!listView">
+          <mat-icon>list</mat-icon>
         </ng-container>
-        <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-        <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
-        </movie-display-list>
-      </div>
-    </article>
-  </section>
-</div>
+        <ng-container *ngIf="listView">
+          <mat-icon>grid_on</mat-icon>
+        </ng-container>
+      </button>
+      <mat-form-field>
+        <mat-label>Sort by</mat-label>
+        <mat-select [formControl]="sortByControl">
+          <mat-option *ngFor="let option of sortOptions" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
+      <ng-container *ngFor="let movie of movies">
+        <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
+          <ng-container movieInformation>
+            <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
+              {{ director.lastName }}
+            </mat-card-subtitle>
+            <span>Production Year {{ movie.main.productionYear }}</span>
+          </ng-container>
+        </movie-card>
+      </ng-container>
+      <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
+      <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
+      </movie-display-list>
+    </div>
+    <span fxLayout="row" fxLayoutAlign="end start">
+      <h6 class="mat-body">There are {{ availableMovies }} Movies in Bigger Boat!</h6>
+    </span>
+  </article>
+</section>
