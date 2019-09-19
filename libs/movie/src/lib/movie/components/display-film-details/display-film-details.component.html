@@ -1,30 +1,49 @@
-<h3 class="mat-title">Film details</h3>
-<article fxLayout="row" fxLayoutAlign="space-between start">
+<h3>Film details</h3>
+<article fxLayout="row" fxLayoutAlign="start center">
   <!-- First Column -->
   <ul class="first-column">
     <ng-container *ngIf="main">
-      <li fxLayout="row"><b>Length</b> <span>{{ main.length }} min</span></li>
-      <li fxLayout="row"><b>ISAN Number</b> <span>{{ main.isan }}</span></li>
+      <li fxLayout="row">
+        <span><b>Length</b></span>
+        <span>{{ main.length }} min</span>
+      </li>
+      <li fxLayout="row">
+        <span><b>ISAN Number</b></span>
+        <span>{{ main.isan }}</span>
+      </li>
     </ng-container>
     <ng-container>
-      <li fxLayout="row"><b>Color / Black & White</b> <span>{{ color }}</span></li>
-      <li fxLayout="row"><b>European Qualification</b><span>{{ europeanQualification }}</span></li>
+      <li fxLayout="row">
+        <span><b>Color / Black & White</b></span>
+        <span>{{ color }}</span>
+      </li>
+      <li fxLayout="row">
+        <span><b>European Qualification</b></span>
+        <span>{{ europeanQualification }}</span>
+      </li>
     </ng-container>
   </ul>
   <!-- Second Column -->
   <ul class="second-column">
     <ng-container *ngIf="salesInfo">
       <li fxLayout="row">
-        <b>Certifications</b>
+        <span><b>Certifications</b></span>
         <span *ngFor="let certification of salesInfo.certifications; let isLast=last">
           {{ certification }} {{isLast ? '' : ', '}}
         </span>
       </li>
-      <li fxLayout="row" class="overflow"><b>Rating</b> <span>{{ salesInfo.pegi }}</span></li>
-      <li fxLayout="row"><b>International Premiere</b> <span>{{ internationalPremiere }}</span></li>
       <li fxLayout="row">
-        <b>Release date in Origin Country</b>
-        <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span></li>
+        <span><b>Rating</b></span>
+        <span>{{ salesInfo.pegi }}</span>
+      </li>
+      <li fxLayout="row">
+        <span><b>International Premiere</b></span>
+        <span>{{ internationalPremiere }}</span>
+      </li>
+      <li fxLayout="row">
+        <span><b>Release date in Origin Country</b></span>
+        <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>
+      </li>
     </ng-container>
   </ul>
 </article>

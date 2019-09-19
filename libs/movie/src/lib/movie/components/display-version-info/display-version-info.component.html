@@ -1,10 +1,10 @@
-<h3 class="mat-title">Languages</h3>
+<h3>Languages</h3>
 <article fxLayout="row" fxLayoutAlign="space-between start">
   <!-- first column -->
   <ul class="first-column">
     <ng-container *ngIf="main">
       <li fxLayout="row">
-        <b>Original language(s)</b>
+        <span><b>Original language(s)</b></span>
         <span *ngFor="let languages of main.languages; let isLast=last">
           {{ languages }}{{isLast ? '' : ', '}}
         </span>
@@ -12,7 +12,7 @@
     </ng-container>
     <ng-container *ngIf="versionInfo">
       <li fxLayout="row">
-        <b>Available dubbing(s)</b>
+        <span><b>Available dubbing(s)</b></span>
         <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
           {{ dubbing }}{{isLast ? '' : ', '}}
         </span>
@@ -23,7 +23,7 @@
   <ul class="second-column">
     <ng-container *ngIf="versionInfo">
       <li fxLayout="row">
-        <b>Available subtitle(s)</b>
+        <span><b>Available subtitle(s)</b></span>
         <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
           {{ subtitle }}{{isLast ? '' : ', '}}
         </span>
