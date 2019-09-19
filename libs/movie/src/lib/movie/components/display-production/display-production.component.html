@@ -1,10 +1,10 @@
 <ng-container>
-  <h3 class="mat-title">Production</h3>
+  <h3>Production</h3>
   <article>
     <ul>
       <ng-container *ngIf="productionCompanies">
         <li fxLayout="row">
-          <b>Production Companie(s)</b>
+          <span><b>Production Companie(s)</b></span>
           <span *ngFor="let productionCompany of productionCompanies">
             {{ productionCompany.firstName }}
           </span>
@@ -12,7 +12,7 @@
       </ng-container>
       <ng-container *ngIf="broadcasterCoproducers">
         <li fxLayout="row">
-          <b>TV / Platform coproducer(s)</b>
+          <span><b>TV / Platform coproducer(s)</b></span>
           <span *ngFor="let broadcasterCoproducer of broadcasterCoproducers">
             {{ broadcasterCoproducer }}
           </span>
