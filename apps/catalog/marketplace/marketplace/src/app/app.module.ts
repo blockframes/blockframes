@@ -23,7 +23,7 @@ import { ProfileModule } from '@blockframes/account';
 import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
-import { NotificationModule } from 'libs/notification/notification.module';
+import { NotificationWidgetModule } from '@blockframes/notification';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -53,14 +53,14 @@ import { LayoutComponent } from './layout/layout.component';
     MatDividerModule,
 
     // Libraries
-    OrganizationModule, 
+    OrganizationModule,
     ToolbarModule,
-    MovieModule, 
+    MovieModule,
     AccountModule,
     ProfileModule,
     WalletModule,
     KeyManagerModule,
-    NotificationModule,
+    NotificationWidgetModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

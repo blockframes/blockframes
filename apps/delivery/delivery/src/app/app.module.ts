@@ -31,7 +31,7 @@ import { ProfileModule } from '@blockframes/account';
 import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
-import { NotificationModule } from 'libs/notification/notification.module';
+import { NotificationWidgetModule } from '@blockframes/notification';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -92,7 +92,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ProfileModule,
     WalletModule,
     KeyManagerModule,
-    NotificationModule,
+    NotificationWidgetModule,
     NoOrganizationModule,
 
     // Firebase

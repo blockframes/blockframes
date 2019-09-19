@@ -1,5 +1,4 @@
 import { firestore } from 'firebase/app';
-import { DocInformations } from 'libs/notification/notification/+state';
 type Timestamp = firestore.Timestamp;
 
 export interface Notification {

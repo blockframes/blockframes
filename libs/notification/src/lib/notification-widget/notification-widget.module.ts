@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Modules
+import { NotificationModule } from '../notification/notification.module';
+import { InvitationModule } from '../invitation/invitation.module';
+
 // Components
-import { NotificationListComponent } from './notification/notification-list/notification-list.component';
-import { NotificationItemComponent } from './notification/notification-item/notification-item.component';
-import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
-import { InvitationListComponent } from './invitation/invitation-list/invitation-list.component';
-import { InvitationItemComponent } from './invitation/invitation-item/invitation-item.component';
+import { NotificationWidgetComponent } from './notification-widget.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,16 +20,15 @@ import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
-    NotificationListComponent,
-    NotificationItemComponent,
     NotificationWidgetComponent,
-    InvitationListComponent,
-    InvitationItemComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+
+    NotificationModule,
+    InvitationModule,
 
     // Material
     MatIconModule,
@@ -41,4 +40,4 @@ import { MatListModule } from '@angular/material/list';
   ],
   exports: [NotificationWidgetComponent]
 })
-export class NotificationModule {}
+export class NotificationWidgetModule {}

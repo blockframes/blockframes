@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
-import { NotificationService, NotificationQuery, Notification } from 'libs/notification/notification/+state';
 import { Order } from '@datorama/akita';
+import { NotificationService, NotificationQuery, Notification } from '../+state';
 
 @Component({
   selector: 'notification-list',
