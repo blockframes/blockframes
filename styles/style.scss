@@ -57,3 +57,7 @@ p {
 main {
   height: 100%;
 }
+
+.warn-color {
+  color: mat-color($blockframes-theme-warn) !important;
+}
