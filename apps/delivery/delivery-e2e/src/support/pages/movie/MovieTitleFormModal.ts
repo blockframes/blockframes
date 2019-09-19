@@ -1,4 +1,4 @@
-import MovieEditPage from "../MovieEditPage";
+import MovieEditablePage from "./MovieEditablePage";
 
 export default class MovieTitleFormModal {
   constructor() {
@@ -12,6 +12,6 @@ export default class MovieTitleFormModal {
   public clickCreate() {
     cy.get('[page-id=movie-title-form]').get('button[test-id=movie-create]').click();
     cy.wait(1000);
-    return new MovieEditPage();
+    return new MovieEditablePage();
   };
 }

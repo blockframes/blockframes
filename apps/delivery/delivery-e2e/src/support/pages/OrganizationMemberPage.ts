@@ -15,7 +15,7 @@ export default class OrganizationMemberPage extends NavbarPage{
     }
 
     public assertInvitationPending(email: string) {
-      cy.get('[test-id=invitations-pending] mat-list-item').should((item) => expect(item).to.contain(email).length(1));
+      cy.get('[test-id=invitations-pending] mat-list-item', {timeout: 5000}).should((item) => expect(item).to.contain(email).length(1));
     }
 
     public removeInvitation(email: string) {

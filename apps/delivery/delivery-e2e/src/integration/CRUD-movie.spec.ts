@@ -1,23 +1,23 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, MovieTitleFormModal, MovieEditPage, WelcomeViewPAge, MovieCreatePage, HomePage } from "../support/pages";
+import { LoginViewPage, MovieTitleFormModal, MovieEditablePage, WelcomeViewPAge, MovieCreatePage, HomePage } from "../support/pages";
 import { User } from "../support/utils/type";
 
 // CONSTS
 
 const INPUTS_FORM = {
-  [MovieEditPage.FIELD_INTERNATIONAL_TITLE]: 'The terminator',
-  [MovieEditPage.FIELD_DIRECTORS]: ['Bruce'],
-  [MovieEditPage.FIELD_PRODUCTION_YEAR]: '2019',
+  [MovieEditablePage.FIELD_INTERNATIONAL_TITLE]: 'The terminator',
+  [MovieEditablePage.FIELD_DIRECTORS]: ['Bruce'],
+  [MovieEditablePage.FIELD_PRODUCTION_YEAR]: '2019',
 };
 
 const OPTIONS_FORM = {
-  [MovieEditPage.OPTION_TYPES]: ['fiction', 'documentary'],
-  [MovieEditPage.OPTION_GENRES]: ['thriller', 'horror'],
-  [MovieEditPage.OPTION_ORIGIN_COUNTRIES]: ['france'],
-  [MovieEditPage.OPTION_PRODUCER_COUNTRY]: ['france'],
-  [MovieEditPage.OPTION_LANGUAGES]: ['french'],
-  [MovieEditPage.OPTION_STATUS]: ['shooting']
+  [MovieEditablePage.OPTION_TYPES]: ['fiction', 'documentary'],
+  [MovieEditablePage.OPTION_GENRES]: ['thriller', 'horror'],
+  [MovieEditablePage.OPTION_ORIGIN_COUNTRIES]: ['france'],
+  [MovieEditablePage.OPTION_PRODUCER_COUNTRY]: ['france'],
+  [MovieEditablePage.OPTION_LANGUAGES]: ['french'],
+  [MovieEditablePage.OPTION_STATUS]: ['shooting']
 };
 
 const USER: Partial<User> = {
@@ -47,7 +47,7 @@ describe('User create a movie', () => {
     // Create a movie
     const p4: MovieTitleFormModal = p2.clickAddMovie();
     p4.fillMovieName(MOVIES_CYTEST[0]);
-    const p5: MovieEditPage = p4.clickCreate();
+    const p5: MovieEditablePage = p4.clickCreate();
     p5.assertMovieTitleExists(MOVIES_CYTEST[0])
   });
 });

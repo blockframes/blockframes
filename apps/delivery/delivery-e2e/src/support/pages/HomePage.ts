@@ -1,5 +1,5 @@
 import NavbarPage from "./NavbarPage";
-import MovieEditPage from "./MovieEditPage";
+import MovieEditablePage from "./movie/MovieEditablePage";
 import TemplateListPage from "./template/TemplateListPage";
 import DeliveryListPage from "./DeliveryListPage";
 import MovieTitleFormModal from "./movie/MovieTitleFormModal";
@@ -41,7 +41,7 @@ export default class HomePage extends NavbarPage {
 }
 
   public clickOnMovie(movieName: string) {
-    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
     return new DeliveryListPage();
   }
 
@@ -55,7 +55,7 @@ export default class HomePage extends NavbarPage {
 
   public clickEdit() {
     cy.get('[page-id=movie-list] button').should('contain', 'Edit').contains('Edit').click();
-    return new MovieEditPage();
+    return new MovieEditablePage();
   }
 
   public clickDelete() {
