@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Invitation } from '@blockframes/notification';
 
 @Component({
@@ -9,6 +9,7 @@ import { Invitation } from '@blockframes/notification';
 })
 
 export class MemberInvitationComponent {
+  @HostBinding('attr.page-id') pageId = 'member-invitation';
   @Output() declined = new EventEmitter<string>();
   @Input() invitations: Invitation[];
   @Input() isSuperAdmin: boolean;

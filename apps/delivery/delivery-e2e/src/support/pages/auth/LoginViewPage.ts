@@ -1,5 +1,5 @@
 import { User } from '../../utils/type';
-import OrganizationHomePage from '../OrganizationHomePage';
+import OrganizationHomePage from '../organization/OrganizationHomePage';
 import MovieCreatePage from '../movie/MovieCreatePage';
 import HomePage from '../HomePage';
 
