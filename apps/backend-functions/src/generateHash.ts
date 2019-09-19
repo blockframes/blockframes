@@ -1,8 +1,10 @@
-import { tmpNameSync } from 'tmp';
 import * as admin from 'firebase-admin';
-import { utils } from 'ethers';
-import * as fs from 'fs';
 import { ObjectMetadata } from 'firebase-functions/lib/providers/storage';
+import * as fs from 'fs';
+import { tmpNameSync } from 'tmp';
+
+import { keccak256 } from '@ethersproject/keccak256';
+
 import { db } from './internals/firebase';
 
 export const RE_IP_UPLOAD = /^ip\/(.+)\/version\/(.+)$/;
@@ -21,7 +23,7 @@ function readFile(p: string, encoding: string): Promise<string> {
 
 export const hashFile = async (p: string): Promise<string> => {
   const content = await readFile(p, 'hex');
-  return utils.keccak256('0x' + content);
+  return keccak256('0x' + content);
 };
 
 export const hashToFirestore = async (object: ObjectMetadata) => {
@@ -72,13 +74,16 @@ export const hashToFirestore = async (object: ObjectMetadata) => {
     timestamp: {
       txHash: null
     }
-
   };
 
   console.info('Updating our IP document', ipID, versionID, 'with:', x);
 
   return db.runTransaction(async tx => {
-    const versionRef = db.collection('ip').doc(ipID).collection('version').doc(versionID);
+    const versionRef = db
+      .collection('ip')
+      .doc(ipID)
+      .collection('version')
+      .doc(versionID);
 
     const current = await tx.get(versionRef);
     if (!current.exists) {

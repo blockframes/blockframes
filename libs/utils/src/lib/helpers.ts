@@ -3,6 +3,7 @@ import { baseEnsDomain, factoryContract } from "@env";
 import { Provider } from '@ethersproject/abstract-provider';
 import { ERC1077 } from '@blockframes/contracts';
 import { keccak256 } from '@ethersproject/keccak256';
+import { BigNumber } from '@ethersproject/BigNumber';
 
 export interface AddressParts {
   start: string;
@@ -83,7 +84,7 @@ export async function precomputeAddress(ensDomain: string, provider: Provider) {
  * @example numberToHexString(1337) = '0x539'
  */
 export function numberToHexString(num: number) {
-  return bigNumberify(num).toHexString();
+  return BigNumber.from(num).toHexString();
 }
 
 /**
