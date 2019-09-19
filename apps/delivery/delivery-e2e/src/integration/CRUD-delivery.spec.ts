@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
 import {
-  LoginPage,
-  LandingPage,
+  LoginViewPage,
+  WelcomeViewPage,
   HomePage,
   DeliveryInformationPage,
   StarterPickerPage,
@@ -75,8 +75,8 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
-  const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p1: WelcomeViewPage = new WelcomeViewPage();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();
 });

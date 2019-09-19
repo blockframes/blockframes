@@ -1,4 +1,4 @@
-import TemplateFormPage from "./TemplateFormPage";
+import TemplateEditablePage from "./TemplateEditablePage";
 
 export default class TemplateListPage {
 
@@ -12,7 +12,7 @@ export default class TemplateListPage {
   public editTemplate(name: string) {
     cy.get('[page-id=template-repertory] tr')
     .contains(name).click();
-    return new TemplateFormPage();
+    return new TemplateEditablePage();
   }
 
   public deleteTemplate(name: string) {

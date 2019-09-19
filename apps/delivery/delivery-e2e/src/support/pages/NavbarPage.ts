@@ -1,4 +1,4 @@
-import { HomePage, OrganizationFormPage, OrganizationMemberPage, LoginPage, TemplateListPage, TemplateCreatePage, EditProfilePage } from "./index";
+import { HomePage, OrganizationEditablePage, MemberEditablePage, LoginViewPage, TemplateListPage, TemplateCreatePage, EditProfilePage } from "./index";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -16,7 +16,7 @@ export default abstract class NavbarPage {
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
-    return new LoginPage();
+    return new LoginViewPage();
   }
 
   public clickHome() {
@@ -36,7 +36,7 @@ export default abstract class NavbarPage {
 
   public clickContextMenuMember() {
     cy.get('[page-id=navbar]').contains('member').click();
-    return new OrganizationMemberPage();
+    return new MemberEditablePage();
   }
 
   public clickContextMenuTemplates() {
@@ -46,7 +46,7 @@ export default abstract class NavbarPage {
 
   public clickOnOrganization() {
     cy.get('button[test-id=manage-organization]').click();
-    return new OrganizationFormPage();
+    return new OrganizationEditablePage();
   }
 
   public clickContextMenuTemplatesCreate() {

@@ -1,4 +1,4 @@
-<editable-sidenav test-id="content" page-id="organization-members" (closed)="opened = false" [opened]="opened">
+<editable-sidenav (closed)="opened = false" [opened]="opened">
   <!-- Content -->
   <ng-container content>
     <member-pending
@@ -10,7 +10,6 @@
     <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
     <member-invitation
-      test-id="invitations-pending"
       [invitations]="invitationsFromOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">

@@ -1,8 +1,8 @@
-import NavbarPage from "./NavbarPage";
+import NavbarPage from "../NavbarPage";
 
 export default class OrganizationHomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=join-the-community]', {timeout: 10000});
+    cy.get('[page-id=organization-home]', {timeout: 10000});
   }
 }

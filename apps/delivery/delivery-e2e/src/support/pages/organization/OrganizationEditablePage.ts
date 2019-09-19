@@ -1,6 +1,6 @@
-import NavbarPage from "./NavbarPage";
+import NavbarPage from "../NavbarPage";
 
-export default class OrganizationFormPage extends NavbarPage {
+export default class OrganizationEditablePage extends NavbarPage {
   constructor() {
     super();
     cy.get('[page-id=organization-editable]', {timeout: 10000})
