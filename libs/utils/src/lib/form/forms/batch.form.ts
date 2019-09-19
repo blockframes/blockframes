@@ -2,11 +2,11 @@ import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, filter, startWith } from 'rxjs/operators';
 
-type EntityControl<E = any> = {
+type ElementControl<E = any> = {
   [key in keyof Partial<E>]: AbstractControl;
 }
 
-export class FormParty<C extends EntityControl> extends FormGroup {
+export class FormElement<C extends ElementControl> extends FormGroup {
   get<K extends keyof C>(path: Extract<K, string>): C[K] {
     return super.get(path) as C[K];
   }
@@ -32,12 +32,16 @@ export class FormParty<C extends EntityControl> extends FormGroup {
   }
 }
 
-export abstract class FormBatch<E, C extends EntityControl<E>> extends FormGroup {
+export abstract class FormBatch<E, C extends ElementControl<E>> extends FormGroup {
   protected idKey = 'id';
   private active = new BehaviorSubject<string>(null);
   public active$ = this.active.asObservable();
 
-  abstract createControl(entity: Partial<E>): FormGroup;
+  abstract createControl(entity: Partial<E>): FormElement<C>;
+
+  get(path: string): FormElement<C> {
+    return super.get(path) as FormElement<C>;
+  }
 
   // Read
   public selectAll(): Observable<Partial<E[]>> {
@@ -52,9 +56,9 @@ export abstract class FormBatch<E, C extends EntityControl<E>> extends FormGroup
     return Object.values(this.value);
   }
 
-  public selectActiveForm(): Observable<FormParty<C>> {
+  public selectActiveForm(): Observable<FormElement<C>> {
     return this.active$.pipe(
-      map(active => this.get(active) as FormParty<C>)
+      map(active => this.get(active))
     );
   }
 
@@ -94,35 +98,3 @@ export abstract class FormBatch<E, C extends EntityControl<E>> extends FormGroup
     });
   }
 }
-
-// TODO: remove it
-// type BatchControl<E = any> = {
-//   [key in keyof Partial<E>]: AbstractControl;
-// }
-
-
-// class BatchTest<C extends BatchControl<E>, E> {
-//   selectActiveForm(): Observable<FormEntity<C>>;
-//   selectAll(): Observable<Partial<E>[]>;
-// }
-
-
-
-// function getControl() {
-//   return {
-//     name: new FormControl(''),
-//     list: new FormArray([])
-//   }
-// }
-
-// interface MyMovie {
-//   id: string;
-//   name: string;
-//   list: string[];
-//   displayName: string;
-// }
-
-// type MyControl = ReturnType<typeof getControl>;
-// const form = new BatchTest<MyControl, MyMovie>();
-
-// form.selectActiveForm().subscribe(formEntity => formEntity.get('name'));

@@ -15,7 +15,7 @@ import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { utils } from 'ethers';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
-import { FormParty } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-editable',
@@ -32,7 +32,7 @@ export class DeliveryEditableComponent implements OnInit {
   public pdfLink: string;
 
   public form = new MaterialForm();
-  public activeForm$: Observable<FormParty<MaterialControl>>;
+  public activeForm$: Observable<FormElement<MaterialControl>>;
 
   constructor(
     private materialQuery: MaterialQuery,
