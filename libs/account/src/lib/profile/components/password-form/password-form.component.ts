@@ -10,8 +10,7 @@ import { ControlContainer } from '@angular/forms';
 })
 
 export class PasswordFormComponent {
-
-  @HostBinding('attr.page-id') pageId = 'password-edit';
+  @HostBinding('attr.page-id') pageId = 'password-form';
 
   constructor(public controlContainer: ControlContainer) {}
 

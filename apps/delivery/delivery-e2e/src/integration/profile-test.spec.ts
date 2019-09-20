@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { User } from "../support/utils/type";
-import { WelcomeViewPage, LoginViewPage, HomePage, EditProfilePage } from "../support/pages";
+import { WelcomeViewPage, LoginViewPage, MovieListPage, ProfileEditablePage } from "../support/pages";
 
 
 const USER: Partial<User> = {
@@ -30,10 +30,10 @@ beforeEach(() => {
 
 describe('Test profile', () => {
   it('should login, navigate to profile, change several information', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();
-    const p2: EditProfilePage = p1.clickProfile();
+    const p2: ProfileEditablePage = p1.clickProfile();
     p2.clickEdit();
     p2.fillName(USER.name);
     p2.fillSurname(USER.surname);
@@ -63,10 +63,10 @@ describe('Test profile', () => {
 
 describe('Test change password', () => {
   it('should login, navigate to profile, change password', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();
-    const p2: EditProfilePage = p1.clickProfile();
+    const p2: ProfileEditablePage = p1.clickProfile();
     p2.editPassword();
     p2.currentPassword(USER.password);
     p2.newPassword(USER_UPDATED.password);

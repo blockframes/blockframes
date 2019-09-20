@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, MovieTitleFormModal, MovieEditablePage, WelcomeViewPage, MovieCreatePage, HomePage } from "../support/pages";
+import { LoginViewPage, MovieTitleFormModal, MovieEditablePage, WelcomeViewPage, MovieCreatePage, MovieListPage } from "../support/pages";
 import { User } from "../support/utils/type";
 
 // CONSTS
@@ -55,7 +55,7 @@ describe('User create a movie', () => {
 describe('User create and update another movie', () => {
   it('should login, open the movie title form, add movie, then update it', () => {
     const p1 = new LoginViewPage();
-    const p2: HomePage = p1.clickSigninWithMovies();
+    const p2: MovieListPage = p1.clickSigninWithMovies();
 
     // Assert movie from previous test exists
     p2.assertMovieExists(MOVIES_CYTEST[0])
@@ -72,7 +72,7 @@ describe('User create and update another movie', () => {
 describe('User delete two movies', () => {
   it('should login, delete two movies, then assert that they are deleted', () => {
     const p1 = new LoginViewPage();
-    const p2: HomePage = p1.clickSigninWithMovies();
+    const p2: MovieListPage = p1.clickSigninWithMovies();
 
     // Assert movies from previous test exist, delete them,
     // then assert movies don't exist anymore

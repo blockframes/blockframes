@@ -3,7 +3,7 @@
 import {
   LoginViewPage,
   WelcomeViewPage,
-  HomePage,
+  MovieListPage,
   DeliveryInformationsEditablePage,
   StarterPickerPage,
   SettingsPage,
@@ -83,7 +83,7 @@ beforeEach(() => {
 
 describe('User create a delivery selecting a movie', () => {
   it('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
     const p2: StarterPickerPage = p1.clickOnMovieWithNoDeliveries(MOVIES_CYTEST[0]);
     const p3: SettingsPage = p2.clickFromScratchStarter();
     p3.selectSetting(DELIVERY_SETTINGS[1]);
@@ -94,7 +94,7 @@ describe('User create a delivery selecting a movie', () => {
 
 describe('User create a delivery from context-menu item', () => {
   it('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
     const p2: MoviePickerPage = p1.selectAddDeliveryTab();
     const p3: StarterPickerPage = p2.pickMovie(MOVIES_CYTEST[1]);
     const p4: TemplatePickerPage = p3.clickTemplateStarter();
@@ -109,7 +109,7 @@ describe('User create a delivery from context-menu item', () => {
 
 describe('User create a delivery on a movie who already got deliveries', () => {
   it('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: StarterPickerPage = p2.clickAddDelivery();
     const p4: SettingsPage = p3.clickMaterialsStarter();
@@ -123,7 +123,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
 
 describe('User update deliveries informations', () => {
   it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
     const p4: DeliveryInformationsEditablePage = p3.clickContextMenuInformation();
@@ -143,7 +143,7 @@ describe('User update deliveries informations', () => {
 
 describe('User delete a delivery', () => {
   it('should login, click on the second movie card, then delete a delivery', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
     const p4: ConfirmModal = p3.clickDeleteDelivery();

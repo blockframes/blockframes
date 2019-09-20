@@ -1,16 +1,26 @@
-import { HomePage, OrganizationEditablePage, MemberEditablePage, LoginViewPage, TemplateListPage, TemplateCreatePage, EditProfilePage, DeliveryListPage, DeliveryInformationsEditablePage } from "./index";
+import { MovieListPage, OrganizationEditablePage, MemberEditablePage, LoginViewPage, TemplateListPage, TemplateCreatePage, ProfileEditablePage, DeliveryListPage, DeliveryInformationsEditablePage } from "./index";
 
 export default abstract class NavbarPage {
   constructor() {
     cy.get('[page-id=navbar]', { timeout: 10000 });
   }
 
-  public assertIsEncrypting() {
-    cy.get('mat-chip').contains('ENCRYPTING');
+  public clickHome() {
+    cy.get('[page-id=navbar] button[test-id=home]').click();
+    return new MovieListPage();
   }
+
+  ////////////////////
+  /// Profile Menu ///
+  ////////////////////
 
   public openProfileMenu() {
     cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
+  }
+
+  public clickProfile() {
+    cy.get('button[test-id=profile]').click();
+    return new ProfileEditablePage();
   }
 
   public clickLogout() {
@@ -19,20 +29,6 @@ export default abstract class NavbarPage {
     return new LoginViewPage();
   }
 
-  public clickHome() {
-    cy.get('[page-id=navbar] button[test-id=home]').click();
-    return new HomePage();
-  }
-
-  public openNotifications() {
-    cy.wait(2000);
-    cy.get('.notification-button').click();
-  }
-
-  public clickProfile() {
-    cy.get('button[testId=buttonProfile]').click();
-    return new EditProfilePage();
-  }
 
   public clickOnOrganization() {
     cy.get('button[test-id=manage-organization]').click();

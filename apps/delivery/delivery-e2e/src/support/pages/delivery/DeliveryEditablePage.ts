@@ -1,7 +1,7 @@
 import NavbarPage from "../NavbarPage";
 import { Material } from "../../utils/type";
 import ConfirmModal from "../ConfirmModal";
-import SaveAsTemplateModal from "../SaveAsTemplateModal";
+import SaveAsTemplateModal from "./SaveAsTemplateModal";
 
 export default class DeliveryEditablePage extends NavbarPage {
   constructor() {

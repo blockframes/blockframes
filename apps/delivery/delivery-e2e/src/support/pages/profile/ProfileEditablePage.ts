@@ -1,6 +1,6 @@
-import NavbarPage from "./NavbarPage";
+import NavbarPage from "../NavbarPage";
 
-export default class EditProfilePage extends NavbarPage {
+export default class ProfileEditablePage extends NavbarPage {
   constructor() {
     super();
     cy.get('[page-id=profile-editable]', {timeout: 10000});
@@ -24,12 +24,6 @@ export default class EditProfilePage extends NavbarPage {
 
   public fillPosition(value: string) {
     cy.get(`[page-id=profile-form] input[test-id="position-form"]`).clear().type(value);
-  }
-
-  public assertEmailExists(value: string) {
-    cy.get(`[page-id=profile-form] input[formControlName=email]`).should(input => {
-      expect(input.val()).to.contain(value);
-    })
   }
 
   public assertNameExists(value: string) {
@@ -61,15 +55,15 @@ export default class EditProfilePage extends NavbarPage {
   //////////////////
 
   public currentPassword(value: string) {
-    cy.get(`[page-id=password-edit] input[test-id="current-password"]`).clear().type(value);
+    cy.get(`[page-id=password-form] input[test-id="current-password"]`).clear().type(value);
   }
 
   public newPassword(value: string) {
-    cy.get(`[page-id=password-edit] input[test-id="password"]`).clear().type(value);
+    cy.get(`[page-id=password-form] input[test-id="password"]`).clear().type(value);
   }
 
   public confirmPassword(value: string) {
-    cy.get(`[page-id=password-edit] input[test-id="password-confirm"]`).clear().type(value);
+    cy.get(`[page-id=password-form] input[test-id="password-confirm"]`).clear().type(value);
   }
 
   /////////////////
@@ -93,10 +87,6 @@ export default class EditProfilePage extends NavbarPage {
     cy.get('[page-id=profile-form]', {timeout: 2000});
   }
 
-  public assertDisplayEmailExists(email: string) {
-    cy.get('div').contains('Email').parent().find('span').contains(email);
-  }
-
   public assertDisplayNameExists(value: string) {
     cy.get(`[page-id=profile-display] mat-card`).find('h4').contains(value);
   }
@@ -113,16 +103,8 @@ export default class EditProfilePage extends NavbarPage {
     cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
   }
 
-  public assertIdIsAddress() {
-    cy.get('label').first().contains('Id');
-
-    cy.get('#mat-input-5', {timeout: 60000}).should(($input) => {
-      expect($input.val()).to.match(/0x[a-zA-Z\d]{40}/); // ethereum address regex
-    });
-  }
-
   public editPassword() {
     cy.get('[page-id=profile-display] button[test-id="change-password"]').click();
-    cy.get('[page-id=password-edit]', {timeout: 2000});
+    cy.get('[page-id=password-form]', {timeout: 2000});
   }
 }

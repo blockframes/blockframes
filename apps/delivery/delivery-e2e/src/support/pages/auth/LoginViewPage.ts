@@ -1,7 +1,8 @@
 import { User } from '../../utils/type';
 import OrganizationHomePage from '../organization/OrganizationHomePage';
 import MovieCreatePage from '../movie/MovieCreatePage';
-import HomePage from '../HomePage';
+import MovieListPage from '../movie/MovieListPage';
+
 
 export default class LoginViewPage {
   constructor() {
@@ -37,7 +38,7 @@ export default class LoginViewPage {
 
   public clickSigninWithMovies() {
     cy.get('[page-id=signin-form] button[type=submit]').click();
-    return new HomePage();
+    return new MovieListPage();
   }
 
 }

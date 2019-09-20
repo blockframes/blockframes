@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 import {
   DeliveryListPage,
-  HomePage,
+  MovieListPage,
   WelcomeViewPage,
   TemplateEditablePage,
   TemplateListPage,
@@ -32,7 +32,7 @@ beforeEach(() => {
 describe('I m a user and I can save a delivery as template', () => {
   it('should login, go to a delivery, save it as a new template, go to an other delivery and save it as uptade existing template', () => {
     // Go to the first delivery and save it as new template
-    const p1 = new HomePage();
+    const p1 = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovie(MOVIE_CYTEST);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORG_CYTEST);
     const p4: SaveAsTemplateModal = p3.clickSaveAsTemplate();
@@ -40,13 +40,13 @@ describe('I m a user and I can save a delivery as template', () => {
     const p5: DeliveryEditablePage = p4.clickSave();
 
     // Verify if the template exists and contains the right materials
-    const p6: HomePage = p5.clickHome();
+    const p6: MovieListPage = p5.clickHome();
     const p7: TemplateListPage = p6.clickContextMenuTemplates();
     const p8: TemplateEditablePage = p7.editTemplate(TEMPLATE_NAME_1);
     p8.assertMaterialExists(MATERIALS[0]);
 
     // Go to an other delivery and save it as overwriting the existing template
-    const p9: HomePage = p8.clickHome();
+    const p9: MovieListPage = p8.clickHome();
     const p10: DeliveryListPage = p9.clickOnMovie(MOVIE_CYTEST);
     const p11: DeliveryEditablePage = p10.clickLastDelivery(ORG_CYTEST);
     const p12: SaveAsTemplateModal = p11.clickSaveAsTemplate();
@@ -54,7 +54,7 @@ describe('I m a user and I can save a delivery as template', () => {
     const p13: DeliveryEditablePage = p12.clickUpdate();
 
     // Verify if the template is overwrote with right materials
-    const p14: HomePage = p13.clickHome();
+    const p14: MovieListPage = p13.clickHome();
     const p15: TemplateListPage = p14.clickContextMenuTemplates();
     const p16: TemplateEditablePage = p15.editTemplate(TEMPLATE_NAME_1);
     p16.assertMaterialExists(MATERIALS[1]);

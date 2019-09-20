@@ -1,4 +1,4 @@
-import DeliveryEditablePage from "./delivery/DeliveryEditablePage";
+import DeliveryEditablePage from "./DeliveryEditablePage";
 
 export default class SaveAsTemplateModal {
   constructor() {

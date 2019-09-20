@@ -23,7 +23,6 @@ export default class MemberEditablePage extends NavbarPage{
     }
 
     public assertInvitationNotExists() {
-      cy.wait(1000);
-      cy.get('[page-id=member-invitation] mat-list-item').should((item) => expect(item).to.have.length(0));
+      cy.get('[page-id=member-invitation] mat-list-item', {timeout: 2000}).should((item) => expect(item).to.have.length(0));
     }
 }

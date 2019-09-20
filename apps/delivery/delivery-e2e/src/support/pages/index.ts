@@ -1,8 +1,8 @@
-import HomePage from './HomePage';
+import MovieListPage from './movie/MovieListPage';
 import OrganizationEditablePage from './organization/OrganizationEditablePage';
 import WelcomeViewPage from './auth/WelcomeViewPage';
 import MovieCreatePage from './movie/MovieCreatePage';
-import EditProfilePage from './EditProfilePage';
+import ProfileEditablePage from './profile/ProfileEditablePage';
 import TemplateEditablePage from './template/TemplateEditablePage';
 import MovieTitleFormModal from './movie/MovieTitleFormModal';
 import MovieEditablePage from './movie/MovieEditablePage';
@@ -18,16 +18,16 @@ import SettingsPage from './delivery-create-tunnel/SettingsPage';
 import MoviePickerPage from './delivery-create-tunnel/MoviePickerPage';
 import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
 import ConfirmModal from './ConfirmModal';
-import SaveAsTemplateModal from './SaveAsTemplateModal';
+import SaveAsTemplateModal from './delivery/SaveAsTemplateModal';
 import OrganizationHomePage from './organization/OrganizationHomePage';
 import TemplateCreatePage from './template/TemplateCreatePage';
 
 export {
-  HomePage,
+  MovieListPage,
   OrganizationEditablePage,
   WelcomeViewPage,
   MovieCreatePage,
-  EditProfilePage,
+  ProfileEditablePage,
   TemplateEditablePage,
   MovieTitleFormModal,
   MovieEditablePage,

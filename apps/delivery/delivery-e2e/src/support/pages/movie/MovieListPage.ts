@@ -1,12 +1,12 @@
-import NavbarPage from "./NavbarPage";
-import MovieEditablePage from "./movie/MovieEditablePage";
-import TemplateListPage from "./template/TemplateListPage";
-import DeliveryListPage from "./delivery/DeliveryListPage";
-import MovieTitleFormModal from "./movie/MovieTitleFormModal";
-import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
-import MoviePickerPage from "./delivery-create-tunnel/MoviePickerPage";
+import NavbarPage from "../NavbarPage";
+import MovieEditablePage from "./MovieEditablePage";
+import TemplateListPage from "../template/TemplateListPage";
+import DeliveryListPage from "../delivery/DeliveryListPage";
+import MovieTitleFormModal from "./MovieTitleFormModal";
+import StarterPickerPage from "../delivery-create-tunnel/StarterPickerPage";
+import MoviePickerPage from "../delivery-create-tunnel/MoviePickerPage";
 
-export default class HomePage extends NavbarPage {
+export default class MovieListPage extends NavbarPage {
   constructor() {
     super();
     cy.get('[page-id=movie-list]', {timeout: 10000});
@@ -38,7 +38,7 @@ export default class HomePage extends NavbarPage {
 
   public assertMovieNotExists(movieName: string) {
     cy.contains(movieName).should('have.length', 0);
-}
+  }
 
   public clickOnMovie(movieName: string) {
     cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
@@ -49,21 +49,7 @@ export default class HomePage extends NavbarPage {
     cy.get('[page-id=movie-list] div').contains(movieName).parent().find('button').click();
   }
 
-  public clickOpenIn() {
-    cy.get('[page-id=movie-list] button span').should('contain', 'Open in...').contains('Open in...').click();
-  }
-
-  public clickEdit() {
-    cy.get('[page-id=movie-list] button').should('contain', 'Edit').contains('Edit').click();
-    return new MovieEditablePage();
-  }
-
   public clickDelete() {
     cy.get('[page-id=movie-list] button').should('contain', 'Delete').contains('Delete').click();
-  }
-
-  public selectTemplates() {
-    cy.get('[page-id=navbar] .mat-tab-links').get('a').contains('templates').click();
-    return new TemplateListPage();
   }
 }
