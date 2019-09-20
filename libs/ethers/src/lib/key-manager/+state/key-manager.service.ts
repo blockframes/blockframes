@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { KeyManagerStore } from './key-manager.store';
 import { getDefaultProvider } from 'ethers';
 import { Contract } from '@ethersproject/contracts';
-import { Wallet as EthersWallet } from '@ethersproject/wallet';
+
+// import from @ethersproject cause a weird runtime error : 'global' is undefined
+import { Wallet as EthersWallet } from 'ethers';
+
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
