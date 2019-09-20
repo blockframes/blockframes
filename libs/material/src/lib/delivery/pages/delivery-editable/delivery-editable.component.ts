@@ -13,7 +13,7 @@ import { ConfirmComponent } from '@blockframes/ui';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
-import { id } from '@ethersproject/hash';
+import { id as keccak256 } from '@ethersproject/hash';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormElement } from '@blockframes/utils';
 
@@ -222,7 +222,7 @@ export class DeliveryEditableComponent implements OnInit {
     const materials = this.materialQuery.getAll();
     const jsonMaterials = JSON.stringify(materials);
 
-    const deliveryHash = id(jsonDelivery + jsonMaterials); // id(string) is ethers's keccak256 hash on a string
+    const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
     const orgAddress = await this.organizationService.getAddress();
     const orgId = this.organizationQuery.getValue().org.id;
 

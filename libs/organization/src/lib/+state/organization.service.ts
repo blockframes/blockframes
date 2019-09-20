@@ -21,7 +21,7 @@ import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Log, Filter } from '@ethersproject/abstract-provider'
-import { namehash, id } from '@ethersproject/hash';
+import { namehash, id as keccak256 } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
@@ -245,7 +245,7 @@ export class OrganizationService {
           this.provider.on(getFilterFromTopics(relayer.registryAddress, [
             newOwnerTopic,
             namehash(baseEnsDomain),
-            id(getNameFromENS(organizationENS)) // id(string) is ether's keccak256 hash on a string
+            keccak256(getNameFromENS(organizationENS))
           ]), () => {
             this.store.update({deployStep: DeploySteps.registered});
           });
@@ -265,7 +265,7 @@ export class OrganizationService {
           resolve();
         }
       });
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), id(getNameFromENS(organizationENS))]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
       this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
       this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
