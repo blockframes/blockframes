@@ -1,9 +1,10 @@
 import { toASCII } from "punycode";
 import { baseEnsDomain, factoryContract } from "@env";
-import { Provider } from '@ethersproject/abstract-provider';
+import { keccak256 } from '@ethersproject/keccak256'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Provider } from '@ethersproject/providers'
+import { toUtf8Bytes } from '@ethersproject/strings'
 import { ERC1077 } from '@blockframes/contracts';
-import { keccak256 } from '@ethersproject/keccak256';
-import { BigNumber } from '@ethersproject/BigNumber';
 
 export interface AddressParts {
   start: string;
