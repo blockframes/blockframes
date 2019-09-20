@@ -11,7 +11,7 @@ import {
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, numberValidator } from '@blockframes/utils';
+import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -77,6 +77,7 @@ function createLanguageControl(language: MovieLanguage) {
     subtitle: new FormControl(language.subtitle)
   });
 }
+
 function createCatalogSearchControl(search: CatalogSearch) {
   // Create controls for the languages
   const languageControl = Object.keys(search.languages).reduce(
@@ -87,26 +88,25 @@ function createCatalogSearchControl(search: CatalogSearch) {
     {}
   );
   return {
-    productionYear: new FormGroup({
-      from: new FormControl(search.productionYear.from, [
-        Validators.max(new Date().getFullYear()),
-        Validators.minLength(4),
-        Validators.maxLength(5),
-        numberValidator
-      ]),
-      to: new FormControl(search.productionYear.to, [
-        Validators.max(new Date().getFullYear()),
-        Validators.minLength(4),
-        Validators.maxLength(5),
-        numberValidator
-      ])
-    }),
-    availabilities: new FormGroup({
-      from: new FormControl(search.availabilities.from, [
-        Validators.min(new Date().getFullYear())
-      ]),
-      to: new FormControl(search.availabilities.to)
-    }),
+    productionYear: new FormGroup(
+      {
+        from: new FormControl(search.productionYear.from, [
+          yearValidators,
+          Validators.max(new Date().getFullYear())
+        ]),
+        to: new FormControl(search.productionYear.to, [yearValidators])
+      },
+      numberRangeValidator('from', 'to')
+    ),
+    availabilities: new FormGroup(
+      {
+        from: new FormControl(search.availabilities.from, [
+          Validators.min(new Date().getFullYear())
+        ]),
+        to: new FormControl(search.availabilities.to)
+      },
+      numberRangeValidator('from', 'to')
+    ),
     type: new FormControl(search.type),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),

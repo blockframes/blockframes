@@ -27,7 +27,7 @@ import {
   MEDIAS_LABEL,
   TERRITORIES_LABEL
 } from '@blockframes/movie/movie/static-model/types';
-import { languageValidator, StandardErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
+import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
@@ -101,7 +101,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Number of available movies in the database */
   public availableMovies: number;
 
-  public matcher = new StandardErrorStateMatcher();
+  public matcher = new ControlErrorStateMatcher();
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -130,6 +130,42 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public goToMovieDetails(id: string) {
     this.router.navigateByUrl(`layout/o/catalog/${id}`);
+  }
+
+  public get getCurrentYear(): number {
+    return new Date().getFullYear();
+  }
+
+  /**
+   * @description function for determine if FormGroup error should be shown.
+   * We want to show this error only, if the children controls don't have any error.
+   * @param formGroupName name of the form group which determine the logic.
+   */
+  public showFormGroupError(formGroupName: string): boolean {
+    if (formGroupName === 'productionYear') {
+      return !this.filterForm
+        .get('productionYear')
+        .get('from')
+        .hasError('pattern') &&
+        !this.filterForm
+          .get('productionYear')
+          .get('from')
+          .hasError('max') &&
+        (!this.filterForm
+          .get('productionYear')
+          .get('to')
+          .hasError('pattern') &&
+          this.filterForm.get('productionYear').hasError('invalidRange'))
+        ? true
+        : false;
+    } else {
+      return !this.filterForm
+        .get('availabilities')
+        .get('from')
+        .hasError('min') && this.filterForm.get('availabilities').hasError('invalidRange')
+        ? true
+        : false;
+    }
   }
 
   ////////////////////

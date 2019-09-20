@@ -26,12 +26,12 @@ function hasLanguage(
     original = movie.main.languages.includes(language.name.toLowerCase());
   }
   if (language.dubbed) {
-    dubbed = movie.versionInfo.dubbings.includes((language.name.toLowerCase()));
+    dubbed = movie.versionInfo.dubbings.includes(language.name.toLowerCase());
   }
   if (language.subtitle) {
     subtitle = movie.versionInfo.subtitles.includes(language.name.toLowerCase());
   }
-  return (original && dubbed && subtitle);
+  return original && dubbed && subtitle;
 }
 
 function types(movie: Movie, movieGenre: string[]): boolean {

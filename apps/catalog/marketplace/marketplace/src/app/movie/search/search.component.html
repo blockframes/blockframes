@@ -10,22 +10,35 @@
       <mat-card-content>
         <mat-accordion multi="true">
           <!-- Production Year -->
-          <mat-expansion-panel>
+          <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="production-year-panel">
                 Production Year
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
+              <!-- TODO##968 -->
               <mat-form-field apperance="outline" color="accent">
                 <input test-id="production-year-input-from" matInput type="number" formControlName="from"
-                  placeholder="From" autocomplete="off" />
+                  placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
+                  Please type in a valid year. Example: <i>{{ getCurrentYear }}</i>
+                </mat-error>
+                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
+                  The year can't be above the current year, {{ getCurrentYear }}
+                </mat-error>
               </mat-form-field>
               <mat-form-field>
                 <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
-                  autocomplete="off" />
+                  autocomplete="off" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
+                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
+                </mat-error>
               </mat-form-field>
             </div>
+            <mat-error *ngIf="showFormGroupError('productionYear')">
+              The value <i>To</i> can't be smaller then the value <i>From</i>!
+            </mat-error>
           </mat-expansion-panel>
 
           <!-- Genre Types -->
@@ -119,6 +132,9 @@
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
               <mat-form-field apperance="outline" color="accent">
                 <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
+                <mat-error *ngIf="filterForm.get('availabilities').get('from').hasError('min')">
+                  You only can choose the current year and above.
+                </mat-error>
                 <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
                 </mat-datepicker-toggle>
                 <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
@@ -127,9 +143,12 @@
                 <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="to" />
                 <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
                 </mat-datepicker-toggle>
-                <mat-datepicker #pickerAvailableTo startView="multi-year"></mat-datepicker>
+                <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2019"></mat-datepicker>
               </mat-form-field>
             </div>
+            <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
+              The value <i>To</i> can't be smaller then the value <i>From</i>!
+            </mat-error>
           </mat-expansion-panel>
 
           <!-- Territories -->

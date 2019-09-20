@@ -20,7 +20,7 @@ export const stringValidators = [];
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
-export const yearValidators = [Validators.pattern('^[1-2][0-9]{3}$')];
+export const yearValidators = Validators.pattern('^[1-2][0-9]{3}$');
 
 export const ethereumPublicAddressValidators = [Validators.pattern('^0x[0-9a-fA-F]{40}$')];
 
@@ -63,25 +63,42 @@ export async function UniqueOrgName(control: AbstractControl): Promise<Validatio
   return !orgAddress ? null : { notUnique: true };
 }
 
-/* Checks if the language exists */
+/**
+ * Checks if the language exists
+ */
 export function languageValidator(control: AbstractControl): { [key: string]: boolean } | null {
   return !LANGUAGES_SLUG.includes(control.value.trim().toLowerCase())
     ? { languageNotSupported: true }
     : null;
 }
-
-/* Checks if the value is an integer */
-export function integerValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  return Math.floor(control.value) === control.value ? null : { isNaN: true };
+/**
+ * @description Form group validator that checks if the two children controls have a valid range
+ * @param firstControl Name of the first control
+ * @param secondControl name of the second control
+ */
+export function numberRangeValidator(firstControl: string, secondControl: string): ValidatorFn {
+  return (group: FormGroup): ValidationErrors => {
+    const control1 = group.controls[`${firstControl}`];
+    const control2 = group.controls[`${secondControl}`];
+    if (control1 instanceof Date) {
+      return control1.value.getTime() > control2.value.getTime() &&
+        group.touched &&
+        group.dirty &&
+        !group.pristine
+        ? { invalidRange: true }
+        : null;
+    }
+    return control1.value > control2.value && group.touched && group.dirty && !group.pristine
+      ? { invalidRange: true }
+      : null;
+  };
 }
 
-/*
- * Error state matcher which is just like in the docs from angular material.
- * Basic usage for invalid, dirty and toched checks.
+/**
+ * @description Error state matcher for only one control
  */
-export class StandardErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+export class ControlErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    return !!(control && control.invalid && control.touched);
   }
 }

@@ -9,54 +9,54 @@ header {
 section {
   padding: 20px 100px;
 
-  article {
-    width: 100%;
-    aside {
-      position: sticky;
-      top: calc(var(--toolbarHeight) + 20px);
+  aside {
+    position: sticky;
+    top: calc(var(--toolbarHeight) + 20px);
 
-      mat-card {
-        max-height: calc(100vh - var(--toolbarHeight) - 40px);
-        overflow: auto;
-      }
+    mat-card {
+      max-height: calc(100vh - var(--toolbarHeight) - 40px);
+      overflow: auto;
+    }
+
+    .movie-list {
+      width: 100%;
+    }
+
+    .filter {
+      width: 500px;
+    }
+
+    .filter-checkboxes {
+      height: 270px;
+      flex-wrap: wrap;
+    }
+
+    .filter-checkboxes-media {
+      height: 260px;
+      flex-wrap: wrap;
     }
   }
-}
 
-mat-divider {
-  width: 70%;
-}
+  article {
+    width: 100%;
+    mat-divider {
+      width: 70%;
+    }
 
-movie-display-list {
-  width: 100%;
-  cursor: pointer;
-}
+    movie-card {
+      height: auto;
+      width: 228px;
+      margin: 15px;
+    }
 
-.movie-list {
-  width: 100%;
-}
+    movie-display-list {
+      width: 100%;
+      cursor: pointer;
+    }
 
-.filter {
-  width: 500px;
-}
-
-.movies {
-  width: 100%;
-  height: auto;
-}
-
-.filter-checkboxes {
-  height: 270px;
-  flex-wrap: wrap;
-}
-
-.filter-checkboxes-media {
-  height: 260px;
-  flex-wrap: wrap;
-}
-
-movie-card {
-  height: auto;
-  width: 228px;
-  margin: 15px;
+    .movies {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
