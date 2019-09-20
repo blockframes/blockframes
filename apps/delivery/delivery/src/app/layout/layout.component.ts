@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, OnInit, Component } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
 import { CONTEXT_MENU } from './context-menu';
 import { RouterOutlet } from '@angular/router';
-import { slideAnimation } from 'libs/utils/src/lib/animations/router-animations';
-
+import { slideAnimation } from '@blockframes/utils';
 
 @Component({
   selector: 'delivery-layout',
@@ -27,6 +26,6 @@ export class LayoutComponent implements OnInit {
   }
 
   prepareRoute(outlet: RouterOutlet) {
-  return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
-}
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
 }
