@@ -1,5 +1,5 @@
-import StarterPickerPage from "./delivery-create-tunnel/StarterPickerPage";
-import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
+import StarterPickerPage from "../delivery-create-tunnel/StarterPickerPage";
+import DeliveryMaterialsPage from "../DeliveryMaterialsPage";
 
 export default class DeliveryListPage {
   constructor() {

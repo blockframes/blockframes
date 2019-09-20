@@ -1,5 +1,5 @@
 import NavbarPage from "./NavbarPage";
-import DeliveryListPage from "./DeliveryListPage";
+import DeliveryListPage from "./delivery/DeliveryListPage";
 import { Material } from "../utils/type";
 import DeliveryInformationsEditablePage from "./delivery/DeliveryInformationsEditablePage";
 import ConfirmModal from "./ConfirmModal";

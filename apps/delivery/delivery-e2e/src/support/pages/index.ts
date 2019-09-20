@@ -7,7 +7,7 @@ import TemplateEditablePage from './template/TemplateEditablePage';
 import MovieTitleFormModal from './movie/MovieTitleFormModal';
 import MovieEditablePage from './movie/MovieEditablePage';
 import TemplateListPage from './template/TemplateListPage';
-import DeliveryListPage from './DeliveryListPage';
+import DeliveryListPage from './delivery/DeliveryListPage';
 import DeliveryMaterialsPage from './DeliveryMaterialsPage';
 import TemplateAddModal from './template/TemplateAddModal';
 import DeliveryInformationsEditablePage from './delivery/DeliveryInformationsEditablePage';

@@ -1,4 +1,4 @@
-import DeliveryListPage from './DeliveryListPage';
+import DeliveryListPage from './delivery/DeliveryListPage';
 
 export default class ConfirmModal {
   constructor() {
