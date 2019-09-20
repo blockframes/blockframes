@@ -10,14 +10,14 @@ import TemplateListPage from './template/TemplateListPage';
 import DeliveryListPage from './DeliveryListPage';
 import DeliveryMaterialsPage from './DeliveryMaterialsPage';
 import TemplateAddModal from './template/TemplateAddModal';
-import DeliveryInformationPage from './DeliveryInformationPage';
+import DeliveryInformationsEditablePage from './delivery/DeliveryInformationsEditablePage';
 import LoginViewPage from './auth/LoginViewPage';
 import MemberEditablePage from './organization/MemberEditablePage';
 import StarterPickerPage from './delivery-create-tunnel/StarterPickerPage';
 import SettingsPage from './delivery-create-tunnel/SettingsPage';
 import MoviePickerPage from './delivery-create-tunnel/MoviePickerPage';
 import TemplatePickerPage from './delivery-create-tunnel/TemplatePickerPage';
-import DeleteDeliveryModal from './DeleteDeliveryModal';
+import ConfirmModal from './ConfirmModal';
 import SaveAsTemplateModal from './SaveAsTemplateModal';
 import OrganizationHomePage from './organization/OrganizationHomePage';
 import TemplateCreatePage from './template/TemplateCreatePage';
@@ -35,14 +35,14 @@ export {
   DeliveryListPage,
   DeliveryMaterialsPage,
   TemplateAddModal,
-  DeliveryInformationPage,
+  DeliveryInformationsEditablePage,
   LoginViewPage,
   MemberEditablePage,
   StarterPickerPage,
   SettingsPage,
   MoviePickerPage,
   TemplatePickerPage,
-  DeleteDeliveryModal,
+  ConfirmModal,
   SaveAsTemplateModal,
   OrganizationHomePage,
   TemplateCreatePage

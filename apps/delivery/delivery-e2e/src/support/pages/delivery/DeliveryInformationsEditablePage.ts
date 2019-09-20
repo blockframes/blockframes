@@ -1,8 +1,8 @@
-import { DeliveryInformation } from '../utils/type';
+import { DeliveryInformation } from '../../utils/type';
 
-export default class DeliveryInformationPage {
+export default class DeliveryInformationsEditablePage {
   constructor() {
-    cy.get('[page-id=delivery-information]', { timeout: 10000 });
+    cy.get('[page-id=delivery-informations-editable]', { timeout: 10000 });
   }
 
   public addMGAmount(information: DeliveryInformation) {
@@ -11,12 +11,12 @@ export default class DeliveryInformationPage {
   }
 
   public openMGDeadlinesEditPanel() {
-    cy.get('[page-id=delivery-information] [test-id=edit-MG-button]').click();
+    cy.get('[page-id=delivery-informations-editable] [test-id=edit-MG-button]').click();
   }
 
   public fillMGAmount(information: DeliveryInformation) {
-    cy.get('[page-id=delivery-information] input[type=number]').type(information.minimumGuarantee.amount);
-    cy.get('[page-id=delivery-information] mat-select').click();
+    cy.get('[page-id=delivery-informations-editable] input[type=number]').type(information.minimumGuarantee.amount);
+    cy.get('[page-id=delivery-informations-editable] mat-select').click();
     cy.get('mat-option')
       .contains(information.minimumGuarantee.currency)
       .click();
@@ -24,14 +24,14 @@ export default class DeliveryInformationPage {
 
   public addDeadlines(information: DeliveryInformation) {
     information.minimumGuarantee.deadlines.forEach(deadline => {
-      cy.get('[page-id=delivery-information] button[test-id=add-deadline]').click();
-      cy.get('[page-id=delivery-information] input[formControlName=label]')
+      cy.get('[page-id=delivery-informations-editable] button[test-id=add-deadline]').click();
+      cy.get('[page-id=delivery-informations-editable] input[formControlName=label]')
         .last()
         .type(deadline.label);
-      cy.get('[page-id=delivery-information] input[formControlName=percentage]')
+      cy.get('[page-id=delivery-informations-editable] input[formControlName=percentage]')
         .last()
         .type(deadline.percentage);
-      cy.get('[page-id=delivery-information] input[formControlName=date]')
+      cy.get('[page-id=delivery-informations-editable] input[formControlName=date]')
         .last()
         .type(deadline.date);
     });
@@ -43,41 +43,41 @@ export default class DeliveryInformationPage {
   }
 
   public openDatesEditPanel() {
-    cy.get('[page-id=delivery-information] [test-id=edit-dates-button]').click();
+    cy.get('[page-id=delivery-informations-editable] [test-id=edit-dates-button]').click();
   }
 
   public fillDates(information: DeliveryInformation) {
-    cy.get('[page-id=delivery-information] input[formControlName=dueDate]')
+    cy.get('[page-id=delivery-informations-editable] input[formControlName=dueDate]')
       .last()
       .type(information.dates.dueDate);
-    cy.get('[page-id=delivery-information] input[formControlName=acceptationPeriod]')
+    cy.get('[page-id=delivery-informations-editable] input[formControlName=acceptationPeriod]')
       .last()
       .type(information.dates.approvalPeriod);
-    cy.get('[page-id=delivery-information] input[formControlName=reWorkingPeriod]')
+    cy.get('[page-id=delivery-informations-editable] input[formControlName=reWorkingPeriod]')
       .last()
       .type(information.dates.reworkingPeriod);
   }
 
   public openStepsEditPanel() {
-    cy.get('[page-id=delivery-information] [test-id=edit-steps-button]').click();
+    cy.get('[page-id=delivery-informations-editable] [test-id=edit-steps-button]').click();
   }
 
   public addSteps(information: DeliveryInformation) {
     this.openStepsEditPanel();
     information.steps.forEach(step => {
-      cy.get('[page-id=delivery-information] button[test-id=add-step]').click();
-      cy.get('[page-id=delivery-information] input[formControlName=name]')
+      cy.get('[page-id=delivery-informations-editable] button[test-id=add-step]').click();
+      cy.get('[page-id=delivery-informations-editable] input[formControlName=name]')
         .last()
         .type(step.name);
-      cy.get('[page-id=delivery-information] input[formControlName=date]')
+      cy.get('[page-id=delivery-informations-editable] input[formControlName=date]')
         .last()
         .type(step.date);
     });
   }
 
   public clickUpdateChanges() {
-    cy.get('[page-id=delivery-information] button[test-id=save]').click();
-    cy.get('[page-id=delivery-information] button[test-id=close]').click();
+    cy.get('[page-id=delivery-informations-editable] button[test-id=save]').click();
+    cy.get('[page-id=delivery-informations-editable] button[test-id=close]').click();
   }
 
   public assertAllInformationFieldsExists(information: DeliveryInformation) {
@@ -98,11 +98,11 @@ export default class DeliveryInformationPage {
   }
 
   public assertDatesExist(information: DeliveryInformation) {
-    cy.get('[page-id=delivery-information] span[test-id=due-date]')
+    cy.get('[page-id=delivery-informations-editable] span[test-id=due-date]')
       .should(span => expect(span).to.contain(information.dates.dueDate));
-    cy.get('[page-id=delivery-information] span[test-id=approval-period]')
+    cy.get('[page-id=delivery-informations-editable] span[test-id=approval-period]')
       .should(span => expect(span).to.contain(information.dates.approvalPeriod));
-    cy.get('[page-id=delivery-information] span[test-id=reworking-period]')
+    cy.get('[page-id=delivery-informations-editable] span[test-id=reworking-period]')
       .should(span => expect(span).to.contain(information.dates.reworkingPeriod));
   }
 

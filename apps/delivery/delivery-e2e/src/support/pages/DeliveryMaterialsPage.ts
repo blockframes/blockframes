@@ -1,8 +1,8 @@
 import NavbarPage from "./NavbarPage";
 import DeliveryListPage from "./DeliveryListPage";
 import { Material } from "../utils/type";
-import DeliveryInformationPage from "./DeliveryInformationPage";
-import DeleteDeliveryModal from "./DeleteDeliveryModal";
+import DeliveryInformationsEditablePage from "./delivery/DeliveryInformationsEditablePage";
+import ConfirmModal from "./ConfirmModal";
 import SaveAsTemplateModal from "./SaveAsTemplateModal";
 
 export default class DeliveryMaterialsPage extends NavbarPage {
@@ -16,9 +16,9 @@ export default class DeliveryMaterialsPage extends NavbarPage {
     return new DeliveryListPage();
   }
 
-  public clickInformationTab(): DeliveryInformationPage {
+  public clickInformationTab(): DeliveryInformationsEditablePage {
     cy.get('[page-id=navbar] .mat-tab-links').get('a').contains('information').click();
-    return new DeliveryInformationPage();
+    return new DeliveryInformationsEditablePage();
   }
 
   public assertDeliveryMustBeSigned() {
@@ -38,9 +38,9 @@ export default class DeliveryMaterialsPage extends NavbarPage {
     );
   }
 
-  public clickDeleteDelivery(): DeleteDeliveryModal {
+  public clickDeleteDelivery(): ConfirmModal {
     cy.get('[page-id=delivery-materials] mat-icon[svgIcon=delete]').click();
-    return new DeleteDeliveryModal();
+    return new ConfirmModal();
   }
 
   public clickSaveAsTemplate() {

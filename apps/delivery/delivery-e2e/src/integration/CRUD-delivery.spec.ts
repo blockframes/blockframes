@@ -4,14 +4,14 @@ import {
   LoginViewPage,
   WelcomeViewPage,
   HomePage,
-  DeliveryInformationPage,
+  DeliveryInformationsEditablePage,
   StarterPickerPage,
   SettingsPage,
   DeliveryMaterialsPage,
   MoviePickerPage,
   DeliveryListPage,
   TemplatePickerPage,
-  DeleteDeliveryModal
+  ConfirmModal
 } from '../support/pages';
 import { User, DeliveryInformation } from '../support/utils/type';
 import { MATERIALS } from '../support/utils/data';
@@ -126,7 +126,7 @@ describe('User update deliveries informations', () => {
     const p1: HomePage = new HomePage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    const p4: DeliveryInformationPage = p3.clickInformationTab();
+    const p4: DeliveryInformationsEditablePage = p3.clickInformationTab();
     p4.addMGAmount(DELIVERY_INFORMATION);
     p4.addDeadlines(DELIVERY_INFORMATION);
     p4.addDates(DELIVERY_INFORMATION);
@@ -146,8 +146,8 @@ describe('User delete a delivery', () => {
     const p1: HomePage = new HomePage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    const p4: DeleteDeliveryModal = p3.clickDeleteDelivery();
-    const p5: DeliveryListPage = p4.confirmDelete();
+    const p4: ConfirmModal = p3.clickDeleteDelivery();
+    const p5: DeliveryListPage = p4.confirmDeleteDelivery();
     p5.assertDeliveryIsDeleted();
   });
 });
