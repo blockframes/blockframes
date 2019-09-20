@@ -1,4 +1,11 @@
-import { Wallet, Contract, utils, getDefaultProvider, providers, ContractFactory } from 'ethers';
+import { getDefaultProvider } from 'ethers';
+import { Wallet } from '@ethersproject/wallet';
+import { Contract, ContractFactory } from '@ethersproject/contracts';
+import { TransactionResponse, TransactionReceipt } from '@ethersproject/abstract-provider';
+import { namehash } from '@ethersproject/hash';
+import { keccak256 } from '@ethersproject/keccak256';
+import { toUtf8Bytes } from '@ethersproject/strings';
+import { getAddress } from '@ethersproject/address';
 import { toASCII } from 'punycode';
 import * as CREATE2_FACTORY from './contracts/Factory2.json';
 import * as ERC1077 from './contracts/ERC1077.json';
@@ -6,8 +13,8 @@ import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
 import * as ENS_RESOLVER from './contracts/PublicResolver.json';
 import * as ORG_CONTRACT from './contracts/Organization.json';
 
-type TxResponse = providers.TransactionResponse;
-type TxReceipt = providers.TransactionReceipt;
+type TxResponse = TransactionResponse;
+type TxReceipt = TransactionReceipt;
 
 export interface Relayer {
   wallet: Wallet;
@@ -69,14 +76,14 @@ export function initRelayer(config: RelayerConfig): Relayer {
   wallet = wallet.connect(provider);
 
   const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY.abi, wallet);
-  const namehash = utils.namehash(config.baseEnsDomain);
+  const relayerNamehash = namehash(config.baseEnsDomain);
   const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
   const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
 
   return <Relayer>{
     wallet,
     contractFactory,
-    namehash,
+    namehash: relayerNamehash,
     registry,
     resolver,
   };
@@ -109,9 +116,9 @@ export async function precomputeAddress(ensDomain: string, config: RelayerConfig
   // CREATE2 address
   let payload = '0xff';
   payload += factoryAddress.substr(2);
-  payload += utils.keccak256(utils.toUtf8Bytes(ensDomain)).substr(2); // salt
-  payload += utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
-  return `0x${utils.keccak256(payload).slice(-40)}`;
+  payload += keccak256(toUtf8Bytes(ensDomain)).substr(2); // salt
+  payload += keccak256(`0x${ERC1077.bytecode}`).substr(2);
+  return `0x${keccak256(payload).slice(-40)}`;
 }
 
 /** check if an ENS name is linked to an eth address */
@@ -140,14 +147,14 @@ export async function relayerDeployLogic(
   }
 
   try {
-    utils.getAddress(key);
-    utils.getAddress(erc1077address);
+    getAddress(key);
+    getAddress(erc1077address);
   } catch (error) {
     throw new Error('"key" and/or "erc1077address" should be a valid ethereum address !');
   }
 
   // compute needed values
-  const hash = utils.keccak256(utils.toUtf8Bytes(username));
+  const hash = keccak256(toUtf8Bytes(username));
 
   try {
 
@@ -189,7 +196,7 @@ export async function relayerRegisterENSLogic(
   }
 
   try {
-    utils.getAddress(address);
+    getAddress(address);
   } catch (error) {
     throw new Error('"address" should be a valid ethereum address !');
   }
@@ -199,7 +206,7 @@ export async function relayerRegisterENSLogic(
 
   // compute needed values
   const fullName = `${labelName}.${config.baseEnsDomain}`;
-  const hash = utils.keccak256(utils.toUtf8Bytes(labelName));
+  const hash = keccak256(toUtf8Bytes(labelName));
 
   try {
     /*
@@ -219,7 +226,7 @@ export async function relayerRegisterENSLogic(
     const result: Record<string, TxReceipt> = {};
 
     // (A) register the user ens username
-    const nameOwner = await relayer.registry.owner(utils.namehash(fullName));
+    const nameOwner = await relayer.registry.owner(namehash(fullName));
     if (nameOwner !== relayer.wallet.address) { // if name is already registered : skip registration
       const registerTx: TxResponse = await relayer.registry.setSubnodeOwner(
         relayer.namehash,
@@ -231,10 +238,10 @@ export async function relayerRegisterENSLogic(
     }
 
     // (B) set a resolver to the ens username : require waiting for (A)
-    const resolverAddress = await relayer.registry.resolver(utils.namehash(fullName))
+    const resolverAddress = await relayer.registry.resolver(namehash(fullName))
     if (resolverAddress !== relayer.resolver.address) { // if a resolver is already set : skip set resolver
       const resolverTx: TxResponse = await relayer.registry.setResolver(
-        utils.namehash(fullName),
+        namehash(fullName),
         relayer.resolver.address,
       );
       result['resolver']= await resolverTx.wait();
@@ -243,7 +250,7 @@ export async function relayerRegisterENSLogic(
 
     // (C) link the erc1077 to the ens username : require waiting for (B)
     const linkTx: TxResponse = await relayer.resolver.setAddr(
-      utils.namehash(fullName),
+      namehash(fullName),
       address,
     )
     result['link'] = await linkTx.wait();
@@ -273,7 +280,7 @@ export async function relayerSendLogic(
   }
 
   try {
-    utils.getAddress(address);
+    getAddress(address);
   } catch (error) {
     throw new Error('"address" should be a valid ethereum address !');
   }
@@ -333,7 +340,7 @@ export async function relayerDeployOrganizationLogic(
   }
 
   try {
-    utils.getAddress(adminAddress);
+    getAddress(adminAddress);
   } catch (error) {
     throw new Error('"adminAddress" should be a valid ethereum address !');
   }

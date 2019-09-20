@@ -16,11 +16,12 @@ import {
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { getDefaultProvider, utils } from 'ethers';
+import { getDefaultProvider } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Log, Filter } from '@ethersproject/abstract-provider'
+import { namehash, id } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
@@ -243,19 +244,19 @@ export class OrganizationService {
           // registered
           this.provider.on(getFilterFromTopics(relayer.registryAddress, [
             newOwnerTopic,
-            utils.namehash(baseEnsDomain),
-            utils.id(getNameFromENS(organizationENS))
+            namehash(baseEnsDomain),
+            id(getNameFromENS(organizationENS)) // id(string) is ether's keccak256 hash on a string
           ]), () => {
             this.store.update({deployStep: DeploySteps.registered});
           });
 
           // resolved
-          this.provider.on(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]), () => {
+          this.provider.on(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]), () => {
             this.store.update({deployStep: DeploySteps.resolved});
           });
 
           // ready
-          this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]), (log: Log) => {
+          this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]), (log: Log) => {
             address = `0x${log.data.slice(-40)}`; // extract address
             this.store.update({deployStep: DeploySteps.ready});
             resolve();
@@ -264,9 +265,9 @@ export class OrganizationService {
           resolve();
         }
       });
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, utils.namehash(baseEnsDomain), utils.id(getNameFromENS(organizationENS))]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), id(getNameFromENS(organizationENS))]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
   }
