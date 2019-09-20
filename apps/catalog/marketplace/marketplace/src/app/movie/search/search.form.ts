@@ -11,7 +11,7 @@ import {
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity, numberValidator } from '@blockframes/utils';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -89,17 +89,22 @@ function createCatalogSearchControl(search: CatalogSearch) {
   return {
     productionYear: new FormGroup({
       from: new FormControl(search.productionYear.from, [
+        Validators.max(new Date().getFullYear()),
         Validators.minLength(4),
-        Validators.maxLength(4)
+        Validators.maxLength(5),
+        numberValidator
       ]),
       to: new FormControl(search.productionYear.to, [
-        Validators.max(2019),
+        Validators.max(new Date().getFullYear()),
         Validators.minLength(4),
-        Validators.maxLength(5)
+        Validators.maxLength(5),
+        numberValidator
       ])
     }),
     availabilities: new FormGroup({
-      from: new FormControl(search.availabilities.from, [Validators.min(2018)]),
+      from: new FormControl(search.availabilities.from, [
+        Validators.min(new Date().getFullYear())
+      ]),
       to: new FormControl(search.availabilities.to)
     }),
     type: new FormControl(search.type),

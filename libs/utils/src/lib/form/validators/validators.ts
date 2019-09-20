@@ -63,9 +63,16 @@ export async function UniqueOrgName(control: AbstractControl): Promise<Validatio
   return !orgAddress ? null : { notUnique: true };
 }
 
-  /* Checks if the language exists */
+/* Checks if the language exists */
 export function languageValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  return !LANGUAGES_SLUG.includes(control.value.trim().toLowerCase()) ? { languageNotSupported: true } : null;
+  return !LANGUAGES_SLUG.includes(control.value.trim().toLowerCase())
+    ? { languageNotSupported: true }
+    : null;
+}
+
+/* Checks if the value is an integer */
+export function integerValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  return Math.floor(control.value) === control.value ? null : { isNaN: true };
 }
 
 /*
