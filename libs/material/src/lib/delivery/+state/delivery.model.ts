@@ -14,7 +14,7 @@ interface MGDeadlineRaw<D> {
 }
 
 /** The Step of a given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
-interface StepRaw<D> {
+export interface StepRaw<D> {
   id: string;
   name: string;
   date: D;

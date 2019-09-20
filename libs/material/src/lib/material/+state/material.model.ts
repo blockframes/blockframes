@@ -1,7 +1,34 @@
-import { Step, Delivery } from '../../delivery/+state';
+import { Step, Delivery, StepRaw } from '../../delivery/+state';
 import { staticModels } from '@blockframes/movie';
+import { firestore } from 'firebase';
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+type Timestamp = firestore.Timestamp;
 // TODO: Create "Price" type with currencies from static-models => ISSUE#818
+
+interface MaterialRaw<D> {
+  id: string;
+  category: string;
+  value: string;
+  description: string;
+  owner?: string;
+  stepId?: string;
+  step?: StepRaw<D>;
+  status?: MaterialStatus;
+  deliveryIds?: string[];
+  price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
+  currency?: CurrencyCode;
+  isOrdered?: boolean;
+  isPaid?: boolean;
+  storage?: string;
+}
+
+interface Material2 extends MaterialRaw<Date> {
+  step: StepRaw<Date>;
+}
+
+interface Material2DB extends MaterialRaw<Timestamp> {
+  stepId: string;
+}
 
 export interface Material {
   id: string;
