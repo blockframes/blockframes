@@ -1,4 +1,4 @@
-import DeliveryMaterialsPage from "./DeliveryMaterialsPage";
+import DeliveryEditablePage from "./delivery/DeliveryEditablePage";
 
 export default class SaveAsTemplateModal {
   constructor() {
@@ -11,11 +11,11 @@ export default class SaveAsTemplateModal {
 
   public clickSave() {
     cy.get('[page-id=save-as-template] button[test-id=save]').click();
-    return new DeliveryMaterialsPage();
+    return new DeliveryEditablePage();
   }
 
   public clickUpdate() {
     cy.get('[page-id=save-as-template] button[test-id=update]').click();
-    return new DeliveryMaterialsPage();
+    return new DeliveryEditablePage();
   }
 }

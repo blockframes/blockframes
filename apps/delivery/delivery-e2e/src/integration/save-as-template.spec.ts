@@ -6,7 +6,7 @@ import {
   TemplateEditablePage,
   TemplateListPage,
   LoginViewPage,
-  DeliveryMaterialsPage,
+  DeliveryEditablePage,
   SaveAsTemplateModal
 } from '../support/pages';
 import { User } from '../support/utils/type';
@@ -34,10 +34,10 @@ describe('I m a user and I can save a delivery as template', () => {
     // Go to the first delivery and save it as new template
     const p1 = new HomePage();
     const p2: DeliveryListPage = p1.clickOnMovie(MOVIE_CYTEST);
-    const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORG_CYTEST);
+    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORG_CYTEST);
     const p4: SaveAsTemplateModal = p3.clickSaveAsTemplate();
     p4.fillName(TEMPLATE_NAME_1);
-    const p5: DeliveryMaterialsPage = p4.clickSave();
+    const p5: DeliveryEditablePage = p4.clickSave();
 
     // Verify if the template exists and contains the right materials
     const p6: HomePage = p5.clickHome();
@@ -48,10 +48,10 @@ describe('I m a user and I can save a delivery as template', () => {
     // Go to an other delivery and save it as overwriting the existing template
     const p9: HomePage = p8.clickHome();
     const p10: DeliveryListPage = p9.clickOnMovie(MOVIE_CYTEST);
-    const p11: DeliveryMaterialsPage = p10.clickLastDelivery(ORG_CYTEST);
+    const p11: DeliveryEditablePage = p10.clickLastDelivery(ORG_CYTEST);
     const p12: SaveAsTemplateModal = p11.clickSaveAsTemplate();
     p12.fillName(TEMPLATE_NAME_1);
-    const p13: DeliveryMaterialsPage = p12.clickUpdate();
+    const p13: DeliveryEditablePage = p12.clickUpdate();
 
     // Verify if the template is overwrote with right materials
     const p14: HomePage = p13.clickHome();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,6 +24,8 @@ import { FormElement } from '@blockframes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'delivery-editable';
+
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;

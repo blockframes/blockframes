@@ -1,4 +1,4 @@
-<editable-sidenav page-id="delivery-materials" (closed)="opened = false" [opened]="opened" (saved)="update()" *ngIf="(delivery$ | async) as delivery">
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="update()" *ngIf="(delivery$ | async) as delivery">
   <!-- Content -->
   <ng-container content>
     <article *ngIf="(movie$ | async) as movie" fxLayout="row" fxLayoutAlign="none center">

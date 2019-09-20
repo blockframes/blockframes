@@ -8,7 +8,7 @@ import MovieTitleFormModal from './movie/MovieTitleFormModal';
 import MovieEditablePage from './movie/MovieEditablePage';
 import TemplateListPage from './template/TemplateListPage';
 import DeliveryListPage from './delivery/DeliveryListPage';
-import DeliveryMaterialsPage from './DeliveryMaterialsPage';
+import DeliveryEditablePage from './delivery/DeliveryEditablePage';
 import TemplateAddModal from './template/TemplateAddModal';
 import DeliveryInformationsEditablePage from './delivery/DeliveryInformationsEditablePage';
 import LoginViewPage from './auth/LoginViewPage';
@@ -33,7 +33,7 @@ export {
   MovieEditablePage,
   TemplateListPage,
   DeliveryListPage,
-  DeliveryMaterialsPage,
+  DeliveryEditablePage,
   TemplateAddModal,
   DeliveryInformationsEditablePage,
   LoginViewPage,

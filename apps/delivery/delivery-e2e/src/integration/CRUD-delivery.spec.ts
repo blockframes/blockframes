@@ -7,7 +7,7 @@ import {
   DeliveryInformationsEditablePage,
   StarterPickerPage,
   SettingsPage,
-  DeliveryMaterialsPage,
+  DeliveryEditablePage,
   MoviePickerPage,
   DeliveryListPage,
   TemplatePickerPage,
@@ -87,7 +87,7 @@ describe('User create a delivery selecting a movie', () => {
     const p2: StarterPickerPage = p1.clickOnMovieWithNoDeliveries(MOVIES_CYTEST[0]);
     const p3: SettingsPage = p2.clickFromScratchStarter();
     p3.selectSetting(DELIVERY_SETTINGS[1]);
-    const p4: DeliveryMaterialsPage = p3.clickContinue();
+    const p4: DeliveryEditablePage = p3.clickContinue();
     p4.assertDeliveryMustBeSigned();
   });
 });
@@ -101,7 +101,7 @@ describe('User create a delivery from context-menu item', () => {
     p4.selectTemplate(TEMPLATE);
     const p5: SettingsPage = p4.clickContinue();
     p5.selectSetting(DELIVERY_SETTINGS[0]);
-    const p6: DeliveryMaterialsPage = p5.clickContinue();
+    const p6: DeliveryEditablePage = p5.clickContinue();
     p6.assertTableDisplayPrice();
     MATERIALS.forEach(material => p6.assertMaterialExists(material));
   });
@@ -114,7 +114,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
     const p3: StarterPickerPage = p2.clickAddDelivery();
     const p4: SettingsPage = p3.clickMaterialsStarter();
     DELIVERY_SETTINGS.forEach(setting => p4.selectSetting(setting));
-    const p5: DeliveryMaterialsPage = p4.clickContinue();
+    const p5: DeliveryEditablePage = p4.clickContinue();
     p5.assertDeliveryMustBeSigned();
     p5.assertTableDisplayPrice();
     MATERIALS.forEach(material => p5.assertMaterialExists(material));
@@ -125,8 +125,8 @@ describe('User update deliveries informations', () => {
   it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
     const p1: HomePage = new HomePage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    const p4: DeliveryInformationsEditablePage = p3.clickInformationTab();
+    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
+    const p4: DeliveryInformationsEditablePage = p3.clickContextMenuInformation();
     p4.addMGAmount(DELIVERY_INFORMATION);
     p4.addDeadlines(DELIVERY_INFORMATION);
     p4.addDates(DELIVERY_INFORMATION);
@@ -145,7 +145,7 @@ describe('User delete a delivery', () => {
   it('should login, click on the second movie card, then delete a delivery', () => {
     const p1: HomePage = new HomePage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryMaterialsPage = p2.clickFirstDelivery(ORGANIZATION_NAME);
+    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
     const p4: ConfirmModal = p3.clickDeleteDelivery();
     const p5: DeliveryListPage = p4.confirmDeleteDelivery();
     p5.assertDeliveryIsDeleted();

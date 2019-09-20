@@ -1,5 +1,5 @@
 import StarterPickerPage from "../delivery-create-tunnel/StarterPickerPage";
-import DeliveryMaterialsPage from "../DeliveryMaterialsPage";
+import DeliveryEditablePage from "./DeliveryEditablePage";
 
 export default class DeliveryListPage {
   constructor() {
@@ -11,16 +11,16 @@ export default class DeliveryListPage {
     return new StarterPickerPage();
   }
 
-  public clickFirstDelivery(orgName1: string, orgName2?: string): DeliveryMaterialsPage {
+  public clickFirstDelivery(orgName1: string, orgName2?: string): DeliveryEditablePage {
     orgName2
       ? cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1 && orgName2).first().click()
       : cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').contains(orgName1).first().click()
-    return new DeliveryMaterialsPage();
+    return new DeliveryEditablePage();
   }
 
   public clickLastDelivery(orgName) {
     cy.get('[page-id=delivery-list] tr[test-id=delivery-row]').last().contains(orgName).click();
-    return new DeliveryMaterialsPage();
+    return new DeliveryEditablePage();
   }
 
   public assertDeliveryIsDeleted() {
