@@ -44,22 +44,22 @@ export default abstract class NavbarPage {
   ////////////////////
 
   public clickContextMenuMember() {
-    cy.get('[page-id=navbar]').contains('member').click();
+    cy.get('[page-id=navbar] a').contains('member').click();
     return new MemberEditablePage();
   }
 
   public clickContextMenuTemplates() {
-    cy.get('[page-id=navbar]').contains('templates').click();
+    cy.get('[page-id=navbar] a').contains('templates').click();
     return new TemplateListPage();
   }
 
   public clickContextMenuInformation(): DeliveryInformationsEditablePage {
-    cy.get('[page-id=navbar] .mat-tab-links').get('a').contains('information').click();
+    cy.get('[page-id=navbar] a').contains('information').click();
     return new DeliveryInformationsEditablePage();
   }
 
   public clickContextMenuTemplatesCreate() {
-    cy.get('[page-id=navbar]').contains('templates').click();
+    cy.get('[page-id=navbar] a').contains('templates').click();
     return new TemplateCreatePage();
   }
 }
