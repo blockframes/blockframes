@@ -24,7 +24,6 @@ import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticMode
 // CatalogGenresFilter //
 /////////////////////////
 
-// TODO#748: split up the foorms if needed
 export interface MovieLanguage {
   original: boolean;
   dubbed: boolean;

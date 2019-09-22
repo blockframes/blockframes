@@ -6,11 +6,11 @@
 }
 
 .dark-theme .mat-accordion .mat-expansion-panel {
-  border-bottom: solid 1px #292929;
+  border-bottom: solid 1px mat-color($bf-dark-foreground, divider);
 }
 
 .light-theme .mat-accordion .mat-expansion-panel {
-  border-bottom: solid 1px #D8D8D8;
+  border-bottom: solid 1px mat-color($bf-light-foreground, divider);
 }
 
 .mat-accordion .mat-expansion-panel:last-of-type {

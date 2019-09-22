@@ -19,18 +19,17 @@
       margin-left: 12px;
       margin-right: 12px;
     }
+    .light-theme .mat-tab-label-active {
+      color: mat-color($bf-light-primary);
+      opacity: 1;
+    }
+    .dark-theme .mat-tab-label-active {
+      color: mat-color($bf-dark-primary);
+      opacity: 1;
+    }
   }
 }
 
-.mat-tab-link:hover {
-  color: mat-color($blockframes-theme-primary);
-  opacity: 1;
-}
-
-.mat-tab-label-active {
-  color: mat-color($blockframes-theme-primary);
-  opacity: 1;
-}
 
 @include medium {
   .context-menu {

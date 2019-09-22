@@ -178,6 +178,20 @@
                 <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
               </mat-form-field>
             </mat-expansion-panel>
+
+            <!-- Mandate Medias -->
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title test-id="mandate-medias-panel">
+                  Mandate Medias
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
+                <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
+                  {{media}}
+                </mat-checkbox>
+              </div>
+            </mat-expansion-panel>
           </mat-accordion>
         </mat-card-content>
       </mat-card>
@@ -206,7 +220,7 @@
         </mat-form-field>
       </div>
       <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
-        <ng-container *ngFor="let movie of sortedMovies">
+        <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
               <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}

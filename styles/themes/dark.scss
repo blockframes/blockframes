@@ -92,7 +92,7 @@ $bf-dark-background: (
   app-bar:    #02000F,
   background: #02000F,
   hover:      rgba(white, 0.04),
-  card:       map_get($mat-grey, 800),
+  card:       rgba(255,255,255,0.05),
   dialog:     map_get($mat-grey, 800),
   disabled-button: rgba(white, 0.12),
   raised-button: map-get($mat-grey, 800),

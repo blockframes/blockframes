@@ -23,7 +23,7 @@ export class InvitationItemComponent {
       return 'A user wants to join your organization.';
     }
     if (this.invitation.type === InvitationType.stakeholder) {
-      return `You have been invited to work on a delivery.`; // TODO: issue#576, implement one message by type of invitation
+      return `You have been invited to work on a delivery.`; // TODO: implement one message by type of invitation
     }
   }
 

@@ -1,4 +1,4 @@
-<nav test-id="context-menu" class="context-menu" mat-tab-nav-bar mat-align-tabs="center" color="primary">
+<nav test-id="context-menu" class="context-menu" mat-tab-nav-bar mat-align-tabs="center">
   <ng-container *ngFor="let item of (items$ | async)">
     <a mat-tab-link *ngIf="item.external else applink" [href]="item.path" target="_blank">
       {{item.name}}
