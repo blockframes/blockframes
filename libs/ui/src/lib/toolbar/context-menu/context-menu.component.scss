@@ -20,11 +20,13 @@
       margin-right: 12px;
     }
     .light-theme .mat-tab-label-active {
-      color: mat-color($bf-light-primary);
+      // TODO #974: replace color
+      color: #4E67F9;
       opacity: 1;
     }
     .dark-theme .mat-tab-label-active {
-      color: mat-color($bf-dark-primary);
+      // TODO #974: replace color
+      color: #4E67F9;
       opacity: 1;
     }
   }
