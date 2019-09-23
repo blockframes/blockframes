@@ -1,4 +1,4 @@
-<mat-sidenav-container test-id="content" page-id="login">
+<mat-sidenav-container>
   <mat-sidenav #signinSidenav [opened]="isSignin" mode="side">
     <auth-login-form (opened)="isSignin=false" (submited)="signin($event)"></auth-login-form>
   </mat-sidenav>

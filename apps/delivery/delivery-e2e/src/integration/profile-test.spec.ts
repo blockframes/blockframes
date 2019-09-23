@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { User } from "../support/utils/type";
-import { LandingPage, LoginPage, HomePage, EditProfilePage } from "../support/pages";
+import { WelcomeViewPage, LoginViewPage, MovieListPage, ProfileEditablePage } from "../support/pages";
 
 
 const USER: Partial<User> = {
@@ -22,18 +22,18 @@ beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
   cy.visit('/auth');
-  const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p1: WelcomeViewPage = new WelcomeViewPage();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithMovies();
 });
 
 describe('Test profile', () => {
   it('should login, navigate to profile, change several information', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();
-    const p2: EditProfilePage = p1.clickProfile();
+    const p2: ProfileEditablePage = p1.clickProfile();
     p2.clickEdit();
     p2.fillName(USER.name);
     p2.fillSurname(USER.surname);
@@ -63,17 +63,17 @@ describe('Test profile', () => {
 
 describe('Test change password', () => {
   it('should login, navigate to profile, change password', () => {
-    const p1: HomePage = new HomePage();
+    const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();
-    const p2: EditProfilePage = p1.clickProfile();
+    const p2: ProfileEditablePage = p1.clickProfile();
     p2.editPassword();
     p2.currentPassword(USER.password);
     p2.newPassword(USER_UPDATED.password);
     p2.confirmPassword(USER_UPDATED.password);
     p2.clickSave();
     p2.clickClose();
-    const p3: LoginPage = p2.clickLogout();
+    const p3: LoginViewPage = p2.clickLogout();
     p3.fillSignin(USER_UPDATED);
     p3.clickSigninWithMovies();
   });

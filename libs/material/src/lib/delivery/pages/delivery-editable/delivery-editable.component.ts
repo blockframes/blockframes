@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,7 +13,7 @@ import { ConfirmComponent } from '@blockframes/ui';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
-import { utils } from 'ethers';
+import { id as keccak256 } from '@ethersproject/hash';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormElement } from '@blockframes/utils';
 
@@ -24,6 +24,8 @@ import { FormElement } from '@blockframes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'delivery-editable';
+
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
@@ -220,7 +222,7 @@ export class DeliveryEditableComponent implements OnInit {
     const materials = this.materialQuery.getAll();
     const jsonMaterials = JSON.stringify(materials);
 
-    const deliveryHash = utils.id(jsonDelivery + jsonMaterials);
+    const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
     const orgAddress = await this.organizationService.getAddress();
     const orgId = this.organizationQuery.getValue().org.id;
 

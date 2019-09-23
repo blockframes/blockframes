@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,7 @@ import { SigninForm } from '../../forms/signin.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginViewComponent {
+  @HostBinding('attr.page-id') pageId = 'login-view';
   @ViewChild('signinSidenav', { static: false }) loginSidenav: MatSidenav;
   @ViewChild('signupSidenav', { static: false }) signupSidenav: MatSidenav;
 

@@ -593,6 +593,30 @@
       },
       "schematics": {}
     },
+    "notification": {
+      "root": "libs/notification",
+      "sourceRoot": "libs/notification/src",
+      "projectType": "library",
+      "prefix": "notification",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/notification/jest.config.js",
+            "tsConfig": "libs/notification/tsconfig.spec.json",
+            "setupFile": "libs/notification/src/test-setup.ts"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/notification/tsconfig.lib.json", "libs/notification/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      },
+      "schematics": {}
+    },
     "delivery": {
       "root": "apps/delivery/delivery/",
       "sourceRoot": "apps/delivery/delivery/src",

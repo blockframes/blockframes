@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 import {
-  LandingPage,
-  OrganizationFormPage,
+  WelcomeViewPage,
+  OrganizationEditablePage,
   MovieCreatePage,
-  LoginPage,
-  OrganizationMemberPage
+  LoginViewPage,
+  MemberEditablePage
 } from '../support/pages';
 import { createOrganization, User } from '../support/utils/type';
 
@@ -18,8 +18,8 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('macbook-15');
-  const p1: LandingPage = new LandingPage();
-  const p2: LoginPage = p1.clickCallToAction();
+  const p1: WelcomeViewPage = new WelcomeViewPage();
+  const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
   p2.clickSigninWithNoMovies();
 });
@@ -29,7 +29,7 @@ describe('Test CRUD org', () => {
     const p1 = new MovieCreatePage();
     // Edit user's organization
     p1.openProfileMenu();
-    const p2: OrganizationFormPage = p1.clickOnOrganization();
+    const p2: OrganizationEditablePage = p1.clickOnOrganization();
     p2.clickEditButtion();
     p2.fillAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
     p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
@@ -37,7 +37,7 @@ describe('Test CRUD org', () => {
     p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
 
     // Add a new member in user's organization and remove him
-    const p3: OrganizationMemberPage = p2.clickContextMenuMember();
+    const p3: MemberEditablePage = p2.clickContextMenuMember();
     p3.addMemberToOrganization(INVITEDUSER.email);
     p3.sendInvitationToMember();
     p3.assertInvitationPending(INVITEDUSER.email);

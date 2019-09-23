@@ -1,4 +1,4 @@
-<editable-sidenav page-id="delivery-information" *ngIf="(delivery$ | async) as delivery" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
+<editable-sidenav *ngIf="(delivery$ | async) as delivery" (closed)="opened = false" [opened]="opened" (saved)="updateInformations()">
   <!-- Content -->
   <ng-container content *ngIf="(deliveryInformations$ | async) as deliveryInformations">
     <delivery-informations-deadlines-repertory

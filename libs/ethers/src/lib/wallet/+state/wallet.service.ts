@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { providers, getDefaultProvider, utils, Contract, Wallet as EthersWallet } from 'ethers';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
@@ -11,10 +9,18 @@ import { WalletQuery } from './wallet.query';
 import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 import { CreateTx } from '../../create-tx';
 
+// Ethers
+import { arrayify } from '@ethersproject/bytes';
+import { AbiCoder } from '@ethersproject/abi';
+import { Provider, TransactionRequest } from '@ethersproject/providers';
+import { Contract } from '@ethersproject/contracts';
+import { Wallet as EthersWallet } from '@ethersproject/wallet';
+import { getDefaultProvider } from 'ethers';
+
 @Injectable({ providedIn: 'root' })
 export class WalletService {
 
-  provider: providers.Provider
+  provider: Provider;
 
   constructor(
     private query: WalletQuery,
@@ -134,7 +140,7 @@ export class WalletService {
   }
 
   private signedMetaTxToData(signedMetaTx: SignedMetaTx) {
-    const abiCoder = new utils.AbiCoder();
+    const abiCoder = new AbiCoder();
     return abiCoder.encode([
       'address', // to
       'uint256', // value
@@ -172,7 +178,7 @@ export class WalletService {
     const mockTxHash = await this.hashMetaTx(from, metaTx);
     const mockSignature = await wallet.signMessage(mockTxHash);
     const mockSignedMetaTx: SignedMetaTx = {...metaTx, signatures: mockSignature};
-    const mockTx: providers.TransactionRequest = {
+    const mockTx: TransactionRequest = {
       to: from,
       value: 0,
       data: this.signedMetaTxToData(mockSignedMetaTx),
@@ -182,7 +188,7 @@ export class WalletService {
     // hash & sign
     metaTx.gasLimit = estimatedGasLimit; // replace temporary gasLimit by its estimation
     const txHash = await this.hashMetaTx(from, metaTx);
-    const signature = await wallet.signMessage(utils.arrayify(txHash));
+    const signature = await wallet.signMessage(arrayify(txHash));
     return {...metaTx, signatures: signature};
   }
 

@@ -81,7 +81,7 @@
     "algoliasearch": "^3.33.0",
     "core-js": "^2.6.4",
     "ethereum-blockies-base64": "^1.0.2",
-    "ethers": "^4.0.27",
+    "ethers": "^5.0.0-beta.157",
     "express": "4.16.4",
     "firebase": "^5.8.2",
     "firebase-admin": "^8.2.0",

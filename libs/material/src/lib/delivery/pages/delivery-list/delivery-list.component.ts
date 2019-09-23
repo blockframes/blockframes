@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { MovieQuery } from 'libs/movie/src/lib/movie/+state/movie.query';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { Organization, OrganizationQuery } from '@blockframes/organization';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryListComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'delivery-list';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public userOrganization$: Observable<Organization>;
   public deliveries$: Observable<Delivery[]>;

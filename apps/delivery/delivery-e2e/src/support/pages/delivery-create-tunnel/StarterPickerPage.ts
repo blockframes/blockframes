@@ -1,4 +1,5 @@
-import { SettingsPage, TemplatePickerPage } from "..";
+import SettingsPage from "./SettingsPage";
+import TemplatePickerPage from "./TemplatePickerPage";
 
 export default class StarterPickerPage {
   constructor() {

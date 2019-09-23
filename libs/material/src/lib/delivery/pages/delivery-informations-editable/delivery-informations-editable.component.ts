@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { tap, switchMap, startWith } from 'rxjs/operators';
@@ -12,6 +12,8 @@ import { createInformationsFormGroup } from '../../forms/informations.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryInformationsEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'delivery-informations-editable';
+
   public opened = false;
   public editContent = 'dates';
 

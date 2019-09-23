@@ -6,7 +6,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Material } from '../../../material/+state';
+import { Material, getMaterialStep } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Delivery } from '../../+state';
@@ -20,12 +20,16 @@ import { deliveryActiveQuery } from '../../guards/delivery-active.guard';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryMaterialListComponent {
+  @Input() delivery: Delivery;
+
   @Input()
   set materials(materials: Material[]) {
+    // Add step with the stepId in materials
+    materials = materials.map(material => getMaterialStep(material, this.delivery));
     this.dataSource = new MatTableDataSource(materials);
     this.dataSource.sort = this.sort;
   }
-  @Input() delivery: Delivery;
+
   @Input() displayedColumns: string[]
 
   @Output() editing = new EventEmitter<string>();

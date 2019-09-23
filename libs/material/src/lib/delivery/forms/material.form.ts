@@ -9,7 +9,7 @@ function createMaterialControl(material: Partial<Material> = {}) {
     id: new FormControl(entity.id),
     value: new FormControl(entity.value),
     description: new FormControl(entity.description),
-    step: new FormControl(entity.step || null),
+    stepId: new FormControl(entity.stepId || null),
     category: new FormControl(entity.category),
     price: new FormControl(entity.price || null),
     currency: new FormControl(entity.currency || null),

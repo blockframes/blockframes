@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, HostBinding } from '@angular/core';
 import { Organization } from '../../+state';
 import { OrganizationProfile } from '../../forms/organization-profile-edit-form';
 
@@ -9,6 +9,8 @@ import { OrganizationProfile } from '../../forms/organization-profile-edit-form'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationDisplayComponent {
+  @HostBinding('attr.page-id') pageId = 'organization-display';
+
   @Output() editing = new EventEmitter<void>();
   @Input() opened: boolean;
   @Input() organization: Organization;

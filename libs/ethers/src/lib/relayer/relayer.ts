@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { providers } from 'ethers';
+import { TransactionRequest, TransactionReceipt } from '@ethersproject/abstract-provider';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({ providedIn: 'root' })
@@ -37,7 +37,7 @@ export class Relayer {
   }
 
   /** Send a transaction to the relayer  */
-  send(address: string, tx: providers.TransactionRequest): Promise<providers.TransactionReceipt> {
+  send(address: string, tx: TransactionRequest): Promise<TransactionReceipt> {
     const call = this.functions.httpsCallable('relayerSend');
     return call({ address, tx }).toPromise();
   }

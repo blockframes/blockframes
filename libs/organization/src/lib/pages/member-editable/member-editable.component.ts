@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { OrganizationQuery, OrganizationMember } from '../../+state';
 import { FormGroup } from '@angular/forms';
@@ -16,6 +16,7 @@ import { createMemberFormList } from '../../forms/member.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberEditableComponent implements OnInit, OnDestroy {
+  @HostBinding('attr.page-id') pageId = 'member-editable';
   private destroyed$ = new Subject();
 
   /** Observable of the selected memberId */

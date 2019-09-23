@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs/internal/Observable';
 
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/internal/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'movie-editable';
   public fullScreen = false;
   public form$: Observable<Movie>;
 

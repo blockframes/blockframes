@@ -1,4 +1,4 @@
-import DeliveryMaterialsPage from "../DeliveryMaterialsPage";
+import DeliveryEditablePage from "../delivery/DeliveryEditablePage";
 
 export default class SettingsPage {
   constructor() {
@@ -9,9 +9,9 @@ export default class SettingsPage {
     cy.get('[page-id=delivery-settings] mat-list-option').contains(setting).click();
   }
 
-  public clickContinue(): DeliveryMaterialsPage {
+  public clickContinue(): DeliveryEditablePage {
     cy.get('[page-id=delivery-settings] button[test-id=continue]').click();
-    return new DeliveryMaterialsPage
+    return new DeliveryEditablePage
   }
 
 }

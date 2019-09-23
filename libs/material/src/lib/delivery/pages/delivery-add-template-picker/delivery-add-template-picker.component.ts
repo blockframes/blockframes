@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -25,6 +25,8 @@ const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddTemplatePickerComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'template-picker';
+
   public isLoading$: Observable<boolean>;
   public items$: Observable<ActionPickerItem<Template>[]>;
   public currentTemplate: Template | undefined;

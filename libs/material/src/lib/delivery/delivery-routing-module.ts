@@ -35,7 +35,9 @@ const routes: Routes = [
       {
         path: '1-find-movie',
         pathMatch: 'full',
-        component: DeliveryAddFindMovieComponent
+        component: DeliveryAddFindMovieComponent,
+        data: {animation: 'DeliveryAddFindMoviePage'}
+
       },
       {
         path: ':movieId',
@@ -45,14 +47,16 @@ const routes: Routes = [
           {
             path: '2-choose-starter',
             pathMatch: 'full',
-            component: DeliveryAddChooseStarterComponent
+            component: DeliveryAddChooseStarterComponent, 
+            data: {animation: 'DeliveryAddChooseStarterPage'}
           },
           {
             path: '3-pick-template',
             canActivate: [TemplateListGuard],
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
-            component: DeliveryAddTemplatePickerComponent
+            component: DeliveryAddTemplatePickerComponent, 
+            data: {animation: 'DeliveryAddTemplatePickerPage'}
           },
           {
             path: '3-pick-specific-delivery-list',
@@ -62,7 +66,8 @@ const routes: Routes = [
           {
             path: '4-settings',
             pathMatch: 'full',
-            component: DeliveryAddSettingsComponent
+            component: DeliveryAddSettingsComponent, 
+            data: {animation: 'DeliveryAddSettingsPage'}
           },
           {
             path: ':templateId',
@@ -72,7 +77,8 @@ const routes: Routes = [
               {
                 path: '4-settings',
                 pathMatch: 'full',
-                component: DeliveryAddSettingsComponent
+                component: DeliveryAddSettingsComponent,
+                data: {animation: 'DeliveryAddSettingsPage'}
               }
             ]
           }
@@ -116,17 +122,20 @@ const routes: Routes = [
             path: 'list',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
-            component: DeliveryEditableComponent
+            component: DeliveryEditableComponent,
+            data: {animation: 'DeliveryEditablePage'}
           },
           {
             path: 'stakeholders',
-            component: DeliveryStakeholdersEditableComponent
+            component: DeliveryStakeholdersEditableComponent,
+            data: {animation: 'DeliveryStakeholdersEditablePage'} //animation test, find the corresponding file in ./utils/lib/animations/router-animations
           },
           {
             path: 'informations',
             canActivate: [DeliveryMaterialsGuard],
             canDeactivate: [DeliveryMaterialsGuard],
-            component: DeliveryInformationsEditableComponent
+            component: DeliveryInformationsEditableComponent,
+            data: {animation: 'DeliveryInformationsEditablePage'}
           }
         ]
       }

@@ -30,7 +30,7 @@ export const materialStatuses: MaterialStatus[] = [
   MaterialStatus.pending,
   MaterialStatus.available,
   MaterialStatus.delivered
-]
+];
 
 export interface MaterialTemplateForm {
   value: string;
@@ -45,7 +45,7 @@ export function createMaterial(material: Partial<Material>): Material {
     category: '',
     value: '',
     description: '',
-    status: material.status|| MaterialStatus.pending,
+    status: material.status || MaterialStatus.pending,
     isOrdered: false,
     isPaid: false,
     ...material
@@ -65,13 +65,11 @@ export function createTemplateMaterial(material: Partial<Material>): Material {
 }
 
 export function getMaterialStep(material: Material, delivery: Delivery) {
-  // Change the step of a material by the step of delivery
-  // TODO: issue #779, juste save the stepId in the database
+  // Add the step of a material by the step of delivery
   return {
     ...material,
-    step: delivery.steps.find(step =>
-      material.step ? step.id === material.step.id : null)
-      ? delivery.steps.find(step => material.step ? step.id === material.step.id : null)
-      : null
+    step: delivery.steps.find(deliveryStep =>
+      material.stepId ? deliveryStep.id === material.stepId : null
+    )
   };
 }

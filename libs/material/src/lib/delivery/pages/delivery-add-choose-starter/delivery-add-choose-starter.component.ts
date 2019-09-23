@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
 import { Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { MovieQuery } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryAddChooseStarterComponent {
+  @HostBinding('attr.page-id') pageId = 'starter-picker';
+
   items: ActionItem[];
 
   constructor(

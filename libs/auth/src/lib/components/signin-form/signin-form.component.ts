@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { SigninForm } from '../../forms/signin.form';
 
 @Component({
@@ -9,6 +9,7 @@ import { SigninForm } from '../../forms/signin.form';
 })
 
 export class SigninFormComponent {
+  @HostBinding('attr.page-id') pageId = 'signin-form';
   @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 

@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Organization } from '../../+state';
-import firebase from 'firebase';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/notification';
 import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';

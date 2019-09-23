@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 import {
-  LandingPage,
-  LoginPage,
+  WelcomeViewPage,
+  LoginViewPage,
   MovieCreatePage,
-  NewTemplatePage,
-  TemplateFormPage,
+  TemplateAddModal,
+  TemplateEditablePage,
   TemplateListPage
 } from '../support/pages';
 import { User } from '../support/utils/type';
-import TemplateCreatePage from '../support/pages/TemplateCreatePage';
+import TemplateCreatePage from '../support/pages/template/TemplateCreatePage';
 import { MATERIALS } from '../support/utils/data';
 
 const TEMPLATE_NAME_1 = 'Crud Template';
@@ -30,18 +30,18 @@ beforeEach(() => {
 describe('Test CRUD template', () => {
   it('should login, create a template, create materials, delete materials, edit material, then delete this template', () => {
     // Connection
-    const p1: LandingPage = new LandingPage();
-    const p2: LoginPage = p1.clickCallToAction();
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
     const p3: MovieCreatePage = p2.clickSigninWithNoMovies();
 
     // Go to template list
     const p4: TemplateCreatePage = p3.clickContextMenuTemplatesCreate();
-    const p5: NewTemplatePage = p4.clickNewTemplate();
+    const p5: TemplateAddModal = p4.clickNewTemplate();
 
     // create a new template
     p5.fillName(TEMPLATE_NAME_1);
-    const p6: TemplateFormPage = p5.clickNext();
+    const p6: TemplateEditablePage = p5.clickNext();
 
     // create a new material
     p6.addMaterial();
@@ -55,7 +55,7 @@ describe('Test CRUD template', () => {
     p7.assertTemplateExists(TEMPLATE_NAME_1);
 
     // re-open previous template
-    const p8: TemplateFormPage = p7.editTemplate(TEMPLATE_NAME_1);
+    const p8: TemplateEditablePage = p7.editTemplate(TEMPLATE_NAME_1);
 
     // create another one
     p8.addMaterial();
