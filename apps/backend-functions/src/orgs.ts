@@ -8,7 +8,7 @@ import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { organizationCreated } from './assets/mail-templates';
 import { Organization, OrganizationStatus } from './data/types';
-import { precomputeAddress, emailToEnsDomain, RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistred } from './relayer';
+import { precomputeAddress, emailToEnsDomain, RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 
 export function onOrganizationCreate(
@@ -61,7 +61,7 @@ export async function onOrganizationUpdate(
 
     const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
-    const isOrgRegistered = await isENSNameRegistred(orgENS, RELAYER_CONFIG);
+    const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 
     if (isOrgRegistered) {
       throw new Error(`This organization has already an ENS name: ${orgENS}`);

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
-import { Wallet as EthersWallet } from "ethers";
+import { Wallet as EthersWallet } from "@ethersproject/wallet";
 import { ActivatedRoute } from "@angular/router";
 import { KeyManagerQuery, KeyManagerService } from "../../../key-manager/+state";
 import { Key } from "@blockframes/utils";

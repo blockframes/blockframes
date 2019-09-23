@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from "@angular/core";
-import { KeyManagerService, KeyManagerQuery } from "../../../key-manager/+state";
-import { WalletQuery } from "../../+state";
-import { Observable } from "rxjs";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Key } from "@blockframes/utils";
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Key } from '@blockframes/utils';
+import { Observable } from 'rxjs';
+import { KeyManagerService, KeyManagerQuery } from '../../../key-manager/+state';
+import { WalletQuery } from '../../+state';
 
 enum steps {
   password,
@@ -19,12 +19,11 @@ enum steps {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WalletAddKeyTunnelComponent implements OnInit {
-
   steps = steps;
   step = this.steps.password;
   key: Key;
   encrypting$: Observable<boolean>;
-  @ViewChild('downloadLink', {static: false}) downloadLink: ElementRef<HTMLAnchorElement>;
+  @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef<HTMLAnchorElement>;
 
   constructor(
     private router: Router,
@@ -52,8 +51,11 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   }
 
   setKey(key: Key) {
-    if (JSON.stringify(this.key) !== JSON.stringify(key)) { // object deep equal
-      throw new Error(`You did not import the good file ! Please import the file named ${this.keyName}`);
+    if (JSON.stringify(this.key) !== JSON.stringify(key)) {
+      // object deep equal
+      throw new Error(
+        `You did not import the good file ! Please import the file named ${this.keyName}`
+      );
     }
     this.keyService.storeKey(key);
     delete this.key;
@@ -66,9 +68,9 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   }
 
   /**
-  * create a downloadable data blob (json file) from this key
-  * @param bypassSecurity `true` = return a SafeResourceUrl, `false` = return a string
-  */
+   * create a downloadable data blob (json file) from this key
+   * @param bypassSecurity `true` = return a SafeResourceUrl, `false` = return a string
+   */
   jsonKeystore(bypassSecurity: boolean): SafeResourceUrl | string {
     const data = new Blob([JSON.stringify(this.key)], { type: 'application/octet-stream' });
     const url = window.URL.createObjectURL(data);

@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { utils } from 'ethers';
+import { getAddress } from '@ethersproject/address';
 
 @Component({
   selector: 'wallet-blockie',
@@ -13,6 +13,6 @@ export class WalletBlockieComponent {
 
   @Input()
   set address(address: string) {
-    this.ethBlockie = makeBlockie(utils.getAddress(address));
+    this.ethBlockie = makeBlockie(getAddress(address));
   }
 }

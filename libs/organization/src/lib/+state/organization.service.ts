@@ -16,7 +16,12 @@ import {
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { getDefaultProvider, providers, Contract, utils } from 'ethers';
+import { getDefaultProvider } from 'ethers';
+import { Provider } from '@ethersproject/providers';
+import { Contract } from '@ethersproject/contracts';
+import { BigNumber } from '@ethersproject/bignumber';
+import { Log, Filter } from '@ethersproject/abstract-provider'
+import { namehash, id as keccak256 } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 
@@ -64,7 +69,7 @@ const actionExecutedTopic   = '0x27bfac0e8b79713f577faf36f24c58597bacaa93ef1b54d
 //--------------------------------------
 //     ETHEREUM ORGS EVENT FILTERS
 //--------------------------------------
-function getFilterFromTopics(address: string, topics: string[]): providers.Filter {
+function getFilterFromTopics(address: string, topics: string[]): Filter {
   return {
     address,
     fromBlock: 0, toBlock: 'latest',
@@ -76,7 +81,7 @@ function getFilterFromTopics(address: string, topics: string[]): providers.Filte
 export class OrganizationService {
   private organization$: Observable<Organization>;
 
-  private provider: providers.Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
+  private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
   private contract: Contract;
 
   constructor(
@@ -239,19 +244,19 @@ export class OrganizationService {
           // registered
           this.provider.on(getFilterFromTopics(relayer.registryAddress, [
             newOwnerTopic,
-            utils.namehash(baseEnsDomain),
-            utils.id(getNameFromENS(organizationENS))
+            namehash(baseEnsDomain),
+            keccak256(getNameFromENS(organizationENS))
           ]), () => {
             this.store.update({deployStep: DeploySteps.registered});
           });
 
           // resolved
-          this.provider.on(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]), () => {
+          this.provider.on(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]), () => {
             this.store.update({deployStep: DeploySteps.resolved});
           });
 
           // ready
-          this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]), (log: providers.Log) => {
+          this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]), (log: Log) => {
             address = `0x${log.data.slice(-40)}`; // extract address
             this.store.update({deployStep: DeploySteps.ready});
             resolve();
@@ -260,9 +265,9 @@ export class OrganizationService {
           resolve();
         }
       });
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, utils.namehash(baseEnsDomain), utils.id(getNameFromENS(organizationENS))]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, utils.namehash(organizationENS)]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, utils.namehash(organizationENS)]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
+      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
       this.contract = new Contract(address, ORGANIZATION_ABI, this.provider);
     }
   }
@@ -327,22 +332,22 @@ export class OrganizationService {
     );
 
     // listen for operation created
-    this.provider.on(operationsFilter, async (log: providers.Log) => {
+    this.provider.on(operationsFilter, async (log: Log) => {
       const operation = await this.getOperationFromContract(log.topics[1]);
       this.upsertOperation(operation);
     });
 
     // listen for quorum updates
     const quorumFilter = getFilterFromTopics(this.contract.address, [quorumUpdatedTopic]);
-    this.provider.on(quorumFilter,(log: providers.Log) => {
+    this.provider.on(quorumFilter,(log: Log) => {
       const operationId = log.topics[1];
-      const quorum = utils.bigNumberify(log.topics[2]).toNumber();
+      const quorum = BigNumber.from(log.topics[2]).toNumber();
       this.updateOperationQuorum(operationId, quorum);
     });
 
     // listen for member added
     const memberAddedFilter = getFilterFromTopics(this.contract.address, [memberAddedTopic]);
-    this.provider.on(memberAddedFilter, (log: providers.Log) => {
+    this.provider.on(memberAddedFilter, (log: Log) => {
       const operationId = log.topics[1];
       const memberAddress = log.topics[2];
       console.log(`member ${memberAddress} added to op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'addOperationMember()'
@@ -350,7 +355,7 @@ export class OrganizationService {
 
     // listen for member removed
     const memberRemovedFilter = getFilterFromTopics(this.contract.address, [memberRemovedTopic]);
-    this.provider.on(memberRemovedFilter, (log: providers.Log) => {
+    this.provider.on(memberRemovedFilter, (log: Log) => {
       const operationId = log.topics[1];
       const memberAddress = log.topics[2];
       console.log(`member ${memberAddress} removed from op ${operationId}`); // TODO issue#762 : link blockchain user address to org members, then call 'removeOperationMember()'
@@ -368,14 +373,14 @@ export class OrganizationService {
       .forEach(actionId => this.getActionFromContract(actionId).then(action => this.upsertAction(action)));
 
     // listen for approvals
-    this.provider.on(actionsFilter, async(log: providers.Log) => {
+    this.provider.on(actionsFilter, async(log: Log) => {
       const action = await this.getActionFromContract(log.topics[1]);
       this.upsertAction(action);
     });
 
     // listen for execution
     const executeFilter = getFilterFromTopics(this.contract.address, [actionExecutedTopic]);
-    this.provider.on(executeFilter, async(log: providers.Log) => {
+    this.provider.on(executeFilter, async(log: Log) => {
       const action = await this.getActionFromContract(log.topics[1]);
       this.upsertAction(action);
     });
@@ -396,7 +401,7 @@ export class OrganizationService {
     const operation: OrganizationOperation = {
       id: operationId,
       name: rawOperation.name,
-      quorum: utils.bigNumberify(rawOperation.quorum).toNumber(),
+      quorum: BigNumber.from(rawOperation.quorum).toNumber(),
       members: [],
     };
 

@@ -1,6 +1,9 @@
 import { toASCII } from "punycode";
 import { baseEnsDomain, factoryContract } from "@env";
-import { utils, providers } from "ethers";
+import { keccak256 } from '@ethersproject/keccak256'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Provider } from '@ethersproject/providers'
+import { toUtf8Bytes } from '@ethersproject/strings'
 import { ERC1077 } from '@blockframes/contracts';
 
 export interface AddressParts {
@@ -66,15 +69,15 @@ export function orgNameToEnsDomain(orgName: string) {
  * @param provider ethers provider
  */
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export async function precomputeAddress(ensDomain: string, provider: providers.Provider) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
+export async function precomputeAddress(ensDomain: string, provider: Provider) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
 
   const factoryAddress = await provider.resolveName(factoryContract).then(address => address.substr(2));
-  const salt = utils.keccak256(utils.toUtf8Bytes(getNameFromENS(ensDomain))).substr(2);
-  const byteCodeHash = utils.keccak256(`0x${ERC1077.bytecode}`).substr(2);
+  const salt = keccak256(toUtf8Bytes(getNameFromENS(ensDomain))).substr(2);
+  const byteCodeHash = keccak256(`0x${ERC1077.bytecode}`).substr(2);
 
   const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
 
-  return `0x${utils.keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
+  return `0x${keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
 }
 
 /**
@@ -82,7 +85,7 @@ export async function precomputeAddress(ensDomain: string, provider: providers.P
  * @example numberToHexString(1337) = '0x539'
  */
 export function numberToHexString(num: number) {
-  return utils.bigNumberify(num).toHexString();
+  return BigNumber.from(num).toHexString();
 }
 
 /**
