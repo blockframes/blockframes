@@ -1,3 +1,5 @@
+@import 'variables';
+
 header {
   padding: 100px 0;
   // TODO: replace image when the real one is available.
@@ -6,6 +8,11 @@ header {
   background-attachment: fixed;
   background-size: cover;
   text-align: center;
+}
+
+.view-content {
+  margin-left: 200px;
+  margin-right: 200px;
 }
 
 .mat-divider {
@@ -24,13 +31,11 @@ header {
 
 .poster-column {
   width: 50%;
-  margin-left: 200px;
   margin-right: 15px;
 }
 
 .information-column {
   width: 100%;
-  margin-right: 200px;
   margin-left: 15px;
 }
 
@@ -59,4 +64,25 @@ header {
 
 .mat-flat-button {
   margin: 10px;
+}
+
+@include mobile {
+  .view-content {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@include tablet {
+  .view-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+@include medium {
+  .view-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 }
