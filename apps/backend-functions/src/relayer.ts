@@ -7,11 +7,11 @@ import { keccak256 } from '@ethersproject/keccak256';
 import { toUtf8Bytes } from '@ethersproject/strings';
 import { getAddress } from '@ethersproject/address';
 import { toASCII } from 'punycode';
-import * as CREATE2_FACTORY from './contracts/Factory2.json';
-import * as ERC1077 from './contracts/ERC1077.json';
-import * as ENS_REGISTRY from './contracts/ENSRegistry.json';
-import * as ENS_RESOLVER from './contracts/PublicResolver.json';
-import * as ORG_CONTRACT from './contracts/Organization.json';
+import { abi as CREATE2_FACTORY_ABI } from './contracts/Factory2.json';
+import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from './contracts/ERC1077.json';
+import { abi as ENS_REGISTRY_ABI } from './contracts/ENSRegistry.json';
+import { abi as ENS_RESOLVER_ABI } from './contracts/PublicResolver.json';
+import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from './contracts/Organization.json';
 
 type TxResponse = TransactionResponse;
 type TxReceipt = TransactionReceipt;
@@ -75,10 +75,10 @@ export function initRelayer(config: RelayerConfig): Relayer {
 
   wallet = wallet.connect(provider);
 
-  const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY.abi, wallet);
+  const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY_ABI, wallet);
   const relayerNamehash = namehash(config.baseEnsDomain);
-  const registry = new Contract(config.registryAddress, ENS_REGISTRY.abi, wallet);
-  const resolver = new Contract(config.resolverAddress, ENS_RESOLVER.abi, wallet);
+  const registry = new Contract(config.registryAddress, ENS_REGISTRY_ABI, wallet);
+  const resolver = new Contract(config.resolverAddress, ENS_RESOLVER_ABI, wallet);
 
   return <Relayer>{
     wallet,
@@ -108,21 +108,26 @@ export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!!
     .join('') + '.' + baseEnsDomain;
 }
 
+/**
+ * This function precompute a contract address as defined in the EIP 1014 (Skinny Create 2)
+ * @param ensDomain this is use as a salt (salt need to be unique for each user)
+ * @param provider ethers provider
+ */
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
 export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
+  const baseName = ensDomain.split('.')[0];
   const relayer = initRelayer(config);
-  const factoryAddress = await relayer.wallet.provider.resolveName(relayer.contractFactory.address);
-  ensDomain = ensDomain.split('.')[0];
-  // CREATE2 address
-  let payload = '0xff';
-  payload += factoryAddress.substr(2);
-  payload += keccak256(toUtf8Bytes(ensDomain)).substr(2); // salt
-  payload += keccak256(`0x${ERC1077.bytecode}`).substr(2);
-  return `0x${keccak256(payload).slice(-40)}`;
+  const factoryAddress = await relayer.wallet.provider.resolveName(relayer.contractFactory.address).then(address => address.substr(2));
+  const salt = keccak256(toUtf8Bytes(baseName)).substr(2);
+  const byteCodeHash = keccak256(`0x${ERC1077_BYTECODE}`).substr(2);
+
+  const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
+
+  return `0x${keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
 }
 
 /** check if an ENS name is linked to an eth address */
-export async function isENSNameRegistred(ensName: string, config: RelayerConfig) {
+export async function isENSNameRegistered(ensName: string, config: RelayerConfig) {
   const relayer = initRelayer(config);
 
   const address = await relayer.wallet.provider.resolveName(ensName); // return eth address or null
@@ -164,7 +169,7 @@ export async function relayerDeployLogic(
     if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
       const deployTx: TxResponse = await relayer.contractFactory.deploy(
         hash,
-        `0x${ERC1077.bytecode}`,
+        `0x${ERC1077_BYTECODE}`,
         key.toLocaleLowerCase(),
         recoverAddress.toLocaleLowerCase(),
       )
@@ -286,7 +291,7 @@ export async function relayerSendLogic(
   }
 
   // compute needed values
-  const erc1077 = new Contract(address, ERC1077.abi, relayer.wallet);
+  const erc1077 = new Contract(address, ERC1077_ABI, relayer.wallet);
 
   // check if tx will be accepted by erc1077
   const canExecute: boolean = await erc1077.functions.canExecute(
@@ -345,7 +350,7 @@ export async function relayerDeployOrganizationLogic(
     throw new Error('"adminAddress" should be a valid ethereum address !');
   }
 
-  const organizationFactory = new ContractFactory(ORG_CONTRACT.abi, ORG_CONTRACT.bytecode, relayer.wallet);
+  const organizationFactory = new ContractFactory(ORG_CONTRACT_ABI, ORG_CONTRACT_BYTECODE, relayer.wallet);
   const contract = await organizationFactory.deploy(adminAddress);
   console.log(`tx sent (deployOrganization) : ${contract.deployTransaction.hash}`); // display tx to firebase logging
   await contract.deployed();
