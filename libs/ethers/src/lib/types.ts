@@ -1,4 +1,4 @@
-import { ContractFunction } from 'ethers';
+import { ContractFunction } from '@ethersproject/contracts';
 
 export interface INgContract {
   [methods: string]: ContractFunction;

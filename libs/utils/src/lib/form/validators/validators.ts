@@ -11,8 +11,10 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
-import { network } from '@env';
+import { getDefaultProvider } from 'ethers';
+import { isValidMnemonic } from '@ethersproject/hdnode';
 import { orgNameToEnsDomain } from '../../helpers';
+import { network } from '@env';
 
 export const emailValidators = [Validators.required, Validators.email];
 
@@ -52,14 +54,14 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
     return { mnemonic: true };
   }
   // Use ethers.js build in function to check for a correct Mnemonic
-  const isValidMnemonic = ethers.utils.HDNode.isValidMnemonic(control.value);
-  return isValidMnemonic ? null : { mnemonic: true };
+  const isValid = isValidMnemonic(control.value);
+  return isValid ? null : { mnemonic: true };
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
   const orgENS = orgNameToEnsDomain(control.value);
-  const orgAddress = await ethers.getDefaultProvider(network).resolveName(orgENS);
+  const orgAddress = await getDefaultProvider(network).resolveName(orgENS);
   return !orgAddress ? null : { notUnique: true };
 }
 
