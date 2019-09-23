@@ -26,10 +26,10 @@
   <!-- Second Column -->
   <ul class="size-column">
     <ng-container *ngIf="salesCast">
-      <li fxLayout="row">
+      <li fxLayout="row wrap">
         <span><b>Principal Cast</b></span>
         <span *ngFor="let cast of salesCast.credits; let isLast=last">
-          {{ cast.lastName }}{{ cast.firstName }} {{isLast ? '' : ', '}}
+          {{ cast.lastName }} {{ cast.firstName }} {{isLast ? '' : ', '}}
         </span>
       </li>
     </ng-container>
