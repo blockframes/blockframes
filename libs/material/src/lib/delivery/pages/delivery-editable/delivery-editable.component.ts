@@ -51,7 +51,10 @@ export class DeliveryEditableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.materials$ = combineLatest([this.query.selectActive(), this.materialQuery.selectAll()]).pipe(
+    this.materials$ = combineLatest([
+      this.query.selectActive(),
+      this.materialQuery.selectAll()
+    ]).pipe(
       tap(([delivery, materials]) => {
         this.form.upsertValue(materials);
         // Disable or enable form depending on delivery isSigned property
@@ -82,7 +85,6 @@ export class DeliveryEditableComponent implements OnInit {
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(materials, delivery)
         : this.materialService.update(materials, delivery);
-      this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
@@ -97,9 +99,12 @@ export class DeliveryEditableComponent implements OnInit {
 
   /* Select a single material to perform an action **/
   public selectMaterial(material: Material) {
-    this.materialQuery.hasActive(material.id)
-      ? this.materialStore.removeActive(material.id)
-      : this.materialStore.addActive(material.id);
+    if (this.materialQuery.hasActive(material.id)) {
+      this.materialStore.removeActive(material.id);
+    }
+    if (!this.materialQuery.hasActive(material.id)) {
+      this.materialStore.addActive(material.id);
+    }
   }
 
   /* Select all materials to perform an action **/

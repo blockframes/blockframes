@@ -4,6 +4,7 @@ import { FireQuery } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore, MovieState } from './movie.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { switchMap } from 'rxjs/operators';
 
 /**
  * @see #483
@@ -28,6 +29,12 @@ export class MovieService extends CollectionService<MovieState> {
     store: MovieStore
   ) {
     super(store);
+  }
+
+  public syncOrgMovies() {
+    return this.organizationQuery.select('org').pipe(
+      switchMap(org => this.syncManyDocs(org.movieIds))
+    )
   }
 
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
@@ -67,7 +74,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.stakeholders) delete movie.stakeholders;
 
     return this.fireQuery.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
-  } 
+  }
 
   public async remove(movieId: string): Promise<void> {
     const movieDoc = this.fireQuery.doc<Movie>(`movies/${movieId}`);
