@@ -5,7 +5,7 @@ import { Material } from './material.model';
 export interface MaterialState extends EntityState<Material>, MultiActiveState {}
 
 const initialState = {
-  active: null,
+  active: [],
 };
 
 @Injectable({

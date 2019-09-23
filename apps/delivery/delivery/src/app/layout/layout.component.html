@@ -35,8 +35,8 @@
       </ng-container>
 
     </toolbar-header>
-    <main>
-      <router-outlet></router-outlet>
+    <main [@slideAnimation]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

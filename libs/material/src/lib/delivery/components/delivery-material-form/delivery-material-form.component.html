@@ -22,9 +22,9 @@
     <!-- Material Step Select -->
     <mat-form-field appearance="outline">
       <mat-label>Step</mat-label>
-      <mat-select formControlName="step">
-        <mat-option value=null>None</mat-option>
-        <mat-option *ngFor="let step of delivery.steps" [value]="step">
+      <mat-select formControlName="stepId">
+        <mat-option value="">None</mat-option>
+        <mat-option *ngFor="let step of delivery.steps" [value]="step.id">
           {{ step.name }} <i>({{ step.date | date: 'dd/MM/yyyy' }})</i>
         </mat-option>
       </mat-select>
