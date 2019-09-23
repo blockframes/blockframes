@@ -34,9 +34,7 @@ export class DeliveryMaterialsGuard extends StateListGuard<Material> {
         const query = delivery.mustBeSigned
           ? deliveryToBeSignedMaterialsQuery(delivery)
           : deliveryMaterialsQuery(delivery);
-          return this.fireQuery.fromQuery<Material[]>(query).pipe(
-            map(materials => materials.map(material => getMaterialStep(material, delivery)))
-          );
+          return this.fireQuery.fromQuery<Material[]>(query)
       })
     );
   }

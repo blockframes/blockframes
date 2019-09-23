@@ -22,3 +22,6 @@ export * from './lib/form/forms/field.form';
 export * from './lib/form/forms/list.form';
 export * from './lib/form/forms/entity.form';
 export * from './lib/form/forms/batch.form';
+
+// animation
+export * from './lib/animations/router-animations';
