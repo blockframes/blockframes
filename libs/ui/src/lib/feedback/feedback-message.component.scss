@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 section {
   text-align: center;
@@ -8,14 +8,14 @@ section {
   }
 }
 
-@include mobile {
-  section {
-    margin: 0 20px;
-    img {
-      width: 250px;
-    }
-    button {
-      margin-top: 40px;
-    }
-  }
-}
+// @include mobile {
+//   section {
+//     margin: 0 20px;
+//     img {
+//       width: 250px;
+//     }
+//     button {
+//       margin-top: 40px;
+//     }
+//   }
+// }

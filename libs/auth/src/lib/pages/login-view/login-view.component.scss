@@ -1,5 +1,5 @@
 @import '~@angular/material/theming';
-@import 'variables';
+//@import 'variables';
 
 mat-sidenav-container {
   height: 100%;
@@ -34,40 +34,40 @@ mat-sidenav {
   width: 700px;
 }
 
-// large
-@include large {
-  mat-sidenav {
-    width: 600px;
-  }
-}
+// // large
+// @include large {
+//   mat-sidenav {
+//     width: 600px;
+//   }
+// }
 
-// medium
-@include medium {
-  mat-sidenav {
-    width: 400px;
-  }
-  mat-sidenav-content {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-y: center;
-  }
-}
+// // medium
+// @include medium {
+//   mat-sidenav {
+//     width: 400px;
+//   }
+//   mat-sidenav-content {
+//     background-size: contain;
+//     background-repeat: no-repeat;
+//     background-position-y: center;
+//   }
+// }
 
-// small
-@include tablet {
-  mat-sidenav {
-    width: 300px;
-  }
-  mat-sidenav-content {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-y: center;
-  }
-}
+// // small
+// @include tablet {
+//   mat-sidenav {
+//     width: 300px;
+//   }
+//   mat-sidenav-content {
+//     background-size: contain;
+//     background-repeat: no-repeat;
+//     background-position-y: center;
+//   }
+// }
 
-// extra small
-@include mobile {
-  mat-sidenav {
-    width: 100%;
-  }
-}
+// // extra small
+// @include mobile {
+//   mat-sidenav {
+//     width: 100%;
+//   }
+// }

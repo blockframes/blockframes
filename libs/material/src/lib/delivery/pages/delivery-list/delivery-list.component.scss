@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 section {
   margin: 50px 300px;
@@ -8,20 +8,20 @@ mat-divider {
   margin: 0 20px;
 }
 
-@include medium {
-  section {
-    margin: 50px;
-  }
-}
+// @include medium {
+//   section {
+//     margin: 50px;
+//   }
+// }
 
-@include tablet {
-  section {
-    margin: 50px;
-  }
-}
+// @include tablet {
+//   section {
+//     margin: 50px;
+//   }
+// }
 
-@include mobile {
-  section {
-    margin: 10px;
-  }
-}
+// @include mobile {
+//   section {
+//     margin: 10px;
+//   }
+// }

@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 form {
   width: 30%;
@@ -24,36 +24,36 @@ mat-form-field {
   background-size: cover;
 }
 
-@include mobile {
-  form {
-    width: 80%;
-    padding-left: 0;
-  }
-  article {
-    height: 80%;
-  }
-  .image {
-    height: 200px;
-    width: 200px;
-  }
-  button {
-    margin-top: 40px;
-  }
-}
+// @include mobile {
+//   form {
+//     width: 80%;
+//     padding-left: 0;
+//   }
+//   article {
+//     height: 80%;
+//   }
+//   .image {
+//     height: 200px;
+//     width: 200px;
+//   }
+//   button {
+//     margin-top: 40px;
+//   }
+// }
 
-@include tablet {
-  form {
-    width: 60%;
-    padding-left: 0;
-  }
-  article {
-    height: 80%;
-  }
-  .image {
-    height: 350px;
-    width: 400px;
-  }
-  button {
-    margin-top: 40px;
-  }
-}
+// @include tablet {
+//   form {
+//     width: 60%;
+//     padding-left: 0;
+//   }
+//   article {
+//     height: 80%;
+//   }
+//   .image {
+//     height: 350px;
+//     width: 400px;
+//   }
+//   button {
+//     margin-top: 40px;
+//   }
+// }

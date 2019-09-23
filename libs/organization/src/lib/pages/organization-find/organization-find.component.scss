@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 section {
   height: 100%;
@@ -32,15 +32,15 @@ mat-form-field {
   margin-top: 80px;
 }
 
-// extra small
-@include mobile {
-  section {
-    height: auto;
-  }
-  article {
-    width: 80%;
-  }
-  .join-org {
-    margin-top: 40px;
-  }
-}
+// // extra small
+// @include mobile {
+//   section {
+//     height: auto;
+//   }
+//   article {
+//     width: 80%;
+//   }
+//   .join-org {
+//     margin-top: 40px;
+//   }
+// }

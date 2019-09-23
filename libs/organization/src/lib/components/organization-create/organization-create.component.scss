@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 mat-card {
   width: 50%;
@@ -12,8 +12,8 @@ mat-toolbar {
   background: transparent;
 }
 
-@include mobile {
-  mat-card {
-    width: 100%;
-  }
-}
+// @include mobile {
+//   mat-card {
+//     width: 100%;
+//   }
+// }

@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 img {
   width: 200px;
@@ -27,32 +27,32 @@ h3 {
   color: #4D5664;
 }
 
-@include medium {
-  img {
-    width: 150px;
-    height: 150px;
-  }
-  mat-card {
-    width: 30%;
-  }
-}
+// @include medium {
+//   img {
+//     width: 150px;
+//     height: 150px;
+//   }
+//   mat-card {
+//     width: 30%;
+//   }
+// }
 
-@include tablet {
-  img {
-    width: 100px;
-    height: 100px;
-  }
-  mat-card {
-    width: 46%;
-  }
-}
+// @include tablet {
+//   img {
+//     width: 100px;
+//     height: 100px;
+//   }
+//   mat-card {
+//     width: 46%;
+//   }
+// }
 
-@include mobile {
-  img {
-    width: 100px;
-    height: 100px;
-  }
-  mat-card {
-    width: 80%;
-  }
-}
+// @include mobile {
+//   img {
+//     width: 100px;
+//     height: 100px;
+//   }
+//   mat-card {
+//     width: 80%;
+//   }
+// }

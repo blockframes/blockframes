@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 section {
   height: 100%;
@@ -26,12 +26,12 @@ h2 {
   font-size: 14px;
 }
 
-// extra small
-@include mobile {
-  article {
-    width: 100%;
-  }
-  section {
-    height: auto;
-  }
-}
+// // extra small
+// @include mobile {
+//   article {
+//     width: 100%;
+//   }
+//   section {
+//     height: auto;
+//   }
+// }

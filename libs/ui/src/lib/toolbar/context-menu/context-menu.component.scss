@@ -1,4 +1,4 @@
-@import 'variables';
+//@import 'variables';
 
 .context-menu {
   height: var(--toolbarHeight);
@@ -31,12 +31,12 @@
 }
 
 
-@include medium {
-  .context-menu {
+// @include medium {
+//   .context-menu {
 
-    .mat-tab-link {
-      padding: 0;
-      min-width: 135px;
-    }
-  }
-}
+//     .mat-tab-link {
+//       padding: 0;
+//       min-width: 135px;
+//     }
+//   }
+// }
