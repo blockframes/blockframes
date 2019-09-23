@@ -10,8 +10,7 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding,
-  OnDestroy
+  HostBinding
 } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery } from '@blockframes/movie';
@@ -41,10 +40,8 @@ import { filterMovie } from './filter.util';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit, OnDestroy {
+export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
-
-  private subscription: Subscription;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -200,9 +197,5 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     }
     this.filterForm.addTerritory(territory.option.viewValue as TerritoriesLabel);
     this.territoryInput.nativeElement.value = '';
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }
