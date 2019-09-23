@@ -1,7 +1,8 @@
 @import 'mixins';
 
 section {
-  background-color: mat-color($bf-light-background, white-bg);
+  // TODO #974: replace color
+  background-color: #FFFFFF;
   height: 100%;
   margin: 0 200px;
 }
