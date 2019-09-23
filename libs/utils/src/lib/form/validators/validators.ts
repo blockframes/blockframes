@@ -5,9 +5,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
-  FormGroupDirective,
-  NgForm
+  Validators
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';

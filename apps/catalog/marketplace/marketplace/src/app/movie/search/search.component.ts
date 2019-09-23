@@ -2,7 +2,6 @@
 import { Router } from '@angular/router';
 import { Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-import { MatAccordion } from '@angular/material/expansion';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import {
   Component,
@@ -10,8 +9,7 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding,
-  OnDestroy
+  HostBinding
 } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery } from '@blockframes/movie';
@@ -22,14 +20,19 @@ import {
   LanguagesLabel,
   CertificationsLabel,
   MediasLabel,
-  TerritoriesLabel,
   CERTIFICATIONS_LABEL,
   MEDIAS_LABEL,
-  TERRITORIES_LABEL
+  TERRITORIES_LABEL,
+  GenresSlug,
+  CertificationsSlug,
+  LanguagesSlug,
+  MediasSlug,
+  TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
+import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -41,10 +44,8 @@ import { filterMovie } from './filter.util';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit, OnDestroy {
+export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
-
-  private subscription: Subscription;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -78,7 +79,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     Validators.required,
     languageValidator
   ]);
-  public territoryControl: FormControl = new FormControl();
+  public territoryControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
@@ -105,7 +106,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
-  @ViewChild(MatAccordion, { static: false }) accordion: MatAccordion;
 
   constructor(private movieQuery: MovieQuery, private router: Router) {}
 
@@ -188,36 +188,62 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   //////////////////
 
   public addLanguage(language: LanguagesLabel) {
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
-      this.filterForm.addLanguage(language);
+      this.filterForm.addLanguage(languageSlug);
+    } else {
+      throw new Error('Something went wrong. Please choose a language from the drop down menu');
     }
   }
 
   public removeLanguage(language: LanguagesLabel) {
-    this.filterForm.removeLanguage(language);
-  }
-
-  public deleteLanguage(language: LanguagesLabel) {
-    this.filterForm.removeLanguage(language);
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
+    this.filterForm.removeLanguage(languageSlug);
   }
 
   public hasGenre(genre: GenresLabel) {
-    if (this.movieGenres.includes(genre) && !this.filterForm.get('type').value.includes(genre)) {
-      this.filterForm.addType(genre);
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
+    if (
+      this.movieGenres.includes(genre) &&
+      !this.filterForm.get('type').value.includes(genreSlug)
+    ) {
+      this.filterForm.addType(genreSlug);
     } else {
-      this.filterForm.removeType(genre);
+      this.filterForm.removeType(genreSlug);
     }
   }
 
   public checkCertification(certification: CertificationsLabel) {
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const certificationSlug: CertificationsSlug = getCodeIfExists('CERTIFICATIONS', certification);
     if (this.movieCertifications.includes(certification)) {
-      this.filterForm.checkCertification(certification);
+      this.filterForm.checkCertification(certificationSlug);
     }
   }
 
   public checkMedia(media: MediasLabel) {
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const mediaSlug: MediasSlug = getCodeIfExists('MEDIAS', media);
     if (this.movieMedias.includes(media)) {
-      this.filterForm.checkMedia(media);
+      this.filterForm.checkMedia(mediaSlug);
     }
   }
 
@@ -234,11 +260,15 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     if (!this.selectedMovieTerritories.includes(territory.option.viewValue)) {
       this.selectedMovieTerritories.push(territory.option.value);
     }
-    this.filterForm.addTerritory(territory.option.viewValue as TerritoriesLabel);
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const territorySlug: TerritoriesSlug = getCodeIfExists(
+      'TERRITORIES',
+      territory.option.viewValue
+    );
+    this.filterForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

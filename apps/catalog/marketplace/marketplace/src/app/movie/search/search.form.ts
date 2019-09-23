@@ -5,13 +5,20 @@ import {
   TerritoriesLabel,
   GenresLabel,
   GENRES_LABEL,
-  CERTIFICATIONS_LABEL,
-  MEDIAS_LABEL,
-  TERRITORIES_LABEL
+  LanguagesSlug,
+  GenresSlug,
+  GENRES_SLUG,
+  CertificationsSlug,
+  CERTIFICATIONS_SLUG,
+  MediasSlug,
+  MEDIAS_SLUG,
+  TerritoriesSlug,
+  TERRITORIES_SLUG
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
+import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -131,18 +138,18 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     return this.get('languages') as FormGroup;
   }
 
-  addLanguage(language: LanguagesLabel, value: Partial<MovieLanguage> = {}) {
+  addLanguage(language: LanguagesSlug, value: Partial<MovieLanguage> = {}) {
     const movieLanguage = createMovieLanguage(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 
-  removeLanguage(language: LanguagesLabel) {
+  removeLanguage(language: LanguagesSlug) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
   }
 
-  addType(type: GenresLabel) {
-    if (!GENRES_LABEL.includes(type)) {
+  addType(type: GenresSlug) {
+    if (!GENRES_SLUG.includes(type)) {
       throw new Error(
         `Type ${type} is not part of the defined types, here is the complete list currently available: ${GENRES_LABEL}`
       );
@@ -151,8 +158,8 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  removeType(type: GenresLabel) {
-    if (GENRES_LABEL.includes(type)) {
+  removeType(type: GenresSlug) {
+    if (GENRES_SLUG.includes(type)) {
       const newControls = this.get('type').value.filter(typeToRemove => typeToRemove !== type);
       this.get('type').setValue(newControls);
     } else {
@@ -160,17 +167,17 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  checkCertification(certificationChecked: CertificationsLabel) {
+  checkCertification(certificationChecked: CertificationsSlug) {
     // check if certification is already checked by the user
     if (
-      CERTIFICATIONS_LABEL.includes(certificationChecked) &&
+      CERTIFICATIONS_SLUG.includes(certificationChecked) &&
       !this.get('certifications').value.includes(certificationChecked)
     ) {
       this.get('certifications').setValue([
         ...this.get('certifications').value,
         certificationChecked
       ]);
-    } else if (CERTIFICATIONS_LABEL.includes(certificationChecked)) {
+    } else if (CERTIFICATIONS_SLUG.includes(certificationChecked)) {
       const uncheckCertification = this.get('certifications').value.filter(
         removeCef => removeCef !== certificationChecked
       );
@@ -180,12 +187,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  checkMedia(mediaChecked: MediasLabel) {
+  checkMedia(mediaChecked: MediasSlug) {
     // check if media is already checked by the user
-    if (MEDIAS_LABEL.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
+    if (MEDIAS_SLUG.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
       this.get('medias').setValue([...this.get('medias').value, mediaChecked]);
     } else if (
-      MEDIAS_LABEL.includes(mediaChecked) &&
+      MEDIAS_SLUG.includes(mediaChecked) &&
       this.get('medias').value.includes(mediaChecked)
     ) {
       const uncheckMedia = this.get('medias').value.filter(
@@ -197,10 +204,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     }
   }
 
-  addTerritory(territory: TerritoriesLabel) {
+  addTerritory(territory: TerritoriesSlug) {
     // Check it's part of the list available
-    if (!TERRITORIES_LABEL.includes(territory)) {
-      throw new Error(`Territory ${territory} is not part of the list`);
+    if (!TERRITORIES_SLUG.includes(territory)) {
+      throw new Error(
+        `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
+      );
     }
     // Check it's not already in the form control
     const territoriesValue = this.get('territories').value;

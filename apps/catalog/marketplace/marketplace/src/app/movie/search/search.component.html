@@ -71,7 +71,7 @@
                   <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
                     Please enter a valid language or choose from the dropdown menu!
                   </mat-error>
-                  <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
+                  <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                     [disabled]="!languageControl.valid">
                     <mat-icon>search</mat-icon>
                   </button>
@@ -166,13 +166,14 @@
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
                 <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
-                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl">
+                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl" />
               </mat-chip-list>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
                 <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
                   {{territory}}
                 </mat-option>
               </mat-autocomplete>
+              <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
             </mat-form-field>
           </mat-expansion-panel>
 
