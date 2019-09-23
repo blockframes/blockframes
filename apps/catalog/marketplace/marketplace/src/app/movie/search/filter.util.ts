@@ -68,7 +68,7 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
     }
   }
 }
-
+// TODO #979
 function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
@@ -77,13 +77,16 @@ function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean 
     movie.sales.some(sale => {
       if (sale.rights) {
         const from: Date = (sale.rights.from as any).toDate();
-        return from.getTime() <= range.from.getTime();
+        /**
+         * Check if range.from is inside of a sales
+         */
+        return from.getTime() < range.from.getTime();
       }
     }) &&
     movie.sales.some(sale => {
       if (sale.rights) {
         const to: Date = (sale.rights.to as any).toDate();
-        return to.getTime() >= range.to.getTime();
+        return to.getTime() > range.to.getTime();
       }
     })
   );
