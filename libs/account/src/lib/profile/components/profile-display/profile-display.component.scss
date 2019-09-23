@@ -1,4 +1,4 @@
-//@import 'variables';
+@import 'mixins';
 
 mat-card {
   height: 380px;
@@ -34,20 +34,20 @@ img {
   height: 250px;
 }
 
-// @include medium {
-//   .mat-card-opened {
-//     height: 90%;
-//   }
-// }
+@include medium {
+  .mat-card-opened {
+    height: 90%;
+  }
+}
 
-// @include mobile {
-//   mat-card {
-//     height: 100%;
-//   }
-// }
+@include mobile {
+  mat-card {
+    height: 100%;
+  }
+}
 
-// @include tablet {
-//   mat-card {
-//     height: 100%;
-//   }
-// }
+@include tablet {
+  mat-card {
+    height: 100%;
+  }
+}

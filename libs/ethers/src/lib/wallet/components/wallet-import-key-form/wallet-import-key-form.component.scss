@@ -1,4 +1,4 @@
-//@import 'variables';
+@import 'mixins';
 
 section {
   max-width: 500px;
@@ -14,11 +14,11 @@ section {
   }
 }
 
-// @include mobile {
-//   section {
-//     img {
-//       width: 250px;
-//       margin-bottom: 30px;
-//     }
-//   }
-// }
+@include mobile {
+  section {
+    img {
+      width: 250px;
+      margin-bottom: 30px;
+    }
+  }
+}

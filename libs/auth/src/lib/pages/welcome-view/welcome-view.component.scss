@@ -1,4 +1,4 @@
-//@import 'variables';
+@import 'mixins';
 
 section {
   height: 100%;
@@ -32,26 +32,26 @@ button {
   margin-top: 80px;
 }
 
-// // small
-// @include tablet {
-//   .image {
-//     height: 300px;
-//     width: 300px;
-//   }
-// }
+// small
+@include tablet {
+  .image {
+    height: 300px;
+    width: 300px;
+  }
+}
 
-// // extra small
-// @include mobile {
-//   button {
-//     margin-top: 40px;
-//   }
-//   .image {
-//     height: 200px;
-//     width: 200px;
-//   }
-//   .content {
-//     height: 250px;
-//     width: 250px;
-//     margin-left: 0;
-//   }
-// }
+// extra small
+@include mobile {
+  button {
+    margin-top: 40px;
+  }
+  .image {
+    height: 200px;
+    width: 200px;
+  }
+  .content {
+    height: 250px;
+    width: 250px;
+    margin-left: 0;
+  }
+}

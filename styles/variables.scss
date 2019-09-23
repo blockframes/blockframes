@@ -11,22 +11,6 @@ $dark-primary: mat-color($bf-dark-primary);
 $dark-accent: mat-color($bf-dark-accent);
 $dark-warn: mat-color($bf-dark-warn);
 
-@mixin mobile {
-  @media screen and (max-width: 599px) { @content; }
-}
-
-@mixin tablet {
-  @media screen and (min-width: 600px) and (max-width: 959px) { @content; }
-}
-
-@mixin medium {
-  @media screen and (min-width: 960px) and (max-width: 1279px) { @content; }
-}
-
-@mixin large {
-  @media screen and (min-width: 1280px) and (max-width: 1919px) { @content; }
-}
-
 // CSS color variables
 :root {
   --primary: #{$primary};

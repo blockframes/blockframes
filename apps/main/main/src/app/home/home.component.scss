@@ -1,4 +1,4 @@
-//@import 'variables';
+@import 'mixins';
 
 section {
   background-color: mat-color($bf-light-background, white-bg);
@@ -6,20 +6,20 @@ section {
   margin: 0 200px;
 }
 
-// @include medium {
-//   section {
-//     margin: 0 100px;
-//   }
-// }
+@include medium {
+  section {
+    margin: 0 100px;
+  }
+}
 
-// @include tablet {
-//   section {
-//     margin: 0 50px;
-//   }
-// }
+@include tablet {
+  section {
+    margin: 0 50px;
+  }
+}
 
-// @include mobile {
-//   section {
-//     margin: 0 20px;
-//   }
-// }
+@include mobile {
+  section {
+    margin: 0 20px;
+  }
+}

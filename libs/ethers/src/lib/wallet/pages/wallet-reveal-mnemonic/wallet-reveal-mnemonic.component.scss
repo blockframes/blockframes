@@ -1,4 +1,4 @@
-//@import 'variables';
+@import 'mixins';
 
 section {
   text-align: center;
@@ -21,27 +21,27 @@ section {
   }
 }
 
-// @include tablet {
-//   section {
-//     .mnemonic {
-//       padding: 0 100px;
-//       a {
-//         margin: 50px;
-//       }
-//     }
-//   }
-// }
+@include tablet {
+  section {
+    .mnemonic {
+      padding: 0 100px;
+      a {
+        margin: 50px;
+      }
+    }
+  }
+}
 
-// @include mobile {
-//   section {
-//     .mnemonic {
-//       padding: 0 10px;
-//       img {
-//         width: 150px;
-//       }
-//       a {
-//         margin: 10px;
-//       }
-//     }
-//   }
-// }
+@include mobile {
+  section {
+    .mnemonic {
+      padding: 0 10px;
+      img {
+        width: 150px;
+      }
+      a {
+        margin: 10px;
+      }
+    }
+  }
+}
