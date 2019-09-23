@@ -1,7 +1,7 @@
-@import 'variables';
-
 .mat-icon {
-  color: mat-color($bf-light-foreground, navbar-icon);
+  // color: mat-color($bf-light-foreground, navbar-icon);
+  // TODO #974: replace color
+  color: #5F697A;
   font-size: 22px;
   margin-right: 12px;
   margin-left: 12px;

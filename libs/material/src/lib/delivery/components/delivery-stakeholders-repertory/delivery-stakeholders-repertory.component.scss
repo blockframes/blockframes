@@ -1,11 +1,13 @@
-@import 'variables';
 table {
   width: 100%;
 }
 
+  // TODO #974: replace color
 .disabled {
-  background: mat-color($bf-light-background, whitebg);
-  color: mat-color($bf-light-foreground, disabled-text);
+  // background: mat-color($bf-light-background, whitebg);
+  // color: mat-color($bf-light-foreground, disabled-text);
+  background: #FFFFFF;
+  color: #5F697A;
 }
 
 img {
