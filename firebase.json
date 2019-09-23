@@ -1,11 +1,7 @@
 {
   "hosting": {
     "public": "dist/apps/",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "/delivery/contract.pdf",
@@ -39,8 +35,10 @@
   },
   "functions": {
     "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint",
-      "npm --prefix \"$RESOURCE_DIR\" run build"
+      "cp ./package.json dist/apps/backend-functions/package.json",
+      "npm run lint backend-functions",
+      "npm run build:functions",
+      "./ops/deploy_secrets.sh"
     ],
     "source": "dist/apps/backend-functions/"
   },

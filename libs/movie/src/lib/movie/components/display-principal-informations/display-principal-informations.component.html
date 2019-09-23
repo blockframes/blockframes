@@ -1,7 +1,7 @@
 <h3>Principal Informations</h3>
 <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
   <!-- First Column -->
-  <ul class="first-column">
+  <ul class="size-column">
     <ng-container *ngIf="main">
       <li fxLayout="row">
         <span><b>Production Year</b></span>
@@ -18,13 +18,13 @@
       <li fxLayout="row">
         <span><b>Director</b></span>
         <span *ngFor="let director of main.directors; let isLast=last">
-          {{ director.lastName }} {{ director.firstName }} {{isLast ? '' : ', '}}
+          {{ director.lastName }} {{ director.firstName }}{{isLast ? '' : ', '}}
         </span>
       </li>
     </ng-container>
   </ul>
   <!-- Second Column -->
-  <ul class="second-column">
+  <ul class="size-column">
     <ng-container *ngIf="salesCast">
       <li fxLayout="row">
         <span><b>Principal Cast</b></span>

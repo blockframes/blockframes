@@ -18,18 +18,18 @@ header {
   margin-left: 0;
 }
 
-.margin-top {
+.film-informations {
   margin-top: 15px;
 }
 
 .poster-column {
-  width: 500px;
+  width: 50%;
   margin-left: 200px;
   margin-right: 15px;
 }
 
 .information-column {
-  width: 1000px;
+  width: 100%;
   margin-right: 200px;
   margin-left: 15px;
 }
@@ -39,6 +39,7 @@ header {
   height: 545px;;
 }
 
+  // TODO #974: replace color
 .movie-presentation {
   margin-top: 40px;
   padding: 50px;
@@ -47,6 +48,7 @@ header {
   border-radius: 10px;
 }
 
+  // TODO #974: replace color
 .informations {
   padding: 50px;
   padding-top: 20px;
