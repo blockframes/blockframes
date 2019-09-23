@@ -1,25 +1,25 @@
 <ng-container *ngIf="organization; else: loading">
-  <mat-card [ngClass]="{ 'mat-card-opened': opened }">
-    <mat-card-content fxLayout="row" fxLayoutAlign="center center" [fxLayout.lt-lg]="layout">
+  <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
       <img mat-card-avatar [src]="organization.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <div>
+        <div class="column-padding-bottom">
           <h3>{{ organization.name }}</h3>
           <span>{{ organization.id }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column">
+        <div fxLayout="column" class="column-padding">
           <span><b>Phone number:</b> {{ organizationInformations.phoneNumber }}</span>
           <span><b>Email:</b> info@{{ organization.name }}.com</span>
           <span><b>Address:</b> {{ organizationInformations.address }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column">
+        <div fxLayout="column" class="column-padding">
           <span><b>Fiscal number:</b> FR 29 340192856</span>
           <span><b>Activity:</b> Distribution company</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div class="action-button" fxLayoutAlign="end">
+        <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>
           </button>

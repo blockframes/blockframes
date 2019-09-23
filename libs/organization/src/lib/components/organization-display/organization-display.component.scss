@@ -2,6 +2,7 @@
 
 mat-card {
   height: 380px;
+  width: 100%;
 }
 
 mat-card-content {
@@ -14,14 +15,18 @@ mat-card-content {
   padding-left: 24px;
 }
 
-.information div {
+.column-padding {
   padding: 16px 0;
 }
 
+.column-padding-bottom {
+  padding-bottom: 16px;
+}
+
 .action-button {
-  position: relative;
-  left: 95%;
-  bottom: 10px;
+  position: absolute;
+  right: 30px;
+  bottom: 5px;
 }
 
 img {
@@ -37,7 +42,7 @@ img {
 
 @include mobile {
   mat-card {
-    height: 100%;
+    height: auto;
   }
 }
 

@@ -1,22 +1,22 @@
 <ng-container *ngIf="user; else: loading">
-  <mat-card [ngClass]="{ 'mat-card-opened': opened }">
-    <mat-card-content fxLayout="row" fxLayoutAlign="center center" [fxLayout.lt-lg]="layout">
+  <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
       <img mat-card-avatar [src]="[user.avatar]" alt="Profile picture" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <div>
-          <h3 class="name">
+        <div class="column-padding-bottom">
+          <h3>
             {{ user.name }}
           </h3>
           <span>{{ user.surname }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column">
+        <div fxLayout="column" class="column-padding">
           <span *ngIf="user.phoneNumber"><b>Phone number:</b> {{ user.phoneNumber }}</span>
           <span><b>Email:</b> {{ userEmail }}</span>
           <span *ngIf="user.position"><b>Position:</b> {{ user.position }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
-        <div>
+        <div class="column-padding">
           <span *ngIf="organization"><b>Organization:</b> {{ organization.name }}</span>
         </div>
         <mat-divider [inset]="true"></mat-divider>
