@@ -68,7 +68,7 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
     }
   }
 }
-// TODO #979
+// TODO #979 - check if availabilities filter is needed
 function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean {
   if (!range || !(range.from && range.to)) {
     return true;

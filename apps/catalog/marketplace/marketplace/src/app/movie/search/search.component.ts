@@ -143,10 +143,11 @@ export class MarketplaceSearchComponent implements OnInit {
    */
   public showFormGroupError(formGroupName: string): boolean {
     if (formGroupName === 'productionYear') {
-      return !this.filterForm
-        .get('productionYear')
-        .get('from')
-        .hasError('pattern') &&
+      return (
+        !this.filterForm
+          .get('productionYear')
+          .get('from')
+          .hasError('pattern') &&
         !this.filterForm
           .get('productionYear')
           .get('from')
@@ -156,15 +157,14 @@ export class MarketplaceSearchComponent implements OnInit {
           .get('to')
           .hasError('pattern') &&
           this.filterForm.get('productionYear').hasError('invalidRange'))
-        ? true
-        : false;
+      );
     } else {
-      return !this.filterForm
-        .get('availabilities')
-        .get('from')
-        .hasError('min') && this.filterForm.get('availabilities').hasError('invalidRange')
-        ? true
-        : false;
+      return (
+        !this.filterForm
+          .get('availabilities')
+          .get('from')
+          .hasError('min') && this.filterForm.get('availabilities').hasError('invalidRange')
+      );
     }
   }
 
@@ -196,7 +196,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
     } else {
-      throw new Error('Something went wrong. Please choose a language from the drop down menu');
+      throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
   }
 

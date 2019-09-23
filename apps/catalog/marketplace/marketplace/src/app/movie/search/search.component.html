@@ -17,12 +17,12 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-              <!-- TODO##968 -->
+              <!-- TODO##968 css: handle multiple error messages --> 
               <mat-form-field apperance="outline" color="accent">
                 <input test-id="production-year-input-from" matInput type="number" formControlName="from"
                   placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
                 <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
-                  Please type in a valid year. Example: <i>{{ getCurrentYear }}</i>
+                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
                 </mat-error>
                 <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
                   The year can't be above the current year, {{ getCurrentYear }}
@@ -37,7 +37,7 @@
               </mat-form-field>
             </div>
             <mat-error *ngIf="showFormGroupError('productionYear')">
-              The value <i>To</i> can't be smaller then the value <i>From</i>!
+              The value <i>To</i> can't be smaller than the value <i>From</i>!
             </mat-error>
           </mat-expansion-panel>
 
@@ -147,7 +147,7 @@
               </mat-form-field>
             </div>
             <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
-              The value <i>To</i> can't be smaller then the value <i>From</i>!
+              The value <i>To</i> can't be smaller than the value <i>From</i>!
             </mat-error>
           </mat-expansion-panel>
 
