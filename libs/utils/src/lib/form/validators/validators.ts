@@ -71,13 +71,13 @@ export function languageValidator(control: AbstractControl): { [key: string]: bo
 }
 /**
  * @description Form group validator that checks if the two children controls have a valid range
- * @param firstControl Name of the first control
- * @param secondControl name of the second control
+ * @param from range from
+ * @param to range to
  */
-export function numberRangeValidator(firstControl: string, secondControl: string): ValidatorFn {
+export function numberRangeValidator(from: string, to: string): ValidatorFn {
   return (group: FormGroup): ValidationErrors => {
-    const control1 = group.controls[`${firstControl}`];
-    const control2 = group.controls[`${secondControl}`];
+    const control1 = group.controls[`${from}`];
+    const control2 = group.controls[`${to}`];
     if (control1 instanceof Date) {
       return control1.value.getTime() > control2.value.getTime() &&
         group.touched &&
