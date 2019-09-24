@@ -5,13 +5,14 @@
     class="notification-button">
     <mat-icon
       *ngIf="notifCount > 0 || invitCount > 0; else: empty"
+      class="grey-icon"
       [matBadge]="notifCount + invitCount"
       matBadgeColor="accent"
       matBadgeSize="small">
       notifications_none
     </mat-icon>
     <ng-template #empty>
-      <mat-icon>notifications_none</mat-icon>
+      <mat-icon class="grey-icon">notifications_none</mat-icon>
     </ng-template>
   </button>
 </section>

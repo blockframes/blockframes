@@ -1,9 +1,7 @@
   // TODO #974: replace color
 
 article {
-  background-color: white;
   border: solid 1px #D8D8D8;
-  // border: solid 1px mat-color($bf-light-foreground, divider);
   border-radius: 10px;
   height: 100px;
   width: 320px;
@@ -41,7 +39,6 @@ article.small {
     margin-right: 0;
     button {
       margin: 5px;
-      color: white
     }
   }
 }
