@@ -4,7 +4,8 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
+  FormArray
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
@@ -53,6 +54,17 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
   // Use ethers.js build in function to check for a correct Mnemonic
   const isValid = isValidMnemonic(control.value);
   return isValid ? null : { mnemonic: true };
+}
+
+/** Checks if the sum of all percentages of FormArray does not exceed 100%  */
+export function validPercentages(control: FormGroup): ValidationErrors | null {
+  // TODO: issue#782
+  let sum = 0;
+  const array = control.get('mgDeadlines') as FormArray;
+  array.controls.forEach(group => sum += group.get('percentage').value)
+
+  const isValid = sum <= 100;
+  return isValid ? null : { percentageNotMatching: true };
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */

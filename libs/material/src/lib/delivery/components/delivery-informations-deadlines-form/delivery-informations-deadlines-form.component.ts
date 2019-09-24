@@ -5,6 +5,7 @@ import {
 import { ControlContainer, FormArray } from '@angular/forms';
 import { createDeadlineFormGroup } from '../../forms/informations.form';
 import { Currencies } from '../../+state';
+import { PercentageStateMatcher } from '@blockframes/utils';
 
 export function calculAmount(total: number, percentage: number): number {
   return total * percentage / 100;
@@ -20,6 +21,7 @@ export class DeliveryInformationsDeadlinesFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 
   public currencies = Currencies;
+  public percentageMatcher = new PercentageStateMatcher('percentage');
 
   public get control() {
     return this.controlContainer.control;

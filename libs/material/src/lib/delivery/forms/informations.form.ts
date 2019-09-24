@@ -1,5 +1,5 @@
-import { FormGroup, FormControl } from '@angular/forms';
-import { FormList } from '@blockframes/utils';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormList, validPercentages } from '@blockframes/utils';
 import { Step, MGDeadline } from '../+state';
 
 export function createStepFormGroup(step: Step) {
@@ -38,5 +38,5 @@ export function createInformationsFormGroup() {
     reWorkingPeriod: new FormControl(),
     // Delivery steps
     steps: createStepsFormList()
-  });
+  }, [Validators.required, validPercentages]);
 }
