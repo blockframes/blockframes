@@ -1,25 +1,36 @@
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, map, startWith, tap } from 'rxjs/operators';
 import {
-  TerritoriesSlug,
-  LanguagesLabel,
-  MediasSlug,
-  MEDIAS_SLUG,
-  TERRITORIES_SLUG
-} from '@blockframes/movie/movie/static-model/types';
-import { Router } from '@angular/router';
-import { BasketService } from '../+state/basket.service';
-import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
-import { ViewChild, HostBinding } from '@angular/core';
-import { DateRange } from '@blockframes/utils';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map } from 'rxjs/operators';
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { DistributionRightForm } from './create.form';
-import { MovieQuery, Movie, staticModels } from '@blockframes/movie';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { startWith, debounceTime } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Movie, MovieQuery, MovieSale } from '@blockframes/movie/movie/+state';
+import {
+  LanguagesLabel,
+  MEDIAS_SLUG,
+  MediasSlug,
+  TERRITORIES_SLUG,
+  TerritoriesSlug
+} from '@blockframes/movie/movie/static-model/types';
+import { DateRange } from '@blockframes/utils';
+import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
+import { BasketService } from '../+state/basket.service';
+import {
+  hasSalesRights,
+  hasTerritoriesInCommon,
+  movieHasExclusiveSales,
+  hasMediaInCommon
+} from './availabilities.util';
+import { DistributionRightForm } from './create.form';
 
 @Component({
   selector: 'distribution-right-create',
@@ -27,26 +38,38 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionRightCreateComponent implements OnInit {
+export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'distribution-right';
+
+  // Subscription for value changes int he distribution right form
+  private formSubscription: Subscription;
+
   // Form for holding users distribution rights choice
   public form = new DistributionRightForm();
+
   // Movie for information to display
   public movie$: Observable<Movie>;
+
   // This variable is going to be passed down to the catalog-form-selection table component
   public catalogBasket: CatalogBasket;
+
   // A flag to indicate if datepicker is open
   public opened = false;
+
   // A flag to indicate if results should be shown
   public showResults = false;
 
-  /*
-    This variable will be input the dates inside of the datepicker
-    if the users types it in manually
- */
+  /**
+   * This variable will be input the dates inside of the datepicker
+   * if the users types it in manually
+   */
   public choosenDateRange: DateRange = { to: new Date(), from: new Date() };
+
   // This variable contains the dates which the movie is already bought
   public occupiedDateRanges: DateRange[] = [];
+
+  // Datepicker section
+  public disabledDates: Date;
 
   // Media section
   public movieMedia: MediasSlug[] = MEDIAS_SLUG;
@@ -66,9 +89,6 @@ export class DistributionRightCreateComponent implements OnInit {
   public selectedDubbings: string[] = [];
   public selectedSubtitles: string[] = [];
 
-  // Datepicker section
-  public disabledDates: Date;
-
   // Territory section
   public territoriesFilter: Observable<string[]>;
   public territoryControl = new FormControl();
@@ -84,12 +104,14 @@ export class DistributionRightCreateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.movie$ = this.query.selectActive();
-    this.query.selectActive().subscribe(movie => {
-      this.movieLanguages = movie.main.languages;
-      this.movieDubbings = movie.versionInfo.dubbings;
-      this.movieSubtitles = movie.versionInfo.subtitles;
-    });
+    // The movie$ observable will get unsubscribed by the async pipe
+    this.movie$ = this.query.selectActive().pipe(
+      tap(movie => {
+        this.movieLanguages = movie.main.languages;
+        this.movieDubbings = movie.versionInfo.dubbings;
+        this.movieSubtitles = movie.versionInfo.subtitles;
+      })
+    );
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -110,7 +132,7 @@ export class DistributionRightCreateComponent implements OnInit {
       debounceTime(300),
       map(value => this._subtitlesFilter(value))
     );
-    this.form.valueChanges.subscribe(data => {
+    this.formSubscription = this.form.valueChanges.subscribe(data => {
       this.catalogBasket = createBaseBasket({
         rights: [
           createDistributionRight({
@@ -132,6 +154,10 @@ export class DistributionRightCreateComponent implements OnInit {
       this.choosenDateRange.from = data.duration.from;
     });
   }
+
+  /////////////////////
+  // Filter section //
+  ////////////////////
 
   private _languageFilter(value: string): string[] {
     return this.movieLanguages.filter(language =>
@@ -157,6 +183,10 @@ export class DistributionRightCreateComponent implements OnInit {
       return movieTerritory.toLowerCase().includes(filterValue);
     });
   }
+
+  ///////////////////
+  // Form section //
+  //////////////////
 
   public changeDateFocus(dates: DateRange) {
     this.opened = true;
@@ -236,106 +266,41 @@ export class DistributionRightCreateComponent implements OnInit {
     this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
-  // Research section
+  //////////////////////
+  // Research section //
+  //////////////////////
 
   public startResearch() {
-    if (
-      this.isInRange(
-        this.form.get('duration').value,
-        this.query.getActive().salesAgentDeal.rights
-      ) &&
-      this.hasTerritoriesInCommon(
-        this.form.get('territories').value,
-        this.query.getActive().salesAgentDeal.territories
-      ) &&
-      this.hasMediaInCommon(
-        this.form.get('medias').value,
-        this.query.getActive().salesAgentDeal.medias
-      )
-    ) {
+    const exclusiveSales: MovieSale[] = movieHasExclusiveSales(this.query.getActive().sales);
+    const salesDateRange: MovieSale[] | boolean = hasSalesRights(
+      this.query.getActive().sales,
+      this.form.get('duration').value,
+      this.query.getActive().salesAgentDeal
+    );
+    const availableTerritories: string[] = hasTerritoriesInCommon(
+      this.form.get('territories').value,
+      this.query.getActive().salesAgentDeal.territories
+    );
+    const availableMedias: string[] = hasMediaInCommon(
+      this.form.get('medias').value,
+      this.query.getActive().salesAgentDeal.medias
+    );
+    if (!!exclusiveSales && !!salesDateRange && !!availableTerritories && !!availableMedias) {
+      // create distribution right
+      this.showResults = true;
+      this.choosenDateRange.to = this.form.get('duration').value.to;
+      this.choosenDateRange.from = this.form.get('duration').value.from;
+    } else {
       // can't create distribution right
       this.showResults = false;
       this.snackBar.open('There is no availability matching your research', null, {
         duration: 5000
       });
-    } else {
-      // create distribution right
-      this.showResults = true;
-      this.choosenDateRange.to = this.form.get('duration').value.to;
-      this.choosenDateRange.from = this.form.get('duration').value.from;
     }
+    console.log(exclusiveSales, salesDateRange, availableTerritories, availableMedias);
   }
 
-  /**
-   * We want to check if selected range is overlapping with salesAgent daterange
-   * @returns true if in salesAgent daterange
-   * @param formDates
-   * @param salesAgentDates
-   */
-  private isInRange(formDates: DateRange, salesAgentDates: DateRange): boolean {
-    const salesAgentDateFrom: Date = new Date(salesAgentDates.from);
-    const salesAgentDateTo: Date = new Date(salesAgentDates.to);
-
-    // If 'from' date is between sales agent date 'from' and 'to', it is in range
-    if (
-      formDates.from.getTime() >= salesAgentDateFrom.getTime() &&
-      formDates.from.getTime() <= salesAgentDateTo.getTime()
-    ) {
-      return true;
-    }
-
-    // If 'to' date is older than sales agent 'to' date
-    // and 'to' date is younger than sales agent 'from' date, it is in range
-    if (
-      formDates.to.getTime() <= salesAgentDateTo.getTime() &&
-      formDates.to.getTime() >= salesAgentDateFrom.getTime()
-    ) {
-      return true;
-    }
-
-    // If 'from' date is older than sales agent 'from' date and
-    // 'to' date if younger than sales agent 'to' date and
-    if (
-      formDates.from.getTime() <= salesAgentDateFrom.getTime() &&
-      formDates.to.getTime() >= salesAgentDateTo.getTime()
-    ) {
-      return true;
-    }
-
-    // Not in range
-    return false;
-  }
-
-  /**
-   * We want to check if formTerritories and salesAgentTerritories have territories in common
-   * @param formTerritories
-   * @param salesAgentTerritories
-   */
-  private hasTerritoriesInCommon(
-    formTerritories: string[],
-    salesAgentTerritories: string[]
-  ): boolean {
-    const checkedTerritories: string[] = [];
-    formTerritories.forEach(territoriy => {
-      if (salesAgentTerritories.includes(territoriy)) {
-        checkedTerritories.push(territoriy);
-      }
-    });
-    return checkedTerritories.length > 0;
-  }
-
-  /**
-   * We want to check if formMedias and salesAgentMedias have medias in common
-   * @param formMedias
-   * @param salesAgentMedias
-   */
-  private hasMediaInCommon(formMedias: string[], salesAgentMedias: string[]): boolean {
-    const checkedMedia: string[] = [];
-    formMedias.forEach(media => {
-      if (salesAgentMedias.includes(media)) {
-        checkedMedia.push(media);
-      }
-    });
-    return checkedMedia.length > 0;
+  ngOnDestroy(): void {
+    this.formSubscription.unsubscribe();
   }
 }
