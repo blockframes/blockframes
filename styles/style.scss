@@ -14,6 +14,7 @@
 @import './components/mat-list';
 @import './components/mat-toolbar';
 @import './components/mat-divider';
+@import './components/mat-form';
 
 * {
   box-sizing: border-box;
@@ -76,35 +77,6 @@ main {
   color: mat-color($blockframes-theme-warn);
 }
 
-mat-form-field {
-  &.ng-valid {
-    .mat-form-field-wrapper {
-      padding-bottom: 1.25em;
-    }
-  }
-
-  &.ng-invalid,
-  &.mat-form-field-invalid {
-    .mat-form-field-wrapper {
-      padding-bottom: 7px;
-    }
-  }
-
-  &.ng-untouched {
-    .mat-form-field-wrapper {
-      padding-bottom: 1.25em;
-    }
-  }
-
-  .mat-form-field {
-    &-underline {
-      position: static;
-    }
-
-    &-subscript-wrapper {
-      position: static;
-    }
-  }
 .white-color {
   color: mat-color($bf-light-foreground, text);
 }
