@@ -105,4 +105,26 @@ mat-form-field {
       position: static;
     }
   }
+.white-color {
+  color: mat-color($bf-light-foreground, text);
+}
+
+.white-background {
+  background: mat-color($bf-light-background, white-bg);
+}
+
+.black-bg-opacity-30 {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.black-bg-opacity-15 {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.black-bg-opacity-05 {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.grey-icon {
+  color: mat-color($bf-light-foreground, navbar-icon);
 }

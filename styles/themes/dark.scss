@@ -91,17 +91,9 @@ $mat-dark-bf-red: (
 $bf-dark-background: (
   app-bar:    #02000F,
   background: #02000F,
-  hover:      rgba(white, 0.04),
+  border:     #292929,
   card:       rgba(255,255,255,0.05),
-  dialog:     map_get($mat-grey, 800),
   disabled-button: rgba(white, 0.12),
-  raised-button: map-get($mat-grey, 800),
-  focused-button: $light-focused,
-  selected-button: map_get($mat-grey, 900),
-  selected-disabled-button: map_get($mat-grey, 800),
-  disabled-button-toggle: black,
-  unselected-chip: map_get($mat-grey, 700),
-  disabled-list-option: black,
 );
 
 ////////////////
@@ -110,20 +102,10 @@ $bf-dark-background: (
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
   base:              white,
-  divider:           #2C2C2C,
-  dividers:          $light-dividers,
-  disabled:          $light-disabled-text,
-  disabled-button:   rgba(white, 0.3),
-  disabled-text:     $light-disabled-text,
-  elevation:         black,
-  hint-text:         $light-disabled-text,
-  secondary-text:    $light-secondary-text,
-  icon:              white,
-  icons:             white,
   text:              white,
-  slider-min:        white,
-  slider-off:        rgba(white, 0.3),
-  slider-off-active: rgba(white, 0.3),
+  divider:           #2C2C2C,
+  disabled-text:     $light-disabled-text,
+  disabled-button:   rgba(white, 0.3),
   subheading:        #BEBEBE,
 );
 

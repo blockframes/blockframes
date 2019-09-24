@@ -16,3 +16,11 @@
 .mat-accordion .mat-expansion-panel:last-of-type {
   border-bottom: none;
 }
+
+.dark-theme .mat-autocomplete-panel:not([class*=mat-elevation-z]) {
+  background: #02000F;
+}
+
+.dark-theme .mat-datepicker-content .mat-calendar {
+  background: #02000F;
+}
