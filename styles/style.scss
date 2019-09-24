@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
 
 // Theme with variables
-@import "./theme.scss";
-@import "./variables.scss";
+@import './theme.scss';
+@import './variables.scss';
 
 // Components style
 @import './components/mat-expansion-panel';
@@ -20,7 +20,8 @@
   font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
 }
 
-html, body {
+html,
+body {
   height: calc(100%);
 }
 
@@ -62,7 +63,8 @@ h2 {
   color: mat-color($bf-dark-foreground, subheading);
 }
 
-p, span {
+p,
+span {
   font-size: 14px;
 }
 
@@ -72,4 +74,35 @@ main {
 
 .warn-color {
   color: mat-color($blockframes-theme-warn);
+}
+
+mat-form-field {
+  &.ng-valid {
+    .mat-form-field-wrapper {
+      padding-bottom: 1.25em;
+    }
+  }
+
+  &.ng-invalid,
+  &.mat-form-field-invalid {
+    .mat-form-field-wrapper {
+      padding-bottom: 7px;
+    }
+  }
+
+  &.ng-untouched {
+    .mat-form-field-wrapper {
+      padding-bottom: 1.25em;
+    }
+  }
+
+  .mat-form-field {
+    &-underline {
+      position: static;
+    }
+
+    &-subscript-wrapper {
+      position: static;
+    }
+  }
 }
