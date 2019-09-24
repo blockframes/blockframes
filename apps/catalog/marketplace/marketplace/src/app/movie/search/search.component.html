@@ -19,7 +19,6 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-                <!-- TODO##968 css: handle multiple error messages -->
                 <mat-form-field apperance="outline" color="accent">
                   <input test-id="production-year-input-from" matInput type="number" formControlName="from"
                     placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
