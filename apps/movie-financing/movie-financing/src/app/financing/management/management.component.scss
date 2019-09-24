@@ -20,9 +20,11 @@ main {
       font-weight: 800;
       color: rgba(0, 0, 0, 0.6);
     }
+    // TODO #974: replace color
+
     .permission {
-      padding-top: 33px; 
-      padding-bottom: 33px; 
+      padding-top: 33px;
+      padding-bottom: 33px;
       border-bottom: solid 1px #EAEAEA;
       mat-slide-toggle {
         margin-left: 14px;

@@ -1,3 +1,5 @@
+// TODO #974: replace color
+
 .movie-card-view {
   // @todo #643 remove that. This should be at the root.
   * {
@@ -62,9 +64,9 @@
       text-align: right;
       width: 50%;
       padding-left: 0px;
-      
+
     }
-  
+
     td {
       text-align: left;
       padding-left: 10px;
@@ -73,11 +75,11 @@
       font-size: 14px;
     }
   }
-  
+
   .movie-grid-list {
     margin-bottom: 15px;
   }
-  
+
   .promotional-element-link {
     text-decoration: none;
   }
