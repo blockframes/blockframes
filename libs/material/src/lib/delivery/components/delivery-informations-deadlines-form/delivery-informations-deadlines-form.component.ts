@@ -21,7 +21,7 @@ export class DeliveryInformationsDeadlinesFormComponent {
   constructor(public controlContainer: ControlContainer) {}
 
   public currencies = Currencies;
-  public percentageMatcher = new PercentageStateMatcher('percentage');
+  public percentageMatcher = new PercentageStateMatcher();
 
   public get control() {
     return this.controlContainer.control;

@@ -57,10 +57,18 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
 }
 
 /** Checks if the sum of all percentages of FormArray does not exceed 100%  */
-export function validPercentages(control: FormArray): ValidationErrors | null {
+export function validPercentageList(control: FormArray): ValidationErrors | null {
   let sum = 0;
-  control.controls.forEach(formGroup => sum += formGroup.get('percentage').value);
-  return sum <= 100 ? null : { percentageNotMatching: true };
+  control.controls.forEach(formGroup => {
+    sum += formGroup.get('percentage').value;
+  });
+  return (sum <= 100) ? null : { percentageNotMatching: true };
+}
+
+/** Checks if the value of the control is between 0 and 100 */
+export function validPercentage(control: FormControl): ValidationErrors | null {
+  const value = Number(control.value);
+  return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
