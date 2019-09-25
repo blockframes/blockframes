@@ -27,7 +27,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  public updateState = 0;
+  public processedMovies = 0;
 
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
@@ -68,15 +68,15 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
       for(const movie of creations) {
-        this.updateState ++;
+        this.processedMovies ++;
         await this.addMovie(movie);
       }
-      this.snackBar.open(`${this.updateState} movies created!`, 'close', { duration: 3000 });
-      this.updateState = 0;
+      this.snackBar.open(`${this.processedMovies} movies created!`, 'close', { duration: 3000 });
+      this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not create all movies (${this.updateState} / ${this.selection.selected})`, 'close', { duration: 3000 });
-      this.updateState = 0;
+      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.processedMovies = 0;
     }
   }
 
@@ -108,15 +108,15 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
       for(const importState of updates) {
-        this.updateState ++;
+        this.processedMovies ++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }
-      this.snackBar.open(`${this.updateState} movies updated!`, 'close', { duration: 3000 });
-      this.updateState = 0;
+      this.snackBar.open(`${this.processedMovies} movies updated!`, 'close', { duration: 3000 });
+      this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all movies (${this.updateState} / ${this.selection.selected})`, 'close', { duration: 3000 });
-      this.updateState = 0;
+      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.processedMovies = 0;
     }
   }
 

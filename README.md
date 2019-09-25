@@ -92,12 +92,13 @@ create a bucket called `blockframes-backups` for the backup functions.
 
 Install gcloud
 ```
-#https://cloud.google.com/storage/docs/gsutil_install
+# Example for Linux :
 curl https://sdk.cloud.google.com | bash
 gcloud init
+# For other OS see https://cloud.google.com/storage/docs/gsutil_install
 ```
 
-Create a file `cors.json` with:
+Create a file named `cors.json` with:
 ```
 [
     {
@@ -112,6 +113,7 @@ Push this file with `gsutil`
 ```
 #https://firebase.google.com/docs/storage/web/download-files
 gsutil cors set cors.json gs://blockframes-vincent.appspot.com
+rm cors.json
 ```
 
 ## eth-events-server

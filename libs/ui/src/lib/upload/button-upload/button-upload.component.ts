@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { sanitizeFileName } from 'libs/utils/src/lib/file-sanitizer';
+import { sanitizeFileName } from '@blockframes/utils';
 
 // TODO create a component who will be use by button-upload and file-upload
 @Component({
@@ -52,8 +52,8 @@ export class ButtonUploadComponent {
       // @ts-ignore
       file.__proto__ = new File([], file.type);
     }
-
-    if (this.types && !this.types.includes(file.type)) {
+    const isFileTypeValid = this.types && !this.types.includes(file.type);
+    if (!isFileTypeValid) {
       this.snackBar.open('unsupported file type :( ', 'close', { duration: 1000 });
       this.state = 'waiting';
       return;
