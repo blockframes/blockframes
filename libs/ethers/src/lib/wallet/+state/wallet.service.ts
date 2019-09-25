@@ -68,7 +68,7 @@ export class WalletService {
     return key;
   }
 
-  public async deployERC1077(ensDomain: string, pubKey: string) {
+  public async deployERC1077(ensDomain: string, pubKey: string, orgId: string) {
     this._requireProvider();
     if (this.query.getValue().hasERC1077) {
       throw new Error('Your smart-wallet is already deployed');
@@ -77,7 +77,7 @@ export class WalletService {
     try {
       const name =  getNameFromENS(ensDomain);
       const erc1077Address = await precomputeAddress(ensDomain, this.provider);
-      const result = await this.relayer.deploy(name, pubKey, erc1077Address);
+      const result = await this.relayer.deploy(name, pubKey, erc1077Address, orgId);
       this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
       this.store.update({hasERC1077: true})
       this.store.setLoading(false);
@@ -85,7 +85,7 @@ export class WalletService {
     } catch(err) {
       this.store.setLoading(false);
       console.error(err);
-      throw new Error('Deploy seems to have failed, but firebase function is maybe still runing');
+      throw new Error('Deploy seems to have failed, but firebase function is maybe still running');
     }
   }
 

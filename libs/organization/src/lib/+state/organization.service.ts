@@ -238,7 +238,7 @@ export class OrganizationService {
     if(!this.contract) {
       this._requireProvider();
       const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
-      let address = await this.getAddress();
+      let address = await this.getEthAddress();
       await new Promise(resolve => {
         if (!address) {
           // registered
@@ -276,7 +276,7 @@ export class OrganizationService {
   //             GETTERS
   //----------------------------------
 
-  public async getAddress() {
+  public async getEthAddress() {
     this._requireProvider();
     const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
     return this.provider.resolveName(organizationENS);

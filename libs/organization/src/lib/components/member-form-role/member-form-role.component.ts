@@ -45,7 +45,7 @@ export class MemberFormRoleComponent {
     const uid = this.controlContainer.control.get('uid').value;
     const userEmail = this.controlContainer.control.get('email').value;
     const userAddress = await this.service.getMemberAddress(userEmail);
-    const orgAddress = await this.service.getAddress();
+    const orgAddress = await this.service.getEthAddress();
     let tx: ActionTx;
     const callback = () => {
       const members = this.query.getValue().org.members
@@ -82,6 +82,26 @@ export class MemberFormRoleComponent {
         redirectName: 'Back to Administration',
         redirectRoute: `/layout/o/organization/${orgId}/members`,
       }
+    }
+
+    this.walletService.setTx(tx);
+    this.walletService.setTxFeedback(feedback);
+    this.router.navigateByUrl('/layout/o/account/wallet/send');
+  }
+
+  public async destroyWallet() {
+    const userEmail = this.controlContainer.control.get('email').value;
+    const userName = this.controlContainer.control.get('name').value;
+    const userAddress = await this.service.getMemberAddress(userEmail);
+    const orgId = this.query.id;
+    const orgAddress = await this.service.getEthAddress();
+
+    const tx = CreateTx.destroyMember(orgAddress, userAddress);
+    const feedback: TxFeedback = {
+      confirmation: `You are about to destroy ${userName}'s Wallet.`,
+      success: `${userName}'s Wallet has been successfully destroyed!`,
+      redirectName: 'Back to Members',
+      redirectRoute: `/layout/o/organization/${orgId}/members`
     }
 
     this.walletService.setTx(tx);

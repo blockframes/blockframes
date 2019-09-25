@@ -13,12 +13,12 @@ export class Relayer {
    * @param key first address of the user (management key)
    * @param erc1077address first address of the user (management key)
    */
-  public deploy(username: string, key: string, erc1077address: string): Promise<Object> {
+  public deploy(username: string, key: string, erc1077address: string, orgId: string): Promise<Object> {
     if (username.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
       username = username.split('.')[0]
     }
     const callDeploy = this.functions.httpsCallable('relayerDeploy');
-    const deploy =  callDeploy({ username, key, erc1077address }).toPromise();
+    const deploy =  callDeploy({ username, key, erc1077address, orgId }).toPromise();
     return deploy;
   }
 

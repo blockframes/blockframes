@@ -45,7 +45,7 @@ export class OrganizationFormOperationComponent {
     this.control.get('members').patchValue(members);
 
     const memberAddress = await this.service.getMemberAddress(removedMember.email);
-    const orgAddress = await this.service.getAddress();
+    const orgAddress = await this.service.getEthAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
     const orgId = this.query.id;
@@ -68,7 +68,7 @@ export class OrganizationFormOperationComponent {
     this.addMemberFrom.reset();
 
     const memberAddress = await this.service.getMemberAddress(addedMember.email);
-    const orgAddress = await this.service.getAddress();
+    const orgAddress = await this.service.getEthAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
     const orgId = this.query.id;
@@ -85,7 +85,7 @@ export class OrganizationFormOperationComponent {
   }
 
   public async updateQuorum() {
-    const orgAddress = await this.service.getAddress();
+    const orgAddress = await this.service.getEthAddress();
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
     const operationName = this.control.get('name').value;

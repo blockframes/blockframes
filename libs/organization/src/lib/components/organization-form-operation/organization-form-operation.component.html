@@ -6,6 +6,7 @@
       <mat-option *ngFor="let amount of amounts" [value]="amount">{{amount}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <button mat-flat-button color="accent" (click)="updateQuorum()">Update</button>
 
   <!-- Members -->
   <article>
@@ -29,7 +30,7 @@
         <mat-option *ngFor="let member of unauthorizedMembers" [value]="member">{{member.name}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="accent" (click)="addMember()">Add</button>
+    <button mat-flat-button color="accent" (click)="addMember()">Add</button>
   </article>
 
 </form>

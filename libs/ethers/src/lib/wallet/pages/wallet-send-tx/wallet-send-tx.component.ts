@@ -6,6 +6,7 @@ import { Wallet as EthersWallet } from "@ethersproject/wallet";
 import { Router } from "@angular/router";
 import { Wallet } from "../../../types";
 import { Key } from "@blockframes/utils";
+import { AuthQuery } from "@blockframes/auth";
 
 enum steps {
   select,
@@ -37,6 +38,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
     private walletService: WalletService,
     private keyManagerQuery: KeyManagerQuery,
     private keyManagerService: KeyManagerService,
+    private authQuery: AuthQuery
   ){}
 
   ngOnInit(){
@@ -56,7 +58,8 @@ export class WalletSendTxTunnelComponent implements OnInit {
 
       if (!this.query.getValue().hasERC1077) { // we have to wait for password decryption to prevent deploying if the user entered a wrong password
         this.isDeploying$.next(true);
-        await this.walletService.deployERC1077(this.key.ensDomain, this.key.address);
+        const orgId = this.authQuery.orgId
+        await this.walletService.deployERC1077(this.key.ensDomain, this.key.address, orgId);
         this.isDeploying$.next(false);
       }
     } catch (err) { // TODO better error handling issue#671

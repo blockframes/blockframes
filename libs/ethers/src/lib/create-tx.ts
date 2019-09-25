@@ -10,7 +10,7 @@ export abstract class CreateTx {
       value: '0x0',
       // deleteKey method hash (4 bytes) + arguments (key address (32 bytes) + purpose uint256 (32 bytes))
       data: `0x81dd7b8e000000000000000000000000${pubKey.substr(2)}0000000000000000000000000000000000000000000000000000000000000001`
-    }
+    };
 
     return {...tx, callback};
   }
@@ -22,7 +22,7 @@ export abstract class CreateTx {
       value: '0x0',
       // addKey method hash (4 bytes) + arguments (key address (32 bytes) + purpose uint256 (32 bytes))
       data: `0xa2d39bdb000000000000000000000000${pubKey.substr(2)}0000000000000000000000000000000000000000000000000000000000000001`
-    }
+    };
 
     return {...tx, callback};
   }
@@ -38,7 +38,7 @@ export abstract class CreateTx {
       to: orgAddress,
       value: '0x0',
       data: `0x0fc23ed2${payload}` // admin_modifyQuorum(operationId uint256, newQuorum uint256)
-    }
+    };
 
     return {...tx, callback};
   }
@@ -54,7 +54,7 @@ export abstract class CreateTx {
       to: orgAddress,
       value: '0x0',
       data: `0xeb836708${payload}` // admin_addUserToWhitelist(operationId uint256, member address)
-    }
+    };
 
     return {...tx, callback};
   }
@@ -70,7 +70,7 @@ export abstract class CreateTx {
       to: orgAddress,
       value: '0x0',
       data: `0x1838a075${payload}` // admin_removeUserFromWhitelist(operationId uint256, member address)
-    }
+    };
 
     return {...tx, callback};
   }
@@ -82,7 +82,7 @@ export abstract class CreateTx {
       value: '0x0',
       // approve(hash bytes32, operationId uint256, to address, value uint256, data bytes)
       data: `0x2a66ad97${deliveryId.slice(2)}000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000ca5cade8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000004ca5cade800000000000000000000000000000000000000000000000000000000`
-    }
+    };
 
     return {...tx, callback};
   }
@@ -93,8 +93,8 @@ export abstract class CreateTx {
       to: orgAddress,
       value: '0x0',
       // admin_addAdmin(address newAdmin)
-      data: `0x875f3664${adminAddress.slice(2)}`
-    }
+      data: `0x875f3664${padTo256Bits(adminAddress).slice(2)}`
+    };
 
     return {...tx, callback};
   }
@@ -104,8 +104,20 @@ export abstract class CreateTx {
       to: orgAddress,
       value: '0x0',
       // admin_removeAdmin(address newAdmin)
-      data: `0x6270667a${adminAddress.slice(2)}`
-    }
+      data: `0x6270667a${padTo256Bits(adminAddress).slice(2)}`
+    };
+
+    return {...tx, callback};
+  }
+
+  /** Ask a member contract to self destruct so he can be redeployed later */
+  static destroyMember(orgAddress: string, memberAddress, callback?: (...args) => void): ActionTx {
+    const tx: Tx = {
+      to: orgAddress,
+      value: '0x0',
+      // admin_destroyUsersContract(address)
+      data: `0x6965d89f${padTo256Bits(memberAddress).slice(2)}`
+    };
 
     return {...tx, callback};
   }

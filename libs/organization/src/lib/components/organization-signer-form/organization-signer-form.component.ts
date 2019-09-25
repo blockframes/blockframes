@@ -49,7 +49,7 @@ export class OrganizationSignerFormComponent {
     this.control.patchValue([...operations, currentOperation]);
 
     const memberAddress = await this.service.getMemberAddress(this.member.email);
-    const orgAddress = await this.service.getAddress();
+    const orgAddress = await this.service.getEthAddress();
     const memberName = this.member.name;
     const operationName = currentOperation.name;
     const orgId = this.query.id;

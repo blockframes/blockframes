@@ -223,7 +223,7 @@ export class DeliveryEditableComponent implements OnInit {
     const jsonMaterials = JSON.stringify(materials);
 
     const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
-    const orgAddress = await this.organizationService.getAddress();
+    const orgAddress = await this.organizationService.getEthAddress();
     const orgId = this.organizationQuery.getValue().org.id;
 
     this.service.setSignDeliveryTx(orgAddress, delivery.id, deliveryHash, orgId);

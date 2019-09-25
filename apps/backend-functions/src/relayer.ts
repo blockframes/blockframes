@@ -12,6 +12,7 @@ import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from './contracts/ER
 import { abi as ENS_REGISTRY_ABI } from './contracts/ENSRegistry.json';
 import { abi as ENS_RESOLVER_ABI } from './contracts/PublicResolver.json';
 import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from './contracts/Organization.json';
+import { db } from './internals/firebase';
 
 type TxResponse = TransactionResponse;
 type TxReceipt = TransactionReceipt;
@@ -19,6 +20,7 @@ type TxReceipt = TransactionReceipt;
 export interface Relayer {
   wallet: Wallet;
   contractFactory: Contract;
+  baseEnsDomain: string;
   namehash: string;
   registry: Contract;
   resolver: Contract;
@@ -76,6 +78,7 @@ export function initRelayer(config: RelayerConfig): Relayer {
   wallet = wallet.connect(provider);
 
   const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY_ABI, wallet);
+  const baseEnsDomain = config.baseEnsDomain;
   const relayerNamehash = namehash(config.baseEnsDomain);
   const registry = new Contract(config.registryAddress, ENS_REGISTRY_ABI, wallet);
   const resolver = new Contract(config.resolverAddress, ENS_RESOLVER_ABI, wallet);
@@ -83,6 +86,7 @@ export function initRelayer(config: RelayerConfig): Relayer {
   return <Relayer>{
     wallet,
     contractFactory,
+    baseEnsDomain,
     namehash: relayerNamehash,
     registry,
     resolver,
@@ -93,6 +97,7 @@ interface DeployParams {
   username: string;
   key: string;
   erc1077address: string;
+  orgId: string;
 }
 
 interface RegisterParams {
@@ -139,16 +144,14 @@ export async function isENSNameRegistered(ensName: string, config: RelayerConfig
 //---------------------------------------------------
 
 export async function relayerDeployLogic(
-  { username, key, erc1077address }: DeployParams,
+  { username, key, erc1077address, orgId }: DeployParams,
   config: RelayerConfig
 ) {
   const relayer: Relayer = initRelayer(config);
 
-  const recoverAddress = '0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3'; // TODO this will be the org address in the future, pass this as a function params : issue #654
-
   // check required params
-  if (!username || !key || !erc1077address) {
-    throw new Error('"username", "key" and "erc1077address" are mandatory parameters !');
+  if (!username || !key || !erc1077address || !orgId) {
+    throw new Error('"username", "key", "erc1077address", and "orgAddress" are mandatory parameters !');
   }
 
   try {
@@ -160,6 +163,9 @@ export async function relayerDeployLogic(
 
   // compute needed values
   const hash = keccak256(toUtf8Bytes(username));
+  const orgName = await db.doc(`/orgs/${orgId}`).get().then(org => org.get('name')) as string;
+  const orgEns = emailToEnsDomain(orgName.replace(' ', '-'), relayer.baseEnsDomain);
+  const orgAddress = await relayer.wallet.provider.resolveName(orgEns);
 
   try {
 
@@ -171,7 +177,7 @@ export async function relayerDeployLogic(
         hash,
         `0x${ERC1077_BYTECODE}`,
         key.toLocaleLowerCase(),
-        recoverAddress.toLocaleLowerCase(),
+        orgAddress.toLocaleLowerCase(),
       )
 
       result['deploy'] = await deployTx.wait();
@@ -224,9 +230,9 @@ export async function relayerRegisterENSLogic(
 
     const ZERO_ADDRESS = '0x00000000000000000000000000000000000000';
 
-    const retreivedAddress = await relayer.wallet.provider.resolveName(fullName);
-    if (!!retreivedAddress && retreivedAddress !== ZERO_ADDRESS) { // if name is already link to a non-zero address : skip
-      throw new Error(`${fullName} already linked to an address (${retreivedAddress})`);
+    const retrievedAddress = await relayer.wallet.provider.resolveName(fullName);
+    if (!!retrievedAddress && retrievedAddress !== ZERO_ADDRESS) { // if name is already link to a non-zero address : skip
+      throw new Error(`${fullName} already linked to an address (${retrievedAddress})`);
     }
     const result: Record<string, TxReceipt> = {};
 
