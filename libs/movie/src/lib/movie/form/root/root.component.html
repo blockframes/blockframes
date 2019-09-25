@@ -1,8 +1,8 @@
 <form [formGroup]="form">
   <!-- @todo #643 Don't use classes for css selector. Use direcly the name of the tag -->
-  <mat-card class="movie-form-container white-background">
-    <mat-card-content class="movie-form-card">
-      <mat-tab-group class="movie-form-nav-bar">
+  <mat-card>
+    <mat-card-content>
+      <mat-tab-group>
         <mat-tab label="Main">
           <movie-form-main formGroupName="main"></movie-form-main>
         </mat-tab>
@@ -32,14 +32,14 @@
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>
-    <mat-card-actions class="movie-card-actions white-background">
+    <mat-card-actions class="movie-card-actions">
       <button mat-button color="primary" (click)="cancel()">Cancel</button>
-      <button testId="saveMovie" color="accent" class="save-btn" mat-flat-button (click)="submit()" type="submit">
-        <span>Save movie</span>
+      <button testId="saveMovie" color="accent" mat-flat-button (click)="submit()" type="submit">
+        Save movie
         <mat-icon>save</mat-icon>
       </button>
       <button mat-flat-button color="accent" (click)="fillForm()">
-        <span>Search on IMDB</span>
+        Search on IMDB
         <mat-icon>search</mat-icon>
       </button>
     </mat-card-actions>

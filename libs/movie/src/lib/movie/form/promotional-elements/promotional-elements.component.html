@@ -29,7 +29,7 @@
   <div formArrayName="promotionalElements">
     <ng-container *ngFor="let element of promotionalElements.promotionalElements.controls; let i = index">
       <div [formGroupName]="i" class="full-width">
-        <mat-form-field class="small-width small-margin">
+        <mat-form-field class="small-width">
           <input matInput formControlName="label" placeholder="Label">
         </mat-form-field>
         <mat-form-field>

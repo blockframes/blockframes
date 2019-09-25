@@ -1,17 +1,8 @@
-// TODO #974: replace color
-
-mat-card.movie-form-container {
+mat-card {
   padding: 0px;
-  border: none !important;
-
-  // @todo #643 remove that. This should be at the root.
-  *:not(.material-icons) {
-    font-family: 'Roboto', "Helvetica Neue", sans-serif !important;
-  }
 
   .mat-tab-body-wrapper {
     padding: 16px;
-    margin-top: 90px;
   }
 
   .full-width {
@@ -38,46 +29,32 @@ mat-card.movie-form-container {
     max-width: 300px;
   }
 
-  .mat-tab-header {
-    position: fixed;
-    z-index: 2;
-    width: 100%;
-    margin-top: -2px;
-
-    .mat-tab-label {
-      height: 90px;
-      font-size: 11px;
-      font-weight: bold;
-      min-width: 150px
-    }
-  }
-
   .mat-tab-body-content {
     padding-bottom: 40px;
   }
+}
 
-  .movie-card-actions {
-    position: fixed;
-    bottom: 0px;
-    margin: 0px !important;
-    z-index: 2;
-    width: 100%;
-    padding: 8px !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+.movie-poster-thumbnail {
+  width: 50%;
+  margin: auto;
+  max-width: 300px;
+}
 
-    button {
-      border: none;
-      box-shadow: none;
-      font-weight: 700;
-      font-size: 12px;
-      width: 200px;
-      height: 45px;
-    }
+.movie-card-actions {
+  position: fixed;
+  bottom: 0px;
+  margin: 0px !important;
+  z-index: 2;
+  background: white;
+  width: 100%;
+  padding: 8px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
 
-    .save-btn {
-      mat-icon {
-        margin-bottom: 3px;
-      }
-    }
-  }
+.mat-tab-header {
+  position: fixed;
+  z-index: 2;
+  background: white;
+  width: 100%;
+  margin-top: -2px;
 }

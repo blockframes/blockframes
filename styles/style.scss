@@ -77,14 +77,6 @@ main {
   color: mat-color($blockframes-theme-warn);
 }
 
-.white-color {
-  color: mat-color($bf-light-foreground, text);
-}
-
-.white-background {
-  background: mat-color($bf-light-background, white-bg);
-}
-
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
 }
