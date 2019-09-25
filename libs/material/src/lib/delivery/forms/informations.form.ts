@@ -23,7 +23,7 @@ export function createDeadlineFormGroup(deadline: MGDeadline) {
 }
 
 function createDeadlinesFormList() {
-  return FormList.factory([], createDeadlineFormGroup);
+  return FormList.factory([], createDeadlineFormGroup, [Validators.required, validPercentages]);
 }
 
 export function createInformationsFormGroup() {
@@ -38,5 +38,5 @@ export function createInformationsFormGroup() {
     reWorkingPeriod: new FormControl(),
     // Delivery steps
     steps: createStepsFormList()
-  }, [Validators.required, validPercentages]);
+  });
 }
