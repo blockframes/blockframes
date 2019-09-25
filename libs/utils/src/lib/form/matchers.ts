@@ -18,16 +18,10 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
 
 /** Checks if the sum of all percentages of FormArray does not exceed 100%  */
 export class PercentageStateMatcher implements ErrorStateMatcher {
-  private controlName: string;
-  constructor(controlName: string) {
-    this.controlName = controlName;
-  }
-
   isErrorState(control: FormControl | null): boolean {
-    let sum = 0;
     const array = control.parent.parent as FormArray;
-    array.controls.forEach(group => sum += group.get(this.controlName).value);
-    return (control && sum > 100);
+    const isNotValid = control.value < 0 || (control.value === null && control.touched);
+    return array.hasError('percentageNotMatching') || isNotValid;
   }
 }
 
