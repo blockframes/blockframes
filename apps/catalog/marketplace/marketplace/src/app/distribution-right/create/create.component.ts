@@ -26,9 +26,13 @@ import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+st
 import { BasketService } from '../+state/basket.service';
 import {
   hasSalesRights,
+  FilteredResponse,
+  exclusiveMovieSales,
+  hasExclusiveTerritoriesInCommon,
+  hasExclusiveMediasInCommon,
+  hasExclusiveDateRangeSales,
   hasTerritoriesInCommon,
-  movieHasExclusiveSales,
-  hasMediaInCommon
+  salesAgentHasDateRange
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 
@@ -277,52 +281,60 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.researchSubscription = this.form.valueChanges
       .pipe(
         startWith(this.form.value),
-        tap(result => {
-          const salesDateRange: MovieSale[] | boolean = hasSalesRights(
-            result.duration,
-            this.query.getActive().salesAgentDeal,
+        tap(value => {
+          const salesAgentDateRange: boolean = salesAgentHasDateRange(
+            this.query.getActive().salesAgentDeal.rights,
+            value.duration
+          );
+          const exclusiveSales: MovieSale[] = exclusiveMovieSales(this.query.getActive().sales);
+          const salesDateRange: FilteredResponse = hasSalesRights(
+            value.duration,
             this.query.getActive().sales
+          );
+
+          const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
+            value.duration,
+            exclusiveSales
+          );
+
+          const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
+            value.territories,
+            exclusiveDateRangeSales.intersectedExclusiveSales
+          );
+
+          const exclusiveMediaInCommon: FilteredResponse = hasExclusiveMediasInCommon(
+            value.medias,
+            exclusiveDateRangeSales.intersectedExclusiveSales
+          );
+
+          const as: FilteredResponse = hasTerritoriesInCommon(
+            value.territories,
+            this.query.getActive().salesAgentDeal.territories,
+            salesDateRange.intersectedSales
           );
           /**
            * We need to check if the hasSalesRights function returned a boolean,
            * which would mean that there is no sales agent provided in the wanted
            * date range
            */
-          if (typeof salesDateRange === 'boolean') {
+          if (salesAgentDateRange) {
             // can't create distribution right
             this.showResults = false;
             this.snackBar.open('Sales Agent is shit', null, {
               duration: 5000
             });
-          } else {
-            const exclusiveSales: MovieSale[] | boolean = movieHasExclusiveSales(
-              this.query.getActive().sales
-            );
-            const availableTerritories: string[] | boolean = hasTerritoriesInCommon(
-              result.territories,
-              this.query.getActive().salesAgentDeal.territories,
-              salesDateRange
-            );
-            const availableMedias: string[] | boolean = hasMediaInCommon(
-              this.form.get('medias').value,
-              this.query.getActive().salesAgentDeal.medias,
-              this.query.getActive().sales
-            );
-            if (
-              (exclusiveSales && salesDateRange && availableTerritories && availableMedias) !==
-              false
-            ) {
-              // create distribution right
-           //   console.log(exclusiveSales);
-           //   console.log(salesDateRange);
-              console.log(availableTerritories);
-             // console.log(availableMedias);
-              this.showResults = true;
-              this.choosenDateRange.to = this.form.get('duration').value.to;
-              this.choosenDateRange.from = this.form.get('duration').value.from;
-            } else {
-              throw new Error('not possible');
-            }
+          } else if (exclusiveTerritoriesInCommon.intersected) {
+            this.showResults = false;
+            this.snackBar.open('Intersected with an exclusive TERITORIES sale', null, {
+              duration: 5000
+            });
+          } else if (exclusiveMediaInCommon.intersected) {
+            this.showResults = false;
+            this.snackBar.open('Intersected with an exclusive MEDIAS sale', null, {
+              duration: 5000
+            });
+          } else if (salesAgentDateRange) {
+            // no intersection with exclusivity
           }
         })
       )
