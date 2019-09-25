@@ -22,7 +22,7 @@
           <!-- We only want to use the first image in the promotinalElements.images array-->
           <ng-container *ngFor="let movie of section.movies">
             <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster" [hideOverlay]="true">
-              <div fxLayout="column" fxLayoutAlign="end start" class="overlay">
+              <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
                 <footer fxLayout="column" fxLayoutAlign="center start">
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }}

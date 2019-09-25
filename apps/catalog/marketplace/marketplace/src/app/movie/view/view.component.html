@@ -13,7 +13,7 @@
   <section fxLayout="row" class="view-content">
 
     <div fxLayout="column" class="poster-column">
-      <section class="movie-presentation black-bg-opacity-05">
+      <section class="movie-presentation grey-bg-opacity-05 dark-border">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
           <img class="movie-poster" [src]="poster" alt="movie poster" />
@@ -33,7 +33,7 @@
         <mat-divider fxFlex></mat-divider>
       </section>
 
-      <section class="informations black-bg-opacity-05">
+      <section class="informations grey-bg-opacity-05 dark-border">
         <article fxLayout="column">
           <!-- Principal Informations -->
           <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-informations>
