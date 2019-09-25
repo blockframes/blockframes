@@ -20,6 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
@@ -68,6 +69,7 @@ import { TableExtractedSalesComponent } from './table-extracted-sales/table-extr
     MatStepperModule,
     MatExpansionModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
 
     // Librairies
     UploadModule,

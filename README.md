@@ -88,6 +88,31 @@ when a Timestamp event is received from the blockchain.
 *Setup:* in your firebase console, hosting section,
 create a bucket called `blockframes-backups` for the backup functions.
 
+### CORS policy
+
+Install gcloud
+```
+#https://cloud.google.com/storage/docs/gsutil_install
+curl https://sdk.cloud.google.com | bash
+gcloud init
+```
+
+Create a file `cors.json` with:
+```
+[
+    {
+      "origin": ["*"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]
+```
+
+Push this file with `gsutil`
+```
+#https://firebase.google.com/docs/storage/web/download-files
+gsutil cors set cors.json gs://blockframes-vincent.appspot.com
+```
 
 ## eth-events-server
 

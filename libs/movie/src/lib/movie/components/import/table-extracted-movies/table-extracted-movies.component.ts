@@ -27,6 +27,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public updateState = 0;
 
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
@@ -65,14 +66,17 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   async createSelectedMovies() : Promise<boolean> {
     try {
-      const creations = this.selection.selected
-        .filter(importState => !importState.movie.id && !hasImportErrors(importState))
-        .map(importState => this.addMovie(importState))
-      await Promise.all(creations);
-      this.snackBar.open(`${creations.length} movies created!`, 'close', { duration: 3000 });
+      const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
+      for(const movie of creations) {
+        this.updateState ++;
+        await this.addMovie(movie);
+      }
+      this.snackBar.open(`${this.updateState} movies created!`, 'close', { duration: 3000 });
+      this.updateState = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not create movies`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not create all movies (${this.updateState} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.updateState = 0;
     }
   }
 
@@ -102,14 +106,17 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   async updateSelectedMovies(): Promise<boolean> {
     try {
-      const updates = this.selection.selected
-        .filter(importState => importState.movie.id && !hasImportErrors(importState))
-        .map(importState => this.movieService.updateById(importState.movie.id, importState.movie));
-      await Promise.all(updates);
-      this.snackBar.open(`${updates.length} movies updated!`, 'close', { duration: 3000 });
+      const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
+      for(const importState of updates) {
+        this.updateState ++;
+        await this.movieService.updateById(importState.movie.id, importState.movie);
+      }
+      this.snackBar.open(`${this.updateState} movies updated!`, 'close', { duration: 3000 });
+      this.updateState = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update movies`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not update all movies (${this.updateState} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.updateState = 0;
     }
   }
 
