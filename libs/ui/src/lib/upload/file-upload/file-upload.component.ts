@@ -9,6 +9,7 @@ import {
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { sanitizeFileName } from 'libs/utils/src/lib/file-sanitizer';
 
 @Component({
   selector: 'file-upload',
@@ -36,7 +37,7 @@ export class FileUploadComponent {
   public state: 'waiting' | 'hovering' | 'uploading' | 'success' = 'waiting';
 
 
-  constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar) {}
+  constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar) { }
 
   @HostListener('drop', ['$event'])
   // TODO: issue#875, use DragEvent type
@@ -82,7 +83,7 @@ export class FileUploadComponent {
     }
 
     if (this.uploadOnFirestore) {
-      const storagePath = `${this.path}/${file.name}`;
+      const storagePath = `${this.path}/${sanitizeFileName(file.name)}`;
       this.task = this.afStorage.upload(storagePath, file);
 
       // Progress monitoring
