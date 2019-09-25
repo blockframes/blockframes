@@ -13,7 +13,7 @@
   <section fxLayout="row" class="view-content">
 
     <div fxLayout="column" class="poster-column">
-      <section class="movie-presentation grey-bg-opacity-05 dark-border">
+      <mat-card class="movie-presentation">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
           <img class="movie-poster" [src]="poster" alt="movie poster" />
@@ -24,7 +24,7 @@
           <!-- Production -->
           <movie-display-production [productionCompanies]="movie.main.productionCompanies" [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
         </article>
-      </section>
+      </mat-card>
     </div>
 
     <div fxLayout="column" class="information-column">
@@ -33,30 +33,28 @@
         <mat-divider fxFlex></mat-divider>
       </section>
 
-      <section class="informations grey-bg-opacity-05 dark-border">
-        <article fxLayout="column">
+      <mat-card class="informations" fxLayout="column">
           <!-- Principal Informations -->
           <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-informations>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Synopsis -->
           <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Film details -->
           <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color" [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere"></movie-display-film-details>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Festival Prizes -->
           <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Key Assets -->
           <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Keywords -->
           <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
-          <mat-divider fxFlex class="large-divider"></mat-divider>
+          <mat-divider [inset]="true"></mat-divider>
           <!-- Languages -->
           <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo"></movie-display-version-info>
-        </article>
-      </section>
+      </mat-card>
     </div>
   </section>
 

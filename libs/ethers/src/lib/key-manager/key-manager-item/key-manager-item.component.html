@@ -8,30 +8,31 @@
     </div>
   </article>
 </ng-container>
+
 <ng-template #notSmall>
-  <article class="white-background" fxLayout="row" fxLayoutAlign="start center">
-    <div class="image" [ngStyle]="{ 'background-color': backgroundColor }">
-      <img src="/assets/icons/keyIcon.svg">
-    </div>
-    <div class="key-info">
-      <h5>{{ keyObject.name }}</h5>
-      <p>Lorem Ipsum</p>
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <ng-container *ngIf="!keyObject.isLinked && !keyObject.isMainKey">
-          <button mat-icon-button color="accent" (click)="linkKey.emit(keyObject)">
-            <mat-icon class="material-icons">cloud_upload</mat-icon>
+  <mat-card fxLayout="column" fxLayoutAlign="center">
+    <mat-card-content fxLayout="row" fxLayoutAlign="start center">
+      <img [ngStyle]="{ 'background-color': backgroundColor }" src="/assets/icons/keyIcon.svg">
+      <div fxLayout="column">
+        <h5>{{ keyObject.name }}</h5>
+        <span>Lorem Ipsum</span>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <ng-container *ngIf="!keyObject.isLinked && !keyObject.isMainKey">
+            <button mat-icon-button color="accent" (click)="linkKey.emit(keyObject)">
+              <mat-icon class="material-icons">cloud_upload</mat-icon>
+            </button>
+          </ng-container>
+          <a mat-icon-button [routerLink]="['/layout/o/account/wallet/reveal', keyObject.address]">
+            <mat-icon class="material-icons-outlined grey-icon">visibility</mat-icon>
+          </a>
+          <a mat-icon-button [href]="jsonKeystore()" [download]="keyName">
+            <mat-icon class="material-icons-outlined grey-icon">cloud_download</mat-icon>
+          </a>
+          <button mat-icon-button (click)="deleteKey.emit(keyObject)">
+            <mat-icon class="material-icons-outlined grey-icon">delete</mat-icon>
           </button>
-        </ng-container>
-        <a mat-icon-button [routerLink]="['/layout/o/account/wallet/reveal', keyObject.address]">
-          <mat-icon class="material-icons-outlined">visibility</mat-icon>
-        </a>
-        <a mat-icon-button [href]="jsonKeystore()" [download]="keyName">
-          <mat-icon class="material-icons-outlined">cloud_download</mat-icon>
-        </a>
-        <button mat-icon-button (click)="deleteKey.emit(keyObject)">
-          <mat-icon class="material-icons-outlined">delete</mat-icon>
-        </button>
+        </div>
       </div>
-    </div>
-  </article>
+    </mat-card-content>
+  </mat-card>
 </ng-template>

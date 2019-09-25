@@ -2,7 +2,7 @@
 
 mat-card.movie-form-container {
   padding: 0px;
-  box-shadow: none !important;
+  border: none !important;
 
   // @todo #643 remove that. This should be at the root.
   *:not(.material-icons) {
@@ -41,7 +41,6 @@ mat-card.movie-form-container {
   .mat-tab-header {
     position: fixed;
     z-index: 2;
-    background: white;
     width: 100%;
     margin-top: -2px;
 
@@ -62,7 +61,6 @@ mat-card.movie-form-container {
     bottom: 0px;
     margin: 0px !important;
     z-index: 2;
-    background: white;
     width: 100%;
     padding: 8px !important;
     border-top: 1px solid rgba(0, 0, 0, 0.12);

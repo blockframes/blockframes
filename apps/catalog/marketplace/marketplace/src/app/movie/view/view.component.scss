@@ -19,10 +19,8 @@ header {
   margin: 0 20px;
 }
 
-.large-divider {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 0;
+.mat-card .mat-divider-horizontal.mat-divider-inset {
+  margin-top: 20px;
 }
 
 .film-informations {

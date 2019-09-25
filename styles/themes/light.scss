@@ -103,8 +103,23 @@ $bf-light-background: (
   background: #FAFAFA,
   border:     #D8D8D8,
   disabled-button: #B9C2CB,
+  status-bar: map_get($mat-grey, 300),
+  hover:      rgba(black, 0.04),
+  card:       white,
+  dialog:     white,
+  raised-button: white,
+  focused-button: $dark-focused,
+  selected-button: map_get($mat-grey, 300),
+  selected-disabled-button: map_get($mat-grey, 400),
+  disabled-button-toggle: map_get($mat-grey, 200),
+  unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: map_get($mat-grey, 200),
+
+  // Custom variables
   stroked-button: map-get($mat-light-bf-blue, 50),
 );
+
+
 
 ////////////////
 // FOREGROUND //
@@ -114,12 +129,26 @@ $bf-light-foreground: (
   base:              black,
   text:              white,
   divider:           #D8D8D8,
+  dividers:          $dark-dividers,
+  disabled:          $dark-disabled-text,
   disabled-text:     #5F697A,
   disabled-button:   rgba(black, 0.26),
+  elevation:         black,
+  hint-text:         $dark-disabled-text,
+  secondary-text:    $dark-secondary-text,
+  icon:              rgba(black, 0.54),
+  icons:             rgba(black, 0.54),
+  slider-min:        rgba(black, 0.87),
+  slider-off:        rgba(black, 0.26),
+  slider-off-active: rgba(black, 0.38),
+
+  // Custom variables
   dynamic:           #5F697A,
   subheading:        #4D5664,
   navbar-icon:       #5F697A,
 );
+
+
 
 ///////////
 // THEME //
