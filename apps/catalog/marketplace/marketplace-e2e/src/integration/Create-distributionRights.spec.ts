@@ -27,7 +27,7 @@ const MOVIE_NAME = 'Eternal Sunshine of the Spotless Mind';
 // DistributionPage
 const DISTRIBUTION_DATES = { from: '1', to: '10'};
 const DISTRIBUTION_TERRITORY = 'World';
-const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv']; // key.slug
+const DISTRIBUTION_MEDIA_ARRAY = ['Pay TV', 'Free TV']; // key.slug
 
 beforeEach(() => {
   cy.clearCookies();

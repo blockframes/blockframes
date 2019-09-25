@@ -2,7 +2,7 @@ import HomePage from './HomePage';
 export default class LoginPage {
 
   constructor() {
-    cy.get('[test-id=content][page-id=login]');
+    cy.get('[page-id=login-view]');
   }
 
   public switchMode() {

@@ -1,5 +1,5 @@
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, HostBinding } from '@angular/core';
 
 @Component({
   selector: '[movie] movie-card',
@@ -8,6 +8,7 @@ import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCardComponent {
+  @HostBinding('attr.page-id') pageId = 'display-card';
   @Input() movie: Movie;
   @Input() link: string;
 
