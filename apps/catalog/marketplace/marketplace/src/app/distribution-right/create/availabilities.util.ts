@@ -17,9 +17,9 @@ import { MovieSale, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state'
  * and returns them
  * @param sales takes in the already made sales of a movie
  */
-export function movieHasExclusiveSales(sales: MovieSale[]): MovieSale[] {
+export function movieHasExclusiveSales(sales: MovieSale[]): MovieSale[] | boolean {
   const exclusiveSales: MovieSale[] = sales.filter(sale => sale.exclusive === true);
-  return exclusiveSales;
+  return exclusiveSales ? exclusiveSales : false;
 }
 
 /**
@@ -30,9 +30,9 @@ export function movieHasExclusiveSales(sales: MovieSale[]): MovieSale[] {
  * @param salesAgent the sales agent deal from the movie
  */
 export function hasSalesRights(
-  sales: MovieSale[],
   formDates: DateRange,
-  salesAgent: MovieSalesAgentDeal
+  salesAgent: MovieSalesAgentDeal,
+  sales: MovieSale[]
 ): MovieSale[] | boolean {
   const agentFrom: Date = new Date(salesAgent.rights.from);
   const agentTo: Date = new Date(salesAgent.rights.to);
@@ -84,6 +84,7 @@ export function hasSalesRights(
     }
     return overlappingDateRanges;
   }
+
   /**
    * If there is no sales agent available in this date range,
    * it means thath the buyer can't buy a distribution deal.
@@ -93,33 +94,105 @@ export function hasSalesRights(
 
 /**
  * @description we want to check if formTerritories and salesAgentTerritories have territories in common
+ * and what are the overlapping territories from the already existing sales are
  * @param formTerritories the territories which got specified by the buyer
  * @param salesAgentTerritories the available territories provided by the sales agent
+ * @param sales the array of sales from a movie in the previously specified date range
  */
 export function hasTerritoriesInCommon(
   formTerritories: string[],
-  salesAgentTerritories: string[]
-): string[] {
+  salesAgentTerritories: MovieSalesAgentDeal['territories'],
+  sales: MovieSale[]
+): string[] | boolean {
   const availableTerritories: string[] = [];
+
+  /**
+   * We look for territories which the buyer wants to have and the
+   * availability on the sales agent deal
+   */
   formTerritories.forEach(territoriy => {
     if (salesAgentTerritories.includes(territoriy)) {
       availableTerritories.push(territoriy);
     }
   });
-  return availableTerritories;
+
+  /**
+   * If the territories are available in the sales agend deal which
+   * the buyer wants to have, we have to look on the already exisitng
+   * sales in the movie and check if there is any overlapping territories
+   */
+  if (availableTerritories.length) {
+    const overlappingTerritories: string[] = [];
+    for (const sale of sales) {
+      for (const territory of availableTerritories) {
+        for (const saleTerritory of sale.territories) {
+          /**
+           * We want to make sure, that only non existing territories get push to the
+           * overlappingTerritories array
+           */
+          if (saleTerritory === territory && !overlappingTerritories.includes(saleTerritory)) {
+            overlappingTerritories.push(saleTerritory);
+          }
+        }
+      }
+    }
+    if (overlappingTerritories.length) {
+      return overlappingTerritories;
+    }
+  }
+
+  /**
+   * If the wanted territories are available and there are no overlappings
+   * we want to return the availableTerritories array, otherwise we going to
+   * return false, because on the sales agent deal where no matching territories found
+   */
+  return false;
 }
 
 /**
  * @description we want to check if formMedias and salesAgentMedias have medias in common
  * @param formMedias the medias which got specified by the buyer
  * @param salesAgentMedias the available medias provided by the sales agent
+ * @param sales the array of sales from a movie in the previously specified date range
  */
-export function hasMediaInCommon(formMedias: string[], salesAgentMedias: string[]): string[] {
-  const checkedMedia: string[] = [];
+export function hasMediaInCommon(
+  formMedias: string[],
+  salesAgentMedias: MovieSalesAgentDeal['medias'],
+  sales: MovieSale[]
+): string[] | boolean {
+  const availableMedias: string[] = [];
+
+  /**
+   * We look for medias which the buyer wants to have and the
+   * availability on the sales agent deal
+   */
   formMedias.forEach(media => {
     if (salesAgentMedias.includes(media)) {
-      checkedMedia.push(media);
+      availableMedias.push(media);
     }
   });
-  return checkedMedia;
+
+  /**
+   * If the medias are available in the sales agend deal which
+   * the buyer wants to have, we have to look on the already exisitng
+   * sales in the movie and check if there is any overlapping medias
+   */
+  if (availableMedias.length) {
+    const overlappingMedias: string[] = [];
+    for (const sale of sales) {
+      for (const media of availableMedias) {
+        for (const saleMedia of sale.medias) {
+          /**
+           * We want to make sure, that only non existing territories get push to the
+           * overlappingMedias array
+           */
+          if (saleMedia === media && !overlappingMedias.includes(saleMedia)) {
+            overlappingMedias.push(saleMedia);
+          }
+        }
+      }
+    }
+    return overlappingMedias;
+  }
+  return availableMedias ? availableMedias : false;
 }

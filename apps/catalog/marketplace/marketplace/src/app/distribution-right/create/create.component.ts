@@ -41,8 +41,11 @@ import { DistributionRightForm } from './create.form';
 export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'distribution-right';
 
-  // Subscription for value changes int he distribution right form
+  // Subscription for value changes in the distribution right form
   private formSubscription: Subscription;
+
+  // Subscription for the results in the research form
+  private researchSubscription: Subscription;
 
   // Form for holding users distribution rights choice
   public form = new DistributionRightForm();
@@ -271,36 +274,63 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   //////////////////////
 
   public startResearch() {
-    const exclusiveSales: MovieSale[] = movieHasExclusiveSales(this.query.getActive().sales);
-    const salesDateRange: MovieSale[] | boolean = hasSalesRights(
-      this.query.getActive().sales,
-      this.form.get('duration').value,
-      this.query.getActive().salesAgentDeal
-    );
-    const availableTerritories: string[] = hasTerritoriesInCommon(
-      this.form.get('territories').value,
-      this.query.getActive().salesAgentDeal.territories
-    );
-    const availableMedias: string[] = hasMediaInCommon(
-      this.form.get('medias').value,
-      this.query.getActive().salesAgentDeal.medias
-    );
-    if (!!exclusiveSales && !!salesDateRange && !!availableTerritories && !!availableMedias) {
-      // create distribution right
-      this.showResults = true;
-      this.choosenDateRange.to = this.form.get('duration').value.to;
-      this.choosenDateRange.from = this.form.get('duration').value.from;
-    } else {
-      // can't create distribution right
-      this.showResults = false;
-      this.snackBar.open('There is no availability matching your research', null, {
-        duration: 5000
-      });
-    }
-    console.log(exclusiveSales, salesDateRange, availableTerritories, availableMedias);
+    this.researchSubscription = this.form.valueChanges
+      .pipe(
+        startWith(this.form.value),
+        tap(result => {
+          const salesDateRange: MovieSale[] | boolean = hasSalesRights(
+            result.duration,
+            this.query.getActive().salesAgentDeal,
+            this.query.getActive().sales
+          );
+          /**
+           * We need to check if the hasSalesRights function returned a boolean,
+           * which would mean that there is no sales agent provided in the wanted
+           * date range
+           */
+          if (typeof salesDateRange === 'boolean') {
+            // can't create distribution right
+            this.showResults = false;
+            this.snackBar.open('Sales Agent is shit', null, {
+              duration: 5000
+            });
+          } else {
+            const exclusiveSales: MovieSale[] | boolean = movieHasExclusiveSales(
+              this.query.getActive().sales
+            );
+            const availableTerritories: string[] | boolean = hasTerritoriesInCommon(
+              result.territories,
+              this.query.getActive().salesAgentDeal.territories,
+              salesDateRange
+            );
+            const availableMedias: string[] | boolean = hasMediaInCommon(
+              this.form.get('medias').value,
+              this.query.getActive().salesAgentDeal.medias,
+              this.query.getActive().sales
+            );
+            if (
+              (exclusiveSales && salesDateRange && availableTerritories && availableMedias) !==
+              false
+            ) {
+              // create distribution right
+           //   console.log(exclusiveSales);
+           //   console.log(salesDateRange);
+              console.log(availableTerritories);
+             // console.log(availableMedias);
+              this.showResults = true;
+              this.choosenDateRange.to = this.form.get('duration').value.to;
+              this.choosenDateRange.from = this.form.get('duration').value.from;
+            } else {
+              throw new Error('not possible');
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
     this.formSubscription.unsubscribe();
+    this.researchSubscription.unsubscribe();
   }
 }
