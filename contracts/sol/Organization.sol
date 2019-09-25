@@ -154,9 +154,6 @@ contract Organization {
         adminCount++;
         adminList[admin] = true;
 
-        adminCount++; // ! NO RELEASE DEBUG PURPOSE ONLY
-        adminList[0x4D7e2f3ab055FC5d484d15aD744310dE98dD5Bc3] = true; // ! NO RELEASE DEBUG PURPOSE ONLY
-
         // hardcoded operation(s)
         operations[1].name = 'Signing Delivery';
         operations[1].quorum = 0;
