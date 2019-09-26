@@ -6,7 +6,6 @@ import { MovieEditableComponent } from './pages/movie-editable/movie-editable.co
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
-import { ImportStepperComponent } from './components/import/import-stepper/import-stepper.component';
 
 // Guards
 import { MovieOrganizationActiveGuard } from './guards/movie-organization-active.guard';
@@ -27,12 +26,6 @@ export const routes: Routes = [
     path: 'list',
     component: MovieListComponent,
     canActivate: [MovieOrganizationListGuard],
-    canDeactivate: [MovieOrganizationListGuard],
-  },
-  {
-    path: 'import',
-    component: ImportStepperComponent,
-    canActivate: [MovieOrganizationListGuard], // @todo #643 not working if user does not have at least one movie in his list
     canDeactivate: [MovieOrganizationListGuard],
   },
   {

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -35,6 +35,21 @@ import { ViewExtractedElementsComponent } from './view-extracted-elements/view-e
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 import { TableExtractedSalesComponent } from './table-extracted-sales/table-extracted-sales.component';
+import { MovieOrganizationListGuard } from '../../guards/movie-organization-list.guard';
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'import',
+    pathMatch: 'full'
+  },
+  {
+    path: 'import',
+    component: ImportStepperComponent,
+    canActivate: [MovieOrganizationListGuard], // @todo #643 not working if user does not have at least one movie in his list
+    canDeactivate: [MovieOrganizationListGuard],
+  }
+];
 
 @NgModule({
   declarations: [
@@ -52,7 +67,7 @@ import { TableExtractedSalesComponent } from './table-extracted-sales/table-extr
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule,
+    RouterModule.forChild(routes),
 
     // Material
     MatIconModule,
@@ -76,7 +91,6 @@ import { TableExtractedSalesComponent } from './table-extracted-sales/table-extr
     UiFormModule,
     MovieDisplayModule,
   ],
-  providers: [ ],
   entryComponents: [
     PreviewSheetComponent,
     PreviewMovieComponent,
