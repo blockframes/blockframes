@@ -2,6 +2,7 @@
   <h2>Create an account</h2>
   <form [formGroup]="signupForm" (ngSubmit)="submited.emit(signupForm)" fxLayout="column">
     <mat-form-field appearance="outline">
+      <mat-label>Email address</mat-label>
       <input matInput type="email" placeholder="Email address" formControlName="email" required />
       <mat-error *ngIf="signupForm.get('email').hasError('email') && !signupForm.get('email').hasError('required')">
         Please enter a <strong>valid</strong> email address.
@@ -26,7 +27,7 @@
     </mat-form-field>
     <password-confirm formControlName="password"></password-confirm>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <button id="submit" type="submit" mat-raised-button color="accent">Sign up</button>
+      <button id="submit" type="submit" mat-flat-button color="accent">Sign up</button>
       <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an account</button>
     </div>
   </form>
