@@ -5,7 +5,14 @@
  */
 import request from 'request';
 import { UserConfig, USERS } from './users.fixture';
+import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
+
+const sleep = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -18,8 +25,8 @@ async function createUserIfItDoesntExists(
   { uid, email, password }: UserConfig
 ): Promise<UserRecord> {
   try {
-    // await here to catch the error in the try / catch scope
     console.log('trying to get user:', uid, email);
+    // await here to catch the error in the try / catch scope
     return await auth.getUser(uid);
   } catch {
     console.log('creating user:', uid, email);
@@ -30,6 +37,7 @@ async function createUserIfItDoesntExists(
 /**
  * Create all users defined in the users.fixture file
  *
+ * @param users The list of users to create if they do not exists.
  * @param auth  Firestore Admin Auth object
  */
 export async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
@@ -37,43 +45,39 @@ export async function createAllUsers(users: UserConfig[], auth: Auth): Promise<a
   return Promise.all(ps);
 }
 
-const sleep = ms => {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
-};
+/**
+ * Remove all users that are not in the list of expected users.
+ *
+ * @param expectedUsers
+ * @param auth
+ */
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+  let pageToken;
 
-export async function trashAllOtherUsers(
-  expectedUsers: UserConfig[],
-  auth: Auth,
-  fromPageToken?: string
-): Promise<any> {
-  // const expectedUsersIds = expectedUsers.map(x => x.uid);
-  const expectedUsersIds = [];
+  do {
+    const result = await auth.listUsers(1000, pageToken);
 
-  let { pageToken, users } = await auth.listUsers(1000, fromPageToken);
+    const users = result.users;
+    pageToken = result.pageToken;
 
-  while (users.length > 0) {
-    const usersToRemove = users.filter(user => expectedUsersIds.indexOf(user.uid) === -1);
+    console.log('PT:', pageToken);
+    console.log('users:', users.map(x => x.uid));
 
-    // Note: this is bad practice to await in a loop.
-    // In that case we just want to remove the users and wait for some
-    // time to avoid exploding Google's quotas. No need for more design,
-    // but do not reproduce in frontend / backend code.
+    // users - expected users => users that we don't want in the database.
+    const usersToRemove = differenceBy(users, expectedUsers, 'uid');
+
+    console.log('usersToRemove:', usersToRemove.map(x => x.uid));
+
+    // Note: this is usually bad practice to await in a loop.
+    // In this VERY SPECIFIC case we just want to remove the user
+    // and wait for some time to avoid exceeding Google's quotas.
+    // This is "good enough", but do not reproduce in frontend / backend code.
     for (const user of usersToRemove) {
       console.log('removing user:', user.email, user.uid);
       await auth.deleteUser(user.uid);
       await sleep(100);
     }
-
-    if (pageToken) {
-      const rest = await auth.listUsers(1000, pageToken);
-      pageToken = rest.pageToken;
-      users = rest.users;
-    } else {
-      break; // Quick fix, looks like there was an API upgrade. Refactor.
-    }
-  }
+  } while (pageToken);
 
   return;
 }
@@ -123,7 +127,7 @@ export async function prepareFirebase() {
     console.info('create all users...');
     await createAllUsers(USERS, auth);
     console.info('clearing other users...');
-    await trashAllOtherUsers(USERS, auth);
+    await removeUnexpectedUsers(USERS, auth);
     console.info('done.');
   } catch (e) {
     console.error(e);
