@@ -23,13 +23,13 @@
             </button>
           </ng-container>
           <a mat-icon-button [routerLink]="['/layout/o/account/wallet/reveal', keyObject.address]">
-            <mat-icon class="material-icons-outlined grey-icon">visibility</mat-icon>
+            <mat-icon class="material-icons-outlined">visibility</mat-icon>
           </a>
           <a mat-icon-button [href]="jsonKeystore()" [download]="keyName">
-            <mat-icon class="material-icons-outlined grey-icon">cloud_download</mat-icon>
+            <mat-icon class="material-icons-outlined">cloud_download</mat-icon>
           </a>
           <button mat-icon-button (click)="deleteKey.emit(keyObject)">
-            <mat-icon class="material-icons-outlined grey-icon">delete</mat-icon>
+            <mat-icon class="material-icons-outlined">delete</mat-icon>
           </button>
         </div>
       </div>

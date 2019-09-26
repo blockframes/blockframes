@@ -19,4 +19,8 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
     border: none;
     background-color: mat-color($bf-light-background, stroked-button);
     }
+
+  [bf-icon] {
+    color: mat-color($bf-light-foreground, icon);
+  }
 }

@@ -4,18 +4,6 @@
 @import './themes/light';
 @import '~saturn-datepicker/theming';
 
-// Main theme
-// $blockframes-theme-primary: mat-palette($mat-lightbf-blue);
-// $blockframes-theme-accent: mat-palette($mat-lightbf-red);
-// $blockframes-theme-warn: mat-palette($mat-bf-red);
-
-// $blockframes-theme: mat-light-theme(
-//   $blockframes-theme-primary,
-//   $blockframes-theme-accent,
-//   $blockframes-theme-warn
-// );
-
-
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);

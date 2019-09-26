@@ -1,5 +1,4 @@
-<!-- TODO: issue#881 uncomment after Toronto -->
-<!-- <article *ngIf="!(hasVerifiedEmail$ | async)">
+<article *ngIf="!(hasVerifiedEmail$ | async)">
   <button
     mat-icon-button
     matTooltip="Your email is not verified, click here to send another verification mail."
@@ -7,6 +6,6 @@
     [disabled]="triggeredOnce"
     (click)="sendEmail()"
   >
-    <mat-icon matBadge="!" class="grey-icon" matBadgePosition="after" matBadgeSize="small" matBadgeColor="accent">mail_outline</mat-icon>
+    <mat-icon bf-icon matBadge="!" matBadgePosition="after" matBadgeSize="small" matBadgeColor="accent">mail_outline</mat-icon>
   </button>
-</article> -->
+</article>
