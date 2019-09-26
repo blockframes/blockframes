@@ -1,5 +1,3 @@
-// TODO #974: replace color
-
 .movie-card-view {
   // @todo #643 remove that. This should be at the root.
   * {
@@ -45,7 +43,6 @@
 
     mat-card-subtitle, .promotional-element-link {
       font-size: 14px;
-      color: #000;
     }
 
     .movie-card-meta-title {
@@ -71,7 +68,6 @@
       text-align: left;
       padding-left: 10px;
       font-weight: normal;
-      color: #000;
       font-size: 14px;
     }
   }
