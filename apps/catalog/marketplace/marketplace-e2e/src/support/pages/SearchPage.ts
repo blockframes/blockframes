@@ -9,7 +9,6 @@ export default class SearchPage {
   }
 
   public fillProductionYear(years: Dates) {
-    // cy.get('[page-id=catalog-search] [test-id=production-year-panel]').click();
     cy.get('[page-id=catalog-search] input[test-id=production-year-input-from]').type(years.from);
     cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(years.to);
   }
