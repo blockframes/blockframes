@@ -40,10 +40,10 @@
             Percentage is <strong>required</strong>.
           </mat-error>
           <mat-error *ngIf="mgDeadlines.hasError('percentageNotMatching')">
-            Percentage do not <strong>match</strong>.
+            Sum of percentages can not exceed <strong>100%</strong>.
           </mat-error>
           <mat-error *ngIf="deadline.get('percentage').hasError('invalidPercentage')">
-            Percentage is not <strong>valid</strong>.
+            Percentage must be between <strong>0 and 100</strong>.
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
