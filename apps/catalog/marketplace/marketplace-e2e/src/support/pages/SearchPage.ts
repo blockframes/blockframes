@@ -56,8 +56,7 @@ export default class SearchPage {
   }
 
   public selectMovie(movieName: string) {
-    // cy.get('[page-id=display-card] [test-id=movie-card-title]').contains(movieName).click()
-    cy.get('[page-id=display-card]').contains('movie-card', movieName).find('a').click()
+    cy.get('[page-id=display-card]').contains('movie-card', movieName).find('a').click();
     return new ViewPage();
   }
 }

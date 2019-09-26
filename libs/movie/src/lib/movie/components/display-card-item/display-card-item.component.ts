@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 @Component({
   selector: '[movie] movie-display-card-item',
   template: `
-    <mat-card test-id="content">
+    <mat-card>
       <img mat-card-image [src]="movie.poster" alt="Movie's poster" />
       <mat-card-content>
         <mat-card-title-group>
