@@ -15,7 +15,9 @@ import {
   cleanModel,
   createMovieSale
 } from '../../../+state';
-import { SheetTab, formatCredits, ImageUploader } from '@blockframes/utils';
+import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { formatCredits } from '@blockframes/utils/spreadsheet/format';
+import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';

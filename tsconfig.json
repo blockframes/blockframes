@@ -17,10 +17,18 @@
       "@blockframes/ip": ["libs/ip/src/index.ts"],
       "@blockframes/auth": ["libs/auth/src/index.ts"],
       "@blockframes/ui": ["libs/ui/src/index.ts"],
+
+      // UTILS
       "@blockframes/utils": ["libs/utils/src/index.ts"],
-      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+      "@blockframes/utils/*": ["libs/utils/src/lib/*"],
+      "@blockframes/utils/spreadsheet": ["libs/utils/src/lib/spreadsheet/index.ts"],
+
+      // MOVIE
       "@blockframes/movie": ["libs/movie/src/index.ts"],
       "@blockframes/movie/*": ["libs/movie/src/lib/*"],
+      "@blockframes/movie/import": ["libs/movie/src/lib/movie/components/import/import-movie.module.ts"],
+
+      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
       "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],

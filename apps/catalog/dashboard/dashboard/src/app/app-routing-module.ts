@@ -59,6 +59,10 @@ export const routes: Routes = [
             loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
           },
           {
+            path: 'import',
+            loadChildren: () => import('@blockframes/movie/import').then(m => m.ImportMovieModule)
+          },
+          {
             path: 'catalog',
             loadChildren: () => import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
           },
