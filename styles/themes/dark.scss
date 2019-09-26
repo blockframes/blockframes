@@ -94,16 +94,19 @@ $bf-dark-background: (
   background: #02000F,
   border:     #292929,
   card:       rgba(255,255,255,0.05),
-  hover:      rgba(white, 0.04),
+  hover:      rgba(255,255,255,0.08),
   dialog:     map_get($mat-grey, 800),
-  disabled-button: rgba(white, 0.12),
+  disabled-button: rgba(155,177,255,0.12),
   raised-button: map-get($mat-grey, 800),
   focused-button: $light-focused,
   selected-button: map_get($mat-grey, 900),
-  selected-disabled-button: map_get($mat-grey, 800),
-  disabled-button-toggle: black,
+  selected-disabled-button: rgba(155,177,255,0.12),
+  disabled-button-toggle: rgba(155,177,255,0.12),
   unselected-chip: map_get($mat-grey, 700),
-  disabled-list-option: black,
+  disabled-list-option: rgba(155,177,255,0.12),
+
+  // Custom variables
+  stroked-button: rgba(255,255,255,0.10),
 );
 
 
@@ -113,11 +116,11 @@ $bf-dark-background: (
 ////////////////
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
-  base:              white,
+  base:              rgba(155,177,255,0.12),
   text:              white,
-  divider:           #2C2C2C,
-  dividers:          $light-dividers,
-  disabled:          $light-disabled-text,
+  divider:           #292929,
+  dividers:          #292929,
+  disabled:          rgba(155,177,255,0.12),
   disabled-text:     $light-disabled-text,
   disabled-button:   rgba(white, 0.3),
   elevation:         black,

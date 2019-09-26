@@ -1,15 +1,16 @@
 <main *ngIf="(movie$ | async) as movie">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <h1 class="mat-display-3">{{movie.main.title.original}}</h1>
-      <b *ngFor="let director of movie.main.directors; let isLast = last">
-        <h3 class="mat-body-1">a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
-        </h3>
-      </b>
+      <h1>{{movie.main.title.original}}</h1>
+      <div *ngFor="let director of movie.main.directors; let isLast = last">
+        <span>a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
+        </span>
+      </div>
     </div>
   </header>
-  <article fxLayout="row">
-    <aside>
+
+  <article fxLayout="row" class="page-content">
+    <div>
       <mat-card>
         <form [formGroup]="form">
           <mat-accordion multi="true">
@@ -17,7 +18,7 @@
             <!-- Dates -->
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="distribution-date-panel" class="mat-h4">
+                <mat-panel-title test-id="distribution-date-panel">
                   Dates
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -31,15 +32,19 @@
             <!-- Territories -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="distribution-territory-panel" class="mat-h4">
+                <mat-panel-title test-id="distribution-territory-panel">
                   Territories
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-form-field>
                 <mat-chip-list #chipList>
-                  <mat-chip *ngFor="let territory of selectedTerritories; let i = index" selectable removeable
+                  <!-- <mat-chip *ngFor="let territory of selectedTerritories; let i = index" selectable removeable
                     (removed)="removeTerritory(territory, i)" class="capitalized">
                     {{territory}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip> -->
+                  <mat-chip color="primary" *ngFor="let territory of selectedTerritories; let i = index" selected >
+                    {{ territory }}
                     <mat-icon matChipRemove>cancel</mat-icon>
                   </mat-chip>
                   <input test-id="distribution-territory-input" placeholder="Territories available" [matAutocomplete]="auto" [matChipInputFor]="chipList"
@@ -57,7 +62,7 @@
             <!-- Media -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="distribution-media-panel" class="mat-h4">Mandate Media</mat-panel-title>
+                <mat-panel-title test-id="distribution-media-panel">Mandate Media</mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
                 <mat-checkbox mat-list-item *ngFor="let media of movieMedia" (change)="checkMedia(media)"
@@ -69,7 +74,7 @@
             <!-- Language -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="distribution-language-panel" class="mat-h4">
+                <mat-panel-title test-id="distribution-language-panel">
                   Languages, Dubbings, Subtitles
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -121,7 +126,7 @@
                 <!-- Dubbings -->
                 <span fxLayout="column" fxLayoutAlign="start start">
                   <ng-container *ngIf="!(movie.versionInfo.dubbings.length === 0); else noDubbings">
-                    <h6 class="mat-h4">Dubbings</h6>
+                    <h6>Dubbings</h6>
                     <span fxLayout="row">
                       <mat-form-field appearance="outline">
                         <input test-id="distribution-dubbing-input" matInput type="text" [matAutocomplete]="dubbings" [formControl]="dubbingsControl"
@@ -143,8 +148,8 @@
                     </span>
                   </ng-container>
                 </span>
-                <ng-template #noDubbings class="mat-h4">
-                  <h4 class="mat-h4">There are no dubbings available</h4>
+                <ng-template #noDubbings>
+                  <h4>There are no dubbings available</h4>
                 </ng-template>
                 <ng-container *ngIf="form.get('dubbings').value">
                   <mat-list fxLayout="column">
@@ -163,7 +168,7 @@
                 <!-- Subtitles -->
                 <span fxLayout="column" fxLayoutAlign="start start">
                   <ng-container *ngIf="!(movie.versionInfo.subtitles.length === 0); else noSubtitles">
-                    <h4 class="mat-h4">Subtitles</h4>
+                    <h4>Subtitles</h4>
                     <span fxLayout="row">
                       <mat-form-field appearance="outline">
                         <input matInput type="text" [matAutocomplete]="subtitles" [formControl]="subtitlesControl"
@@ -185,8 +190,8 @@
                     </span>
                   </ng-container>
                 </span>
-                <ng-template #noSubtitles class="mat-h4">
-                  <h4 class="mat-h4">There are no subtitles available</h4>
+                <ng-template #noSubtitles>
+                  <h4>There are no subtitles available</h4>
                 </ng-template>
                 <ng-container *ngIf="form.get('subtitles').value">
                   <mat-list fxLayout="column">
@@ -207,12 +212,12 @@
           <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()">Search</button>
         </form>
       </mat-card>
-    </aside>
+    </div>
 
     <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="showResults">
       <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
         (rangeSelected)="changeDateFocus($event)"></month-calendar>
-        <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
+        <a test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionRight()" [disabled]="!catalogBasket">Add
         distribution right</a>
     </section>
     <section>

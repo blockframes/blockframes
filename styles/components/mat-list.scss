@@ -9,6 +9,17 @@
   border: 1px solid mat-color($bf-light-background, border);
 }
 
+.dark-theme .mat-nav-list,
+.dark-theme .mat-selection-list {
+  background-color: rgba(#02000F, 0.5);
+  border: 1px solid mat-color($bf-dark-background, border);
+}
+
+.dark-theme .mat-menu-content,
+.dark-theme .mat-select-panel {
+  background: #02000F;
+}
+
 .active-list-item mat-icon {
   color: mat-color($bf-light-primary) !important;
 }
