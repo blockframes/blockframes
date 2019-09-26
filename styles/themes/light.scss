@@ -108,25 +108,24 @@ $mat-light-bf-red: (
 // Background palette for light themes.
 $bf-light-background: (
   app-bar:    #FFF,
-  status-bar: #FFF, // ??
+  status-bar: #FFF,
   background: #FAFAFA,
-  border:     #FFF, // ??
+  border:     #FFF,
   disabled-button: #B9C2CB,
   hover:      rgba(#4E67F9, 0.05),
   card:       #FFF,
   dialog:     #FFF,
   raised-button: white,
-  focused-button: #FFF, // ??
-  selected-button: #FFF, // ??
-  selected-disabled-button: #B9C2CB, // ??
-  disabled-button-toggle: #B9C2CB, // ??
-  unselected-chip: map_get($mat-grey, 300), // ??
-  disabled-list-option: #B9C2CB, // ??
+  focused-button: #FFF,
+  selected-button: #FFF,
+  selected-disabled-button: #B9C2CB,
+  disabled-button-toggle: #B9C2CB,
+  unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: #B9C2CB,
 
   // Custom variables
   stroked-button: map-get($mat-light-bf-blue, 50),
 );
-
 
 ////////////////
 // FOREGROUND //
@@ -154,8 +153,6 @@ $bf-light-foreground: (
   subheading:        #4D5664,
   link:              #1A49F5,
 );
-
-
 
 ///////////
 // THEME //

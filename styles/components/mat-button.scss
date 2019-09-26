@@ -10,7 +10,7 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
 .light-theme {
 
   a {
-    color: mat-color($bf-light-foreground,);
+    color: mat-color($bf-light-foreground, link);
   }
 
   .mat-stroked-button {
