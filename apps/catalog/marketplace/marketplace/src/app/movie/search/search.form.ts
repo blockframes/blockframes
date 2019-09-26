@@ -17,7 +17,7 @@ import {
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
+import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils/form';
 import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 
 /////////////////////////

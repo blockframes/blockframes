@@ -1,5 +1,5 @@
 import { MovieSalesInfo, createMovieSalesInfo, Movie } from '../../+state';
-import { FormEntity, FormField, FormList } from '@blockframes/utils';
+import { FormEntity, FormField, FormList } from '@blockframes/utils/form';
 import { FormControl } from '@angular/forms';
 
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){

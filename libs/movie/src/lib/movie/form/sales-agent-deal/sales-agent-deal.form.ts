@@ -1,5 +1,5 @@
 import { MovieSalesAgentDeal, createMovieSalesAgentDeal, Movie } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity, FormField } from '@blockframes/utils/form';
 
 function createMovieSalesAgentDealControls(salesAgentDeal: Partial<MovieSalesAgentDeal> = {}){
   const entity = createMovieSalesAgentDeal(salesAgentDeal);

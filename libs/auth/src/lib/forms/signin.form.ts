@@ -3,7 +3,7 @@ import {
   FormEntity,
   PasswordControl,
   EmailControl
-} from '@blockframes/utils';
+} from '@blockframes/utils/form';
 
 interface SignIn {
   email: string

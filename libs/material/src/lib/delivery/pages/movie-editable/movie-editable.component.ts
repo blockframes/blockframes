@@ -6,7 +6,7 @@ import { MaterialQuery } from '../../../material/+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { tap, switchMap } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 
 @Component({
   selector: 'movie-editable',

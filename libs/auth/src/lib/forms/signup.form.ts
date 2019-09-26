@@ -3,7 +3,7 @@ import {
   PasswordControl,
   EmailControl,
   FormEntity
-} from '@blockframes/utils';
+} from '@blockframes/utils/form';
 import { FormControl, Validators } from '@angular/forms';
 
 interface SignUp {

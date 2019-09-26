@@ -1,4 +1,4 @@
-import { EntityControl, FormEntity } from '@blockframes/utils';
+import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';

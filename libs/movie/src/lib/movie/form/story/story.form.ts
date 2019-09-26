@@ -1,12 +1,12 @@
 import { MovieStory, createMovieStory } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity, FormField } from '@blockframes/utils/form';
 import { Validators } from '@angular/forms';
 
 function createMovieStoryControls(story: Partial<MovieStory> = {}) {
   const entity = createMovieStory(story);
   return {
-    logline:  new FormField(entity.logline, [Validators.maxLength(180)]), 
-    synopsis: new FormField(entity.synopsis, [Validators.maxLength(500)]), 
+    logline:  new FormField(entity.logline, [Validators.maxLength(180)]),
+    synopsis: new FormField(entity.synopsis, [Validators.maxLength(500)]),
   }
 }
 

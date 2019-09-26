@@ -1,5 +1,5 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements } from '../../+state';
-import { FormEntity, FormList, UrlControl } from '@blockframes/utils';
+import { FormEntity, FormList, UrlControl } from '@blockframes/utils/form';
 import { FormControl } from '@angular/forms';
 
 

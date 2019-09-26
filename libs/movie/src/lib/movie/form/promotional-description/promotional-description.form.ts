@@ -1,5 +1,5 @@
 import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 

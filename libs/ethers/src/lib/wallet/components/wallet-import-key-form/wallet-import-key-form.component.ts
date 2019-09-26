@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input } from "@angular/core";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, Validators } from "@angular/forms";
-import { validMnemonic, Key } from '@blockframes/utils';
+import { Key } from '@blockframes/utils';
+import { validMnemonic } from '@blockframes/utils/form';
 
 @Component({
   selector: 'wallet-import-key-form',
@@ -15,7 +16,7 @@ export class WalletImportKeyFormComponent {
   isMnemonic = false;
   keyObject: Key;
   mnemonic = new FormControl('', [Validators.required, validMnemonic]);
-  
+
   @Input() lockMnemonic = false;
   @Output() importKey = new EventEmitter<Key>();
   @Output() importMnemonic = new EventEmitter<string>();

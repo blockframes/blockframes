@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from 
 import { ControlContainer } from '@angular/forms';
 import { Delivery, Currencies } from '../../+state';
 import { Material } from '../../../material/+state';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 import { MaterialControl } from '../../forms/material.form';
 
 @Component({

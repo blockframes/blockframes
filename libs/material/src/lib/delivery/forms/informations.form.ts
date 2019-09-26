@@ -1,5 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormList } from '@blockframes/utils';
+import { FormList } from '@blockframes/utils/form';
 import { Step, MGDeadline } from '../+state';
 
 export function createStepFormGroup(step: Step) {

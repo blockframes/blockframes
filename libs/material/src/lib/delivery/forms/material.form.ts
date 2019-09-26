@@ -1,4 +1,4 @@
-import { FormBatch, FormElement } from '@blockframes/utils';
+import { FormBatch, FormElement } from '@blockframes/utils/form';
 import { FormControl } from '@angular/forms';
 import { Material } from '@blockframes/material';
 import { createMaterial } from '../../material/+state';

@@ -30,7 +30,8 @@ import {
   TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
-import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
+import { languageValidator, ControlErrorStateMatcher } from '@blockframes/utils/form';
+import { sortMovieBy } from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';

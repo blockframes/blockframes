@@ -22,6 +22,7 @@
       "@blockframes/utils": ["libs/utils/src/index.ts"],
       "@blockframes/utils/spreadsheet/format": ["libs/utils/src/lib/spreadsheet/format.ts"],
       "@blockframes/utils/spreadsheet": ["libs/utils/src/lib/spreadsheet/index.ts"],
+      "@blockframes/utils/form": ["libs/utils/src/lib/form/index.ts"],
 
       // MOVIE
       "@blockframes/movie": ["libs/movie/src/index.ts"],

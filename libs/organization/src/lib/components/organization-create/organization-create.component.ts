@@ -7,7 +7,7 @@ import { first, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../../+state';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { UniqueOrgName } from '@blockframes/utils';
+import { UniqueOrgName } from '@blockframes/utils/form';
 
 @Component({
   selector: 'organization-create',

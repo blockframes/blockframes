@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 
 @Component({
   selector: '[formGroupName] movie-material-form,[formGroup] movie-material-form, movie-material-form',

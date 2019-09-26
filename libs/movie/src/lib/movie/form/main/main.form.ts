@@ -1,5 +1,5 @@
 import { MovieMain, Movie, Credit, createMovieMain, createCredit } from '../../+state';
-import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
+import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils/form';
 import { Validators, FormControl } from '@angular/forms';
 
 

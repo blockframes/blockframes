@@ -4,7 +4,7 @@ import { ProfileForm } from '../../forms/profile-edit.form';
 import { startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup } from '@angular/forms';
-import { PasswordControl } from '@blockframes/utils';
+import { PasswordControl } from '@blockframes/utils/form';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { Observable } from 'rxjs';
 

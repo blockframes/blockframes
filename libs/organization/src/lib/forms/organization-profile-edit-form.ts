@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form';
 import { PLACEHOLDER_LOGO } from '../+state';
 
 export interface OrganizationProfile {

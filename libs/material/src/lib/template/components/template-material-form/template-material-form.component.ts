@@ -3,7 +3,7 @@ import { ControlContainer } from '@angular/forms';
 import { Material } from '../../../material/+state';
 import { Currencies } from '../../../delivery/+state';
 import { MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 
 @Component({
   selector: '[formGroup] template-material-form',

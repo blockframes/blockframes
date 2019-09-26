@@ -1,4 +1,4 @@
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form';
 import { DistributionRight } from '../+state/basket.model';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {

@@ -15,7 +15,7 @@ import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { id as keccak256 } from '@ethersproject/hash';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 
 @Component({
   selector: 'delivery-editable',

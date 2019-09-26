@@ -7,7 +7,7 @@ import { MaterialService } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormElement } from '@blockframes/utils/form';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Component({
