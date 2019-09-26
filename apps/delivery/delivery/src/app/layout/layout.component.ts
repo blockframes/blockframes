@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, OnInit, Component } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
 import { CONTEXT_MENU } from './context-menu';
 import { RouterOutlet } from '@angular/router';
-import { slideAnimation } from '@blockframes/utils';
+import { slideAnimation } from '@blockframes/utils/animation';
 
 @Component({
   selector: 'delivery-layout',
