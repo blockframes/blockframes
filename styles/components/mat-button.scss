@@ -9,16 +9,14 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
 
 .light-theme {
 
+  a {
+    color: mat-color($bf-light-foreground,);
+  }
+
   .mat-stroked-button {
     border-radius: 50px;
     box-shadow: none;
     border: none;
     background-color: mat-color($bf-light-background, stroked-button);
     }
-
-  .mat-flat-button.mat-flat-button:disabled {
-      color: mat-color($bf-light-foreground, disabled-button);
-      background: mat-color($bf-light-background, disabled-button);
-      border: none;
-  }
 }

@@ -3,30 +3,39 @@
 // PALETTES //
 //////////////
 
-$mat-light-bf-orange: (
-  50 : #FFEEF1,
-  100 : #FFD5D9,
-  200 : #F8A8A5,
-  300 : #F28882,
-  400 : #FF6E61,
-  500 : #FF6247,
-  600 : #F75B48,
-  700 : #E45141,
-  800 : #D74B3B,
-  900 : #C8412F,
+$mat-light-bf-warn: (
+  50 : #ffecef,
+  100 : #ffcfd5,
+  200 : #f49c9f,
+  300 : #ec7679,
+  400 : #f75557,
+  500 : #fe453e,
+  600 : #ef3a3d,
+  700 : #dc3036,
+  800 : #cf292f,
+  900 : #c01c23,
+  A100 : #ffffff,
+  A200 : #fffdfd,
+  A400 : #ffcbca,
+  A700 : #ffb2b1,
   contrast: (
     50 : #24374E,
     100 : #24374E,
-    200 : #24374E,
-    300 : #F9F8FF,
-    400 : #F9F8FF,
-    500 : #F9F8FF,
-    600 : #F9F8FF,
-    700 : #F9F8FF,
-    800 : #F9F8FF,
-    900 : #F9F8FF,
+    200 : #FFFFFF,
+    300 : #FFFFFF,
+    400 : #FFFFFF,
+    500 : #FFFFFF,
+    600 : #FFFFFF,
+    700 : #FFFFFF,
+    800 : #FFFFFF,
+    900 : #FFFFFF,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
+
 $mat-light-bf-blue: (
   50 : #E9EAFF,
   100 : #C7CAFD,
@@ -98,27 +107,25 @@ $mat-light-bf-red: (
 ////////////////
 // Background palette for light themes.
 $bf-light-background: (
-  app-bar:    white,
-  white-bg:   #FFFFFF,
+  app-bar:    #FFF,
+  status-bar: #FFF, // ??
   background: #FAFAFA,
-  border:     #D8D8D8,
+  border:     #FFF, // ??
   disabled-button: #B9C2CB,
-  status-bar: map_get($mat-grey, 300),
-  hover:      rgba(black, 0.04),
-  card:       white,
-  dialog:     white,
+  hover:      rgba(#4E67F9, 0.05),
+  card:       #FFF,
+  dialog:     #FFF,
   raised-button: white,
-  focused-button: $dark-focused,
-  selected-button: map_get($mat-grey, 300),
-  selected-disabled-button: map_get($mat-grey, 400),
-  disabled-button-toggle: map_get($mat-grey, 200),
-  unselected-chip: map_get($mat-grey, 300),
-  disabled-list-option: map_get($mat-grey, 200),
+  focused-button: #FFF, // ??
+  selected-button: #FFF, // ??
+  selected-disabled-button: #B9C2CB, // ??
+  disabled-button-toggle: #B9C2CB, // ??
+  unselected-chip: map_get($mat-grey, 300), // ??
+  disabled-list-option: #B9C2CB, // ??
 
   // Custom variables
   stroked-button: map-get($mat-light-bf-blue, 50),
 );
-
 
 
 ////////////////
@@ -126,18 +133,18 @@ $bf-light-background: (
 ////////////////
 // Foreground palette for light themes.
 $bf-light-foreground: (
-  base:              black,
-  text:              white,
+  base:              #4E67F9,
+  text:              #000,
   divider:           #D8D8D8,
-  dividers:          $dark-dividers,
-  disabled:          $dark-disabled-text,
+  dividers:          #D8D8D8,
+  disabled:          #5F697A,
   disabled-text:     #5F697A,
-  disabled-button:   rgba(black, 0.26),
-  elevation:         black,
-  hint-text:         $dark-disabled-text,
-  secondary-text:    $dark-secondary-text,
-  icon:              rgba(black, 0.54),
-  icons:             rgba(black, 0.54),
+  disabled-button:   #5F697A,
+  elevation:         #5F697A,
+  hint-text:         #B9C2CB,
+  secondary-text:    #5F697A,
+  icon:              #5F697A,
+  icons:             #5F697A,
   slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
@@ -145,7 +152,7 @@ $bf-light-foreground: (
   // Custom variables
   dynamic:           #5F697A,
   subheading:        #4D5664,
-  navbar-icon:       #5F697A,
+  link:              #1A49F5,
 );
 
 
@@ -156,7 +163,7 @@ $bf-light-foreground: (
 
 $bf-light-primary: mat-palette($mat-light-bf-blue, 400, 50, 700);
 $bf-light-accent: mat-palette($mat-light-bf-red, 500, 50, 800);
-$bf-light-warn: mat-palette($mat-light-bf-red, 200);
+$bf-light-warn: mat-palette($mat-light-bf-warn, 500);
 
 $bf-light-theme: (
   // Standard

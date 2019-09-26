@@ -1,7 +1,9 @@
+@import 'theme.scss';
+
 // Main theme
-$primary: mat-color($blockframes-theme-primary);
-$accent: mat-color($blockframes-theme-accent);
-$warn: mat-color($blockframes-theme-warn);
+$primary: mat-color($bf-light-primary);
+$accent: mat-color($bf-light-accent);
+$warn: mat-color($bf-light-warn);
 
 // Dark-theme
 $dark-primary: mat-color($bf-dark-primary);

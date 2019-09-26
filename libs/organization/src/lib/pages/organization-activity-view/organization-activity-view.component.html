@@ -1,9 +1,9 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
     <ng-container content>
-      <h2 fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex="noshrink">Activity Report</span>
+      <section fxLayout="row" fxLayoutAlign="start center">
+        <h2 fxFlex="noshrink">Activity Report</h2>
         <mat-divider></mat-divider>
-      </h2>
+      </section>
       <h4>Pending Approval</h4>
       <org-display-actions [actions]="pendingActions$ | async" [isApproved]="false" (actionSelected)="openSidenav($event)">
       </org-display-actions>

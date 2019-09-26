@@ -73,14 +73,6 @@ main {
   height: 100%;
 }
 
-.warn-color {
-  color: mat-color($blockframes-theme-warn);
-}
-
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
-}
-
-.grey-icon {
-  color: mat-color($bf-light-foreground, navbar-icon);
 }

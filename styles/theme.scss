@@ -1,28 +1,28 @@
 @import '~@angular/material/theming';
 @include mat-core();
-@import './palette.scss';
 @import './themes/dark';
 @import './themes/light';
 @import '~saturn-datepicker/theming';
 
 // Main theme
-$blockframes-theme-primary: mat-palette($mat-lightbf-blue);
-$blockframes-theme-accent: mat-palette($mat-lightbf-red);
-$blockframes-theme-warn: mat-palette($mat-bf-red);
+// $blockframes-theme-primary: mat-palette($mat-lightbf-blue);
+// $blockframes-theme-accent: mat-palette($mat-lightbf-red);
+// $blockframes-theme-warn: mat-palette($mat-bf-red);
 
-$blockframes-theme: mat-light-theme(
-  $blockframes-theme-primary,
-  $blockframes-theme-accent,
-  $blockframes-theme-warn
-);
+// $blockframes-theme: mat-light-theme(
+//   $blockframes-theme-primary,
+//   $blockframes-theme-accent,
+//   $blockframes-theme-warn
+// );
 
-@include sat-datepicker-theme($blockframes-theme);
 
 
 .light-theme {
-  @include angular-material-theme($blockframes-theme);
+  @include angular-material-theme($bf-light-theme);
+  @include sat-datepicker-theme($bf-light-theme);
 }
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
+  @include sat-datepicker-theme($bf-dark-theme);
 }
 
