@@ -1,4 +1,4 @@
-import { createAllUsers, prepareFirebase, trashAllOtherUsers } from './firebaseSetup';
+import { createAllUsers, prepareFirebase, removeUnexpectedUsers } from './firebaseSetup';
 import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
@@ -37,7 +37,7 @@ async function upgradeAlgoliaOrgs() {
 async function prepareToronto() {
   const { auth } = loadAdminServices();
   console.info('clearing other users...');
-  await trashAllOtherUsers(USERS, auth);
+  await removeUnexpectedUsers(USERS, auth);
   console.info('create all users...');
   await createAllUsers(USERS, auth);
   console.info('done.');
