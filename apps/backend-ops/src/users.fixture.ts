@@ -94,5 +94,10 @@ export const USERS: UserConfig[] = [
     uid: 'rjcV3BfLGlPalqUrbRX91zWqwqB2',
     email: 'cjentertainment@blockframes.com',
     password: 'blockframes'
+  },
+  {
+    uid: 'rjcrjcfLGlPalqUrbRX91zWqwqB2',
+    email: 'cypressCRUDdelivery@blockframes.com',
+    password: 'blockframes'
   }
 ];
