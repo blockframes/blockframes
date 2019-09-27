@@ -11,7 +11,9 @@ import {
   MoviePickerPage,
   DeliveryListPage,
   TemplatePickerPage,
-  ConfirmModal
+  ConfirmModal,
+  DeliveryStakeholdersPage,
+  MovieCreatePage
 } from '../support/pages';
 import { User, DeliveryInformation } from '../support/utils/type';
 import { MATERIALS, UPDATED_MATERIALS, Statuses } from '../support/utils/data';
@@ -25,7 +27,13 @@ const USER: Partial<User> = {
   password: 'blockframes'
 };
 
+const USER2: Partial<User> = {
+  email: 'cypressCRUDdelivery2@blockframes.com',
+  password: 'blockframes'
+};
+
 const ORGANIZATION_NAME = 'Cypress Delivery Test';
+const ORGANIZATION2_NAME = 'Cypress Invited Organization';
 
 const MOVIES_CYTEST = ['Starship Troopers', 'Anchorman'];
 
@@ -77,153 +85,205 @@ beforeEach(() => {
   cy.clearLocalStorage();
   cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
-  const p1: WelcomeViewPage = new WelcomeViewPage();
-  const p2: LoginViewPage = p1.clickCallToAction();
-  p2.fillSignin(USER);
-  p2.clickSigninWithMovies();
 });
 
 describe('User create a delivery selecting a movie', () => {
-  it('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: StarterPickerPage = p1.clickOnMovieWithNoDeliveries(MOVIES_CYTEST[0]);
-    const p3: SettingsPage = p2.clickFromScratchStarter();
-    p3.selectSetting(DELIVERY_SETTINGS[1]);
-    const p4: DeliveryEditablePage = p3.clickContinue();
-    p4.assertDeliveryMustBeSigned();
+  it.skip('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: StarterPickerPage = p3.clickOnMovieWithNoDeliveries(MOVIES_CYTEST[0]);
+    const p5: SettingsPage = p4.clickFromScratchStarter();
+    p5.selectSetting(DELIVERY_SETTINGS[1]);
+    const p6: DeliveryEditablePage = p5.clickContinue();
+    p6.assertDeliveryMustBeSigned();
   });
 });
 
 describe('User create a delivery from context-menu item', () => {
-  it('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: MoviePickerPage = p1.selectAddDeliveryTab();
-    const p3: StarterPickerPage = p2.pickMovie(MOVIES_CYTEST[1]);
-    const p4: TemplatePickerPage = p3.clickTemplateStarter();
-    p4.selectTemplate(TEMPLATE);
-    const p5: SettingsPage = p4.clickContinue();
-    p5.selectSetting(DELIVERY_SETTINGS[0]);
-    const p6: DeliveryEditablePage = p5.clickContinue();
-    p6.assertTableDisplayPrice();
-    MATERIALS.forEach(material => p6.assertMaterialExists(material));
+  it.skip('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
+
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: MoviePickerPage = p3.selectAddDeliveryTab();
+    const p5: StarterPickerPage = p4.pickMovie(MOVIES_CYTEST[1]);
+    const p6: TemplatePickerPage = p5.clickTemplateStarter();
+    p6.selectTemplate(TEMPLATE);
+    const p7: SettingsPage = p6.clickContinue();
+    p7.selectSetting(DELIVERY_SETTINGS[0]);
+    const p8: DeliveryEditablePage = p7.clickContinue();
+    p8.assertTableDisplayPrice();
+    MATERIALS.forEach(material => p8.assertMaterialExists(material));
   });
 });
 
 describe('User create a delivery on a movie who already got deliveries', () => {
-  it('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: StarterPickerPage = p2.clickAddDelivery();
-    const p4: SettingsPage = p3.clickMaterialsStarter();
-    DELIVERY_SETTINGS.forEach(setting => p4.selectSetting(setting));
-    const p5: DeliveryEditablePage = p4.clickContinue();
-    p5.assertDeliveryMustBeSigned();
-    p5.assertTableDisplayPrice();
-    MATERIALS.forEach(material => p5.assertMaterialExists(material));
+  it.skip('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: StarterPickerPage = p4.clickAddDelivery();
+    const p6: SettingsPage = p5.clickMaterialsStarter();
+    DELIVERY_SETTINGS.forEach(setting => p6.selectSetting(setting));
+    const p7: DeliveryEditablePage = p6.clickContinue();
+    p7.assertDeliveryMustBeSigned();
+    p7.assertTableDisplayPrice();
+    MATERIALS.forEach(material => p7.assertMaterialExists(material));
   });
 });
 
 describe('User update deliveries informations', () => {
-  it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    const p4: DeliveryInformationsEditablePage = p3.clickContextMenuInformation();
-    p4.addMGAmount(DELIVERY_INFORMATION);
-    p4.addDeadlines(DELIVERY_INFORMATION);
-    p4.addDates(DELIVERY_INFORMATION);
-    p4.addSteps(DELIVERY_INFORMATION);
+  it.skip('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
+    const p6: DeliveryInformationsEditablePage = p5.clickContextMenuInformation();
+    p6.addMGAmount(DELIVERY_INFORMATION);
+    p6.addDeadlines(DELIVERY_INFORMATION);
+    p6.addDates(DELIVERY_INFORMATION);
+    p6.addSteps(DELIVERY_INFORMATION);
 
     // Checks if every informations appear in the view before updating
-    p4.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
-    p4.clickUpdateChanges();
+    p6.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
+    p6.clickUpdateChanges();
 
     // Checks informations are displayed in view after updating
-    p4.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
+    p6.assertAllInformationFieldsExists(DELIVERY_INFORMATION);
   });
 });
 
 describe('User delete a delivery', () => {
-  it('should login, click on the second movie card, then delete a delivery', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    const p4: ConfirmModal = p3.clickDeleteDelivery();
-    const p5: DeliveryListPage = p4.confirmDeleteDelivery();
-    p5.assertDeliveryIsDeleted();
+  it.skip('should login, click on the second movie card, then delete a delivery', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
+    const p6: ConfirmModal = p5.clickDeleteDelivery();
+    const p7: DeliveryListPage = p6.confirmDeleteDelivery();
+    p7.assertDeliveryIsDeleted();
   });
 });
 
 // MATERIALS CRUD //
 
 describe('User add some materials', () => {
-  it('should login, click on the second movie card, click on the first delivery, then create 3 materials and assert that they exist', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
+  it.skip('should login, click on the second movie card, click on the first delivery, then create 3 materials and assert that they exist', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
     MATERIALS.forEach(material => {
-      p3.addMaterial();
-      p3.fillMaterial(material);
+      p5.addMaterial();
+      p5.fillMaterial(material);
 
       // Check if material display works
-      p3.assertMaterialExists(material);
+      p5.assertMaterialExists(material);
     });
-    p3.saveMaterial();
+    p5.saveMaterial();
 
     // Check if materials are saved
-    MATERIALS.forEach(material => p3.assertMaterialExists(material));
+    MATERIALS.forEach(material => p5.assertMaterialExists(material));
   });
 });
 
 describe('User update some materials fields', () => {
-  it('should login, click on the second movie card, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
+  it.skip('should login, click on the second movie card, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
     MATERIALS.forEach((material, index) => {
-      p3.editMaterial(material);
-      p3.clearMaterial();
-      p3.fillMaterial(UPDATED_MATERIALS[index]);
+      p5.editMaterial(material);
+      p5.clearMaterial();
+      p5.fillMaterial(UPDATED_MATERIALS[index]);
 
       // Check if material display works
-      p3.assertMaterialExists(material);
+      p5.assertMaterialExists(UPDATED_MATERIALS[index]);
     });
-    p3.saveMaterial();
+    p5.saveMaterial();
 
     // Check if materials are updated
-    UPDATED_MATERIALS.forEach(material => p3.assertMaterialExists(material));
+    UPDATED_MATERIALS.forEach(material => p5.assertMaterialExists(material));
   });
 });
 
 describe('User update some materials status', () => {
-  it('should login, click on the second movie card, click on the first delivery, then update 3 materials status and assert that they exist', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    p3.selectAllMaterials();
-    p3.updateStatus(Statuses.AVAILABLE);
-    p3.assertMaterialStatusChanged(UPDATED_MATERIALS, Statuses.AVAILABLE);
-    p3.selectMaterial(UPDATED_MATERIALS[0]);
-    p3.updateStatus(Statuses.PAID);
-    p3.assertMaterialsArePaid([UPDATED_MATERIALS[0]]);
-    p3.selectMaterial(UPDATED_MATERIALS[1]);
-    p3.selectMaterial(UPDATED_MATERIALS[2]);
-    p3.updateStatus(Statuses.ORDERED);
-    p3.assertMaterialsAreOrdered([UPDATED_MATERIALS[1], UPDATED_MATERIALS[2]]);
+  it.skip('should login, click on the second movie card, click on the first delivery, then update 3 materials status and assert that they exist', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
+    p5.selectAllMaterials();
+    p5.updateStatus(Statuses.AVAILABLE);
+    p5.assertMaterialStatusChanged(UPDATED_MATERIALS, Statuses.AVAILABLE);
+    p5.selectMaterial(UPDATED_MATERIALS[0]);
+    p5.updateStatus(Statuses.PAID);
+    p5.assertMaterialsArePaid([UPDATED_MATERIALS[0]]);
+    p5.selectMaterial(UPDATED_MATERIALS[1]);
+    p5.selectMaterial(UPDATED_MATERIALS[2]);
+    p5.updateStatus(Statuses.ORDERED);
+    p5.assertMaterialsAreOrdered([UPDATED_MATERIALS[1], UPDATED_MATERIALS[2]]);
   });
 });
 
 describe('User delete some materials', () => {
-  it('should login, click on the second movie card, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
-    const p1: MovieListPage = new MovieListPage();
-    const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
-    const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
+  it.skip('should login, click on the second movie card, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
     UPDATED_MATERIALS.forEach(material => {
-      p3.editMaterial(material);
-      const p4: ConfirmModal = p3.deleteMaterial();
-      p4.confirmDeleteMaterial();
+      p5.editMaterial(material);
+      const p6: ConfirmModal = p5.deleteMaterial();
+      p6.confirmDeleteMaterial();
     });
-    const p5: DeliveryEditablePage = new DeliveryEditablePage();
-    p5.assertNoMaterialsExists();
+    const p7: DeliveryEditablePage = new DeliveryEditablePage();
+    p7.assertNoMaterialsExists();
+  });
+});
+
+// DELIVERY TEAMWORK //
+
+describe('User invite an organization', () => {
+  it('should login, click on the second movie card, click on the first delivery, then invite an organization and assert that stakeholder exists', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
+    const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
+    const p6: DeliveryStakeholdersPage = p5.clickContextMenuStakeholders();
+    p6.inviteOrganization(ORGANIZATION2_NAME);
+    p6.assertOrganizationIsInvited(ORGANIZATION2_NAME);
+  });
+});
+
+describe('User accept an invitation', () => {
+  it('should login, click on the invitation, accept it, then sign the delivery', () => {
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
+    p2.fillSignin(USER2);
+    const p3: MovieListPage = p2.clickSigninWithMovies();
+    p3.acceptInvitation();
+    p3.assertMovieExists(MOVIES_CYTEST[1]);
+    p3.navigateToDocument();
   });
 });

@@ -21,6 +21,7 @@ import ConfirmModal from './ConfirmModal';
 import SaveAsTemplateModal from './delivery/SaveAsTemplateModal';
 import OrganizationHomePage from './organization/OrganizationHomePage';
 import TemplateCreatePage from './template/TemplateCreatePage';
+import DeliveryStakeholdersPage from './delivery/DeliveryStakeholdersPage';
 
 export {
   MovieListPage,
@@ -45,5 +46,6 @@ export {
   ConfirmModal,
   SaveAsTemplateModal,
   OrganizationHomePage,
-  TemplateCreatePage
+  TemplateCreatePage,
+  DeliveryStakeholdersPage
 };

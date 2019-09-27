@@ -1,4 +1,15 @@
-import { MovieListPage, OrganizationEditablePage, MemberEditablePage, LoginViewPage, TemplateListPage, TemplateCreatePage, ProfileEditablePage, DeliveryListPage, DeliveryInformationsEditablePage } from "./index";
+import {
+  MovieListPage,
+  OrganizationEditablePage,
+  MemberEditablePage,
+  LoginViewPage,
+  TemplateListPage,
+  TemplateCreatePage,
+  ProfileEditablePage,
+  DeliveryInformationsEditablePage,
+  DeliveryStakeholdersPage,
+  DeliveryEditablePage
+} from './index';
 
 export default abstract class NavbarPage {
   constructor() {
@@ -15,7 +26,9 @@ export default abstract class NavbarPage {
   ////////////////////
 
   public openProfileMenu() {
-    cy.get('[page-id=navbar]').get('button[test-id=profile-avatar]').click();
+    cy.get('[page-id=navbar]')
+      .get('button[test-id=profile-avatar]')
+      .click();
   }
 
   public clickProfile() {
@@ -29,10 +42,37 @@ export default abstract class NavbarPage {
     return new LoginViewPage();
   }
 
-
   public clickOnOrganization() {
     cy.get('button[test-id=manage-organization]').click();
     return new OrganizationEditablePage();
+  }
+
+  /////////////////////
+  /// Notifications ///
+  /////////////////////
+
+  public acceptInvitation(message: string): MovieListPage {
+    this.openNotifications();
+    this.clickAccept(message);
+    return new MovieListPage();
+  }
+
+  public navigateToDocument(): DeliveryEditablePage {
+    this.openNotifications();
+    this.clickGoToDocument();
+    return new DeliveryEditablePage();
+  }
+
+  public clickGoToDocument() {
+    cy.get('notification-item').contains('Go to document').click();
+  }
+
+  public openNotifications() {
+    cy.get('notification-widget').click();
+  }
+
+  public clickAccept(message: string) {
+    cy.get('invitation-item a[test-id=accept]').click();
   }
 
   ////////////////////
@@ -40,22 +80,39 @@ export default abstract class NavbarPage {
   ////////////////////
 
   public clickContextMenuMember() {
-    cy.get('[page-id=navbar] a').contains('member').click();
+    cy.get('[page-id=navbar] a')
+      .contains('member')
+      .click();
     return new MemberEditablePage();
   }
 
   public clickContextMenuTemplates() {
-    cy.get('[page-id=navbar] a').contains('templates').click();
+    cy.get('[page-id=navbar] a')
+      .contains('templates')
+      .click();
     return new TemplateListPage();
   }
 
+  // Delivery view
+
   public clickContextMenuInformation(): DeliveryInformationsEditablePage {
-    cy.get('[page-id=navbar] a').contains('information').click();
+    cy.get('[page-id=navbar] a')
+      .contains('information')
+      .click();
     return new DeliveryInformationsEditablePage();
   }
 
+  clickContextMenuStakeholders(): DeliveryStakeholdersPage {
+    cy.get('[page-id=navbar] a')
+      .contains('stakeholders')
+      .click();
+    return new DeliveryStakeholdersPage();
+  }
+
   public clickContextMenuTemplatesCreate() {
-    cy.get('[page-id=navbar] a').contains('templates').click();
+    cy.get('[page-id=navbar] a')
+      .contains('templates')
+      .click();
     return new TemplateCreatePage();
   }
 }

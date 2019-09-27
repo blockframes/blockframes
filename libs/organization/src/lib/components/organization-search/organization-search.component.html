@@ -14,7 +14,7 @@
     [displayWith]="displayFn"
     (optionSelected)="submit($event)"
   >
-    <mat-option *ngFor="let organization of (searchResults$ | async)" [value]="organization">
+    <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization">
       <span fxLayout="row" fxLayoutAlign="space-between center">
         <span>{{ organization.name }}</span>
         <mat-icon color="primary" svgIcon="add"></mat-icon>
