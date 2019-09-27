@@ -16,12 +16,12 @@ export default class MovieListPage extends NavbarPage {
   }
 
   public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {
-    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains('mat-card', movieName).click();
     return new StarterPickerPage();
   }
 
   public clickOnMovieWithDeliveries(movieName: string): DeliveryListPage {
-    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains('mat-card', movieName).click();
     return new DeliveryListPage();
   }
 

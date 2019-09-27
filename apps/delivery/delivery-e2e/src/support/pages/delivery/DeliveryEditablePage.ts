@@ -47,9 +47,7 @@ export default class DeliveryEditablePage extends NavbarPage {
 
   public editMaterial(material: Material) {
     cy.get('[page-id=delivery-material-list] tr')
-      .contains(material.title)
-      .parent()
-      .parent()
+      .contains('tr', material.title)
       .find('button')
       .click();
   }
@@ -61,15 +59,15 @@ export default class DeliveryEditablePage extends NavbarPage {
 
   public selectMaterial(material: Material) {
     cy.get('[page-id=delivery-material-list] tr')
-      .contains(material.title)
-      .parent()
-      .parent()
+      .contains('tr', material.title)
       .find('mat-checkbox')
       .click();
   }
 
   public selectAllMaterials() {
-    cy.get('[page-id=delivery-material-list] th').find('mat-checkbox').click();
+    cy.get('[page-id=delivery-material-list] th')
+      .find('mat-checkbox')
+      .click();
   }
 
   public updateStatus(status: string) {
@@ -156,7 +154,9 @@ export default class DeliveryEditablePage extends NavbarPage {
   }
 
   public clearSelectAllCheckbox() {
-    cy.get('[page-id=delivery-material-list] th').find('mat-checkbox').uncheck();
+    cy.get('[page-id=delivery-material-list] th')
+      .find('mat-checkbox')
+      .uncheck();
   }
 
   //-------------------------------------

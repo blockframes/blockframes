@@ -84,7 +84,7 @@ beforeEach(() => {
 });
 
 describe('User create a delivery selecting a movie', () => {
-  it.skip('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
+  it('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: StarterPickerPage = p1.clickOnMovieWithNoDeliveries(MOVIES_CYTEST[0]);
     const p3: SettingsPage = p2.clickFromScratchStarter();
@@ -95,7 +95,7 @@ describe('User create a delivery selecting a movie', () => {
 });
 
 describe('User create a delivery from context-menu item', () => {
-  it.skip('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
+  it('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: MoviePickerPage = p1.selectAddDeliveryTab();
     const p3: StarterPickerPage = p2.pickMovie(MOVIES_CYTEST[1]);
@@ -110,7 +110,7 @@ describe('User create a delivery from context-menu item', () => {
 });
 
 describe('User create a delivery on a movie who already got deliveries', () => {
-  it.skip('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
+  it('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: StarterPickerPage = p2.clickAddDelivery();
@@ -124,7 +124,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
 });
 
 describe('User update deliveries informations', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
+  it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
@@ -144,7 +144,7 @@ describe('User update deliveries informations', () => {
 });
 
 describe('User delete a delivery', () => {
-  it.skip('should login, click on the second movie card, then delete a delivery', () => {
+  it('should login, click on the second movie card, then delete a delivery', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
@@ -164,8 +164,13 @@ describe('User add some materials', () => {
     MATERIALS.forEach(material => {
       p3.addMaterial();
       p3.fillMaterial(material);
+
+      // Check if material display works
+      p3.assertMaterialExists(material);
     });
     p3.saveMaterial();
+
+    // Check if materials are saved
     MATERIALS.forEach(material => p3.assertMaterialExists(material));
   });
 });
@@ -175,14 +180,17 @@ describe('User update some materials fields', () => {
     const p1: MovieListPage = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p3: DeliveryEditablePage = p2.clickFirstDelivery(ORGANIZATION_NAME);
-    let index = 0;
-    MATERIALS.forEach(material => {
+    MATERIALS.forEach((material, index) => {
       p3.editMaterial(material);
       p3.clearMaterial();
       p3.fillMaterial(UPDATED_MATERIALS[index]);
-      index++;
+
+      // Check if material display works
+      p3.assertMaterialExists(material);
     });
     p3.saveMaterial();
+
+    // Check if materials are updated
     UPDATED_MATERIALS.forEach(material => p3.assertMaterialExists(material));
   });
 });
