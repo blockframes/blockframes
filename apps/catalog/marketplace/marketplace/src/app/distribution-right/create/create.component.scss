@@ -1,3 +1,5 @@
+@import 'mixins';
+
 :host {
   height: 100%;
   display: flex;
@@ -46,4 +48,25 @@ header {
 .filter-checkboxes-media {
   height: 260px;
   flex-wrap: wrap;
+}
+
+@include mobile {
+  .page-content {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@include tablet {
+  .page-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+@include medium {
+  .page-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 }
