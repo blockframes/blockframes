@@ -276,6 +276,7 @@ export class OrganizationService {
   //             GETTERS
   //----------------------------------
 
+  /** Retrieve the Ethereum address of the current org (using it's ENS name) */
   public async getEthAddress() {
     this._requireProvider();
     const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);

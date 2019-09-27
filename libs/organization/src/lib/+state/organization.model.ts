@@ -56,7 +56,7 @@ export interface Organization {
   id: string;
   status: OrganizationStatus; // is the organization accepted by cascade8 admins?
   name: string;
-  /** organization's physical address, **not ethereum address**  */
+  /** organization's office address, **not ethereum address**  */
   address: string;
   phoneNumber: string;
   created: number;

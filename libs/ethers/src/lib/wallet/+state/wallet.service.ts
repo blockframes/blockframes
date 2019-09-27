@@ -68,6 +68,12 @@ export class WalletService {
     return key;
   }
 
+  /**
+   * Ask the relayer to deploy the user's smart-wallet
+   * @param ensDomain the ens of the user : `alice.blockframes.eth`
+   * @param pubKey the address of the first key to put in the smart-wallet
+   * @param orgId the id of the user's org, it will be used to put the org address as the recover address
+   */
   public async deployERC1077(ensDomain: string, pubKey: string, orgId: string) {
     this._requireProvider();
     if (this.query.getValue().hasERC1077) {
