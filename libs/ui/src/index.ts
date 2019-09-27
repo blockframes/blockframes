@@ -1,6 +1,3 @@
-export * from './lib/material-form.module';
-export * from './lib/material-layout.module';
-export * from './lib/material-common.module';
 export * from './lib/upload/upload.module';
 export * from './lib/form/form.module';
 export * from './lib/toolbar/toolbar.module';
@@ -14,8 +11,6 @@ export * from './lib/actions-picker-list/actions-picker-list.module';
 export * from './lib/editable/editable.module';
 export * from './lib/editable-sidenav/editable-sidenav.module';
 export * from './lib/avatar-list/avatar-list.module';
-export * from './lib/month-calendar/month-calendar.module';
-export * from './lib/datepicker/datepicker.module';
 export * from './lib/icon-component';
 export * from './lib/movie-card/movie-card.module';
 // toolbar State

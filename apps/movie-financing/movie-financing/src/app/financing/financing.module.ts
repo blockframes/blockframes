@@ -8,11 +8,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material';
 // Angular
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MaterialCommonModule, MaterialLayoutModule } from '@blockframes/ui';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CardStatComponent } from './card-stat/card-stat.component';
@@ -62,12 +62,11 @@ export const routes: Routes = [
     MatIconModule,
     MatListModule,
     MatMenuModule,
+    MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    MaterialLayoutModule,
-    MaterialCommonModule,
     FlexLayoutModule
   ],
   providers: [],

@@ -16,7 +16,10 @@
       "@env": ["env/env.ts"],
       "@blockframes/ip": ["libs/ip/src/index.ts"],
       "@blockframes/auth": ["libs/auth/src/index.ts"],
+
+      // UI
       "@blockframes/ui": ["libs/ui/src/index.ts"],
+      "@blockframes/ui/*": ["libs/ui/src/lib/*"],
 
       // UTILS
       "@blockframes/utils": ["libs/utils/src/index.ts"],
