@@ -1,5 +1,5 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FormList, validPercentageList, validPercentage } from '@blockframes/utils';
+import { FormList, validPercentageList } from '@blockframes/utils';
 import { Step, MGDeadline } from '../+state';
 
 export function createStepFormGroup(step: Step) {
@@ -17,13 +17,15 @@ function createStepsFormList() {
 export function createDeadlineFormGroup(deadline: MGDeadline) {
   return new FormGroup({
     label: new FormControl(deadline.label),
-    percentage: new FormControl(deadline.percentage, [Validators.required, validPercentage]),
+    percentage: new FormControl(deadline.percentage, Validators.required),
     date: new FormControl(deadline.date)
   });
 }
 
 function createDeadlinesFormList() {
-  return FormList.factory([], createDeadlineFormGroup, validPercentageList);
+  return FormList.factory([], createDeadlineFormGroup,
+    validPercentageList
+);
 }
 
 export function createInformationsFormGroup() {

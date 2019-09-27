@@ -57,18 +57,23 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
 }
 
 /** Checks if the sum of all percentages of FormArray does not exceed 100%  */
-export function validPercentageList(control: FormArray): ValidationErrors | null {
-  let sum = 0;
-  control.controls.forEach(formGroup => {
-    sum += formGroup.get('percentage').value;
-  });
-  return (sum <= 100) ? null : { percentageNotMatching: true };
-}
-
-/** Checks if the value of the control is between 0 and 100 */
-export function validPercentage(control: FormControl): ValidationErrors | null {
-  const value = Number(control.value);
-  return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
+export function validPercentageList(control: FormArray) {
+    let sum = 0;
+    control.controls.forEach(formGroup => {
+      sum += formGroup.get('percentage').value;
+    });
+    control.controls.forEach(formGroup => {
+      if (sum > 100) {
+        if (formGroup.get('percentage').value === null) formGroup.get('percentage').setErrors({ required: true });
+        else if (formGroup.get('percentage').value > 100) formGroup.get('percentage').setErrors({ invalidPercentage: true });
+        else formGroup.get('percentage').setErrors({ percentageNotMatching: true });
+      } else {
+        if (formGroup.get('percentage').value === null) formGroup.get('percentage').setErrors({ required: true });
+        else if (formGroup.get('percentage').value < 0) formGroup.get('percentage').setErrors({ invalidPercentage: true });
+        else formGroup.get('percentage').setErrors(null);
+      }
+    });
+    return null;
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
