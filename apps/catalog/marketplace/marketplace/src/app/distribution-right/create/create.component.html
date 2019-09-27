@@ -37,18 +37,23 @@
             </mat-expansion-panel-header>
             <mat-form-field>
               <mat-chip-list #chipList>
-                <!-- <mat-chip *ngFor="let territory of selectedTerritories; let i = index" selectable removeable
-                  (removed)="removeTerritory(territory, i)" class="capitalized">
+                <mat-chip
+                  *ngFor="let territory of selectedTerritories; let i = index"
+                  selectable
+                  removable
+                  (removed)="removeTerritory(territory, i)"
+                  class="capitalized">
                   {{territory}}
                   <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip> -->
-                <mat-chip color="primary" *ngFor="let territory of selectedTerritories; let i = index" selected >
-                  {{ territory }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
-                <input test-id="distribution-territory-input" placeholder="Territories available" [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                  [formControl]="territoryControl" #territoryInput>
               </mat-chip-list>
+              <input
+              test-id="distribution-territory-input"
+              placeholder="Territories available"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [formControl]="territoryControl"
+              #territoryInput>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
                 <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory"
                   class="capitalized">
