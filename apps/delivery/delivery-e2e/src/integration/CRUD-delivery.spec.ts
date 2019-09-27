@@ -88,7 +88,7 @@ beforeEach(() => {
 });
 
 describe('User create a delivery selecting a movie', () => {
-  it.skip('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
+  it('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -102,7 +102,7 @@ describe('User create a delivery selecting a movie', () => {
 });
 
 describe('User create a delivery from context-menu item', () => {
-  it.skip('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
+  it('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
 
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
@@ -121,7 +121,7 @@ describe('User create a delivery from context-menu item', () => {
 });
 
 describe('User create a delivery on a movie who already got deliveries', () => {
-  it.skip('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
+  it('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -138,7 +138,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
 });
 
 describe('User update deliveries informations', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
+  it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -161,7 +161,7 @@ describe('User update deliveries informations', () => {
 });
 
 describe('User delete a delivery', () => {
-  it.skip('should login, click on the second movie card, then delete a delivery', () => {
+  it('should login, click on the second movie card, then delete a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -177,7 +177,7 @@ describe('User delete a delivery', () => {
 // MATERIALS CRUD //
 
 describe('User add some materials', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, then create 3 materials and assert that they exist', () => {
+  it('should login, click on the second movie card, click on the first delivery, then create 3 materials and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -199,7 +199,7 @@ describe('User add some materials', () => {
 });
 
 describe('User update some materials fields', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
+  it('should login, click on the second movie card, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -222,7 +222,7 @@ describe('User update some materials fields', () => {
 });
 
 describe('User update some materials status', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, then update 3 materials status and assert that they exist', () => {
+  it('should login, click on the second movie card, click on the first delivery, then update 3 materials status and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -243,7 +243,7 @@ describe('User update some materials status', () => {
 });
 
 describe('User delete some materials', () => {
-  it.skip('should login, click on the second movie card, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
+  it('should login, click on the second movie card, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -284,6 +284,6 @@ describe('User accept an invitation', () => {
     const p3: MovieListPage = p2.clickSigninWithMovies();
     p3.acceptInvitation();
     p3.assertMovieExists(MOVIES_CYTEST[1]);
-    p3.navigateToDocument();
+    p3.navigateToDelivery();
   });
 });

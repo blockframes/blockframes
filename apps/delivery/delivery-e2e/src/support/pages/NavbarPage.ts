@@ -51,27 +51,27 @@ export default abstract class NavbarPage {
   /// Notifications ///
   /////////////////////
 
-  public acceptInvitation(message: string): MovieListPage {
+  public acceptInvitation(): MovieListPage {
     this.openNotifications();
-    this.clickAccept(message);
+    this.clickAccept();
     return new MovieListPage();
   }
 
-  public navigateToDocument(): DeliveryEditablePage {
+  public navigateToDelivery(): DeliveryEditablePage {
     this.openNotifications();
     this.clickGoToDocument();
     return new DeliveryEditablePage();
   }
 
   public clickGoToDocument() {
-    cy.get('notification-item').contains('Go to document').click();
+    cy.get('notification-item a[test-id=navigate]').click();
   }
 
   public openNotifications() {
     cy.get('notification-widget').click();
   }
 
-  public clickAccept(message: string) {
+  public clickAccept() {
     cy.get('invitation-item a[test-id=accept]').click();
   }
 

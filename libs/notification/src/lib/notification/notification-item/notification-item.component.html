@@ -3,7 +3,7 @@
     {{ notification.message }}
   </span>
   <article class="nav-anchor" *ngIf="notification.message.includes('link')">
-    <a mat-flat-button color="accent" (click)="goToPath()">Go to document</a>
+    <a test-id="navigate" mat-flat-button color="accent" (click)="goToPath()">Go to document</a>
   </article>
   <p>
     Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
