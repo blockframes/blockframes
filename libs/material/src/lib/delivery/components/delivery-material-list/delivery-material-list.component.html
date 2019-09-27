@@ -72,7 +72,7 @@
     <ng-container matColumnDef="isOrdered">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
       <td mat-cell *matCellDef="let material">
-        <mat-icon *ngIf="material.isOrdered" svgIcon="ordered"></mat-icon>
+        <mat-icon test-id="ordered" *ngIf="material.isOrdered" svgIcon="ordered"></mat-icon>
       </td>
     </ng-container>
 
@@ -80,7 +80,7 @@
     <ng-container matColumnDef="isPaid">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
       <td mat-cell *matCellDef="let material">
-        <mat-icon *ngIf="material.isPaid" svgIcon="paid"></mat-icon>
+        <mat-icon test-id="paid" *ngIf="material.isPaid" svgIcon="paid"></mat-icon>
       </td>
     </ng-container>
 

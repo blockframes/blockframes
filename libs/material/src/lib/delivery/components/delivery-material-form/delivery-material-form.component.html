@@ -55,6 +55,7 @@
     <mat-divider inset></mat-divider>
     <article *ngIf="!delivery.isSigned" fxLayout="row" fxLayoutAlign="center center">
       <button
+        test-id="delete"
         mat-flat-button
         color="warn"
         (click)="delete.emit(control.value.id)">

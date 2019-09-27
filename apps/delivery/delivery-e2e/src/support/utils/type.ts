@@ -27,7 +27,10 @@ export interface Step {
 export interface Material {
   title: string;
   category: string;
+  step: Step;
   description: string;
+  price: string;
+  currency: string;
 }
 export interface User {
   email: string;

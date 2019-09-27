@@ -1,6 +1,4 @@
 import NavbarPage from "../NavbarPage";
-import MovieEditablePage from "./MovieEditablePage";
-import TemplateListPage from "../template/TemplateListPage";
 import DeliveryListPage from "../delivery/DeliveryListPage";
 import MovieTitleFormModal from "./MovieTitleFormModal";
 import StarterPickerPage from "../delivery-create-tunnel/StarterPickerPage";
@@ -18,12 +16,12 @@ export default class MovieListPage extends NavbarPage {
   }
 
   public clickOnMovieWithNoDeliveries(movieName: string): StarterPickerPage {
-    cy.get('[page-id=movie-list] mat-card-title').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
     return new StarterPickerPage();
   }
 
   public clickOnMovieWithDeliveries(movieName: string): DeliveryListPage {
-    cy.get('[page-id=movie-list] mat-card-title').contains(movieName).parent().click();
+    cy.get('[page-id=movie-list] mat-card').contains(movieName).parent().parent().parent().parent().click();
     return new DeliveryListPage();
   }
 

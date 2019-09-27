@@ -4,7 +4,8 @@ import {
   EventEmitter,
   Input,
   Output,
-  ViewChild
+  ViewChild,
+  HostBinding
 } from '@angular/core';
 import { Material, getMaterialStep } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,6 +21,7 @@ import { deliveryActiveQuery } from '../../guards/delivery-active.guard';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryMaterialListComponent {
+  @HostBinding('attr.page-id') pageId = 'delivery-material-list';
   @Input() delivery: Delivery;
 
   @Input()

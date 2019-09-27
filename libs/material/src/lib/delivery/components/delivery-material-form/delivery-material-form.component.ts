@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { Delivery, Currencies } from '../../+state';
 import { Material } from '../../../material/+state';
@@ -12,6 +12,7 @@ import { MaterialControl } from '../../forms/material.form';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DeliveryMaterialFormComponent{
+  @HostBinding('attr.page-id') pageId = 'delivery-material-form';
   @Input() delivery: Delivery;
 
   @Output() delete = new EventEmitter<Material>();
