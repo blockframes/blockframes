@@ -9,6 +9,11 @@ async function prepareForTesting() {
   console.info('Preparing firebase...');
   await prepareFirebase();
   console.info('Firebase ready for testing!');
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs();
+  console.info('Algolia ready for testing!');
+
   process.exit(0);
 }
 
