@@ -52,18 +52,6 @@ export function createMaterial(material: Partial<Material>): Material {
   };
 }
 
-export function createTemplateMaterial(material: Partial<Material>): Material {
-  return {
-    id: material.id,
-    category: '',
-    value: '',
-    description: '',
-    price: null,
-    currency: null,
-    ...material
-  };
-}
-
 export function getMaterialStep(material: Material, delivery: Delivery) {
   // Add the step of a material by the step of delivery
   return {

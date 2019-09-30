@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, HostBinding } from '@angular/core';
-import { Material } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { MaterialTemplate } from '../../material/+state';
 
 @Component({
   selector: 'template-material-list',
@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
 export class TemplateMaterialListComponent {
   @HostBinding('attr.page-id') pageId = 'template-material-list';
   @Input()
-  set materials(materials: Material[]) {
+  set materials(materials: MaterialTemplate[]) {
     this.dataSource = new MatTableDataSource(materials);
     this.dataSource.sort = this.sort;
   }
@@ -21,7 +21,7 @@ export class TemplateMaterialListComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Material>;
+  public dataSource: MatTableDataSource<MaterialTemplate>;
   public displayedColumns: string[] = ['value', 'description', 'category', 'price', 'action'];
 
 }

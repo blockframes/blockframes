@@ -1,14 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
-import { Material } from '../../../material/+state/material.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialService } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { FormElement } from '@blockframes/utils';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { MaterialTemplate } from '../../material/+state';
 
 @Component({
   selector: 'template-editable',
@@ -19,7 +18,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 export class TemplateEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'template-editable';
   public template$: Observable<Template>;
-  public materials$: Observable<Material[]>;
+  public materials$: Observable<MaterialTemplate[]>;
   public activeForm$: Observable<FormElement<MaterialControl>>;
 
   public opened = false;

@@ -1,9 +1,10 @@
 import { FormBatch, FormElement } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { createTemplateMaterial, Material } from '../../material/+state';
+import { Material } from '../../material/+state';
+import { MaterialTemplate, createMaterialTemplate } from '../material/+state';
 
-function createMaterialControl(material: Partial<Material> = {}) {
-  const entity = createTemplateMaterial(material);
+function createMaterialControl(material: Partial<MaterialTemplate> = {}) {
+  const entity = createMaterialTemplate(material);
   return {
     id: new FormControl(entity.id),
     value: new FormControl(entity.value),
@@ -16,8 +17,8 @@ function createMaterialControl(material: Partial<Material> = {}) {
 
 export type MaterialControl = ReturnType<typeof createMaterialControl>;
 
-export class MaterialForm extends FormBatch<Material, MaterialControl> {
-  constructor(material?: Partial<Material>) {
+export class MaterialForm extends FormBatch<MaterialTemplate, MaterialControl> {
+  constructor(material?: Partial<MaterialTemplate>) {
     const controls: MaterialControl = createMaterialControl(material);
     super(controls);
   }

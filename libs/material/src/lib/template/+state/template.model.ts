@@ -1,5 +1,5 @@
-import { Material } from '../../material/+state/material.model';
 import { firestore } from 'firebase/app';
+import { MaterialTemplate } from '../material/+state';
 
 export interface BaseTemplate {
   id: string;
@@ -8,7 +8,7 @@ export interface BaseTemplate {
 }
 
 export interface Template extends BaseTemplate {
-  materials?: Material[];
+  materials?: MaterialTemplate[];
   created: firestore.Timestamp;
   _type: 'templates';
 }

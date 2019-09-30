@@ -1,0 +1,27 @@
+import { staticModels } from "@blockframes/movie";
+
+type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+
+export interface MaterialRaw {
+  id: string;
+  value: string;
+  description: string;
+  category: string;
+}
+
+export interface MaterialTemplate extends MaterialRaw {
+  price: number;
+  currency: CurrencyCode;
+}
+
+export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
+  return {
+    id: material.id,
+    category: '',
+    value: '',
+    description: '',
+    price: null,
+    currency: null,
+    ...material
+  };
+}
