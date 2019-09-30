@@ -10,11 +10,13 @@ export interface MaterialRaw {
   category: string;
 }
 
+/** Extends a Material Raw with fields that are specific to Material Template. */
 export interface MaterialTemplate extends MaterialRaw {
   price: number;
   currency: CurrencyCode;
 }
 
+/** A factory function that creates a Material Template */
 export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
   return {
     id: material.id,
@@ -27,6 +29,7 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate>): Mat
   };
 }
 
+/** Convert a type Material to MaterialTemplate with only the corresponding fields */
 export function convertMaterialToMaterialTemplate(material: Partial<Material>): MaterialTemplate {
   return {
     id: material.id,

@@ -73,6 +73,7 @@ export class TemplateService {
       // Add the delivery's materials in the template
       const batch = this.db.firestore.batch();
       materials.forEach(material => {
+        // Convert the material to MaterialTemplate to save only the corresponding fields on the database
         const materialTemplate = convertMaterialToMaterialTemplate(material);
         const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialTemplate);
@@ -96,6 +97,7 @@ export class TemplateService {
       });
       // Add delivery's materials in template
       materials.forEach(material => {
+        // Convert the material to MaterialTemplate to save only the corresponding fields on the database
         const materialTemplate = convertMaterialToMaterialTemplate(material);
         const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialTemplate);
