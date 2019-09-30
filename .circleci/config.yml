@@ -117,7 +117,9 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use ci &&
-            ENV=ci npx firebase deploy --force &&
+            ENV=ci npx firebase deploy --force --token "${FIREBASE_CI_TOKEN}" &&
+            ENV=ci npx ng build backend-ops --configuration=$ENV
+            ENV=ci node dist/apps/backend-ops/main.js prepareForTesting
             ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
