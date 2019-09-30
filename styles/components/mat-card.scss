@@ -1,10 +1,10 @@
 .dark-theme mat-card {
   border-radius: 10px;
-  border: 1px solid mat-color($bf-dark-foreground, divider);
+  border: 1px solid mat-color($bf-dark-background, border);
 }
 
 .light-theme .mat-card:not([class*="mat-elevation-z"]) {
   border-radius: 10px;
   box-shadow: none;
-  border: 1px solid mat-color($bf-light-foreground, divider);
+  border: 1px solid mat-color($bf-light-background, border);
 }

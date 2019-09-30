@@ -1,0 +1,25 @@
+.light-theme {
+  table {
+    width: 100%;
+  }
+
+  td.mat-cell:first-of-type {
+    border-left: solid 1px mat-color($bf-light-foreground, divider);
+  }
+  td.mat-cell:last-of-type {
+    border-right: solid 1px mat-color($bf-light-foreground, divider);
+  }
+
+
+  .mat-header-cell {
+    border-top: solid 1px mat-color($bf-light-foreground, divider);
+    &:first-of-type {
+      border-radius: 10px 0 0 0;
+      border-left: solid 1px mat-color($bf-light-foreground, divider);
+    }
+    &:last-of-type {
+      border-right: solid 1px mat-color($bf-light-foreground, divider);
+      border-radius: 0 10px 0 0;
+    }
+  }
+}

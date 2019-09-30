@@ -3,7 +3,7 @@
 }
 
 img {
-  height: 380px;
+  height: 230px;
   object-fit: cover;
 }
 
@@ -15,4 +15,13 @@ img {
   position: absolute;
   top: 0;
   right: 5px;
+}
+
+.mat-card-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.mat-card-subtitle {
+  font-size: 12px;
 }
