@@ -23,7 +23,6 @@ import { FormElement } from '@blockframes/utils';
   styleUrls: ['./delivery-editable.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class DeliveryEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'delivery-editable';
 

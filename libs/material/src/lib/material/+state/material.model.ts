@@ -3,11 +3,14 @@ import { staticModels } from '@blockframes/movie';
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 // TODO: Create "Price" type with currencies from static-models => ISSUE#818
 
-export interface Material {
+export interface MaterialRaw {
   id: string;
-  category: string;
   value: string;
   description: string;
+  category: string;
+}
+
+export interface Material extends MaterialRaw {
   owner?: string;
   stepId?: string;
   step?: Step;

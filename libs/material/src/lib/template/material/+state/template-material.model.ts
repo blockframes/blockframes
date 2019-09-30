@@ -1,14 +1,7 @@
 import { staticModels } from "@blockframes/movie";
-import { Material } from "../../../material/+state";
+import { Material, MaterialRaw } from "../../../material/+state";
 
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
-
-export interface MaterialRaw {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-}
 
 /** Extends a Material Raw with fields that are specific to Material Template. */
 export interface MaterialTemplate extends MaterialRaw {
