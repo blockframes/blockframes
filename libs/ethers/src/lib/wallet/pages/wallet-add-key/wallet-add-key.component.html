@@ -20,12 +20,12 @@
       Your key is precious, download it to save a copy on your computer ! Download should start
       automatically, if it is not the case please click on the link below.
     </p>
-    <a class="download-btn" mat-button [href]="jsonKeystore(true)" [download]="keyName">Download</a>
-    <button mat-raised-button color="accent" (click)="step = steps.import">Next</button>
+    <a class="download-btn" mat-button color="primary" [href]="jsonKeystore(true)" [download]="keyName">Download</a>
+    <button mat-flat-button color="accent" (click)="step = steps.import">Next</button>
   </article>
   <article *ngSwitchCase="steps.import">
     <wallet-import-key-form (importKey)="setKey($event)" lockMnemonic></wallet-import-key-form>
-    <button mat-stroked-button (click)="step = steps.export"><mat-icon>keyboard_backspace</mat-icon>Previous</button>
+    <button mat-stroked-button color="primary" (click)="step = steps.export"><mat-icon>keyboard_backspace</mat-icon>Previous</button>
   </article>
   <article *ngSwitchCase="steps.end">
     <feedback-message
@@ -35,6 +35,6 @@
       (redirectUser)="handleRedirect()">
     </feedback-message>
   </article>
-  <a class="cancel-btn" mat-button routerLink="/layout/o/account/wallet">Cancel</a>
+  <a class="cancel-btn" mat-button color="primary" routerLink="/layout/o/account/wallet">Cancel</a>
   <a #downloadLink hidden>automatic_download</a>
 </section>
