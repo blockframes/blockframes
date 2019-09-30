@@ -7,6 +7,8 @@ import { FireQuery, Query } from '@blockframes/utils';
 import { TemplateStore } from './template.store';
 import { switchMap, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { convertMaterialToMaterialTemplate, MaterialTemplate } from '../material/+state';
+import { MaterialForm } from '../forms/material.form';
 
 const templateQuery = (id: string): Query<Template> => ({
   path: `templates/${id}`
@@ -71,10 +73,9 @@ export class TemplateService {
       // Add the delivery's materials in the template
       const batch = this.db.firestore.batch();
       materials.forEach(material => {
-        const materialWithoutStep = { ...material, step: null };
-        delete materialWithoutStep.step;
+        const materialTemplate = convertMaterialToMaterialTemplate(material);
         const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialWithoutStep);
+        return batch.set(materialDoc.ref, materialTemplate);
       });
       return batch.commit();
     }
@@ -84,21 +85,20 @@ export class TemplateService {
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await this.db.snapshot<Material[]>(`templates/${selectedTemplate.id}/materials`);
+    const templateMaterials = await this.db.snapshot<MaterialTemplate[]>(`templates/${selectedTemplate.id}/materials`);
 
     if (materials.length > 0) {
       const batch = this.db.firestore.batch();
       // Delete all materials of template
       templateMaterials.forEach(material => {
-        const materialDoc = this.db.doc<Material>(`templates/${selectedTemplate.id}/materials/${material.id}`);
+        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
         return batch.delete(materialDoc.ref);
       });
       // Add delivery's materials in template
       materials.forEach(material => {
-        const materialWithoutStep = { ...material, step: null };
-        delete materialWithoutStep.step;
-        const materialDoc = this.db.doc<Material>(`templates/${selectedTemplate.id}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialWithoutStep);
+        const materialTemplate = convertMaterialToMaterialTemplate(material);
+        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
+        return batch.set(materialDoc.ref, materialTemplate);
       });
       return batch.commit();
     }

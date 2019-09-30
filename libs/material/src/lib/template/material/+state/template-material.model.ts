@@ -1,4 +1,5 @@
 import { staticModels } from "@blockframes/movie";
+import { Material } from "../../../material/+state";
 
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
@@ -23,5 +24,16 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate>): Mat
     price: null,
     currency: null,
     ...material
+  };
+}
+
+export function convertMaterialToMaterialTemplate(material: Partial<Material>): MaterialTemplate {
+  return {
+    id: material.id,
+    category: material.category,
+    value: material.value,
+    description: material.description,
+    price: material.price,
+    currency: material.currency
   };
 }
