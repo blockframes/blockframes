@@ -295,10 +295,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
      * he is going to make. That will give us the chance to render the hint/error message
      * in real time. But for that he needs to fill every part of the survey once.
      */
-    this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      tap(console.log)
-    ).subscribe();
     this.researchSubscription = this.form.valueChanges
       .pipe(
         startWith(this.form.value),
@@ -314,6 +310,10 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
             salesInDateRange.intersectedSales
           );
           const exclusiveSales: MovieSale[] = exclusiveMovieSales(this.movie.sales);
+          const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
+            value.duration,
+            exclusiveSales
+          );
           /**
            * If salesAgentDateRange resolves as true, the sales agent doesn't provide this wanted date range
            */
@@ -323,124 +323,134 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
               `There are no sales agent provided in that date range. ${value.duration.from.getDate()} - ${value.duration.to.getDate()}`
             );
           } else if (
-            (!!availableTerritories.availableValues || availableTerritories.intersected) &&
-            exclusiveSales.length
+            !!availableTerritories.availableValues ||
+            !!availableTerritories.intersectedSales
           ) {
-            const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
-              value.duration,
-              exclusiveSales
-            );
-            const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
-              value.territories,
-              exclusiveDateRangeSales.intersectedExclusiveSales
-            );
-            if (exclusiveTerritoriesInCommon.intersected) {
-              this.step = this.steps.ERROR;
-              console.log(exclusiveTerritoriesInCommon.intersectedExclusiveSales);
-            } else if (!salesAgentDateRange) {
-              /**
-               * For the choosen date range of the customer, there is a sales agent
-               * that can sell this movie
-               */
-              /**
-               * We checked that there are no intersections with exclusive sales,
-               * so now we need to look for non exclusive sales that aren't the
-               * same distribution rights like the customer wants to have, or even
-               * contains all of the rights that the customer has choosen
-               */
-              if (salesInDateRange.intersected && !value.exclusive) {
+            if (!exclusiveDateRangeSales.intersected) {
+              console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
+            } else {
+              const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
+                value.territories,
+                exclusiveDateRangeSales.intersectedExclusiveSales
+              );
+              if (exclusiveTerritoriesInCommon.intersected) {
+                this.step = this.steps.ERROR;
+                console.log(
+                  'occupied by this dist right' +
+                    exclusiveTerritoriesInCommon.intersectedExclusiveSales
+                );
+              } else if (!salesAgentDateRange) {
                 /**
-                 * If there are other sales in the wanted date range, we have to look
-                 * for the intersected properties
+                 * For the choosen date range of the customer, there is a sales agent
+                 * that can sell this movie
                  */
-                if (availableTerritories.intersected) {
+                /**
+                 * We checked that there are no intersections with exclusive sales,
+                 * so now we need to look for non exclusive sales that aren't the
+                 * same distribution rights like the customer wants to have, or even
+                 * contains all of the rights that the customer has choosen
+                 */
+                if (salesInDateRange.intersected && !value.exclusive) {
                   /**
-                   * If true, there are sales in that territory for the choosen date range
+                   * If there are other sales in the wanted date range, we have to look
+                   * for the intersected properties
                    */
-                  const availableMedias: FilteredResponse = hasMediaInCommon(
-                    value.medias,
-                    availableTerritories.intersectedSales,
-                    this.movie.salesAgentDeal.medias
-                  );
-                  if (availableMedias.intersected) {
+                  if (availableTerritories.intersected) {
                     /**
-                     * Now we need to check if every wanted value from the buyer is included in the
-                     * already existing sales
+                     * If true, there are sales in that territory for the choosen date range
                      */
-                    availableMedias.intersectedSales.forEach(sale => {
-                      if (
-                        isEqual(sortBy(sale.medias), sortBy(value.medias)) &&
-                        isEqual(sortBy(sale.territories), sortBy(value.territories))
-                      ) {
-                        this.step = this.steps.ERROR;
-                        console.log('The are already a distribution right for your wanted values');
-                      } else {
-                        const territoriesIntersections: MovieSale[] = [];
+                    const availableMedias: FilteredResponse = hasMediaInCommon(
+                      value.medias,
+                      availableTerritories.intersectedSales,
+                      this.movie.salesAgentDeal.medias
+                    );
+                    if (availableMedias.intersected) {
+                      /**
+                       * Now we need to check if every wanted value from the buyer is included in the
+                       * already existing sales
+                       */
+                      availableMedias.intersectedSales.forEach(sale => {
+                        if (
+                          isEqual(sortBy(sale.medias), sortBy(value.medias)) &&
+                          isEqual(sortBy(sale.territories), sortBy(value.territories))
+                        ) {
+                          this.step = this.steps.ERROR;
+                          console.log(
+                            'The are already a distribution right for your wanted values'
+                          );
+                        } else {
+                          const territoriesIntersections: MovieSale[] = [];
 
-                        value.territories.forEach(territory => {
-                          if (includes(sale.territories, territory)) {
-                            territoriesIntersections.push(sale);
-                          }
-                        });
-                        /**
-                         * Here we are checking if the territories wanted from the
-                         * customer are different in one territory from the existing sales
-                         */
-                        if (territoriesIntersections.length >= 1) {
-                          const mediasIntersections: MovieSale[] = [];
-
-                          value.medias.forEach(media => {
-                            if (!includes(sale.medias, media)) {
-                              mediasIntersections.push(sale);
+                          value.territories.forEach(territory => {
+                            if (includes(sale.territories, territory)) {
+                              territoriesIntersections.push(sale);
                             }
                           });
+                          /**
+                           * Here we are checking if the territories wanted from the
+                           * customer are different in one territory from the existing sales
+                           */
+                          if (territoriesIntersections.length >= 1) {
+                            const mediasIntersections: MovieSale[] = [];
 
-                          if (mediasIntersections.length >= 1) {
-                            for (const intersection of territoriesIntersections) {
-                              if (mediasIntersections.includes(intersection)) {
-                                console.log(
-                                  'already existing dist right in this territory with your wanted media' +
-                                    intersection
-                                );
+                            value.medias.forEach(media => {
+                              if (includes(sale.medias, media)) {
+                                mediasIntersections.push(sale);
                               }
+                            });
+                            if (mediasIntersections.length >= 1) {
+                              for (const intersection of territoriesIntersections) {
+                                if (mediasIntersections.includes(intersection)) {
+                                  console.log(
+                                    'already existing dist right in this territory with your wanted media' +
+                                      intersection
+                                  );
+                                }
+                              }
+                            } else {
+                              console.log('No INTERSECTIONS were found in the media section');
                             }
+                          } else {
+                            console.log('YOU CAN CREATE YOUR DIST RIGHT');
                           }
-                        } else {
-                          console.log('YOU CAN CREATE YOUR DIST RIGHT');
                         }
-                      }
-                    });
+                      });
+                    } else {
+                      console.log('available medias was the problem' + availableMedias);
+                    }
                   } else {
-                    console.log('available medias was the problem'+availableMedias);
+                    console.log('SALES AGENT DOESNT PROVIDE THESE TERRITORIES', value.territories);
                   }
-                } else {
-                  console.log('SALES AGENT DOESNT PROVIDE THESE TERRITORIES', value.territories);
-                }
-              } else if (value.exclusive && salesInDateRange.intersected) {
-                /**
-                 * If the customer wants to have an exclusive distribution right,
-                 * we need to find the all the sales for his wanted values and
-                 * give him the possibilities to rebuy other distribution rights.
-                 */
-                const salesToBeBought: MovieSale[] = [];
-                for (const sale of salesInDateRange.intersectedSales) {
-                  for (const territory of value.territories) {
-                    for (const media of value.medias) {
-                      if (
-                        sale.territories.includes(territory) &&
-                        sale.medias.includes(media) &&
-                        !salesToBeBought.includes(sale)
-                      ) {
-                        salesToBeBought.push(sale);
+                } else if (value.exclusive && salesInDateRange.intersected) {
+                  /**
+                   * If the customer wants to have an exclusive distribution right,
+                   * we need to find the all the sales for his wanted values and
+                   * give him the possibilities to rebuy other distribution rights.
+                   */
+                  const salesToBeBought: MovieSale[] = [];
+                  for (const sale of salesInDateRange.intersectedSales) {
+                    for (const territory of value.territories) {
+                      for (const media of value.medias) {
+                        if (
+                          sale.territories.includes(territory) &&
+                          sale.medias.includes(media) &&
+                          !salesToBeBought.includes(sale)
+                        ) {
+                          salesToBeBought.push(sale);
+                        }
                       }
                     }
                   }
-                }
-                if (salesToBeBought.length) {
-                  console.log('You have to buy this sales', salesToBeBought);
+                  if (salesToBeBought.length) {
+                    console.log('You have to buy this sales', salesToBeBought);
+                  }
+                } else {
+                  console.log(
+                    'YOU CAN BUY THE RIGHT, CAUSE THERE WHERE NO OTHER DIST RIGHT FOUNDS'
+                  );
                 }
               } else {
-                console.log('YOU CAN BUY THE RIGHT, CAUSE THERE WHERE NO OTHER DIST RIGHT FOUNDS');
+                console.log('NO ELSE WAS PROVIDED');
               }
             }
           } else {

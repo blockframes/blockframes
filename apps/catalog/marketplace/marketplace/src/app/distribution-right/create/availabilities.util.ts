@@ -80,7 +80,6 @@ export function hasExclusiveDateRangeSales(
   exclusiveSales: MovieSale[]
 ): FilteredResponse {
   const intersectedExDateRangeSales: MovieSale[] = [];
-
   for (const sale of exclusiveSales) {
     const salesFrom: Date = new Date(sale.rights.from);
     const salesTo: Date = new Date(sale.rights.to);
@@ -158,13 +157,14 @@ export function hasExclusiveTerritoriesInCommon(
   }
 }
 
+// TODO(MF) maybe delete?
 /**
  * @description Checks if the wanted medias are available or already sold
  * to an exclusive distribution right
  * @param formMedias The wanted medias from the customer
  * @param exclusiveSales Takes in an array of exclusive movie sales -> `exclusiveMovieSales`
  */
-export function hasExclusiveMediasInCommon(
+/* export function hasExclusiveMediasInCommon(
   formMedias: string[],
   exclusiveSales: MovieSale[]
 ): FilteredResponse {
@@ -184,12 +184,12 @@ export function hasExclusiveMediasInCommon(
     return { intersected: false };
   }
 }
-
+ */
 /**
  * @description This function checks if there are intersections in the sales
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
- * @param sales Array of the movie sales property. 
+ * @param sales Array of the movie sales property.
  * Note don't put the exclusive sales array in here
  */
 export function hasSalesRights(formDates: DateRange, sales: MovieSale[]): FilteredResponse {
@@ -288,7 +288,7 @@ export function hasTerritoriesInCommon(
   }
 
   /**
-   * If there are no overlappings with other sales, we want to return the 
+   * If there are no overlappings with other sales, we want to return the
    * available territories. If there are no available territories, because
    * the sales agent doesn't provide the wanted territories from the customer,
    * we return an empty array
@@ -329,7 +329,7 @@ export function hasMediaInCommon(
     for (const sale of salesInTerritories) {
       for (const media of availableMedias) {
         for (const saleMedia of sale.medias) {
-         /**
+          /**
            * We want to make sure, that only sales get push to the
            * overlappingMediasSalesSales array, that are not already inside of it
            */
@@ -343,8 +343,8 @@ export function hasMediaInCommon(
       return { intersected: true, intersectedSales: overlappingMediasSales };
     }
   }
-   /**
-   * If there are no overlappings with other sales, we want to return the 
+  /**
+   * If there are no overlappings with other sales, we want to return the
    * available medias. If there are no available medias, because
    * the sales agent doesn't provide the wanted medias from the customer,
    * we return an empty array
