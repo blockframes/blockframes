@@ -2,25 +2,21 @@ import { DateRange } from '@blockframes/utils';
 import { MovieSale, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
 
 /**
- * If there is an overlap in an exclusive distribution right, we need to send back some information
- * for the user what he can do to make this deal happen. A boolean value won't be enough.
- * Otherwise, if there is no exclusive deal and everything is overlapping except for
- * one value, the distribution right can be bought.
- * Or the buyer wants to buy an exclusive deal and there are already some distribution rights from other
- * buyers, we should show a message, that he has to buy the rights from the other buyers, so this exclusive
- * deal can happen.
- * But if there is no sales agent deal for this movie or specific values, no distribution right can be made.
- *  BE VERY PRECISE IN THE EXPLANATION AND EXTEND THIS DOC!!!!! TODO(MF)
+ * These function should be used in connection. For instance, we look for movie sales in
+ * a date range which get specified by the customer. Then we go on to put the array we got back
+ * from the function and put that into the next function where we look for territories, for instance.
+ * Like that we make sure that we only search in a relevant date range.
+ * Because of that flow, all properties which can be specified by the customer are mandatory.
+ * That is why we need to implement a good error handeling and show results and solution
+ * in the UI.
  */
 
 /**
- * @description Interface which helps us to unterstand what is possible to buy and
- * what's not
+ * @description Interface for handeling the possible results of our research functions
  */
 export interface FilteredResponse {
   /**
-   * Determine with this boolean, if the wanted values from the buyer is possible or
-   * it may have to change to make the distribution right happen
+   * Determine with this boolean, if the wanted values are overlapping in already existing sales.
    */
   readonly intersected: boolean;
 
@@ -31,20 +27,26 @@ export interface FilteredResponse {
   readonly intersectedSales?: MovieSale[];
 
   /**
-   * If this property is set, the buyer can't buy a distribution right for his
-   * wanted properties. We can show the conent of this array in the UI for
-   * explaining the problem.
+   * If this property is set, the customer can't buy a distribution right for his
+   * wanted properties, because the movie sales are exclusive.
+   * We can show the conent of this array in the UI for explaining the problem.
    */
   readonly intersectedExclusiveSales?: MovieSale[];
 
   /**
-   * If there are no intersections in the sales array of the movie and the
-   * sales agent provides these wanted values, the buyer can buy this distribution
+   * If there are no intersections in the sales of the movie and the
+   * sales agent provides these wanted values, the customer can buy this distribution
    * right for his wanted values.
    */
   readonly availableValues?: string[];
 }
 
+/**
+ * @description Returns a boolean whether a distribution right can be bought or not
+ * in the specified date range from the parameter `formDates`
+ * @param dateRange The possible date range from the movie sales agent
+ * @param formDates The specified date range from the customer
+ */
 export function salesAgentHasDateRange(
   dateRange: MovieSalesAgentDeal['rights'],
   formDates: DateRange
@@ -52,21 +54,26 @@ export function salesAgentHasDateRange(
   const from = new Date(dateRange.from);
   const to = new Date(dateRange.to);
 
-  if (formDates.from >= from && formDates.to <= to) {
-    return true;
-  } else {
+  if (formDates.from.getTime() >= from.getTime() && formDates.to.getTime() <= to.getTime()) {
     return false;
+  } else {
+    return true;
   }
 }
 
+/**
+ * @description Fetches you all the exclusive sales of a movie
+ * @param sales The movie sales property
+ */
 export function exclusiveMovieSales(sales: MovieSale[]): MovieSale[] {
   return sales.filter(sale => sale.exclusive === true);
 }
 
 /**
  * @description This function checks if there are exclusive sales on the wanted date range
- * @param formDates The date range which got specified by the buyer
- * @param exclusiveSales Takes in an array of exclusive movie sales
+ * @param formDates The date range which got specified by the customer
+ * @param exclusiveSales Takes in an array of exclusive movie sales,
+ * which can be found by the function `exclusiveMovieSales`
  */
 export function hasExclusiveDateRangeSales(
   formDates: DateRange,
@@ -119,8 +126,8 @@ export function hasExclusiveDateRangeSales(
 /**
  * @description Checks if the wanted territories are available or already sold
  * to an exclusive distribution right
- * @param formTerritories The wanted territories from the buyer
- * @param exclusiveSales akes in an array of exclusive movie sales
+ * @param formTerritories The wanted territories from the customer
+ * @param exclusiveSales Takes in an array of exclusive movie sales -> `exclusiveMovieSales`
  */
 export function hasExclusiveTerritoriesInCommon(
   formTerritories: string[],
@@ -138,15 +145,14 @@ export function hasExclusiveTerritoriesInCommon(
   }
   if (intersectedExTerritoriesInDateRange.length) {
     /**
-     * There are other exclusive sales in the date range
-     * and some of them got the same territory, which means,
-     * it is not possible to create a distribution right for the buyer
+     * This if statement checks whether some territories were found that got
+     * intersection with other exclusive sales in that predefined date range
      */
     return { intersected: true, intersectedExclusiveSales: intersectedExTerritoriesInDateRange };
   } else {
     /**
-     * There are other exclusive sales in the date range
-     *  but none have the wanted territory from the buyer
+     * There maybe some other sales in the pre defined date range, but none have
+     * an intersection with the wanted territories from the customer
      */
     return { intersected: false };
   }
@@ -155,16 +161,13 @@ export function hasExclusiveTerritoriesInCommon(
 /**
  * @description Checks if the wanted medias are available or already sold
  * to an exclusive distribution right
- * @param formMedias The wanted medias from the buyer
- * @param exclusiveSales akes in an array of exclusive movie sales
+ * @param formMedias The wanted medias from the customer
+ * @param exclusiveSales Takes in an array of exclusive movie sales -> `exclusiveMovieSales`
  */
 export function hasExclusiveMediasInCommon(
   formMedias: string[],
   exclusiveSales: MovieSale[]
 ): FilteredResponse {
-  /**
-   * Find the intersected sales and return them
-   */
   const intersectedExMedias: MovieSale[] = [];
   for (const sale of exclusiveSales) {
     for (const media of sale.medias) {
@@ -183,11 +186,11 @@ export function hasExclusiveMediasInCommon(
 }
 
 /**
- * @description This function checks if there are overlappings in the sales
+ * @description This function checks if there are intersections in the sales
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
- * @param salesAgent The sales agent deal from the movie
- * @param sales Array of the current sales of the movie
+ * @param sales Array of the movie sales property. 
+ * Note don't put the exclusive sales array in here
  */
 export function hasSalesRights(formDates: DateRange, sales: MovieSale[]): FilteredResponse {
   const intersectedDateRangeSales: MovieSale[] = [];
@@ -237,10 +240,11 @@ export function hasSalesRights(formDates: DateRange, sales: MovieSale[]): Filter
 
 /**
  * @description We want to check if formTerritories and salesAgentTerritories have territories in common
- * and what are the overlapping territories from the already existing sales are
+ * and what the overlapping territories from the already existing sales are
  * @param formTerritories The territories which got specified by the buyer
  * @param salesAgentTerritories The available territories provided by the sales agent
  * @param sales The array of sales from a movie in the previously specified date range
+ * -> `hasSalesRights`
  */
 export function hasTerritoriesInCommon(
   formTerritories: string[],
@@ -250,7 +254,7 @@ export function hasTerritoriesInCommon(
   const availableTerritories: string[] = [];
 
   /**
-   * We look for territories which the buyer wants to have and the
+   * We look for territories which the costumer wants to have and the
    * availability on the sales agent deal
    */
   formTerritories.forEach(territoriy => {
@@ -258,36 +262,36 @@ export function hasTerritoriesInCommon(
       availableTerritories.push(territoriy);
     }
   });
-
   /**
    * If the territories are available in the sales agend deal which
    * the buyer wants to have, we have to look on the already exisitng
    * sales in the movie and check if there is any overlapping territories
    */
-  if (availableTerritories.length) {
-    const overlappingTerritories: MovieSale[] = [];
+  if (availableTerritories.length && sales.length > 0) {
+    const overlappingTerritoriesSales: MovieSale[] = [];
     for (const sale of sales) {
       for (const territory of availableTerritories) {
         for (const saleTerritory of sale.territories) {
           /**
-           * We want to make sure, that only non existing territories get push to the
-           * overlappingTerritories array
+           * We want to make sure, that only sales get push to the
+           * overlappingTerritoriesSales array, that are not already inside of it
            */
-          if (saleTerritory === territory && !overlappingTerritories.includes(sale)) {
-            overlappingTerritories.push(sale);
+          if (saleTerritory === territory && !overlappingTerritoriesSales.includes(sale)) {
+            overlappingTerritoriesSales.push(sale);
           }
         }
       }
     }
-    if (overlappingTerritories.length) {
-      return { intersected: true, intersectedSales: overlappingTerritories };
+    if (overlappingTerritoriesSales.length) {
+      return { intersected: true, intersectedSales: overlappingTerritoriesSales };
     }
   }
 
   /**
-   * If the wanted territories are available and there are no overlappings
-   * we want to return the availableTerritories array, otherwise we going to
-   * return false, because on the sales agent deal where no matching territories found
+   * If there are no overlappings with other sales, we want to return the 
+   * available territories. If there are no available territories, because
+   * the sales agent doesn't provide the wanted territories from the customer,
+   * we return an empty array
    */
   return { intersected: false, availableValues: availableTerritories };
 }
@@ -300,8 +304,8 @@ export function hasTerritoriesInCommon(
  */
 export function hasMediaInCommon(
   formMedias: string[],
-  salesAgentMedias: MovieSalesAgentDeal['medias'],
-  sales: MovieSale[]
+  salesInTerritories: MovieSale[],
+  salesAgentMedias: MovieSalesAgentDeal['medias']
 ): FilteredResponse {
   const availableMedias: string[] = [];
 
@@ -321,23 +325,29 @@ export function hasMediaInCommon(
    * sales in the movie and check if there is any overlapping medias
    */
   if (availableMedias.length) {
-    const overlappingMedias: MovieSale[] = [];
-    for (const sale of sales) {
+    const overlappingMediasSales: MovieSale[] = [];
+    for (const sale of salesInTerritories) {
       for (const media of availableMedias) {
         for (const saleMedia of sale.medias) {
-          /**
-           * We want to make sure, that only non existing territories get push to the
-           * overlappingMedias array
+         /**
+           * We want to make sure, that only sales get push to the
+           * overlappingMediasSalesSales array, that are not already inside of it
            */
-          if (saleMedia === media && !overlappingMedias.includes(sale)) {
-            overlappingMedias.push(sale);
+          if (saleMedia === media && !overlappingMediasSales.includes(sale)) {
+            overlappingMediasSales.push(sale);
           }
         }
       }
     }
-    if (overlappingMedias.length) {
-      return { intersected: true, intersectedSales: overlappingMedias };
+    if (overlappingMediasSales.length) {
+      return { intersected: true, intersectedSales: overlappingMediasSales };
     }
   }
+   /**
+   * If there are no overlappings with other sales, we want to return the 
+   * available medias. If there are no available medias, because
+   * the sales agent doesn't provide the wanted medias from the customer,
+   * we return an empty array
+   */
   return { intersected: false, availableValues: availableMedias };
 }

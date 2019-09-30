@@ -1,3 +1,6 @@
+import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
+import includes from 'lodash/includes';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, tap } from 'rxjs/operators';
 import {
@@ -11,15 +14,14 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Movie, MovieQuery, MovieSale } from '@blockframes/movie/movie/+state';
 import {
-  LanguagesLabel,
   MEDIAS_SLUG,
   MediasSlug,
   TERRITORIES_SLUG,
-  TerritoriesSlug
+  TerritoriesSlug,
+  LanguagesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { DateRange } from '@blockframes/utils';
 import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
@@ -29,12 +31,18 @@ import {
   FilteredResponse,
   exclusiveMovieSales,
   hasExclusiveTerritoriesInCommon,
-  hasExclusiveMediasInCommon,
   hasExclusiveDateRangeSales,
   hasTerritoriesInCommon,
-  salesAgentHasDateRange
+  salesAgentHasDateRange,
+  hasMediaInCommon
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
+
+enum ResearchSteps {
+  START = 'Start',
+  ERROR = 'ERROR',
+  POSSIBLE = 'POSSBILE'
+}
 
 @Component({
   selector: 'distribution-right-create',
@@ -44,6 +52,10 @@ import { DistributionRightForm } from './create.form';
 })
 export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'distribution-right';
+
+  // Enum for tracking the current research state
+  public steps = ResearchSteps;
+  public step: ResearchSteps = this.steps.START;
 
   // Subscription for value changes in the distribution right form
   private formSubscription: Subscription;
@@ -62,9 +74,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
   // A flag to indicate if datepicker is open
   public opened = false;
-
-  // A flag to indicate if results should be shown
-  public showResults = false;
 
   /**
    * This variable will be input the dates inside of the datepicker
@@ -106,8 +115,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   constructor(
     private query: MovieQuery,
     private basketService: BasketService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -144,7 +152,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
         rights: [
           createDistributionRight({
             id: this.basketService.createFireStoreId,
-            movieId: this.query.getActive().id,
+            movieId: this.movie.id,
             medias: data.medias,
             languages: data.languages,
             dubbings: data.dubbings,
@@ -160,6 +168,10 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
     });
+  }
+
+  private get movie(): Movie {
+    return this.query.getActive();
   }
 
   /////////////////////
@@ -209,7 +221,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.territoryInput.nativeElement.value = '';
   }
 
-  public removeTerritory(territory: string, index: number) {
+  public removeTerritory(territory: TerritoriesSlug, index: number) {
     const i = this.selectedTerritories.indexOf(territory);
     if (i >= 0) {
       this.selectedTerritories.splice(i, 1);
@@ -222,46 +234,46 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.opened = false;
   }
 
-  public checkMedia(media: string) {
+  public checkMedia(media: MediasSlug) {
     this.form.checkMedia(media);
   }
 
-  public addLanguage(language: LanguagesLabel) {
+  public addLanguage(language: LanguagesSlug) {
     if (!this.selectedLanguages.includes(language) && this.movieLanguages.includes(language)) {
       this.selectedLanguages.push(language);
       this.form.addLanguage(language);
     }
   }
 
-  public removeLanguage(language: LanguagesLabel, index: number) {
+  public removeLanguage(language: LanguagesSlug, index: number) {
     if (this.selectedLanguages.includes(language)) {
       this.selectedLanguages.splice(index, 1);
       this.form.removeLanguage(language);
     }
   }
 
-  public addDubbing(language: LanguagesLabel) {
+  public addDubbing(language: LanguagesSlug) {
     if (!this.selectedDubbings.includes(language) && this.movieDubbings.includes(language)) {
       this.selectedDubbings.push(language);
       this.form.addDubbings(language);
     }
   }
 
-  public removeDubbing(language: LanguagesLabel, index: number) {
+  public removeDubbing(language: LanguagesSlug, index: number) {
     if (this.selectedDubbings.includes(language)) {
       this.selectedDubbings.splice(index, 1);
       this.form.removeDubbings(language);
     }
   }
 
-  public addSubtitle(language: LanguagesLabel) {
+  public addSubtitle(language: LanguagesSlug) {
     if (!this.selectedSubtitles.includes(language) && this.movieSubtitles.includes(language)) {
       this.selectedSubtitles.push(language);
       this.form.addSubtitles(language);
     }
   }
 
-  public removeSubtitle(language: LanguagesLabel, index: number) {
+  public removeSubtitle(language: LanguagesSlug, index: number) {
     if (this.selectedSubtitles.includes(language)) {
       this.selectedSubtitles.splice(index, 1);
       this.form.removeSubtitles(language);
@@ -278,63 +290,161 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   //////////////////////
 
   public startResearch() {
+    /**
+     * If the customer once hit the search button. We want to listen on the changes
+     * he is going to make. That will give us the chance to render the hint/error message
+     * in real time. But for that he needs to fill every part of the survey once.
+     */
+    this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      tap(console.log)
+    ).subscribe();
     this.researchSubscription = this.form.valueChanges
       .pipe(
         startWith(this.form.value),
         tap(value => {
           const salesAgentDateRange: boolean = salesAgentHasDateRange(
-            this.query.getActive().salesAgentDeal.rights,
+            this.movie.salesAgentDeal.rights,
             value.duration
           );
-          const exclusiveSales: MovieSale[] = exclusiveMovieSales(this.query.getActive().sales);
-          const salesDateRange: FilteredResponse = hasSalesRights(
-            value.duration,
-            this.query.getActive().sales
-          );
-
-          const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
-            value.duration,
-            exclusiveSales
-          );
-
-          const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
+          const salesInDateRange = hasSalesRights(value.duration, this.movie.sales);
+          const availableTerritories = hasTerritoriesInCommon(
             value.territories,
-            exclusiveDateRangeSales.intersectedExclusiveSales
+            this.movie.salesAgentDeal.territories,
+            salesInDateRange.intersectedSales
           );
-
-          const exclusiveMediaInCommon: FilteredResponse = hasExclusiveMediasInCommon(
-            value.medias,
-            exclusiveDateRangeSales.intersectedExclusiveSales
-          );
-
-          const as: FilteredResponse = hasTerritoriesInCommon(
-            value.territories,
-            this.query.getActive().salesAgentDeal.territories,
-            salesDateRange.intersectedSales
-          );
+          const exclusiveSales: MovieSale[] = exclusiveMovieSales(this.movie.sales);
           /**
-           * We need to check if the hasSalesRights function returned a boolean,
-           * which would mean that there is no sales agent provided in the wanted
-           * date range
+           * If salesAgentDateRange resolves as true, the sales agent doesn't provide this wanted date range
            */
           if (salesAgentDateRange) {
-            // can't create distribution right
-            this.showResults = false;
-            this.snackBar.open('Sales Agent is shit', null, {
-              duration: 5000
-            });
-          } else if (exclusiveTerritoriesInCommon.intersected) {
-            this.showResults = false;
-            this.snackBar.open('Intersected with an exclusive TERITORIES sale', null, {
-              duration: 5000
-            });
-          } else if (exclusiveMediaInCommon.intersected) {
-            this.showResults = false;
-            this.snackBar.open('Intersected with an exclusive MEDIAS sale', null, {
-              duration: 5000
-            });
-          } else if (salesAgentDateRange) {
-            // no intersection with exclusivity
+            this.step = this.steps.ERROR;
+            console.log(
+              `There are no sales agent provided in that date range. ${value.duration.from.getDate()} - ${value.duration.to.getDate()}`
+            );
+          } else if (
+            (!!availableTerritories.availableValues || availableTerritories.intersected) &&
+            exclusiveSales.length
+          ) {
+            const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
+              value.duration,
+              exclusiveSales
+            );
+            const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
+              value.territories,
+              exclusiveDateRangeSales.intersectedExclusiveSales
+            );
+            if (exclusiveTerritoriesInCommon.intersected) {
+              this.step = this.steps.ERROR;
+              console.log(exclusiveTerritoriesInCommon.intersectedExclusiveSales);
+            } else if (!salesAgentDateRange) {
+              /**
+               * For the choosen date range of the customer, there is a sales agent
+               * that can sell this movie
+               */
+              /**
+               * We checked that there are no intersections with exclusive sales,
+               * so now we need to look for non exclusive sales that aren't the
+               * same distribution rights like the customer wants to have, or even
+               * contains all of the rights that the customer has choosen
+               */
+              if (salesInDateRange.intersected && !value.exclusive) {
+                /**
+                 * If there are other sales in the wanted date range, we have to look
+                 * for the intersected properties
+                 */
+                if (availableTerritories.intersected) {
+                  /**
+                   * If true, there are sales in that territory for the choosen date range
+                   */
+                  const availableMedias: FilteredResponse = hasMediaInCommon(
+                    value.medias,
+                    availableTerritories.intersectedSales,
+                    this.movie.salesAgentDeal.medias
+                  );
+                  if (availableMedias.intersected) {
+                    /**
+                     * Now we need to check if every wanted value from the buyer is included in the
+                     * already existing sales
+                     */
+                    availableMedias.intersectedSales.forEach(sale => {
+                      if (
+                        isEqual(sortBy(sale.medias), sortBy(value.medias)) &&
+                        isEqual(sortBy(sale.territories), sortBy(value.territories))
+                      ) {
+                        this.step = this.steps.ERROR;
+                        console.log('The are already a distribution right for your wanted values');
+                      } else {
+                        const territoriesIntersections: MovieSale[] = [];
+
+                        value.territories.forEach(territory => {
+                          if (includes(sale.territories, territory)) {
+                            territoriesIntersections.push(sale);
+                          }
+                        });
+                        /**
+                         * Here we are checking if the territories wanted from the
+                         * customer are different in one territory from the existing sales
+                         */
+                        if (territoriesIntersections.length >= 1) {
+                          const mediasIntersections: MovieSale[] = [];
+
+                          value.medias.forEach(media => {
+                            if (!includes(sale.medias, media)) {
+                              mediasIntersections.push(sale);
+                            }
+                          });
+
+                          if (mediasIntersections.length >= 1) {
+                            for (const intersection of territoriesIntersections) {
+                              if (mediasIntersections.includes(intersection)) {
+                                console.log(
+                                  'already existing dist right in this territory with your wanted media' +
+                                    intersection
+                                );
+                              }
+                            }
+                          }
+                        } else {
+                          console.log('YOU CAN CREATE YOUR DIST RIGHT');
+                        }
+                      }
+                    });
+                  } else {
+                    console.log('available medias was the problem'+availableMedias);
+                  }
+                } else {
+                  console.log('SALES AGENT DOESNT PROVIDE THESE TERRITORIES', value.territories);
+                }
+              } else if (value.exclusive && salesInDateRange.intersected) {
+                /**
+                 * If the customer wants to have an exclusive distribution right,
+                 * we need to find the all the sales for his wanted values and
+                 * give him the possibilities to rebuy other distribution rights.
+                 */
+                const salesToBeBought: MovieSale[] = [];
+                for (const sale of salesInDateRange.intersectedSales) {
+                  for (const territory of value.territories) {
+                    for (const media of value.medias) {
+                      if (
+                        sale.territories.includes(territory) &&
+                        sale.medias.includes(media) &&
+                        !salesToBeBought.includes(sale)
+                      ) {
+                        salesToBeBought.push(sale);
+                      }
+                    }
+                  }
+                }
+                if (salesToBeBought.length) {
+                  console.log('You have to buy this sales', salesToBeBought);
+                }
+              } else {
+                console.log('YOU CAN BUY THE RIGHT, CAUSE THERE WHERE NO OTHER DIST RIGHT FOUNDS');
+              }
+            }
+          } else {
+            console.log('Sales agent does not provide these territories', value.territories);
           }
         })
       )

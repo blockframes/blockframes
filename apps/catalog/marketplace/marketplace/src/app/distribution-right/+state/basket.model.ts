@@ -30,6 +30,7 @@ export interface DistributionRight {
     to: Date;
   };
   territories: TerritoriesSlug[];
+  exclusive: boolean;
 }
 
 export interface CatalogBasket {
