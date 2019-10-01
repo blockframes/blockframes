@@ -4,7 +4,8 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
+  FormArray
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
@@ -53,6 +54,37 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
   // Use ethers.js build in function to check for a correct Mnemonic
   const isValid = isValidMnemonic(control.value);
   return isValid ? null : { mnemonic: true };
+}
+
+/** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
+export function validPercentageList(control: FormArray): ValidationErrors {
+    let sum = 0;
+    // Counts the total percentages
+    control.controls.forEach(formGroup => {
+      sum += formGroup.get('percentage').value;
+    });
+    control.controls.forEach(formGroup => {
+      if (sum > 100) {
+        // If sum > 100: add the error percentageNotMatching
+        const errors = formGroup.get('percentage').errors;
+        formGroup.get('percentage').setErrors({...errors, percentageNotMatching: true });
+      } else {
+        // If the sum <= 100, we have to delete the percentageNotMatching error
+        let errors = formGroup.get('percentage').errors;
+        // If the control contains more than one error we delete the percentageNotMatching error
+        if (errors &&  Object.keys(errors).length > 1) delete errors.percentageNotMatching;
+        // If the control contains only the percentageNotMatching error, we set it to null
+        else if (errors && Object.keys(errors).length === 1 && errors.percentageNotMatching) errors = null;
+        formGroup.get('percentage').setErrors(errors);
+      }
+    });
+    return;
+}
+
+/** Checks if the value of the control is between 0 and 100 */
+export function validPercentage(control: FormControl): ValidationErrors {
+  const value = Number(control.value);
+  return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
