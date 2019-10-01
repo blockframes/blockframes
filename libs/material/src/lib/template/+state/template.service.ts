@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
-import { Material, convertMaterialToMaterialTemplate, MaterialTemplate } from '../../material/+state';
+import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery, Query } from '@blockframes/utils';
 import { TemplateStore } from './template.store';
@@ -71,8 +71,8 @@ export class TemplateService {
       // Add the delivery's materials in the template
       const batch = this.db.firestore.batch();
       materials.forEach(material => {
-        // Convert the material to MaterialTemplate to save only the corresponding fields on the database
-        const materialTemplate = convertMaterialToMaterialTemplate(material);
+        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
+        const materialTemplate = createMaterialTemplate(material);
         const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialTemplate);
       });
@@ -95,8 +95,8 @@ export class TemplateService {
       });
       // Add delivery's materials in template
       materials.forEach(material => {
-        // Convert the material to MaterialTemplate to save only the corresponding fields on the database
-        const materialTemplate = convertMaterialToMaterialTemplate(material);
+        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
+        const materialTemplate = createMaterialTemplate(material);
         const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
         return batch.set(materialDoc.ref, materialTemplate);
       });

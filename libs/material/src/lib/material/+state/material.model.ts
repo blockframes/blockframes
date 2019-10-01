@@ -72,26 +72,13 @@ export function getMaterialStep(material: Material, delivery: Delivery) {
 }
 
 /** A factory function that creates a Material Template */
-export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
+export function createMaterialTemplate(material: Partial<Material>): MaterialTemplate {
   return {
     id: material.id,
-    category: '',
-    value: '',
-    description: '',
-    price: null,
-    currency: null,
-    ...material
-  };
-}
-
-/** Convert a type Material to MaterialTemplate with only the corresponding fields */
-export function convertMaterialToMaterialTemplate(material: Partial<Material>): MaterialTemplate {
-  return {
-    id: material.id,
-    category: material.category,
-    value: material.value,
-    description: material.description,
-    price: material.price,
-    currency: material.currency
+    category: material.category || '',
+    value: material.value || '',
+    description: material.description || '',
+    price: material.price || null,
+    currency: material.currency || null
   };
 }
