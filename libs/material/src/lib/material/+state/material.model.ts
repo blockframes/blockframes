@@ -10,6 +10,12 @@ export interface MaterialRaw {
   category: string;
 }
 
+/** Extends a Material Raw with fields that are specific to Material Template. */
+export interface MaterialTemplate extends MaterialRaw {
+  price: number;
+  currency: CurrencyCode;
+}
+
 export interface Material extends MaterialRaw {
   owner?: string;
   stepId?: string;
@@ -62,5 +68,30 @@ export function getMaterialStep(material: Material, delivery: Delivery) {
     step: delivery.steps.find(deliveryStep =>
       material.stepId ? deliveryStep.id === material.stepId : null
     )
+  };
+}
+
+/** A factory function that creates a Material Template */
+export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
+  return {
+    id: material.id,
+    category: '',
+    value: '',
+    description: '',
+    price: null,
+    currency: null,
+    ...material
+  };
+}
+
+/** Convert a type Material to MaterialTemplate with only the corresponding fields */
+export function convertMaterialToMaterialTemplate(material: Partial<Material>): MaterialTemplate {
+  return {
+    id: material.id,
+    category: material.category,
+    value: material.value,
+    description: material.description,
+    price: material.price,
+    currency: material.currency
   };
 }

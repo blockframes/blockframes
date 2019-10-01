@@ -2,12 +2,11 @@ import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angula
 import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService } from '../../../material/+state';
+import { MaterialService, MaterialTemplate } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { FormElement } from '@blockframes/utils';
-import { MaterialTemplate } from '../../material/+state';
 
 @Component({
   selector: 'template-editable',

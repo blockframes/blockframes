@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Material, createMaterial, MaterialStatus } from './material.model';
+import { Material, createMaterial, MaterialStatus, createMaterialTemplate } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '../../delivery/+state';
 import { TemplateQuery } from '../../template/+state/template.query';
-import { createMaterialTemplate } from '../../template/material/+state';
-
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,6 @@
 import { FormBatch, FormElement } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { Material } from '../../material/+state';
-import { MaterialTemplate, createMaterialTemplate } from '../material/+state';
+import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
 
 function createMaterialControl(material: Partial<MaterialTemplate> = {}) {
   const entity = createMaterialTemplate(material);

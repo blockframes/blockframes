@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, HostBinding } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MaterialTemplate } from '../../material/+state';
+import { MaterialTemplate } from '../../../material/+state';
 
 @Component({
   selector: 'template-material-list',

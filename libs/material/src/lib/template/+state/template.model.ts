@@ -1,5 +1,5 @@
 import { firestore } from 'firebase/app';
-import { MaterialTemplate } from '../material/+state';
+import { MaterialTemplate } from '../../material/+state';
 
 export interface BaseTemplate {
   id: string;

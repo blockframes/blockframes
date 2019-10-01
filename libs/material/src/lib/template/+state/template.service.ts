@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
-import { Material } from '../../material/+state';
+import { Material, convertMaterialToMaterialTemplate, MaterialTemplate } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { FireQuery, Query } from '@blockframes/utils';
 import { TemplateStore } from './template.store';
 import { switchMap, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { convertMaterialToMaterialTemplate, MaterialTemplate } from '../material/+state';
-import { MaterialForm } from '../forms/material.form';
 
 const templateQuery = (id: string): Query<Template> => ({
   path: `templates/${id}`
