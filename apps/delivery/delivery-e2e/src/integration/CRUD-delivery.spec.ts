@@ -12,8 +12,7 @@ import {
   DeliveryListPage,
   TemplatePickerPage,
   ConfirmModal,
-  DeliveryStakeholdersPage,
-  MovieCreatePage
+  DeliveryStakeholdersPage
 } from '../support/pages';
 import { User, DeliveryInformation } from '../support/utils/type';
 import { MATERIALS, UPDATED_MATERIALS, Statuses } from '../support/utils/data';
@@ -27,13 +26,13 @@ const USER: Partial<User> = {
   password: 'blockframes'
 };
 
-const USER2: Partial<User> = {
+const INVITED_USER: Partial<User> = {
   email: 'cypressCRUDdelivery2@blockframes.com',
   password: 'blockframes'
 };
 
 const ORGANIZATION_NAME = 'Cypress Delivery Test';
-const ORGANIZATION2_NAME = 'Cypress Invited Organization';
+const INVITED_ORGANIZATION_NAME = 'Cypress Invited Organization';
 
 const MOVIES_CYTEST = ['Starship Troopers', 'Anchorman'];
 
@@ -88,7 +87,7 @@ beforeEach(() => {
 });
 
 describe('User create a delivery selecting a movie', () => {
-  it('should login, click on the movie card, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
+  it('should login, click on the first movie, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -102,7 +101,7 @@ describe('User create a delivery selecting a movie', () => {
 });
 
 describe('User create a delivery from context-menu item', () => {
-  it('should login, click on the second movie card, click on create from template, select "Materials price list", and then create a delivery', () => {
+  it('should login, click on the second movie, click on create from template, select "Materials price list", and then create a delivery', () => {
 
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
@@ -121,7 +120,7 @@ describe('User create a delivery from context-menu item', () => {
 });
 
 describe('User create a delivery on a movie who already got deliveries', () => {
-  it('should login, click on the second movie card, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
+  it('should login, click on the second movie, then click on add delivery from delivery-list, click on create from existing materials, select both options, and then create a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -138,7 +137,7 @@ describe('User create a delivery on a movie who already got deliveries', () => {
 });
 
 describe('User update deliveries informations', () => {
-  it('should login, click on the second movie card, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
+  it('should login, click on the second movie, click on the first delivery, go to information, edit fields, save and asserts they are updated', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -161,7 +160,7 @@ describe('User update deliveries informations', () => {
 });
 
 describe('User delete a delivery', () => {
-  it('should login, click on the second movie card, then delete a delivery', () => {
+  it('should login, click on the second movie, then delete a delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -177,7 +176,7 @@ describe('User delete a delivery', () => {
 // MATERIALS CRUD //
 
 describe('User add some materials', () => {
-  it('should login, click on the second movie card, click on the first delivery, then create 3 materials and assert that they exist', () => {
+  it('should login, click on the second movie, click on the first delivery, then create 3 materials and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -199,7 +198,7 @@ describe('User add some materials', () => {
 });
 
 describe('User update some materials fields', () => {
-  it('should login, click on the second movie card, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
+  it('should login, click on the second movie, click on the first delivery, then update 3 materials fields and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -222,7 +221,7 @@ describe('User update some materials fields', () => {
 });
 
 describe('User update some materials status', () => {
-  it('should login, click on the second movie card, click on the first delivery, then update 3 materials status and assert that they exist', () => {
+  it('should login, click on the second movie, click on the first delivery, then update 3 materials status and assert that they exist', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -243,7 +242,7 @@ describe('User update some materials status', () => {
 });
 
 describe('User delete some materials', () => {
-  it('should login, click on the second movie card, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
+  it('should login, click on the second movie, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -263,7 +262,7 @@ describe('User delete some materials', () => {
 // DELIVERY TEAMWORK //
 
 describe('User invite an organization', () => {
-  it('should login, click on the second movie card, click on the first delivery, then invite an organization and assert that stakeholder exists', () => {
+  it('should login, click on the second movie, click on the first delivery, then invite an organization and assert that stakeholder exists', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -271,8 +270,8 @@ describe('User invite an organization', () => {
     const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
     const p6: DeliveryStakeholdersPage = p5.clickContextMenuStakeholders();
-    p6.inviteOrganization(ORGANIZATION2_NAME);
-    p6.assertOrganizationIsInvited(ORGANIZATION2_NAME);
+    p6.inviteOrganization(INVITED_ORGANIZATION_NAME);
+    p6.assertOrganizationIsInvited(INVITED_ORGANIZATION_NAME);
   });
 });
 
@@ -280,7 +279,7 @@ describe('User accept an invitation', () => {
   it('should login, click on the invitation, accept it, then sign the delivery', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
-    p2.fillSignin(USER2);
+    p2.fillSignin(INVITED_USER);
     const p3: MovieListPage = p2.clickSigninWithMovies();
     p3.acceptInvitation();
     p3.assertMovieExists(MOVIES_CYTEST[1]);
