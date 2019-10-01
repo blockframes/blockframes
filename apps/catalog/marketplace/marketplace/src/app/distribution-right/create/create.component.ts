@@ -168,6 +168,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
     });
+    this.researchSubscription = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe();
   }
 
   private get movie(): Movie {
@@ -297,7 +298,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
      */
     this.researchSubscription = this.form.valueChanges
       .pipe(
-        startWith(this.form.value),
         tap(value => {
           const salesAgentDateRange: boolean = salesAgentHasDateRange(
             this.movie.salesAgentDeal.rights,
