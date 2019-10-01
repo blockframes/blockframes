@@ -56,25 +56,36 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
   return isValid ? null : { mnemonic: true };
 }
 
-/** Checks if the sum of all percentages of FormArray does not exceed 100%  */
-export function validPercentageList(control: FormArray) {
+/** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
+export function validPercentageList(control: FormArray): ValidationErrors {
     let sum = 0;
+    // Counts the total percentages
     control.controls.forEach(formGroup => {
       sum += formGroup.get('percentage').value;
     });
     control.controls.forEach(formGroup => {
       if (sum > 100) {
-        if (formGroup.get('percentage').value === null) formGroup.get('percentage').setErrors({ required: true });
-        else if (formGroup.get('percentage').value > 100) formGroup.get('percentage').setErrors({ invalidPercentage: true });
-        else formGroup.get('percentage').setErrors({ percentageNotMatching: true });
+        // If sum > 100: add the error percentageNotMatching
+        const errors = formGroup.get('percentage').errors;
+        formGroup.get('percentage').setErrors({...errors, percentageNotMatching: true });
       } else {
-        if (formGroup.get('percentage').value === null) formGroup.get('percentage').setErrors({ required: true });
-        else if (formGroup.get('percentage').value < 0) formGroup.get('percentage').setErrors({ invalidPercentage: true });
-        else formGroup.get('percentage').setErrors(null);
+        // If the sum <= 100, we have to delete the percentageNotMatching error
+        let errors = formGroup.get('percentage').errors;
+        // If the control contains more than one error we delete the percentageNotMatching error
+        if (errors &&  Object.keys(errors).length > 1) delete errors.percentageNotMatching;
+        // If the control contains only the percentageNotMatching error, we set it to null
+        else if (errors && Object.keys(errors).length === 1 && errors.percentageNotMatching) errors = null;
+        formGroup.get('percentage').setErrors(errors);
       }
     });
-    return null;
+    return;
 }
+
+  /** Checks if the value of the control is between 0 and 100 */
+  export function validPercentage(control: FormControl): ValidationErrors {
+    const value = Number(control.value);
+    return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
+  }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {

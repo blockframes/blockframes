@@ -39,11 +39,11 @@
           <mat-error *ngIf="deadline.get('percentage').hasError('required') && deadline.get('percentage').touched">
             Percentage is <strong>required</strong>.
           </mat-error>
-          <mat-error *ngIf="deadline.get('percentage').hasError('percentageNotMatching')">
-            Sum of percentages can not exceed <strong>100%</strong>.
-          </mat-error>
           <mat-error *ngIf="deadline.get('percentage').hasError('invalidPercentage')">
             Percentage must be between <strong>0 and 100</strong>.
+          </mat-error>
+          <mat-error *ngIf="deadline.get('percentage').hasError('percentageNotMatching') && !deadline.get('percentage').hasError('invalidPercentage')">
+            Sum of percentages can not exceed <strong>100%</strong>.
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
