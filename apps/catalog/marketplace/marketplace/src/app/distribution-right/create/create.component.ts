@@ -15,7 +15,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery, MovieSale } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -27,14 +27,10 @@ import { DateRange } from '@blockframes/utils';
 import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
 import { BasketService } from '../+state/basket.service';
 import {
-  hasSalesRights,
-  FilteredResponse,
+  getSalesInDateRange,
+  getSalesWithMediasAndTerritoriesInCommon,
   exclusiveMovieSales,
-  hasExclusiveTerritoriesInCommon,
-  hasExclusiveDateRangeSales,
-  hasTerritoriesInCommon,
-  salesAgentHasDateRange,
-  hasMediaInCommon
+  salesAgentHasDateRange
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 
@@ -116,15 +112,19 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     private query: MovieQuery,
     private basketService: BasketService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     // The movie$ observable will get unsubscribed by the async pipe
     this.movie$ = this.query.selectActive().pipe(
       tap(movie => {
         this.movieLanguages = movie.main.languages;
-        this.movieDubbings = movie.versionInfo.dubbings;
-        this.movieSubtitles = movie.versionInfo.subtitles;
+        // @todo #980 should be all dubbings (ie langugages from static-model) since we can make a request to get new dubbings
+        // But wait vincent return on that point
+        this.movieDubbings = movie.versionInfo.dubbings; 
+        // @todo #980 should be all dubbings (ie langugages from static-model) since we can make a request to get new dubbings
+        // But wait vincent return on that point
+        this.movieSubtitles = movie.versionInfo.subtitles; 
       })
     );
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
@@ -299,163 +299,97 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.researchSubscription = this.form.valueChanges
       .pipe(
         tap(value => {
-          const salesAgentDateRange: boolean = salesAgentHasDateRange(
+
+          //////////////////
+          // FORM VALIDATION
+          //////////////////
+
+          // @todo #980 form validation, do we have territories selected, medias etc ..
+
+          /////////////////////
+          // SALES AGENT CHECKS
+          /////////////////////
+
+          // If isSpecifiedDateRangeInSalesAgentDateRange resolves as false, the sales agent doesn't provide this wanted date range
+          const isSpecifiedDateRangeInSalesAgentDateRange: boolean = salesAgentHasDateRange(
             this.movie.salesAgentDeal.rights,
             value.duration
           );
-          const salesInDateRange = hasSalesRights(value.duration, this.movie.sales);
-          const availableTerritories = hasTerritoriesInCommon(
-            value.territories,
-            this.movie.salesAgentDeal.territories,
-            salesInDateRange.intersectedSales
-          );
-          const exclusiveSales: MovieSale[] = exclusiveMovieSales(this.movie.sales);
-          const exclusiveDateRangeSales: FilteredResponse = hasExclusiveDateRangeSales(
-            value.duration,
-            exclusiveSales
-          );
-          /**
-           * If salesAgentDateRange resolves as true, the sales agent doesn't provide this wanted date range
-           */
-          if (salesAgentDateRange) {
+          if (!isSpecifiedDateRangeInSalesAgentDateRange) {
             this.step = this.steps.ERROR;
             console.log(
-              `There are no sales agent provided in that date range. ${value.duration.from.getDate()} - ${value.duration.to.getDate()}`
+              `There is no sales agent provided in that date range. ${value.duration.from.getDate()} - ${value.duration.to.getDate()}`
             );
-          } else if (
-            !!availableTerritories.availableValues ||
-            !!availableTerritories.intersectedSales
-          ) {
-            if (!exclusiveDateRangeSales.intersected) {
-              console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
+            return false; // End of process
+          }
+
+          // Do we have territories or medias from search that are not in sales agent scope ?
+          const territoriesNotInSalesAgentScope = [];
+          value.territories.forEach(territory => {
+            if (!this.movie.salesAgentDeal.territories.includes(territory)) {
+              territoriesNotInSalesAgentScope.push(territory)
+            }
+          });
+
+          const mediasNotInSalesAgentScope = [];
+          value.medias.forEach(media => {
+            if (!this.movie.salesAgentDeal.medias.includes(media)) {
+              mediasNotInSalesAgentScope.push(media);
+            }
+          });
+
+          if (mediasNotInSalesAgentScope.length || territoriesNotInSalesAgentScope.length) {
+            // @todo #980 let customer make a request to sales agent ( to see if he can adapt and find a solution)
+            console.log('Some territories or medias are not in sales agent scope', territoriesNotInSalesAgentScope, mediasNotInSalesAgentScope);
+            return false; // End of process
+          }
+
+          ///////////////
+          // SALES CHECKS
+          ///////////////
+
+          // Do we have others sales overrlapping current daterange ?
+          const salesInDateRange = getSalesInDateRange(value.duration, this.movie.sales);
+          if (salesInDateRange.length === 0) {
+            // We have no intersection with other sales, so we are OK !
+            console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
+            return true; // End of process
+          }
+
+          // We have territories and medias in common with some existing sales,
+          // Lets check if territories and medias in common belongs to the same sales and if those sales are exclusives.
+          const salesWithMediasAndTerritoriesInCommon = getSalesWithMediasAndTerritoriesInCommon(
+            value.territories,
+            value.medias,
+            salesInDateRange
+          )
+
+          if (salesWithMediasAndTerritoriesInCommon.length) {
+            const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveMovieSales(salesWithMediasAndTerritoriesInCommon);
+            if (exclusiveSalesWithMediasAndTerritoriesInCommon.length) {
+              console.log('There is some exclusive sales blocking your request :', exclusiveSalesWithMediasAndTerritoriesInCommon);
+              return false; // End of process
             } else {
-              const exclusiveTerritoriesInCommon: FilteredResponse = hasExclusiveTerritoriesInCommon(
-                value.territories,
-                exclusiveDateRangeSales.intersectedExclusiveSales
-              );
-              if (exclusiveTerritoriesInCommon.intersected) {
-                this.step = this.steps.ERROR;
-                console.log(
-                  'occupied by this dist right' +
-                    exclusiveTerritoriesInCommon.intersectedExclusiveSales
-                );
-              } else if (!salesAgentDateRange) {
-                /**
-                 * For the choosen date range of the customer, there is a sales agent
-                 * that can sell this movie
-                 */
-                /**
-                 * We checked that there are no intersections with exclusive sales,
-                 * so now we need to look for non exclusive sales that aren't the
-                 * same distribution rights like the customer wants to have, or even
-                 * contains all of the rights that the customer has choosen
-                 */
-                if (salesInDateRange.intersected && !value.exclusive) {
-                  /**
-                   * If there are other sales in the wanted date range, we have to look
-                   * for the intersected properties
-                   */
-                  if (availableTerritories.intersected) {
-                    /**
-                     * If true, there are sales in that territory for the choosen date range
-                     */
-                    const availableMedias: FilteredResponse = hasMediaInCommon(
-                      value.medias,
-                      availableTerritories.intersectedSales,
-                      this.movie.salesAgentDeal.medias
-                    );
-                    if (availableMedias.intersected) {
-                      /**
-                       * Now we need to check if every wanted value from the buyer is included in the
-                       * already existing sales
-                       */
-                      availableMedias.intersectedSales.forEach(sale => {
-                        if (
-                          isEqual(sortBy(sale.medias), sortBy(value.medias)) &&
-                          isEqual(sortBy(sale.territories), sortBy(value.territories))
-                        ) {
-                          this.step = this.steps.ERROR;
-                          console.log(
-                            'The are already a distribution right for your wanted values'
-                          );
-                        } else {
-                          const territoriesIntersections: MovieSale[] = [];
-
-                          value.territories.forEach(territory => {
-                            if (includes(sale.territories, territory)) {
-                              territoriesIntersections.push(sale);
-                            }
-                          });
-                          /**
-                           * Here we are checking if the territories wanted from the
-                           * customer are different in one territory from the existing sales
-                           */
-                          if (territoriesIntersections.length >= 1) {
-                            const mediasIntersections: MovieSale[] = [];
-
-                            value.medias.forEach(media => {
-                              if (includes(sale.medias, media)) {
-                                mediasIntersections.push(sale);
-                              }
-                            });
-                            if (mediasIntersections.length >= 1) {
-                              for (const intersection of territoriesIntersections) {
-                                if (mediasIntersections.includes(intersection)) {
-                                  console.log(
-                                    'already existing dist right in this territory with your wanted media' +
-                                      intersection
-                                  );
-                                }
-                              }
-                            } else {
-                              console.log('No INTERSECTIONS were found in the media section');
-                            }
-                          } else {
-                            console.log('YOU CAN CREATE YOUR DIST RIGHT');
-                          }
-                        }
-                      });
-                    } else {
-                      console.log('available medias was the problem' + availableMedias);
-                    }
-                  } else {
-                    console.log('SALES AGENT DOESNT PROVIDE THESE TERRITORIES', value.territories);
-                  }
-                } else if (value.exclusive && salesInDateRange.intersected) {
-                  /**
-                   * If the customer wants to have an exclusive distribution right,
-                   * we need to find the all the sales for his wanted values and
-                   * give him the possibilities to rebuy other distribution rights.
-                   */
-                  const salesToBeBought: MovieSale[] = [];
-                  for (const sale of salesInDateRange.intersectedSales) {
-                    for (const territory of value.territories) {
-                      for (const media of value.medias) {
-                        if (
-                          sale.territories.includes(territory) &&
-                          sale.medias.includes(media) &&
-                          !salesToBeBought.includes(sale)
-                        ) {
-                          salesToBeBought.push(sale);
-                        }
-                      }
-                    }
-                  }
-                  if (salesToBeBought.length) {
-                    console.log('You have to buy this sales', salesToBeBought);
-                  }
-                } else {
-                  console.log(
-                    'YOU CAN BUY THE RIGHT, CAUSE THERE WHERE NO OTHER DIST RIGHT FOUNDS'
-                  );
-                }
+              if (value.exclusive) {
+                console.log('There is some sales blocking your exclusivity request :', salesWithMediasAndTerritoriesInCommon);
+                return false; // End of process
               } else {
-                console.log('NO ELSE WAS PROVIDED');
+                console.log('YOU CAN BUY YOUR DIST RIGHT, since you do not require exclusivity');
+                return true; // End of process
               }
             }
           } else {
-            console.log('Sales agent does not provide these territories', value.territories);
+            // There is no sales with territories AND medias in common, we are OK.
+            console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS AND TERRITORIES OVERLAPPING FOUND');
+            return true; // End of process
           }
+
+
+          // @todo #980 
+          // do same verification process with languages, dubbing, subtitles ?
+          // Is it relevant to distinguish Languages and Dubbings ?
+          // => Wait for Vincent return on this since we do not know how exclusivity must behave regarding dubbings, subtitles..
+
         })
       )
       .subscribe();

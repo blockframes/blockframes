@@ -5,6 +5,7 @@ import {
   LanguagesSlug,
   TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
+import { DateRange } from '@blockframes/utils/helpers';
 
 export const enum BasketStatus {
   pending = 'pending',
@@ -25,10 +26,7 @@ export interface DistributionRight {
   languages: LanguagesSlug[];
   dubbings: LanguagesSlug[];
   subtitles: LanguagesSlug[];
-  duration: {
-    from: Date;
-    to: Date;
-  };
+  duration: DateRange;
   territories: TerritoriesSlug[];
   exclusive: boolean;
 }
