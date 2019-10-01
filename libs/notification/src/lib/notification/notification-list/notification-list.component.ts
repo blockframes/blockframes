@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Order } from '@datorama/akita';
-import { NotificationService, NotificationQuery, Notification } from '../+state';
+import { NotificationQuery, Notification } from '../+state';
 
 @Component({
   selector: 'notification-list',
@@ -10,22 +9,15 @@ import { NotificationService, NotificationQuery, Notification } from '../+state'
   styleUrls: ['./notification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationListComponent implements OnInit, OnDestroy {
+export class NotificationListComponent implements OnInit {
   public notifications$: Observable<Notification[]>
-  private destroyed$ = new Subject();
 
-  constructor(private service: NotificationService, private query: NotificationQuery) {}
+  constructor(private query: NotificationQuery) {}
 
   ngOnInit() {
     this.notifications$ = this.query.selectAll({
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    this.service.userNotifications$.pipe(takeUntil(this.destroyed$)).subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
   }
 }

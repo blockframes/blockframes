@@ -99,12 +99,9 @@ export class DeliveryEditableComponent implements OnInit {
 
   /* Select a single material to perform an action **/
   public selectMaterial(material: Material) {
-    if (this.materialQuery.hasActive(material.id)) {
-      this.materialStore.removeActive(material.id);
-    }
-    if (!this.materialQuery.hasActive(material.id)) {
-      this.materialStore.addActive(material.id);
-    }
+    this.materialQuery.hasActive(material.id)
+      ? this.materialStore.removeActive(material.id)
+      : this.materialStore.addActive(material.id);
   }
 
   /* Select all materials to perform an action **/
