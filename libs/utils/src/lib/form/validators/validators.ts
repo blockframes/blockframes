@@ -81,11 +81,11 @@ export function validPercentageList(control: FormArray): ValidationErrors {
     return;
 }
 
-  /** Checks if the value of the control is between 0 and 100 */
-  export function validPercentage(control: FormControl): ValidationErrors {
-    const value = Number(control.value);
-    return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
-  }
+/** Checks if the value of the control is between 0 and 100 */
+export function validPercentage(control: FormControl): ValidationErrors {
+  const value = Number(control.value);
+  return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
+}
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {

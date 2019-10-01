@@ -45,7 +45,6 @@ export class DeliveryInformationsEditableComponent implements OnInit {
   }
 
   public async updateInformations() {
-    console.log(this.informationsFormGroup)
     try {
       if (this.informationsFormGroup.invalid) {
         throw new Error('Delivery informations are not valid');

@@ -1,4 +1,4 @@
-import { FormControl, FormGroupDirective, NgForm, FormArray, FormGroup } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material';
 
 /** Checks if two inputs have the same value */
@@ -13,15 +13,6 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
 
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return (control && control.parent.get(this.password).value !== control.parent.get(this.confirm).value && control.dirty)
-  }
-}
-
-/** Checks if the sum of all percentages of FormArray does not exceed 100%  */
-export class PercentageStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    const array = control.parent.parent as FormArray;
-    const isNotValid = control.value < 0 || (control.value === null && control.touched);
-    return array.hasError('percentageNotMatching') || isNotValid;
   }
 }
 
