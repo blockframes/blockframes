@@ -11,7 +11,7 @@ export class CatalogBasketGuard extends CollectionGuard<BasketState> {
   }
 
   sync() {
-    // TODO # : change in syncCollection(path, queryFn)
+    // TODO #1027 : change in syncCollection(path, queryFn)
     return this.service.syncQuery();
   }
 }
