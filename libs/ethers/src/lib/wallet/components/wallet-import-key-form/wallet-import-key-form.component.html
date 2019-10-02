@@ -22,7 +22,8 @@
       ></file-upload>
     </ng-container>
     <ng-template #mnemonicImport>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your mnemonic</mat-label>
         <textarea matInput placeholder="Enter or paste your mnemonic" [formControl]="mnemonic"></textarea>
       </mat-form-field>
     </ng-template>

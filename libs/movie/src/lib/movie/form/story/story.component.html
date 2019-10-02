@@ -1,7 +1,8 @@
 <form [formGroup]="story">
   <!-- LOGLINE -->
   <h3> Logline </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Logline</mat-label>
     <textarea matInput #logline formControlName="logline" maxlength="180" placeholder="Logline"
       type="string"></textarea>
     <mat-hint align="end">{{ story.logline.value?.length }} / 180</mat-hint>
@@ -9,7 +10,8 @@
 
   <!-- SYNOPSIS -->
   <h3> Synopsis </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Synopsis</mat-label>
     <textarea matInput #synopsis formControlName="synopsis" maxlength="500" placeholder="Synopsis"
       type="string"></textarea>
     <mat-hint align="end">{{ story.synopsis.value?.length }} / 500</mat-hint>

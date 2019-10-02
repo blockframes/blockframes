@@ -1,7 +1,7 @@
 <form [formGroup]="promotionalDescription">
   <!-- KEYWORDS -->
   <h3> Keywords </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-chip-list #chipList>
       <mat-chip *ngFor="let keyword of promotionalDescription.keywords.controls ; let i = index" [selectable]="true"
         [removable]="true" (removed)="promotionalDescription.removeKeyword(i)">
@@ -16,7 +16,8 @@
   <h3> Key assets </h3>
   <div formArrayName="keyAssets" *ngFor="let keyAssets of promotionalDescription.keyAssets.controls; let i = index">
     <div class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Key asset</mat-label>
         <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="Key asset" type="string"></textarea>
       </mat-form-field>
       <button *ngIf="promotionalDescription.keyAssets.controls.length < 3" mat-icon-button color="primary" (click)="promotionalDescription.addKeyAsset()">

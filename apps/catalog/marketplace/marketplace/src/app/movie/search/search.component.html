@@ -18,7 +18,8 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-                <mat-form-field apperance="outline" color="accent">
+                <mat-form-field appearance="outline">
+                  <mat-label>From</mat-label>
                   <input test-id="production-year-input-from" matInput type="number" formControlName="from"
                     placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
@@ -28,7 +29,8 @@
                     The year can't be above the current year, {{ getCurrentYear }}
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>To</mat-label>
                   <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
                     autocomplete="off" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
@@ -65,7 +67,8 @@
               </mat-expansion-panel-header>
               <form formGroupName="languages" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="start start">
-                  <mat-form-field color="accent" appearance="outline">
+                  <mat-form-field appearance="outline">
+                    <mat-label>New language</mat-label>
                     <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
                       [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
                     <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
@@ -130,7 +133,8 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
-                <mat-form-field apperance="outline" color="accent">
+                <mat-form-field appearance="outline">
+                  <mat-label>From</mat-label>
                   <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
                   <mat-error *ngIf="filterForm.get('availabilities').get('from').hasError('min')">
                     You only can choose the current year and above.
@@ -139,7 +143,8 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field color="accent">
+                <mat-form-field appearance="outline">
+                  <mat-label>To</mat-label>
                   <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="To" />
                   <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
                   </mat-datepicker-toggle>
@@ -158,7 +163,7 @@
                   Territories
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-form-field>
+              <mat-form-field appearance="outline">
                 <mat-chip-list #chipList>
                   <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectable"
                     [removable]="removable" (removed)="removeTerritory(territory, i)">

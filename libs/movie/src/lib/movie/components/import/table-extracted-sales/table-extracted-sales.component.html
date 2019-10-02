@@ -8,7 +8,8 @@
   </button>
 </p>
 
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 

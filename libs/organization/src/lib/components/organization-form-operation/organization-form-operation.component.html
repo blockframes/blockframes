@@ -24,7 +24,7 @@
   <!-- Add Member to Operation -->
   <article>
     <p>Add a member</p>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Add a new member to this operation</mat-label>
       <mat-select [formControl]="addMemberFrom">
         <mat-option *ngFor="let member of unauthorizedMembers" [value]="member">{{member.name}}</mat-option>

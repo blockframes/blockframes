@@ -2,12 +2,14 @@
   <div formGroupName="rights">
     <!-- MANDATE DATE RANGE -->
     <h3> Mandate Date range </h3>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>From</mat-label>
       <input matInput [matDatepicker]="picker1" placeholder="Choose start date" formControlName="from" />
       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
       <mat-datepicker #picker1></mat-datepicker>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>To</mat-label>
       <input matInput [matDatepicker]="picker2" placeholder="Choose end date" formControlName="to" />
       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
       <mat-datepicker #picker2></mat-datepicker>
@@ -15,7 +17,7 @@
   </div>
   <!-- TERRITORIES -->
   <h3> Mandate Territories </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="territories" placeholder="Territories" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="territoriesFilterCtrl" [placeholderLabel]="'Search...'"
@@ -28,7 +30,7 @@
   </mat-form-field>
   <!-- MEDIAS -->
   <h3> Mandate Medias </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="medias" placeholder="Medias" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="mediasFilterCtrl" [placeholderLabel]="'Search...'"

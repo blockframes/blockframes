@@ -35,7 +35,7 @@
                 Territories
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-form-field>
+            <mat-form-field appearance="outline">
               <mat-chip-list #chipList>
                 <mat-chip
                   *ngFor="let territory of selectedTerritories; let i = index"
@@ -47,6 +47,7 @@
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
               </mat-chip-list>
+              <mat-label>Territories available</mat-label>
               <input
               test-id="distribution-territory-input"
               placeholder="Territories available"
@@ -90,6 +91,7 @@
                   <h6 class="mat-h4">Languages</h6>
                   <span fxLayout="row">
                     <mat-form-field appearance="outline">
+                      <mat-label>Available languages</mat-label>
                       <input test-id="distribution-language-input" matInput type="text" [matAutocomplete]="language" [formControl]="languageControl"
                         placeholder="Add available languages" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
@@ -133,6 +135,7 @@
                   <h6>Dubbings</h6>
                   <span fxLayout="row">
                     <mat-form-field appearance="outline">
+                      <mat-label>Available dubbings</mat-label>
                       <input test-id="distribution-dubbing-input" matInput type="text" [matAutocomplete]="dubbings" [formControl]="dubbingsControl"
                         placeholder="Add available dubbings" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addDubbing(dubbingsControl.value)"
@@ -175,6 +178,7 @@
                   <h4>Subtitles</h4>
                   <span fxLayout="row">
                     <mat-form-field appearance="outline">
+                      <mat-label>Available subtitles</mat-label>
                       <input matInput type="text" [matAutocomplete]="subtitles" [formControl]="subtitlesControl"
                         placeholder="Add available subtitles" class="capitalized" />
                       <button mat-button matSuffix mat-icon-button (click)="addSubtitle(subtitlesControl.value)"

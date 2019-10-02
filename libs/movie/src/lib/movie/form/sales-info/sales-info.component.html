@@ -1,7 +1,7 @@
 <form [formGroup]="salesInfo">
   <!-- SCORING -->
   <h3> Scoring </h3>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-select formControlName="scoring" placeholder="Scoring">
       <mat-option *ngFor="let scoring of staticModels.SCORING" [value]="scoring.slug">
         {{ scoring.label }}
@@ -10,7 +10,7 @@
   </mat-form-field>
   <!-- COLOR -->
   <h3> Color </h3>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-select formControlName="color" placeholder="Color">
       <mat-option *ngFor="let color of staticModels.COLORS" [value]="color.slug">
         {{ color.label }}
@@ -22,7 +22,8 @@
   <mat-checkbox formControlName="europeanQualification">European Qualification</mat-checkbox>
   <!-- RATING (PEGI) -->
   <h3> Rating (PEGI) </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Rating (PEGI)</mat-label>
     <input matInput type="text" placeholder="Rating (PEGI)" formControlName="pegi" />
     <mat-error *ngIf="salesInfo.get('pegi').hasError('required')">
       Rating is <strong>required</strong>
@@ -30,7 +31,7 @@
   </mat-form-field>
   <!-- CERTIFICATIONS -->
   <h3> Certifications </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="certifications" placeholder="Certifications" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="certificationsFilterCtrl" [placeholderLabel]="'Search...'"
@@ -44,16 +45,18 @@
   <div formGroupName="internationalPremiere">
     <!-- INTERNATIONAL PREMIERE -->
     <h3> International Premiere</h3>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Festival name</mat-label>
       <input matInput type="text" placeholder="Festival name" formControlName="name" />
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Year</mat-label>
       <input matInput type="number" placeholder="Year" formControlName="year" />
     </mat-form-field>
   </div>
   <!-- ORIGIN COUNTRY RELEASE DATE -->
   <h3> Release date in Origin Country</h3>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <input matInput formControlName="originCountryReleaseDate" [matDatepicker]="picker" placeholder="Choose a date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
@@ -62,7 +65,8 @@
   <h3> TV / Platform coproducer(s), if any </h3>
   <div formArrayName="broadcasterCoproducers" *ngFor="let broadcasterCoproducer of salesInfo.broadcasterCoproducers.controls; let i = index">
     <div class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Coproducers</mat-label>
         <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="TV / Platform coproducer"
           type="string"></textarea>
       </mat-form-field>

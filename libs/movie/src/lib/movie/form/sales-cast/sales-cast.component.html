@@ -3,13 +3,15 @@
   <h3> Credits </h3>
   <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Firstname</mat-label>
         <input matInput formControlName="firstName" placeholder="First Name">
       </mat-form-field>
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Lastname</mat-label>
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
         <mat-select formControlName="creditRole" placeholder="Position">
           <mat-option *ngFor="let creditRole of staticModels.CREDIT_ROLES" [value]="creditRole.slug">
             {{ creditRole.label }}

@@ -3,13 +3,16 @@
   <h3> Festival Prizes </h3>
   <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Festival name">
       </mat-form-field>
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Year</mat-label>
         <input matInput formControlName="year" placeholder="Festival year">
       </mat-form-field>
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Prize</mat-label>
         <input matInput formControlName="prize" placeholder="Prize">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">

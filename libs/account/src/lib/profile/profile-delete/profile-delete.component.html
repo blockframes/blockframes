@@ -1,7 +1,8 @@
 <h1 mat-dialog-title>Delete account</h1>
 <div mat-dialog-content>
   <p>Type in your email to confirm deletion:</p>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
     <input matInput placeholder="Email" [(ngModel)]="data.email">
   </mat-form-field>
 </div>

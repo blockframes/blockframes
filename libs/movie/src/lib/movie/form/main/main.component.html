@@ -1,13 +1,15 @@
 <form page-id="movie-form-main" [formGroup]="main">
   <!-- INTERNAL REF -->
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Internal ref</mat-label>
     <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" required />
     <mat-error *ngIf="main.get('internalRef').hasError('required')">
       Internal ref is <strong>required</strong>
     </mat-error>
   </mat-form-field>
   <!-- ISAN NUMBER -->
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>ISAN Number</mat-label>
     <input matInput type="text" placeholder="ISAN number (ISAN 0000-0001-8947-0000-8-0000-0000-D)"
       formControlName="isan" required />
     <mat-error *ngIf="main.get('isan').hasError('required')">
@@ -18,13 +20,15 @@
   <div formGroupName="title">
     <!-- TITLES -->
     <h3> Titles </h3>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Original title</mat-label>
       <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
       <mat-error *ngIf="main.title.get('original').hasError('required')">
         Original title is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>International title</mat-label>
       <input matInput type="text" placeholder="International title" formControlName="international" required />
       <mat-error *ngIf="main.title.get('international').hasError('required')">
         International title is <strong>required</strong>
@@ -35,10 +39,12 @@
   <h3> Directed By </h3>
   <div formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Firstname</mat-label>
         <input matInput formControlName="firstName" placeholder="First Name">
       </mat-form-field>
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Lastname</mat-label>
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addDirector()">
@@ -73,7 +79,8 @@
   </mat-card>
   <!-- PRODUCTION -->
   <h3> Production </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Production year</mat-label>
     <input matInput type="number" placeholder="Production year" formControlName="productionYear" />
     <mat-error *ngIf="main.get('productionYear').hasError('pattern')">
       Invalid year.
@@ -81,7 +88,7 @@
   </mat-form-field>
   <!-- GENRES -->
   <h3> Genres </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="genres" placeholder="Genres" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="genresFilterCtrl" [placeholderLabel]="'Search...'"
@@ -94,7 +101,7 @@
   </mat-form-field>
   <!-- ORIGIN COUNTRIES -->
   <h3> Origin Countries </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="originCountries" placeholder="Origin Countries" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
@@ -107,7 +114,7 @@
   </mat-form-field>
   <!-- LANGUAGES -->
   <h3> Languages </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-select formControlName="languages" placeholder="Film Languages" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
@@ -120,7 +127,7 @@
   </mat-form-field>
   <!-- STATUS -->
   <h3> Status </h3>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-select formControlName="status" placeholder="Status">
       <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
         {{ status.label }}
@@ -129,14 +136,16 @@
   </mat-form-field>
   <!-- SHORT SYNOPSIS -->
   <h3> Short synopsis </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Synopsis</mat-label>
     <textarea matInput #synopsis formControlName="shortSynopsis" maxlength="500" placeholder="Short synopsis"
       type="string"></textarea>
     <mat-hint align="end">{{ main.shortSynopsis.value?.length }} / 500</mat-hint>
   </mat-form-field>
   <!-- LENGTH -->
   <h3> Length </h3>
-  <mat-form-field class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Length</mat-label>
     <input matInput type="number" placeholder="Length" formControlName="length" />
     <mat-error *ngIf="main.get('length').hasError('required')">
       Length is <strong>required</strong>
@@ -147,7 +156,8 @@
   <div formArrayName="productionCompanies"
     *ngFor="let productionCompany of main.productionCompanies.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <mat-form-field class="small-margin">
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Company name</mat-label>
         <input matInput formControlName="firstName" placeholder="Company name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
