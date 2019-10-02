@@ -28,3 +28,33 @@ mat-form-field {
     }
   }
 }
+
+.light-theme .mat-form-field-appearance-outline {
+  .mat-form-field-outline {
+    color: mat-color($bf-light-foreground, dynamic);
+  }
+  .mat-form-field-outline-thick {
+    color: mat-color($bf-light-primary);
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end,
+    .mat-form-field-outline-gap {
+      border-width: 1px;
+    }
+  }
+
+}
+
+.dark-theme .mat-form-field-appearance-outline {
+  .mat-form-field-outline {
+    color: mat-color($bf-dark-foreground, dynamic);
+  }
+  .mat-form-field-outline-thick {
+    color: mat-color($bf-dark-primary);
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end,
+    .mat-form-field-outline-gap {
+      border-width: 1px;
+    }
+  }
+
+}
