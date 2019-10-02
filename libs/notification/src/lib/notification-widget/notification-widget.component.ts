@@ -2,13 +2,14 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { Observable, Subject } from 'rxjs';
 import { User, AuthQuery } from '@blockframes/auth';
 import { NotificationQuery } from '../notification/+state';
-import { InvitationQuery } from '../invitation/+state';
+import { InvitationQuery, InvitationStore } from '../invitation/+state';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'notification-widget',
   templateUrl: './notification-widget.component.html',
   styleUrls: ['./notification-widget.component.scss'],
+  providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationWidgetComponent implements OnInit, OnDestroy {

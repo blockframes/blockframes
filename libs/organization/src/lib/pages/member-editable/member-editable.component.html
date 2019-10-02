@@ -1,13 +1,13 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
   <!-- Content -->
   <ng-container content>
+    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-pending
       (declined)="declineInvitation($event)"
       (accepted)="acceptInvitation($event)"
       [invitations]="invitationsToJoinOrganization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async">
     </member-pending>
-    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
     <member-invitation
       [invitations]="invitationsFromOrganization$ | async"
