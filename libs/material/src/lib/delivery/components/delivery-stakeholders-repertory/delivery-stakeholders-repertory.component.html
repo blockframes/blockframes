@@ -5,11 +5,11 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td fxLayout="row" fxLayoutAlign="start center" [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">
+      <td fxLayout="row" fxLayoutAlign="start center" class="bf-strong" [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">
         <img
           [src]="stakeholder.organization.logo"
           alt="Organization Logo"/>
-        <b>{{ stakeholder.organization.name }}</b>
+        {{ stakeholder.organization.name }}
       </td>
     </ng-container>
 

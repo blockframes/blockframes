@@ -28,8 +28,8 @@
   <!-- Title Column -->
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-    <td mat-cell *matCellDef="let material">
-      <span class="bf-display-strong">{{ material.value }}</span>
+    <td mat-cell *matCellDef="let material" class="bf-strong">
+      {{ material.value }}
     </td>
   </ng-container>
 

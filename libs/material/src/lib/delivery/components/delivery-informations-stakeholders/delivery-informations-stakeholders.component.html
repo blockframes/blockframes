@@ -4,10 +4,10 @@
     <!-- Stakeholder Column -->
     <ng-container matColumnDef="stakeholder">
       <th mat-header-cell *matHeaderCellDef>Stakeholder</th>
-      <td mat-cell *matCellDef="let stakeholder">
+      <td mat-cell *matCellDef="let stakeholder" class="bf-strong">
         <span fxLayout="row" fxLayoutAlign="start center">
           <img [src]="stakeholder.organization.logo" alt="Organization Logo"/>
-          <b>{{ stakeholder.organization.name }}</b>
+          {{ stakeholder.organization.name }}
         </span>
       </td>
     </ng-container>

@@ -23,7 +23,7 @@
           <!-- Movie name -->
           <ng-container matColumnDef="movieName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Movie name</th>
-              <td mat-cell *matCellDef="let element"><b>{{element.movieName | titlecase}}</b></td>
+              <td mat-cell *matCellDef="let element" class="bf-strong">{{element.movieName | titlecase}}</td>
           </ng-container>
 
           <!-- End Rights -->
