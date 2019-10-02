@@ -1,4 +1,11 @@
-import { FormEntity } from '@blockframes/utils';
+import { Validators } from '@angular/forms';
+import {
+  FormEntity,
+  territoryValidator,
+  mediaValidator,
+  numberRangeValidator,
+  languageValidator
+} from '@blockframes/utils';
 import { DistributionRight } from '../+state/basket.model';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {
@@ -10,15 +17,18 @@ import {
 export class DistributionRightForm extends FormEntity<DistributionRight> {
   constructor() {
     super({
-      medias: new FormArray([]),
-      languages: new FormControl([]),
-      dubbings: new FormControl([]),
-      subtitles: new FormControl([]),
-      duration: new FormGroup({
-        from: new FormControl(),
-        to: new FormControl()
-      }),
-      territories: new FormArray([]),
+      medias: new FormArray([], [Validators.required, mediaValidator]),
+      languages: new FormControl([], languageValidator),
+      dubbings: new FormControl([], languageValidator),
+      subtitles: new FormControl([], languageValidator),
+      duration: new FormGroup(
+        {
+          from: new FormControl(),
+          to: new FormControl()
+        },
+        [Validators.required, numberRangeValidator('from', 'to')]
+      ),
+      territories: new FormArray([], [Validators.required, territoryValidator]),
       exclusive: new FormControl(false)
     });
   }

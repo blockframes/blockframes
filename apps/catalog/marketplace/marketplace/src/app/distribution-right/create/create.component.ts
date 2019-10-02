@@ -1,6 +1,3 @@
-import isEqual from 'lodash/isEqual';
-import sortBy from 'lodash/sortBy';
-import includes from 'lodash/includes';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, tap } from 'rxjs/operators';
 import {
@@ -304,7 +301,9 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           // FORM VALIDATION
           //////////////////
 
-          // @todo #980 form validation, do we have territories selected, medias etc ..
+          if(!!value.duration || value.medias.length || value.territories.length ) {
+            console.log('You have to provide value for your research')
+          }
 
           /////////////////////
           // SALES AGENT CHECKS

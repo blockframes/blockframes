@@ -252,7 +252,8 @@
               </div>
             </mat-expansion-panel>
           </mat-accordion>
-          <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()">Search</button>
+          <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()"
+            [disabled]="!form.valid">Search</button>
         </form>
       </mat-card>
     </aside>
