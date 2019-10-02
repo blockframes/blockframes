@@ -1,14 +1,19 @@
 export const CONTEXT_MENU = [
   {
     route: 'default',
-    items: [
-      { name: 'templates', path: '/layout/o/templates/list' },
-      { name: 'add a delivery', path: '/layout/o/delivery/add/1-find-movie' }
-    ]
+    items: []
   },
   {
     route: '/layout/welcome',
     items: []
+  },
+  {
+    route: '/layout/o/home/list',
+    items: [
+      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'templates', path: '/layout/o/templates/list' },
+      { name: 'add a delivery', path: '/layout/o/delivery/add/1-find-movie' }
+    ]
   },
   {
     route: '/layout/o/home/:movieId/edit',
@@ -26,11 +31,17 @@ export const CONTEXT_MENU = [
   },
   {
     route: '/layout/o/templates/list',
-    items: [{ name: 'templates', path: '/layout/o/templates/list' }]
+    items: [
+      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'templates', path: '/layout/o/templates/list' }
+    ]
   },
   {
     route: '/layout/o/templates/create',
-    items: [{ name: 'templates', path: '/layout/o/templates/create' }]
+    items: [
+      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'templates', path: '/layout/o/templates/create' }
+    ]
   },
   {
     route: '/layout/o/templates/:templateId',
