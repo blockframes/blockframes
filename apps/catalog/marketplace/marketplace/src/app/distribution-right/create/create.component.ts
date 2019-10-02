@@ -21,7 +21,6 @@ import {
   LanguagesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { DateRange } from '@blockframes/utils';
-import { CatalogBasket, createBaseBasket, createDistributionRight } from '../+state/basket.model';
 import { BasketService } from '../+state/basket.service';
 import {
   getSalesInDateRange,
@@ -61,9 +60,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
   // Movie for information to display
   public movie$: Observable<Movie>;
-
-  // This variable is going to be passed down to the catalog-form-selection table component
-  public catalogBasket: CatalogBasket;
 
   // A flag to indicate if datepicker is open
   public opened = false;
@@ -145,26 +141,9 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
       map(value => this._subtitlesFilter(value))
     );
     this.formSubscription = this.form.valueChanges.subscribe(data => {
-      this.catalogBasket = createBaseBasket({
-        rights: [
-          createDistributionRight({
-            id: this.basketService.createFireStoreId,
-            movieId: this.movie.id,
-            medias: data.medias,
-            languages: data.languages,
-            dubbings: data.dubbings,
-            subtitles: data.subtitles,
-            duration: {
-              from: data.duration.from,
-              to: data.duration.to
-            },
-            territories: data.territories
-          })
-        ]
-      });
       this.choosenDateRange.to = data.duration.to;
       this.choosenDateRange.from = data.duration.from;
-    });
+    }); 
     this.researchSubscription = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe();
   }
 
@@ -279,7 +258,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   }
 
   public addDistributionRight() {
-    this.basketService.addBasket(this.catalogBasket);
     this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
@@ -384,7 +362,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           }
 
 
-          // @todo #980 
+          // @TODO#1022 
           // do same verification process with languages, dubbing, subtitles ?
           // Is it relevant to distinguish Languages and Dubbings ?
           // => Wait for Vincent return on this since we do not know how exclusivity must behave regarding dubbings, subtitles..

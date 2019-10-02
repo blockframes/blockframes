@@ -1,12 +1,6 @@
 import { Validators } from '@angular/forms';
-import {
-  FormEntity,
-  territoryValidator,
-  mediaValidator,
-  numberRangeValidator,
-  languageValidator
-} from '@blockframes/utils';
-import { DistributionRight } from '../+state/basket.model';
+import { FormEntity, numberRangeValidator } from '@blockframes/utils';
+import { DistributionRight, createDistributionRight } from '../+state/basket.model';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {
   TerritoriesSlug,
@@ -16,20 +10,27 @@ import {
 
 export class DistributionRightForm extends FormEntity<DistributionRight> {
   constructor() {
+    const distributionRight = createDistributionRight();
     super({
-      medias: new FormArray([], [Validators.required, mediaValidator]),
-      languages: new FormControl([], languageValidator),
-      dubbings: new FormControl([], languageValidator),
-      subtitles: new FormControl([], languageValidator),
+      medias: new FormArray(
+        (distributionRight.medias || []).map(media => new FormControl(media)),
+        Validators.required
+      ),
+      languages: new FormControl(distributionRight.languages, Validators.required),
+      dubbings: new FormControl(distributionRight.dubbings),
+      subtitles: new FormControl(distributionRight.subtitles),
       duration: new FormGroup(
         {
-          from: new FormControl(),
-          to: new FormControl()
+          from: new FormControl(distributionRight.duration.from, [Validators.required]),
+          to: new FormControl(distributionRight.duration.to, [Validators.required])
         },
         [Validators.required, numberRangeValidator('from', 'to')]
       ),
-      territories: new FormArray([], [Validators.required, territoryValidator]),
-      exclusive: new FormControl(false)
+      territories: new FormArray(
+        (distributionRight.territories || []).map(territory => new FormControl(territory)),
+        Validators.required
+      ),
+      exclusive: new FormControl(distributionRight.exclusive)
     });
   }
 

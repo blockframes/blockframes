@@ -8,7 +8,11 @@ import {
   FormArray
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LANGUAGES_SLUG, TERRITORIES_SLUG, MEDIAS_SLUG } from '@blockframes/movie/movie/static-model/types';
+import {
+  LANGUAGES_SLUG,
+  TERRITORIES_SLUG,
+  MEDIAS_SLUG
+} from '@blockframes/movie/movie/static-model/types';
 import { InfuraProvider } from '@ethersproject/providers';
 import { isValidMnemonic } from '@ethersproject/hdnode';
 import { orgNameToEnsDomain } from '../../helpers';
@@ -110,8 +114,8 @@ export function languageValidator(control: AbstractControl): { [key: string]: bo
  */
 export function numberRangeValidator(from: string, to: string): ValidatorFn {
   return (group: FormGroup): ValidationErrors => {
-    const control1 = group.controls[`${from}`];
-    const control2 = group.controls[`${to}`];
+    const control1 = group.controls[from];
+    const control2 = group.controls[to];
     if (control1 instanceof Date) {
       return control1.value.getTime() > control2.value.getTime() &&
         group.touched &&

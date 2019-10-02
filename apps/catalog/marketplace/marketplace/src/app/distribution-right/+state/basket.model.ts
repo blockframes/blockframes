@@ -62,43 +62,20 @@ export function createBasket(basket: Partial<CatalogBasket> = {}) {
   } as CatalogBasket;
 }
 
-export function createMovieDetails(details: Partial<MovieData> = {}) {
-  return [
-    {
-      id: details.id,
-      movieName: details.movieName,
-      rights: details.rights,
-      languages: details.languages,
-      dubbed: details.dubbed,
-      subtitle: details.subtitle,
-      territory: details.territory,
-      endRights: details.endRights,
-      ...details
-    } as MovieData
-  ];
-}
-
-export function createBaseBasket(basket: Partial<CatalogBasket>) {
-  return {
-    status: BasketStatus.pending,
-    price: 0,
-    rights: basket.rights,
-    ...basket
-  } as CatalogBasket;
-}
-
 export function createDistributionRight(right: Partial<DistributionRight> = {}) {
   return {
-    id: right.id,
-    movieId: right.movieId,
-    medias: right.medias,
-    languages: right.languages,
-    dubbings: right.dubbings,
-    subtitles: right.subtitles,
+    id: '',
+    movieId: '',
+    medias: [],
+    languages: [],
+    dubbings: [],
+    subtitles: [],
     duration: {
-      from: right.duration.from,
-      to: right.duration.to
+      from: Date,
+      to: Date
     },
-    territories: right.territories
-  } as DistributionRight;
+    territories: [],
+    exclusive: false,
+    ...right
+  };
 }
