@@ -18,12 +18,13 @@ export class InvitationItemComponent {
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
+  /** Creates a message based on the invitation.type. */
   public get message(): string {
-    if (this.invitation.type === InvitationType.fromUserToOrganization) {
-      return 'A user wants to join your organization.';
-    }
     if (this.invitation.type === InvitationType.stakeholder) {
-      return `You have been invited to work on a delivery.`; // TODO: implement one message by type of invitation
+      return `You have been invited to work on a delivery.`;
+    }
+    if (this.invitation.type === InvitationType.fromUserToOrganization) {
+      return `${this.invitation.user.name} ${this.invitation.user.surname} wishes to join your organization`;
     }
   }
 

@@ -1,6 +1,5 @@
 import { firestore } from 'firebase/app';
-import { User } from '@blockframes/auth';
-import { Organization } from '@blockframes/organization';
+import { PublicUser } from '@blockframes/auth';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
@@ -8,8 +7,8 @@ export interface Invitation {
   app: string;
   type: InvitationType;
   userId?: string;
-  user?: User;
-  organization?: Organization;
+  user?: PublicUser;
+  organizationName?: string;
   organizationId: string;
   docId?: string;
   state: 'accepted' | 'declined' | 'pending';
@@ -19,14 +18,17 @@ export interface Invitation {
 export const enum InvitationType {
   fromUserToOrganization = 'fromUserToOrganization',
   fromOrganizationToUser = 'fromOrganizationToUser',
-  stakeholder = "stakeholder"
+  stakeholder = 'stakeholder'
 }
 
-/** Required options to create an invitation to join organization. */
+/** Required options to create an invitation to join organization (both from user and organization). */
 export interface InvitationToJoinOrganizationOptions {
   id: string;
   organizationId: string;
+  organizationName: string;
   userId: string;
+  user: PublicUser;
+  type: InvitationType;
 }
 
 /** Required options to create an invitation to work on a document. */
@@ -37,21 +39,13 @@ export interface InvitationToWorkOnDocument {
   docId: string;
 }
 
-export function createInvitationToJoinOrganization(params: InvitationToJoinOrganizationOptions): Invitation {
+export function createInvitationToJoinOrganization(
+  params: InvitationToJoinOrganizationOptions
+): Invitation {
   return {
     app: 'main',
     state: 'pending',
     type: InvitationType.fromUserToOrganization,
-    date: firestore.Timestamp.now(),
-    ...params
-  };
-}
-
-export function createInvitationToOrganization(params: InvitationToJoinOrganizationOptions): Invitation {
-  return {
-    app: 'main',
-    state: 'pending',
-    type: InvitationType.fromOrganizationToUser,
     date: firestore.Timestamp.now(),
     ...params
   };

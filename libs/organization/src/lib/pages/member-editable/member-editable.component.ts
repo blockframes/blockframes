@@ -1,23 +1,25 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { OrganizationQuery, OrganizationMember } from '../../+state';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService, InvitationQuery, Invitation } from '@blockframes/notification';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { InvitationService, InvitationQuery, Invitation, InvitationStore, InvitationType } from '@blockframes/notification';
 import { PermissionsService, PermissionsQuery } from '../../permissions/+state';
 import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
+import { AuthQuery } from '@blockframes/auth';
+import { Description } from '@ethersproject/properties';
+import { Order } from '@datorama/akita';
 
 @Component({
   selector: 'member-editable',
   templateUrl: './member-editable.component.html',
   styleUrls: ['./member-editable.component.scss'],
+  providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberEditableComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
-  private destroyed$ = new Subject();
 
   /** Observable of the selected memberId */
   private selectedMemberId$ = new BehaviorSubject<string>(null);
@@ -40,13 +42,17 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   /** Observable of the selected memberFormGroup in the membersFormList */
   public memberFormGroup$: Observable<FormGroup>;
 
+  public sub: Subscription;
+
   constructor(
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
+    private invitationStore: InvitationStore,
     private permissionsService: PermissionsService,
-    private permissionQuery: PermissionsQuery
+    private permissionQuery: PermissionsQuery,
+    private organizationQuery: OrganizationQuery,
   ) {}
 
   ngOnInit() {
@@ -63,10 +69,21 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     );
 
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
-    // TODO : remove this when subscribe is in the guard: /layout guard => ISSUE#641
-    this.invitationService.organizationInvitations$.pipe(takeUntil(this.destroyed$));
-    this.invitationsToJoinOrganization$ = this.invitationQuery.invitationsToJoinOrganization$;
-    this.invitationsFromOrganization$ = this.invitationQuery.invitationsFromOrganization$;
+
+    const storeName = this.invitationStore.storeName;
+    const queryFn = ref => ref.where('organizationId', '==', this.organizationQuery.getValue().org.id).where('state', '==', 'pending');
+    this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
+
+    this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
+      filterBy: invitation => invitation.type === InvitationType.fromUserToOrganization,
+      sortBy: 'date',
+      sortByOrder: Order.DESC
+    });
+    this.invitationsFromOrganization$ = this.invitationQuery.selectAll({
+      filterBy: invitation => invitation.type === InvitationType.fromOrganizationToUser,
+      sortBy: 'date',
+      sortByOrder: Order.DESC
+    });
   }
 
   public openSidenav(memberId: string) {
@@ -92,7 +109,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
+    this.sub.unsubscribe();
   }
 }
