@@ -281,6 +281,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
           if(!!value.duration || value.medias.length || value.territories.length ) {
             console.log('You have to provide value for your research')
+            return false;
           }
 
           /////////////////////

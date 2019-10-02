@@ -1,5 +1,8 @@
 import { Validators } from '@angular/forms';
-import { FormEntity, numberRangeValidator } from '@blockframes/utils';
+import {
+  FormEntity,
+  numberRangeValidator,
+} from '@blockframes/utils';
 import { DistributionRight, createDistributionRight } from '../+state/basket.model';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {
