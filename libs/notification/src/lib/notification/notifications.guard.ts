@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { NotificationState, NotificationService } from './+state';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class NotificationsGuard extends CollectionGuard<NotificationState> {
-  constructor(protected service: NotificationService) {
+  constructor(service: NotificationService, private authQuery: AuthQuery) {
     super(service);
   }
 
+  /** This sync on notifications where userId is the same as the connected user id */
   sync() {
-    // This is using the syncQuery from CollectionService to load notifications where
-    // the connected user uid is equal to notification.userId
-    return this.service.syncQuery()
+    return this.service.syncCollection(ref => ref.where('userId', '==', this.authQuery.userId));
   }
 }

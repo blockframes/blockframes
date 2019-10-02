@@ -43,12 +43,7 @@ export class MovieListComponent implements OnInit {
 
   public async delete(movie: Movie) {
     await this.service.remove(movie.id);
-    if (this.query.getCount() === 0) {
-      this.router.navigate(['/layout/o/home/create']);
-    }
-    this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {
-      duration: 2000
-    });
+    this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {duration: 2000});
   }
 
   public linkToDeliveryList(movieId: string) {
