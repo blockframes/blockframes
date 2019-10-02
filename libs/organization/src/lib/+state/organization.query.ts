@@ -70,10 +70,6 @@ export class OrganizationQuery extends Query<OrganizationState> {
     return this.getValue().org.id;
   }
 
-  get form$() {
-    return this.select(state => state.form);
-  }
-
   get pendingActions$() {
     return this.select(state => state.org.actions.filter(action => !action.isApproved));
   }

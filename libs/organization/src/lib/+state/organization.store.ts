@@ -5,16 +5,11 @@ import { Organization, createOrganization } from './organization.model';
 export const enum DeploySteps { notDeployed, registered, resolved, ready };
 export interface OrganizationState {
   org: Organization;
-  form: any;
   deployStep: DeploySteps;
 }
 
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
-  form: {
-    name: '',
-    officeAddress: ''
-  },
   org: null,
   deployStep: DeploySteps.notDeployed,
 };
@@ -25,7 +20,7 @@ export class OrganizationStore extends Store<OrganizationState> {
     super(initialState);
   }
 
-  updateOrganization(organization: Partial<Organization>) {
+  public updateOrganization(organization: Partial<Organization>) {
     const org = createOrganization(organization);
     this.update(({ org }));
   }
