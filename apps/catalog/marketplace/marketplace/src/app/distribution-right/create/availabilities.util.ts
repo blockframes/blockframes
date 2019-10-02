@@ -38,10 +38,9 @@ export function salesAgentHasDateRange(
 export function exclusiveMovieSales(sales: MovieSale[]): MovieSale[] {
   return sales.filter(sale => sale.exclusive === true);
 }
-
 /**
- * @description This function returns the sales from the current movie 
- * that are intersection with  the specified date range from the buyer
+ * @description This function checks if there are intersections in the sales
+ * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
  * @param sales Array of the movie sales property.
  * Note don't put the exclusive sales array in here
@@ -85,7 +84,6 @@ export function getSalesInDateRange(formDates: DateRange, sales: MovieSale[]): M
       intersectedDateRangeSales.push(sale);
     }
   }
-
   return intersectedDateRangeSales;
 }
 
@@ -98,9 +96,8 @@ export function getSalesInDateRange(formDates: DateRange, sales: MovieSale[]): M
 export function getSalesWithMediasAndTerritoriesInCommon(
   formTerritories: string[],
   formMedias: string[],
-  sales: MovieSale[],
+  sales: MovieSale[]
 ): MovieSale[] {
-
   /**
    * We have to look on the already exisitng
    * sales in the movie and check if there is any overlapping medias
@@ -126,7 +123,11 @@ export function getSalesWithMediasAndTerritoriesInCommon(
       }
     }
 
-    if (mediasInCommon && territoriesInCommon && !salesWithMediasAndTerritoriesInCommon.includes(sale)) {
+    if (
+      mediasInCommon &&
+      territoriesInCommon &&
+      !salesWithMediasAndTerritoriesInCommon.includes(sale)
+    ) {
       salesWithMediasAndTerritoriesInCommon.push(sale);
     }
   }
