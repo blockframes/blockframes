@@ -110,7 +110,6 @@ $bf-light-background: (
   app-bar:    #FFF,
   status-bar: #FFF,
   background: #FAFAFA,
-  border:     #FFF,
   disabled-button: #B9C2CB,
   hover:      rgba(mat-color($mat-light-bf-blue, 400), 0.05),
   card:       #FFF,
@@ -124,6 +123,7 @@ $bf-light-background: (
   disabled-list-option: #B9C2CB,
 
   // Custom variables
+  border:     #E4E4E4,
   stroked-button: map-get($mat-light-bf-blue, 50),
 );
 

@@ -1,11 +1,11 @@
 .light-theme .mat-toolbar {
   background: mat-color($bf-light-background, app-bar);
   box-shadow: none;
-  border-bottom: 1px solid mat-color($bf-light-foreground, divider);
+  border-bottom: 1px solid mat-color($bf-light-background, border);
 }
 
 .dark-theme .mat-toolbar {
   background: mat-color($bf-dark-background, app-bar);
   box-shadow: none;
-  border-bottom: 1px solid mat-color($bf-dark-foreground, divider);
+  border-bottom: 1px solid mat-color($bf-dark-background, border);
 }
