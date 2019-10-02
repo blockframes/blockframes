@@ -1,35 +1,17 @@
-import { CatalogBasket } from '@blockframes/marketplace';
-import { OrganizationQuery } from '@blockframes/organization';
-import { BasketStore } from '../distribution-right/+state/basket.store';
-import { Router } from '@angular/router';
+import { BasketState } from '../distribution-right/+state/basket.store';
 import { Injectable } from '@angular/core';
-import { FireQuery, Query, StateListGuard } from '@blockframes/utils';
-import { switchMap } from 'rxjs/operators';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { BasketService } from '../distribution-right/+state/basket.service';
 
-export const distributionRightQuery = (orgId: string): Query<CatalogBasket> => ({
-  path: `orgs/${orgId}/baskets`,
-  queryFn: ref => ref.where(`status`, '==', 'pending')
-});
 @Injectable({ providedIn: 'root' })
-export class CatalogBasketGuard extends StateListGuard<CatalogBasket> {
-  public params = [];
-  public urlFallback = '/layout/o/catalog/home';
-
-  constructor(
-    private fireQuery: FireQuery,
-    store: BasketStore,
-    router: Router,
-    private orgQuery: OrganizationQuery
-  ) {
-    super(store, router);
+@CollectionGuardConfig({ awaitSync: true })
+export class CatalogBasketGuard extends CollectionGuard<BasketState> {
+  constructor(protected service: BasketService) {
+    super(service);
   }
 
-  get query() {
-    return this.orgQuery.select('org').pipe(
-      switchMap(organization => {
-        const query = distributionRightQuery(organization.id);
-        return this.fireQuery.fromQuery<CatalogBasket[]>(query);
-      })
-    );
+  sync() {
+    // TODO # : change in syncCollection(path, queryFn)
+    return this.service.syncQuery();
   }
 }
