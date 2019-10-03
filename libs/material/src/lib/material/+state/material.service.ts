@@ -48,26 +48,15 @@ export class MaterialService {
 
   /** Update materials of a delivery (materials loaded from movie). */
   public async update(materials: Material[], delivery: Delivery) {
-    // TODO: (ISSUE#773) We should load an update the data within a transaction.
-    //const movieMaterialsQuery = this.db.collection<Material[]>(`movies/${delivery.movieId}/materials`);
-    const movieMaterialsSnapshot = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
-      const myMaterials = movieMaterialsSnapshot.map(movieMaterial => {
-        const movieMaterialquery = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).ref;
-        return tx.get(movieMaterialquery)
-      })
-      const myMaterials2 = await Promise.all(myMaterials);
-      const movieMaterials = myMaterials2.map(m => m.data() as Material)
-
-      movieMaterials.forEach(material => {
-        const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
-        return tx.update(targetRef, material);
-      })
+      // NOTE: There is no way to query a collection within the transaction
+      // So we accept that we can have 2 materials with the same properties in the database
+      const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
 
       materials.forEach(material => {
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
-        const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
+        const isNewMaterial = !sameIdMaterial && !sameValuesMaterial;
 
         // If material from the list have no change and already exists, just return.
         const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
@@ -83,6 +72,7 @@ export class MaterialService {
 
         this.upsertMaterial(material, sameValuesMaterial, delivery, tx);
 
+        // TODO: new material with the same properties that an existing
         this.checkMultipleDelivery(material, delivery, sameIdMaterial, tx);
       });
     });
@@ -102,6 +92,7 @@ export class MaterialService {
       const target = sameValuesMaterial;
       if (!target.deliveryIds.includes(delivery.id)) {
         const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${target.id}`).ref;
+
         return tx.update(targetRef, { deliveryIds: [...target.deliveryIds, delivery.id] });
       }
     // If values are not the same, this material is considered as new and we have to create
@@ -118,6 +109,7 @@ export class MaterialService {
   /** Checks if the material belongs to multiple delivery, if so: update the deliveryIds, otherwise just delete it. */
   public checkMultipleDelivery(material: Material, delivery: Delivery, sameIdMaterial: Material, tx: firebase.firestore.Transaction) {
     const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
+
     if (sameIdMaterial.deliveryIds.length === 1) {
       return tx.delete(materialRef);
     } else {
