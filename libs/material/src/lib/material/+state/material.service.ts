@@ -75,11 +75,13 @@ export class MaterialService {
     });
   }
 
+  /** Create a material in a movie. */
   public setNewMaterial(material: Material, delivery: Delivery, tx: firebase.firestore.Transaction) {
     const newMaterialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
     return tx.set(newMaterialRef, { ...material, deliveryIds: [delivery.id] });
   }
 
+  /** Upsert a material in a movie. */
   public upsertMaterial(material: Material, sameValuesMaterial: Material, delivery: Delivery, tx: firebase.firestore.Transaction) {
     // If there already is a material with same properties (but different id), we merge this
     // material with existing one, and push the new deliveryId into deliveryIds.
@@ -100,9 +102,8 @@ export class MaterialService {
     }
   }
 
+  /** Checks if the material belongs to multiple delivery, if so: update the deliveryIds, otherwise just delete it. */
   public checkMultipleDelivery(material: Material, delivery: Delivery, sameIdMaterial: Material, tx: firebase.firestore.Transaction) {
-    // Checks if this material belongs to multiple delivery.
-    // If so, update the deliveryIds, otherwise just delete it.
     const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
     if (sameIdMaterial.deliveryIds.length === 1) {
       return tx.delete(materialRef);
