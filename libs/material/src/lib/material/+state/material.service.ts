@@ -52,7 +52,6 @@ export class MaterialService {
     const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
-        const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
         const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
@@ -65,46 +64,51 @@ export class MaterialService {
 
         // We check if material is brand new. If so, we just add it to database and return.
         if (isNewMaterial) {
-          const newMaterialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
-
-          tx.set(newMaterialRef, { ...material, deliveryIds: [delivery.id] });
+          this.setNewMaterial(material, delivery, tx);
           return;
         }
 
-        // If there already is a material with same properties (but different id), we merge this
-        // material with existing one, and push the new deliveryId into deliveryIds.
-        if (!!sameValuesMaterial) {
-          const target = sameValuesMaterial;
+        this.upsertMaterial(material, sameValuesMaterial, delivery, tx);
 
-          if (!target.deliveryIds.includes(delivery.id)) {
-            const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${target.id}`).ref;
-
-            tx.update(targetRef, { deliveryIds: [...target.deliveryIds, delivery.id] });
-          }
-        // If values are not the same, this material is considered as new and we have to create
-        // and set a new material with updated fields.
-        } else {
-          const target = createMaterial({
-            ...material,
-            id: this.db.createId(),
-            deliveryIds: [delivery.id]
-          });
-          const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${target.id}`).ref;
-
-          tx.set(targetRef, target);
-        }
-
-        const source = sameIdMaterial;
-
-        // Checks if this material belongs to multiple delivery.
-        // If so, update the deliveryIds, otherwise just delete it.
-        if (source.deliveryIds.length === 1) {
-          tx.delete(materialRef);
-        } else {
-          tx.update(materialRef, { deliveryIds: source.deliveryIds.filter(id => id !== delivery.id) });
-        }
+        this.checkMultipleDelivery(material, delivery, sameIdMaterial, tx);
       });
     });
+  }
+
+  public setNewMaterial(material: Material, delivery: Delivery, tx: firebase.firestore.Transaction) {
+    const newMaterialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
+    return tx.set(newMaterialRef, { ...material, deliveryIds: [delivery.id] });
+  }
+
+  public upsertMaterial(material: Material, sameValuesMaterial: Material, delivery: Delivery, tx: firebase.firestore.Transaction) {
+    // If there already is a material with same properties (but different id), we merge this
+    // material with existing one, and push the new deliveryId into deliveryIds.
+    if (!!sameValuesMaterial) {
+      const target = sameValuesMaterial;
+      if (!target.deliveryIds.includes(delivery.id)) {
+        const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${target.id}`).ref;
+        return tx.update(targetRef, { deliveryIds: [...target.deliveryIds, delivery.id] });
+      }
+    // If values are not the same, this material is considered as new and we have to create
+    // and set a new material with updated fields.
+    } else {
+      const target = createMaterial({
+        ...material,
+        id: this.db.createId()
+      });
+      return this.setNewMaterial(target, delivery, tx);
+    }
+  }
+
+  public checkMultipleDelivery(material: Material, delivery: Delivery, sameIdMaterial: Material, tx: firebase.firestore.Transaction) {
+    // Checks if this material belongs to multiple delivery.
+    // If so, update the deliveryIds, otherwise just delete it.
+    const materialRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
+    if (sameIdMaterial.deliveryIds.length === 1) {
+      return tx.delete(materialRef);
+    } else {
+      return tx.update(materialRef, { deliveryIds: sameIdMaterial.deliveryIds.filter(id => id !== delivery.id) });
+    }
   }
 
   /** Update the property status of selected materials. */
