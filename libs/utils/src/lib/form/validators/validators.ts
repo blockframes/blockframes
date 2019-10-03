@@ -15,8 +15,6 @@ import { orgNameToEnsDomain } from '../../helpers';
 import { network } from '@env';
 import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 
-export const emailValidators = [Validators.required, Validators.email];
-
 export const stringValidators = [];
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];

@@ -1,20 +1,11 @@
 import { FormControl } from '@angular/forms';
 import {
-  emailValidators,
-  stringValidators,
   yearValidators,
   ethereumPublicAddressValidators,
   ethereumPrivateAddressValidators,
   urlValidators,
   validMnemonic
 } from './validators/validators';
-
-/* Checks if input is a valid email */
-export class EmailControl extends FormControl{
-  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : emailValidators);
-  }
-}
 
 /* Checks if input is a valid Ethereum private key */
 export class EthereumPrivateKeyControl extends FormControl{
