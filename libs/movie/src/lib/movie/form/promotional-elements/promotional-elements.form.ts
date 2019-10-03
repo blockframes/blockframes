@@ -1,12 +1,12 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements } from '../../+state';
-import { FormEntity, FormList, UrlControl } from '@blockframes/utils';
+import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 
 function createPromotionalElementControl(promotionalElement : Partial<PromotionalElement> = {}) {
   return {
     label: new FormControl(promotionalElement.label),
-    url: new UrlControl(promotionalElement.url),
+    url: new FormControl(promotionalElement.url, urlValidators),
   }
 }
 
@@ -52,7 +52,7 @@ export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromot
   public addPromotionalElement(): void {
     const promotionalElement = new FormEntity<PromotionalElement>({
       label: new FormControl(''),
-      url: new UrlControl(''),
+      url: new FormControl('', urlValidators),
     });
     this.promotionalElements.push(promotionalElement);
   }

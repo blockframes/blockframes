@@ -27,10 +27,3 @@ export class EthereumMnemonicControl extends FormControl{
     super({ value, disabled }, validators !== undefined ? validators : validMnemonic);
   }
 }
-
-/* Checks if input is a valid url */
-export class UrlControl extends FormControl{
-  constructor (value : string = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : urlValidators);
-  }
-}
