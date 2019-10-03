@@ -9,7 +9,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTableModule } from "@angular/material/table";
-import { MatPaginatorModule, MatDialogModule, MatCheckboxModule } from "@angular/material";
+import { MatPaginatorModule, MatDialogModule, MatRadioModule } from "@angular/material";
 
 // Libraries
 import { UiFormModule } from "@blockframes/ui";
@@ -35,7 +35,7 @@ import { MovieImdbSearchComponent } from "./movie-imdb-search.component";
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
-    MatCheckboxModule,
+    MatRadioModule,
 
     // Librairies
     UiFormModule,

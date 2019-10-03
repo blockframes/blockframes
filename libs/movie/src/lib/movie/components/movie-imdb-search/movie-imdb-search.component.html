@@ -2,15 +2,20 @@
   <form [formGroup]="searchForm" *ngIf="!formSubmitted else displayResults">
     <article fxLayout="column" fxLayoutAlign="space-between center">
       <h3>Search movie on IMDB</h3>
+      <mat-label>Search type : </mat-label>
+      <mat-radio-group aria-label="Search type" formControlName="searchtype" (change)="searchTypeChange($event)" required>
+        <mat-radio-button value="normal">Normal</mat-radio-button><br />
+        <mat-radio-button value="exact">Exact</mat-radio-button><br />
+        <mat-radio-button value="id">By Id</mat-radio-button><br />
+      </mat-radio-group>
       <mat-form-field appearance="outline">
-        <mat-label>Movie title</mat-label>
-        <input matInput #movieName type="string" placeholder="Movie title" formControlName="name" required />
+        <mat-label>Movie title or Id</mat-label>
+        <input matInput #movieName type="string" placeholder="Movie title or id" formControlName="searchvalue" required />
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="searchType !== 'id'">
         <mat-label>Production year</mat-label>
         <input matInput #movieYear type="string" placeholder="Production year" formControlName="year" />
       </mat-form-field>
-      <mat-checkbox formControlName="exact">Exact search</mat-checkbox>
     </article>
 
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
@@ -62,14 +67,14 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator 
+    <mat-paginator
       pageSize="10"
       [pageSizeOptions]="[10]"
       showFirstLastButtons
       [length]="rows.data.length"
       (page)="changePage($event)"
     >
-  </mat-paginator>
+    </mat-paginator>
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
       <button mat-flat-button color="warn" (click)="searchAgain()">Previous</button>
       <button mat-button color="warn" (click)="onNoClick()">Cancel</button>
