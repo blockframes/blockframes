@@ -1,5 +1,4 @@
 import { BasketQuery } from './basket.query';
-import { FireQuery } from '@blockframes/utils';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
 import { OrganizationQuery } from '@blockframes/organization';
@@ -8,7 +7,7 @@ import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
-  // queryFn: ref => ref.where('status', '==', 'pending')
+  queryFn: ref => ref.where('status', '==', 'pending')
 })
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +16,6 @@ export class BasketService extends SubcollectionService<BasketState>{
   syncQuery = syncQuery.bind(this, basketsQuery(this.organizationQuery.getValue().org.id))
 
   constructor(
-    private fireQuery: FireQuery,
     private organizationQuery: OrganizationQuery,
     private basketQuery: BasketQuery,
     store: BasketStore
@@ -26,13 +24,13 @@ export class BasketService extends SubcollectionService<BasketState>{
   }
 
   public addBasket(basket: CatalogBasket) {
-    const id = this.fireQuery.createId();
+    const id = this.db.createId();
     const newBasket: CatalogBasket = createBasket({
       id,
       price: { amount: 0, currency: 'euro' },
       rights: basket.rights
     });
-    this.fireQuery.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${id}`).set(newBasket);
+    this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${id}`).set(newBasket);
   }
 
   public removeDistributionRight(rightId: string, basketId: string) {
@@ -46,12 +44,12 @@ export class BasketService extends SubcollectionService<BasketState>{
     );
     // if there is only one distribution right in the basket, delete the basket
     if (findDistributionRight.length <= 1) {
-      this.fireQuery.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`).delete();
+      this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`).delete();
     } else {
       this.basketQuery.getAll().forEach(baskets =>
         baskets.rights.forEach(right => {
           if (right.id !== rightId) {
-            this.fireQuery
+            this.db
               .doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`)
               .update(baskets);
           }
@@ -61,12 +59,12 @@ export class BasketService extends SubcollectionService<BasketState>{
   }
 
   public rewriteBasket(basket: CatalogBasket) {
-    this.fireQuery
+    this.db
       .doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basket.id}`)
       .update(basket);
   }
 
   get createFireStoreId(): string {
-    return this.fireQuery.createId();
+    return this.db.createId();
   }
 }

@@ -55,11 +55,13 @@ export class MarketplaceSelectionComponent implements OnInit {
   }
 
   private getMovieTitle(id: string): string {
-    const movieLookup = this.movieQuery.getEntity(id).main.title.original;
-    if (!movieLookup) {
-      throw new Error(`No movie found for this ${id} id`);
+    const movie = this.movieQuery.getEntity(id);
+    if (movie) {
+      return movie.main.title.original;
     }
-    return movieLookup;
+    else {
+      throw new Error(`No movie found for this id: ${id}`);
+    }
   }
 
   public deleteDistributionRight(rightId: string) {
