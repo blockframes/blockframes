@@ -49,8 +49,21 @@ export class MaterialService {
   /** Update materials of a delivery (materials loaded from movie). */
   public async update(materials: Material[], delivery: Delivery) {
     // TODO: (ISSUE#773) We should load an update the data within a transaction.
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
+    //const movieMaterialsQuery = this.db.collection<Material[]>(`movies/${delivery.movieId}/materials`);
+    const movieMaterialsSnapshot = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
     return this.db.firestore.runTransaction(async tx => {
+      const myMaterials = movieMaterialsSnapshot.map(movieMaterial => {
+        const movieMaterialquery = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).ref;
+        return tx.get(movieMaterialquery)
+      })
+      const myMaterials2 = await Promise.all(myMaterials);
+      const movieMaterials = myMaterials2.map(m => m.data() as Material)
+
+      movieMaterials.forEach(material => {
+        const targetRef = this.db.doc<Material>(`movies/${delivery.movieId}/materials/${material.id}`).ref;
+        return tx.update(targetRef, material);
+      })
+
       materials.forEach(material => {
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
         const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
