@@ -21,11 +21,13 @@ export interface UserForm {
   email: string;
   pwd: string;
 }
-/** User interface with public informations, used in invitations to/from organization. */
+
+/** A user interface with public informations */
 export interface PublicUser {
+  uid: string;
   email: string;
-  name: string;
-  surname: string;
+  name?: string;
+  surname?: string;
 }
 
 export interface AuthState {

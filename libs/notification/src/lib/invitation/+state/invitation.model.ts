@@ -1,32 +1,35 @@
 import { firestore } from 'firebase/app';
 import { PublicUser } from '@blockframes/auth';
+import { PublicOrganization } from '@blockframes/organization';
 type Timestamp = firestore.Timestamp;
 
 export interface Invitation {
   id: string;
   app: string;
   type: InvitationType;
-  userId?: string;
   user?: PublicUser;
-  organizationName?: string;
-  organizationId: string;
+  organization?: PublicOrganization;
   docId?: string;
-  state: 'accepted' | 'declined' | 'pending';
+  status: InvitationStatus;
   date: Timestamp;
+}
+
+export const enum InvitationStatus {
+  accepted = 'accepted',
+  declined = 'declined',
+  pending = 'pending'
 }
 
 export const enum InvitationType {
   fromUserToOrganization = 'fromUserToOrganization',
   fromOrganizationToUser = 'fromOrganizationToUser',
-  stakeholder = 'stakeholder'
+  toWorkOnDocument = 'toWorkOnDocument'
 }
 
 /** Required options to create an invitation to join organization (both from user and organization). */
 export interface InvitationToJoinOrganizationOptions {
   id: string;
-  organizationId: string;
-  organizationName: string;
-  userId: string;
+  organization: PublicOrganization;
   user: PublicUser;
   type: InvitationType;
 }
@@ -34,17 +37,14 @@ export interface InvitationToJoinOrganizationOptions {
 /** Required options to create an invitation to work on a document. */
 export interface InvitationToWorkOnDocument {
   id: string;
-  organizationId: string;
-  userId: string;
+  organization: PublicOrganization;
   docId: string;
 }
 
-export function createInvitationToJoinOrganization(
-  params: InvitationToJoinOrganizationOptions
-): Invitation {
+export function createInvitationToJoinOrganization(params: InvitationToJoinOrganizationOptions): Invitation {
   return {
     app: 'main',
-    state: 'pending',
+    status: InvitationStatus.pending,
     type: InvitationType.fromUserToOrganization,
     date: firestore.Timestamp.now(),
     ...params
@@ -54,8 +54,8 @@ export function createInvitationToJoinOrganization(
 export function createInvitationToDocument(params: InvitationToWorkOnDocument): Invitation {
   return {
     app: 'media_delivering',
-    state: 'pending',
-    type: InvitationType.stakeholder,
+    status: InvitationStatus.pending,
+    type: InvitationType.toWorkOnDocument,
     date: firestore.Timestamp.now(),
     ...params
   };

@@ -2,7 +2,6 @@ import { db, serverTimestamp } from './internals/firebase';
 import {
   App,
   BaseNotification,
-  Invitation,
   Notification,
   SnapObject
 } from './data/types';
@@ -14,18 +13,6 @@ export function triggerNotifications(notifications: Notification[]): Promise<any
   notifications.forEach((notification: Notification) => {
     const notificationRef = db.collection('notifications').doc(notification.id);
     batch.set(notificationRef, notification);
-  });
-
-  return batch.commit();
-}
-
-/** Takes one or more invitations and add them on the invitations collection */
-export function triggerInvitations(invitations: Invitation[]): Promise<any> {
-  const batch = db.batch();
-
-  invitations.forEach((invitation: Invitation) => {
-    const invitationRef = db.collection('invitations').doc(invitation.id);
-    batch.set(invitationRef, invitation);
   });
 
   return batch.commit();

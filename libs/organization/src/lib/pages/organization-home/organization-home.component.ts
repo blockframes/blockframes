@@ -13,7 +13,7 @@ import { AuthQuery } from '@blockframes/auth';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
-  title: `Pending request to ${invitation.organizationName}`,
+  title: `Pending request to ${invitation.organization.name}`,
   routerLink: '#',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
@@ -21,7 +21,7 @@ const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
   matIcon: 'alternate_email',
-  title: `Join ${invitation.organizationName}`,
+  title: `Join ${invitation.organization.name}`,
   action,
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
@@ -62,7 +62,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('userId', '==', this.authQuery.userId).where('state', '==', 'pending');
+    const queryFn = ref => ref.where('user.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
     this.items$ = this.invitationQuery.selectAll().pipe(
       map(invitations => {

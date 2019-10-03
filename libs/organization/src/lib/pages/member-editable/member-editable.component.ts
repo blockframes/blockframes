@@ -71,7 +71,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('organizationId', '==', this.organizationQuery.getValue().org.id).where('state', '==', 'pending');
+    const queryFn = ref => ref.where('organization.id', '==', this.organizationQuery.getValue().org.id).where('state', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({

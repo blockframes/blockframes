@@ -20,7 +20,7 @@ export class InvitationItemComponent {
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
-    if (this.invitation.type === InvitationType.stakeholder) {
+    if (this.invitation.type === InvitationType.toWorkOnDocument) {
       return `You have been invited to work on a delivery.`;
     }
     if (this.invitation.type === InvitationType.fromUserToOrganization) {

@@ -4,7 +4,7 @@ import {
   Stakeholder,
   createDeliveryStakeholder
 } from './stakeholder.model';
-import { Organization } from '@blockframes/organization';
+import { Organization, PublicOrganization } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '@blockframes/material';
 import { Movie } from '../../movie/+state/movie.model';
@@ -22,11 +22,12 @@ export class StakeholderService {
     isAccepted: boolean = false,
     tx?: firebase.firestore.Transaction
   ): Promise<string> {
+    const organization = await this.db.snapshot<PublicOrganization>(`orgs/${organizationId}`);
 
     const stakeholder = (doc._type === 'movies')
-      ? createMovieStakeholder({ id: organizationId, isAccepted })
+      ? createMovieStakeholder({ id: organization.id, isAccepted })
       : createDeliveryStakeholder({
-        id: organizationId,
+        id: organization.id,
         isAccepted
       });
 
@@ -36,8 +37,8 @@ export class StakeholderService {
       ? tx.set(stakeholderDoc.ref, stakeholder)
       : stakeholderDoc.set(stakeholder);
 
-    if (organizationId !== this.authQuery.orgId) {
-      this.invitationService.sendDocInvitationToOrg(organizationId, doc.id);
+    if (organization.id !== this.authQuery.orgId) {
+      this.invitationService.sendDocumentInvitationToOrg(organization, doc.id);
     }
 
     return stakeholder.id;

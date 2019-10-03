@@ -129,14 +129,14 @@ export type AppIcon = App;
 // Invitations
 // -----------
 
-export const enum InvitationState {
+export const enum InvitationStatus {
   accepted = 'accepted',
   declined = 'declined',
   pending = 'pending'
 }
 
 export const enum InvitationType {
-  stakeholder = 'stakeholder',
+  toWorkOnDocument = 'toWorkOnDocument',
   fromUserToOrganization = 'fromUserToOrganization',
   fromOrganizationToUser = 'fromOrganizationToUser'
 }
@@ -148,39 +148,53 @@ export const enum InvitationType {
 interface RawInvitation {
   id: string;
   app: App;
-  state: InvitationState;
+  status: InvitationStatus;
   type: InvitationType;
   date: FirebaseFirestore.FieldValue;
   processedId?: string;
 }
 
-/** Invite a stakeholder to work on a document. */
-export interface InvitationStakeholder extends RawInvitation {
-  type: InvitationType.stakeholder;
+/** Invite an organization to work on a document. */
+export interface InvitationToWorkOnDocument extends RawInvitation {
+  type: InvitationType.toWorkOnDocument;
   docId: string;
   docType: DocType;
-  organizationId: string;
+  organization: PublicOrganization;
 }
 
 /** Invite a user to an organization. */
 export interface InvitationFromOrganizationToUser extends RawInvitation {
   type: InvitationType.fromOrganizationToUser;
-  userId: string;
-  organizationId: string;
+  user: PublicUser;
+  organization: PublicOrganization;
 }
 
 /** A user requests to join an organization. */
 export interface InvitationFromUserToOrganization extends RawInvitation {
   type: InvitationType.fromUserToOrganization;
-  userId: string;
-  organizationId: string;
+  user: PublicUser;
+  organization: PublicOrganization;
+}
+
+/** A user interface with public informations */
+export interface PublicUser {
+  uid: string;
+  email: string;
+  name: string;
+  surname: string;
+}
+
+/** An organization interface with public informations */
+export interface PublicOrganization {
+  id: string;
+  name: string;
 }
 
 /**
  * This is the generic type for invitation,
  * use the type field to figure out which kind of invitation you are working with.
  */
-export type Invitation = InvitationStakeholder | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
+export type Invitation = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
 export type InvitationOrUndefined = Invitation | undefined;
 
 // Notifications
@@ -188,15 +202,10 @@ export type InvitationOrUndefined = Invitation | undefined;
 
 export interface BaseNotification {
   message: string;
-  userInformations?: {
-    userId: string;
-    name?: string;
-    surname?: string;
-    email: string;
-  };
+  user?: PublicUser;
   userId: string;
   docInformations: DocInformations;
-  organizationId?: string;
+  organization?: PublicOrganization;
   path?: string;
 }
 
@@ -213,7 +222,6 @@ export interface SnapObject {
   organization: OrganizationDocument;
   eventType: string;
   delivery?: Delivery | null;
-  newStakeholderId: string;
   count?: number;
 }
 
