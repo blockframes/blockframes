@@ -58,7 +58,6 @@ export interface Organization extends OrganizationDocument {
 
 export interface OrganizationForm {
   name: string;
-  adress: string;
 }
 
 export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {

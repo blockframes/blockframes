@@ -101,7 +101,6 @@ async function stakeholdersCollectionEvent(
         docInformations,
         organization,
         eventType: context.eventType,
-        newStakeholderId: newStakeholder.id,
         count: stakeholderCount,
         delivery
       };
@@ -138,7 +137,7 @@ function createNotifications(organizations: OrganizationDocument[], snap: SnapOb
         message: customMessage(snap),
         userId,
         path,
-        organizationId: snap.newStakeholderId,
+        organization: snap.organization,
         docInformations: snap.docInformations
       });
     });

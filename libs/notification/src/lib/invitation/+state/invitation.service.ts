@@ -6,10 +6,11 @@ import {
   createInvitationToJoinOrganization,
   Invitation,
   createInvitationToDocument,
-  InvitationType
+  InvitationType,
+  InvitationStatus
 } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Organization } from '@blockframes/organization';
+import { Organization, PublicOrganization, organizationRoutes } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -29,53 +30,47 @@ export class InvitationService extends CollectionService<InvitationState> {
     const organization = await this.fireQuery.snapshot<Organization>(`orgs/${organizationId}`);
     const { uid, name, surname, email } = this.authQuery.getValue().user;
     const invitation = createInvitationToJoinOrganization({
-      id: this.fireQuery.createId(),
-      organizationId: organizationId,
-      organizationName: organization.name,
-      userId: uid,
-      user: { name, surname, email },
+      id: this.db.createId(),
+      organization: {id: organization.id, name: organization.name},
+      user: { uid, name, surname, email },
       type: InvitationType.fromUserToOrganization
     });
-    return this.fireQuery.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 
   /** Create an invitation when an organization asks a user to join it */
   public async sendInvitationToUser(userEmail: string, organizationId: string): Promise<void> {
     // Get a user or create a ghost user when needed
-    const { uid, name, surname, email } = await this.authService.getOrCreateUserByMail(userEmail);
+    const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail);
     const organization = await this.fireQuery.snapshot<Organization>(`orgs/${organizationId}`);
     const invitation = createInvitationToJoinOrganization({
-      id: this.fireQuery.createId(),
-      organizationId: organizationId,
-      organizationName: organization.name,
-      userId: uid,
-      user: { name, surname, email },
+      id: this.db.createId(),
+      organization: {id: organization.id, name: organization.name},
+      user: { uid, email },
       type: InvitationType.fromOrganizationToUser
     });
-    return this.fireQuery.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 
   /** Create an invitation when an organization is invited to work on a document */
-  public sendDocInvitationToOrg(organizationId: string, docId: string): Promise<void> {
-    const userId = this.authQuery.userId;
+  public sendDocumentInvitationToOrg({id, name}: PublicOrganization, docId: string): Promise<void> {
     const invitation = createInvitationToDocument({
       id: this.fireQuery.createId(),
-      organizationId,
-      docId,
-      userId
+      organization: {id, name},
+      docId
     });
-    return this.fireQuery.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
+    return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 
   public acceptInvitation(invitationId: string) {
-    return this.fireQuery
+    return this.db
       .doc<Invitation>(`invitations/${invitationId}`)
-      .update({ state: 'accepted' });
+      .update({ status: InvitationStatus.accepted });
   }
 
   public declineInvitation(invitationId: string) {
-    return this.fireQuery
+    return this.db
       .doc<Invitation>(`invitations/${invitationId}`)
-      .update({ state: 'declined' });
+      .update({ status: InvitationStatus.declined });
   }
 }

@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 import { Order } from '@datorama/akita';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'invitation-list',
@@ -35,37 +36,29 @@ export class InvitationListComponent implements OnInit, OnDestroy {
      * Checks if the user is superAdmin before populating the invitations arrays. If so, we populate
      * both docInvitations and userInvitations. If not, we populate only docInvitations.
      */
-    this.permissionQuery.isSuperAdmin$.pipe().subscribe(isSuperAdmin => {
-      if (isSuperAdmin) {
-        const storeName = this.store.storeName;
-        const queryFn = ref =>
-          ref.where('organizationId', '==', this.authQuery.orgId).where('state', '==', 'pending');
-        this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-        this.docInvitations$ = this.query.selectAll({
-          filterBy: invitation => invitation.type === InvitationType.stakeholder,
-          sortBy: 'date',
-          sortByOrder: Order.DESC
-        });
-        this.userInvitations$ = this.query.selectAll({
-          filterBy: invitation => invitation.type === InvitationType.fromUserToOrganization,
-          sortBy: 'date',
-          sortByOrder: Order.DESC
-        });
-      } else {
-        const storeName = this.store.storeName;
-        const queryFn = ref =>
-          ref
-            .where('organizationId', '==', this.authQuery.orgId)
-            .where('state', '==', 'pending')
-            .where('type', '==', InvitationType.stakeholder);
-        this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-        this.docInvitations$ = this.query.selectAll({
-          filterBy: invitation => invitation.type === InvitationType.stakeholder,
-          sortBy: 'date',
-          sortByOrder: Order.DESC
-        });
-      }
+    const storeName = this.store.storeName;
+    const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+    this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+    this.docInvitations$ = this.query.selectAll({
+      filterBy: invitation => invitation.type === InvitationType.toWorkOnDocument,
+      sortBy: 'date',
+      sortByOrder: Order.DESC
     });
+
+    this.userInvitations$ = this.permissionQuery.isSuperAdmin$.pipe(
+      switchMap((isSuperAdmin) => {
+        const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
+        if (!isSuperAdmin) {
+          const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
+          this.store.remove(ids);
+        }
+        return this.query.selectAll({
+          filterBy,
+          sortBy: 'date',
+          sortByOrder: Order.DESC
+        });
+      })
+    );
   }
 
   ngOnDestroy() {
