@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild } from '@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { omdbApiKey } from "@env";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, YearControl } from '@blockframes/utils';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, yearValidators } from '@blockframes/utils';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 
 @Component({
@@ -40,7 +40,7 @@ export class MovieImdbSearchComponent implements OnInit {
   ngOnInit() {
     this.searchForm = this.builder.group({
       name: [this.data.name, Validators.required],
-      year: new YearControl(this.data.year),
+      year: new FormControl(this.data.year, yearValidators),
       exact: [true],
     });
 
@@ -56,7 +56,7 @@ export class MovieImdbSearchComponent implements OnInit {
     this.formSubmitted = true;
     const { name, year, exact } = this.searchForm.value;
     const method = exact ? 'get' : 'search';
-    
+
     try {
       const search: ImdbMovie | SearchResults = await this.imdbService[method]({ name, year });
       if (search instanceof ImdbMovie) {

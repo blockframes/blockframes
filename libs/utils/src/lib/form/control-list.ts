@@ -34,10 +34,3 @@ export class UrlControl extends FormControl{
     super({ value, disabled }, validators !== undefined ? validators : urlValidators);
   }
 }
-
-/* Checks if input is a valid year */
-export class YearControl extends FormControl{
-  constructor (value : string | number = '', disabled : boolean = false, validators? : any[]) {
-    super({ value, disabled }, validators !== undefined ? validators : yearValidators);
-  }
-}
