@@ -5,7 +5,6 @@ export * from './lib/abstract-state-guard';
 export * from './lib/algolia';
 export * from './lib/helpers';
 export * from './lib/form/controls/password.control';
-export * from './lib/form/control-list';
 export * from './lib/form/validators/validators';
 export * from './lib/form/matchers';
 export * from './lib/pipes/translate-slug.module';
