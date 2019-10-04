@@ -31,6 +31,8 @@ export class WalletSendTxTunnelComponent implements OnInit {
   isDecrypting$: Observable<boolean>;
   isDeploying$ = new BehaviorSubject(false);
   isPending$ = new BehaviorSubject(false);
+  feedbackImage = '/assets/images/ppl_celebrating.png';
+  feedbackTitle = 'Congratulation !';
 
   constructor(
     private router: Router,
@@ -55,17 +57,31 @@ export class WalletSendTxTunnelComponent implements OnInit {
     this.step = this.steps.confirm;
     try {
       this.activeKey = await this.keyManagerService.unlockKey(this.key, password);
+    } catch {
+      this.walletService.handleError(
+        'The password you entered is incorrect. Be sure to enter the password of *this* key. '
+        + 'If you forget the password to this key, please delete it and use another one. '
+        + 'If you do not have another key, contact an admin of your organization to recover your wallet. '
+      );
+      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackTitle = 'Wrong Password :/';
+      this.step = this.steps.end;
+    }
 
+    try {
       if (!this.query.getValue().hasERC1077) { // we have to wait for password decryption to prevent deploying if the user entered a wrong password
         this.isDeploying$.next(true);
         const orgId = this.authQuery.orgId;
         await this.walletService.deployERC1077(this.key.ensDomain, this.key.address, orgId);
         this.isDeploying$.next(false);
       }
-    } catch (err) { // TODO better error handling issue#671
-      console.warn('Oooops', err);
-      this.isDeploying$.next(false);
+    } catch(err) {
+      console.warn('Ooops', err);
+      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackTitle = 'The deploy of your wallet has failed :/';
       this.step = this.steps.end;
+    } finally {
+      this.isDeploying$.next(false);
     }
   }
 
@@ -78,9 +94,13 @@ export class WalletSendTxTunnelComponent implements OnInit {
       this.isPending$.next(true);
       const signedMetaTx = await this.walletService.prepareMetaTx(this.activeKey);
       await this.walletService.sendSignedMetaTx(this.key.ensDomain, signedMetaTx); // await to ensure tx has been mined (tx failure will throw)
-      this.isPending$.next(false);
+      this.feedbackImage = '/assets/images/ppl_celebrating.png';
+      this.feedbackTitle = 'Congratulation !';
     } catch(err) {
-      console.warn('Ooops', err); // TODO better error handling issue#671
+      console.warn('Ooops', err);
+      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackTitle = 'An error as occurred :/';
+    } finally {
       this.isPending$.next(false);
     }
   }
