@@ -201,18 +201,24 @@ export class WalletService {
 
   public async sendSignedMetaTx(ensDomain: string, signedMetaTx: SignedMetaTx, ...args: any[]) {
     const address = await this.retrieveAddress(getNameFromENS(ensDomain));
-    const txReceipt = await this.relayer.send(address, signedMetaTx);
-    if (txReceipt.status === 0) {
-      throw new Error(`The transaction ${txReceipt.transactionHash} has failed !`);
-    }
+    try {
+      const txReceipt = await this.relayer.send(address, signedMetaTx);
 
-    const actionTx = this.query.getValue().tx;
-    const hasCallback = !!actionTx.callback;
-    if(hasCallback) {
-      actionTx.callback(...args); // execute tx callback (ex: delete local key)
+      if (txReceipt.status === 0) {
+        throw new Error(`The transaction (${txReceipt.transactionHash}) has been sent but has failed to complete successfully !`);
+      }
+
+      const actionTx = this.query.getValue().tx;
+      const hasCallback = !!actionTx.callback;
+      if(hasCallback) {
+        actionTx.callback(...args); // execute tx callback (ex: delete local key)
+      }
+      this.store.update({tx: undefined});
+    } catch (error) {
+      // store error and throw back to notice the component of the error
+      this.handleError('Our relayer as encountered a problem, your transaction hasn\'t been sent. Please try again later. If the problem persist please contact an admin.');
+      throw new Error(error);
     }
-    this.store.update({tx: undefined});
-    return txReceipt;
   }
 
   public async waitForTx(txHash: string) {
@@ -230,5 +236,14 @@ export class WalletService {
       keys.forEach(key => this.keyManager.deleteKey(key));
       throw new Error('self-destructed');
     }
+  }
+
+  /** Update the feedback message with the error */
+  public handleError(error: string) {
+    const txFeedback = this.query.getValue().feedback;
+    this.store.update({feedback: {
+      ...txFeedback,
+      success: error
+    }})
   }
 }
