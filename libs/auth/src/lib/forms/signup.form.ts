@@ -34,7 +34,7 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
 
 type SignupControl = ReturnType<typeof createSignupControls>;
 
-export class SignupForm extends FormEntity<SignUp, SignupControl> {
+export class SignupForm extends FormEntity<SignupControl> {
   constructor(data?: SignUp) {
     super(
       createSignupControls(data),

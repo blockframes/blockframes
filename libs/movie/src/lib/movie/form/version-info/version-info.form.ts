@@ -11,7 +11,7 @@ function createMovieVersionInfoControls(versionInfo: Partial<MovieVersionInfo> =
 
 type MovieVersionInfoControl = ReturnType<typeof createMovieVersionInfoControls>
 
-export class MovieVersionInfoForm extends FormEntity<Partial<MovieVersionInfo>, MovieVersionInfoControl>{
+export class MovieVersionInfoForm extends FormEntity<MovieVersionInfoControl>{
   constructor(VersionInfo : MovieVersionInfo) {
     super(createMovieVersionInfoControls(VersionInfo));
   }

@@ -12,7 +12,7 @@ function createMovieSalesCastControls(salesCast: Partial<MovieSalesCast> = {}){
 
 type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
-export class MovieSalesCastForm extends FormEntity<Partial<MovieSalesCast>, MovieSalesCastControl>{
+export class MovieSalesCastForm extends FormEntity<MovieSalesCastControl>{
   constructor(salesCast : MovieSalesCast) {
     super(createMovieSalesCastControls(salesCast));
   }

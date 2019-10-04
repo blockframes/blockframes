@@ -13,7 +13,7 @@ function createCreditFormControl(credit : Partial<Credit> = {}) {
 
 type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
-export class MovieCreditForm extends FormEntity<Credit,CreditFormControl> {
+export class MovieCreditForm extends FormEntity<CreditFormControl> {
   constructor(credit: Credit) {
     super(createCreditFormControl(credit));
   }
@@ -43,7 +43,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
 
 type MovieMainControl = ReturnType<typeof createMovieMainControls>
 
-export class MovieMainForm extends FormEntity<Partial<MovieMain>, MovieMainControl>{
+export class MovieMainForm extends FormEntity<MovieMainControl>{
   constructor(main: MovieMain) {
     super(createMovieMainControls(main));
   }

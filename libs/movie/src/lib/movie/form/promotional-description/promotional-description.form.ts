@@ -13,7 +13,7 @@ function createMoviePromotionalDescriptionControls(promotionalDescription: Parti
 
 type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
-export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePromotionalDescription>, MoviePromotionalDescriptionControl>{
+export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotionalDescriptionControl>{
   constructor(promotionalDescription: MoviePromotionalDescription) {
     super(createMoviePromotionalDescriptionControls(promotionalDescription));
   }

@@ -12,7 +12,7 @@ function createPromotionalElementControl(promotionalElement : Partial<Promotiona
 
 type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
 
-export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,PromotionalElementControl> {
+export class MoviePromotionalElementForm extends FormEntity<PromotionalElementControl> {
   constructor(promotionalElement: PromotionalElement) {
     super(createPromotionalElementControl(promotionalElement));
   }
@@ -28,7 +28,7 @@ function createMoviePromotionalElementsControls(promotionalElements : Partial<Mo
 
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
-export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromotionalElements>, MoviePromotionalElementsControl>{
+export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements : MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }

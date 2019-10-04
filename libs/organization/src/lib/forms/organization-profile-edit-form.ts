@@ -28,7 +28,7 @@ function createOrganizationProfileControls(entity: Partial<OrganizationProfile>)
 
 type ProfileControl = ReturnType<typeof createOrganizationProfileControls>;
 
-export class OrganizationProfileForm extends FormEntity<OrganizationProfile, ProfileControl> {
+export class OrganizationProfileForm extends FormEntity<ProfileControl> {
   constructor(data?: OrganizationProfile) {
     super(createOrganizationProfileControls(data));
   }
