@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { TranslateSlugPipe } from './translate-slug.pipe';
 
 @NgModule({
-    declarations: [TranslateSlugPipe],
-    imports: [CommonModule]
+  declarations: [TranslateSlugPipe],
+  imports: [CommonModule],
+  exports: [TranslateSlugPipe]
 })
-export class TranslateSlugModule{}
+export class TranslateSlugModule {}
