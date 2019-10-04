@@ -419,9 +419,19 @@ export class DeliveryService {
         return;
       }
 
-      this.materialService.upsertMaterial(material, sameValuesMaterial, delivery, tx);
-    });
+      // If there already is a material with same properties (but different id), we merge this
+      // material with existing one, and push the new deliveryId into deliveryIds.
+      if (!!sameValuesMaterial) {
+        this.materialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery, tx);
+      }
 
+      // If values are not the same, this material is considered as new and we have to create
+      // and set a new material (with new Id).
+      if (!sameValuesMaterial) {
+        const newMaterial = createMaterial({...material, id: this.db.createId()});
+        this.materialService.setNewMaterial(newMaterial, delivery, tx);
+      }
+    });
     return tx;
   }
 
