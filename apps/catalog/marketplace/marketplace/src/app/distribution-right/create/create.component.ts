@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, tap } from 'rxjs/operators';
 import {
@@ -9,7 +10,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
@@ -18,10 +18,11 @@ import {
   MediasSlug,
   TERRITORIES_SLUG,
   TerritoriesSlug,
-  LanguagesSlug
+  LanguagesSlug,
+  LANGUAGES_SLUG,
+  LanguagesLabel
 } from '@blockframes/movie/movie/static-model/types';
-import { DateRange } from '@blockframes/utils';
-import { BasketService } from '../+state/basket.service';
+import { DateRange, ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getSalesInDateRange,
   getSalesWithMediasAndTerritoriesInCommon,
@@ -29,6 +30,7 @@ import {
   salesAgentHasDateRange
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
+import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 
 enum ResearchSteps {
   START = 'Start',
@@ -49,9 +51,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   public steps = ResearchSteps;
   public step: ResearchSteps = this.steps.START;
 
-  // Subscription for value changes in the distribution right form
-  private formSubscription: Subscription;
-
   // Subscription for the results in the research form
   private researchSubscription: Subscription;
 
@@ -60,9 +59,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
   // Movie for information to display
   public movie$: Observable<Movie>;
-
-  // A flag to indicate if datepicker is open
-  public opened = false;
 
   /**
    * This variable will be input the dates inside of the datepicker
@@ -73,78 +69,50 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   // This variable contains the dates which the movie is already bought
   public occupiedDateRanges: DateRange[] = [];
 
-  // Datepicker section
-  public disabledDates: Date;
+  // Error state matcher
+  public matcher = new ControlErrorStateMatcher();
 
-  // Media section
+  // Available movie medias
   public movieMedia: MediasSlug[] = MEDIAS_SLUG;
 
-  // Language section
-  // TODO(MF): Think of a slim solution
-  public languageControl = new FormControl(null);
-  public dubbingsControl = new FormControl(null);
-  public subtitlesControl = new FormControl(null);
-  public movieLanguages: string[] = [];
-  public movieDubbings: string[] = [];
-  public movieSubtitles: string[] = [];
-  public languagesFilter: Observable<string[]>;
-  public dubbingsFilter: Observable<string[]>;
-  public subtitlesFilter: Observable<string[]>;
-  public selectedLanguages: string[] = [];
-  public selectedDubbings: string[] = [];
-  public selectedSubtitles: string[] = [];
+  // Available movie languages
+  public movieLanguages: LanguagesSlug[] = LANGUAGES_SLUG;
 
-  // Territory section
-  public territoriesFilter: Observable<string[]>;
-  public territoryControl = new FormControl();
+  // Available movie territories
   public movieTerritories: TerritoriesSlug[] = TERRITORIES_SLUG;
-  public selectedTerritories: string[] = [];
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
-  constructor(
-    private query: MovieQuery,
-    private basketService: BasketService,
-    private router: Router
-  ) { }
+  // Filters section
+  public languagesFilter: Observable<string[]>;
+  public territoriesFilter: Observable<string[]>;
+
+  // Helper controls
+  public languageControl = new FormControl('', languageValidator);
+  public territoryControl: FormControl = new FormControl();
+  public languages$ = this.form.valueChanges.pipe(
+    startWith(this.form.value),
+    map(({ languages }) => Object.keys(languages))
+  );
+
+  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
+
+  constructor(private query: MovieQuery, private router: Router) {}
 
   ngOnInit() {
     // The movie$ observable will get unsubscribed by the async pipe
-    this.movie$ = this.query.selectActive().pipe(
-      tap(movie => {
-        this.movieLanguages = movie.main.languages;
-        // @todo #980 should be all dubbings (ie langugages from static-model) since we can make a request to get new dubbings
-        // But wait vincent return on that point
-        this.movieDubbings = movie.versionInfo.dubbings; 
-        // @todo #980 should be all dubbings (ie langugages from static-model) since we can make a request to get new dubbings
-        // But wait vincent return on that point
-        this.movieSubtitles = movie.versionInfo.subtitles; 
-      })
-    );
+    this.movie$ = this.query.selectActive();
     this.territoriesFilter = this.territoryControl.valueChanges.pipe(
       startWith(''),
-      debounceTime(300),
+      debounceTime(250),
       map(territory => this._territoriesFilter(territory))
     );
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
-      debounceTime(300),
+      debounceTime(250),
       map(value => this._languageFilter(value))
     );
-    this.dubbingsFilter = this.dubbingsControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(value => this._dubbingsFilter(value))
-    );
-    this.subtitlesFilter = this.subtitlesControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(value => this._subtitlesFilter(value))
-    );
-    this.formSubscription = this.form.valueChanges.subscribe(data => {
-      this.choosenDateRange.to = data.duration.to;
-      this.choosenDateRange.from = data.duration.from;
-    }); 
     this.researchSubscription = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe();
+    this.form.get('languages').valueChanges.subscribe(console.log);
   }
 
   private get movie(): Movie {
@@ -161,22 +129,9 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _dubbingsFilter(value: string): string[] {
-    return this.movieDubbings.filter(language =>
-      language.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  private _subtitlesFilter(value: string): string[] {
-    return this.movieSubtitles.filter(language =>
-      language.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
   private _territoriesFilter(territory: string): string[] {
-    const filterValue = territory.toLowerCase();
     return this.movieTerritories.filter(movieTerritory => {
-      return movieTerritory.toLowerCase().includes(filterValue);
+      return movieTerritory.toLowerCase().includes(territory.toLowerCase());
     });
   }
 
@@ -185,76 +140,34 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   //////////////////
 
   public changeDateFocus(dates: DateRange) {
-    this.opened = true;
     this.choosenDateRange.to = dates.to;
     this.choosenDateRange.from = dates.from;
   }
 
   public selectedTerritory(territory: MatAutocompleteSelectedEvent) {
-    if (!this.selectedTerritories.includes(territory.option.viewValue)) {
-      this.selectedTerritories.push(territory.option.value);
-    }
-    this.form.addTerritory(territory.option.viewValue as TerritoriesSlug);
+    this.form.addTerritory(getCodeIfExists('TERRITORIES', territory.option.viewValue));
     this.territoryInput.nativeElement.value = '';
   }
 
-  public removeTerritory(territory: TerritoriesSlug, index: number) {
-    const i = this.selectedTerritories.indexOf(territory);
-    if (i >= 0) {
-      this.selectedTerritories.splice(i, 1);
-    }
+  public removeTerritory(index: number) {
     this.form.removeTerritory(index);
   }
 
   public setWantedRange(date: DateRange) {
     this.form.get('duration').setValue({ to: date.to, from: date.from });
-    this.opened = false;
   }
 
   public checkMedia(media: MediasSlug) {
     this.form.checkMedia(media);
   }
 
-  public addLanguage(language: LanguagesSlug) {
-    if (!this.selectedLanguages.includes(language) && this.movieLanguages.includes(language)) {
-      this.selectedLanguages.push(language);
-      this.form.addLanguage(language);
-    }
+  public addLanguage(language: LanguagesLabel) {
+    this.form.addLanguage(getCodeIfExists('LANGUAGES', language), this.movie.main);
+    this.languageInput.nativeElement.value = '';
   }
 
-  public removeLanguage(language: LanguagesSlug, index: number) {
-    if (this.selectedLanguages.includes(language)) {
-      this.selectedLanguages.splice(index, 1);
-      this.form.removeLanguage(language);
-    }
-  }
-
-  public addDubbing(language: LanguagesSlug) {
-    if (!this.selectedDubbings.includes(language) && this.movieDubbings.includes(language)) {
-      this.selectedDubbings.push(language);
-      this.form.addDubbings(language);
-    }
-  }
-
-  public removeDubbing(language: LanguagesSlug, index: number) {
-    if (this.selectedDubbings.includes(language)) {
-      this.selectedDubbings.splice(index, 1);
-      this.form.removeDubbings(language);
-    }
-  }
-
-  public addSubtitle(language: LanguagesSlug) {
-    if (!this.selectedSubtitles.includes(language) && this.movieSubtitles.includes(language)) {
-      this.selectedSubtitles.push(language);
-      this.form.addSubtitles(language);
-    }
-  }
-
-  public removeSubtitle(language: LanguagesSlug, index: number) {
-    if (this.selectedSubtitles.includes(language)) {
-      this.selectedSubtitles.splice(index, 1);
-      this.form.removeSubtitles(language);
-    }
+  public removeLanguage(language: LanguagesSlug) {
+    this.form.removeLanguage(language);
   }
 
   public addDistributionRight() {
@@ -274,13 +187,12 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.researchSubscription = this.form.valueChanges
       .pipe(
         tap(value => {
-
           //////////////////
           // FORM VALIDATION
           //////////////////
 
-          if(!!value.duration || value.medias.length || value.territories.length ) {
-            console.log('You have to provide value for your research')
+          if (!!value.duration || value.medias.length || value.territories.length) {
+            console.log('You have to provide value for your research');
             return false;
           }
 
@@ -305,7 +217,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           const territoriesNotInSalesAgentScope = [];
           value.territories.forEach(territory => {
             if (!this.movie.salesAgentDeal.territories.includes(territory)) {
-              territoriesNotInSalesAgentScope.push(territory)
+              territoriesNotInSalesAgentScope.push(territory);
             }
           });
 
@@ -317,8 +229,12 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           });
 
           if (mediasNotInSalesAgentScope.length || territoriesNotInSalesAgentScope.length) {
-            // @todo #980 let customer make a request to sales agent ( to see if he can adapt and find a solution)
-            console.log('Some territories or medias are not in sales agent scope', territoriesNotInSalesAgentScope, mediasNotInSalesAgentScope);
+            // @todo #1036 let customer make a request to sales agent ( to see if he can adapt and find a solution)
+            console.log(
+              'Some territories or medias are not in sales agent scope',
+              territoriesNotInSalesAgentScope,
+              mediasNotInSalesAgentScope
+            );
             return false; // End of process
           }
 
@@ -340,16 +256,24 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
             value.territories,
             value.medias,
             salesInDateRange
-          )
+          );
 
           if (salesWithMediasAndTerritoriesInCommon.length) {
-            const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveMovieSales(salesWithMediasAndTerritoriesInCommon);
+            const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveMovieSales(
+              salesWithMediasAndTerritoriesInCommon
+            );
             if (exclusiveSalesWithMediasAndTerritoriesInCommon.length) {
-              console.log('There is some exclusive sales blocking your request :', exclusiveSalesWithMediasAndTerritoriesInCommon);
+              console.log(
+                'There is some exclusive sales blocking your request :',
+                exclusiveSalesWithMediasAndTerritoriesInCommon
+              );
               return false; // End of process
             } else {
               if (value.exclusive) {
-                console.log('There is some sales blocking your exclusivity request :', salesWithMediasAndTerritoriesInCommon);
+                console.log(
+                  'There is some sales blocking your exclusivity request :',
+                  salesWithMediasAndTerritoriesInCommon
+                );
                 return false; // End of process
               } else {
                 console.log('YOU CAN BUY YOUR DIST RIGHT, since you do not require exclusivity');
@@ -362,19 +286,16 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
             return true; // End of process
           }
 
-
-          // @TODO#1022 
+          // @TODO#1022
           // do same verification process with languages, dubbing, subtitles ?
           // Is it relevant to distinguish Languages and Dubbings ?
           // => Wait for Vincent return on this since we do not know how exclusivity must behave regarding dubbings, subtitles..
-
         })
       )
       .subscribe();
   }
 
   ngOnDestroy(): void {
-    this.formSubscription.unsubscribe();
     this.researchSubscription.unsubscribe();
   }
 }

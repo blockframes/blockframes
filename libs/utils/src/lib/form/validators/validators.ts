@@ -8,13 +8,12 @@ import {
   FormArray
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import {
-  LANGUAGES_SLUG
-} from '@blockframes/movie/movie/static-model/types';
+import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
 import { InfuraProvider } from '@ethersproject/providers';
 import { isValidMnemonic } from '@ethersproject/hdnode';
 import { orgNameToEnsDomain } from '../../helpers';
 import { network } from '@env';
+import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 
 export const emailValidators = [Validators.required, Validators.email];
 
@@ -60,33 +59,34 @@ export function validMnemonic(control: AbstractControl): ValidationErrors | null
 
 /** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
 export function validPercentageList(control: FormArray): ValidationErrors {
-    let sum = 0;
-    // Counts the total percentages
-    control.controls.forEach(formGroup => {
-      sum += formGroup.get('percentage').value;
-    });
-    control.controls.forEach(formGroup => {
-      if (sum > 100) {
-        // If sum > 100: add the error percentageNotMatching
-        const errors = formGroup.get('percentage').errors;
-        formGroup.get('percentage').setErrors({...errors, percentageNotMatching: true });
-      } else {
-        // If the sum <= 100, we have to delete the percentageNotMatching error
-        let errors = formGroup.get('percentage').errors;
-        // If the control contains more than one error we delete the percentageNotMatching error
-        if (errors &&  Object.keys(errors).length > 1) delete errors.percentageNotMatching;
-        // If the control contains only the percentageNotMatching error, we set it to null
-        else if (errors && Object.keys(errors).length === 1 && errors.percentageNotMatching) errors = null;
-        formGroup.get('percentage').setErrors(errors);
-      }
-    });
-    return;
+  let sum = 0;
+  // Counts the total percentages
+  control.controls.forEach(formGroup => {
+    sum += formGroup.get('percentage').value;
+  });
+  control.controls.forEach(formGroup => {
+    if (sum > 100) {
+      // If sum > 100: add the error percentageNotMatching
+      const errors = formGroup.get('percentage').errors;
+      formGroup.get('percentage').setErrors({ ...errors, percentageNotMatching: true });
+    } else {
+      // If the sum <= 100, we have to delete the percentageNotMatching error
+      let errors = formGroup.get('percentage').errors;
+      // If the control contains more than one error we delete the percentageNotMatching error
+      if (errors && Object.keys(errors).length > 1) delete errors.percentageNotMatching;
+      // If the control contains only the percentageNotMatching error, we set it to null
+      else if (errors && Object.keys(errors).length === 1 && errors.percentageNotMatching)
+        errors = null;
+      formGroup.get('percentage').setErrors(errors);
+    }
+  });
+  return;
 }
 
 /** Checks if the value of the control is between 0 and 100 */
 export function validPercentage(control: FormControl): ValidationErrors {
   const value = Number(control.value);
-  return (value >= 0 && value <= 100) ? null : { invalidPercentage: true };
+  return value >= 0 && value <= 100 ? null : { invalidPercentage: true };
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
@@ -114,7 +114,7 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
   return (group: FormGroup): ValidationErrors => {
     const control1 = group.controls[from];
     const control2 = group.controls[to];
-    if (control1 instanceof Date) {
+    if (control1 instanceof Date && control2 instanceof Date) {
       return control1.value.getTime() > control2.value.getTime() &&
         group.touched &&
         group.dirty &&
@@ -129,6 +129,21 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
 }
 
 /**
+ * @description This validator checks if the value in the form group
+ * or form array is in the static model and then valid
+ * @param scope defines where to look. For instance 'TERRITORIES'
+ */
+export function valueIsInModelValidator(scope: string): ValidatorFn {
+  return (parent: FormGroup | FormArray): ValidationErrors => {
+    if (parent.value.filter(val => getLabelByCode(scope, val)).length) {
+      return null;
+    } else {
+      return { invalidValue: true };
+    }
+  };
+}
+
+/**
  * @description Error state matcher which is just like in the docs from angular material.
  * Basic usage for invalid, dirty and touched checks.
  */
@@ -137,4 +152,3 @@ export class ControlErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && control.touched);
   }
 }
-

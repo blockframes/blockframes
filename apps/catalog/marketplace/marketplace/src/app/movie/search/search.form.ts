@@ -24,7 +24,7 @@ import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticMode
 // CatalogGenresFilter //
 /////////////////////////
 
-export interface MovieLanguage {
+export interface MovieLanguageSpecification {
   original: boolean;
   dubbed: boolean;
   subtitle: boolean;
@@ -40,7 +40,7 @@ export interface CatalogSearch {
     to: Date;
   };
   type: GenresLabel[];
-  languages: { [language in LanguagesLabel]: MovieLanguage };
+  languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
   territories: TerritoriesLabel[];
@@ -50,13 +50,15 @@ export interface CatalogSearch {
 /* CREATE OBJECT */
 /* ------------- */
 
-function createMovieLanguage(movieLanguage: Partial<MovieLanguage> = {}): MovieLanguage {
+export function createMovieLanguage(
+  movieLanguage: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
   return {
     original: false,
     dubbed: false,
     subtitle: false,
     ...movieLanguage
-  } as MovieLanguage;
+  } as MovieLanguageSpecification;
 }
 
 function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
@@ -76,10 +78,10 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
 /* CREATE CONTROL */
 /* -------------- */
 
-function createLanguageControl(language: MovieLanguage) {
+export function createLanguageControl(language: MovieLanguageSpecification, disableDubbed?: boolean) {
   return new FormGroup({
     original: new FormControl(language.original),
-    dubbed: new FormControl(language.dubbed),
+    dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
     subtitle: new FormControl(language.subtitle)
   });
 }
@@ -137,7 +139,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchCo
     return this.get('languages') as FormGroup;
   }
 
-  addLanguage(language: LanguagesSlug, value: Partial<MovieLanguage> = {}) {
+  addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguage(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }

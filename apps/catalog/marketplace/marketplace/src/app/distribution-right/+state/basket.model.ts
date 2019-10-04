@@ -1,3 +1,8 @@
+import {
+  MovieLanguageSpecification,
+  createLanguageControl
+} from './../../movie/search/search.form';
+import { FormArray, Validators, FormControl, FormGroup } from '@angular/forms';
 import { DistributionRight } from './basket.model';
 import { DateRange } from '@blockframes/utils/helpers';
 import {
@@ -6,6 +11,7 @@ import {
   LanguagesSlug,
   TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
+import { numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
 
 export const enum BasketStatus {
   pending = 'pending',
@@ -23,10 +29,8 @@ export interface DistributionRight {
   id: string;
   movieId: string;
   medias: MediasSlug[];
-  languages: LanguagesSlug[];
-  dubbings: LanguagesSlug[];
-  subtitles: LanguagesSlug[];
-  duration: DateRange
+  languages: { [language in LanguagesSlug]: MovieLanguageSpecification };
+  duration: DateRange;
   territories: TerritoriesSlug[];
   exclusive: boolean;
 }
@@ -68,14 +72,42 @@ export function createDistributionRight(right: Partial<DistributionRight> = {}) 
     movieId: '',
     medias: [],
     languages: [],
-    dubbings: [],
-    subtitles: [],
     duration: {
-      from: Date,
-      to: Date
+      from: '',
+      to: ''
     },
     territories: [],
     exclusive: false,
     ...right
+  } as DistributionRight;
+}
+
+export function createDistributionRightControls(right: Partial<DistributionRight> = {}) {
+  // Create controls for the languages
+  const languageControl = Object.keys(right.languages).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: createLanguageControl(right.languages[key])
+    }),
+    {}
+  );
+  return {
+    medias: new FormArray(right.medias.map(media => new FormControl(media)), [
+      Validators.required,
+      valueIsInModelValidator('MEDIAS')
+    ]),
+    languages: new FormGroup(languageControl, Validators.required),
+    duration: new FormGroup(
+      {
+        from: new FormControl(right.duration.from, [Validators.required]),
+        to: new FormControl(right.duration.to, [Validators.required])
+      },
+      [Validators.required, numberRangeValidator('from', 'to')]
+    ),
+    territories: new FormArray(right.territories.map(territory => new FormControl(territory)), [
+      Validators.required,
+      valueIsInModelValidator('TERRITORIES')
+    ]),
+    exclusive: new FormControl(right.exclusive)
   };
 }

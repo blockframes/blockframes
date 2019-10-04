@@ -1,27 +1,13 @@
+<span fxLayout="row" fxLayoutAlign="center center">
   <mat-form-field appearance="outline">
     <mat-label>Start date - End date</mat-label>
-    <input
-      matInput
-      [formControl]="rangeForm"
-      [matDatepickerFilter]="disableDates"
-      placeholder="Choose a date"
-      [satDatepicker]="picker"
-      (dateChange)="rangeChange($event.value)"
-      (blur)="rangeChange($event.value)"
-      (focus)="picker.open()"
-      test-id="datepicker-input"
-    >
-    <mat-error *ngIf="rangeForm.invalid">{{getErrorMessage()}}</mat-error>
-    <sat-datepicker
-      #picker
-      [rangeMode]="true"
-      [startAt]="selectedRange.from"
-      startView="month"
-      orderPeriodLabel="month"
-    >
+    <input matInput [formControl]="rangeForm" [matDatepickerFilter]="disableDates" placeholder="Choose a date"
+      [satDatepicker]="picker" (dateChange)="rangeChange($event.value)" (blur)="rangeChange($event.value)"
+      (focus)="picker.open()" test-id="datepicker-input">
+    <mat-error *ngIf="rangeForm.invalid && rangeForm.pristine">{{getErrorMessage}}</mat-error>
+    <sat-datepicker #picker [rangeMode]="true" [startAt]="selectedRange.from" startView="month"
+      orderPeriodLabel="month">
     </sat-datepicker>
   </mat-form-field>
   <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-  <mat-card-actions>
-    <button test-id="add-selection" mat-raised-button type="submit" color="primary" [disabled]="!isValidRange" (click)="addRange()">Add on selection</button>
-  </mat-card-actions>
+</span>

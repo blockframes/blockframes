@@ -11,6 +11,7 @@ import { DatepickerRangeComponent } from './datepicker.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {SatDatepickerModule, SatNativeDateModule} from 'saturn-datepicker';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {SatDatepickerModule, SatNativeDateModule} from 'saturn-datepicker';
     MatInputModule,
     MatCardModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    FlexLayoutModule
 ],
   exports: [DatepickerRangeComponent]
 })

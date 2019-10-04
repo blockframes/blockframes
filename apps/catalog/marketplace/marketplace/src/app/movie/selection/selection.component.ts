@@ -46,8 +46,6 @@ export class MarketplaceSelectionComponent implements OnInit {
       rights: detail.medias[0],
       endRights: (detail.duration as any).to.toDate().toDateString(),
       languages: detail.languages[0],
-      dubbed: detail.dubbings[0],
-      subtitle: detail.subtitles[0]
     } as MovieData;
   }
 

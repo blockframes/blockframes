@@ -9,37 +9,37 @@
     </div>
   </header>
 
-  <aside fxLayout="row" class="page-content">
-    <mat-card>
-      <form [formGroup]="form">
+  <section fxLayout="row">
+    <aside fxLayout="row" class="page-content" [formGroup]="form">
+      <mat-card>
         <mat-accordion multi="true">
 
           <!-- Dates -->
+
           <mat-expansion-panel expanded="true">
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="distribution-date-panel">
+              <mat-panel-title test-id="distribution-date-panel" class="bf-strong">
                 Dates
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <span formGroupName="duration">
-              <datepicker-range [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
-                (wantedRange)="setWantedRange($event)" [opened]="opened">
-              </datepicker-range>
-            </span>
+            <datepicker-range [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
+              (wantedRange)="setWantedRange($event)">
+            </datepicker-range>
           </mat-expansion-panel>
 
           <!-- Territories -->
+
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="distribution-territory-panel" class="mat-h4">
+              <mat-panel-title test-id="distribution-territory-panel" class="bf-strong">
                 Territories
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-form-field>
               <mat-chip-list #chipList>
-                <mat-chip *ngFor="let territory of selectedTerritories; let i = index" selectable removeable
-                  (removed)="removeTerritory(territory, i)" class="capitalized">
-                  {{territory}}
+                <mat-chip *ngFor="let territory of form.territory.value; let i = index" selectable removeable
+                  (removed)="removeTerritory(i)">
+                  {{territory | translateSlug: 'TERRITORIES'}}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input test-id="distribution-territory-input" placeholder="Territories available"
@@ -47,198 +47,86 @@
                   #territoryInput>
               </mat-chip-list>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
-                <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory" class="capitalized">
-                  {{territory}}
+                <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
+                  {{territory | translateSlug: 'TERRITORIES'}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
           </mat-expansion-panel>
 
           <!-- Media -->
+
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="distribution-media-panel">Mandate Media</mat-panel-title>
+              <mat-panel-title test-id="distribution-media-panel" class="bf-strong">Mandate Media</mat-panel-title>
             </mat-expansion-panel-header>
             <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
               <mat-checkbox mat-list-item *ngFor="let media of movieMedia" (change)="checkMedia(media)"
-                class="capitalized">{{media}}
+                class="capitalized">{{media | translateSlug: 'MEDIAS'}}
               </mat-checkbox>
             </div>
           </mat-expansion-panel>
 
-          <!-- Language -->
+          <!-- Languages -->
+
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="distribution-language-panel">
-                Languages, Dubbings, Subtitles
+              <mat-panel-title test-id="languages-panel" class="bf-strong">
+                Languages
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <article fxLayout="column">
-
-              <!-- Original -->
-              <span fxLayout="column" fxLayoutAlign="start start">
-                <ng-container *ngIf="!(movie.main.languages.length === 0); else noLanguages">
-                  <h6 class="mat-h4">Languages</h6>
-                  <span fxLayout="row">
-                    <mat-form-field appearance="outline">
-                      <input test-id="distribution-language-input" matInput type="text" [matAutocomplete]="language"
-                        [formControl]="languageControl" placeholder="Add available languages" class="capitalized" />
-                      <button mat-button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-                        [disabled]="!languageControl.valid">
-                        <mat-icon>search</mat-icon>
-                      </button>
-                      <mat-autocomplete #language="matAutocomplete"
-                        (optionSelected)="addLanguage(languageControl.value)">
-                        <mat-option *ngFor="let language of languagesFilter | async" [value]="language"
-                          class="capitalized">
-                          {{language}}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <button mat-button [disabled]="!languageControl.valid" color="accent"
-                      (click)="addLanguage(languageControl.value)">Add
-                      language</button>
-                  </span>
-                </ng-container>
-              </span>
-              <ng-template #noLanguages class="mat-h4">
-                <h4 class="mat-h4">There are no languages on this film</h4>
-              </ng-template>
-              <ng-container *ngIf="form.get('languages').value">
-                <mat-list fxLayout="column">
-                  <mat-list-item *ngFor="let language of selectedLanguages; let i = index" fxLayout="row"
-                    fxLayoutAlign="space-between start">
-                    <p class="capitalized">
-                      {{language}}
-                    </p>
-                    <button mat-icon-button (click)="removeLanguage(language, i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </mat-list-item>
-                </mat-list>
-                <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
-                  <mat-option *ngFor="let language of languagesFilter | async" [value]="language" class="capitalized">
-                    {{language}}
-                  </mat-option>
-                </mat-autocomplete>
-                <button mat-button [disabled]="!languageControl.valid" color="accent"
+            <form formGroupName="languages" fxLayout="column">
+              <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline">
+                  <mat-label>New language</mat-label>
+                  <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
+                    [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher"
+                    #languageInput />
+                  <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
+                    Please enter a valid language or choose from the dropdown menu!
+                  </mat-error>
+                  <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
+                    [disabled]="!languageControl.valid">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
+                    <mat-option *ngFor="let language of languagesFilter | async" [value]="language">
+                      {{language | translateSlug: 'LANGUAGES'}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
                   (click)="addLanguage(languageControl.value)">Add
-                  language</button>
-              </ng-container>
-              <ng-template #noLanguages class="mat-h4">
-                <h4 class="mat-h4">There are no languages on this film</h4>
-              </ng-template>
+                  language
+                </button>
+              </div>
               <ng-container *ngIf="form.get('languages').value">
-                <mat-list fxLayout="column">
-                  <mat-list-item *ngFor="let language of selectedLanguages; let i = index" fxLayout="row"
-                    fxLayoutAlign="space-between start">
-                    <p class="capitalized">
-                      {{language}}
-                    </p>
-                    <button mat-icon-button (click)="removeLanguage(language, i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </mat-list-item>
-                </mat-list>
-              </ng-container>
-
-              <!-- Dubbings -->
-              <span fxLayout="column" fxLayoutAlign="start start">
-                <ng-container *ngIf="!(movie.versionInfo.dubbings.length === 0); else noDubbings">
-                  <h6 class="mat-h4">Dubbings</h6>
-                  <span fxLayout="row">
-                    <mat-form-field appearance="outline">
-                      <input test-id="distribution-dubbing-input" matInput type="text" [matAutocomplete]="dubbings"
-                        [formControl]="dubbingsControl" placeholder="Add available dubbings" class="capitalized" />
-                      <button mat-button matSuffix mat-icon-button (click)="addDubbing(dubbingsControl.value)"
-                        [disabled]="!dubbingsControl.valid">
-                        <mat-icon>search</mat-icon>
+                <mat-list [formGroup]="form.get('languages')" role="list">
+                  <ng-container *ngFor="let language of languages$ | async">
+                    <mat-list-item [formGroupName]="language">
+                      <h3 class="mat-h3" mat-line> {{language | translateSlug: 'LANGUAGES'}}</h3>
+                      <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
+                      </mat-checkbox>
+                      <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
+                      </mat-checkbox>
+                      <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                        Subtitles
+                      </mat-checkbox>
+                      <button mat-icon-button (click)="removeLanguage(language)">
+                        <mat-icon>delete</mat-icon>
                       </button>
-                      <mat-autocomplete #dubbings="matAutocomplete"
-                        (optionSelected)="addDubbing(dubbingsControl.value)">
-                        <mat-option *ngFor="let dub of dubbingsFilter | async" [value]="dub" class="capitalized">
-                          {{dub}}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <button mat-button [disabled]="!dubbingsControl.valid" color="accent"
-                      (click)="addDubbing(dubbingsControl.value)">Add
-                      dubbing</button>
-                  </span>
-                </ng-container>
-              </span>
-              <ng-template #noDubbings class="mat-h4">
-                <h4 class="mat-h4">There are no dubbings available</h4>
-              </ng-template>
-              <ng-container *ngIf="form.get('dubbings').value">
-                <mat-list fxLayout="column">
-                  <mat-list-item *ngFor="let dubbing of selectedDubbings; let i = index" fxLayout="row"
-                    fxLayoutAlign="space-between start">
-                    <p class="capitalized">
-                      {{dubbing}}
-                    </p>
-                    <button mat-icon-button (click)="removeDubbing(dubbing, i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </mat-list-item>
-                </mat-list>
-                <mat-autocomplete #dubbings="matAutocomplete" (optionSelected)="addDubbing(dubbingsControl.value)">
-                  <mat-option *ngFor="let dub of dubbingsFilter | async" [value]="dub" class="capitalized">
-                    {{dub}}
-                  </mat-option>
-                </mat-autocomplete>
-                <button mat-button [disabled]="!dubbingsControl.valid" color="accent"
-                  (click)="addDubbing(dubbingsControl.value)">Add
-                  dubbing</button>
-              </ng-container>
-              <ng-template #noDubbings>
-                <h4>There are no dubbings available</h4>
-              </ng-template>
-              <ng-container *ngIf="form.get('dubbings').value">
-                <mat-list fxLayout="column">
-                  <mat-list-item *ngFor="let dubbing of selectedDubbings; let i = index" fxLayout="row"
-                    fxLayoutAlign="space-between start">
-                    <p class="capitalized">
-                      {{dubbing}}
-                    </p>
-                    <button mat-icon-button (click)="removeDubbing(dubbing, i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </mat-list-item>
+                    </mat-list-item>
+                  </ng-container>
                 </mat-list>
               </ng-container>
-
-              <!-- Subtitles -->
-              <span fxLayout="column" fxLayoutAlign="start start">
-                <ng-container *ngIf="!(movie.versionInfo.subtitles.length === 0); else noSubtitles">
-                  <h4>Subtitles</h4>
-                  <span fxLayout="row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Available subtitles</mat-label>
-                      <input matInput type="text" [matAutocomplete]="subtitles" [formControl]="subtitlesControl"
-                        placeholder="Add available subtitles" class="capitalized" />
-                      <button mat-button matSuffix mat-icon-button (click)="addSubtitle(subtitlesControl.value)"
-                        [disabled]="!subtitlesControl.valid">
-                        <mat-icon>search</mat-icon>
-                      </button>
-                      <mat-autocomplete #subtitles="matAutocomplete"
-                        (optionSelected)="addSubtitle(subtitlesControl.value)">
-                        <mat-option *ngFor="let subtitles of subtitlesFilter | async" [value]="subtitles"
-                          class="capitalized">
-                          {{subtitles}}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <button mat-button [disabled]="!subtitlesControl.valid" color="accent"
-                      (click)="addSubtitle(subtitlesControl.value)">Add subtitle</button>
-                  </span>
-                </ng-container>
-              </span>
-            </article>
+            </form>
           </mat-expansion-panel>
+
+          <!-- Exclusive -->
+
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>Exclusive</mat-panel-title>
+              <mat-panel-title class="bf-strong">Exclusive</mat-panel-title>
             </mat-expansion-panel-header>
             <div fxLayout="column" fxLayoutAlign="start space-between">
               <mat-checkbox mat-list-item formControlName="exclusive"
@@ -249,23 +137,25 @@
         </mat-accordion>
         <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()"
           [disabled]="!form.valid">Search</button>
-      </form>
-    </mat-card>
-  </aside>
+      </mat-card>
+    </aside>
 
-  <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" [ngSwitch]="step">
-    <div *ngSwitchCase="steps.START">
-      <img src='assets/images/availabilities.png' />
-    </div>
-    <div *ngSwitchCase="steps.POSSIBLE">
-      <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
-        (rangeSelected)="changeDateFocus($event)"></month-calendar>
-      <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()"
-        [disabled]="!catalogBasket">Add
-        distribution right</a>
-    </div>
-    <div *ngSwitchCase="steps.ERROR">
-      Error
-    </div>
+    <!-- Results -->
+
+    <article fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px" [ngSwitch]="step">
+      <div *ngSwitchCase="steps.START">
+        <img src='assets/images/availabilities.png' />
+      </div>
+      <div *ngSwitchCase="steps.POSSIBLE">
+        <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
+          (rangeSelected)="changeDateFocus($event)"></month-calendar>
+        <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()"
+          [disabled]="!catalogBasket">Add
+          distribution right</a>
+      </div>
+      <div *ngSwitchCase="steps.ERROR">
+        Error
+      </div>
+    </article>
   </section>
 </main>
