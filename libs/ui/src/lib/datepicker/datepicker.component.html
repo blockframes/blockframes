@@ -4,7 +4,7 @@
     <input matInput [formControl]="rangeForm" [matDatepickerFilter]="disableDates" placeholder="Choose a date"
       [satDatepicker]="picker" (dateChange)="rangeChange($event.value)" (blur)="rangeChange($event.value)"
       (focus)="picker.open()" test-id="datepicker-input">
-    <mat-error *ngIf="rangeForm.invalid && rangeForm.pristine">{{getErrorMessage}}</mat-error>
+    <mat-error *ngIf="rangeForm.invalid && rangeForm.pristine">{{errorMessage}}</mat-error>
     <sat-datepicker #picker [rangeMode]="true" [startAt]="selectedRange.from" startView="month"
       orderPeriodLabel="month">
     </sat-datepicker>

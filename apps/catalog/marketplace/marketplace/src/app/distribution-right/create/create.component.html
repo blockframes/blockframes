@@ -37,7 +37,7 @@
             </mat-expansion-panel-header>
             <mat-form-field>
               <mat-chip-list #chipList>
-                <mat-chip *ngFor="let territory of form.territory.value; let i = index" selectable removeable
+                <mat-chip *ngFor="let territory of form.territories.value; let i = index" selectable removeable
                   (removed)="removeTerritory(i)">
                   {{territory | translateSlug: 'TERRITORIES'}}
                   <mat-icon matChipRemove>cancel</mat-icon>
@@ -100,8 +100,8 @@
                   language
                 </button>
               </div>
-              <ng-container *ngIf="form.get('languages').value">
-                <mat-list [formGroup]="form.get('languages')" role="list">
+              <ng-container *ngIf="form.languages.value">
+                <mat-list [formGroup]="form.languages" role="list">
                   <ng-container *ngFor="let language of languages$ | async">
                     <mat-list-item [formGroupName]="language">
                       <h3 class="mat-h3" mat-line> {{language | translateSlug: 'LANGUAGES'}}</h3>

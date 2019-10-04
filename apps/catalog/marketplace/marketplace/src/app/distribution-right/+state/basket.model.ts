@@ -87,9 +87,10 @@ export function createDistributionRightControls(right: Partial<DistributionRight
   const languageControl = Object.keys(right.languages).reduce(
     (acc, key) => ({
       ...acc,
+      // Key is the name of the language, english, french etc.
       [key]: createLanguageControl(right.languages[key])
     }),
-    {}
+    {} // Initial value. No controls at the beginning
   );
   return {
     medias: new FormArray(right.medias.map(media => new FormControl(media)), [

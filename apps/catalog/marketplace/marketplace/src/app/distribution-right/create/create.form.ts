@@ -24,8 +24,16 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
     super(controls);
   }
 
-  get territory() {
+  get territories() {
     return this.get('territories');
+  }
+
+  get languages() {
+    return this.get('languages');
+  }
+
+  get medias() {
+    return this.get('medias');
   }
 
   addTerritory(territory: TerritoriesSlug) {
@@ -34,28 +42,28 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
       throw new Error(`Territory ${territory} is not part of the list`);
     }
     // Check it's not already in the form control
-    const territories = this.get('territories').value;
+    const territories = this.territories.value;
     if (!territories.includes(territory)) {
       // I guess TS complains about, that territories is not an array.
-      (<FormArray>this.get('territories')).push(new FormControl(territory));
+      (<FormArray>this.territories).push(new FormControl(territory));
     }
     // Else do nothing as it's already in the list
   }
 
   removeTerritory(index: number) {
     // I guess TS complains about, that territories is not an array.
-    (<FormArray>this.get('territories')).removeAt(index);
+    (<FormArray>this.territories).removeAt(index);
   }
 
   checkMedia(mediaChecked: string) {
     // check if media is already checked by the user
-    if (!this.get('medias').value.includes(mediaChecked)) {
+    if (!this.medias.value.includes(mediaChecked)) {
       // I guess TS complains about, that territories is not an array.
-      (<FormArray>this.get('medias')).push(new FormControl(mediaChecked));
-    } else if (this.get('medias').value.includes(mediaChecked)) {
-      const uncheckMedia = this.get('medias').value.indexOf(mediaChecked);
+      (<FormArray>this.medias).push(new FormControl(mediaChecked));
+    } else if (this.medias.value.includes(mediaChecked)) {
+      const uncheckMedia = this.medias.value.indexOf(mediaChecked);
       // I guess TS complains about, that territories is not an array.
-      (<FormArray>this.get('medias')).removeAt(uncheckMedia);
+      (<FormArray>this.medias).removeAt(uncheckMedia);
     } else {
       throw new Error(`Media ${mediaChecked} doesn't exist`);
     }
@@ -68,19 +76,19 @@ export class DistributionRightForm extends FormEntity<DistributionRight> {
   ) {
     if (movie.languages.includes(language)) {
       value.original = true;
-      (<FormGroup>this.get('languages')).addControl(
+      (<FormGroup>this.languages).addControl(
         language,
         createLanguageControl(createMovieLanguage(value), true)
       );
     }
-    (<FormGroup>this.get('languages')).addControl(
+    (<FormGroup>this.languages).addControl(
       language,
       createLanguageControl(createMovieLanguage(value))
     );
   }
 
   removeLanguage(language: LanguagesSlug) {
-    (<FormGroup>this.get('languages')).removeControl(language);
+    (<FormGroup>this.languages).removeControl(language);
     this.updateValueAndValidity();
   }
 }

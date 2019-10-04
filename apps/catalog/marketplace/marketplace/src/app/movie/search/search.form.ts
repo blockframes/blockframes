@@ -78,7 +78,10 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
 /* CREATE CONTROL */
 /* -------------- */
 
-export function createLanguageControl(language: MovieLanguageSpecification, disableDubbed?: boolean) {
+export function createLanguageControl(
+  language: MovieLanguageSpecification,
+  disableDubbed?: boolean
+) {
   return new FormGroup({
     original: new FormControl(language.original),
     dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
@@ -91,9 +94,10 @@ function createCatalogSearchControl(search: CatalogSearch) {
   const languageControl = Object.keys(search.languages).reduce(
     (acc, key) => ({
       ...acc,
+      // Key is the name of the language, english, french etc.
       [key]: createLanguageControl(search.languages[key])
     }),
-    {}
+    {} // Initial value. No controls at the beginning
   );
   return {
     productionYear: new FormGroup(

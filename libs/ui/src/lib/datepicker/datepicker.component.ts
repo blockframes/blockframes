@@ -90,7 +90,7 @@ export class DatepickerRangeComponent {
     snackBarRef.onAction().subscribe(() => this.initDatepicker());
   }
 
-  get getErrorMessage() {
+  get errorMessage() {
     return this.rangeForm.hasError('required') ? 'You must enter correct dates' : '';
   }
 }

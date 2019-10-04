@@ -112,17 +112,17 @@ export function languageValidator(control: AbstractControl): { [key: string]: bo
  */
 export function numberRangeValidator(from: string, to: string): ValidatorFn {
   return (group: FormGroup): ValidationErrors => {
-    const control1 = group.controls[from];
-    const control2 = group.controls[to];
-    if (control1 instanceof Date && control2 instanceof Date) {
-      return control1.value.getTime() > control2.value.getTime() &&
+    const controlFrom = group.controls[from];
+    const controlTo = group.controls[to];
+    if (controlFrom instanceof Date && controlTo instanceof Date) {
+      return controlFrom.value.getTime() > controlTo.value.getTime() &&
         group.touched &&
         group.dirty &&
         !group.pristine
         ? { invalidRange: true }
         : null;
     }
-    return control1.value > control2.value && group.touched && group.dirty && !group.pristine
+    return controlFrom.value > controlTo.value && group.touched && group.dirty && !group.pristine
       ? { invalidRange: true }
       : null;
   };
