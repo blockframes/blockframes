@@ -50,7 +50,7 @@ export class MaterialService {
   public async update(materials: Material[], delivery: Delivery) {
     return this.db.firestore.runTransaction(async tx => {
       // NOTE: There is no way to query a collection within the transaction
-      // So we accept that we can have 2 materials with the same properties in the database
+      // So we accept that we can have 2 materials with the same properties in the database (race condition)
       const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
 
       materials.forEach(material => {

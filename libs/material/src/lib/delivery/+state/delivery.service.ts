@@ -406,6 +406,8 @@ export class DeliveryService {
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
+    // NOTE: There is no way to query a collection within the transaction
+    // So we accept a race condition here
     const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`);
     const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
 
