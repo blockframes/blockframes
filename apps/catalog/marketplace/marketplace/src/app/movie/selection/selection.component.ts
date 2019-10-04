@@ -5,7 +5,10 @@ import { ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { BasketStatus } from '../../distribution-right/+state/basket.model';
 import { Component, OnInit } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie';
-import { MOVIE_CURRENCIES_SLUG, MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types'
+import {
+  MOVIE_CURRENCIES_SLUG,
+  MovieCurrenciesSlug
+} from '@blockframes/movie/movie/static-model/types';
 import { FormControl } from '@angular/forms';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 
@@ -29,7 +32,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currencyList = MOVIE_CURRENCIES_SLUG
+    this.currencyList = MOVIE_CURRENCIES_SLUG;
     // TODO #922: make an observable out of the basketquery
     this.basketQuery.getAll().forEach(basket =>
       basket.rights.forEach(right => {
@@ -50,14 +53,13 @@ export class MarketplaceSelectionComponent implements OnInit {
   }
 
   private getMovieTitle(id: string): string {
-    let movieLookup: string;
-    this.movieQuery
-      .getAll({ filterBy: movie => movie.id === id })
-      .forEach(movie => (movieLookup = movie.main.title.original));
-    if (!movieLookup) {
-      throw new Error(`No movie found for this ${id} id`);
+    const movie = this.movieQuery.getEntity(id);
+    if (movie) {
+      return movie.main.title.original;
     }
-    return movieLookup;
+    else {
+      throw new Error(`No movie found for this id: ${id}`);
+    }
   }
 
   public deleteDistributionRight(rightId: string) {

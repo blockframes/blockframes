@@ -154,7 +154,11 @@ contract Organization {
         adminCount++;
         adminList[admin] = true;
 
-        // hardcoded operation(s)
+        // This operation is needed in every Organization,
+        // It is defined in the frontend as "operation[1]",
+        // Not defining this operation is the constructor will require to perform
+        // an "init" tx by the admin for the contract to be usable by Blockframes
+        // this would add friction for the user and only provide a small gain in flexibility
         operations[1].name = 'Signing Delivery';
         operations[1].quorum = 0;
         operations[1].active = true;

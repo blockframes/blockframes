@@ -6,7 +6,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   selector: 'key-manager-item',
   templateUrl: './key-manager-item.component.html',
   styleUrls: ['./key-manager-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyManagerItemComponent implements OnInit {
   public address: AddressParts;
@@ -16,6 +16,7 @@ export class KeyManagerItemComponent implements OnInit {
 
   /** Background color string for generic background depending on the wallet address */
   public backgroundColor: string;
+  public foregroundColor: string;
 
   @Input()
   set key(key: Key) {

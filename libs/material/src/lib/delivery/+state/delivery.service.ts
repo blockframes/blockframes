@@ -339,7 +339,7 @@ export class DeliveryService {
   }
 
   /** Sign the delivery and save this action into active organization logs */
-  public setSignDeliveryTx(orgEthAddress: string, deliveryId: string, deliveryHash: string, orgId: string) {
+  public setSignDeliveryTx(orgEthAddress: string, deliveryId: string, deliveryHash: string, movieId: string) {
     const name = `Delivery #${deliveryId}`; // TODO better delivery name (see with @ioaNikas)
     const callback = async () => {
       await Promise.all([
@@ -353,8 +353,8 @@ export class DeliveryService {
     const feedback: TxFeedback = {
       confirmation: `You are about to sign the delivery ${name}`,
       success: `The delivery has been successfully signed !`,
-      redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      redirectName: 'Back to Delivery',
+      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`,
     }
     this.walletService.setTx(CreateTx.approveDelivery(orgEthAddress, deliveryHash, callback));
     this.walletService.setTxFeedback(feedback);

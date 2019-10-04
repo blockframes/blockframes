@@ -22,7 +22,14 @@ export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {
     return new Promise((res, rej) => {
       this.subscription = this.authQuery.user$.pipe(
         filter(user => !!user),
-        tap(async user => await this.walletService.updateFromEmail(user.email))
+        tap(async user => {
+          await this.walletService.updateFromEmail(user.email);
+          try {
+            await this.walletService.checkWallet();
+          } catch (error) {
+            rej(error);
+          }
+        })
       ).subscribe({
         next: result => res(!!result),
         error: err => res(this.router.parseUrl(this.urlFallback))

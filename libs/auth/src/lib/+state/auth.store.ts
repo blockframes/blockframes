@@ -27,7 +27,6 @@ export interface AuthState {
   auth?: { emailVerified: boolean };
   form: UserForm;
   requestedRoute?: string;
-  isEncrypting: boolean;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -43,7 +42,6 @@ const initialState: AuthState = {
     email: '',
     pwd: ''
   },
-  isEncrypting: false,
 }
 
 @Injectable({ providedIn: 'root' })

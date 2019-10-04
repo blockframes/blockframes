@@ -224,9 +224,9 @@ export class DeliveryEditableComponent implements OnInit {
 
     const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
     const orgEthAddress = await this.organizationService.getOrganizationEthAddress();
-    const orgId = this.organizationQuery.getValue().org.id;
+    const movieId = this.movieQuery.getValue().active;
 
-    this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, orgId);
+    this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, movieId);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 

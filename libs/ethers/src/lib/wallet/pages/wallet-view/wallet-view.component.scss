@@ -1,18 +1,11 @@
 @import 'mixins';
 
-mat-divider {
-  width: 100%;
-  margin: 0 20px;
-}
-
 :host {
   display: block;
-  padding-left: 200px;
-  padding-right: 200px;
-  padding-top: 100px;
+  padding: 100px 200px 0 200px;
   header {
-    hr {
-      margin: 0 30px 0 30px;
+    mat-divider {
+      margin: 0 30px;
     }
     button {
       margin-left: 16px;
@@ -22,12 +15,9 @@ mat-divider {
 
 @include tablet {
   :host {
-    display: block;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 10px;
+    padding: 10px 50px 0 50px;
     header {
-      hr {
+      mat-divider {
         display: none;
       }
       button {
@@ -39,12 +29,9 @@ mat-divider {
 
 @include mobile {
   :host {
-    display: block;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
+    padding: 10px 0 10px 10px;
     header {
-      hr {
+      mat-divider {
         display: none;
       }
     }

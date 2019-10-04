@@ -1,18 +1,41 @@
+
 mat-card {
   height: 100px;
-  width: 300px;
+  width: 320px;
+  padding: 0;
+  mat-card-content {
+    .image-container {
+      height: 100px;
+      width: 100px;
+      border-radius: 10px 0 0 10px;
+      margin-right: 16px;
+      img {
+        margin: 40px 30px;
+      }
+    }
+    div.key-info {
+      width: 100%;
+      height: 100%;
+      padding-top: 10px;
+      h5 {
+        margin: 0;
+      }
+      p {
+        margin: 0;
+      }
+      div {
+        padding-top: 10px;
+      }
+    }
+  }
 }
 
-img {
-  height: 100px;
-  width: 100px;
-  margin-right: 15px;
-}
-
-article.small {
+mat-card.small {
   height: 50px;
-  h5 {
+  span {
+    font-weight: 600;
     margin-left: 20px;
+    padding-top: 20px;
   }
   div.small {
     height: 50px;
@@ -21,6 +44,9 @@ article.small {
     margin-right: 0;
     button {
       margin: 5px;
+      mat-icon {
+        color: white; /* This is hardcoded on purpose, do not delete, TODO find a better way with th ux team */
+      }
     }
   }
 }
