@@ -2,7 +2,8 @@ import { FormEntity } from '@blockframes/utils';
 import {
   DistributionRight,
   createDistributionRight,
-  createDistributionRightControls
+  createDistributionRightControls,
+  DistributionRightControls
 } from '../+state/basket.model';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import {
@@ -17,7 +18,7 @@ import {
 } from '../../movie/search/search.form';
 import { MovieMain } from '@blockframes/movie';
 
-export class DistributionRightForm extends FormEntity<DistributionRight> {
+export class DistributionRightForm extends FormEntity<DistributionRightControls> {
   constructor(distributionRight: Partial<DistributionRight> = {}) {
     const right = createDistributionRight(distributionRight);
     const controls = createDistributionRightControls(right);

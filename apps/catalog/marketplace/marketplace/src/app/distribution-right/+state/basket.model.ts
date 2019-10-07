@@ -112,3 +112,5 @@ export function createDistributionRightControls(right: Partial<DistributionRight
     exclusive: new FormControl(right.exclusive)
   };
 }
+
+export type DistributionRightControls = ReturnType<typeof createDistributionRightControls>;
