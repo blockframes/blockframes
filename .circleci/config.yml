@@ -116,8 +116,8 @@ jobs:
           token: $CIRCLE_TOKEN
           command: |
             npm install --save-dev firebase-tools &&
-              npx firebase use ci &&
-              ENV=ci npx firebase deploy --force --token "${FIREBASE_CI_TOKEN}"
+            npx firebase use ci &&
+            ENV=ci npx firebase deploy --force --token "${FIREBASE_CI_TOKEN}" || true;
             ENV=ci npx ng build backend-ops --configuration=$ENV
             ENV=ci node dist/apps/backend-ops/main.js prepareForTesting
             ENV=ci npm run e2e --headless
