@@ -50,7 +50,7 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   }
 
   public addPromotionalElement(): void {
-    const promotionalElement = new FormEntity<PromotionalElement>({
+    const promotionalElement = new FormEntity<PromotionalElementControl>({
       label: new FormControl(''),
       url: new FormControl('', urlValidators),
     });

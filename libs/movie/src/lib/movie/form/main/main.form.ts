@@ -1,3 +1,5 @@
+import { MovieMain, Credit, createMovieMain, createCredit } from '../../+state';
+import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
 import { MovieMain, Movie, Credit, createMovieMain, createCredit } from '../../+state';
 import { FormEntity, FormList, FormField, yearValidators } from '@blockframes/utils';
 import { Validators, FormControl } from '@angular/forms';
@@ -11,7 +13,7 @@ function createCreditFormControl(credit : Partial<Credit> = {}) {
   }
 }
 
-type CreditFormControl = ReturnType<typeof createCreditFormControl>;
+export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
   constructor(credit: Credit) {
@@ -19,12 +21,21 @@ export class MovieCreditForm extends FormEntity<CreditFormControl> {
   }
 }
 
+function createTitleFormControl(entity : Partial<MovieMain> = {}) {
+  return {
+    original: new FormField(entity.title.original),
+    international: new FormField(entity.title.international),
+  }
+}
+
+type TitleFormControl = ReturnType<typeof createTitleFormControl>;
+
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormField(entity.internalRef),
     isan: new FormField(entity.isan),
-    title: new FormEntity<Movie['main']['title']>({
+    title: new FormEntity<TitleFormControl>({
       original: new FormField(entity.title.original),
       international: new FormField(entity.title.international),
     }),
@@ -66,7 +77,7 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
 
   public addDirector(credit?: Partial<Credit>): void {
     const entity = createCredit(credit);
-    const creditControl = new FormEntity<Credit>({
+    const creditControl = new FormEntity<CreditFormControl>({
       firstName: new FormControl(entity.firstName),
       lastName: new FormControl(entity.lastName),
     });
@@ -78,7 +89,7 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
   }
 
   public addProductionCompany(): void {
-    const credit = new FormEntity<Credit>({
+    const credit = new FormEntity<CreditFormControl>({
       firstName: new FormControl(''),
     });
     this.productionCompanies.push(credit);

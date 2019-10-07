@@ -1,10 +1,19 @@
-import { MovieSalesAgentDeal, createMovieSalesAgentDeal, Movie } from '../../+state';
+import { MovieSalesAgentDeal, createMovieSalesAgentDeal, Movie, MovieMain } from '../../+state';
 import { FormEntity, FormField } from '@blockframes/utils';
+
+function createRightsFormControl(entity : Partial<MovieSalesAgentDeal> = {}) {
+  return {
+    from: new FormField(entity.rights.from),
+    to: new FormField(entity.rights.to)
+  }
+}
+
+type RightsFormControl = ReturnType<typeof createRightsFormControl>;
 
 function createMovieSalesAgentDealControls(salesAgentDeal: Partial<MovieSalesAgentDeal> = {}){
   const entity = createMovieSalesAgentDeal(salesAgentDeal);
   return {
-    rights: new FormEntity<Movie['salesAgentDeal']['rights']>({
+    rights: new FormEntity<RightsFormControl>({
       from: new FormField(entity.rights.from),
       to: new FormField(entity.rights.to),
     }),

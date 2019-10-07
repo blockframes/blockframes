@@ -2,6 +2,15 @@ import { MovieSalesInfo, createMovieSalesInfo, Movie } from '../../+state';
 import { FormEntity, FormField, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
+function createInternationalPremiereControl(entity : Partial<MovieSalesInfo> = {}) {
+  return {
+    name: new FormField(entity.internationalPremiere.name),
+    year: new FormField(entity.internationalPremiere.year)
+  }
+}
+
+type InternationalPremiereControl = ReturnType<typeof createInternationalPremiereControl>;
+
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
   return {
@@ -10,7 +19,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     europeanQualification: new FormField<Boolean>(entity.europeanQualification),
     pegi: new FormField(entity.pegi),
     certifications: new FormField(entity.certifications),
-    internationalPremiere: new FormEntity<Movie['salesInfo']['internationalPremiere']>({
+    internationalPremiere: new FormEntity<InternationalPremiereControl>({
       name: new FormField(entity.internationalPremiere.name),
       year: new FormField(entity.internationalPremiere.year),
     }),

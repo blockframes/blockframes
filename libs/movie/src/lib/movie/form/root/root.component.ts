@@ -10,6 +10,7 @@ import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframe
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { FormControl } from '@angular/forms';
 import { getCodeIfExists } from '../../static-model/staticModels';
+import { CreditFormControl } from '../main/main.form';
 
 @Component({
   selector: 'movie-form-root',
@@ -45,6 +46,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
 
   /* Saves the form */
   public submit() {
+    console.log(this.form)
     if (!this.form.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
@@ -109,7 +111,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
         // PRODUCTION COMPANY
         this.form.get('main').productionCompanies.clear();
         movie.production.split(',').forEach((a: string) => {
-          this.form.get('main').productionCompanies.push(new FormEntity<Credit>({
+          this.form.get('main').productionCompanies.push(new FormEntity<CreditFormControl>({
             firstName: new FormControl(a.trim()),
           }));
         })
