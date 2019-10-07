@@ -610,7 +610,10 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/notification/tsconfig.lib.json", "libs/notification/tsconfig.spec.json"],
+            "tsConfig": [
+              "libs/notification/tsconfig.lib.json",
+              "libs/notification/tsconfig.spec.json"
+            ],
             "exclude": ["**/node_modules/**"]
           }
         }
@@ -1476,6 +1479,38 @@
             "jestConfig": "libs/catalog/jest.config.js",
             "tsConfig": "libs/catalog/tsconfig.spec.json",
             "setupFile": "libs/catalog/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "e2e": {
+      "root": "libs/e2e",
+      "sourceRoot": "libs/e2e/src",
+      "projectType": "library",
+      "prefix": "e2e",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/e2e/tsconfig.lib.json",
+              "libs/e2e/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/e2e/tsconfig.lib.json",
+            "project": "libs/e2e/ng-package.json"
           }
         }
       },
