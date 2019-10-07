@@ -29,12 +29,16 @@ export interface ConfirmPassword {
   confirm: string,
 }
 
-interface ConfirmPasswordControl {
-  password: PasswordControl,
-  confirm: PasswordControl,
+function createConfirmPasswordControls(password: string) {
+  return {
+    password: new PasswordControl(password),
+    confirm: new PasswordControl(),
+  }
 }
 
-export class ConfirmPasswordForm extends FormEntity<ConfirmPassword, ConfirmPasswordControl> {
+type ConfirmPasswordControl = ReturnType<typeof createConfirmPasswordControls>;
+
+export class ConfirmPasswordForm extends FormEntity<ConfirmPasswordControl> {
   constructor(password?: string) {
     super({
       password: new PasswordControl(password),

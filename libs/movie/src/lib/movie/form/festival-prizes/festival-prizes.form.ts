@@ -38,7 +38,7 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
   }
 
   public addPrize(): void {
-    const credit = new FormEntity<Prize>({
+    const credit = new FormEntity<PrizeFormControl>({
       name: new FormControl(''),
       year: new FormControl(''),
       prize: new FormControl(''),

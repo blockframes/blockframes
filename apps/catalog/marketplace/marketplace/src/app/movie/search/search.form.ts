@@ -132,7 +132,7 @@ export type CatalogSearchControl = ReturnType<typeof createCatalogSearchControl>
 /* FROM */
 /* ---- */
 
-export class CatalogSearchForm extends FormEntity<CatalogSearch, CatalogSearchControl> {
+export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   constructor(search: Partial<CatalogSearch> = {}) {
     const catalogSearch = createCatalogSearch(search);
     const control = createCatalogSearchControl(catalogSearch);

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Output, EventEmitter, HostBinding }
 import { ControlContainer } from '@angular/forms';
 import { Currencies } from '../../../delivery/+state';
 import { MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
 import { MaterialTemplate } from '../../../material/+state';
 
 @Component({
@@ -22,6 +22,6 @@ export class TemplateMaterialFormComponent{
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
-    return this.controlContainer.control as FormElement<MaterialControl>;
+    return this.controlContainer.control as FormEntity<MaterialControl>;
   }
 }

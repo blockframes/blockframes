@@ -12,6 +12,17 @@ function createMovieSalesCastControls(salesCast: Partial<MovieSalesCast> = {}){
 
 type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
+function createCreditControls(credit: Partial<Credit>) {
+  const entity = createCredit(credit);
+  return {
+    firstName: new FormControl(entity.firstName),
+    lastName: new FormControl(entity.lastName),
+    creditRole: new FormControl(entity.creditRole),
+  }
+}
+
+type CreditControl = ReturnType<typeof createCreditControls>
+
 export class MovieSalesCastForm extends FormEntity<MovieSalesCastControl>{
   constructor(salesCast : MovieSalesCast) {
     super(createMovieSalesCastControls(salesCast));
@@ -23,7 +34,7 @@ export class MovieSalesCastForm extends FormEntity<MovieSalesCastControl>{
 
   public addCredit(credit?: Partial<Credit>): void {
     const entity = createCredit(credit);
-    const creditControl = new FormEntity<Credit>({
+    const creditControl = new FormEntity<CreditControl>({
       firstName: new FormControl(entity.firstName),
       lastName: new FormControl(entity.lastName),
       creditRole: new FormControl(entity.creditRole),

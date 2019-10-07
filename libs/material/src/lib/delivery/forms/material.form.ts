@@ -1,4 +1,4 @@
-import { FormBatch, FormElement } from '@blockframes/utils';
+import { FormBatch, FormEntity } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { Material } from '@blockframes/material';
 import { createMaterial } from '../../material/+state';
@@ -31,6 +31,6 @@ export class MaterialForm extends FormBatch<Material, MaterialControl> {
 
   createControl(material: Partial<Material>) {
     const controls = createMaterialControl(material);
-    return new FormElement(controls);
+    return new FormEntity(controls);
   }
 }
