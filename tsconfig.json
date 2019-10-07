@@ -87,6 +87,8 @@
       "@blockframes/apps/delivery": ["apps/delivery/delivery/src/app/delivery.module.ts"],
       "@blockframes/apps/catalog/marketplace": ["apps/catalog/marketplace/marketplace/src/app/marketplace.module.ts"],
       "@blockframes/apps/catalog/dashboard": ["apps/catalog/dashboard/dashboard/src/app/dashboard.module.ts"],
+
+      "@blockframes/e2e": ["libs/e2e/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

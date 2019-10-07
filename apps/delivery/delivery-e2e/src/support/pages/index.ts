@@ -1,6 +1,5 @@
 import MovieListPage from './movie/MovieListPage';
 import OrganizationEditablePage from './organization/OrganizationEditablePage';
-import WelcomeViewPage from './auth/WelcomeViewPage';
 import MovieCreatePage from './movie/MovieCreatePage';
 import ProfileEditablePage from './profile/ProfileEditablePage';
 import TemplateEditablePage from './template/TemplateEditablePage';
@@ -26,7 +25,6 @@ import DeliveryStakeholdersPage from './delivery/DeliveryStakeholdersPage';
 export {
   MovieListPage,
   OrganizationEditablePage,
-  WelcomeViewPage,
   MovieCreatePage,
   ProfileEditablePage,
   TemplateEditablePage,

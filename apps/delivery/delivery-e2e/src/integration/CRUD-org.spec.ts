@@ -1,7 +1,9 @@
 /// <reference types="cypress" />
 
+// import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
+import WelcomeViewPage from '@blockframes/e2e';
+
 import {
-  WelcomeViewPage,
   OrganizationEditablePage,
   MovieCreatePage,
   LoginViewPage,
@@ -19,7 +21,8 @@ beforeEach(() => {
   cy.visit('/auth');
   cy.viewport('macbook-15');
   const p1: WelcomeViewPage = new WelcomeViewPage();
-  const p2: LoginViewPage = p1.clickCallToAction();
+  p1.clickCallToAction();
+  const p2 = new LoginViewPage();
   p2.fillSignin(USER);
   p2.clickSigninWithNoMovies();
 });
