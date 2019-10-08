@@ -2,7 +2,7 @@
   <form [formGroup]="searchForm" *ngIf="!formSubmitted else displayResults">
     <article fxLayout="column" fxLayoutAlign="space-between center">
       <h3>Search movie on IMDB</h3>
-      <mat-label>Search type : </mat-label>
+      <mat-label>Search type: </mat-label>
       <mat-radio-group aria-label="Search type" formControlName="searchtype" (change)="searchTypeChange($event)" required>
         <mat-radio-button value="normal">Normal</mat-radio-button><br />
         <mat-radio-button value="exact">Exact</mat-radio-button><br />
