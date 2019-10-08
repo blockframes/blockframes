@@ -1,7 +1,6 @@
 import { FormEntity, FormList, FormField, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, createCredit } from '../../+state';
+import { MovieMain, Credit, createMovieMain, createCredit, Movie } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
-
 
 function createCreditFormControl(credit : Partial<Credit> = {}) {
   return {
@@ -19,10 +18,46 @@ export class MovieCreditForm extends FormEntity<CreditFormControl> {
   }
 }
 
-function createTitleFormControl(entity : Partial<MovieMain> = {}) {
+export class DirectorForm extends FormEntity<DirectorFormControl> {
+  constructor(director: Partial<Credit>) {
+    super(createDirectorFormControl(director))
+  }
+}
+
+function createDirectorFormControl(director: Partial<Credit> = {}) {
   return {
-    original: new FormField(entity.title.original),
-    international: new FormField(entity.title.international),
+    firstName: new FormControl(director.firstName),
+    lastName: new FormControl(director.lastName),
+  }
+}
+
+type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
+
+export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
+  constructor(compagny?: Partial<Credit>) {
+    super(createProductionCompagnyControl(compagny))
+  }
+}
+
+function createProductionCompagnyControl(compagny : Partial<Credit> = {}) {
+  return {
+    firstName: new FormControl(compagny.firstName || ''),
+  }
+}
+
+type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyControl>;
+
+
+export class TitleForm extends FormEntity<TitleFormControl> {
+  constructor(title: Movie['main']['title']) {
+    super(createTitleFormControl(title));
+  }
+}
+
+function createTitleFormControl(title : Partial<Movie['main']['title']> = {}) {
+  return {
+    original: new FormField(title.original),
+    international: new FormField(title.international),
   }
 }
 
@@ -33,11 +68,8 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
   return {
     internalRef: new FormField(entity.internalRef),
     isan: new FormField(entity.isan),
-    title: new FormEntity<TitleFormControl>({
-      original: new FormField(entity.title.original),
-      international: new FormField(entity.title.international),
-    }),
-    directors: FormList.factory(entity.directors, el => new MovieCreditForm(el)),
+    title: new TitleForm(entity.title),
+    directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormField(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
     genres: new FormField(entity.genres),
@@ -46,7 +78,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     status: new FormField(entity.status , [Validators.required]),
     length: new FormField<number>(entity.length),
     shortSynopsis: new FormField(entity.shortSynopsis, [Validators.maxLength(500)] ),
-    productionCompanies: FormList.factory(entity.productionCompanies, el => new MovieCreditForm(el)),
+    productionCompanies: FormList.factory(entity.productionCompanies, el => new ProductionCompagnyForm(el)),
   }
 }
 
@@ -75,10 +107,7 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
 
   public addDirector(credit?: Partial<Credit>): void {
     const entity = createCredit(credit);
-    const creditControl = new FormEntity<CreditFormControl>({
-      firstName: new FormControl(entity.firstName),
-      lastName: new FormControl(entity.lastName),
-    });
+    const creditControl = new DirectorForm(entity);
     this.directors.push(creditControl);
   }
 
@@ -87,14 +116,11 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
   }
 
   public addProductionCompany(): void {
-    const credit = new FormEntity<CreditFormControl>({
-      firstName: new FormControl(''),
-    });
+    const credit = new ProductionCompagnyForm();
     this.productionCompanies.push(credit);
   }
 
   public removeProductionCompany(i: number): void {
     this.productionCompanies.removeAt(i);
   }
-
 }
