@@ -1,12 +1,13 @@
-import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements } from '../../+state';
+import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 
-function createPromotionalElementControl(promotionalElement : Partial<PromotionalElement> = {}) {
+function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
+  const { label, url } = createPromotionalElement(promotionalElement);
   return {
-    label: new FormControl(promotionalElement.label || ''),
-    url: new FormControl(promotionalElement.url  || '', urlValidators),
+    label: new FormControl(label),
+    url: new FormControl(url, urlValidators),
   }
 }
 

@@ -3,7 +3,7 @@ import { Material } from "@blockframes/material";
 import { Stakeholder } from "../../stakeholder/+state";
 import { DateRange } from "@blockframes/utils";
 
-export interface MovieSale { 
+export interface MovieSale {
   operatorName: string;
   showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
   rights: DateRange;
@@ -108,7 +108,7 @@ export interface Movie {
   sales: MovieSale[], //@todo 581 => move to subcollection
 
   // @todo #643 not main movie attributes WIP
-  
+
   ipId: string,
   directorNote: string,
   producerNote: string,
@@ -187,6 +187,19 @@ export function createMoviePromotionalDescription(params : Partial<MoviePromotio
   } as MoviePromotionalDescription;
 }
 
+export interface PromotionalElement {
+  label: string,
+  url: string
+}
+
+export function createPromotionalElement(promotionalElement: Partial<PromotionalElement> = {}): PromotionalElement {
+  return {
+    label: '',
+    url: '',
+    ...promotionalElement
+  }
+}
+
 export function createMovieSalesCast(params : Partial<MovieSalesCast> = {}) : MovieSalesCast{
   return {
     credits: [],
@@ -226,6 +239,23 @@ export function createMovieFestivalPrizes(params : Partial<MovieFestivalPrizes> 
     prizes: [],
     ... params
   } as MovieFestivalPrizes;
+}
+
+export function createPrize(prize: Partial<Prize> = {}): Prize {
+  return {
+    name: '',
+    year: null,
+    prize: '',
+    ...prize
+  }
+}
+
+export function createRights(rights: Partial<DateRange> = {}): DateRange {
+  return {
+    from: null,
+    to: null,
+    ...rights
+  }
 }
 
 export function createMovieSalesAgentDeal(params : Partial<MovieSalesAgentDeal> = {}) : MovieSalesAgentDeal{
