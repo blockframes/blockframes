@@ -86,7 +86,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
   }
 
   private acceptInvitation(invitation: Invitation) {
-    return this.invitationService.acceptInvitation(invitation.id);
+    return this.invitationService.acceptInvitation(invitation);
   }
 
   ngOnDestroy(): void {

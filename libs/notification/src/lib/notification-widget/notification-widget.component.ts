@@ -1,9 +1,15 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { User, AuthQuery } from '@blockframes/auth';
 import { NotificationQuery } from '../notification/+state';
-import { InvitationQuery, InvitationStore } from '../invitation/+state';
-import { takeUntil } from 'rxjs/operators';
+import {
+  InvitationQuery,
+  InvitationStore,
+  InvitationStatus,
+  InvitationType
+} from '../invitation/+state';
+import { switchMap } from 'rxjs/operators';
+import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 
 @Component({
   selector: 'notification-widget',
@@ -12,32 +18,39 @@ import { takeUntil } from 'rxjs/operators';
   providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationWidgetComponent implements OnInit, OnDestroy {
+export class NotificationWidgetComponent implements OnInit {
   public user$: Observable<User>;
-  public notifCount: number;
-  public invitCount: number;
-  private destroyed$ = new Subject();
+  public notificationCount$: Observable<number>;
+  public invitationCount$: Observable<number>;
 
   constructor(
-    private auth: AuthQuery,
+    private authQuery: AuthQuery,
     private notificationQuery: NotificationQuery,
-    private invitationQuery: InvitationQuery
+    private invitationQuery: InvitationQuery,
+    private permissionQuery: PermissionsQuery
   ) {}
 
   ngOnInit() {
-    this.user$ = this.auth.user$;
-    this.notificationQuery
-      .selectCount(entity => !entity.isRead)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(count => (this.notifCount = count));
-    this.invitationQuery
-      .selectCount(entity => entity.status === 'pending')
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(count => (this.invitCount = count));
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
+    this.user$ = this.authQuery.user$;
+    this.notificationCount$ = this.notificationQuery.selectCount(
+      notification => !notification.isRead
+    );
+    this.invitationCount$ = this.permissionQuery.isSuperAdmin$.pipe(
+      switchMap(isSuperAdmin => {
+        if (!isSuperAdmin) {
+          return this.invitationQuery.selectCount(
+            invitation =>
+              invitation.status === InvitationStatus.pending &&
+              invitation.type !== InvitationType.fromOrganizationToUser
+          );
+        } else {
+          return this.invitationQuery.selectCount(
+            invitation =>
+              invitation.status === InvitationStatus.pending &&
+              invitation.type === InvitationType.toWorkOnDocument
+          );
+        }
+      })
+    );
   }
 }
