@@ -1,8 +1,8 @@
-import { MovieSalesAgentDeal, createMovieSalesAgentDeal, createRights } from '../../+state';
-import { FormEntity, FormField, DateRange } from '@blockframes/utils';
+import { MovieSalesAgentDeal, createMovieSalesAgentDeal } from '../../+state';
+import { FormEntity, FormField, DateRange, createDateRange } from '@blockframes/utils';
 
 function createRightsFormControl(entity?: Partial<DateRange>) {
-  const { from, to } = createRights(entity);
+  const { from, to } = createDateRange(entity);
   return {
     from: new FormField(from),
     to: new FormField(to)
@@ -18,11 +18,11 @@ export class RightsForm extends FormEntity<RightsFormControl>{
 }
 
 function createMovieSalesAgentDealControls(salesAgentDeal?: Partial<MovieSalesAgentDeal>){
-  const entity = createMovieSalesAgentDeal(salesAgentDeal);
+  const { rights, territories, medias } = createMovieSalesAgentDeal(salesAgentDeal);
   return {
-    rights: new RightsForm(entity.rights),
-    territories: new FormField(entity.territories),
-    medias: new FormField(entity.medias),
+    rights: new RightsForm(rights),
+    territories: new FormField(territories),
+    medias: new FormField(medias)
   }
 }
 

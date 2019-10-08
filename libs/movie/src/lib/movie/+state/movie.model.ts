@@ -252,14 +252,6 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
   }
 }
 
-export function createRights(rights: Partial<DateRange> = {}): DateRange {
-  return {
-    from: null,
-    to: null,
-    ...rights
-  }
-}
-
 export function createTitle(title: Partial<Title> = {}): Title {
   return {
     original: '',

@@ -33,6 +33,14 @@ export interface DateRange {
   to: Date;
 }
 
+export function createDateRange(params: Partial<DateRange> = {}): DateRange {
+  return {
+    from: null,
+    to: null,
+    ...params
+  }
+}
+
  /** check if a date is in a range */
  export function isBetween(date: Date, startRange: Date, endRange: Date){
   return date.getTime() >= startRange.getTime() && date.getTime() <= endRange.getTime();

@@ -2,10 +2,10 @@ import { MovieVersionInfo, createMovieVersionInfo } from '../../+state';
 import { FormEntity, FormField } from '@blockframes/utils';
 
 function createMovieVersionInfoControls(versionInfo?: Partial<MovieVersionInfo>){
-  const entity = createMovieVersionInfo(versionInfo);
+  const { subtitles, dubbings } = createMovieVersionInfo(versionInfo);
   return {
-    subtitles: new FormField(entity.subtitles),
-    dubbings: new FormField(entity.dubbings),
+    subtitles: new FormField(subtitles),
+    dubbings: new FormField(dubbings),
   }
 }
 
@@ -15,5 +15,4 @@ export class MovieVersionInfoForm extends FormEntity<MovieVersionInfoControl>{
   constructor(versionInfo?: MovieVersionInfo) {
     super(createMovieVersionInfoControls(versionInfo));
   }
-
 }

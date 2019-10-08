@@ -13,11 +13,11 @@ function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>){
 type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
 function createCreditControls(credit?: Partial<Credit>) {
-  const entity = createCredit(credit);
+  const { firstName, lastName, creditRole } = createCredit(credit);
   return {
-    firstName: new FormControl(entity.firstName),
-    lastName: new FormControl(entity.lastName),
-    creditRole: new FormControl(entity.creditRole),
+    firstName: new FormControl(firstName),
+    lastName: new FormControl(lastName),
+    creditRole: new FormControl(creditRole),
   }
 }
 
