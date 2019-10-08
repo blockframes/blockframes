@@ -11,6 +11,12 @@ function createInternationalPremiereControl(entity : Partial<MovieSalesInfo> = {
 
 type InternationalPremiereControl = ReturnType<typeof createInternationalPremiereControl>;
 
+class InternationalPremiereForm extends FormEntity<InternationalPremiereControl> {
+  constructor(entity : Partial<MovieSalesInfo>) {
+    super(createInternationalPremiereControl(entity));
+  }
+}
+
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
   return {
@@ -19,10 +25,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     europeanQualification: new FormField<Boolean>(entity.europeanQualification),
     pegi: new FormField(entity.pegi),
     certifications: new FormField(entity.certifications),
-    internationalPremiere: new FormEntity<InternationalPremiereControl>({
-      name: new FormField(entity.internationalPremiere.name),
-      year: new FormField(entity.internationalPremiere.year),
-    }),
+    internationalPremiere: new InternationalPremiereForm(entity),
     originCountryReleaseDate: new FormField<Date>(entity.originCountryReleaseDate),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
   }

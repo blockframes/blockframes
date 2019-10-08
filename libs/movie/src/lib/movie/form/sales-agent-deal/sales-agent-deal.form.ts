@@ -1,4 +1,4 @@
-import { MovieSalesAgentDeal, createMovieSalesAgentDeal, Movie, MovieMain } from '../../+state';
+import { MovieSalesAgentDeal, createMovieSalesAgentDeal } from '../../+state';
 import { FormEntity, FormField } from '@blockframes/utils';
 
 function createRightsFormControl(entity : Partial<MovieSalesAgentDeal> = {}) {
@@ -10,13 +10,16 @@ function createRightsFormControl(entity : Partial<MovieSalesAgentDeal> = {}) {
 
 type RightsFormControl = ReturnType<typeof createRightsFormControl>;
 
+export class RightsForm extends FormEntity<RightsFormControl>{
+  constructor(salesAgentDeal : Partial<MovieSalesAgentDeal>) {
+    super(createRightsFormControl(salesAgentDeal));
+  }
+}
+
 function createMovieSalesAgentDealControls(salesAgentDeal: Partial<MovieSalesAgentDeal> = {}){
   const entity = createMovieSalesAgentDeal(salesAgentDeal);
   return {
-    rights: new FormEntity<RightsFormControl>({
-      from: new FormField(entity.rights.from),
-      to: new FormField(entity.rights.to),
-    }),
+    rights: new RightsForm(entity),
     territories: new FormField(entity.territories),
     medias: new FormField(entity.medias),
   }
@@ -28,5 +31,4 @@ export class MovieSalesAgentDealForm extends FormEntity<MovieSalesAgentDealContr
   constructor(salesAgentDeal : MovieSalesAgentDeal) {
     super(createMovieSalesAgentDealControls(salesAgentDeal));
   }
-
 }

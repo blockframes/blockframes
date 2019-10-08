@@ -4,16 +4,16 @@ import { FormControl } from '@angular/forms';
 
 function createPrizeFormControl(prize : Partial<Prize> = {}) {
   return {
-    name: new FormControl(prize.name),
-    year: new FormControl(prize.year),
-    prize: new FormControl(prize.prize),
+    name: new FormControl(prize.name || ''),
+    year: new FormControl(prize.year || ''),
+    prize: new FormControl(prize.prize || '')
   }
 }
 
 type PrizeFormControl = ReturnType<typeof createPrizeFormControl>;
 
 export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
-  constructor(prize: Prize) {
+  constructor(prize?: Prize) {
     super(createPrizeFormControl(prize));
   }
 }
@@ -38,11 +38,7 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
   }
 
   public addPrize(): void {
-    const credit = new FormEntity<PrizeFormControl>({
-      name: new FormControl(''),
-      year: new FormControl(''),
-      prize: new FormControl(''),
-    });
+    const credit = new MoviePrizeForm();
     this.prizes.push(credit);
   }
 

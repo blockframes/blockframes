@@ -5,15 +5,15 @@ import { FormControl } from '@angular/forms';
 
 function createPromotionalElementControl(promotionalElement : Partial<PromotionalElement> = {}) {
   return {
-    label: new FormControl(promotionalElement.label),
-    url: new FormControl(promotionalElement.url, urlValidators),
+    label: new FormControl(promotionalElement.label || ''),
+    url: new FormControl(promotionalElement.url  || '', urlValidators),
   }
 }
 
 type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
 
 export class MoviePromotionalElementForm extends FormEntity<PromotionalElementControl> {
-  constructor(promotionalElement: PromotionalElement) {
+  constructor(promotionalElement?: PromotionalElement) {
     super(createPromotionalElementControl(promotionalElement));
   }
 }
@@ -50,10 +50,7 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   }
 
   public addPromotionalElement(): void {
-    const promotionalElement = new FormEntity<PromotionalElementControl>({
-      label: new FormControl(''),
-      url: new FormControl('', urlValidators),
-    });
+    const promotionalElement = new MoviePromotionalElementForm();
     this.promotionalElements.push(promotionalElement);
   }
 
