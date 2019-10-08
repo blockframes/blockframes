@@ -10,7 +10,7 @@ import {
   InvitationStatus
 } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Organization, PublicOrganization, organizationRoutes } from '@blockframes/organization';
+import { Organization, PublicOrganization } from '@blockframes/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -55,22 +55,18 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Create an invitation when an organization is invited to work on a document */
   public sendDocumentInvitationToOrg({id, name}: PublicOrganization, docId: string): Promise<void> {
     const invitation = createInvitationToDocument({
-      id: this.fireQuery.createId(),
+      id: this.db.createId(),
       organization: {id, name},
       docId
     });
     return this.db.doc<Invitation>(`invitations/${invitation.id}`).set(invitation);
   }
 
-  public acceptInvitation(invitationId: string) {
-    return this.db
-      .doc<Invitation>(`invitations/${invitationId}`)
-      .update({ status: InvitationStatus.accepted });
+  public acceptInvitation(invitation: Invitation) {
+    return this.update({...invitation, status: InvitationStatus.accepted});
   }
 
-  public declineInvitation(invitationId: string) {
-    return this.db
-      .doc<Invitation>(`invitations/${invitationId}`)
-      .update({ status: InvitationStatus.declined });
+  public declineInvitation(invitation: Invitation) {
+    return this.update({...invitation, status: InvitationStatus.declined});
   }
 }

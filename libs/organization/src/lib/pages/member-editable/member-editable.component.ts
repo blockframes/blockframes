@@ -91,12 +91,12 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.opened = true;
   }
 
-  public acceptInvitation(invitationId: string) {
-    this.invitationService.acceptInvitation(invitationId);
+  public acceptInvitation(invitation: Invitation) {
+    this.invitationService.acceptInvitation(invitation);
   }
 
-  public declineInvitation(invitationId: string) {
-    this.invitationService.declineInvitation(invitationId);
+  public declineInvitation(invitation: Invitation) {
+    this.invitationService.declineInvitation(invitation);
   }
 
   public async updateRole() {

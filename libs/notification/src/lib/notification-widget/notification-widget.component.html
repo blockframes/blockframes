@@ -5,8 +5,8 @@
     class="notification-button">
     <mat-icon
       bf-icon
-      *ngIf="notifCount > 0 || invitCount > 0; else: empty"
-      [matBadge]="notifCount + invitCount"
+      *ngIf="(notificationCount$ | async) > 0 || (invitationCount$ | async)  > 0; else: empty"
+      [matBadge]="(notificationCount$ | async) + (invitationCount$ | async)"
       matBadgeColor="accent"
       matBadgeSize="small">
       notifications_none
