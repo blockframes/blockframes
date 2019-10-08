@@ -56,4 +56,8 @@ export class MovieForm extends FormEntity<MovieControl> {
       }
     });
   }
+
+  get main() {
+    return this.get('main');
+  }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { createMovie, MovieQuery, MovieService, Credit } from '../../+state';
+import { createMovie, MovieQuery, MovieService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PersistNgFormPlugin } from '@datorama/akita';
 import { Router } from '@angular/router';
@@ -50,7 +50,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
     } else {
-      this.snackBar.open(`${this.form.get('main').get('title').get('original').value} saved.`, 'close', { duration: 2000 });
+      this.snackBar.open(`${this.form.main.title.get('original').value} saved.`, 'close', { duration: 2000 });
       this.service.updateById(this.query.getActiveId(), { ...this.form.value });
     }
   }
@@ -75,8 +75,8 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
    */
   public fillForm() {
     const data = {
-      name: this.form.get('main').get('title').get('original').value,
-      year: this.form.get('main').get('productionYear').value
+      name: this.form.main.title.get('original').value,
+      year: this.form.main.get('productionYear').value
     } as SearchRequest;
 
     const dialogRef = this.dialog.open(MovieImdbSearchComponent, { data, width: '700px' });
@@ -85,20 +85,20 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
       if (movie !== undefined && movie !== null) {
 
         // TITLE
-        this.form.get('main').get('title').get('original').setValue(movie.title);
+        this.form.main.title.get('original').setValue(movie.title);
 
         // PRODUCTION YEAR
-        this.form.get('main').get('productionYear').setValue(movie.year);
+        this.form.main.get('productionYear').setValue(movie.year);
 
         // POSTER
         const poster = await this.imageUploader.upload(movie.poster);
         if (poster) {
-          this.form.get('main').get('poster').setValue(poster);
+          this.form.main.get('poster').setValue(poster);
         }
 
         // DIRECTOR
-        this.form.get('main').directors.clear();
-        this.form.get('main').addDirector(formatCredit(movie.director));
+        this.form.main.directors.clear();
+        this.form.main.addDirector(formatCredit(movie.director));
 
         // ACTORS
         this.form.get('salesCast').credits.clear();
@@ -108,15 +108,15 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
         formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, creditRole: 'writer' }));
 
         // PRODUCTION COMPANY
-        this.form.get('main').productionCompanies.clear();
+        this.form.main.productionCompanies.clear();
         movie.production.split(',').forEach((a: string) => {
-          this.form.get('main').productionCompanies.push(new FormEntity<CreditFormControl>({
+          this.form.main.productionCompanies.push(new FormEntity<CreditFormControl>({
             firstName: new FormControl(a.trim()),
           }));
         })
 
         // SHORT SYNOPSIS
-        this.form.get('main').get('shortSynopsis').setValue(movie.plot.substring(0, 500));
+        this.form.main.get('shortSynopsis').setValue(movie.plot.substring(0, 500));
 
         // SYNOPSIS
         this.form.get('story').get('synopsis').setValue(movie.plot.substring(0, 500));
@@ -127,7 +127,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
           const language = getCodeIfExists('LANGUAGES', g.trim());
           if (language) { languages.push(language) }
         });
-        this.form.get('main').get('languages').setValue(languages);
+        this.form.main.get('languages').setValue(languages);
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         this.form.get('salesInfo').get('originCountryReleaseDate').setValue(movie.released);
@@ -139,7 +139,7 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
           if (c === 'USA') { c = 'United States' };
           const country = getCodeIfExists('TERRITORIES', c);
           if (country) { countries.push(country) }
-          this.form.get('main').get('originCountries').setValue(countries);
+          this.form.main.get('originCountries').setValue(countries);
         });
 
         // GENRES
@@ -150,16 +150,16 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
           const genre = getCodeIfExists('GENRES', g);
           if (genre) { genres.push(genre) }
         });
-        this.form.get('main').get('genres').setValue(genres);
+        this.form.main.get('genres').setValue(genres);
 
         // LENGTH
-        this.form.get('main').get('length').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
+        this.form.main.get('length').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
 
         // PEGI (Rating)
         this.form.get('salesInfo').get('pegi').setValue(movie.rated);
 
         // STATUS
-        this.form.get('main').get('status').setValue('finished');
+        this.form.main.get('status').setValue('finished');
 
         this.snackBar.open('Form filled with IMDB data!', 'close', { duration: 2000 });
       }
