@@ -222,6 +222,8 @@ export function createMovieSalesInfo(params : Partial<MovieSalesInfo> = {}) : Mo
 
 export function createMovieStory(params : Partial<MovieStory> = {}) : MovieStory{
   return {
+    synopsis: '',
+    logline: '',
     ... params
   } as MovieStory;
 }
@@ -255,6 +257,14 @@ export function createRights(rights: Partial<DateRange> = {}): DateRange {
     from: null,
     to: null,
     ...rights
+  }
+}
+
+export function createTitle(title: Partial<Title> = {}): Title {
+  return {
+    original: '',
+    international: '',
+    ...title
   }
 }
 

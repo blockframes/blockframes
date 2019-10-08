@@ -1,18 +1,19 @@
-import { MovieSalesInfo, createMovieSalesInfo } from '../../+state';
+import { MovieSalesInfo, createMovieSalesInfo, createPrize } from '../../+state';
 import { FormEntity, FormField, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
-function createInternationalPremiereControl(entity : Partial<MovieSalesInfo['internationalPremiere']> = {}) {
+function createInternationalPremiereControl(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {;
+  const { name, year } = createPrize(entity)
   return {
-    name: new FormField(entity.name),
-    year: new FormField(entity.year)
+    name: new FormField(name),
+    year: new FormField(year)
   }
 }
 
 type InternationalPremiereControl = ReturnType<typeof createInternationalPremiereControl>;
 
 class InternationalPremiereForm extends FormEntity<InternationalPremiereControl> {
-  constructor(entity : Partial<MovieSalesInfo['internationalPremiere']>) {
+  constructor(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {
     super(createInternationalPremiereControl(entity));
   }
 }

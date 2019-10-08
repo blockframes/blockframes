@@ -1,33 +1,35 @@
 import { FormEntity, FormList, FormField, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, createCredit, Movie } from '../../+state';
+import { MovieMain, Credit, createMovieMain, createCredit, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 
-function createCreditFormControl(credit : Partial<Credit> = {}) {
+function createCreditFormControl(credit?: Partial<Credit>) {
+  const { firstName, lastName, creditRole } = createCredit(credit);
   return {
-    firstName: new FormControl(credit.firstName),
-    lastName: new FormControl(credit.lastName),
-    creditRole: new FormControl(credit.creditRole),
+    firstName: new FormControl(firstName),
+    lastName: new FormControl(lastName),
+    creditRole: new FormControl(creditRole),
   }
 }
 
 export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
-  constructor(credit: Credit) {
+  constructor(credit?: Credit) {
     super(createCreditFormControl(credit));
   }
 }
 
 export class DirectorForm extends FormEntity<DirectorFormControl> {
-  constructor(director: Partial<Credit>) {
+  constructor(director?: Partial<Credit>) {
     super(createDirectorFormControl(director))
   }
 }
 
-function createDirectorFormControl(director: Partial<Credit> = {}) {
+function createDirectorFormControl(director?: Partial<Credit>) {
+  const { firstName, lastName } = createCredit(director);
   return {
-    firstName: new FormControl(director.firstName),
-    lastName: new FormControl(director.lastName),
+    firstName: new FormControl(firstName),
+    lastName: new FormControl(lastName),
   }
 }
 
@@ -39,9 +41,10 @@ export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl
   }
 }
 
-function createProductionCompagnyControl(compagny : Partial<Credit> = {}) {
+function createProductionCompagnyControl(compagny?: Partial<Credit>) {
+  const { firstName } = createCredit(compagny);
   return {
-    firstName: new FormControl(compagny.firstName || ''),
+    firstName: new FormControl(firstName),
   }
 }
 
@@ -49,15 +52,16 @@ type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyContr
 
 
 export class TitleForm extends FormEntity<TitleFormControl> {
-  constructor(title: Movie['main']['title']) {
+  constructor(title?: Movie['main']['title']) {
     super(createTitleFormControl(title));
   }
 }
 
-function createTitleFormControl(title : Partial<Movie['main']['title']> = {}) {
+function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
+  const { original, international } = createTitle(title);
   return {
-    original: new FormField(title.original),
-    international: new FormField(title.international),
+    original: new FormField(original),
+    international: new FormField(international),
   }
 }
 

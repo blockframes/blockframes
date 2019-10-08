@@ -19,7 +19,7 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElementCo
   }
 }
 
-function createMoviePromotionalElementsControls(promotionalElements : Partial<MoviePromotionalElements> = {}) {
+function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
     images: FormList.factory(entity.images),
@@ -30,7 +30,7 @@ function createMoviePromotionalElementsControls(promotionalElements : Partial<Mo
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
-  constructor(promotionalElements : MoviePromotionalElements) {
+  constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 

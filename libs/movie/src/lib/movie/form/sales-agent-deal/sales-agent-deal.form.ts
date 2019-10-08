@@ -17,7 +17,7 @@ export class RightsForm extends FormEntity<RightsFormControl>{
   }
 }
 
-function createMovieSalesAgentDealControls(salesAgentDeal: Partial<MovieSalesAgentDeal> = {}){
+function createMovieSalesAgentDealControls(salesAgentDeal?: Partial<MovieSalesAgentDeal>){
   const entity = createMovieSalesAgentDeal(salesAgentDeal);
   return {
     rights: new RightsForm(entity.rights),
@@ -29,7 +29,7 @@ function createMovieSalesAgentDealControls(salesAgentDeal: Partial<MovieSalesAge
 type MovieSalesAgentDealControl = ReturnType<typeof createMovieSalesAgentDealControls>
 
 export class MovieSalesAgentDealForm extends FormEntity<MovieSalesAgentDealControl>{
-  constructor(salesAgentDeal : MovieSalesAgentDeal) {
+  constructor(salesAgentDeal?: MovieSalesAgentDeal) {
     super(createMovieSalesAgentDealControls(salesAgentDeal));
   }
 }
