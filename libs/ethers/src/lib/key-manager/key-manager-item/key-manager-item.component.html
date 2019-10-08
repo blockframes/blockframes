@@ -1,19 +1,21 @@
 <ng-container *ngIf="isSmall; else notSmall">
-  <article class="small" fxLayout="row" fxLayoutAlign="space-between center">
-    <h5>{{ keyObject.name }}</h5>
+  <mat-card class="small" fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="mat-h4">{{ keyObject.name }}</span>
     <div class="small" [ngStyle]="{ 'background-color': backgroundColor }">
       <button mat-icon-button (click)="selectKey.emit(keyObject)">
         <mat-icon class="material-icons-outlined">keyboard_arrow_right</mat-icon>
       </button>
     </div>
-  </article>
+  </mat-card>
 </ng-container>
 
 <ng-template #notSmall>
   <mat-card fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="start center">
-      <img [ngStyle]="{ 'background-color': backgroundColor }" src="/assets/icons/keyIcon.svg">
-      <div fxLayout="column">
+      <div class="image-container" [ngStyle]="{ 'background-color': backgroundColor }">
+        <img src="/assets/icons/keyIcon.svg">
+      </div>
+      <div class="key-info" fxLayout="column">
         <h5>{{ keyObject.name }}</h5>
         <span>Lorem Ipsum</span>
         <div fxLayout="row" fxLayoutAlign="end center">

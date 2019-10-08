@@ -1,9 +1,0 @@
-<mat-chip-list *ngIf="(encrypting$ | async)">
-  <mat-chip
-    color="primary"
-    matTooltip="We are currently encrypting your key pair, this process can take several minutes. DO NOT CLOSE THIS PAGE BEFORE THE END OF ENCRYPTION !"
-  >
-    ENCRYPTING
-    <mat-spinner [diameter]="20" [strokeWidth]="2" class="encrypting-spinner"></mat-spinner>
-  </mat-chip>
-</mat-chip-list>

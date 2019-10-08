@@ -24,12 +24,6 @@ export class DatepickerRangeComponent {
   @Input() selectedRange: DateRange;
   /** An array of reserved rights dates */
   @Input() disabledDates: DateRange[];
-  @Input()
-  set opened(isOpen: boolean) {
-    if (isOpen) {
-      this.initDatepicker();
-    }
-  }
 
   /** The range chosen by the user */
   @Output() wantedRange = new EventEmitter<DateRange>();
@@ -45,10 +39,6 @@ export class DatepickerRangeComponent {
   rangeForm = new FormControl('', [Validators.required]);
 
   constructor(private _snackBar: MatSnackBar) {}
-
-  public addRange() {
-    this.wantedRange.emit(this.range);
-  }
 
   /** Open the datepicker */
   initDatepicker() {
@@ -67,7 +57,9 @@ export class DatepickerRangeComponent {
         range.end < range.begin
           ? { from: range.end, to: range.begin }
           : { from: range.begin, to: range.end };
-      this.validateDatepickerInput(this.range);
+      if (this.validateDatepickerInput(this.range)) {
+        this.wantedRange.emit(this.range);
+      }
     }
   }
 
@@ -98,7 +90,7 @@ export class DatepickerRangeComponent {
     snackBarRef.onAction().subscribe(() => this.initDatepicker());
   }
 
-  getErrorMessage() {
+  get errorMessage() {
     return this.rangeForm.hasError('required') ? 'You must enter correct dates' : '';
   }
 }

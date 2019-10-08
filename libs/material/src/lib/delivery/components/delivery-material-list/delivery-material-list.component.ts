@@ -12,7 +12,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Delivery } from '../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { deliveryActiveQuery } from '../../guards/delivery-active.guard';
 
 @Component({
   selector: 'delivery-material-list',

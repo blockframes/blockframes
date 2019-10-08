@@ -1,7 +1,6 @@
 import {
   EntityControl,
   PasswordControl,
-  EmailControl,
   FormEntity
 } from '@blockframes/utils';
 import { FormControl, Validators } from '@angular/forms';
@@ -26,7 +25,7 @@ function createSignup(params?: Partial<SignUp>): SignUp {
 function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
   const signup = createSignup(entity);
   return {
-    email: new EmailControl(signup.email),
+    email: new FormControl(signup.email, [Validators.required, Validators.email]),
     password: new PasswordControl(signup.password),
     name: new FormControl(signup.name),
     surname: new FormControl(signup.surname)

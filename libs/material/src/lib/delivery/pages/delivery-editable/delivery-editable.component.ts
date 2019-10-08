@@ -51,7 +51,10 @@ export class DeliveryEditableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.materials$ = combineLatest([this.query.selectActive(), this.materialQuery.selectAll()]).pipe(
+    this.materials$ = combineLatest([
+      this.query.selectActive(),
+      this.materialQuery.selectAll()
+    ]).pipe(
       tap(([delivery, materials]) => {
         this.form.upsertValue(materials);
         // Disable or enable form depending on delivery isSigned property
@@ -82,7 +85,6 @@ export class DeliveryEditableComponent implements OnInit {
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(materials, delivery)
         : this.materialService.update(materials, delivery);
-      this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
@@ -224,9 +226,9 @@ export class DeliveryEditableComponent implements OnInit {
 
     const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
     const orgEthAddress = await this.organizationService.getOrganizationEthAddress();
-    const orgId = this.organizationQuery.getValue().org.id;
+    const movieId = this.movieQuery.getValue().active;
 
-    this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, orgId);
+    this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, movieId);
     this.router.navigateByUrl('/layout/o/account/wallet/send');
   }
 

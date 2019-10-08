@@ -1,16 +1,27 @@
 import { BasketQuery } from './basket.query';
-import { FireQuery } from '@blockframes/utils';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
 import { OrganizationQuery } from '@blockframes/organization';
+import { BasketState, BasketStore } from './basket.store';
+import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
+
+const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
+  path: `orgs/${organizationId}/baskets`,
+  queryFn: ref => ref.where('status', '==', 'pending')
+})
 
 @Injectable({ providedIn: 'root' })
-export class BasketService {
+@CollectionConfig({path: 'orgs/:orgId/baskets'})
+export class BasketService extends SubcollectionService<BasketState>{
+  syncQuery = syncQuery.bind(this, basketsQuery(this.organizationQuery.getValue().org.id))
+
   constructor(
-    private db: FireQuery,
     private organizationQuery: OrganizationQuery,
-    private basketQuery: BasketQuery
-  ) {}
+    private basketQuery: BasketQuery,
+    store: BasketStore
+  ) {
+    super(store)
+  }
 
   public addBasket(basket: CatalogBasket) {
     const id = this.db.createId();

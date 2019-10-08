@@ -10,6 +10,7 @@ import { MovieEmptyComponent } from '@blockframes/movie';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
+import { NotificationsGuard } from '@blockframes/notification';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -36,8 +37,8 @@ export const routes: Routes = [
       },
       {
         path: 'o',
-        canActivate: [PermissionsGuard, OrganizationGuard],
-        canDeactivate: [PermissionsGuard, OrganizationGuard],
+        canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
+        canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
         children: [
           {
             path: '',

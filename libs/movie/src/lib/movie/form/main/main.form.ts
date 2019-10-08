@@ -1,5 +1,5 @@
 import { MovieMain, Movie, Credit, createMovieMain, createCredit } from '../../+state';
-import { FormEntity, FormList, YearControl, FormField } from '@blockframes/utils';
+import { FormEntity, FormList, FormField, yearValidators } from '@blockframes/utils';
 import { Validators, FormControl } from '@angular/forms';
 
 
@@ -30,7 +30,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     }),
     directors: FormList.factory(entity.directors, el => new MovieCreditForm(el)),
     poster: new FormField(entity.poster),
-    productionYear: new YearControl(entity.productionYear),
+    productionYear: new FormControl(entity.productionYear, yearValidators),
     genres: new FormField(entity.genres),
     originCountries: new FormField(entity.originCountries),
     languages: new FormField(entity.languages),

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
-import { KeyManagerService } from '../../key-manager/+state';
+import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
 import { MetaTx, SignedMetaTx, ActionTx, TxFeedback } from '../../types';
 import { WalletQuery } from './wallet.query';
@@ -26,6 +26,7 @@ export class WalletService {
     private query: WalletQuery,
     private store: WalletStore,
     private keyManager: KeyManagerService,
+    private keyQuery: KeyManagerQuery,
     private relayer: Relayer,
   ) {}
 
@@ -218,5 +219,16 @@ export class WalletService {
     this._requireProvider();
     console.log('wait for :', txHash);
     return this.provider.waitForTransaction(txHash);
+  }
+
+  public async checkWallet() {
+    this._requireProvider();
+    const ensDomain = this.query.getValue().ensDomain;
+    const walletCode = await this.provider.getCode(ensDomain);
+    if (walletCode === '0x') { // wallet has been destroyed or is not yet deployed
+      const keys = [...this.keyQuery.getKeysOfUser(ensDomain)];
+      keys.forEach(key => this.keyManager.deleteKey(key));
+      throw new Error('self-destructed');
+    }
   }
 }

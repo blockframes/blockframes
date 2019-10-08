@@ -15,10 +15,10 @@
   </header>
   <section>
     <h3>My Profile</h3>
-    <article fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center" *ngIf="!!wallet.address">
+    <mat-card fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start center" *ngIf="!!wallet.address">
       <wallet-blockie fxFlex="noshrink" [address]="wallet.address"></wallet-blockie>
       <wallet-address-view fxFlex="grow" [ethAddress]="wallet.address" [ensName]="wallet.ensDomain"></wallet-address-view>
-    </article>
+    </mat-card>
     <key-manager-list [ensDomain]="wallet.ensDomain" (linkKey)="linkKey($event)" (deleteKey)="deleteKey($event)"></key-manager-list>
   </section>
 </ng-container>

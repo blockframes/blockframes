@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MonthCalendarModule } from '@blockframes/ui/month-calendar/month-calendar.module';
 import { DatepickerModule } from '@blockframes/ui/datepicker/datepicker.module';
 import { DistributionRightCreateComponent } from './create.component';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -22,7 +23,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-
 @NgModule({
   declarations: [DistributionRightCreateComponent],
   imports: [
@@ -31,6 +31,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     DatepickerModule,
     MonthCalendarModule,
     FlexLayoutModule,
+    TranslateSlugModule,
 
     // Material
     MatInputModule,

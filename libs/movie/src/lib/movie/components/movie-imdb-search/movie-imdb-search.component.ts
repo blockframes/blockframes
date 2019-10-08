@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { omdbApiKey } from "@env";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, YearControl } from '@blockframes/utils';
+import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, yearValidators } from '@blockframes/utils';
 import { MatPaginator, MatTableDataSource, MatRadioChange } from '@angular/material';
 
 @Component({
@@ -41,7 +41,7 @@ export class MovieImdbSearchComponent implements OnInit {
   ngOnInit() {
     this.searchForm = this.builder.group({
       searchvalue: [this.data.name, Validators.required],
-      year: new YearControl(this.data.year),
+      year: new FormControl(this.data.year, yearValidators),
       searchtype: new FormControl(this.searchType, Validators.required),
     });
 

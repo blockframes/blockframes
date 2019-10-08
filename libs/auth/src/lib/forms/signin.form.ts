@@ -1,9 +1,9 @@
 import {
   EntityControl,
   FormEntity,
-  PasswordControl,
-  EmailControl
+  PasswordControl
 } from '@blockframes/utils';
+import { FormControl, Validators } from '@angular/forms';
 
 interface SignIn {
   email: string
@@ -21,7 +21,7 @@ function createSignin(params?: Partial<SignIn>): SignIn {
 function createSigninControls(entity: Partial<SignIn>): EntityControl<SignIn> {
   const signin = createSignin(entity);
   return {
-    email: new EmailControl(signin.email),
+    email: new FormControl(signin.email, [Validators.required, Validators.email]),
     password: new PasswordControl(signin.password),
   }
 }
