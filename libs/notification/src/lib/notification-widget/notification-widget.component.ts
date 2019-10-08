@@ -1,14 +1,15 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { User, AuthQuery } from '@blockframes/auth';
 import { NotificationQuery } from '../notification/+state';
 import {
   InvitationQuery,
   InvitationStore,
   InvitationStatus,
-  InvitationType
+  InvitationType,
+  Invitation
 } from '../invitation/+state';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 
 @Component({
@@ -32,25 +33,33 @@ export class NotificationWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.notificationCount$ = this.notificationQuery.selectCount(
-      notification => !notification.isRead
-    );
+    this.notificationCount$ = this.notificationQuery.selectCount(notification => !notification.isRead);
     this.invitationCount$ = this.permissionQuery.isSuperAdmin$.pipe(
-      switchMap(isSuperAdmin => {
-        if (!isSuperAdmin) {
-          return this.invitationQuery.selectCount(
-            invitation =>
-              invitation.status === InvitationStatus.pending &&
-              invitation.type !== InvitationType.fromOrganizationToUser
-          );
-        } else {
-          return this.invitationQuery.selectCount(
-            invitation =>
-              invitation.status === InvitationStatus.pending &&
-              invitation.type === InvitationType.toWorkOnDocument
-          );
-        }
-      })
+      switchMap(isSuperAdmin =>
+        isSuperAdmin
+          ? this.invitationQuery.selectCount(invitation => this.adminInvitations(invitation))
+          : this.invitationQuery.selectCount(invitation => this.memberInvitations(invitation))
+      )
+    );
+  }
+
+  private adminInvitations(invitation: Invitation) {
+    return (
+      invitation.status === InvitationStatus.pending &&
+      invitation.type !== InvitationType.fromOrganizationToUser
+    );
+  }
+
+  private memberInvitations(invitation: Invitation) {
+    return (
+      invitation.status === InvitationStatus.pending &&
+      invitation.type === InvitationType.toWorkOnDocument
+    );
+  }
+
+  public get totalCount() {
+    return combineLatest([this.invitationCount$, this.notificationCount$]).pipe(
+      map(counts => counts[0] + counts[1])
     );
   }
 }

@@ -21,6 +21,7 @@ import { filter, switchMap } from 'rxjs/operators';
 export class InvitationListComponent implements OnInit, OnDestroy {
   public docInvitations$: Observable<Invitation[]>;
   public userInvitations$: Observable<Invitation[]>;
+  public isSuperAdmin$: Observable<boolean>;
   private sub: Subscription;
 
   constructor(
@@ -45,11 +46,14 @@ export class InvitationListComponent implements OnInit, OnDestroy {
       sortByOrder: Order.DESC
     });
 
+    this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+
     this.userInvitations$ = this.permissionQuery.isSuperAdmin$.pipe(
       switchMap((isSuperAdmin) => {
         const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
         if (!isSuperAdmin) {
           const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
+          // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
           this.store.remove(ids);
         }
         return this.query.selectAll({

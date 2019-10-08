@@ -5,9 +5,12 @@
     <mat-divider></mat-divider>
   </ng-container>
 
-  <ng-container *ngFor="let invitation of (userInvitations$ | async)">
-    <invitation-item [invitation]="invitation"></invitation-item>
-    <mat-divider></mat-divider>
+  <!-- Only SuperAdmins can get user requests invitations in notification-widget -->
+  <ng-container *ngIf="(isSuperAdmin$ | async)">
+    <ng-container *ngFor="let invitation of (userInvitations$ | async)">
+      <invitation-item [invitation]="invitation"></invitation-item>
+      <mat-divider></mat-divider>
+    </ng-container>
   </ng-container>
 
 </section>
