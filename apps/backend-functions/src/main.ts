@@ -118,7 +118,7 @@ export const onMovieStakeholderDeleteEvent = onDocumentDelete(
   onMovieStakeholderDelete
 );
 
-/** Trigger: when an invitation is updated (e. g. when invitation.state change). */
+/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite

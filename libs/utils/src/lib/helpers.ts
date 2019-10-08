@@ -118,3 +118,16 @@ export function numberTo256Bits(num: number) {
   const hex = numberToHexString(num);
   return padTo256Bits(hex);
 }
+
+/** Return the current value of the path from Firestore */
+export async function snapshot<T>(path: string): Promise<T> {
+  // If path targets a collection ( odd number of segments after the split )
+  if (path.split('/').length % 2 !== 0) {
+    const snap = await this.collection(path).ref.get();
+    return snap.docs.map(doc => doc.data()) as any;
+    // Else path targets a doc
+  } else {
+    const snap = await this.doc(path).ref.get();
+    return snap.data() as any;
+  }
+}
