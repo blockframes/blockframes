@@ -40,9 +40,6 @@ type ConfirmPasswordControl = ReturnType<typeof createConfirmPasswordControls>;
 
 export class ConfirmPasswordForm extends FormEntity<ConfirmPasswordControl> {
   constructor(password?: string) {
-    super({
-      password: new PasswordControl(password),
-      confirm: new PasswordControl(),
-    }, { validators: confirmPasswords() });
+    super(createConfirmPasswordControls(password), { validators: confirmPasswords() });
   }
 }
