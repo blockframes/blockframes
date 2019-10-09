@@ -344,11 +344,11 @@ export async function onInvitationWrite(
     // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
       case InvitationType.toWorkOnDocument:
-        return await onDocumentInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
+        return onDocumentInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromOrganizationToUser:
-        return await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+        return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromUserToOrganization:
-        return await onInvitationFromUserToJoinOrgUpdate(
+        return onInvitationFromUserToJoinOrgUpdate(
           invitationDocBefore,
           invitationDoc,
           invitation

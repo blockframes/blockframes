@@ -24,17 +24,27 @@ export class InvitationItemComponent {
       return 'You have been invited to work on a delivery.';
     }
     if (this.invitation.type === InvitationType.fromUserToOrganization) {
-      return `${this.invitation.user.name} ${this.invitation.user.surname} wishes to join your organization`;
+      return `${this.invitation.user.name} ${
+        this.invitation.user.surname
+      } wishes to join your organization`;
     }
   }
 
   public acceptInvitation(invitation: Invitation) {
-    this.service.acceptInvitation(invitation);
-    this.snackBar.open('You accepted the invitation!', 'close', { duration: 5000 });
+    try {
+      this.service.acceptInvitation(invitation);
+      this.snackBar.open('You accepted the invitation!', 'close', { duration: 5000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
+    }
   }
 
   public declineInvitation(invitation: Invitation) {
-    this.service.declineInvitation(invitation);
-    this.snackBar.open('You declined the invitation.', 'close', { duration: 5000 });
+    try {
+      this.service.declineInvitation(invitation);
+      this.snackBar.open('You declined the invitation.', 'close', { duration: 5000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
+    }
   }
 }
