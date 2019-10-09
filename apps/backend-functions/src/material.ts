@@ -2,7 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DocType, Material, Movie, Organization, Delivery, MaterialStatus } from './data/types';
+import { DocType, Material, Movie, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
 export const onMovieMaterialUpdate = async (
@@ -20,7 +20,7 @@ export const onMovieMaterialUpdate = async (
     getOrganizationsOfDocument(deliveryId, 'deliveries')
   );
   const orgsPerDelivery = await Promise.all(orgsPromises);
-  const organizations: Organization[] = uniqBy(flatten(orgsPerDelivery), 'id');
+  const organizations: OrganizationDocument[] = uniqBy(flatten(orgsPerDelivery), 'id');
 
   if (!material || !materialBefore) {
     console.info('No changes detected on this document');

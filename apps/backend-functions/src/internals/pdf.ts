@@ -5,7 +5,7 @@
  * and in a firebase function.
  */
 import { groupBy, sortBy, isEmpty } from 'lodash';
-import { asIDMap, Delivery, IDMap, Material, Organization, Stakeholder, Step } from '../data/types';
+import { asIDMap, Delivery, IDMap, Material, OrganizationDocument, Stakeholder, Step } from '../data/types';
 import { getCollection, getDocument } from '../data/internals';
 
 const PdfPrinter = require('pdfmake');
@@ -18,7 +18,7 @@ const PdfPrinter = require('pdfmake');
  */
 interface DeliveryContent {
   txID: { [stakeholderID: string]: string };
-  orgs: IDMap<Organization>;
+  orgs: IDMap<OrganizationDocument>;
   steps: IDMap<Step>;
   materials: Material[];
 }
@@ -83,7 +83,7 @@ const center = (content: string | { [k: string]: any }): any => {
  * @param orgIds
  * @param orgs
  */
-function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
+function rowOrganizations(orgIds: string[], orgs: IDMap<OrganizationDocument>): any {
   const columns: any = orgIds.map((id: string) => {
     const org = orgs[id];
     return [subHeader(org.name), description(org.officeAddress)];
@@ -204,7 +204,7 @@ function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: S
  */
 function rowSignatures(
   organizationIds: string[],
-  organizations: { [id: string]: Organization },
+  organizations: { [id: string]: OrganizationDocument },
   txID: { [orgId: string]: string }
 ): any {
   if (isEmpty(txID)) {
@@ -293,7 +293,7 @@ export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
   const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
 
   const orgs = await Promise.all(
-    stakeholders.map(({id}) => getDocument<Organization>(`orgs/${id}`))
+    stakeholders.map(({id}) => getDocument<OrganizationDocument>(`orgs/${id}`))
   );
 
   const materials = await getCollection<Material>(`deliveries/${deliveryId}/materials`);

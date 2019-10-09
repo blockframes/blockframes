@@ -6,7 +6,7 @@ import {
   DocInformations,
   DocType,
   Movie,
-  Organization,
+  OrganizationDocument,
   SnapObject,
   Stakeholder
 } from './data/types';
@@ -68,7 +68,7 @@ async function stakeholdersCollectionEvent(
     type: !!context.params.movieID ? DocType.movie : DocType.delivery
   };
 
-  const organization = await getDocument<Organization>(`orgs/${newStakeholder.id}`);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${newStakeholder.id}`);
 
   if (!!document && !!newStakeholder && !!organization) {
     const documentSnapshot = await db.doc(`${collection}/${document.id}`).get();
@@ -121,12 +121,12 @@ async function stakeholdersCollectionEvent(
  * Takes a list of Organization and a SnapObject to generate one notification for each users
  * working on the document, with custom path and message.
  */
-function createNotifications(organizations: Organization[], snap: SnapObject) {
+function createNotifications(organizations: OrganizationDocument[], snap: SnapObject) {
   const path = !!snap.delivery
     ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
     : `/layout/o/home/${snap.movie.id}/teamwork`;
 
-  const isNotTheInvitedOrganization = (organization: Organization): boolean => {
+  const isNotTheInvitedOrganization = (organization: OrganizationDocument): boolean => {
     return !!organization && !!organization.userIds && organization.id !== snap.organization.id;
   };
 

@@ -7,7 +7,7 @@ import { functions, db } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { organizationCreated } from './assets/mail-templates';
-import { Organization, OrganizationStatus } from './data/types';
+import { OrganizationDocument, OrganizationStatus } from './data/types';
 import { precomputeAddress as precomputeEthAddress, emailToEnsDomain, RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 
@@ -39,8 +39,8 @@ export async function onOrganizationUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ): Promise<any> {
-  const before = change.before.data() as Organization;
-  const after = change.after.data() as Organization;
+  const before = change.before.data() as OrganizationDocument;
+  const after = change.after.data() as OrganizationDocument;
 
   if (!before || !after || !after.name) {
     console.error('Invalid org data, before:', before, 'after:', after);
@@ -56,7 +56,7 @@ export async function onOrganizationUpdate(
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
 
   if (becomeAccepted) {
-    const { userIds } = before as Organization;
+    const { userIds } = before as OrganizationDocument;
     const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
 
     const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);

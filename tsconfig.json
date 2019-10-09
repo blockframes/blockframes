@@ -32,7 +32,11 @@
       "@blockframes/movie/import": ["libs/movie/src/lib/movie/components/import/import-movie.module.ts"],
 
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+
+      // Organization
       "@blockframes/organization": ["libs/organization/src/index.ts"],
+      "@blockframes/organization/types": ["libs/organization/src/lib/+state/organization.firestore.ts"],
+
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],
       "@blockframes/template": ["libs/material/src/index.ts"],

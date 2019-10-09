@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie, Organization, Stakeholder } from './data/types';
+import { Delivery, DocType, Material, Movie, OrganizationDocument, Stakeholder } from './data/types';
 import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
@@ -80,7 +80,7 @@ export async function onDeliveryUpdate(
  * Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
  * that all stakeholders approved the delivery.
  */
-async function notifyOnNewSignee(delivery: any, organizations: Organization[], movie: Movie): Promise<void> {
+async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocument[], movie: Movie): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
   const newStakeholder = await getDocument<Stakeholder>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
@@ -90,7 +90,7 @@ async function notifyOnNewSignee(delivery: any, organizations: Organization[], m
     throw new Error('This stakeholder doesn\'t exist !');
   }
 
-  const newStakeholderOrg = await getDocument<Organization>(`orgs/${newStakeholder!.id}`);
+  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
     throw new Error('This organization doesn\'t exist !');
@@ -106,10 +106,10 @@ async function notifyOnNewSignee(delivery: any, organizations: Organization[], m
  * pass the signatory's Organization as the 4th argument to get the correct message displayed in notification.
  */
 function createSignatureNotifications(
-  organizations: Organization[],
+  organizations: OrganizationDocument[],
   movie: Movie,
   delivery: Delivery,
-  newStakeholderOrg?: Organization
+  newStakeholderOrg?: OrganizationDocument
 ) {
   return organizations
     .filter(organization => !!organization && !!organization.userIds)
