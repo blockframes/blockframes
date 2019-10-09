@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Organization, createOrganization } from './organization.model';
+import { Organization } from './organization.model';
 
 export const enum DeploySteps { notDeployed, registered, resolved, ready };
 export interface OrganizationState {
@@ -20,8 +20,7 @@ export class OrganizationStore extends Store<OrganizationState> {
     super(initialState);
   }
 
-  public updateOrganization(organization: Partial<Organization>) {
-    const org = createOrganization(organization);
+  public updateOrganization(org: Organization) {
     this.update(({ org }));
   }
 }

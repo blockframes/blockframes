@@ -1,3 +1,5 @@
+import { OrganizationDocument } from '@blockframes/organization/types';
+
 /**
  * Types used by the firebase backend.
  *
@@ -9,6 +11,7 @@
 // ===============
 
 export type IDMap<T> = Record<string, T>;
+export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 
 interface DocWithID {
   id: string;
@@ -28,20 +31,6 @@ export interface DocInformations {
 // Core Application Types
 // ======================
 // Business & App Related
-
-export const enum OrganizationStatus {
-  pending = 'pending',
-  accepted = 'accepted'
-}
-
-export interface Organization {
-  id: string;
-  userIds: string[];
-  movieIds: string[];
-  name: string;
-  officeAddress: string;
-  status: OrganizationStatus;
-}
 
 export interface Stakeholder {
   id: string;
@@ -221,7 +210,7 @@ export interface Notification extends BaseNotification {
 export interface SnapObject {
   movie: Movie;
   docInformations: DocInformations;
-  organization: Organization;
+  organization: OrganizationDocument;
   eventType: string;
   delivery?: Delivery | null;
   newStakeholderId: string;

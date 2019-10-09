@@ -17,7 +17,7 @@ import {
   InvitationStakeholder,
   InvitationState,
   InvitationType,
-  Organization
+  OrganizationDocument
 } from './data/types';
 import { prepareNotification, triggerNotifications } from './notify';
 import { sendMail } from './internals/email';
@@ -150,7 +150,7 @@ async function onStakeholderInvitationAccept({
     db.doc(`orgs/${stakeholderId}`).get(),
     db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
     db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
-    getDocument<Organization>(`orgs/${stakeholderId}`)
+    getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
   ]);
 
   const orgDocPermissions = createOrganizationDocPermissions({

@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie, Organization } from './data/types';
+import { Delivery, DocType, Material, Movie, OrganizationDocument } from './data/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -26,7 +26,7 @@ export async function deleteFirestoreMovie(
   // TODO: .where('movieIds', 'array-contains', movie.id) doesn't seem to work. => ISSUE#908
 
   organizations.forEach(async doc => {
-    const organization = await getDocument<Organization>(`orgs/${doc.id}`);
+    const organization = await getDocument<OrganizationDocument>(`orgs/${doc.id}`);
 
     if (organization.movieIds.includes(movie.id)) {
       console.log(`delete movie id reference in organization ${doc.data().id}`);
