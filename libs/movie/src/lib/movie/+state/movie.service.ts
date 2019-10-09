@@ -75,15 +75,4 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
   }
-
-  public async remove(movieId: string): Promise<void> {
-    const movieDoc = this.db.doc<Movie>(`movies/${movieId}`);
-
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      // Delete the movie in movies collection
-      tx.delete(movieDoc.ref);
-      // Remove the movie from the movies store
-      this.store.remove(movieId);
-    });
-  }
 }

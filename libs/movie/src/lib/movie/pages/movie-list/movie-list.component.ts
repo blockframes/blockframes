@@ -41,9 +41,13 @@ export class MovieListComponent implements OnInit {
     this.dialog.open(MovieTitleFormComponent);
   }
 
-  public async delete(movie: Movie) {
-    await this.service.remove(movie.id);
-    this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {duration: 2000});
+  public delete(movie: Movie) {
+    try {
+      this.service.remove(movie.id);
+      this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {duration: 2000});
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public linkToDeliveryList(movieId: string) {
