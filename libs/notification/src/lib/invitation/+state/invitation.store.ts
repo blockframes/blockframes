@@ -1,5 +1,5 @@
-import { EntityState, EntityStore, ActiveState, guid } from '@datorama/akita';;
-import { Invitation } from './invitation.model';
+import { EntityState, EntityStore, ActiveState, guid } from '@datorama/akita';
+import { Invitation } from './invitation.firestore';
 
 export interface InvitationState extends EntityState<Invitation>, ActiveState<string> {}
 

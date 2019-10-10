@@ -1,3 +1,14 @@
+export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
+export {
+  InvitationDocument,
+  InvitationOrUndefined,
+  InvitationStatus,
+  InvitationType,
+  InvitationFromOrganizationToUser,
+  InvitationFromUserToOrganization,
+  InvitationToWorkOnDocument
+  } from '@blockframes/invitation/types';
+
 /**
  * Types used by the firebase backend.
  *
@@ -7,9 +18,7 @@
 
 // Low Level Types
 // ===============
-
 export type IDMap<T> = Record<string, T>;
-export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 
 interface DocWithID {
   id: string;
@@ -124,56 +133,6 @@ export const enum App {
 //  code deal with the app specifics (icons, message, etc).
 export type AppIcon = App;
 
-// Invitations
-// -----------
-
-export const enum InvitationStatus {
-  accepted = 'accepted',
-  declined = 'declined',
-  pending = 'pending'
-}
-
-export const enum InvitationType {
-  toWorkOnDocument = 'toWorkOnDocument',
-  fromUserToOrganization = 'fromUserToOrganization',
-  fromOrganizationToUser = 'fromOrganizationToUser'
-}
-
-/**
- * Raw invitation with generic fields,
- * use type dispatch to identify the actual content of the invitation.
- */
-interface RawInvitation {
-  id: string;
-  app: App;
-  status: InvitationStatus;
-  type: InvitationType;
-  date: FirebaseFirestore.FieldValue;
-  processedId?: string;
-}
-
-/** Invite an organization to work on a document. */
-export interface InvitationToWorkOnDocument extends RawInvitation {
-  type: InvitationType.toWorkOnDocument;
-  docId: string;
-  docType: DocType;
-  organization: PublicOrganization;
-}
-
-/** Invite a user to an organization. */
-export interface InvitationFromOrganizationToUser extends RawInvitation {
-  type: InvitationType.fromOrganizationToUser;
-  user: PublicUser;
-  organization: PublicOrganization;
-}
-
-/** A user requests to join an organization. */
-export interface InvitationFromUserToOrganization extends RawInvitation {
-  type: InvitationType.fromUserToOrganization;
-  user: PublicUser;
-  organization: PublicOrganization;
-}
-
 /** A user interface with public informations */
 export interface PublicUser {
   uid: string;
@@ -187,13 +146,6 @@ export interface PublicOrganization {
   id: string;
   name: string;
 }
-
-/**
- * This is the generic type for invitation,
- * use the type field to figure out which kind of invitation you are working with.
- */
-export type Invitation = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
-export type InvitationOrUndefined = Invitation | undefined;
 
 // Notifications
 // -------------

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Invitation } from '@blockframes/notification';
+import { Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'member-pending',

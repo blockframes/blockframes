@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Invitation, InvitationService, InvitationType } from '../+state';
+import { InvitationService } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { FireQuery } from '@blockframes/utils';
-import { DeliveryDB } from '@blockframes/material';
-import { switchMap, map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie';
+import { InvitationDocument, InvitationType } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'invitation-item',
@@ -14,7 +10,7 @@ import { Movie } from '@blockframes/movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationItemComponent {
-  @Input() invitation: Invitation;
+  @Input() invitation: InvitationDocument;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
@@ -30,7 +26,7 @@ export class InvitationItemComponent {
     }
   }
 
-  public acceptInvitation(invitation: Invitation) {
+  public acceptInvitation(invitation: InvitationDocument) {
     try {
       this.service.acceptInvitation(invitation);
       this.snackBar.open('You accepted the invitation!', 'close', { duration: 5000 });
@@ -39,7 +35,7 @@ export class InvitationItemComponent {
     }
   }
 
-  public declineInvitation(invitation: Invitation) {
+  public declineInvitation(invitation: InvitationDocument) {
     try {
       this.service.declineInvitation(invitation);
       this.snackBar.open('You declined the invitation.', 'close', { duration: 5000 });

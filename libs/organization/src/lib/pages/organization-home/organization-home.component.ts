@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
 import {
-  Invitation,
   InvitationService,
-  InvitationType,
   InvitationQuery,
   InvitationStore
 } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
+import { InvitationType, Invitation } from '@blockframes/invitation/types';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',

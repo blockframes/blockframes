@@ -1,16 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import {
-  InvitationQuery,
-  InvitationService,
-  Invitation,
-  InvitationStore,
-  InvitationType
-} from '../+state';
+import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 import { Order } from '@datorama/akita';
-import { filter, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { InvitationType, Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'invitation-list',
