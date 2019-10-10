@@ -9,7 +9,7 @@ import {
 } from './data/internals';
 import { db, functions, getUserMail } from './internals/firebase';
 import {
-  Delivery,
+  DeliveryDocument,
   InvitationDocument,
   InvitationOrUndefined,
   InvitationFromOrganizationToUser,
@@ -131,7 +131,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   // Create all the constants we need to work with
   const stakeholderId = invitation.organization.id;
   const docId = invitation.docId;
-  const delivery = await getDocument<Delivery>(`deliveries/${docId}`);
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${docId}`);
 
   const [
     organizationDocPermissionsSnap,

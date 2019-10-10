@@ -1,3 +1,6 @@
+import { DeliveryDocument } from '@blockframes/material/delivery/types';
+
+export { DeliveryDocument, StepDocument, StepDocumentWithDate, convertStepDocumentToStepDocumentWithDate } from '@blockframes/material/delivery/types';
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
   InvitationDocument,
@@ -44,22 +47,6 @@ export interface Stakeholder {
   id: string;
   isAccepted: boolean;
   processedId: string;
-}
-
-export interface Step {
-  id: string;
-  date: Date;
-  name: string;
-}
-
-export interface Delivery {
-  id: string;
-  movieId: string;
-  processedId: string;
-  stakeholders: string[];
-  materials: string[];
-  steps: Step[];
-  mustBeSigned: boolean;
 }
 
 export interface Movie {
@@ -152,7 +139,7 @@ export interface SnapObject {
   docInformations: DocInformations;
   organization: PublicOrganization;
   eventType: string;
-  delivery?: Delivery | null;
+  delivery?: DeliveryDocument | null;
   count?: number;
 }
 

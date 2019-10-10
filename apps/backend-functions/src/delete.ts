@@ -139,7 +139,7 @@ export async function deleteFirestoreMaterial(
     throw new Error(`This material doesn't exist !`);
   }
 
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryId}`);
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryId}`);
 
   if (!delivery) {
     throw new Error(`This delivery doesn't exist !`);

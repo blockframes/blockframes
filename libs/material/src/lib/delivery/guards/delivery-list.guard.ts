@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryDB } from '../+state';
+import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryWithTimestamps } from '../+state';
 import { switchMap, map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
 import { combineLatest, of } from 'rxjs';
@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveryQuery = (deliveryId: string): Query<DeliveryDB> => ({
+const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
   path: `deliveries/${deliveryId}`,
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
@@ -41,7 +41,7 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
         switchMap(ids => {
           if (!ids || ids.length === 0) return of([]);
           const queries = ids.map(id => {
-            return this.fireQuery.fromQuery<DeliveryDB>(deliveryQuery(id)).pipe(
+            return this.fireQuery.fromQuery<DeliveryWithTimestamps>(deliveryQuery(id)).pipe(
               catchError(e => {
                 // TODO: Only catch NotFoundError => ISSUE#627
                 return of(undefined);
@@ -50,11 +50,11 @@ export class DeliveryListGuard extends StateListGuard<Delivery> {
           });
           return combineLatest(queries);
         }),
-        map((deliveries: DeliveryDB[]) => {
+        map((deliveries: DeliveryWithTimestamps[]) => {
           if (deliveries.length === 0) throw new Error('There is no deliveries');
           return deliveries
             .filter(delivery => !!delivery)
-            .map((delivery: DeliveryDB) => modifyTimestampToDate(delivery));
+            .map((delivery: DeliveryWithTimestamps) => modifyTimestampToDate(delivery));
         })
       );
   }

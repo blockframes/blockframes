@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { customMessage, prepareNotification, triggerNotifications } from './notify';
 import { getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
-  Delivery,
+  DeliveryDocument,
   DocInformations,
   DocType,
   Movie,
@@ -93,7 +93,7 @@ async function stakeholdersCollectionEvent(
         : await getDocument<Movie>(`movies/${document.movieId}`);
 
       const delivery = !!context.params.deliveryID
-        ? await getDocument<Delivery>(`deliveries/${document.id}`)
+        ? await getDocument<DeliveryDocument>(`deliveries/${document.id}`)
         : null;
 
       const snapInformations: SnapObject = {
