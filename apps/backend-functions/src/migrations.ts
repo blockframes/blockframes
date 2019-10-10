@@ -1,5 +1,5 @@
 import { getCollection, getCount } from './data/internals';
-import { OrganizationDocument, Material } from './data/types';
+import { OrganizationDocument, MaterialDocument } from './data/types';
 import { db, serverTimestamp } from './internals/firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
 import { setRestoreFlag } from './backup';
@@ -26,7 +26,7 @@ interface Template {
 function migrateMaterialToNewCollection(
   batch: WriteBatch,
   template: Template,
-  material: Material
+  material: MaterialDocument
 ) {
   if (template.materialsId.includes(material.id)) {
     const materialRef = db.doc(`templates/${template.id}/materials/${material.id}`);
@@ -49,7 +49,7 @@ async function migrateOrgsTemplate(batch: WriteBatch, org: OrganizationDocument)
 
   const [templates, materials] = await Promise.all([
     getCollection<Template>(`orgs/${org.id}/templates`),
-    getCollection<Material>(`orgs/${org.id}/materials`)
+    getCollection<MaterialDocument>(`orgs/${org.id}/materials`)
   ]);
 
   templates.forEach(template => {

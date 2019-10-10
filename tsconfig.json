@@ -42,7 +42,11 @@
       "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
+
+      // Material
       "@blockframes/material": ["libs/material/src/index.ts"],
+      "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
+
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"],
       "@blockframes/notification": ["libs/notification/src/index.ts"],

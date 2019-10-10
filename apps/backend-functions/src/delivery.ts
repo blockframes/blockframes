@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie, OrganizationDocument, Stakeholder } from './data/types';
+import { Delivery, DocType, MaterialDocument, Movie, OrganizationDocument, Stakeholder } from './data/types';
 import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
@@ -54,8 +54,8 @@ export async function onDeliveryUpdate(
   try {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: context.eventId });
     const [materialsMovie, materialsDelivery] = await Promise.all([
-      getCollection<Material>(`movies/${delivery.movieId}/materials`),
-      getCollection<Material>(`deliveries/${delivery.id}/materials`)
+      getCollection<MaterialDocument>(`movies/${delivery.movieId}/materials`),
+      getCollection<MaterialDocument>(`deliveries/${delivery.id}/materials`)
     ]);
 
     const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];

@@ -8,6 +8,7 @@ export {
   InvitationFromUserToOrganization,
   InvitationToWorkOnDocument
   } from '@blockframes/invitation/types';
+  export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
 
 /**
  * Types used by the firebase backend.
@@ -69,26 +70,6 @@ export interface Movie {
     };
   }
   deliveryIds: string[];
-}
-
-export interface Material {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-  deliveryIds: string[];
-  status: MaterialStatus;
-  stepId: string;
-  price?: {
-    amount: number;
-    currency: string;
-  }
-}
-
-export const enum MaterialStatus {
-  pending = 'pending',
-  available = 'available',
-  delivered = 'delivered'
 }
 
 export interface OrganizationPermissions {

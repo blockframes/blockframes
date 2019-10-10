@@ -2,7 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DocType, Material, Movie, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
+import { DocType, MaterialDocument, Movie, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
 export const onMovieMaterialUpdate = async (
@@ -14,7 +14,7 @@ export const onMovieMaterialUpdate = async (
   }
 
   const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
-  const material: Material = change.after.data() as Material;
+  const material: MaterialDocument = change.after.data() as MaterialDocument;
   const materialBefore = change.before.data();
   const orgsPromises = material.deliveryIds.map((deliveryId: string) =>
     getOrganizationsOfDocument(deliveryId, 'deliveries')
@@ -76,8 +76,8 @@ export const onMovieMaterialUpdate = async (
  * already exists in the movie before copying it. If so, it just add the delivery.id into material.deliveryIds.
  */
 export function copyMaterialsToMovie(
-  deliveryMaterials: Material[],
-  movieMaterials: Material[],
+  deliveryMaterials: MaterialDocument[],
+  movieMaterials: MaterialDocument[],
   delivery: Delivery
 ) {
   return Promise.all(
@@ -88,8 +88,8 @@ export function copyMaterialsToMovie(
 }
 
 function copyMaterialToMovie(
-  deliveryMaterial: Material,
-  movieMaterials: Material[],
+  deliveryMaterial: MaterialDocument,
+  movieMaterials: MaterialDocument[],
   delivery: Delivery
 ) {
   const duplicateMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, deliveryMaterial));
