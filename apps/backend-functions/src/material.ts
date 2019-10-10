@@ -2,7 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DocType, MaterialDocument, Movie, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
+import { DocType, MaterialDocument, Movie, OrganizationDocument, DeliveryDocument, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
 export const onMovieMaterialUpdate = async (
@@ -78,7 +78,7 @@ export const onMovieMaterialUpdate = async (
 export function copyMaterialsToMovie(
   deliveryMaterials: MaterialDocument[],
   movieMaterials: MaterialDocument[],
-  delivery: Delivery
+  delivery: DeliveryDocument
 ) {
   return Promise.all(
     deliveryMaterials.map(deliveryMaterial => {
@@ -90,7 +90,7 @@ export function copyMaterialsToMovie(
 function copyMaterialToMovie(
   deliveryMaterial: MaterialDocument,
   movieMaterials: MaterialDocument[],
-  delivery: Delivery
+  delivery: DeliveryDocument
 ) {
   const duplicateMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, deliveryMaterial));
 

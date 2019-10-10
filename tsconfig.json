@@ -46,6 +46,7 @@
 
       // MATERIAL
       "@blockframes/material": ["libs/material/src/index.ts"],
+      "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
 
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"],

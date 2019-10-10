@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryDB, deliveryStatuses, Step } from './delivery.model';
+import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses, Step } from './delivery.model';
 import {
   createDeliveryStakeholder,
   Movie,
@@ -41,7 +41,7 @@ export function timestampObjectsToDate(docs: any[]) {
 }
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
-export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
+export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Delivery {
   const mgDeadlines = delivery.mgDeadlines || [];
 
   return {
@@ -85,7 +85,7 @@ export class DeliveryService {
     return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
   }
 
-  private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryDB> {
+  private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryWithTimestamps> {
     return this.db.doc(`deliveries/${deliveryId}`);
   }
 

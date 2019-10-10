@@ -25,7 +25,7 @@ export async function onDeliveryUpdate(
    * We store the Google Cloud Funtion's event ID in the delivery, retrieve it and verify that its different
    * betweeen two runs to enforce "only once delivery".
    */
-  const delivery = await getDocument<Delivery>(`deliveries/${deliveryDoc.id}`);
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${deliveryDoc.id}`);
   const processedId = delivery.processedId;
 
   const [organizations, movie, stakeholderCount] = await Promise.all([
@@ -108,7 +108,7 @@ async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocum
 function createSignatureNotifications(
   organizations: OrganizationDocument[],
   movie: Movie,
-  delivery: Delivery,
+  delivery: DeliveryDocument,
   newStakeholderOrg?: OrganizationDocument
 ) {
   return organizations
