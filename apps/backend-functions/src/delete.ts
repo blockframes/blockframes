@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie, OrganizationDocument } from './data/types';
+import { Delivery, DocType, MaterialDocument, Movie, OrganizationDocument } from './data/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -145,17 +145,17 @@ export async function deleteFirestoreMaterial(
     throw new Error(`This delivery doesn't exist !`);
   }
 
-  const movieMaterials = await getCollection<Material>(`movies/${delivery.movieId}/materials`);
+  const movieMaterials = await getCollection<MaterialDocument>(`movies/${delivery.movieId}/materials`);
 
   // As material and movieMaterial don't share the same document ID, we have to look at
   // some property values to find the matching one.
-  const movieMaterial = movieMaterials.find(movieMat => isTheSame(movieMat, material as Material));
+  const movieMaterial = movieMaterials.find(movieMat => isTheSame(movieMat, material as MaterialDocument));
 
   if (!movieMaterial) {
     throw new Error(`This material doesn't exist on this movie`);
   }
 
-  if (movieMaterial.deliveryIds.includes(delivery.id)) {
+  if (!!movieMaterial.deliveryIds && movieMaterial.deliveryIds.includes(delivery.id)) {
     if (movieMaterial.deliveryIds.length === 1) {
       db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).delete();
     } else {

@@ -1,51 +1,21 @@
-import { Step, Delivery } from '../../delivery/+state';
-import { staticModels } from '@blockframes/movie';
-type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
-// TODO: Create "Price" type with currencies from static-models => ISSUE#818
+import { Delivery, CurrencyCode } from '../../delivery/+state';
+import { MaterialStatus, MaterialDocument, MaterialRaw } from './material.firestore';
 
-export interface MaterialRaw {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-}
+export { MaterialStatus } from './material.firestore';
 
 /** Extends a Material Raw with fields that are specific to Material Template. */
 export interface MaterialTemplate extends MaterialRaw {
-  price: number;
+  price: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
   currency: CurrencyCode;
 }
 
-export interface Material extends MaterialRaw {
-  owner?: string;
-  stepId?: string;
-  step?: Step;
-  status?: MaterialStatus;
-  deliveryIds?: string[];
-  price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
-  currency?: CurrencyCode;
-  isOrdered?: boolean;
-  isPaid?: boolean;
-  storage?: string;
-}
-
-export const enum MaterialStatus {
-  pending = 'Pending',
-  available = 'Available',
-  delivered = 'Delivered'
-}
+export type Material = MaterialDocument;
 
 export const materialStatuses: MaterialStatus[] = [
   MaterialStatus.pending,
   MaterialStatus.available,
   MaterialStatus.delivered
 ];
-
-export interface MaterialTemplateForm {
-  value: string;
-  description: string;
-  category: string;
-}
 
 // TODO: Type safety => ISSUE#774
 export function createMaterial(material: Partial<Material>): Material {
@@ -57,6 +27,7 @@ export function createMaterial(material: Partial<Material>): Material {
     status: material.status || MaterialStatus.pending,
     isOrdered: false,
     isPaid: false,
+    deliveryIds: [],
     ...material
   };
 }
@@ -72,7 +43,7 @@ export function getMaterialStep(material: Material, delivery: Delivery) {
 }
 
 /** A factory function that creates a Material Template */
-export function createMaterialTemplate(material: Partial<Material>): MaterialTemplate {
+export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
   return {
     id: material.id,
     category: material.category || '',

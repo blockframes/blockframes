@@ -1,6 +1,6 @@
 import { functions } from './internals/firebase';
 import * as backup from './backup';
-import { Material } from './data/types';
+import { MaterialDocument } from './data/types';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -48,7 +48,7 @@ export function onDocumentCreate(docPath: string, fn: Function) {
 /**
  * Checks properties of two material to tell if they are the same or not.
  */
-export function isTheSame(matA: Material, matB: Material): boolean {
-  const getProperties = ({value, description, category}: Material) => ({ value, description, category });
+export function isTheSame(matA: MaterialDocument, matB: MaterialDocument): boolean {
+  const getProperties = ({value, description, category}: MaterialDocument) => ({ value, description, category });
   return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
 }
