@@ -10,10 +10,10 @@ import {
 import { db, functions, getUserMail } from './internals/firebase';
 import {
   Delivery,
-  Invitation,
+  InvitationDocument,
+  InvitationOrUndefined,
   InvitationFromOrganizationToUser,
   InvitationFromUserToOrganization,
-  InvitationOrUndefined,
   InvitationToWorkOnDocument,
   InvitationStatus,
   InvitationType,
@@ -29,12 +29,12 @@ import {
 } from './assets/mail-templates';
 
 /** Checks if an invitation just got accepted. */
-function wasAccepted(before: Invitation, after: Invitation) {
+function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
   return before.status === InvitationStatus.pending && after.status === InvitationStatus.accepted;
 }
 
 /** Checks if an invitation just got created. */
-function wasCreated(before: InvitationOrUndefined, after: Invitation) {
+function wasCreated(before: InvitationOrUndefined, after: InvitationDocument) {
   return !before && !!after;
 }
 
@@ -215,7 +215,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
  */
 async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
-  after: Invitation,
+  after: InvitationDocument,
   invitation: InvitationFromOrganizationToUser
 ): Promise<any> {
   if (wasCreated(before, after)) {
@@ -273,7 +273,7 @@ async function onInvitationFromUserToJoinOrgAccept({
  */
 async function onInvitationFromUserToJoinOrgUpdate(
   before: InvitationOrUndefined,
-  after: Invitation,
+  after: InvitationDocument,
   invitation: InvitationFromUserToOrganization
 ): Promise<any> {
   if (wasCreated(before, after)) {
@@ -289,7 +289,7 @@ async function onInvitationFromUserToJoinOrgUpdate(
  */
 async function onDocumentInvitationUpdate(
   before: InvitationOrUndefined,
-  after: Invitation,
+  after: InvitationDocument,
   invitation: InvitationToWorkOnDocument
 ): Promise<any> {
   if (!before) {
@@ -328,7 +328,7 @@ export async function onInvitationWrite(
   }
 
   // Prevent duplicate events with the processedId workflow
-  const invitation: Invitation = await getDocument<Invitation>(`invitations/${invitationDoc.id}`);
+  const invitation: InvitationDocument = await getDocument<InvitationDocument>(`invitations/${invitationDoc.id}`);
   const processedId = invitation.processedId;
 
   if (processedId === context.eventId) {

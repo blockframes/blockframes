@@ -35,7 +35,11 @@
 
       // Organization
       "@blockframes/organization": ["libs/organization/src/index.ts"],
+
+      // FIRESTORE DATA MODEL
       "@blockframes/organization/types": ["libs/organization/src/lib/+state/organization.firestore.ts"],
+      "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
+      "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
       "@blockframes/material": ["libs/material/src/index.ts"],

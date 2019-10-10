@@ -53,7 +53,7 @@ export interface Organization extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  baskets: CatalogBasket[]
+  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
 
 export interface OrganizationForm {

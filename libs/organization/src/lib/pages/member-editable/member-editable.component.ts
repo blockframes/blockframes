@@ -1,15 +1,14 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { OrganizationQuery, OrganizationMember } from '../../+state';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService, InvitationQuery, Invitation, InvitationStore, InvitationType } from '@blockframes/notification';
+import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
 import { PermissionsService, PermissionsQuery } from '../../permissions/+state';
 import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
-import { AuthQuery } from '@blockframes/auth';
-import { Description } from '@ethersproject/properties';
 import { Order } from '@datorama/akita';
+import { Invitation, InvitationType } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'member-editable',

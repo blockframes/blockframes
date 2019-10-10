@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Invitation } from '@blockframes/notification';
-
+import { Invitation } from '@blockframes/invitation/types';
 @Component({
   selector: 'member-invitation',
   templateUrl: './member-invitation.component.html',
