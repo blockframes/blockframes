@@ -1,5 +1,3 @@
-import { OrganizationDocument } from '@blockframes/organization/types';
-
 /**
  * Types used by the firebase backend.
  *
@@ -219,7 +217,7 @@ export interface Notification extends BaseNotification {
 export interface SnapObject {
   movie: Movie;
   docInformations: DocInformations;
-  organization: OrganizationDocument;
+  organization: PublicOrganization;
   eventType: string;
   delivery?: Delivery | null;
   count?: number;

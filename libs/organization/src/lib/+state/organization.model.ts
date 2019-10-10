@@ -60,6 +60,11 @@ export interface OrganizationForm {
   name: string;
 }
 
+export interface PublicOrganization {
+  id: string;
+  name: string;
+}
+
 export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
   return {
     quorum: 0,
