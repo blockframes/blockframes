@@ -5,6 +5,10 @@ import { DropZoneDirective } from './drop-zone.directive';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+// Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 // Angular Fire
 import { firebase } from '@env';
 import { AngularFireModule } from '@angular/fire';
@@ -12,19 +16,21 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 // Components
-import {ImageCropperComponent} from './image-cropper/image-cropper.component';
-import {CropperPageComponent} from './page/cropper-page.component';
+import { CropperComponent } from './cropper/cropper.component';
+import { CropperPageComponent } from './page/cropper-page.component';
 
 @NgModule({
-  declarations: [DropZoneDirective, ImageCropperComponent, CropperPageComponent],
+  declarations: [DropZoneDirective, CropperComponent, CropperPageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     ImageCropperModule,
     AngularFireModule.initializeApp({firebase}),
     AngularFireStorageModule,
     AngularFirestoreModule
   ],
-  exports: [DropZoneDirective, ImageCropperComponent, CropperPageComponent]
+  exports: [DropZoneDirective, CropperComponent, CropperPageComponent]
 })
 export class CropperModule {}
