@@ -17,9 +17,10 @@ import {
   InvitationToWorkOnDocument,
   InvitationStatus,
   InvitationType,
-  OrganizationDocument
+  OrganizationDocument,
+  Movie
 } from './data/types';
-import { prepareNotification, triggerNotifications } from './notify';
+import { triggerNotifications } from './notification';
 import { sendMail } from './internals/email';
 import {
   userInviteToOrg,
@@ -27,6 +28,7 @@ import {
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg
 } from './assets/mail-templates';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -132,6 +134,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   const stakeholderId = invitation.organization.id;
   const docId = invitation.docId;
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${docId}`);
+  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
 
   const [
     organizationDocPermissionsSnap,
@@ -195,13 +198,11 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
       // Now that permissions are in the database, notify organization users with direct link to the document
       triggerNotifications(
         organization.userIds.map(userId => {
-          return prepareNotification({
-            message:
-              `You can now work on the delivery.\n` +
-              `Click on the link below to go to the delivery's page`,
+          return createNotification({
             userId,
-            docInformations: { id: docId, type: null },
-            path: `/layout/o/delivery/${delivery.movieId}/${docId}/list`
+            docId,
+            movie: {id: movie.id, title: movie.main.title},
+            type: NotificationType.pathToDocument
           });
         })
       )

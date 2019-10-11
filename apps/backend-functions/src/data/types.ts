@@ -1,6 +1,7 @@
-import { DeliveryDocument } from '@blockframes/material/delivery/types';
+import { PublicOrganization } from '@blockframes/organization/types';
+import { NotificationType } from '@blockframes/notification/types';
+import { PublicMovie } from '@blockframes/movie/types';
 
-export { DeliveryDocument, StepDocument, StepDocumentWithDate, convertStepDocumentToStepDocumentWithDate } from '@blockframes/material/delivery/types';
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
   InvitationDocument,
@@ -13,6 +14,7 @@ export {
   } from '@blockframes/invitation/types';
   export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
   export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+  export { DeliveryDocument, StepDocument, StepDocumentWithDate, convertStepDocumentToStepDocumentWithDate } from '@blockframes/material/delivery/types';
 
 /**
  * Types used by the firebase backend.
@@ -29,17 +31,6 @@ interface DocWithID {
   id: string;
 }
 
-export enum DocType {
-  movie = 'movie',
-  delivery = 'delivery',
-  material = 'material'
-}
-
-export interface DocInformations {
-  id: string;
-  type: DocType | null; // TODO: We don't want type to be null => ISSUE#884
-}
-
 // Core Application Types
 // ======================
 // Business & App Related
@@ -49,6 +40,7 @@ export interface Movie {
   main: {
     title: {
       original: string;
+      international: string;
     };
   }
   deliveryIds: string[];
@@ -96,46 +88,11 @@ export const enum App {
 //  code deal with the app specifics (icons, message, etc).
 export type AppIcon = App;
 
-/** A user interface with public informations */
-export interface PublicUser {
-  uid: string;
-  email: string;
-  name: string;
-  surname: string;
-}
-
-/** An organization interface with public informations */
-export interface PublicOrganization {
-  id: string;
-  name: string;
-}
-
-// Notifications
-// -------------
-
-export interface BaseNotification {
-  message: string;
-  user?: PublicUser;
-  userId: string;
-  docInformations: DocInformations;
-  organization?: PublicOrganization;
-  path?: string;
-}
-
-export interface Notification extends BaseNotification {
-  id: string;
-  isRead: boolean;
-  date: FirebaseFirestore.FieldValue;
-  appIcon: App;
-}
-
 export interface SnapObject {
-  movie: Movie;
-  docInformations: DocInformations;
-  organization: PublicOrganization;
-  eventType: string;
-  delivery?: DeliveryDocument | null;
-  count?: number;
+  organization: PublicOrganization | undefined;
+  movie: PublicMovie;
+  docId: string;
+  type: NotificationType;
 }
 
 /**

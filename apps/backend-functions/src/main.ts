@@ -17,9 +17,7 @@ import {
 } from './delete';
 import {
   onDeliveryStakeholderCreate,
-  onDeliveryStakeholderDelete,
-  onMovieStakeholderCreate,
-  onMovieStakeholderDelete
+  onDeliveryStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
 import * as migrations from './migrations';
@@ -35,7 +33,6 @@ import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
-import { onMovieMaterialUpdate } from './material';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -101,18 +98,6 @@ export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
 export const onDeliveryStakeholderDeleteEvent = onDocumentDelete(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
   onDeliveryStakeholderDelete
-);
-
-/** Trigger: when a stakeholder is added to a movie. */
-export const onMovieStakeholderCreateEvent = onDocumentCreate(
-  'movies/{movieID}/stakeholders/{stakeholerID}',
-  onMovieStakeholderCreate
-);
-
-/** Trigger: when a stakeholder is removed from a movie. */
-export const onMovieStakeholderDeleteEvent = onDocumentDelete(
-  'movies/{movieID}/stakeholders/{stakeholerID}',
-  onMovieStakeholderDelete
 );
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
