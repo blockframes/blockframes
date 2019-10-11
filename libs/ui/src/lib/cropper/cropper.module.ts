@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { DropZoneDirective } from './drop-zone.directive';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -22,7 +22,7 @@ import { CropperPageComponent } from './page/cropper-page.component';
 @NgModule({
   declarations: [DropZoneDirective, CropperComponent, CropperPageComponent],
   imports: [
-    BrowserModule,
+    CommonModule,
     BrowserAnimationsModule,
     MatIconModule,
     MatProgressSpinnerModule,
