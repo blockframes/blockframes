@@ -1,0 +1,3 @@
+<ng-container *ngIf="path$ | async as path">
+  <catalog-cropper [path]="path" [ratio]="4/3" (uploaded)="save($event)" (deleted)="remove()"></catalog-cropper>
+</ng-container>
