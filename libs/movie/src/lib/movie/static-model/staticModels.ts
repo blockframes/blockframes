@@ -14,7 +14,7 @@ interface Model {
   MEDIAS: readonly SlugAndLabel[];
 }
 
-type Scope = keyof Model;
+export type Scope = keyof Model;
 
 const models: Model = {
   'GENRES': [

@@ -1,13 +1,9 @@
-import { Delivery, CurrencyCode } from '../../delivery/+state';
-import { MaterialStatus, MaterialDocument, MaterialRaw } from './material.firestore';
+import { Delivery } from '../../delivery/+state';
+import { MaterialStatus, MaterialDocument, MaterialTemplateDocument } from './material.firestore';
 
 export { MaterialStatus } from './material.firestore';
 
-/** Extends a Material Raw with fields that are specific to Material Template. */
-export interface MaterialTemplate extends MaterialRaw {
-  price: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
-  currency: CurrencyCode;
-}
+export type MaterialTemplate = MaterialTemplateDocument
 
 export type Material = MaterialDocument;
 

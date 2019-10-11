@@ -33,19 +33,19 @@
 
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
 
-      // Organization
+      // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
 
       // FIRESTORE DATA MODEL
       "@blockframes/organization/types": ["libs/organization/src/lib/+state/organization.firestore.ts"],
       "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
       "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
+      "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
 
-      // Material
+      // MATERIAL
       "@blockframes/material": ["libs/material/src/index.ts"],
-      "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
 
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"],
