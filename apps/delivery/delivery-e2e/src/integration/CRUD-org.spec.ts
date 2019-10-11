@@ -1,15 +1,14 @@
 /// <reference types="cypress" />
 
 // import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
-import WelcomeViewPage from '@blockframes/e2e';
-
 import {
-  OrganizationEditablePage,
-  MovieCreatePage,
+  WelcomeViewPage,
   LoginViewPage,
-  MemberEditablePage
-} from '../support/pages';
-import { createOrganization, User } from '../support/utils/type';
+  MemberEditablePage,
+  MovieCreatePage,
+  OrganizationEditablePage
+} from '../support';
+import { createOrganization, User } from '../support';
 
 const USER: Partial<User> = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
 const ORGANIZATION = createOrganization();

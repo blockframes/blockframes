@@ -1,7 +1,32 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress"]
+    "types": ["cypress"],
+    "paths": {
+      "@env": ["env/env.ts"],
+      "@blockframes/ip": ["libs/ip/src/index.ts"],
+      "@blockframes/auth": ["libs/auth/src/index.ts"],
+      "@blockframes/ui": ["libs/ui/src/index.ts"],
+      "@blockframes/ui/*": ["libs/ui/src/lib/*"],
+      "@blockframes/utils": ["libs/utils/src/index.ts"],
+      "@blockframes/utils/*": ["libs/utils/src/lib/*"],
+      "@blockframes/utils/spreadsheet": ["libs/utils/src/lib/spreadsheet/index.ts"],
+      "@blockframes/movie": ["libs/movie/src/index.ts"],
+      "@blockframes/movie/*": ["libs/movie/src/lib/*"],
+      "@blockframes/movie/import": [
+        "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
+      ],
+      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+      "@blockframes/organization": ["libs/organization/src/index.ts"],
+      "@blockframes/account": ["libs/account/src/index.ts"],
+      "@blockframes/material": ["libs/material/src/index.ts"],
+      "@blockframes/template": ["libs/material/src/index.ts"],
+      "@blockframes/contracts": ["contracts/build"],
+      "@blockframes/notification": ["libs/notification/src/index.ts"],
+      "@blockframes/catalog": ["libs/catalog/src/index.ts"],
+      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"],
+      "@blockframes/e2e": ["libs/e2e/src/index.ts"]
+    }
   },
   "include": ["**/*.ts"]
 }

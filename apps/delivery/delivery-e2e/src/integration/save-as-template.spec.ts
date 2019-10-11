@@ -1,16 +1,16 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
+import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
 import {
+  DeliveryEditablePage,
   DeliveryListPage,
+  LoginViewPage,
+  MATERIALS,
   MovieListPage,
+  SaveAsTemplateModal,
   TemplateEditablePage,
   TemplateListPage,
-  LoginViewPage,
-  DeliveryEditablePage,
-  SaveAsTemplateModal
-} from '../support/pages';
-import { User } from '../support/utils/type';
-import { MATERIALS } from '../support/utils/data';
+  User
+} from '../support';
 
 const USER: Partial<User> = {email: 'cytest@blockframes.com', password: 'azerty'}
 

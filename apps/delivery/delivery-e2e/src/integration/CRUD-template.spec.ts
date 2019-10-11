@@ -1,15 +1,15 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
+import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
 import {
   LoginViewPage,
+  MATERIALS,
   MovieCreatePage,
   TemplateAddModal,
+  TemplateCreatePage,
   TemplateEditablePage,
-  TemplateListPage
-} from '../support/pages';
-import { User } from '../support/utils/type';
-import TemplateCreatePage from '../support/pages/template/TemplateCreatePage';
-import { MATERIALS } from '../support/utils/data';
+  TemplateListPage,
+  User
+} from '../support';
 
 const TEMPLATE_NAME_1 = 'Crud Template';
 

@@ -1,10 +1,5 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
-import {
-  LoginViewPage,
-  OrganizationHomePage
-} from '../support/pages';
-import { createUser } from '../support/utils/type';
+import { createUser, LoginViewPage, OrganizationHomePage, WelcomeViewPage } from '../support';
 
 const USER = createUser();
 

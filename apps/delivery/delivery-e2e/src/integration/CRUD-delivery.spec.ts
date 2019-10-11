@@ -1,20 +1,23 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
 import {
-  LoginViewPage,
-  MovieListPage,
-  DeliveryInformationsEditablePage,
-  StarterPickerPage,
-  SettingsPage,
-  DeliveryEditablePage,
-  MoviePickerPage,
-  DeliveryListPage,
-  TemplatePickerPage,
   ConfirmModal,
-  DeliveryStakeholdersPage
-} from '../support/pages';
-import { User, DeliveryInformation } from '../support/utils/type';
-import { MATERIALS, UPDATED_MATERIALS, Statuses } from '../support/utils/data';
+  DeliveryEditablePage,
+  DeliveryInformation,
+  DeliveryInformationsEditablePage,
+  DeliveryListPage,
+  DeliveryStakeholdersPage,
+  LoginViewPage,
+  MATERIALS,
+  MovieListPage,
+  MoviePickerPage,
+  SettingsPage,
+  StarterPickerPage,
+  Statuses,
+  TemplatePickerPage,
+  UPDATED_MATERIALS,
+  User,
+  WelcomeViewPage
+} from '../support';
 
 //////////
 // DATA //
@@ -101,7 +104,6 @@ describe('User create a delivery selecting a movie', () => {
 
 describe('User create a delivery from context-menu item', () => {
   it.skip('should login, click on the second movie, click on create from template, select "Materials price list", and then create a delivery', () => {
-
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);
@@ -241,7 +243,7 @@ describe('User update some materials status', () => {
 });
 
 describe('User delete some materials', () => {
-  it.skip('should login, click on the second movie, click on the first delivery, then delete 3 materials and assert that they don\'t exists', () => {
+  it.skip("should login, click on the second movie, click on the first delivery, then delete 3 materials and assert that they don't exists", () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(USER);

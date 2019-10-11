@@ -1,4 +1,4 @@
-import { randomString, randomEmail } from './functions';
+import { randomEmail, randomString } from './functions';
 
 export interface DeliveryInformation {
   minimumGuarantee: {
@@ -24,6 +24,7 @@ export interface Step {
   name: string;
   date: string;
 }
+
 export interface Material {
   title: string;
   category: string;
@@ -32,6 +33,7 @@ export interface Material {
   price: string;
   currency: string;
 }
+
 export interface User {
   email: string;
   password: string;

@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
-import { User } from "../support/utils/type";
-import { LoginViewPage, MovieListPage, ProfileEditablePage } from "../support/pages";
-
+import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
+import { LoginViewPage, MovieListPage, ProfileEditablePage, User } from '../support';
 
 const USER: Partial<User> = {
   email: 'c8test@ctest.com',

@@ -11,6 +11,7 @@ import DeliveryEditablePage from './delivery/DeliveryEditablePage';
 import TemplateAddModal from './template/TemplateAddModal';
 import DeliveryInformationsEditablePage from './delivery/DeliveryInformationsEditablePage';
 import LoginViewPage from './auth/LoginViewPage';
+import WelcomeViewPage from './auth/WelcomeViewPage';
 import MemberEditablePage from './organization/MemberEditablePage';
 import StarterPickerPage from './delivery-create-tunnel/StarterPickerPage';
 import SettingsPage from './delivery-create-tunnel/SettingsPage';
@@ -24,6 +25,7 @@ import DeliveryStakeholdersPage from './delivery/DeliveryStakeholdersPage';
 
 export {
   MovieListPage,
+  WelcomeViewPage,
   OrganizationEditablePage,
   MovieCreatePage,
   ProfileEditablePage,

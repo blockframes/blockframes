@@ -1,7 +1,13 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/support/WelcomeViewPage';
-import { LoginViewPage, MovieTitleFormModal, MovieEditablePage, MovieCreatePage, MovieListPage } from "../support/pages";
-import { User } from "../support/utils/type";
+import {
+  LoginViewPage,
+  MovieCreatePage,
+  MovieEditablePage,
+  MovieListPage,
+  MovieTitleFormModal,
+  User,
+  WelcomeViewPage
+} from '../support';
 
 // CONSTS
 

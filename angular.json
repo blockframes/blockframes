@@ -1489,30 +1489,24 @@
       }
     },
     "e2e": {
-      "projectType": "library",
       "root": "libs/e2e",
       "sourceRoot": "libs/e2e/src",
-      "prefix": "blockframes",
+      "projectType": "library",
+      "prefix": "e2e",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": ["libs/e2e/tsconfig.lib.json", "libs/e2e/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!libs/e2e/**"]
+            "exclude": ["**/node_modules/**"]
           }
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "jestConfig": "libs/e2e/jest.config.js",
-            "tsConfig": "libs/e2e/tsconfig.spec.json",
-            "setupFile": "libs/e2e/src/test-setup.ts"
+            "tsConfig": "libs/e2e/tsconfig.lib.json",
+            "project": "libs/e2e/ng-package.json"
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
         }
       }
     }
