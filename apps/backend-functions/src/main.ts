@@ -91,9 +91,6 @@ export const admin = functions.https
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
 
-/** Trigger: when material state (`state`) is modified. */
-export const onMovieMaterialUpdateEvent = onDocumentUpdate('movies/{movieID}', onMovieMaterialUpdate);
-
 /** Trigger: when a stakeholder is added to a delivery. */
 export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
