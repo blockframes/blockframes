@@ -900,7 +900,7 @@ export class ViewExtractedElementsComponent {
             sale.subtitles = [];
             spreadSheetRow[SpreadSheetSale.subtitles].split(this.separator).forEach((g: string) => {
               const subtitle = getCodeIfExists('LANGUAGES', g);
-              if (subtitle !== false) {
+              if (!!subtitle) {
                 sale.subtitles.push(subtitle);
               } else {
                 importErrors.errors.push({

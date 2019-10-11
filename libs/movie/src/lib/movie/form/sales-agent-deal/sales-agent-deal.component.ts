@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { default as staticModels, StaticModel } from '../../static-model/staticModels';
+import { default as staticModels, SlugAndLabel } from '../../static-model/staticModels';
 import { MovieSalesAgentDealForm } from './sales-agent-deal.form';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
@@ -12,12 +12,12 @@ import { startWith, debounceTime, map, distinctUntilChanged } from 'rxjs/operato
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormSalesAgentDealComponent implements OnInit {
-  
+
   public staticModels: any;
   public territoriesFilterCtrl = new FormControl();
   public mediasFilterCtrl = new FormControl();
-  public territories$: Observable<StaticModel[]>;
-  public medias$: Observable<StaticModel[]>;
+  public territories$: Observable<SlugAndLabel[]>;
+  public medias$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
 
@@ -31,7 +31,7 @@ export class MovieFormSalesAgentDealComponent implements OnInit {
     return this.controlContainer.control as MovieSalesAgentDealForm;
   }
 
-  private filterSelectSearch(control: FormControl, model: StaticModel[]) {
+  private filterSelectSearch(control: FormControl, model: SlugAndLabel[]) {
     return control.valueChanges.pipe(
       startWith(''),
       debounceTime(200),

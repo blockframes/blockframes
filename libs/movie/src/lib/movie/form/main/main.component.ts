@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { default as staticModels, StaticModel } from '../../static-model/staticModels';
+import { default as staticModels, SlugAndLabel } from '../../static-model/staticModels';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { MovieMainForm } from './main.form';
@@ -13,14 +13,14 @@ import { MovieMainForm } from './main.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMainComponent implements OnInit {
-  
+
   public staticModels: any;
   public countriesFilterCtrl = new FormControl();
   public languagesFilterCtrl = new FormControl();
   public genresFilterCtrl = new FormControl();
-  public countries$: Observable<StaticModel[]>;
-  public languages$: Observable<StaticModel[]>;
-  public genres$: Observable<StaticModel[]>;
+  public countries$: Observable<SlugAndLabel[]>;
+  public languages$: Observable<SlugAndLabel[]>;
+  public genres$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
 
@@ -40,7 +40,7 @@ export class MovieFormMainComponent implements OnInit {
     this.genres$ = this.filterSelectSearch(this.genresFilterCtrl, this.staticModels['GENRES']);
   }
 
-  private filterSelectSearch(control: FormControl, model: StaticModel[]) {
+  private filterSelectSearch(control: FormControl, model: SlugAndLabel[]) {
     return control.valueChanges.pipe(
       startWith(''),
       debounceTime(200),

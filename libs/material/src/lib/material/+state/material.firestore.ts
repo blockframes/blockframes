@@ -1,4 +1,4 @@
- import { default as staticModels } from '@blockframes/movie/movie/static-model/staticModels';
+import { default as staticModels } from '@blockframes/movie/movie/static-model/staticModels';
 
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
@@ -15,6 +15,13 @@ export interface MaterialRaw {
   description: string;
   category: string;
 }
+
+/** Document model of a material specific to a template. */
+export interface MaterialTemplateDocument extends MaterialRaw {
+  price: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
+  currency: CurrencyCode;
+}
+
 
 /** Document model of a material */
 export interface MaterialDocument extends MaterialRaw {
