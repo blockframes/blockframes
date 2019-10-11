@@ -34,13 +34,13 @@ function isFile(path: string): boolean {
 }
 
 @Component({
-  selector: 'image-cropper',
-  templateUrl: './image-cropper.component.html',
-  styleUrls: ['./image-cropper.component.scss'],
+  selector: 'cropper',
+  templateUrl: './cropper.component.html',
+  styleUrls: ['./cropper.component.scss'],
   viewProviders: [DropZoneDirective],
   animations: [ zoom, zoomDelay, check, finalZoom ]
 })
-export class ImageCropperComponent {
+export class CropperComponent {
   private ref: AngularFireStorageReference;
   private folder: string;
   private name: string;
