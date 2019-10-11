@@ -1,45 +1,23 @@
 import { db, functions } from './internals/firebase';
-import { customMessage, prepareNotification, triggerNotifications } from './notify';
-import { getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import {
-  DeliveryDocument,
-  DocInformations,
-  DocType,
-  Movie,
-  OrganizationDocument,
-  SnapObject,
-  StakeholderDocument
-} from './data/types';
-
-const COLLECTION_DELIVERIES = 'deliveries';
-const COLLECTION_MOVIES = 'movies';
+import { triggerNotifications } from './notification';
+import { getDocument, getOrganizationsOfDocument } from './data/internals';
+import { OrganizationDocument, SnapObject, Movie, StakeholderDocument, DeliveryDocument } from './data/types';
+import { PublicOrganization } from '@blockframes/organization/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { PublicMovie } from '@blockframes/movie/types';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) {
-  return stakeholdersCollectionEvent(snap, context, COLLECTION_DELIVERIES);
-}
-
-export async function onMovieStakeholderCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
-) {
-  return stakeholdersCollectionEvent(snap, context, COLLECTION_MOVIES);
+  return stakeholdersCollectionEvent(snap, context);
 }
 
 export async function onDeliveryStakeholderDelete(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) {
-  return stakeholdersCollectionEvent(snap, context, COLLECTION_DELIVERIES);
-}
-
-export async function onMovieStakeholderDelete(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
-) {
-  return stakeholdersCollectionEvent(snap, context, COLLECTION_MOVIES);
+  return stakeholdersCollectionEvent(snap, context);
 }
 
 /**
@@ -49,8 +27,7 @@ export async function onMovieStakeholderDelete(
  */
 async function stakeholdersCollectionEvent(
   snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext,
-  collection: string
+  context: functions.EventContext
 ) {
   const newStakeholder = snap.data() as StakeholderDocument | undefined;
 
@@ -59,19 +36,12 @@ async function stakeholdersCollectionEvent(
   }
 
   // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
-  const document = !!context.params.movieID
-    ? await getDocument<any>(`${collection}/${context.params.movieID}`)
-    : await getDocument<any>(`${collection}/${context.params.deliveryID}`);
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryID}`);
+  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`)
+  const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.id}`);
 
-  const docInformations: DocInformations = {
-    id: document.id,
-    type: !!context.params.movieID ? DocType.movie : DocType.delivery
-  };
-
-  const organization = await getDocument<OrganizationDocument>(`orgs/${newStakeholder.id}`);
-
-  if (!!document && !!newStakeholder && !!organization) {
-    const documentSnapshot = await db.doc(`${collection}/${document.id}`).get();
+  if (!!delivery.id && !!newStakeholder && !!organization) {
+    const documentSnapshot = await db.doc(`deliveries/${delivery.id}`).get();
     const processedId = documentSnapshot.data()!.processedId;
 
     if (processedId === context.eventId) {
@@ -80,36 +50,29 @@ async function stakeholdersCollectionEvent(
 
     try {
       await db
-        .doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
         .update({ processedId: context.eventId });
-      const [organizations, stakeholderCount] = await Promise.all([
-        getOrganizationsOfDocument(document.id, collection),
-        getCount(`${collection}/${document.id}/stakeholders`)
-      ]);
+      const organizationsOfDocument = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
-      // Retrieve the movie concerned by the event
-      const movie = !!context.params.movieID
-        ? document
-        : await getDocument<Movie>(`movies/${document.movieId}`);
+      const type =
+        context.eventType === 'google.firestore.document.create'
+          ? NotificationType.inviteOrganization
+          : NotificationType.removeOrganization;
 
-      const delivery = !!context.params.deliveryID
-        ? await getDocument<DeliveryDocument>(`deliveries/${document.id}`)
-        : null;
-
-      const snapInformations: SnapObject = {
-        movie,
-        docInformations,
-        organization,
-        eventType: context.eventType,
-        count: stakeholderCount,
-        delivery
+      const snapObject: SnapObject = {
+        organization: {id: organization.id, name: organization.name} as PublicOrganization,
+        movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+        docId: delivery.id,
+        type
       };
 
-      const notifications = createNotifications(organizations, snapInformations);
+      const notifications = createNotifications(organizationsOfDocument, snapObject);
 
       return Promise.all([triggerNotifications(notifications)]);
     } catch (e) {
-      await db.doc(`${collection}/${document.id}/stakeholders/${newStakeholder.id}`).update({ processedId: null });
+      await db
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .update({ processedId: null });
       throw e;
     }
   }
@@ -120,25 +83,28 @@ async function stakeholdersCollectionEvent(
  * Takes a list of Organization and a SnapObject to generate one notification for each users
  * working on the document, with custom path and message.
  */
-function createNotifications(organizations: OrganizationDocument[], snap: SnapObject) {
-  const path = !!snap.delivery
-    ? `/layout/o/${snap.delivery.movieId}/${snap.delivery.id}/teamwork`
-    : `/layout/o/home/${snap.movie.id}/teamwork`;
-
-  const isNotTheInvitedOrganization = (organization: OrganizationDocument): boolean => {
-    return !!organization && !!organization.userIds && organization.id !== snap.organization.id;
+function createNotifications(
+  organizationsOfDocument: OrganizationDocument[],
+  snapObject: SnapObject
+) {
+  const isNotTheInvitedOrganization = (organizationOfDocument: OrganizationDocument): boolean => {
+    return (
+      !!snapObject.organization &&
+      !!organizationOfDocument.userIds &&
+      organizationOfDocument.id !== snapObject.organization.id
+    );
   };
 
-  return organizations
+  return organizationsOfDocument
     .filter(isNotTheInvitedOrganization)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
-      return prepareNotification({
-        message: customMessage(snap),
+      return createNotification({
         userId,
-        path,
-        organization: snap.organization,
-        docInformations: snap.docInformations
+        organization: snapObject.organization,
+        movie: snapObject.movie,
+        type: snapObject.type,
+        docId: snapObject.docId
       });
     });
 }

@@ -3,7 +3,7 @@ import { PublicUser } from "@blockframes/auth/types";
 import { firestore } from 'firebase/app';
 type Timestamp = firestore.Timestamp;
 
-
+/** Raw type for Invitation. */
 export interface Invitation {
   id: string;
   app: string;
@@ -16,6 +16,7 @@ export interface Invitation {
   processedId?: string;
 }
 
+/** Specific types of Invitation, both used in firebase functions. */
 export type InvitationDocument = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
@@ -47,7 +48,7 @@ export const enum InvitationStatus {
   pending = 'pending'
 }
 
-/** Type of Invitation depending its purpose. */
+/** Type of Invitation depending of its purpose. */
 export const enum InvitationType {
   fromUserToOrganization = 'fromUserToOrganization',
   fromOrganizationToUser = 'fromOrganizationToUser',

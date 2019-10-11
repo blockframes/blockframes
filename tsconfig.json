@@ -43,6 +43,8 @@
       "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
       "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
       "@blockframes/organization/stakeholder/types": ["libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"],
+      "@blockframes/notification/types": ["libs/notification/src/lib/notification/+state/notification.firestore.ts"],
+      "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
 

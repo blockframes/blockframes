@@ -1,8 +1,8 @@
-<article *ngIf="!!notification.path; else: noPath" class="container">
+<article *ngIf="notification" class="container" (click)="read()">
   <span class="message" (click)="goToPath()">
-    {{ notification.message }}
+    {{ message }}
   </span>
-  <article class="nav-anchor" *ngIf="notification.message.includes('link')">
+  <article class="nav-anchor" *ngIf="notification.type === 'pathToDocument'">
     <a test-id="navigate" mat-flat-button color="accent" (click)="goToPath()">Go to document</a>
   </article>
   <p>
@@ -10,14 +10,3 @@
     {{ notification.date.toDate() | date: 'hh:mm a' }}
   </p>
 </article>
-<ng-template #noPath>
-  <article [ngClass]="{ 'already-read': !!notification.isRead }" class="container">
-    <span class="message" (click)="read()">
-      {{ notification.message }}
-    </span>
-    <p>
-      Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
-      {{ notification.date.toDate() | date: 'hh:mm a' }}
-    </p>
-  </article>
-</ng-template>

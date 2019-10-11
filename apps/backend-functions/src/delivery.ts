@@ -1,15 +1,11 @@
 import { db, functions } from './internals/firebase';
-import { prepareNotification, triggerNotifications } from './notify';
+import { triggerNotifications } from './notification';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import {
-  DeliveryDocument,
-  DocType,
-  MaterialDocument,
-  Movie,
-  OrganizationDocument,
-  StakeholderDocument
-} from './data/types';
+import { Movie, OrganizationDocument, SnapObject, DeliveryDocument, MaterialDocument, StakeholderDocument } from './data/types';
 import { copyMaterialsToMovie } from './material';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { PublicOrganization } from '@blockframes/organization/types';
+import { PublicMovie } from '@blockframes/movie/types';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -67,9 +63,16 @@ export async function onDeliveryUpdate(
 
     const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];
 
+    const snapObject: SnapObject = {
+      organization: undefined,
+      movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+      docId: delivery.id,
+      type: NotificationType.finalSignature
+    }
+
     // When delivery is signed, we create notifications for each stakeholder
     if (delivery.mustBeSigned) {
-      const notifications = createSignatureNotifications(organizations, movie, delivery);
+      const notifications = createSignatureNotifications(organizations, snapObject);
       promises.push(triggerNotifications(notifications));
     }
 
@@ -101,44 +104,39 @@ async function notifyOnNewSignee(
     throw new Error("This stakeholder doesn't exist !");
   }
 
-  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
+  const newStakeholderOrg= await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
     throw new Error("This organization doesn't exist !");
   }
 
-  const notifications = createSignatureNotifications(
-    organizations,
-    movie,
-    delivery,
-    newStakeholderOrg
-  );
+  const snapObject: SnapObject = {
+    organization: {id: newStakeholderOrg.id, name: newStakeholderOrg.name} as PublicOrganization,
+    movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+    docId: delivery.id,
+    type: NotificationType.newSignature
+  }
+
+  const notifications = createSignatureNotifications(organizations, snapObject);
 
   await triggerNotifications(notifications);
 }
 
-/**
- * Create custom notifications for deliveries signatures. If it is used for a non-final signature,
- * pass the signatory's Organization as the 4th argument to get the correct message displayed in notification.
- */
+/**  Create custom notifications for deliveries signatures. */
 function createSignatureNotifications(
-  organizations: OrganizationDocument[],
-  movie: Movie,
-  delivery: DeliveryDocument,
-  newStakeholderOrg?: OrganizationDocument
+  organizationsOfDocument: OrganizationDocument[],
+  snapObject: SnapObject
 ) {
-  return organizations
-    .filter(organization => !!organization && !!organization.userIds)
+  return organizationsOfDocument
+    .filter(organizationOfDocument => !!organizationOfDocument && !!organizationOfDocument.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
-      const message = !!newStakeholderOrg
-        ? `${newStakeholderOrg.name} just signed ${movie.main.title.original}'s delivery`
-        : `${movie.main.title.original}'s delivery has been approved by all stakeholders.`;
-      return prepareNotification({
-        message,
+      return createNotification({
         userId,
-        path: `/layout/o/delivery/${delivery.movieId}/${delivery.id}/list`,
-        docInformations: { id: delivery.id, type: DocType.delivery }
+        organization: snapObject.organization,
+        type: snapObject.type,
+        docId: snapObject.docId,
+        movie: snapObject.movie
       });
     });
 }

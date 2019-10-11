@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Notification } from './notification.model';
 import { NotificationStore, NotificationState } from './notification.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
@@ -11,7 +12,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     super(store);
   }
 
-  public readNotification(id: string) {
-    this.update(id, { isRead: true });
+  public readNotification(notification: Notification) {
+    this.update({...notification, isRead: true });
   }
 }

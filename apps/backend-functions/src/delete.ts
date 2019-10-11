@@ -1,8 +1,9 @@
 import { db, functions } from './internals/firebase';
-import { prepareNotification, triggerNotifications } from './notify';
+import { triggerNotifications } from './notification';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DeliveryDocument, DocType, MaterialDocument, Movie, OrganizationDocument } from './data/types';
+import { Movie, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -88,18 +89,18 @@ export async function deleteFirestoreDelivery(
     batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });
   }
 
-
   await batch.commit();
 
-  // When delivery is deleted, notifications are created for each stakeholder of this delivery
+  // When delivery is deleted, notifications are created for each organization of this delivery
   const notifications = organizations
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId =>
-      prepareNotification({
-        message: `${movie.main.title.original}'s delivery has been deleted.`,
+      createNotification({
         userId,
-        docInformations: { id: delivery.id, type: DocType.delivery }
+        docId: delivery.id,
+        movie: { id: movie.id, title: movie.main.title },
+        type: NotificationType.deleteDocument
       })
     );
 
