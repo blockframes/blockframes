@@ -41,12 +41,12 @@
       "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
       "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
       "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
+      "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
 
       // MATERIAL
       "@blockframes/material": ["libs/material/src/index.ts"],
-      "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
 
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"],

@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, MaterialDocument, Movie, OrganizationDocument, Stakeholder } from './data/types';
+import { DeliveryDocument, DocType, MaterialDocument, Movie, OrganizationDocument, Stakeholder } from './data/types';
 import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
