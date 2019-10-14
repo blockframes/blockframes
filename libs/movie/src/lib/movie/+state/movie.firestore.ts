@@ -1,5 +1,5 @@
 import { DateRangeRaw } from "@blockframes/utils/date-range";
-import { firestore } from "firebase";
+import { firestore } from "firebase/app";
 
 type Timestamp = firestore.Timestamp;
 
@@ -107,6 +107,7 @@ interface MovieSalesInfoRaw<D> {
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
 }
 
+/** Generic interface of a Movie */
 interface MovieRaw<D> {
   // @todo #643 add new fields to Draw.io
   _type: 'movies';
@@ -115,16 +116,16 @@ interface MovieRaw<D> {
   // @todo #643 not main movie attributes WIP
 
   deliveryIds: string[];
-  ipId: string;
-  directorNote: string;
-  producerNote: string;
-  goalBudget: number;
-  movieCurrency: string;
-  fundedBudget: number;
-  breakeven: number;
-  backendProfit: number;
-  potentialRevenues: number;
-  selectionCategories: string;
+  ipId?: string;
+  directorNote?: string;
+  producerNote?: string;
+  goalBudget?: number;
+  movieCurrency?: string;
+  fundedBudget?: number;
+  breakeven?: number;
+  backendProfit?: number;
+  potentialRevenues?: number;
+  selectionCategories?: string;
 
   // Sections
   sales: MovieSaleRaw<D>[]; //@todo 581 => move to subcollection
@@ -139,9 +140,11 @@ interface MovieRaw<D> {
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
 }
 
+/** Document model of a Movie */
 export interface MovieDocument extends MovieRaw<Timestamp> {
 }
 
+/** Document model of a Movie with Dates (type Date) */
 export interface MovieDocumentWithDates extends MovieRaw<Date> {
 }
 
