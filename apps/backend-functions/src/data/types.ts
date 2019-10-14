@@ -12,6 +12,7 @@ export {
   InvitationToWorkOnDocument
   } from '@blockframes/invitation/types';
   export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
+  export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
 
 /**
  * Types used by the firebase backend.
@@ -42,12 +43,6 @@ export interface DocInformations {
 // Core Application Types
 // ======================
 // Business & App Related
-
-export interface Stakeholder {
-  id: string;
-  isAccepted: boolean;
-  processedId: string;
-}
 
 export interface Movie {
   id: string;

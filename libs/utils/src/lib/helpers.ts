@@ -5,6 +5,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Provider } from '@ethersproject/providers'
 import { toUtf8Bytes } from '@ethersproject/strings'
 import { ERC1077 } from '@blockframes/contracts';
+import firebase from "firebase";
 
 export interface AddressParts {
   start: string;
@@ -123,11 +124,11 @@ export function numberTo256Bits(num: number) {
 export async function snapshot<T>(path: string): Promise<T> {
   // If path targets a collection ( odd number of segments after the split )
   if (path.split('/').length % 2 !== 0) {
-    const snap = await this.collection(path).ref.get();
+    const snap = await firebase.firestore().collection(path).get();
     return snap.docs.map(doc => doc.data()) as any;
     // Else path targets a doc
   } else {
-    const snap = await this.doc(path).ref.get();
+    const snap = await firebase.firestore().doc(path).get();
     return snap.data() as any;
   }
 }

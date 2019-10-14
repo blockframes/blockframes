@@ -8,7 +8,7 @@ import {
   Movie,
   OrganizationDocument,
   SnapObject,
-  Stakeholder
+  StakeholderDocument
 } from './data/types';
 
 const COLLECTION_DELIVERIES = 'deliveries';
@@ -52,7 +52,7 @@ async function stakeholdersCollectionEvent(
   context: functions.EventContext,
   collection: string
 ) {
-  const newStakeholder = snap.data() as Stakeholder | undefined;
+  const newStakeholder = snap.data() as StakeholderDocument | undefined;
 
   if (!newStakeholder) {
     throw new Error(`New stakeholder not found !`);

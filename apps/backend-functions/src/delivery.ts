@@ -1,7 +1,14 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DeliveryDocument, DocType, MaterialDocument, Movie, OrganizationDocument, Stakeholder } from './data/types';
+import {
+  DeliveryDocument,
+  DocType,
+  MaterialDocument,
+  Movie,
+  OrganizationDocument,
+  StakeholderDocument
+} from './data/types';
 import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
@@ -66,7 +73,7 @@ export async function onDeliveryUpdate(
       promises.push(triggerNotifications(notifications));
     }
 
-    await db.doc(`deliveries/${delivery.id}`).update({ isSigned: true })
+    await db.doc(`deliveries/${delivery.id}`).update({ isSigned: true });
     await Promise.all(promises);
   } catch (e) {
     await db.doc(`deliveries/${delivery.id}`).update({ processedId: null });
@@ -80,23 +87,32 @@ export async function onDeliveryUpdate(
  * Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
  * that all stakeholders approved the delivery.
  */
-async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocument[], movie: Movie): Promise<void> {
+async function notifyOnNewSignee(
+  delivery: any,
+  organizations: OrganizationDocument[],
+  movie: Movie
+): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
-  const newStakeholder = await getDocument<Stakeholder>(
+  const newStakeholder = await getDocument<StakeholderDocument>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
   );
 
   if (!newStakeholder) {
-    throw new Error('This stakeholder doesn\'t exist !');
+    throw new Error("This stakeholder doesn't exist !");
   }
 
   const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
-    throw new Error('This organization doesn\'t exist !');
+    throw new Error("This organization doesn't exist !");
   }
 
-  const notifications = createSignatureNotifications(organizations, movie, delivery, newStakeholderOrg);
+  const notifications = createSignatureNotifications(
+    organizations,
+    movie,
+    delivery,
+    newStakeholderOrg
+  );
 
   await triggerNotifications(notifications);
 }
@@ -115,7 +131,7 @@ function createSignatureNotifications(
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
-      const message = (!!newStakeholderOrg)
+      const message = !!newStakeholderOrg
         ? `${newStakeholderOrg.name} just signed ${movie.main.title.original}'s delivery`
         : `${movie.main.title.original}'s delivery has been approved by all stakeholders.`;
       return prepareNotification({
