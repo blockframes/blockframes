@@ -94,6 +94,7 @@ export class CropperComponent {
     this.url$ = this.ref.getDownloadURL();
     this.ref.getMetadata().toPromise()
     .then(meta => this.uploaded.emit(meta.fullPath));
+    this.nextStep('show');
   }
 
   // upload
@@ -107,7 +108,8 @@ export class CropperComponent {
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(() => this.nextStep('upload_complete'))
+        finalize(() => {this.nextStep('upload_complete')
+        console.log('upload_compeleteddddddddddddd')})
       );
     } catch (err) {
       console.log(err);

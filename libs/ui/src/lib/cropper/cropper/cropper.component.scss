@@ -2,7 +2,6 @@ section {
   height: 80%;
   width: 100%;
   background-color: rgb(240, 240, 240);
-  // margin: auto;
   text-align: center;
 }
 
@@ -30,8 +29,14 @@ article {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  button {
+    padding: 10px;
+  }
 }
 
 mat-icon {
   color: #3f51b5;
+  font-size: 45px;
+  font-weight: 800;
+  padding: 10px;
 }
