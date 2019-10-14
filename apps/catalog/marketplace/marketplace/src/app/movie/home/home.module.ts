@@ -12,11 +12,13 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
+import {CropperModule} from '@blockframes/ui/cropper/cropper.module'
 
 @NgModule({
   declarations: [MarketplaceHomeComponent],
   imports: [
     CommonModule,
+    CropperModule,
     MatButtonModule,
     FlexLayoutModule,
     MatCarouselModule,
