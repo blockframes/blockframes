@@ -45,7 +45,7 @@ export interface CatalogBasket {
 export interface MovieData {
   id: string;
   movieName: string;
-  endRights: string;
+  duration: DateRange;
   territory: string;
   rights: string;
   languages: string;
