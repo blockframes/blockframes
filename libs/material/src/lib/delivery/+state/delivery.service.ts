@@ -3,13 +3,10 @@ import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
 import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses, Step } from './delivery.model';
 import {
-  createDeliveryStakeholder,
   Movie,
-  MovieQuery,
-  Stakeholder,
-  StakeholderService
+  MovieQuery
 } from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder, createDeliveryStakeholder } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
@@ -150,7 +147,7 @@ export class DeliveryService {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization.id, true, tx);
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -193,7 +190,7 @@ export class DeliveryService {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization.id, true, tx);
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { Observable } from 'rxjs';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
-import { StakeholderService } from '@blockframes/movie';
+import { StakeholderService } from '@blockframes/organization';
 
 @Component({
   selector: 'delivery-stakeholders-editable',
@@ -32,6 +32,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
   public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
     const delivery = this.query.getActive();
-    this.stakeholderService.addStakeholder(delivery, objectID);
+    this.stakeholderService.addStakeholder(delivery.id, objectID);
   }
 }

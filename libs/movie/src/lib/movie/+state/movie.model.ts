@@ -1,6 +1,5 @@
 import { Organization } from "@blockframes/organization";
 import { Material } from "@blockframes/material";
-import { Stakeholder } from "../../stakeholder/+state";
 import { DateRange } from "@blockframes/utils";
 
 export interface MovieSale {
@@ -104,7 +103,6 @@ export interface Movie {
   id: string,
   organization?: Organization,
   materials?: Material[];
-  stakeholders?: Stakeholder[];
   sales: MovieSale[], //@todo 581 => move to subcollection
 
   // @todo #643 not main movie attributes WIP
