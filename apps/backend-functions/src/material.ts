@@ -2,7 +2,7 @@ import { flatten, uniqBy } from 'lodash';
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { DocType, MaterialDocument, Movie, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
+import { DocType, MaterialDocument, MovieDocument, OrganizationDocument, Delivery, MaterialStatus } from './data/types';
 import { isTheSame } from './utils';
 
 export const onMovieMaterialUpdate = async (
@@ -13,7 +13,7 @@ export const onMovieMaterialUpdate = async (
     throw new Error('Parameter "change" not found');
   }
 
-  const movie = await getDocument<Movie>(`movies/${context.params.movieID}`);
+  const movie = await getDocument<MovieDocument>(`movies/${context.params.movieID}`);
   const material: MaterialDocument = change.after.data() as MaterialDocument;
   const materialBefore = change.before.data();
   const orgsPromises = material.deliveryIds.map((deliveryId: string) =>

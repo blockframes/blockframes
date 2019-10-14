@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, MaterialDocument, Movie, OrganizationDocument, Stakeholder } from './data/types';
+import { Delivery, DocType, MaterialDocument, MovieDocument, OrganizationDocument, Stakeholder } from './data/types';
 import { copyMaterialsToMovie } from './material';
 
 export async function onDeliveryUpdate(
@@ -30,7 +30,7 @@ export async function onDeliveryUpdate(
 
   const [organizations, movie, stakeholderCount] = await Promise.all([
     getOrganizationsOfDocument(delivery.id, 'deliveries'),
-    getDocument<Movie>(`movies/${delivery.movieId}`),
+    getDocument<MovieDocument>(`movies/${delivery.movieId}`),
     getCount(`deliveries/${delivery.id}/stakeholders`)
   ]);
 
@@ -80,7 +80,7 @@ export async function onDeliveryUpdate(
  * Note: It doesn't trigger if this is the last signature, as another notification will be sent to notify
  * that all stakeholders approved the delivery.
  */
-async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocument[], movie: Movie): Promise<void> {
+async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocument[], movie: MovieDocument): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
   const newStakeholder = await getDocument<Stakeholder>(
     `deliveries/${delivery.id}/stakeholders/${newStakeholderId}`
@@ -107,7 +107,7 @@ async function notifyOnNewSignee(delivery: any, organizations: OrganizationDocum
  */
 function createSignatureNotifications(
   organizations: OrganizationDocument[],
-  movie: Movie,
+  movie: MovieDocument,
   delivery: Delivery,
   newStakeholderOrg?: OrganizationDocument
 ) {

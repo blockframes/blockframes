@@ -5,7 +5,7 @@ import {
   Delivery,
   DocInformations,
   DocType,
-  Movie,
+  MovieDocument,
   OrganizationDocument,
   SnapObject,
   Stakeholder
@@ -90,7 +90,7 @@ async function stakeholdersCollectionEvent(
       // Retrieve the movie concerned by the event
       const movie = !!context.params.movieID
         ? document
-        : await getDocument<Movie>(`movies/${document.movieId}`);
+        : await getDocument<MovieDocument>(`movies/${document.movieId}`);
 
       const delivery = !!context.params.deliveryID
         ? await getDocument<Delivery>(`deliveries/${document.id}`)

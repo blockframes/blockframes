@@ -1,3 +1,6 @@
+import { MovieDocument } from '@blockframes/movie/types';
+
+export { MovieDocument } from '@blockframes/movie/types';
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
   InvitationDocument,
@@ -62,15 +65,15 @@ export interface Delivery {
   mustBeSigned: boolean;
 }
 
-export interface Movie {
-  id: string;
-  main: {
-    title: {
-      original: string;
-    };
-  }
-  deliveryIds: string[];
-}
+// export interface Movie {
+//   id: string;
+//   main: {
+//     title: {
+//       original: string;
+//     };
+//   }
+//   deliveryIds: string[];
+// }
 
 export interface OrganizationPermissions {
   superAdmins: string[];
@@ -148,7 +151,7 @@ export interface Notification extends BaseNotification {
 }
 
 export interface SnapObject {
-  movie: Movie;
+  movie: MovieDocument;
   docInformations: DocInformations;
   organization: PublicOrganization;
   eventType: string;

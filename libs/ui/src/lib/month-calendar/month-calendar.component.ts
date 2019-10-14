@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy, Input} from '@angular/core';
-import { isBetween, DateRange } from '@blockframes/utils';
+import { DateRange, isBetween } from '@blockframes/utils/date-range';
 
 interface Tile {
   cols: number;
@@ -23,7 +23,7 @@ export class CalendarComponent implements OnInit {
   months: Date[];
   currentDate: Date;
   monthTiles: Tile[];
-  headerTile: Tile;  
+  headerTile: Tile;
   displayedDates: Date[];
   from: Date;
   to: Date;
@@ -69,7 +69,7 @@ export class CalendarComponent implements OnInit {
   fillDates() {
     const dates: Date[] = [];
     const displayedDates = [];
-    const displayDetails = []; 
+    const displayDetails = [];
     const hover = false;
     for(let i=0; i<12; i++){
       const firstDayOfMonth = new Date(this.currentDate.getFullYear(), i, 1);
@@ -81,7 +81,7 @@ export class CalendarComponent implements OnInit {
     this.displayedDates = displayedDates;
     return dates;
   }
-  
+
   /** give a state to month tiles depending of movies' reserved ranges */
   monthClass(dates: Date[]){
     dates.forEach((_, i) => {
@@ -92,7 +92,7 @@ export class CalendarComponent implements OnInit {
         }
 
         else if (this.checkRangesIntersections(disableRange)){
-          this.monthTiles[i].state = 'partial'; 
+          this.monthTiles[i].state = 'partial';
         }
       });
     });
@@ -100,9 +100,9 @@ export class CalendarComponent implements OnInit {
 
   /** check if a range got an intersection with an other range */
   checkRangesIntersections(disableRange: DateRange){
-    return isBetween(this.from, disableRange.from, disableRange.to)  
-        || isBetween(this.to, disableRange.from, disableRange.to) 
-        || isBetween(disableRange.from, this.from, this.to) 
+    return isBetween(this.from, disableRange.from, disableRange.to)
+        || isBetween(this.to, disableRange.from, disableRange.to)
+        || isBetween(disableRange.from, this.from, this.to)
         || isBetween(disableRange.to, this.from, this.to);
   }
 
@@ -113,7 +113,7 @@ export class CalendarComponent implements OnInit {
 
   /** check if a range is fully in an other range */
   checkRangeInclusion(disableRange: DateRange){
-    return isBetween(this.from, disableRange.from, disableRange.to) 
+    return isBetween(this.from, disableRange.from, disableRange.to)
         && isBetween(this.to, disableRange.from, disableRange.to);
   }
 }
