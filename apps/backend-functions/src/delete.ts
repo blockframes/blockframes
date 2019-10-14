@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { prepareNotification, triggerNotifications } from './notify';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, MaterialDocument, Movie, OrganizationDocument } from './data/types';
+import { DeliveryDocument, DocType, MaterialDocument, Movie, OrganizationDocument } from './data/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
