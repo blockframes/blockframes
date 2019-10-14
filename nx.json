@@ -59,6 +59,9 @@
     "backend-ops": {
       "tags": []
     },
+    "notification": {
+      "tags": ["notification"]
+    },
     "catalog-dashboard-e2e": {
       "tags": []
     },
