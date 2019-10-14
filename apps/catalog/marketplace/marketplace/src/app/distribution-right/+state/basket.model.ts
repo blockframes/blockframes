@@ -4,7 +4,7 @@ import {
 } from './../../movie/search/search.form';
 import { FormArray, Validators, FormControl, FormGroup } from '@angular/forms';
 import { DistributionRight } from './basket.model';
-import { DateRange } from '@blockframes/utils/helpers';
+import { DateRange } from '@blockframes/utils/date-range';
 import {
   MovieCurrenciesSlug,
   MediasSlug,

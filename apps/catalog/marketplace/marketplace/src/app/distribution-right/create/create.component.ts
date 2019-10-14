@@ -22,7 +22,8 @@ import {
   LANGUAGES_SLUG,
   LanguagesLabel
 } from '@blockframes/movie/movie/static-model/types';
-import { DateRange, ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
+import { DateRange } from '@blockframes/utils/date-range';
+import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getSalesInDateRange,
   getSalesWithMediasAndTerritoriesInCommon,

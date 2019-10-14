@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
-  Movie,
+  MovieDocument,
   OrganizationDocument,
   SnapObject,
   DeliveryDocument,
@@ -38,7 +38,7 @@ export async function onDeliveryUpdate(
 
   const [organizations, movie, stakeholderCount] = await Promise.all([
     getOrganizationsOfDocument(delivery.id, 'deliveries'),
-    getDocument<Movie>(`movies/${delivery.movieId}`),
+    getDocument<MovieDocument>(`movies/${delivery.movieId}`),
     getCount(`deliveries/${delivery.id}/stakeholders`)
   ]);
 
@@ -98,7 +98,7 @@ export async function onDeliveryUpdate(
 async function notifyOnNewSignee(
   delivery: any,
   organizationDocuments: OrganizationDocument[],
-  movie: Movie
+  movie: MovieDocument
 ): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
   const newStakeholder = await getDocument<StakeholderDocument>(

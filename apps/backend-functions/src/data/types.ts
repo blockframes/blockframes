@@ -2,6 +2,7 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
+export { MovieDocument } from '@blockframes/movie/types';
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
   InvitationDocument,
@@ -34,17 +35,6 @@ interface DocWithID {
 // Core Application Types
 // ======================
 // Business & App Related
-
-export interface Movie {
-  id: string;
-  main: {
-    title: {
-      original: string;
-      international: string;
-    };
-  }
-  deliveryIds: string[];
-}
 
 export interface OrganizationPermissions {
   superAdmins: string[];
