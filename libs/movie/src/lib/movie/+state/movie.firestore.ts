@@ -1,4 +1,4 @@
-import { DateRangeRaw } from "@blockframes/utils/helpers";
+import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase";
 
 type Timestamp = firestore.Timestamp;

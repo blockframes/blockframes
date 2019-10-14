@@ -2,7 +2,7 @@ import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Movie, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
+import { MovieDocument, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 export async function deleteFirestoreMovie(
@@ -83,7 +83,7 @@ export async function deleteFirestoreDelivery(
   });
 
   const movieDoc = await db.doc(`movies/${delivery.movieId}`).get();
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   if (!!movieDoc) {
     batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });

@@ -1,4 +1,4 @@
-import { DateRange } from '@blockframes/utils';
+import { DateRange } from '@blockframes/utils/date-range';
 import { MovieSale, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
 
 /**
