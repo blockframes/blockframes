@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { map, filter, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 function createOrg(org: any) {
   return {
