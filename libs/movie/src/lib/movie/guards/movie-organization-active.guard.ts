@@ -4,13 +4,7 @@ import { Movie, MovieStore } from '../+state';
 import { Router } from '@angular/router';
 
 export const movieOrganizationActiveQuery = (id: string): Query<Movie> => ({
-  path: `movies/${id}`,
-  stakeholders: (movie: Movie) => ({
-    path: `movies/${movie.id}/stakeholders`,
-    organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
-    })
-  })
+  path: `movies/${id}`
 });
 
 @Injectable({ providedIn: 'root' })

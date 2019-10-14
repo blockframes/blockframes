@@ -1,44 +1,40 @@
 import { Injectable } from '@angular/core';
-import {
-  createMovieStakeholder,
-  Stakeholder,
-  createDeliveryStakeholder
-} from './stakeholder.model';
+import { Stakeholder, createDeliveryStakeholder } from './stakeholder.model';
 import { Organization, PublicOrganization } from '@blockframes/organization';
 import { FireQuery } from '@blockframes/utils';
-import { Delivery } from '@blockframes/material';
-import { Movie } from '../../movie/+state/movie.model';
 import { InvitationService } from '@blockframes/notification';
 import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 export class StakeholderService {
-  constructor(private db: FireQuery, private invitationService: InvitationService, private authQuery: AuthQuery) {}
+  constructor(
+    private db: FireQuery,
+    private invitationService: InvitationService,
+    private authQuery: AuthQuery
+  ) {}
 
-  /** Add a stakeholder into movies or deliveries sub-collection */
+  /** Add a stakeholder into deliveries sub-collection */
   public async addStakeholder(
-    doc: Movie | Delivery,
+    docId: string,
     organizationId: string,
     isAccepted: boolean = false,
     tx?: firebase.firestore.Transaction
   ): Promise<string> {
     const organization = await this.db.snapshot<PublicOrganization>(`orgs/${organizationId}`);
 
-    const stakeholder = (doc._type === 'movies')
-      ? createMovieStakeholder({ id: organization.id, isAccepted })
-      : createDeliveryStakeholder({
-        id: organization.id,
-        isAccepted
-      });
+    const stakeholder = createDeliveryStakeholder({
+      id: organization.id,
+      isAccepted
+    });
 
-    const stakeholderDoc = this.db.doc<Stakeholder>(`${doc._type}/${doc.id}/stakeholders/${stakeholder.id}`);
+    const stakeholderDoc = this.db.doc<Stakeholder>(
+      `deliveries/${docId}/stakeholders/${stakeholder.id}`
+    );
 
-    (!!tx)
-      ? tx.set(stakeholderDoc.ref, stakeholder)
-      : stakeholderDoc.set(stakeholder);
+    !!tx ? tx.set(stakeholderDoc.ref, stakeholder) : stakeholderDoc.set(stakeholder);
 
     if (organization.id !== this.authQuery.orgId) {
-      this.invitationService.sendDocumentInvitationToOrg(organization, doc.id);
+      this.invitationService.sendDocumentInvitationToOrg(organization, docId);
     }
 
     return stakeholder.id;
@@ -71,7 +67,10 @@ export class StakeholderService {
 
       const newMovieIds = movieIds.filter(x => x !== movieId);
 
-      return Promise.all([tx.delete(stkDoc.ref), tx.update(organizationDoc.ref, { movieIds: newMovieIds })]);
+      return Promise.all([
+        tx.delete(stkDoc.ref),
+        tx.update(organizationDoc.ref, { movieIds: newMovieIds })
+      ]);
     });
   }
 }
