@@ -65,16 +65,6 @@ export interface Delivery {
   mustBeSigned: boolean;
 }
 
-// export interface Movie {
-//   id: string;
-//   main: {
-//     title: {
-//       original: string;
-//     };
-//   }
-//   deliveryIds: string[];
-// }
-
 export interface OrganizationPermissions {
   superAdmins: string[];
 }
