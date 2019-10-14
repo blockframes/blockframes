@@ -60,7 +60,7 @@ export interface DeliveryDocumentWithDates extends DeliveryRaw<Date> {
 /** Document model of a Step */
 export interface StepDocument extends StepRaw<Timestamp> {}
 
-/** Syntaxic Sugar: the Delivery Step type used in the frontend. */
+/** Document model of a Step with dates typed in Date. */
 export interface StepDocumentWithDate extends StepRaw<Date> {}
 
 /** Convert a StepDocument to a Step (that uses Date). */

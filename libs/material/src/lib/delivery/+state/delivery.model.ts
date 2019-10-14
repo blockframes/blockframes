@@ -6,17 +6,17 @@ export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
 
 export type Step = StepDocumentWithDate;
 
-/** Extends a Raw Delivery with fields that are specific to the local data model. */
+/** The delivery interface with dates typed in Date and stakeholders used by front-end. */
 export interface Delivery extends DeliveryDocumentWithDates {
   stakeholders: Stakeholder[];
 }
 
-/** Syntaxic Sugar: the Delivery type in firestore. */
+/** The delivery interface with dates typed in Timestamp and stakeholders used by guards. */
 export interface DeliveryWithTimestamps extends DeliveryDocument {
   stakeholders: Stakeholder[];
 }
 
-/** Syntaxic Sugar: the Delivery Minumum Guaratee Deadline type used in the frontend. */
+/** The MGDeadline interface typed with Date. */
 export interface MGDeadline extends MGDeadlineRaw<Date> {}
 
 export const deliveryStatuses: DeliveryStatus[] = [
@@ -27,6 +27,7 @@ export const deliveryStatuses: DeliveryStatus[] = [
   DeliveryStatus.accepted
 ];
 
+/** A factory function to create a delivery. */
 export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],
