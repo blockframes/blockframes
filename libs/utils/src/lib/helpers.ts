@@ -27,10 +27,13 @@ export function keyToAddressPart(key: Key, length: number): AddressParts {
   return {start: address.slice(0, length), middle: address.slice(length, address.length - length), end: address.slice(-length)};
 }
 
-/** need it for calendar components */
-export interface DateRange {
-  from: Date;
-  to: Date;
+export interface DateRangeRaw<D> {
+  from: D;
+  to: D
+}
+
+/** Need it for calendar components */
+export interface DateRange extends DateRangeRaw<Date> {
 }
 
 export function createDateRange(params: Partial<DateRange> = {}): DateRange {
