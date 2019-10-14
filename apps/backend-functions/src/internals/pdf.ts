@@ -5,7 +5,16 @@
  * and in a firebase function.
  */
 import { groupBy, sortBy, isEmpty } from 'lodash';
-import { asIDMap, DeliveryDocument, IDMap, MaterialDocument, OrganizationDocument, Stakeholder, StepDocumentWithDate, convertStepDocumentToStepDocumentWithDate } from '../data/types';
+import {
+  asIDMap,
+  DeliveryDocument,
+  IDMap,
+  MaterialDocument,
+  OrganizationDocument,
+  StepDocumentWithDate,
+  convertStepDocumentToStepDocumentWithDate,
+  StakeholderDocument
+} from '../data/types';
 import { getCollection, getDocument } from '../data/internals';
 
 const PdfPrinter = require('pdfmake');
@@ -117,7 +126,10 @@ function rowOrganizations(orgIds: string[], orgs: IDMap<OrganizationDocument>): 
  * @param materials
  * @param steps
  */
-function rowMaterials(materials: MaterialDocument[], steps: { [id: string]: StepDocumentWithDate }): any {
+function rowMaterials(
+  materials: MaterialDocument[],
+  steps: { [id: string]: StepDocumentWithDate }
+): any {
   // NOTE: pdfmake side-effect over the data provided, we can reuse the same objects
   // multiple time, we have to keep this variable definition INSIDE the forEach.
   const tableHeader = [bold('material'), center(bold('step'))];
@@ -170,8 +182,14 @@ function rowMaterials(materials: MaterialDocument[], steps: { [id: string]: Step
  * @param materials
  * @param steps
  */
-function rowMaterialsPerCategory(materials: MaterialDocument[], steps: { [id: string]: StepDocumentWithDate }): any {
-  const materialsPerCategory = groupBy(materials, (material: MaterialDocument) => material.category);
+function rowMaterialsPerCategory(
+  materials: MaterialDocument[],
+  steps: { [id: string]: StepDocumentWithDate }
+): any {
+  const materialsPerCategory = groupBy(
+    materials,
+    (material: MaterialDocument) => material.category
+  );
   const categories = sortBy(Object.keys(materialsPerCategory));
 
   const tables: any[] = [];
@@ -290,10 +308,12 @@ export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
 
   // TODO: factor out the data layer
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${deliveryId}`);
-  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
+  const stakeholders = await getCollection<StakeholderDocument>(
+    `deliveries/${deliveryId}/stakeholders`
+  );
 
   const orgs = await Promise.all(
-    stakeholders.map(({id}) => getDocument<OrganizationDocument>(`orgs/${id}`))
+    stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`))
   );
 
   const materials = await getCollection<MaterialDocument>(`deliveries/${deliveryId}/materials`);

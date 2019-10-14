@@ -6,7 +6,7 @@ import {
   Movie,
   MovieQuery
 } from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder, createDeliveryStakeholder } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
@@ -15,6 +15,7 @@ import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/f
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx, TxFeedback } from '@blockframes/ethers';
+import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -89,7 +90,7 @@ export class DeliveryService {
   private deliveryStakeholderDoc(
     deliveryId: string,
     stakeholderId: string
-  ): AngularFirestoreDocument<Stakeholder> {
+  ): AngularFirestoreDocument<StakeholderDocument> {
     return this.deliveryStakeholdersCollection(deliveryId).doc(stakeholderId);
   }
 
@@ -438,10 +439,6 @@ export class DeliveryService {
   // CRUD STAKEHOLDERS //
   //////////////////////
 
-  private makeDeliveryStakeholder(id: string, isAccepted: boolean) {
-    return createDeliveryStakeholder({ id, isAccepted });
-  }
-
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
     const delivery = this.query.getActive();
@@ -451,10 +448,7 @@ export class DeliveryService {
 
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
-      const newDeliveryStakeholder = this.makeDeliveryStakeholder(
-        movieStakeholder.id,
-        false
-      );
+      const newDeliveryStakeholder = createStakeholder({ id: movieStakeholder.id, isAccepted: false });
 
       return this.deliveryStakeholderDoc(delivery.id, newDeliveryStakeholder.id).set(
         newDeliveryStakeholder

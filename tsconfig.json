@@ -42,6 +42,7 @@
       "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
       "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
       "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
+      "@blockframes/organization/stakeholder/types": ["libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
 

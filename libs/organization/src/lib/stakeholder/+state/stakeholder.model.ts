@@ -1,14 +1,6 @@
-import { Organization } from "@blockframes/organization";
+import { StakeholderDocument } from "./stakeholder.firestore";
+import { Organization } from "../../+state";
 
-export interface Stakeholder {
-  id: string;
-  organization?: Organization;
-  role: string
-  isAccepted: boolean;
-}
-
-export function createDeliveryStakeholder(params?: Partial<Stakeholder>) {
-  return {
-    ...params,
-  } as Stakeholder;
+export interface Stakeholder extends StakeholderDocument {
+  organization: Organization;
 }
