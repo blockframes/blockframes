@@ -1,6 +1,3 @@
-import { Organization } from '@blockframes/organization';
-import { Material } from '@blockframes/material';
-import { Stakeholder } from '../../stakeholder/+state';
 import {
   MovieDocumentWithDates,
   MovieMain,
@@ -15,8 +12,11 @@ import {
   Credit,
   MovieSaleDocumentWithDates,
   MovieSalesAgentDealDocumentWithDates,
-  MovieSalesInfoDocumentWithDates
+  MovieSalesInfoDocumentWithDates,
+  PromotionalElement
 } from './movie.firestore';
+
+export type PromotionalElement = PromotionalElement;
 
 export type MovieFestivalPrizes = MovieFestivalPrizes;
 
@@ -44,27 +44,27 @@ export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
 
 export type Movie = MovieDocumentWithDates;
 
-/**
- * A factory function that creates Movie
- */
+/** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
+    id: params.id,
     deliveryIds: [],
     _type: 'movies',
-    main: {},
-    story: {},
-    promotionalElements: {},
-    promotionalDescription: {},
-    salesCast: {},
-    salesInfo: {},
-    versionInfo: {},
-    festivalPrizes: {},
-    salesAgentDeal: {},
+    main: createMovieMain(params.main),
+    story: createMovieStory(params.story),
+    promotionalElements: createMoviePromotionalElements(params.promotionalElements),
+    promotionalDescription: createMoviePromotionalDescription(params.promotionalDescription),
+    salesCast: createMovieSalesCast(params.salesCast),
+    salesInfo: createMovieSalesInfo(params.salesInfo),
+    versionInfo: createMovieVersionInfo(params.versionInfo),
+    festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
+    salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     sales: [],
     ...params
-  } as Movie;
+  };
 }
 
+/** A factory function that creates MovieMain */
 export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
   return {
     title: {
@@ -98,11 +98,6 @@ export function createMoviePromotionalDescription(
     keywords: [],
     ...params
   } as MoviePromotionalDescription;
-}
-
-export interface PromotionalElement {
-  label: string;
-  url: string;
 }
 
 export function createPromotionalElement(
