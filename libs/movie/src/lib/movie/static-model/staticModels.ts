@@ -663,3 +663,10 @@ export interface CurrencyWithLabel {
   slug: string;
   code: string;
 }
+
+/** Used in notifications/invitations to define which app is concerned. */
+export const enum App {
+  main = 'main',
+  delivery = 'delivery',
+  catalog = 'catalog'
+}

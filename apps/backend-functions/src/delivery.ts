@@ -1,11 +1,16 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Movie, OrganizationDocument, SnapObject, DeliveryDocument, MaterialDocument, StakeholderDocument } from './data/types';
+import {
+  Movie,
+  OrganizationDocument,
+  SnapObject,
+  DeliveryDocument,
+  MaterialDocument,
+  StakeholderDocument
+} from './data/types';
 import { copyMaterialsToMovie } from './material';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
-import { PublicOrganization } from '@blockframes/organization/types';
-import { PublicMovie } from '@blockframes/movie/types';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -65,10 +70,10 @@ export async function onDeliveryUpdate(
 
     const snapObject: SnapObject = {
       organization: undefined,
-      movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+      movie: { id: movie.id, title: movie.main.title },
       docId: delivery.id,
       type: NotificationType.finalSignature
-    }
+    };
 
     // When delivery is signed, we create notifications for each stakeholder
     if (delivery.mustBeSigned) {
@@ -92,7 +97,7 @@ export async function onDeliveryUpdate(
  */
 async function notifyOnNewSignee(
   delivery: any,
-  organizations: OrganizationDocument[],
+  organizationDocuments: OrganizationDocument[],
   movie: Movie
 ): Promise<void> {
   const newStakeholderId = delivery.validated[delivery.validated.length - 1];
@@ -104,31 +109,31 @@ async function notifyOnNewSignee(
     throw new Error("This stakeholder doesn't exist !");
   }
 
-  const newStakeholderOrg= await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
+  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
 
   if (!newStakeholderOrg) {
     throw new Error("This organization doesn't exist !");
   }
 
   const snapObject: SnapObject = {
-    organization: {id: newStakeholderOrg.id, name: newStakeholderOrg.name} as PublicOrganization,
-    movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+    organization: { id: newStakeholderOrg.id, name: newStakeholderOrg.name },
+    movie: { id: movie.id, title: movie.main.title },
     docId: delivery.id,
     type: NotificationType.newSignature
-  }
+  };
 
-  const notifications = createSignatureNotifications(organizations, snapObject);
+  const notifications = createSignatureNotifications(organizationDocuments, snapObject);
 
   await triggerNotifications(notifications);
 }
 
 /**  Create custom notifications for deliveries signatures. */
 function createSignatureNotifications(
-  organizationsOfDocument: OrganizationDocument[],
+  organizationDocuments: OrganizationDocument[],
   snapObject: SnapObject
 ) {
-  return organizationsOfDocument
-    .filter(organizationOfDocument => !!organizationOfDocument && !!organizationOfDocument.userIds)
+  return organizationDocuments
+    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId => {
       return createNotification({
