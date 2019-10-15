@@ -1,12 +1,12 @@
 import { MovieSalesInfo, createMovieSalesInfo, createPrize } from '../../+state';
-import { FormEntity, FormField, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 function createInternationalPremiereControl(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {;
   const { name, year } = createPrize(entity)
   return {
-    name: new FormField(name),
-    year: new FormField(year)
+    name: new FormControl(name),
+    year: new FormControl(year)
   }
 }
 
@@ -21,13 +21,13 @@ class InternationalPremiereForm extends FormEntity<InternationalPremiereControl>
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
   return {
-    scoring: new FormField(entity.scoring),
-    color: new FormField(entity.color),
-    europeanQualification: new FormField<Boolean>(entity.europeanQualification),
-    pegi: new FormField(entity.pegi),
-    certifications: new FormField(entity.certifications),
+    scoring: new FormControl(entity.scoring),
+    color: new FormControl(entity.color),
+    europeanQualification: new FormControl(entity.europeanQualification),
+    pegi: new FormControl(entity.pegi),
+    certifications: new FormControl(entity.certifications),
     internationalPremiere: new InternationalPremiereForm(entity.internationalPremiere),
-    originCountryReleaseDate: new FormField<Date>(entity.originCountryReleaseDate),
+    originCountryReleaseDate: new FormControl(entity.originCountryReleaseDate),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
   }
 }

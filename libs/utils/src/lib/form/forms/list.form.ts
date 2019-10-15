@@ -1,11 +1,10 @@
 import { AbstractControl } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 import { FormEntity } from './entity.form';
-import { FormField } from './field.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';
 
-type GetValue<T> = T extends FormField<infer I> ? I : T extends FormEntity<infer J> ? J : T;
+type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
 /** A list of FormField */
 export class FormList<T, Control extends AbstractControl = any> extends FormArray {

@@ -1,12 +1,13 @@
 import { MovieSalesAgentDeal, createMovieSalesAgentDeal } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
 import { DateRange, createDateRange } from '@blockframes/utils/date-range';
+import { FormControl } from '@angular/forms';
 
 function createRightsFormControl(entity?: Partial<DateRange>) {
   const { from, to } = createDateRange(entity);
   return {
-    from: new FormField(from),
-    to: new FormField(to)
+    from: new FormControl(from),
+    to: new FormControl(to)
   }
 }
 
@@ -22,8 +23,8 @@ function createMovieSalesAgentDealControls(salesAgentDeal?: Partial<MovieSalesAg
   const { rights, territories, medias } = createMovieSalesAgentDeal(salesAgentDeal);
   return {
     rights: new RightsForm(rights),
-    territories: new FormField(territories),
-    medias: new FormField(medias)
+    territories: new FormControl(territories),
+    medias: new FormControl(medias)
   }
 }
 

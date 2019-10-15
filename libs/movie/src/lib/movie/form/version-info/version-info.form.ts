@@ -1,11 +1,12 @@
 import { MovieVersionInfo, createMovieVersionInfo } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 
 function createMovieVersionInfoControls(versionInfo?: Partial<MovieVersionInfo>){
   const { subtitles, dubbings } = createMovieVersionInfo(versionInfo);
   return {
-    subtitles: new FormField(subtitles),
-    dubbings: new FormField(dubbings),
+    subtitles: new FormControl(subtitles),
+    dubbings: new FormControl(dubbings),
   }
 }
 

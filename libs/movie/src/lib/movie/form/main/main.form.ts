@@ -1,4 +1,4 @@
-import { FormEntity, FormList, FormField, yearValidators } from '@blockframes/utils';
+import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, createCredit, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 
@@ -60,8 +60,8 @@ export class TitleForm extends FormEntity<TitleFormControl> {
 function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
   const { original, international } = createTitle(title);
   return {
-    original: new FormField(original),
-    international: new FormField(international),
+    original: new FormControl(original),
+    international: new FormControl(international),
   }
 }
 
@@ -70,18 +70,18 @@ type TitleFormControl = ReturnType<typeof createTitleFormControl>;
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
-    internalRef: new FormField(entity.internalRef),
-    isan: new FormField(entity.isan),
+    internalRef: new FormControl(entity.internalRef),
+    isan: new FormControl(entity.isan),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    poster: new FormField(entity.poster),
+    poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: new FormField(entity.genres),
-    originCountries: new FormField(entity.originCountries),
-    languages: new FormField(entity.languages),
-    status: new FormField(entity.status , [Validators.required]),
-    length: new FormField<number>(entity.length),
-    shortSynopsis: new FormField(entity.shortSynopsis, [Validators.maxLength(500)] ),
+    genres: new FormControl(entity.genres),
+    originCountries: new FormControl(entity.originCountries),
+    languages: new FormControl(entity.languages),
+    status: new FormControl(entity.status , [Validators.required]),
+    length: new FormControl(entity.length),
+    shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     productionCompanies: FormList.factory(entity.productionCompanies, el => new ProductionCompagnyForm(el)),
   }
 }

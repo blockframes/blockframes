@@ -1,5 +1,5 @@
-import { FormField, FormEntity } from '../forms'
-import { AbstractControlOptions, Validators } from '@angular/forms';
+import { FormEntity } from '../forms'
+import { AbstractControlOptions, Validators, FormControl } from '@angular/forms';
 import { confirmPasswords } from '../validators/validators';
 
 export const passwordValidators = [
@@ -18,7 +18,7 @@ function defaultOptions(options: Partial<AbstractControlOptions> = {}): Abstract
 }
 
 /* Checks if input is a valid password */
-export class PasswordControl extends FormField<string> {
+export class PasswordControl extends FormControl {
   constructor(value = '', validators?: Partial<AbstractControlOptions>) {
     super(value, defaultOptions(validators));
   }
