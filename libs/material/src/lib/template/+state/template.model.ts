@@ -1,25 +1,20 @@
 import { firestore } from 'firebase/app';
 import { MaterialTemplate } from '../../material/+state';
+import { TemplateDocument } from './template.firestore';
 
-export interface BaseTemplate {
-  id: string;
-  name: string;
-  orgId: string;
-}
-
-export interface Template extends BaseTemplate {
+/** Template interface with materials (used by the guard). */
+export interface Template extends TemplateDocument {
   materials?: MaterialTemplate[];
-  created: firestore.Timestamp;
-  _type: 'templates';
 }
 
-/**
- * A factory function that creates Template
- */
-export function createTemplate(template: BaseTemplate) {
-  return template?{
-    ...(template || {}),
+/** A factory function that creates Template */
+export function createTemplate(template: Partial<Template>): Template {
+  return {
+    id : template.id,
     _type: 'templates',
-    created: firestore.Timestamp.now() // TODO: Figure out a way to use FieldValue to get a consistent date.
-  } as Template : {} as Template
+    name: '',
+    orgId: template.orgId,
+    created: firestore.Timestamp.now(),
+    ...template
+  }
 }
