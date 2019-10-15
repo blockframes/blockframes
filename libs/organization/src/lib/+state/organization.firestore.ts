@@ -33,7 +33,7 @@ export interface PublicOrganization {
 /** A factory function that creates an Organization. */
 export function createOrganization(params: Partial<OrganizationDocument> = {}): OrganizationDocument {
   return {
-    id: '',
+    id: params.id,
     name: '',
     address: '',
     officeAddress: '',
