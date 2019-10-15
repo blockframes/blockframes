@@ -213,7 +213,7 @@ export class WalletService {
       if(hasCallback) {
         actionTx.callback(...args); // execute tx callback (ex: delete local key)
       }
-      this.store.update({tx: undefined});
+      this.store.update({tx: null});
     } catch (error) {
       // store error and throw back to notice the component of the error
       this.handleError('Our relayer as encountered a problem, your transaction hasn\'t been sent. Please try again later. If the problem persist please contact an admin.');

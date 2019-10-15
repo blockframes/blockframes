@@ -23,16 +23,17 @@ enum steps {
 })
 export class WalletSendTxTunnelComponent implements OnInit {
 
-  steps = steps;
-  step = this.steps.select;
-  key: Key;
-  activeKey: EthersWallet;
-  wallet$: Observable<Wallet>;
-  isDecrypting$: Observable<boolean>;
-  isDeploying$ = new BehaviorSubject(false);
-  isPending$ = new BehaviorSubject(false);
-  feedbackImage = '/assets/images/ppl_celebrating.png';
-  feedbackTitle = 'Congratulation !';
+  public steps = steps;
+  public step = this.steps.select;
+  public wallet$: Observable<Wallet>;
+  public isDecrypting$: Observable<boolean>;
+  public isDeploying$ = new BehaviorSubject(false);
+  public isPending$ = new BehaviorSubject(false);
+  public feedbackImage = '/assets/images/ppl_celebrating.png';
+  public feedbackTitle = 'Congratulation !';
+
+  private key: Key;
+  private activeKey: EthersWallet;
 
   constructor(
     private router: Router,
@@ -76,7 +77,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
         this.isDeploying$.next(false);
       }
     } catch(err) {
-      console.warn('Ooops', err);
+      console.warn('Some Blockchain transaction has failed : ', err);
       this.feedbackImage = '/assets/images/delete.png';
       this.feedbackTitle = 'The deploy of your wallet has failed :/';
       this.step = this.steps.end;
