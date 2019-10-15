@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 const path = require('path');
-import { spawn } from 'child_process';
+const os = require('os');
+import { exec } from 'child_process';
 import { copyFile } from 'fs';
 
 //////////////////
@@ -27,7 +28,15 @@ const deploySecrets = () => {
 const deployDemos = () => {
   // set -x : show the command?
   // set -e : stop script if there is error
-  // spawn('git checkout demo');
+
+  exec('npm --version', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+  });
   const date = new Date();
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
