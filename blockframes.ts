@@ -16,7 +16,7 @@ const filename = process.argv[3];
 //////////////////////
 
 
-const deploy_secrets = () => {
+const deploySecrets = () => {
   const SECRETS = path('./secrets.sh');
   const SECRETS_TEMPLATE = path('secrets.template.sh');
 
@@ -68,7 +68,7 @@ const packageEnv = () => {
 // FIREBASE PREDEPLOY //
 ////////////////////////
 
-const firebase_predeploy = () => {
+const firebasePredeploy = () => {
 
 }
 
