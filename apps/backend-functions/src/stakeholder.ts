@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { OrganizationDocument, SnapObject, Movie, StakeholderDocument, DeliveryDocument } from './data/types';
+import { OrganizationDocument, SnapObject, MovieDocument, StakeholderDocument, DeliveryDocument } from './data/types';
 import { PublicOrganization } from '@blockframes/organization/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
@@ -37,7 +37,7 @@ async function stakeholdersCollectionEvent(
 
   // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryID}`);
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`)
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`)
   const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.id}`);
 
   if (!!delivery.id && !!newStakeholder && !!organization) {
