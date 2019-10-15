@@ -148,10 +148,8 @@ export interface MovieDocument extends MovieRaw<Timestamp> {
 export interface MovieDocumentWithDates extends MovieRaw<Date> {
 }
 
+/** Public interface of a movie (to notifications). */
 export interface PublicMovie {
   id: string;
-  title: {
-    original: string;
-    international: string;
-  };
+  title: Title;
 }

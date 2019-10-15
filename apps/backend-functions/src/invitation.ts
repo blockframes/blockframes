@@ -18,7 +18,7 @@ import {
   InvitationStatus,
   InvitationType,
   OrganizationDocument,
-  Movie
+  MovieDocument
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMail } from './internals/email';
@@ -134,7 +134,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   const stakeholderId = invitation.organization.id;
   const docId = invitation.docId;
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${docId}`);
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   const [
     organizationDocPermissionsSnap,
