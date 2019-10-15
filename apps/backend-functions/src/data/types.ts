@@ -12,10 +12,15 @@ export {
   InvitationFromOrganizationToUser,
   InvitationFromUserToOrganization,
   InvitationToWorkOnDocument
-  } from '@blockframes/invitation/types';
-  export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-  export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
-  export { DeliveryDocument, StepDocument, StepDocumentWithDate, convertStepDocumentToStepDocumentWithDate } from '@blockframes/material/delivery/types';
+} from '@blockframes/invitation/types';
+export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
+export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+export {
+  DeliveryDocument,
+  StepDocument,
+  StepDocumentWithDate,
+  convertStepDocumentToStepDocumentWithDate
+} from '@blockframes/material/delivery/types';
 
 /**
  * Types used by the firebase backend.
@@ -64,6 +69,7 @@ export enum AppAccessStatus {
   accepted = 'accepted'
 }
 
+/** Custom object used to build notifications. */
 export interface SnapObject {
   organization: PublicOrganization | undefined;
   movie: PublicMovie;
