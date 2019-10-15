@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Movie, createMovie } from './movie.model';
-import { FireQuery } from '@blockframes/utils';
+import { Movie, createMovie, MovieSale } from './movie.model';
 import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore, MovieState } from './movie.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { switchMap } from 'rxjs/operators';
+import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
+import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
+import objectHash from 'object-hash';
 
 /**
  * @see #483
@@ -74,5 +76,44 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.stakeholders) delete movie.stakeholders;
 
     return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
+  }
+
+  private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
+    return this.db.doc(`movies/${movieId}`);
+  }
+
+  /////////////////////////////
+  // CRUD DISTRIBUTION DEALS //
+  /////////////////////////////
+
+  /**
+   * 
+   * @param movieId 
+   */
+  private distributionDealsCollection(movieId: string): AngularFirestoreCollection<MovieSale> {
+    return this.movieDoc(movieId).collection('distributiondeals');
+  }
+
+  /**
+   * 
+   * @param movieId 
+   * @param distributionDeal 
+   */
+  public addDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<void> {
+    // Create an id from MovieSale content.
+    // A same MovieSale document will always have the same hash to prevent multiple insertion of same deal
+    const dealId = objectHash(distributionDeal); 
+    return this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
+  }
+
+  /**
+   * Checks if a distribution deal is already existing for a given movie and returns it.
+   * @param movieId 
+   * @param distributionDeal 
+   */
+  public async existingDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<MovieSale> {
+    const dealId = objectHash(distributionDeal); 
+    const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
+    return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as MovieSale : undefined;
   }
 }
