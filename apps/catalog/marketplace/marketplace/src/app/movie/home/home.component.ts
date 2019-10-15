@@ -20,7 +20,7 @@ interface CarouselSection {
   selector: 'catalog-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';

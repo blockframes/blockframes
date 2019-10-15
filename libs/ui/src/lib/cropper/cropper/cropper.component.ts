@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 
@@ -44,9 +44,10 @@ export class CropperComponent {
   private ref: AngularFireStorageReference;
   private folder: string;
   private name: string;
+  private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
+  step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
-  step: CropStep = 'drop';
   prev: CropStep;
   url$: Observable<string | null>;
   percentage$: Observable<number>;
@@ -108,8 +109,7 @@ export class CropperComponent {
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(() => {this.nextStep('upload_complete')
-        console.log('upload_compeleteddddddddddddd')})
+        finalize(() => this.nextStep('upload_complete'))
       );
     } catch (err) {
       console.log(err);
@@ -117,8 +117,8 @@ export class CropperComponent {
   }
 
   nextStep(name: CropStep) {
-    this.prev = this.step;
-    this.step = name;
+    this.prev = this.step.getValue();
+    this.step.next(name);
   }
 }
 

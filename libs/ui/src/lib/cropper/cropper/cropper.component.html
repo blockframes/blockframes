@@ -1,4 +1,4 @@
-<section [ngSwitch]="step">
+<section [ngSwitch]="step$ | async">
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <!-- TODO: dropZone can't be applied to mat-icon -->
     <mat-icon fontSet="material-icons-outlined">cloud_upload</mat-icon>
@@ -12,12 +12,18 @@
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
     <div class="buttons">
-      <button mat-mini-fab (click)="cropIt()">
+      <!-- <button mat-mini-fab (click)="cropIt()">
         <mat-icon>check_circle</mat-icon>
       </button>
       <button mat-mini-fab (click)="nextStep(prev)">
         <mat-icon>cancel</mat-icon>
-      </button>
+      </button> -->
+      <a mat-mini-fab (click)="cropIt()" routerLink=".">
+          <mat-icon>check_circle</mat-icon>
+      </a>
+      <a mat-mini-fab (click)="nextStep(prev)" routerLink=".">
+          <mat-icon>cancel</mat-icon>
+      </a>
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>

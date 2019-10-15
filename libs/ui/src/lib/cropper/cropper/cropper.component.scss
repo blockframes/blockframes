@@ -29,8 +29,9 @@ article {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  button {
-    padding: 10px;
+  a {
+    margin: 20px;
+    cursor: pointer;
   }
 }
 
