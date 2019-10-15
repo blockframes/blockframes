@@ -5,17 +5,12 @@
       <article fxLayout="row" fxLayoutAlign="space-between center">
         <h2>Welcome to Delivery</h2>
         <mat-divider fxFlex></mat-divider>
-        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
+        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addMovie()">
           <mat-icon>add</mat-icon>
           <span>Add a movie</span>
         </a>
       </article>
-      <article fxLayout="row wrap" fxLayoutAlign="start space-between">
-        <!-- Movie Card -->
-      <ng-container *ngFor="let movie of (movies$ | async)">
-        <movie-card [movie]="movie" (delete)="delete($event)" [link]="linkToDeliveryList(movie.id)"></movie-card>
-      </ng-container>
-      </article>
+      <movie-list [movies]="movies$ | async" (deleteMovie)="deleteMovie($event)"></movie-list>
     </ng-template>
   </section>
 </div>

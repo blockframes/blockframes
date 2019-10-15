@@ -5,12 +5,13 @@ import { App } from '@blockframes/organization';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { MovieEmptyComponent } from '@blockframes/movie';
+import { HomeComponent } from './home/home.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { NotificationsGuard } from '@blockframes/notification';
+import { MovieOrganizationListGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -46,8 +47,10 @@ export const routes: Routes = [
             pathMatch: 'full'
           },
           {
-            path: 'no-movies',
-            component: MovieEmptyComponent
+            path: 'home',
+            component: HomeComponent,
+            canActivate: [MovieOrganizationListGuard],
+            canDeactivate: [MovieOrganizationListGuard]
           },
           {
             path: 'organization',
@@ -58,16 +61,16 @@ export const routes: Routes = [
             loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
           },
           {
-            path: 'home',
-            loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
-          },
-          {
             path: 'templates',
-            loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
+            loadChildren: () => import('@blockframes/template').then(m => m.TemplateModule)
           },
           {
             path: 'delivery',
-            loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
+            loadChildren: () => import('@blockframes/delivery').then(m => m.DeliveryModule)
+          },
+          {
+            path: 'movie',
+            loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
           }
         ]
       }

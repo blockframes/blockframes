@@ -814,41 +814,6 @@
         }
       }
     },
-    "material": {
-      "root": "libs/material",
-      "sourceRoot": "libs/material/src",
-      "projectType": "library",
-      "prefix": "material",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/material/tsconfig.lib.json",
-            "project": "libs/material/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/material/tsconfig.lib.json", "libs/material/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/schematics:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "utils": {
       "root": "libs/utils",
       "sourceRoot": "libs/utils/src",

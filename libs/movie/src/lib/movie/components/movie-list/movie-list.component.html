@@ -1,0 +1,6 @@
+<section fxLayout="row wrap" fxLayoutAlign="start space-between">
+  <!-- Movie Card -->
+  <ng-container *ngFor="let movie of movies">
+    <movie-card [movie]="movie" (delete)="delete($event)" [link]="navigateToApp(movie.id)"></movie-card>
+  </ng-container>
+</section>

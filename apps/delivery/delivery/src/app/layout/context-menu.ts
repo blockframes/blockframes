@@ -8,9 +8,9 @@ export const CONTEXT_MENU = [
     items: []
   },
   {
-    route: '/layout/o/home/list',
+    route: '/layout/o/home',
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'home', path: '/layout/o/home' },
       { name: 'templates', path: '/layout/o/templates/list' },
       { name: 'add a delivery', path: '/layout/o/delivery/add/1-find-movie' }
     ]
@@ -32,14 +32,14 @@ export const CONTEXT_MENU = [
   {
     route: '/layout/o/templates/list',
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'home', path: '/layout/o/home' },
       { name: 'templates', path: '/layout/o/templates/list' }
     ]
   },
   {
     route: '/layout/o/templates/create',
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'home', path: '/layout/o/home' },
       { name: 'templates', path: '/layout/o/templates/create' }
     ]
   },

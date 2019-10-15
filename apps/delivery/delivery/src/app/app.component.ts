@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconComponent } from '@blockframes/ui';
 
 @Component({
@@ -10,7 +9,6 @@ import { IconComponent } from '@blockframes/ui';
 })
 export class AppComponent {
   constructor(
-    private query: AuthQuery,
     private icons: IconComponent // even if not used in component, keep this to load icons
   ) {
   }
