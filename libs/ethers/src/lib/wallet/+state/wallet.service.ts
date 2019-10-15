@@ -241,9 +241,11 @@ export class WalletService {
   /** Update the feedback message with the error */
   public handleError(error: string) {
     const txFeedback = this.query.getValue().feedback;
-    this.store.update({feedback: {
-      ...txFeedback,
-      success: error
-    }})
+    this.store.update({
+      feedback: {
+        ...txFeedback,
+        success: error
+      }
+    })
   }
 }

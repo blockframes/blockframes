@@ -98,7 +98,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
       this.feedbackImage = '/assets/images/ppl_celebrating.png';
       this.feedbackTitle = 'Congratulation !';
     } catch(err) {
-      console.warn('Ooops', err);
+      console.warn('Some Blockchain transaction has failed : ', err);
       this.feedbackImage = '/assets/images/delete.png';
       this.feedbackTitle = 'An error as occurred :/';
     } finally {
