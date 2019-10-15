@@ -1,5 +1,7 @@
 #!/usr/bin/env ts-node
 const path = require('path');
+import { spawn } from 'child_process';
+import { copyFile } from 'fs';
 
 //////////////////
 // PARSING ARGV //
@@ -22,17 +24,26 @@ const deploy_secrets = () => {
 
 }
 
-const deploy_demos = () => {
+const deployDemos = () => {
   // set -x : show the command?
   // set -e : stop script if there is error
+  // spawn('git checkout demo');
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
 
+  const tag = `demo-${year}-${month}-${day}`;
+  console.log(tag);
+
+  // copyFile()
 }
 
 ////////////////////////////////
 // PORT PACKAGE.JSON WITH ENG //
 ////////////////////////////////
 
-const package_env = () => {
+const packageEnv = () => {
   // npx run build:functions --configuration=dev
   // firebase deploy --only functions
 
@@ -49,6 +60,8 @@ const package_env = () => {
       // "e2e:catalog-marketplace": "./node_modules/.bin/ng e2e catalog-marketplace-e2e --configuration=\"${ENV}\" --headless",
       // "e2e:movie-financing": "./node_modules/.bin/ng e2e movie-financing-e2e --configuration=\"${ENV}\" --headless",
 
+      // in angular.json
+      // architect -> build -> configurations: { "dev": {} } ???
 }
 
 ////////////////////////
@@ -71,9 +84,9 @@ const program = () => {
   }
 
   // deploy_secrets.sh
-  if (type === "deploy" && filename === "secrets") {
+  if (type === "deploy" && filename === "demo") {
     // deploy_secrets();
-
+    deployDemos();
     console.log(type, filename)
   }
 
