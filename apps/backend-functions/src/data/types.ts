@@ -1,6 +1,7 @@
 import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
+import { App } from '@blockframes/movie/movie/static-model/staticModels';
 
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
@@ -72,15 +73,6 @@ export enum AppAccessStatus {
   requested = 'requested',
   pending = 'pending',
   accepted = 'accepted'
-}
-
-// Internal Interaction Types
-// ==========================
-
-export const enum App {
-  main = 'main',
-  mediaDelivering = 'media_delivering',
-  mediaFinanciers = 'media_financiers'
 }
 
 // Legacy for compat between Notifications & Invitations
