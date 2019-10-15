@@ -1,8 +1,8 @@
 #!/usr/bin/env ts-node
 const path = require('path');
-const os = require('os');
 import { exec } from 'child_process';
 import { copyFile } from 'fs';
+require('dotenv').config()
 
 //////////////////
 // PARSING ARGV //
@@ -29,6 +29,9 @@ const deployDemos = () => {
   // set -x : show the command?
   // set -e : stop script if there is error
 
+  // export NODE_OPTIONS="--max_old_space_size=8192" : Increasing Node’s Memory
+
+  // git checkout demo : exec('git checkout demo')
   exec('npm --version', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
@@ -37,6 +40,8 @@ const deployDemos = () => {
     console.log(`stdout: ${stdout}`);
     console.error(`stderr: ${stderr}`);
   });
+
+  // TAG="demo-$(date +'%Y%m%d%H%M')"
   const date = new Date();
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -45,7 +50,25 @@ const deployDemos = () => {
   const tag = `demo-${year}-${month}-${day}`;
   console.log(tag);
 
-  // copyFile()
+  // for loop : copy env files -> build => firebase deploy without function -> only function
+  // for (let i = 1; i < 6; i++) {
+    // console.log(i);
+
+    // export ENV=production
+    process.env['NODE_ENV'] = 'production';
+    console.log(process.env.NODE_ENV)
+
+    // cp ./env/demo/env.demo${i}.ts ./env/env.ts : copyFile()
+    // destination.txt will be created or overwritten by default.
+    copyFile('source.txt', 'destination.txt', (err) => {
+      if (err) throw err;
+      console.log('source.txt was copied to destination.txt');
+    });
+
+  // }
+
+
+
 }
 
 ////////////////////////////////
@@ -53,8 +76,7 @@ const deployDemos = () => {
 ////////////////////////////////
 
 const packageEnv = () => {
-  // npx run build:functions --configuration=dev
-  // firebase deploy --only functions
+  // cross-env NODE_ENV=production ???
 
       // "build:main": "npx ng build main --base-href / --configuration=\"${ENV:-dev}\"",
       // "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
