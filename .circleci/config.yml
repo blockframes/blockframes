@@ -51,6 +51,12 @@ jobs:
           root: ~/.cache
           paths:
             - Cypress
+  bundlesize:
+    executor: blockframes-ci
+    environment:
+      - ENV: "ci"
+    steps:
+      - run: npm run analyze:delivery
   lint:
     executor: blockframes-ci
     steps:

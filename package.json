@@ -11,7 +11,7 @@
     "start": "npx ng serve --hmr --disable-host-check",
     "build:stats": "ng build --prod --stats-json",
     "build:main": "npx ng build main --base-href / --configuration=\"${ENV:-dev}\"",
-    "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
+    "build:delivery": "npx ng build delivery --stats-json --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
     "build:movie-financing": "npx ng build movie-financing --base-href /movie-financing/ --configuration=\"${ENV:-dev}\"",
     "build:catalog-marketplace": "npx ng build catalog-marketplace --base-href /catalog-marketplace/ --configuration=\"${ENV:-dev}\"",
     "build:catalog-dashboard": "npx ng build catalog-dashboard --base-href /catalog-dashboard/ --configuration=\"${ENV:-dev}\"",
