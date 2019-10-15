@@ -1,7 +1,6 @@
 import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
-import { App } from '@blockframes/movie/movie/static-model/staticModels';
 
 export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
 export {
@@ -74,11 +73,6 @@ export enum AppAccessStatus {
   pending = 'pending',
   accepted = 'accepted'
 }
-
-// Legacy for compat between Notifications & Invitations
-// TODO(issue#684): use App everywhere and let the frontend / concrete
-//  code deal with the app specifics (icons, message, etc).
-export type AppIcon = App;
 
 export interface SnapObject {
   organization: PublicOrganization | undefined;
