@@ -6,6 +6,9 @@
   "engines": {
     "node": "10"
   },
+  "bin": {
+    "blockframes": "./blockframes.ts"
+  },
   "scripts": {
     "ng": "ng",
     "start": "npx ng serve --hmr --disable-host-check",
