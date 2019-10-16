@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
-}
-/* This is necessary for unit test for components
-for finding the path that are custom like
-@blockframes/movies */
