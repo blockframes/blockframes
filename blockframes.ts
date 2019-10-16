@@ -1,8 +1,7 @@
 #!/usr/bin/env ts-node
 const path = require('path');
 import { exec } from 'child_process';
-import { copyFile } from 'fs';
-const client = require('scp2');
+import { copyFile, existsSync, readFile, readFileSync } from 'fs';
 require('dotenv').config();
 
 //////////////////
@@ -16,9 +15,9 @@ const filename = process.argv[3];
 // PORT BASH SCRIPT //
 //////////////////////
 
-const deployDemoSecrets = () => {
-  const TAG = `demo-${new Date()}`;
+const deployDemos = () => {
   exec('set -x && set -e');
+  const tag = `demo-${new Date()}`;
   process.env['NODE_OPTIONS'] = '--max_old_space_size=8192';
   exec('git checkout demo');
   let i = 0;
@@ -45,56 +44,60 @@ const deployDemoSecrets = () => {
         console.log('number of retries exceeded');
       }
     });
-    // do {exec('firebase deplay --only functions')} while(true);
-    client.scp2('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`);
+    // client.scp2('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`);
     i++;
   }
-  exec(`git tag ${TAG}`);
-  exec(`git push origin ${TAG}`);
+  exec(`git tag ${tag}`);
+  exec(`git push origin ${tag}`);
 };
 
-const deployDemos = () => {
-  // set -x : print commands and their arguments as they are executed.
-  // set -e : stop script if there is error
+const deploySecrets =  () => {
+  let secrets, secretsTemplate;
+  const tokenArg = '';
 
-  // export NODE_OPTIONS="--max_old_space_size=8192" : Increasing Node’s Memory
-
-  // git checkout demo : exec('git checkout demo')
-  exec('npm --version', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-  });
-
-  // TAG="demo-$(date +'%Y%m%d%H%M')"
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-
-  const tag = `demo-${year}-${month}-${day}`;
-  console.log(tag);
-
-  // for loop : copy env files -> build => firebase deploy without function -> only function
-  // for (let i = 1; i < 6; i++) {
-  // console.log(i);
-
-  // export ENV=production
-  process.env['NODE_ENV'] = 'production';
-  console.log(process.env.NODE_ENV);
-
-  // cp ./env/demo/env.demo${i}.ts ./env/env.ts : copyFile()
-  // destination.txt will be created or overwritten by default.
-  copyFile('source.txt', 'destination.txt', err => {
-    if (err) throw err;
-    console.log('source.txt was copied to destination.txt');
-  });
-
-  // }
+  if (existsSync('./secrets.json')) {
+    const rawSecret = readFileSync('./secrets.json');
+    secrets = JSON.parse(rawSecret.toString());
+   
+  } else {
+    const rawTemplate =  readFileSync('./secrets.template.json');
+    secretsTemplate = JSON.parse(rawTemplate.toString());
+  }
+ 
 };
+
+/* 
+
+# ci deployement
+if [ -n "${FIREBASE_CI_TOKEN}" ]; then
+  TOKEN_ARG="--token ${FIREBASE_CI_TOKEN}"
+fi
+
+# Check that we have the configuration in memory,
+# If we don't, load from the local secrets file.
+# This file is for developers' local environment.
+if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
+  echo -e "\e[33mno configuration found in your env, loading your secrets\e[0m"
+
+  if [ -f "$SECRETS" ]; then
+    source ${SECRETS};
+  else
+    echo -e "\e[31mno secrets.sh file found, using secrets.template.sh";
+    echo -e "(this is not secure, don't use for production!)\e[0m";
+    echo -e "\e[31mpress enter to continue the deploy\e[0m";
+    read -n 1 -s -r;
+    source ${SECRETS_TEMPLATE};
+  fi
+fi
+
+
+echo "deploying the functions configuration"
+firebase functions:config:set sendgrid.api_key="${SENDGRID_API_KEY}" \
+                              relayer.mnemonic="${ETHEREUM_MNEMONIC}" \
+                              algolia.api_key="${ALGOLIA_API_KEY}" \
+                              admin.email="${CASCADE8_ADMIN}" \
+                              ${TOKEN_ARG};
+ */
 
 ////////////////////////////////
 // PORT PACKAGE.JSON WITH ENG //
@@ -132,15 +135,12 @@ const program = () => {
     console.error('please enter type and name');
   }
 
-  // deploy_secrets.sh
-  if (type === 'deploy' && filename === 'demo') {
-    // deploy_secrets();
+  if (type === 'deploy' && filename === 'demos') {
     deployDemos();
-    console.log(type, filename);
   }
 
-  if (type === 'secrets' && filename === 'demo') {
-    deployDemoSecrets();
+  if (type === 'deploy' && filename === 'secrets') {
+    deploySecrets();
   }
 };
 
