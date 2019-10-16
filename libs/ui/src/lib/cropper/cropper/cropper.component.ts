@@ -5,6 +5,8 @@ import { finalize } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
+import undefined = require('firebase/empty-import');
+import { HttpClient } from '@angular/common/http';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -22,6 +24,14 @@ function b64toBlob(data: string) {
   return new Blob([ab], { type });
 }
 
+  function blobToFile(blob: Blob, fileName:string): File {
+    const b: any = Object.assign({}, blob);
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+    //Cast to a File() type
+    return <File>b;
+}
 
 /** Check if the path is a file path */
 function isFile(path: string): boolean {
@@ -71,7 +81,7 @@ export class CropperComponent {
   @Output() uploaded = new EventEmitter<string>();
   @Output() deleted = new EventEmitter<string>();
 
-  constructor(private storage: AngularFireStorage) { }
+  constructor(private storage: AngularFireStorage, private http: HttpClient) { }
 
   // drop
   filesSelected(fileList: FileList): void {
@@ -81,21 +91,7 @@ export class CropperComponent {
 
   // crop
   imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-  }
-
-  delete() {
-    this.ref.delete().subscribe(() => {
-      this.nextStep('drop');
-      this.deleted.emit(); // TODO : add path as parameter
-    });
-  }
-
-  goToShow() {
-    this.url$ = this.ref.getDownloadURL();
-    this.ref.getMetadata().toPromise()
-    .then(meta => this.uploaded.emit(meta.fullPath));
-    this.nextStep('show');
+      this.croppedImage = event.base64;
   }
 
   // upload
@@ -115,6 +111,29 @@ export class CropperComponent {
       console.log(err);
     }
   }
+
+  goToShow() {
+    this.url$ = this.ref.getDownloadURL();
+    this.ref.getMetadata().toPromise()
+    .then(meta => this.uploaded.emit(meta.fullPath));
+      this.nextStep('show');
+    }
+
+    async resize(url: string) {
+      if (!this.file) {
+        const name = url.split('/').pop();
+        const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
+        this.file = blobToFile(blob, name);
+      }
+      this.nextStep('crop');
+    }
+
+    delete() {
+      this.ref.delete().subscribe(() => {
+        this.nextStep('drop');
+        this.deleted.emit();
+      });
+    }
 
   nextStep(name: CropStep) {
     this.prev = this.step.getValue();

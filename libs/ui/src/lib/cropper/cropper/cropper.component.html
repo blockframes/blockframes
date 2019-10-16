@@ -1,6 +1,5 @@
 <section [ngSwitch]="step$ | async">
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
-    <!-- TODO: dropZone can't be applied to mat-icon -->
     <mat-icon fontSet="material-icons-outlined">cloud_upload</mat-icon>
     <h1>Drop something here</h1>
   </article>
@@ -11,26 +10,26 @@
       [aspectRatio]="ratio"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
-    <div class="buttons">
-      <!-- <button mat-mini-fab (click)="cropIt()">
+    <div class="cropButtons">
+      <button mat-mini-fab (click)="cropIt()">
         <mat-icon>check_circle</mat-icon>
       </button>
       <button mat-mini-fab (click)="nextStep(prev)">
         <mat-icon>cancel</mat-icon>
-      </button> -->
-      <a mat-mini-fab (click)="cropIt()" routerLink=".">
+      </button>
+      <!-- <a mat-mini-fab (click)="cropIt()" routerLink=".">
           <mat-icon>check_circle</mat-icon>
       </a>
       <a mat-mini-fab (click)="nextStep(prev)" routerLink=".">
           <mat-icon>cancel</mat-icon>
-      </a>
+      </a> -->
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>
     <div *ngIf="( percentage$ | async ) as percentage">
       <mat-progress-spinner class="example-margin" color="primary" mode="determinate" [value]="percentage$ | async">
       </mat-progress-spinner>
-      <p>{{ percentage }}% uploading....</p>
+      <p>{{ percentage | number:'1.0-0' }}% uploading....</p>
     </div>
   </article>
   <article *ngSwitchCase="'upload_complete'">
@@ -46,14 +45,20 @@
     </svg>
   </article>
   <article class="show" *ngSwitchCase="'show'" @finalZoom>
-    <div class="show" *ngIf="url$ | async as url">
-      <img class="show-show" [src]="url" />
-    </div>
-    <div class="buttons">
-      <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
-      <button mat-flat-button (click)="nextStep('crop')">resize</button>
-      <button mat-flat-button (click)="fileUploader.click()">edit</button>
-      <button mat-flat-button (click)="delete()">delete</button>
-    </div>
+    <ng-container *ngIf="url$ | async as url">
+      <div class="show">
+        <img class="show-show" [src]="url" />
+      </div>
+      <div class="showButtons">
+        <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
+        <button mat-flat-button (click)="resize(url)">resize</button>
+        <button mat-flat-button (click)="fileUploader.click()">edit</button>
+        <button mat-flat-button (click)="delete()">delete</button>
+        <!-- <a mat-mini-fab (click)="nextStep('crop')" routerLink=".">resize</a>
+        <a mat-flat-button (click)="fileUploader.click()" routerLink=".">edit</a>
+        <a mat-flat-button (click)="delete()" routerLink=".">delete</a> -->
+      </div>
+    </ng-container>
+
   </article>
 </section>

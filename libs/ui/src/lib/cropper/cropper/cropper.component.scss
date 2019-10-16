@@ -25,13 +25,13 @@ article {
   border-radius: 50%;
 }
 
-.buttons {
+.cropButtons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   a {
-    margin: 20px;
     cursor: pointer;
+    padding: 20px;
   }
 }
 
@@ -39,5 +39,4 @@ mat-icon {
   color: #3f51b5;
   font-size: 45px;
   font-weight: 800;
-  padding: 10px;
 }
