@@ -2,8 +2,7 @@ export const production = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
 export const persistenceSettings = {
-  // TODO(issue#846): change to synchronizeTabs when available (angularFire 5.2)
-  experimentalTabSynchronization: true
+  synchronizeTabs: true
 };
 
 // Firebase
