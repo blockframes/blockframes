@@ -128,7 +128,6 @@ interface MovieRaw<D> {
   selectionCategories?: string;
 
   // Sections
-  sales: MovieSaleRaw<D>[]; //@todo 581 => move to subcollection
   main: MovieMain;
   story: MovieStory;
   promotionalElements: MoviePromotionalElements;

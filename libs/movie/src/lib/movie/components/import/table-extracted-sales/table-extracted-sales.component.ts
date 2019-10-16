@@ -63,7 +63,7 @@ export class TableExtractedSalesComponent implements OnInit {
       type: 'error',
       field: 'sale',
       name: 'Sale',
-      reason: 'Sale already added',// @todo #1061 rename to distributionDeal
+      reason: 'Sale already added',
       hint: 'Sale already added'
     } as SpreadsheetImportError)
     this.rows.data = data;
@@ -92,7 +92,6 @@ export class TableExtractedSalesComponent implements OnInit {
             hint: 'Sale already added'
           } as SpreadsheetImportError)
 
-          // @todo #1061 faire pareil que pour l'insertion multiple de movies
           return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.sale));
         });
       this.rows.data = data;

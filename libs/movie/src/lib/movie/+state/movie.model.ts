@@ -59,7 +59,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     versionInfo: createMovieVersionInfo(params.versionInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
-    sales: [],
     ...params
   };
 }
@@ -197,7 +196,7 @@ export function createMovieSale(params: Partial<MovieSale> = {}): MovieSale {
     dubbings: [],
     subtitles: [],
     ...params
-  } as MovieSale;
+  } as MovieSale; // @todo #1061 move to another file (distributionDeal.model.ts ?)
 }
 
 export function createCredit(params: Partial<Credit> = {}): Credit {

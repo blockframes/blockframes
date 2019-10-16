@@ -807,7 +807,6 @@ export class ViewExtractedElementsComponent {
 
       if (spreadSheetRow[SpreadSheetSale.internalRef]) {
 
-        //@todo #1061 use service instead of query to prevent error if movie is not in the state?
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]); 
         const sale = createMovieSale();
         const importErrors = {

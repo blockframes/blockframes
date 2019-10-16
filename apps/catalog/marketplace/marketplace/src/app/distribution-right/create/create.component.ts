@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieService } from '@blockframes/movie/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -97,7 +97,11 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
 
-  constructor(private query: MovieQuery, private router: Router) {}
+  constructor(
+    private query: MovieQuery,
+    private router: Router,
+    private movieService: MovieService,
+  ) { }
 
   ngOnInit() {
     // The movie$ observable will get unsubscribed by the async pipe
@@ -112,8 +116,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
       debounceTime(250),
       map(value => this._languageFilter(value))
     );
-    this.researchSubscription = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe();
-    this.form.get('languages').valueChanges.subscribe(console.log);
+    this.researchSubscription = this.subscribeOnSearchForm();
   }
 
   private get movie(): Movie {
@@ -180,19 +183,24 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   //////////////////////
 
   public startResearch() {
+    console.log('todo :)');
+  }
+
+  public subscribeOnSearchForm(): Subscription {
     /**
      * If the customer once hit the search button. We want to listen on the changes
      * he is going to make. That will give us the chance to render the hint/error message
      * in real time. But for that he needs to fill every part of the survey once.
      */
-    this.researchSubscription = this.form.valueChanges
+    return this.form.valueChanges
       .pipe(
-        tap(value => {
+        startWith(this.form.value),
+        tap(async value => {
           //////////////////
           // FORM VALIDATION
           //////////////////
 
-          if (!!value.duration || value.medias.length || value.territories.length) {
+          if (!value.duration || !value.medias.length || !value.territories.length ) {
             console.log('You have to provide value for your research');
             return false;
           }
@@ -244,7 +252,8 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           ///////////////
 
           // Do we have others sales overrlapping current daterange ?
-          const salesInDateRange = getSalesInDateRange(value.duration, this.movie.sales);
+          const deals = await this.movieService.getDistributionDeals(this.movie.id);
+          const salesInDateRange = getSalesInDateRange(value.duration, deals);
           if (salesInDateRange.length === 0) {
             // We have no intersection with other sales, so we are OK !
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
@@ -288,9 +297,8 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           }
 
           // @TODO#1022
-          // do same verification process with languages, dubbing, subtitles ?
-          // Is it relevant to distinguish Languages and Dubbings ?
-          // => Wait for Vincent return on this since we do not know how exclusivity must behave regarding dubbings, subtitles..
+          // @see https://www.notion.so/cascade8/Workflows-843369bf4c7e43958d5cf27da57fb91d
+          // and wait new distributionDeal model especially for the languages part (#1052)
         })
       )
       .subscribe();

@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
 import objectHash from 'object-hash';
+import { firestore } from 'firebase';
 
 /**
  * @see #483
@@ -115,5 +116,24 @@ export class MovieService extends CollectionService<MovieState> {
     const dealId = objectHash(distributionDeal); 
     const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
     return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as MovieSale : undefined;
+  }
+
+  /**
+   * @param movieId 
+   */
+  public async getDistributionDeals(movieId: string): Promise<MovieSale[]> {
+    const deals = await this.distributionDealsCollection(movieId).get().toPromise();
+    return deals.docs.map(doc => {
+      const data = doc.data();
+      // Dates from firebase are Timestamps, we convert it to Dates.
+      if(data.rights.from instanceof firestore.Timestamp) {
+        data.rights.from = data.rights.from.toDate();
+      }
+
+      if(data.rights.to instanceof firestore.Timestamp) {
+        data.rights.to = data.rights.to.toDate();
+      }
+      return data as MovieSale;
+    })
   }
 }
