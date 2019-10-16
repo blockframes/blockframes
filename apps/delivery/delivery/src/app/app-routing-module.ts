@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { App } from '@blockframes/organization';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
@@ -21,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
-    data: { app: App.mediaDelivering },
+    data: { app: 'delivery' },
     canActivate: [AuthGuard],
     canDeactivate: [AuthGuard],
     children: [

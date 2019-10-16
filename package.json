@@ -48,7 +48,12 @@
     "affected": "./node_modules/.bin/nx affected",
     "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
     "analyze:marketplace": "webpack-bundle-analyzer dist/apps/catalog/marketplace/stats.json --port=8000",
-    "pwm": "pwmetrics --config"
+    "pwm": "pwmetrics --config",
+    "compodoc:all": "npx compodoc -p tsconfig.json -s",
+    "compodoc:delivery": "npx compodoc -p apps/delivery/delivery/tsconfig.app.json --serve --output documentation/delivery",
+    "compodoc:catalog-marketplace": "npx compodoc -p apps/catalog/marketplace/marketplace/tsconfig.app.json --serve --output documentation/catalog/marketplace",
+    "compodoc:movie": "npx compodoc -p libs/movie/tsconfig.lib.json -s",
+    "compodoc:material": "npx compodoc -p libs/material/tsconfig.lib.json -s"
   },
   "private": true,
   "dependencies": {
@@ -65,6 +70,7 @@
     "@angular/platform-browser-dynamic": "^8.1.3",
     "@angular/router": "^8.1.3",
     "@angular/service-worker": "^8.1.3",
+    "@compodoc/compodoc": "^1.1.11",
     "@datorama/akita": "^4.10.4",
     "@ethersproject/abi": "^5.0.0-beta.138",
     "@ethersproject/abstract-provider": "^5.0.0-beta.132",

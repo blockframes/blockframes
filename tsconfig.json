@@ -61,5 +61,6 @@
     "module": "commonjs",
     "rootDir": "."
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "include": ["libs/**/*.ts"],
 }
