@@ -48,7 +48,8 @@
     "affected": "./node_modules/.bin/nx affected",
     "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
     "analyze:marketplace": "webpack-bundle-analyzer dist/apps/catalog/marketplace/stats.json --port=8000",
-    "pwm": "pwmetrics --config"
+    "pwm": "pwmetrics --config",
+    "bundlesize": "bundlesize"
   },
   "private": true,
   "dependencies": {
@@ -167,7 +168,11 @@
     "url": "http://localhost:4200/"
   },
   "bundlesize": [
-
+    {
+      "path": "./dist/apps/main**.js",
+      "maxSize": "4.5 MB",
+      "compression": "none"
+    },
     {
       "path": "./dist/apps/delivery/main**.js",
       "maxSize": "6 MB",
@@ -176,6 +181,21 @@
     {
       "path": "./dist/apps/catalog/marketplace/main**.js",
       "maxSize": "6 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/catalog/dashboard/main**.js",
+      "maxSize": "7 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/backend-functions/main**.js",
+      "maxSize": "0.9 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/movie-financing/main**.js",
+      "maxSize": "5.5 MB",
       "compression": "none"
     }
   ]
