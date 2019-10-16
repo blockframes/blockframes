@@ -1,7 +1,8 @@
 #!/usr/bin/env ts-node
 const path = require('path');
+const client = require('scp2');
 import { exec } from 'child_process';
-import { copyFile, existsSync, readFile, readFileSync } from 'fs';
+import { copyFile, existsSync, readFileSync } from 'fs';
 require('dotenv').config();
 
 //////////////////
@@ -10,6 +11,7 @@ require('dotenv').config();
 
 const type = process.argv[2];
 const filename = process.argv[3];
+const firebase_ci_token = process.argv[4];
 
 //////////////////////
 // PORT BASH SCRIPT //
@@ -35,47 +37,68 @@ const deployDemos = () => {
 
     // we deploy everything but functions, they tend to crash
     exec('firebase deploy --except functions', err => {
-      let countRetry = 0;
-      if (err && countRetry < 10) {
+      if (err) {
         console.log(`Error occured, retry! ${err}`);
-        countRetry++;
         exec('firebase deploy --except functions');
-      } else if (countRetry >= 10) {
-        console.log('number of retries exceeded');
       }
     });
-    // client.scp2('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`);
+    client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
+      if (err) {
+        console.log(err);
+        process.exit(1);
+      }
+    });
     i++;
   }
   exec(`git tag ${tag}`);
   exec(`git push origin ${tag}`);
 };
 
-const deploySecrets =  () => {
+const deploySecrets = () => {
   let secrets, secretsTemplate;
-  const tokenArg = '';
+  let tokenArg: string;
 
+  // ci deployment
+  if (firebase_ci_token) {
+    tokenArg = `--token ${firebase_ci_token}`;
+  }
+
+  // Since there is no source or . operator on Windows,
+  // we have to specify in an if statement which is our
+  // source
   if (existsSync('./secrets.json')) {
     const rawSecret = readFileSync('./secrets.json');
     secrets = JSON.parse(rawSecret.toString());
-   
+    if (secrets.SENDGRID_API_KEY || secrets.ETHEREUM_MNEMONIC) {
+      console.log('configuration found in your env, loading your secrets');
+      console.log('deploying the functions configuration');
+      exec(`firebase functions:config:set sendgrid.api_key="${secrets.SENDGRID_API_KEY}" \
+                                          replayer.mnemonic="${secrets.ETHEREUM_MNEMONIC}" \
+                                          algolia.api_key="${secrets.ALGOLIA_API_KEY}" \
+                                          admin.email="${secrets.CASCADE8_ADMIN}" \
+                                          ${tokenArg}`);
+    }
   } else {
-    const rawTemplate =  readFileSync('./secrets.template.json');
+    const rawTemplate = readFileSync('./secrets.template.json');
     secretsTemplate = JSON.parse(rawTemplate.toString());
+    console.log('deploying the functions configuration');
+    exec(`firebase functions:config:set sendgrid.api_key="${secretsTemplate.SENDGRID_API_KEY}" \
+                                        replayer.mnemonic="${secretsTemplate.ETHEREUM_MNEMONIC}" \
+                                        algolia.api_key="${secretsTemplate.ALGOLIA_API_KEY}" \
+                                        admin.email="${secretsTemplate.CASCADE8_ADMIN}" \
+                                        ${tokenArg}`);
   }
- 
+
+  /*  
+  Check that we have the configuration in memory,
+  If we don't, load from the local secrets file.
+  This file is for developers' local environment. 
+  */
 };
 
 /* 
 
-# ci deployement
-if [ -n "${FIREBASE_CI_TOKEN}" ]; then
-  TOKEN_ARG="--token ${FIREBASE_CI_TOKEN}"
-fi
 
-# Check that we have the configuration in memory,
-# If we don't, load from the local secrets file.
-# This file is for developers' local environment.
 if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
   echo -e "\e[33mno configuration found in your env, loading your secrets\e[0m"
 
