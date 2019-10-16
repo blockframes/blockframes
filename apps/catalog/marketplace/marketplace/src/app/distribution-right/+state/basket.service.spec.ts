@@ -1,7 +1,10 @@
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { AkitaNgRouterStoreModule, RouterService } from '@datorama/akita-ng-router-store';
 import { FirestoreSettingsToken, AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
+import {
+  SpectatorService,
+  createServiceFactory,
+} from '@ngneat/spectator/jest';
 import { BasketService } from './basket.service';
 import { mockProvider } from '@ngneat/spectator/jest';
 import { FirebaseOptionsToken, AngularFireModule } from '@angular/fire';
@@ -39,7 +42,7 @@ describe('BasketService', () => {
   let spectator: SpectatorService<BasketService>;
   const createService = createServiceFactory({
     service: BasketService,
-    imports: [AkitaNgRouterStoreModule],
+    imports: [AkitaNgRouterStoreModule.forRoot()],
     providers: [
       // Values in the providers must be the values you inject in the BasketService (store, queries, AngularFirestore)
       mockProvider(MockBasketService, {
@@ -57,6 +60,7 @@ describe('BasketService', () => {
         provide: FirebaseOptionsToken,
         useValue: { projectId: environment.firebase.appId }
       },
+      mockProvider(RouterService)
     ]
   });
 
