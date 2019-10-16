@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { createMovie, MovieQuery, MovieService } from '../../+state';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, Input } from '@angular/core';
+import { MovieQuery, MovieService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PersistNgFormPlugin } from '@datorama/akita';
-import { Router } from '@angular/router';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
 import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/movie-imdb-search.component';
@@ -11,38 +9,28 @@ import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/form
 import { FormControl } from '@angular/forms';
 import { getCodeIfExists } from '../../static-model/staticModels';
 import { CreditFormControl } from '../main/main.form';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'movie-form-root',
+  selector: '[form] movie-form-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None, //@todo #643 do not use
 })
-export class MovieFormRootComponent implements OnInit, OnDestroy {
-  public persistForm: PersistNgFormPlugin;
-  public form: MovieForm;
+export class MovieFormRootComponent {
+  // @todo #643 => navigation arrows , not mat-tab
+  // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
+  @Input() public form: MovieForm;
 
   constructor(
     private query: MovieQuery,
     private service: MovieService,
     private snackBar: MatSnackBar,
-    private router: Router,
     private dialog: MatDialog,
     private imageUploader: ImageUploader,
+    private router: Router
   ) { }
-
-
-  ngOnInit() {
-    // @todo #643 => navigation arrows , not mat-tab
-    // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
-
-    this.form = new MovieForm(this.query.getActive());
-
-    // Akita Persist Form
-    this.persistForm = new PersistNgFormPlugin(this.query, createMovie).setForm(this.form);
-
-  }
 
   /* Saves the form */
   public submit() {
@@ -55,19 +43,8 @@ export class MovieFormRootComponent implements OnInit, OnDestroy {
     }
   }
 
-  private clear() {
-    this.persistForm.reset();
-    this.form.reset();
-  }
-
   public cancel() {
-    this.clear();
     this.router.navigateByUrl('');
-  }
-
-  ngOnDestroy() {
-    this.clear();
-    this.persistForm.destroy();
   }
 
   /**
