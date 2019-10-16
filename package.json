@@ -49,9 +49,9 @@
     "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
     "analyze:marketplace": "webpack-bundle-analyzer dist/apps/catalog/marketplace/stats.json --port=8000",
     "pwm": "pwmetrics --config",
-    "compodoc:all": "npx compodoc -p tsconfig.json -s",
-    "compodoc:delivery": "npx compodoc -p apps/delivery/delivery/tsconfig.app.json --serve --output documentation/delivery",
-    "compodoc:catalog-marketplace": "npx compodoc -p apps/catalog/marketplace/marketplace/tsconfig.app.json --serve --output documentation/catalog/marketplace",
+    "compodoc:all": "npm run compodoc:delivery && npm run compodoc:catalog-marketplace",
+    "compodoc:delivery": "npx compodoc -p apps/delivery/delivery/tsconfig.app.json --output documentation/delivery",
+    "compodoc:catalog-marketplace": "npx compodoc -p apps/catalog/marketplace/marketplace/tsconfig.app.json --output documentation/catalog/marketplace",
     "compodoc:movie": "npx compodoc -p libs/movie/tsconfig.lib.json -s",
     "compodoc:material": "npx compodoc -p libs/material/tsconfig.lib.json -s"
   },

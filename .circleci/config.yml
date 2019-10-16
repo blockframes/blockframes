@@ -92,6 +92,26 @@ jobs:
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
+  docs-build:
+    executor: blockframes-ci
+    - run:
+        name: Build documentation
+        command: npm run compodoc:all
+  docs-deploy:
+    executor: blockframes-ci
+    steps:
+      - checkout
+      - attach_workspace:
+        at: docs/_build
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "ci-build@blockframes.net"
+            git config user.name "ci-build"
+      - run:
+          name: Deploy documentation to gh-pages branch
+          command: gh-pages --dist documentation
 ## For future reference, how to deploy to docker:
 ##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
 #  deploy:
@@ -128,6 +148,20 @@ workflows:
             - click-to-run-e2e
             - test
             - lint
+      - docs-build:
+          requires:
+            - build
+            - test
+            - lint
+      - docs-deploy:
+          requires:
+            - build
+            - test
+            - lint
+            - docs-build
+          filters:
+            branches:
+              only: fake_master
 #      - request-deploy:
 #          type: approval
 #          requires:
