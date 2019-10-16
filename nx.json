@@ -76,6 +76,9 @@
     },
     "catalog": {
       "tags": ["catalog"]
+    },
+    "notification": {
+      "tags": ["notification"]
     }
   }
 }
