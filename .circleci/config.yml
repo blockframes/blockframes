@@ -111,24 +111,29 @@ jobs:
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
-## For future reference, how to deploy to docker:
-##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
-#  deploy:
-#    executor: blockframes-ci
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: ~/build
-#      - run: cp -R ~/build/* ./
-#      - setup_remote_docker:
-#          docker_layer_caching: true
-#      - run:
-#          name: Build and push the eth-events Server
-#          command: |
-#            ./node_modules/.bin/ng build eth-events-server
-#            docker build -t lsenta/eth-events-server:$CIRCLE_BRANCH .
-#            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-#            docker push lsenta/eth-events-server:$CIRCLE_BRANCH
+  deploy-to-prod:
+    executor: blockframes-ci
+    environment:
+      - ENV: "production"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-{{ .Environment.CACHE_VERSION }}
+      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: npm install
+      - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npm run build:all
+      - do-exclusively/do-exclusively:
+          # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
+          token: $CIRCLE_TOKEN
+          command: |
+            npm install --save-dev firebase-tools &&
+            npx firebase use prod &&
+            ENV=production npx firebase deploy --except functions --token "${FIREBASE_CI_TOKEN}" &&
+            ENV=production npx firebase deploy --only functions --token "${FIREBASE_CI_TOKEN}"
 workflows:
   version: 2.1
   build-test-deploy:
@@ -158,6 +163,14 @@ workflows:
             - click-to-run-e2e
             - test
             - lint
+      - deploy-to-prod:
+          requires:
+            - build
+            - lint
+            - test
+          filters:
+            branches:
+              only: production
 #      - request-deploy:
 #          type: approval
 #          requires:
