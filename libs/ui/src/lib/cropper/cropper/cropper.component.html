@@ -10,19 +10,13 @@
       [aspectRatio]="ratio"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
-    <div class="cropButtons">
-      <button mat-mini-fab (click)="cropIt()">
-        <mat-icon>check_circle</mat-icon>
-      </button>
-      <button mat-mini-fab (click)="nextStep(prev)">
-        <mat-icon>cancel</mat-icon>
-      </button>
-      <!-- <a mat-mini-fab (click)="cropIt()" routerLink=".">
+    <div class="Buttons">
+      <a (click)="cropIt()" routerLink=".">
           <mat-icon>check_circle</mat-icon>
       </a>
-      <a mat-mini-fab (click)="nextStep(prev)" routerLink=".">
+      <a (click)="nextStep(prev)" routerLink=".">
           <mat-icon>cancel</mat-icon>
-      </a> -->
+      </a>
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>
@@ -49,14 +43,11 @@
       <div class="show">
         <img class="show-show" [src]="url" />
       </div>
-      <div class="showButtons">
+      <div class="Buttons">
         <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
-        <button mat-flat-button (click)="resize(url)">resize</button>
-        <button mat-flat-button (click)="fileUploader.click()">edit</button>
-        <button mat-flat-button (click)="delete()">delete</button>
-        <!-- <a mat-mini-fab (click)="nextStep('crop')" routerLink=".">resize</a>
-        <a mat-flat-button (click)="fileUploader.click()" routerLink=".">edit</a>
-        <a mat-flat-button (click)="delete()" routerLink=".">delete</a> -->
+        <button mat-flat-button color="primary" (click)="resize(url)">resize</button>
+        <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>
+        <button mat-flat-button color="primary" (click)="delete()">delete</button>
       </div>
     </ng-container>
 

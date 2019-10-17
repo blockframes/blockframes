@@ -25,12 +25,8 @@ function b64toBlob(data: string) {
 }
 
   function blobToFile(blob: Blob, fileName:string): File {
-    const b: any = Object.assign({}, blob);
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
-    b.lastModifiedDate = new Date();
-    b.name = fileName;
-    //Cast to a File() type
-    return <File>b;
+    const picture = new File([blob], fileName, {type:"image/png"})
+    return picture;
 }
 
 /** Check if the path is a file path */
@@ -93,6 +89,14 @@ export class CropperComponent {
   imageCropped(event: ImageCroppedEvent) {
       this.croppedImage = event.base64;
   }
+  imageLoaded() {
+    // show cropper
+    console.log('image loaded')
+  }
+  cropperReady() {
+      // cropper ready
+      console.log('cropper ready')
+  }
 
   // upload
   cropIt() {
@@ -121,10 +125,16 @@ export class CropperComponent {
 
     async resize(url: string) {
       if (!this.file) {
-        const name = url.split('/').pop();
+        const name = url.split('%2F').pop();
         const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
         this.file = blobToFile(blob, name);
+        console.log('resize url ', url)
+        console.log('resize name ', name)
+        console.log('resize blob ', blob)
+        console.log('resize file ', this.file)
       }
+      console.log('resize out')
+      console.log('resize file ', this.file)
       this.nextStep('crop');
     }
 

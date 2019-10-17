@@ -25,13 +25,16 @@ article {
   border-radius: 50%;
 }
 
-.cropButtons {
+.Buttons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   a {
     cursor: pointer;
     padding: 20px;
+  }
+  button {
+    margin: 10px;
   }
 }
 
