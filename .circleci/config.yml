@@ -100,6 +100,25 @@ jobs:
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
+  docs-deploy:
+    executor: blockframes-ci
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "1c:11:e6:54:21:33:66:b0:a3:b1:88:95:34:32:af:11"
+      - checkout
+      - run:
+          name: Build documentation
+          command: npm run compodoc:all
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install --save-dev gh-pages@2.0.1 &&
+            git config user.email "ci-build@blockframes.io" &&
+            git config user.name "ci-build-documentation"
+      - run:
+          name: Deploy documentation to gh-pages branch
+          command: npx gh-pages --dist documentation
 ## For future reference, how to deploy to docker:
 ##   Do not forget the DOCKER_PASS and DOCKER_USER env variables
 #  deploy:
@@ -139,6 +158,10 @@ workflows:
             - click-to-run-e2e
             - test
             - lint
+      - docs-deploy:
+        filters:
+          branches:
+            only: integrating_compodoc
 #      - request-deploy:
 #          type: approval
 #          requires:
