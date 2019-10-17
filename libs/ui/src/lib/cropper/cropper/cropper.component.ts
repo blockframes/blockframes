@@ -128,13 +128,7 @@ export class CropperComponent {
         const name = url.split('%2F').pop();
         const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
         this.file = blobToFile(blob, name);
-        console.log('resize url ', url)
-        console.log('resize name ', name)
-        console.log('resize blob ', blob)
-        console.log('resize file ', this.file)
       }
-      console.log('resize out')
-      console.log('resize file ', this.file)
       this.nextStep('crop');
     }
 
