@@ -11,7 +11,8 @@ require('dotenv').config();
 
 commander
   .option('-s, script <command>', 'Launches the following script command')
-  .option('-d, deploy <file>', 'Launces the function to deploy the wanted file');
+  .option('-d, deploy <file>', 'Launces the function to deploy the wanted file')
+  .option('-t, token <token>', 'Pass a token to the script');
 
 commander.parse(process.argv);
 
@@ -20,8 +21,9 @@ commander.parse(process.argv);
 //////////////////////
 
 const deployDemos = () => {
+  // TODO(DAJUNG): check if set -x and set -e works on Windows
   exec('set -x && set -e');
-  const tag = `demo-${new Date().getTime()}`;
+  const tag = `demo-${new Date().toISOString().slice(0, 10)}`;
   process.env['NODE_OPTIONS'] = '--max_old_space_size=8192';
   exec('git checkout demo');
   let i = 0;
@@ -30,18 +32,16 @@ const deployDemos = () => {
     process.env['ENV'] = 'production';
     copyFile(`.env/demo/env.demo${i}.ts`, './env/env.ts', err => {
       console.log(err);
+      process.exit(1);
     });
     copyFile(`.env/demo/env.demo${i}.ts`, './env/env.prod.ts', err => {
       console.log(err);
+      process.exit(1);
     });
-    exec('npm run build:all');
-    exec(`firebase use demo${i}`);
+    execSync('blockframes -s build:all');
+    execSync(`firebase use demo${i}`);
 
-    exec('firebase deploy --except functions', err => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    execSync('firebase deploy --except functions');
 
     // we deploy everything but functions, they tend to crash
     let rerunLoop = true;
@@ -53,7 +53,7 @@ const deployDemos = () => {
         rerunLoop = false;
       });
     }
-
+    // What are the configs for blockframes server?
     client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
       if (err) {
         console.log(err);
@@ -62,18 +62,18 @@ const deployDemos = () => {
     });
     i++;
   }
-  exec(`git tag ${tag}`);
-  exec(`git push origin ${tag}`);
+  execSync(`git tag ${tag}`);
+  execSync(`git push origin ${tag}`);
 };
 
-const deploySecrets = () => {
+const deploySecrets = (firebase_ci_token: string) => {
   let secrets, secretsTemplate;
   let tokenArg: string;
 
   // ci deployment
-  /*  if (firebase_ci_token) {
+  if (firebase_ci_token) {
     tokenArg = `--token ${firebase_ci_token}`;
-  } */
+  }
 
   // Since there is no source or . operator on Windows,
   // we have to specify in an if statement which is our
@@ -84,7 +84,7 @@ const deploySecrets = () => {
     if (secrets.SENDGRID_API_KEY || secrets.ETHEREUM_MNEMONIC) {
       console.log('configuration found in your env, loading your secrets');
       console.log('deploying the functions configuration');
-      exec(`firebase functions:config:set sendgrid.api_key="${secrets.SENDGRID_API_KEY}" \
+      execSync(`firebase functions:config:set sendgrid.api_key="${secrets.SENDGRID_API_KEY}" \
                                           replayer.mnemonic="${secrets.ETHEREUM_MNEMONIC}" \
                                           algolia.api_key="${secrets.ALGOLIA_API_KEY}" \
                                           admin.email="${secrets.CASCADE8_ADMIN}" \
@@ -94,7 +94,7 @@ const deploySecrets = () => {
     const rawTemplate = readFileSync('./secrets.template.json');
     secretsTemplate = JSON.parse(rawTemplate.toString());
     console.log('deploying the functions configuration');
-    exec(`firebase functions:config:set sendgrid.api_key="${secretsTemplate.SENDGRID_API_KEY}" \
+    execSync(`firebase functions:config:set sendgrid.api_key="${secretsTemplate.SENDGRID_API_KEY}" \
                                         replayer.mnemonic="${secretsTemplate.ETHEREUM_MNEMONIC}" \
                                         algolia.api_key="${secretsTemplate.ALGOLIA_API_KEY}" \
                                         admin.email="${secretsTemplate.CASCADE8_ADMIN}" \
@@ -109,8 +109,7 @@ const deploySecrets = () => {
 const packageEnv = (command: string) => {
   switch (command) {
     case 'start':
-      const npx = spawn('npx ng serve --hmr --disable-host-check');
-      console.log(process.env);
+      const npx = spawn('/home/max/.nvm/versions/node/v10.16.1/bin/npx ng serve --hmr --disable-host-check');
       npx.stdout.on('data', stdout => {
         console.log(stdout.toString());
       });
@@ -144,12 +143,12 @@ const firebasePredeploy = () => {};
 const program = () => {
   if (commander.script) {
     packageEnv(commander.script);
-  }
-  if (commander.deploy === 'demo') {
+  } else if (commander.deploy === 'demo') {
     deployDemos();
-  }
-  if(commander.deploy === 'secrets') {
-    deploySecrets()
+  } else if (commander.deploy === 'secrets') {
+    deploySecrets(commander.token);
+  } else {
+    console.log(commander.opts());
   }
 };
 
