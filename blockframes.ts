@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
-const path = require('path');
+const commander = require('commander');
 const client = require('scp2');
-import { exec } from 'child_process';
+import { exec, execSync, spawn } from 'child_process';
 import { copyFile, existsSync, readFileSync } from 'fs';
 require('dotenv').config();
 
@@ -9,9 +9,11 @@ require('dotenv').config();
 // PARSING ARGV //
 //////////////////
 
-const type = process.argv[2];
-const filename = process.argv[3];
-const firebase_ci_token = process.argv[4];
+commander
+  .option('-s, script <command>', 'Launches the following script command')
+  .option('-d, deploy <file>', 'Launces the function to deploy the wanted file');
+
+commander.parse(process.argv);
 
 //////////////////////
 // PORT BASH SCRIPT //
@@ -19,7 +21,7 @@ const firebase_ci_token = process.argv[4];
 
 const deployDemos = () => {
   exec('set -x && set -e');
-  const tag = `demo-${new Date()}`;
+  const tag = `demo-${new Date().getTime()}`;
   process.env['NODE_OPTIONS'] = '--max_old_space_size=8192';
   exec('git checkout demo');
   let i = 0;
@@ -35,13 +37,23 @@ const deployDemos = () => {
     exec('npm run build:all');
     exec(`firebase use demo${i}`);
 
-    // we deploy everything but functions, they tend to crash
     exec('firebase deploy --except functions', err => {
       if (err) {
-        console.log(`Error occured, retry! ${err}`);
-        exec('firebase deploy --except functions');
+        console.log(err);
       }
     });
+
+    // we deploy everything but functions, they tend to crash
+    let rerunLoop = true;
+    while (rerunLoop) {
+      exec('firebase deploy --only functions', err => {
+        if (err) {
+          rerunLoop = true;
+        }
+        rerunLoop = false;
+      });
+    }
+
     client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
       if (err) {
         console.log(err);
@@ -59,9 +71,9 @@ const deploySecrets = () => {
   let tokenArg: string;
 
   // ci deployment
-  if (firebase_ci_token) {
+  /*  if (firebase_ci_token) {
     tokenArg = `--token ${firebase_ci_token}`;
-  }
+  } */
 
   // Since there is no source or . operator on Windows,
   // we have to specify in an if statement which is our
@@ -88,45 +100,21 @@ const deploySecrets = () => {
                                         admin.email="${secretsTemplate.CASCADE8_ADMIN}" \
                                         ${tokenArg}`);
   }
-
-  /*  
-  Check that we have the configuration in memory,
-  If we don't, load from the local secrets file.
-  This file is for developers' local environment. 
-  */
 };
 
-/* 
-
-
-if [ -z "${SENDGRID_API_KEY}" ] || [ -z "${ETHEREUM_MNEMONIC}" ]; then
-  echo -e "\e[33mno configuration found in your env, loading your secrets\e[0m"
-
-  if [ -f "$SECRETS" ]; then
-    source ${SECRETS};
-  else
-    echo -e "\e[31mno secrets.sh file found, using secrets.template.sh";
-    echo -e "(this is not secure, don't use for production!)\e[0m";
-    echo -e "\e[31mpress enter to continue the deploy\e[0m";
-    read -n 1 -s -r;
-    source ${SECRETS_TEMPLATE};
-  fi
-fi
-
-
-echo "deploying the functions configuration"
-firebase functions:config:set sendgrid.api_key="${SENDGRID_API_KEY}" \
-                              relayer.mnemonic="${ETHEREUM_MNEMONIC}" \
-                              algolia.api_key="${ALGOLIA_API_KEY}" \
-                              admin.email="${CASCADE8_ADMIN}" \
-                              ${TOKEN_ARG};
- */
-
 ////////////////////////////////
-// PORT PACKAGE.JSON WITH ENG //
+// PORT PACKAGE.JSON WITH ENV //
 ////////////////////////////////
 
-const packageEnv = () => {
+const packageEnv = (command: string) => {
+  switch (command) {
+    case 'start':
+      const npx = spawn('npx ng serve --hmr --disable-host-check');
+      console.log(process.env);
+      npx.stdout.on('data', stdout => {
+        console.log(stdout.toString());
+      });
+  }
   // cross-env NODE_ENV=production ???
   // "build:main": "npx ng build main --base-href / --configuration=\"${ENV:-dev}\"",
   // "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
@@ -154,16 +142,14 @@ const firebasePredeploy = () => {};
 /////////////
 
 const program = () => {
-  if (!type || !filename) {
-    console.error('please enter type and name');
+  if (commander.script) {
+    packageEnv(commander.script);
   }
-
-  if (type === 'deploy' && filename === 'demos') {
+  if (commander.deploy === 'demo') {
     deployDemos();
   }
-
-  if (type === 'deploy' && filename === 'secrets') {
-    deploySecrets();
+  if(commander.deploy === 'secrets') {
+    deploySecrets()
   }
 };
 
