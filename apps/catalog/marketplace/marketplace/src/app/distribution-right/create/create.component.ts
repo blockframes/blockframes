@@ -187,12 +187,12 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
      */
     this.researchSubscription = this.form.valueChanges
       .pipe(
+        startWith(this.form.value),
         tap(value => {
           //////////////////
           // FORM VALIDATION
           //////////////////
-
-          if (!!value.duration || value.medias.length || value.territories.length) {
+          if (!(!!value.duration || value.medias.length || value.territories.length)) {
             console.log('You have to provide value for your research');
             return false;
           }
@@ -297,6 +297,6 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.researchSubscription.unsubscribe();
+      this.researchSubscription.unsubscribe();
   }
 }
