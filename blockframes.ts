@@ -54,7 +54,7 @@ const deployDemos = () => {
         rerunLoop = false;
       });
     }
-    // What are the configs for blockframes server?
+    // What are the configs for blockframes server? @laurent
     client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
       if (err) {
         console.log(err);
@@ -137,6 +137,8 @@ const deployProduction = () => {
 // PORT PACKAGE.JSON WITH ENV //
 ////////////////////////////////
 
+// TODO: Some of the build commands don't console.log their
+// progress. We need to find out why? start script works
 const packageEnv = (command: string, config?: string) => {
   let configENV = 'dev';
   if (config) {
@@ -207,9 +209,9 @@ const packageEnv = (command: string, config?: string) => {
       const buildMarketplace: ChildProcess = spawn('npx', [
         'ng',
         'build',
-        'catalg-marketplace',
+        'catalog-marketplace',
         '--base-href',
-        'catalg-marketplace',
+        'marketplace',
         `--configuration=${configENV}`
       ]);
       buildMarketplace.stderr.on('data', stderr => {
@@ -255,27 +257,79 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'pree2e':
       console.log(`excuting in '${configENV}' environment`);
-      const pree2e: ChildProcess = spawn('ng', [
-        'build',
-        'backend-ops',
-        `--configuration=${configENV}`,
-      ]);
-      pree2e.stderr.on('data', stderr => {
-        console.log(stderr.toString());
-      });
-      pree2e.stdout.on('data', stdou => {
-        console.log(stdou.toString());
-      });
+      console.log(`ng build backend-ops --configuration=${configENV} is in progress...`);
+      // since the original command used the && operator, we need to split it up into two commands.
+      // Therefore we have to use the spawnSync and execSync command,
+      // so that we wait for each command to finish
+      const pree2e = spawnSync('ng', ['build', 'backend-ops', `--configuration=${configENV}`]);
+      console.log(pree2e.toString());
       execSync('node dist/apps/backend-ops/main.js');
       break;
+    case 'e2e:main':
+      console.log(`excuting in '${configENV}' environment`);
+      const e2eMain: ChildProcess = spawn('npx', [
+        'ng',
+        'e2e',
+        'main-e2e',
+        `--configuration=${configENV}`,
+        '--headless'
+      ]);
+      e2eMain.stderr.on('data', stderr => {
+        console.log(stderr.toString());
+      });
+      e2eMain.stdout.on('data', stdou => {
+        console.log(stdou.toString());
+      });
+      break;
+    case 'e2e:delivery':
+      console.log(`excuting in '${configENV}' environment`);
+      const e2eDelivery: ChildProcess = spawn('npx', [
+        'ng',
+        'e2e',
+        'delivery-e2e',
+        `--configuration=${configENV}`,
+        '--headless'
+      ]);
+      e2eDelivery.stderr.on('data', stderr => {
+        console.log(stderr.toString());
+      });
+      e2eDelivery.stdout.on('data', stdou => {
+        console.log(stdou.toString());
+      });
+      break;
+    case 'e2e:marketplace':
+      console.log(`excuting in '${configENV}' environment`);
+      const e2eMarketplace: ChildProcess = spawn('npx', [
+        'ng',
+        'e2e',
+        'marketplace-e2e',
+        `--configuration=${configENV}`,
+        '--headless'
+      ]);
+      e2eMarketplace.stderr.on('data', stderr => {
+        console.log(stderr.toString());
+      });
+      e2eMarketplace.stdout.on('data', stdou => {
+        console.log(stdou.toString());
+      });
+      break;
+    case 'e2e:movie-financing':
+      console.log(`excuting in '${configENV}' environment`);
+      const e2eFinancing: ChildProcess = spawn('npx', [
+        'ng',
+        'e2e',
+        'movie-financing-e2e',
+        `--configuration=${configENV}`,
+        '--headless'
+      ]);
+      e2eFinancing.stderr.on('data', stderr => {
+        console.log(stderr.toString());
+      });
+      e2eFinancing.stdout.on('data', stdou => {
+        console.log(stdou.toString());
+      });
+      break;
   }
-  // "pree2e": "ng build backend-ops --configuration=\"${ENV}\" && node dist/apps/backend-ops/main.js",
-  // "e2e:main": "./node_modules/.bin/ng e2e main-e2e --configuration=\"${ENV}\" --headless",
-  // "e2e:delivery": "./node_modules/.bin/ng e2e delivery-e2e --configuration=\"${ENV}\" --headless",
-  // "e2e:catalog-marketplace": "./node_modules/.bin/ng e2e catalog-marketplace-e2e --configuration=\"${ENV}\" --headless",
-  // "e2e:movie-financing": "./node_modules/.bin/ng e2e movie-financing-e2e --configuration=\"${ENV}\" --headless",
-  // in angular.json
-  // architect -> build -> configurations: { "dev": {} } ???
 };
 
 ////////////////////////
@@ -299,6 +353,8 @@ const program = () => {
     deployDemos();
   } else if (commander.deploy === 'secrets') {
     deploySecrets(commander.token);
+  } else if (commander.deploy === 'production') {
+    deployProduction();
   } else {
     console.log(commander.opts());
   }
