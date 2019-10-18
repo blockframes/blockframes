@@ -1,22 +1,22 @@
 <section *ngIf="(user$ | async) as user" test-id="notification-widget">
   <button
     mat-icon-button
-    [matMenuTriggerFor]="notifications"
-    class="notification-button">
-    <mat-icon
-      bf-icon
-      *ngIf="notifCount > 0 || invitCount > 0; else: empty"
-      [matBadge]="notifCount + invitCount"
-      matBadgeColor="accent"
-      matBadgeSize="small">
-      notifications_none
-    </mat-icon>
+    [matMenuTriggerFor]="notifications">
+    <ng-container *ngIf="(totalCount | async) as count; else: empty">
+      <mat-icon
+        bf-icon
+        [matBadge]="count"
+        matBadgeColor="accent"
+        matBadgeSize="small">
+        notifications_none
+      </mat-icon>
+    </ng-container>
     <ng-template #empty>
       <mat-icon bf-icon>notifications_none</mat-icon>
     </ng-template>
   </button>
 </section>
-<mat-menu #notifications="matMenu" xPosition="before" class="notifMenu mat-elevation-z6">
+<mat-menu #notifications="matMenu" xPosition="before" class="mat-elevation-z6">
   <section class="notification-list" test-id="notification-list">
     <mat-list> <invitation-list></invitation-list> </mat-list>
     <mat-list> <notification-list></notification-list> </mat-list>

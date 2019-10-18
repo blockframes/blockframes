@@ -22,6 +22,14 @@ export interface UserForm {
   pwd: string;
 }
 
+/** A user interface with public informations */
+export interface PublicUser {
+  uid: string;
+  email: string;
+  name?: string;
+  surname?: string;
+}
+
 export interface AuthState {
   user: User;
   auth?: { emailVerified: boolean };

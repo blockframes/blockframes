@@ -1,19 +1,19 @@
 import { MovieVersionInfo, createMovieVersionInfo } from '../../+state';
-import { FormEntity, FormField } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
+import { FormControl } from '@angular/forms';
 
-function createMovieVersionInfoControls(versionInfo: Partial<MovieVersionInfo> = {}){
-  const entity = createMovieVersionInfo(versionInfo);
+function createMovieVersionInfoControls(versionInfo?: Partial<MovieVersionInfo>){
+  const { subtitles, dubbings } = createMovieVersionInfo(versionInfo);
   return {
-    subtitles: new FormField(entity.subtitles),
-    dubbings: new FormField(entity.dubbings),
+    subtitles: new FormControl(subtitles),
+    dubbings: new FormControl(dubbings),
   }
 }
 
 type MovieVersionInfoControl = ReturnType<typeof createMovieVersionInfoControls>
 
-export class MovieVersionInfoForm extends FormEntity<Partial<MovieVersionInfo>, MovieVersionInfoControl>{
-  constructor(VersionInfo : MovieVersionInfo) {
-    super(createMovieVersionInfoControls(VersionInfo));
+export class MovieVersionInfoForm extends FormEntity<MovieVersionInfoControl>{
+  constructor(versionInfo?: MovieVersionInfo) {
+    super(createMovieVersionInfoControls(versionInfo));
   }
-
 }

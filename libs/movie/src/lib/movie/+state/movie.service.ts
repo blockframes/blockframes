@@ -23,7 +23,6 @@ export function cleanModel<T>(data: T): T {
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
   constructor(
-    private fireQuery: FireQuery,
     private organizationQuery: OrganizationQuery,
     private permissionsService: PermissionsService,
     store: MovieStore
@@ -39,9 +38,9 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
-    const id = this.fireQuery.createId();
+    const id = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.fireQuery.doc<Organization>(`orgs/${organization.id}`);
+    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
 
     if (!movie) {
       // create empty movie
@@ -51,7 +50,7 @@ export class MovieService extends CollectionService<MovieState> {
       movie = createMovie({ id, ...movie });
     }
 
-    await this.fireQuery.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
+    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
       const organizationSnap = await tx.get(organizationDoc.ref);
       const movieIds = organizationSnap.data().movieIds || [];
 
@@ -74,17 +73,6 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    return this.fireQuery.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
-  }
-
-  public async remove(movieId: string): Promise<void> {
-    const movieDoc = this.fireQuery.doc<Movie>(`movies/${movieId}`);
-
-    await this.fireQuery.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      // Delete the movie in movies collection
-      tx.delete(movieDoc.ref);
-      // Remove the movie from the movies store
-      this.store.remove(movieId);
-    });
+    return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
   }
 }

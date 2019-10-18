@@ -51,11 +51,13 @@
       <ng-template #txMined>
         <div fxLayout="column" fxLayoutAlign="start center">
           <feedback-message
-            title="Congratulations !"
+            [title]="feedbackTitle"
+            [imageUrl]="feedbackImage"
             [subTitle]="wallet.feedback.success"
             [buttonMessage]="wallet.feedback.redirectName"
-            (redirectUser)="handleRedirect(wallet.feedback.redirectRoute)">
-          ></feedback-message>
+            (redirectUser)="handleRedirect(wallet.feedback.redirectRoute)"
+          >
+          </feedback-message>
         </div>
       </ng-template>
     </section>

@@ -1,3 +1,27 @@
+import { PublicOrganization } from '@blockframes/organization/types';
+import { NotificationType } from '@blockframes/notification/types';
+import { PublicMovie } from '@blockframes/movie/types';
+
+export { MovieDocument } from '@blockframes/movie/types';
+export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
+export {
+  InvitationDocument,
+  InvitationOrUndefined,
+  InvitationStatus,
+  InvitationType,
+  InvitationFromOrganizationToUser,
+  InvitationFromUserToOrganization,
+  InvitationToWorkOnDocument
+} from '@blockframes/invitation/types';
+export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
+export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+export {
+  DeliveryDocument,
+  StepDocument,
+  StepDocumentWithDate,
+  convertStepDocumentToStepDocumentWithDate
+} from '@blockframes/material/delivery/types';
+
 /**
  * Types used by the firebase backend.
  *
@@ -7,93 +31,15 @@
 
 // Low Level Types
 // ===============
-
 export type IDMap<T> = Record<string, T>;
 
 interface DocWithID {
   id: string;
 }
 
-export enum DocType {
-  movie = 'movie',
-  delivery = 'delivery',
-  material = 'material'
-}
-
-export interface DocInformations {
-  id: string;
-  type: DocType | null; // TODO: We don't want type to be null => ISSUE#884
-}
-
 // Core Application Types
 // ======================
 // Business & App Related
-
-export const enum OrganizationStatus {
-  pending = 'pending',
-  accepted = 'accepted'
-}
-
-export interface Organization {
-  id: string;
-  userIds: string[];
-  movieIds: string[];
-  name: string;
-  officeAddress: string;
-  status: OrganizationStatus;
-}
-
-export interface Stakeholder {
-  id: string;
-  isAccepted: boolean;
-  processedId: string;
-}
-
-export interface Step {
-  id: string;
-  date: Date;
-  name: string;
-}
-
-export interface Delivery {
-  id: string;
-  movieId: string;
-  processedId: string;
-  stakeholders: string[];
-  materials: string[];
-  steps: Step[];
-  mustBeSigned: boolean;
-}
-
-export interface Movie {
-  id: string;
-  main: {
-    title: {
-      original: string;
-    };
-  }
-  deliveryIds: string[];
-}
-
-export interface Material {
-  id: string;
-  value: string;
-  description: string;
-  category: string;
-  deliveryIds: string[];
-  status: MaterialStatus;
-  stepId: string;
-  price?: {
-    amount: number;
-    currency: string;
-  }
-}
-
-export const enum MaterialStatus {
-  pending = 'pending',
-  available = 'available',
-  delivered = 'delivered'
-}
 
 export interface OrganizationPermissions {
   superAdmins: string[];
@@ -123,109 +69,12 @@ export enum AppAccessStatus {
   accepted = 'accepted'
 }
 
-// Internal Interaction Types
-// ==========================
-
-export const enum App {
-  main = 'main',
-  mediaDelivering = 'media_delivering',
-  mediaFinanciers = 'media_financiers'
-}
-
-// Legacy for compat between Notifications & Invitations
-// TODO(issue#684): use App everywhere and let the frontend / concrete
-//  code deal with the app specifics (icons, message, etc).
-export type AppIcon = App;
-
-// Invitations
-// -----------
-
-export const enum InvitationState {
-  accepted = 'accepted',
-  declined = 'declined',
-  pending = 'pending'
-}
-
-export const enum InvitationType {
-  stakeholder = 'stakeholder',
-  fromUserToOrganization = 'fromUserToOrganization',
-  fromOrganizationToUser = 'fromOrganizationToUser'
-}
-
-/**
- * Raw invitation with generic fields,
- * use type dispatch to identify the actual content of the invitation.
- */
-interface RawInvitation {
-  id: string;
-  app: App;
-  state: InvitationState;
-  type: InvitationType;
-  date: FirebaseFirestore.FieldValue;
-  processedId?: string;
-}
-
-/** Invite a stakeholder to work on a document. */
-export interface InvitationStakeholder extends RawInvitation {
-  type: InvitationType.stakeholder;
-  docId: string;
-  docType: DocType;
-  organizationId: string;
-}
-
-/** Invite a user to an organization. */
-export interface InvitationFromOrganizationToUser extends RawInvitation {
-  type: InvitationType.fromOrganizationToUser;
-  userId: string;
-  organizationId: string;
-}
-
-/** A user requests to join an organization. */
-export interface InvitationFromUserToOrganization extends RawInvitation {
-  type: InvitationType.fromUserToOrganization;
-  userId: string;
-  organizationId: string;
-}
-
-/**
- * This is the generic type for invitation,
- * use the type field to figure out which kind of invitation you are working with.
- */
-export type Invitation = InvitationStakeholder | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
-export type InvitationOrUndefined = Invitation | undefined;
-
-// Notifications
-// -------------
-
-export interface BaseNotification {
-  message: string;
-  userInformations?: {
-    userId: string;
-    name?: string;
-    surname?: string;
-    email: string;
-  };
-  userId: string;
-  docInformations: DocInformations;
-  organizationId?: string;
-  path?: string;
-}
-
-export interface Notification extends BaseNotification {
-  id: string;
-  isRead: boolean;
-  date: FirebaseFirestore.FieldValue;
-  appIcon: App;
-}
-
+/** Custom object used to build notifications. */
 export interface SnapObject {
-  movie: Movie;
-  docInformations: DocInformations;
-  organization: Organization;
-  eventType: string;
-  delivery?: Delivery | null;
-  newStakeholderId: string;
-  count?: number;
+  organization: PublicOrganization | undefined;
+  movie: PublicMovie;
+  docId: string;
+  type: NotificationType;
 }
 
 /**

@@ -4,7 +4,7 @@ import {
 } from './../../movie/search/search.form';
 import { FormArray, Validators, FormControl, FormGroup } from '@angular/forms';
 import { DistributionRight } from './basket.model';
-import { DateRange } from '@blockframes/utils/helpers';
+import { DateRange } from '@blockframes/utils/date-range';
 import {
   MovieCurrenciesSlug,
   MediasSlug,
@@ -45,7 +45,7 @@ export interface CatalogBasket {
 export interface MovieData {
   id: string;
   movieName: string;
-  endRights: string;
+  duration: DateRange;
   territory: string;
   rights: string;
   languages: string;
@@ -112,3 +112,5 @@ export function createDistributionRightControls(right: Partial<DistributionRight
     exclusive: new FormControl(right.exclusive)
   };
 }
+
+export type DistributionRightControls = ReturnType<typeof createDistributionRightControls>;

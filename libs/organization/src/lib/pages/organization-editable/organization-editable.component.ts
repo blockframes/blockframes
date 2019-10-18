@@ -15,7 +15,7 @@ import { startWith, tap } from 'rxjs/operators';
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
-  public organizationProfileForm: OrganizationProfileForm;
+  public organizationProfileForm = new OrganizationProfileForm();
   public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
@@ -31,7 +31,6 @@ export class OrganizationEditableComponent implements OnInit {
       .select('org')
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
-    this.organizationProfileForm = new OrganizationProfileForm(this.query.getValue().org);
   }
 
   public get organizationInformations$() {

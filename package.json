@@ -48,7 +48,8 @@
     "affected": "./node_modules/.bin/nx affected",
     "analyze:delivery": "webpack-bundle-analyzer dist/apps/delivery/stats.json --port=8000",
     "analyze:marketplace": "webpack-bundle-analyzer dist/apps/catalog/marketplace/stats.json --port=8000",
-    "pwm": "pwmetrics --config"
+    "pwm": "pwmetrics --config",
+    "bundlesize": "bundlesize"
   },
   "private": true,
   "dependencies": {
@@ -142,6 +143,7 @@
     "@types/pdfmake": "^0.1.7",
     "@types/tmp": "0.0.34",
     "akita-schematics": "^2.0.0",
+    "bundlesize": "^0.18.0",
     "codelyzer": "~4.5.0",
     "concurrently": "^4.1.0",
     "cypress": "^3.1.5",
@@ -165,5 +167,37 @@
   },
   "pwmetrics": {
     "url": "http://localhost:4200/"
-  }
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/apps/main**.js",
+      "maxSize": "4.5 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/delivery/main**.js",
+      "maxSize": "6 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/catalog/marketplace/main**.js",
+      "maxSize": "6 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/catalog/dashboard/main**.js",
+      "maxSize": "7 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/backend-functions/main**.js",
+      "maxSize": "0.9 MB",
+      "compression": "none"
+    },
+    {
+      "path": "./dist/apps/movie-financing/main**.js",
+      "maxSize": "5.5 MB",
+      "compression": "none"
+    }
+  ]
 }

@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryDB, deliveryStatuses, Step } from './delivery.model';
+import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses, Step } from './delivery.model';
 import {
-  createDeliveryStakeholder,
   Movie,
-  MovieQuery,
-  Stakeholder,
-  StakeholderService
+  MovieQuery
 } from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder } from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
@@ -18,6 +15,7 @@ import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/f
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx, TxFeedback } from '@blockframes/ethers';
+import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -41,7 +39,7 @@ export function timestampObjectsToDate(docs: any[]) {
 }
 
 /** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
-export function modifyTimestampToDate(delivery: DeliveryDB): Delivery {
+export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Delivery {
   const mgDeadlines = delivery.mgDeadlines || [];
 
   return {
@@ -85,14 +83,14 @@ export class DeliveryService {
     return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
   }
 
-  private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryDB> {
+  private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryWithTimestamps> {
     return this.db.doc(`deliveries/${deliveryId}`);
   }
 
   private deliveryStakeholderDoc(
     deliveryId: string,
     stakeholderId: string
-  ): AngularFirestoreDocument<Stakeholder> {
+  ): AngularFirestoreDocument<StakeholderDocument> {
     return this.deliveryStakeholdersCollection(deliveryId).doc(stakeholderId);
   }
 
@@ -150,7 +148,7 @@ export class DeliveryService {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization.id, true, tx);
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -193,7 +191,7 @@ export class DeliveryService {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery, organization.id, true, tx);
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -441,10 +439,6 @@ export class DeliveryService {
   // CRUD STAKEHOLDERS //
   //////////////////////
 
-  private makeDeliveryStakeholder(id: string, isAccepted: boolean) {
-    return createDeliveryStakeholder({ id, isAccepted });
-  }
-
   /** Add a stakeholder to the delivery */
   public addStakeholder(movieStakeholder: Stakeholder) {
     const delivery = this.query.getActive();
@@ -454,10 +448,7 @@ export class DeliveryService {
 
     // If deliveryStakeholder doesn't exist yet, we need to create him
     if (!deliveryStakeholder) {
-      const newDeliveryStakeholder = this.makeDeliveryStakeholder(
-        movieStakeholder.id,
-        false
-      );
+      const newDeliveryStakeholder = createStakeholder({ id: movieStakeholder.id, isAccepted: false });
 
       return this.deliveryStakeholderDoc(delivery.id, newDeliveryStakeholder.id).set(
         newDeliveryStakeholder

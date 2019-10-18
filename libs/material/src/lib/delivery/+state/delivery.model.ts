@@ -1,70 +1,24 @@
-import { Stakeholder, staticModels } from '@blockframes/movie';
-import { firestore } from 'firebase/app';
+import { staticModels } from '@blockframes/movie';
+import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
+import { Stakeholder } from '@blockframes/organization';
 
-type Timestamp = firestore.Timestamp;
-
+export { DeliveryStatus, CurrencyCode } from './delivery.firestore';
 export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
-export type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 
-/** This is a Minimum Guarantee deadline, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
-interface MGDeadlineRaw<D> {
-  percentage: number;
-  date?: D;
-  label: string;
-}
+export type Step = StepDocumentWithDate;
 
-/** The Step of a given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
-interface StepRaw<D> {
-  id: string;
-  name: string;
-  date: D;
-}
-
-/** A given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
-interface DeliveryRaw<D> {
-  id: string;
-  movieId: string;
-  validated: string[]; // Stakeholder.id[];
-  isSigned?: boolean;
-  delivered: boolean;
+/** The delivery interface with dates typed in Date and stakeholders used by front-end. */
+export interface Delivery extends DeliveryDocumentWithDates {
   stakeholders: Stakeholder[];
-  dueDate?: D;
-  status: DeliveryStatus;
-  isPaid: boolean;
-  mustChargeMaterials?: boolean;
-  mustBeSigned?: boolean;
-  _type: 'deliveries';
-  steps: StepRaw<D>[];
-  /** Time to accept a material */
-  acceptationPeriod?: number;
-  /** Time to return a refused material */
-  reWorkingPeriod?: number;
-  /** Minimum Guarantee: */
-  mgCurrentDeadline?: number;
-  mgAmount?: number;
-  mgCurrency?: CurrencyCode;
-  mgDeadlines: MGDeadlineRaw<D>[];
 }
 
-/** Extends a Raw Delivery with fields that are specific to the local data model. */
-export interface Delivery extends DeliveryRaw<Date> {}
+/** The delivery interface with dates typed in Timestamp and stakeholders used by guards. */
+export interface DeliveryWithTimestamps extends DeliveryDocument {
+  stakeholders: Stakeholder[];
+}
 
-/** Syntaxic Sugar: the Delivery type in firestore. */
-export interface DeliveryDB extends DeliveryRaw<Timestamp> {}
-
-/** Syntaxic Sugar: the Delivery Step type used in the frontend. */
-export interface Step extends StepRaw<Date> {}
-
-/** Syntaxic Sugar: the Delivery Minumum Guaratee Deadline type used in the frontend. */
+/** The MGDeadline interface typed with Date. */
 export interface MGDeadline extends MGDeadlineRaw<Date> {}
-
-export const enum DeliveryStatus {
-  negociation = 'Delivery in negotiation',
-  pending = 'Materials pending',
-  noa = 'Notice of Availability',
-  nod = 'Notice of Delivery',
-  accepted = 'Materials accepted'
-}
 
 export const deliveryStatuses: DeliveryStatus[] = [
   DeliveryStatus.negociation,
@@ -74,6 +28,7 @@ export const deliveryStatuses: DeliveryStatus[] = [
   DeliveryStatus.accepted
 ];
 
+/** A factory function to create a delivery. */
 export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],

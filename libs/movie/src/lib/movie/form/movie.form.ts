@@ -29,7 +29,7 @@ function createMovieControls(movie: Partial<Movie>) {
 
 type MovieControl = ReturnType<typeof createMovieControls>
 
-export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
+export class MovieForm extends FormEntity<MovieControl> {
   protected builder : FormBuilder;
   constructor(movie: Movie) {
     super(createMovieControls(movie));
@@ -55,5 +55,9 @@ export class MovieForm extends FormEntity<Partial<Movie>, MovieControl> {
         abstractControl.clear();
       }
     });
+  }
+
+  get main() {
+    return this.get('main');
   }
 }

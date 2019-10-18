@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
-import { PLACEHOLDER_LOGO } from '../+state';
+import { PLACEHOLDER_LOGO, Organization } from '../+state';
 
 export interface OrganizationProfile {
   officeAddress: string;
@@ -8,7 +8,7 @@ export interface OrganizationProfile {
   logo?: string;
 }
 
-function createOrganizationProfile(params: Partial<OrganizationProfile> = {}): OrganizationProfile {
+function createOrganizationProfile(params: Partial<Organization> = {}): OrganizationProfile {
   return {
     officeAddress: '',
     phoneNumber: '',
@@ -17,7 +17,7 @@ function createOrganizationProfile(params: Partial<OrganizationProfile> = {}): O
   };
 }
 
-function createOrganizationProfileControls(entity: Partial<OrganizationProfile>) {
+function createOrganizationProfileControls(entity: Partial<Organization>) {
   const organizationProfile = createOrganizationProfile(entity);
   return {
     officeAddress: new FormControl(organizationProfile.officeAddress),
@@ -28,8 +28,8 @@ function createOrganizationProfileControls(entity: Partial<OrganizationProfile>)
 
 type ProfileControl = ReturnType<typeof createOrganizationProfileControls>;
 
-export class OrganizationProfileForm extends FormEntity<OrganizationProfile, ProfileControl> {
-  constructor(data?: OrganizationProfile) {
+export class OrganizationProfileForm extends FormEntity<ProfileControl> {
+  constructor(data?: Organization) {
     super(createOrganizationProfileControls(data));
   }
 }

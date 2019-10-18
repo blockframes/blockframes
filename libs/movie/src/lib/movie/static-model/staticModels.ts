@@ -1,4 +1,22 @@
-const models = {
+interface Model {
+  GENRES: readonly SlugAndLabel[];
+  STAKEHOLDER_ROLES: readonly SlugAndLabel[];
+  STAKEHOLDER_DELIVERY_AUTHORIZATIONS: readonly SlugAndLabel[];
+  CREDIT_ROLES: readonly SlugAndLabel[];
+  MOVIE_STATUS: readonly SlugAndLabel[];
+  LANGUAGES: readonly SlugAndLabel[];
+  MOVIE_CURRENCIES: readonly CurrencyWithLabel[];
+  SELECTION_CATEGORIES: readonly SlugAndLabel[];
+  SCORING: readonly SlugAndLabel[];
+  COLORS: readonly SlugAndLabel[];
+  CERTIFICATIONS: readonly SlugAndLabel[];
+  TERRITORIES: readonly SlugAndLabel[];
+  MEDIAS: readonly SlugAndLabel[];
+}
+
+export type Scope = keyof Model;
+
+const models: Model = {
   'GENRES': [
     { 'slug': 'action', 'label': 'Action' },
     { 'slug': 'horror', 'label': 'Horror' },
@@ -612,12 +630,12 @@ const models = {
  * @param scope
  * @param str
  */
-export const getCodeIfExists = (scope: string, str: string) => {
+export const getCodeIfExists = (scope: Scope, str: string) => {
   let item = models[scope].find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
-  if(item) { return item.slug }
+  if (item) { return item.slug }
 
   item = models[scope].find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
-  if(item) { return item.slug }
+  if (item) { return item.slug }
 
   return null;
 };
@@ -628,14 +646,27 @@ export const getCodeIfExists = (scope: string, str: string) => {
  * @param scope
  * @param slug
  */
-export const getLabelByCode = (scope: string, slug: string) => {
+export const getLabelByCode = (scope: Scope, slug: string) => {
   const item = models[scope].find(i => i.slug === slug);
   return item ? item.label : '';
 };
 
 export default models;
 
-export interface StaticModel {
+export interface SlugAndLabel {
   label: string;
   slug: string;
+}
+
+export interface CurrencyWithLabel {
+  label: string;
+  slug: string;
+  code: string;
+}
+
+/** Used in notifications/invitations to define which app is concerned. */
+export const enum App {
+  main = 'main',
+  delivery = 'delivery',
+  catalog = 'catalog'
 }

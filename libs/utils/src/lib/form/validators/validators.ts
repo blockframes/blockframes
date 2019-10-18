@@ -13,7 +13,7 @@ import { InfuraProvider } from '@ethersproject/providers';
 import { isValidMnemonic } from '@ethersproject/hdnode';
 import { orgNameToEnsDomain } from '../../helpers';
 import { network } from '@env';
-import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
+import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
@@ -119,7 +119,7 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
  * or form array is in the static model and then valid
  * @param scope defines where to look. For instance 'TERRITORIES'
  */
-export function valueIsInModelValidator(scope: string): ValidatorFn {
+export function valueIsInModelValidator(scope: Scope): ValidatorFn {
   return (parent: FormGroup | FormArray): ValidationErrors => {
     if (parent.value.filter(val => getLabelByCode(scope, val)).length) {
       return null;

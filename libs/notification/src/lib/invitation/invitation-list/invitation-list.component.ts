@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationQuery, InvitationService, Invitation } from '../+state';
+import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
+import { Observable, Subscription } from 'rxjs';
+import { AuthQuery } from '@blockframes/auth';
+import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 import { Order } from '@datorama/akita';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { InvitationType, Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'invitation-list',
@@ -11,22 +14,53 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-  public invitations$: Observable<Invitation[]>;
-  private destroyed$ = new Subject();
+  public docInvitations$: Observable<Invitation[]>;
+  public userInvitations$: Observable<Invitation[]>;
+  public isSuperAdmin$: Observable<boolean>;
+  private sub: Subscription;
 
-  constructor(private query: InvitationQuery, private service: InvitationService) {}
+  constructor(
+    private query: InvitationQuery,
+    private store: InvitationStore,
+    private service: InvitationService,
+    private permissionQuery: PermissionsQuery,
+    private authQuery: AuthQuery
+  ) {}
 
   ngOnInit() {
-    this.invitations$ = this.query.selectAll({
-      filterBy: entity => entity.state === 'pending',
+    /**
+     * Checks if the user is superAdmin before populating the invitations arrays. If so, we populate
+     * both docInvitations and userInvitations. If not, we populate only docInvitations.
+     */
+    const storeName = this.store.storeName;
+    const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+    this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+    this.docInvitations$ = this.query.selectAll({
+      filterBy: invitation => invitation.type === InvitationType.toWorkOnDocument,
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    this.service.organizationInvitations$.pipe(takeUntil(this.destroyed$)).subscribe();
+
+    this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+
+    this.userInvitations$ = this.permissionQuery.isSuperAdmin$.pipe(
+      switchMap((isSuperAdmin) => {
+        const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
+        if (!isSuperAdmin) {
+          const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
+          // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
+          this.store.remove(ids);
+        }
+        return this.query.selectAll({
+          filterBy,
+          sortBy: 'date',
+          sortByOrder: Order.DESC
+        });
+      })
+    );
   }
 
   ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.unsubscribe();
+    this.sub.unsubscribe();
   }
 }

@@ -1,6 +1,8 @@
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
+import { OrganizationDocument } from './organization.firestore';
+export { OrganizationStatus, createOrganization, PLACEHOLDER_LOGO } from './organization.firestore';
 
 export const enum AppStatus {
   none = 'none', // no request nor accept.
@@ -11,11 +13,6 @@ export const enum AppStatus {
 /** An application details with the organization authorizations */
 export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
-}
-
-export const enum OrganizationStatus {
-  pending = 'pending',
-  accepted = 'accepted'
 }
 
 export interface OrganizationMemberRequest {
@@ -52,53 +49,21 @@ export interface OrganizationAction {
   approvalDate?: string;
 }
 
-export interface Organization {
-  id: string;
-  status: OrganizationStatus; // is the organization accepted by cascade8 admins?
-  name: string;
-  officeAddress: string;
-  phoneNumber: string;
-  created: number;
-  updated: number;
-  movieIds: string[];
-  templateIds: string[];
-  userIds: string[];
+export interface Organization extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  baskets: CatalogBasket[],
-  logo?: string;
+  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
-
 
 export interface OrganizationForm {
   name: string;
-  adress: string;
 }
 
-export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
-
-/**
- * A factory function that creates an Organization
- */
-export function createOrganization(params: Partial<Organization> = {}): Organization {
-  return {
-    id: '',
-    name: '',
-    officeAddress: '',
-    userIds: [],
-    movieIds: [],
-    templateIds: [],
-    created: Date.now(),
-    updated: Date.now(),
-    actions: [],
-    members: [],
-    logo: PLACEHOLDER_LOGO,
-    catalog: null,
-    ...params
-  } as Organization;
+export interface PublicOrganization {
+  id: string;
+  name: string;
 }
-
 
 export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
   return {

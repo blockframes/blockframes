@@ -1,24 +1,25 @@
-import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements } from '../../+state';
+import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 
-function createPromotionalElementControl(promotionalElement : Partial<PromotionalElement> = {}) {
+function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
+  const { label, url } = createPromotionalElement(promotionalElement);
   return {
-    label: new FormControl(promotionalElement.label),
-    url: new FormControl(promotionalElement.url, urlValidators),
+    label: new FormControl(label),
+    url: new FormControl(url, urlValidators),
   }
 }
 
 type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
 
-export class MoviePromotionalElementForm extends FormEntity<PromotionalElement,PromotionalElementControl> {
-  constructor(promotionalElement: PromotionalElement) {
+export class MoviePromotionalElementForm extends FormEntity<PromotionalElementControl> {
+  constructor(promotionalElement?: PromotionalElement) {
     super(createPromotionalElementControl(promotionalElement));
   }
 }
 
-function createMoviePromotionalElementsControls(promotionalElements : Partial<MoviePromotionalElements> = {}) {
+function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
     images: FormList.factory(entity.images),
@@ -28,8 +29,8 @@ function createMoviePromotionalElementsControls(promotionalElements : Partial<Mo
 
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
-export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromotionalElements>, MoviePromotionalElementsControl>{
-  constructor(promotionalElements : MoviePromotionalElements) {
+export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
+  constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
@@ -50,10 +51,7 @@ export class MoviePromotionalElementsForm extends FormEntity<Partial<MoviePromot
   }
 
   public addPromotionalElement(): void {
-    const promotionalElement = new FormEntity<PromotionalElement>({
-      label: new FormControl(''),
-      url: new FormControl('', urlValidators),
-    });
+    const promotionalElement = new MoviePromotionalElementForm();
     this.promotionalElements.push(promotionalElement);
   }
 

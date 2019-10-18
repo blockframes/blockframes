@@ -1,9 +1,12 @@
-<h4>Invitations pending</h4>
-<mat-list>
+<h4>Pending invitations ({{ invitations.length }})</h4>
+<mat-list *ngIf="invitations.length; else empty">
   <mat-list-item *ngFor="let invitation of invitations">
     <span>{{ invitation.user.email }}</span>
-    <button *ngIf="isSuperAdmin" (click)="declined.emit(invitation.id)" mat-icon-button>
+    <button *ngIf="isSuperAdmin" (click)="declined.emit(invitation)" mat-icon-button>
       <mat-icon svgIcon="refuseMember"></mat-icon>
     </button>
   </mat-list-item>
 </mat-list>
+<ng-template #empty>
+  <span>No pending invitations</span>
+</ng-template>

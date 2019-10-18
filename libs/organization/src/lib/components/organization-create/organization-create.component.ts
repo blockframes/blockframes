@@ -37,7 +37,6 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user = this.auth.user;
     this.form = this.builder.group({
-      'id': [''],
       'name': new FormControl('', {
         validators: [Validators.required],
         asyncValidators: [UniqueOrgName],

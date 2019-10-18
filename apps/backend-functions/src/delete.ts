@@ -1,8 +1,9 @@
 import { db, functions } from './internals/firebase';
-import { prepareNotification, triggerNotifications } from './notify';
+import { triggerNotifications } from './notification';
 import { isTheSame } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { Delivery, DocType, Material, Movie, Organization } from './data/types';
+import { MovieDocument, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -26,7 +27,7 @@ export async function deleteFirestoreMovie(
   // TODO: .where('movieIds', 'array-contains', movie.id) doesn't seem to work. => ISSUE#908
 
   organizations.forEach(async doc => {
-    const organization = await getDocument<Organization>(`orgs/${doc.id}`);
+    const organization = await getDocument<OrganizationDocument>(`orgs/${doc.id}`);
 
     if (organization.movieIds.includes(movie.id)) {
       console.log(`delete movie id reference in organization ${doc.data().id}`);
@@ -82,24 +83,24 @@ export async function deleteFirestoreDelivery(
   });
 
   const movieDoc = await db.doc(`movies/${delivery.movieId}`).get();
-  const movie = await getDocument<Movie>(`movies/${delivery.movieId}`);
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   if (!!movieDoc) {
     batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });
   }
 
-
   await batch.commit();
 
-  // When delivery is deleted, notifications are created for each stakeholder of this delivery
+  // When delivery is deleted, notifications are created for each organization of this delivery
   const notifications = organizations
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId =>
-      prepareNotification({
-        message: `${movie.main.title.original}'s delivery has been deleted.`,
+      createNotification({
         userId,
-        docInformations: { id: delivery.id, type: DocType.delivery }
+        docId: delivery.id,
+        movie: { id: movie.id, title: movie.main.title },
+        type: NotificationType.deleteDocument
       })
     );
 
@@ -139,23 +140,23 @@ export async function deleteFirestoreMaterial(
     throw new Error(`This material doesn't exist !`);
   }
 
-  const delivery = await getDocument<Delivery>(`deliveries/${context.params.deliveryId}`);
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryId}`);
 
   if (!delivery) {
     throw new Error(`This delivery doesn't exist !`);
   }
 
-  const movieMaterials = await getCollection<Material>(`movies/${delivery.movieId}/materials`);
+  const movieMaterials = await getCollection<MaterialDocument>(`movies/${delivery.movieId}/materials`);
 
   // As material and movieMaterial don't share the same document ID, we have to look at
   // some property values to find the matching one.
-  const movieMaterial = movieMaterials.find(movieMat => isTheSame(movieMat, material as Material));
+  const movieMaterial = movieMaterials.find(movieMat => isTheSame(movieMat, material as MaterialDocument));
 
   if (!movieMaterial) {
     throw new Error(`This material doesn't exist on this movie`);
   }
 
-  if (movieMaterial.deliveryIds.includes(delivery.id)) {
+  if (!!movieMaterial.deliveryIds && movieMaterial.deliveryIds.includes(delivery.id)) {
     if (movieMaterial.deliveryIds.length === 1) {
       db.doc(`movies/${delivery.movieId}/materials/${movieMaterial.id}`).delete();
     } else {

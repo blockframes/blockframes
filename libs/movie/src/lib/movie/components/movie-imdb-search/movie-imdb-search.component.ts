@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { omdbApiKey } from "@env";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, yearValidators } from '@blockframes/utils';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatRadioChange } from '@angular/material';
 
 @Component({
   selector: 'movie-imdb-search',
@@ -24,6 +24,7 @@ export class MovieImdbSearchComponent implements OnInit {
   ];
   public rows = new MatTableDataSource<ImdbMovie | SearchResult>([]);
   public formSubmitted = false;
+  public searchType = 'exact';
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -39,9 +40,9 @@ export class MovieImdbSearchComponent implements OnInit {
 
   ngOnInit() {
     this.searchForm = this.builder.group({
-      name: [this.data.name, Validators.required],
+      searchvalue: [this.data.name, Validators.required],
       year: new FormControl(this.data.year, yearValidators),
-      exact: [true],
+      searchtype: new FormControl(this.searchType, Validators.required),
     });
 
     this.rows.paginator = this.paginator;
@@ -54,11 +55,22 @@ export class MovieImdbSearchComponent implements OnInit {
     }
 
     this.formSubmitted = true;
-    const { name, year, exact } = this.searchForm.value;
-    const method = exact ? 'get' : 'search';
+    const { searchvalue, year, searchtype } = this.searchForm.value;
 
     try {
-      const search: ImdbMovie | SearchResults = await this.imdbService[method]({ name, year });
+      let promise : Promise<ImdbMovie | SearchResults>;
+      switch (searchtype) {
+        case 'exact':
+          promise = this.imdbService.get({ name: searchvalue, year })
+          break;
+        case 'id':
+          promise = this.imdbService.get({ id: searchvalue, year })
+          break;
+        default:
+          promise = this.imdbService.search({ name: searchvalue, year })
+          break;
+      }
+      const search: ImdbMovie | SearchResults = await promise;
       if (search instanceof ImdbMovie) {
         this.rows.data = [search];
       } else if (search instanceof SearchResults) {
@@ -80,20 +92,24 @@ export class MovieImdbSearchComponent implements OnInit {
 
   public async importMovie(result: ImdbMovie | SearchResult): Promise<void> {
     // send back the selected result
-    if(result instanceof ImdbMovie){
+    if (result instanceof ImdbMovie) {
       this.dialogRef.close(result);
     } else {
-      const movie : ImdbMovie = await this.imdbService.get({id : result.imdbid});
+      const movie: ImdbMovie = await this.imdbService.get({ id: result.imdbid });
       this.dialogRef.close(movie);
     }
   }
 
-  public async changePage(event){
+  public async changePage($event) {
     try {
-      const search: ImdbMovie | SearchResults = await this.imdbService.search(this.data, event.pageIndex + 1);
+      const search: ImdbMovie | SearchResults = await this.imdbService.search(this.data, $event.pageIndex + 1);
       this.rows.data = [...search.results];
     } catch (e) {
       this.snackBar.open(`An error occured : ${e.message}`, 'close', { duration: 1000 });
     }
+  }
+
+  public searchTypeChange($event: MatRadioChange) {
+    this.searchType = $event.value;
   }
 }

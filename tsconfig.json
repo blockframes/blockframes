@@ -32,9 +32,26 @@
       "@blockframes/movie/import": ["libs/movie/src/lib/movie/components/import/import-movie.module.ts"],
 
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+
+      // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
+
+      // FIRESTORE DATA MODEL
+      "@blockframes/organization/types": ["libs/organization/src/lib/+state/organization.firestore.ts"],
+      "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
+      "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
+      "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
+      "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
+      "@blockframes/material/template/types": ["libs/material/src/lib/template/+state/template.firestore.ts"],
+      "@blockframes/organization/stakeholder/types": ["libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"],
+      "@blockframes/notification/types": ["libs/notification/src/lib/notification/+state/notification.firestore.ts"],
+      "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
+
       "@blockframes/account": ["libs/account/src/index.ts"],
+
+      // MATERIAL
       "@blockframes/material": ["libs/material/src/index.ts"],
+
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contracts": ["contracts/build"],
       "@blockframes/notification": ["libs/notification/src/index.ts"],

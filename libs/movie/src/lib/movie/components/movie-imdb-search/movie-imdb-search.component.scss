@@ -22,3 +22,10 @@ table {
     width: 50px;
   }
 }
+
+mat-radio-group {
+  display: inline-flex;
+  .mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+}

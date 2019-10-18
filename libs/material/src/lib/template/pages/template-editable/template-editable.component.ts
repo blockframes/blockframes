@@ -6,7 +6,7 @@ import { MaterialService, MaterialTemplate } from '../../../material/+state';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
-import { FormElement } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
 
 @Component({
   selector: 'template-editable',
@@ -18,7 +18,7 @@ export class TemplateEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'template-editable';
   public template$: Observable<Template>;
   public materials$: Observable<MaterialTemplate[]>;
-  public activeForm$: Observable<FormElement<MaterialControl>>;
+  public activeForm$: Observable<FormEntity<MaterialControl>>;
 
   public opened = false;
   public form = new MaterialForm();

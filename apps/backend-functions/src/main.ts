@@ -17,9 +17,7 @@ import {
 } from './delete';
 import {
   onDeliveryStakeholderCreate,
-  onDeliveryStakeholderDelete,
-  onMovieStakeholderCreate,
-  onMovieStakeholderDelete
+  onDeliveryStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
 import * as migrations from './migrations';
@@ -35,7 +33,6 @@ import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
-import { onMovieMaterialUpdate } from './material';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -91,9 +88,6 @@ export const admin = functions.https
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
 
-/** Trigger: when material state (`state`) is modified. */
-export const onMovieMaterialUpdateEvent = onDocumentUpdate('movies/{movieID}', onMovieMaterialUpdate);
-
 /** Trigger: when a stakeholder is added to a delivery. */
 export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
@@ -106,19 +100,7 @@ export const onDeliveryStakeholderDeleteEvent = onDocumentDelete(
   onDeliveryStakeholderDelete
 );
 
-/** Trigger: when a stakeholder is added to a movie. */
-export const onMovieStakeholderCreateEvent = onDocumentCreate(
-  'movies/{movieID}/stakeholders/{stakeholerID}',
-  onMovieStakeholderCreate
-);
-
-/** Trigger: when a stakeholder is removed from a movie. */
-export const onMovieStakeholderDeleteEvent = onDocumentDelete(
-  'movies/{movieID}/stakeholders/{stakeholerID}',
-  onMovieStakeholderDelete
-);
-
-/** Trigger: when an invitation is updated (e. g. when invitation.state change). */
+/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite

@@ -3,7 +3,7 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
-function createMoviePromotionalDescriptionControls(promotionalDescription: Partial<MoviePromotionalDescription> = {}) {
+function createMoviePromotionalDescriptionControls(promotionalDescription?: Partial<MoviePromotionalDescription>) {
   const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
     keywords: FormList.factory(entity.keywords),
@@ -13,8 +13,8 @@ function createMoviePromotionalDescriptionControls(promotionalDescription: Parti
 
 type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
-export class MoviePromotionalDescriptionForm extends FormEntity<Partial<MoviePromotionalDescription>, MoviePromotionalDescriptionControl>{
-  constructor(promotionalDescription: MoviePromotionalDescription) {
+export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotionalDescriptionControl>{
+  constructor(promotionalDescription?: MoviePromotionalDescription) {
     super(createMoviePromotionalDescriptionControls(promotionalDescription));
   }
 

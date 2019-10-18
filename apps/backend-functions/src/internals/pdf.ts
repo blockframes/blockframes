@@ -5,7 +5,16 @@
  * and in a firebase function.
  */
 import { groupBy, sortBy, isEmpty } from 'lodash';
-import { asIDMap, Delivery, IDMap, Material, Organization, Stakeholder, Step } from '../data/types';
+import {
+  asIDMap,
+  DeliveryDocument,
+  IDMap,
+  MaterialDocument,
+  OrganizationDocument,
+  StepDocumentWithDate,
+  convertStepDocumentToStepDocumentWithDate,
+  StakeholderDocument
+} from '../data/types';
 import { getCollection, getDocument } from '../data/internals';
 
 const PdfPrinter = require('pdfmake');
@@ -18,9 +27,9 @@ const PdfPrinter = require('pdfmake');
  */
 interface DeliveryContent {
   txID: { [stakeholderID: string]: string };
-  orgs: IDMap<Organization>;
-  steps: IDMap<Step>;
-  materials: Material[];
+  orgs: IDMap<OrganizationDocument>;
+  steps: IDMap<StepDocumentWithDate>;
+  materials: MaterialDocument[];
 }
 
 // Constants for styles & fonts
@@ -83,7 +92,7 @@ const center = (content: string | { [k: string]: any }): any => {
  * @param orgIds
  * @param orgs
  */
-function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
+function rowOrganizations(orgIds: string[], orgs: IDMap<OrganizationDocument>): any {
   const columns: any = orgIds.map((id: string) => {
     const org = orgs[id];
     return [subHeader(org.name), description(org.officeAddress)];
@@ -117,7 +126,10 @@ function rowOrganizations(orgIds: string[], orgs: IDMap<Organization>): any {
  * @param materials
  * @param steps
  */
-function rowMaterials(materials: Material[], steps: { [id: string]: Step }): any {
+function rowMaterials(
+  materials: MaterialDocument[],
+  steps: { [id: string]: StepDocumentWithDate }
+): any {
   // NOTE: pdfmake side-effect over the data provided, we can reuse the same objects
   // multiple time, we have to keep this variable definition INSIDE the forEach.
   const tableHeader = [bold('material'), center(bold('step'))];
@@ -170,8 +182,14 @@ function rowMaterials(materials: Material[], steps: { [id: string]: Step }): any
  * @param materials
  * @param steps
  */
-function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: Step }): any {
-  const materialsPerCategory = groupBy(materials, (material: Material) => material.category);
+function rowMaterialsPerCategory(
+  materials: MaterialDocument[],
+  steps: { [id: string]: StepDocumentWithDate }
+): any {
+  const materialsPerCategory = groupBy(
+    materials,
+    (material: MaterialDocument) => material.category
+  );
   const categories = sortBy(Object.keys(materialsPerCategory));
 
   const tables: any[] = [];
@@ -204,7 +222,7 @@ function rowMaterialsPerCategory(materials: Material[], steps: { [id: string]: S
  */
 function rowSignatures(
   organizationIds: string[],
-  organizations: { [id: string]: Organization },
+  organizations: { [id: string]: OrganizationDocument },
   txID: { [orgId: string]: string }
 ): any {
   if (isEmpty(txID)) {
@@ -289,15 +307,18 @@ export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
   const deliveryId: string = req.query.deliveryId;
 
   // TODO: factor out the data layer
-  const delivery = await getDocument<Delivery>(`deliveries/${deliveryId}`);
-  const stakeholders = await getCollection<Stakeholder>(`deliveries/${deliveryId}/stakeholders`);
-
-  const orgs = await Promise.all(
-    stakeholders.map(({id}) => getDocument<Organization>(`orgs/${id}`))
+  const delivery = await getDocument<DeliveryDocument>(`deliveries/${deliveryId}`);
+  const stakeholders = await getCollection<StakeholderDocument>(
+    `deliveries/${deliveryId}/stakeholders`
   );
 
-  const materials = await getCollection<Material>(`deliveries/${deliveryId}/materials`);
-  const steps = asIDMap(delivery.steps);
+  const orgs = await Promise.all(
+    stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`))
+  );
+
+  const materials = await getCollection<MaterialDocument>(`deliveries/${deliveryId}/materials`);
+
+  const steps = asIDMap(convertStepDocumentToStepDocumentWithDate(delivery.steps));
 
   const pdf = buildDeliveryPDF({ orgs: asIDMap(orgs), materials, steps, txID: {} });
   pdf.pipe(resp);

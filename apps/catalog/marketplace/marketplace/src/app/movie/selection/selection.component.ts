@@ -47,8 +47,8 @@ export class MarketplaceSelectionComponent implements OnInit {
       movieName: this.getMovieTitle(detail.movieId),
       territory: detail.territories[0],
       rights: detail.medias[0],
-      endRights: (detail.duration as any).to.toDate().toDateString(),
-      languages: detail.languages[0],
+      duration: detail.duration,
+      // TODO#1071: refactor the model after the ui presentation
     } as MovieData;
   }
 

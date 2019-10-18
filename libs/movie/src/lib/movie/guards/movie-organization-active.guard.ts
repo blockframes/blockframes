@@ -3,14 +3,8 @@ import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
 import { Movie, MovieStore } from '../+state';
 import { Router } from '@angular/router';
 
-export const movieOrganizationActiveQuery = (id: string): Query<Movie> => ({
+export const movieActiveQuery = (id: string): Query<Movie> => ({
   path: `movies/${id}`,
-  stakeholders: (movie: Movie) => ({
-    path: `movies/${movie.id}/stakeholders`,
-    organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
-    })
-  })
 });
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +17,7 @@ export class MovieOrganizationActiveGuard extends StateActiveGuard<Movie> {
   }
 
   query({ movieId }) {
-    const query = movieOrganizationActiveQuery(movieId);
+    const query = movieActiveQuery(movieId);
     return this.fireQuery.fromQuery<Movie>(query);
   }
 }

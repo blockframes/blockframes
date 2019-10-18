@@ -10,7 +10,7 @@ import { MatDatepicker } from '@angular/material';
 
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { isBetween, DateRange } from '@blockframes/utils';
+import { DateRange, isBetween } from '@blockframes/utils/date-range';
 import { SatDatepickerRangeValue } from 'saturn-datepicker';
 
 @Component({

@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
-import { Invitation, InvitationService, InvitationType } from '@blockframes/notification';
+import {
+  InvitationService,
+  InvitationQuery,
+  InvitationStore
+} from '@blockframes/notification';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AuthQuery } from '@blockframes/auth';
+import { InvitationType, Invitation } from '@blockframes/invitation/types';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
@@ -24,32 +30,40 @@ const invitationActionFromOrgToUser = (invitation: Invitation, action: () => voi
   selector: 'organization-home',
   templateUrl: './organization-home.component.html',
   styleUrls: ['./organization-home.component.scss'],
+  providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationHomeComponent implements OnInit {
+export class OrganizationHomeComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'organization-home';
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
       icon: 'adjustableWrench',
       title: 'Create your organization',
-      description:
-        ''
+      description: ''
     },
     {
       routerLink: '../find',
       icon: 'magnifyingGlass',
       title: 'Find your organization',
-      description:
-        ''
+      description: ''
     }
   ];
   public items$: Observable<ActionItem[]>;
+  private sub: Subscription;
 
-  constructor(private invitationService: InvitationService) {}
+  constructor(
+    private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery,
+    private invitationStore: InvitationStore,
+    private authQuery: AuthQuery
+  ) {}
 
   ngOnInit(): void {
-    this.items$ = this.invitationService.userInvitations$.pipe(
+    const storeName = this.invitationStore.storeName;
+    const queryFn = ref => ref.where('user.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
+    this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
+    this.items$ = this.invitationQuery.selectAll().pipe(
       map(invitations => {
         const actions = invitations.map(invitation => {
           // Create the action item depending on which kind of invitation we have,
@@ -70,7 +84,11 @@ export class OrganizationHomeComponent implements OnInit {
     );
   }
 
-  private acceptInvitation(invitation) {
-    return this.invitationService.acceptInvitation(invitation.id);
+  private acceptInvitation(invitation: Invitation) {
+    return this.invitationService.acceptInvitation(invitation);
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

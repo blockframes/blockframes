@@ -1,5 +1,5 @@
 import { getCollection, getCount } from './data/internals';
-import { Organization, Material } from './data/types';
+import { OrganizationDocument, MaterialDocument } from './data/types';
 import { db, serverTimestamp } from './internals/firebase';
 import { WriteBatch, FieldValue, Timestamp } from '@google-cloud/firestore';
 import { setRestoreFlag } from './backup';
@@ -26,7 +26,7 @@ interface Template {
 function migrateMaterialToNewCollection(
   batch: WriteBatch,
   template: Template,
-  material: Material
+  material: MaterialDocument
 ) {
   if (template.materialsId.includes(material.id)) {
     const materialRef = db.doc(`templates/${template.id}/materials/${material.id}`);
@@ -36,7 +36,7 @@ function migrateMaterialToNewCollection(
 
 function migrateTemplateToNewCollection(
   batch: WriteBatch,
-  org: Organization,
+  org: OrganizationDocument,
   template: Template
 ) {
   const newTemplate = { ...template, orgId: org.id, created: serverTimestamp() };
@@ -45,11 +45,11 @@ function migrateTemplateToNewCollection(
   batch.set(templateRef, newTemplate);
 }
 
-async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promise<void> {
+async function migrateOrgsTemplate(batch: WriteBatch, org: OrganizationDocument): Promise<void> {
 
   const [templates, materials] = await Promise.all([
     getCollection<Template>(`orgs/${org.id}/templates`),
-    getCollection<Material>(`orgs/${org.id}/materials`)
+    getCollection<MaterialDocument>(`orgs/${org.id}/materials`)
   ]);
 
   templates.forEach(template => {
@@ -63,7 +63,7 @@ async function migrateOrgsTemplate(batch: WriteBatch, org: Organization): Promis
 
 export async function copyTemplates() {
   const batch = db.batch();
-  const orgs = await getCollection<Organization>(`orgs`);
+  const orgs = await getCollection<OrganizationDocument>(`orgs`);
   const promises = orgs.map(org => migrateOrgsTemplate(batch, org));
   await Promise.all(promises);
   return batch.commit();
@@ -71,7 +71,7 @@ export async function copyTemplates() {
 
 export async function deleteTemplates() {
   const batch = db.batch();
-  const orgs = await getCollection<Organization>(`orgs`);
+  const orgs = await getCollection<OrganizationDocument>(`orgs`);
   const promises = orgs.map(async org => {
     const [nbTemplates, nbMaterials] = await Promise.all([
       getCount(`orgs/${org.id}/templates`),

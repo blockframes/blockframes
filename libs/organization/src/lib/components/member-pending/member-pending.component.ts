@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Invitation } from '@blockframes/notification';
+import { Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'member-pending',
@@ -9,8 +9,8 @@ import { Invitation } from '@blockframes/notification';
 })
 
 export class MemberPendingComponent {
-  @Output() accepted = new EventEmitter<string>();
-  @Output() declined = new EventEmitter<string>();
+  @Output() accepted = new EventEmitter<Invitation>();
+  @Output() declined = new EventEmitter<Invitation>();
   @Input() invitations: Invitation[];
   @Input() isSuperAdmin: boolean;
 }

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { default as staticModels, StaticModel } from '../../static-model/staticModels';
+import { default as staticModels, SlugAndLabel } from '../../static-model/staticModels';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieVersionInfoForm } from './version-info.form';
@@ -17,7 +17,7 @@ export class MovieFormVersionInfoComponent implements OnInit {
   public europeanQualification: false;
 
   public languagesFilterCtrl = new FormControl();
-  public languages$: Observable<StaticModel[]>;
+  public languages$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
 

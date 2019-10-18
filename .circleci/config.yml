@@ -51,6 +51,14 @@ jobs:
           root: ~/.cache
           paths:
             - Cypress
+  bundlesize:
+    executor: blockframes-ci
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: cp -R ~/build/* ./
+      - run: npm run bundlesize
   lint:
     executor: blockframes-ci
     steps:
@@ -115,6 +123,9 @@ workflows:
   build-test-deploy:
     jobs:
       - build
+      - bundlesize:
+          requires:
+            - build
       - lint:
           requires:
             - build

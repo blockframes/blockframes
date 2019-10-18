@@ -1,24 +1,25 @@
-import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize } from '../../+state';
+import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
-function createPrizeFormControl(prize : Partial<Prize> = {}) {
+function createPrizeFormControl(entity? : Partial<Prize>) {
+  const { name, year, prize } = createPrize(entity);
   return {
-    name: new FormControl(prize.name),
-    year: new FormControl(prize.year),
-    prize: new FormControl(prize.prize),
+    name: new FormControl(name),
+    year: new FormControl(year),
+    prize: new FormControl(prize)
   }
 }
 
 type PrizeFormControl = ReturnType<typeof createPrizeFormControl>;
 
-export class MoviePrizeForm extends FormEntity<Prize,PrizeFormControl> {
-  constructor(prize: Prize) {
+export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
+  constructor(prize?: Prize) {
     super(createPrizeFormControl(prize));
   }
 }
 
-function createMovieFestivalPrizesControls(festivalprizes: Partial<MovieFestivalPrizes> = {}) {
+function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestivalPrizes>) {
   const entity = createMovieFestivalPrizes(festivalprizes);
   return {
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el))
@@ -27,9 +28,9 @@ function createMovieFestivalPrizesControls(festivalprizes: Partial<MovieFestival
 
 type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
 
-export class MovieFestivalPrizesForm extends FormEntity<Partial<MovieFestivalPrizes>, MovieFestivalPrizesControl>{
+export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
 
-  constructor(story: MovieFestivalPrizes) {
+  constructor(story?: MovieFestivalPrizes) {
     super(createMovieFestivalPrizesControls(story));
   }
 
@@ -38,11 +39,7 @@ export class MovieFestivalPrizesForm extends FormEntity<Partial<MovieFestivalPri
   }
 
   public addPrize(): void {
-    const credit = new FormEntity<Prize>({
-      name: new FormControl(''),
-      year: new FormControl(''),
-      prize: new FormControl(''),
-    });
+    const credit = new MoviePrizeForm();
     this.prizes.push(credit);
   }
 

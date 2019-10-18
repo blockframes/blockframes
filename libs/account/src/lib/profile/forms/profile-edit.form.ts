@@ -34,7 +34,7 @@ function createProfileControls(entity: Partial<Profile>) {
 
 type ProfileControl = ReturnType<typeof createProfileControls>;
 
-export class ProfileForm extends FormEntity<Profile, ProfileControl> {
+export class ProfileForm extends FormEntity<ProfileControl> {
   constructor(data?: Profile) {
     super(createProfileControls(data));
   }

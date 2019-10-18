@@ -5,12 +5,12 @@
  */
 import { db } from '../internals/firebase';
 import {
-  Organization,
+  OrganizationDocument,
   OrganizationDocPermissions,
   OrganizationPermissions,
-  Stakeholder,
   UserDocPermissions
 } from './types';
+import { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -39,9 +39,9 @@ export function getDocument<T>(path: string): Promise<T> {
 export async function getOrganizationsOfDocument(
   documentId: string,
   collection: string
-): Promise<Organization[]> {
-  const stakeholders = await getCollection<Stakeholder>(`${collection}/${documentId}/stakeholders`);
-  const promises = stakeholders.map(({ id }) => getDocument<Organization>(`orgs/${id}`));
+): Promise<OrganizationDocument[]> {
+  const stakeholders = await getCollection<StakeholderDocument>(`${collection}/${documentId}/stakeholders`);
+  const promises = stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`));
   return Promise.all(promises);
 }
 

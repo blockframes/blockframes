@@ -17,9 +17,3 @@ export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.comp
 export { default as staticModels } from './lib/movie/static-model/staticModels';
 export * from './lib/movie/static-model/types';
 export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';
-
-// Stakeholder exports
-export * from './lib/stakeholder/+state/stakeholder.model';
-export * from './lib/stakeholder/+state/stakeholder.query';
-export * from './lib/stakeholder/+state/stakeholder.service';
-export * from './lib/stakeholder/+state/stakeholder.store';
