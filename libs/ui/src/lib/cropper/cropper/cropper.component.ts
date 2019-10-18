@@ -5,7 +5,6 @@ import { finalize } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import undefined = require('firebase/empty-import');
 import { HttpClient } from '@angular/common/http';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
@@ -36,6 +35,8 @@ function isFile(path: string): boolean {
   }
   const part = path.split('.');
   const last = part.pop();
+  console.log('isFile part', part)
+  console.log('isFile las', last)
   return part.length === 1 && !last.includes('/');
 }
 
@@ -61,9 +62,11 @@ export class CropperComponent {
   // inputs
   @Input() ratio: string;
   @Input() set path(path: string) {
+    console.log('input path', path)
     if (isFile(path)) {
       const part = path.split('/');
       this.name = part.pop();
+      // this.name = 'cropped';
       this.folder = part.pop();
       this.ref = this.storage.ref(path);
       this.url$ = this.ref.getDownloadURL();
@@ -82,20 +85,14 @@ export class CropperComponent {
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
+    console.log('image dropped', this.file)
+    this.storage.ref(`${this.folder}/original`).put(this.file);
     this.nextStep('crop');
   }
 
   // crop
   imageCropped(event: ImageCroppedEvent) {
       this.croppedImage = event.base64;
-  }
-  imageLoaded() {
-    // show cropper
-    console.log('image loaded')
-  }
-  cropperReady() {
-      // cropper ready
-      console.log('cropper ready')
   }
 
   // upload
@@ -107,6 +104,7 @@ export class CropperComponent {
       this.nextStep('upload');
       const fileName = this.name || this.file.name;
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
+      // this.ref = this.storage.ref(`${this.folder}/cropped`);
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(() => this.nextStep('upload_complete'))
@@ -117,6 +115,8 @@ export class CropperComponent {
   }
 
   goToShow() {
+    console.log('show ref', this.ref)
+    console.log('show file', this.file)
     this.url$ = this.ref.getDownloadURL();
     this.ref.getMetadata().toPromise()
     .then(meta => this.uploaded.emit(meta.fullPath));
@@ -125,9 +125,12 @@ export class CropperComponent {
 
     async resize(url: string) {
       if (!this.file) {
+        console.log('resize url', url)
         const name = url.split('%2F').pop();
+        console.log('resize url name', name)
         const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
-        this.file = blobToFile(blob, name);
+        // this.file = blobToFile(blob, name);
+        this.file = blobToFile(blob, 'original');
       }
       this.nextStep('crop');
     }
