@@ -146,37 +146,27 @@ const packageEnv = (command: string, config?: string) => {
   }
   switch (command) {
     case 'start':
-      const npx: ChildProcess = spawn('npx', ['ng', 'serve', '--hmr', '--disable-host-check']);
+      const npx: ChildProcess = process.platform==='win32'
+      ? exec('npx ng serve --hmr --disable-host-check')
+      : spawn('npx', ['ng', 'serve', '--hmr', '--disable-host-check'], {stdio: 'inherit'});
       npx.stdout.on('data', stdout => {
         console.log(stdout.toString());
       });
       break;
     case 'build:main':
       console.log(`excuting in '${configENV}' environment`);
-      const buildMain: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'main',
-        '--base-href',
-        `--configuration=${configENV}`
-      ]);
-      buildMain.stderr.on('data', stderr => {
-        console.log(stderr.toString());
-      });
+      const buildMain: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build main --base-href --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','main','--base-href',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildMain.stdout.on('data', stdou => {
         console.log(stdou.toString());
       });
       break;
     case 'build:delivery':
       console.log(`excuting in '${configENV}' environment`);
-      const buildDelivery: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'delivery',
-        '--base-href',
-        'delivery',
-        `--configuration=${configENV}`
-      ]);
+      const buildDelivery: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build delivery --base-href delivery --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','delivery','--base-href','delivery',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildDelivery.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -189,14 +179,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'build:movie-financing':
       console.log(`excuting in '${configENV}' environment`);
-      const buildFinancing: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'movie-financing',
-        '--base-href',
-        'movie-financing',
-        `--configuration=${configENV}`
-      ]);
+      const buildFinancing: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build movie-financing --base-href movie-financing --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','movie-financing','--base-href','movie-financing',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildFinancing.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -206,14 +191,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'build:catalog-marketplace':
       console.log(`excuting in '${configENV}' environment`);
-      const buildMarketplace: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'catalog-marketplace',
-        '--base-href',
-        'marketplace',
-        `--configuration=${configENV}`
-      ]);
+      const buildMarketplace: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build catalog-marketplace --base-href marketplace --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','catalog-marketplace','--base-href','marketplace',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildMarketplace.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -223,14 +203,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'build:catalog-dashboard':
       console.log(`excuting in '${configENV}' environment`);
-      const buildDashboard: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'catalog-dashboard',
-        '--base-href',
-        'catalog-dashboard',
-        `--configuration=${configENV}`
-      ]);
+      const buildDashboard: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build catalog-dashboard --base-href catalog-dashboard --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','catalog-dashboard','--base-href','catalog-dashboard',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildDashboard.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -240,14 +215,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'build:functions':
       console.log(`excuting in '${configENV}' environment`);
-      const buildFunctions: ChildProcess = spawn('npx', [
-        'ng',
-        'build',
-        'backend-functions',
-        '--base-href',
-        'backend-functions',
-        `--configuration=${configENV}`
-      ]);
+      const buildFunctions: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng build backend-functions --configuration=${configENV}`)
+      : spawn('npx', ['ng','build','backend-functions',`--configuration=${configENV}`], {stdio: 'inherit'});
       buildFunctions.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -261,19 +231,29 @@ const packageEnv = (command: string, config?: string) => {
       // since the original command used the && operator, we need to split it up into two commands.
       // Therefore we have to use the spawnSync and execSync command,
       // so that we wait for each command to finish
-      const pree2e = spawnSync('ng', ['build', 'backend-ops', `--configuration=${configENV}`]);
-      console.log(pree2e.toString());
-      execSync('node dist/apps/backend-ops/main.js');
+      const pree2e: ChildProcess = function () {
+        if (process.platform==='win32') {
+        execSync(`ng build backend-ops --configuration=${configENV}`);
+        console.log(pree2e.toString());
+        execSync('node dist/apps/backend-ops/main.js');
+      } else {
+        spawnSync('ng', ['build', 'backend-ops', `--configuration=${configENV}`]);
+        console.log(pree2e.toString());
+        execSync('node dist/apps/backend-ops/main.js');
+      }
+          pree2e.stderr.on('data', stderr => {
+            console.log(stderr.toString());
+          });
+          pree2e.stdout.on('data', stdou => {
+            console.log(stdou.toString());
+          });
+    }
       break;
     case 'e2e:main':
       console.log(`excuting in '${configENV}' environment`);
-      const e2eMain: ChildProcess = spawn('npx', [
-        'ng',
-        'e2e',
-        'main-e2e',
-        `--configuration=${configENV}`,
-        '--headless'
-      ]);
+      const e2eMain: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng e2e main-e2e --configuration=${configENV} --headless`)
+      : spawn('npx', ['ng','e2e','main-e2e',`--configuration=${configENV}`,'--headless'], {stdio: 'inherit'});
       e2eMain.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -283,13 +263,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'e2e:delivery':
       console.log(`excuting in '${configENV}' environment`);
-      const e2eDelivery: ChildProcess = spawn('npx', [
-        'ng',
-        'e2e',
-        'delivery-e2e',
-        `--configuration=${configENV}`,
-        '--headless'
-      ]);
+      const e2eDelivery: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng e2e delivery-e2e --configuration=${configENV} --headless`)
+      : spawn('npx', ['ng','e2e','delivery-e2e',`--configuration=${configENV}`,'--headless'], {stdio: 'inherit'});
       e2eDelivery.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -299,13 +275,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'e2e:marketplace':
       console.log(`excuting in '${configENV}' environment`);
-      const e2eMarketplace: ChildProcess = spawn('npx', [
-        'ng',
-        'e2e',
-        'marketplace-e2e',
-        `--configuration=${configENV}`,
-        '--headless'
-      ]);
+      const e2eMarketplace: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng e2e marketplace-e2e --configuration=${configENV} --headless`)
+      : spawn('npx', ['ng','e2e','marketplace-e2e',`--configuration=${configENV}`,'--headless']);
       e2eMarketplace.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
@@ -315,13 +287,9 @@ const packageEnv = (command: string, config?: string) => {
       break;
     case 'e2e:movie-financing':
       console.log(`excuting in '${configENV}' environment`);
-      const e2eFinancing: ChildProcess = spawn('npx', [
-        'ng',
-        'e2e',
-        'movie-financing-e2e',
-        `--configuration=${configENV}`,
-        '--headless'
-      ]);
+      const e2eFinancing: ChildProcess = process.platform==='win32'
+      ? exec(`npx ng e2e movie-financing-e2e --configuration=${configENV} --headless`)
+      : spawn('npx', ['ng','e2e','movie-financing-e2e',`--configuration=${configENV}`,'--headless']);
       e2eFinancing.stderr.on('data', stderr => {
         console.log(stderr.toString());
       });
