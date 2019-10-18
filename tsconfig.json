@@ -78,8 +78,10 @@
       "@blockframes/contracts/*": ["contracts/build/*"],
       "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/catalog": ["libs/catalog/src/index.ts"],
-      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"],
-      "@blockframes/marketplace/*": ["apps/catalog/marketplace/marketplace/src/*"]
+
+      // APPS
+      "@blockframes/apps/delivery": ["apps/delivery/delivery/src/app/delivery.module.ts"],
+      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
