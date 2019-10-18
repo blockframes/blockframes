@@ -12,6 +12,7 @@
 version: 2.1
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
+  slack: circleci/slack@3.4.0
 executors:
   blockframes-ci:
     docker:
@@ -126,14 +127,19 @@ jobs:
       - run: npm install
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
+      - slack/notify:
+          message: "🚚 Deploying to production..."
+          webhook: "${SLACK_WEBHOOK}"
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
           command: |
             npm install --save-dev firebase-tools &&
-            npx firebase use prod &&
-            ENV=production npx firebase deploy --except functions --token "${FIREBASE_CI_TOKEN}" &&
-            ENV=production npx firebase deploy --only functions --token "${FIREBASE_CI_TOKEN}"
+            ENV=production npx firebase deploy --project prod --token "${FIREBASE_CI_TOKEN}" --except functions &&
+            ENV=production npx firebase deploy --project prod --token "${FIREBASE_CI_TOKEN}" --only functions
+      - slack/notify:
+          message: "🚀 Deploy complete!"
+          webhook: "${SLACK_WEBHOOK}"
 workflows:
   version: 2.1
   build-test-deploy:
