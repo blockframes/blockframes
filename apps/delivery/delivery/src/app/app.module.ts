@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
 // Akita
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
@@ -56,56 +55,54 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   declarations: [AppComponent, LayoutComponent],
   imports: [
     // Angular
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FlexLayoutModule,
-    HttpClientModule,
+      BrowserModule,
+      BrowserAnimationsModule,
+      AppRoutingModule,
+      FlexLayoutModule,
+      HttpClientModule,
 
-    // Material
-    MatSnackBarModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatButtonModule,
-    MatListModule,
-    MatRippleModule,
-    MatDividerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatCheckboxModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatBadgeModule,
+      // Material
+      MatSnackBarModule,
+      MatCardModule,
+      MatToolbarModule,
+      MatSidenavModule,
+      MatIconModule,
+      MatButtonModule,
+      MatListModule,
+      MatRippleModule,
+      MatDividerModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatChipsModule,
+      MatCheckboxModule,
+      MatProgressSpinnerModule,
+      MatMenuModule,
+      MatBadgeModule,
 
-    // Libraries
-    AuthModule,
-    UploadModule,
-    UiFormModule,
-    OrganizationModule,
-    ToolbarModule,
-    MovieModule,
-    AccountModule,
-    ProfileModule,
-    WalletModule,
-    KeyManagerModule,
-    NotificationWidgetModule,
-    NoOrganizationModule,
+      // Libraries
+      AuthModule,
+      UploadModule,
+      UiFormModule,
+      OrganizationModule,
+      ToolbarModule,
+      MovieModule,
+      AccountModule,
+      ProfileModule,
+      WalletModule,
+      KeyManagerModule,
+      NotificationWidgetModule,
+      NoOrganizationModule,
 
-    // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
-    AngularFireFunctionsModule,
+      // Firebase
+      AngularFireModule.initializeApp(environment.firebase),
+      AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+      AngularFireFunctionsModule,
 
-    // Akita
-    AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()]
+      // Akita
+      AkitaNgRouterStoreModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
-
