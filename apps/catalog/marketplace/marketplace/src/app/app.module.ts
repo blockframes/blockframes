@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
 // Akita
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
@@ -69,7 +68,6 @@ import { LayoutComponent } from './layout/layout.component';
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()]
   ],
   providers: [],
   bootstrap: [AppComponent]

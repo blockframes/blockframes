@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 // Akita
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
@@ -69,8 +68,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     AngularFireFunctionsModule,
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()]
+    AkitaNgRouterStoreModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

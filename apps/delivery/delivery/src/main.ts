@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { persistState } from '@datorama/akita';
+import { persistState, akitaDevtools, enableAkitaProdMode } from '@datorama/akita';
 import { LocalStorageVault } from 'libs/ethers/src/lib/vault/vault';
 
 // ethereum private keys storage
@@ -25,6 +25,9 @@ persistState({
 
 if (environment.production) {
   enableProdMode();
+  enableAkitaProdMode();
+} else {
+  akitaDevtools();
 }
 
 platformBrowserDynamic()
