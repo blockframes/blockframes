@@ -24,6 +24,7 @@ export class WalletRevealMnemonicComponent implements OnInit {
   activeKey: EthersWallet;
   mnemonic: string;
   isLoading$: Observable<boolean>;
+  loadingProgress$: Observable<number>;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,7 @@ export class WalletRevealMnemonicComponent implements OnInit {
   ngOnInit() {
     this.key = this.keyQuery.getEntity(this.route.snapshot.paramMap.get('address'));
     this.isLoading$ = this.keyQuery.selectLoading();
+    this.loadingProgress$ = this.keyQuery.selectProgress();
     this.mnemonic = '';
   }
 

@@ -17,12 +17,16 @@ import {
   OrganizationMember,
   OrganizationMemberRequest,
   OrganizationOperation,
-  OrganizationStatus,
   OrganizationAction
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { InfuraProvider } from '@ethersproject/providers';
+import {
+  InfuraProvider,
+  EtherscanProvider,
+  FallbackProvider,
+  NodesmithProvider
+} from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -236,7 +240,11 @@ export class OrganizationService {
   /** ensure that the provider exist */
   private _requireProvider() {
     if(!this.provider) {
-      this.provider = new InfuraProvider(network);
+      const infura = new InfuraProvider(network);
+      const etherscan = new EtherscanProvider(network);
+      const nodesmith = new NodesmithProvider(network);
+
+      this.provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
     }
   }
 
@@ -248,6 +256,7 @@ export class OrganizationService {
       let ethAddress = await this.getOrganizationEthAddress();
       await new Promise(resolve => {
         if (!ethAddress) {
+          this.store.update({isDeploying: true});
           // registered
           this.provider.on(getFilterFromTopics(relayer.registryAddress, [
             newOwnerTopic,
@@ -266,15 +275,17 @@ export class OrganizationService {
           this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]), (log: Log) => {
             ethAddress = `0x${log.data.slice(-40)}`; // extract address
             this.store.update({deployStep: DeploySteps.ready});
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
+
+            this.store.update({isDeploying: false});
             resolve();
           });
         } else {
           resolve();
         }
       });
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
       this.contract = new Contract(ethAddress, ORGANIZATION_ABI, this.provider);
     }
   }
@@ -533,17 +544,16 @@ export class OrganizationService {
   /** retrieve approval date if the action was executed */
   public async getActionApprovalDate(actionId: string) {
     await this._requireContract();
-    return this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId])).then(logs => {
-      if (!!logs[0]) {
-        return this.provider.getBlock(logs[0].blockHash);
-      }
-    }).then(block => {
+    const filter = getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId]);
+    const logs = await this.provider.getLogs(filter);
+    if (!!logs[0]) {
+      const block = await this.provider.getBlock(logs[0].blockHash) // TODO is block hash start with 0x0 it will throw, see ethers issue 629
       if (!!block) {
         const date = new Date(block.timestamp * 1000);
         const month = date.getMonth() + 1;
-         return `${date.getFullYear()}/${month < 10 ? '0' + month : month}/${date.getDate()}`
+        return `${date.getFullYear()}/${month < 10 ? '0' + month : month}/${date.getDate()}`
       }
-    });
+    }
   }
 
   /** create a newOperation in the state, or update it if it already exists */

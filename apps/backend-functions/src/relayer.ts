@@ -1,4 +1,9 @@
-import { InfuraProvider } from '@ethersproject/providers';
+import {
+  InfuraProvider,
+  EtherscanProvider,
+  FallbackProvider,
+  NodesmithProvider
+} from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
 import { Contract, ContractFactory } from '@ethersproject/contracts';
 import { TransactionResponse, TransactionReceipt } from '@ethersproject/abstract-provider';
@@ -73,7 +78,12 @@ export interface SignDeliveryParams {
 
 export function initRelayer(config: RelayerConfig): Relayer {
   let wallet = Wallet.fromMnemonic(config.mnemonic);
-  const provider = new InfuraProvider(config.network);
+
+  const infura = new InfuraProvider(config.network);
+  const etherscan = new EtherscanProvider(config.network);
+  const nodesmith = new NodesmithProvider(config.network);
+
+  const provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
 
   wallet = wallet.connect(provider);
 

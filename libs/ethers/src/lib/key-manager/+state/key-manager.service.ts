@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore } from './key-manager.store';
-import { InfuraProvider } from '@ethersproject/providers';
+import {
+  InfuraProvider,
+  EtherscanProvider,
+  FallbackProvider,
+  NodesmithProvider
+} from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 
 // import from @ethersproject cause a weird runtime error : 'global' is undefined
@@ -36,7 +41,12 @@ export class KeyManagerService {
 
   private async encrypt(keyName: string, wallet: EthersWallet, ensDomain: string, encryptionPassword: string): Promise<Key> {
     this.store.setLoading(true);
-    const keyStore = await wallet.encrypt(encryptionPassword);
+    this.store.progress = 0;
+    const keyStore = await wallet.encrypt(
+      encryptionPassword,
+      null,
+      (progress) => { this.store.progress = Math.round(progress * 100); }
+    );
     let isMainKey = false;
     if (this.query.getKeyCountOfUser(ensDomain) === 0) {
       isMainKey = true;
@@ -87,7 +97,12 @@ export class KeyManagerService {
     if (this.query.getKeyCountOfUser(ensDomain) === 0) {
       isMainKey = true;
     }
-    const provider = new InfuraProvider(network);
+    const infura = new InfuraProvider(network);
+    const etherscan = new EtherscanProvider(network);
+    const nodesmith = new NodesmithProvider(network);
+
+    const provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
+
     const erc1077 = new Contract(ensDomain, ERC1077.abi, provider);
     const isLinked = await erc1077.keyExist(address);
     this.store.add({name, address, ensDomain, keyStore, isMainKey, isLinked});
@@ -100,8 +115,13 @@ export class KeyManagerService {
   async unlockKey(key: Key, encryptionPassword: string) {
 
     this.store.setLoading(true);
+    this.store.progress = 0;
     try {
-      const wallet = await EthersWallet.fromEncryptedJson(key.keyStore, encryptionPassword)
+      const wallet = await EthersWallet.fromEncryptedJson(
+        key.keyStore,
+        encryptionPassword,
+        (progress) => { this.store.progress = Math.round(progress * 100); }
+      );
       this.store.setLoading(false);
       return wallet;
     }

@@ -29,6 +29,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
@@ -85,7 +86,7 @@ export const organizationRoutes: Routes = [
     FeedbackMessageModule,
     AvatarListModule,
     WalletModule,
-    UploadModule, 
+    UploadModule,
     UiFormModule,
 
     // Material
@@ -106,6 +107,7 @@ export const organizationRoutes: Routes = [
     MatSelectModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [

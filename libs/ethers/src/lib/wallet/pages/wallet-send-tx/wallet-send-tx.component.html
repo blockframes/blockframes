@@ -16,7 +16,8 @@
             Your key is extra secured, so decryption will takes some time (20-30sec),
             please do not close or refresh this tab !
           </p>
-          <mat-progress-spinner color="accent" mode="indeterminate"></mat-progress-spinner>
+          <p>{{loadingProgress$ | async}}%</p>
+          <mat-progress-bar mode="determinate" [value]="loadingProgress$ | async" color="accent"></mat-progress-bar>
         </div>
       </ng-container>
       <ng-template #decrypted>
@@ -50,7 +51,7 @@
       </ng-container>
       <ng-template #txMined>
         <div fxLayout="column" fxLayoutAlign="start center">
-          <feedback-message
+          <feedback-message *ngIf="wallet.feedback"
             [title]="feedbackTitle"
             [imageUrl]="feedbackImage"
             [subTitle]="wallet.feedback.success"
