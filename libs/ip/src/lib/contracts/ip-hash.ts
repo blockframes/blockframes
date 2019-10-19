@@ -2,7 +2,7 @@ import { contracts } from '@env';
 import { Injectable } from '@angular/core';
 import { INgContract } from '@blockframes/ethers';
 import { Contract } from '@ethersproject/contracts';
-import { InfuraProvider } from '@ethersproject/providers';
+import { FallbackProvider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 
 export interface IpHash extends INgContract {
@@ -28,7 +28,7 @@ export class IpHashContract extends Contract {
 export class IpHashContractReadOnly extends Contract {
   static NAME = 'IpHash';
 
-  constructor(provider: InfuraProvider) {
+  constructor(provider: FallbackProvider) {
     const address = contracts[IpHashContractReadOnly.NAME];
     super(address, abi, provider);
   }

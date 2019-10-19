@@ -27,6 +27,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
   public step = this.steps.select;
   public wallet$: Observable<Wallet>;
   public isDecrypting$: Observable<boolean>;
+  public loadingProgress$: Observable<number>;
   public isDeploying$ = new BehaviorSubject(false);
   public isPending$ = new BehaviorSubject(false);
   public feedbackImage = '/assets/images/ppl_celebrating.png';
@@ -47,6 +48,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
   ngOnInit(){
     this.wallet$ = this.query.select();
     this.isDecrypting$ = this.keyManagerQuery.selectLoading();
+    this.loadingProgress$ = this.keyManagerQuery.selectProgress();
   }
 
   handleKeySelection(key: Key) {

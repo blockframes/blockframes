@@ -1,6 +1,6 @@
 <section>
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <h2>Deliveries for {{ movieName }}</h2>
+  <article fxLayout="row" fxLayoutAlign="space-between center" *ngIf="(movie$ | async) as movie; else loading">
+    <h2>Deliveries for {{ movie.main.title.original }}</h2>
     <mat-divider fxFlex></mat-divider>
     <button test-id="add-delivery" mat-stroked-button color="primary" (click)="addDelivery()">
       <mat-icon>add</mat-icon>
@@ -10,4 +10,7 @@
   <article>
     <delivery-repertory [deliveries]="(deliveries$ | async)" [userOrganization]="(userOrganization$ | async)"></delivery-repertory>
   </article>
+  <ng-template #loading>
+    <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+  </ng-template>
 </section>

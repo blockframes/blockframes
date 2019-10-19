@@ -12,15 +12,20 @@ import { CreateTx } from '../../create-tx';
 // Ethers
 import { arrayify } from '@ethersproject/bytes';
 import { AbiCoder } from '@ethersproject/abi';
-import { Provider, TransactionRequest } from '@ethersproject/providers';
+import {
+  TransactionRequest,
+  EtherscanProvider,
+  FallbackProvider,
+  InfuraProvider,
+  NodesmithProvider
+} from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
-import { InfuraProvider } from '@ethersproject/providers';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
 
-  provider: Provider;
+  provider: FallbackProvider;
 
   constructor(
     private query: WalletQuery,
@@ -58,7 +63,11 @@ export class WalletService {
 
   private _requireProvider() {
     if(!this.provider) {
-      this.provider = new InfuraProvider(network);
+      const infura = new InfuraProvider(network);
+      const etherscan = new EtherscanProvider(network);
+      const nodesmith = new NodesmithProvider(network);
+
+      this.provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
     }
   }
 

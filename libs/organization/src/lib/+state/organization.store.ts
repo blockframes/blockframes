@@ -5,12 +5,22 @@ import { Organization } from './organization.model';
 export const enum DeploySteps { notDeployed, registered, resolved, ready };
 export interface OrganizationState {
   org: Organization;
+  form: {
+    name: string,
+    address: string
+  };
+  isDeploying: boolean;
   deployStep: DeploySteps;
 }
 
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
   org: null,
+  form: {
+    name: '',
+    address: ''
+  },
+  isDeploying: false,
   deployStep: DeploySteps.notDeployed,
 };
 @Injectable({ providedIn: 'root' })

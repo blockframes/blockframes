@@ -33,7 +33,9 @@ export class OrganizationAdminViewComponent implements OnInit {
   /** Variable to indicate whether to show an action in the sidenav or a member */
   public editContent: 'operation' | 'member';
 
+  public isDeploying$: Observable<boolean>;
   public deployStep$: Observable<string>;
+  public deployProgress$: Observable<number>;
 
   constructor(
     private query: OrganizationQuery,
@@ -41,6 +43,7 @@ export class OrganizationAdminViewComponent implements OnInit {
 
   ngOnInit() {
 
+    this.isDeploying$ = this.query.select().pipe(map(state => state.isDeploying));
     this.deployStep$ = this.query.select().pipe(
       map(state => state.deployStep),
       map(step => {
@@ -49,6 +52,17 @@ export class OrganizationAdminViewComponent implements OnInit {
           case DeploySteps.resolved: return 'Resolved (2/3)';
           case DeploySteps.ready: return 'Retrieving information (3/3)';
           default: return 'Not deployed (0/3)';
+        }
+      })
+    );
+    this.deployProgress$ = this.query.select().pipe(
+      map(state => state.deployStep),
+      map(step => {
+        switch(step) {
+          case DeploySteps.registered: return 25;
+          case DeploySteps.resolved: return 50;
+          case DeploySteps.ready: return 75;
+          default: return 0;
         }
       })
     );

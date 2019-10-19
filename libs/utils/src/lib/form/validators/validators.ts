@@ -9,7 +9,12 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
-import { InfuraProvider } from '@ethersproject/providers';
+import {
+  InfuraProvider,
+  EtherscanProvider,
+  FallbackProvider,
+  NodesmithProvider
+} from '@ethersproject/providers';
 import { isValidMnemonic } from '@ethersproject/hdnode';
 import { orgNameToEnsDomain } from '../../helpers';
 import { network } from '@env';
@@ -78,7 +83,11 @@ export function validPercentage(control: FormControl): ValidationErrors {
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
   const orgENS = orgNameToEnsDomain(control.value);
-  const provider = new InfuraProvider(network);
+  const infura = new InfuraProvider(network);
+  const etherscan = new EtherscanProvider(network);
+  const nodesmith = new NodesmithProvider(network);
+
+  const provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
   const orgEthAddress = await provider.resolveName(orgENS);
   return !orgEthAddress ? null : { notUnique: true };
 }

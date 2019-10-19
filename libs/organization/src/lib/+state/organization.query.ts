@@ -71,11 +71,17 @@ export class OrganizationQuery extends Query<OrganizationState> {
   }
 
   get pendingActions$() {
-    return this.select(state => state.org.actions.filter(action => !action.isApproved));
+    return this.select(state => state.org.actions).pipe(
+      filter(actions => !!actions),
+      map(actions => actions.filter(action => !action.isApproved))
+    );
   }
 
   get approvedActions$() {
-    return this.select(state => state.org.actions.filter(action => action.isApproved));
+    return this.select(state => state.org.actions).pipe(
+      filter(actions => !!actions),
+      map(actions => actions.filter(action => action.isApproved))
+    );
   }
 
   getOperationById(id: string) {

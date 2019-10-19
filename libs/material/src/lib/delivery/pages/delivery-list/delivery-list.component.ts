@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { Observable} from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { Movie } from '@blockframes/movie';
 
 @Component({
   selector: 'delivery-list',
@@ -17,6 +18,7 @@ export class DeliveryListComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public userOrganization$: Observable<Organization>;
   public deliveries$: Observable<Delivery[]>;
+  public movie$: Observable<Movie>;
 
   constructor(
     private query: DeliveryQuery,
@@ -28,6 +30,7 @@ export class DeliveryListComponent implements OnInit {
   ngOnInit() {
     this.userOrganization$ = this.organizationQuery.select('org');
     this.deliveries$ = this.query.selectAll();
+    this.movie$ = this.movieQuery.selectActive();
   }
 
   /**
@@ -36,9 +39,5 @@ export class DeliveryListComponent implements OnInit {
   public addDelivery() {
     const movieId = this.movieQuery.getActiveId();
     this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
-  }
-
-  public get movieName() {
-    return this.movieQuery.getActive().main.title.original;
   }
 }

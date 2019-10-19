@@ -23,6 +23,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   step = this.steps.password;
   key: Key;
   encrypting$: Observable<boolean>;
+  loadingProgress$: Observable<number>;
   @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef<HTMLAnchorElement>;
 
   constructor(
@@ -36,6 +37,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
 
   ngOnInit() {
     this.encrypting$ = this.keyQuery.selectLoading();
+    this.loadingProgress$ = this.keyQuery.selectProgress();
   }
 
   async setPassword(password: string) {

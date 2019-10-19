@@ -71,7 +71,7 @@ export enum AppAccessStatus {
 
 /** Custom object used to build notifications. */
 export interface SnapObject {
-  organization: PublicOrganization | undefined;
+  organization: PublicOrganization;
   movie: PublicMovie;
   docId: string;
   type: NotificationType;
