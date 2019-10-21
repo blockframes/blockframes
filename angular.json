@@ -1434,6 +1434,7 @@
             "devServerTarget": "catalog-marketplace:serve"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "catalog-marketplace:serve:production"
             }
