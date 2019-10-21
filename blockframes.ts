@@ -23,22 +23,23 @@ commander.parse(process.argv);
 
 const deployDemos = () => {
   // TODO(DAJUNG): check if set -x and set -e works on Windows
-  exec('set -x && set -e');
+  exec('set -x && set -e'); // can't run with Windows command prompt
   const tag = `demo-${new Date().toISOString().slice(0, 10)}`;
   process.env['NODE_OPTIONS'] = '--max_old_space_size=8192';
   exec('git checkout demo');
-  let i = 0;
-  while (i < 5) {
+  let i = 1;
+  while (i <= 5) {
     console.log(i);
     process.env['ENV'] = 'production';
-    copyFile(`.env/demo/env.demo${i}.ts`, './env/env.ts', err => {
+    copyFile(`./env/demo/env.demo${i}.ts`, './env/env.ts', err => {
       console.log(err);
       process.exit(1);
     });
-    copyFile(`.env/demo/env.demo${i}.ts`, './env/env.prod.ts', err => {
+    copyFile(`./env/demo/env.demo${i}.ts`, './env/env.prod.ts', err => {
       console.log(err);
       process.exit(1);
     });
+    // TODO: console.log process
     execSync('blockframes -s build:all');
     execSync(`firebase use demo${i}`);
 
@@ -55,18 +56,19 @@ const deployDemos = () => {
       });
     }
     // What are the configs for blockframes server? @laurent
-    client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-    });
+    // client.scp('dist/apps/*', `blockframes:~/www/www-data/demo${i}//`, err => {
+    //   if (err) {
+    //     console.log(err);
+    //     process.exit(1);
+    //   }
+    // });
     i++;
   }
   execSync(`git tag ${tag}`);
   execSync(`git push origin ${tag}`);
 };
 
+// blockframes
 const deploySecrets = (firebase_ci_token?: string) => {
   let secrets, secretsTemplate;
   let tokenArg: string;
