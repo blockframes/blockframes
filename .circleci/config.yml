@@ -138,18 +138,8 @@ jobs:
             npx firebase use prod &&
             ENV=production npx firebase deploy --except functions &&
             ENV=production npx firebase deploy --only functions --force
-      - when:
-          condition: on_fail
-          steps:
-            - slack/notify:
-                message: "💣 Deploy to production failed"
-                webhook: "${SLACK_WEBHOOK}"
-      - when:
-          condition: on_success
-          steps:
-            - slack/notify:
-                message: "🚀 Deploy complete!"
-                webhook: "${SLACK_WEBHOOK}"
+      - slack/status:
+          webhook: "${SLACK_WEBHOOK}"
 workflows:
   version: 2.1
   build-test-deploy:
@@ -179,19 +169,13 @@ workflows:
             - click-to-run-e2e
             - test
             - lint
-      - deploy-to-prod:
-          requires:
-            - build
-            - lint
-            - test
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
           filters:
             branches:
-              only: production
-#      - request-deploy:
-#          type: approval
-#          requires:
-#            - lint
-#            - test
-#      - deploy:
-#          requires:
-#            - request-deploy
+              only:
+                - production
+    jobs:
+      - deploy-to-prod
