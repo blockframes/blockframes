@@ -107,7 +107,7 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use ci &&
-            ENV=ci npx firebase deploy &&
+            ENV=ci npx firebase deploy --force &&
             ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
@@ -137,10 +137,19 @@ jobs:
             npm install --save-dev firebase-tools &&
             npx firebase use prod &&
             ENV=production npx firebase deploy --except functions &&
-            ENV=production npx firebase deploy --only functions
-      - slack/notify:
-          message: "🚀 Deploy complete!"
-          webhook: "${SLACK_WEBHOOK}"
+            ENV=production npx firebase deploy --only functions --force
+      - when:
+          condition: on_fail
+          steps:
+            - slack/notify:
+                message: "💣 Deploy to production failed"
+                webhook: "${SLACK_WEBHOOK}"
+      - when:
+          condition: on_success
+          steps:
+            - slack/notify:
+                message: "🚀 Deploy complete!"
+                webhook: "${SLACK_WEBHOOK}"
 workflows:
   version: 2.1
   build-test-deploy:
