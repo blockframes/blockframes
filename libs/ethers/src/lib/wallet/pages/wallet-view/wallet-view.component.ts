@@ -4,9 +4,7 @@ import { Observable } from "rxjs";
 import { WalletQuery, WalletService } from "../../+state";
 import { KeyManagerService } from "../../../key-manager/+state";
 import { Router } from "@angular/router";
-import { Wallet } from "../../../types";
-import { Key } from "@blockframes/utils";
-
+import { Wallet, Key } from "../../../types";
 
 @Component({
   selector: 'wallet-view',

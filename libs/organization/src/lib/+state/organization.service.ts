@@ -2,13 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import {
-  FireQuery,
-  Query,
-  emailToEnsDomain,
-  precomputeAddress as precomputeEthAddress,
-  getNameFromENS,
-  orgNameToEnsDomain } from '@blockframes/utils';
+import { FireQuery, Query} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -21,12 +15,6 @@ import {
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import {
-  InfuraProvider,
-  EtherscanProvider,
-  FallbackProvider,
-  NodesmithProvider
-} from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -35,6 +23,13 @@ import { namehash, id as keccak256 } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 import { OrganizationDocument } from './organization.firestore';
+import {
+  instantiateFallbackProvider,
+  orgNameToEnsDomain,
+  getNameFromENS,
+  emailToEnsDomain,
+  precomputeAddress as precomputeEthAddress
+} from 'libs/ethers/src/lib/helpers';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
@@ -240,11 +235,7 @@ export class OrganizationService {
   /** ensure that the provider exist */
   private _requireProvider() {
     if(!this.provider) {
-      const infura = new InfuraProvider(network);
-      const etherscan = new EtherscanProvider(network);
-      const nodesmith = new NodesmithProvider(network);
-
-      this.provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
+      this.provider = instantiateFallbackProvider(network);
     }
   }
 

@@ -55,3 +55,19 @@ export interface Wallet {
   tx: ActionTx;
   feedback: TxFeedback;
 }
+
+export interface AddressParts {
+  start: string;
+  middle: string;
+  end: string;
+}
+
+export interface Key {
+  name: string,
+  ensDomain: string,
+  keyStore: string,
+  address: string,
+  isMainKey: boolean,
+  /** Does the key also exists inside the ERC1077 */
+  isLinked: boolean,
+}

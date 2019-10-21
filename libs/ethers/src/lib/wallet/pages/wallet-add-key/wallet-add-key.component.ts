@@ -1,10 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Key } from '@blockframes/utils';
 import { Observable } from 'rxjs';
 import { KeyManagerService, KeyManagerQuery } from '../../../key-manager/+state';
 import { WalletQuery } from '../../+state';
+import { Key } from '../../../types';
 
 enum steps {
   password,

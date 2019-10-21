@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore } from './key-manager.store';
-import {
-  InfuraProvider,
-  EtherscanProvider,
-  FallbackProvider,
-  NodesmithProvider
-} from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 
 // import from @ethersproject cause a weird runtime error : 'global' is undefined
@@ -14,9 +8,10 @@ import { Wallet as EthersWallet } from '@ethersproject/wallet';
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
-import { Key } from '@blockframes/utils';
 import { SigningKey } from '@ethersproject/signing-key';
 import { mnemonicToEntropy, entropyToMnemonic } from '@ethersproject/hdnode';
+import { Key } from '../../types';
+import { instantiateFallbackProvider } from '../../helpers';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {
@@ -28,16 +23,16 @@ export class KeyManagerService {
     private query: KeyManagerQuery,
   ) {}
 
-  /** Set signing key into process memory */
-  private setSigningKey(wallet: EthersWallet) {
-    this.signingKey = new SigningKey(wallet.privateKey);
-  }
+  // /** Set signing key into process memory */
+  // private setSigningKey(wallet: EthersWallet) {
+  //   this.signingKey = new SigningKey(wallet.privateKey);
+  // }
 
-  private requireSigningKey() {
-    if (!this.signingKey) {
-      throw new Error('A signing key is required !');
-    }
-  }
+  // private requireSigningKey() {
+  //   if (!this.signingKey) {
+  //     throw new Error('A signing key is required !');
+  //   }
+  // }
 
   private async encrypt(keyName: string, wallet: EthersWallet, ensDomain: string, encryptionPassword: string): Promise<Key> {
     this.store.setLoading(true);
@@ -97,11 +92,8 @@ export class KeyManagerService {
     if (this.query.getKeyCountOfUser(ensDomain) === 0) {
       isMainKey = true;
     }
-    const infura = new InfuraProvider(network);
-    const etherscan = new EtherscanProvider(network);
-    const nodesmith = new NodesmithProvider(network);
 
-    const provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
+    const provider = instantiateFallbackProvider(network);
 
     const erc1077 = new Contract(ensDomain, ERC1077.abi, provider);
     const isLinked = await erc1077.keyExist(address);

@@ -116,7 +116,7 @@ interface RegisterParams {
 }
 
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
+export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!! there is a copy of this function in 'libs\ethers\src\lib\helpers.ts'
   return toASCII(email.split('@')[0]).toLowerCase()
     .split('')
     .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
@@ -129,7 +129,7 @@ export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!!
  * @param provider ethers provider
  */
 // TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
+export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs\ethers\src\lib\helpers.ts'
   const baseName = ensDomain.split('.')[0];
   const relayer = initRelayer(config);
   const factoryAddress = await relayer.wallet.provider.resolveName(relayer.contractFactory.address).then(address => address.substr(2));

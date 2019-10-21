@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from "@angular/core";
-import { keyToAddressPart, AddressParts, Key } from "@blockframes/utils";
 import { DomSanitizer } from "@angular/platform-browser";
+import { Key, AddressParts } from "../../types";
+import { keyToAddressPart } from "../../helpers";
 
 @Component({
   selector: 'key-manager-item',
