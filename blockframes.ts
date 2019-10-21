@@ -225,30 +225,18 @@ const packageEnv = (command: string, config?: string) => {
         console.log(stdou.toString());
       });
       break;
-    case 'pree2e':
-      console.log(`excuting in '${configENV}' environment`);
-      console.log(`ng build backend-ops --configuration=${configENV} is in progress...`);
-      // since the original command used the && operator, we need to split it up into two commands.
-      // Therefore we have to use the spawnSync and execSync command,
-      // so that we wait for each command to finish
-      const pree2e: ChildProcess = function () {
-        if (process.platform==='win32') {
-        execSync(`ng build backend-ops --configuration=${configENV}`);
-        console.log(pree2e.toString());
-        execSync('node dist/apps/backend-ops/main.js');
-      } else {
-        spawnSync('ng', ['build', 'backend-ops', `--configuration=${configENV}`]);
-        console.log(pree2e.toString());
-        execSync('node dist/apps/backend-ops/main.js');
-      }
-          pree2e.stderr.on('data', stderr => {
-            console.log(stderr.toString());
-          });
-          pree2e.stdout.on('data', stdou => {
-            console.log(stdou.toString());
-          });
-    }
-      break;
+      case 'pree2e':
+        console.log(`excuting in '${configENV}' environment`);
+        console.log(`ng build backend-ops --configuration=${configENV} is in progress...`);
+        // since the original command used the && operator, we need to split it up into two commands.
+        // Therefore we have to use the spawnSync and execSync command,
+        // so that we wait for each command to finish
+        const preE2E = process.platform === 'win32'
+        ? exec(`ng build backend-ops --configuration=${configENV}`)
+        : spawn('ng', ['build', 'backend-ops', `--configuration=${configENV}`]);
+        preE2E.stdout.on('data', data => console.log(data.toString()));
+        preE2E.stdout.on('close', () => exec('node dist/apps/backend-ops/main.js'));
+        break;
     case 'e2e:main':
       console.log(`excuting in '${configENV}' environment`);
       const e2eMain: ChildProcess = process.platform==='win32'
@@ -276,7 +264,7 @@ const packageEnv = (command: string, config?: string) => {
     case 'e2e:marketplace':
       console.log(`excuting in '${configENV}' environment`);
       const e2eMarketplace: ChildProcess = process.platform==='win32'
-      ? exec(`npx ng e2e marketplace-e2e --configuration=${configENV} --headless`)
+      ? exec(`npx ng e2e catalog-marketplace-e2e --configuration=${configENV} --headless`)
       : spawn('npx', ['ng','e2e','marketplace-e2e',`--configuration=${configENV}`,'--headless']);
       e2eMarketplace.stderr.on('data', stderr => {
         console.log(stderr.toString());
