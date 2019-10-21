@@ -107,7 +107,7 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use ci &&
-            ENV=ci npx firebase deploy --token "${FIREBASE_CI_TOKEN}" &&
+            ENV=ci npx firebase deploy &&
             ENV=ci npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
@@ -135,8 +135,9 @@ jobs:
           token: $CIRCLE_TOKEN
           command: |
             npm install --save-dev firebase-tools &&
-            ENV=production npx firebase deploy --project prod --token "${FIREBASE_CI_TOKEN}" --except functions &&
-            ENV=production npx firebase deploy --project prod --token "${FIREBASE_CI_TOKEN}" --only functions
+            npx firebase use prod &&
+            ENV=production npx firebase deploy --except functions &&
+            ENV=production npx firebase deploy --only functions
       - slack/notify:
           message: "🚀 Deploy complete!"
           webhook: "${SLACK_WEBHOOK}"
