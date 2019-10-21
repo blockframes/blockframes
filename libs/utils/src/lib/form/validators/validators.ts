@@ -9,16 +9,9 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
-import {
-  InfuraProvider,
-  EtherscanProvider,
-  FallbackProvider,
-  NodesmithProvider
-} from '@ethersproject/providers';
-import { isValidMnemonic } from '@ethersproject/hdnode';
-import { orgNameToEnsDomain } from '../../helpers';
 import { network } from '@env';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { instantiateFallbackProvider, orgNameToEnsDomain } from 'libs/ethers/src/lib/helpers';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
@@ -34,18 +27,6 @@ export function confirmPasswords(
       ? null
       : { passwordsNotMatching: true };
   };
-}
-
-/** Checks if the inputted mnemonic is a valid mnemonic */
-export function validMnemonic(control: AbstractControl): ValidationErrors | null {
-  // Every Mnemonic has 24 words, if not it is not a Mnemonic
-  const size = control.value.split(' ').length;
-  if (size !== 24) {
-    return { mnemonic: true };
-  }
-  // Use ethers.js build in function to check for a correct Mnemonic
-  const isValid = isValidMnemonic(control.value);
-  return isValid ? null : { mnemonic: true };
 }
 
 /** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
@@ -83,11 +64,7 @@ export function validPercentage(control: FormControl): ValidationErrors {
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
   const orgENS = orgNameToEnsDomain(control.value);
-  const infura = new InfuraProvider(network);
-  const etherscan = new EtherscanProvider(network);
-  const nodesmith = new NodesmithProvider(network);
-
-  const provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
+  const provider = instantiateFallbackProvider(network);
   const orgEthAddress = await provider.resolveName(orgENS);
   return !orgEthAddress ? null : { notUnique: true };
 }

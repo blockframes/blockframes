@@ -1,5 +1,5 @@
 import { ActionTx, Tx } from "./types";
-import { numberTo256Bits, padTo256Bits } from "@blockframes/utils";
+import { padTo256Bits, numberTo256Bits } from "./helpers";
 
 export abstract class CreateTx {
 

@@ -4,9 +4,8 @@ import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
-import { MetaTx, SignedMetaTx, ActionTx, TxFeedback } from '../../types';
+import { MetaTx, SignedMetaTx, ActionTx, TxFeedback, Key } from '../../types';
 import { WalletQuery } from './wallet.query';
-import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 import { CreateTx } from '../../create-tx';
 
 // Ethers
@@ -14,13 +13,11 @@ import { arrayify } from '@ethersproject/bytes';
 import { AbiCoder } from '@ethersproject/abi';
 import {
   TransactionRequest,
-  EtherscanProvider,
-  FallbackProvider,
-  InfuraProvider,
-  NodesmithProvider
+  FallbackProvider
 } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
+import { instantiateFallbackProvider, emailToEnsDomain, precomputeAddress, getNameFromENS } from '../../helpers';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -63,11 +60,7 @@ export class WalletService {
 
   private _requireProvider() {
     if(!this.provider) {
-      const infura = new InfuraProvider(network);
-      const etherscan = new EtherscanProvider(network);
-      const nodesmith = new NodesmithProvider(network);
-
-      this.provider = new FallbackProvider([infura, etherscan, nodesmith], 1);
+      this.provider = instantiateFallbackProvider(network);
     }
   }
 

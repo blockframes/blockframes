@@ -4,8 +4,7 @@ import { Observable, BehaviorSubject } from "rxjs";
 import { KeyManagerQuery, KeyManagerService } from "../../../key-manager/+state";
 import { Wallet as EthersWallet } from "@ethersproject/wallet";
 import { Router } from "@angular/router";
-import { Wallet } from "../../../types";
-import { Key } from "@blockframes/utils";
+import { Wallet, Key } from "../../../types";
 import { AuthQuery } from "@blockframes/auth";
 
 enum steps {

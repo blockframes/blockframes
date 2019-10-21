@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, Output, EventEmitter
 import { Observable } from "rxjs";
 
 import { KeyManagerQuery } from "../+state";
-import { Key } from "@blockframes/utils";
+import { Key } from "../../types";
 
 @Component({
   selector: 'key-manager-list',
