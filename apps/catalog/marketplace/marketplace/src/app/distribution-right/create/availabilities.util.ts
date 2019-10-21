@@ -1,3 +1,4 @@
+import { MovieLanguageSpecification } from './../../movie/search/search.form';
 import { DateRange } from '@blockframes/utils/date-range';
 import { MovieSale, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
 
@@ -93,9 +94,10 @@ export function getSalesInDateRange(formDates: DateRange, sales: MovieSale[]): M
  * @param formMedias The medias which got specified by the buyer
  * @param sales The array of sales from a movie in the previously specified date range
  */
-export function getSalesWithMediasAndTerritoriesInCommon(
+export function getSalesWithMediasTerritoriesAndLanguagesInCommon(
   formTerritories: string[],
   formMedias: string[],
+  formLanguages: MovieLanguageSpecification,
   sales: MovieSale[]
 ): MovieSale[] {
   /**
@@ -103,7 +105,7 @@ export function getSalesWithMediasAndTerritoriesInCommon(
    * sales in the movie and check if there is any overlapping medias
    */
 
-  const salesWithMediasAndTerritoriesInCommon: MovieSale[] = [];
+  const salesWithMediasTerritoriesAndLanguagesInCommon: MovieSale[] = [];
   for (const sale of sales) {
     let mediasInCommon = false;
     for (const media of formMedias) {
@@ -123,14 +125,32 @@ export function getSalesWithMediasAndTerritoriesInCommon(
       }
     }
 
+    // TODO: Add language when language is moved inside of sales object
+    const languagesName: string[] = Object.keys(formLanguages);
+
+    let dubbingInCommon = false;
+    for (const language of languagesName) {
+      if (sale.dubbings.includes(language)) {
+        dubbingInCommon = true;
+      }
+    }
+
+    let subtitlesInCommon = false;
+    for (const language of languagesName) {
+      if (sale.subtitles.includes(language)) {
+        subtitlesInCommon = true;
+      }
+    }
+
     if (
       mediasInCommon &&
       territoriesInCommon &&
-      !salesWithMediasAndTerritoriesInCommon.includes(sale)
+      dubbingInCommon &&
+      subtitlesInCommon &&
+      !salesWithMediasTerritoriesAndLanguagesInCommon.includes(sale)
     ) {
-      salesWithMediasAndTerritoriesInCommon.push(sale);
+      salesWithMediasTerritoriesAndLanguagesInCommon.push(sale);
     }
   }
-
-  return salesWithMediasAndTerritoriesInCommon;
+  return salesWithMediasTerritoriesAndLanguagesInCommon;
 }
