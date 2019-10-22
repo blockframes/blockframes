@@ -36,9 +36,15 @@ h1 {
   font-weight: 800;
 }
 
-h2 {
+.light-theme h2 {
   font-size: 30px;
   font-weight: 800;
+}
+
+.dark-theme h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #E2E8FF;
 }
 
 .light-theme h3 {
