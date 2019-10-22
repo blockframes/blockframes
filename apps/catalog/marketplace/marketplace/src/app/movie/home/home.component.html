@@ -1,10 +1,5 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-  <ng-container *ngIf="path$ | async as path">
-    <div class="cropper">
-      <cropper [path]="path" [ratio]="4/3" (uploaded)="save($event)" (deleted)="remove()"></cropper>
-    </div>
-  </ng-container>
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1>Welcome to Bigger Boat</h1>
     <p>
