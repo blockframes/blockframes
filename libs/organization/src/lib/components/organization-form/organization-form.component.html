@@ -1,17 +1,11 @@
 <h4>Logo</h4>
 <article class="actions" fxLayout="column" fxLayoutAlign="center center">
-  <img mat-card-image [src]="logo">
   <mat-card-actions>
-    <button-upload
-      accept="['.jpg', '.png']"
-      path='logo'
-      [types]="['image/jpeg', 'image/png']"
-      [uploadOnFirestore]="true"
-      (storeUploaded)="logo = $event">
-    </button-upload>
-    <button mat-button color="primary" (click)="logo = undefined">
-      Delete this picture
-    </button>
+    <ng-container>
+      <div class="cropper">
+        <cropper [ratio]="4/3"></cropper>
+      </div>
+    </ng-container>
   </mat-card-actions>
 </article>
 

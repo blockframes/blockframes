@@ -1,7 +1,7 @@
 <section [ngSwitch]="step$ | async">
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <mat-icon fontSet="material-icons-outlined">cloud_upload</mat-icon>
-    <h1>Drop something here</h1>
+    <h3>Drop something here</h3>
   </article>
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
     <image-cropper

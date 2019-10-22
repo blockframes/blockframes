@@ -10,6 +10,7 @@ import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -88,6 +89,7 @@ export const organizationRoutes: Routes = [
     WalletModule,
     UploadModule,
     UiFormModule,
+    CropperModule,
 
     // Material
     MatFormFieldModule,
