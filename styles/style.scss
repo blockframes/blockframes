@@ -86,3 +86,8 @@ main {
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
 }
+
+.dark-theme .bf-dark-icon {
+  border: 1px solid mat-color($bf-dark-background, border);
+  background: mat-color($bf-dark-background, background);
+}
