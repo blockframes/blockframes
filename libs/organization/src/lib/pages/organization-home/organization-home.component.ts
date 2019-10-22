@@ -14,16 +14,14 @@ const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
   title: `Pending request to ${invitation.organization.name}`,
   routerLink: '#',
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+  description: ''
 });
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
   matIcon: 'alternate_email',
   title: `Join ${invitation.organization.name}`,
   action,
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+  description: ''
 });
 
 @Component({

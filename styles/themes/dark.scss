@@ -136,6 +136,7 @@ $bf-dark-foreground: (
   // Custom variables
   subheading:        #BEBEBE,
   dynamic:           #3B414D,
+  blue-icon:         #9EB1FF,
 );
 
 
@@ -145,7 +146,7 @@ $bf-dark-foreground: (
 
 $bf-dark-primary: mat-palette($mat-dark-bf-blue, 200, 50, 500);
 $bf-dark-accent: mat-palette($mat-dark-bf-orange, 400, 50, 700);
-$bf-dark-warn: mat-palette($mat-dark-bf-red, 200);
+$bf-dark-warn: mat-palette($mat-dark-bf-red, 500);
 
 $bf-dark-theme: (
   // Standard

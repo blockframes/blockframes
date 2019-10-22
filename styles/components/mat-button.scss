@@ -32,4 +32,8 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
     box-shadow: none;
     border: none;
     }
+
+  [bf-dark-icon] {
+    color: mat-color($bf-dark-background, autocomplete);
+  }
 }
