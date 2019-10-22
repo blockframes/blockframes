@@ -7,9 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { AuthModule } from '@blockframes/auth';
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
-import { FeedbackMessageModule } from '@blockframes/ui';
-import { WalletModule } from '@blockframes/ethers';
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { FeedbackMessageModule, UploadModule, UiFormModule } from '@blockframes/ui';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -33,22 +31,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberAddComponent } from './components/member-add/member-add.component';
-import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
-import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
 import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
-import { OrganizationFormOperationComponent } from './components/organization-form-operation/organization-form-operation.component';
-import { OrganizationDisplayActionsComponent } from './components/organization-display-actions/organization-display-actions.component';
-import { OrganizationDisplayOperationsComponent } from './components/organization-display-operations/organization-display-operations.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
-import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
-import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 
@@ -62,14 +53,6 @@ export const organizationRoutes: Routes = [
         path: 'members',
         component: MemberEditableComponent
       },
-      {
-        path: 'activityreports',
-        component: OrganizationActivityViewComponent
-      },
-      {
-        path: 'administration',
-        component: OrganizationAdminViewComponent
-      }
     ]
   }
 ];
@@ -84,8 +67,7 @@ export const organizationRoutes: Routes = [
     EditableSidenavModule,
     FeedbackMessageModule,
     AvatarListModule,
-    WalletModule,
-    UploadModule, 
+    UploadModule,
     UiFormModule,
 
     // Material
@@ -118,16 +100,8 @@ export const organizationRoutes: Routes = [
     OrganizationWidgetComponent,
     MemberRepertoryComponent,
     MemberAddComponent,
-    OrganizationActivityViewComponent,
-    OrganizationFormOperationComponent,
-    OrganizationDisplayActionsComponent,
-    OrganizationAdminViewComponent,
-    OrganizationDisplayOperationsComponent,
-    OrganizationSignerRepertoryComponent,
-    OrganizationSignerFormComponent,
     OrganizationEditableComponent,
     OrganizationFormComponent,
-    OrganizationActivityViewComponent,
     OrganizationSearchComponent
   ],
   exports: [OrganizationWidgetComponent, OrganizationSearchComponent]

@@ -7,7 +7,6 @@ import { first, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createOrganization, OrganizationQuery, OrganizationService, OrganizationState } from '../../+state';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { UniqueOrgName } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-create',
@@ -39,7 +38,6 @@ export class OrganizationCreateComponent implements OnInit, OnDestroy {
     this.form = this.builder.group({
       'name': new FormControl('', {
         validators: [Validators.required],
-        asyncValidators: [UniqueOrgName],
         updateOn: 'blur',
       }),
       'officeAddress': ['', [Validators.required]]

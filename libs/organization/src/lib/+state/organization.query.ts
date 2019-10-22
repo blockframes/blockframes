@@ -69,16 +69,4 @@ export class OrganizationQuery extends Query<OrganizationState> {
   get id() {
     return this.getValue().org.id;
   }
-
-  get pendingActions$() {
-    return this.select(state => state.org.actions.filter(action => !action.isApproved));
-  }
-
-  get approvedActions$() {
-    return this.select(state => state.org.actions.filter(action => action.isApproved));
-  }
-
-  getOperationById(id: string) {
-    return this.getValue().org.operations.filter(action => action.id === id)[0];
-  }
 }

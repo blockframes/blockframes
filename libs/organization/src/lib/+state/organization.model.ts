@@ -33,26 +33,8 @@ export const enum UserRole {
   member = 'member'
 }
 
-export interface OrganizationOperation {
-  id: string;
-  name: string;
-  quorum: number;
-  members: OrganizationMember[];
-}
-
-export interface OrganizationAction {
-  id: string;
-  opId: string;
-  name: string;
-  signers: OrganizationMember[];
-  isApproved: boolean;
-  approvalDate?: string;
-}
-
 export interface Organization extends OrganizationDocument {
   members?: OrganizationMember[];
-  operations?: OrganizationOperation[];
-  actions?: OrganizationAction[];
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
 
@@ -65,10 +47,3 @@ export interface PublicOrganization {
   name: string;
 }
 
-export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
-  return {
-    quorum: 0,
-    members: [],
-    ...operation,
-  } as OrganizationOperation;
-}
