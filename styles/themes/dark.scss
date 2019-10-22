@@ -106,6 +106,7 @@ $bf-dark-background: (
 
   // Custom variables
   border:     #34364C,
+  autocomplete: #242737,
   stroked-button: rgba(255,255,255,0.10),
 );
 
@@ -142,8 +143,8 @@ $bf-dark-foreground: (
 // THEME //
 ///////////
 
-$bf-dark-primary: mat-palette($mat-dark-bf-orange, 400, 50, 700);
-$bf-dark-accent: mat-palette($mat-dark-bf-blue, 200, 50, 500);
+$bf-dark-primary: mat-palette($mat-dark-bf-blue, 200, 50, 500);
+$bf-dark-accent: mat-palette($mat-dark-bf-orange, 400, 50, 700);
 $bf-dark-warn: mat-palette($mat-dark-bf-red, 200);
 
 $bf-dark-theme: (
