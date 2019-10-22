@@ -11,7 +11,7 @@
 
 .dark-theme .mat-nav-list,
 .dark-theme .mat-selection-list {
-  background-color: rgba(#02000F, 0.5);
+  background-color: mat-color($bf-dark-background, app-bar);
   border: 1px solid mat-color($bf-dark-background, border);
 }
 

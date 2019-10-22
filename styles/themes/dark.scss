@@ -89,7 +89,7 @@ $mat-dark-bf-red: (
 ////////////////
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar:    #02000F,
+  app-bar:    #0D0F1F,
   status-bar: black,
   background: #02000F,
   card:       rgba(255,255,255,0.05),
@@ -105,7 +105,7 @@ $bf-dark-background: (
   disabled-list-option: rgba(155,177,255,0.12),
 
   // Custom variables
-  border:     #292929,
+  border:     #34364C,
   stroked-button: rgba(255,255,255,0.10),
 );
 
@@ -117,9 +117,9 @@ $bf-dark-background: (
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
   base:              rgba(155,177,255,0.12),
-  text:              white,
-  divider:           #292929,
-  dividers:          #292929,
+  text:              #F3F6FF,
+  divider:           #34364C,
+  dividers:          #34364C,
   disabled:          rgba(155,177,255,0.12),
   disabled-text:     $light-disabled-text,
   disabled-button:   rgba(white, 0.3),
