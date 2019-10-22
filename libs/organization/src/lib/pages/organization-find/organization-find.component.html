@@ -1,6 +1,6 @@
 <section fxLayout="row" fxLayoutAlign="center" test-id="content" page-id="organization-find">
   <article fxLayout="column" fxLayoutAlign="center center">
-    <h2>Find your organization</h2>
+    <h2>Search for your company</h2>
     <!--
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
@@ -17,14 +17,16 @@
         [formControl]="orgControl"
         [matAutocomplete]="auto"
       />
+      <mat-icon matSuffix svgIcon="magnifyingGlass"></mat-icon>
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
-          {{ org.name }}
+          <b>{{ org.name }}</b>
+          <mat-divider></mat-divider>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <div class="image"></div>
-    <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-raised-button color="accent" [disabled]="!selected">Let's go !</button>
-    <a routerLink="../home"><button mat-button color="primary">Back</button></a>
+    <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-flat-button color="accent" [disabled]="!selected">Send a request</button>
+    <a routerLink="../create"><button mat-button color="primary">Create my company</button></a>
   </article>
 </section>

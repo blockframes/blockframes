@@ -58,3 +58,10 @@ mat-form-field {
   }
 
 }
+
+// Autocomplete CSS
+.dark-theme .mat-autocomplete-panel.mat-autocomplete-visible {
+  background: mat-color($bf-dark-background, autocomplete);
+  border: 1px solid mat-color($bf-dark-background, border);
+  border-radius: 10px;
+}
