@@ -4,5 +4,5 @@
   <div fxLayout="row" fxLayoutAlign="center">
     <img [src]="imageUrl" alt="congratulation" />
   </div>
-  <a test-id="feedback-link" [disabled]="!enabled" (click)="redirectUser.emit()" mat-raised-button color="accent">{{ buttonMessage }}</a>
+  <a test-id="feedback-link" [disabled]="!enabled" (click)="redirectUser.emit()" mat-flat-button color="accent">{{ buttonMessage }}</a>
 </section>

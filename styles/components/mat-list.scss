@@ -23,7 +23,7 @@
 
 .dark-theme .mat-menu-content,
 .dark-theme .mat-select-panel {
-  background: #02000F;
+  background: mat-color($bf-dark-background, autocomplete);
 }
 
 .active-list-item mat-icon {

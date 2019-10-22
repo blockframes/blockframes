@@ -22,7 +22,7 @@ export class InvitationItemComponent {
     if (this.invitation.type === InvitationType.fromUserToOrganization) {
       return `${this.invitation.user.name} ${
         this.invitation.user.surname
-      } wishes to join your organization`;
+      } wants to join your organization`;
     }
   }
 

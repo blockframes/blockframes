@@ -90,4 +90,5 @@ main {
 .dark-theme .bf-dark-icon {
   border: 1px solid mat-color($bf-dark-background, border);
   background: mat-color($bf-dark-background, background);
+  color: mat-color($bf-dark-foreground, blue-icon);
 }
