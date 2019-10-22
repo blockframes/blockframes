@@ -1,19 +1,46 @@
 @import 'mixins';
 
-mat-card {
-  width: 50%;
+section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+article {
+  margin-left: 50px;
+}
+
+img {
+  width: 500px;
+}
+
+h3 {
+  margin-bottom: 6px;
+}
+
+div {
+  margin-top: 40px;
 }
 
 mat-form-field {
   width: 100%;
 }
 
-mat-toolbar {
-  background: transparent;
+button {
+  margin-top: 8px;
 }
 
 @include mobile {
-  mat-card {
-    width: 100%;
+  img {
+    width: 200px;
+  }
+  article {
+    margin-left: 0;
+    padding: 0 20px;
+  }
+}
+
+@include tablet {
+  img {
+    width: 300px;
   }
 }
