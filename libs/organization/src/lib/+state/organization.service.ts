@@ -140,7 +140,8 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (permissions, apps permissions, user...).
    */
-  public async add(organization: Partial<OrganizationDocument>, user: User): Promise<string> {
+  public async add(organization: Partial<OrganizationDocument>): Promise<string> {
+    const user = this.authQuery.user;
     const orgId: string = this.db.createId();
     const newOrganization: OrganizationDocument = createOrganization({
       id: orgId,

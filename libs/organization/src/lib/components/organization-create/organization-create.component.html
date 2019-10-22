@@ -1,40 +1,79 @@
-<section class="mat-typography" fxLayout="row" fxLayoutAlign="center center" test-id="content" page-id="organization-create">
-  <mat-card fxLayout="column" fxLayoutAlign="center none">
-    <mat-card-header>
-      <h1>Principal Information</h1>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="addOrganization()">
-        <h2>Organization Name</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput placeholder="Name" aria-label="name" formControlName="name" />
-          <mat-error *ngIf="notProvided">You must enter a name</mat-error>
-          <mat-error *ngIf="notUnique">{{name}} is already taken, please use another name</mat-error>
-        </mat-form-field>
+<section
+  fxLayout="row"
+  fxLayoutAlign="center start"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="center center">
+  <img src="/assets/images/dark_rocket.png" alt="Rocket taking off in the air" />
+  <article>
+    <h2>Create your organization</h2>
+    <form [formGroup]="form" (ngSubmit)="addOrganization()">
+      <h3>Your compagny</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization name</mat-label>
+        <input
+          matInput
+          placeholder="Organization name"
+          aria-label="organization name"
+          formControlName="name"
+          required
+        />
+        <mat-error *ngIf="notProvided">You must enter a name</mat-error>
+        <mat-error *ngIf="notUnique">{{ name }} is already taken, please use another name</mat-error>
+      </mat-form-field>
 
-        <h2>Organization's Office Address</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Office Address</mat-label>
-          <textarea
-            matInput
-            placeholder="Office Address"
-            aria-label="office address"
-            formControlName="officeAddress"
-          ></textarea>
-        </mat-form-field>
-        <mat-toolbar>
-          <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-around center">
-            <button mat-button type="button" (click)="clear()">Cancel</button>
-            <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
-              <ng-container *ngIf="(loading$ | async); else notLoading">
-                <mat-progress-spinner mode="indeterminate" color="accent" diameter="20"></mat-progress-spinner>
-              </ng-container>
-              <ng-template #notLoading>Next</ng-template>
-            </button>
-          </mat-toolbar-row>
-        </mat-toolbar>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      <h3>Contact information</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone number</mat-label>
+        <input
+          matInput
+          placeholder="Phone number"
+          aria-label="phone number"
+          formControlName="phoneNumber"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email address</mat-label>
+        <input
+          matInput
+          placeholder="Email address"
+          aria-label="email address"
+          formControlName="email"
+        />
+        <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
+      </mat-form-field>
+
+      <h3>Information</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Fiscal number</mat-label>
+        <input
+          matInput
+          placeholder="Fiscal number"
+          aria-label="fiscal number"
+          formControlName="fiscalNumber"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Activity</mat-label>
+        <input matInput placeholder="Activity" aria-label="activity" formControlName="activity" />
+      </mat-form-field>
+
+      <!-- TODO: issue#287 cropper image => use key "logo" of the form -->
+
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <button mat-flat-button type="submit" color="primary">
+          <ng-container *ngIf="(loading$ | async); else: notLoading">
+            <mat-progress-spinner
+              mode="indeterminate"
+              color="accent"
+              diameter="20"
+            ></mat-progress-spinner>
+          </ng-container>
+          <ng-template #notLoading>Submit</ng-template>
+        </button>
+        <button class="cancel" mat-button color="accent" type="button" (click)="clear()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </article>
 </section>
