@@ -5,7 +5,8 @@ import { MatSlideToggleChange } from '@angular/material';
 import { PermissionsQuery } from '../../permissions/+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx, ActionTx, TxFeedback } from '@blockframes/ethers';
+import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
+import { CreateTx } from '@blockframes/ethers';
 
 @Component({
   selector: 'organization-signer-form',

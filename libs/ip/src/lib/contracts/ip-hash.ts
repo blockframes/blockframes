@@ -1,6 +1,6 @@
 import { contracts } from '@env';
 import { Injectable } from '@angular/core';
-import { INgContract } from '@blockframes/ethers';
+import { INgContract } from '@blockframes/ethers/types';
 import { Contract } from '@ethersproject/contracts';
 import { FallbackProvider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';

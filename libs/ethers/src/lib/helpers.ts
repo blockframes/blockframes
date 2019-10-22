@@ -1,25 +1,26 @@
 import { toASCII } from "punycode";
-import { baseEnsDomain, factoryContract } from "@env";
 import { keccak256 } from '@ethersproject/keccak256'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Provider, InfuraProvider, EtherscanProvider, NodesmithProvider, FallbackProvider } from '@ethersproject/providers'
 import { toUtf8Bytes } from '@ethersproject/strings'
 import { ERC1077 } from '@blockframes/contracts';
-import { Key, AddressParts } from "./types";
 
-export function instantiateFallbackProvider(network: string) {
+/** instantiate a Fallback provider from the wanted network */
+export function getProvider(network: string) {
 
   // we only use these providers, because the other doesn't supports Goerli
   const infura = new InfuraProvider(network);
   const etherscan = new EtherscanProvider(network);
   const nodesmith = new NodesmithProvider(network);
 
-  return new FallbackProvider([infura, etherscan, nodesmith], 1);
-}
+  // A Fallback provider is composed of an array of providers
+  // for each query, every providers will be queried,
+  // then we wait until a quorum (second params) is reached between these providers,
+  // we can also (optionally) assign weight to each providers
 
-export function keyToAddressPart(key: Key, length: number): AddressParts {
-  const { address } = JSON.parse(key.keyStore);
-  return {start: address.slice(0, length), middle: address.slice(length, address.length - length), end: address.slice(-length)};
+  // this Fallback provider is optimized for speed, it will return the first answer it get back
+  // if needed we could instead optimized it for consensus (i.e. wait until at least 2 providers agree on the answer)
+  return new FallbackProvider([infura, etherscan, nodesmith], 1);
 }
 
 /** Get first part of an ens domain : `alice.blockframes.eth` -> `alice` */
@@ -33,8 +34,7 @@ export function getNameFromENS(ensDomain: string) {
  * then add base ens domain
  * @example `漢micHel+9@example.com` -> `xn--michel439-2c2s.blockframes.eth`
  */
-// TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export function emailToEnsDomain(email: string) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
+export function emailToEnsDomain(email: string, baseEnsDomain: string) {
   return toASCII(email.split('@')[0]).toLowerCase()
     .split('')
     .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
@@ -44,8 +44,8 @@ export function emailToEnsDomain(email: string) { // !!!! there is a copy of thi
 /** same as `emailToEnsDomain` but for org name
  * @see `emailToEnsDomain(email: string): string`
  */
-export function orgNameToEnsDomain(orgName: string) {
-  return emailToEnsDomain(orgName.replace(' ', '-'));
+export function orgNameToEnsDomain(orgName: string, baseEnsDomain: string) {
+  return emailToEnsDomain(orgName.replace(' ', '-'), baseEnsDomain);
 }
 
 /**
@@ -53,9 +53,7 @@ export function orgNameToEnsDomain(orgName: string) {
  * @param ensDomain this is use as a salt (salt need to be unique for each user)
  * @param provider ethers provider
  */
-// TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export async function precomputeAddress(ensDomain: string, provider: Provider) { // !!!! there is a copy of this function in 'apps/backend-functions/src/relayer.ts'
-
+export async function precomputeAddress(ensDomain: string, provider: Provider, factoryContract: string) {
   const factoryAddress = await provider.resolveName(factoryContract).then(address => address.substr(2));
   const salt = keccak256(toUtf8Bytes(getNameFromENS(ensDomain))).substr(2);
   const byteCodeHash = keccak256(`0x${ERC1077.bytecode}`).substr(2);
@@ -78,10 +76,8 @@ export function numberToHexString(num: number) {
  * @param hexString a `0x` prefixed hex string
  */
 export function padTo256Bits(hexString: string) {
-  let hex = hexString;
-  if (hex.includes('0x')) {
-    hex = hex.slice(2);
-  }
+  const hex = hexString.replace('0x', '');
+
   if (hex.length > 64) {
     throw new Error('The hex string cannot be more than 256 bits (\'0x\' + 64 hex chars)');
   }

@@ -14,7 +14,8 @@ import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.s
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx, TxFeedback } from '@blockframes/ethers';
+import { CreateTx } from '@blockframes/ethers';
+import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
 
 interface AddDeliveryOptions {

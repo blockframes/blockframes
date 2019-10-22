@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { network } from '@env';
+import { network, factoryContract, baseEnsDomain } from '@env';
 import { ERC1077 } from '@blockframes/contracts';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
@@ -17,7 +17,7 @@ import {
 } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
-import { instantiateFallbackProvider, emailToEnsDomain, precomputeAddress, getNameFromENS } from '../../helpers';
+import { getProvider, emailToEnsDomain, precomputeAddress, getNameFromENS } from '../../helpers';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -33,7 +33,7 @@ export class WalletService {
   ) {}
 
   public async updateFromEmail(email: string) {
-    const ensDomain = emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email, baseEnsDomain);
     const address = await this.retrieveAddress(ensDomain);
     this.store.update({ensDomain, address});
   }
@@ -53,19 +53,19 @@ export class WalletService {
         return address;
       }
     }
-    return precomputeAddress(ensDomain, this.provider);
+    return precomputeAddress(ensDomain, this.provider, factoryContract);
   }
 
 
 
   private _requireProvider() {
     if(!this.provider) {
-      this.provider = instantiateFallbackProvider(network);
+      this.provider = getProvider(network);
     }
   }
 
   public async createRandomKeyFromEmail(keyName: string, email: string, password?: string) {
-    const ensDomain = emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email, baseEnsDomain);
     const key = await this.keyManager.createFromRandom(keyName, ensDomain, password);
     this.keyManager.storeKey(key);
     return key;
@@ -85,7 +85,7 @@ export class WalletService {
     this.store.setLoading(true);
     try {
       const name =  getNameFromENS(ensDomain);
-      const erc1077Address = await precomputeAddress(ensDomain, this.provider);
+      const erc1077Address = await precomputeAddress(ensDomain, this.provider, factoryContract);
       const result = await this.relayer.deploy(name, pubKey, erc1077Address, orgId);
       this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
       this.store.update({hasERC1077: true})

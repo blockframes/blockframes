@@ -1,5 +1,5 @@
 
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 /** Return the current value of the path from Firestore */
 export async function snapshot<T>(path: string): Promise<T> {

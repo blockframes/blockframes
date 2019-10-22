@@ -53,7 +53,4 @@ export class KeyManagerQuery extends QueryEntity<KeyState, Key> {
   getKeyCountOfUser(ensDomain: string) {
     return this.getKeysOfUser(ensDomain).length;
   }
-  selectProgress() {
-    return this.store.progress$;
-  }
 }

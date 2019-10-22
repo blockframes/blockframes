@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KeyManagerStore } from './key-manager.store';
 import { Contract } from '@ethersproject/contracts';
-
-// import from @ethersproject cause a weird runtime error : 'global' is undefined
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
 
 import { KeyManagerQuery } from './key-manager.query';
@@ -11,7 +9,7 @@ import { ERC1077 } from '@blockframes/contracts';
 import { SigningKey } from '@ethersproject/signing-key';
 import { mnemonicToEntropy, entropyToMnemonic } from '@ethersproject/hdnode';
 import { Key } from '../../types';
-import { instantiateFallbackProvider } from '../../helpers';
+import { getProvider } from '../../helpers';
 
 @Injectable({ providedIn: 'root' })
 export class KeyManagerService {
@@ -23,29 +21,17 @@ export class KeyManagerService {
     private query: KeyManagerQuery,
   ) {}
 
-  // /** Set signing key into process memory */
-  // private setSigningKey(wallet: EthersWallet) {
-  //   this.signingKey = new SigningKey(wallet.privateKey);
-  // }
-
-  // private requireSigningKey() {
-  //   if (!this.signingKey) {
-  //     throw new Error('A signing key is required !');
-  //   }
-  // }
-
   private async encrypt(keyName: string, wallet: EthersWallet, ensDomain: string, encryptionPassword: string): Promise<Key> {
     this.store.setLoading(true);
-    this.store.progress = 0;
+    this.store.update({progress: 0});
+
     const keyStore = await wallet.encrypt(
       encryptionPassword,
       null,
-      (progress) => { this.store.progress = Math.round(progress * 100); }
+      (progress) => { this.store.update({progress: Math.round(progress * 100)}); }
     );
-    let isMainKey = false;
-    if (this.query.getKeyCountOfUser(ensDomain) === 0) {
-      isMainKey = true;
-    }
+
+    const isMainKey = this.query.getKeyCountOfUser(ensDomain) === 0;
     const key = {name: keyName, address: wallet.address, ensDomain, keyStore, isMainKey, isLinked: false};
     this.store.setLoading(false);
     return key;
@@ -88,12 +74,9 @@ export class KeyManagerService {
 
   async importFromJsonFile(jsonString: string) {
     const {address, ensDomain, keyStore} = JSON.parse(jsonString);
-    let isMainKey = false;
-    if (this.query.getKeyCountOfUser(ensDomain) === 0) {
-      isMainKey = true;
-    }
+    const isMainKey = this.query.getKeyCountOfUser(ensDomain) === 0;
 
-    const provider = instantiateFallbackProvider(network);
+    const provider = getProvider(network);
 
     const erc1077 = new Contract(ensDomain, ERC1077.abi, provider);
     const isLinked = await erc1077.keyExist(address);
@@ -107,12 +90,12 @@ export class KeyManagerService {
   async unlockKey(key: Key, encryptionPassword: string) {
 
     this.store.setLoading(true);
-    this.store.progress = 0;
+    this.store.update({progress: 0});
     try {
       const wallet = await EthersWallet.fromEncryptedJson(
         key.keyStore,
         encryptionPassword,
-        (progress) => { this.store.progress = Math.round(progress * 100); }
+        (progress) => { this.store.update({progress: Math.round(progress * 100)}); }
       );
       this.store.setLoading(false);
       return wallet;
