@@ -52,6 +52,14 @@ const ICONS_SVG = [
     url: 'assets/icons/magnifyingGlass.svg'
   },
   {
+    name: 'dark_32px_MagnifyingGlass',
+    url: 'assets/icons/dark_32px_MagnifyingGlass.svg'
+  },
+  {
+    name: 'dark_32px_adjustableWrench',
+    url: 'assets/icons/dark_32px_adjustableWrench.svg'
+  },
+  {
     name: 'arrow',
     url: 'assets/icons/arrow.svg'
   },

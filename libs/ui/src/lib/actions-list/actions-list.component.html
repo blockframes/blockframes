@@ -2,26 +2,26 @@
   <ng-container *ngFor="let item of items; last as last">
     <ng-container *ngIf="item.routerLink">
       <mat-list-item [routerLink]="item.routerLink">
-        <mat-icon class="left-icon" matListIcon [svgIcon]="item.icon">
+        <mat-icon class="left-icon bf-dark-icon" matListIcon [svgIcon]="item.icon">
           {{ item.matIcon }}
         </mat-icon>
-        <h4 mat-line>
+        <p>
           <b>{{ item.title }}</b>
-        </h4>
-        <p mat-line>{{ item.description }}</p>
+        </p>
+        <p>{{ item.description }}</p>
       </mat-list-item>
       <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
     <ng-container *ngIf="item.action">
       <a (click)="item.action()">
         <mat-list-item>
-          <mat-icon class="left-icon" matListIcon [svgIcon]="item.icon">
+          <mat-icon class="left-icon bf-dark-icon" matListIcon [svgIcon]="item.icon">
             {{ item.matIcon }}
           </mat-icon>
-          <h4 mat-line>
+          <p>
             <b>{{ item.title }}</b>
-          </h4>
-          <p mat-line>{{ item.description }}</p>
+          </p>
+          <p>{{ item.description }}</p>
         </mat-list-item>
         <mat-divider *ngIf="!last"></mat-divider>
       </a>
