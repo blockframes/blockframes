@@ -17,11 +17,5 @@ export class OrganizationFormComponent {
     return this.controlContainer.control;
   }
 
-  public get logo() {
-    return this.control.get('logo').value;
-  }
-
-  public set logo(logoPath: string | undefined){
-    this.control.get('logo').patchValue(logoPath || PLACEHOLDER_LOGO);
-  }
+  //TODO: connect cropper with firebase
 }
