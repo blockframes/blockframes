@@ -44,7 +44,7 @@ h1 {
 .dark-theme h2 {
   font-size: 30px;
   font-weight: 800;
-  color: #E2E8FF;
+  color: mat-color($bf-dark-foreground, title);
 }
 
 .light-theme h3 {
