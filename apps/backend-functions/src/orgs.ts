@@ -8,8 +8,9 @@ import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { organizationCreated } from './assets/mail-templates';
 import { OrganizationDocument, OrganizationStatus } from './data/types';
-import { precomputeAddress as precomputeEthAddress, emailToEnsDomain, RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
+import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
+import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -67,7 +68,9 @@ export async function onOrganizationUpdate(
       throw new Error(`This organization has already an ENS name: ${orgENS}`);
     }
 
-    const adminEthAddress = await precomputeEthAddress(emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain), RELAYER_CONFIG);
+    const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
+    const provider = getProvider(RELAYER_CONFIG.network);
+    const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
     const orgEthAddress =  await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
     console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);

@@ -47,7 +47,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
   ngOnInit(){
     this.wallet$ = this.query.select();
     this.isDecrypting$ = this.keyManagerQuery.selectLoading();
-    this.loadingProgress$ = this.keyManagerQuery.selectProgress();
+    this.loadingProgress$ = this.keyManagerQuery.select('progress');
   }
 
   handleKeySelection(key: Key) {

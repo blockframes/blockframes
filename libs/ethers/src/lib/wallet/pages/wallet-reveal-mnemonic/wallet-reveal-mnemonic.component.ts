@@ -35,7 +35,7 @@ export class WalletRevealMnemonicComponent implements OnInit {
   ngOnInit() {
     this.key = this.keyQuery.getEntity(this.route.snapshot.paramMap.get('address'));
     this.isLoading$ = this.keyQuery.selectLoading();
-    this.loadingProgress$ = this.keyQuery.selectProgress();
+    this.loadingProgress$ = this.keyQuery.select('progress');
     this.mnemonic = '';
   }
 

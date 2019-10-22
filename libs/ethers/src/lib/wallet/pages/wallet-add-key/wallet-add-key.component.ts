@@ -37,7 +37,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
 
   ngOnInit() {
     this.encrypting$ = this.keyQuery.selectLoading();
-    this.loadingProgress$ = this.keyQuery.selectProgress();
+    this.loadingProgress$ = this.keyQuery.select('progress');
   }
 
   async setPassword(password: string) {

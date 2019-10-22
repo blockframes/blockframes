@@ -34,7 +34,7 @@ export interface SignedMetaTx extends MetaTx {
 }
 
 export interface ActionTx extends Tx {
-  callback?: (...args) => void;
+  callback?: (...args: Object[]) => void;
 }
 
 export interface TxFeedback {
@@ -54,12 +54,6 @@ export interface Wallet {
   hasERC1077: boolean;
   tx: ActionTx;
   feedback: TxFeedback;
-}
-
-export interface AddressParts {
-  start: string;
-  middle: string;
-  end: string;
 }
 
 export interface Key {

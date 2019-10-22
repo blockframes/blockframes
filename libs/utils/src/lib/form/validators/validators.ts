@@ -9,9 +9,9 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
-import { network } from '@env';
+import { network, baseEnsDomain } from '@env';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
-import { instantiateFallbackProvider, orgNameToEnsDomain } from 'libs/ethers/src/lib/helpers';
+import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
@@ -63,8 +63,8 @@ export function validPercentage(control: FormControl): ValidationErrors {
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
-  const orgENS = orgNameToEnsDomain(control.value);
-  const provider = instantiateFallbackProvider(network);
+  const orgENS = orgNameToEnsDomain(control.value, baseEnsDomain);
+  const provider = getProvider(network);
   const orgEthAddress = await provider.resolveName(orgENS);
   return !orgEthAddress ? null : { notUnique: true };
 }
