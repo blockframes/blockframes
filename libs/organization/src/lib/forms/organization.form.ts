@@ -17,9 +17,9 @@ function createOrganizationFormControl(params?: Organization) {
   }
 }
 
-export type CreateOrganizationFormControl = ReturnType<typeof createOrganizationFormControl>;
+export type OrganizationFormControl = ReturnType<typeof createOrganizationFormControl>;
 
-export class CreateOrganizationForm extends FormEntity<CreateOrganizationFormControl> {
+export class OrganizationForm extends FormEntity<OrganizationFormControl> {
   constructor(organization?: Organization) {
     super(createOrganizationFormControl(organization));
   }
