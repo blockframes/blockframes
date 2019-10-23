@@ -3,8 +3,12 @@
     {{ message }}
   </span>
   <article fxLayoutAlign="start" fxLayoutGap="15px">
-    <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)"><mat-icon bf-icon>done</mat-icon></a>
-    <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)"><mat-icon bf-icon>clear</mat-icon></a>
+    <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+      <mat-icon bf-icon>done</mat-icon>
+    </a>
+    <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+      <mat-icon bf-icon>clear</mat-icon>
+    </a>
   </article>
   <p class="date">
     Received {{ invitation.date.toDate() | date: 'MMM dd yyyy' }} at
