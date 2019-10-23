@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU } from './context-menu';
+import { CONTEXT_MENU, CONTEXT_MENU_AFM } from './context-menu';
+import { AFM_DISABLE } from '@env';
 
 @Component({
   selector: 'catalog-layout',
@@ -10,12 +11,19 @@ import { CONTEXT_MENU } from './context-menu';
 })
 
 export class LayoutComponent implements OnInit {
+  public AFM_DISABLE: boolean;
 
   constructor(
     private contextMenuService: ContextMenuService,
-  ) {}
+  ) {
+    this.AFM_DISABLE = AFM_DISABLE;
+   }
 
   ngOnInit() {
-    this.contextMenuService.setMenu(CONTEXT_MENU);
+    if (this.AFM_DISABLE) {
+      this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
+    } else {
+      this.contextMenuService.setMenu(CONTEXT_MENU);
+    }
   }
 }

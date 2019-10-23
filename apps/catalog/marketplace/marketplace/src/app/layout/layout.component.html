@@ -20,8 +20,10 @@
             <account-profile-widget></account-profile-widget>
             <mat-divider></mat-divider>
             <organization-widget></organization-widget>
-            <mat-divider></mat-divider>
-            <wallet-widget></wallet-widget>
+            <ng-container *ngIf="!AFM_DISABLE"> <!-- TODO #1146 -->
+              <mat-divider></mat-divider>
+              <wallet-widget></wallet-widget>
+            </ng-container>
           </ng-container>
         </account-profile-menu>
       </ng-container>
