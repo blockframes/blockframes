@@ -45,7 +45,7 @@
       </div>
       <div class="Buttons">
         <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
-        <button mat-flat-button color="primary" (click)="resize(url)">resize</button>
+        <!-- <button mat-flat-button color="primary" (click)="resize(url)">resize</button> -->
         <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>
         <button mat-flat-button color="primary" (click)="delete()">delete</button>
       </div>
