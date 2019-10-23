@@ -31,6 +31,6 @@ export class MaterialForm extends FormBatch<Material, MaterialControl> {
 
   createControl(material: Partial<Material>) {
     const controls = createMaterialControl(material);
-    return new FormEntity(controls);
+    return new FormEntity<MaterialControl>(controls);
   }
 }
