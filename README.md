@@ -44,10 +44,11 @@ export GOOGLE_APPLICATION_CREDENTIALS=some/path/service-account-for-your-firebas
 
 ### Setup your secrets
 
-```sh
-export SENDGRID_API_KEY=""
-export MNEMONIC=""
-```
+We use this to send emails, configure algolia, etc.
+
+We have secrets that we don't share on the public github, these should be stored in the `secrets.sh` file at the root of the project. By default the ops scripts will use the `secrets.template.sh` file that contains an example of the secrets we use.
+
+Copy the `secrets.template.sh` to `secrets.sh` and update the values with keys you create on different services.
 
 ## Running and testing
 
