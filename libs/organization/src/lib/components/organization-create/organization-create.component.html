@@ -7,7 +7,7 @@
   <article>
     <h2>Create your organization</h2>
     <form [formGroup]="form" (ngSubmit)="addOrganization()">
-      <h3>Your compagny</h3>
+      <h3>Your company</h3>
       <mat-form-field appearance="outline">
         <mat-label>Organization name</mat-label>
         <input
@@ -23,26 +23,30 @@
 
       <h3>Contact information</h3>
       <mat-form-field appearance="outline">
-        <mat-label>Phone number</mat-label>
+        <mat-label>Company phone number</mat-label>
         <input
           matInput
-          placeholder="Phone number"
-          aria-label="phone number"
+          placeholder="Company phone number"
+          aria-label="company phone number"
           formControlName="phoneNumber"
         />
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Email address</mat-label>
+        <mat-label>Contact email address</mat-label>
         <input
           matInput
-          placeholder="Email address"
-          aria-label="email address"
+          placeholder="Contact email address"
+          aria-label="contact email address"
           formControlName="email"
         />
         <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
       </mat-form-field>
 
-      <h3>Information</h3>
+      <h3>Activity details</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Activity description</mat-label>
+        <input matInput placeholder="Activity description" aria-label="activity description" formControlName="activity" />
+      </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Fiscal number</mat-label>
         <input
@@ -51,10 +55,6 @@
           aria-label="fiscal number"
           formControlName="fiscalNumber"
         />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Activity</mat-label>
-        <input matInput placeholder="Activity" aria-label="activity" formControlName="activity" />
       </mat-form-field>
 
       <!-- TODO: issue#287 cropper image => use key "logo" of the form -->
