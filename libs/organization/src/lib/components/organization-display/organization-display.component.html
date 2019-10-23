@@ -4,12 +4,12 @@
       <img mat-card-avatar [storageRef]="organization.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <h3>{{ organization.name }}</h3>
-        <p class="info-text"> Phone number   <span>  {{organization.phoneNumber}}</span></p>
-        <p class="info-text"> Email   <span>  {{organization.email}}</span></p>
+        <p class="info-text"> Phone number   <span>  {{organizationInformations.phoneNumber}}</span></p>
+        <p class="info-text"> Email   <span>  {{organizationInformations.email}}</span></p>
         <!-- TODO: #1126 Address form fields -->
-        <p class="info-text"> Address   <span>  {{organization.officeAddress}}</span></p>
-        <p class="info-text"> Fiscal number   <span>  {{organization.fiscalNumber}}</span></p>
-        <p class="info-text"> Activity   <span>  {{organization.activity}}</span></p>
+        <!-- <p class="info-text"> Address   <span>  {{organization.officeAddress}}</span></p> -->
+        <p class="info-text"> Fiscal number   <span>  {{organizationInformations.fiscalNumber}}</span></p>
+        <p class="info-text"> Activity   <span>  {{organizationInformations.activity}}</span></p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>

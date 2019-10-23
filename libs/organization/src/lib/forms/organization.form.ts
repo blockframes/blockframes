@@ -17,10 +17,29 @@ function createOrganizationFormControl(params?: Organization) {
   }
 }
 
+function createOrganizationEditFormControl(params?: Organization)  {
+  const organization = createOrganization(params);
+  return {
+    phoneNumber: new FormControl(organization.phoneNumber),
+    email: new FormControl(organization.email, Validators.email),
+    fiscalNumber: new FormControl(organization.fiscalNumber),
+    activity: new FormControl(organization.activity),
+    logo: new FormControl(organization.logo)
+  }
+}
+
 export type OrganizationFormControl = ReturnType<typeof createOrganizationFormControl>;
+
+export type OrganizationFormEditControl = ReturnType<typeof createOrganizationEditFormControl>;
 
 export class OrganizationForm extends FormEntity<OrganizationFormControl> {
   constructor(organization?: Organization) {
     super(createOrganizationFormControl(organization));
+  }
+}
+
+export class OrganizationEditForm extends FormEntity<OrganizationFormEditControl> {
+  constructor(organization?: Organization) {
+    super(createOrganizationEditFormControl(organization));
   }
 }
