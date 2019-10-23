@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { PLACEHOLDER_LOGO } from '../../+state';
 
 @Component({
   selector: '[formGroupName] organization-form, [formGroup] organization-form, organization-form',
