@@ -12,7 +12,7 @@ import {
   HostBinding
 } from '@angular/core';
 // Blockframes
-import { Movie, MovieQuery } from '@blockframes/movie';
+import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
 import {
   GenresLabel,
   GENRES_LABEL,
@@ -107,11 +107,18 @@ export class MarketplaceSearchComponent implements OnInit {
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
-  constructor(private movieQuery: MovieQuery, private router: Router) {}
+  constructor(
+    private movieQuery: MovieQuery,
+    private router: Router,
+    private movieService: MovieService,
+  ) { }
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => movies.filter(movie => filterMovie(movie, filterOptions))),
+      map(([movies, filterOptions]) => movies.filter(async movie => { 
+        const deals = await this.movieService.getDistributionDeals(movie.id);
+        return filterMovie(movie, deals, filterOptions);
+      })),
       tap(movies => (this.availableMovies = movies.length))
     );
 

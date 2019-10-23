@@ -1,7 +1,5 @@
-import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { CatalogSearch } from './search.form';
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie, MovieSale } from '@blockframes/movie/movie/+state';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -38,7 +36,7 @@ function types(movie: Movie, movieGenre: string[]): boolean {
   if (!movieGenre.length) {
     return true;
   }
-  // we have to make it lowercase to make sure we are comapring correctly
+  // we have to make it lowercase to make sure we are comparing correctly
   const movieGenreToLowerCase = movieGenre.map(type => type.toLowerCase());
   const movieTypesToLowerCase = movie.main.genres.map(genre => genre.toLowerCase());
   for (let i = 0; i < movieTypesToLowerCase.length; i++) {
@@ -69,12 +67,12 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
   }
 }
 // TODO #979 - check if availabilities filter is needed
-function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean {
+function availabilities(deals: MovieSale[], range: { from: Date; to: Date }): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
   return (
-    movie.sales.some(sale => {
+    deals.some(sale => {
       if (sale.rights) {
         const from: Date = (sale.rights.from as any).toDate();
         /**
@@ -83,7 +81,7 @@ function availabilities(movie: Movie, range: { from: Date; to: Date }): boolean 
         return from.getTime() < range.from.getTime();
       }
     }) &&
-    movie.sales.some(sale => {
+    deals.some(sale => {
       if (sale.rights) {
         const to: Date = (sale.rights.to as any).toDate();
         return to.getTime() > range.to.getTime();
@@ -105,7 +103,7 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
+export function filterMovie(movie: Movie, deals : MovieSale[], filter: CatalogSearch): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
       ...filter.languages[name],
@@ -119,7 +117,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
     hasEveryLanguage &&
     types(movie, filter.type) &&
     certifications(movie, filter.certifications) &&
-    availabilities(movie, filter.availabilities) &&
+    availabilities(deals, filter.availabilities) &&
     hasTerritory &&
     hasMedia
   );

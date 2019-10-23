@@ -56,10 +56,9 @@ export class TableExtractedSalesComponent implements OnInit {
 
   async createSale(importState: SalesImportState): Promise<boolean> {
     const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-    const movie = createMovie(cleanModel(existingMovie));
     const data = this.rows.data;
-    movie.sales.push(importState.sale);
-    await this.movieService.updateById(movie.id, movie);
+
+    await this.movieService.addDistributionDeal(existingMovie.id, importState.sale);
     importState.errors.push({
       type: 'error',
       field: 'sale',
@@ -76,7 +75,8 @@ export class TableExtractedSalesComponent implements OnInit {
     try {
       const data = this.rows.data;
       const movies = {};
-      const sales = this.selection.selected
+      const promises = [];
+      this.selection.selected
         .filter(importState => !hasImportErrors(importState))
         .map(importState => {
 
@@ -91,14 +91,13 @@ export class TableExtractedSalesComponent implements OnInit {
             reason: 'Sale already added',
             hint: 'Sale already added'
           } as SpreadsheetImportError)
-          
-          return movies[importState.movieInternalRef].sales.push(importState.sale);
+
+          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.sale));
         });
       this.rows.data = data;
-      const promises = Object.keys(movies).map(k => this.movieService.updateById(movies[k].id, movies[k]))
 
       await Promise.all(promises);
-      this.snackBar.open(`${sales.length} sales inserted!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${promises.length} sales inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
       this.snackBar.open(`Could not insert sales`, 'close', { duration: 3000 });

@@ -607,7 +607,7 @@ const models: Model = {
     { 'slug': 't-vod-er-dtr-streaming', 'label': 'T-VOD, ER, DTR, Streaming' },
     { 'slug': 'est-dto-download', 'label': 'EST, DTO, Download' },
     { 'slug': 'n-vod', 'label': 'N-VOD' },
-    { 'slug': 'a-vod', 'label': 'A-getCodeIfExistsVOD' },
+    { 'slug': 'a-vod', 'label': 'A-VOD' },
     { 'slug': 'f-vod', 'label': 'F-VOD' },
     { 'slug': 's-vod', 'label': 'S-VOD' },
     { 'slug': 'all-rights', 'label': 'All rights' },

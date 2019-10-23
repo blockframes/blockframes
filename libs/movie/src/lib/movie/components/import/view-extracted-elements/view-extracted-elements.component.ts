@@ -13,7 +13,8 @@ import {
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   cleanModel,
-  createMovieSale
+  createMovieSale,
+  MovieService
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -106,6 +107,7 @@ export class ViewExtractedElementsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
+    private movieService: MovieService,
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
   ) { }
@@ -801,11 +803,11 @@ export class ViewExtractedElementsComponent {
 
   public formatSales(sheetTab: SheetTab) {
     this.clearDataSources();
-    sheetTab.rows.forEach(spreadSheetRow => {
+    sheetTab.rows.forEach(async spreadSheetRow => {
 
       if (spreadSheetRow[SpreadSheetSale.internalRef]) {
 
-        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]);
+        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]); 
         const sale = createMovieSale();
         const importErrors = {
           sale,
@@ -926,7 +928,7 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (this.movieQuery.existingSale(movie.main.internalRef, sale)) {
+          if (await this.movieService.existingDistributionDeal(movie.id, sale)) {
             importErrors.errors.push({
               type: 'error',
               field: 'sale',

@@ -59,7 +59,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     versionInfo: createMovieVersionInfo(params.versionInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
-    sales: [],
     ...params
   };
 }
