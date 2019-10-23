@@ -12,9 +12,10 @@ import { MatButtonModule } from '@angular/material/button';
 // Components
 import { CropperComponent } from './cropper/cropper.component';
 import { HttpClientModule } from '@angular/common/http';
+import { StorageImageDirective } from './storage-image.directive';
 
 @NgModule({
-  declarations: [DropZoneDirective, CropperComponent],
+  declarations: [DropZoneDirective, CropperComponent, StorageImageDirective],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -23,6 +24,6 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     ImageCropperModule
   ],
-  exports: [DropZoneDirective, CropperComponent]
+  exports: [DropZoneDirective, CropperComponent, StorageImageDirective]
 })
 export class CropperModule {}
