@@ -15,12 +15,14 @@ article {
 .cropper,
 .show {
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.show-show {
-  height: 300px;
-  width: 300px;
-  padding: 100px;
+.croppedImage {
+  height: 200px;
+  width: 200px;
   border-radius: 50%;
 }
 

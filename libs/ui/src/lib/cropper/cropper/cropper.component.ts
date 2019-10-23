@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -23,10 +24,12 @@ function b64toBlob(data: string) {
   return new Blob([ab], { type });
 }
 
+
   function blobToFile(blob: Blob, fileName:string): File {
     const picture = new File([blob], fileName, {type:"image/png"})
     return picture;
 }
+
 
 /** Check if the path is a file path */
 function isFile(path: string): boolean {
@@ -35,19 +38,26 @@ function isFile(path: string): boolean {
   }
   const part = path.split('.');
   const last = part.pop();
-  console.log('isFile part', part)
-  console.log('isFile las', last)
   return part.length === 1 && !last.includes('/');
 }
+
+
+
+
 
 @Component({
   selector: 'cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   viewProviders: [DropZoneDirective],
-  animations: [ zoom, zoomDelay, check, finalZoom ]
+  animations: [ zoom, zoomDelay, check, finalZoom ],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => CropperComponent),
+    multi: true
+  }]
 })
-export class CropperComponent {
+export class CropperComponent implements ControlValueAccessor{
   private ref: AngularFireStorageReference;
   private folder: string;
   private name: string;
@@ -61,8 +71,18 @@ export class CropperComponent {
 
   // inputs
   @Input() ratio: string;
-  @Input() set path(path: string) {
-    console.log('input path', path)
+
+  uploaded: (ref: string) => void;
+  deleted: () => void;
+
+  constructor(private storage: AngularFireStorage, private http: HttpClient) { }
+
+  //////////////////////////
+  // ControlValueAccessor //
+  //////////////////////////
+
+  //  Triggered when the parent form field is initialized or updated (parent -> component)
+  writeValue(path: string): void {
     if (isFile(path)) {
       const part = path.split('/');
       this.name = part.pop();
@@ -77,15 +97,23 @@ export class CropperComponent {
     }
   }
 
-  @Output() uploaded = new EventEmitter<string>();
-  @Output() deleted = new EventEmitter<string>();
+  // update the parent form field when there is change in the component (component -> parent)
+  registerOnChange(fn: any): void {
+    this.uploaded = (ref: string) => fn(ref);
+    this.deleted = () => fn();
+  }
+  registerOnTouched(fn: any): void {
+    return;
+  }
 
-  constructor(private storage: AngularFireStorage, private http: HttpClient) { }
+  ///////////
+  // Steps //
+  ///////////
+
 
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
-    console.log('image dropped', this.file)
     this.storage.ref(`${this.folder}/original`).put(this.file);
     this.nextStep('crop');
   }
@@ -115,19 +143,15 @@ export class CropperComponent {
   }
 
   goToShow() {
-    console.log('show ref', this.ref)
-    console.log('show file', this.file)
     this.url$ = this.ref.getDownloadURL();
     this.ref.getMetadata().toPromise()
-    .then(meta => this.uploaded.emit(meta.fullPath));
+    .then(meta => this.uploaded(meta.fullPath));
       this.nextStep('show');
     }
 
     async resize(url: string) {
       if (!this.file) {
-        console.log('resize url', url)
-        const name = url.split('%2F').pop();
-        console.log('resize url name', name)
+        // const name = url.split('%2F').pop();
         const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
         // this.file = blobToFile(blob, name);
         this.file = blobToFile(blob, 'original');
@@ -138,7 +162,7 @@ export class CropperComponent {
     delete() {
       this.ref.delete().subscribe(() => {
         this.nextStep('drop');
-        this.deleted.emit();
+        this.deleted();
       });
     }
 
