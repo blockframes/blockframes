@@ -13,7 +13,9 @@ import {
   MovieSaleDocumentWithDates,
   MovieSalesAgentDealDocumentWithDates,
   MovieSalesInfoDocumentWithDates,
-  PromotionalElement
+  PromotionalElement,
+  PromotionalElementTypes,
+  MovieBudget
 } from './movie.firestore';
 
 export type PromotionalElement = PromotionalElement;
@@ -44,6 +46,8 @@ export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
 
 export type Movie = MovieDocumentWithDates;
 
+export type MovieBudget = MovieBudget;
+
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
@@ -59,6 +63,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     versionInfo: createMovieVersionInfo(params.versionInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
+    budget: createMovieBudget(params.budget),
     ...params
   };
 }
@@ -105,6 +110,7 @@ export function createPromotionalElement(
   return {
     label: '',
     url: '',
+    type: PromotionalElementTypes.OTHER,
     ...promotionalElement
   };
 }
@@ -181,6 +187,7 @@ export function createMovieSalesAgentDeal(
     },
     territories: [],
     medias: [],
+    reservedTerritories: [],
     ...params
   } as MovieSalesAgentDeal;
 }
@@ -204,6 +211,15 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     firstName: '',
     lastName: '',
     creditRole: '',
+    logo: '',
     ...params
   } as Credit;
+}
+
+
+export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
+  return {
+    totalBudget: '',
+    ...params
+  } as MovieBudget;
 }
