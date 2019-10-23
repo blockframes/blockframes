@@ -21,5 +21,12 @@ export class MemberRepertoryComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<OrganizationMember>;
-  public displayedColumns: string[] = ['name', 'email', 'role', 'signer', 'action'];
+  public displayedColumns: string[] = [
+    'name',
+    'email',
+    'role',
+    // ! STRIP BLOCKCHAIN CODE
+    // 'signer',
+    'action'
+  ];
 }

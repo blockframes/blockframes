@@ -4,7 +4,10 @@
   <!-- Name and Surname Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-    <td mat-cell *matCellDef="let member">{{ member.name }} {{ member.surname }}</td>
+    <td mat-cell *matCellDef="let member">
+      <avatar-list [urls]="[member.avatar]"></avatar-list>
+      {{ member.name }} {{ member.surname }}
+    </td>
   </ng-container>
 
   <!-- Email Column -->
@@ -19,13 +22,14 @@
     <td mat-cell *matCellDef="let member">{{ member.role }}</td>
   </ng-container>
 
+  <!-- ! STRIP BLOCKCHAIN CODE -->
   <!-- Signer Column -->
-  <ng-container matColumnDef="signer">
+  <!-- <ng-container matColumnDef="signer">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Signer</th>
     <td mat-cell *matCellDef="let member">
       <avatar-list [urls]="[member.avatar]"></avatar-list>
     </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- Action Column -->
   <ng-container matColumnDef="action">
