@@ -16,6 +16,4 @@ export class OrganizationFormComponent {
   public get control() {
     return this.controlContainer.control;
   }
-
-  //TODO: connect cropper with firebase
 }

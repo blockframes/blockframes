@@ -1,17 +1,13 @@
-<h4>Logo</h4>
-<article class="actions" fxLayout="column" fxLayoutAlign="center center">
-  <mat-card-actions>
-    <ng-container>
-      <div class="cropper">
-        <cropper [ratio]="4/3"></cropper>
-      </div>
-    </ng-container>
-  </mat-card-actions>
-</article>
-
-<mat-divider></mat-divider>
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+    <h4>Logo</h4>
+    <mat-card-actions>
+      <ng-container>
+        <div class="cropper">
+          <cropper [ratio]="4/3" formControlName="logo"></cropper>
+        </div>
+      </ng-container>
+    </mat-card-actions>
     <h4>Information</h4>
     <mat-form-field appearance="outline">
       <mat-label>Office Address</mat-label>
