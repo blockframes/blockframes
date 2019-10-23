@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { network, factoryContract, baseEnsDomain } from '@env';
-import { ERC1077 } from '@blockframes/contracts';
+import { abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
@@ -101,7 +101,7 @@ export class WalletService {
   /** return an instance of an ERC10777 contract */
   private getUsersERC1077(ensDomainOrAddress: string) {
     this._requireProvider();
-    return new Contract(ensDomainOrAddress, ERC1077.abi, this.provider);
+    return new Contract(ensDomainOrAddress, ERC1077_ABI, this.provider);
   }
 
   public setDeleteKeyTx(erc1077Address: string, key: Key) {

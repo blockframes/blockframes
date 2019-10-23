@@ -3,7 +3,7 @@ import { keccak256 } from '@ethersproject/keccak256'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Provider, InfuraProvider, EtherscanProvider, NodesmithProvider, FallbackProvider } from '@ethersproject/providers'
 import { toUtf8Bytes } from '@ethersproject/strings'
-import { ERC1077 } from '@blockframes/contracts';
+import { bytecode as ERC1077_BYTECODE } from '@blockframes/contracts/ERC1077.json';
 
 /** instantiate a Fallback provider from the wanted network */
 export function getProvider(network: string) {
@@ -56,7 +56,7 @@ export function orgNameToEnsDomain(orgName: string, baseEnsDomain: string) {
 export async function precomputeAddress(ensDomain: string, provider: Provider, factoryContract: string) {
   const factoryAddress = await provider.resolveName(factoryContract).then(address => address.substr(2));
   const salt = keccak256(toUtf8Bytes(getNameFromENS(ensDomain))).substr(2);
-  const byteCodeHash = keccak256(`0x${ERC1077.bytecode}`).substr(2);
+  const byteCodeHash = keccak256(`0x${ERC1077_BYTECODE}`).substr(2);
 
   const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
 
