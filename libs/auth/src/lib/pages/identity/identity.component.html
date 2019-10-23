@@ -1,10 +1,10 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <article fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <img src="/assets/images/rocket_night.png" />
+    <img src="/assets/images/rocket.png">
     <form [formGroup]="form">
       <h2>Your identity</h2>
       <p>
-        Please fill out the form to interact with the blockframes DApps.
+        Please enter your name and surname, this is mandatory.
       </p>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
@@ -39,5 +39,5 @@
       </ng-container>
     </form>
   </article>
-  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">Next</button>
+  <button (click)="update()" type="submit" mat-flat-button color="accent">Next</button>
 </section>
