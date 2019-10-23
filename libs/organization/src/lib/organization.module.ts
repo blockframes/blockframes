@@ -64,14 +64,15 @@ export const organizationRoutes: Routes = [
         path: 'members',
         component: MemberEditableComponent
       },
-      {
-        path: 'activityreports',
-        component: OrganizationActivityViewComponent
-      },
-      {
-        path: 'administration',
-        component: OrganizationAdminViewComponent
-      }
+      // ! STRIP BLOCKCHAIN CODE
+      // {
+      //   path: 'activityreports',
+      //   component: OrganizationActivityViewComponent
+      // },
+      // {
+      //   path: 'administration',
+      //   component: OrganizationAdminViewComponent
+      // }
     ]
   }
 ];

@@ -19,7 +19,8 @@ export class OrganizationGuard {
           if (organization.status === OrganizationStatus.pending) {
             return res(this.router.parseUrl('layout/organization/congratulation'));
           }
-          this.orgService.retrieveDataAndAddListeners();
+          // ! STRIP BLOCKCHAIN CODE
+          // this.orgService.retrieveDataAndAddListeners();
           return res(true);
         },
         error: err => {
@@ -32,7 +33,8 @@ export class OrganizationGuard {
 
   canDeactivate() {
     this.subscription.unsubscribe();
-    this.orgService.removeAllListeners();
+    // ! STRIP BLOCKCHAIN CODE
+    // this.orgService.removeAllListeners();
     return true;
   }
 }
