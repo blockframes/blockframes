@@ -2,7 +2,7 @@
   <ng-container *ngFor="let item of items; last as last">
     <ng-container *ngIf="item.routerLink">
       <mat-list-item [routerLink]="item.routerLink">
-        <mat-icon class="left-icon bf-dark-icon" matListIcon [svgIcon]="item.icon">
+        <mat-icon class="left-icon bf-icon bf-bg-icon" matListIcon [svgIcon]="item.icon">
           {{ item.matIcon }}
         </mat-icon>
         <p>
@@ -15,7 +15,7 @@
     <ng-container *ngIf="item.action">
       <a (click)="item.action()">
         <mat-list-item>
-          <mat-icon class="left-icon bf-dark-icon" matListIcon [svgIcon]="item.icon">
+          <mat-icon class="left-icon bf-icon bf-bg-icon" matListIcon [svgIcon]="item.icon">
             {{ item.matIcon }}
           </mat-icon>
           <p>
