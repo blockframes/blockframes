@@ -196,7 +196,7 @@ export function createMovieSale(params: Partial<MovieSale> = {}): MovieSale {
     dubbings: [],
     subtitles: [],
     ...params
-  } as MovieSale; // @todo #1061 move to another file (distributionDeal.model.ts ?)
+  } as MovieSale;
 }
 
 export function createCredit(params: Partial<Credit> = {}): Credit {

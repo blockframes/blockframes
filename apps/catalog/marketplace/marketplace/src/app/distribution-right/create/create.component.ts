@@ -183,7 +183,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   //////////////////////
 
   public startResearch() {
-    console.log('todo :)');
+    console.log('todo #1022');
   }
 
   public subscribeOnSearchForm(): Subscription {
