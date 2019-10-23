@@ -26,7 +26,7 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
-import { PromotionalElementTypes, ProductionStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { PromotionalElementTypes, ProductionStatus, ResourceRatios } from '@blockframes/movie/movie/+state/movie.firestore';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -553,7 +553,8 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
-            type: PromotionalElementTypes.BANNER
+            type: PromotionalElementTypes.BANNER,
+            ratio: ResourceRatios.RECTANGLE
           });
 
           movie.promotionalElements.promotionalElements.push(promotionalElement);
