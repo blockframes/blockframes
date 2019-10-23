@@ -46,8 +46,9 @@ export class OrganizationEditableComponent implements OnInit {
 
   public update() {
     try {
-      if (this.organizationProfileForm.invalid)
+      if (this.organizationProfileForm.invalid) {
         throw new Error('Your organization profile informations are not valid');
+      }
       this.service.update(this.organizationProfileForm.value);
       this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {
