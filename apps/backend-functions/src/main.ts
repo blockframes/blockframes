@@ -3,12 +3,13 @@ import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
-import {
-  RelayerConfig,
-  relayerDeployLogic,
-  relayerRegisterENSLogic,
-  relayerSendLogic,
-} from './relayer';
+// import { // ! STRIP BLOCKCHAIN CODE
+//   RelayerConfig,
+//   relayerDeployLogic,
+//   relayerRegisterENSLogic,
+//   relayerSendLogic,
+// } from './relayer';
+// import { mnemonic, relayer } from './environments/environment';
 import {
   deleteFirestoreDelivery,
   deleteFirestoreMaterial,
@@ -28,7 +29,6 @@ import {
   onDocumentWrite,
   onOrganizationDocumentUpdate
 } from './utils';
-import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
@@ -150,20 +150,20 @@ export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryP
 //--------------------------------
 //            RELAYER           //
 //--------------------------------
+// ! STRIP BLOCKCHAIN CODE
+// const RELAYER_CONFIG: RelayerConfig = {
+//   ...relayer,
+//   mnemonic
+// };
 
-const RELAYER_CONFIG: RelayerConfig = {
-  ...relayer,
-  mnemonic
-};
+// export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
+//   .onCall((data, context) => relayerDeployLogic(data, RELAYER_CONFIG));
 
-export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
-  .onCall((data, context) => relayerDeployLogic(data, RELAYER_CONFIG));
+// export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
+//   .onCall((data, context) => relayerRegisterENSLogic(data, RELAYER_CONFIG));
 
-export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
-  .onCall((data, context) => relayerRegisterENSLogic(data, RELAYER_CONFIG));
-
-export const relayerSend = functions.https
-  .onCall((data, context) => relayerSendLogic(data, RELAYER_CONFIG));
+// export const relayerSend = functions.https
+//   .onCall((data, context) => relayerSendLogic(data, RELAYER_CONFIG));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
