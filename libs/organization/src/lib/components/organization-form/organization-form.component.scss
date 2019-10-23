@@ -11,7 +11,8 @@ img {
   padding: 8px 0;
 }
 
-.cropper {
-  height: 330px;
-  width: 350px;
+cropper {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
 }

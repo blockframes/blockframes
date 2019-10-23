@@ -1,14 +1,9 @@
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
     <h4>Logo</h4>
-    <mat-card-actions>
-      <ng-container>
-        <div class="cropper">
-          <cropper [ratio]="4/3" formControlName="logo"></cropper>
-        </div>
-      </ng-container>
-    </mat-card-actions>
+    <cropper [ratio]="4/3" formControlName="logo"></cropper>
     <mat-divider [inset]="true"></mat-divider>
+    <!-- TODO: #1142 Check uniqueness of org name -->
     <!-- <h4>Your Company</h4>
     <mat-form-field appearance="outline">
       <mat-label>Organization name</mat-label>

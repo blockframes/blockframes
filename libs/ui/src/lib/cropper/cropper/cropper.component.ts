@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
+// convert base64 from ngx-image-cropper to blob for uploading in firebase
 function b64toBlob(data: string) {
   const [metadata, content] = data.split(',');
   const byteString = atob(content);
@@ -65,17 +66,23 @@ export class CropperComponent implements ControlValueAccessor{
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
+  cropRatio: string;
   prev: CropStep;
   url$: Observable<string | null>;
   percentage$: Observable<number>;
 
   // inputs
-  @Input() ratio: string;
+  @Input() set ratio(ratio: string) {
+    this.cropRatio = ratio;
+    const el:HTMLElement = this._elementRef.nativeElement;
+    const w = el.clientWidth;
+    this._renderer.setStyle(el, "height", `calc(40px+${w}px/${ratio})`)
+  }
 
   uploaded: (ref: string) => void;
   deleted: () => void;
 
-  constructor(private storage: AngularFireStorage, private http: HttpClient) { }
+  constructor(private storage: AngularFireStorage, private http: HttpClient, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   //////////////////////////
   // ControlValueAccessor //
@@ -132,7 +139,6 @@ export class CropperComponent implements ControlValueAccessor{
       this.nextStep('upload');
       const fileName = this.name || this.file.name;
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
-      // this.ref = this.storage.ref(`${this.folder}/cropped`);
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(() => this.nextStep('upload_complete'))
@@ -149,7 +155,7 @@ export class CropperComponent implements ControlValueAccessor{
       this.nextStep('show');
     }
 
-    // TODO: get original picture
+    // TODO#1149: get original picture
     async resize(url: string) {
       if (!this.file) {
         // const name = url.split('%2F').pop();

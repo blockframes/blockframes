@@ -71,8 +71,19 @@ h1 {
   color: mat-color($bf-dark-foreground, subheading);
 }
 
-p, span {
+p,
+span {
   font-size: 14px;
+}
+
+p.bf-dark-text,
+span.bf-dark-text {
+  color: mat-color($bf-dark-foreground, dark-text);
+}
+
+p.bf-text,
+span.bf-text {
+  color: mat-color($bf-dark-foreground, text);
 }
 
 .bf-strong {

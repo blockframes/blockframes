@@ -3,13 +3,13 @@
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
       <img mat-card-avatar [storageRef]="organization.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <h3>{{ organization.name }}</h3>
-        <p class="info-text"> Phone number   <span>  {{organizationInformations.phoneNumber}}</span></p>
-        <p class="info-text"> Email   <span>  {{organizationInformations.email}}</span></p>
+        <h4>{{ organization.name }}</h4>
+        <p class="bf-dark-text"> Phone number   <span class="bf-text">  {{organizationInformations.phoneNumber}}</span></p>
+        <p class="bf-dark-text"> Email   <span class="bf-text">  {{organizationInformations.email}}</span></p>
         <!-- TODO: #1126 Address form fields -->
-        <!-- <p class="info-text"> Address   <span>  {{organization.officeAddress}}</span></p> -->
-        <p class="info-text"> Fiscal number   <span>  {{organizationInformations.fiscalNumber}}</span></p>
-        <p class="info-text"> Activity   <span>  {{organizationInformations.activity}}</span></p>
+        <!-- <p class="bf-dark-text"> Address   <span class="bf-text">  {{organization.officeAddress}}</span></p> -->
+        <p class="bf-dark-text"> Fiscal number   <span class="bf-text">  {{organizationInformations.fiscalNumber}}</span></p>
+        <p class="bf-dark-text"> Activity   <span class="bf-text">  {{organizationInformations.activity}}</span></p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>

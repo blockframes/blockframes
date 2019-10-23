@@ -1,11 +1,9 @@
 section {
-  height: 100%;
   width: 100%;
   text-align: center;
 }
 
 article {
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,13 +21,9 @@ article {
 .croppedImage {
   height: 200px;
   width: 200px;
-  border-radius: 50%;
 }
 
-.Buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.buttons {
   a {
     cursor: pointer;
     padding: 20px;
