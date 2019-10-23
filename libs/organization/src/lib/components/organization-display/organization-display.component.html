@@ -1,15 +1,15 @@
 <ng-container *ngIf="organization; else: loading">
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
-      <img mat-card-avatar [src]="organizationInformations.logo" alt="Organization logo" />
+      <img mat-card-avatar [storageRef]="organization.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <h3>{{ organization.name }}</h3>
-        <p class="info-text"> Phone number   <span>  {{organizationInformations.phoneNumber}}</span></p>
-        <p class="info-text"> Email   <span>  {{organizationInformations.email}}</span></p>
+        <p class="info-text"> Phone number   <span>  {{organization.phoneNumber}}</span></p>
+        <p class="info-text"> Email   <span>  {{organization.email}}</span></p>
         <!-- TODO: #1126 Address form fields -->
-        <p class="info-text"> Address   <span>  {{organizationInformations.officeAddress}}</span></p>
-        <p class="info-text"> Fiscal number   <span>  {{organizationInformations.fiscalNumber}}</span></p>
-        <p class="info-text"> Activity   <span>  {{organizationInformations.activity}}</span></p>
+        <p class="info-text"> Address   <span>  {{organization.officeAddress}}</span></p>
+        <p class="info-text"> Fiscal number   <span>  {{organization.fiscalNumber}}</span></p>
+        <p class="info-text"> Activity   <span>  {{organization.activity}}</span></p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>
