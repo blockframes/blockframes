@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs/internal/Observable';
+import { MovieForm } from '../../form/movie.form';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-editable',
@@ -12,17 +14,20 @@ export class MovieEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'movie-editable';
   public fullScreen = false;
   public form$: Observable<Movie>;
+  public form: MovieForm;
 
   constructor(
     private query: MovieQuery,
   ) { }
 
   ngOnInit() {
-    this.form$ = this.query.movieFormChanges$;
+    // TODO: issue#1084, use PersistNgFormPlugin of Akita to save changes of form in the state
+    const movie = this.query.getActive();
+    this.form = new MovieForm(movie);
+    this.form$ = this.form.valueChanges.pipe(startWith(movie));
   }
 
   public toggleFullScreen() {
     return this.fullScreen = !this.fullScreen;
   }
-
 }

@@ -26,9 +26,9 @@ import { DateRange } from '@blockframes/utils/date-range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getSalesInDateRange,
-  getSalesWithMediasAndTerritoriesInCommon,
   exclusiveMovieSales,
-  salesAgentHasDateRange
+  salesAgentHasDateRange,
+  getSalesWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
@@ -200,8 +200,8 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           // FORM VALIDATION
           //////////////////
 
-          if (!value.duration || !value.medias.length || !value.territories.length ) {
-            console.log('You have to provide value for your research');
+          if (!this.form.valid) {
+            console.log('Waiting for the form to be filled');
             return false;
           }
 
@@ -262,15 +262,16 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
           // We have territories and medias in common with some existing sales,
           // Lets check if territories and medias in common belongs to the same sales and if those sales are exclusives.
-          const salesWithMediasAndTerritoriesInCommon = getSalesWithMediasAndTerritoriesInCommon(
+          const salesWithMediasTerritoriesAndLanguagesInCommon = getSalesWithMediasTerritoriesAndLanguagesInCommon(
             value.territories,
             value.medias,
+            value.languages,
             salesInDateRange
           );
 
-          if (salesWithMediasAndTerritoriesInCommon.length) {
+          if (salesWithMediasTerritoriesAndLanguagesInCommon.length) {
             const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveMovieSales(
-              salesWithMediasAndTerritoriesInCommon
+              salesWithMediasTerritoriesAndLanguagesInCommon
             );
             if (exclusiveSalesWithMediasAndTerritoriesInCommon.length) {
               console.log(
@@ -282,7 +283,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
               if (value.exclusive) {
                 console.log(
                   'There is some sales blocking your exclusivity request :',
-                  salesWithMediasAndTerritoriesInCommon
+                  salesWithMediasTerritoriesAndLanguagesInCommon
                 );
                 return false; // End of process
               } else {
@@ -292,7 +293,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
             }
           } else {
             // There is no sales with territories AND medias in common, we are OK.
-            console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS AND TERRITORIES OVERLAPPING FOUND');
+            console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS, TERRITORIES AND LANGUAGES OVERLAPPINGS FOUND');
             return true; // End of process
           }
 

@@ -3,6 +3,8 @@ export interface OrganizationDocument {
   id: string;
   name: string;
   address: string;
+  officeAddress: string;
+  email: string;
   created: number;
   updated: number;
   userIds: string[];
@@ -11,8 +13,9 @@ export interface OrganizationDocument {
   status: OrganizationStatus;
   catalog: null;
   logo: string;
-  officeAddress: string;
   phoneNumber: string;
+  fiscalNumber: string;
+  activity: string;
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -33,11 +36,14 @@ export interface PublicOrganization {
 /** A factory function that creates an Organization. */
 export function createOrganization(params: Partial<OrganizationDocument> = {}): OrganizationDocument {
   return {
-    id: '',
+    id: !!params.id ? params.id : '',
     name: '',
+    email: '',
+    fiscalNumber: '',
+    activity: '',
+    phoneNumber: '',
     address: '',
     officeAddress: '',
-    phoneNumber: '',
     status: OrganizationStatus.pending,
     userIds: [],
     movieIds: [],
