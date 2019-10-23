@@ -5,7 +5,7 @@ import { Wallet as EthersWallet } from '@ethersproject/wallet';
 
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
-import { ERC1077 } from '@blockframes/contracts';
+import { abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
 import { SigningKey } from '@ethersproject/signing-key';
 import { mnemonicToEntropy, entropyToMnemonic } from '@ethersproject/hdnode';
 import { Key } from '../../types';
@@ -78,7 +78,7 @@ export class KeyManagerService {
 
     const provider = getProvider(network);
 
-    const erc1077 = new Contract(ensDomain, ERC1077.abi, provider);
+    const erc1077 = new Contract(ensDomain, ERC1077_ABI, provider);
     const isLinked = await erc1077.keyExist(address);
     this.store.add({name, address, ensDomain, keyStore, isMainKey, isLinked});
   }
