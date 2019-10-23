@@ -23,7 +23,8 @@ export enum ResourceRatios {
   A16_9 = '16/9',
   A4_3 = '4/3',
   ROUND = 'round',
-  SQUARE = 'square'
+  SQUARE = 'square',
+  RECTANGLE = 'rectangle'
 }
 
 export enum ProductionStatus {
