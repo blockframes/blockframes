@@ -3,145 +3,135 @@
 //////////////
 
 $mat-dark-bf-orange: (
-  50 : #FFEEF1,
-  100 : #FFD5D9,
-  200 : #F8A8A5,
-  300 : #F28882,
-  400 : #FF6E61,
-  500 : #FF6247,
-  600 : #F75B48,
-  700 : #E45141,
-  800 : #D74B3B,
-  900 : #C8412F,
+  50: #ffeef1,
+  100: #ffd5d9,
+  200: #f8a8a5,
+  300: #f28882,
+  400: #ff6e61,
+  500: #ff6247,
+  600: #f75b48,
+  700: #e45141,
+  800: #d74b3b,
+  900: #c8412f,
   contrast: (
-    50 : #24374E,
-    100 : #24374E,
-    200 : #24374E,
-    300 : #F9F8FF,
-    400 : #F9F8FF,
-    500 : #F9F8FF,
-    600 : #F9F8FF,
-    700 : #F9F8FF,
-    800 : #F9F8FF,
-    900 : #F9F8FF,
+    50: #24374e,
+    100: #24374e,
+    200: #24374e,
+    300: #f9f8ff,
+    400: #f9f8ff,
+    500: #f9f8ff,
+    600: #f9f8ff,
+    700: #f9f8ff,
+    800: #f9f8ff,
+    900: #f9f8ff
   )
 );
 $mat-dark-bf-blue: (
-  50 : #E9ECFF,
-  100 : #C6D0FF,
-  200 : #9EB1FF,
-  300 : #7492FA,
-  400 : #5679F0,
-  500 : #3560E6,
-  600 : #2E57DB,
-  700 : #234CCE,
-  800 : #1A41C1,
-  900 : #092DAA,
+  50: #e9ecff,
+  100: #c6d0ff,
+  200: #9eb1ff,
+  300: #7492fa,
+  400: #5679f0,
+  500: #3560e6,
+  600: #2e57db,
+  700: #234cce,
+  800: #1a41c1,
+  900: #092daa,
   contrast: (
-    50 : #24374E,
-    100 : #24374E,
-    200 : #24374E,
-    300 : #F9F8FF,
-    400 : #F9F8FF,
-    500 : #F9F8FF,
-    600 : #F9F8FF,
-    700 : #F9F8FF,
-    800 : #F9F8FF,
-    900 : #F9F8FF,
+    50: #24374e,
+    100: #24374e,
+    200: #24374e,
+    300: #f9f8ff,
+    400: #f9f8ff,
+    500: #f9f8ff,
+    600: #f9f8ff,
+    700: #f9f8ff,
+    800: #f9f8ff,
+    900: #f9f8ff
   )
 );
-
 $mat-dark-bf-red: (
-  50 : #ffecef,
-  100 : #ffcfd5,
-  200 : #f49c9f,
-  300 : #ec7679,
-  400 : #f75557,
-  500 : #fe453e,
-  600 : #ef3a3d,
-  700 : #dc3036,
-  800 : #cf292f,
-  900 : #c01c23,
-  A100 : #ffffff,
-  A200 : #fffdfd,
-  A400 : #ffcbca,
-  A700 : #ffb2b1,
+  50: #ffecef,
+  100: #ffcfd5,
+  200: #f49c9f,
+  300: #ec7679,
+  400: #f75557,
+  500: #fe453e,
+  600: #ef3a3d,
+  700: #dc3036,
+  800: #cf292f,
+  900: #c01c23,
+  A100: #ffffff,
+  A200: #fffdfd,
+  A400: #ffcbca,
+  A700: #ffb2b1,
   contrast: (
-    50 : #24374E,
-    100 : #24374E,
-    200 : #FFFFFF,
-    300 : #FFFFFF,
-    400 : #FFFFFF,
-    500 : #FFFFFF,
-    600 : #FFFFFF,
-    700 : #FFFFFF,
-    800 : #FFFFFF,
-    900 : #FFFFFF,
-    A100 : #000000,
-    A200 : #000000,
-    A400 : #000000,
-    A700 : #000000,
+    50: #24374e,
+    100: #24374e,
+    200: #ffffff,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000
   )
 );
-
-////////////////
+// //////////////
 // BACKGROUND //
-////////////////
+// //////////////
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar:    #0D0F1F,
+  app-bar: #0d0f1f,
   status-bar: black,
   background: #010314,
-  card:       rgba(255,255,255,0.05),
-  hover:      rgba(255,255,255,0.08),
-  dialog:     map_get($mat-grey, 800),
-  disabled-button: rgba(155,177,255,0.12),
+  card: rgba(255, 255, 255, 0.05),
+  hover: rgba(255, 255, 255, 0.08),
+  dialog: map_get($mat-grey, 800),
+  disabled-button: rgba(155, 177, 255, 0.12),
   raised-button: map-get($mat-grey, 800),
   focused-button: $light-focused,
   selected-button: map_get($mat-grey, 900),
-  selected-disabled-button: rgba(155,177,255,0.12),
-  disabled-button-toggle: rgba(155,177,255,0.12),
+  selected-disabled-button: rgba(155, 177, 255, 0.12),
+  disabled-button-toggle: rgba(155, 177, 255, 0.12),
   unselected-chip: map_get($mat-grey, 700),
-  disabled-list-option: rgba(155,177,255,0.12),
-
-  // Custom variables
-  border:     #34364C,
+  disabled-list-option: rgba(155, 177, 255, 0.12),
+  // Custom variables border: #34364c,
   autocomplete: #242737,
-  stroked-button: rgba(255,255,255,0.10),
+  stroked-button: rgba(255, 255, 255, 0.1)
 );
-
-
-
-////////////////
+// //////////////
 // FOREGROUND //
-////////////////
+// //////////////
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
-  base:              rgba(155,177,255,0.12),
-  text:              #F3F6FF,
-  divider:           #34364C,
-  dividers:          #34364C,
-  disabled:          rgba(155,177,255,0.12),
-  disabled-text:     $light-disabled-text,
-  disabled-button:   rgba(white, 0.3),
-  elevation:         black,
-  hint-text:         $light-disabled-text,
-  secondary-text:    $light-secondary-text,
-  icon:              #E1E1E3,
-  icons:             #E1E1E3,
-  slider-min:        rgba(#000000, 0.3),
-  slider-off:        rgba(#000000, 0.3),
+  base: rgba(155, 177, 255, 0.12),
+  text: #f3f6ff,
+  divider: #34364c,
+  dividers: #34364c,
+  disabled: rgba(155, 177, 255, 0.12),
+  disabled-text: $light-disabled-text,
+  disabled-button: rgba(white, 0.3),
+  elevation: black,
+  hint-text: $light-disabled-text,
+  secondary-text: $light-secondary-text,
+  icon: #e1e1e3,
+  icons: #e1e1e3,
+  slider-min: rgba(#000000, 0.3),
+  slider-off: rgba(#000000, 0.3),
   slider-off-active: rgba(#000000, 0.3),
-
-  // Custom variables
-  title:             #E2E8FF,
-  subheading:        #F3F6FF,
-  dynamic:           #3B414D,
-  blue-icon:         #9EB1FF,
+  // Custom variables title: #e2e8ff,
+  subheading: #f3f6ff,
+  dynamic: #3b414d,
+  blue-icon: #9eb1ff,
+  dark-text: #80818a
 );
-
-
-///////////
+// /////////
 // THEME //
 ///////////
 
@@ -151,10 +141,10 @@ $bf-dark-warn: mat-palette($mat-dark-bf-red, 500);
 
 $bf-dark-theme: (
   // Standard
-  primary: $bf-dark-primary,
+    primary: $bf-dark-primary,
   accent: $bf-dark-accent,
   warn: $bf-dark-warn,
   is-dark: true,
   foreground: $bf-dark-foreground,
-  background: $bf-dark-background,
+  background: $bf-dark-background
 );

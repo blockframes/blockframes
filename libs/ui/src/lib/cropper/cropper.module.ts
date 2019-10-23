@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DropZoneDirective } from './drop-zone.directive';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +23,8 @@ import { StorageImageDirective } from './storage-image.directive';
     MatIconModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    ImageCropperModule
+    ImageCropperModule,
+    FlexLayoutModule
   ],
   exports: [DropZoneDirective, CropperComponent, StorageImageDirective]
 })

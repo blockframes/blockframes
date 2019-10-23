@@ -7,10 +7,10 @@
     <image-cropper
       [imageFile]="file"
       [maintainAspectRatio]="true"
-      [aspectRatio]="ratio"
+      [aspectRatio]="cropRatio"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
-    <div class="Buttons">
+    <div class="buttons" fxLayout="row" fxLayoutAlign="center">
       <a (click)="cropIt()" routerLink=".">
           <mat-icon>check_circle</mat-icon>
       </a>
@@ -43,7 +43,7 @@
       <div class="show">
         <img class="croppedImage" [src]="url" />
       </div>
-      <div class="Buttons">
+      <div class="buttons" fxLayout="row" fxLayoutAlign="center">
         <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
         <!-- <button mat-flat-button color="primary" (click)="resize(url)">resize</button> -->
         <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>

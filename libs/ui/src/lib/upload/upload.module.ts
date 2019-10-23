@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DropZoneDirective } from './drop-zone.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { ButtonUploadComponent } from './button-upload/button-upload.component';
 
@@ -12,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [CommonModule, MatIconModule, MatProgressBarModule, MatSnackBarModule, MatButtonModule],
-  declarations: [DropZoneDirective, FileUploadComponent, ButtonUploadComponent],
-  exports: [DropZoneDirective, FileUploadComponent, ButtonUploadComponent]
+  declarations: [FileUploadComponent, ButtonUploadComponent],
+  exports: [FileUploadComponent, ButtonUploadComponent]
 })
 export class UploadModule {}
