@@ -81,3 +81,28 @@ export const CONTEXT_MENU = [
     ]
   }
 ];
+
+export const CONTEXT_MENU_AFM = [
+  {
+    route: 'default',
+    items: []
+  },
+  {
+    route: '/layout/o/catalog/home',
+    items: [
+      {
+        name: 'home',
+        path: '/layout/o/catalog/home'
+      },
+      {
+        name: 'catalogue',
+        path: '/layout/o/catalog/search'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/home' // @todo change for correct path
+      }
+    ]
+  }
+];
+
