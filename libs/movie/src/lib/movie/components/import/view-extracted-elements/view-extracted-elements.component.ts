@@ -14,7 +14,11 @@ import {
   createMovieSalesAgentDeal,
   cleanModel,
   createMovieSale,
-  MovieService
+  MovieService,
+  createPromotionalElement,
+  createCredit,
+  createMovieBudget,
+  createMoviePromotionalElements
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -22,6 +26,7 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
+import { PromotionalElementTypes, ProductionStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -74,7 +79,17 @@ enum SpreadSheetMovie {
   keywords,
   languages,
   dubbings,
-  subtitles
+  subtitles,
+  promoReelLink,
+  trailerLink,
+  scenarioLink,
+  productionStatus,
+  budget,
+  theatricalRelease,
+  bannerLink,
+  salesAgentName,
+  salesAgentImage,
+  reservedTerritories
 }
 
 enum SpreadSheetSale {
@@ -121,15 +136,16 @@ export class ViewExtractedElementsComponent {
         const movie = {
           main: createMovieMain(),
           promotionalDescription: createMoviePromotionalDescription(),
+          promotionalElements: createMoviePromotionalElements(),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
           versionInfo: createMovieVersionInfo(),
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
+          budget: createMovieBudget(),
           ...existingMovie ? cleanModel(existingMovie) : undefined
         } as Movie;
 
-        movie.main.status = 'finished'; // all imported movies are in finished state
         const importErrors = { movie, errors: [] } as MovieImportState;
 
         //////////////////
@@ -457,6 +473,118 @@ export class ViewExtractedElementsComponent {
             }
           });
         }
+
+        // PROMO REEL LINK
+        if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Promo reel link',
+            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.promoReelLink]),
+            type: PromotionalElementTypes.REEL
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Promo reel link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+        }
+
+        // TRAILER LINK
+        if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Trailer link',
+            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.trailerLink]),
+            type: PromotionalElementTypes.TRAILER
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Trailer link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+        }
+
+        // SCENARIO LINK
+        if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Scenario link',
+            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.scenarioLink]),
+            type: PromotionalElementTypes.SCENARIO
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Scenario link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+        }
+
+        // PRODUCTION STATUS
+        if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
+          movie.main.status = spreadSheetRow[SpreadSheetMovie.productionStatus];
+        } else {
+          movie.main.status = ProductionStatus.FINISHED;
+        }
+
+        // BUDGET
+        if (spreadSheetRow[SpreadSheetMovie.budget]) {
+          movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
+        }
+
+        // THEATRICAL RELEASE
+        if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
+          movie.salesInfo.theatricalRelease = spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes' ? true : false;
+        }
+
+        // IMAGE BANNIERE LINK
+        if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Banner link',
+            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
+            type: PromotionalElementTypes.BANNER
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Banner link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          } as SpreadsheetImportError);
+        }
+
+        // SALES AGENT (name)
+        const salesAgent = createCredit();
+        if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
+          salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
+        }
+
+        // SALES AGENT (logo)
+        if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
+          salesAgent.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
+        }
+
+        movie.salesAgentDeal.salesAgent = salesAgent;
+
+        // RESERVED TERRITORIES
+        if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
+          movie.salesAgentDeal.reservedTerritories = spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator);
+        }
+
 
         ///////////////
         // VALIDATION
@@ -797,6 +925,46 @@ export class ViewExtractedElementsComponent {
       } as SpreadsheetImportError);
     }
 
+    if (movie.budget.totalBudget === undefined) {
+      errors.push({
+        type: 'warning',
+        field: 'budget.totalBudget',
+        name: 'Budget',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
+
+    if (movie.salesInfo.theatricalRelease === undefined) {
+      errors.push({
+        type: 'warning',
+        field: 'salesInfo.theatricalRelease',
+        name: 'Theatrical release',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
+
+    if (movie.salesAgentDeal.salesAgent === undefined) {
+      errors.push({
+        type: 'warning',
+        field: 'salesAgentDeal.salesAgent',
+        name: 'Sales agent',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
+
+    if (movie.salesAgentDeal.reservedTerritories.length === 0) { 
+      errors.push({
+        type: 'warning',
+        field: 'salesAgentDeal.reservedTerritories',
+        name: 'Reserved territories',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      } as SpreadsheetImportError);
+    }
+
     return importErrors;
   }
 
@@ -807,7 +975,7 @@ export class ViewExtractedElementsComponent {
 
       if (spreadSheetRow[SpreadSheetSale.internalRef]) {
 
-        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]); 
+        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]);
         const sale = createMovieSale();
         const importErrors = {
           sale,
