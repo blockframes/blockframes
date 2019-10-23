@@ -149,6 +149,7 @@ export class CropperComponent implements ControlValueAccessor{
       this.nextStep('show');
     }
 
+    // TODO: get original picture
     async resize(url: string) {
       if (!this.file) {
         // const name = url.split('%2F').pop();
