@@ -1,24 +1,15 @@
 <ng-container *ngIf="organization; else: loading">
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
-      <img mat-card-avatar [src]="organization.logo" alt="Organization logo" />
+      <img mat-card-avatar [src]="organizationInformations.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <div class="column-padding-bottom">
-          <h3>{{ organization.name }}</h3>
-          <span>{{ organization.id }}</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column" class="column-padding">
-          <span><b>Phone number:</b> {{ organizationInformations.phoneNumber }}</span>
-          <span><b>Email:</b> info@{{ organization.name }}.com</span>
-          <span><b>Address:</b> {{ organizationInformations.officeAddress }}</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column" class="column-padding">
-          <span><b>Fiscal number:</b> {{ organizationInformations.fiscalNumber }}</span>
-          <span><b>Activity:</b> {{ organizationInformations.activity }}</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
+        <h3>{{ organization.name }}</h3>
+        <p class="info-text"> Phone number   <span>  {{organizationInformations.phoneNumber}}</span></p>
+        <p class="info-text"> Email   <span>  {{organizationInformations.email}}</span></p>
+        <!-- TODO: #1126 Address form fields -->
+        <p class="info-text"> Address   <span>  {{organizationInformations.officeAddress}}</span></p>
+        <p class="info-text"> Fiscal number   <span>  {{organizationInformations.fiscalNumber}}</span></p>
+        <p class="info-text"> Activity   <span>  {{organizationInformations.activity}}</span></p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>
