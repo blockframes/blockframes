@@ -64,3 +64,8 @@ export const relayer = {
 
 export const backupBucket = 'prod-backups';
 export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
+
+// AFM
+// =========
+
+export const AFM_DISABLE = true

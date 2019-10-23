@@ -64,3 +64,8 @@ export const relayer = {
 
 export const backupBucket = 'ci-backups';
 export const sendgridAPIKey = '';
+
+// AFM
+// =========
+
+export const AFM_DISABLE = true
