@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
-import { CreateOrganizationForm } from '../../forms/create-organization.form';
+import { OrganizationForm } from '../../forms/organization.form';
 
 @Component({
   selector: 'organization-create',
@@ -14,7 +14,7 @@ import { CreateOrganizationForm } from '../../forms/create-organization.form';
 export class OrganizationCreateComponent {
   @HostBinding('attr.page-id') pageId = 'organization-create';
 
-  public form = new CreateOrganizationForm();
+  public form = new OrganizationForm();
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
