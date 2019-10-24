@@ -12,6 +12,9 @@ import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic,
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
+
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
@@ -60,7 +63,8 @@ export async function onOrganizationUpdate(
     const { userIds } = before as OrganizationDocument;
     const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
 
-    if (false) { // ! STRIP BLOCKCHAIN CODE
+    // TODO issue#1146
+    if (AFM_DISABLE) {
       const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
       const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
