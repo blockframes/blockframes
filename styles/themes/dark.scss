@@ -82,56 +82,65 @@ $mat-dark-bf-red: (
     A700: #000000
   )
 );
-// //////////////
+
+////////////////
 // BACKGROUND //
-// //////////////
+////////////////
+
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar: #0d0f1f,
-  status-bar: black,
-  background: #010314,
-  card:       rgba(255,255,255,0.05),
-  hover:      rgba(255,255,255,0.08),
-  dialog:     map_get($mat-grey, 800),
-  disabled-button: rgba(155,177,255,0.12),
-  raised-button: rgba(0,0,0,0.3),
-  focused-button: $light-focused,
-  selected-button: map_get($mat-grey, 900),
+  app-bar:      #0d0f1f,
+  status-bar:   black,
+  background:   #010314,
+  card:         rgba(255,255,255,0.05),
+  hover:        rgba(255,255,255,0.08),
+  dialog:             map_get($mat-grey, 800),
+  disabled-button:  rgba(155,177,255,0.12),
+  raised-button:    rgba(0,0,0,0.3),
+  focused-button:     $light-focused,
+  selected-button:    map_get($mat-grey, 900),
   selected-disabled-button: rgba(155, 177, 255, 0.12),
   disabled-button-toggle: rgba(155, 177, 255, 0.12),
-  unselected-chip: map_get($mat-grey, 700),
+  unselected-chip:    map_get($mat-grey, 700),
   disabled-list-option: rgba(155, 177, 255, 0.12),
-  // Custom variables border: #34364c,
-  autocomplete: #242737,
-  stroked-button: rgba(255, 255, 255, 0.1)
+
+  // Custom variables
+  border:           #34364c,
+  autocomplete:     #242737,
+  stroked-button:   rgba(255, 255, 255, 0.1)
 );
-// //////////////
+
+////////////////
 // FOREGROUND //
-// //////////////
+////////////////
+
 // Foreground palette for dark themes.
 $bf-dark-foreground: (
-  base: rgba(155, 177, 255, 0.12),
-  text: #f3f6ff,
-  divider: #34364c,
-  dividers: #34364c,
-  disabled: rgba(155, 177, 255, 0.12),
-  disabled-text: $light-disabled-text,
-  disabled-button: rgba(white, 0.3),
-  elevation: black,
-  hint-text: $light-disabled-text,
-  secondary-text: $light-secondary-text,
-  icon: #e1e1e3,
-  icons: #e1e1e3,
-  slider-min: rgba(#000000, 0.3),
-  slider-off: rgba(#000000, 0.3),
+  base:           rgba(155, 177, 255, 0.12),
+  text:           #f3f6ff,
+  divider:        #34364c,
+  dividers:       #34364c,
+  disabled:       rgba(155, 177, 255, 0.12),
+  disabled-text:    $light-disabled-text,
+  disabled-button:  rgba(white, 0.3),
+  elevation:      black,
+  hint-text:        $light-disabled-text,
+  secondary-text:   $light-secondary-text,
+  icon:           #e1e1e3,
+  icons:          #e1e1e3,
+  slider-min:       rgba(#000000, 0.3),
+  slider-off:       rgba(#000000, 0.3),
   slider-off-active: rgba(#000000, 0.3),
-  // Custom variables title: #e2e8ff,
-  subheading: #f3f6ff,
-  dynamic: #3b414d,
-  blue-icon: #9eb1ff,
-  dark-text: #80818a
+
+  // Custom variables
+  title:        #e2e8ff,
+  subheading:   #f3f6ff,
+  dynamic:      #3b414d,
+  blue-icon:    #9eb1ff,
+  dark-text:    #80818a
 );
-// /////////
+
+///////////
 // THEME //
 ///////////
 
@@ -141,7 +150,7 @@ $bf-dark-warn: mat-palette($mat-dark-bf-red, 500);
 
 $bf-dark-theme: (
   // Standard
-    primary: $bf-dark-primary,
+  primary: $bf-dark-primary,
   accent: $bf-dark-accent,
   warn: $bf-dark-warn,
   is-dark: true,
