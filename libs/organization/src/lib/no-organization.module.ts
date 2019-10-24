@@ -28,7 +28,7 @@ import { OrganizationFeedbackComponent } from './pages/organization-feedback/org
 import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
-
+import { NoOrganizationInvitationGuard } from '@blockframes/notification';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -47,9 +47,13 @@ export const noOrganizationRoutes: Routes = [
     canActivate: [NoOrganizationGuard],
     canDeactivate: [NoOrganizationGuard],
     component: OrganizationFindComponent,
+    canActivate: [NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationInvitationGuard],
   },
   {
     path: 'congratulations',
+    canActivate: [NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
   },
   {
@@ -57,6 +61,8 @@ export const noOrganizationRoutes: Routes = [
     canActivate: [NoOrganizationGuard],
     canDeactivate: [NoOrganizationGuard],
     component: OrganizationCreateComponent,
+    canActivate: [NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationInvitationGuard],
   },
   {
     path: 'loading',

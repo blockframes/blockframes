@@ -1,17 +1,40 @@
 import { Injectable } from '@angular/core';
-import { snapshot } from '@blockframes/utils';
+import { snapshot, FireQuery } from '@blockframes/utils';
 import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Organization, PublicOrganization } from '@blockframes/organization';
 import { Invitation, InvitationStatus } from './invitation.firestore';
+import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { Query } from '@blockframes/utils';
+
+export const invitationQuery = (uid: string): Query<Invitation[]> => ({
+  path: `invitations`,
+  queryFn: ref => ref.where('user.uid', '==', uid )
+});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  constructor(private authQuery: AuthQuery, private authService: AuthService) {
+  private invitations$: Observable<Invitation[]>;
+
+  constructor(private authQuery: AuthQuery, private authService: AuthService, public db: FireQuery,) {
     super();
+  }
+
+  public syncUserInvitations(): Observable<Invitation[]> {
+    // Prevent creating multiple side-effecting subs
+    if (this.invitations$) {
+      return this.invitations$;
+    }
+
+    return this.invitations$ = this.authQuery.user$.pipe(
+      switchMap(user => {
+        return this.db.fromQuery<Invitation[]>(invitationQuery(user.uid));
+      }),
+    );
   }
 
   /** Create an Invitation when a user asks to join an Organization. */
