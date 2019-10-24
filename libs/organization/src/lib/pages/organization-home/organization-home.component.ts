@@ -57,7 +57,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
     private authQuery: AuthQuery,
-    private router: Router
+    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
@@ -75,7 +75,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
             case InvitationType.fromUserToOrganization:
               return {
                 ...invitationActionFromUserToOrganization(invitation),
-                button: { matIcon: 'delete_outline', action: () => this.removeInvitation() }
+                button: { matIcon: 'delete_outline', action: () => this.removeInvitation(invitation.id) }
               };
             case InvitationType.fromOrganizationToUser:
               return invitationActionFromOrgToUser(invitation, () => {
@@ -90,12 +90,9 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private removeInvitation() {
-    const userInvitation = this.invitationQuery
-      .getAll()
-      .find(invitation => invitation.user.uid === this.authQuery.userId);
+  private removeInvitation(invitationId: string) {
     try {
-      this.invitationService.removeInvitation(userInvitation.id);
+      this.invitationService.remove(invitationId);
       this.snackBar.open('Your request has been removed', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

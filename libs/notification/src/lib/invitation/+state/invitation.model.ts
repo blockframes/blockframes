@@ -3,6 +3,8 @@ import { PublicOrganization } from '@blockframes/organization';
 import { InvitationType, InvitationStatus, InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
 import { PublicUser } from '@blockframes/auth/types';
 
+export { InvitationStatus } from './invitation.firestore';
+
 
 /** Required options to create an Invitation from a User to join an Organization. */
 export interface InvitationFromUserToOrganizationOptions {
