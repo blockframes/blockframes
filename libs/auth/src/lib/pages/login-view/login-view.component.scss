@@ -7,7 +7,7 @@ mat-sidenav-container {
 }
 
 mat-sidenav-content {
-  background-image: url('/assets/images/signin-signup.png');
+  background-image: url('/assets/images/dark-sign-1080.png');
   background-size: cover;
 }
 
@@ -24,10 +24,12 @@ button {
 .mat-fab {
   height: 120px;
   width: 120px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 mat-sidenav {
-  width: 700px;
+  width: 730px;
 }
 
 // large
