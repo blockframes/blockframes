@@ -5,9 +5,9 @@
         <mat-icon class="left-icon bf-icon bf-bg-icon" matListIcon [svgIcon]="item.icon">
           {{ item.matIcon }}
         </mat-icon>
-        <p>
+        <span>
           <b>{{ item.title }}</b>
-        </p>
+        </span>
         <p>{{ item.description }}</p>
       </mat-list-item>
       <mat-divider *ngIf="!last"></mat-divider>
@@ -18,9 +18,9 @@
           <mat-icon class="left-icon bf-icon bf-bg-icon" matListIcon [svgIcon]="item.icon">
             {{ item.matIcon }}
           </mat-icon>
-          <p>
+          <span>
             <b>{{ item.title }}</b>
-          </p>
+          </span>
           <p>{{ item.description }}</p>
         </mat-list-item>
         <mat-divider *ngIf="!last"></mat-divider>
