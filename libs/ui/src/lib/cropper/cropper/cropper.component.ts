@@ -76,7 +76,6 @@ export class CropperComponent implements ControlValueAccessor{
     this.cropRatio = ratio;
     const el:HTMLElement = this._elementRef.nativeElement;
     const w = el.clientWidth;
-    console.log(`calc(40px+${w}px/${ratio})`);
     this._renderer.setStyle(el, "height", `calc(40px+${w}px/${ratio})`)
   }
 

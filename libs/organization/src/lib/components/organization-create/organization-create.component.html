@@ -56,9 +56,8 @@
           formControlName="fiscalNumber"
         />
       </mat-form-field>
-
-      <!-- TODO: issue#287 cropper image => use key "logo" of the form -->
-
+      <h3>Logo</h3>
+      <drop-cropper [ratio]="4/3" formControlName="logo"></drop-cropper>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button mat-flat-button type="submit" color="primary">
           <ng-container *ngIf="(loading$ | async); else: notLoading">
