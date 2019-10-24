@@ -151,9 +151,10 @@ export class AuthService {
    * @email find the user with this email. If email doesn't match with an existing user,
    * create a user with this email address.
    */
-  public async getOrCreateUserByMail(email: string): Promise<User> {
+  // public async getOrCreateUserByMail(email: string): Promise<User> {
+  public async getOrCreateUserByMail(email: string, invitationId?: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email }).then(matchingEmail => matchingEmail.data);
+    return f({ email, invitationId }).then(matchingEmail => matchingEmail.data);
   }
 
   /** Call a firebase function to get a list of users corresponding to the `prefix` string. */
@@ -168,10 +169,13 @@ export class AuthService {
   //---------------------------
   public changeRank(rank: string) {
     this.store.update(state => {
-      return {...state, user: {
-        ...state.user,
-        financing: { rank }
-      }}
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          financing: { rank }
+        }
+      };
     });
   }
 }

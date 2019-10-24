@@ -5,6 +5,7 @@ import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest } from '../internals/email';
 
 const USER_WELCOME_PATH = '/auth/welcome';
+const USER_ORG_INVITATION = '/auth/identity/';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
@@ -44,11 +45,12 @@ export function userInvite(email: string, password: string): EmailRequest {
 }
 
 /** Generates a transactional email request for user invited to an organization. */
-export function userInviteToOrg(email: string): EmailRequest {
+export function userInviteToOrg(email: string, invitationId: string): EmailRequest {
   return {
     to: email,
     subject: 'You have been invited to an organization',
-    text: 'TODO'
+    text: `Visit: ${appUrl}${USER_ORG_INVITATION}${invitationId}
+    to register to the organization`
   };
 }
 

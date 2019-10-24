@@ -109,14 +109,14 @@ async function onInvitationToOrgAccept({
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ user }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgCreate({ user, id }: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(user.uid);
-
+  
   if (!userMail) {
     console.error('No user email provided for userId:', user.uid);
     return;
   } else {
-    return sendMail(userInviteToOrg(userMail));
+    return sendMail(userInviteToOrg(userMail, id));
   }
 }
 
