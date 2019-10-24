@@ -24,6 +24,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     super();
   }
 
+  /** Return an observable of all invitations that correspond to the connected user. */
   public syncUserInvitations(): Observable<Invitation[]> {
     // Prevent creating multiple side-effecting subs
     if (this.invitations$) {
@@ -80,5 +81,10 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
     return this.update({...invitation, status: InvitationStatus.declined});
+  }
+
+  /** Remove an Invitation. */
+  public removeInvitation(invitationId: string) {
+    return this.remove(invitationId);
   }
 }
