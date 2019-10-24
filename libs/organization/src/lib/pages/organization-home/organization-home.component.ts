@@ -10,12 +10,13 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { InvitationType, Invitation } from '@blockframes/invitation/types';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
   title: `Pending request to ${invitation.organization.name}`,
   routerLink: '#',
-  description: ''
+  description: '',
 });
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
@@ -57,6 +58,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     private invitationStore: InvitationStore,
     private authQuery: AuthQuery,
     private router: Router
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +73,10 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
           // - If an org sent them an invitation, display with an action that let them accept the invite.
           switch (invitation.type) {
             case InvitationType.fromUserToOrganization:
-              return invitationActionFromUserToOrganization(invitation);
+              return {
+                ...invitationActionFromUserToOrganization(invitation),
+                button: { matIcon: 'delete_outline', action: () => this.removeInvitation() }
+              };
             case InvitationType.fromOrganizationToUser:
               return invitationActionFromOrgToUser(invitation, () => {
                 this.acceptInvitation(invitation);
@@ -83,6 +88,18 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
         return [...actions, ...this.defaultItems];
       })
     );
+  }
+
+  private removeInvitation() {
+    const userInvitation = this.invitationQuery
+      .getAll()
+      .find(invitation => invitation.user.uid === this.authQuery.userId);
+    try {
+      this.invitationService.removeInvitation(userInvitation.id);
+      this.snackBar.open('Your request has been removed', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   private acceptInvitation(invitation: Invitation) {
