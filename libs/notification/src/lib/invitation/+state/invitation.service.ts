@@ -1,41 +1,27 @@
 import { Injectable } from '@angular/core';
-import { snapshot, FireQuery } from '@blockframes/utils';
-import { InvitationState } from './invitation.store';
+import { snapshot } from '@blockframes/utils';
+import { InvitationState, InvitationStore } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Organization, PublicOrganization } from '@blockframes/organization';
 import { Invitation, InvitationStatus } from './invitation.firestore';
-import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { Query } from '@blockframes/utils';
-
-export const invitationQuery = (uid: string): Query<Invitation[]> => ({
-  path: `invitations`,
-  queryFn: ref => ref.where('user.uid', '==', uid )
-});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  private invitations$: Observable<Invitation[]>;
 
-  constructor(private authQuery: AuthQuery, private authService: AuthService, public db: FireQuery,) {
+  constructor(private authQuery: AuthQuery, private authService: AuthService, protected store: InvitationStore) {
     super();
   }
 
-  /** Return an observable of all invitations that correspond to the connected user. */
-  public syncUserInvitations(): Observable<Invitation[]> {
-    // Prevent creating multiple side-effecting subs
-    if (this.invitations$) {
-      return this.invitations$;
-    }
-
-    return this.invitations$ = this.authQuery.user$.pipe(
-      switchMap(user => {
-        return this.db.fromQuery<Invitation[]>(invitationQuery(user.uid));
-      }),
-    );
+  /** Synchronizes the store with invitations that correspond to the connected user. */
+  public syncUserInvitations() {
+    const storeName = this.store.storeName;
+    return this.authQuery.user$.pipe(
+      switchMap((user => this.syncCollection(ref => ref.where('user.uid', '==', user.uid), { storeName })))
+    )
   }
 
   /** Create an Invitation when a user asks to join an Organization. */
@@ -81,10 +67,5 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
     return this.update({...invitation, status: InvitationStatus.declined});
-  }
-
-  /** Remove an Invitation. */
-  public removeInvitation(invitationId: string) {
-    return this.remove(invitationId);
   }
 }

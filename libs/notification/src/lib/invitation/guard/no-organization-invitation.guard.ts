@@ -4,31 +4,30 @@ import { Subscription } from 'rxjs';
 import { InvitationService } from '../+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/types';
 import { AuthQuery } from '@blockframes/auth';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { InvitationState, InvitationQuery, InvitationStatus, InvitationStore } from '../+state';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class NoOrganizationInvitationGuard {
-  private subscription: Subscription;
+@CollectionGuardConfig({ awaitSync: true })
+export class NoOrganizationInvitationGuard extends CollectionGuard<InvitationState> {
 
-  constructor(private invitationService: InvitationService, private router: Router, private authQuery: AuthQuery) {}
-
-  canActivate() {
-    return new Promise(res => {
-      this.subscription = this.invitationService.syncUserInvitations().subscribe({
-        next: (invitations: Invitation[]) => {
-          if (!invitations) {
-            return res(false);
-          }
-          if (invitations.find(invitation => invitation.status === 'pending')) {
-            return res(this.router.parseUrl('layout/organization/home'));
-          }
-          return res(true);
-        }
-      });
-    });
+  constructor(protected service: InvitationService, private query: InvitationQuery) {
+    super(service);
   }
 
-  canDeactivate() {
-    this.subscription.unsubscribe();
-    return true;
+  sync() {
+    return this.service.syncUserInvitations().pipe(
+      map(_ => this.query.getAll()),
+      map(invitations => {
+          if (!invitations) {
+            return false;
+          }
+          if (invitations.find(invitation => invitation.status === InvitationStatus.pending)) {
+            return 'layout/organization/home';
+          }
+          return true;
+      })
+    );
   }
 }
