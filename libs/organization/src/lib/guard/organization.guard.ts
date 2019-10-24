@@ -3,6 +3,9 @@ import { Organization, OrganizationService, OrganizationStatus } from '../+state
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
+
 @Injectable({ providedIn: 'root' })
 export class OrganizationGuard {
   private subscription: Subscription;
@@ -19,8 +22,12 @@ export class OrganizationGuard {
           if (organization.status === OrganizationStatus.pending) {
             return res(this.router.parseUrl('layout/organization/congratulation'));
           }
-          // ! STRIP BLOCKCHAIN CODE
-          // this.orgService.retrieveDataAndAddListeners();
+
+          // TODO issue#1146
+          if (AFM_DISABLE) {
+            this.orgService.retrieveDataAndAddListeners();
+          }
+
           return res(true);
         },
         error: err => {
@@ -33,8 +40,12 @@ export class OrganizationGuard {
 
   canDeactivate() {
     this.subscription.unsubscribe();
-    // ! STRIP BLOCKCHAIN CODE
-    // this.orgService.removeAllListeners();
+
+    // TODO issue#1146
+    if (AFM_DISABLE) {
+      this.orgService.removeAllListeners();
+    }
+
     return true;
   }
 }

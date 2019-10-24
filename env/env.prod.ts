@@ -1,6 +1,10 @@
 export const production = true;
 export const hmr = false;
 
+// TODO issue#1146 AFM CODE
+// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
+export const AFM_DISABLE = false;
+
 export const persistenceSettings = {
   synchronizeTabs: true
 };
