@@ -95,7 +95,7 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
+                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="primary"
                   (click)="addLanguage(languageControl.value)">Add
                   language
                 </button>
@@ -135,7 +135,7 @@
             </div>
           </mat-expansion-panel>
         </mat-accordion>
-        <button test-id="distribution-search" mat-button color="accent" (click)="startResearch()"
+        <button test-id="distribution-search" mat-button color="primary" (click)="startResearch()"
           [disabled]="!form.valid">Search</button>
       </mat-card>
     </aside>
@@ -149,7 +149,7 @@
       <div *ngSwitchCase="steps.POSSIBLE">
         <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
           (rangeSelected)="changeDateFocus($event)"></month-calendar>
-        <a test-id="add-distribution-button" mat-raised-button color="accent" (click)="addDistributionRight()"
+        <a test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionRight()"
           [disabled]="!catalogBasket">Add
           distribution right</a>
       </div>
