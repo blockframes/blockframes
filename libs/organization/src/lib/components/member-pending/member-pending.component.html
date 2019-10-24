@@ -1,10 +1,10 @@
-<section >
+<section>
   <h4>Pending members ({{invitations.length}})</h4>
 
   <mat-list *ngIf="invitations.length; else empty">
     <mat-list-item *ngFor="let invitation of invitations">
-      <span>{{ invitation.user.name }} {{ invitation.user.surname }} {{ invitation.user.email }}</span>
-      <ng-container *ngIf="isSuperAdmin">
+      <span><span class="bold">{{ invitation.user.name }} {{ invitation.user.surname }} </span>{{ invitation.user.email }}</span>
+      <ng-container *ngIf="isSuperAdmin" fxLayout="row" fxLayoutAlign="end center">
         <button (click)="accepted.emit(invitation)" mat-icon-button>
           <mat-icon svgIcon="acceptMember"></mat-icon>
         </button>
