@@ -1,7 +1,7 @@
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
     <h4>Logo</h4>
-    <cropper [ratio]="4/3" formControlName="logo"></cropper>
+    <image-cropper [ratio]="4/3" formControlName="logo"></image-cropper>
     <mat-divider [inset]="true"></mat-divider>
     <!-- TODO: #1142 Check uniqueness of org name -->
     <!-- <h4>Your Company</h4>

@@ -47,7 +47,7 @@ function isFile(path: string): boolean {
 
 
 @Component({
-  selector: 'cropper',
+  selector: 'image-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   viewProviders: [DropZoneDirective],
