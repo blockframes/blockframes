@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -56,6 +57,7 @@ export const noOrganizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
+    CropperModule,
 
     // Material
     MatFormFieldModule,
