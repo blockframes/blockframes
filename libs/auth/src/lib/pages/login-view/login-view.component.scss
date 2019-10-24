@@ -42,7 +42,7 @@ mat-sidenav {
 // medium
 @include medium {
   mat-sidenav {
-    width: 400px;
+    width: 500px;
   }
   mat-sidenav-content {
     background-size: contain;
@@ -54,7 +54,7 @@ mat-sidenav {
 // small
 @include tablet {
   mat-sidenav {
-    width: 300px;
+    width: 500px;
   }
   mat-sidenav-content {
     background-size: contain;
