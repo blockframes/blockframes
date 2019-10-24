@@ -1,6 +1,7 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
   <!-- Content -->
   <ng-container content>
+    <h3>{{orgName}}</h3>
     <member-pending
       (declined)="declineInvitation($event)"
       (accepted)="acceptInvitation($event)"

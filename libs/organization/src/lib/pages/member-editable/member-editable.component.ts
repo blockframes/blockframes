@@ -20,6 +20,8 @@ import { Invitation, InvitationType } from '@blockframes/invitation/types';
 export class MemberEditableComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
+  public orgName: string = this.query.getValue().org.name
+
   /** Observable of the selected memberId */
   private selectedMemberId$ = new BehaviorSubject<string>(null);
 
@@ -77,6 +79,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
+    
     this.invitationsFromOrganization$ = this.invitationQuery.selectAll({
       filterBy: invitation => invitation.type === InvitationType.fromOrganizationToUser,
       sortBy: 'date',
