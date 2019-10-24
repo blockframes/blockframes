@@ -10,7 +10,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
-// convert base64 from ngx-image-cropper to blob for uploading in firebase
+/** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
   const [metadata, content] = data.split(',');
   const byteString = atob(content);
@@ -47,7 +47,7 @@ function isFile(path: string): boolean {
 
 
 @Component({
-  selector: 'image-cropper',
+  selector: 'drop-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   viewProviders: [DropZoneDirective],
@@ -76,6 +76,7 @@ export class CropperComponent implements ControlValueAccessor{
     this.cropRatio = ratio;
     const el:HTMLElement = this._elementRef.nativeElement;
     const w = el.clientWidth;
+    console.log(`calc(40px+${w}px/${ratio})`);
     this._renderer.setStyle(el, "height", `calc(40px+${w}px/${ratio})`)
   }
 
