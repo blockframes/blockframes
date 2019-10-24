@@ -54,6 +54,9 @@ import { OrganizationAdminViewComponent } from './pages/organization-admin-view/
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
+
 export const organizationRoutes: Routes = [
   {
     path: ':orgId',
@@ -64,18 +67,25 @@ export const organizationRoutes: Routes = [
         path: 'members',
         component: MemberEditableComponent
       },
-      // ! STRIP BLOCKCHAIN CODE
-      // {
-      //   path: 'activityreports',
-      //   component: OrganizationActivityViewComponent
-      // },
-      // {
-      //   path: 'administration',
-      //   component: OrganizationAdminViewComponent
-      // }
     ]
   }
 ];
+
+// TODO issue#1146
+if (AFM_DISABLE) {
+  organizationRoutes[0].children.push(
+    {
+      path: 'activityreports',
+      component: OrganizationActivityViewComponent
+    }
+  );
+  organizationRoutes[0].children.push(
+    {
+      path: 'administration',
+      component: OrganizationAdminViewComponent
+    }
+  );
+}
 
 @NgModule({
   imports: [

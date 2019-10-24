@@ -1,7 +1,10 @@
-import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { OrganizationMember } from '../../+state';
+
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
 
 @Component({
   selector: 'member-repertory',
@@ -9,7 +12,7 @@ import { OrganizationMember } from '../../+state';
   styleUrls: ['./member-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberRepertoryComponent {
+export class MemberRepertoryComponent implements OnInit {
 
   @Input() set members(members: OrganizationMember[]) {
     this.dataSource = new MatTableDataSource(members);
@@ -21,12 +24,12 @@ export class MemberRepertoryComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<OrganizationMember>;
-  public displayedColumns: string[] = [
-    'name',
-    'email',
-    'role',
-    // ! STRIP BLOCKCHAIN CODE
-    // 'signer',
-    'action'
-  ];
+  public displayedColumns: string[] = [ 'name', 'email', 'role', 'action' ];
+
+  // TODO issue#146
+  ngOnInit() {
+    if (AFM_DISABLE) {
+      this.displayedColumns.push('signer');
+    }
+  }
 }

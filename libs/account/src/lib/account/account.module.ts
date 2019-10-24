@@ -1,16 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
+
 export const accountRoutes: Routes = [
   { path: '',
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile', loadChildren: '../profile/profile.module#ProfileModule' },
-      // ! STRIP BLOCKCHAIN CODE
-      // { path: 'wallet', loadChildren: '@blockframes/ethers#WalletModule' }
     ]
   }
 ];
+
+// TODO issue#1146
+if (AFM_DISABLE) {
+  accountRoutes[0].children.push(
+    { path: 'wallet', loadChildren: '@blockframes/ethers#WalletModule' }
+  );
+}
 
 @NgModule({
   imports: [
