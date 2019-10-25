@@ -26,7 +26,6 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
-import { PromotionalElementTypes, ProductionStatus, ResourceRatios } from '@blockframes/movie/movie/+state/movie.firestore';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -177,7 +176,7 @@ export class ViewExtractedElementsComponent {
               name: "Scoring",
               reason: `${spreadSheetRow[SpreadSheetMovie.scoring]} not found in scoring list`,
               hint: 'Edit corresponding sheet field.'
-            } as SpreadsheetImportError);
+            });
 
           }
         }
@@ -209,7 +208,7 @@ export class ViewExtractedElementsComponent {
                 name: "Mandate Territories",
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -228,7 +227,7 @@ export class ViewExtractedElementsComponent {
                 name: "Mandate Medias",
                 reason: `${c} not found in medias list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -288,7 +287,7 @@ export class ViewExtractedElementsComponent {
               name: "Color",
               reason: `${spreadSheetRow[SpreadSheetMovie.color]} not found in colors list`,
               hint: 'Edit corresponding sheet field.'
-            } as SpreadsheetImportError);
+            });
 
           }
         }
@@ -307,7 +306,7 @@ export class ViewExtractedElementsComponent {
                 name: "Countries of origin",
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -336,7 +335,7 @@ export class ViewExtractedElementsComponent {
                 name: "Certifications",
                 reason: `${c} not found in certifications list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
 
@@ -381,7 +380,7 @@ export class ViewExtractedElementsComponent {
                 name: "Genres",
                 reason: `${g} not found in genres list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -431,7 +430,7 @@ export class ViewExtractedElementsComponent {
                 name: "Languages",
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -450,7 +449,7 @@ export class ViewExtractedElementsComponent {
                 name: "Dubbings",
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -469,7 +468,7 @@ export class ViewExtractedElementsComponent {
                 name: "Subtitles",
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
-              } as SpreadsheetImportError);
+              });
             }
           });
         }
@@ -479,7 +478,7 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Promo reel link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.promoReelLink]),
-            type: PromotionalElementTypes.REEL
+            type: 'reel'
           });
 
           movie.promotionalElements.promotionalElements.push(promotionalElement);
@@ -490,7 +489,7 @@ export class ViewExtractedElementsComponent {
             name: 'Promo reel link',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
-          } as SpreadsheetImportError);
+          });
         }
 
         // TRAILER LINK
@@ -498,7 +497,7 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Trailer link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.trailerLink]),
-            type: PromotionalElementTypes.TRAILER
+            type: 'trailer'
           });
 
           movie.promotionalElements.promotionalElements.push(promotionalElement);
@@ -509,7 +508,7 @@ export class ViewExtractedElementsComponent {
             name: 'Trailer link',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
-          } as SpreadsheetImportError);
+          });
         }
 
         // SCENARIO LINK
@@ -517,7 +516,7 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Scenario link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.scenarioLink]),
-            type: PromotionalElementTypes.SCENARIO
+            type: 'scenario'
           });
 
           movie.promotionalElements.promotionalElements.push(promotionalElement);
@@ -528,14 +527,14 @@ export class ViewExtractedElementsComponent {
             name: 'Scenario link',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
-          } as SpreadsheetImportError);
+          });
         }
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
           movie.main.status = spreadSheetRow[SpreadSheetMovie.productionStatus];
         } else {
-          movie.main.status = ProductionStatus.FINISHED;
+          movie.main.status = 'finished';
         }
 
         // BUDGET
@@ -553,8 +552,8 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
-            type: PromotionalElementTypes.BANNER,
-            ratio: ResourceRatios.RECTANGLE
+            type: 'banner',
+            ratio: 'rectangle'
           });
 
           movie.promotionalElements.promotionalElements.push(promotionalElement);
@@ -565,7 +564,7 @@ export class ViewExtractedElementsComponent {
             name: 'Banner link',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
-          } as SpreadsheetImportError);
+          });
         }
 
         // SALES AGENT (name)
@@ -619,7 +618,7 @@ export class ViewExtractedElementsComponent {
         name: "Film Code ",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.title.original) {
@@ -629,7 +628,7 @@ export class ViewExtractedElementsComponent {
         name: "Original title",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.productionYear) {
@@ -639,7 +638,7 @@ export class ViewExtractedElementsComponent {
         name: "Production Year",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.scoring) {
@@ -649,7 +648,7 @@ export class ViewExtractedElementsComponent {
         name: "Scoring",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesAgentDeal.rights.from) {
@@ -659,7 +658,7 @@ export class ViewExtractedElementsComponent {
         name: 'Mandate Beginning of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesAgentDeal.rights.to) {
@@ -669,7 +668,7 @@ export class ViewExtractedElementsComponent {
         name: 'Mandate End of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesAgentDeal.territories) {
@@ -679,7 +678,7 @@ export class ViewExtractedElementsComponent {
         name: "Mandate Territories",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesAgentDeal.medias) {
@@ -689,7 +688,7 @@ export class ViewExtractedElementsComponent {
         name: "Mandate Medias",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.main.directors.length === 0) {
@@ -699,7 +698,7 @@ export class ViewExtractedElementsComponent {
         name: "Directors",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.poster) {
@@ -709,7 +708,7 @@ export class ViewExtractedElementsComponent {
         name: "Poster",
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
-      } as SpreadsheetImportError);
+      });
     }
 
     //////////////////
@@ -723,7 +722,7 @@ export class ViewExtractedElementsComponent {
         name: "ISAN number",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.title.international) {
@@ -733,7 +732,7 @@ export class ViewExtractedElementsComponent {
         name: "International title",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.length) {
@@ -743,7 +742,7 @@ export class ViewExtractedElementsComponent {
         name: "Length",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.main.productionCompanies.length === 0) {
@@ -753,7 +752,7 @@ export class ViewExtractedElementsComponent {
         name: "Production Companie(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesInfo.broadcasterCoproducers.length === 0) {
@@ -763,7 +762,7 @@ export class ViewExtractedElementsComponent {
         name: "TV / Platform coproducer(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.color) {
@@ -773,7 +772,7 @@ export class ViewExtractedElementsComponent {
         name: "Color / Black & White ",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.main.originCountries.length === 0) {
@@ -783,7 +782,7 @@ export class ViewExtractedElementsComponent {
         name: "Countries of origin",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.certifications) {
@@ -793,7 +792,7 @@ export class ViewExtractedElementsComponent {
         name: "Certifications",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesInfo.europeanQualification === undefined) {
@@ -803,7 +802,7 @@ export class ViewExtractedElementsComponent {
         name: 'European Qualification',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.pegi) {
@@ -813,7 +812,7 @@ export class ViewExtractedElementsComponent {
         name: 'Rating',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesCast.credits.length === 0) {
@@ -823,7 +822,7 @@ export class ViewExtractedElementsComponent {
         name: "Principal Cast",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.main.shortSynopsis) {
@@ -833,7 +832,7 @@ export class ViewExtractedElementsComponent {
         name: "Synopsis",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.internationalPremiere) {
@@ -843,7 +842,7 @@ export class ViewExtractedElementsComponent {
         name: "International Premiere",
         reason: 'Optional field is missing or could not be parsed',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (!movie.salesInfo.originCountryReleaseDate) {
@@ -853,7 +852,7 @@ export class ViewExtractedElementsComponent {
         name: 'Release date in Origin Country',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.main.genres.length === 0) {
@@ -863,7 +862,7 @@ export class ViewExtractedElementsComponent {
         name: "Genres",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.festivalPrizes.prizes.length === 0) {
@@ -873,7 +872,7 @@ export class ViewExtractedElementsComponent {
         name: "Festival Prizes",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.promotionalDescription.keyAssets.length === 0) {
@@ -883,7 +882,7 @@ export class ViewExtractedElementsComponent {
         name: "Key assets",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.promotionalDescription.keywords.length === 0) {
@@ -893,7 +892,7 @@ export class ViewExtractedElementsComponent {
         name: "Keywords",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.main.languages.length === 0) {
@@ -903,7 +902,7 @@ export class ViewExtractedElementsComponent {
         name: "Languages",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.versionInfo.dubbings.length === 0) {
@@ -913,7 +912,7 @@ export class ViewExtractedElementsComponent {
         name: "Dubbings",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.versionInfo.subtitles.length === 0) {
@@ -923,7 +922,7 @@ export class ViewExtractedElementsComponent {
         name: "Subtitles",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.budget.totalBudget === undefined) {
@@ -933,7 +932,7 @@ export class ViewExtractedElementsComponent {
         name: 'Budget',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesInfo.theatricalRelease === undefined) {
@@ -943,7 +942,7 @@ export class ViewExtractedElementsComponent {
         name: 'Theatrical release',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesAgentDeal.salesAgent === undefined) {
@@ -953,7 +952,7 @@ export class ViewExtractedElementsComponent {
         name: 'Sales agent',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     if (movie.salesAgentDeal.reservedTerritories.length === 0) { 
@@ -963,7 +962,7 @@ export class ViewExtractedElementsComponent {
         name: 'Reserved territories',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     return importErrors;
@@ -1022,7 +1021,7 @@ export class ViewExtractedElementsComponent {
                   name: "Territories sold",
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
-                } as SpreadsheetImportError);
+                });
               }
             });
           }
@@ -1041,7 +1040,7 @@ export class ViewExtractedElementsComponent {
                   name: "Media(s)",
                   reason: `${c} not found in medias list`,
                   hint: 'Edit corresponding sheet field.'
-                } as SpreadsheetImportError);
+                });
               }
             });
           }
@@ -1060,7 +1059,7 @@ export class ViewExtractedElementsComponent {
                   name: "Authorized language(s)",
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
-                } as SpreadsheetImportError);
+                });
               }
             });
 
@@ -1080,7 +1079,7 @@ export class ViewExtractedElementsComponent {
                   name: "Authorized subtitle(s)",
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
-                } as SpreadsheetImportError);
+                });
               }
             });
 
@@ -1104,7 +1103,7 @@ export class ViewExtractedElementsComponent {
               name: 'Sale',
               reason: 'Sale already added',
               hint: 'Sale already added'
-            } as SpreadsheetImportError)
+            });
           }
 
         } else {
@@ -1114,7 +1113,7 @@ export class ViewExtractedElementsComponent {
             name: "Movie",
             reason: 'Movie not found',
             hint: 'Try importing it first or check if data is correct.'
-          } as SpreadsheetImportError);
+          });
         }
 
         const saleWithErrors = this.validateMovieSale(importErrors);
@@ -1148,7 +1147,7 @@ export class ViewExtractedElementsComponent {
         name: "Operator name",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     //  OPERATOR NAME
@@ -1159,7 +1158,7 @@ export class ViewExtractedElementsComponent {
         name: "Operator name",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // SHOW OPERATOR NAME
@@ -1170,7 +1169,7 @@ export class ViewExtractedElementsComponent {
         name: "Do you want to show the operator name on a buyer research ?",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // BEGINNING OF RIGHTS
@@ -1181,7 +1180,7 @@ export class ViewExtractedElementsComponent {
         name: 'Beginning of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // END OF RIGHTS
@@ -1192,7 +1191,7 @@ export class ViewExtractedElementsComponent {
         name: 'End of rights',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // TERRITORIES
@@ -1203,7 +1202,7 @@ export class ViewExtractedElementsComponent {
         name: "Territories sold",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // MEDIAS
@@ -1214,7 +1213,7 @@ export class ViewExtractedElementsComponent {
         name: "Media(s)",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // DUBBINGS
@@ -1225,7 +1224,7 @@ export class ViewExtractedElementsComponent {
         name: "Authorized language(s)",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // SUBTITLES
@@ -1236,7 +1235,7 @@ export class ViewExtractedElementsComponent {
         name: "Authorized subtitle(s)",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     // EXCLUSIVE
@@ -1247,7 +1246,7 @@ export class ViewExtractedElementsComponent {
         name: "Exclusive deal",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     //////////////////
@@ -1262,7 +1261,7 @@ export class ViewExtractedElementsComponent {
         name: "Sale price",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
-      } as SpreadsheetImportError);
+      });
     }
 
     return importErrors;

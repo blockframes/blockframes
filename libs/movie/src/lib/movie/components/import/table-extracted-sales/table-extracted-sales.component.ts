@@ -65,7 +65,7 @@ export class TableExtractedSalesComponent implements OnInit {
       name: 'Sale',
       reason: 'Sale already added',
       hint: 'Sale already added'
-    } as SpreadsheetImportError)
+    });
     this.rows.data = data;
     this.snackBar.open('Movie sale added!', 'close', { duration: 3000 });
     return true;
@@ -90,7 +90,7 @@ export class TableExtractedSalesComponent implements OnInit {
             name: 'Sale',
             reason: 'Sale already added',
             hint: 'Sale already added'
-          } as SpreadsheetImportError)
+          });
 
           return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.sale));
         });
