@@ -79,8 +79,10 @@ enum SpreadSheetMovie {
   languages,
   dubbings,
   subtitles,
+  screenerLink,
   promoReelLink,
   trailerLink,
+  pitchTeaserLink,
   scenarioLink,
   productionStatus,
   budget,
@@ -473,11 +475,30 @@ export class ViewExtractedElementsComponent {
           });
         }
 
+        // SCREENER LINK
+        if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Screener link',
+            url: spreadSheetRow[SpreadSheetMovie.screenerLink],
+            type: 'screener'
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Screener link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
         // PROMO REEL LINK
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Promo reel link',
-            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.promoReelLink]),
+            url: spreadSheetRow[SpreadSheetMovie.promoReelLink],
             type: 'reel'
           });
 
@@ -496,7 +517,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Trailer link',
-            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.trailerLink]),
+            url: spreadSheetRow[SpreadSheetMovie.trailerLink],
             type: 'trailer'
           });
 
@@ -511,11 +532,30 @@ export class ViewExtractedElementsComponent {
           });
         }
 
+        // PITCH TEASER LINK
+        if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Pitch teaser link',
+            url: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
+            type: 'teaser'
+          });
+
+          movie.promotionalElements.promotionalElements.push(promotionalElement);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Pitch teaser link',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Scenario link',
-            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.scenarioLink]),
+            url: spreadSheetRow[SpreadSheetMovie.scenarioLink],
             type: 'scenario'
           });
 
