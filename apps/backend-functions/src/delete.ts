@@ -48,6 +48,10 @@ export async function deleteFirestoreMovie(
     }
   });
 
+  // Delete sub-collections
+  const subCollections = await snap.ref.listCollections();
+  subCollections.forEach(async x => (await db.collection(x.path).listDocuments()).forEach(ref => batch.delete(ref)));
+
   return batch.commit();
 }
 
