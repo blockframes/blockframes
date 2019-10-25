@@ -1,6 +1,6 @@
 <ng-container *ngIf="(user$ | async) as user">
   <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
-    <img class="profile-picture-menu" [src]="profile.avatar" alt="Profile picture" />
+    <img class="profile-picture-menu" [storageRef]="profile.avatar" alt="Profile picture" />
   </button>
   <mat-menu #menu="matMenu" class="mat-elevation-z6">
     <mat-list>
