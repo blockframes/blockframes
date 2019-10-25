@@ -7,6 +7,9 @@
     <image-cropper
       [imageFile]="file"
       [maintainAspectRatio]="true"
+      [containWithinAspectRatio]="true"
+      [onlyScaleDown]="true"
+      [alignImage]="'left'"
       [aspectRatio]="cropRatio"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
