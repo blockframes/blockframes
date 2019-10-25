@@ -6,11 +6,9 @@
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
     <image-cropper
       [imageFile]="file"
-      [maintainAspectRatio]="true"
-      [containWithinAspectRatio]="true"
-      [onlyScaleDown]="true"
-      [alignImage]="'left'"
       [aspectRatio]="cropRatio"
+      [containWithinAspectRatio]="true"
+      [resizeToWidth]="parentWidth"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="center">

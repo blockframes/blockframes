@@ -67,6 +67,7 @@ export class CropperComponent implements ControlValueAccessor{
   file: File;
   croppedImage: string;
   cropRatio: string;
+  parentWidth: number;
   prev: CropStep;
   url$: Observable<string | null>;
   percentage$: Observable<number>;
@@ -75,8 +76,8 @@ export class CropperComponent implements ControlValueAccessor{
   @Input() set ratio(ratio: string) {
     this.cropRatio = ratio;
     const el:HTMLElement = this._elementRef.nativeElement;
-    const w = el.clientWidth;
-    this._renderer.setStyle(el, "height", `calc(40px+${w}px/${ratio})`)
+    this.parentWidth = el.clientWidth;
+    this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
 
   uploaded: (ref: string) => void;
