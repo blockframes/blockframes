@@ -9,13 +9,12 @@ import {
   MovieFestivalPrizes,
   Prize,
   Title,
-  Credit,
   MovieSaleDocumentWithDates,
   MovieSalesAgentDealDocumentWithDates,
   MovieSalesInfoDocumentWithDates,
   PromotionalElement,
-  PromotionalElementTypes,
-  MovieBudget
+  MovieBudget,
+  Person
 } from './movie.firestore';
 
 export type PromotionalElement = PromotionalElement;
@@ -36,7 +35,9 @@ export type MovieVersionInfo = MovieVersionInfo;
 
 export type Prize = Prize;
 
-export type Credit = Credit;
+export type Credit = Person;
+
+export type SalesAgent = Person;
 
 export type MovieSale = MovieSaleDocumentWithDates;
 
@@ -45,8 +46,6 @@ export type MovieSalesInfo = MovieSalesInfoDocumentWithDates;
 export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
 
 export type Movie = MovieDocumentWithDates;
-
-export type MovieBudget = MovieBudget;
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
@@ -81,7 +80,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     productionCompanies: [],
     originCountries: [],
     ...params
-  } as MovieMain;
+  };
 }
 
 export function createMoviePromotionalElements(
@@ -91,7 +90,7 @@ export function createMoviePromotionalElements(
     images: [],
     promotionalElements: [],
     ...params
-  } as MoviePromotionalElements;
+  };
 }
 
 export function createMoviePromotionalDescription(
@@ -101,7 +100,7 @@ export function createMoviePromotionalDescription(
     keyAssets: [],
     keywords: [],
     ...params
-  } as MoviePromotionalDescription;
+  };
 }
 
 export function createPromotionalElement(
@@ -110,7 +109,7 @@ export function createPromotionalElement(
   return {
     label: '',
     url: '',
-    type: PromotionalElementTypes.OTHER,
+    type: 'other',
     ...promotionalElement
   };
 }
@@ -119,20 +118,26 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
   return {
     credits: [],
     ...params
-  } as MovieSalesCast;
+  };
 }
 
 export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
   return {
     internationalPremiere: {
       name: '',
-      year: '',
+      year: 0,
       prize: ''
     },
     certifications: [],
     broadcasterCoproducers: [],
+    scoring: '',
+    color:'',
+    europeanQualification: false,
+    pegi: '',
+    originCountryReleaseDate: null,
+    theatricalRelease: false,
     ...params
-  } as MovieSalesInfo;
+  };
 }
 
 export function createMovieStory(params: Partial<MovieStory> = {}): MovieStory {
@@ -140,7 +145,7 @@ export function createMovieStory(params: Partial<MovieStory> = {}): MovieStory {
     synopsis: '',
     logline: '',
     ...params
-  } as MovieStory;
+  };
 }
 
 export function createMovieVersionInfo(params: Partial<MovieVersionInfo> = {}): MovieVersionInfo {
@@ -148,7 +153,7 @@ export function createMovieVersionInfo(params: Partial<MovieVersionInfo> = {}): 
     dubbings: [],
     subtitles: [],
     ...params
-  } as MovieVersionInfo;
+  };
 }
 
 export function createMovieFestivalPrizes(
@@ -157,7 +162,7 @@ export function createMovieFestivalPrizes(
   return {
     prizes: [],
     ...params
-  } as MovieFestivalPrizes;
+  };
 }
 
 export function createPrize(prize: Partial<Prize> = {}): Prize {
@@ -182,28 +187,32 @@ export function createMovieSalesAgentDeal(
 ): MovieSalesAgentDeal {
   return {
     rights: {
-      from: '',
-      to: ''
+      from: null,
+      to: null
     },
     territories: [],
     medias: [],
     reservedTerritories: [],
     ...params
-  } as MovieSalesAgentDeal;
+  };
 }
 
 export function createMovieSale(params: Partial<MovieSale> = {}): MovieSale {
   return {
+    operatorName: '',
+    showOperatorName: false,
     rights: {
-      from: '',
-      to: ''
+      from: null,
+      to: null
     },
     territories: [],
     medias: [],
     dubbings: [],
     subtitles: [],
+    exclusive: false,
+    price: 0,
     ...params
-  } as MovieSale;
+  };
 }
 
 export function createCredit(params: Partial<Credit> = {}): Credit {
@@ -213,7 +222,7 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     creditRole: '',
     logo: '',
     ...params
-  } as Credit;
+  };
 }
 
 
@@ -221,5 +230,5 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
   return {
     totalBudget: '',
     ...params
-  } as MovieBudget;
+  };
 }

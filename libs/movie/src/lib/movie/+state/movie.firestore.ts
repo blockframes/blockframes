@@ -1,38 +1,8 @@
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
+import { PromotionalElementTypesSlug, ResourceSizesSlug, ResourceRatioSlug, MovieStatusSlug, SalesAgent } from "@blockframes/movie";
 
 type Timestamp = firestore.Timestamp;
-
-export enum PromotionalElementTypes {
-  TRAILER = 'trailer',
-  POSTER = 'poster',
-  REEL = 'reel',
-  SCENARIO = 'scenario',
-  OTHER = 'other',
-  BANNER = 'banner',
-}
-
-export enum ResourceSizes {
-  MEDIUM = 'medium',
-  SMALL = 'small',
-  LARGE = 'large',
-  THUMBNAIL = 'thumbnail'
-}
-
-export enum ResourceRatios {
-  A16_9 = '16/9',
-  A4_3 = '4/3',
-  ROUND = 'round',
-  SQUARE = 'square',
-  RECTANGLE = 'rectangle'
-}
-
-export enum ProductionStatus {
-  PREPROD = 'pre-production',
-  PRODUCTION = 'on production',
-  SHOOTING = 'shooting',
-  FINISHED = 'finished'
-}
 
 export interface MovieVersionInfo {
   dubbings: string[],
@@ -43,7 +13,7 @@ interface MovieSalesAgentDealRaw<D> {
   rights: DateRangeRaw<D>;
   territories: string[],
   medias: string[],
-  salesAgent?: Credit,
+  salesAgent?: SalesAgent,
   reservedTerritories?: string[],
 }
 
@@ -63,9 +33,9 @@ export interface Prize {
 
 export interface PromotionalElement {
   label: string,
-  type: PromotionalElementTypes,
-  size?: ResourceSizes,
-  ratio?: ResourceRatios,
+  type: PromotionalElementTypesSlug,
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
   url: string
 }
 
@@ -79,7 +49,7 @@ export interface Title {
   international?: string;
 }
 
-export interface Credit {
+export interface Person {
   firstName: string, // @todo #1052 replace with displayName
   lastName?: string, // @todo #1052 replace with displayName
   creditRole?: string, // @todo #1052 rename to role
@@ -95,7 +65,7 @@ export interface MovieStory {
 }
 
 export interface MovieSalesCast {
-  credits: Credit[],
+  credits: Person[],
 }
 
 export interface MovieFestivalPrizes {
@@ -104,8 +74,8 @@ export interface MovieFestivalPrizes {
 
 export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
-  budgetCurrency? : string, // WIP #1052
-  detailledBudget? : any // WIP #1052
+  budgetCurrency?: string, // WIP #1052
+  detailledBudget?: any // WIP #1052
 }
 
 interface MovieSaleRaw<D> {
@@ -127,14 +97,14 @@ export interface MovieMain {
   internalRef?: string,
   isan?: string,
   title: Title,
-  directors?: Credit[],
+  directors?: Person[],
   poster?: string,
   productionYear?: number,
   genres?: string[],
   originCountries?: string[],
   languages?: string[],
-  status?: ProductionStatus,
-  productionCompanies?: Credit[],
+  status?: MovieStatusSlug,
+  productionCompanies?: Person[],
   length?: number,
   shortSynopsis?: string,
 }
