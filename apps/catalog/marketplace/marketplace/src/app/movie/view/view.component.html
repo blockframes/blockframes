@@ -10,6 +10,13 @@
     </div>
   </header>
 
+  <span fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
+    <mat-divider></mat-divider>
+    <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
+      <mat-icon svgIcon="heart"></mat-icon>
+    </button>
+  </span>
+
   <section fxLayout="row" class="view-content">
 
     <div fxLayout="column" class="poster-column">
@@ -18,42 +25,44 @@
         <ng-container *ngIf="movie.main.poster as poster">
           <img class="movie-poster" [src]="poster" alt="movie poster" />
         </ng-container>
-        <article>
-          <!-- Availabilities -->
-          <movie-display-availabilities [rights]="movie.salesAgentDeal.rights"></movie-display-availabilities>
-          <!-- Production -->
-          <movie-display-production [productionCompanies]="movie.main.productionCompanies" [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
-        </article>
+        <!-- Reserved territories -->
+        <catalog-reserved-territories></catalog-reserved-territories>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Production information -->
+        <catalog-production-information></catalog-production-information>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Key Assets -->
+        <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
+        <mat-divider [inset]="true"></mat-divider>
       </mat-card>
     </div>
 
     <div fxLayout="column" class="information-column">
-      <section fxLayout="row" fxLayoutAlign="start center" class="film-informations">
-        <h2>Film Information</h2>
-        <mat-divider fxFlex></mat-divider>
-      </section>
-
       <mat-card class="informations" fxLayout="column">
-          <!-- Principal Informations -->
-          <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast"></movie-display-principal-informations>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Synopsis -->
-          <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Film details -->
-          <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color" [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere"></movie-display-film-details>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Festival Prizes -->
-          <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Key Assets -->
-          <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Keywords -->
-          <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
-          <mat-divider [inset]="true"></mat-divider>
-          <!-- Languages -->
-          <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo"></movie-display-version-info>
+        <!-- Promotional elements -->
+        <catalog-promotional-elements></catalog-promotional-elements>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Main informations -->
+        <movie-display-principal-informations [main]="movie.main"></movie-display-principal-informations>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Film details -->
+        <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color"
+          [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere">
+        </movie-display-film-details>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Festival Prizes -->
+        <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Languages -->
+        <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo">
+        </movie-display-version-info>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Synopsis -->
+        <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
+        <mat-divider [inset]="true"></mat-divider>
+        <!-- Keywords -->
+        <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
+        <mat-divider [inset]="true"></mat-divider>
       </mat-card>
     </div>
   </section>
@@ -66,3 +75,11 @@
     </a>
   </div>
 </main>
+<!-- 
+  <article>
+            Availabilities -->
+<!-- <movie-display-availabilities [rights]="movie.salesAgentDeal.rights"></movie-display-availabilities> -->
+<!-- Production -->
+<!--<movie-display-production [productionCompanies]="movie.main.productionCompanies"
+  [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
+</article> -->

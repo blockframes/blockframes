@@ -274,7 +274,12 @@ const ICONS_SVG = [
   {
     name: 'wallet',
     url: 'assets/icons/wallet.svg'
-  }
+  },
+  {
+    name: 'heart',
+    url: 'assets/icons/heart.svg'
+  },
+  { name: 'star', url: 'assets/icons/star.svg' }
 ];
 
 /**
@@ -286,9 +291,7 @@ const ICONS_SVG = [
  */
 @Injectable({ providedIn: 'root' })
 export class IconComponent {
-  constructor(private matIconRegistry: MatIconRegistry,
-              private domSanitizer: DomSanitizer
-  ) {
+  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     ICONS_SVG.forEach(({ name, url }) => {
       this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
     });

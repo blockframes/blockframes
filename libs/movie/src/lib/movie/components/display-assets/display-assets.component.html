@@ -1,6 +1,10 @@
 <ng-container *ngIf="assets">
   <h3>Key Assets</h3>
-  <article *ngFor="let asset of assets">
-    <span>{{ asset }}</span>
+  <article *ngFor="let asset of assets" fxLayout="row nowrap" fxLayoutGap="10px">
+    <div fxLayout="column">
+      <mat-icon svgIcon="star"></mat-icon>
+    </div>
+    <div fxLayout="column">
+      <span>{{ asset }}</span></div>
   </article>
 </ng-container>

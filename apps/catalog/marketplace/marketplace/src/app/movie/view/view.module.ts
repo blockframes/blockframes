@@ -8,6 +8,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
+import {
+  CatalogReservedTerritoriesModule,
+  CatalogProductionInformationModule,
+  CatalogPromotionalElementsModule
+} from '@blockframes/catalog';
 import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
 import { MovieDisplayProductionModule } from '@blockframes/movie/movie/components/display-production/display-production.module';
 import { MovieDisplayPrincipalInformationsModule } from '@blockframes/movie/movie/components/display-principal-informations/display-principal-informations.module';
@@ -21,9 +26,9 @@ import { MovieDisplayVersionInfoModule } from '@blockframes/movie/movie/componen
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-
 
 @NgModule({
   declarations: [MarketplaceMovieViewComponent],
@@ -40,14 +45,16 @@ import { MatButtonModule } from '@angular/material/button';
     MovieDisplayAssetsModule,
     MovieDisplayKeywordsModule,
     MovieDisplayVersionInfoModule,
+    CatalogReservedTerritoriesModule,
+    CatalogProductionInformationModule,
+    CatalogPromotionalElementsModule,
     //Material
     MatCardModule,
     MatDividerModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    RouterModule.forChild([
-      { path: '', component: MarketplaceMovieViewComponent }
-    ])
-  ],
+    MatIconModule,
+    RouterModule.forChild([{ path: '', component: MarketplaceMovieViewComponent }])
+  ]
 })
 export class MovieViewModule {}
