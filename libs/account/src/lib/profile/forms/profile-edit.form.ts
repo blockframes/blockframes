@@ -16,7 +16,7 @@ export function createProfile(params: Partial<Profile> = {}): Profile {
     surname: '',
     phoneNumber: '',
     position: '',
-    avatar: PLACEHOLDER_AVATAR,
+    avatar: '',
     ...params
   };
 }
