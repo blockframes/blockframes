@@ -3,21 +3,21 @@
   <!-- First Column -->
   <ul class="first-column">
     <ng-container *ngIf="main">
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.length">
         <span><b>Length</b></span>
         <span>{{ main.length }} min</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.isan">
         <span><b>ISAN Number</b></span>
         <span>{{ main.isan }}</span>
       </li>
     </ng-container>
     <ng-container>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="color">
         <span><b>Color / Black & White</b></span>
         <span>{{ color }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="europeanQualification">
         <span><b>European Qualification</b></span>
         <span>{{ europeanQualification }}</span>
       </li>
@@ -26,21 +26,21 @@
   <!-- Second Column -->
   <ul class="second-column">
     <ng-container *ngIf="salesInfo">
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="salesInfo.certification">
         <span><b>Certifications</b></span>
         <span *ngFor="let certification of salesInfo.certifications; let isLast=last">
           {{ certification }} {{isLast ? '' : ', '}}
         </span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="salesInfo.pegi">
         <span><b>Rating</b></span>
         <span>{{ salesInfo.pegi }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="internationalPremiere">
         <span><b>International Premiere</b></span>
         <span>{{ internationalPremiere }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="salesInfo.originCountryReleaseDate">
         <span><b>Release date in Origin Country</b></span>
         <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>
       </li>

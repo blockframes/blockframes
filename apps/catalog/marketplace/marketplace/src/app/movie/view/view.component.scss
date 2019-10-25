@@ -13,10 +13,20 @@ header {
 .view-content {
   margin-left: 200px;
   margin-right: 200px;
+  &.heart {
+    margin: 30px 200px;
+  }
+}
+
+.heart-icon {
+  color: #e1e1e3;
+  width: 36px;
+  cursor: pointer;
 }
 
 .mat-divider {
   margin: 0 20px;
+  width: 100%;
 }
 
 .mat-card .mat-divider-horizontal.mat-divider-inset {
@@ -39,11 +49,10 @@ header {
 
 .movie-poster {
   width: 410px;
-  height: 545px;;
+  height: 545px;
 }
 
 .movie-presentation {
-  margin-top: 40px;
   padding: 50px;
   border-radius: 10px;
 }
@@ -62,6 +71,8 @@ header {
   .view-content {
     margin-left: 0;
     margin-right: 0;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -69,6 +80,8 @@ header {
   .view-content {
     margin-left: 50px;
     margin-right: 50px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -76,5 +89,7 @@ header {
   .view-content {
     margin-left: 50px;
     margin-right: 50px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }

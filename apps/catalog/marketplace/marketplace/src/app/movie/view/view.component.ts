@@ -1,7 +1,9 @@
+import { BasketService } from './../../distribution-right/+state/basket.service';
 import { Movie } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -14,15 +16,24 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
 
-  constructor(private query: MovieQuery) {}
+  constructor(
+    private query: MovieQuery,
+    private basketService: BasketService,
+    private orgQuery: OrganizationQuery
+  ) {}
 
   ngOnInit() {
     this.getMovie();
+    console.log(this.orgQuery.getValue());
   }
 
   private getMovie() {
     this.loading$ = this.query.selectLoading();
     this.movie$ = this.query.selectActive();
+  }
+
+  public addToWishlist() {
+    this.basketService.updateWishlist(this.query.getActive());
   }
 
   get internationalPremiere() {
