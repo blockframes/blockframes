@@ -53,9 +53,24 @@ export interface OrganizationAction {
   approvalDate?: string;
 }
 
+export const enum WishlistStatus {
+  pending = 'pending',
+  submitted = 'submitted',
+  accepted = 'accepted',
+  paid = 'paid'
+  
+}
+
+export interface Wishlist extends MovieMain {
+  salesAgent: string;
+  id: string;
+  wishListStatus: WishlistStatus;
+}
+
 export interface Organization extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
+  wishlist?: Wishlist[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
@@ -78,13 +93,6 @@ export interface Wishlist extends MovieMain {
   id: string;
   wishListStatus: WishlistStatus;
   movieId: string;
-}
-
-export const enum WishlistStatus {
-  pending = 'pending',
-  submitted = 'submitted',
-  accepted = 'accepted',
-  paid = 'paid'
 }
 
 export function createOperation(
