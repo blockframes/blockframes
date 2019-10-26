@@ -1,3 +1,4 @@
+import { MovieMain } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
@@ -52,9 +53,24 @@ export interface OrganizationAction {
   approvalDate?: string;
 }
 
+export const enum WishlistStatus {
+  pending = 'pending',
+  submitted = 'submitted',
+  accepted = 'accepted',
+  paid = 'paid'
+  
+}
+
+export interface Wishlist extends MovieMain {
+  salesAgent: string;
+  id: string;
+  wishListStatus: WishlistStatus;
+}
+
 export interface Organization extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
+  wishlist?: Wishlist[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
@@ -72,10 +88,12 @@ export interface PublicOrganization {
   name: string;
 }
 
-export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
+export function createOperation(
+  operation: Partial<OrganizationOperation> = {}
+): OrganizationOperation {
   return {
     quorum: 0,
     members: [],
-    ...operation,
+    ...operation
   } as OrganizationOperation;
 }

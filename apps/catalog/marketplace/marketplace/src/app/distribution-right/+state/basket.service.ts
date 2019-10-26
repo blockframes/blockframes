@@ -3,7 +3,7 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { OrganizationQuery, Organization, Wishlist, WishlistStatus } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
 
@@ -49,22 +49,25 @@ export class BasketService extends SubcollectionService<BasketState> {
       });
     let ownerOfMovie: Organization;
     organizations.forEach(org => {
-      org.movieIds.forEach(id => {
-        if (id === movie.id) {
+      org.movieIds.forEach(movieId => {
+        if (movieId === movie.id) {
           ownerOfMovie = org;
         }
       });
     });
     const id = this.db.createId();
-    const wishlistFactory = () => {
+    const wishlistFactory = (): Wishlist => {
       return {
         id: id,
-        movie: movie.main.title.original,
+        title: {
+          original: movie.main.title.original
+        },
         salesAgent: ownerOfMovie.name || '',
-        director: movie.main.directors[0],
+        directors: movie.main.directors,
         status: movie.main.status,
-        originCountry: getLabelByCode('TERRITORIES', movie.main.originCountries[0]),
-        length: `${movie.main.length} min`
+        originCountries: [getLabelByCode('TERRITORIES', movie.main.originCountries[0])],
+        length: movie.main.length,
+        wishListStatus: WishlistStatus.pending
       };
     };
     this.db.doc(`orgs/${this.organizationQuery.id}/wishlist/${id}`).set(wishlistFactory());

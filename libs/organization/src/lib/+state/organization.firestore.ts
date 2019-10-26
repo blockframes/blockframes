@@ -14,12 +14,11 @@ export interface OrganizationDocument {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  catalog: null;
   logo: string;
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
-  wishList: WhishListWithDates[];
+  wishList: WhishlistWithDates[];
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -28,15 +27,15 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface WhishListRaw<D> {
+export interface WhishlistRaw<D> {
   status: WhishListStatus,
   movieIds: string[],
   sent?: D
 }
 
-export interface WhishListDocument extends WhishListRaw<Timestamp> { }
+export interface WhishlistDocument extends WhishlistRaw<Timestamp> { }
 
-export interface WhishListWithDates extends WhishListRaw<Date> { }
+export interface WhishlistWithDates extends WhishlistRaw<Date> { }
 
 export const enum WhishListStatus {
   pending = 'pending',
@@ -53,7 +52,9 @@ export interface PublicOrganization {
 }
 
 /** A factory function that creates an Organization. */
-export function createOrganization(params: Partial<OrganizationDocument> = {}): OrganizationDocument {
+export function createOrganization(
+  params: Partial<OrganizationDocument> = {}
+): OrganizationDocument {
   return {
     id: !!params.id ? params.id : '',
     name: '',
@@ -69,9 +70,8 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     templateIds: [],
     created: Date.now(),
     updated: Date.now(),
-    logo: '',
-    catalog: null,
-    wishList: [],
+    logo: PLACEHOLDER_LOGO,
+    whishlist: [],
     ...params
   };
 }
