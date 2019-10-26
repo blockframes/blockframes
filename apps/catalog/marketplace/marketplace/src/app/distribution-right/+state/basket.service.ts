@@ -3,7 +3,12 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery, Organization, Wishlist, WishlistStatus } from '@blockframes/organization';
+import {
+  OrganizationQuery,
+  Organization,
+  Wishlist,
+  WishlistStatus
+} from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
 
@@ -49,11 +54,13 @@ export class BasketService extends SubcollectionService<BasketState> {
       });
     let ownerOfMovie: Organization;
     organizations.forEach(org => {
-      org.movieIds.forEach(movieId => {
-        if (movieId === movie.id) {
-          ownerOfMovie = org;
-        }
-      });
+      if (org.movieIds) {
+        org.movieIds.forEach(movieId => {
+          if (movieId === movie.id) {
+            ownerOfMovie = org;
+          }
+        });
+      }
     });
     const id = this.db.createId();
     const wishlistFactory = (): Wishlist => {
@@ -62,6 +69,7 @@ export class BasketService extends SubcollectionService<BasketState> {
         title: {
           original: movie.main.title.original
         },
+        movieId: movie.id,
         salesAgent: ownerOfMovie.name || '',
         directors: movie.main.directors,
         status: movie.main.status,
@@ -70,7 +78,45 @@ export class BasketService extends SubcollectionService<BasketState> {
         wishListStatus: WishlistStatus.pending
       };
     };
-    this.db.doc(`orgs/${this.organizationQuery.id}/wishlist/${id}`).set(wishlistFactory());
+    // Unwrap the present, cause it can only be one org
+    const [orgState]: Organization[] = organizations.filter(
+      org => org.id === this.organizationQuery.id
+    ); 
+    if (!orgState.wishlist) {
+      this.db
+        .collection('orgs')
+        .doc(`${this.organizationQuery.id}`)
+        .set({ ...orgState, wishlist: [wishlistFactory()] });
+    } else if (orgState.wishlist.length >= 0) {
+      /* There are already movies in the wishlist,
+       * now ne need to look if the movie is already added
+       */
+      const movieAlreadyExists: Wishlist[] = orgState.wishlist.filter(
+        entity => entity.movieId === movie.id
+      );
+      if (movieAlreadyExists.length >= 1) {
+        // It already exists, so delet it
+        const updatedWishlist: Wishlist[] = [];
+        orgState.wishlist.forEach(entity => {
+          movieAlreadyExists.forEach(movieToDelete => {
+            if (movieToDelete.movieId !== entity.movieId) {
+              updatedWishlist.push(entity);
+            }
+          });
+        });
+        this.db
+          .collection('orgs')
+          .doc(`${this.organizationQuery.id}`)
+          .update({ wishlist: updatedWishlist });
+      } else {
+        const movieToAdd = orgState.wishlist;
+        movieToAdd.push(wishlistFactory());
+        this.db
+          .collection('orgs')
+          .doc(`${this.organizationQuery.id}`)
+          .update({ wishlist: movieToAdd });
+      }
+    }
   }
 
   public removeDistributionRight(rightId: string, basketId: string) {
