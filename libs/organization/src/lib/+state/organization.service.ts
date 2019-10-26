@@ -36,6 +36,10 @@ export const orgQuery = (orgId: string): Query<Organization> => ({
   members: (organization: Organization) =>
     organization.userIds.map(id => ({
       path: `users/${id}`
+    })),
+  wishlist: (organization: Organization) =>
+    organization.wishlist.map(Wishlist => ({
+      path: `orgs/${orgId}/wishlist/${Wishlist.id}`
     }))
 });
 
