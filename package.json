@@ -84,7 +84,7 @@
     "@fullpage/angular-fullpage": "0.0.14",
     "@google-cloud/pubsub": "^1.1.2",
     "@google-cloud/storage": "^3.5.0",
-    "@ngmodule/material-carousel": "^0.5.0",
+    "@ngmodule/material-carousel": "^0.5.1",
     "@ngrx/effects": "8.4.0",
     "@ngrx/router-store": "8.4.0",
     "@ngrx/store": "8.4.0",

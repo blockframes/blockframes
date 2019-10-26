@@ -3,12 +3,15 @@
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1>Welcome to Bigger Boat</h1>
     <p>
-        Bigger Boat, one of the Blockframes suite of DApps, is a beta peer-to-peer platform for trading film, TV and series rights between Sales Agents and Content Buyers, facilitating the licensing process through its database of rights to films and TV programs and executing instantaneously the waterfall on all revenue.
+      Bigger Boat, one of the Blockframes suite of DApps, is a beta peer-to-peer platform for trading film, TV and
+      series rights between Sales Agents and Content Buyers, facilitating the licensing process through its database of
+      rights to films and TV programs and executing instantaneously the waterfall on all revenue.
     </p>
-    <a mat-flat-button color="primary" test-id="discover" routerLink="/layout/o/catalog/search">View our film catalogue</a>
+    <a mat-flat-button color="primary" test-id="discover" routerLink="/layout/o/catalog/search">View our film
+      catalogue</a>
   </header>
 
-  <section fxLayout="column" fxLayoutAlign="start center">
+  <section fxLayout="column" fxLayoutAlign="start center" >
     <ng-container *ngFor="let section of moviesBySections$ | async; let i = index">
       <!-- We want by every iteration of the keys array that the text switches side-->
       <article [fxLayout]="layout(i)" fxLayoutAlign="center start">
@@ -18,17 +21,17 @@
           <a mat-flat-button test-id="seeMore1" color="primary" routerLink="/layout/o/catalog/search">See more</a>
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-          <!-- We only want to use the first image in the promotinalElements.images array-->
           <ng-container *ngFor="let movie of section.movies">
             <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster" [hideOverlay]="true">
-              <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
+              <h1>hey</h1>
+    <!--           <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
                 <footer fxLayout="column" fxLayoutAlign="center start">
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }}
                     {{ director.lastName }}</span>
                   <span><b>Production year</b> {{ movie.main.productionYear }}</span>
                 </footer>
-              </div>
+              </div> -->
             </mat-carousel-slide>
           </ng-container>
         </mat-carousel>
