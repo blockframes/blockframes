@@ -12,9 +12,16 @@
 
   <span fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
     <mat-divider></mat-divider>
-    <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
-      <mat-icon svgIcon="heart"></mat-icon>
-    </button>
+    <ng-container *ngIf="(wishlistState | async); else alreadyAdded">
+      <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
+        <mat-icon svgIcon="heart"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #alreadyAdded>
+      <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
+        <mat-icon svgIcon="heart"></mat-icon>
+      </button>
+    </ng-template>
   </span>
 
   <section fxLayout="row" class="view-content">
@@ -69,17 +76,8 @@
 
 
   <div fxLayout="row" fxLayoutAlign="center end">
-    <a test-id="distribution-right-link" mat-flat-button color="accent"
-      [routerLink]="['/layout/o/catalog', movie.id, 'create']">
-      Create distribution right
-    </a>
+    <button test-id="distribution-right-link" mat-flat-button color="primary" (click)="addToWishlist()">
+      {{ toggle ? 'Remove from wishlist' : 'Add to wishlist'}}
+    </button>
   </div>
 </main>
-<!-- 
-  <article>
-            Availabilities -->
-<!-- <movie-display-availabilities [rights]="movie.salesAgentDeal.rights"></movie-display-availabilities> -->
-<!-- Production -->
-<!--<movie-display-production [productionCompanies]="movie.main.productionCompanies"
-  [broadcasterCoproducers]="movie.salesInfo.broadcasterCoproducers"></movie-display-production>
-</article> -->

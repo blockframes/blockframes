@@ -1,9 +1,10 @@
+import { tap } from 'rxjs/operators';
 import { BasketService } from './../../distribution-right/+state/basket.service';
 import { Movie } from '@blockframes/movie';
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -11,10 +12,13 @@ import { OrganizationQuery } from '@blockframes/organization';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class MarketplaceMovieViewComponent implements OnInit {
+export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
+  private orgState: Subscription;
+  // Flag to indicate which icon and message to show
+  public toggle: boolean;
 
   constructor(
     private query: MovieQuery,
@@ -24,7 +28,19 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   ngOnInit() {
     this.getMovie();
-    console.log(this.orgQuery.getValue());
+    this.orgState = this.orgQuery
+      .select()
+      .pipe(
+        tap(value => {
+          // prevent the 'length' getter to throw an error
+          this.toggle = !!value.org.wishlist
+            ? value.org.wishlist.length > 0
+              ? true
+              : false
+            : false;
+        })
+      )
+      .subscribe();
   }
 
   private getMovie() {
@@ -50,5 +66,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
   get europeanQualification() {
     const europeanQualification = this.query.getActive().salesInfo.europeanQualification;
     return europeanQualification ? 'Yes' : 'No';
+  }
+
+  ngOnDestroy() {
+    this.orgState.unsubscribe();
   }
 }
