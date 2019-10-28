@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { OrganizationStatus } from '../../+state/organization.model';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { OrganizationService } from '../../+state/organization.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'organization-feedback',
@@ -20,12 +21,23 @@ export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private service: OrganizationService,
-    private query: OrganizationQuery
+    private query: OrganizationQuery,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.subscription = this.service.sync().subscribe();
     this.canMoveOn = this.query.status$.pipe(map(status => status === OrganizationStatus.accepted));
+  }
+
+  public async removeOrganization() {
+    try {
+      await this.service.removeOrganization();
+      this.snackBar.open('Your request to create an organization has been canceled.', 'close', { duration: 2000 });
+      return this.router.navigate(['../']);
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   ngOnDestroy(): void {
