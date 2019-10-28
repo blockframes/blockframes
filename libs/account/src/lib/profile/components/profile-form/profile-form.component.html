@@ -4,27 +4,37 @@
     <h4>Avatar</h4>
     <drop-cropper [ratio]="1" formControlName="avatar"></drop-cropper>
     <mat-divider [inset]="true"></mat-divider>
-    <h4>Identity</h4>
+    <h4>Your identity</h4>
     <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput test-id="name-form" placeholder="Name" type="text" formControlName="name" required />
+      <mat-label>First name</mat-label>
+      <input matInput test-id="name-form" placeholder="First name" type="text" formControlName="name" required />
       <mat-error *ngIf="control.get('name').hasError('required')">
         Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Surname</mat-label>
-      <input matInput test-id="surname-form" placeholder="Surname" type="text" formControlName="surname" required />
+      <mat-label>Last name</mat-label>
+      <input matInput test-id="surname-form" placeholder="Last name" type="text" formControlName="surname" required />
       <mat-error *ngIf="control.get('surname').hasError('required')">
         Surname is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-divider [inset]="true"></mat-divider>
-    <h4>Informations</h4>
+    <h4>Contact Information</h4>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>
       <input matInput test-id="phone-form" placeholder="Phone number" type="tel" formControlName="phoneNumber" />
     </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput test-id="phone-form" placeholder="Email Address" type="tel" formControlName="email" />
+      </mat-form-field>
+    <mat-divider [inset]="true"></mat-divider>
+    <h4>Contact Information</h4>
+    <!-- <mat-form-field appearance="outline">
+        <mat-label>Organization</mat-label>
+        <input matInput test-id="position-form" placeholder="Organization" type="text" formControlName="organization" />
+      </mat-form-field> -->
     <mat-form-field appearance="outline">
       <mat-label>Position</mat-label>
       <input matInput test-id="position-form" placeholder="Position" type="text" formControlName="position" />
