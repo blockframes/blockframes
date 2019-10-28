@@ -15,12 +15,8 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
-      },
-      {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist'
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },
@@ -36,17 +32,13 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
-      },
-      {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist'
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },
-  {
-    route: '/layout/o/catalog/selection/overview',
+  {    // TODO issue#1146
+    route: '/layout/o/catalog/wishlist/overview',
     items: [
       {
         name: 'home',
@@ -57,33 +49,8 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
-      },
-      {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist'
-      }
-    ]
-  },
-  {
-    route: '/layout/o/catalog/wishlist',
-    items: [
-      {
-        name: 'home',
-        path: '/layout/o/catalog/home'
-      },
-      {
-        name: 'catalogue',
-        path: '/layout/o/catalog/search'
-      },
-      {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
-      },
-      {
-        name: 'wishlist',
-        path: '/layout/o/catalog/wishlist'
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },

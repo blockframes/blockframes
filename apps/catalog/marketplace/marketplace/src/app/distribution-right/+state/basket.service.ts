@@ -104,4 +104,19 @@ export class BasketService extends CollectionService<BasketState> {
   get createFireStoreId(): string {
     return this.db.createId();
   }
+
+  public async removeMovieFromWishlist(id: string): Promise<boolean | Error> {
+    try {
+      const updatedWishlist = this.organizationQuery
+        .getValue()
+        .org.wishlist.filter(entity => entity.id !== id);
+      await this.db
+        .collection('orgs')
+        .doc(`${this.organizationQuery.id}`)
+        .update({ ...this.organizationQuery.getValue().org, wishlist: updatedWishlist });
+      return true;
+    } catch (err) {
+      return err;
+    }
+  }
 }

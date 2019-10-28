@@ -1,3 +1,6 @@
+import { Subscription } from 'rxjs';
+import { OrganizationQuery, Wishlist } from '@blockframes/organization';
+import { AFM_DISABLE } from '@env';
 import { DistributionRight, MovieData } from '../../distribution-right/+state/basket.model';
 import { CatalogBasket } from '@blockframes/marketplace';
 import { BasketQuery } from '../../distribution-right/+state/basket.query';
@@ -23,22 +26,34 @@ export class MarketplaceSelectionComponent implements OnInit {
   public priceControl: FormControl = new FormControl(null);
   public currencyList: MovieCurrenciesSlug[];
   public selectedCurrency;
-  public movieDistributionRights: MovieData[] = [];
+  // TODO issue#1146 rename it
+  public moviesOnWishlist: Wishlist[] = [];
+  public wishlist: Subscription;
 
   constructor(
     private basketService: BasketService,
     private movieQuery: MovieQuery,
-    private basketQuery: BasketQuery
+    private basketQuery: BasketQuery,
+    private orgQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
-    this.currencyList = MOVIE_CURRENCIES_SLUG;
-    // TODO #922: make an observable out of the basketquery
-    this.basketQuery.getAll().forEach(basket =>
-      basket.rights.forEach(right => {
-        this.movieDistributionRights.push(this.createRightDetail(right));
-      })
-    );
+    // TODO issue#1146
+    if (!AFM_DISABLE) {
+      this.wishlist = this.orgQuery.select().subscribe(wishlist => {
+        console.log(wishlist);
+        this.moviesOnWishlist = wishlist.org.wishlist;
+      });
+    } else {
+      this.currencyList = MOVIE_CURRENCIES_SLUG;
+      // TODO #922: make an observable out of the basketquery
+      this.basketQuery.getAll().forEach(basket =>
+        basket.rights.forEach(right => {
+          // TODO issue#1146
+          // this.movieDistributionRights.push(this.createRightDetail(right));
+        })
+      );
+    }
   }
 
   private createRightDetail(detail: DistributionRight) {
@@ -47,7 +62,7 @@ export class MarketplaceSelectionComponent implements OnInit {
       movieName: this.getMovieTitle(detail.movieId),
       territory: detail.territories[0],
       rights: detail.medias[0],
-      duration: detail.duration,
+      duration: detail.duration
       // TODO#1071: refactor the model after the ui presentation
     } as MovieData;
   }
@@ -56,25 +71,37 @@ export class MarketplaceSelectionComponent implements OnInit {
     const movie = this.movieQuery.getEntity(id);
     if (movie) {
       return movie.main.title.original;
-    }
-    else {
+    } else {
       throw new Error(`No movie found for this id: ${id}`);
     }
   }
 
-  public deleteDistributionRight(rightId: string) {
-    const findBasket: CatalogBasket[] = [];
-    this.basketQuery.getAll().forEach(baskets =>
-      baskets.rights.forEach(right => {
-        if (right.id === rightId) {
-          findBasket.push(baskets);
-        }
-      })
-    );
-    let findBasketId: string;
-    findBasket.forEach(basket => (findBasketId = basket.id));
-    this.basketService.removeDistributionRight(rightId, findBasketId);
+  public async deleteDistributionRight(rightId) {
+    // TODO issue#1146
+    if (!AFM_DISABLE) {
+      let result: boolean | Error;
+      await this.basketService.removeMovieFromWishlist(rightId).then(data => (result = data));
+      if (result === true) {
+        return;
+      } else {
+        console.log(result);
+        return;
+      }
+    } else {
+      const findBasket: CatalogBasket[] = [];
+      this.basketQuery.getAll().forEach(baskets =>
+        baskets.rights.forEach(right => {
+          if (right.id === rightId) {
+            findBasket.push(baskets);
+          }
+        })
+      );
+      let findBasketId: string;
+      findBasket.forEach(basket => (findBasketId = basket.id));
+      this.basketService.removeDistributionRight(rightId, findBasketId);
+    }
   }
+
   // TODO#918: We have to think about how we want to bundle/handle multiple pending distrights
   public setPriceCurrency() {
     const [oldBasket]: CatalogBasket[] = this.basketQuery.getAll();
