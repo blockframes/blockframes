@@ -279,6 +279,10 @@ const ICONS_SVG = [
     name: 'heart',
     url: 'assets/icons/heart.svg'
   },
+  {
+    name: 'heart_filled',
+    url: 'assets/icons/heart_filled.svg'
+  },
   { name: 'star', url: 'assets/icons/star.svg' }
 ];
 
