@@ -84,13 +84,6 @@ export const routes: Routes = [
                 path: 'wishlist',
                 canActivate: [CatalogBasketGuard, MovieCollectionGuard],
                 canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
-                loadChildren: () =>
-                  import('./movie/wishlist/wishlist.module').then(m => m.WishlistModule)
-              },
-              {
-                path: 'selection',
-                canActivate: [CatalogBasketGuard, MovieCollectionGuard],
-                canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
                 children: [
                   {
                     path: '',
