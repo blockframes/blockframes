@@ -19,12 +19,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 
 
 export const noOrganizationRoutes: Routes = [
@@ -48,7 +50,11 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'create',
     component: OrganizationCreateComponent
-  }
+  },
+  {
+    path: 'loading',
+    component: OrganizationLoadingComponent
+  },
 ];
 
 @NgModule({
@@ -70,6 +76,7 @@ export const noOrganizationRoutes: Routes = [
     MatButtonModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
 
     // UI
     ActionsListModule,
@@ -81,7 +88,8 @@ export const noOrganizationRoutes: Routes = [
     OrganizationHomeComponent,
     OrganizationFindComponent,
     OrganizationFeedbackComponent,
-    OrganizationCreateComponent
+    OrganizationCreateComponent,
+    OrganizationLoadingComponent,
   ]
 })
 export class NoOrganizationModule {}
