@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { InvitationType, Invitation } from '@blockframes/invitation/types';
+import { Router } from '@angular/router';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
@@ -54,7 +55,8 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +73,10 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
             case InvitationType.fromUserToOrganization:
               return invitationActionFromUserToOrganization(invitation);
             case InvitationType.fromOrganizationToUser:
-              return invitationActionFromOrgToUser(invitation, () =>
-                this.acceptInvitation(invitation)
-              );
+              return invitationActionFromOrgToUser(invitation, () => {
+                this.acceptInvitation(invitation);
+                this.router.navigateByUrl('/layout/organization/loading');
+              });
           }
         });
 
