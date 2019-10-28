@@ -3,12 +3,9 @@ import { Organization, OrganizationService, OrganizationStatus } from '../+state
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
-
 // TODO: issue#1171, use a CollectionGuard
 @Injectable({ providedIn: 'root' })
-export class OrganizationGuard {
+export class NoOrganizationGuard {
   private subscription: Subscription;
 
   constructor(private orgService: OrganizationService, private router: Router) {}
@@ -18,22 +15,15 @@ export class OrganizationGuard {
       this.subscription = this.orgService.sync().subscribe({
         next: (organization: Organization) => {
           if (!organization) {
-            return res(false);
+            return res(true);
           }
           if (organization.status === OrganizationStatus.pending) {
-            return res(this.router.parseUrl('layout/organization/congratulation'));
+            return res(this.router.parseUrl('layout/organization/congratulations'));
           }
-
-          // TODO issue#1146
-          if (AFM_DISABLE) {
-            this.orgService.retrieveDataAndAddListeners();
-          }
-
           return res(true);
         },
         error: err => {
-          console.log('Error: ', err);
-          res(this.router.parseUrl('layout/organization'));
+          res(true);
         }
       });
     });
@@ -41,12 +31,7 @@ export class OrganizationGuard {
 
   canDeactivate() {
     this.subscription.unsubscribe();
-
-    // TODO issue#1146
-    if (AFM_DISABLE) {
-      this.orgService.removeAllListeners();
-    }
-
     return true;
   }
 }
+
