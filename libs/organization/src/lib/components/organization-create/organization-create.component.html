@@ -57,7 +57,7 @@
         />
       </mat-form-field>
       <h3>Logo</h3>
-      <drop-cropper [ratio]="4/3" formControlName="logo"></drop-cropper>
+      <drop-cropper [ratio]="1" formControlName="logo"></drop-cropper>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button mat-flat-button type="submit" color="accent">
           <ng-container *ngIf="(loading$ | async); else: notLoading">
