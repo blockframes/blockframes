@@ -13,10 +13,10 @@
     ></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="center">
       <a (click)="cropIt()" routerLink=".">
-          <mat-icon color="primary">check_circle</mat-icon>
+        <mat-icon fontSet="material-icons-outlined" color="primary">check_circle</mat-icon>
       </a>
       <a (click)="nextStep(prev)" routerLink=".">
-          <mat-icon color="primary">cancel</mat-icon>
+        <mat-icon fontSet="material-icons-outlined" color="warn">cancel</mat-icon>
       </a>
     </div>
   </article>
@@ -47,8 +47,16 @@
       <div class="buttons" fxLayout="row" fxLayoutAlign="center">
         <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
         <!-- <button mat-flat-button color="primary" (click)="resize(url)">resize</button> -->
-        <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>
-        <button mat-flat-button color="primary" (click)="delete()">delete</button>
+        <div class="buttons" fxLayout="row" fxLayoutAlign="center">
+            <a (click)="fileUploader.click()" routerLink=".">
+              <mat-icon fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+            </a>
+            <a (click)="delete()" routerLink=".">
+              <mat-icon fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
+            </a>
+          </div>
+        <!-- <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>
+        <button mat-flat-button color="warning" (click)="delete()">delete</button> -->
       </div>
     </ng-container>
   </article>
