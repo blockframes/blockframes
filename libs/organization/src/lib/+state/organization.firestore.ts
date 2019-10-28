@@ -1,5 +1,7 @@
+import { MovieMain } from '@blockframes/movie/types';
 import { firestore } from "firebase/app";
 type Timestamp = firestore.Timestamp;
+
 
 /** Document model of an Organization */
 export interface OrganizationDocument {
@@ -49,6 +51,20 @@ export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
 export interface PublicOrganization {
   id: string;
   name: string;
+}
+
+export const enum WishlistStatus {
+  pending = 'pending',
+  submitted = 'submitted',
+  accepted = 'accepted',
+  paid = 'paid'
+}
+
+export interface Wishlist extends MovieMain {
+  salesAgent: string;
+  id: string;
+  wishListStatus: WishlistStatus;
+  movieId: string;
 }
 
 /** A factory function that creates an Organization. */
