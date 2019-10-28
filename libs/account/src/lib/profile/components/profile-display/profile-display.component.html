@@ -4,28 +4,22 @@
       <img mat-card-avatar [storageRef]="user.avatar" alt="Profile picture" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <div class="column-padding-bottom">
-          <h3>
-            {{ user.name }}
-          </h3>
-          <span>{{ user.surname }}</span>
+          <h3>{{ user.name }}</h3><span>{{ user.surname }}</span>
         </div>
-        <mat-divider [inset]="true"></mat-divider>
         <div fxLayout="column" class="column-padding">
-          <span *ngIf="user.phoneNumber"><b>Phone number:</b> {{ user.phoneNumber }}</span>
-          <span><b>Email:</b> {{ user.email }}</span>
+          <p class="bf-dark-text">Phone number: <span class="bf-text">{{ user.phoneNumber }}</span></p>
+          <p class="bf-dark-text">Email: <span class="bf-text">{{ user.email }}</span></p>
         </div>
-        <mat-divider [inset]="true"></mat-divider>
         <div fxLayout="column" class="column-padding">
-          <span *ngIf="organization"><b>Organization:</b> {{ organization.name }}</span>
-          <span *ngIf="user.position"><b>Position:</b> {{ user.position }}</span>
+            <p class="bf-dark-text">Organization: <span class="bf-text">{{ organization.name }}</span></p>
+            <p class="bf-dark-text">Position: <span class="bf-text">{{ user.position }}</span></p>
         </div>
-        <mat-divider [inset]="true"></mat-divider>
         <div class="action-button">
           <button mat-icon-button (click)="editing.emit('password')" color="primary">
             <mat-icon svgIcon="changePass"></mat-icon>
           </button>
           <button mat-icon-button (click)="editing.emit('profile')" color="primary">
-            <mat-icon>edit</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
           </button>
         </div>
       </article>
