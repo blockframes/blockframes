@@ -20,19 +20,16 @@ export class AuthService {
   // AUTH //
   //////////
 
-  /** Get the auth from AngulareFireAuth */
-  public getAuth() {
-    return this.afAuth.auth;
-  }
-
   /**
    * Initiate the password reset process for this user.
    * @param email email of the user
    */
   public resetPasswordInit(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(
-      email,
-      { url: 'http://localhost:4200/auth' });
+    return this.afAuth.auth.sendPasswordResetEmail(email);
+  }
+
+  public checkResetCode(actionCode: string) {
+    return this.afAuth.auth.verifyPasswordResetCode(actionCode);
   }
 
   /**
@@ -52,7 +49,7 @@ export class AuthService {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.getAuth().confirmPasswordReset(actionCode, newPassword)
+    this.afAuth.auth.confirmPasswordReset(actionCode, newPassword)
   }
 
   /** Basic function used to login. */

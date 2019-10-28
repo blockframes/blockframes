@@ -12,7 +12,6 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./password-reset.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class PasswordResetComponent implements OnInit, OnDestroy {
 
   public passwordForm: FormGroup;
@@ -40,7 +39,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
 
         // Verify the password reset code is valid.
         try {
-          this.service.getAuth().verifyPasswordResetCode(this.actionCode);
+          this.service.checkResetCode(this.actionCode);
           this.actionCodeChecked = true;
         } catch (error) {
           // Invalid or expired action code. Ask user to try to reset the password again.
@@ -51,7 +50,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
   }
 
   /** Attempt to confirm the password reset with Firebase and navigate user back to login page. */
-  public setNewPassword() {
+  public confirmPassword() {
     try {
       if (this.passwordForm.invalid) throw new Error('Your informations to change your password are not valid');
       console.log(this.actionCode)
