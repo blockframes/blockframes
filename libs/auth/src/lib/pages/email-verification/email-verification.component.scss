@@ -1,0 +1,42 @@
+@import 'mixins';
+
+section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+form {
+  margin-left: 50px;
+}
+
+img {
+  width: 500px;
+}
+
+h3 {
+  margin-bottom: 6px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  margin-top: 8px;
+}
+
+@include mobile {
+  img {
+    width: 200px;
+  }
+  form {
+    margin-left: 0;
+    padding: 0 20px;
+  }
+}
+
+@include tablet {
+  img {
+    width: 300px;
+  }
+}

@@ -25,13 +25,17 @@ import { EmailVerifyComponent } from './components/email-verify/email-verify.com
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
+import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
+import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
   { path: 'identity', component: IdentityComponent },
-  { path: 'congratulation', component: IdentityFeedbackComponent }
+  { path: 'congratulation', component: IdentityFeedbackComponent },
+  { path: 'email-verification', component: EmailVerificationComponent},
+  { path: 'password-reset', component: PasswordResetComponent}
 ];
 
 @NgModule({
@@ -60,7 +64,9 @@ export const AuthRoutes: Routes = [
     WelcomeViewComponent,
     IdentityComponent,
     EmailVerifyComponent,
-    IdentityFeedbackComponent
+    IdentityFeedbackComponent,
+    EmailVerificationComponent,
+    PasswordResetComponent
   ],
   exports: [EmailVerifyComponent]
 })

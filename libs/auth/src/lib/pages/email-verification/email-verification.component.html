@@ -1,0 +1,30 @@
+<section
+  fxLayout="row"
+  fxLayoutAlign="center start"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="center center">
+  <img src="/assets/images/dark_import_key.png" alt="Cyclist carrying a key" />
+  <form [formGroup]="emailForm" fxLayout="column">
+    <h3>Reset password</h3>
+    <p>To reset your password, please provide your Blockframes email address.</p>
+    <mat-form-field appearance="outline">
+      <mat-label>Email address</mat-label>
+      <input
+        matInput
+        type="email"
+        placeholder="Email address"
+        formControlName="email"
+        required />
+      <mat-error *ngIf="emailForm.get('email').hasError('email') && !emailForm.get('email').hasError('required')">
+        Please enter a <strong>valid</strong> email address.
+      </mat-error>
+      <mat-error *ngIf="emailForm.get('email').hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <button type="submit" mat-flat-button color="accent" (click)="resetPassword()" [disabled]="emailForm.invalid">Submit</button>
+      <a mat-button color="primary" routerLink="../connexion">Cancel</a>
+    </div>
+  </form>
+</section>
