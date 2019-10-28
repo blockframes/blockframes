@@ -9,7 +9,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./email-verification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class EmailVerificationComponent implements OnInit {
   public emailForm: FormGroup;
 
@@ -28,7 +27,7 @@ export class EmailVerificationComponent implements OnInit {
   public resetPassword() {
     try {
       if (this.emailForm.invalid) {
-        throw new Error('Invalid format of email (must be like: cascade8@blockframes.com)');
+        throw new Error('Invalid format of email');
       }
       this.service.resetPasswordInit(this.emailForm.value.email)
       this.snackBar.open('A password reset link has been sent to your email address', 'close', {duration: 5000})
