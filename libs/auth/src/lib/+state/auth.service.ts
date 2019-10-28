@@ -20,10 +20,27 @@ export class AuthService {
   // AUTH //
   //////////
 
+  public getAuth() {
+    return this.afAuth.auth;
+  }
+  /**
+   * Initiate the password reset process for this user
+   * @param email email of the user
+   */
+  public resetPasswordInit(email: string) {
+    return this.afAuth.auth.sendPasswordResetEmail(
+      email,
+      { url: 'http://localhost:4200/auth' });
+  }
+
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
     await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
     return this.afAuth.auth.currentUser.updatePassword(newPassword);
+  }
+
+  public handleResetPassword(newPassword: string, actionCode: string) {
+    this.getAuth().confirmPasswordReset(actionCode, newPassword)
   }
 
   public async signin(email: string, password: string) {
