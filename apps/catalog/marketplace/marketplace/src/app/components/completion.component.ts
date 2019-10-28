@@ -4,18 +4,23 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'catalog-completion-item',
   template: `
-  <main fxLayout="row" fxLayoutAlign="center center">
-    <feedback-message
-    title="Congratulation!"
-    subTitle="Your bid successfuly processed."
-    imageUrl="/assets/images/bid-success.png"
-    (redirectUser)="navigate()">
-    </feedback-message>
-  </main>`,
+    <main fxLayout="row" fxLayoutAlign="center center">
+      <feedback-message
+        [title]="header"
+        [subTitle]="subTitle"
+        imageUrl="/assets/images/Dark_Fine_380.png"
+        (redirectUser)="navigate()"
+      >
+      </feedback-message>
+    </main>
+  `,
   styleUrls: ['./completion.component.scss']
 })
-
 export class CatalogCompletionComponent {
+  public header = 'Everything is fine';
+  public subTitle =
+    'Your request has been sent. A summary email has just been sent to you. Please kindly wait for the relevant sellers to contact you.';
+
   constructor(private router: Router) {}
 
   public navigate() {
