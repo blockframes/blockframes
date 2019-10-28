@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { AFM_DISABLE } from '@env';
@@ -34,14 +35,14 @@ export class MarketplaceSelectionComponent implements OnInit {
     private basketService: BasketService,
     private movieQuery: MovieQuery,
     private basketQuery: BasketQuery,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private matSnackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
     // TODO issue#1146
     if (!AFM_DISABLE) {
       this.wishlist = this.orgQuery.select().subscribe(wishlist => {
-        console.log(wishlist);
         this.moviesOnWishlist = wishlist.org.wishlist;
       });
     } else {
@@ -81,10 +82,10 @@ export class MarketplaceSelectionComponent implements OnInit {
     if (!AFM_DISABLE) {
       let result: boolean | Error;
       await this.basketService.removeMovieFromWishlist(rightId).then(data => (result = data));
-      if (result === true) {
+      if (typeof result === 'boolean') {
         return;
       } else {
-        console.log(result);
+        this.matSnackbar.open(result.message, 'close', { duration: 3000 });
         return;
       }
     } else {
