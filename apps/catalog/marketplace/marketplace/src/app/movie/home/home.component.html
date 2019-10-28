@@ -1,4 +1,3 @@
-<!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1>Welcome to Bigger Boat</h1>
@@ -11,7 +10,7 @@
       catalogue</a>
   </header>
 
-  <section fxLayout="column" fxLayoutAlign="start center" >
+  <section fxLayout="column" fxLayoutAlign="start center">
     <ng-container *ngFor="let section of moviesBySections$ | async; let i = index">
       <!-- We want by every iteration of the keys array that the text switches side-->
       <article [fxLayout]="layout(i)" fxLayoutAlign="center start">
@@ -24,19 +23,18 @@
           <ng-container *ngFor="let movie of section.movies">
             <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster" [hideOverlay]="true">
               <h1>hey</h1>
-    <!--           <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
+              <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
                 <footer fxLayout="column" fxLayoutAlign="center start">
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }}
                     {{ director.lastName }}</span>
                   <span><b>Production year</b> {{ movie.main.productionYear }}</span>
                 </footer>
-              </div> -->
+              </div>
             </mat-carousel-slide>
           </ng-container>
         </mat-carousel>
       </article>
     </ng-container>
   </section>
-
 </div>
