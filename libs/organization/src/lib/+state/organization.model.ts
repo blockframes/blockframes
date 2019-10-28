@@ -1,4 +1,3 @@
-import { MovieMain } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
@@ -71,20 +70,6 @@ export interface OrganizationForm {
 export interface PublicOrganization {
   id: string;
   name: string;
-}
-
-export interface Wishlist extends MovieMain {
-  salesAgent: string;
-  id: string;
-  wishListStatus: WishlistStatus;
-  movieId: string;
-}
-
-export const enum WishlistStatus {
-  pending = 'pending',
-  submitted = 'submitted',
-  accepted = 'accepted',
-  paid = 'paid'
 }
 
 export function createOperation(
