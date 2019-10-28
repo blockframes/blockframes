@@ -13,7 +13,11 @@ import { MatSnackBar } from '@angular/material';
 export class EmailVerificationComponent implements OnInit {
   public emailForm: FormGroup;
 
-  constructor(private builder: FormBuilder, private service: AuthService, private snackBar: MatSnackBar) {}
+  constructor(
+    private builder: FormBuilder,
+    private service: AuthService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.emailForm = this.builder.group({
@@ -22,18 +26,15 @@ export class EmailVerificationComponent implements OnInit {
   }
 
   public resetPassword() {
-    console.log('submit')
-    if (!this.emailForm.invalid) {
-      try {
-        this.service.resetPasswordInit(this.emailForm.value.email)
-        this.snackBar.open('A password reset link has been sent to your email address', 'close', {duration: 5000})
+    try {
+      if (this.emailForm.invalid) {
+        throw new Error('Invalid format of email (must be like: cascade8@blockframes.com)');
       }
-      catch (error) {
-        this.snackBar.open(error.message, 'close', {duration: 5000})
-      }
+      this.service.resetPasswordInit(this.emailForm.value.email)
+      this.snackBar.open('A password reset link has been sent to your email address', 'close', {duration: 5000})
     }
-    else {
-    this.snackBar.open('Please enter a valid email', 'close', {duration: 5000});
+    catch (error) {
+      this.snackBar.open(error.message, 'close', {duration: 5000})
     }
   }
 }
