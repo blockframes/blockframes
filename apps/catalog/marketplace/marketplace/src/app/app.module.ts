@@ -14,6 +14,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
@@ -82,6 +83,7 @@ import { intercomId } from '@env';
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
+    AngularFireAuthModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

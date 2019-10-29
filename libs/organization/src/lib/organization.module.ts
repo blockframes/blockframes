@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { AuthModule } from '@blockframes/auth';
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
@@ -92,7 +91,6 @@ if (AFM_DISABLE) {
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    AuthModule,
     FlexLayoutModule,
     EditableSidenavModule,
     FeedbackMessageModule,

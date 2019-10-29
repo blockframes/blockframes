@@ -50,7 +50,7 @@ import { FinancingExplorerProfileComponent } from './explorer/profile/profile.co
 import { FinancingRangeSliderModule } from './explorer/ui/range-slider/range-slider.module';
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
-import { AuthModule } from '@blockframes/auth';
+import { AuthModule } from '@blockframes/auth/auth.module';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FlexModule } from '@angular/flex-layout';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';

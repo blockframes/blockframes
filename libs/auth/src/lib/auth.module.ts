@@ -25,13 +25,15 @@ import { LoginViewComponent } from './pages/login-view/login-view.component';
 import { UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
-import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms-conditions.module';
+
+// Component Module
+import { EmailVerifyModule } from './components/email-verify/email-verify.module';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -64,6 +66,8 @@ export const AuthRoutes: Routes = [
     // Fire
     AngularFireAuthModule,
     AngularFirePerformanceModule,
+    EmailVerifyModule,
+
     RouterModule.forChild(AuthRoutes),
     UiFormModule,
   ],
@@ -73,11 +77,14 @@ export const AuthRoutes: Routes = [
     SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
-    EmailVerifyComponent,
     IdentityFeedbackComponent,
     EmailVerificationComponent,
     PasswordResetComponent
   ],
-  exports: [EmailVerifyComponent]
+  exports: []
 })
-export class AuthModule {}
+export class AuthModule {
+  constructor() {
+    console.log('AuthModule loaded');
+  }
+}

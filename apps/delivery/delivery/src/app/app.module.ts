@@ -12,25 +12,21 @@ import { environment } from '../environments/environment';
 // Components
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
-import { LayoutComponent } from './layout/layout.component';
-import { DeliveryQuery} from '@blockframes/material'; // TODO: find better way to load material lib
-import { TemplateModule} from '@blockframes/material'; // TODO: find better way to load material lib
+import { LayoutComponent } from '@blockframes/utils/routes/layout/layout.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 // Libraries
-import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { MovieModule } from '@blockframes/movie';
 import { OrganizationModule, NoOrganizationModule } from '@blockframes/organization';
-import { ProfileModule } from '@blockframes/account';
-import { AccountModule } from '@blockframes/account';
-import { WalletModule } from '@blockframes/ethers';
-import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { MovieModule } from '@blockframes/movie';
+import { ProfileModule, AccountModule } from '@blockframes/account';
+import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -50,6 +46,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+
+// Component Module
+import { EmailVerifyModule } from '@blockframes/auth';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -80,8 +79,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatMenuModule,
       MatBadgeModule,
 
+      // Component Modules
+      EmailVerifyModule,
+
       // Libraries
-      AuthModule,
       UploadModule,
       UiFormModule,
       OrganizationModule,
@@ -98,6 +99,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
       AngularFireFunctionsModule,
+      AngularFireAuthModule,
 
       // Akita
       AkitaNgRouterStoreModule.forRoot(),

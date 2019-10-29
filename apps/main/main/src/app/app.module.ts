@@ -19,9 +19,9 @@ import { HomeComponent } from './home/home.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 // Libraries
-import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { OrganizationModule } from '@blockframes/organization';
 import { ProfileModule } from '@blockframes/account';
@@ -49,6 +49,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
+
+// Component Module
+import { EmailVerifyModule } from '@blockframes/auth';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
@@ -79,8 +82,10 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     MatMenuModule,
     MatBadgeModule,
 
+    // Component Module
+    EmailVerifyModule,
+
     // Libraries
-    AuthModule,
     UploadModule,
     UiFormModule,
     OrganizationModule,
@@ -95,6 +100,7 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
+    AngularFireAuthModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
