@@ -85,10 +85,6 @@ export const CONTEXT_MENU = [
 export const CONTEXT_MENU_AFM = [
   {
     route: 'default',
-    items: []
-  },
-  {
-    route: '/layout/o/catalog/home',
     items: [
       {
         name: 'home',
