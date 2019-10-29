@@ -45,19 +45,18 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'find',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard],
     component: OrganizationFindComponent,
   },
   {
     path: 'congratulations',
     canActivate: [NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
   },
   {
     path: 'create',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard],
     component: OrganizationCreateComponent,
   },
   {
