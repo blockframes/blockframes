@@ -41,5 +41,9 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
     border: 1px solid mat-color($bf-dark-background, border);
     background: mat-color($bf-dark-background, background);
   }
+
+  [mat-fab].mat-fab {
+    background: mat-color($bf-dark-background, raised-button);
+  }
 }
 

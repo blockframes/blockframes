@@ -1,9 +1,13 @@
+@import 'mixins';
+
 section {
   height: 100%;
+  margin-left: 60px;
+  margin-right: 200px;
 }
 
 form {
-  width: 60%;
+  width: 100%;
 }
 
 #submit {
@@ -11,5 +15,26 @@ form {
 }
 
 #tosignin {
-  margin-top: 30px;
+  margin-top: 10px;
+}
+
+@include medium {
+  section {
+    margin-right: 100px;
+    margin-left: 30px;
+  }
+}
+
+@include tablet {
+  section {
+    margin-right: 50px;
+    margin-left: 20px;
+  }
+}
+
+@include mobile {
+  section {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }

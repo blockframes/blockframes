@@ -81,11 +81,6 @@ span.bf-dark-text {
   color: mat-color($bf-dark-foreground, dark-text);
 }
 
-p.bf-text,
-span.bf-text {
-  color: mat-color($bf-dark-foreground, text);
-}
-
 .bf-strong {
   font-weight: 600;
 }
