@@ -9,14 +9,14 @@
       <mat-label>First name</mat-label>
       <input matInput test-id="name-form" placeholder="First name" type="text" formControlName="name" required />
       <mat-error *ngIf="control.get('name').hasError('required')">
-        Name is <strong>required</strong>
+        First name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Last name</mat-label>
       <input matInput test-id="surname-form" placeholder="Last name" type="text" formControlName="surname" required />
       <mat-error *ngIf="control.get('surname').hasError('required')">
-        Surname is <strong>required</strong>
+        Last name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-divider [inset]="true"></mat-divider>

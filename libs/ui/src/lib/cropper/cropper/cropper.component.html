@@ -14,13 +14,9 @@
       [resizeToWidth]="parentWidth"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
-    <div class="buttons" fxLayout="row" fxLayoutAlign="center">
-      <a (click)="cropIt()" routerLink=".">
-        <mat-icon fontSet="material-icons-outlined" color="primary">check_circle</mat-icon>
-      </a>
-      <a (click)="nextStep(prev)" routerLink=".">
-        <mat-icon fontSet="material-icons-outlined" color="warn">cancel</mat-icon>
-      </a>
+    <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
+      <mat-icon (click)="cropIt()" mat-button fontSet="material-icons-outlined" color="primary">check_circle</mat-icon>
+      <mat-icon (click)="nextStep(prev)" mat-button fontSet="material-icons-outlined" color="warn">cancel</mat-icon>
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>
@@ -47,19 +43,11 @@
       <div class="show">
         <img class="croppedImage" [src]="url" />
       </div>
-      <div class="buttons" fxLayout="row" fxLayoutAlign="center">
+      <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
         <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
-        <!-- <button mat-flat-button color="primary" (click)="resize(url)">resize</button> -->
-        <div class="buttons" fxLayout="row" fxLayoutAlign="center">
-            <a (click)="fileUploader.click()" routerLink=".">
-              <mat-icon fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
-            </a>
-            <a (click)="delete()" routerLink=".">
-              <mat-icon fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
-            </a>
-          </div>
-        <!-- <button mat-flat-button color="primary" (click)="fileUploader.click()">edit</button>
-        <button mat-flat-button color="warning" (click)="delete()">delete</button> -->
+        <!-- <mat-icon (click)="resize(url)" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="resize current picture">icon</mat-icon> -->
+        <mat-icon (click)="fileUploader.click()" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+        <mat-icon (click)="delete()" mat-button fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
       </div>
     </ng-container>
   </article>
