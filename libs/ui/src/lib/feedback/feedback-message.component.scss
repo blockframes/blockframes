@@ -6,6 +6,13 @@ section {
   button {
     margin-top: 80px;
   }
+  img {
+    width: 100%;
+  }
+}
+
+.mat-flat-button {
+  margin-top: 30px;
 }
 
 @include mobile {

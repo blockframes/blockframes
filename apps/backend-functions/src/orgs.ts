@@ -8,8 +8,12 @@ import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail } from './internals/email';
 import { organizationCreated } from './assets/mail-templates';
 import { OrganizationDocument, OrganizationStatus } from './data/types';
-import { precomputeAddress as precomputeEthAddress, emailToEnsDomain, RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
+import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
+import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
+
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -59,20 +63,25 @@ export async function onOrganizationUpdate(
     const { userIds } = before as OrganizationDocument;
     const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
 
-    const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
+    // TODO issue#1146
+    if (AFM_DISABLE) {
+      const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
-    const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
+      const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 
-    if (isOrgRegistered) {
-      throw new Error(`This organization has already an ENS name: ${orgENS}`);
-    }
+      if (isOrgRegistered) {
+        throw new Error(`This organization has already an ENS name: ${orgENS}`);
+      }
 
-    const adminEthAddress = await precomputeEthAddress(emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain), RELAYER_CONFIG);
+    const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
+    const provider = getProvider(RELAYER_CONFIG.network);
+    const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
     const orgEthAddress =  await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
-    console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-    const res = await relayerRegisterENSLogic({name: orgENS, ethAddress: orgEthAddress}, RELAYER_CONFIG);
-    console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
+      console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
+      const res = await relayerRegisterENSLogic({name: orgENS, ethAddress: orgEthAddress}, RELAYER_CONFIG);
+      console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
+    }
   }
 
   return Promise.resolve(true); // no-op by default

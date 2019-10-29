@@ -1,10 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Key } from '@blockframes/utils';
 import { Observable } from 'rxjs';
 import { KeyManagerService, KeyManagerQuery } from '../../../key-manager/+state';
 import { WalletQuery } from '../../+state';
+import { Key } from '../../../types';
 
 enum steps {
   password,
@@ -23,6 +23,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   step = this.steps.password;
   key: Key;
   encrypting$: Observable<boolean>;
+  loadingProgress$: Observable<number>;
   @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef<HTMLAnchorElement>;
 
   constructor(
@@ -36,6 +37,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
 
   ngOnInit() {
     this.encrypting$ = this.keyQuery.selectLoading();
+    this.loadingProgress$ = this.keyQuery.select('progress');
   }
 
   async setPassword(password: string) {

@@ -20,17 +20,48 @@ export class AuthService {
   // AUTH //
   //////////
 
+  /**
+   * Initiate the password reset process for this user.
+   * @param email email of the user
+   */
+  public resetPasswordInit(email: string) {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
+  }
+
+  public checkResetCode(actionCode: string) {
+    return this.afAuth.auth.verifyPasswordResetCode(actionCode);
+  }
+
+  /**
+   * Update the user password with a new one.
+   * @param currentPassword current password of the user
+   * @param newPassword new password set by the user
+   */
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
     await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
     return this.afAuth.auth.currentUser.updatePassword(newPassword);
   }
 
+  /**
+   * Set a new password after it has been resetted.
+   * @param actionCode specific code from Firebase to check the user
+   * @param newPassword new password set by the owned of email
+   */
+  public handleResetPassword(actionCode: string, newPassword: string) {
+    this.afAuth.auth.confirmPasswordReset(actionCode, newPassword)
+  }
+
+  /** Basic function used to login. */
   public async signin(email: string, password: string) {
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     return this.router.navigate(['layout']);
   }
 
+  /**
+   * Function to sign up to the application, creating a user in both database and authentication repertory.
+   * It also send a verification email to the user.
+   */
   public async signup(email: string, password: string, name: string, surname: string) {
     const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
 
@@ -46,6 +77,7 @@ export class AuthService {
     return this.create(user);
   }
 
+  /** Function used to log out of the application. */
   public async logout() {
     await this.afAuth.auth.signOut();
     this.store.update({ user: null });
@@ -83,6 +115,7 @@ export class AuthService {
     await this.db.doc<User>(`users/${uid}`).delete();
   }
 
+  /** Send a new verification email to the current user */
   public async sendVerifyEmail() {
     return this.afAuth.auth.currentUser.sendEmailVerification();
   }
@@ -114,11 +147,16 @@ export class AuthService {
     return items.docs;
   }
 
+  /** Call a firebase function to get or create a user.
+   * @email find the user with this email. If email doesn't match with an existing user,
+   * create a user with this email address.
+   */
   public async getOrCreateUserByMail(email: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
     return f({ email }).then(matchingEmail => matchingEmail.data);
   }
 
+  /** Call a firebase function to get a list of users corresponding to the `prefix` string. */
   public async getUserByMail(prefix: string): Promise<User[]> {
     const f = firebase.functions().httpsCallable('findUserByMail');
     return f({ prefix }).then(matchingUsers => matchingUsers.data);

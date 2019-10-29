@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -33,6 +34,7 @@ export const profileRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    CropperModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,

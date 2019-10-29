@@ -1,26 +1,28 @@
 import { Injectable } from '@angular/core';
-import { network } from '@env';
-import { ERC1077 } from '@blockframes/contracts';
+import { network, factoryContract, baseEnsDomain } from '@env';
+import { abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';
-import { MetaTx, SignedMetaTx, ActionTx, TxFeedback } from '../../types';
+import { MetaTx, SignedMetaTx, ActionTx, TxFeedback, Key } from '../../types';
 import { WalletQuery } from './wallet.query';
-import { emailToEnsDomain, precomputeAddress, getNameFromENS, Key } from '@blockframes/utils';
 import { CreateTx } from '../../create-tx';
 
 // Ethers
 import { arrayify } from '@ethersproject/bytes';
 import { AbiCoder } from '@ethersproject/abi';
-import { Provider, TransactionRequest } from '@ethersproject/providers';
+import {
+  TransactionRequest,
+  FallbackProvider
+} from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
-import { InfuraProvider } from '@ethersproject/providers';
+import { getProvider, emailToEnsDomain, precomputeAddress, getNameFromENS } from '../../helpers';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
 
-  provider: Provider;
+  provider: FallbackProvider;
 
   constructor(
     private query: WalletQuery,
@@ -31,7 +33,7 @@ export class WalletService {
   ) {}
 
   public async updateFromEmail(email: string) {
-    const ensDomain = emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email, baseEnsDomain);
     const address = await this.retrieveAddress(ensDomain);
     this.store.update({ensDomain, address});
   }
@@ -51,19 +53,19 @@ export class WalletService {
         return address;
       }
     }
-    return precomputeAddress(ensDomain, this.provider);
+    return precomputeAddress(ensDomain, this.provider, factoryContract);
   }
 
 
 
   private _requireProvider() {
     if(!this.provider) {
-      this.provider = new InfuraProvider(network);
+      this.provider = getProvider(network);
     }
   }
 
   public async createRandomKeyFromEmail(keyName: string, email: string, password?: string) {
-    const ensDomain = emailToEnsDomain(email);
+    const ensDomain = emailToEnsDomain(email, baseEnsDomain);
     const key = await this.keyManager.createFromRandom(keyName, ensDomain, password);
     this.keyManager.storeKey(key);
     return key;
@@ -83,7 +85,7 @@ export class WalletService {
     this.store.setLoading(true);
     try {
       const name =  getNameFromENS(ensDomain);
-      const erc1077Address = await precomputeAddress(ensDomain, this.provider);
+      const erc1077Address = await precomputeAddress(ensDomain, this.provider, factoryContract);
       const result = await this.relayer.deploy(name, pubKey, erc1077Address, orgId);
       this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
       this.store.update({hasERC1077: true})
@@ -99,7 +101,7 @@ export class WalletService {
   /** return an instance of an ERC10777 contract */
   private getUsersERC1077(ensDomainOrAddress: string) {
     this._requireProvider();
-    return new Contract(ensDomainOrAddress, ERC1077.abi, this.provider);
+    return new Contract(ensDomainOrAddress, ERC1077_ABI, this.provider);
   }
 
   public setDeleteKeyTx(erc1077Address: string, key: Key) {

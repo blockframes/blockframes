@@ -9,6 +9,7 @@ import {
   relayerRegisterENSLogic,
   relayerSendLogic,
 } from './relayer';
+import { mnemonic, relayer } from './environments/environment';
 import {
   deleteFirestoreDelivery,
   deleteFirestoreMaterial,
@@ -28,7 +29,6 @@ import {
   onDocumentWrite,
   onOrganizationDocumentUpdate
 } from './utils';
-import { mnemonic, relayer } from './environments/environment';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
@@ -150,7 +150,6 @@ export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryP
 //--------------------------------
 //            RELAYER           //
 //--------------------------------
-
 const RELAYER_CONFIG: RelayerConfig = {
   ...relayer,
   mnemonic

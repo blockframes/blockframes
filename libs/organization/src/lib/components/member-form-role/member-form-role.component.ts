@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { UserRole, OrganizationService, OrganizationQuery, OrganizationMember } from '../../+state';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx, ActionTx, TxFeedback } from '@blockframes/ethers';
+import { CreateTx } from '@blockframes/ethers';
+import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { Router } from '@angular/router';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
 

@@ -17,7 +17,6 @@ interface CarouselSection {
 })
 export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
-
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
 

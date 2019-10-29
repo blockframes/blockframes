@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -18,12 +19,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+import { NoOrganizationGuard } from './guard/no-organization.guard';
+import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 
 
 export const noOrganizationRoutes: Routes = [
@@ -34,19 +38,29 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'home',
-    component: OrganizationHomeComponent
+    canActivate: [NoOrganizationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationHomeComponent,
   },
   {
     path: 'find',
-    component: OrganizationFindComponent
+    canActivate: [NoOrganizationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationFindComponent,
   },
   {
-    path: 'congratulation',
+    path: 'congratulations',
     component: OrganizationFeedbackComponent
   },
   {
     path: 'create',
-    component: OrganizationCreateComponent
+    canActivate: [NoOrganizationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationCreateComponent,
+  },
+  {
+    path: 'loading',
+    component: OrganizationLoadingComponent
   }
 ];
 
@@ -56,6 +70,7 @@ export const noOrganizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
+    CropperModule,
 
     // Material
     MatFormFieldModule,
@@ -68,6 +83,7 @@ export const noOrganizationRoutes: Routes = [
     MatButtonModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
 
     // UI
     ActionsListModule,
@@ -79,7 +95,8 @@ export const noOrganizationRoutes: Routes = [
     OrganizationHomeComponent,
     OrganizationFindComponent,
     OrganizationFeedbackComponent,
-    OrganizationCreateComponent
+    OrganizationCreateComponent,
+    OrganizationLoadingComponent,
   ]
 })
 export class NoOrganizationModule {}

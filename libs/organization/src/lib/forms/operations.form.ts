@@ -16,6 +16,6 @@ export type OperationControl = ReturnType<typeof createOperationControl>;
 export function createOperationFormList() {
   return FormList.factory([], (operation: OrganizationOperation) => {
     const control = createOperationControl(operation);
-    return new FormEntity(control);
+    return new FormEntity<OperationControl>(control);
   });
 }

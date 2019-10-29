@@ -9,21 +9,20 @@ import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { InvitationType, Invitation } from '@blockframes/invitation/types';
+import { Router } from '@angular/router';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
   title: `Pending request to ${invitation.organization.name}`,
   routerLink: '#',
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+  description: ''
 });
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
   matIcon: 'alternate_email',
   title: `Join ${invitation.organization.name}`,
   action,
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis sagittis.'
+  description: ''
 });
 
 @Component({
@@ -38,13 +37,13 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
-      icon: 'adjustableWrench',
+      icon: 'darkAdjustableWrench',
       title: 'Create your organization',
       description: ''
     },
     {
       routerLink: '../find',
-      icon: 'magnifyingGlass',
+      icon: 'darkMagnifyingGlass',
       title: 'Find your organization',
       description: ''
     }
@@ -56,7 +55,8 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -73,9 +73,10 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
             case InvitationType.fromUserToOrganization:
               return invitationActionFromUserToOrganization(invitation);
             case InvitationType.fromOrganizationToUser:
-              return invitationActionFromOrgToUser(invitation, () =>
-                this.acceptInvitation(invitation)
-              );
+              return invitationActionFromOrgToUser(invitation, () => {
+                this.acceptInvitation(invitation);
+                this.router.navigateByUrl('/layout/organization/loading');
+              });
           }
         });
 

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { PLACEHOLDER_LOGO } from '../../+state';
 
 @Component({
   selector: '[formGroupName] organization-form, [formGroup] organization-form, organization-form',
@@ -15,13 +14,5 @@ export class OrganizationFormComponent {
 
   public get control() {
     return this.controlContainer.control;
-  }
-
-  public get logo() {
-    return this.control.get('logo').value;
-  }
-
-  public set logo(logoPath: string | undefined){
-    this.control.get('logo').patchValue(logoPath || PLACEHOLDER_LOGO);
   }
 }

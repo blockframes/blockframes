@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from "@angular/core";
-import { keyToAddressPart, AddressParts, Key } from "@blockframes/utils";
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
+import { Key } from "../../types";
 
 @Component({
   selector: 'key-manager-item',
@@ -8,8 +8,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   styleUrls: ['./key-manager-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KeyManagerItemComponent implements OnInit {
-  public address: AddressParts;
+export class KeyManagerItemComponent {
 
   /** Key which is getting set by the input setter function */
   public keyObject: Key;
@@ -39,10 +38,6 @@ export class KeyManagerItemComponent implements OnInit {
   constructor(
     private sanitizer: DomSanitizer
   ){}
-
-  ngOnInit() {
-    this.address = keyToAddressPart(this.keyObject, 6);
-  }
 
   /** create a name for the downloadable file */
   get keyName() {

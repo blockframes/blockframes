@@ -50,7 +50,7 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     templateIds: [],
     created: Date.now(),
     updated: Date.now(),
-    logo: PLACEHOLDER_LOGO,
+    logo: '',
     catalog: null,
     ...params
   };

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { OrganizationQuery, OrganizationService, Organization } from '../../+state';
 import { PermissionsQuery } from '../../permissions/+state';
-import { OrganizationProfileForm } from '../../forms/organization-profile-edit-form';
+import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { startWith, tap } from 'rxjs/operators';
@@ -15,8 +15,7 @@ import { startWith, tap } from 'rxjs/operators';
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
-  // TODO: issue#1101 use OrganizationForm instead of OrganizationProfileForm
-  public organizationProfileForm = new OrganizationProfileForm();
+  public organizationProfileForm = new OrganizationForm();
   public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
@@ -46,8 +45,9 @@ export class OrganizationEditableComponent implements OnInit {
 
   public update() {
     try {
-      if (this.organizationProfileForm.invalid)
+      if (this.organizationProfileForm.invalid) {
         throw new Error('Your organization profile informations are not valid');
+      }
       this.service.update(this.organizationProfileForm.value);
       this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {

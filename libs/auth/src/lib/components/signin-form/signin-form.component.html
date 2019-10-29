@@ -1,5 +1,5 @@
-<section page-id="signin" fxLayout="column" fxLayoutAlign="center center">
-  <h2>Sign in</h2>
+<section page-id="signin" fxLayout="column" fxLayoutAlign="center start">
+  <h2>Log in</h2>
   <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Email address</mat-label>
@@ -25,6 +25,7 @@
         Password is <strong>required</strong>
       </mat-error>
     </mat-form-field>
+    <a type="button" color="primary" mat-button routerLink="../email-verification">Forgot your password ?</a>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-flat-button color="accent">Sign in</button>
       <button id="tosignup" type="button" color="primary" mat-button (click)="opened.emit()">I don't have an account</button>

@@ -1,9 +1,12 @@
 export const production = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
+// TODO issue#1146 AFM CODE
+// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
+export const AFM_DISABLE = false;
+
 export const persistenceSettings = {
-  // TODO(issue#846): change to synchronizeTabs when available (angularFire 5.2)
-  experimentalTabSynchronization: true
+  synchronizeTabs: true
 };
 
 // Firebase

@@ -51,7 +51,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private invitationStore: InvitationStore,
     private permissionsService: PermissionsService,
     private permissionQuery: PermissionsQuery,
-    private organizationQuery: OrganizationQuery,
   ) {}
 
   ngOnInit() {
@@ -70,7 +69,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.organizationQuery.getValue().org.id).where('status', '==', 'pending');
+    const queryFn = ref => ref.where('organization.id', '==', this.query.getValue().org.id).where('status', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({

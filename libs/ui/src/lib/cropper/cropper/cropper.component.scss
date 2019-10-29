@@ -1,0 +1,29 @@
+section {
+  width: 100%;
+  text-align: center;
+}
+
+article {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.cropper,
+.show {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  a {
+    cursor: pointer;
+    padding: 20px;
+  }
+  button {
+    margin: 10px;
+  }
+}

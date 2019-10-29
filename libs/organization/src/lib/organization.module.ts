@@ -10,6 +10,7 @@ import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -29,6 +30,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
@@ -52,6 +54,9 @@ import { OrganizationAdminViewComponent } from './pages/organization-admin-view/
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 
+// TODO issue#1146
+import { AFM_DISABLE } from '@env';
+
 export const organizationRoutes: Routes = [
   {
     path: ':orgId',
@@ -62,17 +67,25 @@ export const organizationRoutes: Routes = [
         path: 'members',
         component: MemberEditableComponent
       },
-      {
-        path: 'activityreports',
-        component: OrganizationActivityViewComponent
-      },
-      {
-        path: 'administration',
-        component: OrganizationAdminViewComponent
-      }
     ]
   }
 ];
+
+// TODO issue#1146
+if (AFM_DISABLE) {
+  organizationRoutes[0].children.push(
+    {
+      path: 'activityreports',
+      component: OrganizationActivityViewComponent
+    }
+  );
+  organizationRoutes[0].children.push(
+    {
+      path: 'administration',
+      component: OrganizationAdminViewComponent
+    }
+  );
+}
 
 @NgModule({
   imports: [
@@ -85,8 +98,9 @@ export const organizationRoutes: Routes = [
     FeedbackMessageModule,
     AvatarListModule,
     WalletModule,
-    UploadModule, 
+    UploadModule,
     UiFormModule,
+    CropperModule,
 
     // Material
     MatFormFieldModule,
@@ -106,6 +120,7 @@ export const organizationRoutes: Routes = [
     MatSelectModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [

@@ -1,4 +1,5 @@
-import { InfuraProvider } from '@ethersproject/providers';
+import { SignedMetaTx } from "@blockframes/ethers/types";
+import { getProvider, emailToEnsDomain } from "@blockframes/ethers/helpers";
 import { Wallet } from '@ethersproject/wallet';
 import { Contract, ContractFactory } from '@ethersproject/contracts';
 import { TransactionResponse, TransactionReceipt } from '@ethersproject/abstract-provider';
@@ -6,12 +7,11 @@ import { namehash } from '@ethersproject/hash';
 import { keccak256 } from '@ethersproject/keccak256';
 import { toUtf8Bytes } from '@ethersproject/strings';
 import { getAddress } from '@ethersproject/address';
-import { toASCII } from 'punycode';
-import { abi as CREATE2_FACTORY_ABI } from './contracts/Factory2.json';
-import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from './contracts/ERC1077.json';
-import { abi as ENS_REGISTRY_ABI } from './contracts/ENSRegistry.json';
-import { abi as ENS_RESOLVER_ABI } from './contracts/PublicResolver.json';
-import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from './contracts/Organization.json';
+import { abi as CREATE2_FACTORY_ABI } from '@blockframes/contracts/Factory2.json';
+import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
+import { abi as ENS_REGISTRY_ABI } from '@blockframes/contracts/ENSRegistry.json';
+import { abi as ENS_RESOLVER_ABI } from '@blockframes/contracts/PublicResolver.json';
+import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from '@blockframes/contracts/Organization.json';
 import { db } from './internals/firebase';
 
 type TxResponse = TransactionResponse;
@@ -35,26 +35,6 @@ export interface RelayerConfig {
   factoryContract: string;
 }
 
-/** Regular Ethereum transaction */
-export interface BaseTx {
-  to: string; // address
-  value: string; // uint256
-  data: string; // bytes
-}
-
-/** A Meta Transaction that encapsulate a regular tx (it will need a signatures before being sent)*/
-export interface MetaTx extends BaseTx {
-  nonce: string; // uint256
-  gasPrice: string; // uint256
-  gasToken: string; // address
-  gasLimit: string; // uint256
-  operationType: string; // uint8
-}
-
-/** A Meta Transaction with the user signature (ready to be sent) */
-export interface SignedMetaTx extends MetaTx {
-  signatures: string; // bytes
-}
 export interface SendParams {
   ethAddress: string;
   tx: SignedMetaTx;
@@ -70,29 +50,6 @@ export interface SignDeliveryParams {
   deliveryId: string;
   stakeholderId: string;
 }
-
-export function initRelayer(config: RelayerConfig): Relayer {
-  let wallet = Wallet.fromMnemonic(config.mnemonic);
-  const provider = new InfuraProvider(config.network);
-
-  wallet = wallet.connect(provider);
-
-  const contractFactory = new Contract(config.factoryContract, CREATE2_FACTORY_ABI, wallet);
-  const baseEnsDomain = config.baseEnsDomain;
-  const relayerNamehash = namehash(config.baseEnsDomain);
-  const registry = new Contract(config.registryAddress, ENS_REGISTRY_ABI, wallet);
-  const resolver = new Contract(config.resolverAddress, ENS_RESOLVER_ABI, wallet);
-
-  return <Relayer>{
-    wallet,
-    contractFactory,
-    baseEnsDomain,
-    namehash: relayerNamehash,
-    registry,
-    resolver,
-  };
-}
-
 interface DeployParams {
   username: string;
   key: string;
@@ -105,30 +62,34 @@ interface RegisterParams {
   ethAddress: string;
 }
 
-// TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export function emailToEnsDomain(email: string, baseEnsDomain: string) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
-  return toASCII(email.split('@')[0]).toLowerCase()
-    .split('')
-    .map(char => /[^\w\d-.]/g.test(char) ? char.charCodeAt(0) : char) // replace every non a-z or 0-9 chars by their ASCII code : '?' -> '63'
-    .join('') + '.' + baseEnsDomain;
-}
+export function initRelayer(config: RelayerConfig): Relayer {
 
-/**
- * This function precompute a contract address as defined in the EIP 1014 (Skinny Create 2)
- * @param ensDomain this is use as a salt (salt need to be unique for each user)
- * @param provider ethers provider
- */
-// TODO issue#714 (Laurent work on a way to get those functions in only one place)
-export async function precomputeAddress(ensDomain: string, config: RelayerConfig) { // !!!! there is a copy of this function in 'libs\utils\src\lib\helpers.ts'
-  const baseName = ensDomain.split('.')[0];
-  const relayer = initRelayer(config);
-  const factoryAddress = await relayer.wallet.provider.resolveName(relayer.contractFactory.address).then(address => address.substr(2));
-  const salt = keccak256(toUtf8Bytes(baseName)).substr(2);
-  const byteCodeHash = keccak256(`0x${ERC1077_BYTECODE}`).substr(2);
+  const {
+    mnemonic,
+    network,
+    factoryContract,
+    baseEnsDomain,
+    registryAddress,
+    resolverAddress
+  } = config;
 
-  const payload = `0xff${factoryAddress}${salt}${byteCodeHash}`;
+  const provider = getProvider(network);
 
-  return `0x${keccak256(payload).slice(-40)}`; // first 40 bytes of the hash of the payload
+  const wallet = Wallet.fromMnemonic(mnemonic).connect(provider);
+
+  const contractFactory = new Contract(factoryContract, CREATE2_FACTORY_ABI, wallet);
+  const relayerNamehash = namehash(baseEnsDomain);
+  const registry = new Contract(registryAddress, ENS_REGISTRY_ABI, wallet);
+  const resolver = new Contract(resolverAddress, ENS_RESOLVER_ABI, wallet);
+
+  return <Relayer>{
+    wallet,
+    contractFactory,
+    baseEnsDomain,
+    namehash: relayerNamehash,
+    registry,
+    resolver,
+  };
 }
 
 /** check if an ENS name is linked to an eth address */

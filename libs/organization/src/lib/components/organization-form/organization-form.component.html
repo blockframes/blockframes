@@ -1,31 +1,37 @@
-<h4>Logo</h4>
-<article class="actions" fxLayout="column" fxLayoutAlign="center center">
-  <img mat-card-image [src]="logo">
-  <mat-card-actions>
-    <button-upload
-      accept="['.jpg', '.png']"
-      path='logo'
-      [types]="['image/jpeg', 'image/png']"
-      [uploadOnFirestore]="true"
-      (storeUploaded)="logo = $event">
-    </button-upload>
-    <button mat-button color="primary" (click)="logo = undefined">
-      Delete this picture
-    </button>
-  </mat-card-actions>
-</article>
-
-<mat-divider></mat-divider>
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
-    <h4>Information</h4>
+    <h4>Logo</h4>
+    <drop-cropper [ratio]="4/3" formControlName="logo"></drop-cropper>
+    <mat-divider [inset]="true"></mat-divider>
+    <h4>Your Company</h4>
     <mat-form-field appearance="outline">
-      <mat-label>Office Address</mat-label>
-      <input matInput placeholder="Office address" type="text" formControlName="officeAddress" />
+      <mat-label>Organization name</mat-label>
+      <input matInput placeholder="=Organization name" type="text" formControlName="name" />
     </mat-form-field>
+    <mat-divider [inset]="true"></mat-divider>
+    <h4>Contact Information</h4>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>
       <input matInput placeholder="Phone number" type="tel" formControlName="phoneNumber" />
+      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email address</mat-label>
+      <input matInput placeholder="Phone number" type="email" formControlName="email" />
+    </mat-form-field>
+    <!-- TODO: #1126 Address form fields -->
+    <!-- <mat-form-field appearance="outline">
+      <mat-label>Office Address</mat-label>
+      <input matInput placeholder="Office address" type="text" formControlName="officeAddress" />
+    </mat-form-field> -->
+    <mat-divider [inset]="true"></mat-divider>
+    <h4>Activity details</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Fiscal number</mat-label>
+      <input matInput placeholder="Fiscal number" type="text" formControlName="fiscalNumber" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Activity</mat-label>
+      <input matInput placeholder="Activity" type="text" formControlName="activity" />
     </mat-form-field>
   </form>
 </article>

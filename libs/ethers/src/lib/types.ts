@@ -34,7 +34,7 @@ export interface SignedMetaTx extends MetaTx {
 }
 
 export interface ActionTx extends Tx {
-  callback?: (...args) => void;
+  callback?: (...args: Object[]) => void;
 }
 
 export interface TxFeedback {
@@ -54,4 +54,14 @@ export interface Wallet {
   hasERC1077: boolean;
   tx: ActionTx;
   feedback: TxFeedback;
+}
+
+export interface Key {
+  name: string,
+  ensDomain: string,
+  keyStore: string,
+  address: string,
+  isMainKey: boolean,
+  /** Does the key also exists inside the ERC1077 */
+  isLinked: boolean,
 }

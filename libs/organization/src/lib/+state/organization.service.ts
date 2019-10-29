@@ -2,13 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import {
-  FireQuery,
-  Query,
-  emailToEnsDomain,
-  precomputeAddress as precomputeEthAddress,
-  getNameFromENS,
-  orgNameToEnsDomain } from '@blockframes/utils';
+import { FireQuery, Query} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -17,20 +11,25 @@ import {
   OrganizationMember,
   OrganizationMemberRequest,
   OrganizationOperation,
-  OrganizationStatus,
   OrganizationAction
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { InfuraProvider } from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Log, Filter } from '@ethersproject/abstract-provider'
 import { namehash, id as keccak256 } from '@ethersproject/hash';
-import { network, relayer, baseEnsDomain } from '@env';
+import { network, relayer, baseEnsDomain, factoryContract } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
 import { OrganizationDocument } from './organization.firestore';
+import {
+  getProvider,
+  orgNameToEnsDomain,
+  getNameFromENS,
+  emailToEnsDomain,
+  precomputeAddress as precomputeEthAddress
+} from '@blockframes/ethers/helpers';
 
 export const orgQuery = (orgId: string): Query<Organization> => ({
   path: `orgs/${orgId}`,
@@ -119,6 +118,20 @@ export class OrganizationService {
     );
 
     return this.organization$;
+  }
+
+  /** Remove an organization that has just been created. */
+  public async removeOrganization() {
+    const orgId = this.query.id;
+    const userId = this.authQuery.userId;
+    const userRef = this.db.doc(`users/${userId}`).ref;
+    const orgRef = this.db.doc(`orgs/${orgId}`).ref;
+    return this.db.firestore.runTransaction(tx =>
+      Promise.all([
+        tx.update(userRef, { orgId: null }),
+        tx.delete(orgRef)
+      ])
+    );
   }
 
   /** Add a new user to the organization */
@@ -236,7 +249,7 @@ export class OrganizationService {
   /** ensure that the provider exist */
   private _requireProvider() {
     if(!this.provider) {
-      this.provider = new InfuraProvider(network);
+      this.provider = getProvider(network);
     }
   }
 
@@ -244,10 +257,12 @@ export class OrganizationService {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
+      const orgName = this.query.getValue().org.name;
+      const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
       let ethAddress = await this.getOrganizationEthAddress();
       await new Promise(resolve => {
         if (!ethAddress) {
+          this.store.update({isDeploying: true});
           // registered
           this.provider.on(getFilterFromTopics(relayer.registryAddress, [
             newOwnerTopic,
@@ -266,15 +281,17 @@ export class OrganizationService {
           this.provider.on(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]), (log: Log) => {
             ethAddress = `0x${log.data.slice(-40)}`; // extract address
             this.store.update({deployStep: DeploySteps.ready});
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
+            this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
+
+            this.store.update({isDeploying: false});
             resolve();
           });
         } else {
           resolve();
         }
       });
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newOwnerTopic, namehash(baseEnsDomain), keccak256(getNameFromENS(organizationENS))]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.registryAddress, [newResolverTopic, namehash(organizationENS)]));
-      this.provider.removeAllListeners(getFilterFromTopics(relayer.resolverAddress, [addrChangedTopic, namehash(organizationENS)]));
       this.contract = new Contract(ethAddress, ORGANIZATION_ABI, this.provider);
     }
   }
@@ -286,14 +303,16 @@ export class OrganizationService {
   /** Retrieve the Ethereum address of the current org (using it's ENS name) */
   public async getOrganizationEthAddress() {
     this._requireProvider();
-    const organizationENS = orgNameToEnsDomain(this.query.getValue().org.name);
+    const orgName = this.query.getValue().org.name;
+    const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
     return this.provider.resolveName(organizationENS);
   }
 
   /** Retrieve the Ethereum address of a member (using it's email and CREATE2 precompute) */
   public async getMemberEthAddress(email: string) {
     this._requireProvider();
-    return precomputeEthAddress(emailToEnsDomain(email), this.provider);
+    const ensDomain = emailToEnsDomain(email, baseEnsDomain);
+    return precomputeEthAddress(ensDomain, this.provider, factoryContract);
   }
 
   //----------------------------------
@@ -419,7 +438,8 @@ export class OrganizationService {
     this.query.getValue().org.members
       .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
       .forEach(member => {
-        const promise = precomputeEthAddress(emailToEnsDomain(member.email), this.provider)
+        const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
+        const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)
           .then((ethAddress): boolean => this.contract.isWhitelisted(ethAddress, operationId))
           .then(isWhiteListed => isWhiteListed ? operation.members.push(member) : -1);
         promises.push(promise);
@@ -519,7 +539,8 @@ export class OrganizationService {
     const promises: Promise<number>[] = [];
     this.query.getValue().org.members
       .forEach(member => {
-        const promise = precomputeEthAddress(emailToEnsDomain(member.email), this.provider)
+        const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
+        const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)
           .then((ethAddress): boolean => this.contract.hasApprovedAction(ethAddress, actionId))
           .then(hasApproved => hasApproved ? action.signers.push(member) : -1);
         promises.push(promise);
@@ -533,17 +554,16 @@ export class OrganizationService {
   /** retrieve approval date if the action was executed */
   public async getActionApprovalDate(actionId: string) {
     await this._requireContract();
-    return this.provider.getLogs(getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId])).then(logs => {
-      if (!!logs[0]) {
-        return this.provider.getBlock(logs[0].blockHash);
-      }
-    }).then(block => {
+    const filter = getFilterFromTopics(this.contract.address, [actionExecutedTopic, actionId]);
+    const logs = await this.provider.getLogs(filter);
+    if (!!logs[0]) {
+      const block = await this.provider.getBlock(logs[0].blockHash) // TODO is block hash start with 0x0 it will throw, see ethers issue 629
       if (!!block) {
         const date = new Date(block.timestamp * 1000);
         const month = date.getMonth() + 1;
-         return `${date.getFullYear()}/${month < 10 ? '0' + month : month}/${date.getDate()}`
+        return `${date.getFullYear()}/${month < 10 ? '0' + month : month}/${date.getDate()}`
       }
-    });
+    }
   }
 
   /** create a newOperation in the state, or update it if it already exists */

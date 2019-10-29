@@ -36,9 +36,15 @@ h1 {
   font-weight: 800;
 }
 
-h2 {
+.light-theme h2 {
   font-size: 30px;
   font-weight: 800;
+}
+
+.dark-theme h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: mat-color($bf-dark-foreground, title);
 }
 
 .light-theme h3 {
@@ -65,8 +71,14 @@ h2 {
   color: mat-color($bf-dark-foreground, subheading);
 }
 
-p, span {
+p,
+span {
   font-size: 14px;
+}
+
+p.bf-dark-text,
+span.bf-dark-text {
+  color: mat-color($bf-dark-foreground, dark-text);
 }
 
 .bf-strong {

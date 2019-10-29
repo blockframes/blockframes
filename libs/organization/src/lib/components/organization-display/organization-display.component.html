@@ -1,24 +1,15 @@
 <ng-container *ngIf="organization; else: loading">
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
-      <img mat-card-avatar [src]="organization.logo" alt="Organization logo" />
+      <img mat-card-avatar [storageRef]="organization.logo" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <div class="column-padding-bottom">
-          <h3>{{ organization.name }}</h3>
-          <span>{{ organization.id }}</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column" class="column-padding">
-          <span><b>Phone number:</b> {{ organizationInformations.phoneNumber }}</span>
-          <span><b>Email:</b> info@{{ organization.name }}.com</span>
-          <span><b>Address:</b> {{ organizationInformations.officeAddress }}</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
-        <div fxLayout="column" class="column-padding">
-          <span><b>Fiscal number:</b> FR 29 340192856</span>
-          <span><b>Activity:</b> Distribution company</span>
-        </div>
-        <mat-divider [inset]="true"></mat-divider>
+        <h4>{{ organization.name }}</h4>
+        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.phoneNumber}}</p>
+        <p><span class="bf-dark-text">Email</span> {{organizationInformations.email}}</p>
+        <!-- TODO: #1126 Address form fields -->
+        <!-- <p><span class="bf-dark-text">Address</span> {{organization.officeAddress}}</p> -->
+        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.fiscalNumber}}</p>
+        <p><span class="bf-dark-text">Activity</span> {{organizationInformations.activity}}</p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon>edit</mat-icon>

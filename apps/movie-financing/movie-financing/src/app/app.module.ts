@@ -23,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Akita
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
@@ -118,7 +117,6 @@ registerLocaleData(localeFr)
     MatRadioModule,
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
-    environment.production ? [] : [AkitaNgDevtools.forRoot()],
     AngularFireFunctionsModule,
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     FlexModule,

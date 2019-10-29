@@ -1,12 +1,11 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1>Welcome to Bigger Boat</h1>
     <p>
         Bigger Boat, one of the Blockframes suite of DApps, is a beta peer-to-peer platform for trading film, TV and series rights between Sales Agents and Content Buyers, facilitating the licensing process through its database of rights to films and TV programs and executing instantaneously the waterfall on all revenue.
     </p>
-    <a mat-flat-button color="primary" test-id="discover" routerLink="/layout/o/catalog/search">View our film catalogue</a>
+    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">View our film catalogue</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -16,7 +15,7 @@
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
           <h4>{{ section.subline}} </h4>
-          <a mat-flat-button test-id="seeMore1" color="primary" routerLink="/layout/o/catalog/search">See more</a>
+          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/layout/o/catalog/search">See more</a>
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->

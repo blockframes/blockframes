@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -8,6 +9,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "module": "esNext",
     "target": "es5",
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "dom"],
@@ -31,7 +33,10 @@
       "@blockframes/movie/*": ["libs/movie/src/lib/*"],
       "@blockframes/movie/import": ["libs/movie/src/lib/movie/components/import/import-movie.module.ts"],
 
+      // ETHERS
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+      "@blockframes/ethers/helpers":["libs/ethers/src/lib/helpers.ts"],
+      "@blockframes/ethers/types":["libs/ethers/src/lib/types.ts"],
 
       // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
@@ -53,13 +58,14 @@
       "@blockframes/material": ["libs/material/src/index.ts"],
 
       "@blockframes/template": ["libs/material/src/index.ts"],
-      "@blockframes/contracts": ["contracts/build"],
+      "@blockframes/contracts/*": ["contracts/build/*"],
       "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/catalog": ["libs/catalog/src/index.ts"],
       "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"]
-    },
-    "module": "commonjs",
-    "rootDir": "."
+    }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true
   },
   "exclude": ["node_modules", "tmp"]
 }

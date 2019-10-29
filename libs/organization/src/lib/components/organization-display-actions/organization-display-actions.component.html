@@ -23,7 +23,7 @@
   <ng-container *ngIf="isApproved">
     <ng-container matColumnDef="Date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-      <td cmatRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)"> {{action.approvalDate}} </td>
+      <td matRipple mat-cell *matCellDef="let action"  (click)="actionSelected.emit(action)"> {{action.approvalDate}} </td>
     </ng-container>
   </ng-container>
 

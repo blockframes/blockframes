@@ -10,7 +10,8 @@
           We are encrypting your key with your password, be sure to remember it or your key will be
           lost !
         </p>
-        <mat-progress-spinner color="accent" mode="indeterminate"></mat-progress-spinner>
+        <p>{{loadingProgress$ | async}}%</p>
+        <mat-progress-bar mode="determinate" [value]="loadingProgress$ | async" color="accent"></mat-progress-bar>
       </div>
     </ng-template>
   </article>

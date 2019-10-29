@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, HostBinding } from '@angular/core';
 import { Organization } from '../../+state';
-import { OrganizationProfile } from '../../forms/organization-profile-edit-form';
+import { OrganizationForm } from '../../forms/organization.form';
 
 @Component({
   selector: 'organization-display',
@@ -14,7 +14,7 @@ export class OrganizationDisplayComponent {
   @Output() editing = new EventEmitter<void>();
   @Input() opened: boolean;
   @Input() organization: Organization;
-  @Input() organizationInformations: OrganizationProfile;
+  @Input() organizationInformations: OrganizationForm;
   @Input() isSuperAdmin: boolean;
 
   get layout() {

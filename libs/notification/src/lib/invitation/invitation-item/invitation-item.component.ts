@@ -20,9 +20,8 @@ export class InvitationItemComponent {
       return 'You have been invited to work on a delivery.';
     }
     if (this.invitation.type === InvitationType.fromUserToOrganization) {
-      return `${this.invitation.user.name} ${
-        this.invitation.user.surname
-      } wishes to join your organization`;
+      // TODO #1140 Put message in an other file dedicated to that
+      return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
     }
   }
 

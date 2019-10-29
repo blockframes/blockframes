@@ -1,23 +1,9 @@
-<h4>Avatar</h4>
-<article class="actions" fxLayout="column" fxLayoutAlign="center center">
-  <img mat-card-image [src]="avatar">
-  <mat-card-actions>
-    <button-upload
-      accept="['.jpg', '.png']"
-      path='avatar'
-      [types]="['image/jpeg', 'image/png']"
-      [uploadOnFirestore]="true"
-      (storeUploaded)="avatar = $event">
-    </button-upload>
-    <button mat-button color="primary" (click)="avatar = undefined">
-      Delete this picture
-    </button>
-  </mat-card-actions>
-</article>
 
-<mat-divider></mat-divider>
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
+    <h4>Avatar</h4>
+    <drop-cropper [ratio]="4/3" formControlName="avatar"></drop-cropper>
+    <mat-divider [inset]="true"></mat-divider>
     <h4>Identity</h4>
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
@@ -33,7 +19,7 @@
         Surname is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-divider></mat-divider>
+    <mat-divider [inset]="true"></mat-divider>
     <h4>Informations</h4>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>

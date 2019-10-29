@@ -21,11 +21,18 @@ export class OrganizationDisplayActionsComponent {
 
   public dataSource;
 
+  private _isApproved: boolean;
+
   @Input() set isApproved(isApproved: boolean) {
-    if (this.isApproved) this.displayedColumns.push('Date');
+    this._isApproved = isApproved;
+    if (this._isApproved) this.displayedColumns.push('Date');
+  }
+  get isApproved() {
+    return this._isApproved;
   }
 
   @Input() set actions(actions: OrganizationAction[]) {
+    if (!actions) return;
     this.dataSource = new MatTableDataSource(actions);
     this.dataSource.sort = this.sort;
   }
