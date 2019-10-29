@@ -7,10 +7,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
-  imports: [CommonModule, MatCardModule, MatIconModule, MatMenuModule, RouterModule, MatButtonModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatMenuModule, RouterModule, MatButtonModule, MatDividerModule, MatChipsModule],
   declarations: [MovieCardComponent],
   exports: [MovieCardComponent]
 })

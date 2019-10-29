@@ -45,5 +45,9 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
   [mat-fab].mat-fab {
     background: mat-color($bf-dark-background, raised-button);
   }
-}
 
+  mat-chip.movie-chip { // TODO: Get rid of the !important
+    background: rgba(0, 0, 0, 0.288) !important;
+    color: #FFFFFF !important;
+  }
+}

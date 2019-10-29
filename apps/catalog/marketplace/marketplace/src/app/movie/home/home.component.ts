@@ -1,8 +1,8 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
+import * as _ from 'lodash';
 
 interface CarouselSection {
   title: string;
@@ -17,6 +17,9 @@ interface CarouselSection {
 })
 export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
+
+  public lodash = _;
+
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
 

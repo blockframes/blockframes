@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 //Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,6 +23,7 @@ import {CropperModule} from '@blockframes/ui/cropper/cropper.module'
     MatButtonModule,
     FlexLayoutModule,
     MatCarouselModule,
+    MatIconModule,
     RouterModule.forChild([
       {
         path: '',
