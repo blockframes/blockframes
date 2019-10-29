@@ -1,8 +1,8 @@
 import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize } from 'rxjs/operators';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { finalize, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
@@ -91,18 +91,24 @@ export class CropperComponent implements ControlValueAccessor{
 
   //  Triggered when the parent form field is initialized or updated (parent -> component)
   writeValue(path: string): void {
-    if (isFile(path)) {
-      const part = path.split('/');
-      this.name = part.pop();
-      // this.name = 'cropped';
-      this.folder = part.pop();
-      this.ref = this.storage.ref(path);
-      this.url$ = this.ref.getDownloadURL();
-      this.nextStep('show');
-    } else {
-      this.folder = path;
-      this.nextStep('drop');
-    }
+
+      if (isFile(path)) {
+        const part = path.split('/');
+        this.name = part.pop();
+        // this.name = 'cropped';
+        this.folder = part.pop();
+        this.ref = this.storage.ref(path);
+        this.url$ = this.ref.getDownloadURL().pipe(
+          catchError(err => {
+            this.nextStep('drop');
+            return of('');
+          })
+        )
+        this.nextStep('show');
+      } else {
+        this.folder = path;
+        this.nextStep('drop');
+      }
   }
 
   // update the parent form field when there is change in the component (component -> parent)
