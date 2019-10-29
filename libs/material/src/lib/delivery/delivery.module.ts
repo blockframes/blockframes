@@ -50,7 +50,7 @@ import {
 import { OrganizationModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
-import { MovieModule } from '@blockframes/movie';
+import { MoviePickerModule } from '@blockframes/movie';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -120,7 +120,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     OrganizationModule,
     EditableSidenavModule,
     DeliveryRoutingModule,
-    MovieModule,
+    MoviePickerModule,
     FeedbackMessageModule,
     AvatarListModule,
 

@@ -25,7 +25,6 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
 import { OrganizationModule, NoOrganizationModule } from '@blockframes/organization';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { MovieModule } from '@blockframes/movie';
 import { ProfileModule, AccountModule } from '@blockframes/account';
 import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 
@@ -88,7 +87,6 @@ import { EmailVerifyModule } from '@blockframes/auth';
       UiFormModule,
       OrganizationModule,
       ToolbarModule,
-      MovieModule,
       AccountModule,
       ProfileModule,
       WalletWidgetModule,

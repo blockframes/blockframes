@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firebase } from '@env';
 
 // Angular Fire
-import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Material
@@ -35,7 +35,6 @@ import { MovieEditableComponent } from './pages/movie-editable/movie-editable.co
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieEmptyComponent } from './components/movie-empty/movie-empty.component';
 import { MovieRoutingModule } from './movie-routing.module';
-import { AngularFireModule } from '@angular/fire';
 import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -45,8 +44,10 @@ import { HomeEmptyComponent } from './components/home-empty/home-empty.component
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
-import { MoviePickerComponent } from './components/movie-picker/movie-picker.component';
+
+// Component Module
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
+import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieEmptyComponent,
     MovieCreateComponent,
     MovieViewComponent,
-    MoviePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -65,10 +65,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     FormsModule,
     ReactiveFormsModule,
     MovieRoutingModule,
-    // Angular Fire
-    AngularFireModule.initializeApp(firebase),
-    AngularFirestoreModule,
-    AngularFireStorageModule,
     // Material
     MatSnackBarModule,
     MatCardModule,
@@ -96,11 +92,9 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieFormModule,
     MovieCardModule,
     MovieImdbSearchModule,
-  ],
-  providers: [
-    { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
+    // Component Module
+    MoviePickerModule
   ],
   entryComponents: [MovieTitleFormComponent],
-  exports: [MovieTitleFormComponent, MoviePickerComponent],
 })
 export class MovieModule {}

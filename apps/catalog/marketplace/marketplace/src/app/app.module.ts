@@ -19,7 +19,6 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
-import { MovieModule } from '@blockframes/movie';
 import { OrganizationModule } from '@blockframes/organization';
 import { ProfileModule } from '@blockframes/account';
 import { AccountModule } from '@blockframes/account';
@@ -69,7 +68,6 @@ import { intercomId } from '@env';
     // Libraries
     OrganizationModule,
     ToolbarModule,
-    MovieModule,
     AccountModule,
     ProfileModule,
     WalletWidgetModule,
