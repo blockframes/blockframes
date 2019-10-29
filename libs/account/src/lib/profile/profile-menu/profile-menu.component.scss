@@ -4,11 +4,9 @@
     border-radius: 50%;
 }
 
-mat-divider {
-    margin-left: 25px;
-    margin-right: 25px;
-    width: 230px;
-  }
+.logout-btn {
+  color: var(--accent);
+}
 
 .mat-list {
   border: none;
