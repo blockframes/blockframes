@@ -1,35 +1,29 @@
-import { Directive, Renderer2, ElementRef, Input, OnInit, OnDestroy } from '@angular/core'
+import { Directive, Renderer2, ElementRef, Input } from '@angular/core'
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { switchMap, filter, catchError } from 'rxjs/operators';
 
 @Directive({
   selector: 'img[storageRef]'
 })
-export class StorageImageDirective implements OnInit, OnDestroy {
+export class StorageImageDirective {
 
-  ref = new BehaviorSubject<string>('');
-  sub: Subscription;
-
-  @Input() set storageRef(ref: string) {
-    this.ref.next(ref);
+  @Input() set storageRef(path: string) {
+    try {
+      const ref = this.storage.ref(path);
+      ref.getDownloadURL().toPromise()
+        .then(url => this.updateUrl(url))
+        .catch(_ => this.updateUrl());
+    } catch (err) {
+      this.updateUrl();
+    }
   }
 
   @Input() placeholderUrl: string;
 
   constructor(private _renderer: Renderer2, private _elementRef: ElementRef, private storage: AngularFireStorage) {}
 
-  ngOnInit() {
-    this.sub = this.ref.pipe(
-      switchMap(ref => this.storage.ref(ref).getDownloadURL()),
-      catchError(err => this.placeholderUrl)
-    ).subscribe(url => {
-      this._renderer.setProperty(this._elementRef.nativeElement, 'src', url)
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  updateUrl(url?: string) {
+    this._renderer.setProperty(this._elementRef.nativeElement, 'src', url || this.placeholderUrl || '')
   }
 
 }
