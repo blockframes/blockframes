@@ -14,6 +14,5 @@ export * from './lib/movie/movie.module';
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
-export { default as staticModels } from './lib/movie/static-model/staticModels';
-export * from './lib/movie/static-model/types';
+export * from './lib/movie/static-model';
 export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';

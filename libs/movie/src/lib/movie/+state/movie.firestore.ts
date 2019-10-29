@@ -1,6 +1,6 @@
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
-import { PromotionalElementTypesSlug, ResourceSizesSlug, ResourceRatioSlug, MovieStatusSlug, SalesAgent } from "@blockframes/movie";
+import { PromotionalElementTypesSlug, ResourceSizesSlug, ResourceRatioSlug, MovieStatusSlug } from "@blockframes/movie/movie/static-model";
 
 type Timestamp = firestore.Timestamp;
 
@@ -13,7 +13,7 @@ interface MovieSalesAgentDealRaw<D> {
   rights: DateRangeRaw<D>;
   territories: string[],
   medias: string[],
-  salesAgent?: SalesAgent,
+  salesAgent?: Person,
   reservedTerritories?: string[],
 }
 
