@@ -79,6 +79,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     languages: [],
     productionCompanies: [],
     originCountries: [],
+    status: '',
     ...params
   };
 }

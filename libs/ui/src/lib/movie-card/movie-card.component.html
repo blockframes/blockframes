@@ -7,13 +7,14 @@
       </ng-container>
     </a>
 
-      <!-- Movie Menu -->
-
+    <!-- Movie Status Chip -->
+    <mat-chip selected disableRipple class="movie-chip">
+      <span class="table-size-text">{{ movie.main.status.toUpperCase() }}</span>
+    </mat-chip>
   </div>
 
   <!-- Movie Informations -->
   <mat-card-content>
-    <b *ngIf="movie.main.status as status" class="status-text">{{ status.toUpperCase() }}</b>
     <mat-card-title-group>
       <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
     </mat-card-title-group>

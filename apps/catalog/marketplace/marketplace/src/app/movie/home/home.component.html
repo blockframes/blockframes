@@ -19,18 +19,24 @@
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
-
             <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="movie.main.poster" [hideOverlay]="true">
               <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
+                <mat-icon>favorite_border</mat-icon>
                 <footer fxLayout="column" fxLayoutAlign="center start">
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ status.toUpperCase() }}</b>
                   <h2>{{ movie.main.title.original }}</h2>
-                  <span *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                    {{ director.lastName }}</span>
-                  <span><b>Production year</b> {{ movie.main.productionYear }}</span>
+                  <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
+                  <b>
+                    {{ lodash.capitalize(movie.main.originCountries[0]) }}
+                    <b *ngIf="movie.main.originCountries.length > 1">, {{ lodash.capitalize(movie.main.originCountries[1]) }} </b>
+                    <span *ngIf="movie.main.originCountries.length > 2">, ... </span>|
+                    {{ movie.main.length }} min |
+                    {{ lodash.capitalize(movie.main.genres[0])}}
+                  </b>
+                  <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
                 </footer>
               </div>
             </mat-carousel-slide>
-
         </mat-carousel>
       </article>
     </ng-container>
