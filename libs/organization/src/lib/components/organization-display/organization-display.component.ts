@@ -6,10 +6,11 @@ import { OrganizationForm } from '../../forms/organization.form';
   selector: 'organization-display',
   templateUrl: './organization-display.component.html',
   styleUrls: ['./organization-display.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationDisplayComponent {
   @HostBinding('attr.page-id') pageId = 'organization-display';
+  public placeholderUrl = '/assets/logo/organisation_avatar_250.svg';
 
   @Output() editing = new EventEmitter<void>();
   @Input() opened: boolean;
