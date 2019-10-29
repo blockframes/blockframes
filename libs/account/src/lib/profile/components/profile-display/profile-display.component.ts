@@ -7,11 +7,12 @@ import { Profile } from '../../forms/profile-edit.form';
   selector: 'profile-display',
   templateUrl: './profile-display.component.html',
   styleUrls: ['./profile-display.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileDisplayComponent {
   @HostBinding('attr.page-id') pageId = 'profile-display';
 
+  public placeholderUrl = '/assets/logo/profil_avatar_250.svg';
   public email: string;
   @Output() editing = new EventEmitter<string>();
   @Input() opened: boolean;

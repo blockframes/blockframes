@@ -12,6 +12,7 @@ import { createProfile } from '../forms/profile-edit.form';
 })
 export class ProfileMenuComponent implements OnInit{
   public user$: Observable<User>;
+  public placeholderUrl = '/assets/logo/profil_avatar_250.svg';
 
   constructor(
     private service: AuthService,

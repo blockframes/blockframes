@@ -1,18 +1,18 @@
 import { Component, ChangeDetectionStrategy, OnInit, HostBinding } from '@angular/core';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { ProfileForm } from '../../forms/profile-edit.form';
-import { startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup } from '@angular/forms';
 import { PasswordControl } from '@blockframes/utils';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { startWith, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'profile-editable',
   templateUrl: './profile-editable.component.html',
   styleUrls: ['./profile-editable.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'profile-editable';
@@ -67,6 +67,8 @@ export class ProfileEditableComponent implements OnInit {
   }
 
   public get user$() {
-    return this.profileForm.valueChanges.pipe(startWith(this.profileForm.value));
+    return this.profileForm.valueChanges.pipe(
+      startWith(this.profileForm.value),
+    );
   }
 }
