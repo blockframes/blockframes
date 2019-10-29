@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class NoOrganizationInvitationGuard extends CollectionGuard<InvitationState> {
-
   constructor(protected service: InvitationService, private query: InvitationQuery) {
     super(service);
   }
@@ -16,13 +15,13 @@ export class NoOrganizationInvitationGuard extends CollectionGuard<InvitationSta
     return this.service.syncUserInvitations().pipe(
       map(_ => this.query.getAll()),
       map(invitations => {
-          if (!invitations) {
-            return false;
-          }
-          if (invitations.find(invitation => invitation.status === InvitationStatus.pending)) {
-            return 'layout/organization/home';
-          }
-          return true;
+        if (!invitations) {
+          return false;
+        }
+        if (invitations.find(invitation => invitation.status === InvitationStatus.pending || invitation.status === InvitationStatus.accepted)) {
+          return 'layout/organization/home';
+        }
+        return true;
       })
     );
   }
