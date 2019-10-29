@@ -277,7 +277,19 @@
               <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
                 {{ director.lastName }}
               </mat-card-subtitle>
-              <span>Production Year {{ movie.main.productionYear }}</span>
+                <b class="table-size-text">
+                  {{ lodash.capitalize(movie.main.originCountries[0]) }}
+                  <b *ngIf="movie.main.originCountries.length > 1">, {{ lodash.capitalize(movie.main.originCountries[1]) }} </b>
+                  <span *ngIf="movie.main.originCountries.length > 2">, ... </span>|
+                  {{ movie.main.length }}min |
+                  {{ lodash.capitalize(movie.main.genres[0])}}
+                </b>
+                <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
+            </ng-container>
+            <ng-container movieCardAction >
+              <div fxLayout="row" fxLayoutAlign="end end">
+                <mat-icon>favorite_border</mat-icon>
+              </div>
             </ng-container>
           </movie-card>
         </ng-container>

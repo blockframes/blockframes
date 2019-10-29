@@ -88,6 +88,15 @@ span {
   font-weight: 600;
 }
 
+.table-size-text {
+  font-size: 12px;
+}
+
+.status-text {
+  font-size: 8px;
+  color: mat-color($bf-dark-foreground, blue-icon);
+}
+
 main {
   height: 100%;
 }

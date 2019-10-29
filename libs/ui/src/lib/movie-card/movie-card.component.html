@@ -32,14 +32,18 @@
 
   <!-- Movie Informations -->
   <mat-card-content>
+    <b class="status-text">{{ movie.main.status.toUpperCase() }}</b>
     <mat-card-title-group>
       <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>
   </mat-card-content>
 
+  <!-- If there is actions in the card, this divider will appear -->
+  <ng-container *ngIf="actions.childNodes.length != 0"><mat-divider></mat-divider></ng-container>
+
   <!-- Movie action button -->
-  <mat-card-actions>
+  <mat-card-actions #actions>
     <ng-content select="[movieCardAction]"></ng-content>
   </mat-card-actions>
 
