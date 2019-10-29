@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
@@ -20,7 +20,8 @@ export class OrganizationCreateComponent {
   constructor(
     private service: OrganizationService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
   }
 
@@ -46,11 +47,11 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const id = await this.service.add(this.form.value);
+    await this.service.add(this.form.value);
 
     this.snackBar.open(`The organization ${this.form.get('name').value} has been created`, 'close', { duration: 2000 });
 
-    this.router.navigate(['layout/o/organization', id]);
+    this.router.navigate(['../congratulations'], { relativeTo: this.route });
   }
 
   /** Clear current form with cancellation */

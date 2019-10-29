@@ -6,6 +6,10 @@ interface ActionItemLink {
   matIcon?: string;
   title: string;
   description: string;
+  button?: {
+    matIcon: string;
+    action: () => any;
+  }
 }
 
 interface ActionItemAction {

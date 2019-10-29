@@ -26,8 +26,9 @@ import { OrganizationHomeComponent } from './pages/organization-home/organizatio
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
-
+import { NoOrganizationInvitationGuard } from '@blockframes/notification';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -37,24 +38,31 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'home',
-    component: OrganizationHomeComponent
+    canActivate: [NoOrganizationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationHomeComponent,
   },
   {
     path: 'find',
-    component: OrganizationFindComponent
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationFindComponent,
   },
   {
-    path: 'congratulation',
+    path: 'congratulations',
+    canActivate: [NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
   },
   {
     path: 'create',
-    component: OrganizationCreateComponent
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard],
+    component: OrganizationCreateComponent,
   },
   {
     path: 'loading',
     component: OrganizationLoadingComponent
-  },
+  }
 ];
 
 @NgModule({

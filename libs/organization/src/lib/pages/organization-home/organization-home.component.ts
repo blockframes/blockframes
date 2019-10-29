@@ -7,15 +7,16 @@ import {
 } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery, User } from '@blockframes/auth';
 import { InvitationType, Invitation } from '@blockframes/invitation/types';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
   title: `Pending request to ${invitation.organization.name}`,
   routerLink: '#',
-  description: ''
+  description: '',
 });
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
@@ -34,6 +35,9 @@ const invitationActionFromOrgToUser = (invitation: Invitation, action: () => voi
 })
 export class OrganizationHomeComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'organization-home';
+
+  private sub: Subscription;
+
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
@@ -49,17 +53,19 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     }
   ];
   public items$: Observable<ActionItem[]>;
-  private sub: Subscription;
+  public user$: Observable<User>;
 
   constructor(
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
     private authQuery: AuthQuery,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.user$ = this.authQuery.user$;
     const storeName = this.invitationStore.storeName;
     const queryFn = ref => ref.where('user.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
@@ -71,7 +77,10 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
           // - If an org sent them an invitation, display with an action that let them accept the invite.
           switch (invitation.type) {
             case InvitationType.fromUserToOrganization:
-              return invitationActionFromUserToOrganization(invitation);
+              return {
+                ...invitationActionFromUserToOrganization(invitation),
+                button: { matIcon: 'delete_outline', action: () => this.cancelInvitation(invitation) }
+              };
             case InvitationType.fromOrganizationToUser:
               return invitationActionFromOrgToUser(invitation, () => {
                 this.acceptInvitation(invitation);
@@ -83,6 +92,15 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
         return [...actions, ...this.defaultItems];
       })
     );
+  }
+
+  private cancelInvitation(invitation: Invitation) {
+    try {
+      this.invitationService.declineInvitation(invitation);
+      this.snackBar.open('Your request has been canceled.', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   private acceptInvitation(invitation: Invitation) {
