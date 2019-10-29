@@ -2,7 +2,8 @@
  * Templates for transactional emails we send to user and to cascade8 admins.
  */
 import { adminEmail, appUrl } from '../environments/environment';
-import { EmailRequest } from '../internals/email';
+import { EmailRequest, EmailTemplateRequest } from '../internals/email';
+import { templateIds } from '@env';
 
 const USER_WELCOME_PATH = '/auth/welcome';
 const USER_ORG_INVITATION = '/auth/identity/';
@@ -45,13 +46,12 @@ export function userInvite(email: string, password: string): EmailRequest {
 }
 
 /** Generates a transactional email request for user invited to an organization. */
-export function userInviteToOrg(email: string, invitationId: string): EmailRequest {
-  return {
-    to: email,
-    subject: 'You have been invited to an organization',
-    text: `Visit: ${appUrl}${USER_ORG_INVITATION}${invitationId}
-    to register to the organization`
-  };
+export function userInviteToOrg(email: string, orgName: string, invitationId: string): EmailTemplateRequest {
+  const data = {
+    orgName: orgName,
+    pageURL: `${appUrl}${USER_ORG_INVITATION}${invitationId}`
+  }
+  return {to: email, templateId: templateIds.orgInviteUser, data};
 }
 
 /** Generates a transactional email request to let cascade8 admin know that a new org is waiting for approval. */

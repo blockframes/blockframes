@@ -21,7 +21,7 @@ import {
   MovieDocument
 } from './data/types';
 import { triggerNotifications } from './notification';
-import { sendMail } from './internals/email';
+import { sendMail, sendMailFromTemplate } from './internals/email';
 import {
   userInviteToOrg,
   userJoinedAnOrganization,
@@ -109,14 +109,14 @@ async function onInvitationToOrgAccept({
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ user, id }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgCreate({ user, organization, id }: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(user.uid);
-  
+
   if (!userMail) {
     console.error('No user email provided for userId:', user.uid);
     return;
   } else {
-    return sendMail(userInviteToOrg(userMail, id));
+    return sendMailFromTemplate(userInviteToOrg(userMail, organization.name, id));
   }
 }
 
