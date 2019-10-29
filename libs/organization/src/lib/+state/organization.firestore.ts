@@ -28,15 +28,15 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface WhishListDocument extends WhishListRaw<Timestamp> { }
-
-export interface WhishListWithDates extends WhishListRaw<Date> { }
-
 export interface WhishListRaw<D> {
   status: WhishListStatus,
   movieIds: string[],
   sent?: D
 }
+
+export interface WhishListDocument extends WhishListRaw<Timestamp> { }
+
+export interface WhishListWithDates extends WhishListRaw<Date> { }
 
 export const enum WhishListStatus {
   pending = 'pending',
