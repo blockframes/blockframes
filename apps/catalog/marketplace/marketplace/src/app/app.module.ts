@@ -24,6 +24,7 @@ import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { IntercomModule } from 'ng-intercom';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -67,6 +68,10 @@ import { yandexId } from '@env';
     WalletModule,
     KeyManagerModule,
     NotificationWidgetModule,
+    IntercomModule.forRoot({
+      appId: "srwfltp4", // from Intercom config
+      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
+    }),
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
