@@ -1,7 +1,5 @@
 import { Directive, Renderer2, ElementRef, Input } from '@angular/core'
 import { AngularFireStorage } from '@angular/fire/storage';
-import { BehaviorSubject, Subscription } from 'rxjs';
-
 @Directive({
   selector: 'img[storageRef]'
 })
