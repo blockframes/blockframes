@@ -1,27 +1,17 @@
 import { Injectable } from '@angular/core';
 import { snapshot } from '@blockframes/utils';
-import { InvitationState, InvitationStore } from './invitation.store';
+import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Organization, PublicOrganization } from '@blockframes/organization';
 import { Invitation, InvitationStatus } from './invitation.firestore';
-import { switchMap, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-
-  constructor(private authQuery: AuthQuery, private authService: AuthService, protected store: InvitationStore) {
+  constructor(private authQuery: AuthQuery, private authService: AuthService) {
     super();
-  }
-
-  /** Synchronizes the store with invitations that correspond to the connected user. */
-  public syncUserInvitations() {
-    const storeName = this.store.storeName;
-    return this.authQuery.user$.pipe(
-      switchMap((user => this.syncCollection(ref => ref.where('user.uid', '==', user.uid), { storeName })))
-    )
   }
 
   /** Create an Invitation when a user asks to join an Organization. */

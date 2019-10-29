@@ -103,7 +103,7 @@ async function onInvitationToOrgAccept({
   user,
   organization
 }: InvitationFromOrganizationToUser) {
-  // TODO: When a user is added to an org, clear other invitations
+  // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
   return mailOnInvitationAccept(user.uid, organization.id);
 }
