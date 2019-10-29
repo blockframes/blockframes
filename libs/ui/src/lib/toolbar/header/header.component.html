@@ -1,8 +1,10 @@
 <mat-toolbar page-id="navbar" class="mat-elevation-z2 top-mat-toolbar" fxLayout="row-reverse" fxLayoutAlign="space-between center">
-  <!-- Applications panel-->
-  <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
-    <mat-icon svgIcon="applications"></mat-icon>
-  </button>
+  <ng-container *ngIf="AFM_DISABLE"> <!-- TODO #1146 -->
+    <!-- Applications panel-->
+    <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
+      <mat-icon svgIcon="applications"></mat-icon>
+    </button>
+  </ng-container>
 
   <!-- Dynamic content -->
   <section class="app-icon-container-toolbar">

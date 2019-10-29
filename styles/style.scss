@@ -92,3 +92,13 @@ main {
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
 }
+
+.account-profile-menu mat-list button.mat-menu-item { // @todo #1176
+  padding-left: 5px;
+  mat-icon {
+    height: 40px;
+    width: 40px;
+    font-size: 40px;
+    margin-right: 0px;
+  }
+}

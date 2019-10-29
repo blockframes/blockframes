@@ -2,12 +2,12 @@
   <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
     <img class="profile-picture-menu" [storageRef]="profile.avatar" alt="Profile picture" />
   </button>
-  <mat-menu #menu="matMenu" class="mat-elevation-z6">
+  <mat-menu #menu="matMenu" class="mat-elevation-z6 account-profile-menu">
     <mat-list>
       <ng-content select="[widgets]"></ng-content>
       <mat-divider></mat-divider>
       <ng-container>
-        <button test-id="logout" mat-menu-item (click)="logout()"><mat-icon color="accent">exit_to_app</mat-icon>
+        <button test-id="logout" mat-menu-item (click)="logout()" class="logout-btn"><mat-icon svgIcon="logout"></mat-icon>
           <span class="logout">Log out</span>
         </button>
       </ng-container>

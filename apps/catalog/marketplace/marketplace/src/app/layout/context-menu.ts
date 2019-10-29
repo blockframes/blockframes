@@ -81,3 +81,24 @@ export const CONTEXT_MENU = [
     ]
   }
 ];
+
+export const CONTEXT_MENU_AFM = [ // TODO #1146 
+  {
+    route: 'default',
+    items: [
+      {
+        name: 'home',
+        path: '/layout/o/catalog/home'
+      },
+      {
+        name: 'catalogue',
+        path: '/layout/o/catalog/search'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/selection/overview'
+      }
+    ]
+  }
+];
+
