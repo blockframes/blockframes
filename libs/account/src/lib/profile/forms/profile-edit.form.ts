@@ -8,6 +8,7 @@ export interface Profile {
   phoneNumber: string;
   position: string;
   avatar: string;
+  email: string;
 }
 
 export function createProfile(params: Partial<Profile> = {}): Profile {
@@ -17,6 +18,7 @@ export function createProfile(params: Partial<Profile> = {}): Profile {
     phoneNumber: '',
     position: '',
     avatar: '',
+    email: '',
     ...params
   };
 }
@@ -28,7 +30,8 @@ function createProfileControls(entity: Partial<Profile>) {
     surname: new FormControl(profile.surname),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new FormControl(profile.avatar)
+    avatar: new FormControl(profile.avatar),
+    email: new FormControl(profile.email)
   };
 }
 

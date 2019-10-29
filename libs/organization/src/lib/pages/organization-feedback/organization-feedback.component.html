@@ -1,4 +1,4 @@
-<section fxLayout="row" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
+<section fxLayout="column" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
   <!-- TODO #1135 Change image according to theme -->
   <feedback-message
     title="Congratulations !"
@@ -7,4 +7,5 @@
     [enabled]="canMoveOn | async"
     (redirectUser)="navigate()">
   </feedback-message>
+  <button mat-button color="primary" *ngIf="!(canMoveOn | async)" (click)="removeOrganization()">Cancel your request</button>
 </section>

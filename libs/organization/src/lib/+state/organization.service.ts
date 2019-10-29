@@ -120,6 +120,20 @@ export class OrganizationService {
     return this.organization$;
   }
 
+  /** Remove an organization that has just been created. */
+  public async removeOrganization() {
+    const orgId = this.query.id;
+    const userId = this.authQuery.userId;
+    const userRef = this.db.doc(`users/${userId}`).ref;
+    const orgRef = this.db.doc(`orgs/${orgId}`).ref;
+    return this.db.firestore.runTransaction(tx =>
+      Promise.all([
+        tx.update(userRef, { orgId: null }),
+        tx.delete(orgRef)
+      ])
+    );
+  }
+
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
     const orgId = this.query.id;
