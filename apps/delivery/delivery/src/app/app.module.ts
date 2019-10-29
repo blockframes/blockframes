@@ -12,13 +12,14 @@ import { environment } from '../environments/environment';
 // Components
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
-import { LayoutComponent } from '@blockframes/utils/routes/layout/layout.component';
+import { LayoutComponent } from './layout/layout.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
@@ -100,6 +101,7 @@ import { EmailVerifyModule } from '@blockframes/auth';
       AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
       AngularFireFunctionsModule,
       AngularFireAuthModule,
+      AngularFireStorageModule,
 
       // Akita
       AkitaNgRouterStoreModule.forRoot(),

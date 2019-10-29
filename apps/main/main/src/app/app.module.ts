@@ -20,6 +20,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
@@ -101,6 +102,7 @@ import { EmailVerifyModule } from '@blockframes/auth';
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

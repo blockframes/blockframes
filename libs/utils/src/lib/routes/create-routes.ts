@@ -19,7 +19,6 @@ export function createAppRoutes(routes: Routes, LayoutComponent) {
     {
       path: 'layout',
       component: LayoutComponent,
-      data: { app: App.mediaDelivering },
       canActivate: [AuthGuard],
       canDeactivate: [AuthGuard],
       children: [

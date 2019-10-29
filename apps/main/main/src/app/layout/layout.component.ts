@@ -3,7 +3,7 @@ import { ContextMenuService } from '@blockframes/ui';
 import { CONTEXT_MENU } from './context-menu';
 
 @Component({
-  selector: 'delivery-layout',
+  selector: 'main-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

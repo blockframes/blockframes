@@ -1,9 +1,28 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { deliveryAppRoutes } from './app-routing-module';
+
+export const deliveryAppRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: 'delivery',
+    pathMatch: 'full'
+  },
+  {
+    path: 'templates',
+    loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
+  },
+  {
+    path: 'delivery',
+    loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
+  }
+];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(deliveryAppRoutes)]
 })
-export class DeliveryAppModule {}
+export class DeliveryAppModule {
+  constructor() {
+    console.log('DeliveryAppModule');
+  }
+}

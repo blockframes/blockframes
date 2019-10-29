@@ -83,8 +83,4 @@ export const AuthRoutes: Routes = [
   ],
   exports: []
 })
-export class AuthModule {
-  constructor() {
-    console.log('AuthModule loaded');
-  }
-}
+export class AuthModule {}
