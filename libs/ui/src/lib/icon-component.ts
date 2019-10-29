@@ -254,6 +254,26 @@ const ICONS_SVG = [
   {
     name: 'catalog-dashboard',
     url: 'assets/apps/catalog-dashboard.svg'
+  },
+  {
+    name: 'group',
+    url: 'assets/icons/icon_40px_Group.svg'
+  },
+  {
+    name: 'profil',
+    url: 'assets/icons/icon_40px_Profil.svg'
+  },
+  {
+    name: 'logout',
+    url: 'assets/icons/icon_40px_LogOut.svg'
+  },
+  {
+    name: 'building',
+    url: 'assets/icons/icon_40px_Building.svg'
+  },
+  {
+    name: 'wallet',
+    url: 'assets/icons/icon_40px_Wallet.svg'
   }
 ];
 
