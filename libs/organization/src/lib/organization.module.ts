@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
-import { WalletModule } from '@blockframes/ethers';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
@@ -95,7 +94,6 @@ if (AFM_DISABLE) {
     EditableSidenavModule,
     FeedbackMessageModule,
     AvatarListModule,
-    WalletModule,
     UploadModule,
     UiFormModule,
     CropperModule,

@@ -25,7 +25,6 @@ import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletKeyGuard } from './guards/wallet-key.guard';
 import { WalletViewComponent } from './pages/wallet-view/wallet-view.component';
 import { WalletImportKeyFormComponent } from './components/wallet-import-key-form/wallet-import-key-form.component';
-import { WalletWidgetComponent } from './components/wallet-widget/wallet-widget.component';
 import { WalletAddKeyTunnelComponent } from './pages/wallet-add-key/wallet-add-key.component';
 import { WalletSendTxTunnelComponent } from './pages/wallet-send-tx/wallet-send-tx.component';
 import { WalletAskPasswordFormComponent } from './components/wallet-ask-password-form/wallet-ask-password-form.component';
@@ -89,7 +88,6 @@ export const walletRoutes: Routes = [
   declarations: [
     WalletViewComponent,
     WalletImportKeyFormComponent,
-    WalletWidgetComponent,
     WalletAddKeyTunnelComponent,
     WalletSendTxTunnelComponent,
     WalletAskPasswordFormComponent,
@@ -99,9 +97,6 @@ export const walletRoutes: Routes = [
     WalletImportKeyComponent,
     WalletNoKeyComponent,
     WalletRevealMnemonicComponent,
-  ],
-  exports: [
-    WalletWidgetComponent,
-  ],
+  ]
 })
 export class WalletModule {}

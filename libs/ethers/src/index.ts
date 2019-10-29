@@ -6,6 +6,8 @@ export * from './lib/create-tx';
 
 // Wallet
 export * from './lib/wallet/wallet.module';
+// Components
+export * from './lib/wallet/components/wallet-widget/wallet-widget.module';
 // Wallet State
 export * from './lib/wallet/+state/wallet.query';
 export * from './lib/wallet/+state/wallet.service';

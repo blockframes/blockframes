@@ -59,7 +59,7 @@ import { registerLocaleData } from '@angular/common';
 import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
 import { UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
-import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
+import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 import { MatRadioModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -95,7 +95,7 @@ registerLocaleData(localeFr)
     AccountModule,
     ProfileModule,
     UtilsModule,
-    WalletModule,
+    WalletWidgetModule,
     KeyManagerModule,
     // Material
     MatSidenavModule,

@@ -27,7 +27,7 @@ import { OrganizationModule, NoOrganizationModule } from '@blockframes/organizat
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { MovieModule } from '@blockframes/movie';
 import { ProfileModule, AccountModule } from '@blockframes/account';
-import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
+import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -91,7 +91,7 @@ import { EmailVerifyModule } from '@blockframes/auth';
       MovieModule,
       AccountModule,
       ProfileModule,
-      WalletModule,
+      WalletWidgetModule,
       KeyManagerModule,
       NotificationWidgetModule,
       NoOrganizationModule,
