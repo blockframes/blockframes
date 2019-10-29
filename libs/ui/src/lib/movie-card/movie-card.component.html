@@ -8,31 +8,12 @@
     </a>
 
       <!-- Movie Menu -->
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon color="primary">more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu" xPosition="before">
-      <button mat-menu-item [matMenuTriggerFor]="subMenu">
-        <mat-icon color="primary">control_camera</mat-icon>
-        <span>Open in...</span>
-      </button>
-      <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-        <mat-icon color="primary">edit</mat-icon>
-        <span>Edit</span>
-      </a>
-      <button mat-menu-item (click)="remove(movie)">
-        <mat-icon color="primary">delete_outline</mat-icon>
-        <span>Delete</span>
-      </button>
-    </mat-menu>
-    <mat-menu #subMenu="matMenu">
-      <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-    </mat-menu>
+
   </div>
 
   <!-- Movie Informations -->
   <mat-card-content>
-    <b class="status-text">{{ movie.main.status.toUpperCase() }}</b>
+    <b *ngIf="movie.main.status as status" class="status-text">{{ status.toUpperCase() }}</b>
     <mat-card-title-group>
       <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
     </mat-card-title-group>

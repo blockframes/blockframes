@@ -12,13 +12,7 @@ export class MovieCardComponent {
   @Input() movie: Movie;
   @Input() link: string;
 
-  @Output() delete = new EventEmitter<Movie>();
-
   get posterSrc() {
     return this.movie.main.poster || '/assets/images/default-movie-poster.png';
-  }
-
-  public remove(movie: Movie) {
-    this.delete.emit(movie);
   }
 }
