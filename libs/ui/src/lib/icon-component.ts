@@ -257,23 +257,23 @@ const ICONS_SVG = [
   },
   {
     name: 'group',
-    url: 'assets/icons/icon_40px_Group.svg'
+    url: 'assets/icons/group.svg'
   },
   {
-    name: 'profil',
-    url: 'assets/icons/icon_40px_Profil.svg'
+    name: 'profile',
+    url: 'assets/icons/profile.svg'
   },
   {
     name: 'logout',
-    url: 'assets/icons/icon_40px_LogOut.svg'
+    url: 'assets/icons/logOut.svg'
   },
   {
     name: 'building',
-    url: 'assets/icons/icon_40px_Building.svg'
+    url: 'assets/icons/building.svg'
   },
   {
     name: 'wallet',
-    url: 'assets/icons/icon_40px_Wallet.svg'
+    url: 'assets/icons/wallet.svg'
   }
 ];
 

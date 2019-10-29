@@ -82,7 +82,7 @@ export const CONTEXT_MENU = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = [
+export const CONTEXT_MENU_AFM = [ // TODO #1146 
   {
     route: 'default',
     items: [
@@ -96,7 +96,7 @@ export const CONTEXT_MENU_AFM = [
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/home' // @todo change for correct path
+        path: '/layout/o/catalog/selection/overview'
       }
     ]
   }
