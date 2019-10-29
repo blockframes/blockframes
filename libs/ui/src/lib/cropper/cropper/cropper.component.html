@@ -1,6 +1,9 @@
 <section [ngSwitch]="step$ | async">
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
-    <mat-icon fontSet="material-icons-outlined" color="primary">cloud_upload</mat-icon>
+    <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
+    <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
+      <mat-icon fontSet="material-icons-outlined" color="primary">cloud_upload</mat-icon>
+    </button>
     <h3>Drop something here</h3>
   </article>
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
