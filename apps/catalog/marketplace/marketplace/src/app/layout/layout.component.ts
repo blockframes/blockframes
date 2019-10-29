@@ -20,7 +20,7 @@ export class LayoutComponent implements OnInit {
    }
 
   ngOnInit() {
-    if (this.AFM_DISABLE) {
+    if (!this.AFM_DISABLE) {
       this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
     } else {
       this.contextMenuService.setMenu(CONTEXT_MENU);
