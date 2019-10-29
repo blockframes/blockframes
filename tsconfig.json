@@ -17,6 +17,8 @@
     "paths": {
       "@env": ["env/env.ts"],
       "@blockframes/ip": ["libs/ip/src/index.ts"],
+
+      // AUTH
       "@blockframes/auth": ["libs/auth/src/index.ts"],
       "@blockframes/auth/*": ["libs/auth/src/lib/*"],
 
@@ -81,6 +83,7 @@
 
       // APPS
       "@blockframes/apps/delivery": ["apps/delivery/delivery/src/app/delivery.module.ts"],
+      "@blockframes/apps/catalog-marketplace": ["apps/catalog/marketplace/marketplace/src/app/catalog-marketplace.module.ts"],
       "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"]
     }
   },
