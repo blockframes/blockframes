@@ -7,7 +7,7 @@ import {
 } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery, User } from '@blockframes/auth';
 import { InvitationType, Invitation } from '@blockframes/invitation/types';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
@@ -35,6 +35,9 @@ const invitationActionFromOrgToUser = (invitation: Invitation, action: () => voi
 })
 export class OrganizationHomeComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'organization-home';
+
+  private sub: Subscription;
+
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
@@ -50,7 +53,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     }
   ];
   public items$: Observable<ActionItem[]>;
-  private sub: Subscription;
+  public user$: Observable<User>;
 
   constructor(
     private invitationService: InvitationService,
@@ -62,6 +65,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.user$ = this.authQuery.user$;
     const storeName = this.invitationStore.storeName;
     const queryFn = ref => ref.where('user.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();

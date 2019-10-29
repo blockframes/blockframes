@@ -44,11 +44,9 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'find',
-    canActivate: [NoOrganizationGuard],
-    canDeactivate: [NoOrganizationGuard],
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationFindComponent,
-    canActivate: [NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationInvitationGuard],
   },
   {
     path: 'congratulations',
@@ -58,11 +56,9 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'create',
-    canActivate: [NoOrganizationGuard],
-    canDeactivate: [NoOrganizationGuard],
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canDeactivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationCreateComponent,
-    canActivate: [NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationInvitationGuard],
   },
   {
     path: 'loading',

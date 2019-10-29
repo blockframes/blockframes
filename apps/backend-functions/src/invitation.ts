@@ -101,12 +101,10 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept({
   user,
-  organization,
-  id
+  organization
 }: InvitationFromOrganizationToUser) {
   // TODO: When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
-  await deleteInvitation(id);
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
@@ -250,21 +248,13 @@ async function onInvitationFromUserToJoinOrgCreate({
   );
 }
 
-async function deleteInvitation(invitationId: string) {
-  // Delete the invitation
-  const invitationRef = db.collection('invitations').doc(invitationId);
-  await invitationRef.delete();
-}
-
 /** Send a mail and update the user, org and permission when the user was accepted. */
 async function onInvitationFromUserToJoinOrgAccept({
   organization,
-  user,
-  id
+  user
 }: InvitationFromUserToOrganization) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
-  await deleteInvitation(id);
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
