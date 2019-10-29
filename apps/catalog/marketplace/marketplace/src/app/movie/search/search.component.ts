@@ -51,6 +51,8 @@ import { AFM_DISABLE } from '@env';
 export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
+  public lodash = _;
+
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
 
