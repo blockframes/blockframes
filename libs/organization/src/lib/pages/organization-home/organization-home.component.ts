@@ -75,7 +75,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
             case InvitationType.fromUserToOrganization:
               return {
                 ...invitationActionFromUserToOrganization(invitation),
-                button: { matIcon: 'delete_outline', action: () => this.removeInvitation(invitation.id) }
+                button: { matIcon: 'delete_outline', action: () => this.cancelInvitation(invitation) }
               };
             case InvitationType.fromOrganizationToUser:
               return invitationActionFromOrgToUser(invitation, () => {
@@ -90,10 +90,10 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private removeInvitation(invitationId: string) {
+  private cancelInvitation(invitation: Invitation) {
     try {
-      this.invitationService.remove(invitationId);
-      this.snackBar.open('Your request has been removed', 'close', { duration: 2000 });
+      this.invitationService.declineInvitation(invitation);
+      this.snackBar.open('Your request has been canceled.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
