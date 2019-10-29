@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
 
 @Component({
   selector: '[formGroupName] profile-form, [formGroup] profile-form, profile-form',
@@ -8,7 +7,7 @@ import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
   styleUrls: ['./profile-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileFormComponent {
+export class ProfileFormComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'profile-form';
 
   constructor(public controlContainer: ControlContainer) {}
@@ -16,12 +15,7 @@ export class ProfileFormComponent {
   public get control() {
     return this.controlContainer.control;
   }
-
-  public get avatar() {
-    return this.control.get('avatar').value;
-  }
-
-  public set avatar(avatarPath: string | undefined) {
-    this.control.get('avatar').patchValue(avatarPath || PLACEHOLDER_AVATAR);
+  ngOnInit() {
+    this.control.get('email').disable();
   }
 }
