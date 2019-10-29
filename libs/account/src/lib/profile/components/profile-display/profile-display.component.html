@@ -7,12 +7,11 @@
           <h3>{{ user.name }}</h3><span>{{ user.surname }}</span>
         </div>
         <div fxLayout="column" class="column-padding">
-          <p class="bf-dark-text">Phone number: <span class="bf-text">{{ user.phoneNumber }}</span></p>
-          <p class="bf-dark-text">Email: <span class="bf-text">{{ user.email }}</span></p>
-        </div>
-        <div fxLayout="column" class="column-padding">
-            <p class="bf-dark-text">Organization: <span class="bf-text">{{ organization.name }}</span></p>
-            <p class="bf-dark-text">Position: <span class="bf-text">{{ user.position }}</span></p>
+          <p>
+            <span class="bf-dark-text">Phone number: </span>{{ user.phoneNumber }}</p>
+            <p><span class="bf-dark-text">Email: </span>{{ user.email }}</p>
+            <p><span class="bf-dark-text">Organization: </span>{{ organization.name }}</p>
+            <p><span class="bf-dark-text">Position: </span>{{ user.position }}</p>
         </div>
         <div class="action-button">
           <button mat-icon-button (click)="editing.emit('password')" color="primary">
