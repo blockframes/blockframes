@@ -3,7 +3,7 @@
   fxLayoutAlign="center start"
   fxLayout.lt-md="column"
   fxLayoutAlign.lt-md="center center">
-  <img src="/assets/images/dark_rocket.png" alt="Rocket taking off in the air" />
+  <img src="/assets/images/dark-rocket.png" alt="Rocket taking off in the air" />
   <article>
     <h2>Create your organization</h2>
     <form [formGroup]="form" (ngSubmit)="addOrganization()">
@@ -57,7 +57,7 @@
         />
       </mat-form-field>
       <h3>Logo</h3>
-      <drop-cropper [ratio]="4/3" formControlName="logo"></drop-cropper>
+      <drop-cropper [ratio]="1" formControlName="logo"></drop-cropper>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button mat-flat-button type="submit" color="accent">
           <ng-container *ngIf="(loading$ | async); else: notLoading">

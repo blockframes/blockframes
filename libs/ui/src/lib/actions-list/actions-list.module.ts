@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActionItem } from './actions-list.component';
+import { MatButtonModule } from '@angular/material';
 
 // Share the type of items with our users.
 export { ActionItem };
@@ -16,7 +17,7 @@ export { ActionItem };
  */
 @NgModule({
   declarations: [ActionsListComponent],
-  imports: [MatListModule, MatIconModule, RouterModule, CommonModule],
+  imports: [MatListModule, MatIconModule, MatButtonModule, RouterModule, CommonModule],
   exports: [ActionsListComponent]
 })
 export class ActionsListModule {}

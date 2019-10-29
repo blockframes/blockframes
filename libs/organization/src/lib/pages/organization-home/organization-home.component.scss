@@ -26,6 +26,10 @@ h2 {
   text-align: center;
 }
 
+a {
+  margin-bottom: 40px;
+}
+
 // extra small
 @include mobile {
   article {
