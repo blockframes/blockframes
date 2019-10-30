@@ -6,7 +6,7 @@
   <img src="/assets/images/dark-rocket.png" alt="Rocket taking off in the air" />
   <article>
     <h2>Create your organization</h2>
-    <form [formGroup]="form" (ngSubmit)="addOrganization()">
+    <form [formGroup]="form">
       <h3>Your company</h3>
       <mat-form-field appearance="outline">
         <mat-label>Organization name</mat-label>
@@ -59,7 +59,7 @@
       <h3>Logo</h3>
       <drop-cropper [ratio]="1" formControlName="logo"></drop-cropper>
       <div fxLayout="column" fxLayoutAlign="center center">
-        <button mat-flat-button type="submit" color="accent">
+        <button mat-flat-button color="accent" (click)="addOrganization()">
           <ng-container *ngIf="(loading$ | async); else: notLoading">
             <mat-progress-spinner
               mode="indeterminate"

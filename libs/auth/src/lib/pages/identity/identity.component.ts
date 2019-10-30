@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
 export class IdentityComponent {
   public form = new FormGroup({
     name: new FormControl(''),
-    surname: new FormControl('')
+    surname: new FormControl(''),
+    avatar: new FormControl('')
   });
 
   constructor(
