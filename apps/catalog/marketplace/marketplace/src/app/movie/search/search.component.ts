@@ -27,7 +27,9 @@ import {
   CertificationsSlug,
   LanguagesSlug,
   MediasSlug,
-  TerritoriesSlug
+  TerritoriesSlug,
+  MovieStatusLabel,
+  MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
@@ -60,13 +62,14 @@ export class MarketplaceSearchComponent implements OnInit {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
+  public sortOptions: string[] = ['All films', 'Title', 'Director'];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
 
   /* Data for UI */
   public movieGenres: GenresLabel[] = GENRES_LABEL;
+  public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
@@ -115,9 +118,9 @@ export class MarketplaceSearchComponent implements OnInit {
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => movies.filter(async movie => { 
-        const deals = await this.movieService.getDistributionDeals(movie.id);
-        return filterMovie(movie, deals, filterOptions);
+      map(([movies, filterOptions]) => movies.filter(async movie => {
+
+        return filterMovie(movie, filterOptions);
       })),
       tap(movies => (this.availableMovies = movies.length))
     );
@@ -229,6 +232,22 @@ export class MarketplaceSearchComponent implements OnInit {
       this.filterForm.addType(genreSlug);
     } else {
       this.filterForm.removeType(genreSlug);
+    }
+  }
+
+  public hasStatus(productionStatus: MovieStatusLabel) {
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const productionStatusSlug: MovieStatusLabel = getCodeIfExists('MOVIE_STATUS', productionStatus);
+    if (
+      this.movieProductionStatuses.includes(productionStatus) &&
+      !this.filterForm.get('status').value.includes(productionStatusSlug)
+    ) {
+      this.filterForm.addStatus(productionStatusSlug);
+    } else {
+      this.filterForm.removeStatus(productionStatusSlug);
     }
   }
 

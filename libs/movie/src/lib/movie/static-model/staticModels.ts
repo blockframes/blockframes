@@ -148,11 +148,11 @@ const models: Model = {
   'MOVIE_STATUS': [
     {
       'slug': 'financing',
-      'label': 'Financing'
+      'label': 'Pre-Production'
     },
     {
       'slug': 'shooting',
-      'label': 'Shooting'
+      'label': 'In Production'
     },
     {
       'slug': 'post-production',
@@ -160,15 +160,7 @@ const models: Model = {
     },
     {
       'slug': 'finished',
-      'label': 'Finished'
-    },
-    {
-      'slug': 'pre-production',
-      'label': 'Pre production'
-    },
-    {
-      'slug': 'on-production',
-      'label': 'On production'
+      'label': 'Completed'
     }
   ] as const,
   'LANGUAGES': [
@@ -655,7 +647,7 @@ const models: Model = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
-  ] as const
+  ] as const,
 };
 
 /**
