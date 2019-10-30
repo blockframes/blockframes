@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'catalog-promotional-elements',
@@ -18,7 +18,5 @@ import { Component } from '@angular/core';
   ]
 })
 export class CatalogPromotionalElementsComponent {
-  public promotionEl = [
-    { type: 'Trailer', hyperlinkText: 'Watch', link: 'https://www.youtube.com/watch?v=Qs_dPc62smw' }
-  ];
+@Input() promotionEl;
 }
