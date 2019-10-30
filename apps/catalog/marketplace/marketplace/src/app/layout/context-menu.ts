@@ -99,6 +99,22 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
         path: '/layout/o/catalog/selection/overview'
       }
     ]
+  },
+  {
+    route: '/layout/organization/home',
+    items: []
+  },
+  {
+    route: '/layout/organization/create',
+    items: []
+  },
+  {
+    route: '/layout/organization/find',
+    items: []
+  },
+  {
+    route: '/layout/organization/congratulations',
+    items: []
   }
 ];
 
