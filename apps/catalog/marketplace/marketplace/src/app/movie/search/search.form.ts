@@ -44,6 +44,7 @@ export interface CatalogSearch {
   };
   type: GenresLabel[];
   status: MovieStatusLabel[];
+  salesAgent: string[];
   languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
@@ -71,6 +72,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     availabilities: {},
     type: [],
     status: [],
+    salesAgent: [],
     languages: {},
     certifications: [],
     medias: [],
@@ -126,6 +128,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     ),
     type: new FormControl(search.type),
     status: new FormControl(search.status),
+    salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),
@@ -195,6 +198,15 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`The production status ${status} was not found!`);
     }
+  }
+
+  addSalesAgent(salesAgent: string) {
+    this.get('salesAgent').setValue([...this.get('salesAgent').value, salesAgent]);
+  }
+
+  removeSalesAgent(salesAgent: string) {
+    const newControls = this.get('salesAgent').value.filter(salesAgentToRemove => salesAgentToRemove !== salesAgent);
+    this.get('salesAgent').setValue(newControls);
   }
 
   checkCertification(certificationChecked: CertificationsSlug) {

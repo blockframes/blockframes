@@ -39,6 +39,7 @@ import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
+import { AFM_DISABLE } from '@env';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -48,6 +49,16 @@ import { filterMovie } from './filter.util';
 })
 export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
+
+  /* Variables for Sales Agents chips */
+  public selectableSAChip = true;
+  public removableSAChip = true;
+  public addOnBlur = true;
+  public selectedSalesAgents: string[] = [];
+  public salesAgents: string[] = ['Pulsar Content', 'WTFilms', 'Charades'];
+
+  @ViewChild('salesAgentInput', {static: false}) salesAgentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -62,7 +73,7 @@ export class MarketplaceSearchComponent implements OnInit {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director'];
+  public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
@@ -76,6 +87,7 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Filter for autocompletion */
   public territoriesFilter: Observable<string[]>;
   public languagesFilter: Observable<string[]>;
+  public salesAgentFilter: Observable<string[]>;
 
   /* Individual form controls for filtering */
   public languageControl: FormControl = new FormControl('', [
@@ -83,6 +95,7 @@ export class MarketplaceSearchComponent implements OnInit {
     languageValidator
   ]);
   public territoryControl: FormControl = new FormControl('');
+  public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
@@ -108,20 +121,28 @@ export class MarketplaceSearchComponent implements OnInit {
   public matcher = new ControlErrorStateMatcher();
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(
     private movieQuery: MovieQuery,
     private router: Router,
     private movieService: MovieService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => movies.filter(async movie => {
-
-        return filterMovie(movie, filterOptions);
-      })),
+      map(([movies, filterOptions]) => {
+        if (AFM_DISABLE) { //TODO #1146
+          return movies.filter(async movie => {
+            const deals = await this.movieService.getDistributionDeals(movie.id);
+            return filterMovie(movie, filterOptions, deals);
+          })
+        } else {
+          return movies.filter(movie => {
+            return filterMovie(movie, filterOptions);
+          })
+        }
+    }),
       tap(movies => (this.availableMovies = movies.length))
     );
 
@@ -136,6 +157,10 @@ export class MarketplaceSearchComponent implements OnInit {
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
     );
+
+    this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
+      startWith(''),
+      map(salesAgent=> salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents.slice()));
   }
 
   public goToMovieDetails(id: string) {
@@ -193,6 +218,12 @@ export class MarketplaceSearchComponent implements OnInit {
     return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
+  private _salesAgentsfilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   //////////////////
   // Form section //
   //////////////////
@@ -235,19 +266,31 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public hasStatus(productionStatus: MovieStatusLabel) {
+
+  public hasStatus(status: MovieStatusLabel) {
     /**
      * We want to exchange the label for the slug,
      * because for our backend we need to store the slug.
      */
-    const productionStatusSlug: MovieStatusLabel = getCodeIfExists('MOVIE_STATUS', productionStatus);
+    const productionStatusSlug: GenresSlug = getCodeIfExists('MOVIE_STATUS', status);
     if (
-      this.movieProductionStatuses.includes(productionStatus) &&
+      this.movieProductionStatuses.includes(status) &&
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
+    }
+  }
+
+  public hasSalesAgent(salesAgent: string) {
+    if (
+      this.movieProductionStatuses.includes(status) &&
+      !this.filterForm.get('salesAgent').value.includes(salesAgent)
+    ) {
+      this.filterForm.addStatus(salesAgent);
+    } else {
+      this.filterForm.removeStatus(salesAgent);
     }
   }
 
@@ -296,5 +339,25 @@ export class MarketplaceSearchComponent implements OnInit {
     );
     this.filterForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
+  }
+
+  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
+    const value = event.option.value;
+
+    if ((value || '').trim() && !this.selectedSalesAgents.includes(value)) {
+      this.selectedSalesAgents.push(value.trim());
+    }
+
+    this.filterForm.addSalesAgent(value);
+    this.salesAgentControl.setValue('');
+  }
+
+  public removeSalesAgent(salesAgent: string) {
+    const index = this.selectedSalesAgents.indexOf(salesAgent);
+
+    if (index >= 0) {
+      this.selectedSalesAgents.splice(index, 1);
+    }
+    this.filterForm.removeSalesAgent(salesAgent);
   }
 }
