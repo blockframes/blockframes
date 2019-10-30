@@ -5,8 +5,7 @@ type Timestamp = firestore.Timestamp;
 export interface OrganizationDocument {
   id: string;
   name: string;
-  address: string;
-  officeAddress: string;
+  addresses: Addresses;
   email: string;
   created: number;
   updated: number;
@@ -14,9 +13,8 @@ export interface OrganizationDocument {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  catalog: null;
+  catalog: null; // @todo #1126 késako ?
   logo: string;
-  phoneNumber: string;
   fiscalNumber: string;
   activity: string;
   whishList: WhishListWithDates[];
@@ -26,6 +24,22 @@ export interface OrganizationDocument {
 export const enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
+}
+
+export interface Addresses {
+  main: Address,
+  billing?: Address,
+  office?: Address,
+  // Other can be added here
+}
+
+export interface Address {
+  street: string,
+  zipCode: string,
+  city: string,
+  country: string,
+  region?: string,
+  phoneNumber: string,
 }
 
 export interface WhishListRaw<D> {
@@ -60,9 +74,7 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     email: '',
     fiscalNumber: '',
     activity: '',
-    phoneNumber: '',
-    address: '',
-    officeAddress: '',
+    addresses: createAddresses(),
     status: OrganizationStatus.pending,
     userIds: [],
     movieIds: [],
@@ -72,6 +84,27 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     logo: '',
     catalog: null,
     whishList: [],
+    ...params
+  };
+}
+
+/** A factory function that creates Organization Addresses */
+export function createAddresses(params: Partial<Addresses> = {}): Addresses {
+  return {
+    main: createAddress(params.main),
+    ...params
+  };
+}
+
+/** A factory function that creates an Address */
+export function createAddress(params: Partial<Address> = {}): Address {
+  return {
+    street: '',
+    zipCode: '',
+    city: '',
+    country: '',
+    phoneNumber: '',
+    region: '',
     ...params
   };
 }

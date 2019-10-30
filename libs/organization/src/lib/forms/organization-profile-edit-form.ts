@@ -3,7 +3,7 @@ import { FormEntity } from '@blockframes/utils';
 import { PLACEHOLDER_LOGO, Organization } from '../+state';
 
 export interface OrganizationProfile {
-  officeAddress: string;
+  officeAddress: string;  // here #1126
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;

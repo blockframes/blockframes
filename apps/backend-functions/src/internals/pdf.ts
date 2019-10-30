@@ -95,7 +95,7 @@ const center = (content: string | { [k: string]: any }): any => {
 function rowOrganizations(orgIds: string[], orgs: IDMap<OrganizationDocument>): any {
   const columns: any = orgIds.map((id: string) => {
     const org = orgs[id];
-    return [subHeader(org.name), description(org.officeAddress)];
+    return [subHeader(org.name), description(org.officeAddress)]; // here #1126
   });
   return [
     header('Stakeholders'),

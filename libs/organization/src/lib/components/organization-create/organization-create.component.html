@@ -22,7 +22,55 @@
       </mat-form-field>
 
       <h3>Contact information</h3>
-      <mat-form-field appearance="outline">
+      <ng-container [formGroup]="form.addresses.main">
+        <h4>Main address</h4>
+        <mat-form-field appearance="outline">
+          <mat-label>Street</mat-label>
+          <input
+            matInput
+            placeholder="Street"
+            aria-label="street"
+            formControlName="street"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Zip code</mat-label>
+          <input
+            matInput
+            placeholder="Zip code"
+            aria-label="zip code"
+            formControlName="zipCode"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input
+            matInput
+            placeholder="City"
+            aria-label="city"
+            formControlName="city"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <input
+            matInput
+            placeholder="Country"
+            aria-label="country"
+            formControlName="country"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Phone number</mat-label>
+          <input
+            matInput
+            placeholder="Phone number"
+            aria-label="phone number"
+            formControlName="phoneNumber"
+          />
+        </mat-form-field>
+    </ng-container>
+      <!-- <mat-form-field appearance="outline">
         <mat-label>Company phone number</mat-label>
         <input
           matInput
@@ -30,7 +78,8 @@
           aria-label="company phone number"
           formControlName="phoneNumber"
         />
-      </mat-form-field>
+      </mat-form-field>-->
+      <h4>Email address</h4>
       <mat-form-field appearance="outline">
         <mat-label>Contact email address</mat-label>
         <input
