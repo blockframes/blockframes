@@ -1,6 +1,6 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
-import { isTheSame } from './utils';
+import { isTheSame, removeAllSubcollections } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
 import { MovieDocument, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
@@ -49,9 +49,8 @@ export async function deleteFirestoreMovie(
   });
 
   // Delete sub-collections
-  const subCollections = await snap.ref.listCollections();
-  subCollections.forEach(async x => (await db.collection(x.path).listDocuments()).forEach(ref => batch.delete(ref)));
-
+  await removeAllSubcollections(snap, batch);
+  console.log(`removed sub colletions of ${movie.id}`);
   return batch.commit();
 }
 
