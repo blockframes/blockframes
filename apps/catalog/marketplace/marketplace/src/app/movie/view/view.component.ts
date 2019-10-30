@@ -6,7 +6,6 @@ import { Observable, Subscription } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 
-
 @Component({
   selector: 'catalog-movie-view',
   templateUrl: './view.component.html',
@@ -22,50 +21,45 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   public toggle: boolean;
 
   constructor(
-    private query: MovieQuery,
+    private movieQuery: MovieQuery,
     private basketService: BasketService,
     private orgQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
     this.getMovie();
-    this.orgState = this.orgQuery
-      .select()
-      .pipe(
+    this.orgState = this.orgQuery.select().pipe(
         tap(value => {
-          // prevent the 'length' getter to throw an error
-          this.toggle = !!value.org.wishlist
-            ? value.org.wishlist.length > 0
-              ? true
-              : false
-            : false;
+          value.org.wishlist.forEach(wishlist => {
+            this.toggle = wishlist.movieIds.includes(this.movieQuery.getActive().id);
+          });
         })
       )
       .subscribe();
   }
 
   private getMovie() {
-    this.loading$ = this.query.selectLoading();
-    this.movie$ = this.query.selectActive();
+    this.loading$ = this.movieQuery.selectLoading();
+    this.movie$ = this.movieQuery.selectActive();
   }
 
   public addToWishlist() {
-    this.basketService.updateWishlist(this.query.getActive());
+    this.basketService.updateWishlist(this.movieQuery.getActive());
   }
 
   get internationalPremiere() {
-    const name = this.query.getActive().main.title.original;
-    const year = this.query.getActive().main.productionYear;
+    const name = this.movieQuery.getActive().main.title.original;
+    const year = this.movieQuery.getActive().main.productionYear;
     return name !== '' ? `${name}, ${year}` : null;
   }
 
   get color() {
-    const color = this.query.getActive().salesInfo.color;
+    const color = this.movieQuery.getActive().salesInfo.color;
     return color === 'c' ? 'color' : 'black & white';
   }
 
   get europeanQualification() {
-    const europeanQualification = this.query.getActive().salesInfo.europeanQualification;
+    const europeanQualification = this.movieQuery.getActive().salesInfo.europeanQualification;
     return europeanQualification ? 'Yes' : 'No';
   }
 

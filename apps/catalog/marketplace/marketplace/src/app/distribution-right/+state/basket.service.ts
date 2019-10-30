@@ -5,8 +5,8 @@ import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
-import { WishlistStatus, WishlistDocument } from '@blockframes/organization/types';
-
+import { WishlistStatus, WishlistWithDates } from '@blockframes/organization/types';
+import clone from 'lodash/clone';
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
   queryFn: ref => ref.where('status', '==', 'pending')
@@ -36,56 +36,37 @@ export class BasketService extends SubcollectionService<BasketState> {
   }
 
   public async updateWishlist(movie: Movie) {
-    const wishlistFactory = (): WishlistDocument => {
+    const orgState = this.organizationQuery.getValue().org;
+    const pendingWishlist = this.organizationQuery
+      .getValue()
+      .org.wishlist.filter(wishlist => wishlist.status === 'pending');
+    const wishlistFactory = (movieId: string): WishlistWithDates => {
       return {
         status: WishlistStatus.pending,
-        movieIds: [movie.id]
+        movieIds: [movieId]
       };
     };
-    const orgState: Organization = this.organizationQuery.getValue().org;
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
       this.db
         .collection('orgs')
         .doc(`${this.organizationQuery.id}`)
-        .set({ ...orgState, wishlist: [wishlistFactory()] });
-    } else if (orgState.wishlist.length >= 0) {
-      /* There are already movies in the wishlist,
-       * now ne need to look if the movie is already added
-       */
-      const movieAlreadyExists = [];
-      orgState.wishlist.forEach(wishlist => {
-        wishlist.movieIds.forEach(id => {
-          if (id === movie.id) {
-            movieAlreadyExists.push(id);
-          }
-        });
-      });
-      if (movieAlreadyExists.length > 0) {
-        // It already exists, so delete it
-        const updatedWishlist = [];
-        orgState.wishlist.forEach(wishlist => {
-          console.log(wishlist);
-          wishlist.movieIds.forEach(id => {
-            if (id !== movie.id) {
-              updatedWishlist.push(wishlist);
-            }
-          });
-        });
-        console.log(updatedWishlist);
-        this.db
-          .collection('orgs')
-          .doc(`${this.organizationQuery.id}`)
-          .update({ ...orgState, wishlist: updatedWishlist });
-      } else {
-        const wishlistWithNewMovie = orgState.wishlist.map(wishlist => {
-          wishlist.movieIds.push(movie.id);
-        });
-        console.log(wishlistWithNewMovie);
-        this.db
-          .collection('orgs')
-          .doc(`${this.organizationQuery.id}`)
-          .update({ ...orgState, wishlist: wishlistWithNewMovie });
+        .set({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
+    } else if (pendingWishlist) {
+      const updatedWishlist = JSON.parse(JSON.stringify(orgState.wishlist));
+      for (let i = 0; i < updatedWishlist.length; i++) {
+        if (updatedWishlist[i].status === 'pending' && updatedWishlist[i].movieIds.includes(movie.id)) {
+          const index = updatedWishlist[i].movieIds.indexOf(movie.id);
+          console.log(updatedWishlist[i]);
+          updatedWishlist[i].movieIds.splice(index, 1);
+          console.log(updatedWishlist[i]);
+        } else if (updatedWishlist[i].status === 'pending'){
+          updatedWishlist[i].movieIds.push(movie.id)
+        }
       }
+      this.db
+        .collection('orgs')
+        .doc(`${this.organizationQuery.id}`)
+        .update({ wishlist: updatedWishlist });
     }
   }
 

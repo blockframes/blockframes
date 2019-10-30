@@ -29,13 +29,13 @@
         <span>{{ color }}</span>
       </li>
     </ng-container>
-    <ng-container>
-      <li fxLayout="row" *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
+    <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
+      <li fxLayout="row" >
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>
       </li>
-      <ng-template>
-        <li fxLayout="row" #noRelease>
+      <ng-template #noRelease>
+        <li fxLayout="row">
           <span><b>Theatrical Release</b></span>
           <span>No</span>
         </li>
