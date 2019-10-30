@@ -6,6 +6,7 @@ import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
+import { Wishlist, WishlistStatus } from '@blockframes/organization/types';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -58,7 +59,7 @@ export class BasketService extends SubcollectionService<BasketState> {
       }
     });
     const id = this.db.createId();
-    const wishlistFactory = () => {
+    const wishlistFactory = (): Wishlist => {
       return {
         id: id,
         title: {
@@ -69,7 +70,8 @@ export class BasketService extends SubcollectionService<BasketState> {
         directors: movie.main.directors,
         status: movie.main.status,
         originCountries: [getLabelByCode('TERRITORIES', movie.main.originCountries[0])],
-        length: movie.main.length
+        length: movie.main.length,
+        wishListStatus: WishlistStatus.pending
       };
     };
     // Unwrap the present, cause it can only be one org
