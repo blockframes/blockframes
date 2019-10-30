@@ -18,11 +18,11 @@ export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
     this.organizationQuery.select(state => state.org.wishList),
     this.movieQuery.selectAll()
   ]).pipe(
-    map(([wishlists, movies]) =>
-      wishlists.map(wishlist =>
-        [{...wishlist, movies: wishlist.movieIds.map(movieId => movies.find(movie => movie.id === movieId))}]
-      ),
-    ),
-    map(wishlists => wishlists.reduce((acc, wishlist) => [...acc, ...wishlist], []))
+    map(([wishlists, movies]) => {
+      return wishlists.map(wishlist => {
+        const movieIds = wishlist.movieIds.map(id => movies.find(movie => movie.id === id));
+        return { ...wishlist, movies: movieIds };
+      })
+    })
   );
 }
