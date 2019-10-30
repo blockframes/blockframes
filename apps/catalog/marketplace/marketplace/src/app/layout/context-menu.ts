@@ -17,6 +17,10 @@ export const CONTEXT_MENU = [
       {
         name: 'selection',
         path: '/layout/o/catalog/selection/overview'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist'
       }
     ]
   },
@@ -34,6 +38,10 @@ export const CONTEXT_MENU = [
       {
         name: 'selection',
         path: '/layout/o/catalog/selection/overview'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist'
       }
     ]
   },
@@ -51,6 +59,31 @@ export const CONTEXT_MENU = [
       {
         name: 'selection',
         path: '/layout/o/catalog/selection/overview'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist'
+      }
+    ]
+  },
+  {
+    route: '/layout/o/catalog/wishlist',
+    items: [
+      {
+        name: 'home',
+        path: '/layout/o/catalog/home'
+      },
+      {
+        name: 'catalogue',
+        path: '/layout/o/catalog/search'
+      },
+      {
+        name: 'selection',
+        path: '/layout/o/catalog/selection/overview'
+      },
+      {
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist'
       }
     ]
   },
@@ -82,7 +115,7 @@ export const CONTEXT_MENU = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = [ // TODO #1146 
+export const CONTEXT_MENU_AFM = [ // TODO #1146
   {
     route: 'default',
     items: [
@@ -96,7 +129,7 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/selection/overview'
+        path: '/layout/o/catalog/wishlist'
       }
     ]
   },

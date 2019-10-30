@@ -1,0 +1,16 @@
+<!-- TODO(#838): Use HostBinding instead of root div -->
+<div test-id="content">
+  <header fxLayout="column" fxLayoutAlign="center center">
+    <h1>Wishlist</h1>
+  </header>
+  <section>
+    <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <h2>My Wishlist</h2>
+        <mat-divider fxFlex></mat-divider>
+    </article>
+    <article>
+      <catalog-wishlist-current-repertory [movies]="movies$ | async">
+      </catalog-wishlist-current-repertory>
+    </article>
+  </section>
+</div>
