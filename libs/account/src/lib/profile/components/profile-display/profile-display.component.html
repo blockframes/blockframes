@@ -1,7 +1,7 @@
 <ng-container *ngIf="user; else: loading">
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
-      <img mat-card-avatar [storageRef]="user.avatar" alt="Profile picture" />
+      <img mat-card-avatar [storageRef]="user.avatar" [placeholderUrl]="placeholderUrl" alt="Profile picture" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <div class="column-padding-bottom">
           <h3>{{ user.name }}</h3><span>{{ user.surname }}</span>
@@ -9,7 +9,7 @@
         <div fxLayout="column" class="column-padding">
           <p>
             <span class="bf-dark-text">Phone number: </span>{{ user.phoneNumber }}</p>
-            <p><span class="bf-dark-text">Email: </span>{{ user.email }}</p>
+            <p><span class="bf-dark-text">Email: </span>{{ userEmail }}</p>
             <p><span class="bf-dark-text">Organization: </span>{{ organization.name }}</p>
             <p><span class="bf-dark-text">Position: </span>{{ user.position }}</p>
         </div>

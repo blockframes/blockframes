@@ -1,3 +1,6 @@
+import { firestore } from "firebase/app";
+type Timestamp = firestore.Timestamp;
+
 /** Document model of an Organization */
 export interface OrganizationDocument {
   id: string;
@@ -16,12 +19,28 @@ export interface OrganizationDocument {
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
+  whishList: WhishListWithDates[];
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
+}
+
+export interface WhishListRaw<D> {
+  status: WhishListStatus,
+  movieIds: string[],
+  sent?: D
+}
+
+export interface WhishListDocument extends WhishListRaw<Timestamp> { }
+
+export interface WhishListWithDates extends WhishListRaw<Date> { }
+
+export const enum WhishListStatus {
+  pending = 'pending',
+  sent = 'sent'
 }
 
 /** Default placeholder logo used when an Organization is created. */
@@ -52,6 +71,7 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     updated: Date.now(),
     logo: '',
     catalog: null,
+    whishList: [],
     ...params
   };
 }

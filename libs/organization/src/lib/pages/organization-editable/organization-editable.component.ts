@@ -10,7 +10,7 @@ import { startWith, tap } from 'rxjs/operators';
   selector: 'organization-editable',
   templateUrl: './organization-editable.component.html',
   styleUrls: ['./organization-editable.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
