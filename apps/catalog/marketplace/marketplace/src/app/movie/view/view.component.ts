@@ -2,7 +2,7 @@ import { tap } from 'rxjs/operators';
 import { BasketService } from './../../distribution-right/+state/basket.service';
 import { Movie } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 
