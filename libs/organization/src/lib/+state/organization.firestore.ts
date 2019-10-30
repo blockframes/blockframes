@@ -29,7 +29,6 @@ export const enum OrganizationStatus {
 }
 
 export interface WishlistRaw<D> {
-  id: string,
   status: WishlistStatus,
   movieIds: string[],
   sent?: D

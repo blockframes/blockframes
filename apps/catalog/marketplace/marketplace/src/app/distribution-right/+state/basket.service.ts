@@ -1,4 +1,3 @@
-import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
@@ -39,14 +38,12 @@ export class BasketService extends SubcollectionService<BasketState> {
   public async updateWishlist(movie: Movie) {
     const wishlistFactory = (): WishlistDocument => {
       return {
-        id: this.db.createId(),
         status: WishlistStatus.pending,
         movieIds: [movie.id]
       };
     };
-    // Unwrap the present, cause it can only be one org
     const orgState: Organization = this.organizationQuery.getValue().org;
-    if (!orgState.wishlist) {
+    if (!orgState.wishlist || orgState.wishlist.length <= 0) {
       this.db
         .collection('orgs')
         .doc(`${this.organizationQuery.id}`)
@@ -55,44 +52,39 @@ export class BasketService extends SubcollectionService<BasketState> {
       /* There are already movies in the wishlist,
        * now ne need to look if the movie is already added
        */
-      const movieAlreadyExists = []
+      const movieAlreadyExists = [];
       orgState.wishlist.forEach(wishlist => {
         wishlist.movieIds.forEach(id => {
           if (id === movie.id) {
-            movieAlreadyExists.push(id)
+            movieAlreadyExists.push(id);
           }
         });
       });
-      console.log(movieAlreadyExists);
       if (movieAlreadyExists.length > 0) {
-        // It already exists, so delet it
+        // It already exists, so delete it
         const updatedWishlist = [];
         orgState.wishlist.forEach(wishlist => {
+          console.log(wishlist);
           wishlist.movieIds.forEach(id => {
             if (id !== movie.id) {
               updatedWishlist.push(wishlist);
-              console.log(wishlist);
             }
           });
         });
+        console.log(updatedWishlist);
         this.db
           .collection('orgs')
           .doc(`${this.organizationQuery.id}`)
-          .update({ wishlist: updatedWishlist });
+          .update({ ...orgState, wishlist: updatedWishlist });
       } else {
-        const wishlistWithNewMovie = [];
-        orgState.wishlist.forEach(wishlist => {
-          wishlist.movieIds.forEach(id => {
-            if (id !== movie.id) {
-              wishlistWithNewMovie.push(wishlist);
-              console.log(wishlist);
-            }
-          });
+        const wishlistWithNewMovie = orgState.wishlist.map(wishlist => {
+          wishlist.movieIds.push(movie.id);
         });
+        console.log(wishlistWithNewMovie);
         this.db
           .collection('orgs')
           .doc(`${this.organizationQuery.id}`)
-          .update({ wishlist: wishlistWithNewMovie });
+          .update({ ...orgState, wishlist: wishlistWithNewMovie });
       }
     }
   }
