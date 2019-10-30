@@ -15,10 +15,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// Components
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { ProfileWidgetComponent } from './profile-widget/profile-widget.component';
-import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
 import { EditableSidenavModule, UiFormModule, UploadModule } from '@blockframes/ui';
 import { PasswordFormComponent } from './components/password-form/password-form.component';
@@ -47,20 +47,14 @@ export const profileRoutes: Routes = [
     UiFormModule,
     // Component Modules
     UploadModule,
-
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [
     ProfileDisplayComponent,
     ProfileFormComponent,
     ProfileWidgetComponent,
-    ProfileMenuComponent,
     ProfileEditableComponent,
     PasswordFormComponent
-  ],
-  exports: [
-    ProfileWidgetComponent,
-    ProfileMenuComponent,
   ],
 })
 export class ProfileModule {}

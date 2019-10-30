@@ -9,6 +9,7 @@ import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { StorageImageModule } from '@blockframes/ui/cropper/storage-image.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -97,6 +98,7 @@ if (AFM_DISABLE) {
     UploadModule,
     UiFormModule,
     CropperModule,
+    StorageImageModule,
 
     // Material
     MatFormFieldModule,

@@ -58,7 +58,7 @@ import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-hor
 import { registerLocaleData } from '@angular/common';
 import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
 import { UtilsModule } from '@blockframes/utils';
-import { AccountModule, ProfileModule } from '@blockframes/account';
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 import { MatRadioModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -92,8 +92,8 @@ registerLocaleData(localeFr)
     RouterModule,
     AuthModule,
     ToolbarModule,
-    AccountModule,
-    ProfileModule,
+    ProfileWidgetModule,
+    ProfileMenuModule,
     UtilsModule,
     WalletWidgetModule,
     KeyManagerModule,

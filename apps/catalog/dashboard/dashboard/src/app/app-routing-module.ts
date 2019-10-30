@@ -14,7 +14,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
   {
     path: 'auth',
-    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
+    loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'layout',

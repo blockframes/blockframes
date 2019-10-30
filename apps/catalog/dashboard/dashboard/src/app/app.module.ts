@@ -24,8 +24,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { OrganizationModule } from '@blockframes/organization';
-import { ProfileModule } from '@blockframes/account';
-import { AccountModule } from '@blockframes/account';
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
@@ -56,8 +55,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     OrganizationModule,
     ToolbarModule,
     MovieModule,
-    AccountModule,
-    ProfileModule,
+    ProfileWidgetModule,
+    ProfileMenuModule,
     WalletWidgetModule,
     KeyManagerModule,
     NotificationWidgetModule,

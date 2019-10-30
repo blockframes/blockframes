@@ -8,7 +8,7 @@ export const accountRoutes: Routes = [
   { path: '',
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile', loadChildren: '../profile/profile.module#ProfileModule' },
+      { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule) },
     ]
   }
 ];
@@ -16,7 +16,7 @@ export const accountRoutes: Routes = [
 // TODO issue#1146
 if (AFM_DISABLE) {
   accountRoutes[0].children.push(
-    { path: 'wallet', loadChildren: '@blockframes/ethers#WalletModule' }
+    { path: 'wallet', loadChildren: () => import('@blockframes/ethers').then(m => m.WalletModule) }
   );
 }
 
