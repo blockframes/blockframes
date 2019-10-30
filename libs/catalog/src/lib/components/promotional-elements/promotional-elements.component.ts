@@ -1,3 +1,4 @@
+import { PromotionalElement } from '@blockframes/movie/types';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -18,5 +19,5 @@ import { Component, Input } from '@angular/core';
   ]
 })
 export class CatalogPromotionalElementsComponent {
-@Input() promotionEl;
+@Input() promotionalElement: PromotionalElement;
 }

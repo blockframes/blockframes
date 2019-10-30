@@ -2,11 +2,11 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
 import { WishlistStatus, WishlistWithDates } from '@blockframes/organization/types';
-import clone from 'lodash/clone';
+
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
   queryFn: ref => ref.where('status', '==', 'pending')
@@ -54,11 +54,14 @@ export class BasketService extends SubcollectionService<BasketState> {
     } else if (pendingWishlist) {
       const updatedWishlist = JSON.parse(JSON.stringify(orgState.wishlist));
       for (let i = 0; i < updatedWishlist.length; i++) {
-        if (updatedWishlist[i].status === 'pending' && updatedWishlist[i].movieIds.includes(movie.id)) {
+        if (
+          updatedWishlist[i].status === 'pending' &&
+          updatedWishlist[i].movieIds.includes(movie.id)
+        ) {
           const index = updatedWishlist[i].movieIds.indexOf(movie.id);
           updatedWishlist[i].movieIds.splice(index, 1);
-        } else if (updatedWishlist[i].status === 'pending'){
-          updatedWishlist[i].movieIds.push(movie.id)
+        } else if (updatedWishlist[i].status === 'pending') {
+          updatedWishlist[i].movieIds.push(movie.id);
         }
       }
       this.db
