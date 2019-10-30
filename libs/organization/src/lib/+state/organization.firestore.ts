@@ -63,7 +63,7 @@ export const enum WishlistStatus {
 export interface Wishlist extends MovieMain {
   salesAgent: string;
   id: string;
-  wishListStatus: WishlistStatus;
+  wishListStatus?: WishlistStatus;
   movieId: string;
 }
 

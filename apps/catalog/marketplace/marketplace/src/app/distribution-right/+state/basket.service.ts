@@ -3,12 +3,7 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import {
-  OrganizationQuery,
-  Organization,
-  Wishlist,
-  WishlistStatus
-} from '@blockframes/organization';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
 
@@ -63,7 +58,7 @@ export class BasketService extends SubcollectionService<BasketState> {
       }
     });
     const id = this.db.createId();
-    const wishlistFactory = (): Wishlist => {
+    const wishlistFactory = () => {
       return {
         id: id,
         title: {
@@ -74,14 +69,13 @@ export class BasketService extends SubcollectionService<BasketState> {
         directors: movie.main.directors,
         status: movie.main.status,
         originCountries: [getLabelByCode('TERRITORIES', movie.main.originCountries[0])],
-        length: movie.main.length,
-        wishListStatus: WishlistStatus.pending
+        length: movie.main.length
       };
     };
     // Unwrap the present, cause it can only be one org
     const [orgState]: Organization[] = organizations.filter(
       org => org.id === this.organizationQuery.id
-    ); 
+    );
     if (!orgState.wishlist) {
       this.db
         .collection('orgs')
@@ -91,12 +85,10 @@ export class BasketService extends SubcollectionService<BasketState> {
       /* There are already movies in the wishlist,
        * now ne need to look if the movie is already added
        */
-      const movieAlreadyExists: Wishlist[] = orgState.wishlist.filter(
-        entity => entity.movieId === movie.id
-      );
+      const movieAlreadyExists = orgState.wishlist.filter(entity => entity.movieId === movie.id);
       if (movieAlreadyExists.length >= 1) {
         // It already exists, so delet it
-        const updatedWishlist: Wishlist[] = [];
+        const updatedWishlist = [];
         orgState.wishlist.forEach(entity => {
           movieAlreadyExists.forEach(movieToDelete => {
             if (movieToDelete.movieId !== entity.movieId) {

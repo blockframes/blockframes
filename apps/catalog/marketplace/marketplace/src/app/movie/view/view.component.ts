@@ -4,7 +4,7 @@ import { Movie } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, Wishlist } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 
 
 @Component({
