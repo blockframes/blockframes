@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { ProfileWidgetComponent } from './profile-widget.component';
 
@@ -9,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 const material = [MatMenuModule, MatIconModule];
 
 @NgModule({
-  imports: [CommonModule, ...material],
+  imports: [CommonModule, RouterModule, ...material],
   declarations: [ProfileWidgetComponent],
   exports: [ProfileWidgetComponent]
 })

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { OrganizationWidgetComponent } from './organization-widget.component';
 
@@ -11,7 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 const material = [MatMenuModule, MatIconModule, MatDividerModule];
 
 @NgModule({
-  imports: [CommonModule, ...material],
+  imports: [CommonModule, RouterModule, ...material],
   declarations: [OrganizationWidgetComponent],
   exports: [OrganizationWidgetComponent]
 })

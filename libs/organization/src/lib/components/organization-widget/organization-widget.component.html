@@ -4,13 +4,14 @@
     test-id="manage-organization">
     <mat-icon svgIcon="building"></mat-icon>
     <span>My organization</span>
-  </button>
+  </a>
+  <mat-divider></mat-divider>
   <button mat-menu-item *ngIf="(organization$ | async) as organization;"
     [routerLink]="['o/organization/', organization.id, 'members']" routerLinkActive="active-list-item"
     test-id="manage-organization">
     <mat-icon svgIcon="group"></mat-icon>
     <span>Organization members</span>
-  </button>
+  </a>
 </ng-container>
 <ng-template #AFM_DISABLED>
   <button mat-menu-item *ngIf="(organization$ | async) as organization; else: noOrg"
@@ -18,12 +19,12 @@
     test-id="manage-organization">
     <mat-icon svgIcon="building"></mat-icon>
     <span>Manage my organization</span>
-  </button>
+  </a>
 </ng-template>
 
 <ng-template #noOrg>
-  <button mat-menu-item routerLink="o/organization/form">
+  <a mat-menu-item routerLink="o/organization/form">
     <mat-icon>add_circle</mat-icon>
     <span>Create</span>
-  </button>
+  </a>
 </ng-template>
