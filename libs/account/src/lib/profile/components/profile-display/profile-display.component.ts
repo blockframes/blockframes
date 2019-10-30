@@ -2,6 +2,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { Organization } from '@blockframes/organization';
 import { Profile } from '../../forms/profile-edit.form';
+import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
 
 @Component({
   selector: 'profile-display',
@@ -12,7 +13,7 @@ import { Profile } from '../../forms/profile-edit.form';
 export class ProfileDisplayComponent {
   @HostBinding('attr.page-id') pageId = 'profile-display';
 
-  public placeholderUrl = '/assets/logo/profil_avatar_250.svg';
+  public placeholderUrl = PLACEHOLDER_AVATAR;
   public email: string;
   @Output() editing = new EventEmitter<string>();
   @Input() opened: boolean;
