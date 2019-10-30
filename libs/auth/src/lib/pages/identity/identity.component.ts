@@ -14,7 +14,7 @@ export class IdentityComponent {
   public form = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
-    avatar: new FormControl
+    avatar: new FormControl('')
   });
 
   constructor(
