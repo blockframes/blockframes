@@ -7,7 +7,7 @@ import { PLACEHOLDER_LOGO } from '../../+state/organization.model'
   selector: 'organization-display',
   templateUrl: './organization-display.component.html',
   styleUrls: ['./organization-display.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationDisplayComponent {
   @HostBinding('attr.page-id') pageId = 'organization-display';
