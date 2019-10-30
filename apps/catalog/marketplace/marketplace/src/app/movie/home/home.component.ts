@@ -2,7 +2,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
-import * as _ from 'lodash';
+import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 
 interface CarouselSection {
   title: string;
@@ -17,8 +17,6 @@ interface CarouselSection {
 })
 export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
-
-  public lodash = _;
 
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
@@ -39,15 +37,15 @@ export class MarketplaceHomeComponent implements OnInit {
     this.moviesBySections$ = combineLatest([latest$, scoring$, prizes$]).pipe(
       map(([latest, scoring, prizes]) => {
         return [
-          { title: 'New Films', subline: '', movies: latest },
+          { title: 'New Films', subline: 'Check out our newest gems!', movies: latest },
           {
-            title: 'Best Sellers',
-            subline: '',
+            title: 'In Production Films',
+            subline: 'Discover the potential of projects still in production',
             movies: scoring
           },
           {
-            title: 'Awarded Films',
-            subline: '',
+            title: 'Completed Films',
+            subline: 'Complete films for complete success',
             movies: prizes
           }
         ];
@@ -61,5 +59,9 @@ export class MarketplaceHomeComponent implements OnInit {
 
   public alignment(index: number) {
     return index % 2 === 0 ? 'start start' : 'start end';
+  }
+
+  public getLabel(slug: string, scope: Scope) {
+    return getLabelByCode(scope, slug);
   }
 }

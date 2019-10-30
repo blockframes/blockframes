@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import { getLabelByCode, Scope } from "../../static-model/staticModels";
 
 @Component({
   selector: 'movie-display-principal-informations',
