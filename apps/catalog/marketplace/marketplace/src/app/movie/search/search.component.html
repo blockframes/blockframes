@@ -125,6 +125,38 @@
               </div>
             </mat-expansion-panel>
 
+            <!-- Sales Agents -->
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title test-id="sales-agent-panel">
+                  Sales Agents
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-form-field class="sales-agents-chip-list">
+                <mat-chip-list #chipList aria-label="Sales Agents selection">
+                  <mat-chip
+                    *ngFor="let salesAgent of selectedSalesAgents"
+                    [selectable]="selectableSAChip"
+                    [removable]="removableSAChip"
+                    (removed)="removeSalesAgent(salesAgent)">
+                    {{ salesAgent }}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="New sales agent..."
+                    #salesAgentInput
+                    [formControl]="salesAgentControl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSalesAgent($event)">
+                  <mat-option *ngFor="let salesAgent of salesAgentFilter | async" [value]="salesAgent">
+                    {{ salesAgent }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </mat-expansion-panel>
+
             <!-- Certifications --> <!-- TODO #1146 -->
             <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
