@@ -23,12 +23,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
+    FlexLayoutModule,
 
     // Material
     MatIconModule,
