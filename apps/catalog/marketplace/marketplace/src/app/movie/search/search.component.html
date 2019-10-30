@@ -10,38 +10,39 @@
         <mat-card-title>Filters</mat-card-title>
         <mat-card-content>
           <mat-accordion multi="true">
-            <!-- Production Year -->
-            <mat-expansion-panel expanded>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="production-year-panel">
-                  Production Year
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-                <mat-form-field appearance="outline">
-                  <mat-label>From</mat-label>
-                  <input test-id="production-year-input-from" matInput type="number" formControlName="from"
-                    placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
-                    Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
-                  </mat-error>
-                  <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
-                    The year can't be above the current year, {{ getCurrentYear }}
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                  <mat-label>To</mat-label>
-                  <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
-                    autocomplete="off" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
-                    Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <mat-error *ngIf="showFormGroupError('productionYear')">
-                The value <i>To</i> can't be smaller than the value <i>From</i>!
-              </mat-error>
-            </mat-expansion-panel>
+
+          <!-- Production Year --> <!-- TODO #1146 -->
+          <!-- <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="production-year-panel">
+                Production Year
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
+              <mat-form-field appearance="outline">
+                <mat-label>From</mat-label>
+                <input test-id="production-year-input-from" matInput type="number" formControlName="from"
+                  placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
+                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
+                </mat-error>
+                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
+                  The year can't be above the current year, {{ getCurrentYear }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>To</mat-label>
+                <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
+                  autocomplete="off" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
+                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <mat-error *ngIf="showFormGroupError('productionYear')">
+              The value <i>To</i> can't be smaller than the value <i>From</i>!
+            </mat-error>
+          </mat-expansion-panel> -->
 
             <!-- Genre Types -->
             <mat-expansion-panel>
@@ -50,7 +51,6 @@
                   Genres
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <h3>You can choose multiple genres</h3>
               <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
                 <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
                   {{genre}}
@@ -110,8 +110,23 @@
                 </ng-container>
               </form>
             </mat-expansion-panel>
-            <!-- Certifications -->
+
+            <!-- Production Statuses -->
             <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title test-id="status-panel">
+                  Production Status
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-status">
+                <mat-checkbox (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
+                  {{status}}
+                </mat-checkbox>
+              </div>
+            </mat-expansion-panel>
+
+            <!-- Certifications --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="certifications-panel">
                   Certifications
@@ -123,10 +138,10 @@
                   (change)="checkCertification(certification)">{{certification}}
                 </mat-checkbox>
               </span>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
 
-            <!-- Availabilities -->
-            <mat-expansion-panel>
+            <!-- Availabilities --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="availabilities-panel">
                   Availabilities
@@ -154,10 +169,10 @@
               <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
 
-            <!-- Territories -->
-            <mat-expansion-panel>
+            <!-- Territories --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="territories-panel">
                   Territories
@@ -180,10 +195,10 @@
                 </mat-autocomplete>
                 <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
               </mat-form-field>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
 
-            <!-- Mandate Medias -->
-            <mat-expansion-panel>
+            <!-- Mandate Medias --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="mandate-medias-panel">
                   Mandate Medias
@@ -194,7 +209,8 @@
                   {{media}}
                 </mat-checkbox>
               </div>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
+
           </mat-accordion>
         </mat-card-content>
       </mat-card>
