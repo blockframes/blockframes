@@ -19,7 +19,7 @@ export interface OrganizationDocument {
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
-  whishList: WhishListWithDates[];
+  wishList: WhishListWithDates[];
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -71,7 +71,7 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     updated: Date.now(),
     logo: '',
     catalog: null,
-    whishList: [],
+    wishList: [],
     ...params
   };
 }

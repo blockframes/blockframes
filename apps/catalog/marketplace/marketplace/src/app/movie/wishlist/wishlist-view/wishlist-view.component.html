@@ -1,5 +1,4 @@
-<!-- TODO(#838): Use HostBinding instead of root div -->
-<div test-id="content">
+<div>
   <header fxLayout="column" fxLayoutAlign="center center">
     <h1>Wishlist</h1>
   </header>
@@ -8,8 +7,9 @@
         <h2>My Wishlist</h2>
         <mat-divider fxFlex></mat-divider>
     </article>
-    <article>
-      <catalog-wishlist-current-repertory [movies]="movies$ | async">
+    <article *ngFor="let wishlist of (wishlists$ | async)">
+      <!-- TODO: manage wishlist with status 'sent' -->
+      <catalog-wishlist-current-repertory *ngIf="wishlist.status === 'pending'" [movies]="wishlist.movies">
       </catalog-wishlist-current-repertory>
     </article>
   </section>
