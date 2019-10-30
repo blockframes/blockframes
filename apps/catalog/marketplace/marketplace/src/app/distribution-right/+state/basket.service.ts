@@ -56,9 +56,7 @@ export class BasketService extends SubcollectionService<BasketState> {
       for (let i = 0; i < updatedWishlist.length; i++) {
         if (updatedWishlist[i].status === 'pending' && updatedWishlist[i].movieIds.includes(movie.id)) {
           const index = updatedWishlist[i].movieIds.indexOf(movie.id);
-          console.log(updatedWishlist[i]);
           updatedWishlist[i].movieIds.splice(index, 1);
-          console.log(updatedWishlist[i]);
         } else if (updatedWishlist[i].status === 'pending'){
           updatedWishlist[i].movieIds.push(movie.id)
         }
