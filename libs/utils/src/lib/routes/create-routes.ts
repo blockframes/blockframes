@@ -29,11 +29,13 @@ interface RouteOptions {
   layout: any,
   /** The routes of the apps */
   appsRoutes: Routes,
+  /** Name of the app to put in data of the route */
+  appName: string,
   /** The page to load by default */
   rootPath?: string;
 }
 
-function root(LayoutComponent, children: Routes, rootPath: string) {
+function root(LayoutComponent, children: Routes, rootPath: string, appName: string) {
   return [
     { path: '', redirectTo: rootPath, pathMatch: 'full' },
     {
@@ -45,6 +47,7 @@ function root(LayoutComponent, children: Routes, rootPath: string) {
       component: LayoutComponent,
       canActivate: [AuthGuard],
       canDeactivate: [AuthGuard],
+      data: { app: appName },
       children: [
         {
           path: '',
@@ -70,7 +73,7 @@ function root(LayoutComponent, children: Routes, rootPath: string) {
   ]
 }
 
-export function marketplace({ layout, appsRoutes, rootPath = 'layout' }: RouteOptions) {
+export function marketplace({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
   const children = [
     {
       path: '',
@@ -81,10 +84,10 @@ export function marketplace({ layout, appsRoutes, rootPath = 'layout' }: RouteOp
     accountRoute,
     ...appsRoutes,
   ];
-  return root(layout, children, rootPath);
+  return root(layout, children, rootPath, appName);
 }
 
-export function dashboard({ layout, appsRoutes, rootPath = 'layout' }: RouteOptions) {
+export function dashboard({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
   const children = [
     {
       path: '',
@@ -96,7 +99,7 @@ export function dashboard({ layout, appsRoutes, rootPath = 'layout' }: RouteOpti
     ...movieRoutes,
     ...appsRoutes
   ];
-  return root(layout, children, rootPath);
+  return root(layout, children, rootPath, appName);
 }
 
 export const appsRoute = '/layout/o';

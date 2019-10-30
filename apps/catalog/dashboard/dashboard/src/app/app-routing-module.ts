@@ -6,16 +6,11 @@ import { RouterModule, Routes, NoPreloading } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { dashboard } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
-// Guards
-import { AuthGuard } from '@blockframes/auth';
-import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
-import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
-
 
 /** Scaffold a marketplace application routing for this application */
-const routes = dashboard({
+const routes: Routes = dashboard({
+  appName: App.catalogDashboard,
   layout: LayoutComponent,
-  // rootPath: `${appsRoute}/${App.biggerBoat}/home`,
   appsRoutes: [{
     path: App.catalogDashboard,
     loadChildren: () => import('./catalog-dashboard.module').then(m => m.CatalogDashboardAppModule)

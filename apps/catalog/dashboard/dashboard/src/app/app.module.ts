@@ -19,6 +19,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
@@ -65,6 +67,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
+    AngularFireStorageModule,
+    AngularFireAuthModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot()

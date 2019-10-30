@@ -7,6 +7,7 @@ import { dashboard } from '@blockframes/utils/routes';
 
 /** Scaffold a dashboard like application routing for this application */
 const routes = dashboard({
+  appName: App.mediaDelivering,
   layout: LayoutComponent,
   appsRoutes: [{
     path: App.mediaDelivering,
