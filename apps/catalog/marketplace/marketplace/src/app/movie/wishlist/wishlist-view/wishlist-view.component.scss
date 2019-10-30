@@ -1,0 +1,17 @@
+header {
+  padding: 150px 0;
+  // TODO: replace image when the real one is available.
+  background-image: url('/assets/images/catalog-marketplace-banner.png');
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+mat-divider {
+  width: 100%;
+  margin-left: 30px;
+}
+
+section {
+  padding: 100px;
+}
