@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
+import { WishList } from '@blockframes/organization';
+import { BasketQuery } from '../../../distribution-right/+state/basket.query';
 
 @Component({
   selector: 'catalog-wishlist-view',
@@ -10,15 +11,11 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistViewComponent implements OnInit {
+  public wishlists$: Observable<WishList[]>;
 
-  public movies$: Observable<Movie[]>;
-
-  constructor(
-    private movieQuery: MovieQuery,
-  ) {}
+  constructor(private basketQuery: BasketQuery) {}
 
   ngOnInit() {
-    this.movies$ = this.movieQuery.selectAll();
-    this.movies$.subscribe(movies => console.log(movies))
+    this.wishlists$ = this.basketQuery.wishlistsWithMovies$;
   }
 }

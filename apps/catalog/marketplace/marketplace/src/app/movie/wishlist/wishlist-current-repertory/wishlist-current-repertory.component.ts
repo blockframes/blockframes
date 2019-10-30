@@ -1,17 +1,10 @@
 import { MatTableDataSource, MatSort } from '@angular/material';
 import {
   Component,
-  OnInit,
-  OnDestroy,
   ViewChild,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter
+  Input
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MovieData } from '../../../distribution-right/+state';
 import { Movie } from '@blockframes/movie';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 
@@ -32,8 +25,7 @@ export class WishlistCurrentRepertoryComponent {
     'length',
     'delete'
   ];
-  dataSource: MatTableDataSource<Movie>;
-  selection = new SelectionModel<MovieData>(true, []);
+  public dataSource: MatTableDataSource<Movie>;
 
   @Input()
   set movies(movies: Movie[]) {
@@ -42,8 +34,6 @@ export class WishlistCurrentRepertoryComponent {
   }
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
-  constructor() {}
 
   public getLabel(scope: Scope, slug: string) {
     return getLabelByCode(scope, slug);
