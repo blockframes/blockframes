@@ -1,7 +1,7 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<main *ngIf="(movie$ | async) as movie;" test-id="content">
+<div *ngIf="(movie$ | async) as movie;" test-id="content">
   <header fxLayout="column">
     <h1>{{movie.main.title.original}}</h1>
     <div *ngFor="let director of movie.main.directors; let isLast = last">
@@ -65,4 +65,4 @@
       Create distribution right
     </a>
   </div>
-</main>
+</div>

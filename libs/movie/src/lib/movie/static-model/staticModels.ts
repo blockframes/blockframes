@@ -1,5 +1,8 @@
 interface Model {
   GENRES: readonly SlugAndLabel[];
+  PROMOTIONAL_ELEMENT_TYPES: readonly SlugAndLabel[];
+  RESOURCE_SIZES: readonly SlugAndLabel[];
+  RESOURCE_RATIOS: readonly SlugAndLabel[];
   STAKEHOLDER_ROLES: readonly SlugAndLabel[];
   STAKEHOLDER_DELIVERY_AUTHORIZATIONS: readonly SlugAndLabel[];
   CREDIT_ROLES: readonly SlugAndLabel[];
@@ -40,6 +43,29 @@ const models: Model = {
     { 'slug': 'web-series', 'label': 'Web Series' },
     { 'slug': 'virtual-reality', 'label': 'Virtual Reality' },
     { 'slug': 'family', 'label': 'Family' }
+  ] as const,
+  'PROMOTIONAL_ELEMENT_TYPES': [
+    { 'slug': 'trailer', 'label': 'Trailer' },
+    { 'slug': 'poster', 'label': 'Poster' },
+    { 'slug': 'reel', 'label': 'Reel' },
+    { 'slug': 'scenario', 'label': 'Scenario' },
+    { 'slug': 'other', 'label': 'Other' },
+    { 'slug': 'banner', 'label': 'Banner' },
+    { 'slug': 'screener', 'label': 'Screener' },
+    { 'slug': 'teaser', 'label': 'Teaser' },
+  ] as const,
+  'RESOURCE_SIZES': [
+    { 'slug': 'medium', 'label': 'Medium'},
+    { 'slug': 'small', 'label': 'Small'},
+    { 'slug': 'large', 'label': 'Large'},
+    { 'slug': 'thumbnail', 'label': 'Thumbnail'},
+  ] as const,
+  'RESOURCE_RATIOS': [
+    { 'slug': '16/9', 'label': '16:9'},
+    { 'slug': '4/3', 'label': '4:3'},
+    { 'slug': 'round', 'label': 'Round'},
+    { 'slug': 'square', 'label': 'Square'},
+    { 'slug': 'rectangle', 'label': 'Rectangle'},
   ] as const,
   'STAKEHOLDER_ROLES': [
     {
@@ -135,6 +161,14 @@ const models: Model = {
     {
       'slug': 'finished',
       'label': 'Finished'
+    },
+    {
+      'slug': 'pre-production',
+      'label': 'Pre production'
+    },
+    {
+      'slug': 'on-production',
+      'label': 'On production'
     }
   ] as const,
   'LANGUAGES': [
