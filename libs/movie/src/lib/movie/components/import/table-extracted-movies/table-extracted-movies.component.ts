@@ -67,7 +67,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
-      for (const movie of creations) {
+      for (const movie of creations) { // @todo #1178
         this.processedMovies++;
         await this.addMovie(movie);
       }
@@ -107,7 +107,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   async updateSelectedMovies(): Promise<boolean> {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
-      for (const importState of updates) {
+      for (const importState of updates) { // @todo #1178
         this.processedMovies++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }

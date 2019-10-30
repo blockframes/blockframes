@@ -96,7 +96,7 @@ export class TableExtractedSalesComponent implements OnInit {
         });
       this.rows.data = data;
 
-      await Promise.all(promises);
+      await Promise.all(promises); // @todo #1178
       this.snackBar.open(`${promises.length} sales inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
