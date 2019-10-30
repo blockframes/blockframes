@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
 export class IdentityComponent {
   public form = new FormGroup({
     name: new FormControl(''),
-    surname: new FormControl('')
+    surname: new FormControl(''),
+    avatar: new FormControl
   });
 
   constructor(
@@ -24,6 +25,7 @@ export class IdentityComponent {
   ) {}
 
   public async update() {
+    console.log(this.form.value)
     if (this.form.invalid) {
       this.snackBar.open('Please enter valid name and surname', 'close', { duration: 2000 });
       return;
