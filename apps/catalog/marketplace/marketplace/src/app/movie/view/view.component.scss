@@ -67,6 +67,12 @@ header {
   margin: 10px;
 }
 
+.movie-status {
+  color: #9eb1ff;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
 @include mobile {
   .view-content {
     margin-left: 0;

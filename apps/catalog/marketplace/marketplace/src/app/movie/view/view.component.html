@@ -8,6 +8,7 @@
       <span>a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
       </span>
     </div>
+    <span class="movie-status">{{ movie.main.status }}</span>
   </header>
 
   <span fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
@@ -54,7 +55,7 @@
         <mat-divider [inset]="true"></mat-divider>
         <!-- Film details -->
         <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color"
-          [europeanQualification]="europeanQualification" [internationalPremiere]="internationalPremiere">
+          [europeanQualification]="europeanQualification" [movieSalesInfo]="movie.salesInfo">
         </movie-display-film-details>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Festival Prizes -->
@@ -76,7 +77,7 @@
 
 
   <div fxLayout="row" fxLayoutAlign="center end">
-    <button test-id="distribution-right-link" mat-flat-button color="primary" (click)="addToWishlist()">
+    <button test-id="distribution-right-link" mat-flat-button color="accent" (click)="addToWishlist()">
       {{ toggle ? 'Remove from wishlist' : 'Add to wishlist'}}
     </button>
   </div>

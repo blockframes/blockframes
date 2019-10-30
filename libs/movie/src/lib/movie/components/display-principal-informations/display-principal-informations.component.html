@@ -1,4 +1,4 @@
-<h3>Main informations</h3>
+<h3>Main information</h3>
 <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
   <!-- First Column -->
   <ul class="size-column">
@@ -43,6 +43,10 @@
       <li fxLayout="row" *ngIf="main.originCountry">
         <span><b>Country of Origin</b></span>
         <span>{{ main.originCountry }}</span>
+      </li>
+      <li fxLayout="row" *ngIf="main.length">
+        <span><b>Length</b></span>
+        <span>{{ main.length }} min</span>
       </li>
     </ng-container>
   </ul>
