@@ -1081,7 +1081,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/catalog/dashboard",
+            "outputPath": "dist/apps/catalog-dashboard",
             "index": "apps/catalog/dashboard/dashboard/src/index.html",
             "main": "apps/catalog/dashboard/dashboard/src/main.ts",
             "polyfills": "apps/catalog/dashboard/dashboard/src/polyfills.ts",
@@ -1273,7 +1273,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/catalog/marketplace",
+            "outputPath": "dist/apps/catalog-marketplace",
             "index": "apps/catalog/marketplace/marketplace/src/index.html",
             "main": "apps/catalog/marketplace/marketplace/src/main.ts",
             "polyfills": "apps/catalog/marketplace/marketplace/src/polyfills.ts",
