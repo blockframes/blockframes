@@ -67,6 +67,11 @@ export const routes: Routes = [
             children: [
               { path: '', redirectTo: 'home', pathMatch: 'full' },
               {
+                path: 'about',
+                loadChildren: () =>
+                import('./pages/about-page/about-page.module').then(m => m.AboutPageModule)
+              },
+              {
                 path: 'home',
                 canActivate: [MovieCollectionGuard],
                 canDeactivate: [MovieCollectionGuard],

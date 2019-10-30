@@ -1,8 +1,13 @@
 header {
-  padding: 150px 0;
-  // TODO: replace image when the real one is available.
+  padding: 100px 0;
   background-image: url('/assets/images/catalog-marketplace-banner.png');
   background-position: center center;
   background-attachment: fixed;
   background-size: cover;
+  text-align: center;
+}
+
+mat-card {
+  margin-top: 50px;
+  width: 1000px;
 }
