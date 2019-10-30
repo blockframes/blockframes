@@ -17,7 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
-import { ProfileDeleteComponent } from './profile-delete/profile-delete.component';
 import { ProfileWidgetComponent } from './profile-widget/profile-widget.component';
 import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
@@ -46,20 +45,20 @@ export const profileRoutes: Routes = [
     MatMenuModule,
     EditableSidenavModule,
     UiFormModule,
+    // Component Modules
     UploadModule,
+
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [
     ProfileDisplayComponent,
     ProfileFormComponent,
-    ProfileDeleteComponent,
     ProfileWidgetComponent,
     ProfileMenuComponent,
     ProfileEditableComponent,
     PasswordFormComponent
   ],
   exports: [
-    ProfileDeleteComponent,
     ProfileWidgetComponent,
     ProfileMenuComponent,
   ],
