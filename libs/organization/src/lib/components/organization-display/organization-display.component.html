@@ -5,11 +5,16 @@
       <img mat-card-avatar [storageRef]="organizationInformations.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ organization.name }}</h4>
-        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.phoneNumber}}</p>
+        <h3>Main address</h3>
+        <p><span class="bf-dark-text">Street</span> {{organizationInformations.addresses.main.street}}</p>
+        <p><span class="bf-dark-text">Zip code</span> {{organizationInformations.addresses.main.zipCode}}</p>
+        <p><span class="bf-dark-text">City</span> {{organizationInformations.addresses.main.city}}</p>
+        <p><span class="bf-dark-text">Country</span> {{organizationInformations.addresses.main.country}}</p>
+        <p><span class="bf-dark-text">Region</span> {{organizationInformations.addresses.main.region}}</p>
+        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.addresses.main.phoneNumber}}</p>
+        <h3>Other informations</h3>
         <p><span class="bf-dark-text">Email</span> {{organizationInformations.email}}</p>
-        <!-- TODO: #1126 Address form fields -->
-        <!-- <p><span class="bf-dark-text">Address</span> {{organizationInformations.officeAddress}}</p> -->
-        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.fiscalNumber}}</p>
+        <p><span class="bf-dark-text">Fiscal number</span> {{organizationInformations.fiscalNumber}}</p>
         <p><span class="bf-dark-text">Activity</span> {{organizationInformations.activity}}</p>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">

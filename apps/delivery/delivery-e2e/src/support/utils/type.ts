@@ -42,7 +42,7 @@ export interface User {
 }
 
 export interface Organization {
-  officeAddress: string;
+  officeAddress: string; // here #1126
   phoneNumber: string;
 }
 

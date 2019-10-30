@@ -7,8 +7,7 @@ type Timestamp = firestore.Timestamp;
 interface OrganizationRaw<D> {
   id: string;
   name: string;
-  address: string;
-  officeAddress: string;
+  addresses: Addresses;
   email: string;
   created: number;
   updated: number;
@@ -16,9 +15,8 @@ interface OrganizationRaw<D> {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  catalog: null,
+  catalog: null; // @todo #1126 késako ?
   logo: string;
-  phoneNumber: string;
   fiscalNumber: string;
   activity: string;
   // TODO: issue#1202 Review model of Wishlist (name, date...)
@@ -35,8 +33,24 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface WishlistRaw<D> {
-  status: WishlistStatus,
+export interface Addresses {
+  main: Address,
+  billing?: Address,
+  office?: Address,
+  // Other can be added here
+}
+
+export interface Address {
+  street: string,
+  zipCode: string,
+  city: string,
+  country: string,
+  region?: string,
+  phoneNumber: string,
+}
+
+export interface WhishListRaw<D> {
+  status: WhishListStatus,
   movieIds: string[],
   sent?: D
 }
@@ -69,9 +83,7 @@ export function createOrganizationDocument(
     email: '',
     fiscalNumber: '',
     activity: '',
-    phoneNumber: '',
-    address: '',
-    officeAddress: '',
+    addresses: createAddresses(),
     status: OrganizationStatus.pending,
     userIds: [],
     movieIds: [],
@@ -81,6 +93,27 @@ export function createOrganizationDocument(
     logo: PLACEHOLDER_LOGO,
     catalog: null,
     wishlist: [],
+    ...params
+  };
+}
+
+/** A factory function that creates Organization Addresses */
+export function createAddresses(params: Partial<Addresses> = {}): Addresses {
+  return {
+    main: createAddress(params.main),
+    ...params
+  };
+}
+
+/** A factory function that creates an Address */
+export function createAddress(params: Partial<Address> = {}): Address {
+  return {
+    street: '',
+    zipCode: '',
+    city: '',
+    country: '',
+    phoneNumber: '',
+    region: '',
     ...params
   };
 }
