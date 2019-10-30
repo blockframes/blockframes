@@ -1,4 +1,3 @@
-import { MovieMain } from '@blockframes/movie/types';
 import { firestore } from "firebase/app";
 type Timestamp = firestore.Timestamp;
 
@@ -20,7 +19,7 @@ export interface OrganizationDocument {
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
-  wishList: WhishlistWithDates[];
+  wishlist: WishlistWithDates[];
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -29,17 +28,18 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface WhishlistRaw<D> {
-  status: WhishListStatus,
+export interface WishlistRaw<D> {
+  id: string,
+  status: WishlistStatus,
   movieIds: string[],
   sent?: D
 }
+export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
-export interface WhishlistDocument extends WhishlistRaw<Timestamp> { }
+export interface WishlistWithDates extends WishlistRaw<Date> { }
 
-export interface WhishlistWithDates extends WhishlistRaw<Date> { }
 
-export const enum WhishListStatus {
+export const enum WishlistStatus {
   pending = 'pending',
   sent = 'sent'
 }
@@ -51,20 +51,6 @@ export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
 export interface PublicOrganization {
   id: string;
   name: string;
-}
-
-export const enum WishlistStatus {
-  pending = 'pending',
-  submitted = 'submitted',
-  accepted = 'accepted',
-  paid = 'paid'
-}
-
-export interface Wishlist extends MovieMain {
-  salesAgent: string;
-  id: string;
-  wishListStatus?: WishlistStatus;
-  movieId: string;
 }
 
 /** A factory function that creates an Organization. */
@@ -87,7 +73,7 @@ export function createOrganization(
     created: Date.now(),
     updated: Date.now(),
     logo: PLACEHOLDER_LOGO,
-    whishlist: [],
+    wishlist: [],
     ...params
   };
 }
