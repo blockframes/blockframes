@@ -64,11 +64,11 @@ export class TableExtractedMoviesComponent implements OnInit {
     return true;
   }
 
-  async createSelectedMovies() : Promise<boolean> {
+  async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
-      for(const movie of creations) {
-        this.processedMovies ++;
+      for (const movie of creations) { // @todo #1178
+        this.processedMovies++;
         await this.addMovie(movie);
       }
       this.snackBar.open(`${this.processedMovies} movies created!`, 'close', { duration: 3000 });
@@ -84,7 +84,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Adds a movie to database and prevents multi-insert by refreshing mat-table
    * @param importState 
    */
-  private async addMovie(importState: MovieImportState) : Promise<boolean> {
+  private async addMovie(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
     await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
     importState.errors.push({
@@ -93,7 +93,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       name: 'Film Code',
       reason: 'Movie already exists',
       hint: 'Movie already saved'
-    } as SpreadsheetImportError)
+    });
     this.rows.data = data;
     return true;
   }
@@ -107,8 +107,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   async updateSelectedMovies(): Promise<boolean> {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
-      for(const importState of updates) {
-        this.processedMovies ++;
+      for (const importState of updates) { // @todo #1178
+        this.processedMovies++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }
       this.snackBar.open(`${this.processedMovies} movies updated!`, 'close', { duration: 3000 });
