@@ -27,11 +27,13 @@
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
                   <b>
-                    {{ lodash.capitalize(movie.main.originCountries[0]) }}
-                    <b *ngIf="movie.main.originCountries.length > 1">, {{ lodash.capitalize(movie.main.originCountries[1]) }} </b>
-                    <span *ngIf="movie.main.originCountries.length > 2">, ... </span>|
+                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
+                      {{ getLabel(country, 'TERRITORIES')}}{{isLast ? '' : ', '}}
+                    </span>
+                    <span *ngIf="movie.main.originCountries.length > 2">...</span>
+                    |
                     {{ movie.main.length }} min |
-                    {{ lodash.capitalize(movie.main.genres[0])}}
+                    {{ getLabel(movie.main.genres[0], 'GENRES')}}
                   </b>
                   <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
                 </footer>

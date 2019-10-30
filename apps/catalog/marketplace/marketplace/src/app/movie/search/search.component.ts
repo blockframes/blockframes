@@ -32,7 +32,7 @@ import {
   MovieStatusLabel,
   MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists, getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest, Subscription } from 'rxjs';
@@ -50,8 +50,6 @@ import { AFM_DISABLE } from '@env';
 })
 export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
-
-  public lodash = _;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;

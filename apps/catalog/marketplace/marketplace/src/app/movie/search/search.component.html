@@ -274,17 +274,17 @@
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                {{ director.lastName }}
+              <mat-card-subtitle *ngFor="let director of movie.main.directors">
+                {{ director.firstName }} {{ director.lastName }}
               </mat-card-subtitle>
-                <b class="table-size-text">
-                  {{ lodash.capitalize(movie.main.originCountries[0]) }}
-                  <b *ngIf="movie.main.originCountries.length > 1">, {{ lodash.capitalize(movie.main.originCountries[1]) }} </b>
-                  <span *ngIf="movie.main.originCountries.length > 2">, ... </span>|
-                  {{ movie.main.length }}min |
-                  {{ lodash.capitalize(movie.main.genres[0])}}
-                </b>
-                <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
+                <mat-card-content class="table-size-text">
+                  <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
+                    {{ getLabel(country, 'TERRITORIES')}}{{isLast ? '' : ', '}}
+                  </b>
+                  <b *ngIf="movie.main.originCountries.length > 2">...</b>
+                  <b>| {{ movie.main.length }} min | {{ getLabel(movie.main.genres[0], 'GENRES')}}</b>
+                </mat-card-content>
+              <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
             </ng-container>
             <ng-container movieCardAction >
               <div fxLayout="row" fxLayoutAlign="end end">

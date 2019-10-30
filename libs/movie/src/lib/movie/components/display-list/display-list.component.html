@@ -5,6 +5,7 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element"><img [src]="element.main.poster" /> </td>
   </ng-container>
+
   <!-- Movie title column -->
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -23,6 +24,12 @@
   <ng-container matColumnDef="productionYear">
     <th mat-header-cell *matHeaderCellDef>Production Year</th>
     <td mat-cell *matCellDef="let element"> {{element.main.productionYear}} </td>
+  </ng-container>
+
+  <!-- Action column -->
+  <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element"><mat-icon>favorite_border</mat-icon></td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
