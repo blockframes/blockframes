@@ -12,11 +12,26 @@ header {
 mat-card {
   margin-top: 50px;
   width: 1000px;
-}
 
-.partner-logo {
-  height: 40px;
-  margin-right: 40px;
+  .partner-logo {
+    height: 40px;
+    margin-right: 40px;
+  }
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .margin-top {
+    margin-top: 15px;
+  }
+
+  .photo-contact {
+    height: 170px;
+    width: 170px;
+    margin-right: 20px;
+    border-radius: 100%;
+  }
 }
 
 @include mobile {
@@ -28,7 +43,7 @@ mat-card {
   .partner-logo {
     max-width: 200px;
     margin-right: 0;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
   }
 }
 
@@ -41,7 +56,7 @@ mat-card {
   .partner-logo {
     max-width: 200px;
     margin-right: 0;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
   }
 }
 

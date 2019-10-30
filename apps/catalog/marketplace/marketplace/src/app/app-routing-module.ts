@@ -77,6 +77,11 @@ export const routes: Routes = [
                 import('./pages/team-page/team-page.module').then(m => m.TeamPageModule)
               },
               {
+                path: 'contact',
+                loadChildren: () =>
+                import('./pages/contact-page/contact-page.module').then(m => m.ContactPageModule)
+              },
+              {
                 path: 'home',
                 canActivate: [MovieCollectionGuard],
                 canDeactivate: [MovieCollectionGuard],
