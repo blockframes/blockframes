@@ -1,7 +1,7 @@
 
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthQuery, AuthService, User } from '@blockframes/auth';
+import { AuthQuery, AuthService, User, PLACEHOLDER_AVATAR } from '@blockframes/auth';
 import { createProfile } from '../forms/profile-edit.form';
 
 @Component({
@@ -12,6 +12,7 @@ import { createProfile } from '../forms/profile-edit.form';
 })
 export class ProfileMenuComponent implements OnInit{
   public user$: Observable<User>;
+  public placeholderUrl = PLACEHOLDER_AVATAR;
 
   constructor(
     private service: AuthService,
