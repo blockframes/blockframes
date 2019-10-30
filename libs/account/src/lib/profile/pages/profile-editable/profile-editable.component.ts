@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup } from '@angular/forms';
 import { PasswordControl } from '@blockframes/utils';
 import { OrganizationQuery, Organization } from '@blockframes/organization';
-import { startWith, tap, distinctUntilChanged } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({

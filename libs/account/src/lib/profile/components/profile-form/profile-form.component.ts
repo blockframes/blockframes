@@ -5,7 +5,7 @@ import { ControlContainer } from '@angular/forms';
   selector: '[formGroupName] profile-form, [formGroup] profile-form, profile-form',
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'profile-form';

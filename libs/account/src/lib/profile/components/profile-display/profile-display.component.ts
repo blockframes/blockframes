@@ -8,7 +8,7 @@ import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
   selector: 'profile-display',
   templateUrl: './profile-display.component.html',
   styleUrls: ['./profile-display.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileDisplayComponent {
   @HostBinding('attr.page-id') pageId = 'profile-display';
