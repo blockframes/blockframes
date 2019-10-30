@@ -26,7 +26,7 @@ export class SentryErrorHandler implements ErrorHandler {
  */
 if (sentryDsn) {
   Sentry.init({
-    dsn: 'https://2ef084dd8ff947e0943115d949f3adcf@sentry.io/1501525'
+    dsn: 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126'
   });
   providers.push({ provide: ErrorHandler, useClass: SentryErrorHandler });
 }
