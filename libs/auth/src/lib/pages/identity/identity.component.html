@@ -21,6 +21,8 @@
           Surname is <strong>required</strong>
         </mat-error>
       </mat-form-field>
+      <h3>Picture</h3>
+      <drop-cropper [ratio]="1" formControlName="avatar"></drop-cropper>
     </form>
   </article>
   <button (click)="update()" type="submit" mat-flat-button color="accent">Next</button>

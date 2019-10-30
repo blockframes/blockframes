@@ -24,6 +24,11 @@ mat-form-field {
   background-size: cover;
 }
 
+drop-cropper {
+  display: block;
+  width: 100%;
+}
+
 @include mobile {
   form {
     width: 80%;
