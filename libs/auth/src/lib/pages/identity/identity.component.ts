@@ -25,7 +25,6 @@ export class IdentityComponent {
   ) {}
 
   public async update() {
-    console.log(this.form.value)
     if (this.form.invalid) {
       this.snackBar.open('Please enter valid name and surname', 'close', { duration: 2000 });
       return;
