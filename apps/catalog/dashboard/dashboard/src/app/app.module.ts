@@ -23,7 +23,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
-import { OrganizationModule } from '@blockframes/organization';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
@@ -52,7 +52,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatDividerModule,
 
     // Libraries
-    OrganizationModule,
+    OrganizationWidgetModule,
     ToolbarModule,
     MovieModule,
     ProfileWidgetModule,

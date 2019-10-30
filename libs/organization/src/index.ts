@@ -9,6 +9,10 @@ export * from './lib/+state/organization.query';
 export * from './lib/+state/organization.service';
 export * from './lib/+state/organization.store';
 
+// Organization Components
+export * from './lib/components/organization-widget/organization-widget.module';
+export * from './lib/components/organization-search/organization-search.module';
+
 // Permission Guard
 export * from './lib/permissions/guard/permissions.guard';
 

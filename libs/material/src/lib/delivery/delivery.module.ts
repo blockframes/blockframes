@@ -47,7 +47,7 @@ import {
   EditableSidenavModule,
   AvatarListModule
 } from '@blockframes/ui';
-import { OrganizationModule } from '@blockframes/organization';
+import { OrganizationSearchModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
 import { MoviePickerModule } from '@blockframes/movie';
@@ -117,7 +117,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     ActionsPickerModule,
     ActionsPickerListModule,
     EditableModule,
-    OrganizationModule,
+    OrganizationSearchModule,
     EditableSidenavModule,
     DeliveryRoutingModule,
     MoviePickerModule,

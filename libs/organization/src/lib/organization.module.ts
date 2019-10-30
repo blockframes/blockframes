@@ -36,12 +36,10 @@ import { OrganizationDisplayComponent } from './components/organization-display/
 import { MemberAddComponent } from './components/member-add/member-add.component';
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
-import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
 import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
-import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
 import { OrganizationFormOperationComponent } from './components/organization-form-operation/organization-form-operation.component';
 import { OrganizationDisplayActionsComponent } from './components/organization-display-actions/organization-display-actions.component';
 import { OrganizationDisplayOperationsComponent } from './components/organization-display-operations/organization-display-operations.component';
@@ -128,7 +126,6 @@ if (AFM_DISABLE) {
     MemberInvitationComponent,
     OrganizationDisplayComponent,
     MemberEditableComponent,
-    OrganizationWidgetComponent,
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationActivityViewComponent,
@@ -141,8 +138,6 @@ if (AFM_DISABLE) {
     OrganizationEditableComponent,
     OrganizationFormComponent,
     OrganizationActivityViewComponent,
-    OrganizationSearchComponent
   ],
-  exports: [OrganizationWidgetComponent, OrganizationSearchComponent]
 })
 export class OrganizationModule {}

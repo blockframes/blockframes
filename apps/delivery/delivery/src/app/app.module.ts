@@ -23,7 +23,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { OrganizationModule, NoOrganizationModule } from '@blockframes/organization';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
@@ -85,14 +85,13 @@ import { EmailVerifyModule } from '@blockframes/auth';
       // Libraries
       UploadModule,
       UiFormModule,
-      OrganizationModule,
+      OrganizationWidgetModule,
       ToolbarModule,
       ProfileWidgetModule,
       ProfileMenuModule,
       WalletWidgetModule,
       KeyManagerModule,
       NotificationWidgetModule,
-      NoOrganizationModule,
 
       // Firebase
       AngularFireModule.initializeApp(environment.firebase),
