@@ -5,7 +5,8 @@ export const enum App {
   mediaDelivering = 'delivery',
   mediaFinanciers = 'movie-financing',
   storiesAndMore = 'stories-and-more',
-  biggerBoat = 'catalog'
+  biggerBoat = 'catalog',
+  catalogDashboard = 'catalog-dashboard'
 }
 
 export interface AppDetails {

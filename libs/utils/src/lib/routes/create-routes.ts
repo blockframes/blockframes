@@ -1,7 +1,4 @@
-import { Routes } from '@angular/router';
-import { App } from '@blockframes/organization';
-
-// Components
+import { Routes, Route } from '@angular/router';
 import { MovieEmptyComponent } from '@blockframes/movie';
 
 // Guards
@@ -9,9 +6,36 @@ import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { NotificationsGuard } from '@blockframes/notification';
 
-export function createAppRoutes(routes: Routes, LayoutComponent) {
+const organizationRoute: Route = {
+  path: 'organization',
+  loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
+};
+
+const accountRoute: Route = {
+  path: 'account',
+  loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+};
+
+const movieRoutes: Routes = [{
+  path: 'no-movies',
+  component: MovieEmptyComponent
+},{
+  path: 'home',
+  loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
+}];
+
+interface RouteOptions {
+  /** The Layout Component to render */
+  layout: any,
+  /** The routes of the apps */
+  appsRoutes: Routes,
+  /** The page to load by default */
+  rootPath?: string;
+}
+
+function root(LayoutComponent, children: Routes, rootPath: string) {
   return [
-    { path: '', redirectTo: 'layout', pathMatch: 'full' },
+    { path: '', redirectTo: rootPath, pathMatch: 'full' },
     {
       path: 'auth',
       loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
@@ -28,41 +52,10 @@ export function createAppRoutes(routes: Routes, LayoutComponent) {
           pathMatch: 'full'
         },
         {
-          // The redirection route when user has no organization
-          path: 'organization',
-          loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
-        },
-        {
           path: 'o',
           canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
           canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-          children: [
-            {
-              path: '',
-              redirectTo: 'home',
-              pathMatch: 'full'
-            },
-            {
-              path: 'no-movies',
-              component: MovieEmptyComponent
-            },
-            {
-              path: 'organization',
-              loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
-            },
-            {
-              path: 'account',
-              loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
-            },
-            {
-              path: 'home',
-              loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
-            },
-            {
-              path: 'apps',
-              children: routes
-            }
-          ]
+          children
         }
       ]
     },
@@ -75,4 +68,35 @@ export function createAppRoutes(routes: Routes, LayoutComponent) {
       loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
     }
   ]
-};
+}
+
+export function marketplace({ layout, appsRoutes, rootPath = 'layout' }: RouteOptions) {
+  const children = [
+    {
+      path: '',
+      redirectTo: appsRoutes[0].path,
+      pathMatch: 'full'
+    },
+    organizationRoute,
+    accountRoute,
+    ...appsRoutes,
+  ];
+  return root(layout, children, rootPath);
+}
+
+export function dashboard({ layout, appsRoutes, rootPath = 'layout' }: RouteOptions) {
+  const children = [
+    {
+      path: '',
+      redirectTo: 'home',
+      pathMatch: 'full'
+    },
+    organizationRoute,
+    accountRoute,
+    ...movieRoutes,
+    ...appsRoutes
+  ];
+  return root(layout, children, rootPath);
+}
+
+export const appsRoute = '/layout/o';

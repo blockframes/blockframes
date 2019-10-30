@@ -21,8 +21,4 @@ export const deliveryAppRoutes: Routes = [
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(deliveryAppRoutes)]
 })
-export class DeliveryAppModule {
-  constructor() {
-    console.log('DeliveryAppModule');
-  }
-}
+export class DeliveryAppModule {}

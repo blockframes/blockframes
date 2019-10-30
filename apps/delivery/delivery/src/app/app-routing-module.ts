@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, NoPreloading } from '@angular/router';
 
 import { App } from '@blockframes/organization';
 import { LayoutComponent } from './layout/layout.component';
-import { createAppRoutes } from '@blockframes/utils/routes';
+import { dashboard } from '@blockframes/utils/routes';
 
-const routes = createAppRoutes([{
-  path: App.mediaDelivering,
-  loadChildren: () => import('./delivery.module').then(m => m.DeliveryAppModule)
-}], LayoutComponent)
+/** Scaffold a dashboard like application routing for this application */
+const routes = dashboard({
+  layout: LayoutComponent,
+  appsRoutes: [{
+    path: App.mediaDelivering,
+    loadChildren: () => import('./delivery.module').then(m => m.DeliveryAppModule)
+  }]
+});
+
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always'
+      paramsInheritanceStrategy: 'always',
+      preloadingStrategy: NoPreloading
     })
   ],
   exports: [RouterModule]

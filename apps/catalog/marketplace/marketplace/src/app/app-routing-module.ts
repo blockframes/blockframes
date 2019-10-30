@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, NoPreloading } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout.component';
-import { createAppRoutes } from '@blockframes/utils/routes';
+import { marketplace, appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
 
-const routes = createAppRoutes([{
-  path: App.biggerBoat,
-  loadChildren: () => import('./catalog-marketplace.module').then(m => m.CatalogMarketplaceAppModule)
-}], LayoutComponent);
+/** Scaffold a marketplace application routing for this application */
+const routes = marketplace({
+  layout: LayoutComponent,
+  rootPath: `${appsRoute}/${App.biggerBoat}/home`,
+  appsRoutes: [{
+    path: App.biggerBoat,
+    loadChildren: () => import('./catalog-marketplace.module').then(m => m.CatalogMarketplaceAppModule)
+  }]
+});
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always'
+      paramsInheritanceStrategy: 'always',
+      preloadingStrategy: NoPreloading
     })
   ],
   exports: [RouterModule]

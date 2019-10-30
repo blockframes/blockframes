@@ -1,14 +1,17 @@
+import { appsRoute } from '@blockframes/utils/routes';
+import { App } from '@blockframes/utils';
+
 export const CONTEXT_MENU = [
   {
     route: 'default',
     items: []
   },
   {
-    route: '/layout/o/catalog/home',
+    route: `${appsRoute}/${App.biggerBoat}/home`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${appsRoute}/${App.biggerBoat}/home`
       },
       {
         name: 'Line-up',
@@ -21,11 +24,11 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/o/catalog/search',
+    route: `${appsRoute}/${App.biggerBoat}/search`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${appsRoute}/${App.biggerBoat}/home`
       },
       {
         name: 'Line-up',
@@ -42,7 +45,7 @@ export const CONTEXT_MENU = [
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${appsRoute}/${App.biggerBoat}/home`
       },
       {
         name: 'Line-up',
@@ -55,28 +58,28 @@ export const CONTEXT_MENU = [
     ]
   },
   {
-    route: '/layout/o/catalog/:movieId/create',
+    route: `${appsRoute}/${App.biggerBoat}/:movieId/create`,
     items: [
       {
         name: 'view',
-        path: '/layout/o/catalog/:movieId/view'
+        path: `${appsRoute}/${App.biggerBoat}/:movieId/view`
       },
       {
         name: 'create',
-        path: '/layout/o/catalog/:movieId/create'
+        path: `${appsRoute}/${App.biggerBoat}/:movieId/create`
       }
     ]
   },
   {
-    route: '/layout/o/catalog/:movieId/view',
+    route: `${appsRoute}/${App.biggerBoat}/:movieId/view`,
     items: [
       {
         name: 'view',
-        path: '/layout/o/catalog/:movieId/view'
+        path: `${appsRoute}/${App.biggerBoat}/:movieId/view`
       },
       {
         name: 'create',
-        path: '/layout/o/catalog/:movieId/create'
+        path: `${appsRoute}/${App.biggerBoat}/:movieId/create`
       }
     ]
   }
@@ -88,8 +91,8 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home',
-        icon: 'home_sidebar'
+        icon: 'home_sidebar',
+        path: `${appsRoute}/${App.biggerBoat}/home`
       },
       {
         name: 'Line-up',
