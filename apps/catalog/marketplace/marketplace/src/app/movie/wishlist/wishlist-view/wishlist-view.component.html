@@ -1,16 +1,14 @@
-<div>
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Wishlist</h1>
-  </header>
-  <section>
-    <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <h2>My Wishlist</h2>
-        <mat-divider fxFlex></mat-divider>
-    </article>
-    <article *ngFor="let wishlist of (wishlists$ | async)">
-      <!-- TODO: manage wishlist with status 'sent' -->
-      <catalog-wishlist-current-repertory *ngIf="wishlist.status === 'pending'" [movies]="wishlist.movies">
-      </catalog-wishlist-current-repertory>
-    </article>
-  </section>
-</div>
+<header fxLayout="column" fxLayoutAlign="center center">
+  <h1>Wishlist</h1>
+</header>
+<section>
+  <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <h2>My Wishlist</h2>
+    <mat-divider fxFlex></mat-divider>
+  </article>
+  <article *ngFor="let wishlist of wishlists$ | async">
+    <!-- TODO: issue#1125 manage wishlist with status 'sent' -->
+    <catalog-wishlist-current-repertory *ngIf="wishlist.status === 'pending'" [movies]="wishlist.movies" >
+    </catalog-wishlist-current-repertory>
+  </article>
+</section>
