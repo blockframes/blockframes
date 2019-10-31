@@ -3,10 +3,11 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
-import { WishlistStatus, WishlistWithDates } from '@blockframes/organization/types';
+import { WishlistStatus } from '@blockframes/organization';
+import { AuthQuery } from '@blockframes/auth';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -22,7 +23,8 @@ export class BasketService extends CollectionService<BasketState> {
     private organizationQuery: OrganizationQuery,
     private basketQuery: BasketQuery,
     private organizationService: OrganizationService,
-    store: BasketStore
+    store: BasketStore,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -36,14 +38,14 @@ export class BasketService extends CollectionService<BasketState> {
   public updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
     const org = this.organizationQuery.getValue().org;
-    let updatedWishlists = [...org.wishList];
+    let updatedWishlists = [...org.wishlist];
     updatedWishlists = updatedWishlists.map(wishlist => {
-      if (wishlist.status === WhishListStatus.pending) {
-        return {...wishlist, status: WhishListStatus.sent, sent: new Date()};
+      if (wishlist.status === WishlistStatus.pending) {
+        return {...wishlist, status: WishlistStatus.sent, sent: new Date()};
       }
       return wishlist;
     })
-    return this.organizationService.update({...org, wishList: updatedWishlists});
+    return this.organizationService.update({...org, wishlist: updatedWishlists});
     // TODO: issue #1111 and #1102, send an email to the user and Cascade8 with list of movies
     // Use variables: movies, org and user
   }
@@ -63,7 +65,7 @@ export class BasketService extends CollectionService<BasketState> {
     const pendingWishlist = this.organizationQuery
       .getValue()
       .org.wishlist.filter(wishlist => wishlist.status === 'pending');
-    const wishlistFactory = (movieId: string): WishlistWithDates => {
+    const wishlistFactory = (movieId: string): Wishlist => {
       return {
         status: WishlistStatus.pending,
         movieIds: [movieId]
