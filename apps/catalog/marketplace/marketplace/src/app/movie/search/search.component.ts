@@ -9,7 +9,8 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding
+  HostBinding,
+  OnDestroy
 } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
@@ -34,7 +35,7 @@ import {
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -47,18 +48,8 @@ import { AFM_DISABLE } from '@env';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit {
+export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
-
-  /* Variables for Sales Agents chips */
-  public selectableSAChip = true;
-  public removableSAChip = true;
-  public addOnBlur = true;
-  public selectedSalesAgents: string[] = [];
-  public salesAgents: string[] = ['Pulsar Content', 'WTFilms', 'Charades'];
-
-  @ViewChild('salesAgentInput', {static: false}) salesAgentInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -110,7 +101,18 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
 
-  /* Flags for the chip input */
+   /* Flags for Sales Agents chip input*/
+   public selectableSAChip = true;
+   public removableSAChip = true;
+   public addOnBlur = true;
+   public selectedSalesAgents: string[] = [];
+   public salesAgents: string[] = [];
+   private salesAgentsSub: Subscription;
+
+   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
+   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  /* Flags for the Territories chip input */
   public visible = true;
   public selectable = true;
   public removable = true;
@@ -125,26 +127,38 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private router: Router,
-    private movieService: MovieService,
-  ) {
-  }
+    private movieService: MovieService
+  ) {}
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
       map(([movies, filterOptions]) => {
-        if (AFM_DISABLE) { //TODO #1146
+        if (AFM_DISABLE) {
+          //TODO #1146
           return movies.filter(async movie => {
             const deals = await this.movieService.getDistributionDeals(movie.id);
             return filterMovie(movie, filterOptions, deals);
-          })
+          });
         } else {
           return movies.filter(movie => {
             return filterMovie(movie, filterOptions);
-          })
+          });
         }
-    }),
+      }),
       tap(movies => (this.availableMovies = movies.length))
     );
+
+    this.salesAgentsSub = this.movieQuery.selectAll().pipe(
+      tap(movies => {
+        movies.forEach(movie => {
+          if (
+            !!movie.salesAgentDeal.salesAgent.displayName &&
+            !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
+            )
+          this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+      })
+    })
+    ).subscribe()
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -160,7 +174,10 @@ export class MarketplaceSearchComponent implements OnInit {
 
     this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
       startWith(''),
-      map(salesAgent=> salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents.slice()));
+      map(salesAgent =>
+        salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents
+      )
+    );
   }
 
   public goToMovieDetails(id: string) {
@@ -220,8 +237,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   private _salesAgentsfilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
-    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0);
+    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0)
   }
 
   //////////////////
@@ -265,7 +281,6 @@ export class MarketplaceSearchComponent implements OnInit {
       this.filterForm.removeType(genreSlug);
     }
   }
-
 
   public hasStatus(status: MovieStatusLabel) {
     /**
@@ -350,6 +365,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
     this.filterForm.addSalesAgent(value);
     this.salesAgentControl.setValue('');
+    this.salesAgentInput.nativeElement.value = '';
   }
 
   public removeSalesAgent(salesAgent: string) {
@@ -359,5 +375,9 @@ export class MarketplaceSearchComponent implements OnInit {
       this.selectedSalesAgents.splice(index, 1);
     }
     this.filterForm.removeSalesAgent(salesAgent);
+  }
+
+  ngOnDestroy() {
+    this.salesAgentsSub.unsubscribe();
   }
 }
