@@ -21,14 +21,16 @@ export class WishlistCurrentRepertoryComponent {
 
   @Output() sent = new EventEmitter();
 
+  @Input() isCurrent = false;
+  @Input() date: Date;
+
   public columnsToDisplay = [
     'movie',
     'salesAgent',
     'director',
     'productionStatus',
     'originCountry',
-    'length',
-    'delete'
+    'length'
   ];
   public dataSource: MatTableDataSource<Movie>;
 
@@ -41,6 +43,12 @@ export class WishlistCurrentRepertoryComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    if (this.isCurrent) {
+      this.columnsToDisplay.push('delete');
+    }
+  }
 
   public getLabel(scope: Scope, slug: string) {
     return getLabelByCode(scope, slug);

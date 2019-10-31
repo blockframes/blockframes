@@ -1,4 +1,4 @@
-<h3>Current Wishlist</h3>
+<h4 *ngIf="!isCurrent">Sent {{ date.toDate() | date: 'MMM dd yyyy' }}</h4>
 <table mat-table [dataSource]="dataSource" matSort>
   <!-- Movie -->
   <ng-container matColumnDef="movie">
@@ -57,7 +57,7 @@
   </ng-container>
 
   <!-- Trash Icon -->
-  <ng-container matColumnDef="delete">
+  <ng-container *ngIf="isCurrent" matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <!-- TODO: issue#1111 add remove function -->
@@ -71,7 +71,7 @@
   <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="redirectToMovie(row.id)"></tr>
 </table>
 <!-- TODO: issue#1111 add sending email -->
-<div fxLayout="row" fxLayoutAlign="center">
+<div *ngIf="isCurrent" fxLayout="row" fxLayoutAlign="center">
   <button class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Express my interest</button>
 </div>
 
