@@ -129,7 +129,7 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieSale[],): boolean {
+export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieSale[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
       ...filter.languages[name],
@@ -138,12 +138,6 @@ export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieS
     .every(language => hasLanguage(movie, language));
   const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
   const hasTerritory = filter.territories.every(territory => territories(movie, territory));
-  console.log((
-    hasEveryLanguage &&
-    types (movie, filter.type) &&
-    productionStatus(movie, filter.status) &&
-    salesAgent(movie, filter.salesAgent)
-  ))
   if (AFM_DISABLE) { //TODO: #1146
     return (
       productionYearBetween(movie, filter.productionYear) &&
