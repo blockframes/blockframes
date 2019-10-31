@@ -21,7 +21,7 @@ import {
   MovieDocument
 } from './data/types';
 import { triggerNotifications } from './notification';
-import { sendMail, sendMailFromTemplate } from './internals/email';
+import { sendMailFromTemplate } from './internals/email';
 import {
   userInviteToOrg,
   userJoinedAnOrganization,
