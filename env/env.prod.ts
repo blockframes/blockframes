@@ -12,7 +12,7 @@ export const persistenceSettings = {
 // Firebase
 // ========
 
-export const appUrl = 'https://app.blockframes.io';
+export const appUrl = 'https://archipelcontent.com';
 
 export const firebase = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',
@@ -62,5 +62,5 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'prod-backups';
+export const backupBucket = 'blockframes-backups';
 export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
