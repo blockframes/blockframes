@@ -151,7 +151,6 @@ export class CropperComponent implements ControlValueAccessor{
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(() => {
-          // this.uploaded(fileName)
           this.nextStep('upload_complete')
         })
       );
@@ -183,7 +182,6 @@ export class CropperComponent implements ControlValueAccessor{
     delete() {
       this.ref.delete().subscribe(() => {
         this.nextStep('drop');
-        // this.deleted();
       });
     }
 
