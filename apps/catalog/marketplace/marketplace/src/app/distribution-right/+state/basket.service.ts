@@ -33,6 +33,21 @@ export class BasketService extends CollectionService<BasketState> {
       .pipe(switchMap(({ id }) => this.syncCollection({ pathParams: { orgId: id } })));
   }
 
+  public updateWishlistStatus(movies: Movie[]) {
+    const user = this.authQuery.user;
+    const org = this.organizationQuery.getValue().org;
+    let updatedWishlists = [...org.wishList];
+    updatedWishlists = updatedWishlists.map(wishlist => {
+      if (wishlist.status === WhishListStatus.pending) {
+        return {...wishlist, status: WhishListStatus.sent, sent: new Date()};
+      }
+      return wishlist;
+    })
+    return this.organizationService.update({...org, wishList: updatedWishlists});
+    // TODO: issue #1111 and #1102, send an email to the user and Cascade8 with list of movies
+    // Use variables: movies, org and user
+  }
+
   public addBasket(basket: CatalogBasket) {
     const id = this.db.createId();
     const newBasket: CatalogBasket = createBasket({
