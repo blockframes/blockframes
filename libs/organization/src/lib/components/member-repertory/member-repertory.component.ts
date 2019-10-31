@@ -23,8 +23,12 @@ export class MemberRepertoryComponent implements OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  public AFM_DISABLE = AFM_DISABLE;
+
   public dataSource: MatTableDataSource<OrganizationMember>;
-  public displayedColumns: string[] = [ 'name', 'email', 'role', 'action' ];
+  // TODO issue#1146
+/*   public displayedColumns: string[] = [ 'name', 'email', 'role', 'action' ]; */
+public displayedColumns: string[] = [ 'name', 'email' ];
 
   // TODO issue#146
   ngOnInit() {
