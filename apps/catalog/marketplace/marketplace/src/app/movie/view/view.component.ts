@@ -1,8 +1,8 @@
-import { tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { BasketService } from './../../distribution-right/+state/basket.service';
 import { Movie } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 
@@ -12,13 +12,12 @@ import { OrganizationQuery } from '@blockframes/organization';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieViewComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
-  private orgState: Subscription;
   // Flag to indicate which icon and message to show
-  public toggle: boolean;
+  public toggle$: Observable<boolean>;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -28,14 +27,16 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getMovie();
-    this.orgState = this.orgQuery.select().pipe(
-        tap(value => {
-          value.org.wishlist.forEach(wishlist => {
-            this.toggle = wishlist.movieIds.includes(this.movieQuery.getActive().id);
-          });
-        })
-      )
-      .subscribe();
+    this.toggle$ = this.orgQuery.select('org').pipe(
+      map(org => {
+        return org.wishlist.some(wish => {
+          if (wish.status === 'pending') {
+            return wish.movieIds.includes(this.movieQuery.getActive().id);
+          }
+        });
+      })
+    );
+    this.toggle$.subscribe(console.log);
   }
 
   private getMovie() {
@@ -61,9 +62,5 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   get europeanQualification() {
     const europeanQualification = this.movieQuery.getActive().salesInfo.europeanQualification;
     return europeanQualification ? 'Yes' : 'No';
-  }
-
-  ngOnDestroy() {
-    this.orgState.unsubscribe();
   }
 }

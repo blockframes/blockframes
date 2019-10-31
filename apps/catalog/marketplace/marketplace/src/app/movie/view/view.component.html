@@ -11,19 +11,19 @@
     <span class="movie-status">{{ movie.main.status }}</span>
   </header>
 
-  <span fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
+  <div fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
     <mat-divider></mat-divider>
-    <ng-container *ngIf="!toggle; else alreadyAdded">
+    <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
       <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
-        <mat-icon svgIcon="heart"></mat-icon>
+        <mat-icon svgIcon="heart_filled"></mat-icon>
       </button>
     </ng-container>
     <ng-template #alreadyAdded>
       <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
-        <mat-icon svgIcon="heart_filled"></mat-icon>
+        <mat-icon svgIcon="heart"></mat-icon>
       </button>
     </ng-template>
-  </span>
+  </div>
 
   <section fxLayout="row" class="view-content">
 
@@ -48,7 +48,7 @@
     <div fxLayout="column" class="information-column">
       <mat-card class="informations" fxLayout="column">
         <!-- Promotional elements -->
-        <catalog-promotional-elements [promotionalElements]="movie.promotionalElements"></catalog-promotional-elements>
+       <!--  <catalog-promotional-elements [promotionalElements]="movie.promotionalElements"></catalog-promotional-elements> -->
         <mat-divider [inset]="true"></mat-divider>
         <!-- Main informations -->
         <movie-display-principal-informations [main]="movie.main"></movie-display-principal-informations>
@@ -78,7 +78,7 @@
 
   <div fxLayout="row" fxLayoutAlign="center end">
     <button test-id="distribution-right-link" mat-flat-button color="accent" (click)="addToWishlist()">
-      {{ toggle ? 'Remove from wishlist' : 'Add to wishlist'}}
+      {{ (toggle$ | async) ? 'Remove from wishlist' : 'Add to wishlist'}}
     </button>
   </div>
 </main>
