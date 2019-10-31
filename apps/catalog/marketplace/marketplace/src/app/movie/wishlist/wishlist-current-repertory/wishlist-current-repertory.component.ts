@@ -43,7 +43,10 @@ export class WishlistCurrentRepertoryComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private router: Router, private service: BasketService) {}
+  constructor(
+    private router: Router,
+    private service: BasketService
+  ) {}
 
   ngOnInit() {
     if (this.isCurrent) {
@@ -56,7 +59,7 @@ export class WishlistCurrentRepertoryComponent {
   }
 
   public async redirectToMovie(movieId: string) {
-    this.router.navigateByUrl(`layout/o/catalog/${movieId}/view`);
+    this.router.navigate([`../../../../layout/o/catalog/${movieId}/view`]);
   }
 
   public remove(movieId: string) {

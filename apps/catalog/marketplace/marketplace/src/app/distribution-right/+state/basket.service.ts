@@ -36,16 +36,18 @@ export class BasketService extends CollectionService<BasketState> {
   }
 
   public updateWishlistStatus(movies: Movie[]) {
+    // Argument movies will be used to send emails => issue#1102
+    // Const user will be used to send emails => issue#1102
     const user = this.authQuery.user;
     const org = this.organizationQuery.getValue().org;
-    let updatedWishlists = [...org.wishlist];
-    updatedWishlists = updatedWishlists.map(wishlist => {
-      if (wishlist.status === WishlistStatus.pending) {
-        return {...wishlist, status: WishlistStatus.sent, sent: new Date()};
-      }
-      return wishlist;
-    })
-    return this.organizationService.update({...org, wishlist: updatedWishlists});
+
+    const setSent = (wishlist: Wishlist) => {
+      return wishlist.status === WishlistStatus.pending
+        ?  {...wishlist, status: WishlistStatus.sent, sent: new Date()}
+        : wishlist
+    }
+
+    return this.organizationService.update({...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist))});
     // TODO: issue #1111 and #1102, send an email to the user and Cascade8 with list of movies
     // Use variables: movies, org and user
   }
