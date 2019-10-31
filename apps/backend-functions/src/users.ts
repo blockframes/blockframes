@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite } from './assets/mail-templates';
-import { sendMail } from './internals/email';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword } from './assets/mail-templates';
+import { sendMailFromTemplate } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -18,10 +18,39 @@ interface OrgProposal {
   name: string;
 }
 
-const onUserCreate = (user: UserRecord) => {
+const sendVerifyEmail = async (data: any, context?: CallableContext) => {
+  const { email } = data;
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+  }
+
+  const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+  await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
+};
+
+const sendResetPasswordEmail = async (data: any, context: CallableContext) => {
+  const { email } = data;
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+  }
+
+  const resetLink = await admin.auth().generatePasswordResetLink(email);
+  await sendMailFromTemplate(userResetPassword(email, resetLink));
+};
+
+const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
+  if (!email || !uid) {
+    throw new Error(`email & uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+  }
+
   const userDocRef = db.collection('users').doc(user.uid);
+
+  await sendVerifyEmail(email);
+  await sendMailFromTemplate(welcomeMessage(email));
 
   // transaction to UPSERT the user doc
   return db.runTransaction(async tx => {
@@ -122,10 +151,10 @@ const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMail(userInvite(email, password));
+    await sendMailFromTemplate(userInvite(email, password));
 
     return { uid: user.uid, email };
   }
 };
 
-export { onUserCreate, findUserByMail, findOrgByName, getOrCreateUserByMail };
+export { onUserCreate, findUserByMail, findOrgByName, getOrCreateUserByMail, sendVerifyEmail, sendResetPasswordEmail };

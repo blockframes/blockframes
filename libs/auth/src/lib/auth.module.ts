@@ -34,7 +34,7 @@ export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
-  { path: 'identity', component: IdentityComponent },
+  { path: 'identity', component: IdentityComponent, canActivate: [AuthGuard], canDeactivate: [AuthGuard] },
   { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}

@@ -5,9 +5,9 @@ import {
   createOrganizationDocPermissions,
   createUserDocPermissions,
   getDocument,
-  getSuperAdmins
+  getSuperAdminIds
 } from './data/internals';
-import { db, functions, getUserMail } from './internals/firebase';
+import { db, functions, getUserMail, getUser } from './internals/firebase';
 import {
   DeliveryDocument,
   InvitationDocument,
@@ -26,7 +26,8 @@ import {
   userInviteToOrg,
   userJoinedAnOrganization,
   userJoinedYourOrganization,
-  userRequestedToJoinYourOrg
+  userRequestedToJoinYourOrg,
+  userJoinOrgPendingRequest
 } from './assets/mail-templates';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 
@@ -88,14 +89,14 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
 async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
-  const adminIds = await getSuperAdmins(organizationId);
+  const adminIds = await getSuperAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
 
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
-    .map(adminEmail => sendMail(userJoinedYourOrganization(adminEmail!, userEmail!)));
+    .map(adminEmail => sendMail(userJoinedYourOrganization(adminEmail!, userEmail!))); // TODO EMAIL
 
-  return Promise.all([sendMail(userJoinedAnOrganization(userEmail!)), ...adminEmailPromises]);
+  return Promise.all([sendMail(userJoinedAnOrganization(userEmail!)), ...adminEmailPromises]); // TODO EMAIL
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
@@ -230,20 +231,24 @@ async function onInvitationFromUserToJoinOrgCreate({
   organization,
   user
 }: InvitationFromUserToOrganization) {
-  const userEmail = await getUserMail(user.uid);
+  const userData = await getUser(user.uid);
 
-  if (!userEmail) {
+  if (!userData.email) {
     throw new Error(`no email for userId: ${user.uid}`);
   }
 
-  const superAdmins = await getSuperAdmins(organization.id);
+  const superAdminIds = await getSuperAdminIds(organization.id);
 
-  const superAdminsMails = await Promise.all(superAdmins.map(getUserMail));
-  const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
+  const superAdmins = await Promise.all(superAdminIds.map(getUser));
+  // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
+  // send invitation pending email to user
+  await sendMailFromTemplate(userJoinOrgPendingRequest(userData.email, organization.name, userData.name!));
+
+  // send invitation received to every org admin
   return Promise.all(
-    validSuperAdminMails.map(adminEmail =>
-      sendMail(userRequestedToJoinYourOrg(adminEmail!, userEmail))
+    superAdmins.map(admin =>
+      sendMailFromTemplate(userRequestedToJoinYourOrg(admin.email, admin.name!, organization.name, organization.id, userData.name!, userData.surname!))
     )
   );
 }

@@ -13,7 +13,6 @@ import {
   ADMIN_DATA_PATH,
   organizationCanAccessApp,
   organizationRequestedAccessToApp,
-  organizationWasAccepted
 } from './assets/mail-templates';
 import {
   acceptNewOrgPage,
@@ -23,7 +22,7 @@ import {
   dataBackupPage,
   dataRestorePage
 } from './assets/admin-templates';
-import { getSuperAdmins } from './data/internals';
+import { getSuperAdminIds } from './data/internals';
 import * as backup from './backup';
 
 // TODO(#714): Synchronize data types with the frontend
@@ -67,7 +66,7 @@ function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
 }
 
 async function mailOrganizationAdminOnAccept(organizationId: string): Promise<any> {
-  const superAdmins = await getSuperAdmins(organizationId);
+  const superAdmins = await getSuperAdminIds(organizationId);
 
   return Promise.all(
     superAdmins.map(async userId => {
@@ -75,7 +74,6 @@ async function mailOrganizationAdminOnAccept(organizationId: string): Promise<an
       if (!email) {
         return;
       }
-      return sendMail(organizationWasAccepted(email));
     })
   );
 }
@@ -114,7 +112,7 @@ async function mailOrganizationAdminOnAccessToApp(
   organizationId: string,
   appId: string
 ): Promise<any> {
-  const superAdmins = await getSuperAdmins(organizationId);
+  const superAdmins = await getSuperAdminIds(organizationId);
 
   return Promise.all(
     superAdmins.map(async userId => {
