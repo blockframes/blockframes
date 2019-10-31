@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WishList } from '@blockframes/organization';
+import { Wishlist } from '@blockframes/organization';
 import { BasketQuery } from '../../../distribution-right/+state/basket.query';
 
 @Component({
@@ -11,7 +11,7 @@ import { BasketQuery } from '../../../distribution-right/+state/basket.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistViewComponent implements OnInit {
-  public wishlists$: Observable<WishList[]>;
+  public wishlists$: Observable<Wishlist[]>;
 
   constructor(private basketQuery: BasketQuery) {}
 

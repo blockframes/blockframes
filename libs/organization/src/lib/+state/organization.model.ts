@@ -1,7 +1,7 @@
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
-import { OrganizationDocument, WhishListWithDates } from './organization.firestore';
+import { OrganizationDocument, WishlistWithDates } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
 export { OrganizationStatus, createOrganization } from './organization.firestore';
 
@@ -59,7 +59,7 @@ export interface Organization extends OrganizationDocument {
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
 
-export interface WishList extends WhishListWithDates {
+export interface Wishlist extends WishlistWithDates {
   movies?: Movie[];
 }
 
