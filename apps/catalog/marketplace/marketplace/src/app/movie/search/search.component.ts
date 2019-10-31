@@ -102,9 +102,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public selectedMovieTerritories: string[] = [];
 
    /* Flags for Sales Agents chip input*/
-   public selectableSAChip = true;
-   public removableSAChip = true;
-   public addOnBlur = true;
    public selectedSalesAgents: string[] = [];
    public salesAgents: string[] = [];
    private salesAgentsSub: Subscription;
@@ -373,8 +370,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
+      this.filterForm.removeSalesAgent(salesAgent);
     }
-    this.filterForm.removeSalesAgent(salesAgent);
   }
 
   ngOnDestroy() {
