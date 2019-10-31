@@ -1,10 +1,11 @@
+import { switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
-import { SubcollectionService, CollectionConfig, syncQuery, Query } from 'akita-ng-fire';
+import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus, WishlistWithDates } from '@blockframes/organization/types';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
@@ -14,15 +15,22 @@ const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/baskets' })
-export class BasketService extends SubcollectionService<BasketState> {
+export class BasketService extends CollectionService<BasketState> {
   syncQuery = syncQuery.bind(this, basketsQuery(this.organizationQuery.getValue().org.id));
 
   constructor(
     private organizationQuery: OrganizationQuery,
     private basketQuery: BasketQuery,
+    private organizationService: OrganizationService,
     store: BasketStore
   ) {
     super(store);
+  }
+
+  public syncBasket() {
+    return this.organizationQuery
+      .select('org')
+      .pipe(switchMap(({ id }) => this.syncCollection({ pathParams: { orgId: id } })));
   }
 
   public addBasket(basket: CatalogBasket) {
@@ -47,27 +55,18 @@ export class BasketService extends SubcollectionService<BasketState> {
       };
     };
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
-      this.db
-        .collection('orgs')
-        .doc(`${this.organizationQuery.id}`)
-        .set({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
-    } else if (pendingWishlist) {
-      const updatedWishlist = JSON.parse(JSON.stringify(orgState.wishlist));
-      for (let i = 0; i < updatedWishlist.length; i++) {
-        if (
-          updatedWishlist[i].status === 'pending' &&
-          updatedWishlist[i].movieIds.includes(movie.id)
-        ) {
-          const index = updatedWishlist[i].movieIds.indexOf(movie.id);
-          updatedWishlist[i].movieIds.splice(index, 1);
-        } else if (updatedWishlist[i].status === 'pending') {
-          updatedWishlist[i].movieIds.push(movie.id);
+      this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
+    } else if (pendingWishlist.length) {
+      const wishlist = orgState.wishlist.map(w => {
+        const wish = Object.assign({}, w);
+        if (wish.status === 'pending') {
+          wish.movieIds.includes(movie.id)
+            ? (wish.movieIds = wish.movieIds.filter(id => id !== movie.id))
+            : (wish.movieIds = [...wish.movieIds, movie.id]);
         }
-      }
-      this.db
-        .collection('orgs')
-        .doc(`${this.organizationQuery.id}`)
-        .update({ wishlist: updatedWishlist });
+        return wish;
+      });
+      this.organizationService.update({ ...orgState, wishlist: wishlist });
     }
   }
 
