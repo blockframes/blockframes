@@ -3,7 +3,7 @@
   <!-- first column -->
   <ul class="size-column">
     <ng-container *ngIf="main.languages">
-      <li fxLayout="row">
+      <li fxLayout="row wrap">
         <span><b>Original language(s)</b></span>
         <span *ngFor="let languages of main.languages; let isLast=last">
           {{ languages }}{{isLast ? '' : ', '}}
@@ -11,7 +11,7 @@
       </li>
     </ng-container>
     <ng-container *ngIf="versionInfo.dubbings">
-      <li fxLayout="row">
+      <li fxLayout="row wrap">
         <span><b>Available dubbing(s)</b></span>
         <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
           {{ dubbing }}{{isLast ? '' : ', '}}
@@ -22,7 +22,7 @@
   <!-- second column -->
   <ul class="size-column">
     <ng-container *ngIf="versionInfo.subtitle">
-      <li fxLayout="row">
+      <li fxLayout="row wrar">
         <span><b>Available subtitle(s)</b></span>
         <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
           {{ subtitle }}{{isLast ? '' : ', '}}
