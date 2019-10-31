@@ -83,3 +83,6 @@ export const templateIds = {
 
 // Yandex Metrika Id
 export const yandexId = 0;
+// Intercom
+// ========
+export const intercomId = '';

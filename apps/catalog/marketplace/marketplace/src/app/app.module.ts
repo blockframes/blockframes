@@ -24,7 +24,6 @@ import { AccountModule } from '@blockframes/account';
 import { WalletModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { IntercomModule } from 'ng-intercom';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -41,6 +40,9 @@ import { LayoutComponent } from './layout/layout.component';
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
+// Intercom
+import { IntercomModule } from 'ng-intercom';
+import { intercomId } from '@env';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -68,8 +70,10 @@ import { yandexId } from '@env';
     WalletModule,
     KeyManagerModule,
     NotificationWidgetModule,
+
+    // Intercom
     IntercomModule.forRoot({
-      appId: "srwfltp4", // from Intercom config
+      appId: intercomId,
       updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
     }),
 
