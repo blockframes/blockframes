@@ -94,9 +94,9 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
-    .map(adminEmail => sendMail(userJoinedYourOrganization(adminEmail!, userEmail!))); // TODO EMAIL
+    .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!)));
 
-  return Promise.all([sendMail(userJoinedAnOrganization(userEmail!)), ...adminEmailPromises]); // TODO EMAIL
+  return Promise.all([sendMailFromTemplate(userJoinedAnOrganization(userEmail!, organizationId)), ...adminEmailPromises]);
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
