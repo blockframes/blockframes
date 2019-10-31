@@ -3,8 +3,7 @@ import { CatalogBasket } from '@blockframes/marketplace';
 import { AppDetails } from '@blockframes/utils';
 import { OrganizationDocument, WishlistWithDates } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
-export { OrganizationStatus, createOrganization } from './organization.firestore';
-
+export { OrganizationStatus, createOrganization, WhishListStatus } from './organization.firestore';
 export const enum AppStatus {
   none = 'none', // no request nor accept.
   requested = 'requested',

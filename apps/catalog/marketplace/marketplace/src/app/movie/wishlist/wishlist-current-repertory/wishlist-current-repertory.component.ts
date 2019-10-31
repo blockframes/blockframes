@@ -3,10 +3,13 @@ import {
   Component,
   ViewChild,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -15,6 +18,8 @@ import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/sta
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistCurrentRepertoryComponent {
+
+  @Output() sent = new EventEmitter();
 
   public columnsToDisplay = [
     'movie',
@@ -35,7 +40,17 @@ export class WishlistCurrentRepertoryComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  constructor(private router: Router) {}
+
   public getLabel(scope: Scope, slug: string) {
     return getLabelByCode(scope, slug);
+  }
+
+  public async redirectToMovie(movieId: string) {
+    this.router.navigateByUrl(`layout/o/catalog/${movieId}/view`);
+  }
+
+  public remove(movie: Movie) {
+    // TODO: user Max update function
   }
 }
