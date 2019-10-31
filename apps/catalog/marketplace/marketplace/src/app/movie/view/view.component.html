@@ -14,12 +14,12 @@
   <div fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
     <mat-divider></mat-divider>
     <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-      <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
+      <button mat-icon-button (click)="addToWishlist()">
         <mat-icon svgIcon="heart_filled"></mat-icon>
       </button>
     </ng-container>
     <ng-template #alreadyAdded>
-      <button mat-icon-button class="heart-icon" (click)="addToWishlist()">
+      <button mat-icon-button (click)="addToWishlist()">
         <mat-icon svgIcon="heart"></mat-icon>
       </button>
     </ng-template>
