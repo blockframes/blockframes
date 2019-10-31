@@ -33,10 +33,6 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms-conditions.module';
 
-// Intercom
-import { IntercomModule } from 'ng-intercom';
-import { intercomId } from '@env';
-
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
@@ -46,15 +42,6 @@ export const AuthRoutes: Routes = [
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}
 ];
-
-// Initialize Intercom
-let intercom = [];
-if (intercomId) {
-  intercom = [IntercomModule.forRoot({
-    appId: intercomId,
-    updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-  })]
-};
 
 @NgModule({
   imports: [
@@ -77,10 +64,8 @@ if (intercomId) {
     // Fire
     AngularFireAuthModule,
     AngularFirePerformanceModule,
-
     RouterModule.forChild(AuthRoutes),
     UiFormModule,
-    intercom,
   ],
   declarations: [
     LoginViewComponent,
