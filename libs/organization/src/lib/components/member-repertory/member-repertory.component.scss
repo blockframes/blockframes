@@ -1,3 +1,11 @@
 table {
   width: 100%;
 }
+.uppercase {
+  text-transform: uppercase;
+}
+
+.bold {
+  font-weight: bold;
+  text-transform: capitalize;
+}
