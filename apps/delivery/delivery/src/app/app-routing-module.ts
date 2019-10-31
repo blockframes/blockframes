@@ -3,18 +3,24 @@ import { RouterModule, NoPreloading } from '@angular/router';
 
 import { App } from '@blockframes/organization';
 import { LayoutComponent } from './layout/layout.component';
-import { dashboard } from '@blockframes/utils/routes';
+import { createRoutes } from '@blockframes/utils/routes';
 
 /** Scaffold a dashboard like application routing for this application */
-const routes = dashboard({
+const routes = createRoutes({
   appName: App.mediaDelivering,
   layout: LayoutComponent,
-  appsRoutes: [{
-    path: App.mediaDelivering,
-    loadChildren: () => import('./delivery.module').then(m => m.DeliveryAppModule)
-  }]
+  appsRoutes: [
+    {
+      path: '',
+      redirectTo: App.mediaDelivering,
+      pathMatch: 'full'
+    },
+    {
+      path: App.mediaDelivering,
+      loadChildren: () => import('./delivery.module').then(m => m.DeliveryAppModule)
+    }
+  ]
 });
-
 
 @NgModule({
   imports: [

@@ -7,7 +7,7 @@ export const CONTEXT_MENU = [
       // { name: 'home', path: '${appsRoute}/${App.catalogDashboard}/catalog/home' }, @todo #878 removed for torronto
       {
         name: 'movie list',
-        path: `${appsRoute}/home/list`
+        path: `${appsRoute}/${App.catalogDashboard}/home/list`
       }, // temp
       {
         name: 'Upload avails & films doc',

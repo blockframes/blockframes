@@ -1,28 +1,7 @@
-import { Routes, Route } from '@angular/router';
-import { MovieEmptyComponent } from '@blockframes/movie';
-
-// Guards
+import { Routes } from '@angular/router';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { NotificationsGuard } from '@blockframes/notification';
-
-const organizationRoute: Route = {
-  path: 'organization',
-  loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
-};
-
-const accountRoute: Route = {
-  path: 'account',
-  loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
-};
-
-const movieRoutes: Routes = [{
-  path: 'no-movies',
-  component: MovieEmptyComponent
-},{
-  path: 'home',
-  loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
-}];
 
 interface RouteOptions {
   /** The Layout Component to render */
@@ -73,33 +52,22 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
   ]
 }
 
-export function marketplace({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
+
+
+export function createRoutes({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
   const children = [
     {
-      path: '',
-      redirectTo: appsRoutes[0].path,
-      pathMatch: 'full'
+      path: 'organization',
+      loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
     },
-    organizationRoute,
-    accountRoute,
+    {
+      path: 'account',
+      loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+    },
     ...appsRoutes,
   ];
   return root(layout, children, rootPath, appName);
 }
 
-export function dashboard({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
-  const children = [
-    {
-      path: '',
-      redirectTo: 'home',
-      pathMatch: 'full'
-    },
-    organizationRoute,
-    accountRoute,
-    ...movieRoutes,
-    ...appsRoutes
-  ];
-  return root(layout, children, rootPath, appName);
-}
 
 export const appsRoute = '/layout/o';

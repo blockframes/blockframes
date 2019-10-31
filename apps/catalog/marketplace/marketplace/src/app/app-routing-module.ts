@@ -2,17 +2,25 @@ import { NgModule } from '@angular/core';
 import { RouterModule, NoPreloading } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout.component';
-import { marketplace } from '@blockframes/utils/routes';
+import { createRoutes } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
 
 /** Scaffold a marketplace application routing for this application */
-const routes = marketplace({
+const routes = createRoutes({
   appName: App.biggerBoat,
   layout: LayoutComponent,
-  appsRoutes: [{
-    path: App.biggerBoat,
-    loadChildren: () => import('./catalog-marketplace.module').then(m => m.CatalogMarketplaceAppModule)
-  }]
+  appsRoutes: [
+    {
+      path: '',
+      redirectTo: App.biggerBoat,
+      pathMatch: 'full'
+    },
+    {
+      path: App.biggerBoat,
+      loadChildren: () =>
+        import('./catalog-marketplace.module').then(m => m.CatalogMarketplaceAppModule)
+    }
+  ]
 });
 
 @NgModule({
