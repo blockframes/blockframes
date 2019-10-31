@@ -75,7 +75,7 @@ export function createOrganization(
     updated: Date.now(),
     logo: PLACEHOLDER_LOGO,
     catalog: null,
-    whishList: [],
+    wishlist: [],
     ...params
   };
 }
