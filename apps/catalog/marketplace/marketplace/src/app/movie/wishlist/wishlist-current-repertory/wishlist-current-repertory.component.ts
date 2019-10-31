@@ -10,6 +10,7 @@ import {
 import { Movie } from '@blockframes/movie';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { Router } from '@angular/router';
+import { BasketService } from '../../../distribution-right/+state/basket.service';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -42,7 +43,7 @@ export class WishlistCurrentRepertoryComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private service: BasketService) {}
 
   ngOnInit() {
     if (this.isCurrent) {
@@ -58,7 +59,7 @@ export class WishlistCurrentRepertoryComponent {
     this.router.navigateByUrl(`layout/o/catalog/${movieId}/view`);
   }
 
-  public remove(movie: Movie) {
-    // TODO: user Max update function
+  public remove(movieId: string) {
+    this.service.removeMovieFromWishlist(movieId);
   }
 }

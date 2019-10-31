@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WishList, WhishListStatus } from '@blockframes/organization';
+import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { BasketQuery } from '../../../distribution-right/+state/basket.query';
 import { BasketService } from '../../../distribution-right/+state/basket.service';
 import { Movie } from '@blockframes/movie';
@@ -15,8 +15,8 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistViewComponent implements OnInit {
-  public wishlists$: Observable<WishList[]>;
-  public currentWishlist$: Observable<WishList>;
+  public wishlists$: Observable<Wishlist[]>;
+  public currentWishlist$: Observable<Wishlist>;
 
   constructor(
     private basketQuery: BasketQuery,
@@ -26,10 +26,10 @@ export class WishlistViewComponent implements OnInit {
 
   ngOnInit() {
     this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WhishListStatus.pending))
+      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
     );
     this.wishlists$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.filter(wishlist => wishlist.status === WhishListStatus.sent))
+      map(wishlists => wishlists.filter(wishlist => wishlist.status === WishlistStatus.sent))
     );
   }
 
