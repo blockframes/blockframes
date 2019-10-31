@@ -98,20 +98,18 @@ export function organizationCanAccessApp(email: string, appId: string): EmailReq
   };
 }
 
-export function userJoinedAnOrganization(userEmail: string): EmailRequest { // TODO
-  return {
-    to: userEmail,
-    subject: 'You joined a new organization',
-    text: 'TODO (userJoinedAnOrganization)'
-  };
+export function userJoinedAnOrganization(userEmail: string, orgId: string): EmailTemplateRequest {
+  const data = {
+    pageURL: `${appUrl}${ORG_HOME}${orgId}`
+  }
+  return { to: userEmail, templateId: templateIds.userRequestAccepted, data };
 }
 
-export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailRequest { // TODO
-  return {
-    to: orgAdminEmail,
-    subject: 'A user joined the organization',
-    text: `user: ${userEmail}`
-  }
+export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest { // TODO
+  const data = {
+    userEmail
+  };
+  return { to: orgAdminEmail, templateId: templateIds.userHasJoined, data };
 }
 /** Generates a transactional email to let an admin now that a user requested to join their org */
 export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: string, orgName: string, orgId: string, userFirstName: string, userLastName: string): EmailTemplateRequest { // TODO

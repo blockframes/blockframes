@@ -49,7 +49,7 @@ const onUserCreate = async (user: UserRecord) => {
 
   const userDocRef = db.collection('users').doc(user.uid);
 
-  await sendVerifyEmail(email);
+  await sendVerifyEmail({email});
   await sendMailFromTemplate(welcomeMessage(email));
 
   // transaction to UPSERT the user doc
