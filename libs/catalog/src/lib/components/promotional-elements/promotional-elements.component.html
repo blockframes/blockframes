@@ -6,7 +6,7 @@
             {{ info.type }}: <a [href]="info.link">{{ info.hyperlinkText }}</a>
         </div>
         <div *ngIf="i%2 === 1" fxLayout="row wrap">
-            {{ info.type }}: <a [href]="info.link">{{ info.hyperlinkText }}</a>
+            {{ info.type }}: <a [href]="info.link" target="_blank">{{ info.hyperlinkText }}</a>
         </div>
     </ng-container>
 </article>
