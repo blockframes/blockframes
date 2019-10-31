@@ -16,6 +16,7 @@ export interface OrganizationDocument {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
+  catalog: null,
   logo: string;
   phoneNumber: string;
   fiscalNumber: string;
