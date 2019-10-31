@@ -20,8 +20,8 @@ export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
   ]).pipe(
     map(([wishlists, movies]) => {
       return wishlists.map(wishlist => {
-        const movieIds = wishlist.movieIds.map(id => movies.find(movie => movie.id === id));
-        return { ...wishlist, movies: movieIds };
+        const wishlistMovies = wishlist.movieIds.map(id => movies.find(movie => movie.id === id));
+        return { ...wishlist, movies: wishlistMovies };
       })
     })
   );
