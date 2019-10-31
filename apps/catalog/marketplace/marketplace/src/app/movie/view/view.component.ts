@@ -29,14 +29,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.getMovie();
     this.toggle$ = this.orgQuery.select('org').pipe(
       map(org => {
-        return org.wishlist.some(wish => {
-          if (wish.status === 'pending') {
-            return wish.movieIds.includes(this.movieQuery.getActive().id);
-          }
-        });
+        return org.wishlist
+          .filter(({ status }) => status === 'pending')
+          .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActive().id));
       })
     );
-    this.toggle$.subscribe(console.log);
   }
 
   private getMovie() {

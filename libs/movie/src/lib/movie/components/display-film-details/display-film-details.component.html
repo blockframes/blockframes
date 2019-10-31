@@ -30,22 +30,22 @@
       </li>
     </ng-container>
     <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
-      <li fxLayout="row" >
+      <li fxLayout="row">
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>
       </li>
-      <ng-template #noRelease>
-        <li fxLayout="row">
-          <span><b>Theatrical Release</b></span>
-          <span>No</span>
-        </li>
-      </ng-template>
-      <ng-container *ngIf="salesInfo.originCountryReleaseDate">
-        <li fxLayout="row">
-          <span><b>Release date in Origin Country</b></span>
-          <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>
-        </li>
-      </ng-container>
+    </ng-container>
+    <ng-template #noRelease>
+      <li fxLayout="row">
+        <span><b>Theatrical Release</b></span>
+        <span>No</span>
+      </li>
+    </ng-template>
+    <ng-container *ngIf="salesInfo.originCountryReleaseDate">
+      <li fxLayout="row">
+        <span><b>Release date in Origin Country</b></span>
+        <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>
+      </li>
     </ng-container>
   </ul>
 </article>
