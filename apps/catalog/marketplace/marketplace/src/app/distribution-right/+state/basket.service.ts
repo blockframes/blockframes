@@ -109,10 +109,8 @@ export class BasketService extends CollectionService<BasketState> {
     try {
       const wishlist = this.organizationQuery.getValue().org.wishlist.map(w => {
         const wish = Object.assign({}, w);
-        if (wish.status === 'pending') {
-          wish.movieIds.includes(id)
-            ? (wish.movieIds = wish.movieIds.filter(movieId => movieId !== id))
-            : false; // movieId is not in the movieIds array
+        if (wish.status === 'pending' && wish.movieIds.includes(id)) {
+          wish.movieIds = wish.movieIds.filter(movieId => movieId !== id);
         }
         return wish;
       });
