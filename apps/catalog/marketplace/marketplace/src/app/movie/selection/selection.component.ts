@@ -80,8 +80,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   public async deleteDistributionRight(rightId) {
     // TODO issue#1146
     if (!AFM_DISABLE) {
-      let result: boolean | Error;
-      await this.basketService.removeMovieFromWishlist(rightId).then(data => (result = data));
+      const result: boolean | Error = this.basketService.removeMovieFromWishlist(rightId);
       if (typeof result === 'boolean') {
         return;
       } else {

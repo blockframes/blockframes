@@ -105,15 +105,21 @@ export class BasketService extends CollectionService<BasketState> {
     return this.db.createId();
   }
 
-  public async removeMovieFromWishlist(id: string): Promise<boolean | Error> {
+  public removeMovieFromWishlist(id: string): boolean | Error {
     try {
-      const updatedWishlist = this.organizationQuery
-        .getValue()
-        .org.wishlist.filter(entity => entity.id !== id);
-      await this.db
-        .collection('orgs')
-        .doc(`${this.organizationQuery.id}`)
-        .update({ ...this.organizationQuery.getValue().org, wishlist: updatedWishlist });
+      const wishlist = this.organizationQuery.getValue().org.wishlist.map(w => {
+        const wish = Object.assign({}, w);
+        if (wish.status === 'pending') {
+          wish.movieIds.includes(id)
+            ? (wish.movieIds = wish.movieIds.filter(movieId => movieId !== id))
+            : false; // movieId is not in the movieIds array
+        }
+        return wish;
+      });
+      this.organizationService.update({
+        ...this.organizationQuery.getValue().org,
+        wishlist: wishlist
+      });
       return true;
     } catch (err) {
       return err;
