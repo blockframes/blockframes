@@ -136,8 +136,8 @@
                 <mat-chip-list #chipList aria-label="Sales Agents selection">
                   <mat-chip
                     *ngFor="let salesAgent of selectedSalesAgents"
-                    [selectable]="selectableSAChip"
-                    [removable]="removableSAChip"
+                    selectable
+                    removable
                     (removed)="removeSalesAgent(salesAgent)">
                     {{ salesAgent }}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
