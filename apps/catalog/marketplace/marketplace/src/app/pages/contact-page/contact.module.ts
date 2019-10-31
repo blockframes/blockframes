@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Pages
-import { TeamPageComponent } from './team-page.component';
+import { ContactPageComponent } from './contact-page.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [TeamPageComponent],
+  declarations: [ContactPageComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -19,9 +19,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterModule.forChild([
       {
         path: '',
-        component: TeamPageComponent
+        component: ContactPageComponent
       }
     ])
   ]
 })
-export class TeamPageModule {}
+export class ContactModule {}
