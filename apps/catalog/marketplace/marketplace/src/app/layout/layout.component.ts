@@ -18,9 +18,6 @@ export class LayoutComponent implements OnInit {
   public AFM_DISABLE: boolean;
   public currentWishlist$: Observable<Wishlist>
 
-  private user$: Observable<User>;
-  private sub: Subscription;
-
   constructor(
     private contextMenuService: ContextMenuService,
     private basketQuery: BasketQuery
@@ -30,23 +27,6 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit() {
     this.contextMenuService.setMenu(CONTEXT_MENU);
-    this.user$ = this.query.user$;
-
-    this.sub = this.user$.subscribe(user => {
-      if (!!user) {
-        // Initialize Intercom Messenger for logged user
-        this.intercom.boot({
-          email: user.email,
-          user_id: user.uid,
-          name: user.surname,
-          widget: {
-            "activator": "#intercom"
-          }
-        });
-      } else {
-        this.intercom.shutdown();
-      }
-    });
 
     if (!this.AFM_DISABLE) {
       this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
@@ -57,9 +37,5 @@ export class LayoutComponent implements OnInit {
     this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
     );
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }

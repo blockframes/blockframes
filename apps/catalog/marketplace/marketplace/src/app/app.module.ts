@@ -71,12 +71,6 @@ import { intercomId } from '@env';
     KeyManagerModule,
     NotificationWidgetModule,
 
-    // Intercom
-    IntercomModule.forRoot({
-      appId: intercomId,
-      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-    }),
-
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
