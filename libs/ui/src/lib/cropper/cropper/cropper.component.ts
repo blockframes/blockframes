@@ -80,6 +80,8 @@ export class CropperComponent implements ControlValueAccessor{
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
 
+  @Input() storagePath: string;
+
   uploaded: (ref: string) => void;
   deleted: () => void;
 
@@ -95,8 +97,7 @@ export class CropperComponent implements ControlValueAccessor{
       if (isFile(path)) {
         const part = path.split('/');
         this.name = part.pop();
-        // this.name = 'cropped';
-        this.folder = part.pop();
+        this.folder = this.storagePath;
         this.ref = this.storage.ref(path);
         this.url$ = this.ref.getDownloadURL().pipe(
           catchError(err => {
@@ -128,7 +129,8 @@ export class CropperComponent implements ControlValueAccessor{
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
-    this.storage.ref(`${this.folder}/original`).put(this.file);
+    // TODO#1149: fix resize - upload original picture
+    // this.storage.ref(`${this.folder}/original`).put(this.file);
     this.nextStep('crop');
   }
 
@@ -144,11 +146,14 @@ export class CropperComponent implements ControlValueAccessor{
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      const fileName = this.name || this.file.name;
+      const fileName = Date.now() + '_' + this.file.name;
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(() => this.nextStep('upload_complete'))
+        finalize(() => {
+          // this.uploaded(fileName)
+          this.nextStep('upload_complete')
+        })
       );
     } catch (err) {
       console.log(err);
@@ -162,7 +167,8 @@ export class CropperComponent implements ControlValueAccessor{
       this.nextStep('show');
     }
 
-    // TODO#1149: get original picture
+    // TODO#1149: fix resize - get original picture
+    /*
     async resize(url: string) {
       if (!this.file) {
         // const name = url.split('%2F').pop();
@@ -172,11 +178,12 @@ export class CropperComponent implements ControlValueAccessor{
       }
       this.nextStep('crop');
     }
+    */
 
     delete() {
       this.ref.delete().subscribe(() => {
         this.nextStep('drop');
-        this.deleted();
+        // this.deleted();
       });
     }
 

@@ -57,7 +57,7 @@
         />
       </mat-form-field>
       <h3>Logo</h3>
-      <drop-cropper [ratio]="1" formControlName="logo"></drop-cropper>
+      <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo"></drop-cropper>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button mat-flat-button color="accent" (click)="addOrganization()">
           <ng-container *ngIf="(loading$ | async); else: notLoading">
