@@ -62,5 +62,5 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'prod-backups';
+export const backupBucket = 'blockframes-backups';
 export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
