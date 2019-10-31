@@ -36,7 +36,6 @@ export class LayoutComponent implements OnInit {
       if (!!user) {
         // Initialize Intercom Messenger for logged user
         this.intercom.boot({
-          app_id: "srwfltp4",
           email: user.email,
           user_id: user.uid,
           name: user.surname,
