@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { BasketStore, BasketState } from './basket.store';
 import { CatalogBasket } from './basket.model';
 import { MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, WishList } from '@blockframes/organization';
+import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -14,8 +14,8 @@ export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
   }
 
   /** Return an observable of a WishList array containing the movies */
-  public wishlistsWithMovies$: Observable<WishList[]> = combineLatest([
-    this.organizationQuery.select(state => state.org.wishList),
+  public wishlistsWithMovies$: Observable<Wishlist[]> = combineLatest([
+    this.organizationQuery.select(state => state.org.wishlist),
     this.movieQuery.selectAll()
   ]).pipe(
     map(([wishlists, movies]) => {
