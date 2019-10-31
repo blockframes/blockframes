@@ -5,6 +5,7 @@ import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import firebase from 'firebase';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private db: FireQuery,
     private router: Router,
-    private query: AuthQuery
+    private query: AuthQuery,
+    private functions: AngularFireFunctions
   ) {}
 
   //////////
@@ -25,7 +27,14 @@ export class AuthService {
    * @param email email of the user
    */
   public resetPasswordInit(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(email);
+    const callDeploy = this.functions.httpsCallable('sendResetPasswordEmail');
+    return callDeploy({ email }).toPromise();
+  }
+
+  /** Send a new verification email to the current user */
+  public async sendVerifyEmail() {
+    const callDeploy = this.functions.httpsCallable('sendVerifyEmail');
+    return callDeploy({ email: this.query.user.email }).toPromise();
   }
 
   public checkResetCode(actionCode: string) {
@@ -64,8 +73,6 @@ export class AuthService {
    */
   public async signup(email: string, password: string, name: string, surname: string) {
     const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-
-    await authUser.user.sendEmailVerification();
 
     const user = createUser({
       uid: authUser.user.uid,
@@ -113,11 +120,6 @@ export class AuthService {
     await this.afAuth.auth.currentUser.delete();
     await this.deleteSubCollections(uid);
     await this.db.doc<User>(`users/${uid}`).delete();
-  }
-
-  /** Send a new verification email to the current user */
-  public async sendVerifyEmail() {
-    return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 
   /** Deletes user subCollections */

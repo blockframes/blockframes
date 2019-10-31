@@ -86,7 +86,7 @@ export function getCount(collection: string): Promise<number> {
 }
 
 /** Retrieve the list of superAdmins of an organization */
-export async function getSuperAdmins(organizationId: string): Promise<string[]> {
+export async function getSuperAdminIds(organizationId: string): Promise<string[]> {
   const permissionsRef = db.collection('permissions').doc(organizationId);
   const permissionsDoc = await permissionsRef.get();
 

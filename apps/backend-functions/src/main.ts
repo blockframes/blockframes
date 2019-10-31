@@ -61,6 +61,14 @@ export const onUserCreate = functions.auth
 export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
+/** Trigger: REST call to send a verify email to a user. */
+export const sendVerifyEmail = functions.https
+  .onCall(users.sendVerifyEmail);
+
+/** Trigger: REST call to send a reset password link to a user. */
+export const sendResetPasswordEmail = functions.https
+  .onCall(users.sendResetPasswordEmail);
+
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);
