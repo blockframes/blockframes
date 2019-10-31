@@ -22,7 +22,7 @@
         </mat-error>
       </mat-form-field>
       <h3>Picture</h3>
-      <drop-cropper [ratio]="1" formControlName="avatar"></drop-cropper>
+      <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
     </form>
   </article>
   <button (click)="update()" type="submit" mat-flat-button color="accent">Next</button>
