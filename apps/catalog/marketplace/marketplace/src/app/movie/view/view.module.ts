@@ -29,6 +29,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 @NgModule({
   declarations: [MarketplaceMovieViewComponent],
@@ -36,6 +37,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     // Custom Modules
+    TranslateSlugModule,
     MovieDisplayAvailabilitiesModule,
     MovieDisplayProductionModule,
     MovieDisplayPrincipalInformationsModule,
