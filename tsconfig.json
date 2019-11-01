@@ -18,6 +18,7 @@
       "@env": ["env/env.ts"],
       "@blockframes/ip": ["libs/ip/src/index.ts"],
       "@blockframes/auth": ["libs/auth/src/index.ts"],
+      "@blockframes/auth/*": ["libs/auth/src/lib/*"],
 
       // UI
       "@blockframes/ui": ["libs/ui/src/index.ts"],
@@ -31,25 +32,41 @@
       // MOVIE
       "@blockframes/movie": ["libs/movie/src/index.ts"],
       "@blockframes/movie/*": ["libs/movie/src/lib/*"],
-      "@blockframes/movie/import": ["libs/movie/src/lib/movie/components/import/import-movie.module.ts"],
+      "@blockframes/movie/import": [
+        "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
+      ],
 
       // ETHERS
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
-      "@blockframes/ethers/helpers":["libs/ethers/src/lib/helpers.ts"],
-      "@blockframes/ethers/types":["libs/ethers/src/lib/types.ts"],
+      "@blockframes/ethers/helpers": ["libs/ethers/src/lib/helpers.ts"],
+      "@blockframes/ethers/types": ["libs/ethers/src/lib/types.ts"],
 
       // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
 
       // FIRESTORE DATA MODEL
-      "@blockframes/organization/types": ["libs/organization/src/lib/+state/organization.firestore.ts"],
+      "@blockframes/organization/types": [
+        "libs/organization/src/lib/+state/organization.firestore.ts"
+      ],
       "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
-      "@blockframes/invitation/types": ["libs/notification/src/lib/invitation/+state/invitation.firestore.ts"],
-      "@blockframes/material/material/types": ["libs/material/src/lib/material/+state/material.firestore.ts"],
-      "@blockframes/material/delivery/types": ["libs/material/src/lib/delivery/+state/delivery.firestore.ts"],
-      "@blockframes/material/template/types": ["libs/material/src/lib/template/+state/template.firestore.ts"],
-      "@blockframes/organization/stakeholder/types": ["libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"],
-      "@blockframes/notification/types": ["libs/notification/src/lib/notification/+state/notification.firestore.ts"],
+      "@blockframes/invitation/types": [
+        "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
+      ],
+      "@blockframes/material/material/types": [
+        "libs/material/src/lib/material/+state/material.firestore.ts"
+      ],
+      "@blockframes/material/delivery/types": [
+        "libs/material/src/lib/delivery/+state/delivery.firestore.ts"
+      ],
+      "@blockframes/material/template/types": [
+        "libs/material/src/lib/template/+state/template.firestore.ts"
+      ],
+      "@blockframes/organization/stakeholder/types": [
+        "libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"
+      ],
+      "@blockframes/notification/types": [
+        "libs/notification/src/lib/notification/+state/notification.firestore.ts"
+      ],
       "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
