@@ -13,7 +13,6 @@ export class ProfileFormComponent implements OnInit {
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
-    console.log(this.controlContainer.control.value)
     return this.controlContainer.control;
   }
   ngOnInit() {
