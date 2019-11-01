@@ -4,8 +4,15 @@ import { AngularFireStorage } from '@angular/fire/storage';
   selector: 'img[storageRef]'
 })
 export class StorageImageDirective {
+  placeholder: string;
+  url: string;
 
+  /** Set src attribute in img tag with the path for storage.
+   *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set storageRef(path: string) {
+    if(!path){
+      this.updateUrl();
+    }
     try {
       const ref = this.storage.ref(path);
       ref.getDownloadURL().toPromise()
@@ -16,12 +23,20 @@ export class StorageImageDirective {
     }
   }
 
-  @Input() placeholderUrl: string;
+  @Input() set placeholderUrl(placeholder: string) {
+    this.placeholder = placeholder;
+    this.updateSrc()
+  };
 
   constructor(private _renderer: Renderer2, private _elementRef: ElementRef, private storage: AngularFireStorage) {}
 
+  updateSrc() {
+    this._renderer.setProperty(this._elementRef.nativeElement, 'src', this.url || this.placeholder || '')
+  }
+
   updateUrl(url?: string) {
-    this._renderer.setProperty(this._elementRef.nativeElement, 'src', url || this.placeholderUrl || '')
+    this.url = url;
+    this.updateSrc();
   }
 
 }
