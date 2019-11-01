@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
+import { WelcomeViewComponent } from '@blockframes/auth/pages/welcome-view/welcome-view.component'
 
 // Guards
 import { CatalogMovieActiveGuard } from './guards/catalog-movie-active.guard';
@@ -65,7 +66,11 @@ export const routes: Routes = [
           {
             path: 'catalog',
             children: [
-              { path: '', redirectTo: 'home', pathMatch: 'full' },
+              { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+              {
+                path: 'welcome',
+                component: WelcomeViewComponent
+              },
               {
                 path: 'home',
                 canActivate: [MovieCollectionGuard],
