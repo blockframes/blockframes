@@ -25,10 +25,6 @@
         <span><b>Running Time</b></span>
         <span>{{ main.length }} min</span>
       </li>
-      <li fxLayout="row" *ngIf="main.productionCompanies">
-        <span><b>Production {{ main.productionCompanies.length > 1? 'Companpies' : 'Company'}}</b></span>
-        <span *ngFor="let company of main.productionCompanies">{{ company.firstName }} {{company.lastName}}</span>
-      </li>
     </ng-container>
   </ul>
   <!-- Second Column -->
@@ -36,9 +32,9 @@
     <ng-container *ngIf="salesCast">
       <li fxLayout="row wrap" *ngIf="salesCast.credits.length > 0">
         <span><b>Principal Cast</b></span>
-        <span *ngFor="let cast of salesCast.credits; let i = index">
+        <span *ngFor="let cast of salesCast.credits; let i = index; let isLast = last">
           <ng-container *ngIf="cast.creditRole === 'actor' && i <= 1; else end">
-            {{ cast.lastName }} {{ cast.firstName }} {{ i === 1 ? '' : ', '}}
+            {{ cast.lastName }} {{ cast.firstName }} {{ isLast ? '' : ', '}}
           </ng-container>
           <ng-template #end>...</ng-template>
         </span>
@@ -62,7 +58,7 @@
     </li>
     <li fxLayout="row" *ngIf="salesInfo.europeanQualification">
       <span><b>Quotas</b></span>
-      <span>european Qualification</span>
+      <span>European Qualification</span>
     </li>
   </ul>
 </article>
