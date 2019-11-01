@@ -2,13 +2,13 @@
 <article fxLayout="row" fxLayoutAlign="start center">
   <!-- First Column -->
   <ul class="first-column">
-    <ng-container *ngIf="main">
-      <li fxLayout="row" *ngIf="main.isan">
+    <ng-container *ngIf="main"><!-- TODO issue#1146 -->
+      <li fxLayout="row" *ngIf="main.isan && !AFM_DISABLE">
         <span><b>ISAN Number</b></span>
         <span>{{ main.isan }}</span>
       </li>
-    </ng-container>
-    <ng-container *ngIf="salesInfo.pegi">
+    </ng-container><!-- TODO issue#1146 -->
+    <ng-container *ngIf="salesInfo.pegi && !AFM_DISABLE">
       <li fxLayout="row">
         <span><b>Rating</b></span>
         <span>{{ salesInfo.pegi }}</span>
@@ -26,7 +26,7 @@
     <ng-container>
       <li fxLayout="row" *ngIf="color">
         <span><b>Color / Black & White</b></span>
-        <span>{{ color }}</span>
+        <span>{{ color | titlecase }}</span>
       </li>
     </ng-container>
     <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
@@ -44,7 +44,7 @@
     <ng-container *ngIf="salesInfo.originCountryReleaseDate">
       <li fxLayout="row">
         <span><b>Release date in Origin Country</b></span>
-        <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>
+        <span>{{ salesInfo.originCountryReleaseDate | date:'LLLL, dd yyyy' | uppercase }}</span>
       </li>
     </ng-container>
   </ul>

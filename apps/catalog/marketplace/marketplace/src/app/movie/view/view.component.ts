@@ -34,6 +34,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActive().id));
       })
     );
+    this.movie$.subscribe(d => console.log(d))
   }
 
   private getMovie() {
