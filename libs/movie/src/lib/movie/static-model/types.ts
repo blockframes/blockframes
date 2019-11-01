@@ -85,19 +85,19 @@ export type MediasLabel = typeof MEDIAS_LABEL[number];
 export type MediasSlug = typeof MEDIAS_SLUG[number];
 
 export const PROMOTIONAL_ELEMENT_TYPES_LABEL = models['PROMOTIONAL_ELEMENT_TYPES'].map(key => key.label);
-export const PROMOTIONAL_ELEMENT_TYPES_SLUG = models['PROMOTIONAL_ELEMENT_TYPES'].map(key => key.label);
+export const PROMOTIONAL_ELEMENT_TYPES_SLUG = models['PROMOTIONAL_ELEMENT_TYPES'].map(key => key.slug);
 
 export type PromotionalElementTypesLabel = typeof PROMOTIONAL_ELEMENT_TYPES_LABEL[number];
 export type PromotionalElementTypesSlug = typeof PROMOTIONAL_ELEMENT_TYPES_SLUG[number];
 
 export const RESOURCE_SIZES_LABEL = models['RESOURCE_SIZES'].map(key => key.label);
-export const RESOURCE_SIZES_SLUG = models['RESOURCE_SIZES'].map(key => key.label);
+export const RESOURCE_SIZES_SLUG = models['RESOURCE_SIZES'].map(key => key.slug);
 
 export type ResourceSizesLabel = typeof RESOURCE_SIZES_LABEL[number];
 export type ResourceSizesSlug = typeof RESOURCE_SIZES_SLUG[number];
 
 export const RESOURCE_RATIOS_LABEL = models['RESOURCE_RATIOS'].map(key => key.label);
-export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.label);
+export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slug);
 
 export type ResourceRatioLabel = typeof RESOURCE_RATIOS_LABEL[number];
 export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];

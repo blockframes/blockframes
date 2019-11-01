@@ -8,8 +8,4 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class MovieDisplayPrizesComponent {
   @Input() prizes;
-  festivalPrizes = [
-    { festivalLogo: '/assets/logo/cannes_logo.png', festivalName: 'Cannes Film Festival (2019)' },
-    { festivalLogo: '/assets/logo/cannes_logo.png', festivalName: 'Cannes Film Festival (2019)' }
-  ];
 }

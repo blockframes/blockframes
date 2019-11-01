@@ -11,15 +11,23 @@
         <span><b>International Title</b></span>
         <span>{{ main.title.international }}</span>
       </li>
-      <li fxLayout="row" *ngIf="main.title.original">
-        <span><b>Original Title</b></span>
-        <span>{{ main.title.original }}</span>
-      </li>
       <li fxLayout="row" *ngIf="main.directors.length > 0">
         <span><b>Director</b></span>
         <span *ngFor="let director of main.directors; let isLast=last">
           {{ director.lastName }} {{ director.firstName }}{{isLast ? '' : ', '}}
         </span>
+      </li>
+      <li fxLayout="row" *ngIf="main.status">
+        <span><b>Production Status</b></span>
+        <span class="capitalized">{{ main.status }}</span>
+      </li>
+      <li fxLayout="row" *ngIf="main.length">
+        <span><b>Running Time</b></span>
+        <span>{{ main.length }} min</span>
+      </li>
+      <li fxLayout="row" *ngIf="main.productionCompanies">
+        <span><b>Production {{ main.productionCompanies.length > 1? 'Companpies' : 'Company'}}</b></span>
+        <span *ngFor="let company of main.productionCompanies">{{ company.firstName }} {{company.lastName}}</span>
       </li>
     </ng-container>
   </ul>
@@ -28,8 +36,11 @@
     <ng-container *ngIf="salesCast">
       <li fxLayout="row wrap" *ngIf="salesCast.credits.length > 0">
         <span><b>Principal Cast</b></span>
-        <span *ngFor="let cast of salesCast.credits; let isLast=last">
-          {{ cast.lastName }} {{ cast.firstName }} {{isLast ? '' : ', '}}
+        <span *ngFor="let cast of salesCast.credits; let i = index">
+          <ng-container *ngIf="cast.creditRole === 'actor' && i <= 1; else end">
+            {{ cast.lastName }} {{ cast.firstName }} {{ i === 1 ? '' : ', '}}
+          </ng-container>
+          <ng-template #end>...</ng-template>
         </span>
       </li>
     </ng-container>
@@ -40,14 +51,18 @@
           {{ genre | translateSlug: 'GENRES' }}{{isLast ? '' : ', '}}
         </span>
       </li>
-      <li fxLayout="row" *ngIf="main.originCountry">
+      <li fxLayout="row" *ngIf="main.originCountries">
         <span><b>Country of Origin</b></span>
-        <span>{{ main.originCountry }}</span>
-      </li>
-      <li fxLayout="row" *ngIf="main.length">
-        <span><b>Length</b></span>
-        <span>{{ main.length }} min</span>
+        <span *ngFor="let country of main.originCountries">{{ country | translateSlug: 'TERRITORIES'}}</span>
       </li>
     </ng-container>
+    <li fxLayout="row" *ngIf="budget">
+      <span><b>Budget</b></span>
+      <span>{{budget.totalBudget}}</span>
+    </li>
+    <li fxLayout="row" *ngIf="salesInfo.europeanQualification">
+      <span><b>Quotas</b></span>
+      <span>european Qualification</span>
+    </li>
   </ul>
 </article>
