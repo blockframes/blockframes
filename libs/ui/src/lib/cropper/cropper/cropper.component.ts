@@ -93,7 +93,6 @@ export class CropperComponent implements ControlValueAccessor{
 
   //  Triggered when the parent form field is initialized or updated (parent -> component)
   writeValue(path: string): void {
-
       if (isFile(path)) {
         const part = path.split('/');
         this.name = part.pop();
