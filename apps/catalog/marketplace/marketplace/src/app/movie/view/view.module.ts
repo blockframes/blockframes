@@ -10,7 +10,7 @@ import { MarketplaceMovieViewComponent } from './view.component';
 // Custom Modules
 import {
   CatalogReservedTerritoriesModule,
-  CatalogProductionInformationModule,
+  CatalogProductionInformationsModule,
   CatalogPromotionalElementsModule
 } from '@blockframes/catalog';
 import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/movie/components/display-availabilities/display-availabilities.module';
@@ -48,7 +48,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
     MovieDisplayKeywordsModule,
     MovieDisplayVersionInfoModule,
     CatalogReservedTerritoriesModule,
-    CatalogProductionInformationModule,
+    CatalogProductionInformationsModule,
     CatalogPromotionalElementsModule,
     //Material
     MatCardModule,
