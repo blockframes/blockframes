@@ -44,7 +44,7 @@
           [salesAgentDealLogo]="movie.salesAgentDeal.salesAgent.logo"></catalog-production-information>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Key Assets -->
-        <ng-container *ngIf="movie.promotionalDescription.keyAssets">
+        <ng-container *ngIf="movie.promotionalDescription.keyAssets.length">
           <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
           <mat-divider [inset]="true"></mat-divider>
         </ng-container>
@@ -54,9 +54,11 @@
     <div fxLayout="column" class="information-column">
       <mat-card class="informations" fxLayout="column">
         <!-- Promotional elements -->
-        <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
-        </catalog-promotional-elements>
-        <mat-divider [inset]="true"></mat-divider>
+        <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
+          <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
+          </catalog-promotional-elements>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container>
         <!-- Main informations -->
         <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast" [budget]="movie.budget"
           [salesInfo]="movie.salesInfo"></movie-display-principal-informations>
