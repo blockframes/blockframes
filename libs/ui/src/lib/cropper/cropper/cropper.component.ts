@@ -115,7 +115,7 @@ export class CropperComponent implements ControlValueAccessor{
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
     this.uploaded = (ref: string) => fn(ref);
-    this.deleted = () => fn();
+    this.deleted = () => fn(null);
   }
   registerOnTouched(fn: any): void {
     return;
@@ -181,6 +181,7 @@ export class CropperComponent implements ControlValueAccessor{
 
     delete() {
       this.ref.delete().subscribe(() => {
+        this.deleted()
         this.nextStep('drop');
       });
     }
