@@ -5,19 +5,15 @@ form {
   padding-left: 80px;
 }
 
-section {
-  height: 100%;
-}
-
 button {
-  margin-top: 80px;
+  margin: 80px 0;
 }
 
 mat-form-field {
   width: 100%;
 }
 
-.img {
+img {
   height: 400px;
   width: 400px;
   background-size: cover;
@@ -28,6 +24,10 @@ drop-cropper {
   width: 100%;
 }
 
+h2, p{
+  text-align: center;
+}
+
 @include mobile {
   form {
     width: 80%;
@@ -36,7 +36,7 @@ drop-cropper {
   article {
     height: 80%;
   }
-  .image {
+  img {
     height: 200px;
     width: 200px;
   }
@@ -53,9 +53,9 @@ drop-cropper {
   article {
     height: 80%;
   }
-  .image {
+  img {
     height: 350px;
-    width: 400px;
+    width: 350px;
   }
   button {
     margin-top: 40px;
