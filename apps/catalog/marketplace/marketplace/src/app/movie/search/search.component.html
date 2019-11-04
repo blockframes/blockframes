@@ -277,19 +277,26 @@
               <mat-card-subtitle *ngFor="let director of movie.main.directors">
                 {{ director.firstName }} {{ director.lastName }}
               </mat-card-subtitle>
-                <mat-card-content class="table-size-text">
-                  <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
-                    {{ getLabel(country, 'TERRITORIES')}}{{isLast ? '' : ', '}}
-                  </b>
-                  <b *ngIf="movie.main.originCountries.length > 2">...</b>
-                  <b>| {{ movie.main.length }} min | {{ getLabel(movie.main.genres[0], 'GENRES')}}</b>
-                </mat-card-content>
-              <!-- <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span> -->
+              <mat-card-content class="table-size-text">
+                <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
+                  {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}
+                </b>
+                <b *ngIf="movie.main.originCountries.length > 2">... </b>
+                <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>| {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
+                <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+              </mat-card-content>
             </ng-container>
-            <ng-container movieCardAction >
-              <div fxLayout="row" fxLayoutAlign="end end">
-                <mat-icon>favorite_border</mat-icon>
-              </div>
+            <ng-container movieCardAction>
+              <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
+                <button mat-icon-button (click)="addToWishlist(movie)">
+                  <mat-icon svgIcon="heart_filled"></mat-icon>
+                </button>
+              </ng-container>
+              <ng-template #alreadyAdded>
+                <button mat-icon-button (click)="addToWishlist(movie)">
+                  <mat-icon svgIcon="heart"></mat-icon>
+                </button>
+              </ng-template>
             </ng-container>
           </movie-card>
         </ng-container>

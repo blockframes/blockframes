@@ -32,7 +32,7 @@ import {
   MovieStatusLabel,
   MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
-import { getCodeIfExists, getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest, Subscription } from 'rxjs';
@@ -41,6 +41,8 @@ import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
+import { OrganizationQuery } from '@blockframes/organization';
+import { BasketService } from '../../distribution-right/+state/basket.service';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -123,9 +125,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
+    private organizationQuery: OrganizationQuery,
     private router: Router,
-    private movieService: MovieService
-  ) { }
+    private movieService: MovieService,
+    private basketService: BasketService
+  ) {}
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
@@ -373,6 +377,20 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
     }
+  }
+
+  public isAddedToWishlist(movieId: string): Observable<boolean> {
+    return this.organizationQuery.select('org').pipe(
+      map(org => {
+        return org.wishlist
+          .filter(({ status }) => status === 'pending')
+          .some(({ movieIds }) => movieIds.includes(movieId))
+      })
+    );
+  }
+
+  public addToWishlist(movie: Movie) {
+    this.basketService.updateWishlist(movie);
   }
 
   ngOnDestroy() {
