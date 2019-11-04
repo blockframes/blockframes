@@ -82,6 +82,11 @@ export const routes: Routes = [
                 import('./pages/contact-page/contact.module').then(m => m.ContactModule)
               },
               {
+                path: 'privacy',
+                loadChildren: () =>
+                import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+              },
+              {
                 path: 'home',
                 canActivate: [MovieCollectionGuard],
                 canDeactivate: [MovieCollectionGuard],
