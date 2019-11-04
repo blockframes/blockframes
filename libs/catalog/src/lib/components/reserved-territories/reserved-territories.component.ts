@@ -15,5 +15,5 @@ import { Component, Input } from '@angular/core';
   }`]
 })
 export class CatalogReservedTerritoriesComponent {
-  @Input() reservedTerritories;
+  @Input() reservedTerritories: string[];
 }
