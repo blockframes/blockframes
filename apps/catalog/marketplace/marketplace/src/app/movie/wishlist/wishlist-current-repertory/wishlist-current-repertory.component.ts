@@ -59,7 +59,8 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
     this.router.navigate([`layout/o/catalog/${movieId}/view`]);
   }
 
-  public remove(movieId: string) {
+  public remove(movieId: string, event: Event) {
+    event.stopPropagation();
     this.service.removeMovieFromWishlist(movieId);
   }
 }
