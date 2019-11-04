@@ -12,13 +12,21 @@ import { PasswordControl } from '@blockframes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent {
-  public userEmail = this.query.getValue().user.email;
+  // TODO issue#1146
+  public mobile =
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i)
+      ? false : true;
 
   public form = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
     avatar: new FormControl(''),
-    email: new FormControl({ value: this.userEmail, disabled: true }),
+    email: new FormControl({ value: this.query.getValue().user.email, disabled: true }),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
   });
