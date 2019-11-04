@@ -63,15 +63,15 @@ export const findUserByMail = functions.https
 
 /** Trigger: REST call to send a verify email to a user. */
 export const sendVerifyEmail = functions.https
-  .onCall(users.sendVerifyEmail);
+  .onCall(users.startVerifyEmailFlow);
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https
-  .onCall(users.sendResetPasswordEmail);
+  .onCall(users.startResetPasswordEmailFlow);
 
 /** Trigger: REST call to send a wishlist pending email to a user & a wishlist request to cascade8 admin. */
 export const sendWishlistEmails = functions.https
-  .onCall(users.sendWishlistEmails);
+  .onCall(users.startWishlistEmailsFlow);
 
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https

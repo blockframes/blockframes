@@ -29,6 +29,7 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
  * Gets the user email for the user corresponding to a given `uid`.
  * Throws if the user does not exists.
  */
-export function getUser(userId: string): Promise<PublicUser> {
-  return db.doc(`/users/${userId}`).get().then(user => user.data() as PublicUser);
+export async function getUser(userId: string): Promise<PublicUser> {
+  const user = await db.doc(`/users/${userId}`).get();
+  return user.data()! as PublicUser;
 }
