@@ -1,0 +1,36 @@
+@import 'mixins';
+
+header {
+  padding: 100px 0;
+  background-image: url('/assets/images/catalog-marketplace-banner.png');
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  text-align: center;
+}
+
+mat-card {
+  margin-top: 50px;
+  width: 1000px;
+}
+
+@include mobile {
+  mat-card {
+    width: 100%;
+    margin-top: 30px;
+  }
+}
+
+@include tablet {
+  mat-card {
+    width: 80%;
+    margin-top: 50px;
+  }
+}
+
+@include medium {
+  mat-card {
+    width: 80%;
+    margin-top: 50px;
+  }
+}

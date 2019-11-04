@@ -5,6 +5,9 @@
 @import './theme.scss';
 @import './variables.scss';
 
+// Footer
+@import './footer.scss';
+
 // Components style
 @import './components/mat-expansion-panel';
 @import './components/mat-dialog';
@@ -56,7 +59,7 @@ h1 {
 .dark-theme h3 {
   font-size: 20px;
   font-weight: 700;
-  color: mat-color($bf-dark-foreground, text);
+  color: mat-color($bf-dark-foreground, subheading);
 }
 
 .light-theme h4 {
@@ -68,7 +71,7 @@ h1 {
 .dark-theme h4 {
   font-size: 16px;
   font-weight: 700;
-  color: mat-color($bf-dark-foreground, subheading);
+  color: mat-color($bf-dark-foreground, text);
 }
 
 p,

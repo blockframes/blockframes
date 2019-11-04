@@ -1,3 +1,5 @@
+@import 'mixins';
+
 header {
   padding: 100px 0;
   background-image: url('/assets/images/catalog-marketplace-banner.png');
@@ -70,4 +72,42 @@ section {
     width: 100%;
   }
 
+}
+
+@include mobile {
+  h1 {
+    text-align: center;
+  }
+  section {
+    padding: 10px 10px;
+    aside {
+      width: 100%;
+      position: static;
+      mat-card {
+        height: 100%;
+      }
+      .filter {
+        margin-top: 50px;
+      }
+    }
+    article mat-form-field-wrapper {
+      width: 80%;
+    }
+  }
+
+}
+
+@include tablet {
+  section aside {
+    position: static;
+    .filter {
+      margin-top: 50px;
+    }
+  }
+}
+
+@include medium {
+  aside.filter {
+    width: 50%;
+  }
 }

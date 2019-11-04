@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
+import { FooterComponent } from './footer/footer.component';
 
 //Modules
 import { RouterModule } from '@angular/router';
@@ -22,12 +23,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
+    FlexLayoutModule,
 
     // Material
     MatIconModule,
@@ -49,10 +52,12 @@ import { MatTabsModule } from '@angular/material/tabs';
     HeaderComponent,
     ContextMenuComponent,
     LeftMenuComponent,
+    FooterComponent,
   ],
   exports: [
     HeaderComponent,
-    LeftMenuComponent
+    LeftMenuComponent,
+    FooterComponent
   ]
 })
 export class ToolbarModule {}
