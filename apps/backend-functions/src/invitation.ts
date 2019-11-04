@@ -96,7 +96,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
     .filter(mail => !!mail)
     .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!)));
 
-  return Promise.all([sendMailFromTemplate(userJoinedAnOrganization(userEmail!, organizationId)), ...adminEmailPromises]);
+  return Promise.all([...adminEmailPromises]);
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
@@ -106,6 +106,7 @@ async function onInvitationToOrgAccept({
 }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
+  // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
@@ -260,6 +261,7 @@ async function onInvitationFromUserToJoinOrgAccept({
 }: InvitationFromUserToOrganization) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
+  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id))
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 

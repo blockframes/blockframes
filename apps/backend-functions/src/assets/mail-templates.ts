@@ -16,20 +16,6 @@ export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 //      MAIL TEMPLATES       //
 // ------------------------- //
 
-const organizationCreatedTemplate = (orgId: string): string =>
-  `
-  A new organization was created on the blockframes project,
-
-  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
-  `;
-
-const organizationRequestAccessToAppTemplate = (orgId: string, appId: string): string =>
-  `
-  An organization requested access to an app,
-
-  Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}/${orgId}/${appId} to enable it.
-  `;
-
 // ------------------------- //
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
@@ -127,6 +113,26 @@ export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: str
 //      CASCADE8 ADMIN       //
 // ------------------------- //
 
+const organizationCreatedTemplate = (orgId: string) =>
+  `
+  A new organization was created on the blockframes project,
+
+  Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
+  `;
+
+const organizationRequestAccessToAppTemplate = (orgId: string, appId: string) =>
+  `
+  An organization requested access to an app,
+
+  Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}/${orgId}/${appId} to enable it.
+  `;
+
+const wishlistSent = (userName: string, orgName: string, wishlist: string[]) =>
+  `
+  ${userName} from ${orgName} just sent a wishlist including ${wishlist.length} :
+  - ${wishlist.join('\n- ')}
+  `;
+
 /** Generates a transactional email request to let cascade8 admin know that a new org is waiting for approval. */
 export function organizationCreated(orgId: string): EmailRequest {
   return {
@@ -143,4 +149,12 @@ export function organizationRequestedAccessToApp(orgId: string, appId: string): 
     subject: 'An organization requested access to an app',
     text: organizationRequestAccessToAppTemplate(orgId, appId)
   };
+}
+
+export function sendWishlist(userName: string, orgName: string, wishlist: string[]): EmailRequest {
+  return {
+    to: adminEmail,
+    subject: 'A wishlist has been sent',
+    text: wishlistSent(userName, orgName, wishlist)
+  }
 }

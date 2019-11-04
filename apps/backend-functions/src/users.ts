@@ -49,14 +49,17 @@ const onUserCreate = async (user: UserRecord) => {
 
   const userDocRef = db.collection('users').doc(user.uid);
 
-  await sendVerifyEmail({email});
-  await sendMailFromTemplate(welcomeMessage(email));
+
 
   // transaction to UPSERT the user doc
   return db.runTransaction(async tx => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
+      if(!user.emailVerified) {
+        await sendVerifyEmail({email});
+        await sendMailFromTemplate(welcomeMessage(email));
+      }
       tx.update(userDocRef, { email, uid });
     } else {
       tx.set(userDocRef, { email, uid });
