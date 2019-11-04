@@ -1,12 +1,12 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <article fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <img src="/assets/images/rocket.png" class="image" />
+    <img src="/assets/images/rocket_night.png" class="image" />
     <form [formGroup]="form">
       <h2>Your identity</h2>
       <p>
         Please fill out the form to interact with the blockframes DApps.
       </p>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="userEmail">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required />
       </mat-form-field>
@@ -24,12 +24,11 @@
           Surname is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <!-- Add invitation state -->
-      <ng-container *ngIf="">
+      <ng-container>
         <mat-form-field appearance="outline">
           <mat-label>Old password</mat-label>
-          <input matInput type="passowrd" placeholder="Your pregenerated password" formControlName="generatedPassword"
-          required />
+          <input matInput type="password" placeholder="Your pregenerated password" formControlName="generatedPassword"
+            required />
         </mat-form-field>
       </ng-container>
       <password-confirm formControlName="newPassword"></password-confirm>
