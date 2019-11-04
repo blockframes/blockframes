@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 // Components
 import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
+import { TranslateSlugModule } from '@blockframes/utils';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     MatSortModule,
     MatIconModule,
     MatRippleModule,
+    TranslateSlugModule,
 
     RouterModule.forChild([
       {

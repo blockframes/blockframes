@@ -35,7 +35,7 @@
   <!-- Production Status -->
   <ng-container matColumnDef="productionStatus">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Production Status</th>
-    <td mat-cell *matCellDef="let element">{{ getLabel('MOVIE_STATUS', element.main.status) | titlecase }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.main.status | translateSlug: 'MOVIE_STATUS' }}</td>
   </ng-container>
 
   <!-- Origin Country -->
@@ -43,7 +43,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Origin Country</th>
     <td mat-cell *matCellDef="let element">
       <span *ngFor="let country of element.main.originCountries | slice: 0:2; let isLast = last">
-        {{ getLabel('TERRITORIES', country) }}{{ isLast ? '' : ', ' }}
+        {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
       </span>
     </td>
   </ng-container>
