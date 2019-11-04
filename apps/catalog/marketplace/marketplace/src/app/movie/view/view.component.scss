@@ -77,13 +77,14 @@ header {
 
 @include tablet {
   .view-content {
-    margin: 0;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 
 @include medium {
-  section .view-content {
-    margin: 0;
-
+  section.view-content {
+    margin-left: 50px;
+    margin-right: 50px;
   }
 }
