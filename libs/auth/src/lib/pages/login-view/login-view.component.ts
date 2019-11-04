@@ -1,10 +1,12 @@
-import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, HostBinding, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
+import { Intercom } from 'ng-intercom';
+import { intercomId } from '@env';
 
 @Component({
   selector: 'auth-login-view',
@@ -24,8 +26,22 @@ export class LoginViewComponent {
     private service: AuthService,
     private query: AuthQuery,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private intercom: Intercom
   ) {}
+
+  ngOnInit() {
+    // Initialize Intercom Messenger for visitor
+    if (intercomId) {
+      this.intercom.boot({
+        widget: {
+          "activator": "#intercom"
+        }
+      });
+    } else {
+      this.intercom.shutdown();
+    }
+  }
 
   public async signin(signinForm: SigninForm) {
     if (signinForm.invalid) {
