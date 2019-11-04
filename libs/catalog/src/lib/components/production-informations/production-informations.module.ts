@@ -7,4 +7,5 @@ import { NgModule } from '@angular/core';
   imports: [CommonModule, FlexLayoutModule],
   exports: [CatalogProductionInformationsComponent]
 })
-export class CatalogProductionInformationsModule {}
+export class CatalogProductionInformationsModule {
+}
