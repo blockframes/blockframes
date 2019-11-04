@@ -1,6 +1,5 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
-import { PLACEHOLDER_AVATAR } from '@blockframes/auth';
 
 export interface Profile {
   name: string;

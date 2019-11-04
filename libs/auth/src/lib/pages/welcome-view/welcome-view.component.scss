@@ -27,7 +27,7 @@ p {
   margin-left: 80px;
 }
 
-button {
+a {
   margin-top: 80px;
 }
 
@@ -41,7 +41,7 @@ button {
 
 // extra small
 @include mobile {
-  button {
+  a {
     margin-top: 40px;
   }
   .image {
