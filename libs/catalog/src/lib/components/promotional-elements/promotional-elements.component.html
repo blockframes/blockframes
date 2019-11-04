@@ -1,0 +1,12 @@
+<h3>Promotional elements</h3>
+<h5>Downlaod</h5>
+<article fxLayout="row wrap">
+    <ng-container *ngFor="let info of promotionalElement; let i = index">
+        <div *ngIf="i%2 === 0" fxLayout="row wrap">
+            {{ info.type }}: <a [href]="info.link">{{ info.hyperlinkText }}</a>
+        </div>
+        <div *ngIf="i%2 === 1" fxLayout="row wrap">
+            {{ info.type }}: <a [href]="info.link" target="_blank">{{ info.hyperlinkText }}</a>
+        </div>
+    </ng-container>
+</article>

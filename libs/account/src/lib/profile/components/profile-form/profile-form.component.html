@@ -2,7 +2,7 @@
 <article>
   <form [formGroup]="control" fxLayout="column" fxLayoutAlign="center start">
     <h4>Avatar</h4>
-    <drop-cropper [ratio]="1" formControlName="avatar"></drop-cropper>
+    <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
     <mat-divider [inset]="true"></mat-divider>
     <h4>Your identity</h4>
     <mat-form-field appearance="outline">

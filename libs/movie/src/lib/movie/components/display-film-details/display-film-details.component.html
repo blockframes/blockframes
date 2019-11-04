@@ -3,43 +3,45 @@
   <!-- First Column -->
   <ul class="first-column">
     <ng-container *ngIf="main">
-      <li fxLayout="row">
-        <span><b>Length</b></span>
-        <span>{{ main.length }} min</span>
-      </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.isan">
         <span><b>ISAN Number</b></span>
         <span>{{ main.isan }}</span>
       </li>
     </ng-container>
-    <ng-container>
+    <ng-container *ngIf="salesInfo.pegi">
       <li fxLayout="row">
-        <span><b>Color / Black & White</b></span>
-        <span>{{ color }}</span>
+        <span><b>Rating</b></span>
+        <span>{{ salesInfo.pegi }}</span>
       </li>
+    </ng-container>
+    <ng-container *ngIf="main">
       <li fxLayout="row">
-        <span><b>European Qualification</b></span>
-        <span>{{ europeanQualification }}</span>
+        <span><b>Original title</b></span>
+        <span>{{ main.title.original }}</span>
       </li>
     </ng-container>
   </ul>
   <!-- Second Column -->
   <ul class="second-column">
-    <ng-container *ngIf="salesInfo">
-      <li fxLayout="row">
-        <span><b>Certifications</b></span>
-        <span *ngFor="let certification of salesInfo.certifications; let isLast=last">
-          {{ certification }} {{isLast ? '' : ', '}}
-        </span>
+    <ng-container>
+      <li fxLayout="row" *ngIf="color">
+        <span><b>Color / Black & White</b></span>
+        <span>{{ color }}</span>
       </li>
+    </ng-container>
+    <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
       <li fxLayout="row">
-        <span><b>Rating</b></span>
-        <span>{{ salesInfo.pegi }}</span>
+        <span><b>Theatrical Release</b></span>
+        <span>Yes</span>
       </li>
+    </ng-container>
+    <ng-template #noRelease>
       <li fxLayout="row">
-        <span><b>International Premiere</b></span>
-        <span>{{ internationalPremiere }}</span>
+        <span><b>Theatrical Release</b></span>
+        <span>No</span>
       </li>
+    </ng-template>
+    <ng-container *ngIf="salesInfo.originCountryReleaseDate">
       <li fxLayout="row">
         <span><b>Release date in Origin Country</b></span>
         <span>{{ salesInfo.originCountryReleaseDate | date:'LLL-dd, yyyy' }}</span>

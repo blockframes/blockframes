@@ -15,8 +15,8 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },
@@ -32,13 +32,13 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },
-  {
-    route: '/layout/o/catalog/selection/overview',
+  {    // TODO issue#1146
+    route: '/layout/o/catalog/wishlist/overview',
     items: [
       {
         name: 'home',
@@ -49,8 +49,8 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/search'
       },
       {
-        name: 'selection',
-        path: '/layout/o/catalog/selection/overview'
+        name: 'wishlist',
+        path: '/layout/o/catalog/wishlist/overview'
       }
     ]
   },
@@ -82,7 +82,7 @@ export const CONTEXT_MENU = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = [ // TODO #1146 
+export const CONTEXT_MENU_AFM = [ // TODO #1146
   {
     route: 'default',
     items: [
@@ -96,7 +96,7 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/selection/overview'
+        path: '/layout/o/catalog/wishlist'
       }
     ]
   },

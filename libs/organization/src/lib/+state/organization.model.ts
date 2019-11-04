@@ -1,7 +1,8 @@
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
-import { OrganizationDocument } from './organization.firestore';
+import { OrganizationDocument, WishlistWithDates } from './organization.firestore';
+import { Movie } from '@blockframes/movie';
 export { OrganizationStatus, createOrganization } from './organization.firestore';
 
 export const enum AppStatus {
@@ -58,6 +59,10 @@ export interface Organization extends OrganizationDocument {
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
 
+export interface Wishlist extends WishlistWithDates {
+  movies?: Movie[];
+}
+
 export interface OrganizationForm {
   name: string;
 }
@@ -67,10 +72,12 @@ export interface PublicOrganization {
   name: string;
 }
 
-export function createOperation(operation: Partial<OrganizationOperation> = {}): OrganizationOperation {
+export function createOperation(
+  operation: Partial<OrganizationOperation> = {}
+): OrganizationOperation {
   return {
     quorum: 0,
     members: [],
-    ...operation,
+    ...operation
   } as OrganizationOperation;
 }

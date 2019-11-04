@@ -1,8 +1,11 @@
-<ng-container *ngIf="prizes">
+<ng-container *ngIf="festivalPrizes">
   <h3>Festival Prizes</h3>
-  <article fxLayout="row" fxLayoutAlign="space-between start">
-    <ng-container *ngFor="let prize of prizes">
-      <span>{{ prize.name }}, {{ prize.year }}, {{ prize.prize }}</span>
-    </ng-container>
+  <article fxLayout="column">
+    <div fxLayout="row nowrap" fxLayoutGap="5px">
+      <img *ngFor="let prize of festivalPrizes" [src]="prize.festivalLogo" />
+    </div>
+    <div fxLayout="column" *ngFor="let prize of festivalPrizes">
+      {{prize.festivalName}}
+    </div>
   </article>
 </ng-container>

@@ -1,21 +1,21 @@
-<h3>Principal Informations</h3>
+<h3>Main information</h3>
 <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
   <!-- First Column -->
   <ul class="size-column">
     <ng-container *ngIf="main">
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.productionYear">
         <span><b>Production Year</b></span>
         <span>{{ main.productionYear }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.title.international">
         <span><b>International Title</b></span>
         <span>{{ main.title.international }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.title.original">
         <span><b>Original Title</b></span>
         <span>{{ main.title.original }}</span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.directors.length > 0">
         <span><b>Director</b></span>
         <span *ngFor="let director of main.directors; let isLast=last">
           {{ director.lastName }} {{ director.firstName }}{{isLast ? '' : ', '}}
@@ -26,7 +26,7 @@
   <!-- Second Column -->
   <ul class="size-column">
     <ng-container *ngIf="salesCast">
-      <li fxLayout="row wrap">
+      <li fxLayout="row wrap" *ngIf="salesCast.credits.length > 0">
         <span><b>Principal Cast</b></span>
         <span *ngFor="let cast of salesCast.credits; let isLast=last">
           {{ cast.lastName }} {{ cast.firstName }} {{isLast ? '' : ', '}}
@@ -34,15 +34,19 @@
       </li>
     </ng-container>
     <ng-container *ngIf="main">
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.genres.length > 0">
         <span><b>Genre</b></span>
         <span *ngFor="let genre of main.genres; let isLast=last">
-          {{ genre }}{{isLast ? '' : ', '}}
+          {{ genre | translateSlug: 'GENRES' }}{{isLast ? '' : ', '}}
         </span>
       </li>
-      <li fxLayout="row">
+      <li fxLayout="row" *ngIf="main.originCountry">
         <span><b>Country of Origin</b></span>
         <span>{{ main.originCountry }}</span>
+      </li>
+      <li fxLayout="row" *ngIf="main.length">
+        <span><b>Length</b></span>
+        <span>{{ main.length }} min</span>
       </li>
     </ng-container>
   </ul>

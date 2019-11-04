@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: '[assets] movie-display-assets',
@@ -6,7 +6,6 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
   styleUrls: ['./display-assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class MovieDisplayAssetsComponent {
   @Input() assets;
 }

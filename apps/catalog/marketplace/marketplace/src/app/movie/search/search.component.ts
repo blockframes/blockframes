@@ -9,7 +9,8 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding
+  HostBinding,
+  OnDestroy
 } from '@angular/core';
 // Blockframes
 import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
@@ -27,16 +28,19 @@ import {
   CertificationsSlug,
   LanguagesSlug,
   MediasSlug,
-  TerritoriesSlug
+  TerritoriesSlug,
+  MovieStatusLabel,
+  MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
+import { AFM_DISABLE } from '@env';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -44,7 +48,7 @@ import { filterMovie } from './filter.util';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit {
+export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /* Observable of all movies */
@@ -67,12 +71,14 @@ export class MarketplaceSearchComponent implements OnInit {
 
   /* Data for UI */
   public movieGenres: GenresLabel[] = GENRES_LABEL;
+  public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
   /* Filter for autocompletion */
   public territoriesFilter: Observable<string[]>;
   public languagesFilter: Observable<string[]>;
+  public salesAgentFilter: Observable<string[]>;
 
   /* Individual form controls for filtering */
   public languageControl: FormControl = new FormControl('', [
@@ -80,6 +86,7 @@ export class MarketplaceSearchComponent implements OnInit {
     languageValidator
   ]);
   public territoryControl: FormControl = new FormControl('');
+  public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
@@ -94,7 +101,15 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
 
-  /* Flags for the chip input */
+   /* Flags for Sales Agents chip input*/
+   public selectedSalesAgents: string[] = [];
+   public salesAgents: string[] = [];
+   private salesAgentsSub: Subscription;
+
+   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
+   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  /* Flags for the Territories chip input */
   public visible = true;
   public selectable = true;
   public removable = true;
@@ -105,22 +120,42 @@ export class MarketplaceSearchComponent implements OnInit {
   public matcher = new ControlErrorStateMatcher();
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(
     private movieQuery: MovieQuery,
     private router: Router,
-    private movieService: MovieService,
-  ) { }
+    private movieService: MovieService
+  ) {}
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => movies.filter(async movie => { 
-        const deals = await this.movieService.getDistributionDeals(movie.id);
-        return filterMovie(movie, deals, filterOptions);
-      })),
+      map(([movies, filterOptions]) => {
+        if (AFM_DISABLE) {
+          //TODO #1146
+          return movies.filter(async movie => {
+            const deals = await this.movieService.getDistributionDeals(movie.id);
+            return filterMovie(movie, filterOptions, deals);
+          });
+        } else {
+          return movies.filter(movie => {
+            return filterMovie(movie, filterOptions);
+          });
+        }
+      }),
       tap(movies => (this.availableMovies = movies.length))
     );
+
+    this.salesAgentsSub = this.movieQuery.selectAll().pipe(
+      tap(movies => {
+        movies.forEach(movie => {
+          if (
+            !!movie.salesAgentDeal.salesAgent.displayName &&
+            !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
+            )
+          this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+      })
+    })
+    ).subscribe()
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -132,6 +167,13 @@ export class MarketplaceSearchComponent implements OnInit {
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
+    );
+
+    this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
+      startWith(''),
+      map(salesAgent =>
+        salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents
+      )
     );
   }
 
@@ -190,6 +232,11 @@ export class MarketplaceSearchComponent implements OnInit {
     return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
+  private _salesAgentsfilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0)
+  }
+
   //////////////////
   // Form section //
   //////////////////
@@ -229,6 +276,33 @@ export class MarketplaceSearchComponent implements OnInit {
       this.filterForm.addType(genreSlug);
     } else {
       this.filterForm.removeType(genreSlug);
+    }
+  }
+
+  public hasStatus(status: MovieStatusLabel) {
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const productionStatusSlug: GenresSlug = getCodeIfExists('MOVIE_STATUS', status);
+    if (
+      this.movieProductionStatuses.includes(status) &&
+      !this.filterForm.get('status').value.includes(productionStatusSlug)
+    ) {
+      this.filterForm.addStatus(productionStatusSlug);
+    } else {
+      this.filterForm.removeStatus(productionStatusSlug);
+    }
+  }
+
+  public hasSalesAgent(salesAgent: string) {
+    if (
+      this.movieProductionStatuses.includes(status) &&
+      !this.filterForm.get('salesAgent').value.includes(salesAgent)
+    ) {
+      this.filterForm.addStatus(salesAgent);
+    } else {
+      this.filterForm.removeStatus(salesAgent);
     }
   }
 
@@ -277,5 +351,30 @@ export class MarketplaceSearchComponent implements OnInit {
     );
     this.filterForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
+  }
+
+  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
+    const value = event.option.value;
+
+    if ((value || '').trim() && !this.selectedSalesAgents.includes(value)) {
+      this.selectedSalesAgents.push(value.trim());
+    }
+
+    this.filterForm.addSalesAgent(value);
+    this.salesAgentControl.setValue('');
+    this.salesAgentInput.nativeElement.value = '';
+  }
+
+  public removeSalesAgent(salesAgent: string) {
+    const index = this.selectedSalesAgents.indexOf(salesAgent);
+
+    if (index >= 0) {
+      this.selectedSalesAgents.splice(index, 1);
+      this.filterForm.removeSalesAgent(salesAgent);
+    }
+  }
+
+  ngOnDestroy() {
+    this.salesAgentsSub.unsubscribe();
   }
 }

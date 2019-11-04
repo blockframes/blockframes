@@ -1,5 +1,7 @@
+
 import { firestore } from "firebase/app";
 type Timestamp = firestore.Timestamp;
+
 
 /** Document model of an Organization */
 export interface OrganizationDocument {
@@ -14,12 +16,12 @@ export interface OrganizationDocument {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  catalog: null;
+  catalog: null,
   logo: string;
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
-  whishList: WhishListWithDates[];
+  wishlist: WishlistWithDates[];
 }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -28,17 +30,17 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface WhishListRaw<D> {
-  status: WhishListStatus,
+export interface WishlistRaw<D> {
+  status: WishlistStatus,
   movieIds: string[],
   sent?: D
 }
+export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
-export interface WhishListDocument extends WhishListRaw<Timestamp> { }
+export interface WishlistWithDates extends WishlistRaw<Date> { }
 
-export interface WhishListWithDates extends WhishListRaw<Date> { }
 
-export const enum WhishListStatus {
+export const enum WishlistStatus {
   pending = 'pending',
   sent = 'sent'
 }
@@ -53,7 +55,9 @@ export interface PublicOrganization {
 }
 
 /** A factory function that creates an Organization. */
-export function createOrganization(params: Partial<OrganizationDocument> = {}): OrganizationDocument {
+export function createOrganization(
+  params: Partial<OrganizationDocument> = {}
+): OrganizationDocument {
   return {
     id: !!params.id ? params.id : '',
     name: '',
@@ -69,9 +73,9 @@ export function createOrganization(params: Partial<OrganizationDocument> = {}): 
     templateIds: [],
     created: Date.now(),
     updated: Date.now(),
-    logo: '',
+    logo: PLACEHOLDER_LOGO,
     catalog: null,
-    whishList: [],
+    wishlist: [],
     ...params
   };
 }

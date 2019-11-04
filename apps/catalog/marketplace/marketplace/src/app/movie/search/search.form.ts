@@ -13,7 +13,10 @@ import {
   MediasSlug,
   MEDIAS_SLUG,
   TerritoriesSlug,
-  TERRITORIES_SLUG
+  TERRITORIES_SLUG,
+  MovieStatusLabel,
+  MovieStatusSlug,
+  MOVIE_STATUS_SLUG
 } from '@blockframes/movie/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -40,6 +43,8 @@ export interface CatalogSearch {
     to: Date;
   };
   type: GenresLabel[];
+  status: MovieStatusLabel[];
+  salesAgent: string[];
   languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
@@ -66,6 +71,8 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     productionYear: {},
     availabilities: {},
     type: [],
+    status: [],
+    salesAgent: [],
     languages: {},
     certifications: [],
     medias: [],
@@ -120,6 +127,8 @@ function createCatalogSearchControl(search: CatalogSearch) {
       numberRangeValidator('from', 'to')
     ),
     type: new FormControl(search.type),
+    status: new FormControl(search.status),
+    salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),
@@ -170,6 +179,34 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`The type ${type} was not found!`);
     }
+  }
+
+  addStatus(status: MovieStatusSlug) {
+    if (!MOVIE_STATUS_SLUG.includes(status)) {
+      throw new Error(
+        `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
+      );
+    } else {
+      this.get('status').setValue([...this.get('status').value, status]);
+    }
+  }
+
+  removeStatus(status: MovieStatusSlug) {
+    if (MOVIE_STATUS_SLUG.includes(status)) {
+      const newControls = this.get('status').value.filter(statusToRemove => statusToRemove !== status);
+      this.get('status').setValue(newControls);
+    } else {
+      throw new Error(`The production status ${status} was not found!`);
+    }
+  }
+
+  addSalesAgent(salesAgent: string) {
+    this.get('salesAgent').setValue([...this.get('salesAgent').value, salesAgent]);
+  }
+
+  removeSalesAgent(salesAgent: string) {
+    const newControls = this.get('salesAgent').value.filter(salesAgentToRemove => salesAgentToRemove !== salesAgent);
+    this.get('salesAgent').setValue(newControls);
   }
 
   checkCertification(certificationChecked: CertificationsSlug) {

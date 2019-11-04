@@ -81,7 +81,7 @@ export const routes: Routes = [
                   import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
               },
               {
-                path: 'selection',
+                path: 'wishlist',
                 canActivate: [CatalogBasketGuard, MovieCollectionGuard],
                 canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
                 children: [
