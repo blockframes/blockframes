@@ -183,12 +183,12 @@
       "compression": "none"
     },
     {
-      "path": "./dist/apps/catalog/marketplace/main**.js",
+      "path": "./dist/apps/catalog-marketplace/main**.js",
       "maxSize": "6 MB",
       "compression": "none"
     },
     {
-      "path": "./dist/apps/catalog/dashboard/main**.js",
+      "path": "./dist/apps/catalog-dashboard/main**.js",
       "maxSize": "7 MB",
       "compression": "none"
     },
