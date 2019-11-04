@@ -58,8 +58,9 @@ export class WishlistCurrentRepertoryComponent {
     return getLabelByCode(scope, slug);
   }
 
+  // TODO: issue#1203 use a relative path
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`../../../../layout/o/catalog/${movieId}/view`]);
+    this.router.navigate([`layout/o/catalog/${movieId}/view`]);
   }
 
   public remove(movieId: string) {
