@@ -101,13 +101,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
 
-   /* Flags for Sales Agents chip input*/
-   public selectedSalesAgents: string[] = [];
-   public salesAgents: string[] = [];
-   private salesAgentsSub: Subscription;
+  /* Flags for Sales Agents chip input*/
+  public selectedSalesAgents: string[] = [];
+  public salesAgents: string[] = [];
+  private salesAgentsSub: Subscription;
 
-   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
-   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   /* Flags for the Territories chip input */
   public visible = true;
@@ -125,7 +125,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     private movieQuery: MovieQuery,
     private router: Router,
     private movieService: MovieService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
@@ -149,12 +149,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       tap(movies => {
         movies.forEach(movie => {
           if (
+            !!movie.salesAgentDeal.salesAgent &&
             !!movie.salesAgentDeal.salesAgent.displayName &&
             !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
-            )
-          this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+          )
+            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+        })
       })
-    })
     ).subscribe()
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
