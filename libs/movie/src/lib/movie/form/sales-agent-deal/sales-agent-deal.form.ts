@@ -20,11 +20,12 @@ export class RightsForm extends FormEntity<RightsFormControl>{
 }
 
 function createMovieSalesAgentDealControls(salesAgentDeal?: Partial<MovieSalesAgentDeal>){
-  const { rights, territories, medias } = createMovieSalesAgentDeal(salesAgentDeal);
+  const { rights, territories, medias, reservedTerritories } = createMovieSalesAgentDeal(salesAgentDeal);
   return {
     rights: new RightsForm(rights),
     territories: new FormControl(territories),
-    medias: new FormControl(medias)
+    medias: new FormControl(medias),
+    reservedTerritories: new FormControl(reservedTerritories),
   }
 }
 
