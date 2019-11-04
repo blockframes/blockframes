@@ -5,6 +5,9 @@
 @import './theme.scss';
 @import './variables.scss';
 
+// Footer
+@import './footer.scss';
+
 // Components style
 @import './components/mat-expansion-panel';
 @import './components/mat-dialog';
@@ -100,27 +103,5 @@ main {
     width: 40px;
     font-size: 40px;
     margin-right: 0px;
-  }
-}
-
-.light-theme {
-  footer {
-    background: mat-color($bf-light-background, app-bar);
-    border-top: 1px solid mat-color($bf-light-background, border);
-
-    a {
-      color: mat-color($bf-light-background, text);
-    }
-  }
-}
-
-.dark-theme {
-  footer {
-    background: mat-color($bf-dark-background, app-bar);
-    border-top: 1px solid mat-color($bf-dark-background, border);
-
-    a {
-      color: mat-color($bf-dark-background, text);
-    }
   }
 }
