@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
-import { Intercom } from 'ng-intercom';
-import { intercomId } from '@env';
+// import { Intercom } from 'ng-intercom';
+// import { intercomId } from '@env';
 
 @Component({
   selector: 'auth-login-view',
@@ -27,20 +27,20 @@ export class LoginViewComponent {
     private query: AuthQuery,
     private router: Router,
     private snackBar: MatSnackBar,
-    private intercom: Intercom
+    // private intercom: Intercom
   ) {}
 
   ngOnInit() {
     // Initialize Intercom Messenger for visitor
-    if (intercomId) {
-      this.intercom.boot({
-        widget: {
-          "activator": "#intercom"
-        }
-      });
-    } else {
-      this.intercom.shutdown();
-    }
+    // if (intercomId) {
+    //   this.intercom.boot({
+    //     widget: {
+    //       "activator": "#intercom"
+    //     }
+    //   });
+    // } else {
+    //   this.intercom.shutdown();
+    // }
   }
 
   public async signin(signinForm: SigninForm) {

@@ -36,6 +36,7 @@ import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms
 // Intercom
 import { IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
+import { IntercomAppModule } from '@blockframes/utils';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -48,13 +49,13 @@ export const AuthRoutes: Routes = [
 ];
 
 // Initialize Intercom
-let intercom = [];
-if (intercomId) {
-  intercom = [IntercomModule.forRoot({
-    appId: intercomId,
-    updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-  })]
-};
+// let intercom = [];
+// if (intercomId) {
+//   intercom = [IntercomModule.forRoot({
+//     appId: intercomId,
+//     updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
+//   })]
+// };
 
 @NgModule({
   imports: [
@@ -79,7 +80,8 @@ if (intercomId) {
     AngularFirePerformanceModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule,
-    intercom,
+    IntercomAppModule,
+    // intercom,
   ],
   declarations: [
     LoginViewComponent,
