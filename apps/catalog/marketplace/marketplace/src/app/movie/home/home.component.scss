@@ -1,3 +1,5 @@
+@import 'mixins';
+
 header {
   padding: 150px 0;
   // TODO: replace image when the real one is available.
@@ -9,6 +11,7 @@ header {
   p {
     width: 50%;
     margin-bottom: 30px;
+    text-align: center;
   }
 }
 
@@ -39,5 +42,16 @@ article {
       width: 100%;
       padding: 10px 30px;
     }
+  }
+}
+
+@include mobile {
+  header {
+    padding: 50px 0;
+  }
+
+  h1 {
+    text-align: center;
+    margin-top: 0;
   }
 }
