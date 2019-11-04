@@ -277,13 +277,13 @@
               <mat-card-subtitle *ngFor="let director of movie.main.directors">
                 {{ director.firstName }} {{ director.lastName }}
               </mat-card-subtitle>
+              <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
               <mat-card-content class="table-size-text">
                 <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
                   {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}
                 </b>
                 <b *ngIf="movie.main.originCountries.length > 2">... </b>
                 <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>| {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
-                <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
               </mat-card-content>
             </ng-container>
             <ng-container movieCardAction>

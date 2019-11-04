@@ -72,4 +72,9 @@ export class MarketplaceHomeComponent implements OnInit {
     this.basketService.updateWishlist(movie);
   }
 
+  public getBanner(movie: Movie) {
+    const movieElement = movie.promotionalElements.promotionalElements.find(element => element.type === "banner");
+    return movieElement.url;
+  }
+
 }
