@@ -33,7 +33,6 @@ export async function sendMail({ to, subject, text }: EmailRequest): Promise<any
     from: 'admin@blockframes.io'
   };
 
-  console.debug("sending mail:", msg);
   return SendGrid.send(msg);
 }
 
@@ -51,6 +50,5 @@ export function sendMailFromTemplate({to, templateId, data}: EmailTemplateReques
     dynamicTemplateData: data,
   };
 
-  console.debug("sending mail:", msg);
   return SendGrid.send(msg);
 }

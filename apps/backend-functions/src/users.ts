@@ -18,7 +18,7 @@ interface OrgProposal {
   name: string;
 }
 
-const sendVerifyEmail = async (data: any, context?: CallableContext) => {
+const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
   const { email } = data;
 
   if (!email) {
@@ -29,7 +29,7 @@ const sendVerifyEmail = async (data: any, context?: CallableContext) => {
   await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
 };
 
-const sendResetPasswordEmail = async (data: any, context: CallableContext) => {
+const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
   const { email } = data;
 
   if (!email) {
@@ -40,7 +40,7 @@ const sendResetPasswordEmail = async (data: any, context: CallableContext) => {
   await sendMailFromTemplate(userResetPassword(email, resetLink));
 };
 
-const sendWishlistEmails = async (data: any, context: CallableContext) => {
+const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
   const { email, userName, orgName, wishlist } = data;
 
   if (!email || !userName || !orgName || !wishlist) {
@@ -69,7 +69,7 @@ const onUserCreate = async (user: UserRecord) => {
 
     if (userDoc.exists) {
       if(!user.emailVerified) {
-        await sendVerifyEmail({email});
+        await startVerifyEmailFlow({email});
         await sendMailFromTemplate(welcomeMessage(email));
       }
       tx.update(userDocRef, { email, uid });
@@ -177,7 +177,7 @@ export {
   findUserByMail,
   findOrgByName,
   getOrCreateUserByMail,
-  sendVerifyEmail,
-  sendResetPasswordEmail,
-  sendWishlistEmails,
+  startVerifyEmailFlow,
+  startResetPasswordEmailFlow,
+  startWishlistEmailsFlow,
 };

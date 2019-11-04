@@ -156,7 +156,8 @@ export class AuthService {
   // public async getOrCreateUserByMail(email: string): Promise<User> {
   public async getOrCreateUserByMail(email: string, invitationId?: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email, invitationId }).then(matchingEmail => matchingEmail.data);
+    const matchingEmail = await f({ email });
+    return matchingEmail.data;
   }
 
   /** Call a firebase function to get a list of users corresponding to the `prefix` string. */
