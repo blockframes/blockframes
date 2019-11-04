@@ -11,7 +11,7 @@
     <span class="movie-status">{{ movie.main.status | translateSlug: 'MOVIE_STATUS'}}</span>
   </header>
 
-  <div fxLayout="row nowrap" fxLayoutAlign="center center" class="view-content heart">
+  <div fxLayout="row nowrap" fxLayoutAlign="center center" fxLayout.lt-md="row" class="view-content heart">
     <mat-divider></mat-divider>
     <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
       <button mat-icon-button (click)="addToWishlist()">
