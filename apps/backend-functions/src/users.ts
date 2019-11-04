@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword } from './assets/mail-templates';
-import { sendMailFromTemplate } from './internals/email';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending } from './assets/mail-templates';
+import { sendMailFromTemplate, sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -33,12 +33,24 @@ const sendResetPasswordEmail = async (data: any, context: CallableContext) => {
   const { email } = data;
 
   if (!email) {
-    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+    throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
   }
 
   const resetLink = await admin.auth().generatePasswordResetLink(email);
   await sendMailFromTemplate(userResetPassword(email, resetLink));
 };
+
+const sendWishlistEmails = async (data: any, context: CallableContext) => {
+  const { email, userName, orgName, wishlist } = data;
+
+  if (!email || !userName || !orgName || !wishlist) {
+    throw new Error(`email, userName, orgName, and wishlist are mandatory parameters`)
+  }
+
+  await sendMail(sendWishlist(userName, orgName, wishlist));
+  await sendMailFromTemplate(sendWishlistPending(email));
+}
+
 
 const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
@@ -160,4 +172,12 @@ const getOrCreateUserByMail = async (
   }
 };
 
-export { onUserCreate, findUserByMail, findOrgByName, getOrCreateUserByMail, sendVerifyEmail, sendResetPasswordEmail };
+export {
+  onUserCreate,
+  findUserByMail,
+  findOrgByName,
+  getOrCreateUserByMail,
+  sendVerifyEmail,
+  sendResetPasswordEmail,
+  sendWishlistEmails,
+};

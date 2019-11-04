@@ -21,22 +21,21 @@ export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 // ------------------------- //
 
 export function welcomeMessage(email: string): EmailTemplateRequest {
-  const data = {
-  }
+  const data = {};
   return { to: email, templateId: templateIds.welcomeMessage, data };
 }
 
 export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
-  }
+  };
   return { to: email, templateId: templateIds.userVerifyEmail, data };
 }
 
 export function userResetPassword(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
-  }
+  };
   return { to: email, templateId: templateIds.resetPassword, data };
 }
 
@@ -46,7 +45,7 @@ export function userInvite(email: string, password: string): EmailTemplateReques
     userEmail: email,
     userPassword: password,
     pageURL: `${appUrl}`
-  }
+  };
   return { to: email, templateId: templateIds.userCredentials, data };
 }
 
@@ -55,8 +54,13 @@ export function userInviteToOrg(email: string, orgName: string, invitationId: st
   const data = {
     orgName: orgName,
     pageURL: `${appUrl}${USER_ORG_INVITATION}`
-  }
+  };
   return { to: email, templateId: templateIds.orgInviteUser, data };
+}
+
+export function sendWishlistPending(email: string): EmailTemplateRequest {
+  const data = {};
+  return { to: email, templateId: templateIds.wishlistPending, data };
 }
 
 /** Generates a transactional email request to let organization admins know that their org was approved. */
@@ -64,7 +68,7 @@ export function organizationWasAccepted(email: string, orgId: string, userFirstN
   const data = {
     userFirstName,
     pageURL: `${appUrl}${ORG_HOME}${orgId}`
-  }
+  };
   return { to: email, templateId: templateIds.orgAccepted, data };
 }
 
@@ -72,7 +76,7 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   const data = {
     userFirstName,
     orgName
-  }
+  };
   return { to: email, templateId: templateIds.joinAnOrgPending, data };
 }
 
@@ -87,7 +91,7 @@ export function organizationCanAccessApp(email: string, appId: string): EmailReq
 export function userJoinedAnOrganization(userEmail: string, orgId: string): EmailTemplateRequest {
   const data = {
     pageURL: `${appUrl}${ORG_HOME}${orgId}`
-  }
+  };
   return { to: userEmail, templateId: templateIds.userRequestAccepted, data };
 }
 
@@ -105,7 +109,7 @@ export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: str
     userLastName,
     orgName,
     pageURL: `${appUrl}${ORG_HOME}${orgId}/members`
-  }
+  };
   return { to: orgAdminEmail, templateId: templateIds.joinYourOrg, data };
 }
 

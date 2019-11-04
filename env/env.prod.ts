@@ -78,4 +78,5 @@ export const templateIds = {
   resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
   userHasJoined: 'd-f84d8c5a70884316870ca4ef657e368f',
   userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
+  wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
 }
