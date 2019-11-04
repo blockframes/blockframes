@@ -20,7 +20,8 @@ export class IdentityComponent {
     navigator.userAgent.match(/iPad/i) ||
     navigator.userAgent.match(/iPod/i) ||
     navigator.userAgent.match(/BlackBerry/i)
-      ? false : true;
+      ? false
+      : true;
 
   public form = new FormGroup({
     name: new FormControl(''),
@@ -44,16 +45,16 @@ export class IdentityComponent {
       return;
     }
     try {
+      await this.service.updatePassword(
+        this.form.get('generatedPassword').value,
+        this.form.get('newPassword').value
+      );
       const uid = this.query.userId;
       await this.service.update(uid, {
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
         avatar: this.form.get('avatar').value
       });
-      await this.service.updatePassword(
-        this.form.get('generatedPassword').value,
-        this.form.get('newPassword').value
-      );
       this.router.navigate(['auth/congratulation']);
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
