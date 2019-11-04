@@ -41,13 +41,14 @@ mat-icon {
 // medium
  @include medium {
   .mat-sidenav {
-    padding: 25px 50px;
+    padding: 25px 25px;
     height: calc(100% - var(--toolbarHeight));
     z-index: 2;
+    width: 50%;
   }
   mat-sidenav-content {
     width: 100%;
-    padding: 0 5%;
+    padding: 0 20px;
   }
   mat-sidenav-container {
     padding-top: 25px;
@@ -60,14 +61,16 @@ mat-icon {
 // small
 @include tablet {
   .mat-sidenav {
-    padding: 25px 25px;
+    width: 100%;
+    padding: 100px 100px;
     z-index: 2;
   }
-  mat-sidenav-content {
-    padding-left: 25px;
-  }
   mat-sidenav-container {
-    padding-top: 25px;
+    padding: 100px 100px;
+  }
+  mat-sidenav-content {
+    width: 100%;
+    padding-left: 0;
   }
 }
 
