@@ -69,6 +69,10 @@ export const sendVerifyEmail = functions.https
 export const sendResetPasswordEmail = functions.https
   .onCall(users.sendResetPasswordEmail);
 
+/** Trigger: REST call to send a wishlist pending email to a user & a wishlist request to cascade8 admin. */
+export const sendWishlistEmails = functions.https
+  .onCall(users.sendWishlistEmails);
+
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);

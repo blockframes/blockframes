@@ -27,14 +27,14 @@ export class AuthService {
    * @param email email of the user
    */
   public resetPasswordInit(email: string) {
-    const callDeploy = this.functions.httpsCallable('sendResetPasswordEmail');
-    return callDeploy({ email }).toPromise();
+    const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
+    return callSendReset({ email }).toPromise();
   }
 
   /** Send a new verification email to the current user */
   public async sendVerifyEmail() {
-    const callDeploy = this.functions.httpsCallable('sendVerifyEmail');
-    return callDeploy({ email: this.query.user.email }).toPromise();
+    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
+    return callSendVerify({ email: this.query.user.email }).toPromise();
   }
 
   public checkResetCode(actionCode: string) {
