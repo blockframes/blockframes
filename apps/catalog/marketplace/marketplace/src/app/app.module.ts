@@ -41,8 +41,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
 // Intercom
-import { IntercomModule } from 'ng-intercom';
-import { intercomId } from '@env';
+import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -72,10 +71,7 @@ import { intercomId } from '@env';
     NotificationWidgetModule,
 
     // Intercom
-    IntercomModule.forRoot({
-      appId: intercomId,
-      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-    }),
+    IntercomAppModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

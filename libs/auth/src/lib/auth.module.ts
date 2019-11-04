@@ -34,9 +34,9 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
 import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms-conditions.module';
 
 // Intercom
-import { IntercomModule } from 'ng-intercom';
-import { intercomId } from '@env';
-import { IntercomAppModule } from '@blockframes/utils';
+// import { IntercomModule } from 'ng-intercom';
+// import { intercomId } from '@env';
+// import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -80,7 +80,7 @@ export const AuthRoutes: Routes = [
     AngularFirePerformanceModule,
     RouterModule.forChild(AuthRoutes),
     UiFormModule,
-    IntercomAppModule,
+    // IntercomAppModule,
     // intercom,
   ],
   declarations: [
