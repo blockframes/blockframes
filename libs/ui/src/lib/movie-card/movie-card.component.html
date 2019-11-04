@@ -8,8 +8,8 @@
     </a>
 
     <!-- Movie Status Chip -->
-    <mat-chip selected disableRipple class="movie-chip">
-      <span class="table-size-text">{{ movie.main.status.toUpperCase() }}</span>
+    <mat-chip *ngIf="movie.main.status as status" selected disableRipple class="movie-chip">
+      <span class="table-size-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</span>
     </mat-chip>
   </div>
 

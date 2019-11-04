@@ -66,14 +66,8 @@ export class MarketplaceHomeComponent implements OnInit {
     return index % 2 === 0 ? 'start start' : 'start end';
   }
 
-  public isAddedToWishlist(movieId: string): Observable<boolean> {
-    return this.organizationQuery.select('org').pipe(
-      map(org => {
-        return org.wishlist
-          .filter(({ status }) => status === 'pending')
-          .some(({ movieIds }) => movieIds.includes(movieId))
-      })
-    );
+  public isAddedToWishlist(movieId: string) {
+    return this.basketService.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie) {
