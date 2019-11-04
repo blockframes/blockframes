@@ -76,6 +76,9 @@ export class BasketService extends CollectionService<BasketState> {
     };
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
       this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
+      // If the organization has sent wishlist but no pending
+    } else if (pendingWishlist.length === 0) {
+      this.organizationService.update({ ...orgState, wishlist: [...orgState.wishlist, wishlistFactory(movie.id)] });
     } else if (pendingWishlist.length) {
       const wishlist = orgState.wishlist.map(w => {
         const wish = Object.assign({}, w);
