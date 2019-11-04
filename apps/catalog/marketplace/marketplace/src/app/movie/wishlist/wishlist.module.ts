@@ -3,7 +3,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { WishlistViewComponent } from './wishlist-view/wishlist-view.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MatTableModule, MatSortModule, MatIconModule } from '@angular/material';
+import { MatTableModule, MatSortModule, MatIconModule, MatRippleModule } from '@angular/material';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -24,6 +24,7 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     MatTableModule,
     MatSortModule,
     MatIconModule,
+    MatRippleModule,
 
     RouterModule.forChild([
       {

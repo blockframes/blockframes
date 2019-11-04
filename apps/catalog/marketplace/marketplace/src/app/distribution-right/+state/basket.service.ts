@@ -35,6 +35,7 @@ export class BasketService extends CollectionService<BasketState> {
       .pipe(switchMap(({ id }) => this.syncCollection({ pathParams: { orgId: id } })));
   }
 
+  /** Update the status of the wishlist to 'sent' and create new date at this moment. */
   public updateWishlistStatus(movies: Movie[]) {
     // Argument movies will be used to send emails => issue#1102
     // Const user will be used to send emails => issue#1102

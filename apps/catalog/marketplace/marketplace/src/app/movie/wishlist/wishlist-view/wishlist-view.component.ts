@@ -33,6 +33,7 @@ export class WishlistViewComponent implements OnInit {
     );
   }
 
+  // Update the status of the wishlist
   public updateWishlistStatus(movies: Movie[]) {
     try {
       this.basketService.updateWishlistStatus(movies);

@@ -3,7 +3,7 @@
   <!-- Movie -->
   <ng-container matColumnDef="movie">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Movie</th>
-    <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong td-link" (click)="redirectToMovie(element.id)">
+    <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong td-link" matRipple (click)="redirectToMovie(element.id)">
       <img *ngIf="element.main.poster; else defaultPoster" [src]="element.main.poster" alt="Poster of movie" />
       <ng-template #defaultPoster>
         <img src="/assets/images/default-movie-poster.png" alt="Default poster of movie" />
