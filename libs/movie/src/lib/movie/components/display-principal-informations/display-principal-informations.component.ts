@@ -10,4 +10,6 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 export class MovieDisplayPrincipalInformationsComponent {
   @Input() main;
   @Input() salesCast;
+  @Input() budget;
+  @Input() salesInfo;
 }

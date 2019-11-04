@@ -87,18 +87,13 @@ export const routes: Routes = [
                 children: [
                   {
                     path: '',
-                    redirectTo: 'overview',
+                    redirectTo: 'view',
                     pathMatch: 'full'
                   },
                   {
-                    path: 'overview',
+                    path: 'view',
                     loadChildren: () =>
-                      import('./movie/selection/selection.module').then(m => m.SelectionModule)
-                  },
-                  {
-                    path: 'success',
-                    loadChildren: () =>
-                      import('./components/completion.module').then(m => m.CatalogCompletionModule)
+                      import('./movie/wishlist/wishlist.module').then(m => m.WishlistModule)
                   }
                 ]
               },

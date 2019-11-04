@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'catalog-reserved-territories',
@@ -15,9 +15,5 @@ import { Component } from '@angular/core';
   }`]
 })
 export class CatalogReservedTerritoriesComponent {
-  public reservedTerritories: string[] = [
-    'France (The Jokers)',
-    'USA (Paramount)',
-    'UK (Avalance)'
-  ];
+  @Input() reservedTerritories: string[];
 }

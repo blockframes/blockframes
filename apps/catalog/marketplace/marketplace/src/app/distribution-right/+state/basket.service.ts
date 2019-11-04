@@ -3,10 +3,11 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
 import { CatalogBasket, createBasket, DistributionRight } from './basket.model';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { BasketState, BasketStore } from './basket.store';
 import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
-import { WishlistStatus, WishlistWithDates } from '@blockframes/organization/types';
+import { WishlistStatus } from '@blockframes/organization';
+import { AuthQuery } from '@blockframes/auth';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -22,7 +23,8 @@ export class BasketService extends CollectionService<BasketState> {
     private organizationQuery: OrganizationQuery,
     private basketQuery: BasketQuery,
     private organizationService: OrganizationService,
-    store: BasketStore
+    store: BasketStore,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -31,6 +33,24 @@ export class BasketService extends CollectionService<BasketState> {
     return this.organizationQuery
       .select('org')
       .pipe(switchMap(({ id }) => this.syncCollection({ pathParams: { orgId: id } })));
+  }
+
+  /** Update the status of the wishlist to 'sent' and create new date at this moment. */
+  public updateWishlistStatus(movies: Movie[]) {
+    // Argument movies will be used to send emails => issue#1102
+    // Const user will be used to send emails => issue#1102
+    const user = this.authQuery.user;
+    const org = this.organizationQuery.getValue().org;
+
+    const setSent = (wishlist: Wishlist) => {
+      return wishlist.status === WishlistStatus.pending
+        ?  {...wishlist, status: WishlistStatus.sent, sent: new Date()}
+        : wishlist
+    }
+
+    return this.organizationService.update({...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist))});
+    // TODO: issue #1111 and #1102, send an email to the user and Cascade8 with list of movies
+    // Use variables: movies, org and user
   }
 
   public addBasket(basket: CatalogBasket) {
@@ -48,7 +68,7 @@ export class BasketService extends CollectionService<BasketState> {
     const pendingWishlist = this.organizationQuery
       .getValue()
       .org.wishlist.filter(wishlist => wishlist.status === 'pending');
-    const wishlistFactory = (movieId: string): WishlistWithDates => {
+    const wishlistFactory = (movieId: string): Wishlist => {
       return {
         status: WishlistStatus.pending,
         movieIds: [movieId]

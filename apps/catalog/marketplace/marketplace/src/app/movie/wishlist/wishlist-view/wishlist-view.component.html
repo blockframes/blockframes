@@ -6,9 +6,19 @@
     <h2>My Wishlist</h2>
     <mat-divider fxFlex></mat-divider>
   </article>
+  <article *ngIf="(currentWishlist$ | async) as wishlist">
+    <h3>Current Wishlist</h3>
+    <catalog-wishlist-current-repertory
+      [movies]="wishlist.movies"
+      isCurrent="true"
+      (sent)="updateWishlistStatus(wishlist.movies)" >
+    </catalog-wishlist-current-repertory>
+  </article>
+  <h3>Past Wishlist</h3>
   <article *ngFor="let wishlist of wishlists$ | async">
-    <!-- TODO: issue#1125 manage wishlist with status 'sent' -->
-    <catalog-wishlist-current-repertory *ngIf="wishlist.status === 'pending'" [movies]="wishlist.movies" >
+    <catalog-wishlist-current-repertory
+      [movies]="wishlist.movies"
+      [date]="wishlist.sent" >
     </catalog-wishlist-current-repertory>
   </article>
 </section>

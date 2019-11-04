@@ -1,12 +1,25 @@
 <h3>Promotional elements</h3>
-<h5>Downlaod</h5>
-<article fxLayout="row wrap">
-    <ng-container *ngFor="let info of promotionalElement; let i = index">
-        <div *ngIf="i%2 === 0" fxLayout="row wrap">
-            {{ info.type }}: <a [href]="info.link">{{ info.hyperlinkText }}</a>
-        </div>
-        <div *ngIf="i%2 === 1" fxLayout="row wrap">
-            {{ info.type }}: <a [href]="info.link" target="_blank">{{ info.hyperlinkText }}</a>
-        </div>
+<article fxLayout="row wrap" fxLayoutGap="20px">
+    <ng-container *ngFor="let info of promotionalElements; let i = index">
+        <ng-container *ngIf="info.type === 'reel'">
+            <div fxLayout="row wrap">
+                Promo Reel <a [href]="info.url" target="_blank">Watch</a>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="info.type === 'trailer'">
+            <div fxLayout="row wrap">
+                Trailer <a [href]="info.url" target="_blank">Watch</a>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="info.type === 'scenario'">
+            <div fxLayout="row wrap">
+                Scenario <a [href]="info.url" target="_blank">Download</a>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="info.type === 'screener'">
+            <div fxLayout="row wrap">
+                Screener <a [href]="info.url" target="_blank">Watch</a>
+            </div>
+        </ng-container>
     </ng-container>
 </article>

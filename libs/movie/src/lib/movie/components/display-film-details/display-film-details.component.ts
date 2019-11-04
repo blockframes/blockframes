@@ -1,3 +1,4 @@
+import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
@@ -12,4 +13,6 @@ export class MovieDisplayFilmDetailsComponent {
   @Input() color;
   @Input() europeanQualification;
   @Input() movieSalesInfo;
+  // TODO issue#1146
+  public AFM_DISABLE = AFM_DISABLE;
 }

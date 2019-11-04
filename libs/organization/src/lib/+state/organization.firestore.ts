@@ -21,6 +21,7 @@ export interface OrganizationDocument {
   phoneNumber: string;
   fiscalNumber: string;
   activity: string;
+  // TODO: issue#1202 Review model of Wishlist (name, date...)
   wishlist: WishlistWithDates[];
 }
 
