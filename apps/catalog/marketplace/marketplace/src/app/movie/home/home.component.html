@@ -32,7 +32,7 @@
                   </button>
                 </ng-template>
                 <footer fxLayout="column" fxLayoutAlign="center start">
-                  <b *ngIf="movie.main.status as status" class="status-text">{{ status.toUpperCase() }}</b>
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</b>
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
                   <b>

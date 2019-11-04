@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
@@ -8,6 +8,7 @@ import { BasketState, BasketStore } from './basket.store';
 import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
+import { Observable } from 'rxjs';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -91,6 +92,17 @@ export class BasketService extends CollectionService<BasketState> {
       });
       this.organizationService.update({ ...orgState, wishlist: wishlist });
     }
+  }
+
+  /** Checks if a movie is or is not in the organization wishlist. */
+  public isAddedToWishlist(movieId: string): Observable<boolean> {
+    return this.organizationQuery.select('org').pipe(
+      map(org => {
+        return org.wishlist
+          .filter(({ status }) => status === 'pending')
+          .some(({ movieIds }) => movieIds.includes(movieId))
+      })
+    );
   }
 
   public removeDistributionRight(rightId: string, basketId: string) {
