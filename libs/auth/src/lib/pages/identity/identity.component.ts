@@ -3,7 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { PasswordControl } from '@blockframes/utils';
+import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 
 @Component({
   selector: 'auth-identity',
