@@ -25,10 +25,10 @@
     </ng-template>
   </div>
 
-  <section fxLayout="row" class="view-content">
+  <section fxLayout="row" class="view-content" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
 
-    <div fxLayout="column" class="poster-column">
-      <mat-card class="movie-presentation">
+    <div fxLayout="column" class="poster-column" >
+      <mat-card class="movie-presentation" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
           <img class="movie-poster" [src]="poster" alt="movie poster" />
@@ -46,7 +46,7 @@
           movie.main.productionCompanies &&
           movie.salesAgentDeal &&
           movie.salesAgentDeal.salesAgent &&
-          movie.salesAgentDeal.salesAgent.logo" 
+          movie.salesAgentDeal.salesAgent.logo"
           [productionCompanies]="movie.main.productionCompanies"
           [salesAgentDealLogo]="movie.salesAgentDeal.salesAgent.logo">
         </catalog-production-informations>
