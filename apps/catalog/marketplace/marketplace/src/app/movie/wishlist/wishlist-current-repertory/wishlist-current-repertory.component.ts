@@ -5,7 +5,8 @@ import {
   ChangeDetectionStrategy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnInit
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
@@ -17,7 +18,7 @@ import { BasketService } from '../../../distribution-right/+state/basket.service
   styleUrls: ['./wishlist-current-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistCurrentRepertoryComponent {
+export class WishlistCurrentRepertoryComponent implements OnInit {
 
   @Output() sent = new EventEmitter();
 

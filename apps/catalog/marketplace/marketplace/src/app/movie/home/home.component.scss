@@ -33,6 +33,7 @@ article {
 
   mat-carousel {
     flex: 1;
+    margin: 10px;
 
     .overlay {
       height: 100%;
@@ -43,8 +44,7 @@ article {
       padding: 10px 30px;
     }
 
-    mat-icon {
-      cursor: pointer;
+    button.mat-icon-button {
       position: absolute;
       top: 15px;
       right: 15px;

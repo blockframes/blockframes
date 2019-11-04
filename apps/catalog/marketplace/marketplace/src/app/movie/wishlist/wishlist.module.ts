@@ -3,22 +3,26 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { WishlistViewComponent } from './wishlist-view/wishlist-view.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MatTableModule, MatSortModule, MatIconModule, MatRippleModule } from '@angular/material';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Material
-import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
 import { TranslateSlugModule } from '@blockframes/utils';
-
 
 @NgModule({
   declarations: [WishlistViewComponent, WishlistCurrentRepertoryComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    TranslateSlugModule,
     // Material
     MatButtonModule,
     MatDividerModule,

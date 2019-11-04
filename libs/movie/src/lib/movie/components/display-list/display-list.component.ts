@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayListComponent {
-  public displayedColumns: string[] = ['picture', 'title', 'director', 'productionYear', 'action'];
+  public displayedColumns: string[] = ['picture', 'title', 'director', 'productionYear'];
   public dataSource: MatTableDataSource<Movie>;
 
   @Input()
