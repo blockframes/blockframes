@@ -170,6 +170,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
+    logo: '',
     ...prize
   };
 }

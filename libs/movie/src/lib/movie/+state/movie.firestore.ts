@@ -29,6 +29,7 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
+  logo?: string,
 }
 
 export interface PromotionalElement {
