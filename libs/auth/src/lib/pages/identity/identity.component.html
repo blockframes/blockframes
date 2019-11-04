@@ -1,12 +1,15 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <article fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <div class="image"></div>
+    <img src="/assets/images/rocket_night.png" />
     <form [formGroup]="form">
       <h2>Your identity</h2>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum metus quis
-        sagittis. Curabitur scelerisque neque erat, ac bibendum nisi aliquet et.
+        Please fill out the form to interact with the blockframes DApps.
       </p>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required />
+      </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput type="text" placeholder="Name" formControlName="name" required />
@@ -21,9 +24,20 @@
           Surname is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <h3>Picture</h3>
-      <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
+      <ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Old password</mat-label>
+          <input matInput type="password" placeholder="Your pregenerated password" formControlName="generatedPassword"
+            required />
+        </mat-form-field>
+      </ng-container>
+      <password-confirm formControlName="newPassword"></password-confirm>
+      <!-- TODO issue#1146 -->
+      <ng-container *ngIf="mobile">
+        <h3>Picture</h3>
+        <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
+      </ng-container>
     </form>
   </article>
-  <button (click)="update()" type="submit" mat-flat-button color="accent">Next</button>
+  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">Next</button>
 </section>
