@@ -34,14 +34,22 @@
           <img class="movie-poster" [src]="poster" alt="movie poster" />
         </ng-container>
         <!-- Reserved territories -->
-        <ng-container *ngIf="movie.salesAgentDeal.reservedTerritories.length">
+        <ng-container
+          *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.reservedTerritories && movie.salesAgentDeal.reservedTerritories.length">
           <catalog-reserved-territories [reservedTerritories]="movie.salesAgentDeal.reservedTerritories">
           </catalog-reserved-territories>
           <mat-divider [inset]="true"></mat-divider>
         </ng-container>
         <!-- Production information -->
-        <catalog-production-information [productionCompanies]="movie.main.productionCompanies"
-          [salesAgentDealLogo]="movie.salesAgentDeal.salesAgent.logo"></catalog-production-information>
+        <catalog-production-informations *ngIf="
+          movie.main &&
+          movie.main.productionCompanies &&
+          movie.salesAgentDeal &&
+          movie.salesAgentDeal.salesAgent &&
+          movie.salesAgentDeal.salesAgent.logo" 
+          [productionCompanies]="movie.main.productionCompanies"
+          [salesAgentDealLogo]="movie.salesAgentDeal.salesAgent.logo">
+        </catalog-production-informations>
         <mat-divider [inset]="true"></mat-divider>
         <!-- Key Assets -->
         <ng-container *ngIf="movie.promotionalDescription.keyAssets.length">
