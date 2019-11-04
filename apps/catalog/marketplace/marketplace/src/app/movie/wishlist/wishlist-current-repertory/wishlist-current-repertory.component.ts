@@ -8,7 +8,6 @@ import {
   EventEmitter
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
-import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { Router } from '@angular/router';
 import { BasketService } from '../../../distribution-right/+state/basket.service';
 
@@ -52,10 +51,6 @@ export class WishlistCurrentRepertoryComponent {
     if (this.isCurrent) {
       this.columnsToDisplay.push('delete');
     }
-  }
-
-  public getLabel(scope: Scope, slug: string) {
-    return getLabelByCode(scope, slug);
   }
 
   // TODO: issue#1203 use a relative path
