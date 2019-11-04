@@ -15,7 +15,6 @@ import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
-import { TranslateSlugModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [WishlistViewComponent, WishlistCurrentRepertoryComponent],
@@ -30,7 +29,6 @@ import { TranslateSlugModule } from '@blockframes/utils';
     MatSortModule,
     MatIconModule,
     MatRippleModule,
-    TranslateSlugModule,
 
     RouterModule.forChild([
       {

@@ -19,7 +19,7 @@
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
-            <mat-carousel-slide *ngFor="let movie of section.movies" [image]="getBanner(movie)" [hideOverlay]="true">
+            <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="getBanner(movie)">
               <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
                 <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
                   <button mat-icon-button (click)="addToWishlist(movie)">
@@ -31,7 +31,7 @@
                     <mat-icon svgIcon="heart"></mat-icon>
                   </button>
                 </ng-template>
-                <footer fxLayout="column" fxLayoutAlign="center start">
+                <div fxLayout="column" fxLayoutAlign="center start" class="informations">
                   <b *ngIf="movie.main.status as status" class="status-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</b>
                   <h2>{{ movie.main.title.original }}</h2>
                   <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
@@ -44,7 +44,7 @@
                     <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
                   </b>
                   <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
-                </footer>
+                </div>
               </div>
             </mat-carousel-slide>
         </mat-carousel>

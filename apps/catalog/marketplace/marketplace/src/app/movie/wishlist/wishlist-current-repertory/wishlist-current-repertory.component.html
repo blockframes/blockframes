@@ -2,8 +2,8 @@
 <table mat-table [dataSource]="dataSource" matSort>
   <!-- Movie -->
   <ng-container matColumnDef="movie">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>International Title</th>
-    <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong td-link" matRipple (click)="redirectToMovie(element.id)">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Movie</th>
+    <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong" matRipple>
       <img *ngIf="element.main.poster; else defaultPoster" [src]="element.main.poster" alt="Poster of movie" />
       <ng-template #defaultPoster>
         <img src="/assets/images/default-movie-poster.png" alt="Default poster of movie" />
@@ -61,14 +61,14 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <!-- TODO: issue#1111 add remove function -->
-      <button mat-icon-button (click)="remove(element.id)">
+      <button mat-icon-button (click)="remove(element.id, $event)">
         <mat-icon>delete_outline</mat-icon>
       </button>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="redirectToMovie(row.id)"></tr>
 </table>
 <!-- TODO: issue#1111 add sending email -->
 <div *ngIf="isCurrent" fxLayout="row" fxLayoutAlign="center">
