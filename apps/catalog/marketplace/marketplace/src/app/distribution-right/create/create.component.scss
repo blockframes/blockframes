@@ -1,7 +1,6 @@
 @import 'mixins';
 
 :host {
-  height: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -22,7 +21,7 @@ month-calendar {
   width: 100%;
 }
 
-main {
+.main {
   width: 100%;
 }
 

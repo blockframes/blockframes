@@ -1,8 +1,12 @@
 @import 'mixins';
 
 mat-sidenav-container {
-  height: 100%;
+  height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
   padding-top: 50px;
+  overflow: auto;
+   .mat-drawer-content {
+    overflow: visible;
+  }
 }
 
 mat-sidenav-content {
@@ -14,9 +18,9 @@ mat-sidenav-content {
   background-color: rgba(0,0,0,0);
   width: 40%;
   padding: 50px 100px;
-  height: calc(100vh - var(--toolbarHeight));
+  height: auto;
   position: fixed;
-  top: var(--toolbarHeight);
+  top: 0px;
 }
 
 mat-card-header {
@@ -31,6 +35,8 @@ mat-card {
 
 .mat-drawer-side.mat-drawer-end {
   border-left: none;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 mat-icon {
