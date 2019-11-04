@@ -3,7 +3,7 @@
     <h1>Discover our selection</h1>
   </header>
 
-  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
+  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <!-- Search -->
     <aside fxLayout="column" class="filter" [formGroup]="filterForm">
       <mat-card>
@@ -270,7 +270,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
+      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
