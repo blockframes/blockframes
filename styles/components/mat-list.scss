@@ -14,11 +14,19 @@
   border: 1px solid mat-color($bf-light-background, border);
 }
 
+.dark-theme .mat-list.bf-list,
 .dark-theme .mat-nav-list,
 .dark-theme .mat-selection-list {
   background-color: mat-color($bf-dark-background, app-bar);
-  border: 1px solid mat-color($bf-dark-background, border);
+  border: 1px solid mat-color($bf-dark-foreground, border);
+}
 
+.dark-theme .mat-list [matlistitem] {
+  height: 60px;
+  border-bottom: 1px solid mat-color($bf-dark-foreground, border);
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .dark-theme .mat-menu-content,
