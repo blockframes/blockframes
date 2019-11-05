@@ -1,13 +1,16 @@
 @import 'mixins';
 
 section {
-  text-align: center;
-  max-width: 500px;
+  max-width: 1000px;
+  p {
+    max-width: 430px;
+    text-align: center;
+  }
   button {
     margin-top: 80px;
   }
   img {
-    width: 100%;
+    width: 50%;
   }
 }
 
