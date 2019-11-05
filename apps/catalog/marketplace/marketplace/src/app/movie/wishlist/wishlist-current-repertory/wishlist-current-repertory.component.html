@@ -59,7 +59,7 @@
   <ng-container matColumnDef="length">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Running time</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.main.length; else noLength">{{ element.main.length }} mins.</ng-container>
+      <ng-container *ngIf="element.main.length; else noLength">{{ element.main.length }} min</ng-container>
       <ng-template #noLength>TBC</ng-template>
     </td>
   </ng-container>
