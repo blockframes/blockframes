@@ -1,11 +1,11 @@
 <section fxLayout="column" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
   <!-- TODO #1135 Change image according to theme -->
   <feedback-message
-    title="Congratulations !"
-    subTitle="Your organization is almost ready to use, a Cascade8 administrator is going to reach out soon."
+    title="We have received your organization request"
+    subTitle="We will send you an email confirming your organization. Please verify your email to continue the registration process."
     imageUrl="/assets/images/org-congratulation.png"
     [enabled]="canMoveOn | async"
     (redirectUser)="navigate()">
   </feedback-message>
-  <button mat-button color="primary" *ngIf="!(canMoveOn | async)" (click)="removeOrganization()">Cancel your request</button>
+  <button mat-button color="primary" *ngIf="!(canMoveOn | async)" (click)="removeOrganization()">Cancel request</button>
 </section>
