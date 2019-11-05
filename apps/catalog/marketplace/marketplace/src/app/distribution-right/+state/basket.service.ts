@@ -27,7 +27,7 @@ export class BasketService extends CollectionService<BasketState> {
     private organizationService: OrganizationService,
     store: BasketStore,
     private authQuery: AuthQuery,
-    private functions: AngularFireFunctions,
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -86,9 +86,11 @@ export class BasketService extends CollectionService<BasketState> {
       const wishlist = orgState.wishlist.map(w => {
         const wish = Object.assign({}, w);
         if (wish.status === 'pending') {
-          wish.movieIds.includes(movie.id)
-            ? (wish.movieIds = wish.movieIds.filter(id => id !== movie.id))
-            : (wish.movieIds = [...wish.movieIds, movie.id]);
+          if (wish.movieIds.includes(movie.id)) {
+            wish.movieIds = wish.movieIds.filter(id => id !== movie.id);
+          } else {
+            wish.movieIds = [...wish.movieIds, movie.id];
+          }
         }
         return wish;
       });

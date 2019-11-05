@@ -17,6 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
@@ -55,6 +56,7 @@ export const AuthRoutes: Routes = [
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
+    MatCheckboxModule,
     FeedbackMessageModule,
 
     RouterModule.forChild(AuthRoutes),
