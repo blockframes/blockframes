@@ -93,10 +93,6 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
       {
         name: 'Line-up',
         path: '/layout/o/catalog/search'
-      },
-      {
-        name: 'wishlist',
-        path: '/layout/o/catalog/wishlist'
       }
     ]
   },

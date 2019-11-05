@@ -1,15 +1,14 @@
-
 <div fxLayout="row" fxLayoutAlign="start center">
 
   <ng-container *ngFor="let url of _urls">
-
     <img *ngIf="!!url; else unknown" [src]="url">
-    <ng-template #unknown>
-      <img [src]="placeholderLogo" alt="Placeholder Logo">
-    </ng-template>
-
   </ng-container>
-
+  <ng-container *ngFor="let ref of _refs">
+    <img *ngIf="!!ref; else unknown" [storageRef]="ref">
+  </ng-container>
+  <ng-template #unknown>
+    <img [src]="placeholderLogo" alt="Placeholder Logo">
+  </ng-template>
   <ng-container *ngIf="_moreDetails > 0">
     +{{_moreDetails}}
   </ng-container>
