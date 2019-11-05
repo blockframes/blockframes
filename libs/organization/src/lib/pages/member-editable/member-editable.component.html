@@ -2,19 +2,20 @@
   <!-- Content -->
   <ng-container content>
     <h3>{{orgName}}</h3>
-    <member-pending
+    <!-- Issue #1146 remove comment after AFM -->
+    <!-- <member-pending
       (declined)="declineInvitation($event)"
       (accepted)="acceptInvitation($event)"
       [invitations]="invitationsToJoinOrganization$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async">
-    </member-pending>
+    </member-pending> -->
     <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
-    <member-invitation
+    <!-- <member-invitation
       [invitations]="invitationsFromOrganization$ | async"
       (declined)="declineInvitation($event)"
       [isSuperAdmin]="isSuperAdmin$ | async">
-    </member-invitation>
+    </member-invitation> -->
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>

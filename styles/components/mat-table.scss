@@ -27,3 +27,33 @@
 td.mat-cell, td span {
   font-size: 12px;
 }
+
+.dark-theme {
+  .mat-table {
+    background-color: mat-color($bf-dark-background, app-bar);
+  }
+  .mat-header-cell {
+    border-top: solid 1px mat-color($bf-dark-foreground, border);
+    .mat-sort-header {
+      border-bottom: 1px solid mat-color($bf-dark-foreground, border);
+    }
+    &:first-of-type {
+      border-radius: 10px 0 0 0;
+      border-left: solid 1px mat-color($bf-dark-foreground, border);
+    }
+    &:last-of-type {
+      border-right: solid 1px mat-color($bf-dark-foreground, border);
+      border-radius: 0 10px 0 0;
+    }
+  }
+
+  td.mat-cell {
+    border-bottom: 1px solid mat-color($bf-dark-foreground, border);
+    &:first-of-type {
+      border-left: solid 1px mat-color($bf-dark-foreground, border);
+    }
+    &:last-of-type {
+      border-right: solid 1px mat-color($bf-dark-foreground, border);
+    }
+  }
+}
