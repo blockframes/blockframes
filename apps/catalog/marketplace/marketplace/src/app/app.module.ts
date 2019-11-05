@@ -29,6 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
 
 // Components
 import { AppComponent } from './app.component';
@@ -50,6 +51,7 @@ import { LayoutComponent } from './layout/layout.component';
     MatIconModule,
     MatButtonModule,
     MatDividerModule,
+    MatBadgeModule,
 
     // Libraries
     OrganizationModule,

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 // Materials
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  imports: [CommonModule, MatTableModule],
+  imports: [CommonModule, MatTableModule, MatIconModule],
   declarations: [MovieDisplayListComponent],
   exports: [MovieDisplayListComponent]
 })
