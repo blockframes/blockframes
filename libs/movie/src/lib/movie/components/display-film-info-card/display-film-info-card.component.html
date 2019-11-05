@@ -1,0 +1,75 @@
+<ng-container *ngIf="synopsis">
+  <article class="synopsis">
+    <span>{{ synopsis }}</span>
+  </article>
+</ng-container>
+<ng-container *ngIf="main">
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.title.original">
+    <span><b>Original Title</b></span>
+    <span>{{ main.title.original }}</span>
+  </li>
+  <ng-container *ngIf="salesCast">
+    <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesCast.credits.length > 0">
+      <span><b>Principal Cast</b></span>
+      <span *ngFor="let cast of salesCast.credits; let i = index; let isLast = last">
+        <ng-container *ngIf="cast.creditRole === 'actor' && i <= 1; else end">
+            {{ cast.firstName }} {{ cast.lastName }} {{ isLast ? '' : ', '}}
+        </ng-container>
+        <ng-template #end>...</ng-template>
+      </span>
+    </li>
+  </ng-container>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.genres.length > 0">
+    <span><b>Genre</b></span>
+    <span *ngFor="let genre of main.genres; let isLast=last">
+      {{ genre | translateSlug: 'GENRES' }}{{isLast ? '' : ', '}}
+    </span>
+  </li>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.originCountries">
+    <span><b>Country of Origin</b></span>
+    <span *ngFor="let country of main.originCountries; let isLast=last">{{ country | translateSlug: 'TERRITORIES'}} {{isLast ? '' : ', '}}</span>
+  </li>
+  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.languages">
+    <span><b>{{main.languages.length <= 1 ? 'language': 'languages'}}</b></span>
+    <span *ngFor="let languages of main.languages; let isLast=last">
+      {{ languages | translateSlug: 'LANGUAGES' }}{{isLast ? '' : ', '}}
+    </span>
+  </li>
+  <li fxLayout="row wrap" *ngIf="versionInfo.subtitles.length">
+    <span><b>Available {{main.languages.length <= 1 ? 'substitle': 'subtitles'}}</b></span>
+    <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
+      {{ subtitle | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
+    </span>
+  </li>
+  <li fxLayout="row wrap" *ngIf="prizes">
+    <span><b>Festival Prizes</b></span>
+    <span *ngFor="let prize of prizes">
+      {{prize.festivalName}} {{prize.prize}} {{prize.year}}
+    </span>
+  </li>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="budget">
+    <span><b>Budget</b></span>
+    <span>{{budget.totalBudget}}</span>
+  </li>
+  <li fxLayout="row" fxLayout.lt-sm="column">
+    <span><b>Theatrical Release</b></span>
+    <span>Yes</span>
+  </li>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
+    <span><b>Quotas</b></span>
+    <span>European Qualification</span>
+  </li>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="color">
+    <span><b>Color / Black & White</b></span>
+    <span>{{ color | titlecase }}</span>
+  </li>
+</ng-container>
+<ng-container *ngIf="keywords">
+  <article fxLayout="row" class="keywords">
+    <mat-chip-list aria-label="keywords">
+      <mat-chip *ngFor="let keyword of keywords" color="primary" selected disableRipple>
+        {{ keyword }}
+      </mat-chip>
+    </mat-chip-list>
+  </article>
+</ng-container>
