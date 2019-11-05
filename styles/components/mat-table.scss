@@ -10,7 +10,6 @@
     border-right: solid 1px mat-color($bf-light-foreground, divider);
   }
 
-
   .mat-header-cell {
     border-top: solid 1px mat-color($bf-light-foreground, divider);
     &:first-of-type {
@@ -24,19 +23,23 @@
   }
 }
 
-td.mat-cell, td span {
-  font-size: 12px;
-}
-
 .dark-theme {
-  .mat-table {
-    background-color: mat-color($bf-dark-background, app-bar);
+  table {
+    width: 100%;
   }
+  mat-row, mat-header-row, mat-footer-row,
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: mat-color($bf-dark-foreground, border);
+  }
+  td.mat-cell:first-of-type {
+    border-left: solid 1px mat-color($bf-dark-foreground, border);
+  }
+  td.mat-cell:last-of-type {
+    border-right: solid 1px mat-color($bf-dark-foreground, border);
+  }
+
   .mat-header-cell {
     border-top: solid 1px mat-color($bf-dark-foreground, border);
-    .mat-sort-header {
-      border-bottom: 1px solid mat-color($bf-dark-foreground, border);
-    }
     &:first-of-type {
       border-radius: 10px 0 0 0;
       border-left: solid 1px mat-color($bf-dark-foreground, border);
@@ -46,14 +49,8 @@ td.mat-cell, td span {
       border-radius: 0 10px 0 0;
     }
   }
+}
 
-  td.mat-cell {
-    border-bottom: 1px solid mat-color($bf-dark-foreground, border);
-    &:first-of-type {
-      border-left: solid 1px mat-color($bf-dark-foreground, border);
-    }
-    &:last-of-type {
-      border-right: solid 1px mat-color($bf-dark-foreground, border);
-    }
-  }
+td.mat-cell, td span {
+  font-size: 12px;
 }
