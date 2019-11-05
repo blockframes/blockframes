@@ -31,11 +31,11 @@ mat-chip {
   bottom: 30px;
   border-radius: 9px;
   right: 0;
-  background: rgba(0, 0, 0, 0.288);
-  height: 55px;
-  text-align: center;
-  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 5px;
+  height: 45px;
   img {
     height: 35px;
+    border-radius: 0px;
   }
 }

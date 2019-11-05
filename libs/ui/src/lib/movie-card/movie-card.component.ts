@@ -15,4 +15,12 @@ export class MovieCardComponent {
   get posterSrc() {
     return this.movie.main.poster || '/assets/images/default-movie-poster.png';
   }
+
+  get firstFestivalPrizeLogo() {
+    if(this.movie.festivalPrizes.prizes.length && this.movie.festivalPrizes.prizes[0].logo) {
+      return this.movie.festivalPrizes.prizes[0].logo;
+    } else {
+      return '';
+    }
+  }
 }
