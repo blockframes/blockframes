@@ -1,6 +1,7 @@
 .light-theme {
   table {
     width: 100%;
+    border-radius: 10px;
   }
 
   td.mat-cell:first-of-type {
@@ -26,6 +27,7 @@
 .dark-theme {
   table {
     width: 100%;
+    border-radius: 10px;
   }
   mat-row, mat-header-row, mat-footer-row,
   th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
