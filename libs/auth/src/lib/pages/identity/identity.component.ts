@@ -55,7 +55,7 @@ export class IdentityComponent {
         surname: this.form.get('surname').value,
         avatar: this.form.get('avatar').value
       });
-      this.router.navigate(['auth/congratulation']);
+      this.router.navigateByUrl('/');
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
