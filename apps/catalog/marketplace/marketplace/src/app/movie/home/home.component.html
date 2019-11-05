@@ -1,9 +1,10 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Welcome to Archipel content</h1>
-    <p>The only marketplace offering package deals for TV, VOD and Ancillary rights.</p>
-    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">Check out the line up</a>
+  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
+    <h3>Archipel Content</h3>
+    <span class="first-header-text">The only marketplace offering package deals</span>
+    <span class="second-header-text">for TV, VOD and ancillary rights</span>
+    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">View the catalogue</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -42,7 +43,7 @@
                       {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
                     </span>
                     <span *ngIf="movie.main.originCountries.length > 2">... </span>
-                    <span *ngIf="!!movie.main.length">| {{ movie.main.length }} min </span>
+                    <span *ngIf="movie.main.length">| {{ movie.main.length }} mins. </span>
                     <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
                   </b>
                   <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
