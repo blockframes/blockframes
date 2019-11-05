@@ -1,8 +1,4 @@
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Discover our films</h1>
-  </header>
-
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <!-- Search -->
     <aside fxLayout="column" class="filter" [formGroup]="filterForm">
@@ -11,8 +7,8 @@
         <mat-card-content>
           <mat-accordion multi="true">
 
-          <!-- Production Year --> <!-- TODO #1146 -->
-          <!-- <mat-expansion-panel expanded>
+            <!-- Production Year --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="production-year-panel">
                 Production Year
@@ -85,7 +81,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
                   <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                    (click)="addLanguage(languageControl.value)">Add
+                    (click)="addLanguage(languageControl.value); languageControl.reset()">Add
                     language
                   </button>
                 </div>
@@ -93,7 +89,12 @@
                   <mat-list [formGroup]="filterForm.get('languages')" role="list">
                     <ng-container *ngFor="let language of languages$ | async">
                       <mat-list-item [formGroupName]="language">
-                        <h3 class="mat-h3" mat-line>{{language | titlecase}}</h3>
+                        <span mat-line>
+                          <h3 class="mat-h3">{{ language | translateSlug: 'LANGUAGES' }}</h3>
+                          <button mat-icon-button (click)="removeLanguage(language)">
+                            <mat-icon class="cancel-btn">cancel</mat-icon>
+                          </button>
+                        </span>
                         <i mat-line>Options are cumulative</i>
                         <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
@@ -102,9 +103,6 @@
                         <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
                           Subtitles
                         </mat-checkbox>
-                        <button mat-icon-button (click)="removeLanguage(language)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
                       </mat-list-item>
                     </ng-container>
                   </mat-list>
@@ -252,7 +250,7 @@
     <!-- List || card of result -->
     <article>
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <h2>Search</h2>
+        <h2>Line-up</h2>
         <mat-divider></mat-divider>
         <button mat-icon-button (click)="listView = !listView">
           <ng-container *ngIf="!listView">
