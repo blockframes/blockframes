@@ -82,7 +82,7 @@ export function UniqueOrgName(service: OrganizationService): AsyncValidatorFn {
       uniqueOnEthereum = !orgEthAddress ? true : false;
     }
 
-    uniqueOnFirestore = !service.orgNameExist(control.value);
+    uniqueOnFirestore = await service.orgNameExist(control.value).then(exist => !exist);
 
     return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
   }
