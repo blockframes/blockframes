@@ -1,8 +1,9 @@
-<h4 *ngIf="!isCurrent">Sent {{ date.toDate() | date: 'MMM dd yyyy' }}</h4>
+<h4 *ngIf="!isCurrent">Submitted on {{ date.toDate() | date: 'EEEE, MMMM d, y' }}</h4>
+<p class="important" *ngIf="isCurrent">Please submit this order for it to be processed.</p>
 <table mat-table [dataSource]="dataSource" matSort>
   <!-- Movie -->
   <ng-container matColumnDef="movie">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Movie</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>International title</th>
     <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong" matRipple>
       <img *ngIf="element.main.poster; else defaultPoster" [src]="element.main.poster" alt="Poster of movie" />
       <ng-template #defaultPoster>
@@ -14,11 +15,17 @@
 
   <!-- Sales Agent -->
   <ng-container matColumnDef="salesAgent">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales Agent</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales agent</th>
     <td mat-cell *matCellDef="let element">
-      <span *ngIf="element.salesAgentDeal.salesAgent">
-        {{ element.salesAgentDeal.salesAgent.displayName | titlecase }}
-      </span>
+      <div fxLayout="row" fxLayoutAlign="none center">
+        <img *ngIf="element.salesAgentDeal.salesAgent && element.salesAgentDeal.salesAgent.logo; else defaultPicture" class="picture" [src]="element.salesAgentDeal.salesAgent.logo" alt="Picture of sales agent" />
+        <ng-template #defaultPicture>
+          <img src="/assets/images/placeHolder_logo.png" alt="Default picture of sales agent" />
+        </ng-template>
+        <span *ngIf="element.salesAgentDeal && element.salesAgentDeal.salesAgent">
+          {{ element.salesAgentDeal.salesAgent.displayName | titlecase }}
+        </span>
+      </div>
     </td>
   </ng-container>
 
@@ -34,13 +41,13 @@
 
   <!-- Production Status -->
   <ng-container matColumnDef="productionStatus">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Production Status</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Production status</th>
     <td mat-cell *matCellDef="let element">{{ element.main.status | translateSlug: 'MOVIE_STATUS' }}</td>
   </ng-container>
 
   <!-- Origin Country -->
   <ng-container matColumnDef="originCountry">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Origin Country</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Country of origin</th>
     <td mat-cell *matCellDef="let element">
       <span *ngFor="let country of element.main.originCountries | slice: 0:2; let isLast = last">
         {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
@@ -50,9 +57,9 @@
 
   <!-- Length -->
   <ng-container matColumnDef="length">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Length</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Running time</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.main.length }} <span *ngIf="element.main.length">min</span>
+      {{ element.main.length }} <span *ngIf="element.main.length">min.</span>
     </td>
   </ng-container>
 
@@ -62,7 +69,7 @@
     <td mat-cell *matCellDef="let element">
       <!-- TODO: issue#1111 add remove function -->
       <button mat-icon-button (click)="remove(element.id, $event)">
-        <mat-icon>delete_outline</mat-icon>
+        <mat-icon>clear</mat-icon>
       </button>
     </td>
   </ng-container>
@@ -72,6 +79,6 @@
 </table>
 <!-- TODO: issue#1111 add sending email -->
 <div *ngIf="isCurrent" fxLayout="row" fxLayoutAlign="center">
-  <button class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Express my interest</button>
+  <button class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Submit to sellers</button>
 </div>
 
