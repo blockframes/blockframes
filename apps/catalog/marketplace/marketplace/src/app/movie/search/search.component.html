@@ -1,6 +1,6 @@
 <div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Discover our selection</h1>
+    <h1>Discover our films</h1>
   </header>
 
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
@@ -93,7 +93,8 @@
                   <mat-list [formGroup]="filterForm.get('languages')" role="list">
                     <ng-container *ngFor="let language of languages$ | async">
                       <mat-list-item [formGroupName]="language">
-                        <h3 class="mat-h3" mat-line>{{language}}</h3>
+                        <h3 class="mat-h3" mat-line>{{language | titlecase}}</h3>
+                        <i mat-line>Options are cumulative</i>
                         <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
                         <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed

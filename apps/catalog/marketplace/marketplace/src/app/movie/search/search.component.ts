@@ -141,6 +141,9 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
             return filterMovie(movie, filterOptions, deals);
           });
         } else {
+          //TODO #1146 : remove the two line for movieGenres
+          const removeGenre = ['TV Show', 'Web Series'];
+          this.movieGenres= this.movieGenres.filter(value => !removeGenre.includes(value));
           return movies.filter(movie => {
             return filterMovie(movie, filterOptions);
           });
