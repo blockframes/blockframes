@@ -83,9 +83,14 @@ h1 {
 }
 
 .heart-button {
+  width: 200px;
   float: right;
   right: 200px;
   bottom: 40px;
+  span {
+    margin-left: 10px;
+    font-size: 16px;
+  }
 }
 
 @include mobile {
@@ -114,7 +119,12 @@ h1 {
   }
 
   .heart-button {
+    width: auto;
     right: 10px;
+    bottom: 0px;
+    span {
+      font-size: 12px;
+    }
   }
 }
 
