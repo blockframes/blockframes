@@ -3,7 +3,7 @@
   <h3> Festival Prizes </h3>
   <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <h4>{{ festivalprizes.prizes.controls[i].get('name').value ? festivalprizes.prizes.controls[i].get('name').value : 'unnamed festival' }}</h4>
+      <h4>{{ getPrizeName(i) }}</h4>
       <mat-form-field appearance="outline" class="small-margin">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Festival name">
@@ -18,8 +18,8 @@
       </mat-form-field>
       <div class="movie-poster-thumbnail">
         <h4> Festival Logo </h4>
-        <ng-container *ngIf="festivalprizes.prizes.controls[i].get('logo').value; else fileUpload">
-          <img mat-card-image [src]="festivalprizes.prizes.controls[i].get('logo').value">
+        <ng-container *ngIf="getPrizeLogo(i); else fileUpload">
+          <img mat-card-image [src]="getPrizeLogo(i)">
           <button mat-raised-button color="warn" (click)="festivalprizes.removeImage(i)">
             <mat-icon>delete_circle</mat-icon>
           </button>

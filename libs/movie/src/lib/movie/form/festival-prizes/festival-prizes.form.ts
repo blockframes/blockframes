@@ -39,6 +39,10 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
     return this.get('prizes');
   }
 
+  public getPrize(i: number) {
+    return this.prizes.controls[i];
+  }
+
   public addPrize(): void {
     const credit = new MoviePrizeForm();
     this.prizes.push(credit);

@@ -11,8 +11,8 @@
     </mat-chip>
 
     <!-- First festival logo (if any) -->
-    <div *ngIf="movie.festivalPrizes.prizes.length && movie.festivalPrizes.prizes[0].logo" class="prize-logo-container" >
-      <a [routerLink]="link"><img [src]="movie.festivalPrizes.prizes[0].logo"></a>
+    <div *ngIf="firstFestivalPrizeLogo" class="prize-logo-container" >
+      <a [routerLink]="link"><img [src]="firstFestivalPrizeLogo"></a>
     </div>
   </div>
 
