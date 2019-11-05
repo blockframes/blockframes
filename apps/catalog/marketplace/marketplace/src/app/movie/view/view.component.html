@@ -13,9 +13,11 @@
         </div>
         <div  class="movie-info" fxLayout="row" fxLayoutAlign="space-between center">
           <div>
-            <span *ngIf="movie.main.productionYear">{{ movie.main.productionYear }} | </span>
+            <span *ngIf="movie.main.productionYear">{{ movie.main.productionYear }}</span>
+            <span *ngIf="movie.main.status || movie.main.length"> | </span>
             <span *ngIf="movie.main.status">{{ movie.main.status | translateSlug: 'MOVIE_STATUS'}}</span>
-            <span *ngIf="movie.main.length"> | {{ movie.main.length }} min.</span>
+            <span *ngIf="movie.main.length && movie.main.status"> | </span>
+            <span *ngIf="movie.main.length">{{ movie.main.length }} min</span>
           </div>
         </div>
       </article>
