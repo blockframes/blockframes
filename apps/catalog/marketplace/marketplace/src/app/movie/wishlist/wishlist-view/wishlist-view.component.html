@@ -1,20 +1,15 @@
-<header fxLayout="column" fxLayoutAlign="center center">
-  <h1>Wishlist</h1>
-</header>
 <section>
   <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-    <h2>My Wishlist</h2>
+    <h2>My selections</h2>
     <mat-divider fxFlex></mat-divider>
   </article>
   <article *ngIf="(currentWishlist$ | async) as wishlist">
-    <h3>Current Wishlist</h3>
     <catalog-wishlist-current-repertory
       [movies]="wishlist.movies"
       isCurrent="true"
       (sent)="updateWishlistStatus(wishlist.movies)" >
     </catalog-wishlist-current-repertory>
   </article>
-  <h3>Past Wishlist</h3>
   <article *ngFor="let wishlist of wishlists$ | async">
     <catalog-wishlist-current-repertory
       [movies]="wishlist.movies"

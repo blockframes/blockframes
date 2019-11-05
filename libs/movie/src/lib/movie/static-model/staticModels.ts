@@ -148,7 +148,7 @@ const models: Model = {
   'MOVIE_STATUS': [
     {
       'slug': 'financing',
-      'label': 'Pre-Production'
+      'label': 'Pre-production'
     },
     {
       'slug': 'shooting',
@@ -156,7 +156,7 @@ const models: Model = {
     },
     {
       'slug': 'post-production',
-      'label': 'Post Production'
+      'label': 'Post-production'
     },
     {
       'slug': 'finished',
