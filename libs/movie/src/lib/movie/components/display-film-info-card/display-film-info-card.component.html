@@ -74,23 +74,15 @@
     <span><b>Color / Black & White</b></span>
     <span>{{ color | titlecase }}</span>
   </li>
-  <li fxLayout="row wrap" *ngIf="productionCompanies">
-      <span><b>Production {{productionCompanies.length <= 1 ? 'company':'companies'}}</b></span>
-      <span *ngFor="let company of productionCompanies; let i = index" fxLayout="row nowrap">
-          <ng-container *ngIf="i <= 1">
-              {{company.firstName}}
-              {{company.lastName}}
-          </ng-container>
-      </span>
-    </li>
-  <li fxLayout="row wrap" *ngIf="salesAgent">
-      <span><b>Sales Agent</b></span>
-      <span>{{ salesAgent.displayName }}</span>
-    </li>
-  <li fxLayout="row wrap" *ngIf="prizes.length">
+  <li fxLayout="column" *ngIf="prizes.length">
     <span><b>{{prizes.length <= 1 ? 'Festival Selection': 'Festival Selections'}}</b></span>
+    <div class="prize-logo-container">
+      <ng-container *ngFor="let prize of prizes">
+        <img *ngIf="prize.logo" [src]="prize.logo">
+      </ng-container>
+    </div>
     <span *ngFor="let prize of prizes">
-      {{prize.prize}}, {{prize.name}},{{prize.year}}
+      {{prize.prize}}, {{prize.name}} ({{prize.year}})
     </span>
   </li>
 </ng-container>
