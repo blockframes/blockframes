@@ -16,15 +16,17 @@ export class SignupFormComponent {
   @Output() submited = new EventEmitter();
 
   public signupForm = new SignupForm();
-  public isTermOfUseChedked = false;
+  public isTermsOfUseChecked = false;
 
   constructor(private dialog: MatDialog) {}
 
-  public openConditions() {
+  /** Opens a dialog with terms of use and privacy policy. */
+  // Create a reusable component for Term of use checkbox and dialog => ISSUE #1233
+  public openTermsOfUse() {
     this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
   }
 
-  public checkTermsOfUse() {
-    this.isTermOfUseChedked = !this.isTermOfUseChedked;
+  public toggleTermsOfUse() {
+    this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
   }
 }

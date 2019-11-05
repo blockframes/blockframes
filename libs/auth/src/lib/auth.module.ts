@@ -1,7 +1,7 @@
 import { AuthGuard } from './guard/auth.guard';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
@@ -45,7 +45,6 @@ export const AuthRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule,
     AngularFireAuthModule,
     FlexLayoutModule,
     CropperModule,

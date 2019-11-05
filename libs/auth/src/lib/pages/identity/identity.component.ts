@@ -66,11 +66,13 @@ export class IdentityComponent {
     }
   }
 
-  public openConditions() {
+  /** Opens a dialog with terms of use and privacy policy. */
+  // Create a reusable component for Term of use checkbox and dialog => ISSUE #1233
+  public openTermsOfUse() {
     this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
   }
 
-  public checkTermsOfUse() {
+  public toggleTermsOfUse() {
     this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
   }
 }

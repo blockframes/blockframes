@@ -43,13 +43,16 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  public addToWishlist(added?: boolean) {
+  public addToWishlist() {
     const title = this.movieQuery.getActive().main.title.international
     this.basketService.updateWishlist(this.movieQuery.getActive());
-    const message = added
-      ? `${title} has been removed from your selection.`
-      : `${title} has been added to your selection.`;
-    this.snackbar.open(message, 'close', { duration: 2000 });
+    this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
+  }
+
+  public removeFromWishlist() {
+    const title = this.movieQuery.getActive().main.title.international
+    this.basketService.updateWishlist(this.movieQuery.getActive());
+    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
   get internationalPremiere() {

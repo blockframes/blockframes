@@ -38,8 +38,8 @@
         <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
       </ng-container>
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <mat-checkbox (change)="checkTermsOfUse()"></mat-checkbox>
-        <span>I accept the <a (click)="openConditions()">Terms of use and Privacy policy</a>.</span>
+        <mat-checkbox (change)="toggleTermsOfUse()"></mat-checkbox>
+        <span>I accept the <a (click)="openTermsOfUse()" class="terms-link">Terms of use and Privacy policy</a>.</span>
       </div>
     </form>
   </article>

@@ -27,11 +27,6 @@ h2, p{
   text-align: center;
 }
 
-a {
-  color: #9eb1ff;
-  cursor: pointer;
-}
-
 @include mobile {
   form {
     width: 80%;

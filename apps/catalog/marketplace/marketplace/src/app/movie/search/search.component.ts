@@ -382,16 +382,18 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  public isAddedToWishlist(movieId: string) {
+  public toggle$(movieId: string) {
     return this.basketService.isAddedToWishlist(movieId);
   }
 
-  public addToWishlist(movie: Movie, added?: boolean) {
+  public addToWishlist(movie: Movie) {
     this.basketService.updateWishlist(movie);
-    const message = added
-      ? `${movie.main.title.international} has been removed from your selection.`
-      : `${movie.main.title.international} has been added to your selection.`;
-    this.snackbar.open(message, 'close', { duration: 2000 });
+    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+  }
+
+  public removeFromWishlist(movie: Movie) {
+    this.basketService.updateWishlist(movie);
+    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
   ngOnDestroy() {

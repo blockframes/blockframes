@@ -10,7 +10,6 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { MatSnackBar } from '@angular/material';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -68,7 +67,6 @@ export class BasketService extends CollectionService<BasketState> {
   }
 
   public async updateWishlist(movie: Movie) {
-    let added: boolean;
     const orgState = this.organizationQuery.getValue().org;
     const pendingWishlist = this.organizationQuery
       .getValue()
@@ -90,17 +88,14 @@ export class BasketService extends CollectionService<BasketState> {
         if (wish.status === 'pending') {
           if (wish.movieIds.includes(movie.id)) {
             wish.movieIds = wish.movieIds.filter(id => id !== movie.id);
-            added = false;
           } else {
             wish.movieIds = [...wish.movieIds, movie.id];
-            added = true;
           }
         }
         return wish;
       });
       this.organizationService.update({ ...orgState, wishlist: wishlist });
     }
-    return added;
   }
 
   /** Checks if a movie is or is not in the organization wishlist. */
