@@ -1,13 +1,13 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormEntity, UniqueOrgName } from "@blockframes/utils";
+import { FormEntity, UniqueOrgName, FireQuery } from "@blockframes/utils";
 import { createOrganization, Organization } from "../+state";
 
-function createOrganizationFormControl(params?: Organization) {
+function createOrganizationFormControl(db: FireQuery, params?: Organization) {
   const organization = createOrganization(params);
   return {
     name: new FormControl(organization.name, {
       validators: [Validators.required],
-      asyncValidators: [UniqueOrgName],
+      asyncValidators: [UniqueOrgName.bind(db)],
     }),
     phoneNumber: new FormControl(organization.phoneNumber),
     email: new FormControl(organization.email, Validators.email),
@@ -20,7 +20,7 @@ function createOrganizationFormControl(params?: Organization) {
 export type OrganizationFormControl = ReturnType<typeof createOrganizationFormControl>;
 
 export class OrganizationForm extends FormEntity<OrganizationFormControl> {
-  constructor(organization?: Organization) {
-    super(createOrganizationFormControl(organization));
+  constructor(private db: FireQuery, organization?: Organization) {
+    super(createOrganizationFormControl(db, organization));
   }
 }
