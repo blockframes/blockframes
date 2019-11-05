@@ -11,7 +11,7 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/home'
       },
       {
-        name: 'Line up',
+        name: 'Line-up',
         path: '/layout/o/catalog/search'
       },
       {
@@ -28,7 +28,7 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/home'
       },
       {
-        name: 'Line up',
+        name: 'Line-up',
         path: '/layout/o/catalog/search'
       },
       {
@@ -45,7 +45,7 @@ export const CONTEXT_MENU = [
         path: '/layout/o/catalog/home'
       },
       {
-        name: 'Line up',
+        name: 'Line-up',
         path: '/layout/o/catalog/search'
       },
       {
@@ -91,7 +91,7 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
         path: '/layout/o/catalog/home'
       },
       {
-        name: 'Line up',
+        name: 'Line-up',
         path: '/layout/o/catalog/search'
       },
       {

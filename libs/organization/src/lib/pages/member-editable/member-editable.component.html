@@ -1,20 +1,28 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened">
   <!-- Content -->
   <ng-container content>
-    <h3>{{orgName}}</h3>
-    <member-pending
-      (declined)="declineInvitation($event)"
-      (accepted)="acceptInvitation($event)"
-      [invitations]="invitationsToJoinOrganization$ | async"
-      [isSuperAdmin]="isSuperAdmin$ | async">
-    </member-pending>
+    <article fxLayout="row" fxLayoutAlign="start center">
+      <h2>{{orgName}}</h2>
+      <mat-divider fxFlex></mat-divider>
+    </article>
+    <div *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+      <member-pending *ngIf="invitations.length > 0"
+        (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)"
+        [invitations]="invitations"
+        [isSuperAdmin]="isSuperAdmin$ | async">
+      </member-pending>
+    </div>
+
     <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
     <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
-    <member-invitation
-      [invitations]="invitationsFromOrganization$ | async"
-      (declined)="declineInvitation($event)"
-      [isSuperAdmin]="isSuperAdmin$ | async">
-    </member-invitation>
+    <div *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+      <member-invitation *ngIf="invitationsMember.length > 0"
+        [invitations]="invitationsMember"
+        (declined)="declineInvitation($event)"
+        [isSuperAdmin]="isSuperAdmin$ | async">
+      </member-invitation>
+    </div>
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
