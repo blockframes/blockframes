@@ -5,6 +5,7 @@ import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { startWith, tap } from 'rxjs/operators';
+import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-editable',
@@ -15,7 +16,7 @@ import { startWith, tap } from 'rxjs/operators';
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
-  public organizationProfileForm = new OrganizationForm();
+  public organizationProfileForm = new OrganizationForm(this.db);
   public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
@@ -23,7 +24,8 @@ export class OrganizationEditableComponent implements OnInit {
     private query: OrganizationQuery,
     private permissionsQuery: PermissionsQuery,
     private service: OrganizationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private db: FireQuery
   ) {}
 
   ngOnInit() {

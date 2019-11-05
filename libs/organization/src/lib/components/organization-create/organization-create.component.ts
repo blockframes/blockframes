@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
+import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-create',
@@ -14,14 +15,15 @@ import { OrganizationForm } from '../../forms/organization.form';
 export class OrganizationCreateComponent {
   @HostBinding('attr.page-id') pageId = 'organization-create';
 
-  public form = new OrganizationForm();
+  public form = new OrganizationForm(this.db);
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private service: OrganizationService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private db: FireQuery,
   ) {
   }
 

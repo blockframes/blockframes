@@ -67,16 +67,21 @@ export function validPercentage(control: FormControl): ValidationErrors {
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
 export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
 
+  let uniqueOnEthereum = true; // set to true by default in case of AFM_DISABLE
+  let uniqueOnFirestore = false;
+
   // TODO issue#1146
   if (AFM_DISABLE) {
     const orgENS = orgNameToEnsDomain(control.value, baseEnsDomain);
     const provider = getProvider(network);
     const orgEthAddress = await provider.resolveName(orgENS);
-    return !orgEthAddress ? null : { notUnique: true };
+    uniqueOnEthereum = !orgEthAddress ? true : false;
   }
 
-  // TODO check also unique on the firestore see issue#1142
-  return null;
+  const orgSnap = await this.firestore.collection('orgs').where('name', '==', control.value).get();
+  uniqueOnFirestore = orgSnap.empty;
+
+  return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
 }
 
 /**
