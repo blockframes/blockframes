@@ -1,5 +1,9 @@
 @import 'mixins';
 
+a {
+  width: 80px;
+}
+
 .context-menu {
   height: var(--toolbarHeight);
   border: none;

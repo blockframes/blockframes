@@ -8,6 +8,14 @@ header {
   background-size: cover;
 }
 
+mat-divider {
+  width: 100%;
+}
+
+h2 {
+  white-space: nowrap;
+}
+
 movie-card {
   height: 390px;
   width: 310px;
