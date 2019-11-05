@@ -44,6 +44,12 @@
       {{ subtitle | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
   </li>
+  <li fxLayout="row wrap" *ngIf="versionInfo.dubbings.length">
+    <span><b>Available {{main.languages.length <= 1 ? 'Dubbing': 'Dubbings'}}</b></span>
+    <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
+      {{ dubbing | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
+    </span>
+  </li>
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="budget">
     <span><b>Budget</b></span>
     <span>{{budget.totalBudget}}</span>
