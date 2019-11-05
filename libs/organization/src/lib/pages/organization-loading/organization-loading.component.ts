@@ -18,7 +18,7 @@ export class OrganizationLoadingComponent implements OnInit {
   ngOnInit() {
     this.query.user$.subscribe(user => {
       if (!!user.orgId) {
-        this.router.navigateByUrl(`/`);
+        this.router.navigateByUrl('/');
       }
     });
   }

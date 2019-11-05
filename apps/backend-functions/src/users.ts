@@ -18,7 +18,7 @@ interface OrgProposal {
   name: string;
 }
 
-const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
+export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
   const { email } = data;
 
   if (!email) {
@@ -29,7 +29,7 @@ const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
   await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
 };
 
-const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
+export const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
   const { email } = data;
 
   if (!email) {
@@ -40,7 +40,7 @@ const startResetPasswordEmailFlow = async (data: any, context: CallableContext) 
   await sendMailFromTemplate(userResetPassword(email, resetLink));
 };
 
-const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
+export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
   const { email, userName, orgName, wishlist } = data;
 
   if (!email || !userName || !orgName || !wishlist) {
@@ -52,7 +52,7 @@ const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
 }
 
 
-const onUserCreate = async (user: UserRecord) => {
+export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
@@ -60,8 +60,6 @@ const onUserCreate = async (user: UserRecord) => {
   }
 
   const userDocRef = db.collection('users').doc(user.uid);
-
-
 
   // transaction to UPSERT the user doc
   return db.runTransaction(async tx => {
@@ -79,7 +77,7 @@ const onUserCreate = async (user: UserRecord) => {
   });
 };
 
-const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
+export const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
   const prefix: string = decodeURIComponent(data.prefix);
 
   // Leave if the prefix is too short (do not search every users in the universe).
@@ -108,7 +106,7 @@ const findUserByMail = async (data: any, context: CallableContext): Promise<User
     });
 };
 
-const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
+export const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
   const prefix: string = decodeURIComponent(data.prefix);
 
   // Leave if the prefix is too short (do not search every users in the universe).
@@ -146,7 +144,7 @@ const generatePassword = () =>
     numbers: true
   });
 
-const getOrCreateUserByMail = async (
+export const getOrCreateUserByMail = async (
   data: any,
   context: CallableContext
 ): Promise<UserProposal> => {
@@ -170,14 +168,4 @@ const getOrCreateUserByMail = async (
 
     return { uid: user.uid, email };
   }
-};
-
-export {
-  onUserCreate,
-  findUserByMail,
-  findOrgByName,
-  getOrCreateUserByMail,
-  startVerifyEmailFlow,
-  startResetPasswordEmailFlow,
-  startWishlistEmailsFlow,
 };
