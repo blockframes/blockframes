@@ -2,15 +2,18 @@
   <!-- Movie Poster -->
   <div class="img-container" test-id="movie-poster">
     <a [routerLink]="link">
-      <ng-container >
-        <img mat-card-image [src]="posterSrc" alt="Movie poster link" />
-      </ng-container>
+      <img mat-card-image [src]="posterSrc" alt="Movie poster link" />
     </a>
 
     <!-- Movie Status Chip -->
     <mat-chip *ngIf="movie.main.status as status" selected disableRipple class="movie-chip">
       <span class="table-size-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</span>
     </mat-chip>
+
+    <!-- First festival logo (if any) -->
+    <div *ngIf="movie.festivalPrizes.prizes.length && movie.festivalPrizes.prizes[0].logo" class="prize-logo-container" >
+      <a [routerLink]="link"><img [src]="movie.festivalPrizes.prizes[0].logo"></a>
+    </div>
   </div>
 
   <!-- Movie Informations -->

@@ -15,7 +15,7 @@
     <article fxLayout="column">
         <p class="bf-dark-text">Sales agent</p>
         <ng-container *ngIf="salesAgentDealLogo; else placeholder">
-            <img *ngFor="let logo of salesAgentDealLogo" [src]="logo">
+            <img [src]="salesAgentDealLogo">
         </ng-container>
         <ng-template #placeholder>
             <b>-</b>

@@ -25,3 +25,17 @@ mat-chip {
 .mat-card-subtitle {
   font-size: 12px;
 }
+
+.prize-logo-container {
+  position: absolute;
+  bottom: 30px;
+  border-radius: 9px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.288);
+  height: 55px;
+  text-align: center;
+  padding: 10px;
+  img {
+    height: 35px;
+  }
+}
