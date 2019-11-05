@@ -101,6 +101,11 @@ span {
   color: mat-color($bf-dark-foreground, blue-icon)
 }
 
+.terms-link {
+  color: mat-color($bf-dark-foreground, blue-icon);
+  cursor: pointer;
+}
+
 main {
   height: 100%;
 }

@@ -24,8 +24,8 @@
                 fxLayoutAlign="end start"
                 class="black-bg-opacity-30 overlay"
                 [routerLink]="['/layout/o/catalog', movie.id]">
-                <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
+                <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
+                  <button mat-icon-button (click)="removeFromWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_filled"></mat-icon>
                   </button>
                 </ng-container>

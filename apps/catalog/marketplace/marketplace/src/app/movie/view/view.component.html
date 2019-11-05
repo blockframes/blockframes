@@ -23,7 +23,7 @@
       </article>
     </section>
     <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-      <button class="heart-button" test-id="distribution-right-link" mat-flat-button color="accent" (click)="addToWishlist()">
+      <button class="heart-button" test-id="distribution-right-link" mat-flat-button color="accent" (click)="removeFromWishlist()">
         <mat-icon>favorite</mat-icon>
         <span>Remove from list</span>
       </button>

@@ -1,4 +1,4 @@
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import {
   Component,
   ViewChild,
@@ -45,7 +45,8 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private service: BasketService
+    private service: BasketService,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -59,8 +60,9 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
     this.router.navigate([`layout/o/catalog/${movieId}/view`]);
   }
 
-  public remove(movieId: string, event: Event) {
+  public remove(movie: Movie, event: Event) {
     event.stopPropagation();
-    this.service.removeMovieFromWishlist(movieId);
+    this.service.removeMovieFromWishlist(movie.id);
+    this.snackbar.open(`${movie.main.title.international} has been removed from your selection`, 'close', { duration: 2000 });
   }
 }

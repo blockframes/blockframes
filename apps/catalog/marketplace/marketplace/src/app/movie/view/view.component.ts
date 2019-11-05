@@ -5,6 +5,7 @@ import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angula
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -22,7 +23,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private basketService: BasketService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -42,7 +44,15 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   public addToWishlist() {
+    const title = this.movieQuery.getActive().main.title.international
     this.basketService.updateWishlist(this.movieQuery.getActive());
+    this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
+  }
+
+  public removeFromWishlist() {
+    const title = this.movieQuery.getActive().main.title.international
+    this.basketService.updateWishlist(this.movieQuery.getActive());
+    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
   get internationalPremiere() {
