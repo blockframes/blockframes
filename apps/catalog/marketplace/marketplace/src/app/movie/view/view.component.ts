@@ -53,7 +53,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   get color() {
     const color = this.movieQuery.getActive().salesInfo.color;
-    return color === 'c' ? 'color' : 'black & white';
+    return color === 'c' ? 'Color' : 'Black & white';
   }
 
   get europeanQualification() {

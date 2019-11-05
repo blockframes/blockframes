@@ -33,14 +33,21 @@ article {
 
   mat-carousel {
     flex: 1;
+    margin: 10px;
 
     .overlay {
       height: 100%;
     }
 
-    footer {
+    .informations {
       width: 100%;
       padding: 10px 30px;
+    }
+
+    button.mat-icon-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
     }
   }
 }

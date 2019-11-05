@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite } from './assets/mail-templates';
-import { sendMail } from './internals/email';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending } from './assets/mail-templates';
+import { sendMailFromTemplate, sendMail } from './internals/email';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -18,8 +18,46 @@ interface OrgProposal {
   name: string;
 }
 
-const onUserCreate = (user: UserRecord) => {
+export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
+  const { email } = data;
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+  }
+
+  const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+  await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
+};
+
+export const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
+  const { email } = data;
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
+  }
+
+  const resetLink = await admin.auth().generatePasswordResetLink(email);
+  await sendMailFromTemplate(userResetPassword(email, resetLink));
+};
+
+export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
+  const { email, userName, orgName, wishlist } = data;
+
+  if (!email || !userName || !orgName || !wishlist) {
+    throw new Error(`email, userName, orgName, and wishlist are mandatory parameters`)
+  }
+
+  await sendMail(sendWishlist(userName, orgName, wishlist));
+  await sendMailFromTemplate(sendWishlistPending(email));
+}
+
+
+export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
+
+  if (!email || !uid) {
+    throw new Error(`email & uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+  }
 
   const userDocRef = db.collection('users').doc(user.uid);
 
@@ -28,6 +66,10 @@ const onUserCreate = (user: UserRecord) => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
+      if(!user.emailVerified) {
+        await startVerifyEmailFlow({email});
+        await sendMailFromTemplate(welcomeMessage(email));
+      }
       tx.update(userDocRef, { email, uid });
     } else {
       tx.set(userDocRef, { email, uid });
@@ -35,7 +77,7 @@ const onUserCreate = (user: UserRecord) => {
   });
 };
 
-const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
+export const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
   const prefix: string = decodeURIComponent(data.prefix);
 
   // Leave if the prefix is too short (do not search every users in the universe).
@@ -64,7 +106,7 @@ const findUserByMail = async (data: any, context: CallableContext): Promise<User
     });
 };
 
-const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
+export const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
   const prefix: string = decodeURIComponent(data.prefix);
 
   // Leave if the prefix is too short (do not search every users in the universe).
@@ -102,7 +144,7 @@ const generatePassword = () =>
     numbers: true
   });
 
-const getOrCreateUserByMail = async (
+export const getOrCreateUserByMail = async (
   data: any,
   context: CallableContext
 ): Promise<UserProposal> => {
@@ -122,10 +164,8 @@ const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMail(userInvite(email, password));
+    await sendMailFromTemplate(userInvite(email, password));
 
     return { uid: user.uid, email };
   }
 };
-
-export { onUserCreate, findUserByMail, findOrgByName, getOrCreateUserByMail };

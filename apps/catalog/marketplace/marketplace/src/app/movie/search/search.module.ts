@@ -32,7 +32,6 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
   declarations: [MarketplaceSearchComponent],
   imports: [
@@ -43,7 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MovieCardModule,
     MovieDisplayListModule,
     TranslateSlugModule,
-    
+
     // Material
     MatIconModule,
     MatDividerModule,

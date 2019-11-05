@@ -19,18 +19,34 @@
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
-          <ng-container *ngFor="let movie of section.movies">
-            <mat-carousel-slide #matCarouselSlide [image]="movie.main.poster" [hideOverlay]="true">
+            <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="getBanner(movie)">
               <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
-                <footer fxLayout="column" fxLayoutAlign="center start">
+                <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
+                  <button mat-icon-button (click)="addToWishlist(movie)">
+                    <mat-icon svgIcon="heart_filled"></mat-icon>
+                  </button>
+                </ng-container>
+                <ng-template #alreadyAdded>
+                  <button mat-icon-button (click)="addToWishlist(movie)">
+                    <mat-icon svgIcon="heart"></mat-icon>
+                  </button>
+                </ng-template>
+                <div fxLayout="column" fxLayoutAlign="center start" class="informations">
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</b>
                   <h2>{{ movie.main.title.original }}</h2>
-                  <span *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                    {{ director.lastName }}</span>
-                  <span><b>Production year</b> {{ movie.main.productionYear }}</span>
-                </footer>
+                  <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
+                  <b>
+                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
+                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ' ' : ', '}}
+                    </span>
+                    <span *ngIf="movie.main.originCountries.length > 2">... </span>
+                    <span *ngIf="movie.main.length">| {{ movie.main.length }} min </span>
+                    <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
+                  </b>
+                  <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+                </div>
               </div>
             </mat-carousel-slide>
-          </ng-container>
         </mat-carousel>
       </article>
     </ng-container>

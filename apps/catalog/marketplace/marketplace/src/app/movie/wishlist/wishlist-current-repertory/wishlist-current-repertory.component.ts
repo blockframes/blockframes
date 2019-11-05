@@ -5,10 +5,10 @@ import {
   ChangeDetectionStrategy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnInit
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
-import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { Router } from '@angular/router';
 import { BasketService } from '../../../distribution-right/+state/basket.service';
 
@@ -18,7 +18,7 @@ import { BasketService } from '../../../distribution-right/+state/basket.service
   styleUrls: ['./wishlist-current-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistCurrentRepertoryComponent {
+export class WishlistCurrentRepertoryComponent implements OnInit {
 
   @Output() sent = new EventEmitter();
 
@@ -54,16 +54,13 @@ export class WishlistCurrentRepertoryComponent {
     }
   }
 
-  public getLabel(scope: Scope, slug: string) {
-    return getLabelByCode(scope, slug);
-  }
-
   // TODO: issue#1203 use a relative path
   public async redirectToMovie(movieId: string) {
     this.router.navigate([`layout/o/catalog/${movieId}/view`]);
   }
 
-  public remove(movieId: string) {
+  public remove(movieId: string, event: Event) {
+    event.stopPropagation();
     this.service.removeMovieFromWishlist(movieId);
   }
 }

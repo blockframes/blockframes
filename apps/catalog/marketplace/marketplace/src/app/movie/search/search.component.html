@@ -273,10 +273,29 @@
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                {{ director.lastName }}
+              <mat-card-subtitle *ngFor="let director of movie.main.directors">
+                {{ director.firstName }} {{ director.lastName }}
               </mat-card-subtitle>
-              <span>Production Year {{ movie.main.productionYear }}</span>
+              <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+              <mat-card-content class="table-size-text">
+                <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
+                  {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}
+                </b>
+                <b *ngIf="movie.main.originCountries.length > 2">... </b>
+                <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>| {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
+              </mat-card-content>
+            </ng-container>
+            <ng-container movieCardAction>
+              <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
+                <button mat-icon-button (click)="addToWishlist(movie)">
+                  <mat-icon svgIcon="heart_filled"></mat-icon>
+                </button>
+              </ng-container>
+              <ng-template #alreadyAdded>
+                <button mat-icon-button (click)="addToWishlist(movie)">
+                  <mat-icon svgIcon="heart"></mat-icon>
+                </button>
+              </ng-template>
             </ng-container>
           </movie-card>
         </ng-container>

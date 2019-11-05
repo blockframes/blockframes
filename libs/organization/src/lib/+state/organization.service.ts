@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FireQuery, Query} from '@blockframes/utils';
-import { AuthQuery, AuthService, AuthStore, User } from '@blockframes/auth';
+import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
   createOrganization,

@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { AuthQuery } from "@blockframes/auth";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'organization-loading',
@@ -10,13 +11,14 @@ import { AuthQuery } from "@blockframes/auth";
 export class OrganizationLoadingComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private query: AuthQuery,
   ) {}
 
   ngOnInit() {
     this.query.user$.subscribe(user => {
       if (!!user.orgId) {
-        window.location.assign('/');
+        this.router.navigateByUrl('/');
       }
     });
   }

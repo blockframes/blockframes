@@ -7,27 +7,10 @@
       </ng-container>
     </a>
 
-      <!-- Movie Menu -->
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon color="primary">more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu" xPosition="before">
-      <button mat-menu-item [matMenuTriggerFor]="subMenu">
-        <mat-icon color="primary">control_camera</mat-icon>
-        <span>Open in...</span>
-      </button>
-      <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-        <mat-icon color="primary">edit</mat-icon>
-        <span>Edit</span>
-      </a>
-      <button mat-menu-item (click)="remove(movie)">
-        <mat-icon color="primary">delete_outline</mat-icon>
-        <span>Delete</span>
-      </button>
-    </mat-menu>
-    <mat-menu #subMenu="matMenu">
-      <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-    </mat-menu>
+    <!-- Movie Status Chip -->
+    <mat-chip *ngIf="movie.main.status as status" selected disableRipple class="movie-chip">
+      <span class="table-size-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</span>
+    </mat-chip>
   </div>
 
   <!-- Movie Informations -->
@@ -38,8 +21,11 @@
     <ng-content select="[movieInformation]"></ng-content>
   </mat-card-content>
 
+  <!-- If there is actions in the card, this divider will appear -->
+  <ng-container *ngIf="actions.childNodes.length != 0"><mat-divider></mat-divider></ng-container>
+
   <!-- Movie action button -->
-  <mat-card-actions>
+  <mat-card-actions #actions>
     <ng-content select="[movieCardAction]"></ng-content>
   </mat-card-actions>
 
