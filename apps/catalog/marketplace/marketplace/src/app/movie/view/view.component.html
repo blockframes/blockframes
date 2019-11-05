@@ -8,7 +8,7 @@
       <span>a film by {{ director.firstName }} {{ director.lastName }} <span *ngIf="!isLast">&</span>
       </span>
     </div>
-    <span class="movie-status">{{ movie.main.status | translateSlug: 'MOVIE_STATUS'}}</span>
+    <span *ngIf="movie.main.status as status" class="movie-status">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</span>
   </header>
 
   <div fxLayout="row nowrap" fxLayoutAlign="center center" fxLayout.lt-md="row" class="view-content heart">

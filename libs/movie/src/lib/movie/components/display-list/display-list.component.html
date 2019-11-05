@@ -16,7 +16,7 @@
     <th mat-header-cell *matHeaderCellDef>Director</th>
     <!-- We want only to show one director because of the design right now -->
     <td mat-cell *matCellDef="let element">
-      {{ element.main.directors[0].firstName }} {{ element.main.directors[0].lastName }}
+      <span *ngIf="element.main.directors.length">{{ element.main.directors[0].firstName }} {{ element.main.directors[0].lastName }}</span>
     </td>
   </ng-container>
 

@@ -19,23 +19,27 @@
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
             <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="getBanner(movie)">
-              <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
+              <div
+                fxLayout="column"
+                fxLayoutAlign="end start"
+                class="black-bg-opacity-30 overlay"
+                [routerLink]="['/layout/o/catalog', movie.id]">
                 <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_filled"></mat-icon>
                   </button>
                 </ng-container>
                 <ng-template #alreadyAdded>
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
                     <mat-icon svgIcon="heart"></mat-icon>
                   </button>
                 </ng-template>
                 <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
-                  <b *ngIf="movie.main.status as status" class="status-text">{{ status.toUpperCase() }}</b>
-                  <h2>{{ movie.main.title.original }}</h2>
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b>
+                  <h2>{{ movie.main.title.international }}</h2>
                   <div>
                     <span *ngFor="let director of movie.main.directors; let isLast=last">
-                      {{ director.firstName }} {{ director.lastName }}{{isLast ? ' ' : ', '}}
+                      {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
                     </span>
                   </div>
                   <b>

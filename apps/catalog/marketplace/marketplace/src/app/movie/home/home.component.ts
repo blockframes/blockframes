@@ -68,7 +68,8 @@ export class MarketplaceHomeComponent implements OnInit {
     return this.basketService.isAddedToWishlist(movieId);
   }
 
-  public addToWishlist(movie: Movie) {
+  public addToWishlist(movie: Movie, event: Event) {
+    event.stopPropagation();
     this.basketService.updateWishlist(movie);
   }
 
