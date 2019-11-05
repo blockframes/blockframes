@@ -4,6 +4,8 @@ import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
+import { MatDialog } from '@angular/material/dialog';
+import { PrivacyPageComponent } from 'apps/catalog/marketplace/marketplace/src/app/pages/privacy-page/privacy-page.component';
 
 @Component({
   selector: 'auth-identity',
@@ -32,10 +34,13 @@ export class IdentityComponent {
     newPassword: new PasswordControl()
   });
 
+  public isTermsOfUseChecked = false;
+
   constructor(
     private service: AuthService,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -59,5 +64,13 @@ export class IdentityComponent {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
+  }
+
+  public openConditions() {
+    this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
+  }
+
+  public checkTermsOfUse() {
+    this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
   }
 }

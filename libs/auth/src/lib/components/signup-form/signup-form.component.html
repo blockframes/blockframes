@@ -26,8 +26,12 @@
       </mat-error>
     </mat-form-field>
     <password-confirm formControlName="password"></password-confirm>
+    <div fxLayout="row">
+      <mat-checkbox (change)="checkTermsOfUse()"></mat-checkbox>
+      <span>I accept the <a (click)="openConditions()">Terms of use and Privacy policy</a>.</span>
+    </div>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <button id="submit" type="submit" mat-flat-button color="accent">Sign up</button>
+      <button id="submit" type="submit" mat-flat-button color="accent" [disabled]="!isTermOfUseChedked">Sign up</button>
       <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an account</button>
     </div>
   </form>

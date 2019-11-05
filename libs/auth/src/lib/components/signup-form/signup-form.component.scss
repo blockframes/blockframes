@@ -2,8 +2,8 @@
 
 section {
   height: 100%;
-  margin-left: 60px;
-  margin-right: 200px;
+  margin-left: 200px;
+  margin-right: 60px;
 }
 
 form {
@@ -16,6 +16,15 @@ form {
 
 #tosignin {
   margin-top: 10px;
+}
+
+mat-checkbox {
+  margin-right: 5px;
+}
+
+a {
+  color: #9eb1ff;
+  cursor: pointer;
 }
 
 @include medium {

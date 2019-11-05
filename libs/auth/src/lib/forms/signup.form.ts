@@ -9,7 +9,8 @@ interface SignUp {
   email: string
   password: string,
   name: string,
-  surname: string
+  surname: string,
+  termsOfUseChecked: boolean
 }
 
 function createSignup(params?: Partial<SignUp>): SignUp {
@@ -18,6 +19,7 @@ function createSignup(params?: Partial<SignUp>): SignUp {
     password: '',
     name: '',
     surname: '',
+    termsOfUseChecked: false,
     ...(params || {})
   } as SignUp
 }
@@ -28,7 +30,8 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
     email: new FormControl(signup.email, [Validators.required, Validators.email]),
     password: new PasswordControl(signup.password),
     name: new FormControl(signup.name),
-    surname: new FormControl(signup.surname)
+    surname: new FormControl(signup.surname),
+    termsOfUseChecked: new FormControl(signup.termsOfUseChecked)
   }
 }
 

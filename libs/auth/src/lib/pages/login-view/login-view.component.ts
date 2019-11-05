@@ -45,7 +45,7 @@ export class LoginViewComponent {
 
   public async signup(signupForm: SignupForm) {
     if (signupForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Information not valid.', 'close', { duration: this.snackbarDuration });
       return;
     }
     try {

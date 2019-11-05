@@ -1,7 +1,7 @@
 import { AuthGuard } from './guard/auth.guard';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
@@ -17,6 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
@@ -44,6 +45,7 @@ export const AuthRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     AngularFireAuthModule,
     FlexLayoutModule,
     CropperModule,
@@ -55,6 +57,7 @@ export const AuthRoutes: Routes = [
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
+    MatCheckboxModule,
     FeedbackMessageModule,
 
     RouterModule.forChild(AuthRoutes),
