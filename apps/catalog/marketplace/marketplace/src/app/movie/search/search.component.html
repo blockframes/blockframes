@@ -287,8 +287,8 @@
             </ng-container>
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">
-                <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                <ng-container *ngIf="(isAddedToWishlist(movie.id) | async) as added; else alreadyAdded">
+                  <button mat-icon-button (click)="addToWishlist(movie, added)">
                     <mat-icon svgIcon="heart_filled"></mat-icon>
                   </button>
                 </ng-container>

@@ -10,6 +10,7 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatSnackBar } from '@angular/material';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -27,7 +28,7 @@ export class BasketService extends CollectionService<BasketState> {
     private organizationService: OrganizationService,
     store: BasketStore,
     private authQuery: AuthQuery,
-    private functions: AngularFireFunctions,
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -67,6 +68,7 @@ export class BasketService extends CollectionService<BasketState> {
   }
 
   public async updateWishlist(movie: Movie) {
+    let added: boolean;
     const orgState = this.organizationQuery.getValue().org;
     const pendingWishlist = this.organizationQuery
       .getValue()
@@ -86,14 +88,19 @@ export class BasketService extends CollectionService<BasketState> {
       const wishlist = orgState.wishlist.map(w => {
         const wish = Object.assign({}, w);
         if (wish.status === 'pending') {
-          wish.movieIds.includes(movie.id)
-            ? (wish.movieIds = wish.movieIds.filter(id => id !== movie.id))
-            : (wish.movieIds = [...wish.movieIds, movie.id]);
+          if (wish.movieIds.includes(movie.id)) {
+            wish.movieIds = wish.movieIds.filter(id => id !== movie.id);
+            added = false;
+          } else {
+            wish.movieIds = [...wish.movieIds, movie.id];
+            added = true;
+          }
         }
         return wish;
       });
       this.organizationService.update({ ...orgState, wishlist: wishlist });
     }
+    return added;
   }
 
   /** Checks if a movie is or is not in the organization wishlist. */

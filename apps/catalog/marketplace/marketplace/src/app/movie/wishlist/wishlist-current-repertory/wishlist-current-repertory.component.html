@@ -64,12 +64,12 @@
     </td>
   </ng-container>
 
-  <!-- Trash Icon -->
+  <!-- Action -->
   <ng-container *ngIf="isCurrent" matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <!-- TODO: issue#1111 add remove function -->
-      <button mat-icon-button (click)="remove(element.id, $event)">
+      <button mat-icon-button (click)="remove(element, $event)">
         <mat-icon>clear</mat-icon>
       </button>
     </td>

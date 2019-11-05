@@ -41,8 +41,8 @@ import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
-import { OrganizationQuery } from '@blockframes/organization';
 import { BasketService } from '../../distribution-right/+state/basket.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -125,10 +125,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
-    private organizationQuery: OrganizationQuery,
     private router: Router,
     private movieService: MovieService,
-    private basketService: BasketService
+    private basketService: BasketService,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -386,8 +386,12 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     return this.basketService.isAddedToWishlist(movieId);
   }
 
-  public addToWishlist(movie: Movie) {
+  public addToWishlist(movie: Movie, added?: boolean) {
     this.basketService.updateWishlist(movie);
+    const message = added
+      ? `${movie.main.title.international} has been removed from your selection.`
+      : `${movie.main.title.international} has been added to your selection.`;
+    this.snackbar.open(message, 'close', { duration: 2000 });
   }
 
   ngOnDestroy() {
