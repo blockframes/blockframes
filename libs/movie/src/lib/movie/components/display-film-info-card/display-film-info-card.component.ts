@@ -14,7 +14,6 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() salesInfo;
   @Input() color;
   @Input() europeanQualification;
-  @Input() movieSalesInfo;
   @Input() versionInfo;
   @Input() prizes;
   @Input() synopsis;
