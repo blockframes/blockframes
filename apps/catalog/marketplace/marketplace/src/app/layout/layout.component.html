@@ -11,18 +11,18 @@
       </ng-container>
 
       <ng-container wishlist>
-        <a
-          *ngIf="(currentWishlist$ | async) as wishlist"
-          mat-icon-button
+        <a *ngIf="(currentWishlist$ | async) as wishlist else emptywishlist" mat-icon-button
           routerLink="/layout/o/catalog/wishlist/view">
-          <mat-icon
-            [matBadge]="wishlist.movieIds.length"
-            matBadgeColor="accent"
-            matBadgeSize="small"
-            svgIcon="heart">
+          <mat-icon [matBadge]="wishlist.movieIds.length" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
           </mat-icon>
         </a>
       </ng-container>
+      <ng-template #emptywishlist>
+        <a mat-icon-button routerLink="/layout/o/catalog/wishlist/view">
+          <mat-icon matBadge="0" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
+          </mat-icon>
+        </a>
+      </ng-template>
 
       <ng-container notifications>
         <notification-widget></notification-widget>
@@ -34,7 +34,8 @@
             <account-profile-widget></account-profile-widget>
             <mat-divider></mat-divider>
             <organization-widget></organization-widget>
-            <ng-container *ngIf="AFM_DISABLE"> <!-- TODO #1146 -->
+            <ng-container *ngIf="AFM_DISABLE">
+              <!-- TODO #1146 -->
               <mat-divider></mat-divider>
               <wallet-widget></wallet-widget>
             </ng-container>
