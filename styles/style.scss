@@ -79,6 +79,10 @@ span {
   font-size: 14px;
 }
 
+.important {
+  color: mat-color($mat-dark-bf-orange, 400);
+}
+
 .dark-theme p.bf-dark-text,
 .dark-theme span.bf-dark-text {
   color: mat-color($bf-dark-foreground, dark-text);
