@@ -1,7 +1,7 @@
 @import 'mixins';
 
 header {
-  padding: 150px 0;
+  padding: 50px;
   // TODO: replace image when the real one is available.
   background-image: url('/assets/images/catalog-marketplace-banner.png');
   background-position: center center;
@@ -9,15 +9,28 @@ header {
   background-size: cover;
   text-align: center;
 
-  p {
-    width: 50%;
-    margin-bottom: 30px;
-    text-align: center;
+  h3 {
+    margin: 0;
   }
-}
 
-section {
-  padding: 50px 0;
+  span {
+    width: 35%;
+    text-align: left;
+  }
+
+  .first-header-text {
+    font-size: 40px;
+    font-weight: 300;
+  }
+
+  .second-header-text {
+    font-size: 28px;
+    font-weight: 300;
+  }
+
+  a {
+    margin-top: 20px;
+  }
 }
 
 article {
@@ -35,6 +48,10 @@ article {
   mat-carousel {
     flex: 1;
     margin: 10px;
+
+    h2 {
+      margin: 0;
+    }
 
     .overlay {
       height: 100%;

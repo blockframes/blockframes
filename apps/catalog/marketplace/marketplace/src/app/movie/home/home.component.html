@@ -1,9 +1,10 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Welcome to Archipel content</h1>
-    <p>The only marketplace offering package deals for TV, VOD and Ancillary rights.</p>
-    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">Check out the line up</a>
+  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="20px">
+    <h3>Archipel Content</h3>
+    <span class="first-header-text">The only marketplace offering package deals</span>
+    <span class="second-header-text">for TV, VOD and ancillary rights</span>
+    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">View the catalogue</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -18,27 +19,35 @@
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
             <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="getBanner(movie)">
-              <div fxLayout="column" fxLayoutAlign="end start" class="black-bg-opacity-30 overlay">
+              <div
+                fxLayout="column"
+                fxLayoutAlign="end start"
+                class="black-bg-opacity-30 overlay"
+                [routerLink]="['/layout/o/catalog', movie.id]">
                 <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_filled"></mat-icon>
                   </button>
                 </ng-container>
                 <ng-template #alreadyAdded>
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
                     <mat-icon svgIcon="heart"></mat-icon>
                   </button>
                 </ng-template>
-                <div fxLayout="column" fxLayoutAlign="center start" class="informations">
-                  <b *ngIf="movie.main.status as status" class="status-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</b>
-                  <h2>{{ movie.main.title.original }}</h2>
-                  <span *ngFor="let director of movie.main.directors">{{ director.firstName }} {{ director.lastName }}</span>
+                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b>
+                  <h2>{{ movie.main.title.international }}</h2>
+                  <div>
+                    <span *ngFor="let director of movie.main.directors; let isLast=last">
+                      {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
+                    </span>
+                  </div>
                   <b>
-                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
-                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ' ' : ', '}}
+                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
                     </span>
                     <span *ngIf="movie.main.originCountries.length > 2">... </span>
-                    <span *ngIf="movie.main.length">| {{ movie.main.length }} min </span>
+                    <span *ngIf="movie.main.length">| {{ movie.main.length }} mins. </span>
                     <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
                   </b>
                   <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>

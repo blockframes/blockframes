@@ -7,7 +7,7 @@
 
     <!-- Movie Status Chip -->
     <mat-chip *ngIf="movie.main.status as status" selected disableRipple class="movie-chip">
-      <span class="table-size-text">{{ status | translateSlug: 'MOVIE_STATUS'}}</span>
+      <span class="table-size-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</span>
     </mat-chip>
 
     <!-- First festival logo (if any) -->
@@ -19,7 +19,7 @@
   <!-- Movie Informations -->
   <mat-card-content>
     <mat-card-title-group>
-      <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+      <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>
   </mat-card-content>
