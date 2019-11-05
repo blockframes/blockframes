@@ -9,7 +9,21 @@
           <mat-icon svgIcon="logoBFdark" class="app-icon"></mat-icon>
         </button>
       </ng-container>
- 
+
+      <ng-container wishlist>
+        <a
+          *ngIf="(currentWishlist$ | async) as wishlist"
+          mat-icon-button
+          routerLink="/layout/o/catalog/wishlist/view">
+          <mat-icon
+            [matBadge]="wishlist.movieIds.length"
+            matBadgeColor="accent"
+            matBadgeSize="small"
+            svgIcon="heart">
+          </mat-icon>
+        </a>
+      </ng-container>
+
       <ng-container notifications>
         <notification-widget></notification-widget>
       </ng-container>

@@ -38,11 +38,11 @@
                     </span>
                   </div>
                   <b>
-                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last">
-                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ' ' : ', '}}
+                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
                     </span>
                     <span *ngIf="movie.main.originCountries.length > 2">... </span>
-                    <span *ngIf="movie.main.length">| {{ movie.main.length }} min </span>
+                    <span *ngIf="!!movie.main.length">| {{ movie.main.length }} min </span>
                     <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
                   </b>
                   <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>

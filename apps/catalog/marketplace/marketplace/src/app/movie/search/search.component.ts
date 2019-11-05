@@ -66,7 +66,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
+  public sortOptions: string[] = ['All films', 'Title', 'Director', /* 'Production Year' #1146 */];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
