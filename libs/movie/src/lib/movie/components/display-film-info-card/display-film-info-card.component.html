@@ -12,7 +12,7 @@
     <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesCast.credits.length > 0">
       <span><b>Principal Cast</b></span>
       <span *ngFor="let cast of salesCast.credits; let isLast = last">
-        {{ cast.firstName }} {{ cast.lastName }} {{ isLast ? '' : ', '}}
+        {{ cast.firstName }} {{ cast.lastName }}{{ isLast ? '' : ', '}}
       </span>
     </li>
   </ng-container>
@@ -25,12 +25,12 @@
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.originCountries">
     <span><b>{{main.originCountries.length <= 1 ? 'Country of Origin': 'Countries of Origin'}}</b></span>
     <span *ngFor="let country of main.originCountries; let isLast=last">
-      {{ country | translateSlug: 'TERRITORIES'}} {{isLast ? '' : ','}}
+      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ','}}
     </span>
   </li>
-  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesInfo.originCountryReleaseDate">
+  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="releaseDate">
     <span><b>Release Date on Country of Origin</b></span>
-    <span>{{ salesInfo.originCountryReleaseDate | date:'LLLL, dd yyyy' }}</span>
+    <span>{{ releaseDate }}</span>
   </li>
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.languages">
     <span><b>{{main.languages.length <= 1 ? 'Original Language': 'Original Languages'}}</b></span>
@@ -39,7 +39,7 @@
     </span>
   </li>
   <li fxLayout="row wrap" *ngIf="versionInfo.subtitles.length">
-    <span><b>Available {{main.languages.length <= 1 ? 'Subtitle': 'Subtitles'}}</b></span>
+    <span><b>Available {{versionInfo.subtitles.length <= 1 ? 'Subtitle': 'Subtitles'}}</b></span>
     <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
       {{ subtitle | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
@@ -68,10 +68,23 @@
     <span><b>Color / Black & White</b></span>
     <span>{{ color | titlecase }}</span>
   </li>
+  <li fxLayout="row wrap" *ngIf="productionCompanies">
+      <span><b>Production {{productionCompanies.length <= 1 ? 'company':'companies'}}</b></span>
+      <span *ngFor="let company of productionCompanies; let i = index" fxLayout="row nowrap">
+          <ng-container *ngIf="i <= 1">
+              {{company.firstName}}
+              {{company.lastName}}
+          </ng-container>
+      </span>
+    </li>
+  <li fxLayout="row wrap" *ngIf="salesAgent">
+      <span><b>Sales Agent</b></span>
+      <span>{{ salesAgent.displayName }}</span>
+    </li>
   <li fxLayout="row wrap" *ngIf="prizes.length">
     <span><b>{{prizes.length <= 1 ? 'Festival Selection': 'Festival Selections'}}</b></span>
     <span *ngFor="let prize of prizes">
-      {{prize.name}} {{prize.prize}} {{prize.year}}
+      {{prize.prize}}, {{prize.name}},{{prize.year}}
     </span>
   </li>
 </ng-container>

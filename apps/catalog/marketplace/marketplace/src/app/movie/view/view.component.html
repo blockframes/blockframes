@@ -72,7 +72,10 @@
           [versionInfo]="movie.versionInfo"
           [prizes]="movie.festivalPrizes.prizes"
           [synopsis]="movie.main.shortSynopsis"
-          [keywords]="movie.promotionalDescription.keywords">
+          [keywords]="movie.promotionalDescription.keywords"
+          [releaseDate]="movie.AFMOriginCountryReleaseDate"
+          [productionCompanies]="movie.main.productionCompanies"
+          [salesAgent]="movie.salesAgentDeal.salesAgent">
         </movie-display-film-info-card>
         <!-- Promotional elements -->
         <!-- <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
