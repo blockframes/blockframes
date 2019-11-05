@@ -1,6 +1,11 @@
-  <h3>Festival Prizes</h3>
-  <article fxLayout="column">
-    <span *ngFor="let prize of prizes">
-      {{prize.festivalName}} {{prize.prize}} {{prize.year}}
-    </span>
-  </article>
+<h3>Festival Prizes</h3>
+<article fxLayout="column">
+  <div class="prize-logo-container">
+    <ng-container *ngFor="let prize of prizes">
+      <img *ngIf="prize.logo" [src]="prize.logo">
+    </ng-container>
+  </div>
+  <span *ngFor="let prize of prizes">
+    {{prize.prize}}, {{prize.name}} ({{prize.year}})
+  </span>
+</article>

@@ -1,24 +1,21 @@
 <h3>Production information</h3>
 <div fxLayout="row nowrap" fxLayoutAlign="start start" fxLayoutGap="30px">
-    <article fxLayout="column">
-        <p class="bf-dark-text">
-            Production {{productionCompanies.length <= 1 ? 'company':'companies'}}
-        </p>
-        <div *ngFor="let company of productionCompanies; let i = index" fxLayout="row nowrap">
-            <ng-container *ngIf="i <= 1; else end">
-                {{company.firstName}}
-                {{company.lastName}}
-            </ng-container>
-        </div>
-        <ng-template #end>...</ng-template>
-    </article>
-    <article fxLayout="column">
-        <p class="bf-dark-text">Sales agent</p>
-        <ng-container *ngIf="salesAgentDealLogo; else placeholder">
-            <img *ngFor="let logo of salesAgentDealLogo" [src]="logo">
-        </ng-container>
-        <ng-template #placeholder>
-            <b>-</b>
-        </ng-template>
-    </article>
+  <article fxLayout="column">
+    <p class="bf-dark-text">
+      Production {{productionCompanies.length <= 1 ? 'company':'companies'}}
+    </p>
+    <div *ngFor="let company of productionCompanies; let i = index" fxLayout="row nowrap">
+      {{company.firstName}}
+      {{company.lastName}}
+    </div>
+  </article>
+  <article fxLayout="column">
+    <p class="bf-dark-text">Sales agent</p>
+    <ng-container *ngIf="salesAgentDealLogo; else placeholder">
+      <img [src]="salesAgentDealLogo">
+    </ng-container>
+    <ng-template #placeholder>
+      <b>-</b>
+    </ng-template>
+  </article>
 </div>

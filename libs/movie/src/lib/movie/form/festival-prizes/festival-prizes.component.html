@@ -3,6 +3,7 @@
   <h3> Festival Prizes </h3>
   <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
+      <h4>{{ getPrizeName(i) }}</h4>
       <mat-form-field appearance="outline" class="small-margin">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Festival name">
@@ -15,6 +16,19 @@
         <mat-label>Prize</mat-label>
         <input matInput formControlName="prize" placeholder="Prize">
       </mat-form-field>
+      <div class="movie-poster-thumbnail">
+        <h4> Festival Logo </h4>
+        <ng-container *ngIf="getPrizeLogo(i); else fileUpload">
+          <img mat-card-image [src]="getPrizeLogo(i)">
+          <button mat-raised-button color="warn" (click)="festivalprizes.removeImage(i)">
+            <mat-icon>delete_circle</mat-icon>
+          </button>
+        </ng-container>
+        <ng-template #fileUpload>
+          <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
+            [uploadOnFirestore]="true" (storeUploaded)="festivalprizes.setImage($event, i)"></file-upload>
+        </ng-template>
+      </div>
       <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
         <mat-icon>add_circle</mat-icon>
       </button>

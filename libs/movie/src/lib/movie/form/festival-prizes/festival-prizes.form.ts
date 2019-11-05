@@ -2,12 +2,13 @@ import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } fr
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
-function createPrizeFormControl(entity? : Partial<Prize>) {
-  const { name, year, prize } = createPrize(entity);
+function createPrizeFormControl(entity?: Partial<Prize>) {
+  const { name, year, prize, logo } = createPrize(entity);
   return {
     name: new FormControl(name),
     year: new FormControl(year),
-    prize: new FormControl(prize)
+    prize: new FormControl(prize),
+    logo: new FormControl(logo),
   }
 }
 
@@ -38,6 +39,10 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
     return this.get('prizes');
   }
 
+  public getPrize(i: number) {
+    return this.prizes.controls[i];
+  }
+
   public addPrize(): void {
     const credit = new MoviePrizeForm();
     this.prizes.push(credit);
@@ -45,6 +50,14 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
 
   public removePrize(i: number): void {
     this.prizes.removeAt(i);
+  }
+
+  public setImage(image: string, index: number): void {
+    this.prizes.controls[index].get('logo').setValue(image);
+  }
+
+  public removeImage(index: number): void {
+    this.prizes.controls[index].get('logo').setValue('');
   }
 
 }

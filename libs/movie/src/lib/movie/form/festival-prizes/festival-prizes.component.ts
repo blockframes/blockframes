@@ -17,5 +17,13 @@ export class MovieFormFestivalPrizesComponent {
     return this.controlContainer.control as MovieFestivalPrizesForm;
   }
 
+  public getPrizeName(i) {
+    const control = this.festivalprizes.getPrize(i);
+    return control.get('name').value ? control.get('name').value : 'unnamed festival';
+  }
 
+  public getPrizeLogo(i) {
+    const control = this.festivalprizes.getPrize(i);
+    return control.get('logo').value;
+  }
 }

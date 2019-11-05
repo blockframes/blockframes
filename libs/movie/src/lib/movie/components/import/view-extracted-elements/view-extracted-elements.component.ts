@@ -390,12 +390,15 @@ export class ViewExtractedElementsComponent {
         // PRIZES (Prizes)
         if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
           movie.festivalPrizes.prizes = [];
-          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach((p: string) => {
-            if (p.split(',').length === 3) {
-              const prize = { name: '', year: undefined, prize: '' } as Prize;
+          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
+            if (p.split(',').length >= 3) {
+              const prize = { name: '', year: undefined, prize: '', logo: '' } as Prize;
               prize.name = p.split(',')[0];
               prize.year = parseInt(p.split(',')[1], 10);
               prize.prize = p.split(',')[2];
+              if (p.split(',').length >= 4) {
+                prize.logo = await this.imageUploader.upload(p.split(',')[3].trim());
+              }
               movie.festivalPrizes.prizes.push(prize);
             }
 
@@ -995,7 +998,7 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.salesAgentDeal.reservedTerritories.length === 0) { 
+    if (movie.salesAgentDeal.reservedTerritories.length === 0) {
       errors.push({
         type: 'warning',
         field: 'salesAgentDeal.reservedTerritories',
