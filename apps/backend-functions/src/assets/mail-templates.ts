@@ -5,16 +5,11 @@ import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
 
-// const USER_WELCOME_PATH = '/auth/welcome';
 const ORG_HOME = '/layout/o/organization/';
 const USER_ORG_INVITATION = '/layout/organization/home';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
-
-// ------------------------- //
-//      MAIL TEMPLATES       //
-// ------------------------- //
 
 // ------------------------- //
 //   FOR BLOCKFRAMES USERS   //
@@ -88,6 +83,7 @@ export function organizationCanAccessApp(email: string, appId: string): EmailReq
   };
 }
 
+/** Send email to a user to inform him that he joined an org */
 export function userJoinedAnOrganization(userEmail: string, orgId: string): EmailTemplateRequest {
   const data = {
     pageURL: `${appUrl}${ORG_HOME}${orgId}`
@@ -95,12 +91,14 @@ export function userJoinedAnOrganization(userEmail: string, orgId: string): Emai
   return { to: userEmail, templateId: templateIds.userRequestAccepted, data };
 }
 
-export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest { // TODO
+/** Send email to org admin to inform him that a new user has joined his org */
+export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest {
   const data = {
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.userHasJoined, data };
 }
+
 /** Generates a transactional email to let an admin now that a user requested to join their org */
 export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: string, orgName: string, orgId: string, userFirstName: string, userLastName: string): EmailTemplateRequest { // TODO
   const data = {
