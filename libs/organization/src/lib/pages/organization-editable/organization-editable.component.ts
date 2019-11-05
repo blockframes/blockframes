@@ -16,7 +16,7 @@ import { FireQuery } from '@blockframes/utils';
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
-  public organizationProfileForm = new OrganizationForm(this.db);
+  public organizationProfileForm = new OrganizationForm(this.service);
   public organization$: Observable<Organization>;
   public isSuperAdmin$: Observable<boolean>;
 
@@ -25,7 +25,6 @@ export class OrganizationEditableComponent implements OnInit {
     private permissionsQuery: PermissionsQuery,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
-    private db: FireQuery
   ) {}
 
   ngOnInit() {

@@ -100,6 +100,11 @@ export class OrganizationService {
     private db: FireQuery,
   ) {}
 
+  public async orgNameExist(orgName: string) {
+    const orgSnap = await this.db.firestore.collection('orgs').where('name', '==', orgName).get();
+    return !orgSnap.empty;
+  }
+
   /** Returns an observable over organization, to be reused when you need orgs without guards */
   public sync(): Observable<Organization> {
     // prevent creating multiple side-effecting subs

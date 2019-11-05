@@ -5,7 +5,8 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-  FormArray
+  FormArray,
+  AsyncValidatorFn
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
@@ -15,6 +16,8 @@ import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
+import { FireQuery } from '@blockframes/utils/firequery/firequery';
+import { OrganizationService } from '@blockframes/organization';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
@@ -65,23 +68,24 @@ export function validPercentage(control: FormControl): ValidationErrors {
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
-export async function UniqueOrgName(control: AbstractControl): Promise<ValidationErrors | null> {
+export function UniqueOrgName(service: OrganizationService): AsyncValidatorFn {
+  return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+    // TODO issue#1146
+    let uniqueOnEthereum = true; // set to true by default in case of AFM_DISABLE
+    let uniqueOnFirestore = false;
 
-  let uniqueOnEthereum = true; // set to true by default in case of AFM_DISABLE
-  let uniqueOnFirestore = false;
+    // TODO issue#1146
+    if (AFM_DISABLE) {
+      const orgENS = orgNameToEnsDomain(control.value, baseEnsDomain);
+      const provider = getProvider(network);
+      const orgEthAddress = await provider.resolveName(orgENS);
+      uniqueOnEthereum = !orgEthAddress ? true : false;
+    }
 
-  // TODO issue#1146
-  if (AFM_DISABLE) {
-    const orgENS = orgNameToEnsDomain(control.value, baseEnsDomain);
-    const provider = getProvider(network);
-    const orgEthAddress = await provider.resolveName(orgENS);
-    uniqueOnEthereum = !orgEthAddress ? true : false;
+    uniqueOnFirestore = !service.orgNameExist(control.value);
+
+    return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
   }
-
-  const orgSnap = await this.firestore.collection('orgs').where('name', '==', control.value).get();
-  uniqueOnFirestore = orgSnap.empty;
-
-  return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
 }
 
 /**
