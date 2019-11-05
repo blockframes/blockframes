@@ -1,25 +1,22 @@
-<h3>Promotional elements</h3>
-<article fxLayout="row wrap" fxLayoutGap="20px">
-    <ng-container *ngFor="let info of promotionalElements; let i = index">
-        <ng-container *ngIf="info.type === 'reel'">
-            <div fxLayout="row wrap">
-                Promo Reel <a [href]="info.url" target="_blank">Watch</a>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="info.type === 'trailer'">
-            <div fxLayout="row wrap">
-                Trailer <a [href]="info.url" target="_blank">Watch</a>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="info.type === 'scenario'">
-            <div fxLayout="row wrap">
-                Scenario <a [href]="info.url" target="_blank">Download</a>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="info.type === 'screener'">
-            <div fxLayout="row wrap">
-                Screener <a [href]="info.url" target="_blank">Watch</a>
-            </div>
-        </ng-container>
-    </ng-container>
-</article>
+<article *ngFor="let info of promotionalElements" class="link" fxLayout="column" fxLayoutAlign="start start">
+    <a *ngIf="info.type === 'reel'" mat-stroked-button color="accent" [href]="info.url" target="_blank">
+      <mat-icon>play_arrow</mat-icon>
+      Watch promo reel
+    </a>
+    <a *ngIf="info.type === 'scenario'" mat-stroked-button color="accent" [href]="info.url" target="_blank">
+      <mat-icon>play_arrow</mat-icon>
+      Download scenario
+    </a>
+    <a *ngIf="info.type === 'screener'" mat-button [href]="info.url" target="_blank">
+      <mat-icon>play_arrow</mat-icon>
+      Watch screener
+    </a>
+    <a *ngIf="info.type === 'trailer'" mat-button [href]="info.url" target="_blank">
+      <mat-icon>play_arrow</mat-icon>
+      Watch trailer
+    </a>
+    <a *ngIf="info.type === 'teaser'" mat-button [href]="info.url" target="_blank">
+      <mat-icon>play_arrow</mat-icon>
+      Watch teaser
+    </a>
+  </article>

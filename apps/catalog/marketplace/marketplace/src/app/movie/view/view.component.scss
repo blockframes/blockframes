@@ -2,16 +2,20 @@
 
 header {
   padding: 50px 0;
-  // TODO: replace image when the real one is available.
-  background-image: url('/assets/images/catalog-marketplace-banner.png');
+  background-image: url('/assets/images/banner_movie_view.png');
   background-position: center center;
   background-attachment: fixed;
   background-size: cover;
   text-align: center;
+
+  h1 {
+    text-align: start;
+  }
 }
 
 .view-content {
-  margin-left: 200px;
+  margin-top: 60px;
+  margin-left: 135px;
   margin-right: 200px;
   &.heart {
     margin: 30px 200px;
@@ -21,6 +25,10 @@ header {
 .mat-divider {
   margin: 0 20px;
   width: 100%;
+}
+
+.titles {
+  width: 500px;
 }
 
 .mat-card .mat-divider-horizontal.mat-divider-inset {
@@ -61,9 +69,23 @@ header {
   margin: 10px;
 }
 
-.movie-status {
-  color: #9eb1ff;
-  font-size: 12px;
+h1 {
+  margin-bottom: 8px;
+}
+
+.sub-title span {
+  font-size: 24px;
+}
+
+.movie-info {
+  margin-top: 60px;
+  width: 100%;
+}
+
+.heart-button {
+  float: right;
+  right: 200px;
+  bottom: 40px;
 }
 
 @include mobile {
@@ -89,6 +111,10 @@ header {
   .movie-poster {
     width: 200px;
     height: auto;
+  }
+
+  .heart-button {
+    right: 10px;
   }
 }
 
@@ -118,6 +144,9 @@ header {
     width: 400px;
     height: auto;
   }
+  .heart-button {
+    right: 20px;
+  }
 }
 
 @include medium {
@@ -128,5 +157,8 @@ header {
   .movie-poster {
     width: 350px;
     height: auto;
+  }
+  .heart-button {
+    right: 50px;
   }
 }

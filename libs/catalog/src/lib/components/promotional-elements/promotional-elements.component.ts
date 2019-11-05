@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'catalog-promotional-elements',
   templateUrl: './promotional-elements.component.html',
-  styles: ['./promotional-elements.component.scss']
+  styleUrls: ['./promotional-elements.component.scss']
 })
 export class CatalogPromotionalElementsComponent {
   @Input() promotionalElements: PromotionalElement[];

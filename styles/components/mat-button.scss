@@ -28,10 +28,11 @@ mat-button { // TODO: Get rid of the !important and apply this on mat-raised-but
 .dark-theme {
 
   .mat-stroked-button {
-    border-radius: 50px;
     box-shadow: none;
-    border: none;
+    &.mat-accent {
+      border-color: mat-color($bf-dark-accent);
     }
+  }
 
   .bf-icon {
     color: mat-color($bf-dark-foreground, blue-icon);
