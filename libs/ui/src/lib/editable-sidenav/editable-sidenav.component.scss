@@ -1,7 +1,7 @@
 @import 'mixins';
 
 mat-sidenav-container {
-  height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
   padding-top: 50px;
   overflow: auto;
    .mat-drawer-content {

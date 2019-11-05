@@ -1,12 +1,14 @@
-<ng-container *ngIf="moviesToUpdate.data.length">
-  <h3>Movies to Update</h3>
-  <movie-table-extracted-movies [rows]="moviesToUpdate" mode="update"></movie-table-extracted-movies>
-</ng-container>
-<ng-container *ngIf="moviesToCreate.data.length">
-  <h3>Movies to Create</h3>
-  <movie-table-extracted-movies [rows]="moviesToCreate" mode="create"></movie-table-extracted-movies>
-</ng-container>
-<ng-container *ngIf="sales.data.length">
-  <h3>Movies Sales</h3>
-  <movie-table-extracted-sales [rows]="sales"></movie-table-extracted-sales>
-</ng-container>
+<section>
+  <ng-container *ngIf="moviesToUpdate.data.length">
+    <h3>Movies to Update</h3>
+    <movie-table-extracted-movies [rows]="moviesToUpdate" mode="update"></movie-table-extracted-movies>
+  </ng-container>
+  <ng-container *ngIf="moviesToCreate.data.length">
+    <h3>Movies to Create</h3>
+    <movie-table-extracted-movies [rows]="moviesToCreate" mode="create"></movie-table-extracted-movies>
+  </ng-container>
+  <ng-container *ngIf="sales.data.length">
+    <h3>Movies Sales</h3>
+    <movie-table-extracted-sales [rows]="sales"></movie-table-extracted-sales>
+  </ng-container>
+</section>

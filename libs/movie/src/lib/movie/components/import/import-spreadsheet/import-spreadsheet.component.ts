@@ -33,7 +33,7 @@ export class ImportSpreadsheetComponent {
   importSpreadsheet(bytes: Uint8Array) {
     let sheetRange;
     if (this.fileType.value === 'movies') {
-      sheetRange = 'A10:AO100';
+      sheetRange = 'A10:AQ100';
     } else {
       sheetRange = 'A10:AD100';
     }
