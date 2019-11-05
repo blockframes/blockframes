@@ -1,8 +1,4 @@
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Discover our films</h1>
-  </header>
-
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <!-- Search -->
     <aside fxLayout="column" class="filter" [formGroup]="filterForm">
@@ -99,6 +95,7 @@
                             <mat-icon class="cancel-btn">cancel</mat-icon>
                           </button>
                         </span>
+                        <p mat-line><i>Options are cumulative</i></p>
                         <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
                         <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
@@ -253,7 +250,7 @@
     <!-- List || card of result -->
     <article>
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <h2>Search</h2>
+        <h2>Line-up</h2>
         <mat-divider></mat-divider>
         <button mat-icon-button (click)="listView = !listView">
           <ng-container *ngIf="!listView">
