@@ -15,7 +15,7 @@ import { FireQuery } from '@blockframes/utils';
 export class OrganizationCreateComponent {
   @HostBinding('attr.page-id') pageId = 'organization-create';
 
-  public form = new OrganizationForm(this.db);
+  public form = new OrganizationForm(this.service);
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -23,7 +23,6 @@ export class OrganizationCreateComponent {
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
-    private db: FireQuery,
   ) {
   }
 
