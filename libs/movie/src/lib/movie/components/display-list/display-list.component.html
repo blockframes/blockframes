@@ -1,30 +1,44 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
   <!-- Picture column -->
   <ng-container matColumnDef="picture">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element"><img [src]="element.main.poster" /> </td>
+    <td mat-cell *matCellDef="let element"><img [src]="element.main.poster" /></td>
   </ng-container>
+
   <!-- Movie title column -->
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element"> {{element.main.title.original}} </td>
+    <td mat-cell *matCellDef="let element">{{ element.main.title.original }}</td>
   </ng-container>
 
   <!-- Director column -->
   <ng-container matColumnDef="director">
     <th mat-header-cell *matHeaderCellDef>Director</th>
     <!-- We want only to show one director because of the design right now -->
-    <td mat-cell *matCellDef="let element"> {{element.main.directors[0].firstName}}
-      {{element.main.directors[0].lastName}} </td>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.main.directors.length">{{ element.main.directors[0].firstName }} {{ element.main.directors[0].lastName }}</span>
+    </td>
   </ng-container>
 
   <!-- Production year column -->
   <ng-container matColumnDef="productionYear">
     <th mat-header-cell *matHeaderCellDef>Production Year</th>
-    <td mat-cell *matCellDef="let element"> {{element.main.productionYear}} </td>
+    <td mat-cell *matCellDef="let element">{{ element.main.productionYear }}</td>
+  </ng-container>
+
+  <!-- Action column -->
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="isAddedToWishlist(element.id) | async; else alreadyAdded">
+        <mat-icon (click)="addToWishlist(element, $event)" svgIcon="heart_filled"></mat-icon>
+      </ng-container>
+      <ng-template #alreadyAdded>
+        <mat-icon (click)="addToWishlist(element, $event)" svgIcon="heart"></mat-icon>
+      </ng-template>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigate.emit(row.id)"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="navigate.emit(row.id)"></tr>
 </table>

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
       >
       </feedback-message>
     </main>
-  `,
+  `, // @todo use something else than "main" tag.
   styleUrls: ['./completion.component.scss']
 })
 export class CatalogCompletionComponent {

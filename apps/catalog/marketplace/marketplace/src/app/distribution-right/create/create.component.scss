@@ -1,7 +1,6 @@
 @import 'mixins';
 
 :host {
-  height: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -16,13 +15,26 @@ section {
   width: 65%;
   flex: 1;
   padding: 10px;
+
+  .cancel-btn {
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+    font-size: 18px;
+  }
+
+  h3.mat-h3 {
+    display: inline;
+    font-weight: inherit;
+    font-size: 16px;
+  }
 }
 
 month-calendar {
   width: 100%;
 }
 
-main {
+.main {
   width: 100%;
 }
 

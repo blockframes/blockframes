@@ -1,43 +1,43 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <article fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <img src="/assets/images/rocket_night.png" />
+    <img src="/assets/images/rocket.png">
     <form [formGroup]="form">
       <h2>Your identity</h2>
       <p>
-        Please fill out the form to interact with the blockframes DApps.
+        Please fill out the form to connect.
       </p>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required />
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput type="text" placeholder="Name" formControlName="name" required />
+        <mat-label>First name</mat-label>
+        <input matInput type="text" placeholder="First name" formControlName="name" required />
         <mat-error *ngIf="form.get('name').hasError('required')">
-          Name is <strong>required</strong>
+          First name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Surname</mat-label>
-        <input matInput type="text" placeholder="Surname" formControlName="surname" required />
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" placeholder="Last name" formControlName="surname" required />
         <mat-error *ngIf="form.get('surname').hasError('required')">
-          Surname is <strong>required</strong>
+          Last name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <ng-container>
         <mat-form-field appearance="outline">
-          <mat-label>Old password</mat-label>
-          <input matInput type="password" placeholder="Your pregenerated password" formControlName="generatedPassword"
+          <mat-label>Pre generated password</mat-label>
+          <input matInput type="password" placeholder="Your pre generated password" formControlName="generatedPassword"
             required />
         </mat-form-field>
       </ng-container>
       <password-confirm formControlName="newPassword"></password-confirm>
       <!-- TODO issue#1146 -->
       <ng-container *ngIf="mobile">
-        <h3>Picture</h3>
+        <h3>Profile picture</h3>
         <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
       </ng-container>
     </form>
   </article>
-  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">Next</button>
+  <button (click)="update()" type="submit" mat-flat-button color="accent">Next</button>
 </section>

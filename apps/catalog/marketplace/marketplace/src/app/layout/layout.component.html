@@ -6,8 +6,22 @@
     <toolbar-header id="navbar" [sidenav]="leftSidenav">
       <ng-container app-icon>
         <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
-          <mat-icon svgIcon="logoBFdark" class="app-icon"></mat-icon>
+          <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
         </button>
+      </ng-container>
+
+      <ng-container wishlist>
+        <a
+          *ngIf="(currentWishlist$ | async) as wishlist"
+          mat-icon-button
+          routerLink="/layout/o/catalog/wishlist/view">
+          <mat-icon
+            [matBadge]="wishlist.movieIds.length"
+            matBadgeColor="accent"
+            matBadgeSize="small"
+            svgIcon="heart">
+          </mat-icon>
+        </a>
       </ng-container>
 
       <ng-container notifications>
@@ -31,6 +45,7 @@
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
+      <toolbar-footer></toolbar-footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

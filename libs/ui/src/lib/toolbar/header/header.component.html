@@ -1,4 +1,4 @@
-<mat-toolbar page-id="navbar" class="mat-elevation-z2 top-mat-toolbar" fxLayout="row-reverse" fxLayoutAlign="space-between center">
+<mat-toolbar page-id="navbar" class="mat-elevation-z2 top-mat-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
   <ng-container *ngIf="AFM_DISABLE"> <!-- TODO #1146 -->
     <!-- Applications panel-->
     <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
@@ -25,7 +25,7 @@
 
   <ng-content select="[email-verify]"></ng-content>
 
-  <ng-content select="[apps-icons]"></ng-content>
+  <ng-content select="[wishlist]"></ng-content>
   <ng-content select="[notifications]"></ng-content>
   <ng-content select="[profile-menu]"></ng-content>
 </mat-toolbar>

@@ -1,8 +1,8 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
+import { BasketService } from '../../distribution-right/+state/basket.service';
 
 interface CarouselSection {
   title: string;
@@ -17,35 +17,39 @@ interface CarouselSection {
 })
 export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
+
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
 
-  constructor(private movieQuery: MovieQuery) {}
+  constructor(
+    private movieQuery: MovieQuery,
+    private basketService: BasketService
+    ) {}
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
       filterBy: movies => movies.main.productionYear >= 2018
     });
-    const scoring$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.salesInfo.scoring === 'a'
+    const preProduction$ = this.movieQuery.selectAll({
+      filterBy: movies => movies.main.status === 'financing'
     });
-    const prizes$ = this.movieQuery.selectAll({
-      filterBy: movies => !!movies.festivalPrizes.prizes
+    const completed$ = this.movieQuery.selectAll({
+      filterBy: movies => movies.main.status === 'finished'
     });
 
-    this.moviesBySections$ = combineLatest([latest$, scoring$, prizes$]).pipe(
-      map(([latest, scoring, prizes]) => {
+    this.moviesBySections$ = combineLatest([latest$, preProduction$, completed$]).pipe(
+      map(([latest, preProduction, completed]) => {
         return [
-          { title: 'New Films', subline: '', movies: latest },
+          { title: 'New Films', subline: 'Check out our newest gems!', movies: latest },
           {
-            title: 'Best Sellers',
-            subline: '',
-            movies: scoring
+            title: 'Pre-Production Films',
+            subline: 'Discover the potential of brand new projects',
+            movies: preProduction
           },
           {
-            title: 'Awarded Films',
-            subline: '',
-            movies: prizes
+            title: 'Completed Films',
+            subline: 'Complete films for complete success',
+            movies: completed
           }
         ];
       })
@@ -59,4 +63,19 @@ export class MarketplaceHomeComponent implements OnInit {
   public alignment(index: number) {
     return index % 2 === 0 ? 'start start' : 'start end';
   }
+
+  public isAddedToWishlist(movieId: string) {
+    return this.basketService.isAddedToWishlist(movieId);
+  }
+
+  public addToWishlist(movie: Movie, event: Event) {
+    event.stopPropagation();
+    this.basketService.updateWishlist(movie);
+  }
+
+  public getBanner(movie: Movie) {
+    const movieElement = movie.promotionalElements.promotionalElements.find(element => element.type === "banner");
+    return movieElement.url;
+  }
+
 }

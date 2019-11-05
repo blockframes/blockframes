@@ -1,5 +1,9 @@
 @import 'mixins';
 
+section {
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+}
+
 header {
   padding: 100px 0;
   background-image: url('/assets/images/catalog-marketplace-banner.png');
@@ -12,6 +16,7 @@ header {
 mat-card {
   margin-top: 50px;
   width: 1000px;
+  margin-bottom: 50px;
 
   h4 {
     margin-bottom: 0;
@@ -33,6 +38,7 @@ mat-card {
   mat-card {
     width: 100%;
     margin-top: 30px;
+    margin-bottom: 30px;
   }
 }
 

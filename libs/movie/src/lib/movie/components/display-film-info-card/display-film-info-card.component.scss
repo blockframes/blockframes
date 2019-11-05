@@ -1,0 +1,44 @@
+@import 'mixins';
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+span {
+  margin: 3px;
+}
+
+.size-column {
+  width: 50%;
+}
+
+.capitalized {
+  text-transform: capitalize;
+}
+
+.synopsis {
+  margin-bottom: 30px;
+}
+
+.keywords {
+  margin-top: 30px;
+}
+
+@include medium {
+  .size-column {
+    width: 100%;
+  }
+}
+
+@include tablet {
+  .size-column {
+    width: 100%;
+  }
+}
+
+@include mobile {
+  .size-column {
+    width: 100%;
+  }
+}

@@ -1,3 +1,5 @@
+@import 'mixins';
+
 header {
   padding: 100px 0;
   background-image: url('/assets/images/catalog-marketplace-banner.png');
@@ -14,6 +16,7 @@ movie-card {
 
 section {
   padding: 20px 100px;
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
 
   aside {
     position: sticky;
@@ -51,12 +54,12 @@ section {
   article {
     width: 100%;
     mat-divider {
-      width: 70%;
+      width: 65%
     }
 
     movie-card {
       height: auto;
-      width: 310px;
+      width: 300px;
       margin: 15px;
     }
 
@@ -70,4 +73,54 @@ section {
     width: 100%;
   }
 
+  .cancel-btn {
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+    font-size: 18px;
+  }
+
+  h3.mat-h3 {
+    display: inline;
+    font-weight: inherit;
+    font-size: 16px;
+  }
+}
+
+@include mobile {
+  h1 {
+    text-align: center;
+  }
+  section {
+    padding: 10px 10px;
+    aside {
+      width: 100%;
+      position: static;
+      mat-card {
+        height: 100%;
+      }
+      .filter {
+        margin-top: 50px;
+      }
+    }
+    article mat-form-field-wrapper {
+      width: 80%;
+    }
+  }
+
+}
+
+@include tablet {
+  section aside {
+    position: static;
+    .filter {
+      margin-top: 50px;
+    }
+  }
+}
+
+@include medium {
+  aside.filter {
+    width: 50%;
+  }
 }

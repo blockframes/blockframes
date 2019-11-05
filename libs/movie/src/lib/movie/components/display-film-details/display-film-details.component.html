@@ -1,21 +1,21 @@
 <h3>Film details</h3>
-<article fxLayout="row" fxLayoutAlign="start center">
+<article fxLayout="row" fxLayout.md="column" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="start center" >
   <!-- First Column -->
   <ul class="first-column">
     <ng-container *ngIf="main"><!-- TODO issue#1146 -->
-      <li fxLayout="row" *ngIf="main.isan && !AFM_DISABLE">
+      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.isan && !AFM_DISABLE">
         <span><b>ISAN Number</b></span>
         <span>{{ main.isan }}</span>
       </li>
     </ng-container><!-- TODO issue#1146 -->
     <ng-container *ngIf="salesInfo.pegi && !AFM_DISABLE">
-      <li fxLayout="row">
+      <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Rating</b></span>
         <span>{{ salesInfo.pegi }}</span>
       </li>
     </ng-container>
     <ng-container *ngIf="main">
-      <li fxLayout="row">
+      <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Original title</b></span>
         <span>{{ main.title.original }}</span>
       </li>
@@ -24,25 +24,25 @@
   <!-- Second Column -->
   <ul class="second-column">
     <ng-container>
-      <li fxLayout="row" *ngIf="color">
+      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="color">
         <span><b>Color / Black & White</b></span>
         <span>{{ color | titlecase }}</span>
       </li>
     </ng-container>
     <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
-      <li fxLayout="row">
+      <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>
       </li>
     </ng-container>
     <ng-template #noRelease>
-      <li fxLayout="row">
+      <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Theatrical Release</b></span>
         <span>No</span>
       </li>
     </ng-template>
     <ng-container *ngIf="salesInfo.originCountryReleaseDate">
-      <li fxLayout="row">
+      <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Release date in Origin Country</b></span>
         <span>{{ salesInfo.originCountryReleaseDate | date:'LLLL, dd yyyy' }}</span>
       </li>

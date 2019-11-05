@@ -1,10 +1,18 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
 
+import { MailData } from '@sendgrid/helpers/classes/mail';
+
 export interface EmailRequest {
   to: string;
   subject: string;
   text: string;
+}
+
+export interface EmailTemplateRequest {
+  to: string;
+  templateId: string;
+  data: { [key: string]: any };
 }
 
 /**
@@ -25,6 +33,22 @@ export async function sendMail({ to, subject, text }: EmailRequest): Promise<any
     from: 'admin@blockframes.io'
   };
 
-  console.debug("sending mail:", msg);
+  return SendGrid.send(msg);
+}
+
+export function sendMailFromTemplate({to, templateId, data}: EmailTemplateRequest) {
+  if (sendgridAPIKey === '') {
+    console.warn('No sendgrid API key set, skipping');
+    return;
+  }
+  SendGrid.setApiKey(sendgridAPIKey);
+
+  const msg: MailData = {
+    to,
+    from: 'admin@blockframes.io',
+    templateId,
+    dynamicTemplateData: data,
+  };
+
   return SendGrid.send(msg);
 }

@@ -92,7 +92,7 @@ $bf-dark-background: (
   app-bar:      #0d0f1f,
   status-bar:   black,
   background:   #010314,
-  card:         rgba(255,255,255,0.05),
+  card:         #0D0F1F,
   hover:        rgba(255,255,255,0.08),
   dialog:             map_get($mat-grey, 800),
   disabled-button:  rgba(155,177,255,0.12),
@@ -137,7 +137,8 @@ $bf-dark-foreground: (
   subheading:   #CFD8FF,
   dynamic:      #3b414d,
   blue-icon:    #9eb1ff,
-  dark-text:    #80818a
+  dark-text:    #80818a,
+  border:       #1A1B2E,
 );
 
 ///////////

@@ -5,6 +5,9 @@
 @import './theme.scss';
 @import './variables.scss';
 
+// Footer
+@import './footer.scss';
+
 // Components style
 @import './components/mat-expansion-panel';
 @import './components/mat-dialog';
@@ -76,6 +79,10 @@ span {
   font-size: 14px;
 }
 
+.important {
+  color: mat-color($mat-dark-bf-orange, 400);
+}
+
 .dark-theme p.bf-dark-text,
 .dark-theme span.bf-dark-text {
   color: mat-color($bf-dark-foreground, dark-text);
@@ -83,6 +90,15 @@ span {
 
 .bf-strong {
   font-weight: 600;
+}
+
+.table-size-text {
+  font-size: 12px;
+}
+
+.status-text {
+  font-size: 8px;
+  color: mat-color($bf-dark-foreground, blue-icon)
 }
 
 main {

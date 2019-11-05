@@ -27,6 +27,7 @@ export class MemberAddComponent {
       const organizationId = this.organizationQuery.id;
       await this.invitationService.sendInvitationToUser(userEmail, organizationId);
       this.snackBar.open('Your invitation was sent', 'close', { duration: 2000 });
+      this.emailControl.reset();
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

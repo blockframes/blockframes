@@ -41,6 +41,8 @@ import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
+import { OrganizationQuery } from '@blockframes/organization';
+import { BasketService } from '../../distribution-right/+state/basket.service';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -64,7 +66,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director', 'Production Year'];
+  public sortOptions: string[] = ['All films', 'Title', 'Director', /* 'Production Year' #1146 */];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
@@ -123,9 +125,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
+    private organizationQuery: OrganizationQuery,
     private router: Router,
-    private movieService: MovieService
-  ) { }
+    private movieService: MovieService,
+    private basketService: BasketService
+  ) {}
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
@@ -137,6 +141,9 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
             return filterMovie(movie, filterOptions, deals);
           });
         } else {
+          //TODO #1146 : remove the two line for movieGenres
+          const removeGenre = ['TV Show', 'Web Series'];
+          this.movieGenres= this.movieGenres.filter(value => !removeGenre.includes(value));
           return movies.filter(movie => {
             return filterMovie(movie, filterOptions);
           });
@@ -373,6 +380,14 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
     }
+  }
+
+  public isAddedToWishlist(movieId: string) {
+    return this.basketService.isAddedToWishlist(movieId);
+  }
+
+  public addToWishlist(movie: Movie) {
+    this.basketService.updateWishlist(movie);
   }
 
   ngOnDestroy() {

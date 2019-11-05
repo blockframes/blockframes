@@ -21,14 +21,14 @@ export type Scope = keyof Model;
 
 const models: Model = {
   'GENRES': [
+    { 'slug': 'comedy', 'label': 'Comedy' },
+    { 'slug': 'drama', 'label': 'Drama' },
     { 'slug': 'action', 'label': 'Action' },
     { 'slug': 'horror', 'label': 'Horror' },
     { 'slug': 'science-fiction', 'label': 'Science Fiction' },
     { 'slug': 'thriller', 'label': 'Thriller' },
-    { 'slug': 'drama', 'label': 'Drama' },
     { 'slug': 'coming-of-age', 'label': 'Coming of Age' },
     { 'slug': 'fantasy', 'label': 'Fantasy' },
-    { 'slug': 'comedy', 'label': 'Comedy' },
     { 'slug': 'romance', 'label': 'Romance' },
     { 'slug': 'western', 'label': 'Western' },
     { 'slug': 'period-piece', 'label': 'Period Piece' },
@@ -148,7 +148,7 @@ const models: Model = {
   'MOVIE_STATUS': [
     {
       'slug': 'financing',
-      'label': 'Pre-Production'
+      'label': 'Pre-production'
     },
     {
       'slug': 'shooting',
@@ -156,7 +156,7 @@ const models: Model = {
     },
     {
       'slug': 'post-production',
-      'label': 'Post Production'
+      'label': 'Post-production'
     },
     {
       'slug': 'finished',

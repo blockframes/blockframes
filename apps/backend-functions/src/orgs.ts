@@ -5,8 +5,8 @@
  */
 import { functions, db } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
-import { sendMail } from './internals/email';
-import { organizationCreated } from './assets/mail-templates';
+import { sendMail, sendMailFromTemplate } from './internals/email';
+import { organizationCreated, organizationWasAccepted } from './assets/mail-templates';
 import { OrganizationDocument, OrganizationStatus } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
@@ -14,6 +14,7 @@ import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvide
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
+import { PublicUser } from '@blockframes/auth/types';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -60,8 +61,11 @@ export async function onOrganizationUpdate(
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
 
   if (becomeAccepted) {
-    const { userIds } = before as OrganizationDocument;
-    const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()!); // TODO use laurent's code after the merge of PR #698
+    const { id, userIds } = before as OrganizationDocument;
+    const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()! as PublicUser); // TODO use laurent's code after the merge of PR #698
+
+    // send email to let the org admin know that the org has been accepted
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.name));
 
     // TODO issue#1146
     if (AFM_DISABLE) {

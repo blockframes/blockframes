@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';
@@ -8,6 +8,8 @@ import { BasketState, BasketStore } from './basket.store';
 import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
+import { Observable } from 'rxjs';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
   path: `orgs/${organizationId}/baskets`,
@@ -24,7 +26,8 @@ export class BasketService extends CollectionService<BasketState> {
     private basketQuery: BasketQuery,
     private organizationService: OrganizationService,
     store: BasketStore,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private functions: AngularFireFunctions,
   ) {
     super(store);
   }
@@ -36,11 +39,13 @@ export class BasketService extends CollectionService<BasketState> {
   }
 
   /** Update the status of the wishlist to 'sent' and create new date at this moment. */
-  public updateWishlistStatus(movies: Movie[]) {
-    // Argument movies will be used to send emails => issue#1102
-    // Const user will be used to send emails => issue#1102
+  public async updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
     const org = this.organizationQuery.getValue().org;
+    const wishlistTitles = movies.map(movie => movie.main.title.original);
+
+    const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
+    await callDeploy({ email: user.email, userName: user.name, orgName: org.name, wishlist: wishlistTitles }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
       return wishlist.status === WishlistStatus.pending
@@ -49,8 +54,6 @@ export class BasketService extends CollectionService<BasketState> {
     }
 
     return this.organizationService.update({...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist))});
-    // TODO: issue #1111 and #1102, send an email to the user and Cascade8 with list of movies
-    // Use variables: movies, org and user
   }
 
   public addBasket(basket: CatalogBasket) {
@@ -76,6 +79,9 @@ export class BasketService extends CollectionService<BasketState> {
     };
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
       this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
+      // If the organization has sent wishlist but no pending
+    } else if (pendingWishlist.length === 0) {
+      this.organizationService.update({ ...orgState, wishlist: [...orgState.wishlist, wishlistFactory(movie.id)] });
     } else if (pendingWishlist.length) {
       const wishlist = orgState.wishlist.map(w => {
         const wish = Object.assign({}, w);
@@ -88,6 +94,17 @@ export class BasketService extends CollectionService<BasketState> {
       });
       this.organizationService.update({ ...orgState, wishlist: wishlist });
     }
+  }
+
+  /** Checks if a movie is or is not in the organization wishlist. */
+  public isAddedToWishlist(movieId: string): Observable<boolean> {
+    return this.organizationQuery.select('org').pipe(
+      map(org => {
+        return org.wishlist
+          .filter(({ status }) => status === 'pending')
+          .some(({ movieIds }) => movieIds.includes(movieId))
+      })
+    );
   }
 
   public removeDistributionRight(rightId: string, basketId: string) {

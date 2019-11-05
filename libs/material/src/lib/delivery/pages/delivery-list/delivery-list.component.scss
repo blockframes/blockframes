@@ -2,6 +2,7 @@
 
 section {
   margin: 50px 300px;
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 100px); // TODO #1212
 }
 
 mat-divider {

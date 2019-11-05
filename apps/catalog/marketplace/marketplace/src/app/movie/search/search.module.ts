@@ -1,6 +1,8 @@
 // Components
 import { MovieCardModule } from "@blockframes/ui";
 import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
+import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
+
 // Pages
 import { MarketplaceSearchComponent } from './search.component';
 
@@ -30,7 +32,6 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
   declarations: [MarketplaceSearchComponent],
   imports: [
@@ -40,7 +41,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     MovieCardModule,
     MovieDisplayListModule,
-    
+    TranslateSlugModule,
+
     // Material
     MatIconModule,
     MatDividerModule,

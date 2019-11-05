@@ -5,6 +5,7 @@ import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import firebase from 'firebase';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private db: FireQuery,
     private router: Router,
-    private query: AuthQuery
+    private query: AuthQuery,
+    private functions: AngularFireFunctions
   ) {}
 
   //////////
@@ -25,7 +27,14 @@ export class AuthService {
    * @param email email of the user
    */
   public resetPasswordInit(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(email);
+    const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
+    return callSendReset({ email }).toPromise();
+  }
+
+  /** Send a new verification email to the current user */
+  public async sendVerifyEmail() {
+    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
+    return callSendVerify({ email: this.query.user.email }).toPromise();
   }
 
   public checkResetCode(actionCode: string) {
@@ -64,8 +73,6 @@ export class AuthService {
    */
   public async signup(email: string, password: string, name: string, surname: string) {
     const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-
-    await authUser.user.sendEmailVerification();
 
     const user = createUser({
       uid: authUser.user.uid,
@@ -115,11 +122,6 @@ export class AuthService {
     await this.db.doc<User>(`users/${uid}`).delete();
   }
 
-  /** Send a new verification email to the current user */
-  public async sendVerifyEmail() {
-    return this.afAuth.auth.currentUser.sendEmailVerification();
-  }
-
   /** Deletes user subCollections */
   private async deleteSubCollections(uid: string) {
     // @todo check if user is the only member of org (and the only ADMIN)
@@ -151,9 +153,11 @@ export class AuthService {
    * @email find the user with this email. If email doesn't match with an existing user,
    * create a user with this email address.
    */
-  public async getOrCreateUserByMail(email: string): Promise<User> {
+  // public async getOrCreateUserByMail(email: string): Promise<User> {
+  public async getOrCreateUserByMail(email: string, invitationId?: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    return f({ email }).then(matchingEmail => matchingEmail.data);
+    const matchingEmail = await f({ email });
+    return matchingEmail.data;
   }
 
   /** Call a firebase function to get a list of users corresponding to the `prefix` string. */
@@ -168,10 +172,13 @@ export class AuthService {
   //---------------------------
   public changeRank(rank: string) {
     this.store.update(state => {
-      return {...state, user: {
-        ...state.user,
-        financing: { rank }
-      }}
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          financing: { rank }
+        }
+      };
     });
   }
 }

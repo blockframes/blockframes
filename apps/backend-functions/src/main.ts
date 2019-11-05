@@ -61,6 +61,18 @@ export const onUserCreate = functions.auth
 export const findUserByMail = functions.https
   .onCall(users.findUserByMail);
 
+/** Trigger: REST call to send a verify email to a user. */
+export const sendVerifyEmail = functions.https
+  .onCall(users.startVerifyEmailFlow);
+
+/** Trigger: REST call to send a reset password link to a user. */
+export const sendResetPasswordEmail = functions.https
+  .onCall(users.startResetPasswordEmailFlow);
+
+/** Trigger: REST call to send a wishlist pending email to a user & a wishlist request to cascade8 admin. */
+export const sendWishlistEmails = functions.https
+  .onCall(users.startWishlistEmailsFlow);
+
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(users.findOrgByName);

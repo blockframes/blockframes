@@ -1,9 +1,5 @@
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Discover our selection</h1>
-  </header>
-
-  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px">
+  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <!-- Search -->
     <aside fxLayout="column" class="filter" [formGroup]="filterForm">
       <mat-card>
@@ -11,8 +7,8 @@
         <mat-card-content>
           <mat-accordion multi="true">
 
-          <!-- Production Year --> <!-- TODO #1146 -->
-          <!-- <mat-expansion-panel expanded>
+            <!-- Production Year --> <!-- TODO #1146 -->
+            <!-- <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="production-year-panel">
                 Production Year
@@ -85,7 +81,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
                   <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                    (click)="addLanguage(languageControl.value)">Add
+                    (click)="addLanguage(languageControl.value); languageControl.reset()">Add
                     language
                   </button>
                 </div>
@@ -93,7 +89,13 @@
                   <mat-list [formGroup]="filterForm.get('languages')" role="list">
                     <ng-container *ngFor="let language of languages$ | async">
                       <mat-list-item [formGroupName]="language">
-                        <h3 class="mat-h3" mat-line>{{language}}</h3>
+                        <span mat-line>
+                          <h3 class="mat-h3">{{ language | translateSlug: 'LANGUAGES' }}</h3>
+                          <button mat-icon-button (click)="removeLanguage(language)">
+                            <mat-icon class="cancel-btn">cancel</mat-icon>
+                          </button>
+                        </span>
+                        <i mat-line>Options are cumulative</i>
                         <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                         </mat-checkbox>
                         <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
@@ -101,9 +103,6 @@
                         <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
                           Subtitles
                         </mat-checkbox>
-                        <button mat-icon-button (click)="removeLanguage(language)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
                       </mat-list-item>
                     </ng-container>
                   </mat-list>
@@ -251,7 +250,7 @@
     <!-- List || card of result -->
     <article>
       <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <h2>Search</h2>
+        <h2>Line-up</h2>
         <mat-divider></mat-divider>
         <button mat-icon-button (click)="listView = !listView">
           <ng-container *ngIf="!listView">
@@ -270,14 +269,35 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies">
+      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">{{ director.firstName }}
-                {{ director.lastName }}
+              <mat-card-subtitle *ngFor="let director of movie.main.directors">
+                {{ director.firstName }} {{ director.lastName }}
               </mat-card-subtitle>
-              <span>Production Year {{ movie.main.productionYear }}</span>
+              <mat-card-content class="table-size-text">
+                <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+                  {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
+                </b>
+                <b *ngIf="movie.main.originCountries.length > 2">... </b>
+                <b *ngIf="movie.main.length">| {{ movie.main.length }} mins. </b><b>| {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
+                <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">{{ movie.salesAgentDeal.salesAgent.displayName}}</p>
+              </mat-card-content>
+            </ng-container>
+            <ng-container movieCardAction>
+              <div fxLayout="row" fxLayoutAlign="end">
+                <ng-container *ngIf="(isAddedToWishlist(movie.id) | async); else alreadyAdded">
+                  <button mat-icon-button (click)="addToWishlist(movie)">
+                    <mat-icon svgIcon="heart_filled"></mat-icon>
+                  </button>
+                </ng-container>
+                <ng-template #alreadyAdded>
+                  <button mat-icon-button (click)="addToWishlist(movie)">
+                    <mat-icon svgIcon="heart"></mat-icon>
+                  </button>
+                </ng-template>
+              </div>
             </ng-container>
           </movie-card>
         </ng-container>

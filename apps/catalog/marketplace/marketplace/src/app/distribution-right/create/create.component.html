@@ -1,4 +1,4 @@
-<main *ngIf="(movie$ | async) as movie">
+<div class="main" *ngIf="(movie$ | async) as movie">
   <header>
     <div fxLayout="column" fxLayoutAlign="center center">
       <h1>{{movie.main.title.original}}</h1>
@@ -104,7 +104,12 @@
                 <mat-list [formGroup]="form.languages" role="list">
                   <ng-container *ngFor="let language of languages$ | async">
                     <mat-list-item [formGroupName]="language">
-                      <h3 class="mat-h3" mat-line> {{language | translateSlug: 'LANGUAGES'}}</h3>
+                      <span mat-line>
+                        <h3 class="mat-h3">{{ language | translateSlug: 'LANGUAGES' }}</h3>
+                        <button mat-icon-button (click)="removeLanguage(language)">
+                          <mat-icon class="cancel-btn">cancel</mat-icon>
+                        </button>
+                      </span>
                       <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
                       </mat-checkbox>
                       <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
@@ -112,9 +117,6 @@
                       <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
                         Subtitles
                       </mat-checkbox>
-                      <button mat-icon-button (click)="removeLanguage(language)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
                     </mat-list-item>
                   </ng-container>
                 </mat-list>
@@ -158,4 +160,4 @@
       </div>
     </article>
   </section>
-</main>
+</div>

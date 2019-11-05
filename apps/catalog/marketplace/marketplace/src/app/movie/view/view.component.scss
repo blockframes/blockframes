@@ -1,7 +1,7 @@
 @import 'mixins';
 
 header {
-  padding: 100px 0;
+  padding: 50px 0;
   // TODO: replace image when the real one is available.
   background-image: url('/assets/images/catalog-marketplace-banner.png');
   background-position: center center;
@@ -70,17 +70,53 @@ header {
   .view-content {
     margin-left: 0;
     margin-right: 0;
-    justify-content: center;
-    flex-wrap: wrap;
+    &.heart {
+      margin: 0;
+    }
+    .poster-column {
+      width: 80%;
+      margin-right: 0;
+    }
+
+    .information-column {
+      margin-top: 20px;
+      width: 80%;
+      margin-left: 0;
+      padding: 0;
+    }
+  }
+
+  .movie-poster {
+    width: 200px;
+    height: auto;
   }
 }
 
 @include tablet {
   .view-content {
-    margin-left: 50px;
-    margin-right: 50px;
-    justify-content: center;
-    flex-wrap: wrap;
+    margin-left: 10px;
+    margin-right: 10px;
+    &.heart {
+      margin: 20px 100px;
+    }
+    .poster-column {
+      width: 80%;
+      margin-right: 0;
+    }
+    .movie-presentation mat-divider {
+      width: 70%;
+    }
+
+    .information-column {
+      margin-top: 50px;
+      width: 80%;
+      margin-left: 0;
+      padding: 0;
+    }
+  }
+  .movie-poster {
+    width: 400px;
+    height: auto;
   }
 }
 
@@ -88,7 +124,9 @@ header {
   .view-content {
     margin-left: 50px;
     margin-right: 50px;
-    justify-content: center;
-    flex-wrap: wrap;
+  }
+  .movie-poster {
+    width: 350px;
+    height: auto;
   }
 }
