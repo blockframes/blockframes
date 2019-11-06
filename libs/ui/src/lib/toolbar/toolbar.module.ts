@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { ContextMenuSidebarComponent } from './context-menu-sidebar/context-menu-sidebar.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { CatalogLeftMenuComponent } from './catalog-left-menu/catalog-left-menu.component';
 import { FooterComponent } from './footer/footer.component';
@@ -52,6 +53,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   declarations: [
     HeaderComponent,
     ContextMenuComponent,
+    ContextMenuSidebarComponent,
     LeftMenuComponent,
     FooterComponent,
     CatalogLeftMenuComponent
