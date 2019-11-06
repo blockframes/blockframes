@@ -78,11 +78,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
   /* Filter for autocompletion */
+  public genresFilter: Observable<string[]>;
   public territoriesFilter: Observable<string[]>;
   public languagesFilter: Observable<string[]>;
   public salesAgentFilter: Observable<string[]>;
 
   /* Individual form controls for filtering */
+  public genreControl: FormControl = new FormControl('');
   public languageControl: FormControl = new FormControl('', [
     Validators.required,
     languageValidator
@@ -109,7 +111,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   private salesAgentsSub: Subscription;
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
 
   /* Flags for the Territories chip input */
   public visible = true;
@@ -118,6 +120,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   /* Number of available movies in the database */
   public availableMovies: number;
+
+  public selectedGenres: string[] = [];
+  @ViewChild('genreInput', { static: false }) genreInput: ElementRef<HTMLInputElement>;
+  @ViewChild('genre', { static: false }) genreMatAutocomplete: MatAutocomplete;
 
   public matcher = new ControlErrorStateMatcher();
 
@@ -164,6 +170,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
         })
       })
     ).subscribe()
+
+    this.genresFilter = this.genreControl.valueChanges.pipe(
+      startWith(''),
+      map(genre =>
+        genre ? this._genreFilter(genre) : this.movieGenres
+      )
+    );
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -228,6 +241,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   ////////////////////
   // Filter section //
   ////////////////////
+
+  private _genreFilter(genre: string): string[] {
+    const filterValue = genre.toLowerCase();
+    return GENRES_LABEL.filter(movieGenre => {
+      return movieGenre.toLowerCase().includes(filterValue);
+    });
+  }
 
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
@@ -359,6 +379,27 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     );
     this.filterForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
+  }
+
+  public addGenre(event: MatAutocompleteSelectedEvent) {
+    const value = event.option.value;
+
+    if ((value || '').trim() && !this.selectedGenres.includes(value)) {
+      this.selectedGenres.push(value.trim());
+    }
+
+    this.filterForm.addGenre(value);
+    this.genreControl.setValue('');
+    this.genreInput.nativeElement.value = '';
+  }
+
+  public removeGenre(genre: string) {
+    const index = this.selectedGenres.indexOf(genre);
+
+    if (index >= 0) {
+      this.selectedGenres.splice(index, 1);
+      this.filterForm.removeGenre(genre);
+    }
   }
 
   public addSalesAgent(event: MatAutocompleteSelectedEvent) {
