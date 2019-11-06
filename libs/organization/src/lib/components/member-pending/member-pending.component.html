@@ -7,10 +7,10 @@
       <span><span class="bold">{{ invitation.user.name }} {{ invitation.user.surname }} </span>{{ invitation.user.email }}</span></article>
       <article *ngIf="isSuperAdmin">
         <button (click)="accepted.emit(invitation)" mat-icon-button>
-          <mat-icon svgIcon="acceptMember"></mat-icon>
+          <mat-icon>done</mat-icon>
         </button>
         <button (click)="declined.emit(invitation)" mat-icon-button>
-          <mat-icon svgIcon="refuseMember"></mat-icon>
+          <mat-icon>clear</mat-icon>
         </button>
       </article>
     </span>
