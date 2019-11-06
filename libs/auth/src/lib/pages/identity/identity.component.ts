@@ -60,8 +60,7 @@ export class IdentityComponent {
         surname: this.form.get('surname').value,
         avatar: this.form.get('avatar').value
       });
-      this.router.navigateByUrl('/layout/organization/home')
-        .then(res => window.location.assign('/')).catch(err => console.error(err));
+      this.router.navigateByUrl('/');
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
