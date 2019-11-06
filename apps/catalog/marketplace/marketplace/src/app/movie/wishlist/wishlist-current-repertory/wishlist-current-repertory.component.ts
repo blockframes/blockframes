@@ -1,7 +1,6 @@
-import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,
-  ViewChild,
   ChangeDetectionStrategy,
   Input,
   Output,
@@ -38,10 +37,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   @Input()
   set movies(movies: Movie[]) {
     this.dataSource = new MatTableDataSource(movies);
-    this.dataSource.sort = this.sort;
   }
-
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private router: Router,

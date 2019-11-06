@@ -8,6 +8,7 @@ import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +36,7 @@ export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
   { path: 'connexion', component: LoginViewComponent },
-  { path: 'identity', component: IdentityComponent, canActivate: [AuthGuard], canDeactivate: [AuthGuard] },
+  { path: 'identity', component: IdentityComponent },
   { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}
@@ -45,7 +46,6 @@ export const AuthRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AngularFireAuthModule,
     FlexLayoutModule,
     CropperModule,
     // Material
@@ -58,6 +58,10 @@ export const AuthRoutes: Routes = [
     MatBadgeModule,
     MatCheckboxModule,
     FeedbackMessageModule,
+
+    // Fire
+    AngularFireAuthModule,
+    AngularFirePerformanceModule,
 
     RouterModule.forChild(AuthRoutes),
     UiFormModule

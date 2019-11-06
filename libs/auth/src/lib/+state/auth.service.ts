@@ -153,10 +153,9 @@ export class AuthService {
    * @email find the user with this email. If email doesn't match with an existing user,
    * create a user with this email address.
    */
-  // public async getOrCreateUserByMail(email: string): Promise<User> {
-  public async getOrCreateUserByMail(email: string, invitationId?: string): Promise<User> {
+  public async getOrCreateUserByMail(email: string, orgName: string, invitationId?: string): Promise<User> {
     const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    const matchingEmail = await f({ email });
+    const matchingEmail = await f({ email, orgName });
     return matchingEmail.data;
   }
 

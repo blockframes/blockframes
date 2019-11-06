@@ -22,6 +22,12 @@ mat-checkbox {
   margin-right: 5px;
 }
 
+@include large {
+  form {
+    height: 80%;
+  }
+}
+
 @include medium {
   section {
     margin-right: 100px;
@@ -37,6 +43,9 @@ mat-checkbox {
 }
 
 @include mobile {
+  form {
+    height: 80%;
+  }
   section {
     margin-left: 5px;
     margin-right: 5px;

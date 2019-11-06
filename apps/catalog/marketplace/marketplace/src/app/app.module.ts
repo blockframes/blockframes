@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
@@ -67,6 +68,7 @@ import { LayoutComponent } from './layout/layout.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
+    AngularFirePerformanceModule,
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

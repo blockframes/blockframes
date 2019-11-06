@@ -29,9 +29,9 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Create an Invitation when an Organization asks a user to join it. */
   public async sendInvitationToUser(userEmail: string, organizationId: string): Promise<void> {
     // Get a user or create a ghost user when needed
-    const invitationId = this.db.createId(); 
-    const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail, invitationId);
+    const invitationId = this.db.createId();
     const organization = await snapshot<Organization>(`orgs/${organizationId}`);
+    const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
     const invitation = createInvitationFromOrganizationToUser({
       id: this.db.createId(),
       organization: {id: organization.id, name: organization.name},
