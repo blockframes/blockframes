@@ -63,7 +63,7 @@ import { LayoutComponent } from './layout/layout.component';
     WalletModule,
     KeyManagerModule,
     NotificationWidgetModule,
-    
+
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
