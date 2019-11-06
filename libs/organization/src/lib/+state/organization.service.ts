@@ -142,8 +142,9 @@ export class OrganizationService {
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
     const orgId = this.query.id;
+    const orgName = this.query.getValue().org.name;
     // get a user or create a ghost user when needed:
-    const { uid } = await this.authService.getOrCreateUserByMail(member.email, this.query.getValue().org.name); // TODO: limit the number of requests per organizations!
+    const { uid } = await this.authService.getOrCreateUserByMail(member.email, orgName); // TODO: limit the number of requests per organizations!
 
     // TODO: use a definitive data type
     // TODO: compare with backend-functions
