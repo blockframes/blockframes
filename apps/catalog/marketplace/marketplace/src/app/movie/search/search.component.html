@@ -273,8 +273,8 @@
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">
-                {{ director.firstName }} {{ director.lastName }}
+              <mat-card-subtitle>
+                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
               <mat-card-content class="table-size-text">
                 <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
