@@ -102,11 +102,13 @@ span {
   font-size: 12px;
 }
 
+/** Used for movie status in banners. */
 .status-text {
   font-size: 8px;
   color: mat-color($bf-dark-foreground, blue-icon)
 }
 
+/** Used for Terms and Condition of Use links. */
 .terms-link {
   color: mat-color($bf-dark-foreground, blue-icon);
   cursor: pointer;
