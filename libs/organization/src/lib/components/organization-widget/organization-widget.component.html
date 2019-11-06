@@ -5,7 +5,6 @@
     <mat-icon svgIcon="building"></mat-icon>
     <span>My organization</span>
   </button>
-  <mat-divider></mat-divider>
   <button mat-menu-item *ngIf="(organization$ | async) as organization;"
     [routerLink]="['o/organization/', organization.id, 'members']" routerLinkActive="active-list-item"
     test-id="manage-organization">
