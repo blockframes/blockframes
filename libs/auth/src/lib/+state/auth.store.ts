@@ -39,7 +39,7 @@ export interface AuthState {
 
 export function createUser(user: Partial<User> = {}) {
   return {
-    avatar: PLACEHOLDER_AVATAR,
+    avatar: "",
     ...user
   } as User;
 }
