@@ -35,10 +35,11 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
 }
 
 /** Generates a transactional email request for user invited to the application. */
-export function userInvite(email: string, password: string): EmailTemplateRequest {
+export function userInvite(email: string, password: string, orgName: string): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
+    orgName,
     pageURL: `${appUrl}`
   };
   return { to: email, templateId: templateIds.userCredentials, data };
