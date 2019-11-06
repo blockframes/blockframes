@@ -82,4 +82,4 @@ export const templateIds = {
 }
 
 // Yandex Metrika Id
-export const yandexId = '';
+export const yandexId = 0;
