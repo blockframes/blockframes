@@ -37,6 +37,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
 
+// Yandex Metrika
+import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
+import { yandexId } from '@env';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
   imports: [
@@ -72,6 +76,15 @@ import { LayoutComponent } from './layout/layout.component';
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
+
+    // Yandex Metrika
+    NgxMetrikaModule.forRoot({
+      id: yandexId,
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true,
+      webvisor:true
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
