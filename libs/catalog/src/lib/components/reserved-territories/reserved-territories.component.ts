@@ -3,8 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'catalog-reserved-territories',
   template: `
-    <h3>Reserved territories</h3>
-    <p class="bf-dark-text">Territories</p>
+    <p class="bf-dark-text">Reserved territories</p>
     <div fxLayout="row wrap">
       <span *ngFor="let territory of reservedTerritories; let isLast = last" class="text">
       {{ territory }}{{isLast ? '' : ', '}}</span>
