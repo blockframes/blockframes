@@ -18,6 +18,12 @@ form {
   margin-top: 10px;
 }
 
+@include large {
+  form {
+    height: 80%;
+  }
+}
+
 @include medium {
   section {
     margin-left: 100px;
