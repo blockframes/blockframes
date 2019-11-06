@@ -23,7 +23,6 @@ import {
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
 import {
-  userInviteToOrg,
   userJoinedAnOrganization,
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg,
@@ -117,8 +116,6 @@ async function onInvitationToOrgCreate({ user, organization, id }: InvitationFro
   if (!userMail) {
     console.error('No user email provided for userId:', user.uid);
     return;
-  } else {
-    return sendMailFromTemplate(userInviteToOrg(userMail, organization.name, id));
   }
 }
 

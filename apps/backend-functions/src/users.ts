@@ -148,7 +148,7 @@ export const getOrCreateUserByMail = async (
   data: any,
   context: CallableContext
 ): Promise<UserProposal> => {
-  const { email } = data;
+  const { email, orgName } = data;
 
   try {
     const user = await auth.getUserByEmail(email);
@@ -164,7 +164,7 @@ export const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMailFromTemplate(userInvite(email, password));
+    await sendMailFromTemplate(userInvite(email, password, orgName));
 
     return { uid: user.uid, email };
   }
