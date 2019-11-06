@@ -5,7 +5,7 @@
       <h2>{{orgName}}</h2>
       <mat-divider fxFlex></mat-divider>
     </article>
-    <div *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+    <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
       <member-pending *ngIf="invitations.length > 0"
         (declined)="declineInvitation($event)"
         (accepted)="acceptInvitation($event)"
@@ -13,10 +13,9 @@
         [isSuperAdmin]="isSuperAdmin$ | async">
       </member-pending>
     </div>
-
-    <member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory>
-    <member-add *ngIf="(isSuperAdmin$ | async)"> </member-add>
-    <div *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <div class="space-between-component"><member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory></div>
+    <div class="space-send-invitation large"><member-add *ngIf="(isSuperAdmin$ | async)"> </member-add></div>
+    <div class="space-pending-invitation" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
       <member-invitation *ngIf="invitationsMember.length > 0"
         [invitations]="invitationsMember"
         (declined)="declineInvitation($event)"
