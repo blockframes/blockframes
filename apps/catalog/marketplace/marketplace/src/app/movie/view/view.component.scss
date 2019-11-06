@@ -2,9 +2,6 @@
 
 header {
   padding: 50px 0;
-  background-image: url('/assets/images/banner_movie_view.png');
-  background-position: center center;
-  background-attachment: fixed;
   background-size: cover;
   text-align: center;
 
@@ -15,7 +12,7 @@ header {
 
 .view-content {
   margin-top: 60px;
-  margin-left: 135px;
+  margin-left: 100px;
   margin-right: 200px;
   &.heart {
     margin: 30px 200px;
