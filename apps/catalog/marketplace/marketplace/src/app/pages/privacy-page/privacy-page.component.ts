@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'catalog-privacy-page',
@@ -10,5 +9,5 @@ import { MatDialogRef } from "@angular/material/dialog";
 
 export class PrivacyPageComponent {
 
-  constructor(private dialogRef: MatDialogRef<PrivacyPageComponent>) {}
+  constructor() {}
 }

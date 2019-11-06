@@ -82,7 +82,7 @@ export const routes: Routes = [
                 import('./pages/contact-page/contact.module').then(m => m.ContactModule)
               },
               {
-                path: 'privacy',
+                path: 'terms',
                 loadChildren: () =>
                 import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
               },
