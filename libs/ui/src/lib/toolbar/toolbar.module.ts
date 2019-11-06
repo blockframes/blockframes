@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
+import { CatalogLeftMenuComponent } from './catalog-left-menu/catalog-left-menu.component';
 import { FooterComponent } from './footer/footer.component';
 
 //Modules
@@ -53,11 +54,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ContextMenuComponent,
     LeftMenuComponent,
     FooterComponent,
+    CatalogLeftMenuComponent
   ],
   exports: [
     HeaderComponent,
     LeftMenuComponent,
-    FooterComponent
+    FooterComponent,
+    CatalogLeftMenuComponent
   ]
 })
 export class ToolbarModule {}
