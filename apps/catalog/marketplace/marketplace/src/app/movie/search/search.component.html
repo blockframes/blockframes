@@ -40,18 +40,36 @@
             </mat-error>
           </mat-expansion-panel> -->
 
-            <!-- Genre Types -->
+            <!-- Genres -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="genres-panel">
                   Genres
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes">
-                <mat-checkbox (change)="hasGenre(genre)" *ngFor="let genre of movieGenres">
-                  {{genre}}
-                </mat-checkbox>
-              </div>
+              <mat-form-field class="genres-chip-list">
+                <mat-chip-list #genreChipList aria-label="Genres selection">
+                  <mat-chip
+                    *ngFor="let genre of selectedGenres"
+                    selectable
+                    removable
+                    (removed)="removeGenre(genre)">
+                    {{ genre }}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="Genres"
+                    #genreInput
+                    [formControl]="genreControl"
+                    [matAutocomplete]="genre"
+                    [matChipInputFor]="genreChipList">
+                </mat-chip-list>
+                <mat-autocomplete #genre="matAutocomplete" (optionSelected)="addGenre($event)">
+                  <mat-option *ngFor="let genre of (genresFilter | async)" [value]="genre">
+                    {{ genre }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
             </mat-expansion-panel>
 
             <!-- Languages -->
@@ -132,7 +150,7 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-form-field class="sales-agents-chip-list">
-                <mat-chip-list #chipList aria-label="Sales Agents selection">
+                <mat-chip-list #salesAgentChipList aria-label="Sales Agents selection">
                   <mat-chip
                     *ngFor="let salesAgent of selectedSalesAgents"
                     selectable
@@ -145,10 +163,10 @@
                     placeholder="Sales Agents"
                     #salesAgentInput
                     [formControl]="salesAgentControl"
-                    [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList">
+                    [matAutocomplete]="salesAgent"
+                    [matChipInputFor]="salesAgentChipList">
                 </mat-chip-list>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSalesAgent($event)">
+                <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
                   <mat-option *ngFor="let salesAgent of salesAgentFilter | async" [value]="salesAgent">
                     {{ salesAgent }}
                   </mat-option>
@@ -273,8 +291,8 @@
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
-              <mat-card-subtitle *ngFor="let director of movie.main.directors">
-                {{ director.firstName }} {{ director.lastName }}
+              <mat-card-subtitle>
+                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
               <mat-card-content class="table-size-text">
                 <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">

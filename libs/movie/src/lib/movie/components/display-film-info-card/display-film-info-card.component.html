@@ -5,77 +5,77 @@
 </ng-container>
 <ng-container *ngIf="main">
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.title.original">
-    <span><b>Original Title</b></span>
+    <span class="bf-dark-text">Original Title</span>
     <span>{{ main.title.original }}</span>
   </li>
   <ng-container *ngIf="salesCast">
     <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesCast.credits.length > 0">
-      <span><b>Principal Cast</b></span>
+      <span class="bf-dark-text">Principal Cast</span>
       <span *ngFor="let cast of salesCast.credits; let isLast = last">
         {{ cast.firstName }} {{ cast.lastName }}{{ isLast ? '' : ', '}}
       </span>
     </li>
   </ng-container>
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.genres.length > 0">
-    <span><b>{{main.genres.length <= 1 ? 'Genre': 'Genres'}}</b></span>
+    <span class="bf-dark-text">{{main.genres.length <= 1 ? 'Genre': 'Genres'}}</span>
     <span *ngFor="let genre of main.genres; let isLast=last">
       {{ genre | translateSlug: 'GENRES' }}{{isLast ? '' : ', '}}
     </span>
   </li>
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.originCountries">
-    <span><b>{{main.originCountries.length <= 1 ? 'Country of Origin': 'Countries of Origin'}}</b></span>
+    <span class="bf-dark-text">{{main.originCountries.length <= 1 ? 'Country of Origin': 'Countries of Origin'}}</span>
     <span *ngFor="let country of main.originCountries; let isLast=last">
       {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ','}}
     </span>
   </li>
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="releaseDate">
-    <span><b>Release Date on Country of Origin</b></span>
+    <span class="bf-dark-text">Release Date on Country of Origin</span>
     <span>{{ releaseDate }}</span>
   </li>
   <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.languages">
-    <span><b>{{main.languages.length <= 1 ? 'Original Language': 'Original Languages'}}</b></span>
+    <span class="bf-dark-text">{{main.languages.length <= 1 ? 'Original Language': 'Original Languages'}}</span>
     <span *ngFor="let languages of main.languages; let isLast=last">
       {{ languages | translateSlug: 'LANGUAGES' }}{{isLast ? '' : ', '}}
     </span>
   </li>
   <li fxLayout="row wrap" *ngIf="versionInfo.subtitles.length">
-    <span><b>Available {{versionInfo.subtitles.length <= 1 ? 'Subtitle': 'Subtitles'}}</b></span>
+    <span class="bf-dark-text">Available {{versionInfo.subtitles.length <= 1 ? 'Subtitle': 'Subtitles'}}</span>
     <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
       {{ subtitle | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
   </li>
   <li fxLayout="row wrap" *ngIf="versionInfo.dubbings.length">
-    <span><b>Available {{main.languages.length <= 1 ? 'Dubbing': 'Dubbings'}}</b></span>
+    <span class="bf-dark-text">Available {{main.languages.length <= 1 ? 'Dubbing': 'Dubbings'}}</span>
     <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
       {{ dubbing | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
   </li>
-  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="budget">
-    <span><b>Budget</b></span>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="budget && budget.totalBudget">
+    <span class="bf-dark-text">Budget</span>
     <span>{{budget.totalBudget}}</span>
   </li>
   <ng-container *ngIf="salesInfo.theatricalRelease; else noRelease">
     <li fxLayout="row" fxLayout.lt-sm="column">
-      <span><b>Theatrical Release</b></span>
+      <span class="bf-dark-text">Theatrical Release</span>
       <span>Yes</span>
     </li>
   </ng-container>
   <ng-template #noRelease>
     <li fxLayout="row" fxLayout.lt-sm="column">
-      <span><b>Theatrical Release</b></span>
+      <span class="bf-dark-text">Theatrical Release</span>
       <span>No</span>
     </li>
   </ng-template>
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
-    <span><b>{{salesInfo.europeanQualification.length <= 1 ? 'Quota': 'Quotas'}}</b></span>
+    <span class="bf-dark-text">{{salesInfo.europeanQualification.length <= 1 ? 'Quota': 'Quotas'}}</span>
     <span>European Qualification</span>
   </li>
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="color">
-    <span><b>Color / Black & White</b></span>
+    <span class="bf-dark-text">Color / Black & White</span>
     <span>{{ color | titlecase }}</span>
   </li>
   <li fxLayout="column" *ngIf="prizes.length">
-    <span><b>{{prizes.length <= 1 ? 'Festival Selection': 'Festival Selections'}}</b></span>
+    <span class="bf-dark-text">{{prizes.length <= 1 ? 'Festival Selection': 'Festival Selections'}}</span>
     <div class="prize-logo-container">
       <ng-container *ngFor="let prize of prizes">
         <img *ngIf="prize.logo" [src]="prize.logo">

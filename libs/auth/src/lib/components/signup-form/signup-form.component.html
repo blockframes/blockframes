@@ -28,7 +28,7 @@
     <password-confirm formControlName="password"></password-confirm>
     <div fxLayout="row">
       <mat-checkbox (change)="toggleTermsOfUse()"></mat-checkbox>
-      <span>I accept the <a (click)="openTermsOfUse()" class="terms-link">Terms of use and Privacy policy</a>.</span>
+      <span>I accept the <a (click)="openTermsOfUse()" class="terms-link">Terms and Conditions of Use</a>.</span>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
       <button id="submit" type="submit" mat-flat-button color="accent" [disabled]="!isTermsOfUseChecked">Sign up</button>

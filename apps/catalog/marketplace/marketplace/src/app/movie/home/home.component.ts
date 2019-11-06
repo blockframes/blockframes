@@ -42,15 +42,17 @@ export class MarketplaceHomeComponent implements OnInit {
     this.moviesBySections$ = combineLatest([latest$, preProduction$, completed$]).pipe(
       map(([latest, preProduction, completed]) => {
         return [
-          { title: 'New Films', subline: 'Check out our newest gems!', movies: latest },
+          { title: 'New Films',
+            subline: 'Discover our latest releases',
+            movies: latest },
           {
-            title: 'Pre-Production Films',
-            subline: 'Discover the potential of brand new projects',
+            title: 'Pre-production Films',
+            subline: 'Brand new projects with great potential',
             movies: preProduction
           },
           {
             title: 'Completed Films',
-            subline: 'Complete films for complete success',
+            subline: 'Explore our selection of acclaimed and unreleased films',
             movies: completed
           }
         ];
