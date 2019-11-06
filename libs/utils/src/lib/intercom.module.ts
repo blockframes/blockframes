@@ -4,17 +4,8 @@ import { Intercom, IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
 import { Observable, Subscription } from 'rxjs';
 
-@NgModule({
-  imports: [
-    IntercomModule.forRoot({
-      appId: intercomId,
-      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-    })
-  ],
-  declarations: [],
-  exports: []
-})
-export class IntercomAppModule {
+@Injectable()
+export class IntercomInitialize {
 
   private user$: Observable<User>;
   private sub: Subscription;
@@ -49,3 +40,15 @@ export class IntercomAppModule {
     }
   }
 }
+
+@NgModule({
+  imports: [
+    IntercomModule.forRoot({
+      appId: intercomId,
+      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
+    })
+  ],
+  declarations: [],
+  exports: []
+})
+export class IntercomAppModule {}
