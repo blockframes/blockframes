@@ -13,6 +13,7 @@
     </mat-toolbar>
     <mat-divider></mat-divider>
     <section>
+      <context-menu-sidebar (click)="sidenav.toggle();"></context-menu-sidebar>
       <ng-content></ng-content>
     </section>
   </div>

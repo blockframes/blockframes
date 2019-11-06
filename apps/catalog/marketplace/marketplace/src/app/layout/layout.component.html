@@ -3,6 +3,10 @@
     <toolbar-catalog-left-menu [sidenav]="leftSidenav">
       <account-profile-widget></account-profile-widget>
       <organization-widget></organization-widget>
+      <button test-id="logout" (click)="logout()" class="logout-btn">
+        <mat-icon svgIcon="logout"></mat-icon>
+        <span class="logout">Log out</span>
+      </button>
     </toolbar-catalog-left-menu>
   </mat-sidenav>
   <mat-sidenav-content>

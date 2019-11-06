@@ -1,0 +1,26 @@
+<!-- <nav test-id="context-menu" class="context-menu" mat-tab-nav-bar mat-align-tabs="center">
+  <ng-container *ngFor="let item of (items$ | async)">
+    <a mat-tab-link *ngIf="item.external else applink" [href]="item.path" target="_blank">
+      {{item.name}}
+    </a>
+    <ng-template #applink>
+      <a mat-tab-link [routerLink]="[item.path]" [active]="isActive(item.path, item.exact, (nextRoute$ | async))">
+        {{item.name}}
+      </a>
+    </ng-template>
+  </ng-container>
+</nav> -->
+
+
+<mat-nav-list>
+  <mat-list-item *ngFor="let item of (items$ | async)">
+    <a *ngIf="item.external else applink" [href]="item.path" target="_blank">
+      {{item.name}}
+    </a>
+    <ng-template #applink>
+      <a [routerLink]="[item.path]" routerLinkActive="active">
+        {{item.name}}
+      </a>
+    </ng-template>
+  </mat-list-item>
+</mat-nav-list>

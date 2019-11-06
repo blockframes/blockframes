@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 import { BasketQuery } from '../distribution-right/+state/basket.query';
+import { AuthService } from '@blockframes/auth';
 
 @Component({
   selector: 'catalog-layout',
@@ -20,7 +21,8 @@ export class LayoutComponent implements OnInit {
 
   constructor(
     private contextMenuService: ContextMenuService,
-    private basketQuery: BasketQuery
+    private basketQuery: BasketQuery,
+    private service: AuthService
   ) {
     this.AFM_DISABLE = AFM_DISABLE;
    }
@@ -37,5 +39,11 @@ export class LayoutComponent implements OnInit {
     this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
     );
+  }
+
+  public async logout() {
+    await this.service.logout();
+    // TODO: issue#879, navigate with router
+    window.location.reload();
   }
 }

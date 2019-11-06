@@ -1,0 +1,40 @@
+@import 'mixins';
+
+a {
+  width: 80px;
+}
+
+a.active {
+  color: red;
+}
+
+.context-menu {
+  height: var(--toolbarHeight);
+  border: none;
+
+  // ::ng-deep is deprecated but did'nt found any workaround
+  ::ng-deep .mat-tab-links {
+    height: 100%;
+
+    .mat-tab-link {
+      text-transform: uppercase;
+      font-size: 14px;
+      height: 100%;
+      min-width: 60px;
+      font-weight: 600;
+      font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
+      padding: 0px;
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+  }
+}
+
+@include medium {
+  .context-menu {
+    .mat-tab-link {
+      padding: 0;
+      min-width: 135px;
+    }
+  }
+}
