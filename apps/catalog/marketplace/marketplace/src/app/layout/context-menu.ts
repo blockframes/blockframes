@@ -15,11 +15,11 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${appsRoute}/${App.biggerBoat}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${appsRoute}/${App.biggerBoat}/wishlist/overview`
       }
     ]
   },
@@ -32,16 +32,16 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${appsRoute}/${App.biggerBoat}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${appsRoute}/${App.biggerBoat}/wishlist/overview`
       }
     ]
   },
   {    // TODO issue#1146
-    route: '/layout/o/catalog/wishlist/overview',
+    route: `${appsRoute}/${App.biggerBoat}/wishlist/overview`,
     items: [
       {
         name: 'home',
@@ -49,11 +49,11 @@ export const CONTEXT_MENU = [
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${appsRoute}/${App.biggerBoat}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${appsRoute}/${App.biggerBoat}/wishlist/overview`
       }
     ]
   },
@@ -96,8 +96,8 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search',
-        icon: 'search_sidebar'
+        icon: 'search_sidebar',
+        path: '${appsRoute}/${App.biggerBoat}/search'
       }
     ]
   },

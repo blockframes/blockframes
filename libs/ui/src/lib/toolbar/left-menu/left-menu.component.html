@@ -5,42 +5,42 @@
     </button>
     <span class="fill-remaining-space"></span>
     <div>
-      <button mat-icon-button (click)="sidenav.toggle();">
+      <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
       </button>
-      <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
+      <button mat-icon-button (click)="sidenav.toggle()" class="apps-button">
         <mat-icon svgIcon="applications"></mat-icon>
       </button>
       <span class="fill-remaining-space"></span>
       <div>
-        <button mat-icon-button (click)="sidenav.toggle();">
+        <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
         </button>
-        <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
+        <button mat-icon-button (click)="sidenav.toggle()" class="apps-button">
           <mat-icon svgIcon="applications"></mat-icon>
         </button>
       </div>
-    </mat-toolbar>
-    <mat-divider></mat-divider>
-    <section>
-      <mat-nav-list>
-        <h3 mat-subheader>DApps</h3>
-        <a *ngFor="let app of apps" mat-list-item [routerLink]="['/layout/o/apps/', app.href]">
-          <img mat-list-icon [src]="app.logo">
-          <h4 mat-line>{{ app.name }}</h4>
-        </a>
-      </mat-nav-list>
-    </section>
-    <div class="see-all-link">
-      <a href="/"><span>See all DApps</span><mat-icon svgIcon="arrowRight"></mat-icon></a>
     </div>
   </mat-toolbar>
+  <mat-divider></mat-divider>
+  <section>
+    <mat-nav-list>
+      <h3 mat-subheader>DApps</h3>
+      <a *ngFor="let app of apps" mat-list-item [routerLink]="['/layout/o/apps/', app.href]">
+        <img mat-list-icon [src]="app.logo" />
+        <h4 mat-line>{{ app.name }}</h4>
+      </a>
+    </mat-nav-list>
+  </section>
+  <div class="see-all-link">
+    <a href="/"><span>See all DApps</span><mat-icon svgIcon="arrowRight"></mat-icon></a>
+  </div>
   <mat-divider></mat-divider>
   <section>
     <mat-list>
       <h3 mat-subheader>DApps</h3>
       <a *ngFor="let app of apps" mat-list-item [href]="app.href">
-        <img mat-list-icon [src]="app.logo">
+        <img mat-list-icon [src]="app.logo" />
         <h4 mat-line>{{ app.name }}</h4>
       </a>
     </mat-list>
