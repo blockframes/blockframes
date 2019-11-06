@@ -62,7 +62,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     HeaderComponent,
     LeftMenuComponent,
     FooterComponent,
-    CatalogLeftMenuComponent
+    CatalogLeftMenuComponent,
+    ContextMenuSidebarComponent
   ]
 })
 export class ToolbarModule {}

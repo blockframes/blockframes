@@ -1,9 +1,10 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #leftSidenav mode="over">
     <toolbar-catalog-left-menu [sidenav]="leftSidenav">
+      <context-menu-sidebar></context-menu-sidebar>
       <account-profile-widget></account-profile-widget>
       <organization-widget></organization-widget>
-      <button test-id="logout" (click)="logout()" class="logout-btn">
+      <button mat-menu-item test-id="logout" (click)="logout()" class="logout-btn mat-menu-item">
         <mat-icon svgIcon="logout"></mat-icon>
         <span class="logout">Log out</span>
       </button>
@@ -39,8 +40,8 @@
         <account-profile-menu fxHide.xs>
           <ng-container widgets>
             <account-profile-widget></account-profile-widget>
-            <mat-divider></mat-divider>
             <organization-widget></organization-widget>
+            <mat-divider></mat-divider>
             <ng-container *ngIf="AFM_DISABLE">
               <!-- TODO #1146 -->
               <mat-divider></mat-divider>
@@ -49,7 +50,6 @@
           </ng-container>
         </account-profile-menu>
       </ng-container>
-
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
