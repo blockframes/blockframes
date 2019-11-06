@@ -3,7 +3,7 @@
   <span matListItem *ngFor="let invitation of invitations" fxLayout="row" fxLayoutAlign="space-between center">
     <p>{{ invitation.user.email }}</p>
     <button *ngIf="isSuperAdmin" (click)="declined.emit(invitation)" mat-icon-button>
-      <mat-icon >clear</mat-icon>
+      <mat-icon>clear</mat-icon>
     </button>
   </span>
 </mat-list>
