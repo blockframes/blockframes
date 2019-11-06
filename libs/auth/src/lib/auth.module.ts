@@ -8,6 +8,7 @@ import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,7 +46,6 @@ export const AuthRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AngularFireAuthModule,
     FlexLayoutModule,
     CropperModule,
     // Material
@@ -58,6 +58,10 @@ export const AuthRoutes: Routes = [
     MatBadgeModule,
     MatCheckboxModule,
     FeedbackMessageModule,
+
+    // Fire
+    AngularFireAuthModule,
+    AngularFirePerformanceModule,
 
     RouterModule.forChild(AuthRoutes),
     UiFormModule
