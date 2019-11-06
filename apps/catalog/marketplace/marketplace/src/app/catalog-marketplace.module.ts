@@ -9,38 +9,46 @@ import { MovieCollectionGuard } from '@blockframes/movie';
 const catalogMarketplaceAppRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
+    path: 'about',
+    loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
+  },
+  {
+    path: 'who-are-we',
+    loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+  },
+  {
+    path: 'contact',
+    loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
+  },
+  {
+    path: 'terms',
+    loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+  },
+  {
     path: 'home',
     canActivate: [MovieCollectionGuard],
     canDeactivate: [MovieCollectionGuard],
-    loadChildren: () =>
-      import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+    loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
   },
   {
     path: 'search',
     canActivate: [MovieCollectionGuard],
     canDeactivate: [MovieCollectionGuard],
-    loadChildren: () =>
-      import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
+    loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
   },
   {
-    path: 'selection',
+    path: 'wishlist',
     canActivate: [CatalogBasketGuard, MovieCollectionGuard],
     canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
     children: [
       {
         path: '',
-        redirectTo: 'overview',
+        redirectTo: 'view',
         pathMatch: 'full'
       },
       {
-        path: 'overview',
-        loadChildren: () =>
-          import('./movie/selection/selection.module').then(m => m.SelectionModule)
-      },
-      {
-        path: 'success',
-        loadChildren: () =>
-          import('./components/completion.module').then(m => m.CatalogCompletionModule)
+        path: 'view',
+        loadChildren: () => import('./movie/wishlist/wishlist.module').then(m => m.WishlistModule)
       }
     ]
   },
@@ -52,13 +60,14 @@ const catalogMarketplaceAppRoutes: Routes = [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       {
         path: 'view',
-        loadChildren: () =>
-          import('./movie/view/view.module').then(m => m.MovieViewModule)
+        loadChildren: () => import('./movie/view/view.module').then(m => m.MovieViewModule)
       },
       {
         path: 'create',
         loadChildren: () =>
-          import('./distribution-right/create/create.module').then(m => m.DistributionRightCreateModule)
+          import('./distribution-right/create/create.module').then(
+            m => m.DistributionRightCreateModule
+          )
       }
     ]
   }

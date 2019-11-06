@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // Component
 import { LoginViewComponent } from './pages/login-view/login-view.component';
@@ -52,6 +53,8 @@ export const AuthRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     TermsAndConditionsModule,
+    FeedbackMessageModule,
+    EmailVerifyModule,
     // Material
     MatFormFieldModule,
     MatInputModule,
@@ -67,6 +70,7 @@ export const AuthRoutes: Routes = [
     AngularFireAuthModule,
     AngularFirePerformanceModule,
     EmailVerifyModule,
+    MatDialogModule,
 
     RouterModule.forChild(AuthRoutes),
     UiFormModule,

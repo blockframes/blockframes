@@ -34,6 +34,11 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
           pathMatch: 'full'
         },
         {
+          // The redirection route when user has no organization
+          path: 'organization',
+          loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+        },
+        {
           path: 'o',
           canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
           canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
@@ -56,6 +61,7 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
 
 export function createRoutes({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
   const children = [
+    ...appsRoutes,
     {
       path: 'organization',
       loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
@@ -64,7 +70,6 @@ export function createRoutes({ layout, appsRoutes, appName, rootPath = 'layout' 
       path: 'account',
       loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
     },
-    ...appsRoutes,
   ];
   return root(layout, children, rootPath, appName);
 }
