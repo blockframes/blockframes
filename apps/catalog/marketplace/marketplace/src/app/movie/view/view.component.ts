@@ -1,11 +1,12 @@
 import { map } from 'rxjs/operators';
 import { BasketService } from './../../distribution-right/+state/basket.service';
-import { Movie } from '@blockframes/movie';
+import { Movie, PromotionalElement } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -24,7 +25,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private orgQuery: OrganizationQuery,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private satanizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -53,6 +55,13 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const title = this.movieQuery.getActive().main.title.international
     this.basketService.updateWishlist(this.movieQuery.getActive());
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+  }
+
+  public getBackgroundImage(promotionalElements: PromotionalElement[]) {
+    const element = promotionalElements.find(promo => promo.type === 'pageBanner');
+    const url = element ? element.url : '/assets/images/banner_movie_view.png';
+    // We need this to bypass the security
+    return this.satanizer.bypassSecurityTrustStyle(`url(${url})`);
   }
 
   get internationalPremiere() {
