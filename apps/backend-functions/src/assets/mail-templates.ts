@@ -10,6 +10,7 @@ const USER_ORG_INVITATION = '/layout/organization/home';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
+export const RESET_PASSWORD = '/auth/password-reset?oobCode='
 
 // ------------------------- //
 //   FOR BLOCKFRAMES USERS   //
@@ -27,9 +28,9 @@ export function userVerifyEmail(email: string, link: string): EmailTemplateReque
   return { to: email, templateId: templateIds.userVerifyEmail, data };
 }
 
-export function userResetPassword(email: string, link: string): EmailTemplateRequest {
+export function userResetPassword(email: string, resetCode: string): EmailTemplateRequest {
   const data = {
-    pageURL: link
+    pageURL: `${appUrl}${RESET_PASSWORD}${resetCode}`
   };
   return { to: email, templateId: templateIds.resetPassword, data };
 }

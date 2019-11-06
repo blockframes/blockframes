@@ -37,7 +37,12 @@ export const startResetPasswordEmailFlow = async (data: any, context: CallableCo
   }
 
   const resetLink = await admin.auth().generatePasswordResetLink(email);
-  await sendMailFromTemplate(userResetPassword(email, resetLink));
+  const resetUrl = new URL(resetLink);
+  const resetCode = resetUrl.searchParams.get('oobCode');
+  if (!resetCode) {
+    throw new Error('Generate Password Link has failed !');
+  }
+  await sendMailFromTemplate(userResetPassword(email, resetCode));
 };
 
 export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {

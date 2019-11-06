@@ -37,6 +37,8 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
         if (!params) this.router.navigate(['/layout']);
         this.actionCode = params['oobCode'];
 
+        console.log('action code', this.actionCode);
+
         // Verify the password reset code is valid.
         try {
           this.service.checkResetCode(this.actionCode);
