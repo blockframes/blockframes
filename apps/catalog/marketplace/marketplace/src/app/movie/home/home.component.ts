@@ -47,12 +47,12 @@ export class MarketplaceHomeComponent implements OnInit {
             movies: latest },
           {
             title: 'Pre-production Films',
-            subline: 'Discover the potential of brand new projects',
+            subline: 'Brand new projects with great potential',
             movies: preProduction
           },
           {
             title: 'Completed Films',
-            subline: 'Complete films for complete success',
+            subline: 'Explore our selection of acclaimed and unreleased films',
             movies: completed
           }
         ];

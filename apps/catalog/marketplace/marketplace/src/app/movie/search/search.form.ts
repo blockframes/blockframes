@@ -200,6 +200,15 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     }
   }
 
+  addGenre(genre: string) {
+    this.get('type').setValue([...this.get('type').value, genre]);
+  }
+
+  removeGenre(genre: string) {
+    const newControls = this.get('type').value.filter(genreToRemove => genreToRemove !== genre);
+    this.get('type').setValue(newControls);
+  }
+
   addSalesAgent(salesAgent: string) {
     this.get('salesAgent').setValue([...this.get('salesAgent').value, salesAgent]);
   }
