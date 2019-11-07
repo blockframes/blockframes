@@ -5,6 +5,8 @@ import { Intercom, IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
 import { Observable, Subscription } from 'rxjs';
 
+const providers: any[] = [];
+
 @Injectable()
 export class IntercomAppClass {
   private user$: Observable<User>;
@@ -25,20 +27,23 @@ export class IntercomAppClass {
             widget: {
               "activator": "#intercom"
             }
-          });
+          })
         } else {
           // Initialize Intercom for visitor
           this.intercom.boot({
             widget: {
               "activator": "#intercom"
             }
-          });
+          })
         }
       });
     } else {
       this.intercom.shutdown();
     }
   }
+}
+if (intercomId) {
+  providers.push( IntercomAppClass );
 }
 
 @NgModule({
@@ -49,6 +54,7 @@ export class IntercomAppClass {
     })
   ],
   declarations: [],
-  exports: []
+  exports: [],
+  providers
 })
 export class IntercomAppModule {}
