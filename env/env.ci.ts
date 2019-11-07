@@ -80,3 +80,6 @@ export const templateIds = {
   userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
   wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
 }
+
+// Yandex Metrika Id
+export const yandexId = 0;
