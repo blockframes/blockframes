@@ -4,7 +4,7 @@ type Timestamp = firestore.Timestamp;
 
 
 /** Document model of an Organization */
-export interface OrganizationDocument {
+interface OrganizationRaw<D> {
   id: string;
   name: string;
   address: string;
@@ -22,8 +22,12 @@ export interface OrganizationDocument {
   fiscalNumber: string;
   activity: string;
   // TODO: issue#1202 Review model of Wishlist (name, date...)
-  wishlist: WishlistWithDates[];
+  wishlist: WishlistRaw<D>[];
 }
+
+export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
+
+export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> {}
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const enum OrganizationStatus {
@@ -38,7 +42,7 @@ export interface WishlistRaw<D> {
 }
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
-export interface WishlistWithDates extends WishlistRaw<Date> { }
+export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
 
 
 export const enum WishlistStatus {
@@ -57,8 +61,8 @@ export interface PublicOrganization {
 
 /** A factory function that creates an Organization. */
 export function createOrganization(
-  params: Partial<OrganizationDocument> = {}
-): OrganizationDocument {
+  params: Partial<OrganizationDocumentWithDates> = {}
+): OrganizationDocumentWithDates {
   return {
     id: !!params.id ? params.id : '',
     name: '',
@@ -79,4 +83,19 @@ export function createOrganization(
     wishlist: [],
     ...params
   };
+}
+
+/** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
+export function convertWishlistDocumentToWishlistDocumentWithDate(wishlist: WishlistDocument[]): WishlistDocumentWithDates[] {
+  if (!wishlist) {
+    return [];
+  }
+
+  return wishlist.map(wish => {
+    if (!!wish.sent) {
+      return { ...wish, sent: wish.sent.toDate() };
+    } else {
+      return { ...wish, sent: null };
+    }
+  });
 }
