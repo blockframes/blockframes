@@ -34,8 +34,8 @@ export class LayoutComponent implements OnInit {
       this.contextMenuService.setMenu(CONTEXT_MENU);
     }
 
-    this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
+    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
+      map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
     );
   }
 }
