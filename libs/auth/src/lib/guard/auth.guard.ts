@@ -6,6 +6,11 @@ import { Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { FireQuery } from '@blockframes/utils';
 
+// Verify if the user exists and has a name and surname.
+function hasIdentity(user: User) {
+  return !!user && !!user.name && !!user.surname;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +28,9 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean | Promise<boolean | UrlTree> {
     this.store.update({ requestedRoute: null });
     // Connected on the app
-    if (!!this.query.user) return true;
+    if (hasIdentity(this.query.user)) {
+      return true;
+    };
     // Wait for the server to give first answer
     return new Promise((res, rej) => {
       this.subscription = this.afAuth.authState
@@ -34,7 +41,7 @@ export class AuthGuard implements CanActivate {
             return this.db.doc<User>(`users/${userAuth.uid}`).valueChanges();
           }),
           tap(user => this.store.update({ user })),
-          map(user => (user && user.name && user.surname) ? true : this.router.parseUrl('auth/identity'))
+          map(user => hasIdentity(user) ? true : this.router.parseUrl('auth/identity'))
         )
         .subscribe({
           next: (response: boolean | UrlTree) => res(response),

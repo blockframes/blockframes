@@ -5,7 +5,12 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
     <td mat-cell *matCellDef="let member" fxLayout="row" class="bold" fxLayoutAlign="start center">
-      <avatar-list *ngIf="[member.avatar]" [refs]="[member.avatar]"></avatar-list>
+      <ng-container *ngIf="member.avatar; else defaultAvatar">
+        <avatar-list [refs]="[member.avatar]"></avatar-list>
+      </ng-container>
+      <ng-template #defaultAvatar>
+        <img src="/assets/images/placeHolder_avatar.png" />
+      </ng-template>
       <span>{{ member.name }} {{ member.surname }}</span>
     </td>
   </ng-container>
