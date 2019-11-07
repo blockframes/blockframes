@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -25,8 +24,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private orgQuery: OrganizationQuery,
-    private snackbar: MatSnackBar,
-    private satanizer: DomSanitizer
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -60,8 +58,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public getBackgroundImage(promotionalElements: PromotionalElement[]) {
     const element = promotionalElements.find(promo => promo.type === 'pageBanner');
     const url = element ? element.url : '/assets/images/banner_movie_view.png';
-    // We need this to bypass the security
-    return this.satanizer.bypassSecurityTrustStyle(`url(${url})`);
+    return `url(${url})`;
   }
 
   get internationalPremiere() {
