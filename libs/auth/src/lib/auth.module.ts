@@ -31,6 +31,7 @@ import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
+import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms-conditions.module';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -48,6 +49,7 @@ export const AuthRoutes: Routes = [
     ReactiveFormsModule,
     FlexLayoutModule,
     CropperModule,
+    TermsAndConditionsModule,
     // Material
     MatFormFieldModule,
     MatInputModule,

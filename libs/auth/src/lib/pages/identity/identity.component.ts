@@ -4,8 +4,6 @@ import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
-import { MatDialog } from '@angular/material/dialog';
-import { PrivacyPageComponent } from 'apps/catalog/marketplace/marketplace/src/app/pages/privacy-page/privacy-page.component';
 
 @Component({
   selector: 'auth-identity',
@@ -34,13 +32,12 @@ export class IdentityComponent {
     newPassword: new PasswordControl()
   });
 
-  public isTermsOfUseChecked = false;
+  public isTermsChecked: boolean;
 
   constructor(
     private service: AuthService,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -66,13 +63,8 @@ export class IdentityComponent {
     }
   }
 
-  /** Opens a dialog with terms of use and privacy policy. */
-  // Create a reusable component for Term of use checkbox and dialog => ISSUE #1233
-  public openTermsOfUse() {
-    this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
-  }
-
-  public toggleTermsOfUse() {
-    this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
+  /** Check the value of the boolean outputed by TermsAndConditionsComponent */
+  public checkTermsOfUse(checked: boolean) {
+    this.isTermsChecked = checked;
   }
 }
