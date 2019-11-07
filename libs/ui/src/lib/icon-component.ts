@@ -288,6 +288,14 @@ const ICONS_SVG = [
     name: 'LogoAC',
     url: 'assets/logo/LogoAC.svg'
   },
+  {
+    name: 'home_sidebar',
+    url: 'assets/icons/home-sidebar.svg'
+  },
+  {
+    name: 'search_sidebar',
+    url: 'assets/icons/search-sidebar.svg'
+  }
 ];
 
 /**
