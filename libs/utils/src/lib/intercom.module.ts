@@ -1,49 +1,23 @@
-import { NgModule, Injectable } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { User } from '@blockframes/auth/+state/auth.store';
 import { Intercom, IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
-import { Observable, Subscription } from 'rxjs';
 
-const providers: any[] = [];
-
-@Injectable()
-export class IntercomAppClass {
-  private user$: Observable<User>;
-  private sub: Subscription;
-  private intercom: Intercom
-
-  constructor(private query: AuthQuery) {
-    this.user$ = this.query.user$;
-
-    if (intercomId) {
-      this.sub = this.user$.subscribe(user => {
-        if (!user) {
-          // Initialize Intercom Messenger for logged user
-          this.intercom.boot({
-            email: user.email,
-            user_id: user.uid,
-            name: user.surname,
-            widget: {
-              "activator": "#intercom"
-            }
-          })
-        } else {
-          // Initialize Intercom for visitor
-          this.intercom.boot({
-            widget: {
-              "activator": "#intercom"
-            }
-          })
+function getIntercomOptions(user) {
+  return user
+    ?  {
+          email: user.email,
+          user_id: user.uid,
+          name: user.surname,
+          widget: {
+            "activator": "#intercom"
+          }
         }
-      });
-    } else {
-      this.intercom.shutdown();
-    }
-  }
-}
-if (intercomId) {
-  providers.push( IntercomAppClass );
+    :  {
+          widget: {
+            "activator": "#intercom"
+          }
+        };
 }
 
 @NgModule({
@@ -53,8 +27,20 @@ if (intercomId) {
       updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
     })
   ],
-  declarations: [],
-  exports: [],
-  providers
 })
-export class IntercomAppModule {}
+export class IntercomAppModule {
+
+  constructor(
+    query: AuthQuery,
+    public intercom: Intercom,
+    ) {
+      if (intercomId) {
+        query.user$.subscribe(user => {
+          if (!user) {
+            intercom.boot(getIntercomOptions(user))
+          }
+        })
+      }
+    }
+  }
+
