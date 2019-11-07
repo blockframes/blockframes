@@ -38,8 +38,8 @@ import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
 
 // Performance Monitoring library
-import * as firebase from "firebase/app";
-import "firebase/performance";
+import * as firebase from 'firebase/app';
+import 'firebase/performance';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -75,11 +75,13 @@ import "firebase/performance";
     AngularFirePerformanceModule,
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  perf = firebase.performance();
+  ngDoBootstrap() {
+    firebase.performance();
+  }
 }
