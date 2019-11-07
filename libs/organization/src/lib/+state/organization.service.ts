@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FireQuery, Query} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
@@ -11,7 +11,9 @@ import {
   OrganizationMember,
   OrganizationMemberRequest,
   OrganizationOperation,
-  OrganizationAction
+  OrganizationAction,
+  OrganizationWithTimestamps,
+  convertOrganizationWithTimestampsToOrganization
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -22,7 +24,6 @@ import { Log, Filter } from '@ethersproject/abstract-provider'
 import { namehash, id as keccak256 } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain, factoryContract } from '@env';
 import { abi as ORGANIZATION_ABI } from '../../../../../contracts/build/Organization.json';
-import { OrganizationDocument } from './organization.firestore';
 import {
   getProvider,
   orgNameToEnsDomain,
@@ -30,10 +31,11 @@ import {
   emailToEnsDomain,
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
+import { OrganizationDocumentWithDates } from './organization.firestore';
 
-export const orgQuery = (orgId: string): Query<Organization> => ({
+export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`,
-  members: (organization: Organization) =>
+  members: (organization: OrganizationWithTimestamps) =>
     organization.userIds.map(id => ({
       path: `users/${id}`
     }))
@@ -117,8 +119,9 @@ export class OrganizationService {
         if (!user.orgId) {
           throw new Error('User has no orgId');
         }
-        return this.db.fromQuery<Organization>(orgQuery(user.orgId));
+        return this.db.fromQuery<OrganizationWithTimestamps>(orgQuery(user.orgId));
       }),
+      map(organization => convertOrganizationWithTimestampsToOrganization(organization)),
       tap(organization => this.store.updateOrganization(organization))
     );
 
@@ -159,10 +162,10 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (permissions, apps permissions, user...).
    */
-  public async add(organization: Partial<OrganizationDocument>): Promise<string> {
+  public async add(organization: Partial<OrganizationDocumentWithDates>): Promise<string> {
     const user = this.authQuery.user;
     const orgId: string = this.db.createId();
-    const newOrganization: OrganizationDocument = createOrganization({
+    const newOrganization: OrganizationDocumentWithDates = createOrganization({
       id: orgId,
       userIds: [user.uid],
       ...organization,

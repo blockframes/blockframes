@@ -1,4 +1,4 @@
-<h4 *ngIf="!isCurrent">Submitted on {{ date.toDate() | date: 'EEEE, MMMM d, y' }}</h4>
+<h4 *ngIf="!isCurrent">Submitted on {{ date | date: 'EEEE, MMMM d, y' }}</h4>
 <p class="important" *ngIf="isCurrent">Please submit this order for it to be processed.</p>
 <table mat-table [dataSource]="dataSource">
   <!-- Movie -->

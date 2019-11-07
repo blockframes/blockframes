@@ -1,5 +1,5 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormEntity, UniqueOrgName, FireQuery } from "@blockframes/utils";
+import { FormEntity, UniqueOrgName } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
 
 function createOrganizationFormControl(service: OrganizationService, params?: Organization) {
