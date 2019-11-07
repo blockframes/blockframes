@@ -15,6 +15,11 @@ production_only: &production_only
     branches:
       only:
         - production
+staging_only: &staging_only
+  filters:
+    branches:
+      only:
+        - staging
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -121,6 +126,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: "production"
+      - NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
       - checkout
       - restore_cache:
@@ -143,6 +149,35 @@ jobs:
             npx firebase use prod &&
             ENV=production npx firebase deploy --except functions &&
             ENV=production npx firebase deploy --only functions --force
+      - slack/status:
+          webhook: "${SLACK_WEBHOOK}"
+  deploy-to-staging:
+    executor: blockframes-ci
+    environment:
+      - ENV: "staging"
+      - NODE_OPTIONS: "--max_old_space_size=4096"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-{{ .Environment.CACHE_VERSION }}
+      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: npm install
+      - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npm run build:all
+      - slack/notify:
+          message: "🛵 Deploying to staging.."
+          webhook: "${SLACK_WEBHOOK}"
+      - do-exclusively/do-exclusively:
+          # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
+          token: $CIRCLE_TOKEN
+          command: |
+            npm install --save-dev firebase-tools &&
+            npx firebase use staging &&
+            ENV=staging npx firebase deploy --except functions &&
+            ENV=staging npx firebase deploy --only functions --force
       - slack/status:
           webhook: "${SLACK_WEBHOOK}"
 workflows:
@@ -176,3 +211,5 @@ workflows:
             - lint
       - deploy-to-prod:
           <<: *production_only
+      - deploy-to-staging:
+          <<: *staging_only
