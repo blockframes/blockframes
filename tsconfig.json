@@ -78,7 +78,8 @@
       "@blockframes/contracts/*": ["contracts/build/*"],
       "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/catalog": ["libs/catalog/src/index.ts"],
-      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"]
+      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"],
+      "@blockframes/marketplace/*": ["apps/catalog/marketplace/marketplace/src/*"]
     }
   },
   "angularCompilerOptions": {

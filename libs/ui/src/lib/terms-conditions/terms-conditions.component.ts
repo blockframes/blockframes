@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PrivacyPageComponent } from 'apps/catalog/marketplace/marketplace/src/app/pages/privacy-page/privacy-page.component';
+import { PrivacyPageComponent } from '@blockframes/marketplace/app/pages/privacy-page/privacy-page.component';
 
 @Component({
   selector: 'terms-conditions',
