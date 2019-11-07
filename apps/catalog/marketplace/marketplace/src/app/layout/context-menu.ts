@@ -88,11 +88,13 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: '/layout/o/catalog/home',
+        icon: 'home_sidebar'
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: '/layout/o/catalog/search',
+        icon: 'search_sidebar'
       }
     ]
   },
