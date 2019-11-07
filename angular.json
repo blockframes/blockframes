@@ -1360,8 +1360,8 @@
                   "with": "env/env.staging.ts"
                 },
                 {
-                  "replace": "apps/catalog/marketplace/src/environments/environment.ts",
-                  "with": "apps/catalog/marketplace/src/environments/environment.staging.ts"
+                  "replace": "apps/catalog/marketplace/marketplace/src/environments/environment.ts",
+                  "with": "apps/catalog/marketplace/marketplace/src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
