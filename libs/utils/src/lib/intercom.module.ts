@@ -1,12 +1,12 @@
-import { Injectable, NgModule } from '@angular/core';
-import { AuthQuery, User } from '@blockframes/auth';
+import { NgModule, Injectable } from '@angular/core';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { User } from '@blockframes/auth/+state/auth.store';
 import { Intercom, IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
 import { Observable, Subscription } from 'rxjs';
 
 @Injectable()
-export class IntercomInitialize {
-
+export class IntercomAppClass {
   private user$: Observable<User>;
   private sub: Subscription;
   private intercom: Intercom
@@ -16,25 +16,25 @@ export class IntercomInitialize {
 
     if (intercomId) {
       this.sub = this.user$.subscribe(user => {
-      if (!!user) {
-        // Initialize Intercom Messenger for logged user
-        this.intercom.boot({
-          email: user.email,
-          user_id: user.uid,
-          name: user.surname,
-          widget: {
-            "activator": "#intercom"
-          }
-        });
-      } else {
-        // Initialize Intercom for visitor
-        this.intercom.boot({
-          widget: {
-            "activator": "#intercom"
-          }
-        });
-      }
-    });
+        if (!user) {
+          // Initialize Intercom Messenger for logged user
+          this.intercom.boot({
+            email: user.email,
+            user_id: user.uid,
+            name: user.surname,
+            widget: {
+              "activator": "#intercom"
+            }
+          });
+        } else {
+          // Initialize Intercom for visitor
+          this.intercom.boot({
+            widget: {
+              "activator": "#intercom"
+            }
+          });
+        }
+      });
     } else {
       this.intercom.shutdown();
     }
