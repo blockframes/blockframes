@@ -14,15 +14,15 @@ export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
   }
 
   /** Return an observable of a WishList array containing the movies */
-  public wishlistsWithMovies$: Observable<Wishlist[]> = combineLatest([
+  public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([
     this.organizationQuery.select(state => state.org),
     this.movieQuery.selectAll()
   ]).pipe(
     filter(([org, movies]) => !!org),
     map(([org, movies]) => {
-      return org.wishlist.map(wishlist => {
-        const wishlistMovies = wishlist.movieIds.map(id => movies.find(movie => movie.id === id));
-        return { ...wishlist, movies: wishlistMovies };
+      return org.wishlist.map(wish => {
+        const wishMovies = wish.movieIds.map(id => movies.find(movie => movie.id === id));
+        return { ...wish, movies: wishMovies };
       })
     })
   );
