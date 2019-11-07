@@ -37,6 +37,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
 
+// Performance Monitoring library
+import * as firebase from "firebase/app";
+import "firebase/performance";
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
   imports: [
@@ -76,4 +80,6 @@ import { LayoutComponent } from './layout/layout.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  perf = firebase.performance();
+}
