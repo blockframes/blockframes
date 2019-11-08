@@ -59,10 +59,10 @@ export interface PublicOrganization {
   name: string;
 }
 
-/** A factory function that creates an Organization. */
-export function createOrganization(
-  params: Partial<OrganizationDocumentWithDates> = {}
-): OrganizationDocumentWithDates {
+/** A factory function that creates an OrganizationDocument. */
+export function createOrganizationDocument(
+  params: Partial<OrganizationDocument> = {}
+): OrganizationDocument {
   return {
     id: !!params.id ? params.id : '',
     name: '',
@@ -83,19 +83,4 @@ export function createOrganization(
     wishlist: [],
     ...params
   };
-}
-
-/** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
-export function convertWishlistDocumentToWishlistDocumentWithDate(wishlist: WishlistDocument[]): WishlistDocumentWithDates[] {
-  if (!wishlist) {
-    return [];
-  }
-
-  return wishlist.map(wish => {
-    if (!!wish.sent) {
-      return { ...wish, sent: wish.sent.toDate() };
-    } else {
-      return { ...wish, sent: null };
-    }
-  });
 }
