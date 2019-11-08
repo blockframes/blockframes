@@ -16,6 +16,13 @@ export const CONTEXT_MENU = [
     ]
   },
   {
+    route: '/layout/o/home/create',
+    items: [
+      { name: 'home', path: '/layout/o/home/list' },
+      { name: 'templates', path: '/layout/o/templates/list' }
+    ]
+  },
+  {
     route: '/layout/o/home/:movieId/edit',
     items: [
       { name: 'edit film', path: '/layout/o/home/:movieId/edit' },
