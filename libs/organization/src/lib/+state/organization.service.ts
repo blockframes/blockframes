@@ -6,14 +6,15 @@ import { FireQuery, Query} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
-  createOrganization,
+  createOrganizationDocument,
   Organization,
   OrganizationMember,
   OrganizationMemberRequest,
   OrganizationOperation,
   OrganizationAction,
   OrganizationWithTimestamps,
-  convertOrganizationWithTimestampsToOrganization
+  convertOrganizationWithTimestampsToOrganization,
+  OrganizationDocument
 } from './organization.model';
 import { OrganizationStore, DeploySteps } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -31,7 +32,6 @@ import {
   emailToEnsDomain,
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
-import { OrganizationDocumentWithDates } from './organization.firestore';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`,
@@ -162,10 +162,10 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (permissions, apps permissions, user...).
    */
-  public async add(organization: Partial<OrganizationDocumentWithDates>): Promise<string> {
+  public async add(organization: Partial<OrganizationDocument>): Promise<string> {
     const user = this.authQuery.user;
     const orgId: string = this.db.createId();
-    const newOrganization: OrganizationDocumentWithDates = createOrganization({
+    const newOrganization: OrganizationDocument = createOrganizationDocument({
       id: orgId,
       userIds: [user.uid],
       ...organization,

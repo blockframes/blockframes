@@ -1,7 +1,6 @@
 import { buildDeliveryPDF } from '../internals/pdf';
 import * as fs from 'fs';
-import { OrganizationStatus, MaterialStatus } from '../data/types';
-import { createOrganization } from '@blockframes/organization/types';
+import { OrganizationStatus, MaterialStatus, createOrganizationDocument } from '../data/types';
 
 const testData = {
   txID: {
@@ -10,7 +9,7 @@ const testData = {
     id3: '0x7e91a0b95412093e639189a05a2dbf68e16c3062001e673826616222baffcac8'
   },
   orgs: {
-    id1: createOrganization({
+    id1: createOrganizationDocument({
       name: 'John Doe',
       officeAddress: 'LogicalPicture',
       userIds: [],
@@ -18,7 +17,7 @@ const testData = {
       movieIds: [],
       status: OrganizationStatus.accepted
     }),
-    id2: createOrganization({
+    id2: createOrganizationDocument({
       name: 'Tomme Hardy',
       officeAddress: '20Th Century Fox',
       userIds: [],
@@ -26,7 +25,7 @@ const testData = {
       movieIds: [],
       status: OrganizationStatus.accepted
     }),
-    id3: createOrganization({
+    id3: createOrganizationDocument({
       name: 'Francis Munster',
       officeAddress: 'Disney',
       userIds: [],
