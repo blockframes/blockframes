@@ -6,12 +6,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 // Guards
-import { CatalogMovieActiveGuard } from './guards/catalog-movie-active.guard';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
-import { MovieCollectionGuard } from '@blockframes/movie';
+import { MovieCollectionGuard, ActiveMovieGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -102,8 +101,8 @@ export const routes: Routes = [
               },
               {
                 path: 'wishlist',
-                canActivate: [CatalogBasketGuard, MovieCollectionGuard],
-                canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
+                canActivate: [CatalogBasketGuard],
+                canDeactivate: [CatalogBasketGuard],
                 children: [
                   {
                     path: '',
@@ -119,8 +118,8 @@ export const routes: Routes = [
               },
               {
                 path: ':movieId',
-                canActivate: [CatalogMovieActiveGuard],
-                canDeactivate: [CatalogMovieActiveGuard],
+                canActivate: [ActiveMovieGuard],
+                canDeactivate: [ActiveMovieGuard],
                 children: [
                   { path: '', redirectTo: 'view', pathMatch: 'full' },
                   {
