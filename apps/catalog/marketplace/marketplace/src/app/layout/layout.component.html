@@ -1,13 +1,14 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #leftSidenav mode="over">
     <toolbar-catalog-left-menu [sidenav]="leftSidenav">
-      <context-menu-sidebar></context-menu-sidebar>
-      <account-profile-widget></account-profile-widget>
-      <organization-widget></organization-widget>
-      <button mat-menu-item test-id="logout" (click)="logout()" class="logout-btn mat-menu-item">
+      <context-menu-sidebar fxHide.gt-xs></context-menu-sidebar>
+      <account-profile-widget fxHide.gt-xs></account-profile-widget>
+      <organization-widget fxHide.gt-xs></organization-widget>
+      <button fxHide.gt-xs mat-menu-item test-id="logout" (click)="logout()" class="logout-btn mat-menu-item">
         <mat-icon svgIcon="logout"></mat-icon>
         <span class="logout">Log out</span>
       </button>
+      <toolbar-apps-list></toolbar-apps-list>
     </toolbar-catalog-left-menu>
   </mat-sidenav>
   <mat-sidenav-content>
