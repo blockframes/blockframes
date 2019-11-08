@@ -58,6 +58,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
 
+  /* Variables for searchbar autocompletion */
+  public allDirectors: string[] = [];
+  public allTitles: string[] = [];
+  public allKeywords: string[] = [];
+
   /* Observables on the languages selected */
   public languages$ = this.filterForm.valueChanges.pipe(
     startWith(this.filterForm.value),
@@ -80,10 +85,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
   /* Filter for autocompletion */
-  public genresFilter: Observable<string[]>;
-  public territoriesFilter: Observable<string[]>;
-  public languagesFilter: Observable<string[]>;
-  public salesAgentFilter: Observable<string[]>;
+  public genresFilter$: Observable<string[]>;
+  public territoriesFilter$: Observable<string[]>;
+  public languagesFilter$: Observable<string[]>;
+  public salesAgentFilter$: Observable<string[]>;
+  public resultFilter$: Observable<any[]>;
 
   /* Individual form controls for filtering */
   public genreControl: FormControl = new FormControl('');
@@ -94,6 +100,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public territoryControl: FormControl = new FormControl('');
   public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
+  public searchbarTextControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
   private sortBy$ = this.sortByControl.valueChanges.pipe(
@@ -157,7 +164,33 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
           });
         }
       }),
-      tap(movies => (this.availableMovies = movies.length))
+      tap(movies => {
+        this.availableMovies = movies.length;
+        movies.forEach(movie => {
+          /*
+           * If a director worked on several movies, we don't want to show
+           * him in the autocompletion twice or more. Same for the other values
+           */
+          if (!this.allTitles.includes(movie.main.title.international)) {
+            this.allTitles.push(movie.main.title.international);
+          }
+          movie.main.directors.forEach(director => {
+            /**
+             * We need to combine these two properties otherwise we will get a hell
+             * of problems. For instance we want to show the directors name in the searchbar
+             * and this is only possible with a string value.
+             */
+            if (!this.allDirectors.includes(`${director.firstName} ${director.lastName}`)) {
+              this.allDirectors.push(`${director.firstName} ${director.lastName}`);
+            }
+          });
+          movie.promotionalDescription.keywords.forEach(word => {
+            if (!this.allKeywords.includes(word)) {
+              this.allKeywords.push(word);
+            }
+          });
+        });
+      })
     );
 
     this.salesAgentsSub = this.movieQuery
@@ -176,26 +209,31 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.genresFilter = this.genreControl.valueChanges.pipe(
+    this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
       map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
     );
 
-    this.languagesFilter = this.languageControl.valueChanges.pipe(
+    this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       map(value => this._languageFilter(value))
     );
 
-    this.territoriesFilter = this.territoryControl.valueChanges.pipe(
+    this.territoriesFilter$ = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
     );
 
-    this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
+    this.salesAgentFilter$ = this.salesAgentControl.valueChanges.pipe(
       startWith(''),
-      map(salesAgent => (salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents))
+      map(salesAgent => (salesAgent ? this._salesAgentsFilter(salesAgent) : this.salesAgents))
+    );
+    this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._resultFilter(value)),
+      tap(value => this.searchbarForm.get('text').setValue(value))
     );
   }
 
@@ -265,11 +303,23 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
-  private _salesAgentsfilter(value: string): string[] {
+  private _salesAgentsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.salesAgents.filter(
       salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0
     );
+  }
+
+  private _resultFilter(value: string) {
+    if (this.searchbarForm.get('type').value === 'title') {
+      return this.allTitles.filter(title => title.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+    } else if (this.searchbarForm.get('type').value === 'keywords') {
+      return this.allKeywords.filter(word => word.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+    } else if (this.searchbarForm.get('type').value === 'director') {
+      return this.allDirectors.filter(director => {
+        return director.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+      });
+    }
   }
 
   //////////////////
@@ -450,6 +500,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       'close',
       { duration: 2000 }
     );
+  }
+
+  public addSearchbarValue(value: MatAutocompleteSelectedEvent) {
+    this.searchbarForm.get('text').setValue(value.option.viewValue);
   }
 
   ngOnDestroy() {
