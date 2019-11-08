@@ -129,16 +129,24 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-function searchbar(movie: Movie, text: string): boolean {
+function searchbar(movie: Movie, text: string, type: string): boolean {
   /* If searchbar is empty, return all movies */
-  if (!text) {
+  if (!text && !type) {
     return true;
-  } else {
-    return (
-      movie.main.directors.some(
-        val => val.firstName.indexOf(text) >= 0 || val.lastName.indexOf(text) >= 0
-      ) || movie.main.title.international.indexOf(text) >= 0
+  } else if (type === 'director') {
+    return movie.main.directors.some(
+      val =>
+        val.firstName.indexOf(text.toLowerCase()) >= 0 ||
+        val.lastName.indexOf(text.toLowerCase()) >= 0
     );
+  } else if (type === 'title') {
+    console.log(movie.main.title.international.toLowerCase(), movie.main.title.international.toLowerCase().indexOf(text.toLowerCase()) >= 0);
+    return movie.main.title.international.indexOf(text.toLowerCase()) >= 0;
+  } else if (type === 'keyword') {
+    return movie.promotionalDescription.keywords.indexOf(text.toLowerCase()) >= 0;
+  } else {
+    /* We still want to return every movie when type is not defined */
+    return true;
   }
 }
 
@@ -168,7 +176,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSa
       hasEveryLanguage &&
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent)
+      salesAgent(movie, filter.salesAgent) &&
+      searchbar(movie, filter.searchbar.text, filter.searchbar.type)
     );
   }
 }
