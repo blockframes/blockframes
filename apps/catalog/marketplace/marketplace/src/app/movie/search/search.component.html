@@ -8,18 +8,24 @@
           Find a content
         </mat-label>
         <span fxLayout="row nowrap" fxLayoutAlign="space-between center">
-          <input matInput type="text" formControlName="text" autocomplete="off">
+          <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
+            [matAutocomplete]="searchbar">
           <mat-select placeholder="Search by ..." formControlName="type">
             <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}</mat-option>
           </mat-select>
+          <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
+            <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
+              {{ result }}
+            </mat-option>
+          </mat-autocomplete>
           <button mat-icon-button matSuffix>
             <mat-icon>search</mat-icon>
           </button>
         </span>
       </mat-form-field>
-      <mat-hint *ngIf="searchbarForm.dirty && searchbarForm.value.text">You must select a value from the dropdown menu
-      </mat-hint>
     </form>
+    <mat-hint *ngIf="searchbarForm.dirty && searchbarForm.value.text">You must select a value from the dropdown menu
+    </mat-hint>
   </header>
 
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
@@ -82,7 +88,7 @@
                     [matChipInputFor]="genreChipList">
                 </mat-chip-list>
                 <mat-autocomplete #genre="matAutocomplete" (optionSelected)="addGenre($event)">
-                  <mat-option *ngFor="let genre of (genresFilter | async)" [value]="genre">
+                  <mat-option *ngFor="let genre of (genresFilter$ | async)" [value]="genre">
                     {{ genre }}
                   </mat-option>
                 </mat-autocomplete>
@@ -110,7 +116,7 @@
                       <mat-icon>search</mat-icon>
                     </button>
                     <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
-                      <mat-option *ngFor="let language of languagesFilter | async" [value]="language">
+                      <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
                         {{language}}
                       </mat-option>
                     </mat-autocomplete>
@@ -177,7 +183,7 @@
                     [matAutocomplete]="salesAgent" [matChipInputFor]="salesAgentChipList">
                 </mat-chip-list>
                 <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
-                  <mat-option *ngFor="let salesAgent of salesAgentFilter | async" [value]="salesAgent">
+                  <mat-option *ngFor="let salesAgent of salesAgentFilter$ | async" [value]="salesAgent">
                     {{ salesAgent }}
                   </mat-option>
                 </mat-autocomplete>
@@ -251,7 +257,7 @@
                     [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl" />
                 </mat-chip-list>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
-                  <mat-option *ngFor="let territory of territoriesFilter | async" [value]="territory">
+                  <mat-option *ngFor="let territory of territoriesFilter$ | async" [value]="territory">
                     {{territory}}
                   </mat-option>
                 </mat-autocomplete>

@@ -130,20 +130,21 @@ function media(movie: Movie, movieMediaType: string): boolean {
 }
 
 function searchbar(movie: Movie, text: string, type: string): boolean {
+  console.log(!!text);
   /* If searchbar is empty, return all movies */
   if (!text && !type) {
     return true;
-  } else if (type === 'director') {
-    return movie.main.directors.some(
-      val =>
+  } else if (type === 'director' && !!text) {
+    return movie.main.directors.some(val => {
+      return (
         val.firstName.indexOf(text.toLowerCase()) >= 0 ||
         val.lastName.indexOf(text.toLowerCase()) >= 0
-    );
-  } else if (type === 'title') {
-    console.log(movie.main.title.international.toLowerCase(), movie.main.title.international.toLowerCase().indexOf(text.toLowerCase()) >= 0);
+      );
+    });
+  } else if (type === 'title' && !!text) {
     return movie.main.title.international.indexOf(text.toLowerCase()) >= 0;
-  } else if (type === 'keyword') {
-    return movie.promotionalDescription.keywords.indexOf(text.toLowerCase()) >= 0;
+  } else if (type === 'keywords' && !!text) {
+    return movie.promotionalDescription.keywords.includes(text);
   } else {
     /* We still want to return every movie when type is not defined */
     return true;
