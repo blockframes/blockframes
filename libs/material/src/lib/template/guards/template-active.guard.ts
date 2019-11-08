@@ -1,26 +1,17 @@
-import { Injectable } from '@angular/core';
-import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
-import { Template, TemplateStore } from '../+state';
-import { Router } from '@angular/router';
-
-export const templateActiveQuery = (id: string): Query<Template> => ({
-  path: `templates/${id}`,
-  materials: template => ({
-    path: `templates/${template.id}/materials`
-  })
-});
+import { Injectable } from "@angular/core";
+import { CollectionGuard } from "akita-ng-fire";
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { TemplateState, TemplateService } from "../+state";
 
 @Injectable({ providedIn: 'root' })
-export class TemplateActiveGuard extends StateActiveGuard<Template> {
-  readonly params = ['templateId'];
-  readonly urlFallback: 'layout';
+export class TemplateActiveGuard extends CollectionGuard<TemplateState> {
 
-  constructor(private fireQuery: FireQuery, store: TemplateStore, router: Router) {
-    super(store, router);
+  constructor(service: TemplateService) {
+    super(service);
   }
 
-  query({ templateId }) {
-    const query = templateActiveQuery(templateId);
-    return this.fireQuery.fromQuery<Template>(query);
+  // Sync and set active
+  sync(next: ActivatedRouteSnapshot) {
+    return this.service.syncActive({ id: next.params.templateId });
   }
 }

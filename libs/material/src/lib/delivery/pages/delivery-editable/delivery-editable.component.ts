@@ -84,7 +84,7 @@ export class DeliveryEditableComponent implements OnInit {
       const materials = this.form.getAll();
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(materials, delivery)
-        : this.materialService.update(materials, delivery);
+        : this.materialService.updateMaterials(materials, delivery);
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
@@ -92,7 +92,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   /* Add a material formGroup to the form **/
   public addMaterial() {
-    const newMaterial = this.materialService.add();
+    const newMaterial = this.materialService.addMaterial();
     this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }

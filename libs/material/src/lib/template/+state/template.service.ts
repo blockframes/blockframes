@@ -3,24 +3,30 @@ import { Organization, PermissionsService, OrganizationQuery } from '@blockframe
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { FireQuery, Query } from '@blockframes/utils';
-import { TemplateStore } from './template.store';
-import { switchMap, tap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-
-const templateQuery = (id: string): Query<Template> => ({
-  path: `templates/${id}`
-});
+import { snapshot } from '@blockframes/utils';
+import { TemplateStore, TemplateState } from './template.store';
+import { switchMap } from 'rxjs/operators';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
 @Injectable({ providedIn: 'root' })
-export class TemplateService {
+@CollectionConfig({ path: 'templates' })
+export class TemplateService extends CollectionService<TemplateState>{
+
   constructor(
-    private db: FireQuery,
     private query: TemplateQuery,
-    private store: TemplateStore,
     private organizationQuery: OrganizationQuery,
-    private permissionsService: PermissionsService
-  ) {}
+    private permissionsService: PermissionsService,
+    store: TemplateStore
+  ) {
+    super(store)
+  }
+
+  /** Gets every movieIds of the user active organization and sync them. */
+  public syncOrgTemplates() {
+    return this.organizationQuery.select('org').pipe(
+      switchMap(org => this.syncManyDocs(org.templateIds))
+    )
+  }
 
   /** Create a template without materials. */
   public async addTemplate(templateName: string): Promise<string> {
@@ -84,7 +90,7 @@ export class TemplateService {
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await this.db.snapshot<MaterialTemplate[]>(`templates/${selectedTemplate.id}/materials`);
+    const templateMaterials = await snapshot<MaterialTemplate[]>(`templates/${selectedTemplate.id}/materials`);
 
     if (materials.length > 0) {
       const batch = this.db.firestore.batch();
@@ -108,19 +114,5 @@ export class TemplateService {
   public nameExists(name: string) {
     const templates = this.query.getAll();
     return templates.find(template => template.name === name);
-  }
-
-  /** Subscribe on organization templates (outside the TemplateListGuard) and set the template store. */
-  public subscribeOnTemplates() {
-    return this.organizationQuery
-      .select(state => state.org.templateIds)
-      .pipe(
-        switchMap(ids => {
-          if (!ids || ids.length === 0) throw new Error('No template yet')
-          const queries = ids.map(id => this.db.fromQuery<Template>(templateQuery(id)))
-          return combineLatest(queries);
-        }),
-        tap(templates => this.store.set(templates))
-      );
   }
 }
