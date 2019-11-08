@@ -1,40 +1,45 @@
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn } from '@env';
 import * as Sentry from '@sentry/browser';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 // Analytics
 const providers: any[] = [];
 
-/**
- * The sentry error handler will capture errors that we do
- * not catch explicitly and let the user file a report.
- */
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor() {
+  constructor(private authQuery: AuthQuery) {
+    this.authQuery.user$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+
+      Sentry.configureScope(scope => {
+        scope.setUser({
+          email: user.email,
+          id: user.uid,
+          username: `${user.name} ${user.surname}`
+        });
+      });
+    });
   }
 
   handleError(error) {
     const eventId = Sentry.captureException(error.originalError || error);
-    Sentry.showReportDialog({ eventId });
+    const { uid, email } = this.authQuery.user || { uid: undefined, email: undefined };
+    Sentry.showReportDialog({ eventId, user: { email } });
   }
 }
 
-/**
- * Inject sentry if the API key (sentryDsn) is configured,
- * allows for development mode.
- */
+// Init and add the Sentry ErrorHandler if and only if sentry is defined in env.
 if (sentryDsn) {
   Sentry.init({
-    dsn: 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126'
+    dsn: sentryDsn
   });
   providers.push({ provide: ErrorHandler, useClass: SentryErrorHandler });
 }
 
 @NgModule({
-  declarations: [],
-  exports: [],
   providers
 })
-export class AnalyticsModule {
-}
+export class AnalyticsModule {}
