@@ -19,7 +19,12 @@
   <!-- Movie Informations -->
   <mat-card-content>
     <mat-card-title-group>
-      <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
+      <ng-container *ngIf="!!movie.main.title.international; else originalTitle">
+        <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
+      </ng-container>
+      <ng-template #originalTitle>
+        <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+      </ng-template>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>
   </mat-card-content>
