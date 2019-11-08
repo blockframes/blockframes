@@ -18,7 +18,8 @@ export class AuthQuery extends Query<AuthState> {
   }
 
   get userId() {
-    return this.user.uid;
+    return this.getValue().uid;
+    //return this.user.uid;
   }
 
   get orgId() {
