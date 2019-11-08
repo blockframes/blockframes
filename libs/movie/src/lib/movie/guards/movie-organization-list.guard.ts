@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionGuard, CollectionGuardConfig, redirectIfEmpty } from 'akita-ng-fire';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
 import { MovieState, MovieService, MovieQuery } from '../+state';
 

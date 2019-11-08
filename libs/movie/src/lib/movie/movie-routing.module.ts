@@ -8,7 +8,7 @@ import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 
 // Guards
-import { MovieOrganizationActiveGuard } from './guards/movie-organization-active.guard';
+import { ActiveMovieGuard } from './guards/movie-active.guard';
 import { MovieOrganizationListGuard } from './guards/movie-organization-list.guard';
 
 export const routes: Routes = [
@@ -30,8 +30,8 @@ export const routes: Routes = [
   },
   {
     path: ':movieId',
-    canActivate: [MovieOrganizationActiveGuard],
-    canDeactivate: [MovieOrganizationActiveGuard],
+    canActivate: [ActiveMovieGuard],
+    canDeactivate: [ActiveMovieGuard],
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', component: MovieViewComponent },

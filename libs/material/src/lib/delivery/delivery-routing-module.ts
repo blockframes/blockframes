@@ -14,7 +14,7 @@ import { DeliveryInformationsEditableComponent } from "./pages/delivery-informat
 import { MovieEditableComponent } from "./pages/movie-editable/movie-editable.component";
 
 // Guards
-import { MovieOrganizationListGuard, MovieOrganizationActiveGuard } from "@blockframes/movie";
+import { MovieOrganizationListGuard, ActiveMovieGuard } from "@blockframes/movie";
 import { MovieMaterialsGuard, DeliveryMaterialsGuard } from "../material";
 import { DeliveryListGuard } from "./guards/delivery-list.guard";
 import { DeliveryActiveGuard } from "./guards/delivery-active.guard";
@@ -41,13 +41,13 @@ const routes: Routes = [
       },
       {
         path: ':movieId',
-        canActivate: [MovieOrganizationActiveGuard],
-        canDeactivate: [MovieOrganizationActiveGuard],
+        canActivate: [ActiveMovieGuard],
+        canDeactivate: [ActiveMovieGuard],
         children: [
           {
             path: '2-choose-starter',
             pathMatch: 'full',
-            component: DeliveryAddChooseStarterComponent, 
+            component: DeliveryAddChooseStarterComponent,
             data: {animation: 'DeliveryAddChooseStarterPage'}
           },
           {
@@ -55,7 +55,7 @@ const routes: Routes = [
             canActivate: [TemplateListGuard],
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
-            component: DeliveryAddTemplatePickerComponent, 
+            component: DeliveryAddTemplatePickerComponent,
             data: {animation: 'DeliveryAddTemplatePickerPage'}
           },
           {
@@ -66,7 +66,7 @@ const routes: Routes = [
           {
             path: '4-settings',
             pathMatch: 'full',
-            component: DeliveryAddSettingsComponent, 
+            component: DeliveryAddSettingsComponent,
             data: {animation: 'DeliveryAddSettingsPage'}
           },
           {
@@ -88,8 +88,8 @@ const routes: Routes = [
   },
   {
     path: ':movieId',
-    canActivate: [MovieOrganizationActiveGuard],
-    canDeactivate: [MovieOrganizationActiveGuard],
+    canActivate: [ActiveMovieGuard],
+    canDeactivate: [ActiveMovieGuard],
     children: [
       {
         path: '',
