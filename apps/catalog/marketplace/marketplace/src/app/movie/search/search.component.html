@@ -1,5 +1,29 @@
 <div test-id="content">
-  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+  <header class="banner" fxLayout="column" fxLayoutAlign="center center" fxLayoutAlign.xs="center center"
+    fxLayoutGap="20px">
+    <h3>Find the content you're looking for</h3>
+    <form [formGroup]="searchbarForm" fxLayout="column" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Find a content
+        </mat-label>
+        <span fxLayout="row nowrap" fxLayoutAlign="space-between center">
+          <input matInput type="text" formControlName="text" autocomplete="off">
+          <mat-select placeholder="Search by ..." formControlName="type">
+            <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}</mat-option>
+          </mat-select>
+          <button mat-icon-button matSuffix>
+            <mat-icon>search</mat-icon>
+          </button>
+        </span>
+      </mat-form-field>
+      <mat-hint *ngIf="searchbarForm.dirty && searchbarForm.value.text">You must select a value from the dropdown menu
+      </mat-hint>
+    </form>
+  </header>
+
+  <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
+    fxLayoutAlign.lt-md="center center">
     <!-- Search -->
     <aside fxLayout="column" class="filter" [formGroup]="filterForm">
       <mat-card>
@@ -7,7 +31,8 @@
         <mat-card-content>
           <mat-accordion multi="true">
 
-            <!-- Production Year --> <!-- TODO #1146 -->
+            <!-- Production Year -->
+            <!-- TODO #1146 -->
             <!-- <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="production-year-panel">
@@ -49,19 +74,11 @@
               </mat-expansion-panel-header>
               <mat-form-field class="genres-chip-list">
                 <mat-chip-list #genreChipList aria-label="Genres selection">
-                  <mat-chip
-                    *ngFor="let genre of selectedGenres"
-                    selectable
-                    removable
-                    (removed)="removeGenre(genre)">
+                  <mat-chip *ngFor="let genre of selectedGenres" selectable removable (removed)="removeGenre(genre)">
                     {{ genre }}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                   </mat-chip>
-                  <input
-                    placeholder="Genres"
-                    #genreInput
-                    [formControl]="genreControl"
-                    [matAutocomplete]="genre"
+                  <input placeholder="Genres" #genreInput [formControl]="genreControl" [matAutocomplete]="genre"
                     [matChipInputFor]="genreChipList">
                 </mat-chip-list>
                 <mat-autocomplete #genre="matAutocomplete" (optionSelected)="addGenre($event)">
@@ -151,20 +168,13 @@
               </mat-expansion-panel-header>
               <mat-form-field class="sales-agents-chip-list">
                 <mat-chip-list #salesAgentChipList aria-label="Sales Agents selection">
-                  <mat-chip
-                    *ngFor="let salesAgent of selectedSalesAgents"
-                    selectable
-                    removable
+                  <mat-chip *ngFor="let salesAgent of selectedSalesAgents" selectable removable
                     (removed)="removeSalesAgent(salesAgent)">
                     {{ salesAgent }}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                   </mat-chip>
-                  <input
-                    placeholder="Sales Agents"
-                    #salesAgentInput
-                    [formControl]="salesAgentControl"
-                    [matAutocomplete]="salesAgent"
-                    [matChipInputFor]="salesAgentChipList">
+                  <input placeholder="Sales Agents" #salesAgentInput [formControl]="salesAgentControl"
+                    [matAutocomplete]="salesAgent" [matChipInputFor]="salesAgentChipList">
                 </mat-chip-list>
                 <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
                   <mat-option *ngFor="let salesAgent of salesAgentFilter | async" [value]="salesAgent">
@@ -174,7 +184,8 @@
               </mat-form-field>
             </mat-expansion-panel>
 
-            <!-- Certifications --> <!-- TODO #1146 -->
+            <!-- Certifications -->
+            <!-- TODO #1146 -->
             <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="certifications-panel">
@@ -189,7 +200,8 @@
               </span>
             </mat-expansion-panel> -->
 
-            <!-- Availabilities --> <!-- TODO #1146 -->
+            <!-- Availabilities -->
+            <!-- TODO #1146 -->
             <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="availabilities-panel">
@@ -220,7 +232,8 @@
               </mat-error>
             </mat-expansion-panel> -->
 
-            <!-- Territories --> <!-- TODO #1146 -->
+            <!-- Territories -->
+            <!-- TODO #1146 -->
             <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="territories-panel">
@@ -246,7 +259,8 @@
               </mat-form-field>
             </mat-expansion-panel> -->
 
-            <!-- Mandate Medias --> <!-- TODO #1146 -->
+            <!-- Mandate Medias -->
+            <!-- TODO #1146 -->
             <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="mandate-medias-panel">
@@ -287,20 +301,24 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+      <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies"
+        fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
               <mat-card-subtitle>
-                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}</span>
+                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
+                  {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
               <mat-card-content class="table-size-text">
                 <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
                   {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
                 </b>
                 <b *ngIf="movie.main.originCountries.length > 2">... </b>
-                <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>| {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
-                <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">{{ movie.salesAgentDeal.salesAgent.displayName}}</p>
+                <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>|
+                  {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
+                <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">{{ movie.salesAgentDeal.salesAgent.displayName}}
+                </p>
               </mat-card-content>
             </ng-container>
             <ng-container movieCardAction>

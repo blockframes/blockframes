@@ -1,7 +1,6 @@
 // Angular
 import { Router } from '@angular/router';
-import { Validators } from '@angular/forms';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import {
   Component,
@@ -66,10 +65,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director', /* 'Production Year' #1146 */];
+  public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
+
+  /* Array of searchbar options */
+  public searchbarOptions: string[] = ['director', 'title', 'keywords'];
 
   /* Data for UI */
   public movieGenres: GenresLabel[] = GENRES_LABEL;
@@ -149,7 +151,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
         } else {
           //TODO #1146 : remove the two line for movieGenres
           const removeGenre = ['TV Show', 'Web Series'];
-          this.movieGenres= this.movieGenres.filter(value => !removeGenre.includes(value));
+          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
           return movies.filter(movie => {
             return filterMovie(movie, filterOptions);
           });
@@ -158,24 +160,25 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       tap(movies => (this.availableMovies = movies.length))
     );
 
-    this.salesAgentsSub = this.movieQuery.selectAll().pipe(
-      tap(movies => {
-        movies.forEach(movie => {
-          if (
-            !!movie.salesAgentDeal.salesAgent &&
-            !!movie.salesAgentDeal.salesAgent.displayName &&
-            !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
-          )
-            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+    this.salesAgentsSub = this.movieQuery
+      .selectAll()
+      .pipe(
+        tap(movies => {
+          movies.forEach(movie => {
+            if (
+              !!movie.salesAgentDeal.salesAgent &&
+              !!movie.salesAgentDeal.salesAgent.displayName &&
+              !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
+            )
+              this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+          });
         })
-      })
-    ).subscribe()
+      )
+      .subscribe();
 
     this.genresFilter = this.genreControl.valueChanges.pipe(
       startWith(''),
-      map(genre =>
-        genre ? this._genreFilter(genre) : this.movieGenres
-      )
+      map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
     );
 
     this.languagesFilter = this.languageControl.valueChanges.pipe(
@@ -192,9 +195,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
     this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
       startWith(''),
-      map(salesAgent =>
-        salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents
-      )
+      map(salesAgent => (salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents))
     );
   }
 
@@ -204,6 +205,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public get getCurrentYear(): number {
     return new Date().getFullYear();
+  }
+
+  public get searchbarForm(): FormGroup {
+    return this.filterForm.get('searchbar');
   }
 
   /**
@@ -262,7 +267,9 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   private _salesAgentsfilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0)
+    return this.salesAgents.filter(
+      salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0
+    );
   }
 
   //////////////////
@@ -429,12 +436,20 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public addToWishlist(movie: Movie) {
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been added to your selection.`,
+      'close',
+      { duration: 2000 }
+    );
   }
 
   public removeFromWishlist(movie: Movie) {
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been removed from your selection.`,
+      'close',
+      { duration: 2000 }
+    );
   }
 
   ngOnDestroy() {
