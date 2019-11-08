@@ -1,26 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Material, createMaterial, MaterialStatus, createMaterialTemplate, MaterialTemplate } from './material.model';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
-import { FireQuery } from '@blockframes/utils';
 import { Delivery } from '../../delivery/+state';
 import { TemplateQuery } from '../../template/+state/template.query';
+import { SubcollectionService } from 'akita-ng-fire';
+import { MaterialState, MaterialStore } from './material.store';
+import { snapshot } from '@blockframes/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MaterialService {
+export class MaterialService extends SubcollectionService<MaterialState> {
   constructor(
-    private db: FireQuery,
     private deliveryQuery: DeliveryQuery,
-    private templateQuery: TemplateQuery
-  ) {}
+    private templateQuery: TemplateQuery,
+    store: MaterialStore
+  ) {
+    super(store)
+  }
 
   //////////////////////////////
   // CRUD MATERIAL (DELIVERY) //
   //////////////////////////////
 
   /** Returns a material to be pushed in a formGroup. */
-  public add(): Material {
+  public addMaterial(): Material {
     const id = this.db.createId();
     const newMaterial = createMaterial({ id });
     return newMaterial;
@@ -47,11 +51,11 @@ export class MaterialService {
   }
 
   /** Update materials of a delivery (materials loaded from movie). */
-  public async update(materials: Material[], delivery: Delivery) {
+  public async updateMaterials(materials: Material[], delivery: Delivery) {
     return this.db.firestore.runTransaction(async tx => {
       // NOTE: There is no way to query a collection within the transaction
       // So we accept that we can have 2 materials with the same properties in the database (race condition)
-      const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
+      const movieMaterials = await snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
 
       materials.forEach(material => {
         const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
@@ -178,7 +182,7 @@ export class MaterialService {
   /** Update materials of a delivery (materials loaded from delivery). */
   public async updateDeliveryMaterials(materials: Material[], delivery: Delivery) {
     // TODO: (ISSUE#773) We should load an update the data within a transaction.
-    const deliveryMaterials = await this.db.snapshot<Material[]>(`deliveries/${delivery.id}/materials`);
+    const deliveryMaterials = await snapshot<Material[]>(`deliveries/${delivery.id}/materials`);
     return this.db.firestore.runTransaction(async tx => {
       materials.forEach(material => {
         const materialRef = this.db.doc<Material>(`deliveries/${delivery.id}/materials/${material.id}`).ref;
