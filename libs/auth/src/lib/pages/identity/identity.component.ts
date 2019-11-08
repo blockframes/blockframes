@@ -52,7 +52,7 @@ export class IdentityComponent {
         this.form.get('newPassword').value
       );
       const uid = this.query.userId;
-      await this.service.update(uid, {
+      await this.service.update({
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
         avatar: this.form.get('avatar').value

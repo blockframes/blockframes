@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthStore, User, createUser } from './auth.store';
+import { AuthStore, User, createUser, AuthState } from './auth.store';
 import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import firebase from 'firebase';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+@CollectionConfig({ path: 'users' })
+export class AuthService extends FireAuthService<AuthState> {
   constructor(
-    private store: AuthStore,
+    protected store: AuthStore,
     private afAuth: AngularFireAuth,
-    private db: FireQuery,
+    protected db: FireQuery,
     private router: Router,
     private query: AuthQuery,
     private functions: AngularFireFunctions
-  ) {}
+  ) {
+    super(store);
+  }
 
   //////////
   // AUTH //
@@ -62,17 +66,17 @@ export class AuthService {
   }
 
   /** Basic function used to login. */
-  public async signin(email: string, password: string) {
-    await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    return this.router.navigate(['layout']);
-  }
+  // public async signin(email: string, password: string) {
+  //   await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  //   return this.router.navigate(['layout']);
+  // }
 
   /**
    * Function to sign up to the application, creating a user in both database and authentication repertory.
    * It also send a verification email to the user.
    */
-  public async signup(email: string, password: string, name: string, surname: string) {
-    const authUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  public async signupUser(email: string, password: string, name: string, surname: string) {
+    const authUser = await this.signup(email, password);
 
     const user = createUser({
       uid: authUser.user.uid,
@@ -108,9 +112,9 @@ export class AuthService {
   }
 
   /** Update a user */
-  public update(uid: string, user: Partial<User>) {
-    return this.db.doc<User>(`users/${uid}`).update(user);
-  }
+  // public update(uid: string, user: Partial<User>) {
+  //   return this.db.doc<User>(`users/${uid}`).update(user);
+  // }
 
   /** Delete the current User */
   public async delete() {
