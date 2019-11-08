@@ -40,6 +40,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
+
 // Intercom
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
