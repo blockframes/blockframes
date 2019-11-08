@@ -42,6 +42,7 @@ import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
 // Intercom
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
+import { intercomId } from '@env';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -71,7 +72,7 @@ import { IntercomAppModule } from '@blockframes/utils/intercom.module';
     NotificationWidgetModule,
 
     // Intercom
-    IntercomAppModule,
+    intercomId ? IntercomAppModule : [],
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

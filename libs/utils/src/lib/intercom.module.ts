@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Intercom, IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 function getIntercomOptions(user) {
   return user
@@ -30,17 +31,16 @@ function getIntercomOptions(user) {
 })
 export class IntercomAppModule {
 
-  constructor(
-    query: AuthQuery,
-    public intercom: Intercom,
-    ) {
-      if (intercomId) {
-        query.user$.subscribe(user => {
-          if (!user) {
-            intercom.boot(getIntercomOptions(user))
-          }
-        })
-      }
+  constructor(query: AuthQuery, public intercom: Intercom) {
+    if (intercomId) {
+      query.user$.pipe(
+        distinctUntilChanged((oldUser, newUser) => !!oldUser === !!newUser) // Trigger only when the user login/logout
+        ).subscribe(user => {
+          intercom.shutdown();  // Stop listening to the current session
+          intercom.boot(getIntercomOptions(user))
+          console.log(user);
+        }
+      )
     }
   }
-
+}
