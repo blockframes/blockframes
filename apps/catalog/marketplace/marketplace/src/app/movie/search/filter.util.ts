@@ -129,7 +129,20 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieSale[]): boolean {
+function searchbar(movie: Movie, text: string): boolean {
+  /* If searchbar is empty, return all movies */
+  if (!text) {
+    return true;
+  } else {
+    return (
+      movie.main.directors.some(
+        val => val.firstName.indexOf(text) >= 0 || val.lastName.indexOf(text) >= 0
+      ) || movie.main.title.international.indexOf(text) >= 0
+    );
+  }
+}
+
+export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSale[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
       ...filter.languages[name],
@@ -138,7 +151,8 @@ export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieS
     .every(language => hasLanguage(movie, language));
   const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
   const hasTerritory = filter.territories.every(territory => territories(movie, territory));
-  if (AFM_DISABLE) { //TODO: #1146
+  if (AFM_DISABLE) {
+    //TODO: #1146
     return (
       productionYearBetween(movie, filter.productionYear) &&
       hasEveryLanguage &&
@@ -155,6 +169,6 @@ export function filterMovie(movie: Movie,  filter: CatalogSearch, deals?: MovieS
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
       salesAgent(movie, filter.salesAgent)
-    )
+    );
   }
 }
