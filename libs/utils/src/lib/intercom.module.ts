@@ -38,7 +38,6 @@ export class IntercomAppModule {
         ).subscribe(user => {
           intercom.shutdown();  // Stop listening to the current session
           intercom.boot(getIntercomOptions(user))
-          console.log(user);
         }
       )
     }
