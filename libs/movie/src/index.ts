@@ -5,7 +5,7 @@ export * from './lib/movie/+state/movie.query';
 export * from './lib/movie/+state/movie.service';
 export * from './lib/movie/+state/movie.store';
 // Movie Guards
-export * from './lib/movie/guards/movie-organization-active.guard';
+export * from './lib/movie/guards/movie-active.guard';
 export * from './lib/movie/guards/movie-organization-list.guard';
 export * from './lib/movie/guards/movie-collection.guard';
 // Movie Modules
