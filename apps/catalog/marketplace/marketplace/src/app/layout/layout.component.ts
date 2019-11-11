@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, OnInit, ViewChild, AfterViewInit, O
 import { ContextMenuService } from '@blockframes/ui';
 import { CONTEXT_MENU, CONTEXT_MENU_AFM } from './context-menu';
 import { AFM_DISABLE } from '@env';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, throwError } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
-import { map } from 'rxjs/operators';
+import { map, catchError, retryWhen } from 'rxjs/operators';
 import { BasketQuery } from '../distribution-right/+state/basket.query';
 import { AuthService } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -20,7 +20,6 @@ import { MatSidenav } from '@angular/material';
 export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public AFM_DISABLE: boolean;
   public currentWishlist$: Observable<Wishlist>;
-  public routerNavi: Observable<number>;
   public subscription: Subscription;
 
   @ViewChild(MatSidenav, {static: false}) sidenav: MatSidenav;
@@ -49,10 +48,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   ngAfterViewInit() {
-    this.routerNavi = this.routerQuery.select('navigationId');
-    this.subscription = this.routerNavi.subscribe(() => {
-      this.sidenav.close();
-    });
+    this.subscription = this.routerQuery.select('navigationId').subscribe(() => this.sidenav.close());
   }
 
   public async logout() {

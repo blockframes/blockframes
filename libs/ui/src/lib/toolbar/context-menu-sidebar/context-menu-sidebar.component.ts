@@ -21,24 +21,5 @@ export class ContextMenuSidebarComponent implements OnInit {
 
   ngOnInit() {
     this.items$ = this.query.menu$;
-    this.nextRoute$ = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
   }
-
-  isActive(path: string, exact: boolean, nextRoute: NavigationEnd): boolean {
-
-   if(nextRoute instanceof NavigationEnd) {
-      // test if path match with next route
-      // (ie: when user clicked on nav bar link)
-      if(exact && nextRoute.url === path){
-        return true;
-      } else if(!exact && nextRoute.url.indexOf(path) === 0){
-        return true;
-      }
-    }
-
-    // if nothing above returned true, we test current route
-    // (ie: used only on first page load)
-    return this.router.isActive(this.router.createUrlTree([path]), exact);
-  }
-
 }
