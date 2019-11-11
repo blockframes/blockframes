@@ -42,7 +42,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.contextMenuService.setMenu(CONTEXT_MENU);
     }
 
-    this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
+    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
       );
     }
