@@ -36,7 +36,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.contextMenuService.setMenu(CONTEXT_MENU);
-
+    // TODO #1146
     if (!this.AFM_DISABLE) {
       this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
     } else {

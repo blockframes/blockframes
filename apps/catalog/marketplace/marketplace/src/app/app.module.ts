@@ -31,6 +31,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
 
 // Components
 import { AppComponent } from './app.component';
@@ -61,6 +62,7 @@ import { intercomId } from '@env';
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
+    MatMenuModule,
 
     // Libraries
     OrganizationModule,
