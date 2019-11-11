@@ -10,14 +10,18 @@ header {
 .searchbar {
   display: inherit;
   width: 70%;
+}
 
-  & mat-form-field {
-    width: 100%;
-  }
+mat-form-field {
+  width: 100%;
 }
 
 mat-divider {
   width: 100%;
+}
+
+.active {
+  background-color: var(--primary) !important;
 }
 
 .form-field-divider {
