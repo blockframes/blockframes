@@ -1,49 +1,4 @@
-.sidenav_container {
-  min-width: 60px;
-  height: calc(100vh - 200px);
-}
-
-.left-sidenav-header {
-  height: var(--toolbarHeight);
-}
-
-.app-icon,
-.app-icon-button {
-  border-radius: 0;
-  width: 157px;
-}
-
-.fill-remaining-space {
-  flex: 1 1 auto;
-}
-
-.mat-icon-button .mat-icon.left-chevron {
-  line-height: 12px;
-  height: 12px;
-}
-
-.apps-button {
-  margin-right: 10px;
-  border-radius: 0;
-}
-
-mat-list {
-  margin-top: 30px;
-  a {
-    text-decoration: none;
-  }
-}
-
 .see-all-link {
   padding-left: 20px;
   margin-top: 30px;
-  a {
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .mat-icon {
-    line-height: 12px;
-    height: 12px;
-  }
 }
