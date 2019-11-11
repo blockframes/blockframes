@@ -1,18 +1,18 @@
 
 <div class="sidenav_container">
-    <mat-toolbar class="mat-elevation-z2 left-sidenav-header">
-      <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
-        <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+  <mat-toolbar class="mat-elevation-z2 left-sidenav-header">
+    <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
+      <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+    </button>
+    <span class="fill-remaining-space"></span>
+    <div>
+      <button mat-icon-button (click)="sidenav.toggle();">
+        <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
       </button>
-      <span class="fill-remaining-space"></span>
-      <div>
-        <button mat-icon-button (click)="sidenav.toggle();">
-          <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
-        </button>
-      </div>
-    </mat-toolbar>
-    <mat-divider></mat-divider>
-    <section>
-      <ng-content></ng-content>
-    </section>
-  </div>
+    </div>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <section>
+    <ng-content></ng-content>
+  </section>
+</div>
