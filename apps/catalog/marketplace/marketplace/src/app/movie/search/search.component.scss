@@ -5,11 +5,30 @@ header {
   background-image: url('/assets/images/banner_empty.png');
   background-position: center center;
   background-attachment: fixed;
-  background-size: cover;
+}
+
+.searchbar {
+  display: inherit;
+  width: 70%;
+
+  & mat-form-field {
+    width: 100%;
+  }
 }
 
 mat-divider {
   width: 100%;
+}
+
+.form-field-divider {
+  width: 1px;
+  height: 36px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.select-searchbar {
+  width: 20%;
 }
 
 h2 {
@@ -66,7 +85,7 @@ section {
   article {
     width: 100%;
     mat-divider {
-      width: 65%
+      width: 65%;
     }
 
     movie-card {
@@ -119,7 +138,6 @@ section {
       width: 80%;
     }
   }
-
 }
 
 @include tablet {

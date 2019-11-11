@@ -1,6 +1,7 @@
 import { CatalogSearch } from './search.form';
 import { Movie, MovieSale } from '@blockframes/movie/movie/+state';
 import { AFM_DISABLE } from '@env';
+import startCase from 'lodash/startCase';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -130,21 +131,36 @@ function media(movie: Movie, movieMediaType: string): boolean {
 }
 
 function searchbar(movie: Movie, text: string, type: string): boolean {
-  console.log(!!text);
   /* If searchbar is empty, return all movies */
   if (!text && !type) {
     return true;
   } else if (type === 'director' && !!text) {
-    return movie.main.directors.some(val => {
-      return (
-        val.firstName.indexOf(text.toLowerCase()) >= 0 ||
-        val.lastName.indexOf(text.toLowerCase()) >= 0
-      );
-    });
+    for (const director of movie.main.directors) {
+      if (director.firstName.indexOf(startCase(text)) >= 0 || director.lastName.indexOf(startCase(text)) >= 0) {
+        return true;
+      } else {
+        /**
+         * If the user is typing the whole name of the directory 
+         * we can't be sure if he types the last name first and the first name
+         * last, so wee need to concat the names and use some regex to remove
+         * the whitespaces which might be there.
+         */
+        const concatedName =
+          director.firstName.toLowerCase().replace(/\s+/g, '') +
+          director.lastName.toLowerCase().replace(/\s+/g, '');
+        return concatedName.toLowerCase().indexOf(text.toLowerCase().replace(/\s+/g, '')) >= 0;
+      }
+    }
   } else if (type === 'title' && !!text) {
-    return movie.main.title.international.indexOf(text.toLowerCase()) >= 0;
+    const filterValue = text.toLowerCase();
+    return movie.main.title.international.toLowerCase().indexOf(filterValue) >= 0;
   } else if (type === 'keywords' && !!text) {
-    return movie.promotionalDescription.keywords.includes(text);
+    // TODO #1268 store keywords in lowercase in DB so we dont need starCase form lodash
+    for (const word of movie.promotionalDescription.keywords) {
+      if (word.indexOf(startCase(text)) >= 0) {
+        return true;
+      }
+    }
   } else {
     /* We still want to return every movie when type is not defined */
     return true;

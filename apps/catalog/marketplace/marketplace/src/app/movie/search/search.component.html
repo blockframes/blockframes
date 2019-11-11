@@ -1,31 +1,45 @@
 <div test-id="content">
+  <!-- TODO #1146 header stays? -->
   <header class="banner" fxLayout="column" fxLayoutAlign="center center" fxLayoutAlign.xs="center center"
     fxLayoutGap="20px">
     <h3>Find the content you're looking for</h3>
-    <form [formGroup]="searchbarForm" fxLayout="column" fxLayoutAlign="center center">
-      <mat-form-field appearance="outline">
-        <mat-label>
-          Find a content
-        </mat-label>
-        <span fxLayout="row nowrap" fxLayoutAlign="space-between center">
-          <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
-            [matAutocomplete]="searchbar">
-          <mat-select placeholder="Search by ..." formControlName="type">
-            <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}</mat-option>
-          </mat-select>
-          <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
-            <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
-              {{ result }}
-            </mat-option>
-          </mat-autocomplete>
-          <button mat-icon-button matSuffix>
-            <mat-icon>search</mat-icon>
-          </button>
-        </span>
-      </mat-form-field>
-    </form>
-    <mat-hint *ngIf="searchbarForm.dirty && searchbarForm.value.text">You must select a value from the dropdown menu
-    </mat-hint>
+    <div class="searchbar">
+      <form [formGroup]="searchbarForm">
+        <mat-form-field appearance="outline">
+          <mat-label>
+            Find a content
+          </mat-label>
+          <span fxLayout="row nowrap" fxLayoutAlign="end center">
+            <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
+              [matAutocomplete]="searchbar">
+            <ng-container *ngIf="isMobile">
+              <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
+              <mat-select placeholder="Search by ..." formControlName="type" class="select-searchbar"
+                disableOptionCentering>
+                <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
+                <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
+                  {{ result }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
+            </ng-container>
+            <button mat-icon-button matSuffix>
+              <mat-icon>search</mat-icon>
+            </button>
+          </span>
+        </mat-form-field>
+      </form>
+    </div>
+    <ng-container *ngIf="!isMobile">
+      <mat-chip-list fxLayout="row" fxLayoutGap="5px">
+        <mat-chip *ngFor="let option of searchbarOptions" [value]="option" (click)="selechtSearchType(option)"
+          [color]="activatedType(option)" selectable>{{ option | titlecase }}
+        </mat-chip>
+      </mat-chip-list>
+    </ng-container>
   </header>
 
   <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
@@ -346,10 +360,10 @@
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
         <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
         </movie-display-list>
-        <span fxLayout="row" fxLayoutAlign="end start">
-          <h6>There are {{ availableMovies }} movies available!</h6>
-        </span>
       </div>
+      <span fxLayout="row" fxLayoutAlign="end start">
+        <h6>There are {{ availableMovies }} movies available!</h6>
+      </span>
     </article>
   </section>
 </div>
