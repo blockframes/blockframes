@@ -136,7 +136,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public matcher = new ControlErrorStateMatcher();
 
-  public isMobile: boolean = window.innerWidth > 599;
+  public isMobile: boolean = window.innerWidth <= 599;
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
@@ -510,14 +510,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public selechtSearchType(value: string) {
     this.searchbarForm.get('type').setValue(value);
-  }
-
-  public activatedType(value: string): string{
-    console.log(value === this.searchbarForm.get('type').value);
-    if(value === this.searchbarForm.get('type').value){
-      return 'accent !important'
-    }
-    return null
   }
 
   ngOnDestroy() {
