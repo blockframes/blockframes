@@ -130,41 +130,53 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-function searchbar(movie: Movie, text: string, type: string): boolean {
+/**
+ * @description filtering function for the searchbar in the header of the movie search page
+ * @param movie current movie to filter on,
+ * @param text the string that got input in the searchbar
+ * @param type determine for what properties we should search
+ */
+function textSearch(movie: Movie, text: string, type: string): boolean {
   /* If searchbar is empty, return all movies */
-  if (!text && !type) {
-    return true;
-  } else if (type === 'director' && !!text) {
-    for (const director of movie.main.directors) {
-      if (director.firstName.indexOf(startCase(text)) >= 0 || director.lastName.indexOf(startCase(text)) >= 0) {
-        return true;
-      } else {
-        /**
-         * If the user is typing the whole name of the directory 
-         * we can't be sure if he types the last name first and the first name
-         * last, so wee need to concat the names and use some regex to remove
-         * the whitespaces which might be there.
-         */
-        const concatedName =
-          director.firstName.toLowerCase().replace(/\s+/g, '') +
-          director.lastName.toLowerCase().replace(/\s+/g, '');
-        return concatedName.toLowerCase().indexOf(text.toLowerCase().replace(/\s+/g, '')) >= 0;
-      }
-    }
-  } else if (type === 'title' && !!text) {
-    const filterValue = text.toLowerCase();
-    return movie.main.title.international.toLowerCase().indexOf(filterValue) >= 0;
-  } else if (type === 'keywords' && !!text) {
-    // TODO #1268 store keywords in lowercase in DB so we dont need starCase form lodash
-    for (const word of movie.promotionalDescription.keywords) {
-      if (word.indexOf(startCase(text)) >= 0) {
-        return true;
-      }
-    }
-  } else {
-    /* We still want to return every movie when type is not defined */
+  if (!text || !type) {
     return true;
   }
+  switch (type) {
+    case 'director':
+      for (const director of movie.main.directors) {
+        if (
+          director.firstName.includes(startCase(text)) ||
+          director.lastName.includes(startCase(text))
+        ) {
+          return true;
+        } else {
+          /**
+           * If the user is typing the whole name of the directory
+           * we can't be sure if he types the last name first and the first name
+           * last, so wee need to concat the names and use some regex to remove
+           * the whitespaces which might be there.
+           */
+          const concatedName = concatingStrings(director.firstName, director.lastName);
+          return concatedName.toLowerCase().includes(text.toLowerCase().replace(/\s+/g, ''));
+        }
+      }
+      break;
+    case 'title':
+      const filterValue = text.toLowerCase();
+      return movie.main.title.international.toLowerCase().includes(filterValue);
+    case 'keywords':
+      for (const word of movie.promotionalDescription.keywords) {
+        // TODO #1268 store keywords in lowercase in DB so we dont need starCase form lodash
+        if (word.includes(startCase(text))) {
+          return true;
+        }
+      }
+      break;
+  }
+}
+
+function concatingStrings(first: string, last: string): string {
+  return first.replace(/\s+/g, '') + last.replace(/\s+/g, '');
 }
 
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSale[]): boolean {
@@ -194,7 +206,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSa
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
       salesAgent(movie, filter.salesAgent) &&
-      searchbar(movie, filter.searchbar.text, filter.searchbar.type)
+      textSearch(movie, filter.searchbar.text, filter.searchbar.type)
     );
   }
 }
