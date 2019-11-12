@@ -1,6 +1,6 @@
 
 import { firestore } from "firebase/app";
-import { CatalogBasket } from "@blockframes/marketplace";
+
 type Timestamp = firestore.Timestamp;
 
 
@@ -8,7 +8,7 @@ type Timestamp = firestore.Timestamp;
 interface OrganizationRaw<D> {
   id: string;
   name: string;
-  addresses: Addresses;
+  addresses: AddressSet;
   email: string;
   created: D;
   updated: D;
@@ -32,7 +32,7 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
-export interface Addresses {
+export interface AddressSet {
   main: Address,
   billing?: Address,
   office?: Address,
@@ -76,9 +76,11 @@ export function createOrganizationDocument(
   params: Partial<OrganizationDocument> = {}
 ): OrganizationDocument {
   const org = createOrganizationRaw(params);
-  org.created = firestore.Timestamp.now();
-  org.updated = firestore.Timestamp.now();
-  return org as OrganizationDocument;
+  return {
+    ...org,
+    created: firestore.Timestamp.now(),
+    updated: firestore.Timestamp.now()
+  } as OrganizationDocument
 }
 
 /** A factory function that creates an OrganizationDocument. */
@@ -91,21 +93,21 @@ export function createOrganizationRaw(
     email: '',
     fiscalNumber: '',
     activity: '',
-    addresses: createAddresses(),
+    addresses: createAddressSet(),
     status: OrganizationStatus.pending,
     userIds: [],
     movieIds: [],
     templateIds: [],
-    created: firestore.Timestamp.now(), // default is timestamp
-    updated: firestore.Timestamp.now(), // default is timestamp
+    created: new Date(),
+    updated: new Date(),
     logo: PLACEHOLDER_LOGO,
     wishlist: [],
     ...params
   };
 }
 
-/** A factory function that creates Organization Addresses */
-export function createAddresses(params: Partial<Addresses> = {}): Addresses {
+/** A factory function that creates Organization AddressSet */
+export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   return {
     main: createAddress(params.main),
     ...params

@@ -1,7 +1,7 @@
 import { FormControl, Validators } from "@angular/forms";
 import { FormEntity, UniqueOrgName } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
-import { Addresses, createAddresses, Address, createAddress } from "@blockframes/organization/types";
+import { AddressSet, createAddressSet, Address, createAddress } from "@blockframes/organization/types";
 
 function createOrganizationFormControl(service: OrganizationService, params?: Organization) {
   const organization = createOrganization(params);
@@ -30,8 +30,8 @@ export class OrganizationForm extends FormEntity<OrganizationFormControl> {
   }
 }
 
-function createOrganizationAddressesControls(addresses : Partial<Addresses> = {}) {
-  const entity = createAddresses(addresses);
+function createOrganizationAddressesControls(addresses : Partial<AddressSet> = {}) {
+  const entity = createAddressSet(addresses);
   return {
     main: new AddressForm(entity.main)
   }
@@ -40,7 +40,7 @@ function createOrganizationAddressesControls(addresses : Partial<Addresses> = {}
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
-  constructor(addresses: Addresses) {
+  constructor(addresses: AddressSet) {
     super(createOrganizationAddressesControls(addresses));
   }
 

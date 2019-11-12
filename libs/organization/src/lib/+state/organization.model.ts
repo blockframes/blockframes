@@ -63,14 +63,14 @@ export interface OrganizationAction {
   approvalDate?: string;
 }
 
-export interface OrganizationWithTimestamps extends OrganizationDocument { 
+export interface OrganizationWithTimestamps extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[];
 }
 
-export interface Organization extends OrganizationDocumentWithDates { 
+export interface Organization extends OrganizationDocumentWithDates {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
@@ -95,15 +95,18 @@ export function createOrganization(
   params: Partial<Organization> = {}
 ): Organization {
   const org = createOrganizationRaw(params) as Organization;
-  // Here, "created" & "updated" fields are Date objects
-  org.created = new Date();
-  org.updated = new Date();
-  // Init "akita" fields
-  org.baskets = [];
-  org.members = [];
-  org.actions = [];
-  org.operations = [];
-  return org;
+
+  return {
+    ...org,
+    // Here, "created" & "updated" fields are Date objects
+    created: new Date(),
+    updated: new Date(),
+    // Init "akita" fields
+    baskets: [],
+    members: [],
+    actions: [],
+    operations: [],
+  }
 }
 
 export function createOperation(
