@@ -8,11 +8,10 @@
       <form [formGroup]="searchbarForm">
         <mat-form-field appearance="outline">
           <mat-label>Find a content</mat-label>
-          <div fxLayout="row nowrap" fxLayoutAlign="end center">
+          <div fxLayout="row nowrap" fxLayoutAlign="end center" class="input-form">
             <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
               [matAutocomplete]="searchbar" #autoCompleteInput>
-            <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
-            <mat-select placeholder="Search by ..." formControlName="type" class="select-searchbar"
+            <mat-select placeholder="Search by ..." formControlName="type" class="searchbar-select"
               (openedChange)="toggleAutoCompletion()" required>
               <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}
               </mat-option>
@@ -22,7 +21,6 @@
                 {{ result }}
               </mat-option>
             </mat-autocomplete>
-            <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
             <button mat-icon-button matSuffix>
               <mat-icon>search</mat-icon>
             </button>
@@ -49,7 +47,7 @@
       </form>
       <mat-chip-list fxLayout="row" fxLayoutGap="5px">
         <mat-chip *ngFor="let option of searchbarOptions" [value]="option"
-          [ngClass]="{'active': option === searchbarForm.get('type').value}" (click)="selectSearchType(option)">
+          [ngClass]="{'active': option === searchbarTypeForm.value}" (click)="selectSearchType(option)">
           {{ option | titlecase }}
         </mat-chip>
       </mat-chip-list>

@@ -178,7 +178,7 @@ function textSearch(movie: Movie, text: string, type: string): boolean {
 function concatingStrings(first: string, last: string): string {
   return first.replace(/\s+/g, '') + last.replace(/\s+/g, '');
 }
-
+// TODO #1271 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSale[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
