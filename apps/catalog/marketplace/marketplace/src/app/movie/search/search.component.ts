@@ -1,17 +1,20 @@
 // Angular
 import { Router } from '@angular/router';
-import { Validators } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  MatAutocompleteSelectedEvent,
+  MatAutocomplete,
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding,
-  OnDestroy
+  HostBinding
 } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
 import {
@@ -35,7 +38,7 @@ import {
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -43,6 +46,7 @@ import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import flatten from 'lodash/flatten';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -50,7 +54,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit, OnDestroy {
+export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /* Observable of all movies */
@@ -59,6 +63,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
 
+  /* Variables for searchbar autocompletion */
+  public allDirectors: string[] = [];
+  public allTitles: string[];
+  public allKeywords: string[];
+
   /* Observables on the languages selected */
   public languages$ = this.filterForm.valueChanges.pipe(
     startWith(this.filterForm.value),
@@ -66,10 +75,13 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   );
 
   /* Array of sorting options */
-  public sortOptions: string[] = ['All films', 'Title', 'Director', /* 'Production Year' #1146 */];
+  public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
 
   /* Flag to indicate either the movies should be presented as a card or a list */
   public listView: boolean;
+
+  /* Array of searchbar options */
+  public searchbarOptions: string[] = ['director', 'title', 'keywords'];
 
   /* Data for UI */
   public movieGenres: GenresLabel[] = GENRES_LABEL;
@@ -78,10 +90,11 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public movieMedias: MediasLabel[] = MEDIAS_LABEL;
 
   /* Filter for autocompletion */
-  public genresFilter: Observable<string[]>;
-  public territoriesFilter: Observable<string[]>;
-  public languagesFilter: Observable<string[]>;
-  public salesAgentFilter: Observable<string[]>;
+  public genresFilter$: Observable<string[]>;
+  public territoriesFilter$: Observable<string[]>;
+  public languagesFilter$: Observable<string[]>;
+  public salesAgentFilter$: Observable<string[]>;
+  public resultFilter$: Observable<any[]>;
 
   /* Individual form controls for filtering */
   public genreControl: FormControl = new FormControl('');
@@ -92,6 +105,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public territoryControl: FormControl = new FormControl('');
   public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
+  public searchbarTextControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
   private sortBy$ = this.sortByControl.valueChanges.pipe(
@@ -108,7 +122,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
   public salesAgents: string[] = [];
-  private salesAgentsSub: Subscription;
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
@@ -127,14 +140,19 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public matcher = new ControlErrorStateMatcher();
 
+  public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
+
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
+  autoComplete: MatAutocompleteTrigger;
 
   constructor(
     private movieQuery: MovieQuery,
     private router: Router,
     private movieService: MovieService,
     private basketService: BasketService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit() {
@@ -149,52 +167,52 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
         } else {
           //TODO #1146 : remove the two line for movieGenres
           const removeGenre = ['TV Show', 'Web Series'];
-          this.movieGenres= this.movieGenres.filter(value => !removeGenre.includes(value));
-          return movies.filter(movie => {
-            return filterMovie(movie, filterOptions);
-          });
+          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
+          return movies.filter(movie => filterMovie(movie, filterOptions));
         }
       }),
-      tap(movies => (this.availableMovies = movies.length))
-    );
-
-    this.salesAgentsSub = this.movieQuery.selectAll().pipe(
       tap(movies => {
         movies.forEach(movie => {
-          if (
-            !!movie.salesAgentDeal.salesAgent &&
-            !!movie.salesAgentDeal.salesAgent.displayName &&
-            !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
-          )
+          if (!this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
             this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
-        })
+          }
+        });
+        this.availableMovies = movies.length;
+        this.allTitles = movies.map(movie => movie.main.title.international);
+        this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
+        this.allDirectors = flatten(
+          movies.map(movie =>
+            movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+          )
+        );
       })
-    ).subscribe()
-
-    this.genresFilter = this.genreControl.valueChanges.pipe(
-      startWith(''),
-      map(genre =>
-        genre ? this._genreFilter(genre) : this.movieGenres
-      )
     );
 
-    this.languagesFilter = this.languageControl.valueChanges.pipe(
+    this.genresFilter$ = this.genreControl.valueChanges.pipe(
+      startWith(''),
+      map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
+    );
+
+    this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       map(value => this._languageFilter(value))
     );
 
-    this.territoriesFilter = this.territoryControl.valueChanges.pipe(
+    this.territoriesFilter$ = this.territoryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
     );
 
-    this.salesAgentFilter = this.salesAgentControl.valueChanges.pipe(
+    this.salesAgentFilter$ = this.salesAgentControl.valueChanges.pipe(
       startWith(''),
-      map(salesAgent =>
-        salesAgent ? this._salesAgentsfilter(salesAgent) : this.salesAgents
-      )
+      map(salesAgent => (salesAgent ? this._salesAgentsFilter(salesAgent) : this.salesAgents))
+    );
+    this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
+      startWith(''),
+      tap(value => this.searchbarForm.get('text').setValue(value)),
+      map(value => this._resultFilter(value))
     );
   }
 
@@ -204,6 +222,18 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public get getCurrentYear(): number {
     return new Date().getFullYear();
+  }
+
+  public get searchbarForm(): FormGroup {
+    return this.filterForm.get('searchbar');
+  }
+
+  public get searchbarTypeForm() {
+    return this.filterForm.get('searchbar').get('type');
+  }
+
+  public toggleAutoCompletion() {
+    this.autoComplete.closePanel();
   }
 
   /**
@@ -242,6 +272,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   // Filter section //
   ////////////////////
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _genreFilter(genre: string): string[] {
     const filterValue = genre.toLowerCase();
     return GENRES_LABEL.filter(movieGenre => {
@@ -249,6 +283,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
     return TERRITORIES_LABEL.filter(movieTerritory => {
@@ -256,13 +294,38 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _languageFilter(value: string): string[] {
     return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
-  private _salesAgentsfilter(value: string): string[] {
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
+  private _salesAgentsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0)
+    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().includes(filterValue));
+  }
+
+  /**
+   * @description returns an array of strings for the autocompletion component.
+   * Also we need to distinguish on what type the user want to have his results
+   * @param value string which got typed in into an input field
+   */
+  private _resultFilter(value: string): string[] {
+    if (this.searchbarTypeForm.value === 'title') {
+      return this.allTitles.filter(title => title.toLowerCase().includes(value.toLowerCase()));
+    } else if (this.searchbarTypeForm.value === 'keywords') {
+      return this.allKeywords.filter(word => word.toLowerCase().includes(value.toLowerCase()));
+    } else if (this.searchbarTypeForm.value === 'director') {
+      return this.allDirectors.filter(director => {
+        return director.toLowerCase().includes(value.toLowerCase());
+      });
+    }
   }
 
   //////////////////
@@ -429,15 +492,31 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public addToWishlist(movie: Movie) {
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been added to your selection.`,
+      'close',
+      { duration: 2000 }
+    );
   }
 
   public removeFromWishlist(movie: Movie) {
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been removed from your selection.`,
+      'close',
+      { duration: 2000 }
+    );
   }
 
-  ngOnDestroy() {
-    this.salesAgentsSub.unsubscribe();
+  public addSearchbarValue(value: MatAutocompleteSelectedEvent) {
+    this.searchbarForm.get('text').setValue(value.option.viewValue);
+  }
+
+  public selectSearchType(value: any) {
+    if (this.searchbarForm.value !== value) {
+      this.searchbarTypeForm.setValue(value);
+    } else {
+      this.searchbarTypeForm.setValue('');
+    }
   }
 }

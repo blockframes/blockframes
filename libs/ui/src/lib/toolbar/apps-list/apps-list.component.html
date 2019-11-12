@@ -1,0 +1,14 @@
+<section *ngIf="AFM_DISABLE">
+  <mat-list>
+    <div fxHide.xs>
+      <h3 mat-subheader>DApps</h3>
+      <a *ngFor="let app of apps" mat-list-item [href]="app.href">
+        <img mat-list-icon [src]="app.logo">
+        <h4 mat-line>{{ app.name }}</h4>
+      </a>
+    </div>
+    <div class="see-all-link">
+      <a href="/"><span>See all DApps</span><mat-icon svgIcon="arrowRight"></mat-icon></a>
+    </div>
+  </mat-list>
+</section>

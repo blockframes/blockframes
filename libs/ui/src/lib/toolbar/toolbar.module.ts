@@ -4,6 +4,9 @@ import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { FooterComponent } from './footer/footer.component';
+import { CatalogLeftMenuComponent } from './catalog-left-menu/catalog-left-menu.component';
+import { ContextMenuSidebarComponent } from './context-menu-sidebar/context-menu-sidebar.component';
+import { AppsListComponent } from './apps-list/apps-list.component';
 
 //Modules
 import { RouterModule } from '@angular/router';
@@ -53,11 +56,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ContextMenuComponent,
     LeftMenuComponent,
     FooterComponent,
+    CatalogLeftMenuComponent,
+    ContextMenuSidebarComponent,
+    AppsListComponent
   ],
   exports: [
     HeaderComponent,
     LeftMenuComponent,
-    FooterComponent
+    FooterComponent,
+    CatalogLeftMenuComponent,
+    ContextMenuSidebarComponent,
+    AppsListComponent
   ]
 })
 export class ToolbarModule {}

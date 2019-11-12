@@ -2,24 +2,57 @@
 
 header {
   padding: 100px 0;
-  background-image: url('/assets/images/catalog-marketplace-banner.png');
+  background-image: url('/assets/images/banner_empty.png');
   background-position: center center;
   background-attachment: fixed;
-  background-size: cover;
+}
+
+.searchbar-section {
+  display: inherit;
+  width: 70%;
+}
+
+.searchbar-header {
+  text-align: center;
+}
+
+mat-form-field {
+  width: 100%;
 }
 
 mat-divider {
   width: 100%;
 }
 
+.mat-chip.active {
+  background-color: var(--primary);
+}
+
 h2 {
   white-space: nowrap;
+}
+
+.input-form {
+  display: block;
+  height: 100%;
+}
+
+.searchbar-select {
+  border-left: 1px solid var(--lightGrey);
+  border-right: 1px solid var(--lightGrey);
+  padding: 10px;
+  height: 100%;
+  width: 20%;
 }
 
 movie-card {
   height: 390px;
   width: 310px;
   margin: 15px;
+}
+
+form {
+  width: 100%;
 }
 
 section {
@@ -62,7 +95,7 @@ section {
   article {
     width: 100%;
     mat-divider {
-      width: 65%
+      width: 65%;
     }
 
     movie-card {
@@ -115,7 +148,6 @@ section {
       width: 80%;
     }
   }
-
 }
 
 @include tablet {

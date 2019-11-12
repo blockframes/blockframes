@@ -1,0 +1,14 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <button test-id="home" mat-button routerLink="/layout" aria-label="Archipel Content Logo">
+    <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+  </button>
+  <div>
+    <button mat-icon-button (click)="sidenav.toggle();" aria-label="toggle button">
+      <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-divider></mat-divider>
+<section>
+  <ng-content></ng-content>
+</section>

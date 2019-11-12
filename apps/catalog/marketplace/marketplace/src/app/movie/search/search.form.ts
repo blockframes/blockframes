@@ -49,6 +49,10 @@ export interface CatalogSearch {
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
   territories: TerritoriesLabel[];
+  searchbar: {
+    text: string;
+    type: string;
+  };
 }
 
 /* ------------- */
@@ -77,6 +81,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     certifications: [],
     medias: [],
     territories: [],
+    searchbar: {},
     ...search
   } as CatalogSearch;
 }
@@ -132,7 +137,11 @@ function createCatalogSearchControl(search: CatalogSearch) {
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),
-    territories: new FormArray(search.territories.map(territory => new FormControl(territory)))
+    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    searchbar: new FormGroup({
+      text: new FormControl(''),
+      type: new FormControl('')
+    })
   };
 }
 export type CatalogSearchControl = ReturnType<typeof createCatalogSearchControl>;
@@ -193,7 +202,9 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   removeStatus(status: MovieStatusSlug) {
     if (MOVIE_STATUS_SLUG.includes(status)) {
-      const newControls = this.get('status').value.filter(statusToRemove => statusToRemove !== status);
+      const newControls = this.get('status').value.filter(
+        statusToRemove => statusToRemove !== status
+      );
       this.get('status').setValue(newControls);
     } else {
       throw new Error(`The production status ${status} was not found!`);
@@ -214,7 +225,9 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   }
 
   removeSalesAgent(salesAgent: string) {
-    const newControls = this.get('salesAgent').value.filter(salesAgentToRemove => salesAgentToRemove !== salesAgent);
+    const newControls = this.get('salesAgent').value.filter(
+      salesAgentToRemove => salesAgentToRemove !== salesAgent
+    );
     this.get('salesAgent').setValue(newControls);
   }
 
