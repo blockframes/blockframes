@@ -10,13 +10,14 @@ import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder 
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
+import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -54,7 +55,10 @@ export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Deliver
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryService {
+@CollectionConfig({
+  path: 'deliveries'
+})
+export class DeliveryService extends CollectionService<DeliveryState> {
   constructor(
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
@@ -65,8 +69,11 @@ export class DeliveryService {
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    private db: FireQuery
-  ) {}
+    protected db: FireQuery,
+    protected store: DeliveryStore
+  ) {
+    super(store);
+  }
 
   ///////////////////////////
   // Document manipulation //

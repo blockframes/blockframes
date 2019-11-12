@@ -1,6 +1,7 @@
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Delivery } from './delivery.model';
+import { CollectionState } from 'akita-ng-fire';
 
 export const enum DeliveryOption {
   mustChargeMaterials = 'mustChargeMaterials',
@@ -27,7 +28,7 @@ export interface DeliveryWizard {
   options: DeliveryOption[];
 }
 
-export interface DeliveryState extends EntityState<Delivery>, ActiveState<string> {
+export interface DeliveryState extends CollectionState<Delivery> {
   wizard?: DeliveryWizard;
 }
 
