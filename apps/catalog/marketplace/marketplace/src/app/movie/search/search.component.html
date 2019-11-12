@@ -13,7 +13,7 @@
               [matAutocomplete]="searchbar" #autoCompleteInput>
             <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
             <mat-select placeholder="Search by ..." formControlName="type" class="select-searchbar"
-              (openedChange)="toggleAutoCompletion()">
+              (openedChange)="toggleAutoCompletion()" required>
               <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}
               </mat-option>
             </mat-select>
@@ -30,6 +30,7 @@
         </mat-form-field>
       </form>
     </div>
+    <mat-hint>Please choose a value from the selection</mat-hint>
   </ng-container>
   <!-- Mobile version -->
   <ng-container *ngIf="isMobile">
