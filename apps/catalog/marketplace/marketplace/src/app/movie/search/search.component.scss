@@ -7,9 +7,13 @@ header {
   background-attachment: fixed;
 }
 
-.searchbar {
+.searchbar-section {
   display: inherit;
   width: 70%;
+}
+
+.searchbar-header{
+  text-align: center;
 }
 
 mat-form-field {
@@ -20,8 +24,8 @@ mat-divider {
   width: 100%;
 }
 
-.active {
-  background-color: var(--primary) !important;
+.mat-chip.active {
+  background-color: var(--primary);
 }
 
 .form-field-divider {

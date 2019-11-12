@@ -11,6 +11,7 @@ import {
   HostBinding,
   OnDestroy
 } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
 import {
@@ -42,6 +43,7 @@ import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import flatten from 'lodash/flatten';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -60,8 +62,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   /* Variables for searchbar autocompletion */
   public allDirectors: string[] = [];
-  public allTitles: string[] = [];
-  public allKeywords: string[] = [];
+  public allTitles: string[];
+  public allKeywords: string[];
 
   /* Observables on the languages selected */
   public languages$ = this.filterForm.valueChanges.pipe(
@@ -136,7 +138,7 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public matcher = new ControlErrorStateMatcher();
 
-  public isMobile: boolean = window.innerWidth <= 599;
+  public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
@@ -145,7 +147,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     private router: Router,
     private movieService: MovieService,
     private basketService: BasketService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit() {
@@ -168,19 +171,18 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
       }),
       tap(movies => {
         this.availableMovies = movies.length;
+        this.allTitles = movies.map(movie => movie.main.title.international);
+        this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
         movies.forEach(movie => {
           /*
            * If a director worked on several movies, we don't want to show
            * him in the autocompletion twice or more. Same for the other values
            */
-          if (!this.allTitles.includes(movie.main.title.international)) {
-            this.allTitles.push(movie.main.title.international);
-          }
           movie.main.directors.forEach(director => {
             /**
-             * We need to combine these two properties otherwise we will get a hell
-             * of problems. For instance we want to show the directors name in the searchbar
-             * and this is only possible with a string value.
+             * We need to combine these two properties otherwise we won't be able
+             * to show it in the mat autocompletion. For instance we want to show
+             * the directors name in the searchbar and this is only possible with a string value.
              */
             if (!this.allDirectors.includes(`${director.firstName} ${director.lastName}`)) {
               this.allDirectors.push(`${director.firstName} ${director.lastName}`);
@@ -287,6 +289,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   // Filter section //
   ////////////////////
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _genreFilter(genre: string): string[] {
     const filterValue = genre.toLowerCase();
     return GENRES_LABEL.filter(movieGenre => {
@@ -294,6 +300,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
     return TERRITORIES_LABEL.filter(movieTerritory => {
@@ -301,10 +311,18 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _languageFilter(value: string): string[] {
     return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
   }
 
+  /**
+   * @description returns an array of strings for the autocompletion component
+   * @param value string which got typed in into an input field
+   */
   private _salesAgentsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.salesAgents.filter(
@@ -312,14 +330,19 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _resultFilter(value: string) {
+  /**
+   * @description returns an array of strings for the autocompletion component.
+   * Also we need to distinguish on what type the user want to have his results
+   * @param value string which got typed in into an input field
+   */
+  private _resultFilter(value: string): string[] {
     if (this.searchbarForm.get('type').value === 'title') {
-      return this.allTitles.filter(title => title.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+      return this.allTitles.filter(title => title.toLowerCase().includes(value.toLowerCase()));
     } else if (this.searchbarForm.get('type').value === 'keywords') {
-      return this.allKeywords.filter(word => word.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+      return this.allKeywords.filter(word => word.toLowerCase().includes(value.toLowerCase()));
     } else if (this.searchbarForm.get('type').value === 'director') {
       return this.allDirectors.filter(director => {
-        return director.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        return director.toLowerCase().includes(value.toLowerCase());
       });
     }
   }
@@ -508,8 +531,12 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     this.searchbarForm.get('text').setValue(value.option.viewValue);
   }
 
-  public selechtSearchType(value: string) {
-    this.searchbarForm.get('type').setValue(value);
+  public selectSearchType(value: any) {
+    if (this.searchbarForm.get('type').value !== value) {
+      this.searchbarForm.get('type').setValue(value);
+    } else {
+      this.searchbarForm.get('type').setValue('');
+    }
   }
 
   ngOnDestroy() {
