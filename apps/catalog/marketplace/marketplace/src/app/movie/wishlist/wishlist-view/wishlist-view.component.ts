@@ -25,11 +25,11 @@ export class WishlistViewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
+    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
+      map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
     );
-    this.wishlists$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.filter(wishlist => wishlist.status === WishlistStatus.sent))
+    this.wishlists$ = this.basketQuery.wishlistWithMovies$.pipe(
+      map(wishlist => wishlist.filter(wish => wish.status === WishlistStatus.sent))
     );
   }
 

@@ -1,9 +1,21 @@
 import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
-import { OrganizationDocument, WishlistWithDates } from './organization.firestore';
+import {
+  OrganizationDocumentWithDates,
+  WishlistDocumentWithDates,
+  OrganizationDocument,
+  OrganizationStatus,
+  WishlistDocument
+} from './organization.firestore';
 import { Movie } from '@blockframes/movie';
-export { OrganizationStatus, createOrganization, WishlistStatus } from './organization.firestore';
+export {
+  OrganizationStatus,
+  WishlistStatus,
+  OrganizationDocument,
+  createOrganizationDocument
+} from './organization.firestore';
+
 export const enum AppStatus {
   none = 'none', // no request nor accept.
   requested = 'requested',
@@ -51,14 +63,22 @@ export interface OrganizationAction {
   approvalDate?: string;
 }
 
-export interface Organization extends OrganizationDocument {
+export interface OrganizationWithTimestamps extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
 }
 
-export interface Wishlist extends WishlistWithDates {
+export interface Organization extends OrganizationDocumentWithDates {
+  members?: OrganizationMember[];
+  operations?: OrganizationOperation[];
+  actions?: OrganizationAction[];
+  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
+  wishlist: Wishlist[];
+}
+
+export interface Wishlist extends WishlistDocumentWithDates {
   movies?: Movie[];
 }
 
@@ -71,6 +91,31 @@ export interface PublicOrganization {
   name: string;
 }
 
+/** A factory function that creates an Organization. */
+export function createOrganization(params: Partial<Organization> = {}): Organization {
+  return {
+    id: !!params.id ? params.id : '',
+    name: '',
+    email: '',
+    fiscalNumber: '',
+    activity: '',
+    phoneNumber: '',
+    address: '',
+    officeAddress: '',
+    status: OrganizationStatus.pending,
+    userIds: [],
+    movieIds: [],
+    templateIds: [],
+    created: Date.now(),
+    updated: Date.now(),
+    logo: PLACEHOLDER_LOGO,
+    catalog: null,
+    wishlist: [],
+    baskets: [],
+    ...params
+  };
+}
+
 export function createOperation(
   operation: Partial<OrganizationOperation> = {}
 ): OrganizationOperation {
@@ -79,4 +124,28 @@ export function createOperation(
     members: [],
     ...operation
   } as OrganizationOperation;
+}
+
+/** Convert an OrganizationWithTimestamps to an Organization (that uses Date). */
+export function convertOrganizationWithTimestampsToOrganization(
+  org: OrganizationWithTimestamps
+): Organization {
+  return { ...org, wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist) };
+}
+
+/** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
+export function convertWishlistDocumentToWishlistDocumentWithDate(
+  wishlist: WishlistDocument[]
+): WishlistDocumentWithDates[] {
+  if (!wishlist) {
+    return [];
+  }
+
+  return wishlist.map(wish => {
+    if (!!wish.sent) {
+      return { ...wish, sent: wish.sent.toDate() };
+    } else {
+      return { ...wish, sent: null };
+    }
+  });
 }

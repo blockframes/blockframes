@@ -24,7 +24,7 @@ export class LoginViewComponent {
     private service: AuthService,
     private query: AuthQuery,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   public async signin(signinForm: SigninForm) {

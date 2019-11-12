@@ -3,7 +3,7 @@ import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
 export { MovieDocument } from '@blockframes/movie/types';
-export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
+export { OrganizationDocument, OrganizationStatus, createOrganizationDocument } from '@blockframes/organization/types';
 export {
   InvitationDocument,
   InvitationOrUndefined,

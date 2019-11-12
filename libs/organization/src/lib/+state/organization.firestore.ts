@@ -4,7 +4,7 @@ type Timestamp = firestore.Timestamp;
 
 
 /** Document model of an Organization */
-export interface OrganizationDocument {
+interface OrganizationRaw<D> {
   id: string;
   name: string;
   address: string;
@@ -22,8 +22,12 @@ export interface OrganizationDocument {
   fiscalNumber: string;
   activity: string;
   // TODO: issue#1202 Review model of Wishlist (name, date...)
-  wishlist: WishlistWithDates[];
+  wishlist: WishlistRaw<D>[];
 }
+
+export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
+
+export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> {}
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const enum OrganizationStatus {
@@ -38,7 +42,7 @@ export interface WishlistRaw<D> {
 }
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
-export interface WishlistWithDates extends WishlistRaw<Date> { }
+export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
 
 
 export const enum WishlistStatus {
@@ -55,8 +59,8 @@ export interface PublicOrganization {
   name: string;
 }
 
-/** A factory function that creates an Organization. */
-export function createOrganization(
+/** A factory function that creates an OrganizationDocument. */
+export function createOrganizationDocument(
   params: Partial<OrganizationDocument> = {}
 ): OrganizationDocument {
   return {

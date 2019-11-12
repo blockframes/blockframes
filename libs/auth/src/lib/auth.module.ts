@@ -64,9 +64,8 @@ export const AuthRoutes: Routes = [
     // Fire
     AngularFireAuthModule,
     AngularFirePerformanceModule,
-
     RouterModule.forChild(AuthRoutes),
-    UiFormModule
+    UiFormModule,
   ],
   declarations: [
     LoginViewComponent,

@@ -26,14 +26,16 @@ export class LayoutComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.contextMenuService.setMenu(CONTEXT_MENU);
+
     if (!this.AFM_DISABLE) {
       this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
     } else {
       this.contextMenuService.setMenu(CONTEXT_MENU);
     }
 
-    this.currentWishlist$ = this.basketQuery.wishlistsWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
+    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
+      map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
     );
   }
 }
