@@ -49,3 +49,7 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate>): Mat
     currency: material.currency || null
   };
 }
+
+export function transformMaterialTemplate(material: MaterialDocument): MaterialTemplate {
+  return material as MaterialTemplate;
+}

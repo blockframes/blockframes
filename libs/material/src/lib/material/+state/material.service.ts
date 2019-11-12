@@ -3,15 +3,18 @@ import { Material, createMaterial, MaterialStatus, createMaterialTemplate, Mater
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { Delivery } from '../../delivery/+state';
 import { TemplateQuery } from '../../template/+state/template.query';
-import { SubcollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from './material.store';
 import { snapshot } from '@blockframes/utils/helpers';
+import { MaterialQuery } from './material.query';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MaterialService extends SubcollectionService<MaterialState> {
+@CollectionConfig({ path: 'movies/:movieId/materials'})
+export class MaterialService extends CollectionService<MaterialState> {
   constructor(
+    private materialQuery: MaterialQuery,
     private deliveryQuery: DeliveryQuery,
     private templateQuery: TemplateQuery,
     store: MaterialStore
@@ -256,7 +259,7 @@ export class MaterialService extends SubcollectionService<MaterialState> {
   /** Update all materials of a template. */
   public updateTemplateMaterials(materials: MaterialTemplate[]) {
     const batch = this.db.firestore.batch();
-    const oldMaterials = this.templateQuery.getActive().materials;
+    const oldMaterials = this.materialQuery.getAll();
     materials.forEach(material => {
       const materialRef = this.db.doc<Material>(
         `templates/${this.templateQuery.getActiveId()}/materials/${material.id}`
