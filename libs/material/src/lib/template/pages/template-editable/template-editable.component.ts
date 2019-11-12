@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angula
 import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService, MaterialTemplate } from '../../../material/+state';
-import { tap, switchMap, filter } from 'rxjs/operators';
+import { MaterialService, MaterialTemplate, MaterialQuery, transformMaterialTemplate } from '../../../material/+state';
+import { tap, switchMap, filter, map } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { FormEntity } from '@blockframes/utils';
@@ -25,17 +25,19 @@ export class TemplateEditableComponent implements OnInit {
 
   constructor(
     private query: TemplateQuery,
+    private materialQuery: MaterialQuery,
     private materialService: MaterialService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
     this.template$ = this.query.selectActive();
-    this.materials$ = this.query.selectActive().pipe(
+    this.materials$ = this.materialQuery.selectAll().pipe(
       // We need to filter materials because when we go into the template list, the guard does not load materials in templates
-      filter(template => !!template.materials),
-      tap(template => this.form.upsertValue(template.materials)),
-      switchMap(template => this.form.selectAll())
+      filter(materials => !!materials),
+      map(materials => materials.map(material => transformMaterialTemplate(material))),
+      tap((materials) => this.form.upsertValue(materials)),
+      switchMap(materials => this.form.selectAll())
     );
     this.activeForm$ = this.form.selectActiveForm();
   }

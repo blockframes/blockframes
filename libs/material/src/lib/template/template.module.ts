@@ -39,6 +39,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { TemplateMaterialsGuard } from '../material/guards/template-materials.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -55,8 +56,8 @@ const routes: Routes = [
   {
     path: ':templateId',
     component: TemplateEditableComponent,
-    canActivate: [TemplateActiveGuard],
-    canDeactivate: [TemplateActiveGuard]
+    canActivate: [TemplateActiveGuard, TemplateMaterialsGuard],
+    canDeactivate: [TemplateActiveGuard, TemplateMaterialsGuard]
   }
 ];
 

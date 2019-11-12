@@ -13,6 +13,7 @@ export class ActiveMovieGuard extends CollectionGuard<MovieState> {
 
   // Sync and set active
   sync(next: ActivatedRouteSnapshot) {
+    console.log(next.params.movieId)
     return this.service.syncActive({ id: next.params.movieId });
   }
 }
