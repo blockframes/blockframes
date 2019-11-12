@@ -1,15 +1,18 @@
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteSelectedEvent,
+  MatAutocomplete,
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding,
-  OnDestroy
+  HostBinding
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
@@ -35,7 +38,7 @@ import {
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -51,7 +54,7 @@ import flatten from 'lodash/flatten';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit, OnDestroy {
+export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /* Observable of all movies */
@@ -119,7 +122,6 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
   public salesAgents: string[] = [];
-  private salesAgentsSub: Subscription;
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
@@ -141,6 +143,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
+  autoComplete: MatAutocompleteTrigger;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -170,48 +174,21 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
         }
       }),
       tap(movies => {
+        movies.forEach(movie => {
+          if (!this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
+            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+          }
+        });
         this.availableMovies = movies.length;
         this.allTitles = movies.map(movie => movie.main.title.international);
         this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
-        movies.forEach(movie => {
-          /*
-           * If a director worked on several movies, we don't want to show
-           * him in the autocompletion twice or more. Same for the other values
-           */
-          movie.main.directors.forEach(director => {
-            /**
-             * We need to combine these two properties otherwise we won't be able
-             * to show it in the mat autocompletion. For instance we want to show
-             * the directors name in the searchbar and this is only possible with a string value.
-             */
-            if (!this.allDirectors.includes(`${director.firstName} ${director.lastName}`)) {
-              this.allDirectors.push(`${director.firstName} ${director.lastName}`);
-            }
-          });
-          movie.promotionalDescription.keywords.forEach(word => {
-            if (!this.allKeywords.includes(word)) {
-              this.allKeywords.push(word);
-            }
-          });
-        });
+        this.allDirectors = flatten(
+          movies.map(movie =>
+            movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+          )
+        );
       })
     );
-
-    this.salesAgentsSub = this.movieQuery
-      .selectAll()
-      .pipe(
-        tap(movies => {
-          movies.forEach(movie => {
-            if (
-              !!movie.salesAgentDeal.salesAgent &&
-              !!movie.salesAgentDeal.salesAgent.displayName &&
-              !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)
-            )
-              this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
-          });
-        })
-      )
-      .subscribe();
 
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
@@ -251,6 +228,10 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public get searchbarForm(): FormGroup {
     return this.filterForm.get('searchbar');
+  }
+
+  public toggleAutoCompletion() {
+    this.autoComplete.closePanel();
   }
 
   /**
@@ -537,9 +518,5 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
     } else {
       this.searchbarForm.get('type').setValue('');
     }
-  }
-
-  ngOnDestroy() {
-    this.salesAgentsSub.unsubscribe();
   }
 }

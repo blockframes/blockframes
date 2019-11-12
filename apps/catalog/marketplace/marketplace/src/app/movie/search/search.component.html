@@ -10,10 +10,10 @@
           <mat-label>Find a content</mat-label>
           <div fxLayout="row nowrap" fxLayoutAlign="end center">
             <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
-              [matAutocomplete]="searchbar">
+              [matAutocomplete]="searchbar" #autoCompleteInput>
             <mat-divider [vertical]="true" class="form-field-divider"></mat-divider>
             <mat-select placeholder="Search by ..." formControlName="type" class="select-searchbar"
-              disableOptionCentering>
+              (openedChange)="toggleAutoCompletion()">
               <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}
               </mat-option>
             </mat-select>
