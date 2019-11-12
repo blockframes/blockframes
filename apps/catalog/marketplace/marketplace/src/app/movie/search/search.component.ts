@@ -168,9 +168,7 @@ export class MarketplaceSearchComponent implements OnInit {
           //TODO #1146 : remove the two line for movieGenres
           const removeGenre = ['TV Show', 'Web Series'];
           this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          return movies.filter(movie => {
-            return filterMovie(movie, filterOptions);
-          });
+          return movies.filter(movie => filterMovie(movie, filterOptions));
         }
       }),
       tap(movies => {
@@ -228,6 +226,10 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public get searchbarForm(): FormGroup {
     return this.filterForm.get('searchbar');
+  }
+
+  public get searchbarTypeForm() {
+    return this.filterForm.get('searchbar').get('type');
   }
 
   public toggleAutoCompletion() {
@@ -306,9 +308,7 @@ export class MarketplaceSearchComponent implements OnInit {
    */
   private _salesAgentsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.salesAgents.filter(
-      salesAgent => salesAgent.toLowerCase().indexOf(filterValue) === 0
-    );
+    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -317,11 +317,11 @@ export class MarketplaceSearchComponent implements OnInit {
    * @param value string which got typed in into an input field
    */
   private _resultFilter(value: string): string[] {
-    if (this.searchbarForm.get('type').value === 'title') {
+    if (this.searchbarTypeForm.value === 'title') {
       return this.allTitles.filter(title => title.toLowerCase().includes(value.toLowerCase()));
-    } else if (this.searchbarForm.get('type').value === 'keywords') {
+    } else if (this.searchbarTypeForm.value === 'keywords') {
       return this.allKeywords.filter(word => word.toLowerCase().includes(value.toLowerCase()));
-    } else if (this.searchbarForm.get('type').value === 'director') {
+    } else if (this.searchbarTypeForm.value === 'director') {
       return this.allDirectors.filter(director => {
         return director.toLowerCase().includes(value.toLowerCase());
       });
@@ -513,10 +513,10 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public selectSearchType(value: any) {
-    if (this.searchbarForm.get('type').value !== value) {
-      this.searchbarForm.get('type').setValue(value);
+    if (this.searchbarForm.value !== value) {
+      this.searchbarTypeForm.setValue(value);
     } else {
-      this.searchbarForm.get('type').setValue('');
+      this.searchbarTypeForm.setValue('');
     }
   }
 }
