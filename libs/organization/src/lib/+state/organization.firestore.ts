@@ -49,8 +49,8 @@ export interface Address {
   phoneNumber: string,
 }
 
-export interface WhishListRaw<D> {
-  status: WhishListStatus,
+export interface WishlistRaw<D> {
+  status: WishlistStatus,
   movieIds: string[],
   sent?: D
 }

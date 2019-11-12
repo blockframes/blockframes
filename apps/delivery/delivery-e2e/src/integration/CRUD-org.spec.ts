@@ -10,7 +10,7 @@ import {
 import { createOrganization, User } from '../support/utils/type';
 
 const USER: Partial<User> = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
-const ORGANIZATION = createOrganization();
+const ORGANIZATION = createOrganization(); // TODOD #1126 here
 const INVITEDUSER: Partial<User> = { email: 'cypressorg2@blockframes.com' };
 
 beforeEach(() => {
