@@ -11,6 +11,7 @@ import { FeedbackMessageModule } from '@blockframes/ui';
 import { WalletModule } from '@blockframes/ethers';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { OrganizationFormModule } from './components/organization-form/organization-form.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -38,7 +39,6 @@ import { MemberAddComponent } from './components/member-add/member-add.component
 import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
 import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { OrganizationWidgetComponent } from './components/organization-widget/organization-widget.component';
-import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
@@ -101,6 +101,7 @@ if (AFM_DISABLE) {
     UploadModule,
     UiFormModule,
     CropperModule,
+    OrganizationFormModule,
 
     // Material
     MatFormFieldModule,
@@ -124,7 +125,6 @@ if (AFM_DISABLE) {
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrganizationFormComponent,
     MemberPendingComponent,
     MemberFormRoleComponent,
     MemberInvitationComponent,
@@ -141,7 +141,6 @@ if (AFM_DISABLE) {
     OrganizationSignerRepertoryComponent,
     OrganizationSignerFormComponent,
     OrganizationEditableComponent,
-    OrganizationFormComponent,
     OrganizationActivityViewComponent,
     OrganizationSearchComponent
   ],

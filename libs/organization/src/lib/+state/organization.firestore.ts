@@ -1,5 +1,6 @@
 
 import { firestore } from "firebase/app";
+import { CatalogBasket } from "@blockframes/marketplace";
 type Timestamp = firestore.Timestamp;
 
 
@@ -7,21 +8,17 @@ type Timestamp = firestore.Timestamp;
 interface OrganizationRaw<D> {
   id: string;
   name: string;
-  address: string;
-  officeAddress: string;
+  addresses: Addresses;
   email: string;
-  created: number;
-  updated: number;
+  created: D;
+  updated: D;
   userIds: string[];
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  catalog: null,
   logo: string;
-  phoneNumber: string;
   fiscalNumber: string;
   activity: string;
-  // TODO: issue#1202 Review model of Wishlist (name, date...)
   wishlist: WishlistRaw<D>[];
 }
 
@@ -35,6 +32,22 @@ export const enum OrganizationStatus {
   accepted = 'accepted'
 }
 
+export interface Addresses {
+  main: Address,
+  billing?: Address,
+  office?: Address,
+  // Other can be added here
+}
+
+export interface Address {
+  street: string,
+  zipCode: string,
+  city: string,
+  country: string,
+  region?: string,
+  phoneNumber: string,
+}
+
 export interface WishlistRaw<D> {
   status: WishlistStatus,
   movieIds: string[],
@@ -43,7 +56,6 @@ export interface WishlistRaw<D> {
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
 export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
-
 
 export const enum WishlistStatus {
   pending = 'pending',
@@ -63,24 +75,52 @@ export interface PublicOrganization {
 export function createOrganizationDocument(
   params: Partial<OrganizationDocument> = {}
 ): OrganizationDocument {
+  const org = createOrganizationRaw(params);
+  org.created = firestore.Timestamp.now();
+  org.updated = firestore.Timestamp.now();
+  return org as OrganizationDocument;
+}
+
+/** A factory function that creates an OrganizationDocument. */
+export function createOrganizationRaw(
+  params: Partial<OrganizationRaw<Timestamp | Date>> = {}
+): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
     name: '',
     email: '',
     fiscalNumber: '',
     activity: '',
-    phoneNumber: '',
-    address: '',
-    officeAddress: '',
+    addresses: createAddresses(),
     status: OrganizationStatus.pending,
     userIds: [],
     movieIds: [],
     templateIds: [],
-    created: Date.now(),
-    updated: Date.now(),
+    created: firestore.Timestamp.now(), // default is timestamp
+    updated: firestore.Timestamp.now(), // default is timestamp
     logo: PLACEHOLDER_LOGO,
-    catalog: null,
     wishlist: [],
+    ...params
+  };
+}
+
+/** A factory function that creates Organization Addresses */
+export function createAddresses(params: Partial<Addresses> = {}): Addresses {
+  return {
+    main: createAddress(params.main),
+    ...params
+  };
+}
+
+/** A factory function that creates an Address */
+export function createAddress(params: Partial<Address> = {}): Address {
+  return {
+    street: '',
+    zipCode: '',
+    city: '',
+    country: '',
+    phoneNumber: '',
+    region: '',
     ...params
   };
 }

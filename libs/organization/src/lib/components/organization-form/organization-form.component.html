@@ -10,28 +10,32 @@
     </mat-form-field>
     <mat-divider [inset]="true"></mat-divider>
     <h4>Contact Information</h4>
-    <mat-form-field appearance="outline">
-      <mat-label>Phone number</mat-label>
-      <input matInput placeholder="Phone number" type="tel" formControlName="phoneNumber" />
-      </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Email address</mat-label>
-      <input matInput placeholder="Phone number" type="email" formControlName="email" />
-    </mat-form-field>
-    <!-- TODO: #1126 Address form fields -->
-    <!-- <mat-form-field appearance="outline">
-      <mat-label>Office Address</mat-label>
-      <input matInput placeholder="Office address" type="text" formControlName="officeAddress" />
-    </mat-form-field> -->
+    <organization-form-address [formGroup]="control.get('addresses').get('main')"></organization-form-address>
     <mat-divider [inset]="true"></mat-divider>
-    <h4>Activity details</h4>
+    <h4>Email address</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Organization email address</mat-label>
+      <input
+        matInput
+        placeholder="Organization email address"
+        aria-label="organization email address"
+        formControlName="email"
+      />
+      <mat-error *ngIf="control.get('email').hasError('email')">Email not valid</mat-error>
+    </mat-form-field>
+    <h3>Activity details</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>Activity description</mat-label>
+      <input matInput placeholder="Activity description" aria-label="activity description" formControlName="activity" />
+    </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Fiscal number</mat-label>
-      <input matInput placeholder="Fiscal number" type="text" formControlName="fiscalNumber" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Activity</mat-label>
-      <input matInput placeholder="Activity" type="text" formControlName="activity" />
+      <input
+        matInput
+        placeholder="Fiscal number"
+        aria-label="fiscal number"
+        formControlName="fiscalNumber"
+      />
     </mat-form-field>
   </form>
 </article>
