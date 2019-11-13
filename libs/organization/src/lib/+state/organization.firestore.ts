@@ -33,13 +33,13 @@ export const enum OrganizationStatus {
 }
 
 export interface AddressSet {
-  main: Address,
-  billing?: Address,
-  office?: Address,
+  main: Location,
+  billing?: Location,
+  office?: Location,
   // Other can be added here
 }
 
-export interface Address {
+export interface Location {
   street: string,
   zipCode: string,
   city: string,
@@ -109,13 +109,13 @@ export function createOrganizationRaw(
 /** A factory function that creates Organization AddressSet */
 export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   return {
-    main: createAddress(params.main),
+    main: createLocation(params.main),
     ...params
   };
 }
 
-/** A factory function that creates an Address */
-export function createAddress(params: Partial<Address> = {}): Address {
+/** A factory function that creates an Address/Location */
+export function createLocation(params: Partial<Location> = {}): Location {
   return {
     street: '',
     zipCode: '',

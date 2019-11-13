@@ -1,11 +1,11 @@
 import { FormControl, Validators } from "@angular/forms";
 import { FormEntity, UniqueOrgName } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
-import { AddressSet, createAddressSet, Address, createAddress } from "@blockframes/organization/types";
+import { AddressSet, createAddressSet, Location, createLocation } from "@blockframes/organization/types";
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
-  constructor(addresses: AddressSet) {
-    super(createOrganizationAddressesControls(addresses));
+  constructor(addressSet: AddressSet) {
+    super(createOrganizationAddressesControls(addressSet));
   }
 
   get main() {
@@ -13,8 +13,8 @@ export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesC
   }
 }
 
-function createAddressControls(address: Partial<Address> = {}) {
-  const entity = createAddress(address);
+function createLoactionControls(location: Partial<Location> = {}) {
+  const entity = createLocation(location);
   return {
     street: new FormControl(entity.street),
     zipCode: new FormControl(entity.zipCode),
@@ -25,11 +25,11 @@ function createAddressControls(address: Partial<Address> = {}) {
   }
 }
 
-type AddressControl = ReturnType<typeof createAddressControls>
+type LocationControl = ReturnType<typeof createLoactionControls>
 
-export class AddressForm extends FormEntity<AddressControl>{
-  constructor(address: Address) {
-    super(createAddressControls(address));
+export class AddressForm extends FormEntity<LocationControl>{
+  constructor(location: Location) {
+    super(createLoactionControls(location));
   }
 }
 
