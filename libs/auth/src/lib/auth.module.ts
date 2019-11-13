@@ -31,7 +31,8 @@ import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
-import { TermsAndConditionsModule } from '@blockframes/ui/terms-conditions/terms-conditions.module';
+import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
+import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 
 // Component Module
 import { EmailVerifyModule } from './components/email-verify/email-verify.module';
@@ -51,8 +52,10 @@ export const AuthRoutes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    // Components
     CropperModule,
-    TermsAndConditionsModule,
+    TermsConditionsModule,
+    AcceptConditionsModule,
     FeedbackMessageModule,
     EmailVerifyModule,
     // Material
