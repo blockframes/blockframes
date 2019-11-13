@@ -16,7 +16,7 @@ import {
   convertOrganizationWithTimestampsToOrganization,
   OrganizationDocument
 } from './organization.model';
-import { OrganizationStore, DeploySteps } from './organization.store';
+import { OrganizationStore, DeploySteps, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
@@ -32,6 +32,7 @@ import {
   emailToEnsDomain,
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`,
@@ -86,7 +87,8 @@ function getFilterFromTopics(address: string, topics: string[]): Filter {
 }
 
 @Injectable({ providedIn: 'root' })
-export class OrganizationService {
+@CollectionConfig({ path: 'orgs'})
+export class OrganizationService extends CollectionService<OrganizationState> {
   private organization$: Observable<Organization>;
 
   private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
@@ -94,13 +96,15 @@ export class OrganizationService {
 
   constructor(
     private query: OrganizationQuery,
-    private store: OrganizationStore,
+    protected store: OrganizationStore,
     private permissionsQuery: PermissionsQuery,
     private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
-    private db: FireQuery,
-  ) {}
+    protected db: FireQuery,
+  ) {
+    super(store);
+  }
 
   public async orgNameExist(orgName: string) {
     const orgSnap = await this.db.firestore.collection('orgs').where('name', '==', orgName).get();
@@ -162,7 +166,7 @@ export class OrganizationService {
    * Add a new organization to the database and create/update
    * related documents (permissions, apps permissions, user...).
    */
-  public async add(organization: Partial<OrganizationDocument>): Promise<string> {
+  public async addOrganization(organization: Partial<OrganizationDocument>): Promise<string> {
     const user = this.authQuery.user;
     const orgId: string = this.db.createId();
     const newOrganization: OrganizationDocument = createOrganizationDocument({
@@ -206,10 +210,10 @@ export class OrganizationService {
     return orgId;
   }
 
-  public update(organization: Partial<Organization>) {
-    const organizationId = this.query.id;
-    return this.db.doc(`orgs/${organizationId}`).update(organization);
-  }
+  // public update(organization: Partial<Organization>) {
+  //   const organizationId = this.query.id;
+  //   return this.db.doc(`orgs/${organizationId}`).update(organization);
+  // }
 
   /** Returns a list of organizations whose part of name match with @param prefix */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {

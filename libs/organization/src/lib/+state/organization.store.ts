@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
+import { Store, StoreConfig, EntityStore } from '@datorama/akita';
 import { Organization } from './organization.model';
+import { CollectionState } from 'akita-ng-fire';
 
 export const enum DeploySteps { notDeployed, registered, resolved, ready };
-export interface OrganizationState {
+export interface OrganizationState extends CollectionState<Organization> {
   org: Organization;
   form: {
     name: string,
@@ -16,6 +17,7 @@ export interface OrganizationState {
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
   org: null,
+  active: null,
   form: {
     name: '',
     address: ''
@@ -25,7 +27,7 @@ const initialState: OrganizationState = {
 };
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'organization' })
-export class OrganizationStore extends Store<OrganizationState> {
+export class OrganizationStore extends EntityStore<OrganizationState, Organization> {
   constructor() {
     super(initialState);
   }

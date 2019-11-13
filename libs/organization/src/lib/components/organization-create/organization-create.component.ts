@@ -47,7 +47,7 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    await this.service.add(this.form.value);
+    await this.service.addOrganization(this.form.value);
 
     this.snackBar.open(`The organization ${this.form.get('name').value} has been created`, 'close', { duration: 2000 });
 
