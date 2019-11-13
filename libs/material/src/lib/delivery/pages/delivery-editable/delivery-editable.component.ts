@@ -89,7 +89,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   /* Add a material formGroup to the form **/
   public addMaterial() {
-    const newMaterial = this.materialService.addMaterial();
+    const newMaterial = this.materialService.createMaterial();
     this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }

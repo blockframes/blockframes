@@ -51,18 +51,7 @@ export class DeliveryMaterialListComponent implements OnInit {
   /* Define an array of columns to be displayed in the list depending on delivery settings **/
   public setDisplayedColumns() {
     return this.deliveryQuery.getActive().mustChargeMaterials
-      ? [
-          'select',
-          'value',
-          'description',
-          'step',
-          'category',
-          'price',
-          'isOrdered',
-          'isPaid',
-          'status',
-          'action'
-        ]
+      ? ['select', 'value', 'description', 'step', 'category', 'price', 'isOrdered', 'isPaid', 'status', 'action']
       : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
   }
 

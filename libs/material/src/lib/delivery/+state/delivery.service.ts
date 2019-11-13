@@ -416,21 +416,21 @@ export class DeliveryService {
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
-        this.materialService.setNewMaterial(material, delivery, tx);
+        this.materialService.setNewMaterial(material, delivery);
         return;
       }
 
       // If there already is a material with same properties (but different id), we merge this
       // material with existing one, and push the new deliveryId into deliveryIds.
       if (!!sameValuesMaterial) {
-        this.materialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery, tx);
+        this.materialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery);
       }
 
       // If values are not the same, this material is considered as new and we have to create
       // and set a new material (with new Id).
       if (!sameValuesMaterial) {
         const newMaterial = createMaterial({...material, id: this.db.createId()});
-        this.materialService.setNewMaterial(newMaterial, delivery, tx);
+        this.materialService.setNewMaterial(newMaterial, delivery);
       }
     });
     return tx;
