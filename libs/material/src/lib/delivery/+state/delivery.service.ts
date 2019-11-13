@@ -17,7 +17,8 @@ import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, Query,syncQuery } from 'akita-ng-fire';
+import { switchMap, tap } from 'rxjs/operators';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -52,6 +53,19 @@ export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Deliver
   };
 }
 
+// TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
+// e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
+const deliveriesQuery = (movieId: string): Query<Delivery[]> =>  ({
+  path: 'deliveries',
+  queryFn: ref => ref.where('movieId', '==', movieId),
+  stakeholders: delivery => ({
+    path: `deliveries/${delivery.id}/stakeholders`,
+    organization: stakeholder => ({
+      path: `orgs/${stakeholder.id}`
+    })
+  })
+})
+
 @Injectable({
   providedIn: 'root'
 })
@@ -59,6 +73,7 @@ export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Deliver
   path: 'deliveries'
 })
 export class DeliveryService extends CollectionService<DeliveryState> {
+
   constructor(
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
@@ -73,6 +88,14 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     protected store: DeliveryStore
   ) {
     super(store);
+  }
+
+  public syncQuery() {
+    return this.movieQuery.selectActiveId().pipe(
+      // Reset the store everytime that movieId changes
+      tap(_ => this.store.reset()),
+      switchMap(movieId => syncQuery.call(this, deliveriesQuery(movieId)))
+    );
   }
 
   ///////////////////////////

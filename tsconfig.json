@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strictBindCallApply": true,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
