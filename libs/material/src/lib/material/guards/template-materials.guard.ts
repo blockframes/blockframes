@@ -12,6 +12,7 @@ export class TemplateMaterialsGuard extends CollectionGuard<MaterialState> {
   }
 
   sync(next: ActivatedRouteSnapshot) {
+    this.store.reset();
     return this.service.syncCollection(`templates/${next.params.templateId}/materials`);
   }
 }

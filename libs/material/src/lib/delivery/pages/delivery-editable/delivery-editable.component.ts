@@ -26,6 +26,7 @@ import { FormEntity } from '@blockframes/utils';
 export class DeliveryEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'delivery-editable';
 
+  public loading$: Observable<boolean>;
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
@@ -45,12 +46,12 @@ export class DeliveryEditableComponent implements OnInit {
     private service: DeliveryService,
     private materialStore: MaterialStore,
     private organizationService: OrganizationService,
-    private organizationQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.loading$ = this.query.selectLoading();
     this.materials$ = combineLatest([
       this.query.selectActive(),
       this.materialQuery.selectAll()

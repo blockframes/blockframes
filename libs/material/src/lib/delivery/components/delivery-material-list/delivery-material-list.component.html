@@ -59,7 +59,7 @@
   </ng-container>
 
   <!-- Display Price, Ordered and Paid columns only if delivery have materials to be charged -->
-  <ng-container *ngIf="delivery.mustChargeMaterials">
+  <ng-container *ngIf="(delivery$ | async).mustChargeMaterials">
 
     <!-- Price Column -->
     <ng-container matColumnDef="price">
@@ -106,6 +106,6 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr test-id="material-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>

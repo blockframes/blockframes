@@ -1,33 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { MaterialStore, Material } from '../+state';
-import { switchMap } from 'rxjs/operators';
-import { MovieQuery } from '@blockframes/movie';
-
-const movieMaterialsQuery = (movieId: string): Query<Material[]> => ({
-  path: `movies/${movieId}/materials`
-});
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { MaterialState, MaterialStore } from '../+state/material.store';
+import { MaterialService } from '../+state/material.service';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class MovieMaterialsGuard extends StateListGuard<Material> {
-  urlFallback = 'layout';
-
-  constructor(
-    private fireQuery: FireQuery,
-    private movieQuery: MovieQuery,
-    store: MaterialStore,
-    router: Router
-  ) {
-    super(store, router);
+@CollectionGuardConfig({ awaitSync: true })
+export class MovieMaterialsGuard extends CollectionGuard<MaterialState> {
+  constructor(service: MaterialService, protected store: MaterialStore) {
+    super(service);
   }
 
-  get query() {
-    return this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => {
-        const query = movieMaterialsQuery(movieId);
-        return this.fireQuery.fromQuery<Material[]>(query);
-      })
-    );
+  sync(next: ActivatedRouteSnapshot) {
+    this.store.reset();
+    return this.service.syncCollection(`movies/${next.params.movieId}/materials`);
   }
 }
