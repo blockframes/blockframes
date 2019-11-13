@@ -19,7 +19,7 @@ export function logErrors(f: any): any {
   return async (...args: any[]) => {
     try {
       console.log('dans try');
-      return await f(...args);
+      return f(...args);
     } catch (err) {
       console.log('dans catch');
       // Send the exception to sentry IF we have a configuration.

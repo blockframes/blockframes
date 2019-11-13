@@ -39,7 +39,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
-import { AnalyticsModule } from '@blockframes/utils';
+
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
@@ -89,7 +92,7 @@ import { intercomId } from '@env';
     AngularFireStorageModule,
 
     // Analytics
-    AnalyticsModule,
+    sentryDsn ? SentryModule : [],
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

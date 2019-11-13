@@ -42,4 +42,4 @@ if (sentryDsn) {
 @NgModule({
   providers
 })
-export class AnalyticsModule {}
+export class SentryModule {}
