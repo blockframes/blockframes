@@ -30,7 +30,7 @@ export class NotificationItemComponent {
         return `Every stakeholders have signed ${movieName}'s delivery.`;
       case NotificationType.createDocument:
         return `A new delivery has been created for ${movieName}.`;
-      case NotificationType.createDocument:
+      case NotificationType.deleteDocument:
         return `${movieName}'s delivery has been deleted.`;
       case NotificationType.pathToDocument:
         return `You accepted the invitation. Now you can work on the document.`;
