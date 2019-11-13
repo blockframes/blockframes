@@ -6,7 +6,7 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class ActiveMovieGuard extends CollectionGuard<MovieState> {
+export class MovieActiveGuard extends CollectionGuard<MovieState> {
 
   constructor(service: MovieService) {
     super(service);

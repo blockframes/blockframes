@@ -29,20 +29,7 @@ export class DeliveryMaterialListComponent implements OnInit {
     materials = materials.map(material => getMaterialStep(material, this.deliveryQuery.getActive()));
     this.dataSource = new MatTableDataSource(materials);
     this.dataSource.sort = this.sort;
-    this.columns = [
-      'select',
-      'value',
-      'description',
-      'step',
-      'category',
-      'price',
-      'isOrdered',
-      'isPaid',
-      'status',
-      'action'
-    ];
   }
-  @Input() displayedColumns: string[]
 
   @Output() editing = new EventEmitter<string>();
   @Output() selectedMaterial = new EventEmitter<Material>();
@@ -53,12 +40,30 @@ export class DeliveryMaterialListComponent implements OnInit {
   public dataSource: MatTableDataSource<Material>;
   public selection = new SelectionModel<Material>(true, []);
   public delivery$: Observable<Delivery>
-  public columns: string[];
+  public displayedColumns = this.setDisplayedColumns();
 
   constructor(private deliveryQuery: DeliveryQuery) {}
 
   ngOnInit() {
     this.delivery$ = this.deliveryQuery.selectActive();
+  }
+
+  /* Define an array of columns to be displayed in the list depending on delivery settings **/
+  public setDisplayedColumns() {
+    return this.deliveryQuery.getActive().mustChargeMaterials
+      ? [
+          'select',
+          'value',
+          'description',
+          'step',
+          'category',
+          'price',
+          'isOrdered',
+          'isPaid',
+          'status',
+          'action'
+        ]
+      : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
   }
 
   public selectMaterial(material: Material) {

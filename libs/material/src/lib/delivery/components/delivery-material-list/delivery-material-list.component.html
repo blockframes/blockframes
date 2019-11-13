@@ -59,32 +59,30 @@
   </ng-container>
 
   <!-- Display Price, Ordered and Paid columns only if delivery have materials to be charged -->
-  <ng-container *ngIf="(delivery$ | async).mustChargeMaterials">
 
-    <!-- Price Column -->
-    <ng-container matColumnDef="price">
-      <th test-id="material-price" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-      <td mat-cell *matCellDef="let material">
-        <span *ngIf="!!material.price"> {{ material.price | currency: material.currency }} </span>
-      </td>
-    </ng-container>
 
-    <!-- Ordered Column -->
-    <ng-container matColumnDef="isOrdered">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
-      <td mat-cell *matCellDef="let material">
-        <mat-icon test-id="ordered" *ngIf="material.isOrdered" svgIcon="ordered"></mat-icon>
-      </td>
-    </ng-container>
+  <!-- Price Column -->
+  <ng-container *ngIf="(delivery$ | async).mustChargeMaterials" matColumnDef="price">
+    <th test-id="material-price" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+    <td mat-cell *matCellDef="let material">
+      <span *ngIf="!!material.price"> {{ material.price | currency: material.currency }} </span>
+    </td>
+  </ng-container>
 
-    <!-- Paid Column -->
-    <ng-container matColumnDef="isPaid">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
-      <td mat-cell *matCellDef="let material">
-        <mat-icon test-id="paid" *ngIf="material.isPaid" svgIcon="paid"></mat-icon>
-      </td>
-    </ng-container>
+  <!-- Ordered Column -->
+  <ng-container *ngIf="(delivery$ | async).mustChargeMaterials" matColumnDef="isOrdered">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ordered</th>
+    <td mat-cell *matCellDef="let material">
+      <mat-icon test-id="ordered" *ngIf="material.isOrdered" svgIcon="ordered"></mat-icon>
+    </td>
+  </ng-container>
 
+  <!-- Paid Column -->
+  <ng-container *ngIf="(delivery$ | async).mustChargeMaterials" matColumnDef="isPaid">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
+    <td mat-cell *matCellDef="let material">
+      <mat-icon test-id="paid" *ngIf="material.isPaid" svgIcon="paid"></mat-icon>
+    </td>
   </ng-container>
 
   <!-- Status Column -->
@@ -106,6 +104,6 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr test-id="material-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>

@@ -3,10 +3,15 @@ import { Organization, PermissionsService, OrganizationQuery } from '@blockframe
 import { createTemplate, Template } from './template.model';
 import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { snapshot } from '@blockframes/utils';
+import { snapshot, Query, FireQuery } from '@blockframes/utils';
 import { TemplateStore, TemplateState } from './template.store';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { combineLatest } from 'rxjs';
+
+const templateQuery = (id: string): Query<Template> => ({
+  path: `templates/${id}`
+});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'templates' })
@@ -16,6 +21,7 @@ export class TemplateService extends CollectionService<TemplateState>{
     private query: TemplateQuery,
     private organizationQuery: OrganizationQuery,
     private permissionsService: PermissionsService,
+    private fireQuery: FireQuery,
     store: TemplateStore
   ) {
     super(store)
@@ -114,5 +120,20 @@ export class TemplateService extends CollectionService<TemplateState>{
   public nameExists(name: string) {
     const templates = this.query.getAll();
     return templates.find(template => template.name === name);
+  }
+
+  // TODO: Find a new way to subscribe on organization templates => ISSUE #1276
+  /** Subscribe on organization templates (outside the TemplateListGuard) and set the template store. */
+  public subscribeOnTemplates() {
+    return this.organizationQuery
+      .select(state => state.org.templateIds)
+      .pipe(
+        switchMap(ids => {
+          if (!ids || ids.length === 0) throw new Error('No template yet')
+          const queries = ids.map(id => this.fireQuery.fromQuery<Template>(templateQuery(id)))
+          return combineLatest(queries);
+        }),
+        tap(templates => this.store.set(templates))
+      );
   }
 }

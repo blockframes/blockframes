@@ -49,6 +49,7 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate>): Mat
   };
 }
 
+/** Takes a MaterialDocument and returns it as a MaterialTemplate */
 export function transformMaterialTemplate(material: MaterialDocument): MaterialTemplate {
   return material as MaterialTemplate;
 }

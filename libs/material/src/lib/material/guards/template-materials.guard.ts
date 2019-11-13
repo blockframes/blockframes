@@ -7,7 +7,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class TemplateMaterialsGuard extends CollectionGuard<MaterialState> {
-  constructor(service: MaterialService, protected store: MaterialStore) {
+  constructor(service: MaterialService, private store: MaterialStore) {
     super(service);
   }
 

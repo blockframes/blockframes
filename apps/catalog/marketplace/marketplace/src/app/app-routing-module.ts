@@ -10,7 +10,7 @@ import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
 import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
-import { MovieCollectionGuard, ActiveMovieGuard } from '@blockframes/movie';
+import { MovieCollectionGuard, MovieActiveGuard } from '@blockframes/movie';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -118,8 +118,8 @@ export const routes: Routes = [
               },
               {
                 path: ':movieId',
-                canActivate: [ActiveMovieGuard],
-                canDeactivate: [ActiveMovieGuard],
+                canActivate: [MovieActiveGuard],
+                canDeactivate: [MovieActiveGuard],
                 children: [
                   { path: '', redirectTo: 'view', pathMatch: 'full' },
                   {
