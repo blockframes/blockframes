@@ -97,7 +97,7 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
       {
         name: 'Line-up',
         icon: 'search_sidebar',
-        path: '${appsRoute}/${App.biggerBoat}/search'
+        path: `${appsRoute}/${App.biggerBoat}/search`
       }
     ]
   },
