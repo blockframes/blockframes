@@ -1,14 +1,14 @@
-import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
 import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
   OrganizationDocument,
-  OrganizationStatus,
-  WishlistDocument
+  WishlistDocument,
+  createOrganizationRaw
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
+import { CatalogBasket } from '@blockframes/marketplace';
 export {
   OrganizationStatus,
   WishlistStatus,
@@ -67,15 +67,14 @@ export interface OrganizationWithTimestamps extends OrganizationDocument {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
+  baskets: CatalogBasket[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
   members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
-  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
-  wishlist: Wishlist[];
+  baskets: CatalogBasket[];
 }
 
 export interface Wishlist extends WishlistDocumentWithDates {
@@ -92,28 +91,22 @@ export interface PublicOrganization {
 }
 
 /** A factory function that creates an Organization. */
-export function createOrganization(params: Partial<Organization> = {}): Organization {
+export function createOrganization(
+  params: Partial<Organization> = {}
+): Organization {
+  const org = createOrganizationRaw(params) as Organization;
+
   return {
-    id: !!params.id ? params.id : '',
-    name: '',
-    email: '',
-    fiscalNumber: '',
-    activity: '',
-    phoneNumber: '',
-    address: '',
-    officeAddress: '',
-    status: OrganizationStatus.pending,
-    userIds: [],
-    movieIds: [],
-    templateIds: [],
-    created: Date.now(),
-    updated: Date.now(),
-    logo: PLACEHOLDER_LOGO,
-    catalog: null,
-    wishlist: [],
+    ...org,
+    // Here, "created" & "updated" fields are Date objects
+    created: new Date(),
+    updated: new Date(),
+    // Init "akita" fields
     baskets: [],
-    ...params
-  };
+    members: [],
+    actions: [],
+    operations: [],
+  }
 }
 
 export function createOperation(
@@ -130,7 +123,12 @@ export function createOperation(
 export function convertOrganizationWithTimestampsToOrganization(
   org: OrganizationWithTimestamps
 ): Organization {
-  return { ...org, wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist) };
+  return {
+    ...org,
+    created: org.created.toDate(),
+    updated: org.updated.toDate(),
+    wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
+  };
 }
 
 /** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */

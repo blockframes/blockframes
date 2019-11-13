@@ -11,7 +11,15 @@ const testData = {
   orgs: {
     id1: createOrganizationDocument({
       name: 'John Doe',
-      officeAddress: 'LogicalPicture',
+      addresses: {
+        main: {
+          street: 'LogicalPicture',
+          zipCode: '69001',
+          city: 'Lyon',
+          country: 'France',
+          phoneNumber: '0102030405',
+        }
+      },
       userIds: [],
       id: '',
       movieIds: [],
@@ -19,7 +27,15 @@ const testData = {
     }),
     id2: createOrganizationDocument({
       name: 'Tomme Hardy',
-      officeAddress: '20Th Century Fox',
+      addresses: {
+        main: {
+          street: '20Th Century Fox',
+          zipCode: '69001',
+          city: 'Lyon',
+          country: 'France',
+          phoneNumber: '0102030405',
+        }
+      },
       userIds: [],
       id: '',
       movieIds: [],
@@ -27,7 +43,15 @@ const testData = {
     }),
     id3: createOrganizationDocument({
       name: 'Francis Munster',
-      officeAddress: 'Disney',
+      addresses: {
+        main: {
+          street: 'Disney',
+          zipCode: '69001',
+          city: 'Lyon',
+          country: 'France',
+          phoneNumber: '0102030405',
+        }
+      },
       userIds: [],
       id: '',
       movieIds: [],

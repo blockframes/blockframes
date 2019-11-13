@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
-import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-create',

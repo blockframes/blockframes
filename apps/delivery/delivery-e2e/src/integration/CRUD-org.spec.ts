@@ -31,10 +31,10 @@ describe('Test CRUD org', () => {
     p1.openProfileMenu();
     const p2: OrganizationEditablePage = p1.clickOnOrganization();
     p2.clickEditButtion();
-    p2.fillAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
-    p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
+    p2.fillAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
+    p2.assertAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
     p2.clickSaveButton();
-    p2.assertAddressAndPhoneNumber(ORGANIZATION.address, ORGANIZATION.phoneNumber);
+    p2.assertAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
 
     // Add a new member in user's organization and remove him
     const p3: MemberEditablePage = p2.clickContextMenuMember();

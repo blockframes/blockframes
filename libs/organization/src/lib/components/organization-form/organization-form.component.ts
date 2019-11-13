@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
+import { OrganizationForm } from '../../forms/organization.form';
 
 @Component({
   selector: '[formGroupName] organization-form, [formGroup] organization-form, organization-form',
@@ -13,7 +14,11 @@ export class OrganizationFormComponent implements OnInit {
   constructor(public controlContainer: ControlContainer) {}
 
   public get control() {
-    return this.controlContainer.control;
+    return this.controlContainer.control as OrganizationForm;
+  }
+
+  public get mainAddress() {
+    return this.control.addresses.main;
   }
 
   ngOnInit() {

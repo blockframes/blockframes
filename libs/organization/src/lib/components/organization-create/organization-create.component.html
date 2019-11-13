@@ -22,15 +22,8 @@
       </mat-form-field>
 
       <h3>Contact information</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Company phone number</mat-label>
-        <input
-          matInput
-          placeholder="Company phone number"
-          aria-label="company phone number"
-          formControlName="phoneNumber"
-        />
-      </mat-form-field>
+      <organization-form-address [formGroup]="form.addresses.main"></organization-form-address>
+      <h4>Email address</h4>
       <mat-form-field appearance="outline">
         <mat-label>Organization email address</mat-label>
         <input
