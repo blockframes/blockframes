@@ -35,7 +35,7 @@ export interface DistributionRight { // @todo #1061 => distribution deal with sp
   exclusive: boolean;
 }
 
-export interface CatalogBasket {  // @todo #1061 => Cart
+export interface CatalogBasket {  // @todo #1061 => Cart => pouvoir avoir n cart sur l'org. Ajouter un "name" au cart. Idem wishlist
   id: string;
   status: BasketStatus;
   rights: DistributionRight[];
