@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angula
 import { Observable } from 'rxjs';
 import { TemplateQuery } from '../../+state/template.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService, MaterialTemplate, MaterialQuery, transformMaterialTemplate } from '../../../material/+state';
+import { MaterialService, MaterialTemplate, MaterialQuery, createMaterialTemplate } from '../../../material/+state';
 import { tap, switchMap, filter, map } from 'rxjs/operators';
 import { Template } from '../../+state';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
@@ -35,7 +35,7 @@ export class TemplateEditableComponent implements OnInit {
     this.materials$ = this.materialQuery.selectAll().pipe(
       // We need to filter materials because when we go into the template list, the guard does not load materials in templates
       filter(materials => !!materials),
-      map(materials => materials.map(material => transformMaterialTemplate(material))),
+      map(materials => materials.map(material => createMaterialTemplate(material))),
       tap((materials) => this.form.upsertValue(materials)),
       switchMap(materials => this.form.selectAll())
     );

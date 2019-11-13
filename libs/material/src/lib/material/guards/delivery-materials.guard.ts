@@ -3,7 +3,6 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from '../+state/material.store';
 import { MaterialService } from '../+state/material.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 
 @Injectable({ providedIn: 'root' })
@@ -19,14 +18,10 @@ export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
 
   sync(next: ActivatedRouteSnapshot) {
     this.store.reset();
-    return this.deliveryQuery.selectActive().pipe(
-      switchMap(delivery => {
-        return delivery.mustBeSigned
-          ? this.service.syncCollection(`deliveries/${next.params.deliveryId}/materials`)
-          : this.service.syncCollection(`movies/${next.params.movieId}/materials`, ref =>
-              ref.where('deliveryIds', 'array-contains', delivery.id)
-            );
-      })
-    );
+    return this.deliveryQuery.getActive().mustBeSigned
+      ? this.service.syncCollection(`deliveries/${next.params.deliveryId}/materials`)
+      : this.service.syncCollection(`movies/${next.params.movieId}/materials`, ref =>
+          ref.where('deliveryIds', 'array-contains', next.params.deliveryId)
+          );
   }
 }

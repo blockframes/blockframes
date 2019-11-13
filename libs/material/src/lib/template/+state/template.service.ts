@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { createTemplate, Template } from './template.model';
-import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
+import { Material, MaterialTemplate, createMaterialTemplate, MaterialService } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { snapshot, Query, FireQuery } from '@blockframes/utils';
+import { Query, FireQuery } from '@blockframes/utils';
 import { TemplateStore, TemplateState } from './template.store';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { combineLatest } from 'rxjs';
 
@@ -16,21 +16,29 @@ const templateQuery = (id: string): Query<Template> => ({
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'templates' })
 export class TemplateService extends CollectionService<TemplateState>{
+  /** An observable of organization's templateIds */
+  templateIds$ = this.organizationQuery.select('org').pipe(
+    map(org => org.templateIds),
+    distinctUntilChanged(
+      (old, curr) => old.every(tpl => curr.includes(tpl))
+    )
+  );
 
   constructor(
     private query: TemplateQuery,
     private organizationQuery: OrganizationQuery,
     private permissionsService: PermissionsService,
+    private materialService: MaterialService,
     private fireQuery: FireQuery,
     store: TemplateStore
   ) {
     super(store)
   }
 
-  /** Gets every movieIds of the user active organization and sync them. */
+  /** Gets every templateIds of the user active organization and sync them. */
   public syncOrgTemplates() {
-    return this.organizationQuery.select('org').pipe(
-      switchMap(org => this.syncManyDocs(org.templateIds))
+    return this.templateIds$.pipe(
+      switchMap(ids => this.syncManyDocs(ids))
     )
   }
 
@@ -96,7 +104,7 @@ export class TemplateService extends CollectionService<TemplateState>{
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await snapshot<MaterialTemplate[]>(`templates/${selectedTemplate.id}/materials`);
+    const templateMaterials = await this.materialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
       const batch = this.db.firestore.batch();
