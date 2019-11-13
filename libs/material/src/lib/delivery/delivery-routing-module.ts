@@ -47,7 +47,7 @@ const routes: Routes = [
           {
             path: '2-choose-starter',
             pathMatch: 'full',
-            component: DeliveryAddChooseStarterComponent, 
+            component: DeliveryAddChooseStarterComponent,
             data: {animation: 'DeliveryAddChooseStarterPage'}
           },
           {
@@ -55,7 +55,7 @@ const routes: Routes = [
             canActivate: [TemplateListGuard],
             canDeactivate: [TemplateListGuard],
             pathMatch: 'full',
-            component: DeliveryAddTemplatePickerComponent, 
+            component: DeliveryAddTemplatePickerComponent,
             data: {animation: 'DeliveryAddTemplatePickerPage'}
           },
           {
@@ -66,7 +66,7 @@ const routes: Routes = [
           {
             path: '4-settings',
             pathMatch: 'full',
-            component: DeliveryAddSettingsComponent, 
+            component: DeliveryAddSettingsComponent,
             data: {animation: 'DeliveryAddSettingsPage'}
           },
           {

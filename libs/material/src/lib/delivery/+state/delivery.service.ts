@@ -27,35 +27,9 @@ interface AddDeliveryOptions {
   mustBeSigned?: boolean;
 }
 
-export function timestampObjectsToDate(docs: any[]) {
-  if (!docs) {
-    return [];
-  }
-
-  return docs.map(doc => {
-    if (doc.date) {
-      return { ...doc, date: doc.date.toDate() };
-    } else {
-      return doc;
-    }
-  });
-}
-
-/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
-export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Delivery {
-  const mgDeadlines = delivery.mgDeadlines || [];
-
-  return {
-    ...delivery,
-    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
-    steps: timestampObjectsToDate(delivery.steps),
-    mgDeadlines: timestampObjectsToDate(mgDeadlines)
-  };
-}
-
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveriesQuery = (movieId: string): Query<Delivery[]> =>  ({
+const deliveriesQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
   path: 'deliveries',
   queryFn: ref => ref.where('movieId', '==', movieId),
   stakeholders: delivery => ({
@@ -65,6 +39,16 @@ const deliveriesQuery = (movieId: string): Query<Delivery[]> =>  ({
     })
   })
 })
+
+export const deliveryActiveQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
+  path: `deliveries/${deliveryId}`,
+  stakeholders: delivery => ({
+    path: `deliveries/${delivery.id}/stakeholders`,
+    organization: stakeholder => ({
+      path: `orgs/${stakeholder.id}`
+    })
+  })
+});
 
 @Injectable({
   providedIn: 'root'
@@ -90,12 +74,16 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     super(store);
   }
 
-  public syncQuery() {
+  public syncDeliveriesQuery() {
     return this.movieQuery.selectActiveId().pipe(
-      // Reset the store everytime that movieId changes
+      // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
       switchMap(movieId => syncQuery.call(this, deliveriesQuery(movieId)))
     );
+  }
+
+  public syncDeliveryActiveQuery(deliveryId: string) {
+    return syncQuery.call(this, deliveryActiveQuery(deliveryId));
   }
 
   ///////////////////////////

@@ -4,12 +4,12 @@
   <ng-container matColumnDef="signers">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Signers</th>
     <td mat-cell *matCellDef="let delivery" class="bf-strong">
-      <!-- <span fxLayout="row" fxLayoutAlign="start center">
+      <span fxLayout="row" fxLayoutAlign="start center">
         <ng-container *ngFor="let stakeholder of delivery.stakeholders">
           <avatar-list [urls]="[stakeholder.organization.logo]"></avatar-list>
           {{ stakeholder.organization.name }}
         </ng-container>
-      </span> -->
+      </span>
     </td>
   </ng-container>
 

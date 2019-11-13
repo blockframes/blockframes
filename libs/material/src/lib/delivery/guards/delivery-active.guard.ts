@@ -1,33 +1,20 @@
 import { Injectable } from '@angular/core';
-import { StateActiveGuard, FireQuery, Query } from '@blockframes/utils';
-import { Delivery, DeliveryStore, modifyTimestampToDate, DeliveryWithTimestamps } from '../+state';
-import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-
-export const deliveryActiveQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
-  path: `deliveries/${deliveryId}`,
-  stakeholders: delivery => ({
-    path: `deliveries/${delivery.id}/stakeholders`,
-    organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
-    })
-  })
-});
+import { DeliveryState, DeliveryService, DeliveryQuery, DeliveryStore } from '../+state';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { tap } from 'rxjs/operators';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 
 @Injectable({ providedIn: 'root' })
-export class DeliveryActiveGuard extends StateActiveGuard<Delivery> {
-  readonly params = ['deliveryId'];
-  readonly urlFallback: 'layout';
-
-  constructor(private fireQuery: FireQuery, store: DeliveryStore, router: Router) {
-    super(store, router);
+@CollectionGuardConfig({ awaitSync: true })
+export class DeliveryActiveGuard extends CollectionGuard<DeliveryState> {
+  constructor(protected service: DeliveryService, private query: DeliveryQuery, private store: DeliveryStore) {
+    super(service);
   }
 
-  query({ deliveryId }) {
-    const query = deliveryActiveQuery(deliveryId);
-    return this.fireQuery.fromQuery<DeliveryWithTimestamps>(query).pipe(
-      map(delivery => modifyTimestampToDate(delivery))
+  sync(next: ActivatedRouteSnapshot) {
+    const deliveryId = next.params.deliveryId;
+    return this.service.syncDeliveryActiveQuery(deliveryId).pipe(
+      tap(_ => this.store.setActive(deliveryId))
     );
   }
-
 }

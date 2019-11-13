@@ -1,6 +1,7 @@
 import { staticModels } from '@blockframes/movie';
 import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
 import { Stakeholder } from '@blockframes/organization';
+import { timestampObjectsToDate } from '@blockframes/utils';
 
 export { DeliveryStatus, CurrencyCode } from './delivery.firestore';
 export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
@@ -38,6 +39,19 @@ export function createDelivery(params: Partial<Delivery>) {
     _type: 'deliveries',
     mustChargeMaterials: params.mustChargeMaterials || false,
     mustBeSigned: params.mustBeSigned || false,
+    mgDeadlines: [],
     ...params
   } as Delivery;
+}
+
+/** Takes a DeliveryWithTimestamps (dates in Timestamp) and returns a Delivery with dates in type Date */
+export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Delivery {
+  const mgDeadlines = delivery.mgDeadlines || [];
+
+  return {
+    ...delivery,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
+    steps: timestampObjectsToDate(delivery.steps),
+    mgDeadlines: timestampObjectsToDate(mgDeadlines)
+  };
 }

@@ -1,6 +1,6 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { EntityStore, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Delivery } from './delivery.model';
+import { Delivery, modifyTimestampToDate } from './delivery.model';
 import { CollectionState } from 'akita-ng-fire';
 
 export const enum DeliveryOption {
@@ -43,6 +43,10 @@ const initialState = {
 export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
   constructor() {
     super(initialState);
+  }
+
+  public akitaPreAddEntity(delivery: any): Delivery {
+    return modifyTimestampToDate(delivery);
   }
 
   public updateWizard(content?: Partial<DeliveryWizard>) {

@@ -20,9 +20,9 @@ export class DeliveryListGuard extends CollectionGuard<DeliveryState> {
   }
 
   sync() {
-    return this.service.syncQuery().pipe(
-      map(_ => this.query.getAll()),
-      map(deliveries => deliveries.length ? true : this.urlFallback)
+    return this.service.syncDeliveriesQuery().pipe(
+      map(_ => this.query.getCount()),
+      map(count => count === 0 ? this.urlFallback : true)
     );
   }
 }
