@@ -40,7 +40,6 @@
     <ng-container *ngIf="(materials$ | async) as materials">
       <delivery-material-list
         [materials]="materials"
-        [delivery]="delivery"
         [displayedColumns]="displayedColumns"
         (editing)="openSidenav($event)"
         (selectedMaterial)="selectMaterial($event)"

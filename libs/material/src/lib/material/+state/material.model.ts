@@ -29,7 +29,6 @@ export function createMaterial(material: Partial<Material>): Material {
 }
 
 export function getMaterialStep(material: Material, delivery: Delivery) {
-  // Add the step of a material by the step of delivery
   return {
     ...material,
     step: delivery.steps.find(deliveryStep =>

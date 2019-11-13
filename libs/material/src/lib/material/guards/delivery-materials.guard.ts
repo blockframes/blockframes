@@ -1,40 +1,30 @@
-
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { MaterialStore, Material, getMaterialStep } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
-import { DeliveryQuery, Delivery } from '../../delivery/+state';
-
-const deliveryMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
-  path: `movies/${delivery.movieId}/materials`,
-  queryFn: ref => ref.where('deliveryIds', 'array-contains', delivery.id )
-});
-
-const deliveryToBeSignedMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
-  path: `deliveries/${delivery.id}/materials`
-});
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { MaterialState, MaterialStore } from '../+state/material.store';
+import { MaterialService } from '../+state/material.service';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 
 @Injectable({ providedIn: 'root' })
-export class DeliveryMaterialsGuard extends StateListGuard<Material> {
-  urlFallback = 'layout';
-
+@CollectionGuardConfig({ awaitSync: true })
+export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
-    private fireQuery: FireQuery,
-    private deliveryQuery: DeliveryQuery,
-    store: MaterialStore,
-    router: Router
+    service: MaterialService,
+    protected store: MaterialStore,
+    private deliveryQuery: DeliveryQuery
   ) {
-    super(store, router);
+    super(service);
   }
 
-  get query() {
+  sync(next: ActivatedRouteSnapshot) {
     return this.deliveryQuery.selectActive().pipe(
       switchMap(delivery => {
-        const query = delivery.mustBeSigned
-          ? deliveryToBeSignedMaterialsQuery(delivery)
-          : deliveryMaterialsQuery(delivery);
-          return this.fireQuery.fromQuery<Material[]>(query)
+        return delivery.mustBeSigned
+          ? this.service.syncCollection(`deliveries/${next.params.deliveryId}/materials`)
+          : this.service.syncCollection(`movies/${next.params.movieId}/materials`, ref =>
+              ref.where('deliveryIds', 'array-contains', delivery.id)
+            );
       })
     );
   }

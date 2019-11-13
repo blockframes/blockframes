@@ -5,13 +5,15 @@ import {
   Input,
   Output,
   ViewChild,
-  HostBinding
+  HostBinding,
+  OnInit
 } from '@angular/core';
 import { Material, getMaterialStep } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { Delivery } from '../../+state';
+import { Delivery, DeliveryQuery } from '../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'delivery-material-list',
@@ -19,18 +21,27 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./delivery-material-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryMaterialListComponent {
+export class DeliveryMaterialListComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'delivery-material-list';
-  @Input() delivery: Delivery;
 
   @Input()
   set materials(materials: Material[]) {
-    // Add step with the stepId in materials
-    materials = materials.map(material => getMaterialStep(material, this.delivery));
+    materials = materials.map(material => getMaterialStep(material, this.deliveryQuery.getActive()));
     this.dataSource = new MatTableDataSource(materials);
     this.dataSource.sort = this.sort;
+    this.columns = [
+      'select',
+      'value',
+      'description',
+      'step',
+      'category',
+      'price',
+      'isOrdered',
+      'isPaid',
+      'status',
+      'action'
+    ];
   }
-
   @Input() displayedColumns: string[]
 
   @Output() editing = new EventEmitter<string>();
@@ -40,8 +51,15 @@ export class DeliveryMaterialListComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<Material>;
-
   public selection = new SelectionModel<Material>(true, []);
+  public delivery$: Observable<Delivery>
+  public columns: string[];
+
+  constructor(private deliveryQuery: DeliveryQuery) {}
+
+  ngOnInit() {
+    this.delivery$ = this.deliveryQuery.selectActive();
+  }
 
   public selectMaterial(material: Material) {
     this.selectedMaterial.emit(material);
