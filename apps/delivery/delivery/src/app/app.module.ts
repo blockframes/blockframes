@@ -49,7 +49,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AnalyticsModule } from '@blockframes/utils';
+
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -90,7 +93,7 @@ import { AnalyticsModule } from '@blockframes/utils';
       NotificationWidgetModule,
       EmailVerifyModule,
 
-      AnalyticsModule,
+      sentryDsn ? SentryModule : [],
 
       // Firebase
       AngularFireModule.initializeApp(environment.firebase),
