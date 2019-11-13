@@ -6,16 +6,20 @@
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ organization.name }}</h4>
         <h3>Main address</h3>
-        <p><span class="bf-dark-text">Street</span> {{organizationInformations.addresses.main.street}}</p>
-        <p><span class="bf-dark-text">Zip code</span> {{organizationInformations.addresses.main.zipCode}}</p>
-        <p><span class="bf-dark-text">City</span> {{organizationInformations.addresses.main.city}}</p>
-        <p><span class="bf-dark-text">Country</span> {{organizationInformations.addresses.main.country}}</p>
-        <p *ngIf="organizationInformations.addresses.main.region"><span class="bf-dark-text">Region</span> {{organizationInformations.addresses.main.region}}</p>
-        <p><span class="bf-dark-text">Phone number</span> {{organizationInformations.addresses.main.phoneNumber}}</p>
+        <ul>
+          <li><b class="bf-dark-text">Street</b> {{organizationInformations.addresses.main.street}}</li>
+          <li><b class="bf-dark-text">Zip code</b> {{organizationInformations.addresses.main.zipCode}}</li>
+          <li><b class="bf-dark-text">City</b> {{organizationInformations.addresses.main.city}}</li>
+          <li><b class="bf-dark-text">Country</b> {{organizationInformations.addresses.main.country}}</li>
+          <li *ngIf="organizationInformations.addresses.main.region"><b class="bf-dark-text">Region</b> {{organizationInformations.addresses.main.region}}</li>
+          <li><b class="bf-dark-text">Phone number</b> {{organizationInformations.addresses.main.phoneNumber}}</li>
+        </ul>
         <h3>Other informations</h3>
-        <p><span class="bf-dark-text">Email</span> {{organizationInformations.email}}</p>
-        <p><span class="bf-dark-text">Fiscal number</span> {{organizationInformations.fiscalNumber}}</p>
-        <p><span class="bf-dark-text">Activity</span> {{organizationInformations.activity}}</p>
+        <ul>
+          <li><b class="bf-dark-text">Email</b> {{organizationInformations.email}}</li>
+          <li><b class="bf-dark-text">Fiscal number</b> {{organizationInformations.fiscalNumber}}</li>
+          <li><b class="bf-dark-text">Activity</b> {{organizationInformations.activity}}</li>
+        </ul>
         <div class="action-button">
           <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon fontSet="material-icons-outlined">edit</mat-icon>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
@@ -8,7 +8,6 @@ import { ControlContainer } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormAddressComponent {
-  @HostBinding('attr.page-id') pageId = 'organization-form-address';
 
   constructor(public controlContainer: ControlContainer) {}
 
