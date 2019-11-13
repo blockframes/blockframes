@@ -11,7 +11,8 @@ import { MaterialQuery } from './material.query';
 @Injectable({
   providedIn: 'root'
 })
-@CollectionConfig({ path: 'movies/:movieId/materials'})
+/** Redefining path in guards. */
+@CollectionConfig({ path: 'toBeDefined'})
 export class MaterialService extends CollectionService<MaterialState> {
   constructor(
     private materialQuery: MaterialQuery,

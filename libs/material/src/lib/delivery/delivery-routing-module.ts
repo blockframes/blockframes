@@ -14,7 +14,7 @@ import { DeliveryInformationsEditableComponent } from "./pages/delivery-informat
 import { MovieEditableComponent } from "./pages/movie-editable/movie-editable.component";
 
 // Guards
-import { MovieOrganizationListGuard, ActiveMovieGuard } from "@blockframes/movie";
+import { MovieOrganizationListGuard, MovieActiveGuard } from "@blockframes/movie";
 import { MovieMaterialsGuard, DeliveryMaterialsGuard } from "../material";
 import { DeliveryListGuard } from "./guards/delivery-list.guard";
 import { DeliveryActiveGuard } from "./guards/delivery-active.guard";
@@ -41,8 +41,8 @@ const routes: Routes = [
       },
       {
         path: ':movieId',
-        canActivate: [ActiveMovieGuard],
-        canDeactivate: [ActiveMovieGuard],
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
         children: [
           {
             path: '2-choose-starter',
@@ -88,8 +88,8 @@ const routes: Routes = [
   },
   {
     path: ':movieId',
-    canActivate: [ActiveMovieGuard],
-    canDeactivate: [ActiveMovieGuard],
+    canActivate: [MovieActiveGuard],
+    canDeactivate: [MovieActiveGuard],
     children: [
       {
         path: '',

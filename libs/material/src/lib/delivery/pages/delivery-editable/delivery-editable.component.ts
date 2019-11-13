@@ -26,12 +26,10 @@ import { FormEntity } from '@blockframes/utils';
 export class DeliveryEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'delivery-editable';
 
-  public loading$: Observable<boolean>;
   public delivery$: Observable<Delivery>;
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public opened = false;
-  public displayedColumns: string[];
   public pdfLink: string;
 
   public form = new MaterialForm();
@@ -51,7 +49,6 @@ export class DeliveryEditableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loading$ = this.query.selectLoading();
     this.materials$ = combineLatest([
       this.query.selectActive(),
       this.materialQuery.selectAll()
@@ -69,7 +66,6 @@ export class DeliveryEditableComponent implements OnInit {
     this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.displayedColumns = this.setDisplayedColumns();
   }
 
   /* Open the sidenav with selected material form **/
@@ -235,25 +231,6 @@ export class DeliveryEditableComponent implements OnInit {
 
   public disableDelivery() {
     // No clue about what to do here
-  }
-
-  /* Define an array of columns to be displayed in the list depending on delivery settings **/
-  public setDisplayedColumns() {
-    const delivery = this.query.getActive();
-    return delivery.mustChargeMaterials
-      ? [
-          'select',
-          'value',
-          'description',
-          'step',
-          'category',
-          'price',
-          'isOrdered',
-          'isPaid',
-          'status',
-          'action'
-        ]
-      : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
   }
 
   public get deliveryContractURL$(): Observable<string> {

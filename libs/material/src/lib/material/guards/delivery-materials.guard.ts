@@ -11,13 +11,14 @@ import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
     service: MaterialService,
-    protected store: MaterialStore,
+    private store: MaterialStore,
     private deliveryQuery: DeliveryQuery
   ) {
     super(service);
   }
 
   sync(next: ActivatedRouteSnapshot) {
+    this.store.reset();
     return this.deliveryQuery.selectActive().pipe(
       switchMap(delivery => {
         return delivery.mustBeSigned
