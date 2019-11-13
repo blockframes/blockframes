@@ -64,7 +64,7 @@ export interface OrganizationAction {
 }
 
 export interface OrganizationWithTimestamps extends OrganizationDocument {
-  members?: OrganizationMember[];
+  members?: OrganizationMember[]; // TODO #1061 prevent from saving to firestore
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
