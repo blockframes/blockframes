@@ -25,7 +25,7 @@ export interface Price {
   currency: MovieCurrenciesSlug;
 }
 
-export interface DistributionRight {
+export interface DistributionRight { // @todo #1061 => distribution deal with specific status
   id: string;
   movieId: string;
   medias: MediasSlug[];
@@ -35,7 +35,7 @@ export interface DistributionRight {
   exclusive: boolean;
 }
 
-export interface CatalogBasket {
+export interface CatalogBasket {  // @todo #1061 => Cart
   id: string;
   status: BasketStatus;
   rights: DistributionRight[];
