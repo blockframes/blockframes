@@ -82,8 +82,15 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   return;
 }
 
+
 function getRestoreURL(projectID: string): string {
   return `https://us-central1-${projectID}.cloudfunctions.net/admin/data/restore`;
+}
+
+export async function syncUsers(expectedUsers: UserConfig[]): Promise<any> {
+  const { auth } = loadAdminServices();
+  await removeUnexpectedUsers(expectedUsers, auth);
+  await createAllUsers(expectedUsers, auth);
 }
 
 /**
