@@ -27,6 +27,7 @@ export class TemplateListComponent implements OnInit {
   }
 
   public deleteTemplate(template: Template) {
+    event.stopPropagation();
     this.service.deleteTemplate(template.id);
     this.snackBar.open(`Template "${template.name}" has been deleted.`, 'close', {
       duration: 2000

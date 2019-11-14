@@ -227,7 +227,7 @@ export class MaterialService extends CollectionService<MaterialState> {
   // MATERIAL UTILS //
   ////////////////////
 
-  /** Returns a snapshot of template materials */
+  /** Returns a snapshot of template materials and sets the subcollectionPath. */
   public async getTemplateMaterials(templateId: string) {
     this.subcollectionPath = `templates/${templateId}/materials`;
     return this.getValue();

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
-import { createTemplate, Template } from './template.model';
-import { Material, MaterialTemplate, createMaterialTemplate, MaterialService } from '../../material/+state';
+import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { createTemplate } from './template.model';
+import { Material, MaterialService } from '../../material/+state';
 import { TemplateQuery } from './template.query';
 import { TemplateStore, TemplateState } from './template.store';
 import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
@@ -21,7 +21,6 @@ export class TemplateService extends CollectionService<TemplateState>{
   constructor(
     private query: TemplateQuery,
     private organizationQuery: OrganizationQuery,
-    private permissionsService: PermissionsService,
     private materialService: MaterialService,
     store: TemplateStore
   ) {
@@ -39,40 +38,28 @@ export class TemplateService extends CollectionService<TemplateState>{
   public async addTemplate(templateName: string): Promise<string> {
     const templateId = this.db.createId();
     const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
     const template = createTemplate({
       id: templateId,
       name: templateName,
       orgId: organization.id
     });
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const organizationSnap = await tx.get(organizationDoc.ref);
-      const templateIds = organizationSnap.data().templateIds || [];
+    // Add the template to the database
+    this.add(template);
 
-      // Create document permissions
-      await this.permissionsService.createDocAndPermissions(template, organization, tx);
-
-      // Update the organization templateIds
-      const nextTemplateIds = [...templateIds, template.id];
-      tx.update(organizationDoc.ref, {templateIds: nextTemplateIds});
-    })
+    // Update the organization templateIds
+    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
 
     return templateId;
   }
 
   /** Delete a template and materials subcollection. */
   public async deleteTemplate(templateId: string): Promise<void> {
-    const org = this.organizationQuery.getValue().org;
-    const templateIds = org.templateIds.filter(id => id !== templateId);
-    const organizationDoc = this.db.doc<Organization>(`orgs/${org.id}`);
-    const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
+    const organization = this.organizationQuery.getValue().org;
+    const templateIds = organization.templateIds.filter(id => id !== templateId);
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      tx.delete(templateDoc.ref);
-      tx.update(organizationDoc.ref, { templateIds })
-      this.store.remove(templateId)
-    })
+    this.remove(templateId);
+    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds});
   }
 
   /** Save a delivery as new template. */
@@ -82,14 +69,8 @@ export class TemplateService extends CollectionService<TemplateState>{
       const templateId = await this.addTemplate(templateName);
 
       // Add the delivery's materials in the template
-      const batch = this.db.firestore.batch();
-      materials.forEach(material => {
-        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
-        const materialTemplate = createMaterialTemplate(material);
-        const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialTemplate);
-      });
-      return batch.commit();
+      this.materialService.getTemplateMaterials(templateId);
+      materials.forEach(material => this.materialService.add(material));
     }
   }
 
@@ -100,20 +81,10 @@ export class TemplateService extends CollectionService<TemplateState>{
     const templateMaterials = await this.materialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
-      const batch = this.db.firestore.batch();
       // Delete all materials of template
-      templateMaterials.forEach(material => {
-        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
-        return batch.delete(materialDoc.ref);
-      });
+      templateMaterials.forEach(material => this.materialService.remove(material.id));
       // Add delivery's materials in template
-      materials.forEach(material => {
-        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
-        const materialTemplate = createMaterialTemplate(material);
-        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialTemplate);
-      });
-      return batch.commit();
+      materials.forEach(material => this.materialService.add(material));
     }
   }
 
