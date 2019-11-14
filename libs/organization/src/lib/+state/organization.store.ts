@@ -1,27 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Store, StoreConfig, EntityStore } from '@datorama/akita';
-import { Organization } from './organization.model';
+import { StoreConfig, EntityStore } from '@datorama/akita';
+import { Organization, convertOrganizationWithTimestampsToOrganization, DeploySteps } from './organization.model';
 import { CollectionState } from 'akita-ng-fire';
 
-export const enum DeploySteps { notDeployed, registered, resolved, ready };
 export interface OrganizationState extends CollectionState<Organization> {
-  org: Organization;
-  form: {
-    name: string,
-    address: string
-  };
   isDeploying: boolean;
   deployStep: DeploySteps;
 }
 
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
-  org: null,
   active: null,
-  form: {
-    name: '',
-    address: ''
-  },
   isDeploying: false,
   deployStep: DeploySteps.notDeployed,
 };
@@ -30,6 +19,10 @@ const initialState: OrganizationState = {
 export class OrganizationStore extends EntityStore<OrganizationState, Organization> {
   constructor() {
     super(initialState);
+  }
+
+  akitaPreAddEntity(organization: any): Organization {
+    return convertOrganizationWithTimestampsToOrganization(organization);
   }
 
   public updateOrganization(org: Organization) {

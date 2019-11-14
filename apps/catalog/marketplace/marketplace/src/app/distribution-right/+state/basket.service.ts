@@ -19,7 +19,7 @@ const basketsQuery = (organizationId: string): Query<CatalogBasket> => ({
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/baskets' })
 export class BasketService extends CollectionService<BasketState> {
-  syncQuery = syncQuery.bind(this, basketsQuery(this.organizationQuery.getValue().org.id));
+  syncQuery = syncQuery.bind(this, basketsQuery(this.organizationQuery.getActiveId()));
 
   constructor(
     private organizationQuery: OrganizationQuery,
@@ -35,7 +35,7 @@ export class BasketService extends CollectionService<BasketState> {
   /** Update the status of the wishlist to 'sent' and create new date at this moment. */
   public async updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
-    const org = this.organizationQuery.getValue().org;
+    const org = this.organizationQuery.getActive();
     const wishlistTitles = movies.map(movie => movie.main.title.original);
 
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
@@ -61,7 +61,7 @@ export class BasketService extends CollectionService<BasketState> {
   }
 
   public async updateWishlist(movie: Movie) {
-    const orgState = this.organizationQuery.getValue().org;
+    const orgState = this.organizationQuery.getActive();
     const pendingWishlist = this.organizationQuery
       .getValue()
       .org.wishlist.filter(wishlist => wishlist.status === 'pending');
@@ -140,7 +140,7 @@ export class BasketService extends CollectionService<BasketState> {
 
   public removeMovieFromWishlist(id: string): boolean | Error {
     try {
-      const wishlist = this.organizationQuery.getValue().org.wishlist.map(w => {
+      const wishlist = this.organizationQuery.getActive().wishlist.map(w => {
         const wish = Object.assign({}, w);
         if (wish.status === 'pending' && wish.movieIds.includes(id)) {
           wish.movieIds = wish.movieIds.filter(movieId => movieId !== id);
@@ -148,7 +148,7 @@ export class BasketService extends CollectionService<BasketState> {
         return wish;
       });
       this.organizationService.update({
-        ...this.organizationQuery.getValue().org,
+        ...this.organizationQuery.getActive(),
         wishlist: wishlist
       });
       return true;

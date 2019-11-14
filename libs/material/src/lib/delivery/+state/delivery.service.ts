@@ -117,7 +117,7 @@ export class DeliveryService {
    */
   public async addDelivery(opts: AddDeliveryOptions) {
     const id = this.db.createId();
-    const organization = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getActive();
     const movieId = opts.movieId || this.movieQuery.getActiveId();
     const movieRef = this.movieDoc(movieId).ref;
 
@@ -163,7 +163,7 @@ export class DeliveryService {
   public async addDeliveryWithMovieMaterials(opts?: AddDeliveryOptions) {
     const id = this.db.createId();
     const movieId = this.movieQuery.getActiveId();
-    const organization = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getActive();
     const movieRef = this.movieDoc(movieId).ref;
 
     const delivery = createDelivery({
@@ -324,7 +324,7 @@ export class DeliveryService {
       delivery = this.query.getActive();
     }
 
-    const organizationId = this.organizationQuery.getValue().org.id;
+    const organizationId = this.organizationQuery.getActiveId();
     const { id, validated, stakeholders } = delivery;
 
     const stakeholderSignee = stakeholders.find(

@@ -14,9 +14,10 @@ import {
   OrganizationAction,
   OrganizationWithTimestamps,
   convertOrganizationWithTimestampsToOrganization,
-  OrganizationDocument
+  OrganizationDocument,
+  DeploySteps
 } from './organization.model';
-import { OrganizationStore, DeploySteps, OrganizationState } from './organization.store';
+import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
@@ -32,7 +33,7 @@ import {
   emailToEnsDomain,
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`,
@@ -109,6 +110,13 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   public async orgNameExist(orgName: string) {
     const orgSnap = await this.db.firestore.collection('orgs').where('name', '==', orgName).get();
     return !orgSnap.empty;
+  }
+
+  syncQuery() {
+    return this.authQuery.user$.pipe(
+      tap(_ => this.store.reset()),
+      switchMap(user => syncQuery.call(this, orgQuery(user.orgId))),
+    );
   }
 
   /** Returns an observable over organization, to be reused when you need orgs without guards */

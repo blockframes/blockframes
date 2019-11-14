@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
+import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import {
   AppDetailsWithStatus,
   AppStatus,
-  OrganizationStatus
+  OrganizationStatus,
+  Organization
 } from './organization.model';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
@@ -15,7 +16,7 @@ import { OrganizationMember, UserRole } from './organization.model';
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationQuery extends Query<OrganizationState> {
+export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
   /**
    * an Observable that describe the list
    * of application that are accessible to the current
@@ -40,7 +41,7 @@ export class OrganizationQuery extends Query<OrganizationState> {
     super(store);
   }
 
-  public members$ = this.select(state => state.org.members);
+  public members$ = this.selectActive().pipe(map(org => org.members));
 
   // TODO: this query does not change correctly when a member is updated: issue#707
   public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
@@ -55,36 +56,36 @@ export class OrganizationQuery extends Query<OrganizationState> {
     })
   );
 
-  get orgId$(): Observable<string> {
-    return this.select(state => state.org.id);
-  }
+  public isAccepted$ = this.selectAll().pipe(
+    filter(orgs => !!orgs[0]),
+    map(orgs => orgs[0].status === OrganizationStatus.accepted)
+  )
 
-  get status$(): Observable<OrganizationStatus> {
-    return this.select(state => state.org).pipe(
-      filter(org => !!org),
-      map(org => org.status)
-    );
+  get orgId$(): Observable<string> {
+    return this.selectActive().pipe(map(org => org.id));
   }
 
   get id() {
-    return this.getValue().org.id;
+    return this.getActiveId()
   }
 
   get pendingActions$() {
-    return this.select(state => state.org.actions).pipe(
+    return this.selectActive().pipe(
+      map(org => org.actions),
       filter(actions => !!actions),
       map(actions => actions.filter(action => !action.isApproved))
     );
   }
 
   get approvedActions$() {
-    return this.select(state => state.org.actions).pipe(
+    return this.selectActive().pipe(
+      map(org => org.actions),
       filter(actions => !!actions),
       map(actions => actions.filter(action => action.isApproved))
     );
   }
 
   getOperationById(id: string) {
-    return this.getValue().org.operations.filter(action => action.id === id)[0];
+    return this.getActive().operations.filter(action => action.id === id)[0];
   }
 }
