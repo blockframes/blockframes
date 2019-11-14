@@ -29,7 +29,7 @@ export class OrganizationEditableComponent implements OnInit {
 
   ngOnInit() {
     this.organization$ = this.query
-      .select('org')
+      .selectActive()
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
     this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
   }
@@ -49,7 +49,7 @@ export class OrganizationEditableComponent implements OnInit {
       if (this.organizationProfileForm.invalid) {
         throw new Error('Your organization profile informations are not valid');
       }
-      this.service.update(this.organizationProfileForm.value);
+      this.service.update(this.query.getActiveId(), this.organizationProfileForm.value);
       this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

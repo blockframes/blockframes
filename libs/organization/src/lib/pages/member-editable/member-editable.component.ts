@@ -20,7 +20,7 @@ import { Invitation, InvitationType } from '@blockframes/invitation/types';
 export class MemberEditableComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
-  public orgName: string = this.query.getValue().org.name
+  public orgName: string = this.query.getActive().name
 
   /** Observable of the selected memberId */
   private selectedMemberId$ = new BehaviorSubject<string>(null);
@@ -71,7 +71,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.query.getValue().org.id).where('status', '==', 'pending');
+    const queryFn = ref => ref.where('organization.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
     this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
@@ -79,7 +79,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-    
+
     this.invitationsFromOrganization$ = this.invitationQuery.selectAll({
       filterBy: invitation => invitation.type === InvitationType.fromOrganizationToUser,
       sortBy: 'date',

@@ -38,7 +38,7 @@ export class ProfileEditableComponent implements OnInit {
     const user = this.authQuery.user;
     this.userEmail = user.email;
     this.profileForm = new ProfileForm(user);
-    this.organization$ = this.organizationQuery.select('org');
+    this.organization$ = this.organizationQuery.selectActive();
   }
 
   public update() {
