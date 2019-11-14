@@ -2,7 +2,7 @@
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
       <!-- using organizationInformations to update display as user type in the form -->
-      <img mat-card-avatar [storageRef]="organizationInformations.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
+      <img mat-card-avatar [imgRef]="organizationInformations.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ organization.name }}</h4>
         <h3>Main address</h3>
