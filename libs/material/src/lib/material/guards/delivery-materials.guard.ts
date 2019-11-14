@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { CollectionGuard } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from '../+state/material.store';
 import { MaterialService } from '../+state/material.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { MaterialQuery } from '../+state/material.query';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
 export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
     service: MaterialService,
     private store: MaterialStore,
+    private materialQuery: MaterialQuery,
     private deliveryQuery: DeliveryQuery
   ) {
     super(service);
+  }
+
+  get awaitSync() {
+    return this.materialQuery.getCount() === 0;
   }
 
   sync(next: ActivatedRouteSnapshot) {
