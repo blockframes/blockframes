@@ -8,17 +8,13 @@ export class ImageReferenceDirective {
   placeholder: string;
   url: string;
 
-  /** Set src attribute in img tag with the path for storage.
+  /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set imgRef(path: ImgRef) {
     if(!path){
       this.updateUrl();
     } try {
       this.updateUrl(path.url);
-      // const ref = this.storage.ref(path);
-      // ref.getDownloadURL().toPromise()
-      //   .then(url => this.updateUrl(url))
-      //   .catch(_ => this.updateUrl());
     } catch (err) {
       this.updateUrl();
     }

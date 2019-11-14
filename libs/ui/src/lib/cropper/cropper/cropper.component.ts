@@ -7,6 +7,7 @@ import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -39,13 +40,13 @@ function b64toBlob(data: string) {
 
 
 /** Check if the path is a file path */
-function isFile(path: string): boolean {
-  if (!path) {
+function isFile(path: any): boolean {
+  if (path === null || !path) {
     return false;
   }
-  const part = path.split('.');
+  const part = path.ref.split('.');
   const last = part.pop();
-  return part.length === 1 && !last.includes('/');
+  return part.length >= 1 && !last.includes('/');
 }
 
 export function createImgRef(ref: Partial<ImgRef> = {}): ImgRef {
@@ -104,12 +105,12 @@ export class CropperComponent implements ControlValueAccessor{
 
   //  Triggered when the parent form field is initialized or updated (parent -> component)
   writeValue(path: ImgRef): void {
-    console.log('writeValue path', path)
-    if (isFile(path.ref)) {
+    if (isFile(path)) {
       const part = path.ref.split('/');
       this.name = part.pop();
       this.folder = this.storagePath;
-      this.url$ = this.storage.ref(path.ref).getDownloadURL().pipe(
+      this.ref = this.storage.ref(path.ref);
+      this.url$ = this.ref.getDownloadURL().pipe(
         catchError(err => {
           this.nextStep('drop');
           return of('');
@@ -117,25 +118,9 @@ export class CropperComponent implements ControlValueAccessor{
       )
       this.nextStep('show');
     } else {
-      this.folder = path.ref;
+      this.folder = this.storagePath;
       this.nextStep('drop');
     }
-      // if (isFile(path)) {
-      //   const part = path.split('/');
-      //   this.name = part.pop();
-      //   this.folder = this.storagePath;
-      //   this.ref = this.storage.ref(path);
-      //   this.url$ = this.ref.getDownloadURL().pipe(
-      //     catchError(err => {
-      //       this.nextStep('drop');
-      //       return of('');
-      //     })
-      //   )
-      //   this.nextStep('show');
-      // } else {
-      //   this.folder = path;
-      //   this.nextStep('drop');
-      // }
   }
 
   // update the parent form field when there is change in the component (component -> parent)
@@ -172,7 +157,7 @@ export class CropperComponent implements ControlValueAccessor{
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      const fileName = Date.now() + '_' + this.file.name;
+      const fileName = sanitizeFileName(this.file.name);
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
@@ -200,11 +185,6 @@ export class CropperComponent implements ControlValueAccessor{
       this.nextStep('show');
 
     })
-    // this.ref.getMetadata().toPromise()
-    // .then(meta => {
-    //   this.uploaded(meta.fullPath)
-    // });
-    //   this.nextStep('show');
     }
 
     // TODO#1149: fix resize - get original picture
