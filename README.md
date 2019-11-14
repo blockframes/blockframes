@@ -44,10 +44,11 @@ export GOOGLE_APPLICATION_CREDENTIALS=some/path/service-account-for-your-firebas
 
 ### Setup your secrets
 
-```sh
-export SENDGRID_API_KEY=""
-export MNEMONIC=""
-```
+We use this to send emails, configure algolia, etc.
+
+We have secrets that we don't share on the public github, these should be stored in the `secrets.sh` file at the root of the project. By default the ops scripts will use the `secrets.template.sh` file that contains an example of the secrets we use.
+
+Copy the `secrets.template.sh` to `secrets.sh` and update the values with keys you create on different services.
 
 ## Running and testing
 
@@ -149,3 +150,13 @@ docker build . --tag=eth-events-server:0.0.1
 docker run -v ${PWD}/blockframes-laurent-702feef93c99.json:/app/creds.json \
     --rm -p 3333 -t -i eth-events-server:0.0.1
 ```
+
+## Firebase mails templates
+
+Verification emails are send by Firebase, using defined template and configuration. As we got different routes in production, make sure to configure deployed versions of the app accordingly.
+
+Go to Firebase console > Authentication > Templates > ...
+
+Click on the pen to edit the template. At the very bottom of the form, click on `customize action URL`. If this database is used for development, the path should be `https://localhost:4200/...`, if it belongs to production, you should put `https://app.blockframes.io/...`.
+
+You can also customize the message of each type of mail (email verification, password reset, email modification).
