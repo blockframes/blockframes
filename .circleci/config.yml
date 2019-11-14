@@ -20,6 +20,11 @@ staging_only: &staging_only
     branches:
       only:
         - staging
+ci_only: &ci_only
+  filters:
+    branches:
+      only:
+        - clean-ops
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -128,7 +133,6 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: "production"
-      - NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
       - checkout
       - restore_cache:
@@ -204,13 +208,8 @@ workflows:
       - test:
           requires:
             - build
-      - click-to-run-e2e:
-          type: approval
       - test-e2e:
-          requires:
-            - click-to-run-e2e
-            - test
-            - lint
+          <<: *ci_only
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
