@@ -29,7 +29,12 @@
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
-      <toolbar-footer></toolbar-footer>
+      <toolbar-footer>
+        <a mat-button routerLink="/layout/o/catalog-dashboard/terms">Terms and Conditions</a>
+        <a mat-button routerLink="/layout/o/catalog-dashboard/about">About</a>
+        <a mat-button routerLink="/layout/o/catalog-dashboard/who-are-we">Who are we?</a>
+        <a mat-button routerLink="/layout/o/catalog-dashboard/contact">Contact</a>
+      </toolbar-footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

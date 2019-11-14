@@ -24,11 +24,9 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
-import { MovieModule } from '@blockframes/movie';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletWidgetModule } from '@blockframes/ethers';
-import { KeyManagerModule } from '@blockframes/ethers';
+import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
 
 // Material
@@ -56,7 +54,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     // Libraries
     OrganizationWidgetModule,
     ToolbarModule,
-    MovieModule,
     ProfileWidgetModule,
     ProfileMenuModule,
     WalletWidgetModule,

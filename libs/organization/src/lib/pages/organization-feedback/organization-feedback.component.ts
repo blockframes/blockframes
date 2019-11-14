@@ -45,6 +45,6 @@ export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
   }
 
   public navigate() {
-    this.router.navigate(['../../layout']);
+    this.router.navigate(['/layout']);
   }
 }
