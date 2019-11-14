@@ -4,8 +4,7 @@ import { MemberState, MemberStore } from "./member.store";
 import { Observable, combineLatest } from "rxjs";
 import { PermissionsQuery } from "../../permissions/+state";
 import { map } from "rxjs/operators";
-import { OrganizationMember, UserRole } from "../../+state";
-
+import { OrganizationMember, UserRole } from "./member.model";
 
 @Injectable({
   providedIn: 'root'

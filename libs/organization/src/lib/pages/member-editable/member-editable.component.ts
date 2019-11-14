@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { OrganizationQuery, OrganizationMember } from '../../+state';
+import { OrganizationQuery } from '../../+state';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
@@ -9,7 +9,7 @@ import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
-import { MemberService, MemberQuery } from '../../member/+state';
+import { MemberService, MemberQuery, OrganizationMember } from '../../member/+state';
 
 @Component({
   selector: 'member-editable',
@@ -45,7 +45,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   public memberFormGroup$: Observable<FormGroup>;
 
   private invitationSubscription: Subscription;
-  private memberSubscription: Subscription;
 
   constructor(
     private query: OrganizationQuery,
@@ -60,8 +59,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this. memberSubscription = this.memberService.syncOrgMembers().subscribe();
-
     this.members$ = this.memberQuery.membersWithRole$.pipe(
       tap(members => this.membersFormList.patchValue(members)),
       switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
@@ -117,6 +114,5 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.invitationSubscription.unsubscribe();
-    this.memberSubscription.unsubscribe();
   }
 }

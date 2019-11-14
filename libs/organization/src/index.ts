@@ -12,6 +12,9 @@ export * from './lib/+state/organization.store';
 // Permission Guard
 export * from './lib/permissions/guard/permissions.guard';
 
+// Member State
+export * from './lib/member/+state';
+
 // Permission State
 export * from './lib/permissions/+state/permissions.query';
 export * from './lib/permissions/+state/permissions.service';

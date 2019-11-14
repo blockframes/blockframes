@@ -56,6 +56,7 @@ import { MemberEditableComponent } from './pages/member-editable/member-editable
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
+import { MemberGuard } from './member/guard/member.guard';
 
 export const organizationRoutes: Routes = [
   {
@@ -65,6 +66,8 @@ export const organizationRoutes: Routes = [
       { path: 'edit', component: OrganizationEditableComponent },
       {
         path: 'members',
+        canActivate: [MemberGuard],
+        canDeactivate: [MemberGuard],
         component: MemberEditableComponent
       },
     ]
@@ -82,6 +85,8 @@ if (AFM_DISABLE) {
   organizationRoutes[0].children.push(
     {
       path: 'administration',
+      canActivate: [MemberGuard],
+      canDeactivate: [MemberGuard],
       component: OrganizationAdminViewComponent
     }
   );

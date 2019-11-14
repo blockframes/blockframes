@@ -8,8 +8,9 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMember, OrganizationOperation, UserRole } from '../../+state';
+import { OrganizationOperation } from '../../+state';
 import { PermissionsQuery } from '../../permissions/+state';
+import { OrganizationMember, UserRole } from '../../member/+state';
 
 interface OperationMember extends OrganizationMember {
   operationIds: string[];

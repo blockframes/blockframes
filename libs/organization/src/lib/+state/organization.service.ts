@@ -8,8 +8,6 @@ import { App, createAppPermissions, createPermissions, PermissionsQuery } from '
 import {
   createOrganizationDocument,
   Organization,
-  OrganizationMember,
-  OrganizationMemberRequest,
   OrganizationOperation,
   OrganizationAction,
   OrganizationWithTimestamps,
@@ -34,13 +32,10 @@ import {
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
 import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
+import { OrganizationMemberRequest, OrganizationMember } from '../member/+state';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
-  path: `orgs/${orgId}`,
-  members: (organization: OrganizationWithTimestamps) =>
-    organization.userIds.map(id => ({
-      path: `users/${id}`
-    }))
+  path: `orgs/${orgId}`
 });
 
 //--------------------------------------

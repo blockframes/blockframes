@@ -9,6 +9,7 @@ import {
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
+import { OrganizationMember } from '../member/+state';
 export {
   OrganizationStatus,
   WishlistStatus,
@@ -29,24 +30,6 @@ export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
 }
 
-export interface OrganizationMemberRequest {
-  email: string;
-  roles: string[];
-}
-
-export interface OrganizationMember extends OrganizationMemberRequest {
-  uid: string;
-  name?: string;
-  surname?: string;
-  avatar?: string;
-  role?: UserRole;
-}
-
-export const enum UserRole {
-  admin = 'admin',
-  member = 'member'
-}
-
 export interface OrganizationOperation {
   id: string;
   name: string;
@@ -64,14 +47,12 @@ export interface OrganizationAction {
 }
 
 export interface OrganizationWithTimestamps extends OrganizationDocument {
-  members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
-  members?: OrganizationMember[];
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[];
@@ -107,7 +88,6 @@ export function createOrganization(
     updated: new Date(),
     // Init "akita" fields
     baskets: [],
-    members: [],
     actions: [],
     operations: [],
   }

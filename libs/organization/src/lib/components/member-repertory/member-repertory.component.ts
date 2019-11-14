@@ -1,10 +1,10 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMember } from '../../+state';
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
+import { OrganizationMember } from '../../member/+state';
 
 @Component({
   selector: 'member-repertory',
