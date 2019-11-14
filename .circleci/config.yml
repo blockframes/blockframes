@@ -117,15 +117,13 @@ jobs:
       - run: cp -R ~/build/* ./
       - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
-      - do-exclusively/do-exclusively:
-          token: $CIRCLE_TOKEN
-          command: |
-            npm install --save-dev firebase-tools &&
-            npx firebase use ci &&
-            ENV=ci npx firebase deploy --force || true;
-            ENV=ci npx ng build backend-ops --configuration=$ENV
-            ENV=ci node dist/apps/backend-ops/main.js prepareForTesting
-            ENV=ci npm run e2e --headless
+      - run: |
+          npm install --save-dev firebase-tools &&
+          npx firebase use ci &&
+          npx firebase deploy --force || true;
+          npx ng build backend-ops --configuration=$ENV
+          node dist/apps/backend-ops/main.js prepareForTesting
+          npm run e2e --headless
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
