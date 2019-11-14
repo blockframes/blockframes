@@ -46,7 +46,7 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   )
 
   get orgId$(): Observable<string> {
-    return this.selectActive().pipe(map(org => org.id));
+    return this.selectActive(org => org.id);
   }
 
   get id() {
@@ -54,16 +54,14 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   }
 
   get pendingActions$() {
-    return this.selectActive().pipe(
-      map(org => org.actions),
+    return this.selectActive(org => org.actions).pipe(
       filter(actions => !!actions),
       map(actions => actions.filter(action => !action.isApproved))
     );
   }
 
   get approvedActions$() {
-    return this.selectActive().pipe(
-      map(org => org.actions),
+    return this.selectActive(org => org.actions).pipe(
       filter(actions => !!actions),
       map(actions => actions.filter(action => action.isApproved))
     );
