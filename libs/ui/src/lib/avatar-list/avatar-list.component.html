@@ -4,7 +4,7 @@
     <img *ngIf="!!url; else unknown" [src]="url">
   </ng-container>
   <ng-container *ngFor="let ref of _refs">
-    <img *ngIf="!!ref; else unknown" [storageRef]="ref">
+    <img *ngIf="!!ref; else unknown" [imgRef]="ref">
   </ng-container>
   <ng-template #unknown>
     <img [src]="placeholderLogo" alt="Placeholder Logo">

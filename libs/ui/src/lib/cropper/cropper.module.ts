@@ -14,10 +14,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Components
 import { CropperComponent } from './cropper/cropper.component';
 import { HttpClientModule } from '@angular/common/http';
-import { StorageImageDirective } from './storage-image.directive';
+import { ImageReferenceDirective } from './image-reference.directive';
 
 @NgModule({
-  declarations: [DropZoneDirective, CropperComponent, StorageImageDirective],
+  declarations: [DropZoneDirective, CropperComponent, ImageReferenceDirective],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -28,6 +28,6 @@ import { StorageImageDirective } from './storage-image.directive';
     ImageCropperModule,
     FlexLayoutModule
   ],
-  exports: [DropZoneDirective, CropperComponent, StorageImageDirective]
+  exports: [DropZoneDirective, CropperComponent, ImageReferenceDirective]
 })
 export class CropperModule {}

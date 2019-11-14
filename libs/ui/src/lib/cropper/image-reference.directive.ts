@@ -2,15 +2,15 @@ import { Directive, Renderer2, ElementRef, Input } from '@angular/core'
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ImgRef } from './cropper/cropper.component';
 @Directive({
-  selector: 'img[storageRef]'
+  selector: 'img[imgRef]'
 })
-export class StorageImageDirective {
+export class ImageReferenceDirective {
   placeholder: string;
   url: string;
 
   /** Set src attribute in img tag with the path for storage.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set storageRef(path: ImgRef) {
+  @Input() set imgRef(path: ImgRef) {
     if(!path){
       this.updateUrl();
     } try {
