@@ -9,6 +9,7 @@ import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
+import { MemberService, MemberQuery } from '../../member/+state';
 
 @Component({
   selector: 'member-editable',
@@ -43,7 +44,8 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   /** Observable of the selected memberFormGroup in the membersFormList */
   public memberFormGroup$: Observable<FormGroup>;
 
-  public sub: Subscription;
+  private invitationSubscription: Subscription;
+  private memberSubscription: Subscription;
 
   constructor(
     private query: OrganizationQuery,
@@ -53,10 +55,14 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private invitationStore: InvitationStore,
     private permissionsService: PermissionsService,
     private permissionQuery: PermissionsQuery,
+    private memberService: MemberService,
+    private memberQuery: MemberQuery
   ) {}
 
   ngOnInit() {
-    this.members$ = this.query.membersWithRole$.pipe(
+    this. memberSubscription = this.memberService.syncOrgMembers().subscribe();
+
+    this.members$ = this.memberQuery.membersWithRole$.pipe(
       tap(members => this.membersFormList.patchValue(members)),
       switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
     );
@@ -72,7 +78,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
     const storeName = this.invitationStore.storeName;
     const queryFn = ref => ref.where('organization.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
-    this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
+    this.invitationSubscription = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
       filterBy: invitation => invitation.type === InvitationType.fromUserToOrganization,
@@ -110,6 +116,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.invitationSubscription.unsubscribe();
+    this.memberSubscription.unsubscribe();
   }
 }
