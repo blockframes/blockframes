@@ -25,7 +25,7 @@ export class AppGridComponent implements OnInit {
   }
 
   public requestAccess(appId: string) {
-    const orgId = this.organizationQuery.getValue().org.id;
+    const orgId = this.organizationQuery.getActiveId();
     return this.organizationService.requestAccessToApp(orgId, appId);
   }
 }

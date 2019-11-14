@@ -34,7 +34,7 @@ export class MovieService extends CollectionService<MovieState> {
 
   /** Gets every movieIds of the user active organization and sync them. */
   public syncOrgMovies() {
-    return this.organizationQuery.select('org').pipe(
+    return this.organizationQuery.selectActive().pipe(
       switchMap(org => this.syncManyDocs(org.movieIds))
     )
   }

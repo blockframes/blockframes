@@ -1,52 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationService, OrganizationStatus } from '../+state';
+import { OrganizationService, OrganizationStatus, OrganizationState, OrganizationQuery, OrganizationStore } from '../+state';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-
-// TODO issue#1146
 import { AFM_DISABLE } from '@env';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { map, tap } from 'rxjs/operators';
 
-// TODO: issue#1171, use a CollectionGuard
 @Injectable({ providedIn: 'root' })
-export class OrganizationGuard {
-  private subscription: Subscription;
+@CollectionGuardConfig({ awaitSync: true })
+export class OrganizationGuard extends CollectionGuard<OrganizationState> {
+  constructor(
+    protected service: OrganizationService,
+    protected router: Router,
+    private query: OrganizationQuery,
+    private store: OrganizationStore,
+  ) {
+    super(service)
+  }
 
-  constructor(private orgService: OrganizationService, private router: Router) {}
-
-  canActivate() {
-    return new Promise(res => {
-      this.subscription = this.orgService.sync().subscribe({
-        next: (organization: Organization) => {
-          if (!organization) {
-            return res(false);
-          }
-          if (organization.status === OrganizationStatus.pending) {
-            return res(this.router.parseUrl('layout/organization/congratulation'));
-          }
-
-          // TODO issue#1146
-          if (AFM_DISABLE) {
-            this.orgService.retrieveDataAndAddListeners();
-          }
-
-          return res(true);
-        },
-        error: err => {
-          console.log('Error: ', err);
-          res(this.router.parseUrl('layout/organization'));
+  sync() {
+    return this.service.syncQuery().pipe(
+      map(_ =>  this.query.getAll()),
+      tap(orgs => this.store.setActive(orgs[0].id)),
+      map(orgs => {
+        if (!orgs[0]) {
+          return false;
         }
-      });
-    });
+        if (orgs[0].status === OrganizationStatus.pending) {
+          return 'layout/organization/congratulations';
+        }
+        if (AFM_DISABLE) {
+          this.service.retrieveDataAndAddListeners();
+        }
+      })
+    );
   }
 
   canDeactivate() {
-    this.subscription.unsubscribe();
-
     // TODO issue#1146
     if (AFM_DISABLE) {
-      this.orgService.removeAllListeners();
+      this.service.removeAllListeners();
     }
-
     return true;
   }
 }

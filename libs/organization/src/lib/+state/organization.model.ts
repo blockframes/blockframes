@@ -75,6 +75,8 @@ export interface Organization extends OrganizationDocumentWithDates {
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
   baskets: CatalogBasket[];
+  isDeploying?: boolean;
+  deployStep?: DeploySteps;
 }
 
 export interface Wishlist extends WishlistDocumentWithDates {
@@ -84,6 +86,8 @@ export interface Wishlist extends WishlistDocumentWithDates {
 export interface OrganizationForm {
   name: string;
 }
+
+export const enum DeploySteps { notDeployed, registered, resolved, ready };
 
 export interface PublicOrganization {
   id: string;
