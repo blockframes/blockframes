@@ -53,7 +53,7 @@ export class MemberFormRoleComponent {
     const orgEthAddress = await this.service.getOrganizationEthAddress();
     let tx: ActionTx;
     const callback = () => {
-      const members = this.query.getValue().org.members
+      const members = this.query.getActive().members
         .filter(member => member.uid !== uid)
         .map(member => {
           if (!member.role) {
@@ -61,14 +61,14 @@ export class MemberFormRoleComponent {
           }
           return member;
         });
-      const memberToUpdate = this.query.getValue().org.members.find(member => member.uid === uid);
+      const memberToUpdate = this.query.getActive().members.find(member => member.uid === uid);
 
       const newMember: OrganizationMember = {...memberToUpdate, role};
       members.push(newMember);
       this.permissionsService.updateMembersRole(members);
     };
 
-    const orgName = this.query.getValue().org.name;
+    const orgName = this.query.getActive().name;
     const orgId = this.query.id;
     let feedback: TxFeedback;
     if (role === UserRole.admin){

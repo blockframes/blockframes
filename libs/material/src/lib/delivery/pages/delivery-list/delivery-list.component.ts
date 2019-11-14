@@ -28,7 +28,7 @@ export class DeliveryListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userOrganization$ = this.organizationQuery.select('org');
+    this.userOrganization$ = this.organizationQuery.selectActive();
     this.deliveries$ = this.query.selectAll();
     this.movie$ = this.movieQuery.selectActive();
   }

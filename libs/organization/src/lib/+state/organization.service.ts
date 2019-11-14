@@ -157,7 +157,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
     const orgId = this.query.id;
-    const orgName = this.query.getValue().org.name;
+    const orgName = this.query.getActive().name;
     // get a user or create a ghost user when needed:
     const { uid } = await this.authService.getOrCreateUserByMail(member.email, orgName); // TODO: limit the number of requests per organizations!
 
@@ -218,11 +218,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return orgId;
   }
 
-  // public update(organization: Partial<Organization>) {
-  //   const organizationId = this.query.id;
-  //   return this.db.doc(`orgs/${organizationId}`).update(organization);
-  // }
-
   /** Returns a list of organizations whose part of name match with @param prefix */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
     const call = firebase.functions().httpsCallable('findOrgByName');
@@ -278,7 +273,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const orgName = this.query.getValue().org.name;
+      const orgName = this.query.getActive().name;
       const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
       let ethAddress = await this.getOrganizationEthAddress();
       await new Promise(resolve => {
@@ -324,7 +319,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   /** Retrieve the Ethereum address of the current org (using it's ENS name) */
   public async getOrganizationEthAddress() {
     this._requireProvider();
-    const orgName = this.query.getValue().org.name;
+    const orgName = this.query.getActive().name;
     const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
     return this.provider.resolveName(organizationENS);
   }
@@ -456,7 +451,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
     // re construct members list
     const promises: Promise<number>[] = [];
-    this.query.getValue().org.members
+    this.query.getActive().members
       .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
@@ -472,7 +467,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** create a newOperation in the state, or update it if it already exists */
   private async upsertOperation(newOperation: OrganizationOperation) {
-    let { operations } = this.query.getValue().org; // get every operations
+    let { operations } = this.query.getActive(); // get every operations
 
     if(!operations) {
       operations = [];
@@ -558,7 +553,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
     // re construct signer list
     const promises: Promise<number>[] = [];
-    this.query.getValue().org.members
+    this.query.getActive().members
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)
@@ -589,7 +584,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** create a newOperation in the state, or update it if it already exists */
   public upsertAction(newAction: OrganizationAction) {
-    let { actions } = this.query.getValue().org; // get every actions
+    let { actions } = this.query.getActive(); // get every actions
 
     if(!actions) {
       actions = [];

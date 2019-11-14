@@ -68,7 +68,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     );
 
     /** Return the operationFormGroup linked to the selected operation.id */
-    this.operations$ = this.query.select('org').pipe(
+    this.operations$ = this.query.selectActive().pipe(
       tap(organization => this.organizationName = organization.name),
       filter(organization => !!organization.operations),
       map(organization => organization.operations),
@@ -82,7 +82,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     );
 
 
-    this.members$ = this.query.select('org').pipe(
+    this.members$ = this.query.selectActive().pipe(
       map(organization => organization.members),
       tap(members => this.memberFormList.patchValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),

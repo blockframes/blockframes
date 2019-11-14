@@ -29,7 +29,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   ngOnInit() {
     this.getMovie();
-    this.toggle$ = this.orgQuery.select('org').pipe(
+    this.toggle$ = this.orgQuery.selectActive().pipe(
       map(org => {
         return org.wishlist
           .filter(({ status }) => status === 'pending')
