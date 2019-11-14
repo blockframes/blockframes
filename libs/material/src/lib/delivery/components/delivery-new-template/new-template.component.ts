@@ -31,7 +31,9 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // TODO: Find a new way to subscribe on organization templates => ISSUE #1276
-    this.templateService.subscribeOnTemplates().pipe(takeUntil(this.destroyed$)).subscribe();
+    this.templateService.syncOrgTemplates()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
     // Check if the name already exists in the selected organization
     this.templateNameControl.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(templateName =>
       this.templateService.nameExists(templateName)

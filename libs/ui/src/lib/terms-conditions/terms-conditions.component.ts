@@ -16,7 +16,7 @@ export class TermsAndConditionsComponent {
 
   /** Opens a dialog with terms of use and privacy policy. */
   public openTermsOfUse() {
-    this.dialog.open(PrivacyPageComponent, { maxHeight: '80vh' })
+    this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
   }
 
   public toggleTermsOfUse() {
