@@ -15,7 +15,7 @@ export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
 
   /** Return an observable of a WishList array containing the movies */
   public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([
-    this.organizationQuery.select(state => state.org),
+    this.organizationQuery.selectActive(),
     this.movieQuery.selectAll()
   ]).pipe(
     filter(([org, movies]) => !!org),

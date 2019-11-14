@@ -63,8 +63,8 @@ export class BasketService extends CollectionService<BasketState> {
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();
     const pendingWishlist = this.organizationQuery
-      .getValue()
-      .org.wishlist.filter(wishlist => wishlist.status === 'pending');
+      .getActive()
+      .wishlist.filter(wishlist => wishlist.status === 'pending');
     const wishlistFactory = (movieId: string): Wishlist => {
       return {
         status: WishlistStatus.pending,
@@ -94,7 +94,7 @@ export class BasketService extends CollectionService<BasketState> {
 
   /** Checks if a movie is or is not in the organization wishlist. */
   public isAddedToWishlist(movieId: string): Observable<boolean> {
-    return this.organizationQuery.select('org').pipe(
+    return this.organizationQuery.selectActive().pipe(
       map(org => {
         return org.wishlist
           .filter(({ status }) => status === 'pending')
