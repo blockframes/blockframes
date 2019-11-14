@@ -1,4 +1,4 @@
-import { createAllUsers, prepareFirebase, removeUnexpectedUsers } from './firebaseSetup';
+import { createAllUsers, prepareFirebase, removeUnexpectedUsers, syncUsers } from './firebaseSetup';
 import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
@@ -13,6 +13,10 @@ async function prepareForTesting() {
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   console.info('Algolia ready for testing!');
+
+  console.info('Syncing users...');
+  await syncUsers(USERS);
+  console.info('Users synced!');
 
   process.exit(0);
 }
@@ -40,11 +44,7 @@ async function upgradeAlgoliaOrgs() {
 }
 
 async function prepareToronto() {
-  const { auth } = loadAdminServices();
-  console.info('clearing other users...');
-  await removeUnexpectedUsers(USERS, auth);
-  console.info('create all users...');
-  await createAllUsers(USERS, auth);
+  await syncUsers(USERS);
   console.info('done.');
   process.exit(0);
 }
