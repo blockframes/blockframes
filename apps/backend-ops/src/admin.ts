@@ -16,10 +16,13 @@ export interface AdminServices {
 }
 
 export function loadAdminServices(): AdminServices {
-  admin.initializeApp({
-    // credential: admin.credential.cert(serviceAccount),
-    credential: admin.credential.applicationDefault(),
-    databaseURL: firebase.databaseURL
-  });
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      // credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.applicationDefault(),
+      databaseURL: firebase.databaseURL
+    });
+  }
+
   return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase };
 }
