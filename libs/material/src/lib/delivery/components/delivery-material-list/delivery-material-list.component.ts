@@ -39,8 +39,8 @@ export class DeliveryMaterialListComponent implements OnInit {
 
   public dataSource: MatTableDataSource<Material>;
   public selection = new SelectionModel<Material>(true, []);
-  public delivery$: Observable<Delivery>
-  public displayedColumns = this.setDisplayedColumns();
+  public delivery$: Observable<Delivery>;
+  public displayedColumns: string[] = this.setDisplayedColumns();
 
   constructor(private deliveryQuery: DeliveryQuery) {}
 
@@ -49,7 +49,7 @@ export class DeliveryMaterialListComponent implements OnInit {
   }
 
   /* Define an array of columns to be displayed in the list depending on delivery settings **/
-  public setDisplayedColumns() {
+  public setDisplayedColumns(): string[] {
     return this.deliveryQuery.getActive().mustChargeMaterials
       ? ['select', 'value', 'description', 'step', 'category', 'price', 'isOrdered', 'isPaid', 'status', 'action']
       : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
