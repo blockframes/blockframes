@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -18,7 +19,7 @@ import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-
 import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 
 @NgModule({
-  imports: [CommonModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule],
+  imports: [CommonModule, CropperModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule],
   declarations: [
     MovieDisplayComponent,
     MovieDisplayMainComponent,
