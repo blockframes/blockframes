@@ -62,7 +62,7 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'staging-backups';
+export const backupBucket = 'staging-backups-bv8ys';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
 
 // Sendgrid Emails
