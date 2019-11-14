@@ -2,13 +2,19 @@ import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/co
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize, catchError } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HttpClient } from '@angular/common/http';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
+
+export interface ImgRef {
+  url: string;
+  ref: string;
+  originalRef: string
+}
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -42,9 +48,14 @@ function isFile(path: string): boolean {
   return part.length === 1 && !last.includes('/');
 }
 
-
-
-
+export function createImgRef(ref: Partial<ImgRef> = {}): ImgRef {
+  return {
+    url: '',
+    ref: '',
+    originalRef: '',
+    ...ref
+  }
+}
 
 @Component({
   selector: 'drop-cropper',
@@ -82,7 +93,7 @@ export class CropperComponent implements ControlValueAccessor{
 
   @Input() storagePath: string;
 
-  uploaded: (ref: string) => void;
+  uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
   constructor(private storage: AngularFireStorage, private http: HttpClient, private _renderer: Renderer2, private _elementRef: ElementRef) { }
@@ -92,28 +103,44 @@ export class CropperComponent implements ControlValueAccessor{
   //////////////////////////
 
   //  Triggered when the parent form field is initialized or updated (parent -> component)
-  writeValue(path: string): void {
-      if (isFile(path)) {
-        const part = path.split('/');
-        this.name = part.pop();
-        this.folder = this.storagePath;
-        this.ref = this.storage.ref(path);
-        this.url$ = this.ref.getDownloadURL().pipe(
-          catchError(err => {
-            this.nextStep('drop');
-            return of('');
-          })
-        )
-        this.nextStep('show');
-      } else {
-        this.folder = path;
-        this.nextStep('drop');
-      }
+  writeValue(path: ImgRef): void {
+    console.log('writeValue path', path)
+    if (isFile(path.ref)) {
+      const part = path.ref.split('/');
+      this.name = part.pop();
+      this.folder = this.storagePath;
+      this.url$ = this.storage.ref(path.ref).getDownloadURL().pipe(
+        catchError(err => {
+          this.nextStep('drop');
+          return of('');
+        })
+      )
+      this.nextStep('show');
+    } else {
+      this.folder = path.ref;
+      this.nextStep('drop');
+    }
+      // if (isFile(path)) {
+      //   const part = path.split('/');
+      //   this.name = part.pop();
+      //   this.folder = this.storagePath;
+      //   this.ref = this.storage.ref(path);
+      //   this.url$ = this.ref.getDownloadURL().pipe(
+      //     catchError(err => {
+      //       this.nextStep('drop');
+      //       return of('');
+      //     })
+      //   )
+      //   this.nextStep('show');
+      // } else {
+      //   this.folder = path;
+      //   this.nextStep('drop');
+      // }
   }
 
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
-    this.uploaded = (ref: string) => fn(ref);
+    this.uploaded = (ref: ImgRef) => fn(ref);
     this.deleted = () => fn(null);
   }
   registerOnTouched(fn: any): void {
@@ -148,6 +175,7 @@ export class CropperComponent implements ControlValueAccessor{
       const fileName = Date.now() + '_' + this.file.name;
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
+
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(() => {
           this.nextStep('upload_complete')
@@ -160,9 +188,23 @@ export class CropperComponent implements ControlValueAccessor{
 
   goToShow() {
     this.url$ = this.ref.getDownloadURL();
-    this.ref.getMetadata().toPromise()
-    .then(meta => this.uploaded(meta.fullPath));
+    combineLatest([this.url$, this.ref.getMetadata()]).pipe(
+      finalize(() => console.log('completed'))
+    ).subscribe(([url, meta]) => {
+      const newRef: ImgRef = createImgRef({
+        url: url,
+        ref: meta.fullPath,
+        originalRef: ''
+      });
+      this.uploaded(newRef);
       this.nextStep('show');
+
+    })
+    // this.ref.getMetadata().toPromise()
+    // .then(meta => {
+    //   this.uploaded(meta.fullPath)
+    // });
+    //   this.nextStep('show');
     }
 
     // TODO#1149: fix resize - get original picture
