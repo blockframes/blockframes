@@ -1,9 +1,10 @@
 import { ControlContainer, FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationMember, OrganizationService, OrganizationQuery } from '../../+state';
+import { OrganizationService, OrganizationQuery } from '../../+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
+import { OrganizationMember } from '../../member/+state';
 
 @Component({
   selector: '[formGroup] organization-form-operation, [formGroupName] organization-form-operation',

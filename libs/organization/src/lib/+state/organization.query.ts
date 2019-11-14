@@ -10,8 +10,7 @@ import {
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
 import { PermissionsQuery } from '../permissions/+state';
-import { combineLatest, Observable } from 'rxjs';
-import { OrganizationMember, UserRole } from './organization.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,21 +39,6 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
     ) {
     super(store);
   }
-
-  public members$ = this.selectActive().pipe(map(org => org.members));
-
-  // TODO: this query does not change correctly when a member is updated: issue#707
-  public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
-    this.members$,
-    this.permissionsQuery.superAdmins$
-  ]).pipe(
-    map(([members, superAdmins]) => {
-      return members.map(member => ({
-        ...member,
-        role: superAdmins.includes(member.uid) ? UserRole.admin : UserRole.member
-      }));
-    })
-  );
 
   public isAccepted$ = this.selectAll().pipe(
     filter(orgs => !!orgs[0]),

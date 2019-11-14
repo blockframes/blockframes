@@ -1,12 +1,13 @@
 import { ControlContainer } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationOperation, OrganizationMember, OrganizationService, OrganizationQuery } from '../../+state';
+import { OrganizationOperation, OrganizationService, OrganizationQuery } from '../../+state';
 import { MatSlideToggleChange } from '@angular/material';
 import { PermissionsQuery } from '../../permissions/+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { CreateTx } from '@blockframes/ethers';
+import { OrganizationMember } from '../../member/+state';
 
 @Component({
   selector: 'organization-signer-form',

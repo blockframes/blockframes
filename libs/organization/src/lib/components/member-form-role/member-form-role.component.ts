@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { UserRole, OrganizationService, OrganizationQuery, OrganizationMember } from '../../+state';
+import { OrganizationService, OrganizationQuery } from '../../+state';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { Router } from '@angular/router';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
+import { UserRole, OrganizationMember, MemberQuery } from '../../member/+state';
 
 @Component({
   selector: '[formGroup] member-form-role',
@@ -17,7 +18,8 @@ export class MemberFormRoleComponent {
   constructor(
     public controlContainer: ControlContainer,
     private service: OrganizationService,
-    private query: OrganizationQuery,
+    private organizationQuery: OrganizationQuery,
+    private query: MemberQuery,
     private walletService: WalletService,
     private permissionsService: PermissionsService,
     private permissionsQuery: PermissionsQuery,
@@ -53,7 +55,7 @@ export class MemberFormRoleComponent {
     const orgEthAddress = await this.service.getOrganizationEthAddress();
     let tx: ActionTx;
     const callback = () => {
-      const members = this.query.getActive().members
+      const members = this.query.getAll()
         .filter(member => member.uid !== uid)
         .map(member => {
           if (!member.role) {
@@ -61,15 +63,15 @@ export class MemberFormRoleComponent {
           }
           return member;
         });
-      const memberToUpdate = this.query.getActive().members.find(member => member.uid === uid);
+      const memberToUpdate = this.query.getAll().find(member => member.uid === uid);
 
       const newMember: OrganizationMember = {...memberToUpdate, role};
       members.push(newMember);
       this.permissionsService.updateMembersRole(members);
     };
 
-    const orgName = this.query.getActive().name;
-    const orgId = this.query.id;
+    const orgName = this.organizationQuery.getActive().name;
+    const orgId = this.organizationQuery.id;
     let feedback: TxFeedback;
     if (role === UserRole.admin){
       tx = CreateTx.addAdmin(orgEthAddress, userEthAddress, callback);
@@ -98,7 +100,7 @@ export class MemberFormRoleComponent {
   public async destroyWallet() {
     const { email } = this.control.value;
     const userEthAddress = await this.service.getMemberEthAddress(email);
-    const orgId = this.query.id;
+    const orgId = this.organizationQuery.id;
     const orgEthAddress = await this.service.getOrganizationEthAddress();
 
     const tx = CreateTx.destroyMember(orgEthAddress, userEthAddress);

@@ -1,4 +1,4 @@
-import { OrganizationOperation, OrganizationMember } from './../../+state/organization.model';
+import { OrganizationOperation } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationQuery, DeploySteps } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -6,6 +6,7 @@ import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { createOperationFormList } from '../../forms/operations.form';
 import { createMemberFormList } from '../../forms/member.form';
+import { OrganizationMember, MemberQuery } from '../../member/+state';
 
 @Component({
   selector: 'org-admin-view',
@@ -39,6 +40,7 @@ export class OrganizationAdminViewComponent implements OnInit {
 
   constructor(
     private query: OrganizationQuery,
+    private memberQuery: MemberQuery
   ) {}
 
   ngOnInit() {
@@ -82,8 +84,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     );
 
 
-    this.members$ = this.query.selectActive().pipe(
-      map(organization => organization.members),
+    this.members$ = this.memberQuery.selectAll().pipe(
       tap(members => this.memberFormList.patchValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
     );

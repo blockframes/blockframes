@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { createOrgDocPermissions, createUserDocPermissions, Permissions } from './permissions.model';
 import { PermissionsQuery } from './permissions.query';
-import { Organization, OrganizationMember, UserRole } from '../../+state';
+import { Organization } from '../../+state';
+import { OrganizationMember, UserRole } from '../../member/+state';
 
 @Injectable({
   providedIn: 'root'
