@@ -97,14 +97,14 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
-    protected db: FireQuery,
+    protected db: FireQuery
   ) {
     super(store);
   }
 
   public async orgNameExist(orgName: string) {
-    const orgSnap = await this.db.firestore.collection('orgs').where('name', '==', orgName).get();
-    return !orgSnap.empty;
+    const orgs = await this.getValue(ref => ref.where('name', '==', orgName));
+    return orgs.length !== 0;
   }
 
   syncQuery() {
