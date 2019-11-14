@@ -11,6 +11,7 @@ export class ImageReferenceDirective {
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set imgRef(path: ImgRef) {
+    console.log('image-reference path: ', path)
     if(!path){
       this.updateUrl();
     } try {

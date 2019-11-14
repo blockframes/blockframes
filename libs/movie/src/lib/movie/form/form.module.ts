@@ -17,6 +17,7 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 
 // components
 import { MovieFormMainComponent } from './main/main.component';
@@ -56,6 +57,7 @@ import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent
     // Librairies
     UiFormModule,
     UploadModule,
+    CropperModule,
   ],
   declarations: [
     MovieFormRootComponent,
