@@ -1,12 +1,12 @@
 <ng-container *ngIf="data">
   <span>internal ref: {{ data.internalRef }}</span>
   <span>ISAN number: {{ data.isan }}</span>
-  <!-- @todo #643 
+  <!-- @todo #643
   check css / HTML:
-  A card is not supposed to have several content and title, ... 
+  A card is not supposed to have several content and title, ...
   Prefer regular section + material typography
 
-  Don't use mat-card-*** if you don't have the mat-card in the same HTML. 
+  Don't use mat-card-*** if you don't have the mat-card in the same HTML.
   This shows that you should use section/article instead.
   -->
   <mat-card-header class="movie-card-header">
@@ -19,7 +19,9 @@
       {{ data.title.international }}
     </mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image class="movie-poster" *ngIf="data.poster" [src]="data.poster">
+  <!-- <img mat-card-image class="movie-poster" *ngIf="data.poster" [src]="data.poster"> -->
+  {{ data.poster.url }}
+  <img mat-card-image class="movie-poster" *ngIf="data.poster" [imgRef]="data.poster" alt="movie poster" />
   <mat-card-content *ngIf="data.directors.length" class="movie-card-section">
     <mat-card-title>Directors</mat-card-title>
     <mat-card-subtitle>

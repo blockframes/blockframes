@@ -62,7 +62,7 @@
   </ng-container>
   <!-- POSTER -->
   <h3> Poster </h3>
-  <mat-card class="movie-poster-thumbnail mat-elevation-z0">
+  <!-- <mat-card class="movie-poster-thumbnail mat-elevation-z0">
     <ng-container *ngIf="main.get('poster').value; else fileUpload">
       <img mat-card-image [src]="main.get('poster').value">
       <mat-card-actions>
@@ -76,7 +76,8 @@
         [uploadOnFirestore]="true" (storeUploaded)="main.get('poster').patchValue($event)">
       </file-upload>
     </ng-template>
-  </mat-card>
+  </mat-card> -->
+  <drop-cropper [ratio]="2/3" storagePath="poster" formControlName="poster"></drop-cropper>
   <!-- PRODUCTION -->
   <h3> Production </h3>
   <mat-form-field appearance="outline" class="full-width">
