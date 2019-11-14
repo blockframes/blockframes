@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CollectionGuard, CollectionGuardConfig, redirectIfEmpty } from 'akita-ng-fire';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
 import { MovieState, MovieService, MovieQuery } from '../+state';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { resolvePath } from '@blockframes/utils/routes';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -10,10 +12,10 @@ export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
     super(service);
   }
 
-  sync() {
+  sync(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.service.syncOrgMovies().pipe(
       map(_ => this.query.getCount()),
-      map(count => (count === 0 ? 'layout/o/home/create' : true))
+      map(count => (count === 0 ? resolvePath(state.url, '../create') : true))
     );
   }
 }
