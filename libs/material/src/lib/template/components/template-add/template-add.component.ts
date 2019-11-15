@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { TemplateService } from '../../+state';
 import { Router } from '@angular/router';
+import { TemplateService } from '../../+state/template.service';
 
 @Component({
   selector: 'material-template-add',
@@ -18,10 +18,10 @@ export class TemplateAddComponent {
     private router: Router
   ) {}
 
-  public async addTemplate(templateName: string) {
-    const templateId = await this.service.addTemplate(templateName);
+  public addTemplate(templateName: string) {
+    const template = this.service.createTemplate(templateName);
     this.close();
-    this.router.navigate([`layout/o/templates/${templateId}`])
+    this.router.navigate([`layout/o/templates/${template.id}`])
   }
 
   public close(): void {

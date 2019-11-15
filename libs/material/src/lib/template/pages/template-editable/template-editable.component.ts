@@ -1,12 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs';
-import { TemplateQuery } from '../../+state/template.query';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
+import { MaterialControl, MaterialForm } from '../../forms/material.form';
+import { MaterialQuery } from '../../../material/+state/material.query';
+import { MaterialService } from '../../../material/+state/material.service';
+import { MaterialTemplate, createMaterialTemplate } from '../../../material/+state/material.model';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialService, MaterialTemplate, MaterialQuery, createMaterialTemplate } from '../../../material/+state';
-import { tap, switchMap, filter, map } from 'rxjs/operators';
-import { Template } from '../../+state';
-import { MaterialForm, MaterialControl } from '../../forms/material.form';
-import { FormEntity } from '@blockframes/utils';
+import { Observable } from 'rxjs';
+import { Template } from '../../+state/template.model';
+import { TemplateQuery } from '../../+state/template.query';
 
 @Component({
   selector: 'template-editable',
@@ -63,15 +65,15 @@ export class TemplateEditableComponent implements OnInit {
     this.openSidenav(newMaterial.id);
   }
 
-  public async deleteMaterial(materialId: string) {
+  public deleteMaterial(materialId: string) {
     try {
       // If material exist in materialFormBatch but not in database
-      if (!this.query.hasMaterial(materialId)) {
+      if (!this.materialQuery.hasEntity(materialId)) {
         this.form.removeControl(materialId);
         this.opened = false;
         return;
       }
-      await this.materialService.deleteTemplateMaterial(materialId);
+      this.materialService.deleteTemplateMaterial(materialId);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {

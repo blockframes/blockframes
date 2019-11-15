@@ -7,12 +7,7 @@ import { Template } from './template.model';
   providedIn: 'root'
 })
 export class TemplateQuery extends QueryEntity<TemplateState, Template> {
-
   constructor(protected store: TemplateStore) {
     super(store);
-  }
-
-  public hasMaterial(materialId: string): boolean {
-    return this.getActive().materials.some(material => material.id === materialId);
   }
 }
