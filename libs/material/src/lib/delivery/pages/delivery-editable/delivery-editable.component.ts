@@ -82,6 +82,7 @@ export class DeliveryEditableComponent implements OnInit {
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(materials, delivery)
         : this.materialService.updateMaterials(materials, delivery);
+      this.snackBar.open('Material list updated !', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
