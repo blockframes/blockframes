@@ -117,6 +117,8 @@ jobs:
       - run: cp -R ~/build/* ./
       - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
+      - slack/notify:
+          message: "🚲 Deploying & testing e2e"
       - run: |
           npm install --save-dev firebase-tools &&
           npx firebase use ci &&
@@ -127,6 +129,8 @@ jobs:
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
+      - slack/status:
+          webhook: "${SLACK_WEBHOOK}"
   deploy-to-prod:
     executor: blockframes-ci
     environment:
