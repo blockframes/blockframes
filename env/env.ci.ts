@@ -62,7 +62,7 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'ci-backups';
+export const backupBucket = 'ci-backups-blockframes';
 export const sendgridAPIKey = '';
 
 // Sendgrid Emails
