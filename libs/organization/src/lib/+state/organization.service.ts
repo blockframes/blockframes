@@ -15,7 +15,9 @@ import {
   OrganizationDocument,
   DeploySteps,
   AppDetailsWithStatus,
-  AppStatus
+  AppStatus,
+  createOrganization,
+  convertToOrganizationDocument
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -131,11 +133,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.authQuery.user$.pipe(
       tap(_ => this.store.reset()),
       switchMap(user => {
-        if (!user.orgId) {
-          throw new Error('User has no organization');
-        }
         return syncQuery.call(this, orgQuery(user.orgId));
-      }),
+      })
     );
   }
 
@@ -182,19 +181,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return uid;
   }
 
+  formatToFirestore(org: Organization): any {
+    return convertToOrganizationDocument(org);
+  }
+
   /**
-   * Add a new organization to the database and create/update
-   * related documents (permissions, apps permissions, user...).
-   */
-  public async addOrganization(organization: Partial<OrganizationDocument>): Promise<string> {
+   * Triggered when we add a new organization
+   * create related documents (permissions, apps permissions, user...).
+  */
+  async onCreate(org: Organization) {
     const user = this.authQuery.user;
-    const orgId: string = this.db.createId();
-    const newOrganization: OrganizationDocument = createOrganizationDocument({
-      id: orgId,
-      userIds: [user.uid],
-      ...organization,
-    });
-    const organizationDoc = this.db.doc(`orgs/${orgId}`);
+    const orgId: string = org.id;
     const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
@@ -214,19 +211,22 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       ])
     );
 
-    // Then set organization in the second transaction (rules from permissions will apply)
-    await this.db.firestore
-      .runTransaction(transaction => {
-        const promises = [
-          // Set the new organization in orgs collection.
-          transaction.set(organizationDoc.ref, newOrganization),
-          // Update user document with the new organization id.
-          transaction.update(userDoc.ref, { orgId })
-        ];
-        return Promise.all(promises);
-      })
-      .catch(error => console.error(error));
-    this.authStore.updateUser({ ...user, ...{ orgId } });
+    // Update user with orgId;
+    return this.db.doc(userDoc.ref).update({ orgId });
+  }
+
+  /** Add a new organization */
+  public async addOrganization(organization: Partial<Organization>): Promise<string> {
+    const user = this.authQuery.user;
+    const orgId: string = this.db.createId();
+    const newOrganization = createOrganization({
+      id: orgId,
+      userIds: [user.uid],
+      ...organization,
+    });
+
+    await this.add(newOrganization)
+
     return orgId;
   }
 

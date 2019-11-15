@@ -24,4 +24,8 @@ export class OrganizationStore extends EntityStore<OrganizationState, Organizati
   akitaPreAddEntity(organization: any): Organization {
     return convertOrganizationWithTimestampsToOrganization(organization);
   }
+
+  // akitaPreUpdateEntity(organization: any) {
+  //   return convertOrganizationWithTimestampsToOrganization(organization);
+  // }
 }
