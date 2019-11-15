@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
-import { createTemplate } from './template.model';
-import { Material, MaterialService } from '../../material/+state';
+import { CollectionConfig, CollectionService, WriteOptions, AtomicWrite } from 'akita-ng-fire';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Material } from '../../material/+state/material.model';
+import { MaterialService } from '../../material/+state/material.service';
+import { createTemplate, Template } from './template.model';
 import { TemplateQuery } from './template.query';
-import { TemplateStore, TemplateState } from './template.store';
-import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { TemplateState, TemplateStore } from './template.store';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'templates' })
@@ -34,31 +35,30 @@ export class TemplateService extends CollectionService<TemplateState>{
     )
   }
 
-  /** Create a template without materials. */
-  public async addTemplate(templateName: string): Promise<string> {
-    const templateId = this.db.createId();
-    const organization = this.organizationQuery.getValue().org;
+  /** Create a template with an id, a name and an orgId. */
+  public createTemplate(templateName: string): Template {
     const template = createTemplate({
-      id: templateId,
+      id: this.db.createId(),
       name: templateName,
-      orgId: organization.id
+      orgId: this.organizationQuery.getValue().org.id
     });
 
-    // Add the template to the database
     this.add(template);
 
-    // Update the organization templateIds
-    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
-
-    return templateId;
+    return template;
   }
 
-  /** Delete a template and materials subcollection. */
-  public async deleteTemplate(templateId: string): Promise<void> {
+  /** Hook that triggers when a template is added to the database. */
+  onCreate(template: Template, write: WriteOptions) {
+    const organization = this.organizationQuery.getValue().org;
+    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
+   }
+
+  /** Hook that triggers when a template is removed from the database. */
+  onDelete(templateId: string, write: WriteOptions) {
     const organization = this.organizationQuery.getValue().org;
     const templateIds = organization.templateIds.filter(id => id !== templateId);
 
-    this.remove(templateId);
     this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds});
   }
 
@@ -66,10 +66,10 @@ export class TemplateService extends CollectionService<TemplateState>{
   public async saveAsTemplate(materials: Material[], templateName: string) {
     if (materials.length > 0) {
       // Add a new template
-      const templateId = await this.addTemplate(templateName);
+      const template = this.createTemplate(templateName);
 
       // Add the delivery's materials in the template
-      this.materialService.getTemplateMaterials(templateId);
+      await this.materialService.getTemplateMaterials(template.id);
       materials.forEach(material => this.materialService.add(material));
     }
   }

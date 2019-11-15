@@ -1,11 +1,7 @@
-import { firestore } from 'firebase/app';
-import { MaterialTemplate } from '../../material/+state';
 import { TemplateDocument } from './template.firestore';
+import { firestore } from 'firebase/app';
 
-/** Template interface with materials (used by the guard). */
-export interface Template extends TemplateDocument {
-  materials?: MaterialTemplate[];
-}
+export type Template = TemplateDocument;
 
 /** A factory function that creates Template */
 export function createTemplate(template: Partial<Template>): Template {
