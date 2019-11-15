@@ -93,6 +93,8 @@ export class CropperComponent implements ControlValueAccessor{
   }
 
   @Input() storagePath: string;
+  @Input() useChangePic?: boolean;
+  @Input() useDelete? = true;
 
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
@@ -127,7 +129,11 @@ export class CropperComponent implements ControlValueAccessor{
   registerOnChange(fn: any): void {
     console.log('register on change');
     this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn(null);
+    this.deleted = () => fn({
+      url: '',
+    ref: '',
+    originalRef: ''
+  });
   }
   registerOnTouched(fn: any): void {
     return;
