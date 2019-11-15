@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, forwardRef, Renderer2, ElementRef, Output } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize, catchError } from 'rxjs/operators';
@@ -41,7 +41,7 @@ function b64toBlob(data: string) {
 
 /** Check if the path is a file path */
 function isFile(path: any): boolean {
-  if (path === null || !path) {
+  if (!path || !path.ref) {
     return false;
   }
   const part = path.ref.split('.');
@@ -125,6 +125,7 @@ export class CropperComponent implements ControlValueAccessor{
 
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
+    console.log('register on change');
     this.uploaded = (ref: ImgRef) => fn(ref);
     this.deleted = () => fn(null);
   }

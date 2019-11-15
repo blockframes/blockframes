@@ -47,7 +47,7 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   }
 
   public addImage(): void {
-    this.images.push(new FormControl(''));
+    this.images.push(new FormControl({}));
   }
 
   public addPromotionalElement(): void {

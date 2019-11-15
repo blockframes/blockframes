@@ -2,9 +2,10 @@
   <mat-card-content *ngIf="shouldDisplayPromotionalElements" class="movie-card-section">
     <mat-divider></mat-divider>
     <mat-card-title class="movie-card-meta-title">Promotional Elements</mat-card-title>
+    {{ data | json }}
     <ng-container *ngIf="data.images.length">
       <mat-card-title>Images</mat-card-title>
-      <div class="movie-grid-list">
+      <!-- <div class="movie-grid-list">
         <mat-grid-list *ngIf="data.images[0] " cols="1" rowHeight="3:4">
           <mat-grid-tile><img mat-card-image src="{{data.images[0]}}"></mat-grid-tile>
         </mat-grid-list>
@@ -13,7 +14,8 @@
           <mat-grid-tile *ngFor="let image of data.images.slice(1)"> <img mat-card-image src="{{image}}">
           </mat-grid-tile>
         </mat-grid-list>
-      </div>
+      </div> -->
+      <img mat-card-image class="movie-poster" *ngIf="data.images[0]" [imgRef]="data.images[0]" alt="movie poster" />
     </ng-container>
     <ng-container *ngIf="data.promotionalElements.length">
       <mat-card-title>Other promotional elements</mat-card-title>

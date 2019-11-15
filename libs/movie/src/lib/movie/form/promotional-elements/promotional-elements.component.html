@@ -2,22 +2,7 @@
   <!-- IMAGES -->
   <h3> Images </h3>
   <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-card class="movie-poster-thumbnail mat-elevation-z0">
-        <ng-container *ngIf="promotionalElements.images.controls[i].value; else fileUpload">
-          <img mat-card-image [src]="promotionalElements.images.controls[i].value">
-        </ng-container>
-        <ng-template #fileUpload>
-          <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
-            [uploadOnFirestore]="true" (storeUploaded)="promotionalElements.setImage($event, i)"></file-upload>
-        </ng-template>
-        <mat-card-actions>
-          <button mat-raised-button color="warn" (click)="promotionalElements.removeImage(i)">
-            <mat-icon>delete_circle</mat-icon> Remove
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+    <drop-cropper [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i"></drop-cropper>
   </div>
   <ng-container *ngIf="promotionalElements.images.controls.length < 6">
     <button mat-icon-button color="primary" (click)="promotionalElements.addImage()">
