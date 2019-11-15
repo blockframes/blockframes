@@ -44,11 +44,15 @@
         <img class="croppedImage" [src]="url" />
       </div>
       <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-        <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
+        <ng-container *ngIf="useChangePic">
+          <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
+          <mat-icon (click)="fileUploader.click()" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+        </ng-container>
         <!-- TODO #1149: fix resize in cropper -->
         <!-- <mat-icon (click)="resize(url)" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="resize current picture">icon</mat-icon> -->
-        <mat-icon (click)="fileUploader.click()" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
-        <mat-icon (click)="delete()" mat-button fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
+        <ng-container *ngIf="useDelete">
+          <mat-icon (click)="delete()" mat-button fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
+        </ng-container>
       </div>
     </ng-container>
   </article>
