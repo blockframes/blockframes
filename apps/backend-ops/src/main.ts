@@ -9,6 +9,7 @@ import {
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
 import { firebase } from '@env';
+import { updateOrganizationIntoInvitation } from 'draft';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
@@ -24,6 +25,12 @@ async function prepareForTesting() {
   console.info('Algolia ready for testing!');
 
   process.exit(0);
+}
+
+function clelia() {
+  const { db } = loadAdminServices();
+  console.log('coucou')
+  updateOrganizationIntoInvitation(db);
 }
 
 async function migrateToV1() {

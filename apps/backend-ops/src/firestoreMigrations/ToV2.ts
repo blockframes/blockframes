@@ -31,7 +31,7 @@ const selectAndMergeValues = (item, defaultValues) => {
 };
 
 /**
- * Build a new field 'Budget' (map) in movie document
+ * Build a new field 'Budget' (map) in movie document ?
  */
 function buildBudgetIntoMovieDoc(movies: QuerySnapshot) {
   const budget = {};
@@ -52,6 +52,28 @@ function buildBudgetIntoMovieDoc(movies: QuerySnapshot) {
   });
 }
 
+
+/**
+ * Migration for invitation document
+ * from organizationId to organization object
+ */
+
+
+
+
+
+  // const orgInfo = organizationDoc.data();
+  // invitations.forEach(doc => {
+  //   const organizationIdToChange = doc.data().organizationId;
+  //   if (organizationIdToChange === orgInfo.id) {
+  //     // utiliser firestore
+  //     doc.data().organizationId = {
+  //       id: orgInfo.id,
+  //       name: orgInfo.name
+  //     }
+  //   }
+  // })
+
 /**
  * Function to upgrade movie data
  */
@@ -60,100 +82,100 @@ function upgradeMovie(movie: QueryDocumentSnapshot, tx: Transaction) {
   const defaultValues = {
     _type: 'movies',
     budget: {
-      totalBudget: data.budget.totalBudget,
-      budgetCurrency: data.budget.budgetCurrency,
-      detailedBudget: data.budget.detailedBudget
+      totalBudget: '' || data.budget.totalBudget,
+      budgetCurrency: '' || data.budget.budgetCurrency,
+      detailedBudget: '' || data.budget.detailedBudget
     },
-    deliveryIds: [data.deliveryIds],
+    deliveryIds: [] || data.deliveryIds,
     festivalPrizes: {
       prizes: [{
-        name: data.festivalPrizes.prizes.name,
-        year: data.festivalPrizes.prizes.year,
-        prize: data.festivalPrizes.prizes.prize,
-        logo: data.festivalPrizes.prizes.logo
+        name: '' || data.festivalPrizes.prizes.name,
+        year: '' || data.festivalPrizes.prizes.year,
+        prize: '' || data.festivalPrizes.prizes.prize,
+        logo: '' || data.festivalPrizes.prizes.logo
       }]
     },
     main: {
       directors: [{
-        firstName: data.main.directors.firstName,
-        lastName: data.main.directors.lastName
+        firstName: '' || data.main.directors.firstName,
+        lastName: '' || data.main.directors.lastName
       }],
-      genres: [data.main.genres],
-      internalRef: data.main.internalRef,
-      isan: data.main.isan,
-      languages: [data.main.languages],
-      length: data.main.length,
-      originCountries: [data.main.originCountries],
-      poster: data.main.poster,
+      genres: [] || data.main.genres,
+      internalRef: '' || data.main.internalRef,
+      isan: '' || data.main.isan,
+      languages: [] || data.main.languages,
+      length: '' || data.main.length,
+      originCountries: [] || data.main.originCountries,
+      poster: '' || data.main.poster,
       productionCompagnies: [{
-        firstName: data.main.productionCompagnies.firstName
+        firstName: '' || data.main.productionCompagnies.firstName
       }],
-      productionYear: data.main.productionYear,
-      status: data.main.status,
-      shortSynopsis: data.main.shortSynopsis,
+      productionYear: '' || data.main.productionYear,
+      status: '' || data.main.status,
+      shortSynopsis: '' || data.main.shortSynopsis,
       title: {
-        international: data.main.title.international,
-        original: data.main.title.original
+        international: '' || data.main.title.international,
+        original: '' || data.main.title.original
       }
     },
     promotionalDescription: {
-      keyAssets: [data.promotionalDescription.keyAssets],
-      keywords: [data.promotionalDescription.keywords]
+      keyAssets: [] || data.promotionalDescription.keyAssets,
+      keywords: [] || data.promotionalDescription.keywords
     },
     promotionalElements: {
       images: [],
       promotionalElements: [{
-        label: data.promotionalElements.label,
-        ratio: data.promotionalElements.ratio,
-        type: data.promotionalElements.type,
-        url: data.promotionalElements.url
+        label: '' || data.promotionalElements.label,
+        ratio: '' || data.promotionalElements.ratio,
+        type: '' || data.promotionalElements.type,
+        url: '' || data.promotionalElements.url
       }]
     },
     salesAgentDeal: {
       medias: [],
       reservedTerritories: [],
       rights: {
-        from: data.salesAgentDeal.rights.from,
-        to: data.salesAgentDeal.rights.to
+        from: '' || data.salesAgentDeal.rights.from,
+        to: '' || data.salesAgentDeal.rights.to
       },
       salesAgent: {
-        creditRole: data.salesAgentDeal.salesAgent.creditRole,
-        displayName: data.salesAgentDeal.salesAgent.displayName,
-        firstName: data.salesAgentDeal.salesAgent.firstName,
-        lastName: data.salesAgentDeal.salesAgent.lastName,
-        logo: data.salesAgentDeal.salesAgent.logo
+        creditRole: '' || data.salesAgentDeal.salesAgent.creditRole,
+        displayName: '' || data.salesAgentDeal.salesAgent.displayName,
+        firstName: '' || data.salesAgentDeal.salesAgent.firstName,
+        lastName: '' || data.salesAgentDeal.salesAgent.lastName,
+        logo: '' || data.salesAgentDeal.salesAgent.logo
       },
-      territories: [data.salesAgentDeal.territories]
+      territories: [] || data.salesAgentDeal.territories
     },
     salesCast: {
       credits: [{
-        creditRole: data.salesCast.credits.creditRole,
-        firstName: data.salesCast.credits.firstName,
-        lastName: data.salesCast.credits.lastName
+        creditRole: '' || data.salesCast.credits.creditRole,
+        firstName: '' || data.salesCast.credits.firstName,
+        lastName: '' || data.salesCast.credits.lastName
       }]
     },
     salesInfo: {
       broadcasterCoproducers: [],
       certifications: [],
-      color: data.salesInfo.color,
-      europeanQualification: data.salesInfo.europeanQualification,
+      color: '' || data.salesInfo.color,
+      europeanQualification: '' || data.salesInfo.europeanQualification,
       internationalPremiere: {
-        name: data.salesInfo.internationalPremiere.name,
-        prize: data.salesInfo.internationalPremiere.prize,
-        year: data.salesInfo.internationalPremiere.year
+        name: '' || data.salesInfo.internationalPremiere.name,
+        prize: '' || data.salesInfo.internationalPremiere.prize,
+        year: '' || data.salesInfo.internationalPremiere.year
       },
-      originCountryReleaseDate: data.salesInfo.originCountryReleaseDate,
-      pegi: data.salesInfo.pegi,
-      scoring: data.salesInfo.scoring,
-      theatricalRelease: data.salesInfo.theatricalRelease
+      originCountryReleaseDate: '' || data.salesInfo.originCountryReleaseDate,
+      pegi: '' || data.salesInfo.pegi,
+      scoring: '' || data.salesInfo.scoring,
+      theatricalRelease: '' || data.salesInfo.theatricalRelease
     },
     story: {
-      logline: data.story.logline,
-      synopsis: data.story.synopsis
+      logline: '' || data.story.logline,
+      synopsis: '' || data.story.synopsis
     },
     versionInfo: {
-      dubbings: [data.versionInfo.dubbings],
-      subtitles: [data.versionInfo.subtitles]
+      dubbings: [] || data.versionInfo.dubbings,
+      subtitles: [] || data.versionInfo.subtitles
     }
   }
 
