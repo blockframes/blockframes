@@ -26,6 +26,12 @@ async function prepareForTesting() {
   process.exit(0);
 }
 
+function clelia() {
+  const { db } = loadAdminServices();
+  console.log('coucou')
+  updateOrganizationIntoInvitation(db);
+}
+
 async function migrateToV1() {
   // NOTE: this is draft stage, the whole select the migration / enter / upgrade should be automated.
   console.info('migrating to v1...');
