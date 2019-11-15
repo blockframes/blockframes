@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { MemberState, MemberStore } from './member.store';
-import { OrganizationQuery } from '../../+state';
+import { OrganizationQuery } from '../../+state/organization.query';
 import { map, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

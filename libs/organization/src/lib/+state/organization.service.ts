@@ -32,7 +32,7 @@ import {
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
 import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
-import { OrganizationMemberRequest, OrganizationMember } from '../member/+state';
+import { OrganizationMemberRequest, OrganizationMember, MemberQuery } from '../member/+state';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`
@@ -97,6 +97,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
+    private memberQuery: MemberQuery,
     protected db: FireQuery
   ) {
     super(store);
@@ -446,7 +447,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
     // re construct members list
     const promises: Promise<number>[] = [];
-    this.query.getActive().members
+    this.memberQuery.getAll()
       .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
@@ -548,7 +549,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
     // re construct signer list
     const promises: Promise<number>[] = [];
-    this.query.getActive().members
+    this.memberQuery.getAll()
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)

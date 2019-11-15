@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService, OrganizationStatus, OrganizationState, OrganizationQuery, OrganizationStore } from '../+state';
 import { Router } from '@angular/router';
-import { AFM_DISABLE } from '@env';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, tap } from 'rxjs/operators';
 
@@ -28,18 +27,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
         if (orgs[0].status === OrganizationStatus.pending) {
           return 'layout/organization/congratulations';
         }
-        if (AFM_DISABLE) {
-          this.service.retrieveDataAndAddListeners();
-        }
       })
     );
-  }
-
-  canDeactivate() {
-    // TODO issue#1146
-    if (AFM_DISABLE) {
-      this.service.removeAllListeners();
-    }
-    return true;
   }
 }
