@@ -6,7 +6,8 @@ import { CreateTx } from '@blockframes/ethers';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { Router } from '@angular/router';
 import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
-import { UserRole, OrganizationMember, MemberQuery } from '../../member/+state';
+import { MemberQuery } from '../../member/+state/member.query';
+import { UserRole, OrganizationMember } from '../../member/+state/member.model';
 
 @Component({
   selector: '[formGroup] member-form-role',

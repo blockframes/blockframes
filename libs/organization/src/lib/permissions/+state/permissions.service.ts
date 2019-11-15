@@ -3,7 +3,7 @@ import { BFDoc, FireQuery } from '@blockframes/utils';
 import { createOrgDocPermissions, createUserDocPermissions, Permissions } from './permissions.model';
 import { PermissionsQuery } from './permissions.query';
 import { Organization } from '../../+state';
-import { OrganizationMember, UserRole } from '../../member/+state';
+import { OrganizationMember, UserRole } from '../../member/+state/member.model';
 
 @Injectable({
   providedIn: 'root'

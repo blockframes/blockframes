@@ -21,7 +21,7 @@ export class AppGridComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.apps$ = this.organizationQuery.appsDetails$;
+    this.apps$ = this.organizationService.appsDetails$;
   }
 
   public requestAccess(appId: string) {

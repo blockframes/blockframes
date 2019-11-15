@@ -4,7 +4,7 @@ import { OrganizationService, OrganizationQuery } from '../../+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
-import { OrganizationMember } from '../../member/+state';
+import { OrganizationMember } from '../../member/+state/member.model';
 
 @Component({
   selector: '[formGroup] organization-form-operation, [formGroupName] organization-form-operation',

@@ -15,22 +15,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
-  /**
-   * an Observable that describe the list
-   * of application that are accessible to the current
-   * organization.
-   */
-  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.orgId$.pipe(
-    map(orgId => this.db.collection('app-requests').doc(orgId)),
-    switchMap(docRef => docRef.valueChanges()),
-    map((appRequest = {}) =>
-      APPS_DETAILS.map(app => ({
-        ...app,
-        status: (appRequest[app.id] as AppStatus) || AppStatus.none
-      }))
-    )
-  );
-
   constructor(
     protected store: OrganizationStore,
     private db: FireQuery

@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
-import { OrganizationMember } from '../../member/+state';
+import { OrganizationMember } from '../../member/+state/member.model';
 
 @Component({
   selector: 'member-repertory',

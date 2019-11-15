@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { CollectionGuardConfig, CollectionGuard } from "akita-ng-fire";
-import { MemberState, MemberService } from "../+state";
 import { tap } from "rxjs/operators";
 import { OrganizationService } from "../../+state";
 import { AFM_DISABLE } from "@env";
+import { MemberState } from "../+state/member.store";
+import { MemberService } from "../+state/member.service";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
