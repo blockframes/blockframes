@@ -27,6 +27,7 @@
     "pree2e": "ng build backend-ops --configuration=\"${ENV}\" && node dist/apps/backend-ops/main.js",
     "e2e:main": "./node_modules/.bin/ng e2e main-e2e --configuration=\"${ENV}\" --headless",
     "e2e:delivery": "./node_modules/.bin/ng e2e delivery-e2e --configuration=\"${ENV}\" --headless",
+    "e2e:catalog-dashboard": "./node_modules/.bin/ng e2e catalog-dashboard-e2e --configuration=\"${ENV}\" --headless",
     "e2e:catalog-marketplace": "./node_modules/.bin/ng e2e catalog-marketplace-e2e --configuration=\"${ENV}\" --headless",
     "e2e:movie-financing": "./node_modules/.bin/ng e2e movie-financing-e2e --configuration=\"${ENV}\" --headless",
     "affected:apps": "./node_modules/.bin/nx affected:apps",

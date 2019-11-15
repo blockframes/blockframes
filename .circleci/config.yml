@@ -124,8 +124,24 @@ jobs:
           npx firebase use ci &&
           npx firebase deploy --force || true;
           npx ng build backend-ops --configuration=$ENV
-          node dist/apps/backend-ops/main.js prepareForTesting
-          npm run e2e --headless
+      - run:
+          name: prepare the ci for testing
+          command: node dist/apps/backend-ops/main.js prepareForTesting
+      - run:
+          name: main e2e tests
+          command: npm e2e:main
+      - run:
+          name: delivery e2e tests
+          command: npm e2e:delivery
+      - run:
+          name: catalog-marketplace e2e tests
+          command: npm e2e:catalog-marketplace
+      - run:
+          name: catalog-dashboard e2e tests
+          command: npm e2e:catalog-dashboard
+      - run:
+          name: movie-financing e2e tests
+          command: npm e2e:movie-financing
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
