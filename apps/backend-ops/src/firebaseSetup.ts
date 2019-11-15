@@ -98,7 +98,7 @@ export async function syncUsers(expectedUsers: UserConfig[]): Promise<any> {
  *
  * @param projectID
  */
-async function restore(projectID: string) {
+export async function restore(projectID: string) {
   const url = getRestoreURL(projectID);
 
   // promisified request

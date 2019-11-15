@@ -1,9 +1,10 @@
-import { createAllUsers, prepareFirebase, removeUnexpectedUsers, syncUsers } from './firebaseSetup';
+import { prepareFirebase, restore, syncUsers } from './firebaseSetup';
 import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
 import { USERS } from './users.toronto.fixture';
 import { storeSearchableOrg } from '../../backend-functions/src/internals/algolia';
+import { firebase } from '@env';
 
 async function prepareForTesting() {
   console.info('Preparing firebase...');
@@ -17,6 +18,10 @@ async function prepareForTesting() {
   console.info('Syncing users...');
   await syncUsers(USERS);
   console.info('Users synced!');
+
+  console.info('Restoring backup...');
+  await restore(firebase.projectId);
+  console.info('backup restored!');
 
   process.exit(0);
 }
