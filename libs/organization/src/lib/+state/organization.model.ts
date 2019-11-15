@@ -10,6 +10,7 @@ import {
 import { Movie } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
 import { OrganizationMember } from '../member/+state/member.model';
+import { firestore } from 'firebase/app';
 export {
   OrganizationStatus,
   WishlistStatus,
@@ -93,6 +94,22 @@ export function createOrganization(
   }
 }
 
+/**
+ * Convert an Organization to an OrganizationDocument at each
+ * creation or update of an organization
+*/
+export function convertToOrganizationDocument(organization: Organization): OrganizationDocument {
+  delete organization.baskets;
+  delete organization.actions;
+  delete organization.operations;
+  return {
+    ...organization,
+    created: firestore.Timestamp.fromDate(organization.created),
+    updated: firestore.Timestamp.fromDate(new Date()),
+    wishlist: convertWishlistDocumentWithDateToWishlistDocument(organization.wishlist)
+  };
+}
+
 export function createOperation(
   operation: Partial<OrganizationOperation> = {}
 ): OrganizationOperation {
@@ -126,6 +143,23 @@ export function convertWishlistDocumentToWishlistDocumentWithDate(
   return wishlist.map(wish => {
     if (!!wish.sent) {
       return { ...wish, sent: wish.sent.toDate() };
+    } else {
+      return { ...wish, sent: null };
+    }
+  });
+}
+
+/** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
+export function convertWishlistDocumentWithDateToWishlistDocument(
+  wishlist: WishlistDocumentWithDates[]
+): WishlistDocument[] {
+  if (!wishlist) {
+    return [];
+  }
+
+  return wishlist.map(wish => {
+    if (!!wish.sent) {
+      return { ...wish, sent: firestore.Timestamp.fromDate(wish.sent) };
     } else {
       return { ...wish, sent: null };
     }
