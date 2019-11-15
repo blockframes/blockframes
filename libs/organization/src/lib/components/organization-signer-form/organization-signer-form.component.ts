@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { CreateTx } from '@blockframes/ethers';
-import { OrganizationMember } from '../../member/+state';
+import { OrganizationMember } from '../../member/+state/member.model';
 
 @Component({
   selector: 'organization-signer-form',

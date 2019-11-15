@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query} from '@blockframes/utils';
+import { FireQuery, Query, APPS_DETAILS} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -13,7 +13,9 @@ import {
   OrganizationWithTimestamps,
   convertOrganizationWithTimestampsToOrganization,
   OrganizationDocument,
-  DeploySteps
+  DeploySteps,
+  AppDetailsWithStatus,
+  AppStatus
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -32,7 +34,8 @@ import {
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
 import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
-import { OrganizationMemberRequest, OrganizationMember, MemberQuery } from '../member/+state';
+import { MemberQuery } from '../member/+state/member.query';
+import { OrganizationMemberRequest, OrganizationMember } from '../member/+state/member.model';
 
 export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
   path: `orgs/${orgId}`
@@ -89,6 +92,22 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
   private contract: Contract;
+
+  /**
+   * an Observable that describe the list
+   * of application that are accessible to the current
+   * organization.
+  */
+  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.query.orgId$.pipe(
+    map(orgId => this.db.collection('app-requests').doc(orgId)),
+    switchMap(docRef => docRef.valueChanges()),
+    map((appRequest = {}) =>
+      APPS_DETAILS.map(app => ({
+        ...app,
+        status: (appRequest[app.id] as AppStatus) || AppStatus.none
+      }))
+    )
+  );
 
   constructor(
     private query: OrganizationQuery,

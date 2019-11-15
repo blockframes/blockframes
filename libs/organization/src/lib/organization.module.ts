@@ -79,6 +79,8 @@ if (AFM_DISABLE) {
   organizationRoutes[0].children.push(
     {
       path: 'activityreports',
+      canActivate: [MemberGuard],
+      canDeactivate: [MemberGuard],
       component: OrganizationActivityViewComponent
     }
   );

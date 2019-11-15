@@ -9,7 +9,7 @@ import {
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
-import { OrganizationMember } from '../member/+state';
+import { OrganizationMember } from '../member/+state/member.model';
 export {
   OrganizationStatus,
   WishlistStatus,

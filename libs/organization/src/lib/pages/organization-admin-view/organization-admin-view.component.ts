@@ -6,7 +6,8 @@ import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { createOperationFormList } from '../../forms/operations.form';
 import { createMemberFormList } from '../../forms/member.form';
-import { OrganizationMember, MemberQuery } from '../../member/+state';
+import { OrganizationMember } from '../../member/+state/member.model';
+import { MemberQuery } from '../../member/+state/member.query';
 
 @Component({
   selector: 'org-admin-view',
