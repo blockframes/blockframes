@@ -130,7 +130,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   syncQuery() {
     return this.authQuery.user$.pipe(
       tap(_ => this.store.reset()),
-      switchMap(user => syncQuery.call(this, orgQuery(user.orgId))),
+      switchMap(user => {
+        if (!user.orgId) {
+          throw new Error('User has no organization');
+        }
+        return syncQuery.call(this, orgQuery(user.orgId));
+      }),
     );
   }
 
@@ -149,24 +154,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
         return this.db.fromQuery<OrganizationWithTimestamps>(orgQuery(user.orgId));
       }),
       map(organization => convertOrganizationWithTimestampsToOrganization(organization)),
-      tap(organization => this.store.updateOrganization(organization))
+      tap(organization => this.store.update(organization))
     );
 
     return this.organization$;
   }
 
-  /** Remove an organization that has just been created. */
-  public async removeOrganization() {
-    const orgId = this.query.id;
-    const userId = this.authQuery.userId;
-    const userRef = this.db.doc(`users/${userId}`).ref;
-    const orgRef = this.db.doc(`orgs/${orgId}`).ref;
-    return this.db.firestore.runTransaction(tx =>
-      Promise.all([
-        tx.update(userRef, { orgId: null }),
-        tx.delete(orgRef)
-      ])
-    );
+  /** Triggered when you remove an organization that has just been created.. */
+  async onDelete() {
+    const { uid } = this.authQuery.user;
+    return this.db.doc(`users/${uid}`).update({ orgId: null });
   }
 
   /** Add a new user to the organization */
