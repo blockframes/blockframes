@@ -151,8 +151,7 @@ jobs:
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
-      - slack/status:
-          webhook: "${SLACK_WEBHOOK}"
+      - slack/status
   deploy-to-prod:
     executor: blockframes-ci
     environment:
@@ -170,7 +169,6 @@ jobs:
       - run: npm run build:all
       - slack/notify:
           message: "🚚 Deploying to production..."
-          webhook: "${SLACK_WEBHOOK}"
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
@@ -179,8 +177,7 @@ jobs:
             npx firebase use prod &&
             ENV=production npx firebase deploy --except functions &&
             ENV=production npx firebase deploy --only functions --force
-      - slack/status:
-          webhook: "${SLACK_WEBHOOK}"
+      - slack/status
   deploy-to-staging:
     executor: blockframes-ci
     environment:
@@ -199,7 +196,6 @@ jobs:
       - run: npm run build:all
       - slack/notify:
           message: "🛵 Deploying to staging.."
-          webhook: "${SLACK_WEBHOOK}"
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
@@ -208,8 +204,7 @@ jobs:
             npx firebase use staging &&
             ENV=staging npx firebase deploy --except functions &&
             ENV=staging npx firebase deploy --only functions --force
-      - slack/status:
-          webhook: "${SLACK_WEBHOOK}"
+      - slack/status
 workflows:
   version: 2.1
   build-test-deploy:
