@@ -24,7 +24,7 @@ ci_only: &ci_only
   filters:
     branches:
       only:
-        - clean-ops
+        - ci
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
