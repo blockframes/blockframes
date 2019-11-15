@@ -118,7 +118,7 @@ jobs:
       - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
       - slack/notify:
-          message: "🚲 Deploying & testing e2e"
+          message: "🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)"
       - run: |
           npm install --save-dev firebase-tools &&
           npx firebase use ci &&
@@ -195,7 +195,7 @@ jobs:
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: "🛵 Deploying to staging.."
+          message: "🛵 Deploying to staging.. (https://staging.blockframes.io/)"
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
