@@ -130,23 +130,23 @@ jobs:
           when: always
       - run:
           name: main e2e tests
-          command: npm e2e:main
+          command: npm run e2e:main
           when: always
       - run:
           name: delivery e2e tests
-          command: npm e2e:delivery
+          command: npm run e2e:delivery
           when: always
       - run:
           name: catalog-marketplace e2e tests
-          command: npm e2e:catalog-marketplace
+          command: npm run e2e:catalog-marketplace
           when: always
       - run:
           name: catalog-dashboard e2e tests
-          command: npm e2e:catalog-dashboard
+          command: npm run e2e:catalog-dashboard
           when: always
       - run:
           name: movie-financing e2e tests
-          command: npm e2e:movie-financing
+          command: npm run e2e:movie-financing
           when: always
       - store_artifacts:
           name: Uploading screenshots
