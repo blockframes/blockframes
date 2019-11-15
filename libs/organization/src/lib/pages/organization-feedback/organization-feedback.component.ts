@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { OrganizationService } from '../../+state/organization.service';
 import { MatSnackBar } from '@angular/material';
+import { AuthQuery } from '@blockframes/auth';
 
 @Component({
   selector: 'organization-feedback',
@@ -20,7 +21,8 @@ export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
     private router: Router,
     private service: OrganizationService,
     private query: OrganizationQuery,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authQuery: AuthQuery
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +32,8 @@ export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
 
   public async removeOrganization() {
     try {
-      await this.service.removeOrganization();
+      const orgId = this.authQuery.orgId;
+      await this.service.remove(orgId);
       this.snackBar.open('Your request to create an organization has been canceled.', 'close', { duration: 2000 });
       return this.router.navigate(['../']);
     } catch (error) {

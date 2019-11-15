@@ -17,6 +17,10 @@ persistState({
   storage: LocalStorageVault // could use different type of vault as long as they implement `PersistStateStorage`
 });
 
+akitaConfig({
+  resettable: true
+});
+
 // TODO uncomment this one day
 // persistState({
 //   exclude: ['router', 'key'],
