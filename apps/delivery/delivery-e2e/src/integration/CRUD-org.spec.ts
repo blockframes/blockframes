@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 describe('Test CRUD org', () => {
-  it('login into an existing account, edit an organization, add member to organization, remove him, then logout', () => {
+  it.skip('login into an existing account, edit an organization, add member to organization, remove him, then logout', () => {
     const p1 = new MovieCreatePage();
     // Edit user's organization
     p1.openProfileMenu();
