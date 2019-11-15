@@ -9,7 +9,6 @@ import {
 } from './organization.model';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
-import { PermissionsQuery } from '../permissions/+state';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -34,8 +33,7 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
 
   constructor(
     protected store: OrganizationStore,
-    private permissionsQuery: PermissionsQuery,
-    protected db: FireQuery
+    private db: FireQuery
     ) {
     super(store);
   }
