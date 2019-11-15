@@ -38,7 +38,7 @@ beforeEach(() => {
 });
 
 describe('test select movie from catalog', () => {
-  it('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
+  it.skip('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
     // Connexion
     const p1: LandingPage = new LandingPage();
     const p2: LoginPage = p1.clickCallToAction();

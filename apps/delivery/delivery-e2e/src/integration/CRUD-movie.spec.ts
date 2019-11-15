@@ -40,7 +40,7 @@ beforeEach(() => {
 });
 
 describe('User create a movie', () => {
-  it('should login, open the movie title form, and add a movie', () => {
+  it.skip('should login, open the movie title form, and add a movie', () => {
     const p1 = new LoginViewPage();
     const p2: MovieCreatePage = p1.clickSigninWithNoMovies();
 
@@ -53,7 +53,7 @@ describe('User create a movie', () => {
 });
 
 describe('User create and update another movie', () => {
-  it('should login, open the movie title form, add movie, then update it', () => {
+  it.skip('should login, open the movie title form, add movie, then update it', () => {
     const p1 = new LoginViewPage();
     const p2: MovieListPage = p1.clickSigninWithMovies();
 
@@ -70,7 +70,7 @@ describe('User create and update another movie', () => {
 });
 
 describe('User delete two movies', () => {
-  it('should login, delete two movies, then assert that they are deleted', () => {
+  it.skip('should login, delete two movies, then assert that they are deleted', () => {
     const p1 = new LoginViewPage();
     const p2: MovieListPage = p1.clickSigninWithMovies();
 
