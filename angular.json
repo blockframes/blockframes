@@ -1238,11 +1238,15 @@
           "options": {
             "cypressConfig": "apps/catalog/dashboard/dashboard-e2e/cypress.json",
             "tsConfig": "apps/catalog/dashboard/dashboard-e2e/tsconfig.e2e.json",
-            "devServerTarget": "catalog-dashboard:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "catalog-dashboard:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "catalog-dashboard:serve"
             }
           }
         },
@@ -1431,11 +1435,15 @@
           "options": {
             "cypressConfig": "apps/catalog/marketplace/marketplace-e2e/cypress.json",
             "tsConfig": "apps/catalog/marketplace/marketplace-e2e/tsconfig.e2e.json",
-            "devServerTarget": "catalog-marketplace:serve"
+            "baseUrl": "http://localhost:4200",
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "catalog-marketplace:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "catalog-marketplace:serve"
             }
           }
         },
