@@ -235,3 +235,16 @@ workflows:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
+  nightly-e2e:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
+      - test-e2e:
+          requires:
+            - build
