@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Movie, createMovie, MovieSale } from './movie.model';
-import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
 import { MovieStore, MovieState } from './movie.store';
-import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig, WriteOptions } from 'akita-ng-fire';
 import { switchMap } from 'rxjs/operators';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
@@ -27,7 +27,6 @@ export function cleanModel<T>(data: T): T {
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
-    private permissionsService: PermissionsService,
     store: MovieStore
   ) {
     super(store);
@@ -40,10 +39,9 @@ export class MovieService extends CollectionService<MovieState> {
     )
   }
 
-  public async addMovie(original: string, movie?: Movie): Promise<Movie> {
+  /** Add a partial or a full movie to the database. */
+  public addMovie(original: string, movie?: Movie): Movie {
     const id = this.db.createId();
-    const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
 
     if (!movie) {
       // create empty movie
@@ -53,22 +51,16 @@ export class MovieService extends CollectionService<MovieState> {
       movie = createMovie({ id, ...movie });
     }
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const organizationSnap = await tx.get(organizationDoc.ref);
-      const movieIds = organizationSnap.data().movieIds || [];
+    // Add movie document to the database
+    this.add(cleanModel(movie))
 
-      // Create movie document and permissions
-      await this.permissionsService.createDocAndPermissions<Movie>(
-        cleanModel(movie),
-        organization,
-        tx
-      );
-
-      // Update the org movieIds
-      const nextMovieIds = [...movieIds, movie.id];
-      tx.update(organizationDoc.ref, { movieIds: nextMovieIds });
-    });
     return movie;
+  }
+
+  /** Hook that triggers when a movie is added to the database. */
+  onCreate(movie: Movie, write: WriteOptions) {
+    const organization = this.organizationQuery.getValue().org;
+    return this.db.doc<Organization>(`orgs/${organization.id}`).update({movieIds: [...organization.movieIds, movie.id]})
   }
 
   public updateById(id: string, movie: any): Promise<void> {
@@ -76,7 +68,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
+    return this.update(id, cleanModel(movie));
   }
 
   private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
@@ -88,38 +80,38 @@ export class MovieService extends CollectionService<MovieState> {
   /////////////////////////////
 
   /**
-   * 
-   * @param movieId 
+   *
+   * @param movieId
    */
   private distributionDealsCollection(movieId: string): AngularFirestoreCollection<MovieSale> {
     return this.movieDoc(movieId).collection('distributiondeals');
   }
 
   /**
-   * 
-   * @param movieId 
-   * @param distributionDeal 
+   *
+   * @param movieId
+   * @param distributionDeal
    */
   public addDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<void> {
     // Create an id from MovieSale content.
     // A same MovieSale document will always have the same hash to prevent multiple insertion of same deal
-    const dealId = objectHash(distributionDeal); 
+    const dealId = objectHash(distributionDeal);
     return this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
   }
 
   /**
    * Checks if a distribution deal is already existing for a given movie and returns it.
-   * @param movieId 
-   * @param distributionDeal 
+   * @param movieId
+   * @param distributionDeal
    */
   public async existingDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<MovieSale> {
-    const dealId = objectHash(distributionDeal); 
+    const dealId = objectHash(distributionDeal);
     const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
     return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as MovieSale : undefined;
   }
 
   /**
-   * @param movieId 
+   * @param movieId
    */
   public async getDistributionDeals(movieId: string): Promise<MovieSale[]> {
     const deals = await this.distributionDealsCollection(movieId).get().toPromise();

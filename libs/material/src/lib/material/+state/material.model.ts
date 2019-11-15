@@ -38,7 +38,7 @@ export function getMaterialStep(material: Material, delivery: Delivery) {
 }
 
 /** A factory function that creates a Material Template */
-export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
+export function createMaterialTemplate(material: Partial<MaterialTemplate> | Partial<MaterialDocument>): MaterialTemplate {
   return {
     id: material.id,
     category: material.category || '',

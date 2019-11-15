@@ -6,6 +6,7 @@ import { TemplateQuery } from '../../template/+state/template.query';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from './material.store';
 import { MaterialQuery } from './material.query';
+import { MaterialDocument } from './material.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -221,6 +222,14 @@ export class MaterialService extends CollectionService<MaterialState> {
         return this.update(material.id, material);
       }
     });
+  }
+
+  /** Convert a MaterialDocument into a MaterialTemplateDocument if the subcollectionPath is set on templates. */
+  formatToFirestore(material: MaterialDocument): any {
+    const collection = this.subcollectionPath.split('/');
+    return collection[0] === 'templates'
+      ? createMaterialTemplate(material)
+      : material;
   }
 
   ////////////////////
