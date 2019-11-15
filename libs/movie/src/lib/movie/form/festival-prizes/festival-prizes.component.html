@@ -18,16 +18,7 @@
       </mat-form-field>
       <div class="movie-poster-thumbnail">
         <h4> Festival Logo </h4>
-        <ng-container *ngIf="getPrizeLogo(i); else fileUpload">
-          <img mat-card-image [src]="getPrizeLogo(i)">
-          <button mat-raised-button color="warn" (click)="festivalprizes.removeImage(i)">
-            <mat-icon>delete_circle</mat-icon>
-          </button>
-        </ng-container>
-        <ng-template #fileUpload>
-          <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
-            [uploadOnFirestore]="true" (storeUploaded)="festivalprizes.setImage($event, i)"></file-upload>
-        </ng-template>
+            <drop-cropper [ratio]="1" storagePath="festivalPrizes" [useChangePic]="false" formControlName="logo"></drop-cropper>
       </div>
       <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
         <mat-icon>add_circle</mat-icon>

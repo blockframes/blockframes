@@ -6,10 +6,10 @@ import { MoviePromotionalElementsForm } from './promotional-elements.form';
   selector: '[formGroup] movie-form-promotional-elements, [formGroupName] movie-form-promotional-elements',
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormPromotionalElementsComponent implements OnInit {
-  
+
   constructor(public controlContainer: ControlContainer) { }
 
   ngOnInit() {}

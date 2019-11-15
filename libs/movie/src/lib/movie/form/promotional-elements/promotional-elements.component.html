@@ -2,7 +2,10 @@
   <!-- IMAGES -->
   <h3> Images </h3>
   <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index">
-    <drop-cropper [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i"></drop-cropper>
+    <drop-cropper [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i" [useChangePic]="false" [useDelete]="false"></drop-cropper>
+    <button mat-raised-button color="warn" (click)="promotionalElements.removeImage(i)">
+        <mat-icon>delete_circle</mat-icon> Remove
+      </button>
   </div>
   <ng-container *ngIf="promotionalElements.images.controls.length < 6">
     <button mat-icon-button color="primary" (click)="promotionalElements.addImage()">
