@@ -7,14 +7,6 @@ import { storeSearchableOrg } from '../../backend-functions/src/internals/algoli
 import { firebase } from '@env';
 
 async function prepareForTesting() {
-  console.info('Preparing firebase...');
-  await prepareFirebase();
-  console.info('Firebase ready for testing!');
-
-  console.info('Preparing Algolia...');
-  await upgradeAlgoliaOrgs();
-  console.info('Algolia ready for testing!');
-
   console.info('Syncing users...');
   await syncUsers(USERS);
   console.info('Users synced!');
@@ -22,6 +14,10 @@ async function prepareForTesting() {
   console.info('Restoring backup...');
   await restore(firebase.projectId);
   console.info('backup restored!');
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs();
+  console.info('Algolia ready for testing!');
 
   process.exit(0);
 }
