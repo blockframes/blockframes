@@ -127,21 +127,27 @@ jobs:
       - run:
           name: prepare the ci for testing
           command: node dist/apps/backend-ops/main.js prepareForTesting
+          when: always
       - run:
           name: main e2e tests
           command: npm e2e:main
+          when: always
       - run:
           name: delivery e2e tests
           command: npm e2e:delivery
+          when: always
       - run:
           name: catalog-marketplace e2e tests
           command: npm e2e:catalog-marketplace
+          when: always
       - run:
           name: catalog-dashboard e2e tests
           command: npm e2e:catalog-dashboard
+          when: always
       - run:
           name: movie-financing e2e tests
           command: npm e2e:movie-financing
+          when: always
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/out-tsc/apps/
