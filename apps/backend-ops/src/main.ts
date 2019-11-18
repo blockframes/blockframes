@@ -26,12 +26,6 @@ async function prepareForTesting() {
   process.exit(0);
 }
 
-function clelia() {
-  const { db } = loadAdminServices();
-  console.log('coucou')
-  updateOrganizationIntoInvitation(db);
-}
-
 async function migrateToV1() {
   // NOTE: this is draft stage, the whole select the migration / enter / upgrade should be automated.
   console.info('migrating to v1...');
@@ -69,6 +63,9 @@ async function upgradeAlgoliaMovies() {
     promises.push(storeSearchableMovie(movie.data(), process.env['ALGOLIA_API_KEY']));
   });
   return Promise.all(promises);
+function upgradeToV2() {
+  const { db } = loadAdminServices();
+  updateOrganizationIntoInvitation(db);
 }
 
 const args = process.argv.slice(2);
@@ -86,4 +83,6 @@ if (cmd === 'prepareForTesting') {
   syncUsers(USERS).then(() => process.exit(0));
 } else if (cmd === 'upgradeAlgoliaMovies') {
   upgradeAlgoliaMovies();
+} else if (cmd === 'upgradeToV2') {
+  upgradeToV2();
 }
