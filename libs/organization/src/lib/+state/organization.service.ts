@@ -95,7 +95,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * of application that are accessible to the current
    * organization.
   */
-  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.query.orgId$.pipe(
+  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.query.selectActiveId().pipe(
     map(orgId => this.db.collection('app-requests').doc(orgId)),
     switchMap(docRef => docRef.valueChanges()),
     map((appRequest = {}) =>
@@ -122,11 +122,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return orgs.length !== 0;
   }
 
-  syncQuery() {
+  syncOrgActive() {
     return this.authQuery.user$.pipe(
-      tap(_ => this.store.reset()),
       switchMap(user => {
-        return syncQuery.call(this, orgQuery(user.orgId));
+        return this.syncActive({ id: user.orgId });
       })
     );
   }
@@ -139,7 +138,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Add a new user to the organization */
   public async addMember(member: OrganizationMemberRequest) {
-    const orgId = this.query.id;
+    const orgId = this.query.getActiveId();
     const orgName = this.query.getActive().name;
     // get a user or create a ghost user when needed:
     const { uid } = await this.authService.getOrCreateUserByMail(member.email, orgName); // TODO: limit the number of requests per organizations!

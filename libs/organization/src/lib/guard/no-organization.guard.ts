@@ -30,8 +30,8 @@ export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
         }
         // When the user has an pending organization, he is stuck on congratulations page.
         else {
-          return this.orgService.syncQuery().pipe(
-            map(_ => this.query.getAll()[0]),
+          return this.orgService.syncActive({ id: user.orgId }).pipe(
+            map(_ => this.query.getActive()),
             map(org => {
               if (org.status === OrganizationStatus.pending) {
                 return 'layout/organization/congratulations';

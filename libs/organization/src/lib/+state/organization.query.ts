@@ -6,7 +6,6 @@ import {
   Organization
 } from './organization.model';
 import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,34 +17,24 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
     super(store);
   }
 
-  public isAccepted$ = this.selectAll().pipe(
-    filter(orgs => !!orgs[0]),
-    map(orgs => orgs[0].status === OrganizationStatus.accepted)
+  public isAccepted$ = this.selectActive().pipe(
+    filter(org => !!org),
+    map(org => org.status === OrganizationStatus.accepted)
   )
 
-  get orgId$(): Observable<string> {
-    return this.selectActive(org => org.id);
-  }
+  public pendingActions$ = this.selectActive(org => org.actions).pipe(
+    filter(actions => !!actions),
+    map(actions => actions.filter(action => !action.isApproved))
+  );
 
-  get id() {
-    return this.getActiveId()
-  }
 
-  get pendingActions$() {
-    return this.selectActive(org => org.actions).pipe(
-      filter(actions => !!actions),
-      map(actions => actions.filter(action => !action.isApproved))
-    );
-  }
+  public approvedActions$ =  this.selectActive(org => org.actions).pipe(
+    filter(actions => !!actions),
+    map(actions => actions.filter(action => action.isApproved))
+  );
 
-  get approvedActions$() {
-    return this.selectActive(org => org.actions).pipe(
-      filter(actions => !!actions),
-      map(actions => actions.filter(action => action.isApproved))
-    );
-  }
 
-  getOperationById(id: string) {
+  public getOperationById(id: string) {
     return this.getActive().operations.filter(action => action.id === id)[0];
   }
 }

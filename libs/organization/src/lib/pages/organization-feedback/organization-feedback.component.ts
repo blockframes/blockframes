@@ -26,7 +26,7 @@ export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.service.syncQuery().subscribe();
+    this.subscription = this.service.syncOrgActive().subscribe();
     this.canMoveOn = this.query.isAccepted$;
   }
 
