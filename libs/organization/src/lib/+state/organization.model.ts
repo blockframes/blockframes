@@ -94,10 +94,7 @@ export function createOrganization(
   }
 }
 
-/**
- * Convert an Organization to an OrganizationDocument at each
- * creation or update of an organization
-*/
+/** Cleans an organization of its optional parameters */
 export function cleanOrganization(organization: Organization) {
   delete organization.baskets;
   delete organization.actions;

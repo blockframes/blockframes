@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService, OrganizationStatus, OrganizationQuery, OrganizationState } from '../+state';
+import {
+  OrganizationService,
+  OrganizationStatus,
+  OrganizationQuery,
+  OrganizationState
+} from '../+state';
 import { AuthQuery } from '@blockframes/auth';
 import { switchMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -10,10 +15,10 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
   constructor(
     protected orgService: OrganizationService,
-    private authQuery:AuthQuery,
+    private authQuery: AuthQuery,
     private query: OrganizationQuery
   ) {
-    super(orgService)
+    super(orgService);
   }
 
   sync() {
@@ -21,7 +26,7 @@ export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
       switchMap(user => {
         // When the user has no organization, he can navigate.
         if (!user.orgId) {
-          return of(true)
+          return of(true);
         }
         // When the user has an pending organization, he is stuck on congratulations page.
         else {
@@ -35,7 +40,6 @@ export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
           );
         }
       })
-    )
+    );
   }
 }
-
