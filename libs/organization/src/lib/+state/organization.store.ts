@@ -21,10 +21,12 @@ export class OrganizationStore extends EntityStore<OrganizationState, Organizati
     super(initialState);
   }
 
+  // TODO: #issue1288, type correctly organization
   akitaPreAddEntity(organization: any): Organization {
     return convertOrganizationWithTimestampsToOrganization(organization);
   }
 
+  // TODO: #issue1288, type correctly organization
   akitaPreUpdateEntity(currentOrg: any, nextOrg: any) {
     return convertOrganizationWithTimestampsToOrganization(nextOrg);
   }

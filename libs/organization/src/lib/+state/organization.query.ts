@@ -2,13 +2,10 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import {
-  AppDetailsWithStatus,
-  AppStatus,
   OrganizationStatus,
   Organization
 } from './organization.model';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
+import { filter, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -16,8 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
   constructor(
-    protected store: OrganizationStore,
-    private db: FireQuery
+    protected store: OrganizationStore
     ) {
     super(store);
   }
