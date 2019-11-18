@@ -1,3 +1,4 @@
+import { Inject } from '@angular/core';
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -36,16 +37,23 @@ import {
   MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
-import { languageValidator, ControlErrorStateMatcher, sortMovieBy } from '@blockframes/utils';
+import {
+  languageValidator,
+  ControlErrorStateMatcher,
+  sortMovieBy,
+  MovieAlgoliaResult,
+  MoviesIndex
+} from '@blockframes/utils';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, tap } from 'rxjs/operators';
+import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 
 @Component({
@@ -56,6 +64,8 @@ import flatten from 'lodash/flatten';
 })
 export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
+
+  public searchResults$: Observable<Movie[]>;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -152,10 +162,22 @@ export class MarketplaceSearchComponent implements OnInit {
     private movieService: MovieService,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
-    private breakpointObserver: BreakpointObserver
-  ) { }
+    private breakpointObserver: BreakpointObserver,
+    @Inject(MoviesIndex) private movieIndex: Index
+  ) {}
 
   ngOnInit() {
+    this.searchResults$ = this.filterForm.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      tap(console.log),
+      switchMap(name => {
+        return new Promise<MovieAlgoliaResult[]>((res, rej) => {
+          this.movieIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
+        });
+      })
+    );
+    this.searchResults$.subscribe(console.log);
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
       map(([movies, filterOptions]) => {
         if (AFM_DISABLE) {
