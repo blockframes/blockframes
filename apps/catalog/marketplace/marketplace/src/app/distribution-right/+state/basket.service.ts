@@ -57,7 +57,7 @@ export class BasketService extends CollectionService<BasketState> {
       price: { amount: 0, currency: 'euro' },
       rights: basket.rights
     });
-    this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${id}`).set(newBasket);
+    this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${id}`).set(newBasket);
   }
 
   public async updateWishlist(movie: Movie) {
@@ -114,13 +114,13 @@ export class BasketService extends CollectionService<BasketState> {
     );
     // if there is only one distribution right in the basket, delete the basket
     if (findDistributionRight.length <= 1) {
-      this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`).delete();
+      this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${basketId}`).delete();
     } else {
       this.basketQuery.getAll().forEach(baskets =>
         baskets.rights.forEach(right => {
           if (right.id !== rightId) {
             this.db
-              .doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basketId}`)
+              .doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${basketId}`)
               .update(baskets);
           }
         })
@@ -130,7 +130,7 @@ export class BasketService extends CollectionService<BasketState> {
 
   public rewriteBasket(basket: CatalogBasket) {
     this.db
-      .doc<CatalogBasket>(`orgs/${this.organizationQuery.id}/baskets/${basket.id}`)
+      .doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${basket.id}`)
       .update(basket);
   }
 
