@@ -11,7 +11,7 @@ const USER = createUser();
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit.skip('/auth'); // TODO: we should visit the root path instead of /auth
+  cy.visit('/auth'); // TODO: we should visit the root path instead of /auth
   cy.viewport('macbook-15');
 });
 

@@ -82,7 +82,7 @@ const DELIVERY_INFORMATION: DeliveryInformation = {
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit.skip('/auth');
+  cy.visit('/auth');
   cy.viewport('ipad-2', 'landscape');
 });
 

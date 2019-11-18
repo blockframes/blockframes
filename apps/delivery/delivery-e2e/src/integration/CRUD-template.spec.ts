@@ -23,7 +23,7 @@ const USER: User = {
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit.skip('/auth');
+  cy.visit('/auth');
   cy.viewport('macbook-15');
 });
 
