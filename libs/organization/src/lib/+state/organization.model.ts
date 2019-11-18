@@ -10,7 +10,6 @@ import {
 import { Movie } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
 import { OrganizationMember } from '../member/+state/member.model';
-import { firestore } from 'firebase/app';
 export {
   OrganizationStatus,
   WishlistStatus,
