@@ -1,45 +1,27 @@
 import { Injectable } from '@angular/core';
 import {
   OrganizationService,
-  OrganizationStatus,
-  OrganizationQuery,
-  OrganizationState
+  OrganizationStatus
 } from '../+state';
 import { AuthQuery } from '@blockframes/auth';
-import { switchMap, map } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
-export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
+export class NoOrganizationGuard {
   constructor(
-    protected orgService: OrganizationService,
+    protected service: OrganizationService,
     private authQuery: AuthQuery,
-    private query: OrganizationQuery
-  ) {
-    super(orgService);
-  }
+    protected router: Router
+  ) {}
 
-  sync() {
-    return this.authQuery.user$.pipe(
-      switchMap(user => {
-        // When the user has no organization, he can navigate.
-        if (!user.orgId) {
-          return of(true);
-        }
-        // When the user has an pending organization, he is stuck on congratulations page.
-        else {
-          return this.orgService.syncActive({ id: user.orgId }).pipe(
-            map(_ => this.query.getActive()),
-            map(org => {
-              if (org.status === OrganizationStatus.pending) {
-                return 'layout/organization/congratulations';
-              }
-            })
-          );
-        }
-      })
-    );
+  async canActivate() {
+    const { orgId } = this.authQuery.getValue().user;
+    if (!orgId) {
+      return true;
+    }
+    const org = await this.service.getValue(orgId);
+    return org.status === OrganizationStatus.pending
+      ? this.router.parseUrl('layout/organization/congratulations')
+      : this.router.parseUrl('layout/o');
   }
 }

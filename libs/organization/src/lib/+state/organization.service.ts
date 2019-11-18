@@ -1,8 +1,6 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
-import { switchMap, tap, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { Query, APPS_DETAILS} from '@blockframes/utils';
+import { switchMap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
@@ -11,8 +9,6 @@ import {
   OrganizationAction,
   OrganizationWithTimestamps,
   DeploySteps,
-  AppDetailsWithStatus,
-  AppStatus,
   createOrganization,
   cleanOrganization
 } from './organization.model';
@@ -35,10 +31,6 @@ import {
 import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMemberRequest, OrganizationMember } from '../member/+state/member.model';
-
-export const orgQuery = (orgId: string): Query<OrganizationWithTimestamps> => ({
-  path: `orgs/${orgId}`
-});
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -89,22 +81,6 @@ function getFilterFromTopics(address: string, topics: string[]): Filter {
 export class OrganizationService extends CollectionService<OrganizationState> {
   private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
   private contract: Contract;
-
-  /**
-   * an Observable that describe the list
-   * of application that are accessible to the current
-   * organization.
-  */
-  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.query.selectActiveId().pipe(
-    map(orgId => this.db.collection('app-requests').doc(orgId)),
-    switchMap(docRef => docRef.valueChanges()),
-    map((appRequest = {}) =>
-      APPS_DETAILS.map(app => ({
-        ...app,
-        status: (appRequest[app.id] as AppStatus) || AppStatus.none
-      }))
-    )
-  );
 
   constructor(
     private query: OrganizationQuery,
@@ -189,16 +165,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   /** Add a new organization */
   public async addOrganization(organization: Partial<Organization>): Promise<string> {
     const user = this.authQuery.user;
-    const orgId: string = this.db.createId();
     const newOrganization = createOrganization({
-      id: orgId,
       userIds: [user.uid],
       ...organization,
     });
 
-    await this.add(newOrganization);
-
-    return orgId;
+    return this.add(newOrganization);
   }
 
   /** Returns a list of organizations whose part of name match with @param prefix */
