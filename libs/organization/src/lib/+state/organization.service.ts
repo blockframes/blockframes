@@ -6,18 +6,16 @@ import { FireQuery, Query, APPS_DETAILS} from '@blockframes/utils';
 import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
-  createOrganizationDocument,
   Organization,
   OrganizationOperation,
   OrganizationAction,
   OrganizationWithTimestamps,
   convertOrganizationWithTimestampsToOrganization,
-  OrganizationDocument,
   DeploySteps,
   AppDetailsWithStatus,
   AppStatus,
   createOrganization,
-  convertToOrganizationDocument
+  cleanOrganization
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -182,7 +180,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   formatToFirestore(org: Organization): any {
-    return convertToOrganizationDocument(org);
+    return cleanOrganization(org);
   }
 
   /**
@@ -225,7 +223,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       ...organization,
     });
 
-    await this.add(newOrganization)
+    await this.add(newOrganization);
 
     return orgId;
   }
