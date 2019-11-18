@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService, OrganizationStatus, OrganizationState, OrganizationQuery, OrganizationStore } from '../+state';
+import {
+  OrganizationService,
+  OrganizationStatus,
+  OrganizationState,
+  OrganizationQuery,
+  OrganizationStore
+} from '../+state';
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, tap } from 'rxjs/operators';
@@ -11,14 +17,14 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
     protected service: OrganizationService,
     protected router: Router,
     private query: OrganizationQuery,
-    private store: OrganizationStore,
+    private store: OrganizationStore
   ) {
-    super(service)
+    super(service);
   }
 
   sync() {
     return this.service.syncQuery().pipe(
-      map(_ =>  this.query.getAll()),
+      map(_ => this.query.getAll()),
       tap(orgs => this.store.setActive(orgs[0].id)),
       map(orgs => {
         if (!orgs[0]) {

@@ -12,7 +12,7 @@ import { TemplateState, TemplateStore } from './template.store';
 @CollectionConfig({ path: 'templates' })
 export class TemplateService extends CollectionService<TemplateState>{
   /** An observable of organization's templateIds */
-  private templateIds$ = this.organizationQuery.select('org').pipe(
+  private templateIds$ = this.organizationQuery.selectActive().pipe(
     map(org => org.templateIds),
     distinctUntilChanged(
       (old, curr) => old.every(tpl => curr.includes(tpl))
