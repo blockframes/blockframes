@@ -19,6 +19,7 @@ export class MemberGuard extends CollectionGuard<MemberState> {
   sync() {
     return this.service.syncOrgMembers().pipe(
       tap(_ => {
+        // TODO issue#1146
         if (AFM_DISABLE) {
           this.organizationService.retrieveDataAndAddListeners();
         }

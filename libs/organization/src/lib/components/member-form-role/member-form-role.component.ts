@@ -72,7 +72,7 @@ export class MemberFormRoleComponent {
     };
 
     const orgName = this.organizationQuery.getActive().name;
-    const orgId = this.organizationQuery.id;
+    const orgId = this.organizationQuery.getActiveId();
     let feedback: TxFeedback;
     if (role === UserRole.admin){
       tx = CreateTx.addAdmin(orgEthAddress, userEthAddress, callback);
@@ -101,7 +101,7 @@ export class MemberFormRoleComponent {
   public async destroyWallet() {
     const { email } = this.control.value;
     const userEthAddress = await this.service.getMemberEthAddress(email);
-    const orgId = this.organizationQuery.id;
+    const orgId = this.organizationQuery.getActiveId();
     const orgEthAddress = await this.service.getOrganizationEthAddress();
 
     const tx = CreateTx.destroyMember(orgEthAddress, userEthAddress);

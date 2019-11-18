@@ -24,7 +24,7 @@ export class MemberAddComponent {
     try {
       if (this.emailControl.invalid) throw new Error('Please enter a valid email address');
       const userEmail = this.emailControl.value;
-      const organizationId = this.organizationQuery.id;
+      const organizationId = this.organizationQuery.getActiveId();
       await this.invitationService.sendInvitationToUser(userEmail, organizationId);
       this.snackBar.open('Your invitation was sent', 'close', { duration: 2000 });
       this.emailControl.reset();

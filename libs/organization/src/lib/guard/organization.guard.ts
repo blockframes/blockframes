@@ -8,7 +8,8 @@ import {
 } from '../+state';
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -17,20 +18,20 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
     protected service: OrganizationService,
     protected router: Router,
     private query: OrganizationQuery,
-    private store: OrganizationStore
+    private store: OrganizationStore,
+    private authQuery: AuthQuery
   ) {
     super(service);
   }
 
   sync() {
-    return this.service.syncQuery().pipe(
-      map(_ => this.query.getAll()),
-      tap(orgs => this.store.setActive(orgs[0].id)),
-      map(orgs => {
-        if (!orgs[0]) {
+    return this.service.syncOrgActive().pipe(
+      map(_ => this.query.getActive()),
+      map(org => {
+        if (!org) {
           return false;
         }
-        if (orgs[0].status === OrganizationStatus.pending) {
+        if (org.status === OrganizationStatus.pending) {
           return 'layout/organization/congratulations';
         }
       })
