@@ -2,15 +2,14 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FireQuery, Query, APPS_DETAILS} from '@blockframes/utils';
-import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth';
+import { Query, APPS_DETAILS} from '@blockframes/utils';
+import { AuthQuery, AuthService } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
   Organization,
   OrganizationOperation,
   OrganizationAction,
   OrganizationWithTimestamps,
-  convertOrganizationWithTimestampsToOrganization,
   DeploySteps,
   AppDetailsWithStatus,
   AppStatus,
@@ -88,8 +87,6 @@ function getFilterFromTopics(address: string, topics: string[]): Filter {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs'})
 export class OrganizationService extends CollectionService<OrganizationState> {
-  private organization$: Observable<Organization>;
-
   private provider: Provider; // we use a different provider than the wallet to easily manage events without having side effects on it
   private contract: Contract;
 
@@ -111,13 +108,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   constructor(
     private query: OrganizationQuery,
-    protected store: OrganizationStore,
+    store: OrganizationStore,
     private permissionsQuery: PermissionsQuery,
-    private authStore: AuthStore,
     private authService: AuthService,
     private authQuery: AuthQuery,
-    private memberQuery: MemberQuery,
-    protected db: FireQuery
+    private memberQuery: MemberQuery
   ) {
     super(store);
   }
@@ -134,27 +129,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
         return syncQuery.call(this, orgQuery(user.orgId));
       })
     );
-  }
-
-  /** Returns an observable over organization, to be reused when you need orgs without guards */
-  public sync(): Observable<Organization> {
-    // prevent creating multiple side-effecting subs
-    if (this.organization$) {
-      return this.organization$;
-    }
-
-    this.organization$ = this.authQuery.user$.pipe(
-      switchMap(user => {
-        if (!user.orgId) {
-          throw new Error('User has no orgId');
-        }
-        return this.db.fromQuery<OrganizationWithTimestamps>(orgQuery(user.orgId));
-      }),
-      map(organization => convertOrganizationWithTimestampsToOrganization(organization)),
-      tap(organization => this.store.update(organization))
-    );
-
-    return this.organization$;
   }
 
   /** Triggered when you remove an organization that has just been created.. */

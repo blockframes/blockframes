@@ -1,37 +1,41 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationService, OrganizationStatus } from '../+state';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { OrganizationService, OrganizationStatus, OrganizationQuery, OrganizationState } from '../+state';
+import { AuthQuery } from '@blockframes/auth';
+import { switchMap, map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 
-// TODO: issue#1171, use a CollectionGuard
 @Injectable({ providedIn: 'root' })
-export class NoOrganizationGuard {
-  private subscription: Subscription;
-
-  constructor(private orgService: OrganizationService, private router: Router) {}
-
-  canActivate() {
-    return new Promise(res => {
-      this.subscription = this.orgService.sync().subscribe({
-        next: (organization: Organization) => {
-          if (!organization) {
-            return res(true);
-          }
-          if (organization.status === OrganizationStatus.pending) {
-            return res(this.router.parseUrl('layout/organization/congratulations'));
-          }
-          return res(true);
-        },
-        error: err => {
-          res(true);
-        }
-      });
-    });
+@CollectionGuardConfig({ awaitSync: true })
+export class NoOrganizationGuard extends CollectionGuard<OrganizationState> {
+  constructor(
+    protected orgService: OrganizationService,
+    private authQuery:AuthQuery,
+    private query: OrganizationQuery
+  ) {
+    super(orgService)
   }
 
-  canDeactivate() {
-    this.subscription.unsubscribe();
-    return true;
+  sync() {
+    return this.authQuery.user$.pipe(
+      switchMap(user => {
+        // When the user has no organization, he can navigate.
+        if (!user.orgId) {
+          return of(true)
+        }
+        // When the user has an pending organization, he is stuck on congratulations page.
+        else {
+          return this.orgService.syncQuery().pipe(
+            map(_ => this.query.getAll()[0]),
+            map(org => {
+              if (org.status === OrganizationStatus.pending) {
+                return 'layout/organization/congratulations';
+              }
+            })
+          );
+        }
+      })
+    )
   }
 }
 
