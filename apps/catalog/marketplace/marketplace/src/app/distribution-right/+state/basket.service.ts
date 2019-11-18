@@ -32,12 +32,6 @@ export class BasketService extends CollectionService<BasketState> {
     super(store);
   }
 
-  public syncBasket() {
-    return this.organizationQuery
-      .select('org')
-      .pipe(switchMap(({ id }) => this.syncCollection({ pathParams: { orgId: id } })));
-  }
-
   /** Update the status of the wishlist to 'sent' and create new date at this moment. */
   public async updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
