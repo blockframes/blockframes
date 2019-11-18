@@ -1,3 +1,4 @@
+import { Movie } from '@blockframes/movie/movie/+state';
 import { algolia } from '@env';
 import algoliasearch from 'algoliasearch/lite';
 import { Index } from 'algoliasearch';
@@ -16,3 +17,13 @@ export interface OrganizationAlgoliaResult {
   name: string;
   objectID: string;
 }
+
+/**
+ * An Interface for movie search result from Algolia 
+ */
+export type MovieAlgoliaResult = Movie;
+
+export const MoviesIndex = new InjectionToken<Index>('Algolia index to search movies', {
+  providedIn: 'root',
+  factory: () => searchClient.initIndex(algolia.indexNameMovies)
+})

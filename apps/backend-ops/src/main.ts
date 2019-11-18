@@ -4,7 +4,10 @@ import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
 import { USERS as USERS_TORONTO } from './users.toronto.fixture';
 import { USERS } from './users.fixture';
-import { storeSearchableOrg } from '../../backend-functions/src/internals/algolia';
+import {
+  storeSearchableOrg,
+  storeSearchableMovie
+} from '../../backend-functions/src/internals/algolia';
 import { firebase } from '@env';
 
 async function prepareForTesting() {
@@ -51,6 +54,17 @@ async function prepareToronto() {
   process.exit(0);
 }
 
+async function upgradeAlgoliaMovies() {
+  const { db } = loadAdminServices();
+  const movies = await db.collection('movies').get();
+
+  const promises = [];
+  movies.forEach(movie => {
+    promises.push(storeSearchableMovie(movie.data(), process.env['ALGOLIA_API_KEY']));
+  });
+  return Promise.all(promises);
+}
+
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
 
@@ -64,4 +78,6 @@ if (cmd === 'prepareForTesting') {
   upgradeAlgoliaOrgs();
 } else if (cmd === 'syncUsers') {
   syncUsers(USERS).then(() => process.exit(0));
+} else if (cmd === 'upgradeAlgoliaMovies') {
+  upgradeAlgoliaMovies();
 }
