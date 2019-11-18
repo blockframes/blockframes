@@ -56,6 +56,7 @@ export interface OrganizationWithTimestamps extends OrganizationDocument {
 export interface Organization extends OrganizationDocumentWithDates {
   operations?: OrganizationOperation[];
   actions?: OrganizationAction[];
+  // Shopping cart list of movies in catalog-marketplace
   baskets: CatalogBasket[];
   isDeploying?: boolean;
   deployStep?: DeploySteps;
