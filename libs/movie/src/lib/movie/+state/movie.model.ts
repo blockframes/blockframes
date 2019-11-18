@@ -1,20 +1,20 @@
 import {
+  MovieBudget,
   MovieDocumentWithDates,
-  MovieMain,
-  MoviePromotionalElements,
-  MoviePromotionalDescription,
-  MovieSalesCast,
-  MovieStory,
-  MovieVersionInfo,
   MovieFestivalPrizes,
-  Prize,
-  Title,
+  MovieMain,
+  MoviePromotionalDescription,
+  MoviePromotionalElements,
   MovieSaleDocumentWithDates,
   MovieSalesAgentDealDocumentWithDates,
+  MovieSalesCast,
   MovieSalesInfoDocumentWithDates,
+  MovieStory,
+  MovieVersionInfo,
+  Person,
+  Prize,
   PromotionalElement,
-  MovieBudget,
-  Person
+  Title
 } from './movie.firestore';
 
 export type PromotionalElement = PromotionalElement;
@@ -132,7 +132,7 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     certifications: [],
     broadcasterCoproducers: [],
     scoring: '',
-    color:'',
+    color: '',
     europeanQualification: false,
     pegi: '',
     originCountryReleaseDate: null,
@@ -226,7 +226,6 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     ...params
   };
 }
-
 
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {

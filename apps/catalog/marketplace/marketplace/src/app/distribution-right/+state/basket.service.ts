@@ -25,9 +25,9 @@ export class BasketService extends CollectionService<BasketState> {
     private organizationQuery: OrganizationQuery,
     private basketQuery: BasketQuery,
     private organizationService: OrganizationService,
-    store: BasketStore,
     private authQuery: AuthQuery,
-    private functions: AngularFireFunctions
+    private functions: AngularFireFunctions,
+    store: BasketStore
   ) {
     super(store);
   }
