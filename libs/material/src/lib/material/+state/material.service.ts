@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Material, createMaterial, MaterialStatus, createMaterialTemplate, MaterialTemplate } from './material.model';
-import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Delivery } from '../../delivery/+state/delivery.model';
 import { TemplateQuery } from '../../template/+state/template.query';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { MaterialState, MaterialStore } from './material.store';
+import { createMaterial, createMaterialTemplate, Material, MaterialStatus, MaterialTemplate } from './material.model';
 import { MaterialQuery } from './material.query';
-import { MaterialDocument } from './material.firestore';
+import { MaterialState, MaterialStore } from './material.store';
 
 @Injectable({
   providedIn: 'root'
@@ -225,7 +223,7 @@ export class MaterialService extends CollectionService<MaterialState> {
   }
 
   /** Convert a MaterialDocument into a MaterialTemplateDocument if the subcollectionPath is set on templates. */
-  formatToFirestore(material: MaterialDocument): any {
+  formatToFirestore(material: Material): any {
     const collection = this.subcollectionPath.split('/');
     return collection[0] === 'templates'
       ? createMaterialTemplate(material)

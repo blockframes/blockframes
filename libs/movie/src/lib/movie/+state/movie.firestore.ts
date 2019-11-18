@@ -1,6 +1,6 @@
+import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug } from "@blockframes/movie/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
-import { PromotionalElementTypesSlug, ResourceSizesSlug, ResourceRatioSlug, MovieStatusSlug } from "@blockframes/movie/movie/static-model";
 
 type Timestamp = firestore.Timestamp;
 

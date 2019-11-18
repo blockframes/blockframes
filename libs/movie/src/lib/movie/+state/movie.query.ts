@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { MovieStore, MovieState } from './movie.store';
-import { Movie, MovieSale } from './movie.model';
+import { Movie } from './movie.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
 
 
   /**
-   * @param internalRef 
+   * @param internalRef
    */
   public existingMovie(internalRef: string) : Movie {
     return this.getAll().find(entity =>  entity.main.internalRef === internalRef );
