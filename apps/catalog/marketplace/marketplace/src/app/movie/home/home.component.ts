@@ -1,5 +1,3 @@
-import { analytics } from 'firebase/app';
-import { ANALYTICS } from './../../analytics.module';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit, Inject } from '@angular/core';
@@ -7,6 +5,9 @@ import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImgRef } from '@blockframes/utils/image-uploader';
+import { Analytics, ANALYTICS } from '@blockframes/utils';
+import { AuthQuery } from '@blockframes/auth';
+
 
 interface CarouselSection {
   title: string;
@@ -29,8 +30,9 @@ export class MarketplaceHomeComponent implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
-    @Inject(ANALYTICS) private logService: analytics.Analytics
-    ) {}
+    private authQuery: AuthQuery,
+    @Inject(ANALYTICS) private logService: Analytics
+  ) {}
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
@@ -81,22 +83,33 @@ export class MarketplaceHomeComponent implements OnInit {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been added to your selection.`,
+      'close',
+      { duration: 2000 }
+    );
     this.logService.logEvent('movie_to_wishlist', {
-      'movie_name': movie.main.title.original
-    })
+      movie_name: movie.main.title.original,
+      userId: this.authQuery.getValue().user.uid
+    });
   }
 
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been removed from your selection.`,
+      'close',
+      { duration: 2000 }
+    );
+    this.logService.logEvent('movie_removed_wishlist', {
+      movie_name: movie.main.title.original,
+      userId: this.authQuery.getValue().user.uid
+    });
   }
 
   public getBanner(movie: Movie): string {
     const movieElement = movie.promotionalElements.promotionalElements.find(element => element.type === "banner");
     if (!movieElement || !movieElement.url) { return; }
     return (<ImgRef>movieElement.url).ref !== undefined ? (<ImgRef>movieElement.url).url : (<string>movieElement.url)
-  }
-
 }

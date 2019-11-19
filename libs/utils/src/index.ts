@@ -10,6 +10,7 @@ export * from './lib/form/validators/validators';
 export * from './lib/form/matchers';
 export * from './lib/pipes/translate-slug.module';
 export * from './lib/intercom.module';
+export * from './lib/analytics.module';
 
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
