@@ -47,17 +47,20 @@ export interface OrganizationAction {
 }
 
 export interface OrganizationWithTimestamps extends OrganizationDocument {
-  operations?: OrganizationOperation[];
-  actions?: OrganizationAction[];
+  /** Shopping cart list of movies in catalog-marketplace */
   baskets: CatalogBasket[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
+  /** Represent the rules of possible actions on the blockchain */
   operations?: OrganizationOperation[];
+  /** Possible actions on the blockchain (example: sign a specific delivery) */
   actions?: OrganizationAction[];
-  // Shopping cart list of movies in catalog-marketplace
+  /** Shopping cart list of movies in catalog-marketplace */
   baskets: CatalogBasket[];
+  /** Is the smart contract of organization being deploy or not */
   isDeploying?: boolean;
+  /** The current step of the status of the smart contract of organization */
   deployStep?: DeploySteps;
 }
 
