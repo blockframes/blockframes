@@ -29,7 +29,7 @@ export class AuthService extends FireAuthService<AuthState> {
   /**
    * Initiate the password reset process for this user.
    * @param email email of the user
-   */
+  */
   public resetPasswordInit(email: string) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email }).toPromise();
@@ -63,6 +63,11 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
     this.afAuth.auth.confirmPasswordReset(actionCode, newPassword)
+  }
+
+  /** Redirect the user after he is signin */
+  onSignin() {
+    return this.router.navigate(['layout']);
   }
 
   /** Basic function used to login. */
