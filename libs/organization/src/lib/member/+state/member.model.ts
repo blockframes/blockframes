@@ -12,6 +12,7 @@ export interface OrganizationMember extends OrganizationMemberRequest {
 }
 
 export const enum UserRole {
+  superAdmin = 'superAdmin',
   admin = 'admin',
   member = 'member'
 }
