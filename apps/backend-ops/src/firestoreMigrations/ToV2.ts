@@ -44,7 +44,36 @@ export async function updateOrganizationIntoInvitation(db: Firestore) {
     return invitDocSnapshot.ref.set(newData);
   });
   const results = await Promise.all(invitationWithOrgName);
-
-  console.log('Updating organisation in invitation collection');
+  console.log('Updating organisation in invitation collection done');
 }
 
+/**
+ * Update organisation document from AFM information to today master information (18/11/19)
+ */
+export async function updateOrganizationDocument(db: Firestore) {
+  const organizations = await db.collection('orgs').get();
+
+  const newOrgnizationData = organizations.docs.map(async (orgDocSnapshot: any): Promise<any> => {
+    const orgData = orgDocSnapshot.data();
+    const {address, phoneNumber} = orgData;
+
+    delete orgData.address;
+    delete orgData.catalog;
+    delete orgData.officeAddress;
+    delete orgData.phoneNumber;
+
+    const newData = {
+      ...orgData,
+      addresses: {
+        city: address,
+        country: "",
+        phoneNumber: phoneNumber,
+        region: "",
+        street: "",
+        zipCode: ""
+    }};
+    return orgDocSnapshot.ref.set(newData);
+  });
+  const results = await Promise.all(newOrgnizationData);
+  console.log('Updating organization documents done');
+}
