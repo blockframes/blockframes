@@ -1,49 +1,33 @@
 import { Firestore } from '../admin';
-import { pickBy, identity } from 'lodash';
 
-
-const withoutUndefined = x => pickBy(x, identity);
 
 /**
- * Lets you select values from an item while configuring default values.
- *
- * Select all the keys from defaultValues in item,
- * if a value is undefined, uses the default Value.
- *
- * selectAndMergeValues({a: undefined, b: 2, c: true}, {a: 42, c: false}) => {a: 42, c: true}
+ * Update invitation collection with organization object and user object instead of organizationId and userId
  */
-const selectAndMergeValues = (item, defaultValues) => {
-  const result = { ...defaultValues };
-
-  Object.keys(defaultValues).forEach(key => {
-    if (item[key] !== undefined) {
-      result[key] = item[key];
-    }
-  });
-
-  return result;
-};
-
-/**
- * Migration for invitation document
- * from organizationId to organization object
- */
-export async function updateOrganizationIntoInvitation(db: Firestore) {
+export async function updateInvitationDocument(db: Firestore) {
   const invitations = await db.collection('invitations').get();
 
-  const invitationWithOrgName = invitations.docs.map( async (invitDocSnapshot: any): Promise<any> => {
+  const newInvitationDoc = invitations.docs.map( async (invitDocSnapshot: any): Promise<any> => {
     const invitationData = invitDocSnapshot.data();
-    const {organizationId} = invitationData;
+    const {organizationId, userId} = invitationData;
 
     const org = await db.doc(`orgs/${organizationId}`).get();
     const orgName = org.data().name;
 
-    delete invitationData.organizationId;
+    const user = await db.doc(`users/${userId}`).get();
+    const userData = user.data();
 
-    const newData = {...invitationData, organization: {id: organizationId, name: orgName}}
+    delete invitationData.organizationId;
+    delete invitationData.userId;
+
+    const newData = {
+      ...invitationData,
+      organization: {id: organizationId, name: orgName},
+      user: {id: userData.uid, email: userData.email, name: userData.name, surname: userData.surname, avatar: userData.avatar}
+    }
     return invitDocSnapshot.ref.set(newData);
   });
-  const results = await Promise.all(invitationWithOrgName);
+  const results = await Promise.all(newInvitationDoc);
   console.log('Updating organisation in invitation collection done');
 }
 
@@ -65,13 +49,16 @@ export async function updateOrganizationDocument(db: Firestore) {
     const newData = {
       ...orgData,
       addresses: {
-        city: address,
-        country: "",
-        phoneNumber: phoneNumber,
-        region: "",
-        street: "",
-        zipCode: ""
-    }};
+        main : {
+          city: address,
+          country: '',
+          phoneNumber: phoneNumber,
+          region: '',
+          street: '',
+          zipCode: ''
+        }
+      }
+    };
     return orgDocSnapshot.ref.set(newData);
   });
   const results = await Promise.all(newOrgnizationData);
