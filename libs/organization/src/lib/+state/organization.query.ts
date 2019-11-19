@@ -3,40 +3,26 @@ import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import {
   OrganizationStatus,
-  Organization,
-  AppDetailsWithStatus,
-  AppStatus
+  Organization
 } from './organization.model';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { FireQuery, APPS_DETAILS } from '@blockframes/utils';
+import { filter, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationQuery extends QueryEntity<OrganizationState, Organization> {
   constructor(
-    protected store: OrganizationStore,
-    private db: FireQuery
+    protected store: OrganizationStore
     ) {
     super(store);
   }
 
   /**
-   * an Observable that describe the list
+   * An Observable that describe the list
    * of application that are accessible to the current
    * organization.
   */
-  public appsDetails$: Observable<AppDetailsWithStatus[]> = this.selectActiveId().pipe(
-    map(orgId => this.db.collection('app-requests').doc(orgId)),
-    switchMap(docRef => docRef.valueChanges()),
-    map((appRequest = {}) =>
-      APPS_DETAILS.map(app => ({
-        ...app,
-        status: (appRequest[app.id] as AppStatus) || AppStatus.none
-      }))
-    )
-  );
+  public appsDetails$ = this.select(state => state.appsDetails);
 
   public isAccepted$ = this.selectActive().pipe(
     filter(org => !!org),

@@ -12,7 +12,8 @@ import {
   styleUrls: ['./app-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppGridComponent implements OnInit {
+export class AppGridComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   public apps$: Observable<AppDetailsWithStatus[]>;
 
   constructor(
@@ -21,11 +22,16 @@ export class AppGridComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.subscription = this.organizationService.syncAppsDetails().subscribe();
     this.apps$ = this.organizationQuery.appsDetails$;
   }
 
   public requestAccess(appId: string) {
     const orgId = this.organizationQuery.getActiveId();
     return this.organizationService.requestAccessToApp(orgId, appId);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
