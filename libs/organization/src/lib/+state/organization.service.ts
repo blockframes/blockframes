@@ -7,7 +7,6 @@ import {
   Organization,
   OrganizationOperation,
   OrganizationAction,
-  OrganizationWithTimestamps,
   DeploySteps,
   createOrganization,
   cleanOrganization
@@ -28,9 +27,9 @@ import {
   emailToEnsDomain,
   precomputeAddress as precomputeEthAddress
 } from '@blockframes/ethers/helpers';
-import { CollectionConfig, CollectionService, syncQuery } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
-import { OrganizationMemberRequest, OrganizationMember } from '../member/+state/member.model';
+import { OrganizationMember } from '../member/+state/member.model';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -100,9 +99,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   syncOrgActive() {
     return this.authQuery.user$.pipe(
-      switchMap(user => {
-        return this.syncActive({ id: user.orgId });
-      })
+      switchMap(user => this.syncActive({ id: user.orgId }))
     );
   }
 
@@ -110,22 +107,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   async onDelete() {
     const { uid } = this.authQuery.user;
     return this.db.doc(`users/${uid}`).update({ orgId: null });
-  }
-
-  /** Add a new user to the organization */
-  public async addMember(member: OrganizationMemberRequest) {
-    const orgId = this.query.getActiveId();
-    const orgName = this.query.getActive().name;
-    // get a user or create a ghost user when needed:
-    const { uid } = await this.authService.getOrCreateUserByMail(member.email, orgName); // TODO: limit the number of requests per organizations!
-
-    // TODO: use a definitive data type
-    // TODO: compare with backend-functions
-    const invitation = { userId: uid, orgId, type: 'orgInvitation', state: 'pending' };
-
-    await this.db.collection('invitations').add(invitation);
-
-    return uid;
   }
 
   formatToFirestore(org: Organization): any {
@@ -136,7 +117,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * Triggered when we add a new organization
    * create related documents (permissions, apps permissions, user...).
   */
-  async onCreate(org: Organization) {
+  async onCreate(org: Organization, { write }: WriteOptions) {
     const user = this.authQuery.user;
     const orgId: string = org.id;
     const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
@@ -144,22 +125,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
-    // Set permissions in the first transaction
-    await this.db.firestore.runTransaction(tx =>
-      Promise.all([
-        // Set the new organization in permissions collection.
-        tx.set(permissionsDoc.ref, permissions),
-        // Initialize apps permissions documents in permissions apps sub-collection.
-        ...apps.map(app => {
-          const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
-          const appPermissions = createAppPermissions(app);
-          return tx.set(newApp.ref, appPermissions);
-        })
-      ])
-    );
+    // Set the new organization in permissions collection.
+    write.set(permissionsDoc.ref, permissions);
+    // Initialize apps permissions documents in permissions apps sub-collection.
+    apps.map(app => {
+      const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
+      const appPermissions = createAppPermissions(app);
+      return write.set(newApp.ref, appPermissions);
+    })
 
-    // Update user with orgId;
-    return this.db.doc(userDoc.ref).update({ orgId });
+    // Update user with orgId.
+    return write.update(userDoc.ref, { orgId });
   }
 
   /** Add a new organization */

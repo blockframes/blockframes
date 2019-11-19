@@ -56,6 +56,6 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
 
 
   public getOperationById(id: string) {
-    return this.getActive().operations.filter(action => action.id === id)[0];
+    return this.getActive().operations.find(action => action.id === id);
   }
 }
