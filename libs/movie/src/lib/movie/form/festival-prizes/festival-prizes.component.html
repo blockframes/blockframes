@@ -18,7 +18,7 @@
       </mat-form-field>
       <div class="movie-poster-thumbnail">
         <h4> Festival Logo </h4>
-            <drop-cropper [ratio]="1" storagePath="festivalPrizes" [useChangePic]="false" formControlName="logo"></drop-cropper>
+            <drop-cropper [ratio]="1" storagePath="festivalPrizes" [useChangePic]="false" [useDelete]="false" formControlName="logo"></drop-cropper>
       </div>
       <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
         <mat-icon>add_circle</mat-icon>
