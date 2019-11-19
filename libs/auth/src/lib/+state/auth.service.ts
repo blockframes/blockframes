@@ -1,20 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthStore, User, createUser, AuthState } from './auth.store';
-import { FireQuery } from '@blockframes/utils';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import firebase from 'firebase';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
+import { FireAuthService, CollectionConfig, WriteOptions } from 'akita-ng-fire';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
-    private afAuth: AngularFireAuth,
-    protected db: FireQuery,
     private router: Router,
     private query: AuthQuery,
     private functions: AngularFireFunctions
@@ -42,7 +38,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public checkResetCode(actionCode: string) {
-    return this.afAuth.auth.verifyPasswordResetCode(actionCode);
+    return this.fireAuth.auth.verifyPasswordResetCode(actionCode);
   }
 
   /**
@@ -52,8 +48,8 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
-    await this.afAuth.auth.signInWithEmailAndPassword(userEmail, currentPassword);
-    return this.afAuth.auth.currentUser.updatePassword(newPassword);
+    await this.signin(userEmail, currentPassword);
+    return this.user.updatePassword(newPassword);
   }
 
   /**
@@ -62,10 +58,10 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.afAuth.auth.confirmPasswordReset(actionCode, newPassword)
+    this.fireAuth.auth.confirmPasswordReset(actionCode, newPassword)
   }
 
-  /** Redirect the user after he is signin */
+  /** Redirect the user after he is signin. */
   onSignin() {
     return this.router.navigate(['layout']);
   }
@@ -81,11 +77,11 @@ export class AuthService extends FireAuthService<AuthState> {
    * It also send a verification email to the user.
    */
   public async signupUser(email: string, password: string, name: string, surname: string) {
-    const authUser = await this.signup(email, password);
+    const userCredential = await this.signup(email, password);
 
     const user = createUser({
-      uid: authUser.user.uid,
-      email: authUser.user.email,
+      uid: userCredential.user.uid,
+      email: userCredential.user.email,
       name,
       surname
     });
@@ -95,7 +91,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
   /** Function used to log out of the application. */
   public async logout() {
-    await this.afAuth.auth.signOut();
+    await this.signOut();
     this.store.update({ user: null });
   }
 
@@ -121,15 +117,20 @@ export class AuthService extends FireAuthService<AuthState> {
   //   return this.db.doc<User>(`users/${uid}`).update(user);
   // }
 
-  /** Delete the current User */
-  public async delete() {
-    const uid = this.afAuth.auth.currentUser.uid;
-
-    await this.store.update({ user: null });
-    await this.afAuth.auth.currentUser.delete();
-    await this.deleteSubCollections(uid);
-    await this.db.doc<User>(`users/${uid}`).delete();
+  onDelete() {
+    const uid = this.query.userId;
+    return this.deleteSubCollections(uid);
   }
+
+  /** Delete the current User */
+  // public async delete() {
+  //   const uid = this.fireAuth.auth.currentUser.uid;
+
+  //   await this.store.update({ user: null });
+  //   await this.fireAuth.auth.currentUser.delete();
+  //   await this.deleteSubCollections(uid);
+  //   await this.db.doc<User>(`users/${uid}`).delete();
+  // }
 
   /** Deletes user subCollections */
   private async deleteSubCollections(uid: string) {
@@ -183,7 +184,7 @@ export class AuthService extends FireAuthService<AuthState> {
       return {
         ...state,
         user: {
-          ...state.user,
+          ...state.profile,
           financing: { rank }
         }
       };
