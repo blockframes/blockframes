@@ -85,7 +85,7 @@ export class CropperComponent implements ControlValueAccessor{
 
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
-  @Input() useChangePic? = true;
+  @Input() useFileuploader? = true;
   @Input() useDelete? = true;
 
   uploaded: (ref: ImgRef) => void;
@@ -120,13 +120,7 @@ export class CropperComponent implements ControlValueAccessor{
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
     this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn(
-      {
-        url: '',
-        ref: '',
-        originalRef: ''
-      }
-    );
+    this.deleted = () => fn({ url: '', ref: '', originalRef: '' });
   }
   registerOnTouched(fn: any): void {
     return;
@@ -175,12 +169,11 @@ export class CropperComponent implements ControlValueAccessor{
     this.url$ = this.ref.getDownloadURL();
     // Observable completed once both requests are completed
     combineLatest([this.url$, this.ref.getMetadata()]).subscribe(([url, meta]) => {
-      const newRef: ImgRef = {
-        url: url,
+      this.uploaded({
+        url,
         ref: meta.fullPath,
         originalRef: ''
-      };
-      this.uploaded(newRef);
+      });
       this.nextStep('show');
 
     })
