@@ -6,9 +6,6 @@
   <ng-container *ngFor="let ref of _refs">
     <img [imgRef]="ref" [placeholderUrl]="placeholderLogo" alt="organization logo">
   </ng-container>
-  <ng-template #unknown>
-    <img [src]="placeholderLogo" alt="Placeholder Logo">
-  </ng-template>
   <ng-container *ngIf="_moreDetails > 0">
     +{{_moreDetails}}
   </ng-container>
