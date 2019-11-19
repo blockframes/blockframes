@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
-import { AuthQuery, AuthService } from '@blockframes/auth';
+import { switchMap, map, tap } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth';
 import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
 import {
   Organization,
@@ -9,7 +9,8 @@ import {
   OrganizationAction,
   DeploySteps,
   createOrganization,
-  cleanOrganization
+  cleanOrganization,
+  AppStatus
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -30,6 +31,7 @@ import {
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
+import { APPS_DETAILS } from '@blockframes/utils';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -85,7 +87,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private query: OrganizationQuery,
     store: OrganizationStore,
     private permissionsQuery: PermissionsQuery,
-    private authService: AuthService,
     private authQuery: AuthQuery,
     private memberQuery: MemberQuery
   ) {
@@ -95,6 +96,20 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   public async orgNameExist(orgName: string) {
     const orgs = await this.getValue(ref => ref.where('name', '==', orgName));
     return orgs.length !== 0;
+  }
+
+  /** Sync appsDetails of store with applications that are accessible to the current organization. */
+  syncAppsDetails() {
+    return this.query.selectActiveId().pipe(
+      switchMap(orgId => this.db.doc(`app-requests/${orgId}`).valueChanges()),
+      map((appRequest = {}) => {
+        return APPS_DETAILS.map(app => ({
+          ...app,
+          status: (appRequest[app.id] as AppStatus) || AppStatus.none
+        }))
+      }),
+      tap(appsDetails => this.store.update({ appsDetails }))
+    );
   }
 
   syncOrgActive() {
