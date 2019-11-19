@@ -174,9 +174,7 @@ export class CropperComponent implements ControlValueAccessor{
   goToShow() {
     this.url$ = this.ref.getDownloadURL();
     // Observable completed once both requests are completed
-    combineLatest([this.url$, this.ref.getMetadata()]).pipe(
-      finalize(() => console.log('completed'))
-    ).subscribe(([url, meta]) => {
+    combineLatest([this.url$, this.ref.getMetadata()]).subscribe(([url, meta]) => {
       const newRef: ImgRef = {
         url: url,
         ref: meta.fullPath,
