@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutAlign="start center">
 
   <ng-container *ngFor="let url of _urls">
-    <img *ngIf="!!url; else unknown" [src]="url">
+    <img *ngIf="!!url" [src]="url">
   </ng-container>
   <ng-container *ngFor="let ref of _refs">
     <img [imgRef]="ref" [placeholderUrl]="placeholderLogo" alt="organization logo">
