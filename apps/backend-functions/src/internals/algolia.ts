@@ -28,7 +28,7 @@ export function deleteSearchableOrg(orgId: string): Promise<any> {
 
 const indexMoviesBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
-  const INDEX_NAME_MOVIES = algolia.indexNameOrganizations;
+  const INDEX_NAME_MOVIES = algolia.indexNameMovies;
   return client.initIndex(INDEX_NAME_MOVIES);
 };
 
@@ -40,5 +40,5 @@ export function storeSearchableMovie(
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
-  return indexMoviesBuilder(adminKey).saveObject({ objectID: movie.id, movie });
+  return indexMoviesBuilder(adminKey).saveObject({ objectID: movie.id });
 }
