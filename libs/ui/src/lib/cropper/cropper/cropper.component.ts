@@ -40,22 +40,13 @@ function b64toBlob(data: string) {
 
 
 /** Check if the path is a file path */
-function isFile(path: any): boolean {
-  if (!path || !path.ref) {
+function isFile(imgRef: ImgRef): boolean {
+  if (!imgRef || !imgRef.ref) {
     return false;
   }
-  const part = path.ref.split('.');
+  const part = imgRef.ref.split('.');
   const last = part.pop();
   return part.length >= 1 && !last.includes('/');
-}
-
-export function createImgRef(ref: Partial<ImgRef> = {}): ImgRef {
-  return {
-    url: '',
-    ref: '',
-    originalRef: '',
-    ...ref
-  }
 }
 
 @Component({
@@ -93,7 +84,8 @@ export class CropperComponent implements ControlValueAccessor{
   }
 
   @Input() storagePath: string;
-  @Input() useChangePic?: boolean;
+  /** Disable fileuploader & delete buttons in 'show' step */
+  @Input() useChangePic? = true;
   @Input() useDelete? = true;
 
   uploaded: (ref: ImgRef) => void;
@@ -127,13 +119,14 @@ export class CropperComponent implements ControlValueAccessor{
 
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
-    console.log('register on change');
     this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn({
-      url: '',
-    ref: '',
-    originalRef: ''
-  });
+    this.deleted = () => fn(
+      {
+        url: '',
+        ref: '',
+        originalRef: ''
+      }
+    );
   }
   registerOnTouched(fn: any): void {
     return;
@@ -180,14 +173,15 @@ export class CropperComponent implements ControlValueAccessor{
 
   goToShow() {
     this.url$ = this.ref.getDownloadURL();
+    // Observable completed once both requests are completed
     combineLatest([this.url$, this.ref.getMetadata()]).pipe(
       finalize(() => console.log('completed'))
     ).subscribe(([url, meta]) => {
-      const newRef: ImgRef = createImgRef({
+      const newRef: ImgRef = {
         url: url,
         ref: meta.fullPath,
         originalRef: ''
-      });
+      };
       this.uploaded(newRef);
       this.nextStep('show');
 
