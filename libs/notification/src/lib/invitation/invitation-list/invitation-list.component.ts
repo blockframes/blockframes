@@ -16,7 +16,7 @@ import { InvitationType, Invitation } from '@blockframes/invitation/types';
 export class InvitationListComponent implements OnInit, OnDestroy {
   public docInvitations$: Observable<Invitation[]>;
   public userInvitations$: Observable<Invitation[]>;
-  public isSuperAdmin$: Observable<boolean>;
+  public isAdmin$: Observable<boolean>;
   private sub: Subscription;
 
   constructor(
@@ -29,7 +29,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /**
-     * Checks if the user is superAdmin before populating the invitations arrays. If so, we populate
+     * Checks if the user is admin before populating the invitations arrays. If so, we populate
      * both docInvitations and userInvitations. If not, we populate only docInvitations.
      */
     const storeName = this.store.storeName;
@@ -41,12 +41,12 @@ export class InvitationListComponent implements OnInit, OnDestroy {
       sortByOrder: Order.DESC
     });
 
-    this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+    this.isAdmin$ = this.permissionQuery.isAdmin$;
 
-    this.userInvitations$ = this.permissionQuery.isSuperAdmin$.pipe(
-      switchMap((isSuperAdmin) => {
+    this.userInvitations$ = this.permissionQuery.isAdmin$.pipe(
+      switchMap((isAdmin) => {
         const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
-        if (!isSuperAdmin) {
+        if (!isAdmin) {
           const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
           // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
           this.store.remove(ids);

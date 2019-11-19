@@ -12,5 +12,5 @@ export class MemberPendingComponent {
   @Output() accepted = new EventEmitter<Invitation>();
   @Output() declined = new EventEmitter<Invitation>();
   @Input() invitations: Invitation[];
-  @Input() isSuperAdmin: boolean;
+  @Input() isAdmin: boolean;
 }

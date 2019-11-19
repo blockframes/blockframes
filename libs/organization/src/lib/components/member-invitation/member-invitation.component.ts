@@ -11,5 +11,5 @@ export class MemberInvitationComponent {
   @HostBinding('attr.page-id') pageId = 'member-invitation';
   @Output() declined = new EventEmitter<Invitation>();
   @Input() invitations: Invitation[];
-  @Input() isSuperAdmin: boolean;
+  @Input() isAdmin: boolean;
 }

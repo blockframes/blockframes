@@ -29,9 +29,9 @@ export class NotificationWidgetComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.notificationCount$ = this.notificationQuery.selectCount(notification => !notification.isRead);
-    this.invitationCount$ = this.permissionQuery.isSuperAdmin$.pipe(
-      switchMap(isSuperAdmin =>
-        isSuperAdmin
+    this.invitationCount$ = this.permissionQuery.isAdmin$.pipe(
+      switchMap(isAdmin =>
+        isAdmin
           ? this.invitationQuery.selectCount(invitation => this.adminInvitations(invitation))
           : this.invitationQuery.selectCount(invitation => this.memberInvitations(invitation))
       )

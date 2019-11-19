@@ -2,6 +2,7 @@ export interface Permissions {
   orgId: string;
   superAdmins: string[];
   admins: string[];
+  members: string[];
   canCreate: string[];
   canRead: string[];
   canUpdate: string[];
@@ -54,6 +55,7 @@ export function createPermissions(params: Partial<Permissions> = {}): Permission
     orgId: params.orgId,
     superAdmins: params.superAdmins,
     admins: [],
+    members: [],
     canCreate: [],
     canRead: [],
     canUpdate: [],

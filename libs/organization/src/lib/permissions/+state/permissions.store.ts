@@ -9,6 +9,7 @@ const initialState: PermissionsState = {
   orgId: null,
   superAdmins: [],
   admins: [],
+  members: [],
   canCreate: [],
   canRead: [],
   canUpdate: [],

@@ -81,7 +81,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
         userIds: [...organizationData.userIds, userId]
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, userId] })
+      tx.set(permissionsRef, { ...permissionData, members: [...permissionData.members, userId] })
     ]);
   });
 }

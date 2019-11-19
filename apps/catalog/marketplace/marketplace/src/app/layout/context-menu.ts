@@ -87,7 +87,8 @@ export const CONTEXT_MENU = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = [ // TODO #1146
+export const CONTEXT_MENU_AFM = [
+  // TODO #1146
   {
     route: 'default',
     items: [
@@ -101,6 +102,42 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
         path: `${baseRoute}/search`,
         icon: 'search_sidebar'
       }
+    ]
+  },
+  {
+    route: '/layout/o/organization/:orgId/edit',
+    items: [
+      {
+        name: 'home',
+        path: '/layout/o/catalog/home',
+        icon: 'home_sidebar'
+      },
+      {
+        name: 'informations',
+        path: '/layout/o/organization/:orgId/edit',
+      },
+      {
+        name: 'members',
+        path: '/layout/o/organization/:orgId/members',
+      },
+    ]
+  },
+  {
+    route: '/layout/o/organization/:orgId/members',
+    items: [
+      {
+        name: 'home',
+        path: '/layout/o/catalog/home',
+        icon: 'home_sidebar'
+      },
+      {
+        name: 'informations',
+        path: '/layout/o/organization/:orgId/edit',
+      },
+      {
+        name: 'members',
+        path: '/layout/o/organization/:orgId/members',
+      },
     ]
   },
   {
@@ -120,4 +157,3 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
     items: []
   }
 ];
-

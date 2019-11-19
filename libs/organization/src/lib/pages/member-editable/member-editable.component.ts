@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { OrganizationQuery } from '../../+state';
+import { OrganizationQuery, OrganizationMember, UserRole } from '../../+state';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
@@ -39,6 +39,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   /** Observable of all the members invited by the organization */
   public invitationsFromOrganization$: Observable<Invitation[]>;
 
+  public isAdmin$: Observable<boolean>;
   public isSuperAdmin$: Observable<boolean>;
 
   public membersFormList = createMemberFormList();
@@ -73,6 +74,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
       map(index => this.membersFormList.controls[index])
     );
 
+    this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
@@ -105,10 +107,15 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationService.declineInvitation(invitation);
   }
 
+  /** Update every user roles in the form list. */
   public async updateRole() {
     try {
+      if (!this.membersFormList.value.find(member => member.role === UserRole.superAdmin)) {
+        throw new Error('There must be at least one Super Admin in the organization.')
+      }
       this.permissionsService.updateMembersRole(this.membersFormList.value);
       this.snackBar.open('Roles updated', 'close', { duration: 2000 });
+      this.opened = false;
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

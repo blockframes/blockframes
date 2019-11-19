@@ -1,4 +1,4 @@
-<editable-sidenav (closed)="opened = false" [opened]="opened">
+<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
   <!-- Content -->
   <ng-container content>
     <article fxLayout="row" fxLayoutAlign="start center">
@@ -10,16 +10,22 @@
         (declined)="declineInvitation($event)"
         (accepted)="acceptInvitation($event)"
         [invitations]="invitations"
-        [isSuperAdmin]="isSuperAdmin$ | async">
+        [isAdmin]="isAdmin$ | async">
       </member-pending>
     </div>
-    <div class="space-between-component"><member-repertory [members]="members$ | async" (editing)="openSidenav($event)"></member-repertory></div>
-    <div class="space-send-invitation large"><member-add *ngIf="(isSuperAdmin$ | async)"> </member-add></div>
+    <div class="space-between-component">
+      <member-repertory
+        [members]="members$ | async"
+        [isSuperAdmin]="isSuperAdmin$ | async"
+        (editing)="openSidenav($event)">
+      </member-repertory>
+    </div>
+    <div class="space-send-invitation large"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
     <div class="space-pending-invitation" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
       <member-invitation *ngIf="invitationsMember.length > 0"
         [invitations]="invitationsMember"
         (declined)="declineInvitation($event)"
-        [isSuperAdmin]="isSuperAdmin$ | async">
+        [isAdmin]="isAdmin$ | async">
       </member-invitation>
     </div>
   </ng-container>
