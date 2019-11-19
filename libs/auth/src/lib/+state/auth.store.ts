@@ -18,11 +18,6 @@ export interface User {
   avatar: string;
 }
 
-export interface UserForm {
-  email: string;
-  pwd: string;
-}
-
 /** A user interface with public informations */
 export interface PublicUser {
   uid: string;
@@ -56,7 +51,8 @@ export class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialState);
   }
-  updateUser(user: Partial<User>) {
-    this.update(state => ({...state, user: ({...state.user, ...user})}));
+  createProfile(user: User) {
+    console.log('createProfile', user)
+    return { uid: user.uid }
   }
 }
