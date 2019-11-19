@@ -33,8 +33,8 @@ export interface PublicUser {
 
 export interface AuthState extends FireAuthState<User> {
   auth?: { emailVerified: boolean };
-  form: UserForm;
   requestedRoute?: string;
+  profile: User;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -47,11 +47,7 @@ export function createUser(user: Partial<User> = {}) {
 const initialState: AuthState = {
   uid: null,
   profile: null,
-  loading: false,
-  form: {
-    email: '',
-    pwd: ''
-  },
+  loading: false
 }
 
 @Injectable({ providedIn: 'root' })
