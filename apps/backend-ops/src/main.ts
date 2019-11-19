@@ -63,9 +63,11 @@ async function upgradeAlgoliaMovies() {
     promises.push(storeSearchableMovie(movie.data(), process.env['ALGOLIA_API_KEY']));
   });
   return Promise.all(promises);
+}
+
 function upgradeToV2() {
   const { db } = loadAdminServices();
-  updateOrganizationIntoInvitation(db);
+  updateInvitationDocument(db);
   updateOrganizationDocument(db);
 }
 
@@ -84,6 +86,6 @@ if (cmd === 'prepareForTesting') {
   syncUsers(USERS).then(() => process.exit(0));
 } else if (cmd === 'upgradeAlgoliaMovies') {
   upgradeAlgoliaMovies();
-} else if (cmd === 'upgradeToV2') {
-  upgradeToV2();
+} else if (cmd === 'prepareToV2') {
+  prepareToV2();
 }
