@@ -1,16 +1,18 @@
-import { AngularFireAnalyticsModule } from './analytics.module';
 // Angular
+import { OnDestroy } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Inject } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { Router, NavigationEnd } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
 // Angular Fire
+import { AngularFireAnalyticsModule, ANALYTICS, Analytics } from '@blockframes/utils';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -52,6 +54,11 @@ import { yandexId } from '@env';
 // Intercom
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
+
+// Analytics
+import { AuthQuery } from '@blockframes/auth';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -104,13 +111,34 @@ import { intercomId } from '@env';
     // Yandex Metrika
     NgxMetrikaModule.forRoot({
       id: yandexId,
-      clickmap:true,
-      trackLinks:true,
-      accurateTrackBounce:true,
-      webvisor:true
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
     })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule implements OnDestroy {
+  private subscription: Subscription;
+
+  constructor(
+    private router: Router,
+    @Inject(ANALYTICS) private logService: Analytics,
+    private authQuery: AuthQuery
+  ) {
+    const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+    this.subscription = navEnds.subscribe((event: NavigationEnd) => {
+      this.logService.logEvent('page_view', {
+        page_location: 'marketplace',
+        page_path: event.urlAfterRedirects,
+        uid: this.authQuery.getValue().user.uid
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+}
