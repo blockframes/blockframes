@@ -18,7 +18,7 @@ export class OrganizationEditableComponent implements OnInit {
   public opened = false;
   public organizationProfileForm = new OrganizationForm(this.service);
   public organization$: Observable<Organization>;
-  public isSuperAdmin$: Observable<boolean>;
+  public isAdmin$: Observable<boolean>;
 
   constructor(
     private query: OrganizationQuery,
@@ -31,7 +31,7 @@ export class OrganizationEditableComponent implements OnInit {
     this.organization$ = this.query
       .selectActive()
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
+    this.isAdmin$ = this.permissionsQuery.isAdmin$;
   }
 
   public get organizationInformations$() {

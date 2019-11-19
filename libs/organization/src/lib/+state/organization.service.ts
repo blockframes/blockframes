@@ -398,7 +398,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     // re construct members list
     const promises: Promise<number>[] = [];
     this.memberQuery.getAll()
-      .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
+      .filter(member => !this.permissionsQuery.isUserAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)

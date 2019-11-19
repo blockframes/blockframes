@@ -9,31 +9,37 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PermissionsQuery extends Query<PermissionsState> {
-  /** Return an array containing the userIds of the superAdmins of the organization */
-  public superAdmins$: Observable<string[]> = this.select(state => state.superAdmins);
 
   constructor(protected store: PermissionsStore, private auth: AuthQuery) {
     super(store);
   }
 
-  /** Checks if the connected user is SuperAdmin of his organization */
+  /** Checks if the connected user is superAdmin of his organization. */
   public get isSuperAdmin$(): Observable<boolean> {
     return this.select(state => state.superAdmins.includes(this.auth.userId));
   }
 
-  public get superAdminCount() {
-    return this.getValue().superAdmins.length;
-  }
-
-  /** Checks if the connected user is either SuperAdmin or Admin of his organization */
-  public get isOrgAdmin$(): Observable<boolean> {
+  /** Checks if the connected user is admin of his organization. */
+  public get isAdmin$(): Observable<boolean> {
     return this.isSuperAdmin$.pipe(
       map(isSuperAdmin => isSuperAdmin || this.getValue().admins.includes(this.auth.userId))
     );
   }
 
-  /** Checks if the user is SuperAdmin of his organization */
-  public isUserSuperAdmin(userId: string) {
-    return this.getValue().superAdmins.includes(userId);
+  /** Checks if the connected user is either member of his organization. */
+  public get isOrgMember$(): Observable<boolean> {
+    return this.isAdmin$.pipe(
+      map(isAdmin => isAdmin || this.getValue().members.includes(this.auth.userId))
+    );
+  }
+
+  /** Returns the number of organization admins. */
+  public get superAdminCount(): number {
+    return this.getValue().superAdmins.length;
+  }
+
+  /** Checks if the user is SuperAdmin of his organization. */
+  public isUserAdmin(userId: string): boolean {
+    return this.getValue().admins.includes(userId);
   }
 }

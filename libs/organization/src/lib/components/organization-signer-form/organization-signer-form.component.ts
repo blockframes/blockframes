@@ -33,7 +33,7 @@ export class OrganizationSignerFormComponent {
   }
 
   public get isAdmin() {
-    return this.permissionQuery.isUserSuperAdmin(this.member.uid);
+    return this.permissionQuery.isUserAdmin(this.member.uid);
   }
 
   isSelected(operation: OrganizationOperation) {

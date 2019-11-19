@@ -6,7 +6,7 @@
       <article>
         <span><span class="bold">{{ invitation.user.name }} {{ invitation.user.surname }} </span>{{ invitation.user.email }}</span>
       </article>
-      <article *ngIf="isSuperAdmin">
+      <article *ngIf="isAdmin">
         <button (click)="accepted.emit(invitation)" mat-icon-button>
           <mat-icon>done</mat-icon>
         </button>
