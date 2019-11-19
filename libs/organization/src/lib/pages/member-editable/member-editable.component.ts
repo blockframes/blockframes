@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { OrganizationQuery, OrganizationMember, UserRole } from '../../+state';
+import { OrganizationQuery } from '../../+state/organization.query';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
@@ -9,7 +9,7 @@ import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
-import { OrganizationMember } from '../../member/+state/member.model';
+import { OrganizationMember, UserRole } from '../../member/+state/member.model';
 import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
 
