@@ -1,6 +1,8 @@
+import { analytics } from 'firebase/app';
+import { ANALYTICS } from './../../analytics.module';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit, Inject } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,8 +28,9 @@ export class MarketplaceHomeComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private basketService: BasketService,
-    private snackbar: MatSnackBar
-  ) { }
+    private snackbar: MatSnackBar,
+    @Inject(ANALYTICS) private logService: analytics.Analytics
+    ) {}
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
@@ -79,6 +82,9 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.basketService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.logService.logEvent('movie_to_wishlist', {
+      'movie_name': movie.main.title.original
+    })
   }
 
   public removeFromWishlist(movie: Movie, event: Event) {
