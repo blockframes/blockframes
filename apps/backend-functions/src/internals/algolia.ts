@@ -28,7 +28,6 @@ export function deleteSearchableOrg(orgId: string): Promise<any> {
 
 const indexMoviesBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
-  
   const INDEX_NAME_MOVIES = algolia.indexNameMovies;
   return client.initIndex(INDEX_NAME_MOVIES);
 };
