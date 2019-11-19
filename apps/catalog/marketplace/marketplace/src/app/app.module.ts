@@ -1,3 +1,4 @@
+import { AngularFireAnalyticsModule } from './analytics.module';
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -88,8 +89,11 @@ import { intercomId } from '@env';
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
+
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireAnalyticsModule,
+
 
     // Analytics
     sentryDsn ? SentryModule : [],
