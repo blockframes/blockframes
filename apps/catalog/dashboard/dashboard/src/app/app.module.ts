@@ -30,6 +30,7 @@ import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { EmailVerifyModule } from '@blockframes/auth';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -61,6 +62,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     WalletWidgetModule,
     KeyManagerModule,
     NotificationWidgetModule,
+    EmailVerifyModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

@@ -29,6 +29,7 @@ import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { EmailVerifyModule } from '@blockframes/auth';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -88,6 +89,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       WalletWidgetModule,
       KeyManagerModule,
       NotificationWidgetModule,
+      EmailVerifyModule,
 
       // Firebase
       AngularFireModule.initializeApp(environment.firebase),
