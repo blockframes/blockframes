@@ -51,6 +51,7 @@ export const AuthRoutes: Routes = [
     CropperModule,
     TermsConditionsModule,
     AcceptConditionsModule,
+    UiFormModule,
 
     // Material
     MatFormFieldModule,
@@ -67,7 +68,6 @@ export const AuthRoutes: Routes = [
     AngularFireAuthModule,
     AngularFirePerformanceModule,
     RouterModule.forChild(AuthRoutes),
-    UiFormModule,
   ],
   declarations: [
     LoginViewComponent,
