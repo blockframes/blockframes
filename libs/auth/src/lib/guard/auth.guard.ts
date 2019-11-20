@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthQuery, AuthStore, User, AuthService, AuthState } from '../+state';
-import { Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { FireQuery } from '@blockframes/utils';
-import { CollectionGuard } from 'akita-ng-fire';
+import { AuthQuery, User, AuthService, AuthState, AuthStore } from '../+state';
+import { map } from 'rxjs/operators';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 
 // Verify if the user exists and has a name and surname.
 function hasIdentity(user: User) {
@@ -15,50 +11,26 @@ function hasIdentity(user: User) {
 @Injectable({
   providedIn: 'root'
 })
+@CollectionGuardConfig({ awaitSync: true })
 export class AuthGuard extends CollectionGuard<AuthState> {
   constructor(
     service: AuthService,
+    private query: AuthQuery,
+    private store: AuthStore
   ) {
     super(service);
   }
 
-  // public subscription: Subscription;
-
-  // canActivate(): boolean | Promise<boolean | UrlTree> {
-  //   this.store.update({ requestedRoute: null });
-  //   // Connected on the app
-  //   // if (hasIdentity(this.query.user)) {
-  //   //   return true;
-  //   // };
-
-  //   return new Promise((res, rej) => {
-  //     this.subscription = this.service.sync().pipe(
-  //       tap(a => this.store.update(a))
-  //     )
-  //     .subscribe(a => console.log(a));
-  //   })
-
-  //   // Wait for the server to give first answer
-  //   return new Promise((res, rej) => {
-  //     this.subscription = this.afAuth.authState
-  //       .pipe(
-  //         switchMap(userAuth => {
-  //           if (!userAuth) throw new Error('Not connected');
-  //           this.store.update({ auth: { emailVerified: userAuth.emailVerified } });
-  //           return this.db.doc<User>(`users/${userAuth.uid}`).valueChanges();
-  //         }),
-  //         tap(user => this.store.update({ user })),
-  //         tap(user => this.store.update({ profile: user })),
-  //         map(user => hasIdentity(user) ? true : this.router.parseUrl('auth/identity'))
-  //       )
-  //       .subscribe({
-  //         next: (response: boolean | UrlTree) => res(response),
-  //         error: error => res(this.router.parseUrl('auth'))
-  //       });
-  //   });
-  // }
-
-  // canDeactivate() {
-  //   this.subscription.unsubscribe();
-  // }
+  sync() {
+    return this.service.sync().pipe(
+      map(_ => this.query.user),
+      map(user => {
+        if (!user) {
+          return 'auth';
+        };
+        this.store.update({  auth: { emailVerified: this.service.user.emailVerified } });
+        return hasIdentity(user) ? true : 'auth/identity';
+      })
+    );
+  }
 }
