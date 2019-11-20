@@ -6,9 +6,8 @@ const DOT = 46;
 
 /**
  * Resolves . and .. elements in a path with directory names
- * @param {string} path
- * @param {boolean} allowAboveRoot
- * @return {string}
+ * @param path
+ * @param allowAboveRoot
  */
 function normalizeStringPosix(path: string, allowAboveRoot: boolean): string {
   let res = '';
@@ -84,12 +83,11 @@ function normalizeStringPosix(path: string, allowAboveRoot: boolean): string {
 
 /**
 * https://nodejs.org/api/path.html#path_path_resolve_paths
-* @param {...string} paths A sequence of paths or path segments.
-* @return {string}
+* @param paths A sequence of paths or path segments.
 */
 export function resolvePath(...paths: string[]): string {
-  let resolvedPath: string = "";
-  let resolvedAbsolute: boolean = false;
+  let resolvedPath = "";
+  let resolvedAbsolute = false;
 
   for (let i = paths.length - 1; i >= -1 && !resolvedAbsolute; i--) {
       let path: string;
