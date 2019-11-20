@@ -13,13 +13,14 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
-import { DeliveryQuery} from '@blockframes/material'; // TODO: find better way to load material lib
-import { TemplateModule} from '@blockframes/material'; // TODO: find better way to load material lib
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { AuthModule } from '@blockframes/auth';
@@ -97,6 +98,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
       AngularFireFunctionsModule,
+      AngularFirePerformanceModule,
+      AngularFireAuthModule,
+      AngularFireStorageModule,
 
       // Akita
       AkitaNgRouterStoreModule.forRoot(),
