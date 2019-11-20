@@ -26,7 +26,7 @@ export class TemplateListComponent implements OnInit {
     this.templates$ = this.query.selectAll();
   }
 
-  public deleteTemplate(template: Template) {
+  public deleteTemplate(event: Event, template: Template) {
     event.stopPropagation();
     this.service.remove(template.id);
     this.snackBar.open(`Template "${template.name}" has been deleted.`, 'close', {
