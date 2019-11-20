@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
@@ -31,9 +30,7 @@ import {
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
-import { APPS_DETAILS, App } from '@blockframes/utils/apps';
-import { createAppPermissions, createOrgPermissions, UserRole } from '../permissions/+state/permissions.firestore';
-import { Router } from '@angular/router';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -91,7 +88,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private permissionsQuery: PermissionsQuery,
     private authQuery: AuthQuery,
     private memberQuery: MemberQuery,
-    private router: Router
+    private angularFireFunctions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -117,9 +114,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   syncOrgActive() {
     return this.authQuery.user$.pipe(
-      switchMap(user => {
-        return this.syncActive({ id: user.orgId })
-      })
+      switchMap(user => this.syncActive({ id: user.orgId }))
     );
   }
 
@@ -174,8 +169,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Returns a list of organizations whose part of name match with @param prefix */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
-    const call = firebase.functions().httpsCallable('findOrgByName');
-    return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
+    const call = this.angularFireFunctions.httpsCallable('findOrgByName');
+    return call({ prefix }).toPromise().then(matchingOrganizations => matchingOrganizations.data);
   }
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly

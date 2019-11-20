@@ -12,7 +12,6 @@ import { MaterialQuery, MaterialService, createMaterial } from '../../material/+
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';

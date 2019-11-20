@@ -25,7 +25,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
       map(_ => this.query.getActive()),
       map(org => {
         if (!org) {
-          return 'auth';
+          return 'layout/organization';
         }
         if (org.status === OrganizationStatus.pending) {
           return 'layout/organization/congratulations';
