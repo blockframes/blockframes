@@ -10,7 +10,6 @@ export interface Invitation {
   type: InvitationType;
   status: InvitationStatus;
   date: Timestamp;
-  user?: PublicUser;
   organization?: PublicOrganization;
   docId?: string;
   processedId?: string;

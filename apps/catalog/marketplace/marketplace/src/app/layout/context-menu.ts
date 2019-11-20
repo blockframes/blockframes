@@ -105,38 +105,38 @@ export const CONTEXT_MENU_AFM = [
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/edit',
+    route: `${appsRoute}/organization/:orgId/edit`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home',
+        path: `${appsRoute}/home`,
         icon: 'home_sidebar'
       },
       {
         name: 'informations',
-        path: '/layout/o/organization/:orgId/edit',
+        path: `${appsRoute}/organization/:orgId/edit`,
       },
       {
         name: 'members',
-        path: '/layout/o/organization/:orgId/members',
+        path: `${appsRoute}/organization/:orgId/members`,
       },
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/members',
+    route: `${appsRoute}/organization/:orgId/members`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home',
+        path: `${appsRoute}/home`,
         icon: 'home_sidebar'
       },
       {
         name: 'informations',
-        path: '/layout/o/organization/:orgId/edit',
+        path: `${appsRoute}/organization/:orgId/edit`,
       },
       {
         name: 'members',
-        path: '/layout/o/organization/:orgId/members',
+        path: `${appsRoute}/organization/:orgId/members`,
       },
     ]
   },
