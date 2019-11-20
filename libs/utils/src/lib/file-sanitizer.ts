@@ -14,8 +14,8 @@ function uuidv4() {
  */
 export function sanitizeFileName(url: string): string {
   // get the part after the last slash and remove url parameters like "#" and "?"
-  const extension = url.split('/').pop().split(/\#|\?/)[0].split('.').pop();
+  const lastSlash = url.split('/').pop();
+  const filePart = lastSlash !== undefined ? lastSlash.split(/\#|\?/) : [];
   // generate a random filename
-  const fileName = uuidv4();
-  return `${fileName}.${extension}`;
+  return filePart.length > 0 ? `${uuidv4()}.${filePart[0].split('.').pop()}` : '';
 }

@@ -16,7 +16,7 @@ import {
   PromotionalElement,
   Title
 } from './movie.firestore';
-import { createImgRef } from '@blockframes/ui/cropper/cropper/cropper.component';
+import { createImgRef } from '@blockframes/utils/image-uploader';
 
 export type PromotionalElement = PromotionalElement;
 

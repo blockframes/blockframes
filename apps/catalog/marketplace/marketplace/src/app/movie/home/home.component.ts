@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImgRef } from '@blockframes/ui/cropper/cropper/cropper.component';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 interface CarouselSection {
   title: string;

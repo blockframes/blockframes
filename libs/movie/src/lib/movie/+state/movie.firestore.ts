@@ -1,7 +1,7 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug } from "@blockframes/movie/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
-import { ImgRef } from "@blockframes/ui/cropper/cropper/cropper.component";
+import { ImgRef } from "@blockframes/utils/image-uploader";
 
 type Timestamp = firestore.Timestamp;
 

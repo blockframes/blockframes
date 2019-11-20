@@ -5,26 +5,12 @@ import { finalize, catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { HttpClient } from '@angular/common/http';
+/*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
-
-export interface ImgRef {
-  url: string;
-  ref: string;
-  originalRef: string
-}
-
-export function createImgRef(ref: Partial<ImgRef> = {}): ImgRef {
-  return {
-    url: '',
-    ref: '',
-    originalRef: '',
-    ...ref
-  };
-}
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -97,7 +83,7 @@ export class CropperComponent implements ControlValueAccessor {
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
-  constructor(private storage: AngularFireStorage, private http: HttpClient, private _renderer: Renderer2, private _elementRef: ElementRef) { }
+  constructor(private storage: AngularFireStorage, /*private http: HttpClient,*/ private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   //////////////////////////
   // ControlValueAccessor //
