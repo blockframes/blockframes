@@ -1,17 +1,19 @@
 import { appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
+
+const baseRoute = `${appsRoute}/${App.catalogDashboard}`;
+
 export const CONTEXT_MENU = [
   {
     route: 'default',
     items: [
-      // { name: 'home', path: '${appsRoute}/${App.catalogDashboard}/catalog/home' }, @todo #878 removed for torronto
       {
         name: 'movie list',
-        path: `${appsRoute}/${App.catalogDashboard}/home/list`
+        path: `${baseRoute}/home/list`
       }, // temp
       {
         name: 'Upload avails & films doc',
-        path: `${appsRoute}/${App.catalogDashboard}/import`
+        path: `${baseRoute}/import`
       }, // temp until good place for this route is found
       {
         name: 'New Deals',

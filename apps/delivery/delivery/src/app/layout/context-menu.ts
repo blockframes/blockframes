@@ -1,6 +1,8 @@
 import { App } from '@blockframes/utils';
 import { appsRoute } from '@blockframes/utils/routes';
 
+const baseRoute = `${appsRoute}/${App.mediaDelivering}`;
+
 export const CONTEXT_MENU = [
   {
     route: 'default',
@@ -11,137 +13,137 @@ export const CONTEXT_MENU = [
     items: []
   },
   {
-    route: `${appsRoute}/home/list`,
+    route: `${baseRoute}/home/list`,
     items: [
-      { name: 'home', path: `${appsRoute}/home/list` },
-      { name: 'templates', path: `${appsRoute}/templates/list` },
-      { name: 'add a delivery', path: `${appsRoute}/delivery/add/1-find-movie` }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` },
+      { name: 'add a delivery', path: `${baseRoute}/delivery/add/1-find-movie` }
     ]
   },
   {
-    route: `${appsRoute}/home/create`,
+    route: `${baseRoute}/home/create`,
     items: [
-      { name: 'home', path: `${appsRoute}/home/list` },
-      { name: 'templates', path: `${appsRoute}/templates/list` }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` }
     ]
   },
   {
-    route: `${appsRoute}/home/:movieId/edit`,
+    route: `${baseRoute}/home/:movieId/edit`,
     items: [
-      { name: 'edit film', path: `${appsRoute}/home/:movieId/edit` },
-      { name: 'teamwork', path: `${appsRoute}/home/:movieId/teamwork` }
+      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
+      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
     ]
   },
   {
-    route: `${appsRoute}/home/:movieId/teamwork`,
+    route: `${baseRoute}/home/:movieId/teamwork`,
     items: [
-      { name: 'edit film', path: `${appsRoute}/home/:movieId/edit` },
-      { name: 'teamwork', path: `${appsRoute}/home/:movieId/teamwork` }
+      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
+      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
     ]
   },
   {
-    route: `${appsRoute}/templates/list`,
+    route: `${baseRoute}/templates/list`,
     items: [
-      { name: 'home', path: `${appsRoute}/home/list` },
-      { name: 'templates', path: `${appsRoute}/templates/list` }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` }
     ]
   },
   {
-    route: `${appsRoute}/templates/create`,
+    route: `${baseRoute}/templates/create`,
     items: [
-      { name: 'home', path: `${appsRoute}/home/list` },
-      { name: 'templates', path: `${appsRoute}/templates/create` }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/create` }
     ]
   },
   {
-    route: `${appsRoute}/templates/:templateId`,
+    route: `${baseRoute}/templates/:templateId`,
     items: [
-      { name: 'templates', path: `${appsRoute}/templates/list` },
-      { name: 'edit', path: `${appsRoute}/templates/:templateId` }
+      { name: 'templates', path: `${baseRoute}/templates/list` },
+      { name: 'edit', path: `${baseRoute}/templates/:templateId` }
     ]
   },
   {
-    route: `${appsRoute}/delivery/:movieId/list`,
+    route: `${baseRoute}/delivery/:movieId/list`,
     items: [
-      { name: 'deliveries', path: `${appsRoute}/delivery/:movieId/list` },
-      { name: 'existing materials', path: `${appsRoute}/delivery/:movieId/materials` }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
     ]
   },
   {
-    route: `${appsRoute}/delivery/:movieId/materials`,
+    route: `${baseRoute}/delivery/:movieId/materials`,
     items: [
-      { name: 'deliveries', path: `${appsRoute}/delivery/:movieId/list` },
-      { name: 'existing materials', path: `${appsRoute}/delivery/:movieId/materials` }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
     ]
   },
   {
-    route: `${appsRoute}/delivery/:movieId/:deliveryId/list`,
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/list`,
     items: [
-      { name: 'deliveries', path: `${appsRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${appsRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${appsRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${appsRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: `${appsRoute}/delivery/:movieId/:deliveryId/informations`,
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/informations`,
     items: [
-      { name: 'deliveries', path: `${appsRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${appsRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${appsRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${appsRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: `${appsRoute}/delivery/:movieId/:deliveryId/stakeholders`,
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders`,
     items: [
-      { name: 'deliveries', path: `${appsRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${appsRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${appsRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${appsRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: `${appsRoute}/account`,
+    route: `${baseRoute}/account`,
     items: [
-      { name: 'profile', path: `${appsRoute}/account/profile` },
-      { name: 'wallet', path: `${appsRoute}/account/wallet` }
+      { name: 'profile', path: `${baseRoute}/account/profile` },
+      { name: 'wallet', path: `${baseRoute}/account/wallet` }
     ]
   },
   {
-    route: `${appsRoute}/organization/:orgId/activityreports`,
+    route: `${baseRoute}/organization/:orgId/activityreports`,
     items: [
-      { name: 'information', path: `${appsRoute}/organization/:orgId/edit` },
-      { name: 'members', path: `${appsRoute}/organization/:orgId/members` },
-      { name: 'admin', path: `${appsRoute}/organization/:orgId/administration` },
-      { name: 'activity reports', path: `${appsRoute}/organization/:orgId/activityreports` }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: `${appsRoute}/organization/:orgId/members`,
+    route: `${baseRoute}/organization/:orgId/members`,
     items: [
-      { name: 'information', path: `${appsRoute}/organization/:orgId/edit` },
-      { name: 'members', path: `${appsRoute}/organization/:orgId/members` },
-      { name: 'admin', path: `${appsRoute}/organization/:orgId/administration` },
-      { name: 'activity reports', path: `${appsRoute}/organization/:orgId/activityreports` }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: `${appsRoute}/organization/:orgId/edit`,
+    route: `${baseRoute}/organization/:orgId/edit`,
     items: [
-      { name: 'information', path: `${appsRoute}/organization/:orgId/edit` },
-      { name: 'members', path: `${appsRoute}/organization/:orgId/members` },
-      { name: 'admin', path: `${appsRoute}/organization/:orgId/administration` },
-      { name: 'activity reports', path: `${appsRoute}/organization/:orgId/activityreports` }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: `${appsRoute}/organization/:orgId/administration`,
+    route: `${baseRoute}/organization/:orgId/administration`,
     items: [
-      { name: 'information', path: `${appsRoute}/organization/:orgId/edit` },
-      { name: 'members', path: `${appsRoute}/organization/:orgId/members` },
-      { name: 'admin', path: `${appsRoute}/organization/:orgId/administration` },
-      { name: 'activity reports', path: `${appsRoute}/organization/:orgId/activityreports` }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   }
 ];
