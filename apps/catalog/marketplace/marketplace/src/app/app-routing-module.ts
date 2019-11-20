@@ -18,7 +18,7 @@ const routes = createRoutes({
     {
       path: App.biggerBoat,
       loadChildren: () =>
-        import('./catalog-marketplace.module').then(m => m.CatalogMarketplaceAppModule)
+        import('./marketplace.module').then(m => m.CatalogMarketplaceAppModule)
     }
   ]
 });
