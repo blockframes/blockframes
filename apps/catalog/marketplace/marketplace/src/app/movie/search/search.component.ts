@@ -153,7 +153,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private basketService: BasketService,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
@@ -173,7 +173,7 @@ export class MarketplaceSearchComponent implements OnInit {
       }),
       tap(movies => {
         movies.forEach(movie => {
-          if (!this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
+          if (movie.salesAgentDeal && movie.salesAgentDeal.salesAgent && !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
             this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
           }
         });
