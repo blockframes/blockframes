@@ -22,12 +22,12 @@ export async function updateInvitationDocument(db: Firestore) {
 
     const newData = {
       ...invitationData,
-      organization: {id: organizationId, name: orgName},
-      user: {id: userData.uid, email: userData.email, name: userData.name, surname: userData.surname, avatar: userData.avatar}
+      organization: {id: organizationId, name: '' || orgName},
+      user: {id: userData.uid, email: userData.email, name: '' || userData.name, surname: '' || userData.surname, avatar: '' || userData.avatar}
     }
     return invitDocSnapshot.ref.set(newData);
   });
-  const results = await Promise.all(newInvitationDoc);
+  await Promise.all(newInvitationDoc);
   console.log('Updating organisation in invitation collection done');
 }
 
@@ -45,6 +45,7 @@ export async function updateOrganizationDocument(db: Firestore) {
     delete orgData.catalog;
     delete orgData.officeAddress;
     delete orgData.phoneNumber;
+    delete orgData.members;
 
     const newData = {
       ...orgData,
@@ -59,8 +60,9 @@ export async function updateOrganizationDocument(db: Firestore) {
         }
       }
     };
+
     return orgDocSnapshot.ref.set(newData);
   });
-  const results = await Promise.all(newOrgnizationData);
+  await Promise.all(newOrgnizationData);
   console.log('Updating organization documents done');
 }

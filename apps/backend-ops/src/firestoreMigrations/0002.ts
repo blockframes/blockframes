@@ -27,6 +27,10 @@ const selectAndMergeValues = (item, defaultValues) => {
 };
 
 
+///////////////////
+/// COLLECTION  ///
+///////////////////
+
 /**
  * Delivery Migration
  */
@@ -69,7 +73,7 @@ function invitationUpgrade(invitation: QueryDocumentSnapshot, tx: Transaction) {
     organization: {},
     status: 'pending',
     type: '',
-    userId: ''
+    user: {}
   };
 
   const newInvitationData = selectAndMergeValues(data, defaultValues);
@@ -78,26 +82,84 @@ function invitationUpgrade(invitation: QueryDocumentSnapshot, tx: Transaction) {
 
 /**
  * Movie Migration
+ * Can I integrate changement inside this function ?
  */
 function movieUpgrade(movie: QueryDocumentSnapshot, tx: Transaction) {
   const data = movie.data();
   const defaultValues = {
     _type: 'movies',
+    // applications: {},
     budget: {
-      totalBudget: '',
       budgetCurrency: '',
-      detailedBudget: ''
+      detailedBudget: '',
+      totalBudget: ''
     },
     deliveryIds: [],
-    festivalPrizes: {},
-    main: {},
-    promotionalDescription: {},
-    promotionalElements: {},
-    salesAgentDeal: {},
-    salesCast: {},
-    salesInfo: {},
-    story: {},
-    versionInfo: {}
+    festivalPrizes: {
+      prizes: {}
+    },
+    main: {
+      // companyDisplayCredit: '',
+      languages: [],
+      // officialIds: {
+      //   ISAN: '',
+      //   EIDR: ''
+      // },
+      title: {
+        original: '',
+      },
+      // totalRunTime: '',
+    },
+    promotionalDescription: {
+      keyAssets: [],
+      keywords: []
+    },
+    promotionalElements: {
+      images: [],
+      promotionalElements: {}
+    },
+    salesAgentDeal: {
+      medias: [],
+      rights: {},
+      // terms: {
+      //   start: '',
+      //   startLag: '',
+      //   end: '',
+      //   endLag: ''
+      // },
+      territories: [],
+    },
+    salesCast: {
+      credits: []
+    },
+    salesInfo: {
+      broadcasterCoproducers: [],
+      certifications: [],
+      color: '',
+      europeanQualification: '',
+      internationalPremiere: {},
+      originCountryReleaseDate: '',
+      pegi: '',
+      // rating: {
+      //   system: '',
+      //   value: '',
+      //   country: '',
+      //   reason: ''
+      // },
+      // releaseHistoryOriginal: '',
+      // releaseHistoryPhysicalHV: '',
+      // releaseYear: '',
+      scoring: '',
+      theatricalRelease: '',
+    },
+    story: {
+      logline: '',
+      synopsis: '',
+    },
+    versionInfo: {
+      dubbings: [],
+      subtitles: [],
+    }
   };
 
   const newMovieData = selectAndMergeValues(data, defaultValues);
@@ -140,7 +202,7 @@ function organizationUpgrade(organization: QueryDocumentSnapshot, tx: Transactio
     email: '',
     fiscalNumber: '',
     logo: data.logo || PLACEHOLDER_LOGO,
-    movieIds: [],
+    // movieIds: { App: [], App: []},
     status: 'pending',
     templateIds: [],
     updated: data.updated,
@@ -152,6 +214,60 @@ function organizationUpgrade(organization: QueryDocumentSnapshot, tx: Transactio
   tx.update(organization.ref, newOrganizationData);
 }
 
+
+///////////////////
+// SUBCOLLECTION //
+///////////////////
+
+/**
+ * Template's materials Migration
+ */
+async function materialTemplateUpgrade(template: QueryDocumentSnapshot) {
+  const materials = await template.ref.collection('materials').get();
+
+  materials.docs.map(async (material: any): Promise<any> => {
+    const data = material.data();
+    const defaultValues = {
+      category: '',
+      description: '',
+      price: {},
+      value: ''
+    };
+
+    const newMaterialData = selectAndMergeValues(data, defaultValues);
+    await template.ref.collection('materials').doc(data.id).set(newMaterialData);
+  })
+}
+
+/**
+ * Delivery's materials and stakeholders Migration
+ */
+async function materialDeliveryUpgrade(delivery: QueryDocumentSnapshot) {
+  const materials = await delivery.ref.collection('materials').get();
+
+  materials.docs.map(async (material: any): Promise<any> => {
+    const data = material.data();
+    const defaultValues = {
+      category: '',
+      description: '',
+      isOrdered: false,
+      isPaid: false,
+      owner: '',
+      price: {
+        type: '',
+        value: '',
+        currency: '' || data.currency
+      },
+      status: 'pending',
+      stepId: '',
+      storage: '',
+      value: ''
+    };
+
+    const newMaterialData = selectAndMergeValues(data, defaultValues);
+    await delivery.ref.collection('materials').doc(data.id).set(newMaterialData);
+  })
+}
 
 /**
  * Function to upgrade the database
