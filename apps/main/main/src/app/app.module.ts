@@ -21,14 +21,13 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 // Libraries
-import { AuthModule } from '@blockframes/auth';
 import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { OrganizationModule } from '@blockframes/organization';
-import { ProfileModule } from '@blockframes/account';
-import { AccountModule } from '@blockframes/account';
-import { WalletModule } from '@blockframes/ethers';
+import { OrganizationWidgetModule } from '@blockframes/organization';
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { EmailVerifyModule } from '@blockframes/auth';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -80,16 +79,16 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     MatBadgeModule,
 
     // Libraries
-    AuthModule,
     UploadModule,
     UiFormModule,
-    OrganizationModule,
+    OrganizationWidgetModule,
     ToolbarModule,
-    AccountModule,
-    ProfileModule,
-    WalletModule,
+    ProfileWidgetModule,
+    ProfileMenuModule,
+    WalletWidgetModule,
     KeyManagerModule,
     NotificationWidgetModule,
+    EmailVerifyModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
