@@ -4,12 +4,12 @@ import { snapshot } from '@blockframes/utils';
 import { InvitationService } from '@blockframes/notification';
 import { AuthQuery } from '@blockframes/auth';
 import { StakeholderDocument, createStakeholder } from './stakeholder.firestore';
-import { SubcollectionService, CollectionConfig } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { StakeholderStore } from './stakeholder.store';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'deliveries/:deliveryId/stakeholders' })
-export class StakeholderService extends SubcollectionService<StakeholderState> {
+export class StakeholderService extends CollectionService<StakeholderState> {
   constructor(
     private invitationService: InvitationService,
     private authQuery: AuthQuery,
