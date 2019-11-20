@@ -8,7 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
-import { MovieEmptyComponent } from '@blockframes/movie/movie/components/movie-empty/movie-empty.component';
+import { MovieCreateComponent } from '@blockframes/movie/movie/pages/movie-create/movie-create.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -44,7 +44,7 @@ export const routes: Routes = [
           },
           {
             path: 'no-movies',
-            component: MovieEmptyComponent
+            component: MovieCreateComponent
           },
           {
             path: 'organization',
