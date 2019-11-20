@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px">
-  <mat-checkbox (change)="toggleTermsOfUse()"></mat-checkbox>
+  <mat-checkbox test-id="checkbox" (change)="toggleTermsOfUse()"></mat-checkbox>
   <span>I accept the
     <a (click)="openTermsOfUse(displayConditions)" class="terms-link">Terms and Conditions of Use</a>.
   </span>
