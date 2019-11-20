@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AcceptConditionsDirective } from './accept-conditions.directive';
 
 @Component({
-  selector: 'accept-conditions',
+  selector: 'auth-accept-conditions',
   templateUrl: './accept-conditions.component.html',
   styleUrls: ['./accept-conditions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
