@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ImgRef } from '@blockframes/ui/cropper/cropper/cropper.component';
 
 interface CarouselSection {
   title: string;
@@ -26,7 +27,7 @@ export class MarketplaceHomeComponent implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private snackbar: MatSnackBar
-    ) {}
+  ) { }
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
@@ -42,9 +43,11 @@ export class MarketplaceHomeComponent implements OnInit {
     this.moviesBySections$ = combineLatest([latest$, preProduction$, completed$]).pipe(
       map(([latest, preProduction, completed]) => {
         return [
-          { title: 'New Films',
+          {
+            title: 'New Films',
             subline: 'Discover our latest releases',
-            movies: latest },
+            movies: latest
+          },
           {
             title: 'Pre-production Films',
             subline: 'Brand new projects with great potential',
@@ -84,9 +87,10 @@ export class MarketplaceHomeComponent implements OnInit {
     this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
-  public getBanner(movie: Movie) {
+  public getBanner(movie: Movie): string {
     const movieElement = movie.promotionalElements.promotionalElements.find(element => element.type === "banner");
-    return movieElement.url;
+    if (!movieElement || !movieElement.url) { return; }
+    return (<ImgRef>movieElement.url).ref !== undefined ? (<ImgRef>movieElement.url).url : (<string>movieElement.url)
   }
 
 }

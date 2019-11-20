@@ -18,7 +18,8 @@ import {
   createPromotionalElement,
   createCredit,
   createMovieBudget,
-  createMoviePromotionalElements
+  createMoviePromotionalElements,
+  createPrize
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -392,7 +393,7 @@ export class ViewExtractedElementsComponent {
           movie.festivalPrizes.prizes = [];
           spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
             if (p.split(',').length >= 3) {
-              const prize = { name: '', year: undefined, prize: '', logo: '' } as Prize;
+              const prize = createPrize();
               prize.name = p.split(',')[0];
               prize.year = parseInt(p.split(',')[1], 10);
               prize.prize = p.split(',')[2];
@@ -401,7 +402,6 @@ export class ViewExtractedElementsComponent {
               }
               movie.festivalPrizes.prizes.push(prize);
             }
-
           });
         }
 

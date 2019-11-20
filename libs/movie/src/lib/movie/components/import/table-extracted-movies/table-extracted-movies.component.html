@@ -71,7 +71,7 @@
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.main.poster; else noposter">
-        <img class="poster" [src]="element.movie.main.poster">
+        <img class="poster" [imgRef]="element.movie.main.poster">
       </ng-container>
       <ng-template #noposter>
         --
