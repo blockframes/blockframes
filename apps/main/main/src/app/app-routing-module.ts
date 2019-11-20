@@ -18,11 +18,11 @@ export const mainAppRoutes: Routes = [
     path: 'apps',
     component: AppGridComponent
   },
-  // {
-  //   path: App.mediaDelivering,
-  //   data: { app: App.mediaDelivering },
-  //   loadChildren: () => import('@blockframes/apps/delivery').then(m => m.DeliveryAppModule)
-  // },
+  {
+    path: App.mediaDelivering,
+    data: { app: App.mediaDelivering },
+    loadChildren: () => import('@blockframes/apps/delivery').then(m => m.DeliveryAppModule)
+  },
   {
     path: App.biggerBoat,
     data: { app: App.biggerBoat },
