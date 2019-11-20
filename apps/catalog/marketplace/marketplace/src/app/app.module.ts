@@ -22,7 +22,7 @@ import { ToolbarModule } from '@blockframes/ui';
 import { MovieModule } from '@blockframes/movie';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletModule } from '@blockframes/ethers';
+import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
 
@@ -71,7 +71,7 @@ import { intercomId } from '@env';
     MovieModule,
     ProfileWidgetModule,
     ProfileMenuModule,
-    WalletModule,
+    WalletWidgetModule,
     KeyManagerModule,
     NotificationWidgetModule,
 
