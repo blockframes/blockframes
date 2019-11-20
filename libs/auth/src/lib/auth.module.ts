@@ -25,7 +25,6 @@ import { LoginViewComponent } from './pages/login-view/login-view.component';
 import { UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { SigninFormComponent } from './components/signin-form/signin-form.component';
-import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
@@ -73,11 +72,9 @@ export const AuthRoutes: Routes = [
     SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
-    EmailVerifyComponent,
     IdentityFeedbackComponent,
     EmailVerificationComponent,
     PasswordResetComponent
   ],
-  exports: [EmailVerifyComponent]
 })
 export class AuthModule {}
