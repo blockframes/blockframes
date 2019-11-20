@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthStore, User, AuthState } from './auth.store';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
-import firebase from 'firebase';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 
@@ -13,7 +12,7 @@ export class AuthService extends FireAuthService<AuthState> {
     protected store: AuthStore,
     private router: Router,
     private query: AuthQuery,
-    private functions: AngularFireFunctions
+    private angularFireFunctions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -27,13 +26,13 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param email email of the user
   */
   public resetPasswordInit(email: string) {
-    const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
+    const callSendReset = this.angularFireFunctions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email }).toPromise();
   }
 
   /** Send a new verification email to the current user */
   public async sendVerifyEmail() {
-    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
+    const callSendVerify = this.angularFireFunctions.httpsCallable('sendVerifyEmail');
     return callSendVerify({ email: this.query.user.email }).toPromise();
   }
 
@@ -85,9 +84,8 @@ export class AuthService extends FireAuthService<AuthState> {
    * create a user with this email address.
    */
   public async getOrCreateUserByMail(email: string, orgName: string, invitationId?: string): Promise<User> {
-    const f = firebase.functions().httpsCallable('getOrCreateUserByMail');
-    const matchingEmail = await f({ email, orgName });
-    return matchingEmail.data;
+    const f = this.angularFireFunctions.httpsCallable('getOrCreateUserByMail');
+    return f({ email, orgName }).toPromise();
   }
 
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
@@ -97,8 +95,7 @@ export class AuthService extends FireAuthService<AuthState> {
   public changeRank(rank: string) {
     this.store.update(state => {
       return {
-        ...state,
-        user: {
+        profile: {
           ...state.profile,
           financing: { rank }
         }

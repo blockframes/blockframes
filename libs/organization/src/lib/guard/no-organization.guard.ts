@@ -15,11 +15,11 @@ export class NoOrganizationGuard {
   ) {}
 
   async canActivate() {
-    const user = this.authQuery.user;
-    if (!user.orgId) {
+    const { orgId } = this.authQuery.user;
+    if (!orgId) {
       return true;
     }
-    const org = await this.service.getValue(user.orgId);
+    const org = await this.service.getValue(orgId);
     return org.status === OrganizationStatus.pending
       ? this.router.parseUrl('layout/organization/congratulations')
       : this.router.parseUrl('layout/o');
