@@ -42,7 +42,7 @@
       <mat-card class="movie-presentation" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <!-- poster -->
         <ng-container *ngIf="movie.main.poster as poster">
-          <img class="movie-poster" [src]="poster" alt="movie poster" />
+          <img class="movie-poster" [imgRef]="poster" alt="movie poster" />
         </ng-container>
         <!-- Promotional elements -->
         <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">

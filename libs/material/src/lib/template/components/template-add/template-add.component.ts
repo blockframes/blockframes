@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TemplateService } from '../../+state/template.service';
 
 @Component({
@@ -15,13 +15,14 @@ export class TemplateAddComponent {
   constructor(
     public dialogRef: MatDialogRef<TemplateAddComponent>,
     private service: TemplateService,
-    private router: Router
+    private router: Router,
+    private routes: ActivatedRoute
   ) {}
 
   public addTemplate(templateName: string) {
     const template = this.service.createTemplate(templateName);
     this.close();
-    this.router.navigate([`layout/o/templates/${template.id}`])
+    this.router.navigate([`../${template.id}`], { relativeTo: this.routes })
   }
 
   public close(): void {

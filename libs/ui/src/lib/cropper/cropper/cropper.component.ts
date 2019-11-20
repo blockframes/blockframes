@@ -1,21 +1,16 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef, Output } from '@angular/core';
+import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize, catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { HttpClient } from '@angular/common/http';
+/*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
-
-export interface ImgRef {
-  url: string;
-  ref: string;
-  originalRef: string
-}
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -25,19 +20,17 @@ function b64toBlob(data: string) {
   const ia = new Uint8Array(ab);
 
   for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
+    ia[i] = byteString.charCodeAt(i);
   }
 
   const type = metadata.split(';')[0].split(':')[1];
   return new Blob([ab], { type });
 }
 
-
-  function blobToFile(blob: Blob, fileName:string): File {
-    const picture = new File([blob], fileName, {type:"image/png"})
-    return picture;
-}
-
+/*function blobToFile(blob: Blob, fileName: string): File {
+  const picture = new File([blob], fileName, { type: "image/png" })
+  return picture;
+}*/
 
 /** Check if the path is a file path */
 function isFile(imgRef: ImgRef): boolean {
@@ -54,17 +47,16 @@ function isFile(imgRef: ImgRef): boolean {
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   viewProviders: [DropZoneDirective],
-  animations: [ zoom, zoomDelay, check, finalZoom ],
+  animations: [zoom, zoomDelay, check, finalZoom],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => CropperComponent),
     multi: true
   }]
 })
-export class CropperComponent implements ControlValueAccessor{
+export class CropperComponent implements ControlValueAccessor {
   private ref: AngularFireStorageReference;
   private folder: string;
-  private name: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   step$ = this.step.asObservable();
   file: File;
@@ -78,20 +70,20 @@ export class CropperComponent implements ControlValueAccessor{
   // inputs
   @Input() set ratio(ratio: string) {
     this.cropRatio = ratio;
-    const el:HTMLElement = this._elementRef.nativeElement;
+    const el: HTMLElement = this._elementRef.nativeElement;
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
 
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
-  @Input() useFileuploader? = true;
-  @Input() useDelete? = true;
+  @Input() useFileuploader?= true;
+  @Input() useDelete?= true;
 
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
-  constructor(private storage: AngularFireStorage, private http: HttpClient, private _renderer: Renderer2, private _elementRef: ElementRef) { }
+  constructor(private storage: AngularFireStorage, /*private http: HttpClient,*/ private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   //////////////////////////
   // ControlValueAccessor //
@@ -101,7 +93,6 @@ export class CropperComponent implements ControlValueAccessor{
   writeValue(path: ImgRef): void {
     if (isFile(path)) {
       const part = path.ref.split('/');
-      this.name = part.pop();
       this.folder = this.storagePath;
       this.ref = this.storage.ref(path.ref);
       this.url$ = this.ref.getDownloadURL().pipe(
@@ -122,6 +113,7 @@ export class CropperComponent implements ControlValueAccessor{
     this.uploaded = (ref: ImgRef) => fn(ref);
     this.deleted = () => fn({ url: '', ref: '', originalRef: '' });
   }
+
   registerOnTouched(fn: any): void {
     return;
   }
@@ -141,7 +133,7 @@ export class CropperComponent implements ControlValueAccessor{
 
   // crop
   imageCropped(event: ImageCroppedEvent) {
-      this.croppedImage = event.base64;
+    this.croppedImage = event.base64;
   }
 
   // upload
@@ -175,29 +167,28 @@ export class CropperComponent implements ControlValueAccessor{
         originalRef: ''
       });
       this.nextStep('show');
-
     })
-    }
+  }
 
-    // TODO#1149: fix resize - get original picture
-    /*
-    async resize(url: string) {
-      if (!this.file) {
-        // const name = url.split('%2F').pop();
-        const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
-        // this.file = blobToFile(blob, name);
-        this.file = blobToFile(blob, 'original');
-      }
-      this.nextStep('crop');
+  // TODO#1149: fix resize - get original picture
+  /*
+  async resize(url: string) {
+    if (!this.file) {
+      // const name = url.split('%2F').pop();
+      const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
+      // this.file = blobToFile(blob, name);
+      this.file = blobToFile(blob, 'original');
     }
-    */
+    this.nextStep('crop');
+  }
+  */
 
-    delete() {
-      this.ref.delete().subscribe(() => {
-        this.deleted()
-        this.nextStep('drop');
-      });
-    }
+  delete() {
+    this.ref.delete().subscribe(() => {
+      this.deleted()
+      this.nextStep('drop');
+    });
+  }
 
   nextStep(name: CropStep) {
     this.prev = this.step.getValue();

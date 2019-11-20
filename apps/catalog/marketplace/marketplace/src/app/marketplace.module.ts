@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
 import { MovieCollectionGuard, MovieActiveGuard } from '@blockframes/movie';
 
-const catalogMarketplaceAppRoutes: Routes = [
+const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'about',
@@ -73,6 +73,6 @@ const catalogMarketplaceAppRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(catalogMarketplaceAppRoutes)]
+  imports: [CommonModule, RouterModule.forChild(routes)]
 })
 export class CatalogMarketplaceAppModule {}

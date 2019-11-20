@@ -4,9 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
 
 @NgModule({
-  imports: [CommonModule, FlexLayoutModule, TranslateSlugModule, MatChipsModule],
+  imports: [
+    CommonModule, 
+    FlexLayoutModule,
+    TranslateSlugModule,
+    MatChipsModule,
+    CropperModule,
+  ],
   declarations: [MovieDisplayFilmInfoCardComponent],
   exports: [MovieDisplayFilmInfoCardComponent]
 })

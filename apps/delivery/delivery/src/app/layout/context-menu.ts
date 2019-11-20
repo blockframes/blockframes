@@ -1,3 +1,8 @@
+import { App } from '@blockframes/utils';
+import { appsRoute } from '@blockframes/utils/routes';
+
+const baseRoute = `${appsRoute}/${App.mediaDelivering}`;
+
 export const CONTEXT_MENU = [
   {
     route: 'default',
@@ -8,137 +13,137 @@ export const CONTEXT_MENU = [
     items: []
   },
   {
-    route: '/layout/o/home/list',
+    route: `${baseRoute}/home/list`,
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
-      { name: 'templates', path: '/layout/o/templates/list' },
-      { name: 'add a delivery', path: '/layout/o/delivery/add/1-find-movie' }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` },
+      { name: 'add a delivery', path: `${baseRoute}/delivery/add/1-find-movie` }
     ]
   },
   {
-    route: '/layout/o/home/create',
+    route: `${baseRoute}/home/create`,
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
-      { name: 'templates', path: '/layout/o/templates/list' }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` }
     ]
   },
   {
-    route: '/layout/o/home/:movieId/edit',
+    route: `${baseRoute}/home/:movieId/edit`,
     items: [
-      { name: 'edit film', path: '/layout/o/home/:movieId/edit' },
-      { name: 'teamwork', path: '/layout/o/home/:movieId/teamwork' }
+      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
+      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
     ]
   },
   {
-    route: '/layout/o/home/:movieId/teamwork',
+    route: `${baseRoute}/home/:movieId/teamwork`,
     items: [
-      { name: 'edit film', path: '/layout/o/home/:movieId/edit' },
-      { name: 'teamwork', path: '/layout/o/home/:movieId/teamwork' }
+      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
+      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
     ]
   },
   {
-    route: '/layout/o/templates/list',
+    route: `${baseRoute}/templates/list`,
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
-      { name: 'templates', path: '/layout/o/templates/list' }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/list` }
     ]
   },
   {
-    route: '/layout/o/templates/create',
+    route: `${baseRoute}/templates/create`,
     items: [
-      { name: 'home', path: '/layout/o/home/list' },
-      { name: 'templates', path: '/layout/o/templates/create' }
+      { name: 'home', path: `${baseRoute}/home/list` },
+      { name: 'templates', path: `${baseRoute}/templates/create` }
     ]
   },
   {
-    route: '/layout/o/templates/:templateId',
+    route: `${baseRoute}/templates/:templateId`,
     items: [
-      { name: 'templates', path: '/layout/o/templates/list' },
-      { name: 'edit', path: '/layout/o/templates/:templateId' }
+      { name: 'templates', path: `${baseRoute}/templates/list` },
+      { name: 'edit', path: `${baseRoute}/templates/:templateId` }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/list',
+    route: `${baseRoute}/delivery/:movieId/list`,
     items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'existing materials', path: '/layout/o/delivery/:movieId/materials' }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/materials',
+    route: `${baseRoute}/delivery/:movieId/materials`,
     items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'existing materials', path: '/layout/o/delivery/:movieId/materials' }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/:deliveryId/list',
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/list`,
     items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/:deliveryId/informations',
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/informations`,
     items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: '/layout/o/delivery/:movieId/:deliveryId/stakeholders',
+    route: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders`,
     items: [
-      { name: 'deliveries', path: '/layout/o/delivery/:movieId/list' },
-      { name: 'information', path: '/layout/o/delivery/:movieId/:deliveryId/informations' },
-      { name: 'stakeholders', path: '/layout/o/delivery/:movieId/:deliveryId/stakeholders' },
-      { name: 'delivery list', path: '/layout/o/delivery/:movieId/:deliveryId/list' }
+      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: '/layout/o/account',
+    route: `${baseRoute}/account`,
     items: [
-      { name: 'profile', path: '/layout/o/account/profile' },
-      { name: 'wallet', path: '/layout/o/account/wallet' }
+      { name: 'profile', path: `${baseRoute}/account/profile` },
+      { name: 'wallet', path: `${baseRoute}/account/wallet` }
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/activityreports',
+    route: `${baseRoute}/organization/:orgId/activityreports`,
     items: [
-      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'members', path: '/layout/o/organization/:orgId/members' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/members',
+    route: `${baseRoute}/organization/:orgId/members`,
     items: [
-      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'members', path: '/layout/o/organization/:orgId/members' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/edit',
+    route: `${baseRoute}/organization/:orgId/edit`,
     items: [
-      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'members', path: '/layout/o/organization/:orgId/members' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   },
   {
-    route: '/layout/o/organization/:orgId/administration',
+    route: `${baseRoute}/organization/:orgId/administration`,
     items: [
-      { name: 'information', path: '/layout/o/organization/:orgId/edit' },
-      { name: 'members', path: '/layout/o/organization/:orgId/members' },
-      { name: 'admin', path: '/layout/o/organization/:orgId/administration' },
-      { name: 'activity reports', path: '/layout/o/organization/:orgId/activityreports' }
+      { name: 'information', path: `${baseRoute}/organization/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/organization/:orgId/members` },
+      { name: 'admin', path: `${baseRoute}/organization/:orgId/administration` },
+      { name: 'activity reports', path: `${baseRoute}/organization/:orgId/activityreports` }
     ]
   }
 ];

@@ -50,7 +50,7 @@
                     <span *ngIf="movie.main.length">| {{ movie.main.length }} min </span>
                     <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
                   </b>
-                  <span>{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+                  <span *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent">{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
                 </div>
               </div>
             </mat-carousel-slide>
