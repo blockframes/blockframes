@@ -350,7 +350,8 @@
               <b *ngIf="movie.main.originCountries.length > 2">... </b>
               <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>|
                 {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
-              <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">{{ movie.salesAgentDeal.salesAgent.displayName}}
+              <p *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent && movie.salesAgentDeal.salesAgent.displayName">
+                {{ movie.salesAgentDeal.salesAgent.displayName}}
               </p>
             </mat-card-content>
           </ng-container>
