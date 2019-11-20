@@ -51,8 +51,4 @@ export class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialState);
   }
-  createProfile(user: User) {
-    console.log('createProfile', user)
-    return { uid: user.uid }
-  }
 }
