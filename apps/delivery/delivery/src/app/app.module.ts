@@ -23,7 +23,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
-import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
+import { ToolbarModule } from '@blockframes/ui';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
@@ -80,8 +80,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatBadgeModule,
 
       // Libraries
-      UploadModule,
-      UiFormModule,
       OrganizationWidgetModule,
       ToolbarModule,
       ProfileWidgetModule,

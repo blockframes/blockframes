@@ -21,7 +21,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 // Libraries
-import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
+import { ToolbarModule } from '@blockframes/ui';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { WalletWidgetModule } from '@blockframes/ethers';
@@ -79,8 +79,6 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     MatBadgeModule,
 
     // Libraries
-    UploadModule,
-    UiFormModule,
     OrganizationWidgetModule,
     ToolbarModule,
     ProfileWidgetModule,
