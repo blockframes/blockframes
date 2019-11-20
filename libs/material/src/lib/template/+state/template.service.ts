@@ -40,7 +40,7 @@ export class TemplateService extends CollectionService<TemplateState>{
     const template = createTemplate({
       id: this.db.createId(),
       name: templateName,
-      orgId: this.organizationQuery.getValue().org.id
+      orgId: this.organizationQuery.getActiveId()
     });
 
     this.add(template);
@@ -50,13 +50,13 @@ export class TemplateService extends CollectionService<TemplateState>{
 
   /** Hook that triggers when a template is added to the database. */
   onCreate(template: Template, write: WriteOptions) {
-    const organization = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getActive();
     this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
    }
 
   /** Hook that triggers when a template is removed from the database. */
   onDelete(templateId: string, write: WriteOptions) {
-    const organization = this.organizationQuery.getValue().org;
+    const organization = this.organizationQuery.getActive();
     const templateIds = organization.templateIds.filter(id => id !== templateId);
 
     this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds});

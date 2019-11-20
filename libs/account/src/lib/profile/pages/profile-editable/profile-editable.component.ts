@@ -46,7 +46,7 @@ export class ProfileEditableComponent implements OnInit {
       switch (this.editContent) {
         case 'profile':
           if (this.profileForm.invalid) throw new Error('Your profile informations are not valid');
-          this.authService.update(this.authQuery.user.uid, this.profileForm.value);
+          this.authService.update(this.profileForm.value);
           this.snackBar.open('Profile change succesfull', 'close', { duration: 2000 });
           break;
         case 'password':
