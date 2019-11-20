@@ -27,14 +27,14 @@ export const mainAppRoutes: Routes = [
     path: App.biggerBoat,
     data: { app: App.biggerBoat },
     loadChildren: () =>
-      import('@blockframes/apps/catalog-marketplace').then(m => m.CatalogMarketplaceAppModule)
+      import('@blockframes/apps/catalog/marketplace').then(m => m.CatalogMarketplaceAppModule)
   },
-  // {
-  //   path: App.catalogDashboard,
-  //   data: { app: App.biggerBoat },
-  //   loadChildren: () =>
-  //     import('@blockframes/apps/catalog-dashboard').then(m => m.CatalogDashboardAppModule)
-  // }
+  {
+    path: App.catalogDashboard,
+    data: { app: App.biggerBoat },
+    loadChildren: () =>
+      import('@blockframes/apps/catalog/dashboard').then(m => m.CatalogDashboardAppModule)
+  }
 ];
 
 /** Scaffold a dashboard like application routing for this application */
