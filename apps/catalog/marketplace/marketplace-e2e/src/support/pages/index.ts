@@ -1,5 +1,5 @@
-import LandingPage from './LandingPage';
-import LoginPage from './LoginPage';
+import WelcomeViewPage from './auth/WelcomeViewPage';
+import LoginViewPage from './auth/LoginViewPage';
 import HomePage from './HomePage';
 import NavbarPage from './NavbarPage';
 import SearchPage from './SearchPage'
@@ -7,11 +7,15 @@ import ViewPage from './ViewPage';
 import DistributionPage from './DistributionPage';
 import SelectionPage from './SelectionPage';
 import FeedbackPage from './FeedbackPage';
+<<<<<<< HEAD
 import WishlistPage from './WishlistPage';
+=======
+import OrganizationHomePage from './OrganizationHomePage';
+>>>>>>> changed page names in auth
 
 export {
-  LandingPage,
-  LoginPage,
+  WelcomeViewPage,
+  LoginViewPage,
   HomePage,
   NavbarPage,
   SearchPage,
@@ -19,5 +23,9 @@ export {
   DistributionPage,
   SelectionPage,
   FeedbackPage,
+<<<<<<< HEAD
   WishlistPage
+=======
+  OrganizationHomePage
+>>>>>>> changed page names in auth
 };
