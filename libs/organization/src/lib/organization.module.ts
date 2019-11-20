@@ -4,11 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// Modules
-import { AuthModule } from '@blockframes/auth';
+// Library
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
-import { WalletModule } from '@blockframes/ethers';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
@@ -97,12 +95,12 @@ if (AFM_DISABLE) {
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    AuthModule,
     FlexLayoutModule,
+
+    // Library
     EditableSidenavModule,
     FeedbackMessageModule,
     AvatarListModule,
-    WalletModule,
     UploadModule,
     UiFormModule,
     CropperModule,
