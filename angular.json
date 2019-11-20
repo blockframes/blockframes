@@ -1435,7 +1435,7 @@
           "options": {
             "cypressConfig": "apps/catalog/marketplace/marketplace-e2e/cypress.json",
             "tsConfig": "apps/catalog/marketplace/marketplace-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200",
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
             "dev": {},
