@@ -29,7 +29,12 @@
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
-      <toolbar-footer></toolbar-footer>
+      <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
+        <a routerLink="/layout/o/catalog-dashboard/terms">Terms and Conditions</a>
+        <a routerLink="/layout/o/catalog-dashboard/about">About</a>
+        <a routerLink="/layout/o/catalog-dashboard/who-are-we">Who are we?</a>
+        <a routerLink="/layout/o/catalog-dashboard/contact">Contact</a>
+      </footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
