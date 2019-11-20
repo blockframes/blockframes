@@ -47,14 +47,14 @@ export class MemberFormRoleComponent {
     const cannotChange =
       this.role.value === UserRole.superAdmin &&
       this.permissionsQuery.superAdminCount <= 1 &&
-      this.permissionsQuery.getValue().superAdmins.includes(this.userId);
+      this.permissionsQuery.getValue().roles[this.userId] === UserRole.superAdmin;
     return !cannotChange;
   }
 
   /** Display a message if a Super Admin is about to downgrade himself. */
   public get willDowngrade() {
     return (
-      this.permissionsQuery.getValue().superAdmins.includes(this.authQuery.userId) &&
+      this.permissionsQuery.getValue().roles[this.authQuery.userId] === UserRole.superAdmin &&
       this.role.value !== UserRole.superAdmin &&
       this.userId === this.authQuery.userId
     );

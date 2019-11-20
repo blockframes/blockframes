@@ -7,9 +7,6 @@ export type PermissionsState = Permissions;
 
 const initialState: PermissionsState = {
   orgId: null,
-  superAdmins: [],
-  admins: [],
-  members: [],
   roles: {},
   canCreate: [],
   canRead: [],

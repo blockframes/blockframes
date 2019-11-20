@@ -22,7 +22,7 @@ import {
   dataBackupPage,
   dataRestorePage
 } from './assets/admin-templates';
-import { getSuperAdminIds } from './data/internals';
+import { getAdminIds } from './data/internals';
 import * as backup from './backup';
 
 // TODO(#714): Synchronize data types with the frontend
@@ -66,10 +66,10 @@ function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
 }
 
 async function mailOrganizationAdminOnAccept(organizationId: string): Promise<any> {
-  const superAdmins = await getSuperAdminIds(organizationId);
+  const admins = await getAdminIds(organizationId);
 
   return Promise.all(
-    superAdmins.map(async userId => {
+    admins.map(async userId => {
       const email = await getUserMail(userId);
       if (!email) {
         return;
@@ -112,10 +112,10 @@ async function mailOrganizationAdminOnAccessToApp(
   organizationId: string,
   appId: string
 ): Promise<any> {
-  const superAdmins = await getSuperAdminIds(organizationId);
+  const admins = await getAdminIds(organizationId);
 
   return Promise.all(
-    superAdmins.map(async userId => {
+    admins.map(async userId => {
       const email = await getUserMail(userId);
       if (!email) {
         return;

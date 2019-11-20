@@ -2,9 +2,6 @@ import { App } from "@blockframes/utils/apps";
 
 export interface PermissionsDocument {
   orgId: string;
-  superAdmins: string[];
-  admins: string[];
-  members: string[];
   roles: Roles
   canCreate: string[];
   canRead: string[];
@@ -56,9 +53,6 @@ export interface OrganizationDocPermissions {
 export function createOrgPermissions(params: Partial<PermissionsDocument>): PermissionsDocument {
   return {
     orgId: params.orgId || '',
-    superAdmins: params.superAdmins || [],
-    admins: [],
-    members: [],
     roles : params.roles || {},
     canCreate: [],
     canRead: [],

@@ -6,7 +6,7 @@
 import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
 import { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
-import { PermissionsDocument } from '@blockframes/permissions/types';
+import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -53,15 +53,21 @@ export function getCount(collection: string): Promise<number> {
     .then(col => col.size);
 }
 
-/** Retrieve the list of superAdmins of an organization */
-export async function getSuperAdminIds(organizationId: string): Promise<string[]> {
-  const permissionsRef = db.collection('permissions').doc(organizationId);
-  const permissionsDoc = await permissionsRef.get();
+/** Retrieve the list of superAdmins and admins of an organization */
+export async function getAdminIds(organizationId: string): Promise<string[]> {
+  const permissions = await getDocument<PermissionsDocument>(`permissions/${organizationId}`);
 
-  if (!permissionsDoc.exists) {
+  if (!permissions) {
     throw new Error(`organization: ${organizationId} does not exists`);
   }
 
-  const { superAdmins } = permissionsDoc.data() as PermissionsDocument;
-  return superAdmins;
+  console.log('Permissions', {permissions});
+
+  const adminIds = Object.keys(permissions.roles).filter(userId => {
+    return (
+      permissions.roles[userId] === UserRole.superAdmin ||
+      permissions.roles[userId] === UserRole.admin
+    );
+  });
+  return adminIds;
 }
