@@ -15,7 +15,6 @@ export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.comp
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
 export * from './lib/movie/static-model';
-export { MovieEmptyComponent } from './lib/movie/components/movie-empty/movie-empty.component';
 
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
