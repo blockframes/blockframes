@@ -37,7 +37,11 @@
         <h3>Profile picture</h3>
         <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
       </ng-container>
-      <terms-conditions (termsOfUseChecked)="checkTermsOfUse($event)"></terms-conditions>
+      <accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
+        <ng-template conditions>
+          <auth-terms-conditions></auth-terms-conditions>
+        </ng-template>
+      </accept-conditions>
     </form>
   </article>
   <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">Next</button>

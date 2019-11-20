@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { TermsAndConditionsComponent } from './terms-conditions.component';
+import { AcceptConditionsComponent } from './accept-conditions.component';
+import { AcceptConditionsDirective } from './accept-conditions.directive';
 
 // Material
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
-  declarations: [TermsAndConditionsComponent],
+  declarations: [AcceptConditionsComponent, AcceptConditionsDirective],
   imports: [RouterModule, CommonModule, FlexLayoutModule, MatCheckboxModule],
-  exports: [TermsAndConditionsComponent]
+  exports: [AcceptConditionsComponent, AcceptConditionsDirective]
 })
-export class TermsAndConditionsModule {}
+export class AcceptConditionsModule {}
