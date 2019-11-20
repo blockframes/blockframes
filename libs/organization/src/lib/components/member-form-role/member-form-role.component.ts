@@ -5,10 +5,9 @@ import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { Router } from '@angular/router';
-import { MemberQuery } from '../../member/+state/member.query';
-import { UserRole, OrganizationMember } from '../../member/+state/member.model';
 import { PermissionsQuery } from '../../permissions/+state/permissions.query';
 import { AuthQuery } from '@blockframes/auth';
+import { UserRole } from '@blockframes/permissions/types';
 
 @Component({
   selector: '[formGroup] member-form-role',
@@ -21,7 +20,6 @@ export class MemberFormRoleComponent {
     public controlContainer: ControlContainer,
     private service: OrganizationService,
     private organizationQuery: OrganizationQuery,
-    private query: MemberQuery,
     private walletService: WalletService,
     private permissionsQuery: PermissionsQuery,
     private authQuery: AuthQuery,
@@ -33,8 +31,7 @@ export class MemberFormRoleComponent {
   }
 
   public get name() {
-    const { name } = this.control.value;
-    return name;
+    return this.control.value.name;
   }
 
   public get role() {
@@ -42,8 +39,7 @@ export class MemberFormRoleComponent {
   }
 
   public get userId() {
-    const { uid } = this.control.value;
-    return uid;
+    return this.control.value.uid;
   }
 
   /** Return false when the a Super Admin try to change the role of the last organization Super Admin. */
@@ -56,7 +52,7 @@ export class MemberFormRoleComponent {
   }
 
   /** Display a message if a Super Admin is about to downgrade himself. */
-  public get displayWarningMessage() {
+  public get willDowngrade() {
     return (
       this.permissionsQuery.getValue().superAdmins.includes(this.authQuery.userId) &&
       this.role.value !== UserRole.superAdmin &&

@@ -3,7 +3,11 @@ import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
 export { MovieDocument } from '@blockframes/movie/types';
-export { OrganizationDocument, OrganizationStatus, createOrganizationDocument } from '@blockframes/organization/types';
+export {
+  OrganizationDocument,
+  OrganizationStatus,
+  createOrganizationDocument
+} from '@blockframes/organization/types';
 export {
   InvitationDocument,
   InvitationOrUndefined,
@@ -21,6 +25,15 @@ export {
   StepDocumentWithDate,
   convertStepDocumentToStepDocumentWithDate
 } from '@blockframes/material/delivery/types';
+export {
+  PermissionsDocument,
+  AppPermissions,
+  UserDocPermissions,
+  OrganizationDocPermissions,
+  createAppPermissions,
+  createOrganizationDocPermissions,
+  createUserDocPermissions
+} from '@blockframes/permissions/types';
 
 /**
  * Types used by the firebase backend.
@@ -40,28 +53,6 @@ interface DocWithID {
 // Core Application Types
 // ======================
 // Business & App Related
-
-export interface OrganizationPermissions {
-  superAdmins: string[];
-}
-
-export interface OrganizationDocPermissions {
-  id: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-  owner: boolean;
-}
-
-export interface UserDocPermissions {
-  id: string;
-  admins: string[];
-  canCreate: string[];
-  canDelete: string[];
-  canRead: string[];
-  canUpdate: string[];
-}
 
 export enum AppAccessStatus {
   requested = 'requested',

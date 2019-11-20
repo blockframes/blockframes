@@ -1,10 +1,10 @@
-import { QueryEntity } from "@datorama/akita";
-import { Injectable } from "@angular/core";
-import { MemberState, MemberStore } from "./member.store";
-import { Observable, combineLatest } from "rxjs";
-import { PermissionsQuery } from "../../permissions/+state";
-import { map } from "rxjs/operators";
-import { OrganizationMember, UserRole } from "./member.model";
+import { QueryEntity } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+import { MemberState, MemberStore } from './member.store';
+import { Observable, combineLatest } from 'rxjs';
+import { PermissionsQuery } from '../../permissions/+state/permissions.query';
+import { map } from 'rxjs/operators';
+import { OrganizationMember } from './member.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,29 +14,13 @@ export class MemberQuery extends QueryEntity<MemberState, OrganizationMember> {
     super(store);
   }
 
-  public membersWithRole$: Observable<OrganizationMember[]> = this.selectAll().pipe(
-    map(orgMembers => {
-      return orgMembers.map(orgMember => {
-        const permissions = this.permissionsQuery.getValue();
-        let userRole: UserRole;
-        switch (true) {
-          case permissions.superAdmins.includes(orgMember.uid):
-            userRole = UserRole.superAdmin;
-            break;
-          case permissions.admins.includes(orgMember.uid):
-            userRole = UserRole.admin;
-            break;
-          case permissions.members.includes(orgMember.uid):
-            userRole = UserRole.member;
-            break;
-          default:
-            throw new Error(`Member ${orgMember.name} ${orgMember.surname} with id ${orgMember.uid} has no role.`);
-        }
-        return {
-          ...orgMember,
-          role: userRole
-        };
-      });
+  public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
+    this.selectAll(),
+    this.permissionsQuery.select()
+  ]).pipe(
+    map(([members, permissions]) => {
+      // Get the role of each member in permissions.roles and add it to member.
+      return members.map(member => ({...member, role: permissions.roles[member.uid]}));
     })
-    );
+  );
 }

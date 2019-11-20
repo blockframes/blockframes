@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BFDoc, FireQuery } from '@blockframes/utils';
-import {
-  createOrgDocPermissions,
-  createUserDocPermissions,
-  Permissions
-} from './permissions.model';
+import { Permissions } from './permissions.model';
 import { PermissionsQuery } from './permissions.query';
 import { Organization } from '../../+state';
-import { OrganizationMember, UserRole } from '../../member/+state/member.model';
+import { OrganizationMember } from '../../member/+state/member.model';
+import { createOrganizationDocPermissions, createUserDocPermissions, UserRole } from './permissions.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +23,8 @@ export class PermissionsService {
     tx: firebase.firestore.Transaction
   ) {
     const promises = [];
-    const orgDocPermissions = createOrgDocPermissions(document.id, organization.id);
-    const userDocPermissions = createUserDocPermissions(document.id);
+    const orgDocPermissions = createOrganizationDocPermissions({id: document.id, ownerId: organization.id});
+    const userDocPermissions = createUserDocPermissions({id : document.id});
 
     const orgDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/orgDocsPermissions/${document.id}`).ref;
     promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
@@ -48,33 +45,26 @@ export class PermissionsService {
 
     return this.db.firestore.runTransaction(async tx => {
       const orgPermissionsDoc = await tx.get(orgPermissionsDocRef);
-      let { superAdmins, admins, members } = orgPermissionsDoc.data() as Permissions;
-
-      const isSuperAdmin = uid => superAdmins.includes(uid);
-      const isAdmin = uid => admins.includes(uid);
-      const isMember = uid => members.includes(uid);
+      const permissions = orgPermissionsDoc.data() as Permissions;
 
       organizationMembers.forEach(({ uid, role }) => {
         // Case of role = 'superAdmin': we remove the member id from members/admins and insert it in superAdmins
-        if (role === UserRole.superAdmin && !isSuperAdmin(uid)) {
-          members = members.filter(member => member !== uid);
-          admins = admins.filter(admin => admin !== uid);
-          superAdmins = [...superAdmins, uid];
+        if (role === UserRole.superAdmin) {
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.superAdmin;
         }
         // Case of role = 'admin': we remove the member id from superAdmins/members and insert it in admins
-        if (role === UserRole.admin && !isAdmin(uid)) {
-          members = members.filter(member => member !== uid);
-          superAdmins = superAdmins.filter(superAdmin => superAdmin !== uid);
-          admins = [...admins, uid];
+        if (role === UserRole.admin) {
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.admin;
         }
         // Case of role = 'member': we remove the member id from admins/superAdmins and insert it in members
-        if (role === UserRole.member && !isMember(uid)) {
-          admins = admins.filter(admin => admin !== uid);
-          superAdmins = superAdmins.filter(superAdmin => superAdmin !== uid);
-          members = [...members, uid];
+        if (role === UserRole.member) {
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.member;
         }
       });
-      return tx.update(orgPermissionsDocRef, { members, admins, superAdmins });
+      return tx.update(orgPermissionsDocRef, { roles: permissions.roles});
     });
   }
 }

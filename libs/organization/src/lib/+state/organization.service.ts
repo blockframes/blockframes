@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
-import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
+import { PermissionsQuery } from '../permissions/+state';
 import {
   Organization,
   OrganizationOperation,
@@ -31,7 +31,8 @@ import {
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
-import { APPS_DETAILS } from '@blockframes/utils';
+import { APPS_DETAILS, App } from '@blockframes/utils/apps';
+import { createAppPermissions, createOrgPermissions, UserRole } from '../permissions/+state/permissions.firestore';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -135,7 +136,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   async onCreate(org: Organization, { write }: WriteOptions) {
     const user = this.authQuery.user;
     const orgId: string = org.id;
-    const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
+    const permissions = createOrgPermissions({ orgId, superAdmins: [user.uid], roles: { [user.uid]: UserRole.superAdmin } });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];

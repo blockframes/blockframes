@@ -9,9 +9,10 @@ import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
 import { createMemberFormList } from '../../forms/member.form';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
-import { OrganizationMember, UserRole } from '../../member/+state/member.model';
+import { OrganizationMember } from '../../member/+state/member.model';
 import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
+import { UserRole } from '@blockframes/permissions/types';
 
 @Component({
   selector: 'member-editable',
