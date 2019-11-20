@@ -45,7 +45,8 @@ import { HomeEmptyComponent } from './components/home-empty/home-empty.component
 import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
-import { MoviePickerComponent } from './components/movie-picker/movie-picker.component';
+
+import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
 
 @NgModule({
@@ -57,7 +58,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieEmptyComponent,
     MovieCreateComponent,
     MovieViewComponent,
-    MoviePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -96,11 +96,12 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieFormModule,
     MovieCardModule,
     MovieImdbSearchModule,
+    MoviePickerModule
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
   ],
   entryComponents: [MovieTitleFormComponent],
-  exports: [MovieTitleFormComponent, MoviePickerComponent],
+  exports: [MovieTitleFormComponent],
 })
 export class MovieModule {}
