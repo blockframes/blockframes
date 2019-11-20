@@ -5,7 +5,7 @@ import { App } from '@blockframes/organization';
 
 // Components
 import { LayoutComponent } from './layout/layout.component';
-import { MovieEmptyComponent } from '@blockframes/movie';
+import { MovieCreateComponent } from '@blockframes/movie/movie/pages/movie-create/movie-create.component';
 
 // Guards
 import { AuthGuard } from '@blockframes/auth';
@@ -47,7 +47,7 @@ export const routes: Routes = [
           },
           {
             path: 'no-movies',
-            component: MovieEmptyComponent
+            component: MovieCreateComponent
           },
           {
             path: 'organization',
