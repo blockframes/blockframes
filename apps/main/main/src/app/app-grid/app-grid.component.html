@@ -2,7 +2,7 @@
   <h3>My DApps</h3>
   <article fxLayout="row wrap"  fxLayoutAlign="space-around center">
     <mat-card *ngFor="let app of (apps$ | async)">
-      <a [href]="app.href">
+      <a [routerLink]="['..', app.id]">
         <mat-card-content fxLayoutAlign="center center" fxLayout="row">
           <img [src]="app.logo">
         </mat-card-content>
@@ -13,7 +13,7 @@
           Request Access To App
         </button>
         <button *ngSwitchCase="'pending'" disabled mat-button>Access Requested</button>
-        <a [href]="app.href" *ngSwitchCase="'accepted'" mat-button>Access App</a>
+        <a [routerLink]="['..', app.id]" *ngSwitchCase="'accepted'" mat-button>Access App</a>
       </mat-card-actions>
       <mat-card-footer>
         <h4>{{ app.name }}</h4>
