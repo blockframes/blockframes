@@ -10,7 +10,7 @@ export class NoOrganizationInvitationGuard {
   }
 
   async canActivate() {
-    const uid = this.authQuery.getValue().user.uid;
+    const uid = this.authQuery.userId;
     const invitations = await this.service.getValue(ref => ref.where('user.uid', '==', uid));
     if (invitations.find(invitation => invitation.status === InvitationStatus.pending || invitation.status === InvitationStatus.accepted)) {
       return this.router.parseUrl('layout/organization/home');

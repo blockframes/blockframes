@@ -27,7 +27,7 @@ export class IdentityComponent {
     name: new FormControl(''),
     surname: new FormControl(''),
     avatar: new FormControl(''),
-    email: new FormControl({ value: this.query.getValue().user.email, disabled: true }),
+    email: new FormControl({ value: this.query.user.email, disabled: true }),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
   });
