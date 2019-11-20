@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import { WishlistPage, SearchPage } from "./index";
 
+=======
+import { LoginViewPage } from './index';
+>>>>>>> wrote tests for scenarios in account-creation.spec
 export default abstract class NavbarPage {
   constructor() {
     cy.get('[page-id=navbar]', { timeout: 10000 });
   }
 
   public openProfileMenu(){
-    cy.get('[page-id=navbar] button[test-id=profile-avatar]').click();
+    cy.get('[page-id=navbar]')
+      .get('button[test-id=profile-avatar]')
+      .click();
   }
 
   public clickWishlist() {
@@ -15,7 +21,9 @@ export default abstract class NavbarPage {
   }
 
   public clickLogout() {
+    this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
+    return new LoginViewPage();
   }
 
   public clickContextMenuLineUp() {

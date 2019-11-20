@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Output, EventEmitter, TemplateRef, ContentChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, EventEmitter, TemplateRef, ContentChild, HostBinding } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptConditionsDirective } from './accept-conditions.directive';
 
@@ -9,7 +9,7 @@ import { AcceptConditionsDirective } from './accept-conditions.directive';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AcceptConditionsComponent {
-
+  @HostBinding('attr.page-id') pageId = 'terms-condition';
   // Access the template given by the parent
   @ContentChild(AcceptConditionsDirective, { static: false })
   acceptConditions: AcceptConditionsDirective;

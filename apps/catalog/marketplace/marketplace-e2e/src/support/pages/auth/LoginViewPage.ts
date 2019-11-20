@@ -13,8 +13,24 @@ export default class LoginViewPage {
 
   // Signup
 
-  public fillEmailInSignup(user: User) {
-    cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
+  public fillEmailInSignup(email: string) {
+    cy.get('[page-id=signup-form] input[type="email"]').type(email);
+  }
+
+  public fillNameInSignup(name: string) {
+    cy.get('[page-id=signup-form] input[test-id="name"]').type(name);
+  }
+
+  public fillSurnameInSignup(surname: string) {
+    cy.get('[page-id=signup-form] input[test-id="surname"]').type(surname);
+  }
+
+  public fillPasswordInSignup(password: string) {
+    cy.get('[page-id=signup-form] input[test-id="password"]').type(password);
+  }
+
+  public fillPasswordConfirmInSignup(password: string) {
+    cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(password);
   }
 
   public fillSignup(user: User) {
