@@ -24,12 +24,12 @@ export class ProfileMenuComponent implements OnInit{
   }
 
   public async logout() {
-    await this.service.logout();
+    await this.service.signOut();
     // TODO: issue#879, navigate with router
     window.location.reload();
   }
 
   public get profile() {
-    return createProfile(this.auth.getValue().user)
+    return createProfile(this.auth.user)
   }
 }

@@ -52,7 +52,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public async logout() {
-    await this.service.logout();
+    await this.service.signOut();
     // TODO: issue#879, navigate with router
     window.location.reload();
   }

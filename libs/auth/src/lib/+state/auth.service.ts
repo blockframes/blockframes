@@ -90,12 +90,6 @@ export class AuthService extends FireAuthService<AuthState> {
     return matchingEmail.data;
   }
 
-  /** Call a firebase function to get a list of users corresponding to the `prefix` string. */
-  // public async getUserByMail(prefix: string): Promise<User[]> {
-  //   const f = firebase.functions().httpsCallable('findUserByMail');
-  //   return f({ prefix }).then(matchingUsers => matchingUsers.data);
-  // }
-
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
   //---------------------------
   //   MOVIE FINANCING RANK
