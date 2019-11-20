@@ -16,6 +16,7 @@ import {
   PromotionalElement,
   Title
 } from './movie.firestore';
+import { createImgRef } from '@blockframes/utils/image-uploader';
 
 export type PromotionalElement = PromotionalElement;
 
@@ -171,7 +172,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: '',
+    logo: createImgRef(),
     ...prize
   };
 }
@@ -222,7 +223,7 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     firstName: '',
     lastName: '',
     creditRole: '',
-    logo: '',
+    logo: createImgRef(),
     ...params
   };
 }

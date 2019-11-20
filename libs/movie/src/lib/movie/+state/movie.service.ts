@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { firestore } from 'firebase';
 import objectHash from 'object-hash';
@@ -27,6 +27,7 @@ export function cleanModel<T>(data: T): T {
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
+    private organizationService: OrganizationService,
     store: MovieStore
   ) {
     super(store);
@@ -40,7 +41,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   /** Add a partial or a full movie to the database. */
-  public addMovie(original: string, movie?: Movie): Movie {
+  public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
 
     if (!movie) {
@@ -52,15 +53,16 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     // Add movie document to the database
-    this.add(cleanModel(movie))
+    await this.add(cleanModel(movie))
 
     return movie;
   }
 
   /** Hook that triggers when a movie is added to the database. */
-  onCreate(movie: Movie, write: WriteOptions) {
-    const organization = this.organizationQuery.getValue().org;
-    return this.db.doc<Organization>(`orgs/${organization.id}`).update({movieIds: [...organization.movieIds, movie.id]})
+  async onCreate(movie: Movie, write: WriteOptions) {
+    const organizationId = this.organizationQuery.getActiveId();
+    const organization = await this.organizationService.getValue(organizationId);
+    return this.db.doc<Organization>(`orgs/${organizationId}`).update({movieIds: [...organization.movieIds, movie.id]})
   }
 
   public updateById(id: string, movie: any): Promise<void> {

@@ -1,6 +1,7 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug } from "@blockframes/movie/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
+import { ImgRef } from "@blockframes/utils/image-uploader";
 
 type Timestamp = firestore.Timestamp;
 
@@ -29,7 +30,7 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
-  logo?: string,
+  logo?: ImgRef,
 }
 
 export interface PromotionalElement {
@@ -37,11 +38,12 @@ export interface PromotionalElement {
   type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
-  url: string
+  // Can be an imgRef if resource is stored on our side or a string for remote resource
+  url: string | ImgRef 
 }
 
 export interface MoviePromotionalElements {
-  images: string[], // @todo #1052 merge into promotional elements
+  images: ImgRef[], // @todo #1052 merge into promotional elements
   promotionalElements: PromotionalElement[],
 }
 
@@ -57,7 +59,7 @@ export interface Person {
   displayName?: string, // @todo #1052 "?" is temporary
   showName?: boolean, // @todo #1052 merge credit & stakeholder interface ? or implements?
   orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
-  logo?: string,
+  logo?: ImgRef,
 }
 
 export interface MovieStory {
@@ -99,7 +101,7 @@ export interface MovieMain {
   isan?: string,
   title: Title,
   directors?: Person[],
-  poster?: string,
+  poster?: ImgRef,
   productionYear?: number,
   genres?: string[],
   originCountries?: string[],

@@ -1,6 +1,7 @@
 import { Directive, Renderer2, ElementRef, Input } from '@angular/core'
 import { AngularFireStorage } from '@angular/fire/storage';
-import { ImgRef } from './cropper/cropper.component';
+import { ImgRef } from '@blockframes/utils/image-uploader';
+
 @Directive({
   selector: 'img[imgRef]'
 })
