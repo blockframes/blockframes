@@ -101,7 +101,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
   ],
-  entryComponents: [MovieTitleFormComponent],
-  exports: [MovieTitleFormComponent],
+  entryComponents: [MovieTitleFormComponent]
 })
 export class MovieModule {}
