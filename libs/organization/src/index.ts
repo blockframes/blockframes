@@ -3,6 +3,9 @@ export * from './lib/organization.module';
 export * from './lib/no-organization.module';
 export * from './lib/guard/organization.guard';
 
+// Organization Components Modules
+export * from './lib/components/organization-widget/organization-widget.module';
+
 // Organization State
 export * from './lib/+state/organization.model';
 export * from './lib/+state/organization.query';
