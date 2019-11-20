@@ -33,7 +33,6 @@ import { MovieDisplayModule } from './display/display.module';
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
 import { MovieListComponent } from './pages/movie-list/movie-list.component';
-import { MovieEmptyComponent } from './components/movie-empty/movie-empty.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
@@ -55,7 +54,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieListComponent,
     MovieTitleFormComponent,
     HomeEmptyComponent,
-    MovieEmptyComponent,
     MovieCreateComponent,
     MovieViewComponent,
   ],
