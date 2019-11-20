@@ -33,6 +33,7 @@ import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
 import { APPS_DETAILS, App } from '@blockframes/utils/apps';
 import { createAppPermissions, createOrgPermissions, UserRole } from '../permissions/+state/permissions.firestore';
+import { Router } from '@angular/router';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -89,7 +90,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     store: OrganizationStore,
     private permissionsQuery: PermissionsQuery,
     private authQuery: AuthQuery,
-    private memberQuery: MemberQuery
+    private memberQuery: MemberQuery,
+    private router: Router
   ) {
     super(store);
   }
@@ -115,7 +117,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   syncOrgActive() {
     return this.authQuery.user$.pipe(
-      switchMap(user => this.syncActive({ id: user.orgId }))
+      switchMap(user => {
+        return this.syncActive({ id: user.orgId })
+      })
     );
   }
 
@@ -158,7 +162,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>): Promise<string> {
+  public async addOrganization(organization: Partial<Organization>) {
     const user = this.authQuery.user;
     const newOrganization = createOrganization({
       userIds: [user.uid],

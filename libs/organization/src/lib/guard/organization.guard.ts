@@ -3,13 +3,11 @@ import {
   OrganizationService,
   OrganizationStatus,
   OrganizationState,
-  OrganizationQuery,
-  OrganizationStore
+  OrganizationQuery
 } from '../+state';
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { map, tap, switchMap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -17,9 +15,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
   constructor(
     protected service: OrganizationService,
     protected router: Router,
-    private query: OrganizationQuery,
-    private store: OrganizationStore,
-    private authQuery: AuthQuery
+    private query: OrganizationQuery
   ) {
     super(service);
   }
@@ -29,7 +25,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
       map(_ => this.query.getActive()),
       map(org => {
         if (!org) {
-          return false;
+          return 'auth';
         }
         if (org.status === OrganizationStatus.pending) {
           return 'layout/organization/congratulations';
