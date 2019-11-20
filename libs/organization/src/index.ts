@@ -5,6 +5,7 @@ export * from './lib/guard/organization.guard';
 
 // Organization Components Modules
 export * from './lib/components/organization-widget/organization-widget.module';
+export * from './lib/components/organization-search/organization-search.module';
 
 // Organization State
 export * from './lib/+state/organization.model';
