@@ -36,7 +36,7 @@ export class ChipsAutocompleteComponent implements OnInit {
 
   ngOnInit() {
     this.filteredItems = this.ctrl.valueChanges.pipe(
-      startWith(null),
+      startWith(''),
       map(item => item ? this._filter(item) : this.items)
     );
   }
