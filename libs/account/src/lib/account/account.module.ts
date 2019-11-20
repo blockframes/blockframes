@@ -8,7 +8,7 @@ export const accountRoutes: Routes = [
   { path: '',
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile', loadChildren: '../profile/profile.module#ProfileModule' },
+      { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule) },
     ]
   }
 ];
