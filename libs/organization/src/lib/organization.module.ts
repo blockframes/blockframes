@@ -41,7 +41,6 @@ import { OrganizationSignerFormComponent } from './components/organization-signe
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
-import { OrganizationSearchComponent } from './components/organization-search/organization-search.component';
 import { OrganizationFormOperationComponent } from './components/organization-form-operation/organization-form-operation.component';
 import { OrganizationDisplayActionsComponent } from './components/organization-display-actions/organization-display-actions.component';
 import { OrganizationDisplayOperationsComponent } from './components/organization-display-operations/organization-display-operations.component';
@@ -147,8 +146,6 @@ if (AFM_DISABLE) {
     OrganizationSignerFormComponent,
     OrganizationEditableComponent,
     OrganizationActivityViewComponent,
-    OrganizationSearchComponent
-  ],
-  exports: [OrganizationSearchComponent]
+  ]
 })
 export class OrganizationModule {}

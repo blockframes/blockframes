@@ -47,7 +47,7 @@ import {
   EditableSidenavModule,
   AvatarListModule
 } from '@blockframes/ui';
-import { OrganizationModule } from '@blockframes/organization';
+import { OrganizationSearchModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
 import { MovieModule } from '@blockframes/movie';
@@ -111,13 +111,15 @@ import { MatStepperModule } from '@angular/material/stepper';
     ReactiveFormsModule,
     TextFieldModule,
     MaterialModule,
+
+    // Library
     ConfirmModule,
     UiFormModule,
     ActionsListModule,
     ActionsPickerModule,
     ActionsPickerListModule,
     EditableModule,
-    OrganizationModule,
+    OrganizationSearchModule,
     EditableSidenavModule,
     DeliveryRoutingModule,
     MovieModule,
