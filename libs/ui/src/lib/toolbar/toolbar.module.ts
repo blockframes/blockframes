@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
-import { FooterComponent } from './footer/footer.component';
 import { CatalogLeftMenuComponent } from './catalog-left-menu/catalog-left-menu.component';
 import { ContextMenuSidebarComponent } from './context-menu-sidebar/context-menu-sidebar.component';
 import { AppsListComponent } from './apps-list/apps-list.component';
@@ -55,7 +54,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     HeaderComponent,
     ContextMenuComponent,
     LeftMenuComponent,
-    FooterComponent,
     CatalogLeftMenuComponent,
     ContextMenuSidebarComponent,
     AppsListComponent
@@ -63,7 +61,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   exports: [
     HeaderComponent,
     LeftMenuComponent,
-    FooterComponent,
     CatalogLeftMenuComponent,
     ContextMenuSidebarComponent,
     AppsListComponent
