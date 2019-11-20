@@ -54,7 +54,12 @@
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
-      <toolbar-footer></toolbar-footer>
+      <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
+        <a routerLink="/layout/o/catalog/terms">Terms and Conditions</a>
+        <a routerLink="/layout/o/catalog/about">About</a>
+        <a routerLink="/layout/o/catalog/who-are-we">Who are we?</a>
+        <a routerLink="/layout/o/catalog/contact">Contact</a>
+      </footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
