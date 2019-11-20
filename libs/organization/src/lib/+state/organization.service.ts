@@ -136,7 +136,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   async onCreate(org: Organization, { write }: WriteOptions) {
     const user = this.authQuery.user;
     const orgId: string = org.id;
-    const permissions = createOrgPermissions({ orgId, roles: { [user.uid]: UserRole.superAdmin } });
+    const permissions = createOrgPermissions({
+      orgId,
+      roles: { [user.uid]: UserRole.superAdmin }
+    });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];

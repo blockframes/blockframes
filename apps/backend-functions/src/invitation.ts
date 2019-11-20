@@ -15,7 +15,7 @@ import {
   OrganizationDocument,
   MovieDocument,
   createOrganizationDocPermissions,
-  createUserDocPermissions
+  createUserDocPermissions,
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -253,14 +253,14 @@ async function onInvitationFromUserToJoinOrgCreate({
   return Promise.all(
     admins.map(admin =>
       sendMailFromTemplate(
-        userRequestedToJoinYourOrg(
-          admin.email,
-          admin.name!,
-          organization.name,
-          organization.id,
-          userData.name!,
-          userData.surname!
-        )
+        userRequestedToJoinYourOrg({
+          adminEmail: admin.email,
+          adminName: admin.name!,
+          organizationName: organization.name,
+          organizationId: organization.id,
+          userFirstname: userData.name!,
+          userLastname: userData.surname!
+        })
       )
     )
   );

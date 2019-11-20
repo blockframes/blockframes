@@ -61,8 +61,6 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
     throw new Error(`organization: ${organizationId} does not exists`);
   }
 
-  console.log('Permissions', {permissions});
-
   const adminIds = Object.keys(permissions.roles).filter(userId => {
     return (
       permissions.roles[userId] === UserRole.superAdmin ||

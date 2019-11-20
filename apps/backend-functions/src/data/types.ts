@@ -34,6 +34,7 @@ export {
   createOrganizationDocPermissions,
   createUserDocPermissions
 } from '@blockframes/permissions/types';
+export { PublicUser } from '@blockframes/auth/types';
 
 /**
  * Types used by the firebase backend.
@@ -66,6 +67,16 @@ export interface SnapObject {
   movie: PublicMovie;
   docId: string;
   type: NotificationType;
+}
+
+/** Custom object used to create an invitation. */
+export interface RequestToJoinOrganization {
+  adminEmail: string;
+  adminName: string;
+  organizationName: string;
+  organizationId: string;
+  userFirstname: string;
+  userLastname: string;
 }
 
 /**
