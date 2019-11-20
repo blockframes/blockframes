@@ -1,77 +1,56 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, NoPreloading } from '@angular/router';
 // Components
 import { LayoutComponent } from './layout/layout.component';
-// Guards
-import { AuthGuard } from '@blockframes/auth';
-import { HomeComponent } from './home/home.component';
-import { OrganizationGuard, PermissionsGuard } from '@blockframes/organization';
+import { AppGridComponent } from './app-grid/app-grid.component';
+// Routes utils
+import { App } from '@blockframes/utils';
+import { createRoutes } from '@blockframes/utils/routes';
 
-export const routes: Routes = [
-  { path: '', redirectTo: 'layout', pathMatch: 'full' },
+export const mainAppRoutes: Routes = [
   {
-    path: 'auth',
-    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
+    path: '',
+    redirectTo: 'apps',
+    pathMatch: 'full'
   },
   {
-    path: 'layout',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [AuthGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: 'o',
-        pathMatch: 'full'
-      },
-      {
-        // The redirection route when user has no organization
-        path: 'organization',
-        loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
-      },
-      {
-        path: 'o',
-        canActivate: [PermissionsGuard, OrganizationGuard],
-        canDeactivate: [PermissionsGuard, OrganizationGuard],
-        children: [
-          {
-            path: '',
-            redirectTo: 'home',
-            pathMatch: 'full'
-          },
-          {
-            path: 'organization',
-            loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
-          },
-          {
-            path: 'account',
-            loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
-          },
-          {
-            path: 'home',
-            component: HomeComponent
-          }
-        ]
-      }
-    ]
+    path: 'apps',
+    component: AppGridComponent
   },
   {
-    path: 'not-found',
-    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+    path: App.mediaDelivering,
+    data: { app: App.mediaDelivering },
+    loadChildren: () => import('@blockframes/apps/delivery').then(m => m.DeliveryAppModule)
   },
   {
-    path: '**',
-    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+    path: App.biggerBoat,
+    data: { app: App.biggerBoat },
+    loadChildren: () =>
+      import('@blockframes/apps/catalog-marketplace').then(m => m.CatalogMarketplaceAppModule)
+  },
+  {
+    path: App.catalogDashboard,
+    data: { app: App.biggerBoat },
+    loadChildren: () =>
+      import('@blockframes/apps/catalog-dashboard').then(m => m.CatalogDashboardAppModule)
   }
 ];
+
+/** Scaffold a dashboard like application routing for this application */
+const routes = createRoutes({
+  appName: 'main',
+  layout: LayoutComponent,
+  appsRoutes: mainAppRoutes
+});
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always'
+      paramsInheritanceStrategy: 'always',
+      preloadingStrategy: NoPreloading
     })
   ],
   exports: [RouterModule]

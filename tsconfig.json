@@ -79,7 +79,12 @@
       "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/catalog": ["libs/catalog/src/index.ts"],
       "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"],
-      "@blockframes/marketplace/*": ["apps/catalog/marketplace/marketplace/src/*"]
+      "@blockframes/marketplace/*": ["apps/catalog/marketplace/marketplace/src/*"],
+
+      // APPS
+      "@blockframes/apps/delivery": ["apps/delivery/delivery/src/app/delivery.module.ts"],
+      "@blockframes/apps/catalog-marketplace": ["apps/catalog/marketplace/marketplace/src/app/catalog-marketplace.module.ts"],
+      "@blockframes/apps/catalog-dashboard": ["apps/catalog/dashboard/dashboard/src/app/catalog-dashboard.module.ts"],
     }
   },
   "angularCompilerOptions": {
