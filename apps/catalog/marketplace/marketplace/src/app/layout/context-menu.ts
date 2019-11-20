@@ -1,82 +1,87 @@
+import { appsRoute } from '@blockframes/utils/routes';
+import { App } from '@blockframes/utils';
+
+const baseRoute = `${appsRoute}/${App.biggerBoat}`;
+
 export const CONTEXT_MENU = [
   {
     route: 'default',
     items: []
   },
   {
-    route: '/layout/o/catalog/home',
+    route: `${baseRoute}/home`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${baseRoute}/home`
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${baseRoute}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${baseRoute}/wishlist/overview`
       }
     ]
   },
   {
-    route: '/layout/o/catalog/search',
+    route: `${baseRoute}/search`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${baseRoute}/home`
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${baseRoute}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${baseRoute}/wishlist/overview`
       }
     ]
   },
   {    // TODO issue#1146
-    route: '/layout/o/catalog/wishlist/overview',
+    route: `${baseRoute}/wishlist/overview`,
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home'
+        path: `${baseRoute}/home`
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search'
+        path: `${baseRoute}/search`
       },
       {
         name: 'wishlist',
-        path: '/layout/o/catalog/wishlist/overview'
+        path: `${baseRoute}/wishlist/overview`
       }
     ]
   },
   {
-    route: '/layout/o/catalog/:movieId/create',
+    route: `${baseRoute}/:movieId/create`,
     items: [
       {
         name: 'view',
-        path: '/layout/o/catalog/:movieId/view'
+        path: `${baseRoute}/:movieId/view`
       },
       {
         name: 'create',
-        path: '/layout/o/catalog/:movieId/create'
+        path: `${baseRoute}/:movieId/create`
       }
     ]
   },
   {
-    route: '/layout/o/catalog/:movieId/view',
+    route: `${baseRoute}/:movieId/view`,
     items: [
       {
         name: 'view',
-        path: '/layout/o/catalog/:movieId/view'
+        path: `${baseRoute}/:movieId/view`
       },
       {
         name: 'create',
-        path: '/layout/o/catalog/:movieId/create'
+        path: `${baseRoute}/:movieId/create`
       }
     ]
   }
@@ -88,12 +93,12 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
     items: [
       {
         name: 'home',
-        path: '/layout/o/catalog/home',
+        path: `${baseRoute}/home`,
         icon: 'home_sidebar'
       },
       {
         name: 'Line-up',
-        path: '/layout/o/catalog/search',
+        path: `${baseRoute}/search`,
         icon: 'search_sidebar'
       }
     ]
