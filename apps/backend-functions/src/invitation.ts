@@ -2,8 +2,6 @@
  * Manage invitations updates.
  */
 import {
-  createOrganizationDocPermissions,
-  createUserDocPermissions,
   getDocument,
   getSuperAdminIds
 } from './data/internals';
@@ -18,7 +16,9 @@ import {
   InvitationStatus,
   InvitationType,
   OrganizationDocument,
-  MovieDocument
+  MovieDocument,
+  createOrganizationDocPermissions,
+  createUserDocPermissions
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -29,6 +29,7 @@ import {
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { UserRole } from '@blockframes/permissions/types';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -72,6 +73,9 @@ async function addUserToOrg(userId: string, organizationId: string) {
       return;
     }
 
+    // Add the new user and his role to the permissions object.
+    permissionData.roles[userId] = UserRole.member;
+
     return Promise.all([
       // Update user's orgId
       tx.set(userRef, { ...userData, orgId: organizationId }),
@@ -81,7 +85,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
         userIds: [...organizationData.userIds, userId]
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, members: [...permissionData.members, userId] })
+      tx.set(permissionsRef, { ...permissionData, members: [...permissionData.members, userId], roles: permissionData.roles})
     ]);
   });
 }
@@ -155,7 +159,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
     id: docId,
     canUpdate: true
   });
-  const userDocPermissions = createUserDocPermissions({ id: docId });
+  const userDocPermissions = createUserDocPermissions( {id: docId} );
   const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
   const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
 

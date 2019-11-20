@@ -9,8 +9,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { OrganizationOperation } from '../../+state';
-import { PermissionsQuery } from '../../permissions/+state';
-import { OrganizationMember, UserRole } from '../../member/+state/member.model';
+import { OrganizationMember } from '../../member/+state/member.model';
 
 interface OperationMember extends OrganizationMember {
   operationIds: string[];
@@ -59,8 +58,6 @@ export class OrganizationSignerRepertoryComponent {
    */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private permissionQuery: PermissionsQuery) {}
-
   private joinMemberAndOperation() {
 
     const getOperationIds = (member: OrganizationMember) => this._operations
@@ -69,21 +66,7 @@ export class OrganizationSignerRepertoryComponent {
 
     const operationMembers: OperationMember[] = this._members.map(member => {
       const operationIds = getOperationIds(member);
-      let role: UserRole;
-      switch(true) {
-        case this.permissionQuery.getValue().superAdmins.includes(member.uid):
-          role = UserRole.superAdmin;
-          break;
-        case this.permissionQuery.getValue().admins.includes(member.uid):
-          role = UserRole.admin;
-          break;
-        case this.permissionQuery.getValue().members.includes(member.uid):
-          role = UserRole.member;
-          break;
-        default:
-          throw new Error(`Member ${member.name} ${member.surname} with id ${member.uid} has no role.`);
-      }
-      return { ...member, operationIds, role };
+      return { ...member, operationIds };
     });
 
     this.dataSource = new MatTableDataSource(operationMembers);

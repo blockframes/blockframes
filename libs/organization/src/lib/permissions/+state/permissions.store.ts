@@ -10,13 +10,14 @@ const initialState: PermissionsState = {
   superAdmins: [],
   admins: [],
   members: [],
+  roles: {},
   canCreate: [],
   canRead: [],
   canUpdate: [],
   canDelete: [],
-  userAppsPermissions: [],
-  userDocsPermissions: [],
-  orgDocsPermissions: []
+  userAppPermissions: [],
+  userDocPermissions: [],
+  organizationDocPermissions: []
 }
 
 @Injectable({

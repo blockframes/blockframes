@@ -85,7 +85,7 @@ export class OrganizationAdminViewComponent implements OnInit {
     );
 
 
-    this.members$ = this.memberQuery.selectAll().pipe(
+    this.members$ = this.memberQuery.membersWithRole$.pipe(
       tap(members => this.memberFormList.patchValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
     );
