@@ -6,7 +6,7 @@ export default class LandingPage {
   }
 
   public clickCallToAction(): LoginPage {
-    cy.get('button[test-id=call-to-action]').click();
+    cy.get('a[test-id=call-to-action]').click();
     return new LoginPage();
   }
 
