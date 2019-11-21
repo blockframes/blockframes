@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
 import {
+  WelcomeViewPage,
   LoginViewPage,
   MATERIALS,
   MovieCreatePage,

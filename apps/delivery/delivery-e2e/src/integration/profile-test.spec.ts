@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
-import { LoginViewPage, MovieListPage, ProfileEditablePage, User } from '../support';
+import {
+  LoginViewPage,
+  MovieListPage,
+  ProfileEditablePage,
+  User,
+  WelcomeViewPage
+} from '../support';
 
 const USER: Partial<User> = {
   email: 'c8test@ctest.com',
@@ -13,7 +18,7 @@ const USER: Partial<User> = {
 
 const USER_UPDATED: Partial<User> = {
   email: 'c8test@ctest.com',
-  password: 'c8testbis',
+  password: 'c8testbis'
 };
 
 beforeEach(() => {

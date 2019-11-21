@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
-import WelcomeViewPage from '../../../../../libs/e2e/src/lib/pages/auth/WelcomeViewPage';
 import {
+  WelcomeViewPage,
   DeliveryEditablePage,
   DeliveryListPage,
   LoginViewPage,
@@ -12,7 +12,7 @@ import {
   User
 } from '../support';
 
-const USER: Partial<User> = {email: 'cytest@blockframes.com', password: 'azerty'}
+const USER: Partial<User> = { email: 'cytest@blockframes.com', password: 'azerty' };
 
 const TEMPLATE_NAME_1 = 'Saveastemplate';
 const MOVIE_CYTEST = 'I, robot';
