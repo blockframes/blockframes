@@ -1,10 +1,9 @@
 /// <reference types="cypress" />
 
+import { setupForMacbook } from '@blockframes/e2e';
+
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/'); // TODO: we should visit the root path instead of /auth
-  cy.viewport('macbook-15');
+  setupForMacbook();
 });
 
 describe('story #569 - main app', () => {

@@ -1,17 +1,27 @@
 /// <reference types="cypress" />
 
-import { LandingPage, LoginPage, HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../support/pages';
-import { User, Availabilities } from "../support/utils/type";
+import {
+  DistributionPage,
+  FeedbackPage,
+  HomePage,
+  LandingPage,
+  LoginPage,
+  SearchPage,
+  SelectionPage,
+  ViewPage
+} from '../support/pages';
+import { Availabilities, User } from '../support/utils/type';
+import { setupForIpad } from '@blockframes/e2e';
 
 const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',
   password: 'blockframes'
 };
 // SearchPage
-const PRODUCTION_YEAR = { from: '2000', to: '2004'};
+const PRODUCTION_YEAR = { from: '2000', to: '2004' };
 const GENRE_ARRAY = ['Romance', 'Drama'];
 const LANGUAGE = 'English';
-const CERTIFICATIONS = 'EOF'
+const CERTIFICATIONS = 'EOF';
 const AVAILAILITIES: Availabilities = {
   yearFrom: '2019',
   monthFrom: 'September',
@@ -19,22 +29,18 @@ const AVAILAILITIES: Availabilities = {
   yearTo: '2019',
   monthTo: 'September',
   dayTo: '10'
-}
+};
 const TERRITORIES = 'World';
 const SEARCH_MEDIA_ARRAY = ['Pay TV', 'Free TV'];
 // ViewPage
 const MOVIE_NAME = 'Eternal Sunshine of the Spotless Mind';
 // DistributionPage
-const DISTRIBUTION_DATES = { from: '1', to: '10'};
+const DISTRIBUTION_DATES = { from: '1', to: '10' };
 const DISTRIBUTION_TERRITORY = 'World';
 const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv'];
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
-
+  setupForIpad();
 });
 
 describe('test select movie from catalog', () => {

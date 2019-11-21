@@ -16,6 +16,10 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
+export function getH1() {
+  return cy.get('h1');
+}
+
 // Fat relative import.
 // see https://github.com/blockframes/blockframes/issues/1047#issuecomment-541091830
 // for details.

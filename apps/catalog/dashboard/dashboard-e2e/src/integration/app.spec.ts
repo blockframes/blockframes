@@ -1,9 +1,12 @@
-import { getGreeting } from '../support/app.po';
+import { setupForMacbook } from '@blockframes/e2e';
+import { getH1 } from '../support';
+
+beforeEach(() => {
+  setupForMacbook();
+});
 
 describe('catalog-dashboard', () => {
-  beforeEach(() => cy.visit('/'));
-
   it.skip('should display welcome message', () => {
-    getGreeting().contains('Welcome to catalog-dashboard!');
+    getH1().contains('Welcome to catalog-dashboard!');
   });
 });

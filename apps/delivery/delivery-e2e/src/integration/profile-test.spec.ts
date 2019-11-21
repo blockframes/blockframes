@@ -3,6 +3,7 @@ import {
   LoginViewPage,
   MovieListPage,
   ProfileEditablePage,
+  setupForMacbook,
   User,
   WelcomeViewPage
 } from '../support';
@@ -22,9 +23,7 @@ const USER_UPDATED: Partial<User> = {
 };
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
+  setupForMacbook();
   const p1: WelcomeViewPage = new WelcomeViewPage();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);

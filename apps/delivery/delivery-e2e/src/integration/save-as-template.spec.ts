@@ -1,15 +1,16 @@
 /// <reference types="cypress" />
 import {
-  WelcomeViewPage,
   DeliveryEditablePage,
   DeliveryListPage,
   LoginViewPage,
   MATERIALS,
   MovieListPage,
   SaveAsTemplateModal,
+  setupForMacbook,
   TemplateEditablePage,
   TemplateListPage,
-  User
+  User,
+  WelcomeViewPage
 } from '../support';
 
 const USER: Partial<User> = { email: 'cytest@blockframes.com', password: 'azerty' };
@@ -19,10 +20,7 @@ const MOVIE_CYTEST = 'I, robot';
 const ORG_CYTEST = 'cytestorg';
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('macbook-15');
+  setupForMacbook();
   const p1: WelcomeViewPage = new WelcomeViewPage();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);

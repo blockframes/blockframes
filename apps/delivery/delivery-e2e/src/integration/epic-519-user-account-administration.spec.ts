@@ -1,13 +1,10 @@
 /// <reference types="cypress" />
-import { createUser, LoginViewPage, OrganizationHomePage, WelcomeViewPage } from '../support';
+import { createUser, LoginViewPage, OrganizationHomePage, setupForMacbook, WelcomeViewPage } from '../support';
 
 const USER = createUser();
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth'); // TODO: we should visit the root path instead of /auth
-  cy.viewport('macbook-15');
+  setupForMacbook();
 });
 
 describe('story #529 - account creation', () => {

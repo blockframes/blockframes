@@ -11,6 +11,7 @@ import {
   MovieListPage,
   MoviePickerPage,
   SettingsPage,
+  setupForIpad,
   StarterPickerPage,
   Statuses,
   TemplatePickerPage,
@@ -81,12 +82,7 @@ const DELIVERY_INFORMATION: DeliveryInformation = {
 
 // DELIVERY CRUD //
 
-beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
-});
+beforeEach(() => setupForIpad());
 
 describe('User create a delivery selecting a movie', () => {
   it.skip('should login, click on the first movie, click on create from scrash, select "Signature of the delivery", and then create a delivery', () => {

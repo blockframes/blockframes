@@ -1,22 +1,21 @@
 /// <reference types="cypress" />
 import {
-  WelcomeViewPage,
+  createOrganization,
   LoginViewPage,
   MemberEditablePage,
   MovieCreatePage,
-  OrganizationEditablePage
+  OrganizationEditablePage,
+  setupForMacbook,
+  User,
+  WelcomeViewPage
 } from '../support';
-import { createOrganization, User } from '../support';
 
 const USER: Partial<User> = { email: 'cypressorg1@blockframes.com', password: 'blockframes' };
 const ORGANIZATION = createOrganization();
 const INVITEDUSER: Partial<User> = { email: 'cypressorg2@blockframes.com' };
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('macbook-15');
+  setupForMacbook();
   const p1: WelcomeViewPage = new WelcomeViewPage();
   p1.clickCallToAction();
   const p2 = new LoginViewPage();
@@ -31,10 +30,19 @@ describe('Test CRUD org', () => {
     p1.openProfileMenu();
     const p2: OrganizationEditablePage = p1.clickOnOrganization();
     p2.clickEditButtion();
-    p2.fillAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
-    p2.assertAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
+    p2.fillAddressAndPhoneNumber(
+      ORGANIZATION.addresses.main.street,
+      ORGANIZATION.addresses.main.phoneNumber
+    );
+    p2.assertAddressAndPhoneNumber(
+      ORGANIZATION.addresses.main.street,
+      ORGANIZATION.addresses.main.phoneNumber
+    );
     p2.clickSaveButton();
-    p2.assertAddressAndPhoneNumber(ORGANIZATION.addresses.main.street, ORGANIZATION.addresses.main.phoneNumber);
+    p2.assertAddressAndPhoneNumber(
+      ORGANIZATION.addresses.main.street,
+      ORGANIZATION.addresses.main.phoneNumber
+    );
 
     // Add a new member in user's organization and remove him
     const p3: MemberEditablePage = p2.clickContextMenuMember();

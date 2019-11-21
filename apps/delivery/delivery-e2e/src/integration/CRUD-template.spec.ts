@@ -1,14 +1,15 @@
 /// <reference types="cypress" />
 import {
-  WelcomeViewPage,
   LoginViewPage,
   MATERIALS,
   MovieCreatePage,
+  setupForMacbook,
   TemplateAddModal,
   TemplateCreatePage,
   TemplateEditablePage,
   TemplateListPage,
-  User
+  User,
+  WelcomeViewPage
 } from '../support';
 
 const TEMPLATE_NAME_1 = 'Crud Template';
@@ -21,10 +22,7 @@ const USER: User = {
 };
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('macbook-15');
+  setupForMacbook();
 });
 
 describe('Test CRUD template', () => {
@@ -87,5 +85,5 @@ describe('Test CRUD template', () => {
 
     // assert that the list is empty
     p9.assertNoTemplatesExists();
-   });
+  });
 });

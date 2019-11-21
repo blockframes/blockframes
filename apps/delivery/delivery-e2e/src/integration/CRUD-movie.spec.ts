@@ -4,7 +4,7 @@ import {
   MovieCreatePage,
   MovieEditablePage,
   MovieListPage,
-  MovieTitleFormModal,
+  MovieTitleFormModal, setupForIpad,
   User,
   WelcomeViewPage
 } from '../support';
@@ -36,10 +36,7 @@ const MOVIES_CYTEST = ['Terminator', 'Kung Fury'];
 // TESTS
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  setupForIpad();
   const p1: WelcomeViewPage = new WelcomeViewPage();
   const p2: LoginViewPage = p1.clickCallToAction();
   p2.fillSignin(USER);
