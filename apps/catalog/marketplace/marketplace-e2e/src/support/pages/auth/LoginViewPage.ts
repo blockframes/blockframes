@@ -50,7 +50,11 @@ export default class LoginViewPage {
     return new OrganizationHomePage();
   }
 
-
+  public assertStayInLoginview() {
+    cy.location().should((loc) => {
+      expect(loc.pathname).to.eq('/auth/connexion')
+    })
+  }
 
     // Signin
 

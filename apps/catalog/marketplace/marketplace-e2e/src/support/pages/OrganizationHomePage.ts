@@ -1,16 +1,12 @@
-import { NavbarPage } from ".";
-
-export default class OrganizationHomePage extends NavbarPage {
+export default class OrganizationHomePage {
   constructor() {
-    super();
     cy.get('[page-id=organization-home]', {timeout: 10000});
 
   }
 
-  public assertOrgHomepage() {
+  public assertMoveToOrgHomepage() {
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq('/layout/organization/home')
     })
   }
-
 }
