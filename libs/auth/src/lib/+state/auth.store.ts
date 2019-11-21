@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState } from 'akita-ng-fire';
+import { state } from '@angular/animations';
 
 export const PLACEHOLDER_AVATAR = '/assets/logo/profil_avatar_250.svg';
 
@@ -29,7 +30,6 @@ export interface PublicUser {
 export interface AuthState extends FireAuthState<User> {
   auth?: { emailVerified: boolean };
   requestedRoute?: string;
-  profile: User;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -50,5 +50,8 @@ const initialState: AuthState = {
 export class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialState);
+  }
+  updateProfile(profile: Partial<User>) {
+    this.update(authState => ({ profile: { ...authState.profile, profile }}))
   }
 }

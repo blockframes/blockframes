@@ -12,7 +12,7 @@ export class AuthService extends FireAuthService<AuthState> {
     protected store: AuthStore,
     private router: Router,
     private query: AuthQuery,
-    private angularFireFunctions: AngularFireFunctions
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -26,13 +26,13 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param email email of the user
   */
   public resetPasswordInit(email: string) {
-    const callSendReset = this.angularFireFunctions.httpsCallable('sendResetPasswordEmail');
+    const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email }).toPromise();
   }
 
   /** Send a new verification email to the current user */
   public async sendVerifyEmail() {
-    const callSendVerify = this.angularFireFunctions.httpsCallable('sendVerifyEmail');
+    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
     return callSendVerify({ email: this.query.user.email }).toPromise();
   }
 
@@ -61,7 +61,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  createProfile(user: Partial<User>, ctx: any) {
+  createProfile(user: Partial<User>, ctx: { name: string, surname: string }) {
     return {
       uid: user.uid,
       email: user.email,
@@ -84,7 +84,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * create a user with this email address.
    */
   public async getOrCreateUserByMail(email: string, orgName: string, invitationId?: string): Promise<User> {
-    const f = this.angularFireFunctions.httpsCallable('getOrCreateUserByMail');
+    const f = this.functions.httpsCallable('getOrCreateUserByMail');
     return f({ email, orgName }).toPromise();
   }
 
@@ -93,13 +93,6 @@ export class AuthService extends FireAuthService<AuthState> {
   //   MOVIE FINANCING RANK
   //---------------------------
   public changeRank(rank: string) {
-    this.store.update(state => {
-      return {
-        profile: {
-          ...state.profile,
-          financing: { rank }
-        }
-      };
-    });
+    this.store.updateProfile({ financing: { rank } });
   }
 }

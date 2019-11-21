@@ -34,10 +34,9 @@ export class FinancingExplorerDetailsComponent {
     return items.reduce((sum, item) => sum + parseFloat(item[attr]), 0);
   }
 
-  public get userRank() {
-    return (!!this.query.user.financing && !!this.query.user.financing.rank)
-      ? this.query.user.financing.rank
-      : 'silver';
+  public get userRank(): string {
+    const hasRank = !!this.query.user.financing && !!this.query.user.financing.rank;
+    return hasRank ? this.query.user.financing.rank : 'silver';
   }
 
   public get isUserEnoughRanked() {
