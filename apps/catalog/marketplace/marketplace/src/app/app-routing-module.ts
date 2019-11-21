@@ -3,8 +3,7 @@ import { RouterModule, NoPreloading } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout.component';
 import { createRoutes } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils';
-import { MovieCollectionGuard } from '@blockframes/movie';
+import { App } from '@blockframes/utils/apps';
 
 /** Scaffold a marketplace application routing for this application */
 const routes = createRoutes({
