@@ -16,7 +16,7 @@ export class MemberQuery extends QueryEntity<MemberState, OrganizationMember> {
 
   public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
     this.selectAll(),
-    this.permissionsQuery.select()
+    this.permissionsQuery.selectActive()
   ]).pipe(
     map(([members, permissions]) => {
       // Get the role of each member in permissions.roles and add it to member.

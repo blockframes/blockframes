@@ -58,7 +58,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private invitationStore: InvitationStore,
     private permissionsService: PermissionsService,
     private permissionQuery: PermissionsQuery,
-    private memberService: MemberService,
     private memberQuery: MemberQuery
   ) {}
 
