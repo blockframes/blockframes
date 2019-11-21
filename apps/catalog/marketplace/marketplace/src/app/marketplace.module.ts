@@ -37,8 +37,8 @@ const routes: Routes = [
   },
   {
     path: 'wishlist',
-    canActivate: [CatalogBasketGuard],
-    canDeactivate: [CatalogBasketGuard],
+    canActivate: [CatalogBasketGuard, MovieCollectionGuard],
+    canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
     children: [
       {
         path: '',
