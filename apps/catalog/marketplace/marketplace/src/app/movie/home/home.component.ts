@@ -8,7 +8,6 @@ import { ImgRef } from '@blockframes/utils/image-uploader';
 import { Analytics, ANALYTICS } from '@blockframes/utils';
 import { AuthQuery } from '@blockframes/auth';
 
-
 interface CarouselSection {
   title: string;
   subline: string;

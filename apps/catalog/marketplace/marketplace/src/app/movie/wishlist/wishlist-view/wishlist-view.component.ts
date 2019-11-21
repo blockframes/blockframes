@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy } from '@angular/core';
+import { ANALYTICS, Analytics } from '@blockframes/utils';
+import { ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
@@ -7,6 +8,7 @@ import { BasketService } from '../../../distribution-right/+state/basket.service
 import { Movie } from '@blockframes/movie';
 import { MatSnackBar } from '@angular/material';
 import { map } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth';
 
 @Component({
   selector: 'catalog-wishlist-view',
@@ -21,7 +23,9 @@ export class WishlistViewComponent implements OnInit {
   constructor(
     private basketQuery: BasketQuery,
     private basketService: BasketService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Inject(ANALYTICS) private logService: Analytics,
+    private authQuery: AuthQuery
   ) {}
 
   ngOnInit() {
@@ -38,6 +42,10 @@ export class WishlistViewComponent implements OnInit {
     try {
       this.basketService.updateWishlistStatus(movies);
       this.snackBar.open('Your current wishlist has been sent.', 'close', { duration: 2000 });
+      this.logService.logEvent('wishlist_send', {
+        wishlist: movies,
+        userId: this.authQuery.getValue().user.uid
+      })
     } catch (err) {
       this.snackBar.open(err.message, 'close', { duration: 2000 });
     }
