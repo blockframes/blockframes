@@ -1,11 +1,4 @@
-import LandingPage from './LandingPage';
-import LoginPage from './LoginPage';
-import HomePage from './HomePage';
-import SearchPage from './SearchPage'
-import ViewPage from './ViewPage';
-import DistributionPage from './DistributionPage';
-import SelectionPage from './SelectionPage';
-import FeedbackPage from './FeedbackPage';
+import { WishlistPage, SearchPage } from "./index";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -16,7 +9,19 @@ export default abstract class NavbarPage {
     cy.get('[page-id=navbar] button[test-id=profile-avatar]').click();
   }
 
+  public clickWishlist() {
+    cy.get('[page-id=navbar] a[test-id=heartIcon]').click();
+    return new WishlistPage();
+  }
+
   public clickLogout() {
     cy.get('button[test-id=logout]').click();
+  }
+
+  public clickContextMenuLineUp() {
+    cy.get('[page-id=navbar] a')
+      .contains('Line-up')
+      .click();
+    return new SearchPage();
   }
 }
