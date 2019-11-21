@@ -16,6 +16,9 @@ import { MatRippleModule } from '@angular/material/core';
 // Components
 import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
 
+// Angular Fire
+import { AngularFireAnalyticsModule } from '@blockframes/utils';
+
 @NgModule({
   declarations: [WishlistViewComponent, WishlistCurrentRepertoryComponent],
   imports: [
@@ -29,6 +32,9 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     MatSortModule,
     MatIconModule,
     MatRippleModule,
+
+    // Angular Fire
+    AngularFireAnalyticsModule,
 
     RouterModule.forChild([
       {

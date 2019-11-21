@@ -1,3 +1,4 @@
+import { ANALYTICS, Analytics } from '@blockframes/utils';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,
@@ -7,10 +8,12 @@ import {
   EventEmitter,
   OnInit,
   HostBinding
+  Inject
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
 import { BasketService } from '../../../distribution-right/+state/basket.service';
+import { AuthQuery } from '@blockframes/auth';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -44,7 +47,9 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   constructor(
     private router: Router,
     private service: BasketService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private authQuery: AuthQuery,
+    @Inject(ANALYTICS) private logService: Analytics
   ) {}
 
   ngOnInit() {
@@ -62,6 +67,14 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   public remove(movie: Movie, event: Event) {
     event.stopPropagation();
     this.service.removeMovieFromWishlist(movie.id);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been removed from your selection`,
+      'close',
+      { duration: 2000 }
+    );
+    this.logService.logEvent('remove_movie_wishlist', {
+      movie: movie.main.title.original,
+      userId: this.authQuery.getValue().user.uid
+    });
   }
 }
