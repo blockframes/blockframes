@@ -4,7 +4,8 @@ import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Organization, PublicOrganization, OrganizationService } from '@blockframes/organization';
+import { Organization, PublicOrganization } from '@blockframes/organization';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Invitation, InvitationStatus } from './invitation.firestore';
 
 @Injectable({ providedIn: 'root' })
