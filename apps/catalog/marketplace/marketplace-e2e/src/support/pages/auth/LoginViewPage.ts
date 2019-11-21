@@ -50,6 +50,10 @@ export default class LoginViewPage {
     return new OrganizationHomePage();
   }
 
+
+
+    // Signin
+
   public fillSignin(user) {
     cy.get('[page-id=signin] input[type="email"]').type(user.email);
     cy.get('[page-id=signin] input[type="password"]').type(user.password);
