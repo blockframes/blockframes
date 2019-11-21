@@ -88,7 +88,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private permissionsQuery: PermissionsQuery,
     private authQuery: AuthQuery,
     private memberQuery: MemberQuery,
-    private angularFireFunctions: AngularFireFunctions
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -169,7 +169,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Returns a list of organizations whose part of name match with @param prefix */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
-    const call = this.angularFireFunctions.httpsCallable('findOrgByName');
+    const call = this.functions.httpsCallable('findOrgByName');
     return call({ prefix }).toPromise().then(matchingOrganizations => matchingOrganizations.data);
   }
 

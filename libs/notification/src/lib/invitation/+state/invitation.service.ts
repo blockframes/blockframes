@@ -4,19 +4,23 @@ import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Organization, PublicOrganization } from '@blockframes/organization';
+import { Organization, PublicOrganization, OrganizationService } from '@blockframes/organization';
 import { Invitation, InvitationStatus } from './invitation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  constructor(private authQuery: AuthQuery, private authService: AuthService) {
+  constructor(
+    private authQuery: AuthQuery,
+    private authService: AuthService,
+    private orgService: OrganizationService
+    ) {
     super();
   }
 
   /** Create an Invitation when a user asks to join an Organization. */
   public async sendInvitationToOrg(organizationId: string) {
-    const organization = await snapshot<Organization>(`orgs/${organizationId}`);
+    const organization = await this.orgService.getValue(organizationId);
     const { uid, avatar, name, surname, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
