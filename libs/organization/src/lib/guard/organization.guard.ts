@@ -3,7 +3,7 @@ import {
   OrganizationService,
   OrganizationStatus,
   OrganizationState,
-  OrganizationQuery
+  OrganizationQuery,
 } from '../+state';
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
@@ -15,7 +15,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
   constructor(
     protected service: OrganizationService,
     protected router: Router,
-    private query: OrganizationQuery
+    private query: OrganizationQuery,
   ) {
     super(service);
   }

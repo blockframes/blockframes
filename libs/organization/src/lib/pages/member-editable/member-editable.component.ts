@@ -109,7 +109,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   }
 
   /** Update every user roles in the form list. */
-  public async updateRole() {
+  public updateRole() {
     try {
       if (!this.membersFormList.value.find(member => member.role === UserRole.superAdmin)) {
         throw new Error('There must be at least one Super Admin in the organization.')

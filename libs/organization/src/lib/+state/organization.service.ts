@@ -138,7 +138,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const user = this.authQuery.user;
     const orgId: string = org.id;
     const permissions = createOrgPermissions({
-      orgId,
+      id: orgId,
       roles: { [user.uid]: UserRole.superAdmin }
     });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);

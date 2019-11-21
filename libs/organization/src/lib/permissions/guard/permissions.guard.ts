@@ -6,17 +6,8 @@ import { switchMap, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
 import { Subscription } from 'rxjs';
 
-export const permissionsQuery = (orgId: string): Query<Permissions> => ({
-  path: `permissions/${orgId}`,
-  userAppPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/userAppPermissions`
-  }),
-  userDocPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/userDocPermissions`
-  }),
-  organizationDocPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/organizationDocPermissions`
-  })
+export const permissionsQuery = (orgId: string): Query<Permissions[]> => ({
+  path: `permissions`,
 });
 
 @Injectable({ providedIn: 'root' })
@@ -40,10 +31,13 @@ export class PermissionsGuard {
       this.subscription = this.auth.user$
         .pipe(
           switchMap(user => {
-            if (!user.orgId) throw new Error('User has no orgId');
+            if (!user.orgId) {
+              throw new Error('User has no orgId')
+            };
             return this.fireQuery.fromQuery<Permissions>(permissionsQuery(user.orgId));
           }),
-          tap(permissions => this.store.update(permissions))
+          tap(permissions => this.store.setActive(permissions.id)),
+          tap(permissions => this.store.updateActive(permissions))
         )
         .subscribe({
           next: (result: Permissions) => res(!!result),
