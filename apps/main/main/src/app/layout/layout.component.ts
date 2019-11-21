@@ -16,7 +16,6 @@ export class LayoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(CONTEXT_MENU);
     this.contextMenuService.setMenu(CONTEXT_MENU);
   }
 }
