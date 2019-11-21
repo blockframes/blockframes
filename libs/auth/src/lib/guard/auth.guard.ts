@@ -28,7 +28,6 @@ export class AuthGuard extends CollectionGuard<AuthState> {
         if (!user) {
           return 'auth';
         };
-        this.store.update({  auth: { emailVerified: this.service.user.emailVerified } });
         return hasIdentity(user) ? true : 'auth/identity';
       })
     );

@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 export class AuthQuery extends Query<AuthState> {
   public isLogged$ = this.select(state => state.uid).pipe(map(uid => !!uid));
   public user$ = this.select(state => state.profile);
-  public hasVerifiedEmail$ = this.select(state => state.auth && state.auth.emailVerified);
+  public hasVerifiedEmail$ = this.select(state => state.emailVerified);
 
   constructor(protected store: AuthStore) {
     super(store);

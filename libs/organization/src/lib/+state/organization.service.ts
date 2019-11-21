@@ -31,6 +31,8 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { APPS_DETAILS, App } from '@blockframes/utils';
+import { createOrgPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.firestore';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES

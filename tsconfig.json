@@ -43,6 +43,7 @@
 
       // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
+      "@blockframes/organization/*": ["libs/organization/src/lib/*"],
 
       // FIRESTORE DATA MODEL
       "@blockframes/organization/types": [
