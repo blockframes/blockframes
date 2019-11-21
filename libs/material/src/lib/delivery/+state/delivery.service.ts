@@ -15,9 +15,9 @@ import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/f
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
-import { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
 import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
+import { StakeholderDocument } from '../stakeholder/+state/stakeholder.firestore';
 
 interface AddDeliveryOptions {
   templateId?: string;
