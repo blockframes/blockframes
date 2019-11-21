@@ -12,7 +12,7 @@ const USER: User = {
 
 // TEST
 
-beforeEach(()=> {
+beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
   cy.visit('/auth')
@@ -33,6 +33,14 @@ describe('User can create new account', () => {
     p1.fillPasswordConfirmInSignup(USER.password);
     p1.clickTermsAndCondition();
     const p2: OrganizationHomePage = p1.clickSignup();
+    p2.assertOrgHomepage();
+    // cy.location('auth/connexion', {timeout: 10000}).should('eq', 'layout/organization/home');
+    // cy.get('[page-id=login-view] snack-bar-container').should((snackbar) => {
+    //   expect(snackbar.get(0).span).to.equal('Information not valid.')
+    // })
+    // cy.get('input').should('not.have.html', 'mat-error')
+    // request firebase post and check if new account created and stored
+    // cy.request('firebase').its('body').should('user', { email: newEmail })
   });
 });
 
@@ -44,8 +52,10 @@ describe('Try with each fields except one', () => {
     p1.fillPasswordInSignup(USER.password);
     p1.fillPasswordConfirmInSignup(USER.password);
     p1.clickTermsAndCondition();
-    // pass test if have mat-error
-    cy.get('[page-id=signup-form] input[type="email"]').should('have', 'mat-error')
+    // cy.get('[page-id=signup-form] button[type=submit]').should()
+    // const p2: OrganizationHomePage = p1.clickSignup().should();
+    // // pass test if have mat-error
+    // cy.get(p2).should('not.respondTo', '888888')
   });
 });
 
@@ -59,7 +69,7 @@ describe('Try email address', () => {
     p1.fillPasswordConfirmInSignup(USER.password);
     p1.clickTermsAndCondition();
     // pass test if have mat-error
-    cy.get('[page-id=signup-form] input[type="email"]').should('have', 'mat-error')
+    cy.get('[page-id=signup-form] input[type="email"]').should('have.html', 'mat-error')
   })
   it('use wrong format email address', () => {
     const p1 = new LoginViewPage();
