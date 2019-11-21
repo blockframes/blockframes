@@ -30,4 +30,4 @@ export const baseMenu = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = ctxMenu(baseMenu);
+export const CONTEXT_MENU = ctxMenu(baseMenu);

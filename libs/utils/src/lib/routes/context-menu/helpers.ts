@@ -7,8 +7,11 @@ export type ContextMenu = {
 }[];
 
 export function ctxMenu(contextMenu: ContextMenu) {
-  return [  {
-    route: 'default',
-    items: []
-  }, ...contextMenu];
+  return [
+    {
+      route: 'default',
+      items: []
+    },
+    ...contextMenu
+  ];
 }
