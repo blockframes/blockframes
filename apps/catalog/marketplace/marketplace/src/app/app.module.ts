@@ -1,5 +1,4 @@
 // Angular
-import { OnDestroy } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Inject } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,7 +27,6 @@ import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { EmailVerifyModule } from '@blockframes/auth';
-
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -100,11 +98,9 @@ import { Subscription } from 'rxjs';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAnalyticsModule,
-
-
     // Analytics
     sentryDsn ? SentryModule : [],
-
+    
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
 
@@ -120,25 +116,28 @@ import { Subscription } from 'rxjs';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule implements OnDestroy {
+export class AppModule {
   private subscription: Subscription;
 
   constructor(
     private router: Router,
-    @Inject(ANALYTICS) private logService: Analytics,
+    @Inject(ANALYTICS) private analytics: Analytics,
     private authQuery: AuthQuery
   ) {
     const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
     this.subscription = navEnds.subscribe((event: NavigationEnd) => {
-      this.logService.logEvent('page_view', {
-        page_location: 'marketplace',
-        page_path: event.urlAfterRedirects,
-        uid: this.authQuery.getValue().user.uid
-      });
+      try {
+        this.analytics.logEvent('page_view', {
+          page_location: 'marketplace',
+          page_path: event.urlAfterRedirects,
+          uid: this.authQuery.getValue().user.uid
+        });
+      } catch {
+        this.analytics.logEvent('page_view', {
+          page_location: 'marketplace',
+          page_path: event.urlAfterRedirects,
+        });
+      }
     });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

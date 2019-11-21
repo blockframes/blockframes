@@ -5,7 +5,7 @@ import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImgRef } from '@blockframes/utils/image-uploader';
-import { Analytics, ANALYTICS } from '@blockframes/utils';
+import { Analytics, ANALYTICS, AppAnalytics } from '@blockframes/utils';
 import { AuthQuery } from '@blockframes/auth';
 
 interface CarouselSection {
@@ -19,7 +19,7 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceHomeComponent implements OnInit {
+export class MarketplaceHomeComponent extends AppAnalytics implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
 
   /** Observable to fetch all movies from the store */
@@ -29,9 +29,11 @@ export class MarketplaceHomeComponent implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
-    private authQuery: AuthQuery,
-    @Inject(ANALYTICS) private logService: Analytics
-  ) {}
+    authQuery: AuthQuery,
+    @Inject(ANALYTICS) analytics: Analytics
+  ) {
+    super(analytics, authQuery);
+  }
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
@@ -87,9 +89,8 @@ export class MarketplaceHomeComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.logService.logEvent('movie_to_wishlist', {
+    this.event('movie_to_wishlist', {
       movie_name: movie.main.title.original,
-      userId: this.authQuery.getValue().user.uid
     });
   }
 
@@ -101,9 +102,8 @@ export class MarketplaceHomeComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.logService.logEvent('movie_removed_wishlist', {
+    this.event('movie_removed_wishlist', {
       movie_name: movie.main.title.original,
-      userId: this.authQuery.getValue().user.uid
     });
   }
 

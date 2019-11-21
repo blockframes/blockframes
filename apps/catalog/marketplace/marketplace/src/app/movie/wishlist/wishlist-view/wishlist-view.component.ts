@@ -1,4 +1,4 @@
-import { ANALYTICS, Analytics } from '@blockframes/utils';
+import { ANALYTICS, Analytics, AppAnalytics } from '@blockframes/utils';
 import { ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -16,7 +16,7 @@ import { AuthQuery } from '@blockframes/auth';
   styleUrls: ['./wishlist-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistViewComponent implements OnInit {
+export class WishlistViewComponent extends AppAnalytics implements OnInit {
   public wishlists$: Observable<Wishlist[]>;
   public currentWishlist$: Observable<Wishlist>;
 
@@ -24,9 +24,11 @@ export class WishlistViewComponent implements OnInit {
     private basketQuery: BasketQuery,
     private basketService: BasketService,
     private snackBar: MatSnackBar,
-    @Inject(ANALYTICS) private logService: Analytics,
-    private authQuery: AuthQuery
-  ) {}
+    @Inject(ANALYTICS) analytics: Analytics,
+    authQuery: AuthQuery
+  ) {
+    super(analytics, authQuery);
+  }
 
   ngOnInit() {
     this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
@@ -42,10 +44,9 @@ export class WishlistViewComponent implements OnInit {
     try {
       this.basketService.updateWishlistStatus(movies);
       this.snackBar.open('Your current wishlist has been sent.', 'close', { duration: 2000 });
-      this.logService.logEvent('wishlist_send', {
-        wishlist: movies,
-        userId: this.authQuery.getValue().user.uid
-      })
+      this.event('wishlist_send', {
+        wishlist: movies
+      });
     } catch (err) {
       this.snackBar.open(err.message, 'close', { duration: 2000 });
     }
