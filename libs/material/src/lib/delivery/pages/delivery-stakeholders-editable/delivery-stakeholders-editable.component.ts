@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
+import { Delivery, DeliveryQuery } from '../../+state';
+import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { Observable } from 'rxjs';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
-import { StakeholderService } from '@blockframes/organization';
+import { createStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
 
 @Component({
   selector: 'delivery-stakeholders-editable',
@@ -16,7 +17,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
   public delivery$: Observable<Delivery>;
 
   constructor(
-    private service: DeliveryService,
     private stakeholderService: StakeholderService,
     private query: DeliveryQuery
   ) {}
@@ -26,12 +26,11 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
   }
 
   public removeStakeholder(stakeholderId: string) {
-    this.service.removeStakeholder(stakeholderId);
+    this.stakeholderService.remove(stakeholderId);
   }
 
   public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    const delivery = this.query.getActive();
-    this.stakeholderService.addStakeholder(delivery.id, objectID);
+    this.stakeholderService.add(createStakeholder({id: objectID}));
   }
 }

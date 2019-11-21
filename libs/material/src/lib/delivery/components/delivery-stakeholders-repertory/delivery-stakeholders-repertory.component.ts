@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { Stakeholder } from '@blockframes/organization';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
+import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
 
 @Component({
   selector: 'delivery-stakeholders-repertory',

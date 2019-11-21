@@ -21,9 +21,3 @@ export * from './lib/permissions/+state/permissions.query';
 export * from './lib/permissions/+state/permissions.service';
 export * from './lib/permissions/+state/permissions.store';
 export * from './lib/permissions/+state/permissions.model';
-
-// Stakeholder State
-export * from './lib/stakeholder/+state/stakeholder.query';
-export * from './lib/stakeholder/+state/stakeholder.service';
-export * from './lib/stakeholder/+state/stakeholder.store';
-export * from './lib/stakeholder/+state/stakeholder.model';

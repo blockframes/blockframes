@@ -1,6 +1,6 @@
 import { staticModels } from '@blockframes/movie';
 import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
-import { Stakeholder } from '@blockframes/organization';
+import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 
 export { DeliveryStatus, CurrencyCode } from './delivery.firestore';
 export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
