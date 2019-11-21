@@ -1,13 +1,10 @@
 import { appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
+import { ctxMenu } from './helpers';
 
 const baseRoute = `${appsRoute}/${App.mediaDelivering}`;
 
-export const CONTEXT_MENU = [
-  {
-    route: 'default',
-    items: []
-  },
+export const baseMenu = [
   {
     route: '/layout/welcome',
     items: []
@@ -147,3 +144,5 @@ export const CONTEXT_MENU = [
     ]
   }
 ];
+
+export const CONTEXT_MENU = ctxMenu(baseMenu);
