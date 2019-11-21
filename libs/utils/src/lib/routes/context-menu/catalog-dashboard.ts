@@ -1,9 +1,10 @@
 import { appsRoute } from '../create-routes';
 import { App } from '@blockframes/utils';
+import { ctxMenu } from './helpers';
 
 export const baseRoute = `${appsRoute}/${App.catalogDashboard}`;
 
-export const CONTEXT_MENU = [
+export const baseMenu = [
   {
     route: baseRoute,
     items: [
@@ -28,3 +29,5 @@ export const CONTEXT_MENU = [
     ]
   }
 ];
+
+export const CONTEXT_MENU_AFM = ctxMenu(baseMenu);

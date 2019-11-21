@@ -1,9 +1,10 @@
 import { appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
+import { ctxMenu } from './helpers';
 
 export const baseRoute = `${appsRoute}/${App.biggerBoat}`;
 
-export const CONTEXT_MENU = [
+export const baseMenu = [
   {
     route: `${baseRoute}/home`,
     items: [
@@ -83,7 +84,9 @@ export const CONTEXT_MENU = [
   }
 ];
 
-export const CONTEXT_MENU_AFM = [ // TODO #1146
+export const CONTEXT_MENU = ctxMenu(baseMenu);
+
+export const baseMenuAfm = [ // TODO #1146
   {
     route: 'default',
     items: [
@@ -117,3 +120,4 @@ export const CONTEXT_MENU_AFM = [ // TODO #1146
   }
 ];
 
+export const CONTEXT_MENU_AFM = ctxMenu(baseMenuAfm);
