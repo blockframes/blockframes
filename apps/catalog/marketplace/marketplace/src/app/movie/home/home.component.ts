@@ -108,7 +108,14 @@ export class MarketplaceHomeComponent implements OnInit {
   }
 
   public getBanner(movie: Movie): string {
-    const movieElement = movie.promotionalElements.promotionalElements.find(element => element.type === "banner");
-    if (!movieElement || !movieElement.url) { return; }
-    return (<ImgRef>movieElement.url).ref !== undefined ? (<ImgRef>movieElement.url).url : (<string>movieElement.url)
+    const movieElement = movie.promotionalElements.promotionalElements.find(
+      element => element.type === 'banner'
+    );
+    if (!movieElement || !movieElement.url) {
+      return;
+    }
+    return (<ImgRef>movieElement.url).ref !== undefined
+      ? (<ImgRef>movieElement.url).url
+      : <string>movieElement.url;
+  }
 }
