@@ -45,6 +45,6 @@ export const APPS_DETAILS: AppDetails[] = [
     name: 'Bigger Boat - Dashboard',
     logo: '/assets/logo/biggerBoatDashboard.png',
     href: 'catalog-dashboard',
-    id: App.biggerBoat
+    id: App.catalogDashboard
   }
 ];

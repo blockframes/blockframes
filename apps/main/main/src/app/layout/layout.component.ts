@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU } from './context-menu';
+import { CONTEXT_MENU } from '@blockframes/utils/routes';
 
 @Component({
   selector: 'delivery-layout',
@@ -16,6 +16,7 @@ export class LayoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(CONTEXT_MENU);
     this.contextMenuService.setMenu(CONTEXT_MENU);
   }
 }
