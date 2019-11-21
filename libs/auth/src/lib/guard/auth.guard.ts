@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AuthQuery, User, AuthService, AuthState, AuthStore } from '../+state';
-import { map } from 'rxjs/operators';
+import { AuthQuery, User, AuthService, AuthState } from '../+state';
+import { map, switchMap } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { of } from 'rxjs';
 
 // Verify if the user exists and has a name and surname.
 function hasIdentity(user: User) {
@@ -16,19 +18,21 @@ export class AuthGuard extends CollectionGuard<AuthState> {
   constructor(
     service: AuthService,
     private query: AuthQuery,
-    private store: AuthStore
+    private afAuth: AngularFireAuth
   ) {
     super(service);
   }
 
   sync() {
-    return this.service.sync().pipe(
-      map(_ => this.query.user),
-      map(user => {
-        if (!user) {
-          return 'auth';
+    return this.afAuth.authState.pipe(
+      switchMap(userAuth => {
+        if (!userAuth) {
+          return of('auth');
         };
-        return hasIdentity(user) ? true : 'auth/identity';
+        return this.service.sync().pipe(
+          map(_ => this.query.user),
+          map(user => hasIdentity(user) ? true : 'auth/identity')
+        );
       })
     );
   }
