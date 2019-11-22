@@ -99,5 +99,70 @@ export const USERS: UserConfig[] = [
     uid: 'rjcrjcfLGlPalqUrbRX91zWqwqB2',
     email: 'cypressCRUDdelivery@blockframes.com',
     password: 'blockframes'
+  },
+  {
+    uid: 'LIXEkDP2jTXPxHcfZ9h05NVdu3p2',
+    email: 'amarkina@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'vYluCjIoB5P6wjgg54azmoBbeaG2',
+    email: 'bdelorme@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'bDNnNUpbqtN7CP0SH1OZOcNQpqm2',
+    email: 'cmandonnet@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'UkhbKhGmG5dJh2ex0353e3ns9Uz1',
+    email: 'dkim@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: '5Qpy8k9IWiXDOuIBvxz6ju3RfA72',
+    email: 'equipe@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'my1cvypMC3cozovVoNdqnbeypPk2',
+    email: 'fguezengar@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: '636h4x3FcQQUX5epbjc6EPRgx9q1',
+    email: 'hhontans@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+    email: 'maltmayer@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'Q6UitPGaItXfbwPmOKAfaaPlow42',
+    email: 'mdugue@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: '1DI4VrSsitRD29BGPowRPmRkVud2',
+    email: 'mfritz@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'MIvjAxTVULPLqmj4EY2iU7ttsME2',
+    email: 'vchoukroun@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'zjdwnjf3Eserzy1KJTMU3rNhlU42',
+    email: 'team@cascade8.com',
+    password: 'blockframes'
+  },
+  {
+    uid: 'z7GwTTzxukhxUiOruEGcWrapRNs2',
+    email: 'ynikas@cascade8.com',
+    password: 'blockframes'
   }
 ];
