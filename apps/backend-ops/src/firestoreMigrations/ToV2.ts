@@ -1,5 +1,4 @@
 import { Firestore } from '../admin';
-import { MovieDisplayFestivalPrizesComponent } from '@blockframes/movie/movie/display/festival-prizes/festival-prizes.component';
 
 
 /**
