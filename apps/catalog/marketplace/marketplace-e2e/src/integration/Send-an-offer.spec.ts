@@ -5,7 +5,7 @@ import { User } from "../support/utils/type";
 import { USERS } from "../support/utils/users";
 
 // Select user: hello@cascade8.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[17];
+const LOGIN_CREDENTIALS: Partial<User> = USERS[16];
 
 const MOVIE_1 = 'A Perfect Enemy';
 const MOVIE_2 = 'Cosmogony';
