@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { WishlistPage, SearchPage } from "./index";
+import { LoginViewPage, SearchPage, WishlistPage } from './index';
 
-=======
-import { LoginViewPage } from './index';
->>>>>>> wrote tests for scenarios in account-creation.spec
 export default abstract class NavbarPage {
   constructor() {
     cy.get('[page-id=navbar]', { timeout: 10000 });
