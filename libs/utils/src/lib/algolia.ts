@@ -7,10 +7,13 @@ import { InjectionToken } from '@angular/core';
 // @ts-ignore
 const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
 
-export const OrganizationsIndex = new InjectionToken<Index>('Algolia index to search organizations', {
-  providedIn: 'root',
-  factory: () => searchClient.initIndex(algolia.indexNameOrganizations)
-});
+export const OrganizationsIndex = new InjectionToken<Index>(
+  'Algolia index to search organizations',
+  {
+    providedIn: 'root',
+    factory: () => searchClient.initIndex(algolia.indexNameOrganizations)
+  }
+);
 
 /** An Organization search result coming from Algolia */
 export interface OrganizationAlgoliaResult {
@@ -19,11 +22,14 @@ export interface OrganizationAlgoliaResult {
 }
 
 /**
- * An Interface for movie search result from Algolia 
+ * An Interface for movie search result from Algolia
  */
-export type MovieAlgoliaResult = Movie;
+export interface MovieAlgoliaResult {
+  objectID: string;
+  movie: Movie;
+}
 
 export const MoviesIndex = new InjectionToken<Index>('Algolia index to search movies', {
   providedIn: 'root',
   factory: () => searchClient.initIndex(algolia.indexNameMovies)
-})
+});
