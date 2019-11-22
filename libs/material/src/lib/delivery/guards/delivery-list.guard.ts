@@ -22,8 +22,7 @@ const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
 @Injectable({ providedIn: 'root' })
 export class DeliveryListGuard extends StateListGuard<Delivery> {
   public get urlFallback() {
-    // TODO: Create delivery home to avoid this double delivery in routes
-    return `layout/o/delivery/delivery/add/${this.movieQuery.getActiveId()}/2-choose-starter`;
+    return `/layout/o/delivery/movie/add/${this.movieQuery.getActiveId()}/2-choose-starter`;
   }
 
   constructor(

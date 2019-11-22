@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MovieService } from '../../+state';
 import { Router } from '@angular/router';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'movie-title-form',
@@ -20,6 +21,7 @@ export class MovieTitleFormComponent implements OnInit {
     private snackBar: MatSnackBar,
     private builder: FormBuilder,
     private service: MovieService,
+    private routerQuery: RouterQuery,
     private router: Router,
   ) { }
 
@@ -39,8 +41,9 @@ export class MovieTitleFormComponent implements OnInit {
       const { title } = this.titleForm.value;
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
       const movie = await this.service.addMovie(title);
+      const appName = this.routerQuery.getValue().state.root.data.app
 
-      this.router.navigate([`/layout/o/home/${movie.id}/edit`]);
+      this.router.navigate([`/layout/o/${appName}/home/${movie.id}/edit`]);
       this.dialogRef.close();
     }
     catch (err) {
