@@ -6,7 +6,7 @@ import { NewTemplateComponent } from '../../components/delivery-new-template/new
 import { Material, MaterialService, MaterialStore, MaterialStatus } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
@@ -45,7 +45,8 @@ export class DeliveryEditableComponent implements OnInit {
     private materialStore: MaterialStore,
     private organizationService: OrganizationService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -193,7 +194,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   private async deleteDelivery() {
     await this.service.deleteDelivery();
-    this.router.navigate([`/layout/o/delivery/${this.movieQuery.getActiveId()}/list`]);
+    this.router.navigate([`../../list`], { relativeTo: this.route });
     this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
   }
 

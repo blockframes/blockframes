@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionPickerItem } from '@blockframes/ui';
-import { MovieQuery } from '@blockframes/movie';
 import { Template, TemplateQuery } from '../../../template/+state';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
 
@@ -34,7 +33,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
   constructor(
     private templateQuery: TemplateQuery,
     private router: Router,
-    private movieQuery: MovieQuery,
+    private route: ActivatedRoute,
     private store: DeliveryStore
   ) {}
 
@@ -48,13 +47,8 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     this.currentTemplate = template;
   }
 
-  public get continueURL(): string {
-    if (!this.currentTemplate) {
-      return '#';
-    }
-
+  public navigateToSettings() {
     const templateId = this.currentTemplate.id;
-    const movieId = this.movieQuery.getActiveId();
-    return `/layout/o/delivery/add/${movieId}/${templateId}/4-settings`;
+    return this.router.navigate([`../${templateId}/4-settings`], { relativeTo: this.route });
   }
 }

@@ -114,7 +114,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'view',
+            redirectTo: 'list',
             pathMatch: 'full'
           },
           {

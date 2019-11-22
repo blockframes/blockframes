@@ -51,6 +51,6 @@ export class DeliveryAddSettingsComponent {
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
     this.store.setActive(deliveryId);
-    return this.router.navigate([`../../${movieId}/${deliveryId}/list`], {relativeTo: this.route});
+    return this.router.navigate([`../../../${movieId}/${deliveryId}`], {relativeTo: this.route});
   }
 }
