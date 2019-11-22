@@ -33,7 +33,7 @@ export default class LoginViewPage {
     cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(password);
   }
 
-  public fillSignup(user: User) {
+  public fillSignup(user: Partial<User>) {
     cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
     cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
     cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
@@ -41,7 +41,7 @@ export default class LoginViewPage {
     cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
   }
 
-  public fillSignupExceptOne(user: User, key, newEmail?) {
+  public fillSignupExceptOne(user: Partial<User>, key, newEmail?) {
     const originalEmail = user.email;
     if (newEmail){
       user.email = newEmail;
