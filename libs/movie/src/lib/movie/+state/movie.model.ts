@@ -110,7 +110,8 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    url: '',
+    // TODO(#1308): create real reference image by pushing the url to firesotre
+    url: createImgRef(promotionalElement.url),
     type: 'other',
     ...promotionalElement
   };

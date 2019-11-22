@@ -38,8 +38,7 @@ export interface PromotionalElement {
   type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
-  // Can be an imgRef if resource is stored on our side or a string for remote resource
-  url: string | ImgRef 
+  url: ImgRef
 }
 
 export interface MoviePromotionalElements {
