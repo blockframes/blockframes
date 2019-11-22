@@ -39,21 +39,17 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 
 import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
-import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 
 @NgModule({
   declarations: [
     MovieEditableComponent,
     HomeEmptyComponent,
-    MovieCreateComponent,
-    MovieViewComponent,
-    MovieTitleFormComponent
+    MovieViewComponent
   ],
   imports: [
     CommonModule,
@@ -96,7 +92,6 @@ import { MovieTitleFormComponent } from './components/movie-title-form/movie-tit
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-  ],
-  entryComponents: [MovieTitleFormComponent],
+  ]
 })
 export class MovieModule {}

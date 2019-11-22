@@ -5,27 +5,34 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Libraries
-import { MovieListModule } from '@blockframes/movie/movie/pages/movie-list/movie-list.module';
+import { MovieListModule } from '@blockframes/movie/movie/components/movie-list/movie-list.module';
+import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatInputModule } from '@angular/material/input';
 
 // Pages
 import { DeliveryHomeComponent } from './home.component';
+
+// Guard
 import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.guard';
+import { MovieTitleFormComponent } from '@blockframes/movie/movie/components/movie-title-form/movie-title-form.component';
 
 
 @NgModule({
-  declarations: [DeliveryHomeComponent],
+  declarations: [DeliveryHomeComponent, MovieTitleFormComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     MovieListModule,
+    MovieCreateModule,
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MatInputModule,
     RouterModule.forChild([
       {
         path: '',
@@ -38,6 +45,7 @@ import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.g
         loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
       }
     ])
-  ]
+  ],
+  entryComponents: [MovieTitleFormComponent]
 })
 export class DeliveryHomeModule {}
