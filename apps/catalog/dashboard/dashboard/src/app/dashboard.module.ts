@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { MovieCreateComponent } from '@blockframes/movie/movie/pages/movie-create/movie-create.component';
+import { MovieCreateComponent } from '@blockframes/movie/movie/components/movie-create/movie-create.component';
 
 const routes: Routes = [
   {

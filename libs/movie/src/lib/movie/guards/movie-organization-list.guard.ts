@@ -15,10 +15,7 @@ export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
     return this.query.getCount() === 0;
   }
 
-  sync(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.service.syncOrgMovies().pipe(
-      map(_ => this.query.getCount()),
-      map(count => (count === 0 ? resolvePath(state.url, '../create') : true))
-    );
+  sync() {
+    return this.service.syncOrgMovies();
   }
 }

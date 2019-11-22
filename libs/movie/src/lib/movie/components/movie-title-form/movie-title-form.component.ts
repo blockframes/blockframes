@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MovieService } from '../../+state';
 import { Router } from '@angular/router';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { appsRoute } from '@blockframes/utils/routes';
+import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'movie-title-form',
@@ -12,38 +12,28 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   styleUrls: ['./movie-title-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTitleFormComponent implements OnInit {
+export class MovieTitleFormComponent {
   @HostBinding('attr.page-id') pageId = 'movie-title-form';
-  public titleForm: FormGroup;
 
   constructor(
     private dialogRef: MatDialogRef<MovieTitleFormComponent>,
     private snackBar: MatSnackBar,
-    private builder: FormBuilder,
     private service: MovieService,
-    private routerQuery: RouterQuery,
     private router: Router,
   ) { }
 
-  ngOnInit() {
-    this.titleForm = this.builder.group({
-      title: ['', Validators.required]
-    });
-  }
-
-  public async newMovie() {
-    if (!this.titleForm.valid) {
+  public async newMovie(movieName: string) {
+    if (!movieName) {
       this.snackBar.open('Invalid form', 'close', { duration: 1000 });
       return
     }
-
     try {
-      const { title } = this.titleForm.value;
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
-      const movie = await this.service.addMovie(title);
-      const appName = this.routerQuery.getValue().state.root.data.app
+      const movie = await this.service.addMovie(movieName);
 
-      this.router.navigate([`/layout/o/${appName}/home/${movie.id}/edit`]);
+      this.router.navigate([`${appsRoute}/${App.mediaDelivering}/home/${movie.id}/edit`]);
+      // TODO: Find out why { relativeTo: this.route } is not working as intended.
+      // this.router.navigate([`./${movie.id}/edit`], { relativeTo: this.route })
       this.dialogRef.close();
     }
     catch (err) {

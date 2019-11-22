@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding, Input } from '@angular/core';
 import { MovieService, MovieQuery, Movie } from '../../+state';
 import { Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-// import { MovieTitleFormComponent } from '../../components/movie-title-form/movie-title-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
@@ -21,9 +18,7 @@ export class MovieListComponent implements OnInit {
   constructor(
     private service: MovieService,
     private query: MovieQuery,
-    private dialog: MatDialog,
     private routerQuery: RouterQuery,
-    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
