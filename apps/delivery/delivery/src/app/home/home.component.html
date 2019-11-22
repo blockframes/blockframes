@@ -1,0 +1,16 @@
+<main fxLayout="row" fxLayoutAlign="center">
+  <section>
+    <ng-container *ngIf="movies$ | async as movies; else noMovies">
+      <article fxLayout="row" fxLayoutAlign="space-between center">
+        <h2>Welcome to Delivery</h2>
+        <mat-divider fxFlex></mat-divider>
+        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
+          <mat-icon>add</mat-icon>
+          <span>Add a movie</span>
+        </a>
+      </article>
+      <movie-list [movies]="movies"></movie-list>
+    </ng-container>
+    <ng-template #noMovies> </ng-template>
+  </section>
+</main>
