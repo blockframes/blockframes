@@ -56,20 +56,21 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     const permissions = await this.getValue(orgId);
 
     organizationMembers.forEach(({ uid, role }) => {
-      // Case of role = 'superAdmin': we remove the member id from members/admins and insert it in superAdmins
-      if (role === UserRole.superAdmin) {
-        delete permissions.roles[uid];
-        permissions.roles[uid] = UserRole.superAdmin;
-      }
-      // Case of role = 'admin': we remove the member id from superAdmins/members and insert it in admins
-      if (role === UserRole.admin) {
-        delete permissions.roles[uid];
-        permissions.roles[uid] = UserRole.admin;
-      }
-      // Case of role = 'member': we remove the member id from admins/superAdmins and insert it in members
-      if (role === UserRole.member) {
-        delete permissions.roles[uid];
-        permissions.roles[uid] = UserRole.member;
+      switch(role) {
+        case UserRole.superAdmin:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.superAdmin;
+          break;
+        case UserRole.admin:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.admin;
+          break;
+        case UserRole.member:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.member;
+          break;
+        default:
+          throw new Error(`User with id : ${uid} have no role.`);
       }
     });
 
