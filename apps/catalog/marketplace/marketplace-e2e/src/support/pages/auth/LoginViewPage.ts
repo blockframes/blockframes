@@ -42,7 +42,10 @@ export default class LoginViewPage {
   }
 
   public fillSignupExceptOne(user: User, key, newEmail?) {
-    user.email = newEmail;
+    const originalEmail = user.email;
+    if (newEmail){
+      user.email = newEmail;
+    }
     switch (key) {
       case 'email' :
           cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
@@ -55,24 +58,28 @@ export default class LoginViewPage {
           cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
           cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
           cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
         break;
       case 'surname' :
           cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
           cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
           cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
           cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
         break;
       case 'password' :
           cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
           cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
           cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
           cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
         break;
       case 'passwordConfirm' :
           cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
           cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
           cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
           cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
+          user.email = originalEmail;
         break
     }
   }
