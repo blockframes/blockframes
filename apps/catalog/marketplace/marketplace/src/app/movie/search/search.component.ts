@@ -40,12 +40,11 @@ import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticMod
 import {
   languageValidator,
   ControlErrorStateMatcher,
-  sortMovieBy,
   MoviesIndex,
   MovieAlgoliaResult
 } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
