@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
-import { MovieCollectionGuard, MovieActiveGuard } from '@blockframes/movie';
+import { MovieActiveGuard } from '@blockframes/movie';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -25,20 +25,16 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    canActivate: [MovieCollectionGuard],
-    canDeactivate: [MovieCollectionGuard],
     loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
   },
   {
     path: 'search',
-    canActivate: [MovieCollectionGuard],
-    canDeactivate: [MovieCollectionGuard],
     loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
   },
   {
     path: 'wishlist',
-    canActivate: [CatalogBasketGuard, MovieCollectionGuard],
-    canDeactivate: [CatalogBasketGuard, MovieCollectionGuard],
+    canActivate: [CatalogBasketGuard],
+    canDeactivate: [CatalogBasketGuard],
     children: [
       {
         path: '',
