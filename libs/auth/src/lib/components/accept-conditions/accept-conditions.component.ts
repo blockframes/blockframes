@@ -9,7 +9,7 @@ import { AcceptConditionsDirective } from './accept-conditions.directive';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AcceptConditionsComponent {
-  @HostBinding('attr.page-id') pageId = 'terms-condition';
+  @HostBinding('attr.page-id') pageId = 'accept-condition';
   // Access the template given by the parent
   @ContentChild(AcceptConditionsDirective, { static: false })
   acceptConditions: AcceptConditionsDirective;
