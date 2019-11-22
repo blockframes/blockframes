@@ -8,15 +8,19 @@ export default class WishlistPage extends NavbarPage {
   }
 
   public clickSendToSellers() {
-    cy.get('catalog-wishlist-view button[test-id=submit-to-sellers]').click();
+    cy.get('[test-id=currentWishlist] button[test-id=submit-to-sellers]').click();
     cy.wait(2000);
   }
 
   public assertNoCurrentWishlist() {
-    cy.get('catalog-wishlist-view button[test-id=submit-to-sellers]').should((button) => expect(button).length(0));
+    cy.get('[test-id=currentWishlist]').should((table) => expect(table).length(0));
   }
 
-  public assertMovieInWishlist(movieName: string) {
-    cy.get('catalog-wishlist-current-repertory td').contains(movieName);
+  public assertMovieInCurrentWishlist(movieName: string) {
+    cy.get('[test-id=currentWishlist] td').contains(movieName);
+  }
+
+  public assertMovieInSentWishlist(movieName: string) {
+    cy.get('[test-id=sentWishlist] td').contains(movieName);
   }
 }

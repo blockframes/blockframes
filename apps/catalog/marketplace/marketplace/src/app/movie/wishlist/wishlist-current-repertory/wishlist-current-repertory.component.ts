@@ -5,7 +5,8 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnInit
+  OnInit,
+  HostBinding
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
@@ -18,6 +19,7 @@ import { BasketService } from '../../../distribution-right/+state/basket.service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistCurrentRepertoryComponent implements OnInit {
+  @HostBinding('attr.test-id') testId = 'sentWishlist';
 
   @Output() sent = new EventEmitter();
 
@@ -48,6 +50,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   ngOnInit() {
     if (this.isCurrent) {
       this.columnsToDisplay.push('delete');
+      this.testId = 'currentWishlist';
     }
   }
 
