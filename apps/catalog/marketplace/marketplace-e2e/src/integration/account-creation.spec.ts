@@ -26,17 +26,12 @@ beforeEach(() => {
   const p2: LoginViewPage = p1.clickCallToAction();
 })
 
-// TODO: after each, delete created account by cypress from firestore
 describe('User can create new account', () => {
   it('Fill all the fields appropriately', () => {
     const p1 = new LoginViewPage();
-    p1.fillEmailInSignup(USER.email);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    p1.fillSignup(USER);
     p1.clickTermsAndCondition();
-    const p2: OrganizationHomePage = p1.clickSignup();
+    const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
     p2.assertMoveToOrgHomepage();
   });
 });
@@ -44,60 +39,45 @@ describe('User can create new account', () => {
 describe('Try with each fields except one', () => {
   it('Fill all the fields except email', () => {
     const p1 = new LoginViewPage();
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    p1.fillSignupExceptOne(USER, 'email');
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   });
 
   it('Fill all the fields except name', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
-    p1.fillEmailInSignup(newEmail);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    const newEmail = `name${Date.now()}@cypress.com`;
+    p1.fillSignupExceptOne(USER, 'name', newEmail);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   });
 
   it('Fill all the fields except surname', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
-    p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    const newEmail = `surname${Date.now()}@cypress.com`;
+    p1.fillSignupExceptOne(USER, 'surname', newEmail);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   });
 
   it('Fill all the fields except password', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
-    p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    const newEmail = `pwd${Date.now()}@cypress.com`;
+    p1.fillSignupExceptOne(USER, 'password', newEmail);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   });
 
   it('Fill all the fields except password confirm', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
-    p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname)
-    p1.fillPasswordInSignup(USER.password);
+    const newEmail =`pwdC${Date.now()}@cypress.com`;
+    p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   });
 });
@@ -105,24 +85,17 @@ describe('Try with each fields except one', () => {
 describe('Try email address', () => {
   it('use already exist email address', () => {
     const p1 = new LoginViewPage();
-    p1.fillEmailInSignup(USER.email);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    p1.fillSignup(USER);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   })
   it('use wrong format email address', () => {
     const p1 = new LoginViewPage();
     p1.fillEmailInSignup(wrongEmailForm);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
-    p1.fillPasswordConfirmInSignup(USER.password);
+    p1.fillSignupExceptOne(USER, 'email');
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   })
 });
@@ -130,38 +103,35 @@ describe('Try email address', () => {
 describe('Try password', () => {
   it('Try with different passwords in password confirm', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
-    p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(USER.password);
+    const newEmail =`wrongPwd${Date.now()}@cypress.com`;
+    p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.fillPasswordConfirmInSignup(wrongPassword);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   })
   it('Try with less than 6 characters', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
+    const newEmail =`shortPwd${Date.now()}@cypress.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.name);
     p1.fillSurnameInSignup(USER.surname);
     p1.fillPasswordInSignup(shortPaasword);
     p1.fillPasswordConfirmInSignup(shortPaasword);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   })
   it('Try with more than 24 characters', () => {
     const p1 = new LoginViewPage();
-    const newEmail = USER.email + Date.now();
+    const newEmail =`longPwd${Date.now()}@cypress.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.name);
     p1.fillSurnameInSignup(USER.surname);
     p1.fillPasswordInSignup(longPassword);
     p1.fillPasswordConfirmInSignup(longPassword);
     p1.clickTermsAndCondition();
-    cy.get('[page-id=signup-form] button[type=submit]').click();
+    p1.clickSignup();
     p1.assertStayInLoginview();
   })
 })

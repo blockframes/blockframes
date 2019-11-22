@@ -41,13 +41,53 @@ export default class LoginViewPage {
     cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
   }
 
+  public fillSignupExceptOne(user: User, key, newEmail?) {
+    user.email = newEmail;
+    switch (key) {
+      case 'email' :
+          cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
+          cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
+          cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
+          cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+        break;
+      case 'name' :
+          cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
+          cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
+          cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
+          cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+        break;
+      case 'surname' :
+          cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
+          cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
+          cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
+          cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+        break;
+      case 'password' :
+          cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
+          cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
+          cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
+          cy.get('[page-id=signup-form] input[test-id="password-confirm"]').type(user.password);
+        break;
+      case 'passwordConfirm' :
+          cy.get('[page-id=signup-form] input[type="email"]').type(user.email);
+          cy.get('[page-id=signup-form] input[test-id="name"]').type(user.name);
+          cy.get('[page-id=signup-form] input[test-id="surname"]').type(user.surname);
+          cy.get('[page-id=signup-form] input[test-id="password"]').type(user.password);
+        break
+    }
+  }
+
   public clickTermsAndCondition() {
-    cy.get('[page-id=terms-condition] [test-id="checkbox"]').click();
+    cy.get('[page-id=accept-condition] [test-id="checkbox"]').click();
+  }
+
+  public clickSignupToOrgHome() {
+    cy.get('[page-id=signup-form] button[type=submit]').click();
+    return new OrganizationHomePage();
   }
 
   public clickSignup() {
     cy.get('[page-id=signup-form] button[type=submit]').click();
-    return new OrganizationHomePage();
   }
 
   public assertStayInLoginview() {
