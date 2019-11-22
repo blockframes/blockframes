@@ -1,316 +1,151 @@
-import {
-  Firestore,
-  QueryDocumentSnapshot,
-  Transaction
-} from '../admin';
-import { PLACEHOLDER_LOGO } from '@blockframes/organization';
+import { Firestore } from '../admin';
 
 
 /**
- * Lets you select values from an item while configuring default values.
- *
- * Select all the keys from defaultValues in item,
- * if a value is undefined, uses the default Value.
- *
- * selectAndMergeValues({a: undefined, b: 2, c: true}, {a: 42, c: false}) => {a: 42, c: true}
+ * Update invitation collection with organization object and user object instead of organizationId and userId
  */
-const selectAndMergeValues = (item, defaultValues) => {
-  const result = { ...defaultValues };
+export async function updateInvitationDocument(db: Firestore) {
+  const invitations = await db.collection('invitations').get();
 
-  Object.keys(defaultValues).forEach(key => {
-    if (item[key] !== undefined) {
-      result[key] = item[key];
+  const newInvitationDoc = invitations.docs.map( async (invitDocSnapshot: any): Promise<any> => {
+    const invitationData = invitDocSnapshot.data();
+    const {organizationId, userId} = invitationData;
+
+    const org = await db.doc(`orgs/${organizationId}`).get();
+    const orgName = org.data().name;
+
+    const user = await db.doc(`users/${userId}`).get();
+    const userData = user.data();
+
+    delete invitationData.organizationId;
+    delete invitationData.userId;
+
+    const newData = {
+      ...invitationData,
+      organization: {id: organizationId, name: '' || orgName},
+      user: {id: userData.uid, email: userData.email, name: '' || userData.name, surname: '' || userData.surname, avatar: '' || userData.avatar}
     }
+    return invitDocSnapshot.ref.set(newData);
   });
-
-  return result;
-};
-
-
-///////////////////
-/// COLLECTION  ///
-///////////////////
-
-/**
- * Delivery Migration
- */
-function deliveryUpgrade(delivery: QueryDocumentSnapshot, tx: Transaction) {
-  const data = delivery.data();
-  const defaultValues = {
-    _type: 'deliveries',
-    acceptationPeriod: '',
-    dueDate: '',
-    isPaid: false,
-    isSigned: false,
-    mgAmount: '',
-    mgCurrency: '',
-    mgCurrentDeadline: '',
-    mgDeadlines: [],
-    movieId: '',
-    mustBeSigned: true,
-    mustChargeMaterials: false,
-    processedId: '',
-    reWorkindPeriod: '',
-    status: 'pending',
-    steps: [],
-    validated: [],
-  };
-
-  const newDeliveryData = selectAndMergeValues(data, defaultValues);
-  tx.update(delivery.ref, newDeliveryData);
+  await Promise.all(newInvitationDoc);
+  console.log('Updating organisation in invitation collection done');
 }
 
 /**
- * Invitation Migration
+ * Update organisation document from AFM information to today master information (18/11/19)
  */
-function invitationUpgrade(invitation: QueryDocumentSnapshot, tx: Transaction) {
-  const data = invitation.data();
-  const defaultValues = {
-    app: '',
-    date: '',
-    docId: '',
-    processedId: '',
-    organization: {},
-    status: 'pending',
-    type: '',
-    user: {}
-  };
+export async function updateOrganizationDocument(db: Firestore) {
+  const organizations = await db.collection('orgs').get();
 
-  const newInvitationData = selectAndMergeValues(data, defaultValues);
-  tx.update(invitation.ref, newInvitationData);
-}
+  const newOrgnizationData = organizations.docs.map(async (orgDocSnapshot: any): Promise<any> => {
+    const orgData = orgDocSnapshot.data();
+    const {address, phoneNumber} = orgData;
 
-/**
- * Movie Migration
- * Can I integrate changement inside this function ?
- */
-function movieUpgrade(movie: QueryDocumentSnapshot, tx: Transaction) {
-  const data = movie.data();
-  const defaultValues = {
-    _type: 'movies',
-    // applications: {},
-    budget: {
-      budgetCurrency: '',
-      detailedBudget: '',
-      totalBudget: ''
-    },
-    deliveryIds: [],
-    festivalPrizes: {
-      prizes: {}
-    },
-    main: {
-      // companyDisplayCredit: '',
-      languages: [],
-      // officialIds: {
-      //   ISAN: '',
-      //   EIDR: ''
-      // },
-      title: {
-        original: '',
-      },
-      // totalRunTime: '',
-    },
-    promotionalDescription: {
-      keyAssets: [],
-      keywords: []
-    },
-    promotionalElements: {
-      images: [],
-      promotionalElements: {}
-    },
-    salesAgentDeal: {
-      medias: [],
-      rights: {},
-      // terms: {
-      //   start: '',
-      //   startLag: '',
-      //   end: '',
-      //   endLag: ''
-      // },
-      territories: [],
-    },
-    salesCast: {
-      credits: []
-    },
-    salesInfo: {
-      broadcasterCoproducers: [],
-      certifications: [],
-      color: '',
-      europeanQualification: '',
-      internationalPremiere: {},
-      originCountryReleaseDate: '',
-      pegi: '',
-      // rating: {
-      //   system: '',
-      //   value: '',
-      //   country: '',
-      //   reason: ''
-      // },
-      // releaseHistoryOriginal: '',
-      // releaseHistoryPhysicalHV: '',
-      // releaseYear: '',
-      scoring: '',
-      theatricalRelease: '',
-    },
-    story: {
-      logline: '',
-      synopsis: '',
-    },
-    versionInfo: {
-      dubbings: [],
-      subtitles: [],
-    }
-  };
+    delete orgData.address;
+    delete orgData.catalog;
+    delete orgData.officeAddress;
+    delete orgData.phoneNumber;
+    delete orgData.members;
 
-  const newMovieData = selectAndMergeValues(data, defaultValues);
-  tx.update(movie.ref, newMovieData);
-}
-
-/**
- * Notification Migration
- */
-function notificationUpgrade(notification: QueryDocumentSnapshot, tx: Transaction) {
-  const data = notification.data();
-  const defaultValues = {
-    app: 'main',
-    date: '',
-    docId: '',
-    isRead: false,
-    movie: {},
-    organization: {},
-    type: '',
-    userId: ''
-  };
-
-  const newNotificationData = selectAndMergeValues(data, defaultValues);
-  tx.update(notification.ref, newNotificationData);
-}
-
-/**
- * Organization Migration
- * TODO : Denomination doesn't exist yet, have I to create it with a function and delete the organization.name before ?
- * Or can I do this in the same function ?
- */
-function organizationUpgrade(organization: QueryDocumentSnapshot, tx: Transaction) {
-  const data = organization.data();
-  const defaultValues = {
-    activity: '',
-    addresses: {},
-    cart: [],
-    created: data.created,
-    denomination: { full: data.name, public: ''},
-    email: '',
-    fiscalNumber: '',
-    logo: data.logo || PLACEHOLDER_LOGO,
-    // movieIds: { App: [], App: []},
-    status: 'pending',
-    templateIds: [],
-    updated: data.updated,
-    userIds: [],
-    wishlist: []
-  };
-
-  const newOrganizationData = selectAndMergeValues(data, defaultValues);
-  tx.update(organization.ref, newOrganizationData);
-}
-
-
-///////////////////
-// SUBCOLLECTION //
-///////////////////
-
-/**
- * Template's materials Migration
- */
-async function materialTemplateUpgrade(template: QueryDocumentSnapshot) {
-  const materials = await template.ref.collection('materials').get();
-
-  materials.docs.map(async (material: any): Promise<any> => {
-    const data = material.data();
-    const defaultValues = {
-      category: '',
-      description: '',
-      price: {},
-      value: ''
+    const newData = {
+      ...orgData,
+      addresses: {
+        main : {
+          city: address || '',
+          country: '',
+          phoneNumber: phoneNumber || '',
+          region: '',
+          street: '',
+          zipCode: ''
+        }
+      }
     };
 
-    const newMaterialData = selectAndMergeValues(data, defaultValues);
-    await template.ref.collection('materials').doc(data.id).set(newMaterialData);
-  })
+    return orgDocSnapshot.ref.set(newData);
+  });
+  await Promise.all(newOrgnizationData);
+  console.log('Updating organization documents done');
 }
 
 /**
- * Delivery's materials and stakeholders Migration
+ * Update poster url in movie documents
  */
-async function materialDeliveryUpgrade(delivery: QueryDocumentSnapshot) {
-  const materials = await delivery.ref.collection('materials').get();
+export async function updatePicturesMovieDocument(db: Firestore) {
+  const movies = await db.collection('movies').get();
 
-  materials.docs.map(async (material: any): Promise<any> => {
-    const data = material.data();
-    const defaultValues = {
-      category: '',
-      description: '',
-      isOrdered: false,
-      isPaid: false,
-      owner: '',
-      price: {
-        type: '',
-        value: '',
-        currency: '' || data.currency
+  const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
+    const movieData = movieDocSnapshot.data();
+
+    const { poster } = movieData.main;
+
+    const newData = {
+      ...movieData,
+      festivalPrizes: {
+        ...movieData.festivalPrizes,
+        prizes: movieData.festivalPrizes.prizes.map(prizeData =>({
+          ...prizeData,
+          logo: {
+            originalRef: '',
+            ref: '',
+            url: prizeData.logo
+          }
+        }))
       },
-      status: 'pending',
-      stepId: '',
-      storage: '',
-      value: ''
+      main: {
+        ...movieData.main,
+        poster: {
+          originalRef: '',
+          ref: '',
+          url: poster
+        }
+      },
+      promotionalElements: {
+        ...movieData.promotionalElements,
+        promotionalElements: movieData.promotionalElements.promotionalElements.map(promoData => {
+          const { url } = promoData;
+          delete promoData.url;
+
+          return {
+            ...promoData,
+            media: {
+              originalRef: '',
+              ref: '',
+              url: url
+            }
+          }
+        })
+      },
     };
 
-    const newMaterialData = selectAndMergeValues(data, defaultValues);
-    await delivery.ref.collection('materials').doc(data.id).set(newMaterialData);
-  })
+
+    return movieDocSnapshot.ref.set(newData);
+  });
+  await Promise.all(newMovieData);
+  console.log('Updating poster in movie documents done');
 }
 
 /**
- * Function to upgrade the database
+ * Update user's avatar in user documents
  */
-async function upgradeV2(db: Firestore) {
+export async function updateAvatarUserDocument(db: Firestore) {
+  const users = await db.collection('users').get();
 
-  // Query all collections
-  const deliveryQuery = db.collection('deliveries');
-  const invitationQuery = db.collection('invitations');
-  const movieQuery = db.collection('movies');
-  const notificationQuery = db.collection('notifications');
-  const organizationQuery = db.collection('orgs');
+  const newUserData = users.docs.map(async (userDocSnapshot: any): Promise<any> => {
+    const userData = userDocSnapshot.data();
 
-  await db.runTransaction(async tx => {
-    const deliveries = await tx.get(deliveryQuery);
-    const invitations = await tx.get(invitationQuery);
-    const movies = await tx.get(movieQuery);
-    const notifications = await tx.get(notificationQuery);
-    const organizations = await tx.get(organizationQuery);
+    const { avatar } = userData;
 
-    // Upgrade deliveries
-    console.log("Upgrading deliveries");
-    deliveries.forEach(doc => deliveryUpgrade(doc, tx));
-    console.log("Deliveries upgraded");
+    const newData = {
+      ...userData,
+      avatar: {
+        originalRef: '',
+        ref: '',
+        url: avatar || ''
+      }
+    };
 
-    // Upgrade invitations
-    console.log("Upgrading invitation");
-    invitations.forEach(doc => invitationUpgrade(doc, tx));
-    console.log("Invitations upgraded");
-
-    // Upgrade movies
-    console.log("Upgrading movies");
-    movies.forEach(doc => movieUpgrade(doc, tx));
-    console.log("Movies upgraded");
-
-    // Upgrade notifications
-    console.log("Upgrading notifications");
-    notifications.forEach(doc => notificationUpgrade(doc, tx));
-    console.log("Notifications upgraded");
-
-    // Upgrade organizations
-    console.log("Upgrading organizations");
-    organizations.forEach(doc => organizationUpgrade(doc, tx));
-    console.log("Organizations upgraded");
+    return userDocSnapshot.ref.set(newData);
   });
+  await Promise.all(newUserData);
+  console.log('Updating avatar in user documents done');
 }

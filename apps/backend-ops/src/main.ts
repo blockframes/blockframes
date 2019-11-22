@@ -65,12 +65,11 @@ async function upgradeAlgoliaMovies() {
   return Promise.all(promises);
 }
 
-function upgradeToV2() {
+function migrateToV2() {
   const { db } = loadAdminServices();
   updateInvitationDocument(db);
   updateOrganizationDocument(db);
   updatePicturesMovieDocument(db);
-  updateAvatarUserDocument(db);
 }
 
 const args = process.argv.slice(2);
@@ -88,6 +87,6 @@ if (cmd === 'prepareForTesting') {
   syncUsers(USERS).then(() => process.exit(0));
 } else if (cmd === 'upgradeAlgoliaMovies') {
   upgradeAlgoliaMovies();
-} else if (cmd === 'prepareToV2') {
-  prepareToV2();
+} else if (cmd === 'migrateToV2') {
+  migrateToV2();
 }
