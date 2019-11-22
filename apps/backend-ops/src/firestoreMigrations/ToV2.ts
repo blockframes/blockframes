@@ -81,7 +81,7 @@ export async function updatePicturesMovieDocument(db: Firestore) {
   const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
     const movieData = movieDocSnapshot.data();
 
-    const { directors, genres, internalRef, languages, length, originCountries, poster, productionCompanies, productionYear, shortSynopsis, status, title } = movieData.main;
+    const { poster } = movieData.main;
 
     const newData = {
       ...movieData,
@@ -106,16 +106,22 @@ export async function updatePicturesMovieDocument(db: Firestore) {
       },
       promotionalElements: {
         ...movieData.promotionalElements,
-        promotionalElements: movieData.promotionalElements.promotionalElements.map(promoData => ({
-          ...promoData,
-          url: {
-            originalRef: '',
-            ref: '',
-            url: promoData.url
+        promotionalElements: movieData.promotionalElements.promotionalElements.map(promoData => {
+          const { url } = promoData;
+          delete promoData.url;
+
+          return {
+            ...promoData,
+            media: {
+              originalRef: '',
+              ref: '',
+              url: url
+            }
           }
-        }))
-      }
+        })
+      },
     };
+
 
     return movieDocSnapshot.ref.set(newData);
   });
