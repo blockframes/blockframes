@@ -2,11 +2,10 @@
 
 import { LoginPage, LandingPage, HomePage, WishlistPage, SearchPage } from "../support/pages";
 import { User } from "../support/utils/type";
+import { USERS } from "../support/utils/users";
 
-const LOGIN_CREDENTIALS: Partial<User> = {
-  email: 'testcypres@cascade8.com',
-  password: 'blockframes'
-};
+// Select user: hello@cascade8.com
+const LOGIN_CREDENTIALS: Partial<User> = USERS[17];
 
 const MOVIE_1 = 'A Perfect Enemy';
 const MOVIE_2 = 'Cosmogony';
