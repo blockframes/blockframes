@@ -119,12 +119,13 @@ export class MarketplaceSearchComponent implements OnInit {
   public searchbarTextControl: FormControl = new FormControl('');
 
   /* Observable to combine for the UI */
-  private sortBy$ = this.sortByControl.valueChanges.pipe(
+  // TODO #1306 - remove when algolia is ready
+/*   private sortBy$ = this.sortByControl.valueChanges.pipe(
     startWith('All films'),
     switchMap(sortIdentifier =>
       this.movieQuery.selectAll({ sortBy: (a, b) => sortMovieBy(a, b, sortIdentifier) })
     )
-  );
+  ); */
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
 
   /* Arrays for showing the selected entities in the UI */
