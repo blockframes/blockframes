@@ -2,6 +2,7 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <div *ngIf="(movie$ | async) as movie;" test-id="content">
+  <!-- TODO(issue#1309) create image directive for background image -->
   <header [style.background-image]="getBackgroundImage(movie.promotionalElements.promotionalElements)" class="banner">
     <section fxLayout="row" fxLayoutAlign="center">
       <article class="titles" fxLayout="column" fxLayoutAlign="start start">

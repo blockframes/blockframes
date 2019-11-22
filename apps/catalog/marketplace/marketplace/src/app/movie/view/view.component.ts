@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ImgRef } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -57,8 +58,14 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   public getBackgroundImage(promotionalElements: PromotionalElement[]) {
     const element = promotionalElements.find(promo => promo.type === 'pageBanner');
-    const url = element ? element.url : '/assets/images/banner_movie_view.png';
-    return `url(${url})`;
+    /** TODO(issue#1309) create image directive for background image*/
+    if (element) {
+      const url = element.url.url
+      return `url(${url})`;
+    } else {
+      const url = '/assets/images/banner_movie_view.png';
+      return `url(${url})`;
+    }
   }
 
   get internationalPremiere() {
