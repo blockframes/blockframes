@@ -32,10 +32,8 @@ import { MovieDisplayModule } from './display/display.module';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
-import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -47,15 +45,15 @@ import { MovieFormModule } from './form/form.module';
 
 import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
+import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 
 @NgModule({
   declarations: [
     MovieEditableComponent,
-    MovieListComponent,
-    MovieTitleFormComponent,
     HomeEmptyComponent,
     MovieCreateComponent,
     MovieViewComponent,
+    MovieTitleFormComponent
   ],
   imports: [
     CommonModule,
@@ -99,6 +97,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
   ],
-  entryComponents: [MovieTitleFormComponent]
+  entryComponents: [MovieTitleFormComponent],
 })
 export class MovieModule {}

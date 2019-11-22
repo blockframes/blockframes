@@ -1,46 +1,32 @@
-<div fxLayout="row" fxLayoutAlign="center">
-  <section>
-    <ng-container *ngIf="(loading$ | async); else: loaded"> Loading </ng-container>
-    <ng-template #loaded>
-      <article fxLayout="row" fxLayoutAlign="space-between center">
-        <h2>Welcome to Delivery</h2>
-        <mat-divider fxFlex></mat-divider>
-        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
-          <mat-icon>add</mat-icon>
-          <span>Add a movie</span>
-        </a>
-      </article>
-      <article fxLayout="row wrap" fxLayoutAlign="start space-between">
-        <!-- Movie Card -->
-      <ng-container *ngFor="let movie of (movies$ | async)">
-        <movie-card [movie]="movie" [link]="linkToDeliveryList(movie.id)">
-          <ng-container movieCardAction>
-            <div fxLayout="row" fxLayoutAlign="end end">
-              <button mat-icon-button [matMenuTriggerFor]="menu">
-                  <mat-icon color="primary">more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu" xPosition="before">
-                <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                  <mat-icon color="primary">control_camera</mat-icon>
-                  <span>Open in...</span>
-                </button>
-                <a mat-menu-item [routerLink]="['../', movie.id, 'edit']">
-                  <mat-icon color="primary">edit</mat-icon>
-                  <span>Edit</span>
-                </a>
-                <button mat-menu-item (click)="remove(movie)">
-                  <mat-icon color="primary">delete_outline</mat-icon>
-                  <span>Delete</span>
-                </button>
-              </mat-menu>
-              <mat-menu #subMenu="matMenu">
-                <a mat-menu-item [routerLink]="['../', movie.id]">Explorer</a>
-              </mat-menu>
-            </div>
-          </ng-container>
-        </movie-card>
+<ng-container *ngIf="loading$ | async; else loaded"> Loading </ng-container>
+<ng-template #loaded>
+  <article fxLayout="row wrap" fxLayoutAlign="start space-between">
+    <!-- Movie Card -->
+    <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="linkToAppList(movie.id)">
+      <ng-container movieCardAction>
+        <div fxLayout="row" fxLayoutAlign="end end">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon color="primary">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item [matMenuTriggerFor]="subMenu">
+              <mat-icon color="primary">control_camera</mat-icon>
+              <span>Open in...</span>
+            </button>
+            <a mat-menu-item [routerLink]="[movie.id, 'edit']">
+              <mat-icon color="primary">edit</mat-icon>
+              <span>Edit</span>
+            </a>
+            <button mat-menu-item (click)="remove(movie)">
+              <mat-icon color="primary">delete_outline</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+          <mat-menu #subMenu="matMenu">
+            <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
+          </mat-menu>
+        </div>
       </ng-container>
-      </article>
-    </ng-template>
-  </section>
-</div>
+    </movie-card>
+  </article>
+</ng-template>
