@@ -7,11 +7,8 @@ import ViewPage from './ViewPage';
 import DistributionPage from './DistributionPage';
 import SelectionPage from './SelectionPage';
 import FeedbackPage from './FeedbackPage';
-<<<<<<< HEAD
 import WishlistPage from './WishlistPage';
-=======
 import OrganizationHomePage from './OrganizationHomePage';
->>>>>>> changed page names in auth
 
 export {
   WelcomeViewPage,
@@ -23,9 +20,6 @@ export {
   DistributionPage,
   SelectionPage,
   FeedbackPage,
-<<<<<<< HEAD
-  WishlistPage
-=======
+  WishlistPage,
   OrganizationHomePage
->>>>>>> changed page names in auth
 };
