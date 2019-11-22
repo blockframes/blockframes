@@ -8,7 +8,7 @@
     </ng-template>
 
     <ng-container *ngIf="currentTemplate; else: disabled">
-      <button test-id="continue" mat-raised-button color="accent" [routerLink]="[continueURL]">Continue</button>
+      <button test-id="continue" mat-raised-button color="accent" (click)="navigateToSettings()">Continue</button>
     </ng-container>
     <ng-template #disabled><span>Select a template</span></ng-template>
 
