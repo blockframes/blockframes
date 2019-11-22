@@ -5,7 +5,7 @@ export default abstract class NavbarPage {
     cy.get('[page-id=navbar]', { timeout: 10000 });
   }
 
-  public openProfileMenu(){
+  public openProfileMenu() {
     cy.get('[page-id=navbar]')
       .get('button[test-id=profile-avatar]')
       .click();
