@@ -18,7 +18,7 @@ export {
   InvitationToWorkOnDocument
 } from '@blockframes/invitation/types';
 export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';
 export {
   DeliveryDocument,
   StepDocument,

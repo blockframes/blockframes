@@ -4,8 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../internals/firebase';
-import { OrganizationDocument } from './types';
-import { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+import { OrganizationDocument, StakeholderDocument } from './types';
 import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
 
 export function getCollection<T>(path: string): Promise<T[]> {

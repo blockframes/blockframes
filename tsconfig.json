@@ -62,8 +62,8 @@
       "@blockframes/material/template/types": [
         "libs/material/src/lib/template/+state/template.firestore.ts"
       ],
-      "@blockframes/organization/stakeholder/types": [
-        "libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"
+      "@blockframes/material/delivery/stakeholder/types": [
+        "libs/material/src/lib/delivery/stakeholder/+state/stakeholder.firestore.ts"
       ],
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
