@@ -52,9 +52,9 @@ export async function updateOrganizationDocument(db: Firestore) {
       ...orgData,
       addresses: {
         main : {
-          city: address,
+          city: address || '',
           country: '',
-          phoneNumber: phoneNumber,
+          phoneNumber: phoneNumber || '',
           region: '',
           street: '',
           zipCode: ''
@@ -76,7 +76,7 @@ export async function updateOrganizationDocument(db: Firestore) {
 /**
  * Update poster url in movie documents
  */
-export async function updatePosterMovieDocument(db: Firestore) {
+export async function updatePicturesMovieDocument(db: Firestore) {
   const movies = await db.collection('movies').get();
 
   const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
@@ -145,5 +145,5 @@ export async function updateAvatarUserDocument(db: Firestore) {
     return userDocSnapshot.ref.set(newData);
   });
   await Promise.all(newUserData);
-  console.log('Updating poster in movie documents done');
+  console.log('Updating avatar in user documents done');
 }
