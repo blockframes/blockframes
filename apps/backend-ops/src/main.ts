@@ -67,8 +67,9 @@ async function upgradeAlgoliaMovies() {
 
 function upgradeToV2() {
   const { db } = loadAdminServices();
-  updateInvitationDocument(db);
-  updateOrganizationDocument(db);
+  // updateInvitationDocument(db);
+  // updateOrganizationDocument(db);
+  updatePosterMovieDocument(db);
 }
 
 const args = process.argv.slice(2);

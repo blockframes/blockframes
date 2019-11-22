@@ -1,4 +1,5 @@
 import { Firestore } from '../admin';
+import { MovieDisplayFestivalPrizesComponent } from '@blockframes/movie/movie/display/festival-prizes/festival-prizes.component';
 
 
 /**
@@ -58,6 +59,11 @@ export async function updateOrganizationDocument(db: Firestore) {
           street: '',
           zipCode: ''
         }
+      },
+      logo: {
+        originalRef: '',
+        ref: '',
+        url: ''
       }
     };
 
@@ -65,4 +71,79 @@ export async function updateOrganizationDocument(db: Firestore) {
   });
   await Promise.all(newOrgnizationData);
   console.log('Updating organization documents done');
+}
+
+/**
+ * Update poster url in movie documents
+ */
+export async function updatePosterMovieDocument(db: Firestore) {
+  const movies = await db.collection('movies').get();
+
+  const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
+    const movieData = movieDocSnapshot.data();
+
+    const { directors, genres, internalRef, languages, length, originCountries, poster, productionCompanies, productionYear, shortSynopsis, status, title } = movieData.main;
+
+    const newData = {
+      ...movieData,
+      festivalPrizes: {
+        ...movieData.festivalPrizes,
+        prizes: movieData.festivalPrizes.prizes.map(prizeData =>({
+          ...prizeData,
+          logo: {
+            originalRef: '',
+            ref: '',
+            url: prizeData.logo
+          }
+        }))
+      },
+      main: {
+        ...movieData.main,
+        poster: {
+          originalRef: '',
+          ref: '',
+          url: poster
+        }
+      },
+      promotionalElements: {
+        ...movieData.promotionalElements,
+        promotionalElements: movieData.promotionalElements.promotionalElements.map(promoData => ({
+          ...promoData,
+          url: {
+            originalRef: '',
+            ref: '',
+            url: promoData.url
+          }
+        }))
+      }
+    };
+
+    return movieDocSnapshot.ref.set(newData);
+  });
+  await Promise.all(newMovieData);
+  console.log('Updating poster in movie documents done');
+}
+
+/**
+ * Update user's avatar in user documents
+ */
+export async function updateAvatarUserDocument(db: Firestore) {
+  const users = await db.collection('users').get();
+
+  const newUserData = users.docs.map(async (userDocSnapshot: any): Promise<any> => {
+    const userData = userDocSnapshot.data();
+
+    const newData = {
+      ...userData,
+      avatar: {
+        originalRef: '',
+        ref: '',
+        url: ''
+      }
+    };
+
+    return userDocSnapshot.ref.set(newData);
+  });
+  await Promise.all(newUserData);
+  console.log('Updating poster in movie documents done');
 }
