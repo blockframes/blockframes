@@ -37,13 +37,17 @@ describe('Test submit wishlist to sellers', () => {
 
     // Go to wishlist and submit to sellers
     const p6: WishlistPage = p5.clickWishlist();
+
     // Verify current wishlist
-    p6.assertMovieInWishlist(MOVIE_1);
-    p6.assertMovieInWishlist(MOVIE_2);
+    p6.assertMovieInCurrentWishlist(MOVIE_1);
+    p6.assertMovieInCurrentWishlist(MOVIE_2);
+
+    // Send the current wishlist
     p6.clickSendToSellers();
+
     // Verify sent wishlist
     p6.assertNoCurrentWishlist();
-    p6.assertMovieInWishlist(MOVIE_1);
-    p6.assertMovieInWishlist(MOVIE_2);
+    p6.assertMovieInSentWishlist(MOVIE_1);
+    p6.assertMovieInSentWishlist(MOVIE_2);
   });
 });
