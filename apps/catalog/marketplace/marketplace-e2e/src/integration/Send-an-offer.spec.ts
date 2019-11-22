@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LoginPage, LandingPage, HomePage, WishlistPage, SearchPage } from "../support/pages";
+import { LoginViewPage, WelcomeViewPage, HomePage, WishlistPage, SearchPage } from "../support/pages";
 import { User } from "../support/utils/type";
 import { USERS } from "../support/utils/users";
 
@@ -20,8 +20,8 @@ beforeEach(() => {
 describe('Test submit wishlist to sellers', () => {
   it('Login into an existing account, verify if the current wishlist is empty, add movies to current wishlist, send wishlist to sellers.', () => {
     // Connexion
-    const p1: LandingPage = new LandingPage();
-    const p2: LoginPage = p1.clickCallToAction();
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
     p2.switchMode();
     p2.fillSignin(LOGIN_CREDENTIALS);
     const p3: HomePage = p2.clickSignIn();
