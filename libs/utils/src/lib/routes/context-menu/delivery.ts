@@ -10,94 +10,80 @@ export const baseMenu = [
     items: []
   },
   {
-    route: `${baseRoute}/home/list`,
+    route: `${baseRoute}/home`,
     items: [
-      { name: 'home', path: `${baseRoute}/home/list` },
-      { name: 'templates', path: `${baseRoute}/templates/list` },
-      { name: 'add a delivery', path: `${baseRoute}/delivery/add/1-find-movie` }
-    ]
-  },
-  {
-    route: `${baseRoute}/home/create`,
-    items: [
-      { name: 'home', path: `${baseRoute}/home/list` },
-      { name: 'templates', path: `${baseRoute}/templates/list` }
+      { name: 'home', path: `${baseRoute}/home` },
+      { name: 'templates', path: `${baseRoute}/templates` },
+      { name: 'add a delivery', path: `${baseRoute}/movie/add/1-find-movie` }
     ]
   },
   {
     route: `${baseRoute}/home/:movieId/edit`,
     items: [
-      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
-      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
-    ]
-  },
-  {
-    route: `${baseRoute}/home/:movieId/teamwork`,
-    items: [
-      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` },
-      { name: 'teamwork', path: `${baseRoute}/home/:movieId/teamwork` }
+      { name: 'home', path: `${baseRoute}/home` },
+      { name: 'edit film', path: `${baseRoute}/home/:movieId/edit` }
     ]
   },
   {
     route: `${baseRoute}/templates/list`,
     items: [
-      { name: 'home', path: `${baseRoute}/home/list` },
-      { name: 'templates', path: `${baseRoute}/templates/list` }
+      { name: 'home', path: `${baseRoute}/home` },
+      { name: 'templates', path: `${baseRoute}/templates` }
     ]
   },
   {
     route: `${baseRoute}/templates/create`,
     items: [
-      { name: 'home', path: `${baseRoute}/home/list` },
-      { name: 'templates', path: `${baseRoute}/templates/create` }
+      { name: 'home', path: `${baseRoute}/home` },
+      { name: 'templates', path: `${baseRoute}/templates` }
     ]
   },
   {
     route: `${baseRoute}/templates/:templateId`,
     items: [
-      { name: 'templates', path: `${baseRoute}/templates/list` },
+      { name: 'templates', path: `${baseRoute}/templates` },
       { name: 'edit', path: `${baseRoute}/templates/:templateId` }
     ]
   },
   {
-    route: `${baseRoute}/delivery/:movieId/list`,
+    route: `${baseRoute}/movie/:movieId/list`,
     items: [
-      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
-      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
+      { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/movie/:movieId/materials` }
     ]
   },
   {
-    route: `${baseRoute}/delivery/:movieId/materials`,
+    route: `${baseRoute}/movie/:movieId/materials`,
     items: [
-      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
-      { name: 'existing materials', path: `${baseRoute}/delivery/:movieId/materials` }
+      { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
+      { name: 'existing materials', path: `${baseRoute}/movie/:movieId/materials` }
     ]
   },
   {
-    route: `${baseRoute}/delivery/:movieId/:deliveryId/list`,
+    route: `${baseRoute}/movie/:movieId/:movie/list`,
     items: [
-      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/movie/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/movie/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/movie/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: `${baseRoute}/delivery/:movieId/:deliveryId/informations`,
+    route: `${baseRoute}/movie/:movieId/:deliveryId/informations`,
     items: [
-      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/movie/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/movie/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/movie/:movieId/:deliveryId/list` }
     ]
   },
   {
-    route: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders`,
+    route: `${baseRoute}/movie/:movieId/:deliveryId/stakeholders`,
     items: [
-      { name: 'deliveries', path: `${baseRoute}/delivery/:movieId/list` },
-      { name: 'information', path: `${baseRoute}/delivery/:movieId/:deliveryId/informations` },
-      { name: 'stakeholders', path: `${baseRoute}/delivery/:movieId/:deliveryId/stakeholders` },
-      { name: 'delivery list', path: `${baseRoute}/delivery/:movieId/:deliveryId/list` }
+      { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
+      { name: 'information', path: `${baseRoute}/movie/:movieId/:deliveryId/informations` },
+      { name: 'stakeholders', path: `${baseRoute}/movie/:movieId/:deliveryId/stakeholders` },
+      { name: 'delivery list', path: `${baseRoute}/movie/:movieId/:deliveryId/list` }
     ]
   },
   {
