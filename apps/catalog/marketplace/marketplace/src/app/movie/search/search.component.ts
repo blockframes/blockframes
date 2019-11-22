@@ -1,4 +1,3 @@
-import { Inject } from '@angular/core';
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,7 +12,8 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostBinding
+  HostBinding,
+  Inject
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
@@ -41,11 +41,11 @@ import {
   languageValidator,
   ControlErrorStateMatcher,
   sortMovieBy,
-  MovieAlgoliaResult,
-  MoviesIndex
+  MoviesIndex,
+  MovieAlgoliaResult
 } from '@blockframes/utils';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
 import { CatalogSearchForm } from './search.form';
@@ -65,10 +65,11 @@ import flatten from 'lodash/flatten';
 export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
-  public searchResults$: Observable<Movie[]>;
+  /** Algolia search results */
+  private algoliaSearchResults$: Observable<MovieAlgoliaResult[]>;
 
   /* Observable of all movies */
-  public movieSearchResults$: Observable<Movie[]>;
+  public movieSearchResults$: Observable<MovieAlgoliaResult[]>;
 
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
@@ -154,7 +155,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
-  autoComplete: MatAutocompleteTrigger;
+  public autoComplete: MatAutocompleteTrigger;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -167,49 +168,50 @@ export class MarketplaceSearchComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.searchResults$ = this.filterForm.valueChanges.pipe(
+    this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      tap(console.log),
-      switchMap(name => {
+      switchMap(searchText => {
         return new Promise<MovieAlgoliaResult[]>((res, rej) => {
-          this.movieIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
+          this.movieIndex.search(searchText.text, (err, result) =>
+            err ? rej(err) : res(result.hits)
+          );
         });
       })
     );
-    this.searchResults$.subscribe(console.log);
-    this.movieSearchResults$ = combineLatest([this.sortBy$, this.filterBy$]).pipe(
+    this.movieSearchResults$ = combineLatest([this.algoliaSearchResults$, this.filterBy$]).pipe(
       map(([movies, filterOptions]) => {
         if (AFM_DISABLE) {
           //TODO #1146
-          return movies.filter(async movie => {
-            const deals = await this.movieService.getDistributionDeals(movie.id);
-            return filterMovie(movie, filterOptions, deals);
+          return movies.filter(async index => {
+            const deals = await this.movieService.getDistributionDeals(index.movie.id);
+            return filterMovie(index.movie, filterOptions, deals);
           });
         } else {
           //TODO #1146 : remove the two line for movieGenres
           const removeGenre = ['TV Show', 'Web Series'];
           this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          return movies.filter(movie => filterMovie(movie, filterOptions));
+          return movies.filter(index => filterMovie(index.movie, filterOptions));
         }
       }),
-      tap(movies => {
-        movies.forEach(movie => {
-          if (movie.salesAgentDeal && movie.salesAgentDeal.salesAgent && !this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
-            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+      tap((movies: MovieAlgoliaResult[]) => {
+        movies.forEach(index => {
+          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
+            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
           }
         });
         this.availableMovies = movies.length;
-        this.allTitles = movies.map(movie => movie.main.title.international);
-        this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
+        this.allTitles = movies.map(index => index.movie.main.title.international);
+        this.allKeywords = flatten(
+          movies.map(index => index.movie.promotionalDescription.keywords)
+        );
         this.allDirectors = flatten(
-          movies.map(movie =>
-            movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+          movies.map(index =>
+            index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
           )
         );
       })
     );
-
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
       map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
@@ -376,22 +378,6 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.removeLanguage(languageSlug);
   }
 
-  public hasGenre(genre: GenresLabel) {
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
-    if (
-      this.movieGenres.includes(genre) &&
-      !this.filterForm.get('type').value.includes(genreSlug)
-    ) {
-      this.filterForm.addType(genreSlug);
-    } else {
-      this.filterForm.removeType(genreSlug);
-    }
-  }
-
   public hasStatus(status: MovieStatusLabel) {
     /**
      * We want to exchange the label for the slug,
@@ -472,18 +458,22 @@ export class MarketplaceSearchComponent implements OnInit {
     if ((value || '').trim() && !this.selectedGenres.includes(value)) {
       this.selectedGenres.push(value.trim());
     }
-
-    this.filterForm.addGenre(value);
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const genreSlug: GenresSlug = getCodeIfExists('GENRES', event.option.viewValue);
+    this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
   }
 
   public removeGenre(genre: string) {
     const index = this.selectedGenres.indexOf(genre);
-
     if (index >= 0) {
       this.selectedGenres.splice(index, 1);
-      this.filterForm.removeGenre(genre);
+      const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
+      this.filterForm.removeGenre(genreSlug);
     }
   }
 
