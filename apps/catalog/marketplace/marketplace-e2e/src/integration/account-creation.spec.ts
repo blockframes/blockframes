@@ -3,7 +3,7 @@
 import { WelcomeViewPage, LoginViewPage, OrganizationHomePage } from '../support/pages';
 import { User } from '../support/utils/type';
 
-const USER: User = {
+const USER: Partial<User> = {
   email: `${Date.now()}@cypress.com`,
   password: 'cypress',
   name: 'cypress',
