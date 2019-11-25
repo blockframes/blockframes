@@ -10,8 +10,9 @@ export function acceptNewOrgPage(orgId: string): string {
   return `
      <html>
      Organization ${orgId}
-     
+
      <form method="post">
+         <input type="password" name="password" placeholder="password"/>
          <button type="submit">Accept</button>
      </form>
      </html>
@@ -34,6 +35,7 @@ export function allowAccessToAppPage(orgId: string, appId: string): string {
      Organization ${orgId} wants access to ${appId}
 
      <form method="post">
+         <input type="password" name="password" placeholder="password"/>
          <button type="submit">Accept</button>
      </form>
      </html>
@@ -56,6 +58,7 @@ export function dataBackupPage(): string {
      Trigger a backup:
 
      <form method="post">
+         <input type="password" name="password" placeholder="password"/>
          <button type="submit">Backup</button>
      </form>
      </html>
@@ -69,6 +72,7 @@ export function dataRestorePage(): string {
      Trigger a restore, ⚠️ this will ERASE all changes since the last backup.
 
      <form method="post">
+         <input type="password" name="password" placeholder="password"/>
          <button type="submit">Restore</button>
      </form>
      </html>
