@@ -31,13 +31,12 @@ export class SentryErrorHandler implements ErrorHandler {
   }
 }
 
-// Init and add the Sentry ErrorHandler if and only if sentry is defined in env.
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn
-  });
-  providers.push({ provide: ErrorHandler, useClass: SentryErrorHandler });
-}
+// Init and add the Sentry ErrorHandler.
+Sentry.init({
+  dsn: sentryDsn
+});
+providers.push({ provide: ErrorHandler, useClass: SentryErrorHandler });
+
 
 @NgModule({
   providers
