@@ -6,22 +6,14 @@ import { OrganizationMember } from '../../member/+state/member.model';
 import { createOrganizationDocPermissions, createUserDocPermissions, UserRole } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 @CollectionConfig({ path: 'permissions'})
 export class PermissionsService extends CollectionService<PermissionsState> {
-  constructor(private query: PermissionsQuery, private authQuery: AuthQuery, store: PermissionsStore) {
+  constructor(private query: PermissionsQuery, store: PermissionsStore) {
     super(store)
-  }
-
-  syncActivePermissions() {
-    return this.authQuery.user$.pipe(
-      switchMap(user => this.syncActive({ id: user.orgId }))
-    );
   }
 
   //////////////////////
