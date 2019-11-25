@@ -40,7 +40,7 @@ export async function updateOrganizationDocument(db: Firestore) {
 
   const newOrgnizationData = organizations.docs.map(async (orgDocSnapshot: any): Promise<any> => {
     const orgData = orgDocSnapshot.data();
-    const {address, phoneNumber, created, updated} = orgData;
+    const {address, phoneNumber, created, updated, logo} = orgData;
 
     delete orgData.address;
     delete orgData.catalog;
@@ -61,6 +61,11 @@ export async function updateOrganizationDocument(db: Firestore) {
         }
       },
       created: new Date(created),
+      logo: {
+        originalRef: '',
+        ref: '',
+        url: logo
+      },
       updated: new Date(updated)
     };
 

@@ -70,6 +70,7 @@ function migrateToV2() {
   updateInvitationDocument(db);
   updateOrganizationDocument(db);
   updatePicturesMovieDocument(db);
+  updateAvatarUserDocument(db);
 }
 
 const args = process.argv.slice(2);
