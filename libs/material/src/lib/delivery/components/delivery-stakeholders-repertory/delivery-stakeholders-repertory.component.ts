@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { OrganizationAlgoliaResult } from '@blockframes/utils';
+import { OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
 import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
 
 @Component({
