@@ -115,6 +115,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public searchbarTextControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
+  private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
 
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
@@ -165,36 +166,6 @@ export class MarketplaceSearchComponent implements OnInit {
             err ? rej(err) : res(result.hits)
           );
         });
-      })
-    );
-    this.movieSearchResults$ = combineLatest([this.algoliaSearchResults$, this.filterBy$]).pipe(
-      map(([movies, filterOptions]) => {
-        if (AFM_DISABLE) {
-          //TODO #1146
-          return movies.filter(async index => {
-            const deals = await this.movieService.getDistributionDeals(index.movie.id);
-            return filterMovie(index.movie, filterOptions, deals);
-          });
-        } else {
-          //TODO #1146 : remove the two line for movieGenres
-          const removeGenre = ['TV Show', 'Web Series'];
-          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          const sortedMovies = movies.sort((a, b) => {
-            switch (this.sortByControl.value) {
-              case 'Title':
-                return a.movie.main.title.international.localeCompare(
-                  b.movie.main.title.international
-                );
-              case 'Director':
-                return a.movie.main.directors[0].lastName.localeCompare(
-                  b.movie.main.directors[0].lastName
-                );
-              default:
-                return 0;
-            }
-          });
-          return sortedMovies.map(index => filterMovie(index.movie, filterOptions));
-        }
       }),
       tap((movies: MovieAlgoliaResult[]) => {
         movies.forEach(index => {
@@ -212,6 +183,36 @@ export class MarketplaceSearchComponent implements OnInit {
             index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
           )
         );
+      })
+    );
+    this.movieSearchResults$ = combineLatest([this.algoliaSearchResults$, this.filterBy$, this.sortBy$]).pipe(
+      map(([movies, filterOptions, sortBy]) => {
+        if (AFM_DISABLE) {
+          //TODO #1146
+          return movies.filter(async index => {
+            const deals = await this.movieService.getDistributionDeals(index.movie.id);
+            return filterMovie(index.movie, filterOptions, deals);
+          });
+        } else {
+          //TODO #1146 : remove the two line for movieGenres
+          const removeGenre = ['TV Show', 'Web Series'];
+          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
+          const sortedMovies = movies.sort((a, b) => {
+            switch (sortBy) {
+              case 'Title':
+                return a.movie.main.title.international.localeCompare(
+                  b.movie.main.title.international
+                );
+              case 'Director':
+                return a.movie.main.directors[0].lastName.localeCompare(
+                  b.movie.main.directors[0].lastName
+                );
+              default:
+                return 0;
+            }
+          });
+          return sortedMovies.filter(index => filterMovie(index.movie, filterOptions));
+        }
       })
     );
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
