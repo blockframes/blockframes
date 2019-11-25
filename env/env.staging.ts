@@ -29,7 +29,8 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '102e09194402cf082527d84476c5fc25',
-  indexNameOrganizations: 'staging_orgs'
+  indexNameOrganizations: 'staging_orgs',
+  indexNameMovies: 'staging_movies'
 };
 
 // Ethereum
