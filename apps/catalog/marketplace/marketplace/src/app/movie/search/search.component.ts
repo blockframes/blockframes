@@ -189,13 +189,7 @@ export class MarketplaceSearchComponent implements OnInit {
                 return a.movie.main.directors[0].lastName.localeCompare(
                   b.movie.main.directors[0].lastName
                 );
-              case 'Production Year':
-                if (b.movie.main.productionYear < a.movie.main.productionYear) {
-                  return -1;
-                }
-                if (b.movie.main.productionYear > a.movie.main.productionYear) {
-                  return 1;
-                }
+              default:
                 return 0;
             }
           });
