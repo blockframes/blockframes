@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  HostBinding
+  HostBinding,
   Inject
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
