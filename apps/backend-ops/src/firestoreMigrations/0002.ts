@@ -1,4 +1,5 @@
 import { Firestore } from '../admin';
+import { firestore as fs } from 'firebase/app';
 
 
 /**
@@ -39,7 +40,7 @@ export async function updateOrganizationDocument(db: Firestore) {
 
   const newOrgnizationData = organizations.docs.map(async (orgDocSnapshot: any): Promise<any> => {
     const orgData = orgDocSnapshot.data();
-    const {address, phoneNumber} = orgData;
+    const {address, phoneNumber, created, updated} = orgData;
 
     delete orgData.address;
     delete orgData.catalog;
@@ -58,7 +59,9 @@ export async function updateOrganizationDocument(db: Firestore) {
           street: '',
           zipCode: ''
         }
-      }
+      },
+      created: new Date(created),
+      updated: new Date(updated)
     };
 
     return orgDocSnapshot.ref.set(newData);
