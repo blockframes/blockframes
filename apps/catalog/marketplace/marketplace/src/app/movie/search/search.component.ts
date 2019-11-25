@@ -51,6 +51,7 @@ import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -149,6 +150,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private routerQuery: RouterQuery,
     private movieService: MovieService,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
@@ -257,6 +259,10 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public get searchbarTypeForm() {
     return this.filterForm.get('searchbar').get('type');
+  }
+
+  public get appName() {
+    return this.routerQuery.getValue().state.root.data.app;
   }
 
   public toggleAutoCompletion() {

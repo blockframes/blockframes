@@ -10,14 +10,14 @@
     </article>
 
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
-      <button
+      <a
         test-id="movie-create"
         mat-flat-button
         color="accent"
         (click)="newMovie(movieName.value)"
         [disabled]="!movieName.value">
         Next
-      </button>
+      </a>
       <a mat-button color="primary" (click)="cancel()">Cancel</a>
     </article>
   </section>

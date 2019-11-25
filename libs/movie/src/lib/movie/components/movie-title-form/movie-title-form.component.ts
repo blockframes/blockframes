@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService } from '../../+state';
@@ -33,7 +33,7 @@ export class MovieTitleFormComponent {
 
       this.router.navigate([`${appsRoute}/${App.mediaDelivering}/home/${movie.id}/edit`]);
       // TODO: Find out why { relativeTo: this.route } is not working as intended.
-      // this.router.navigate([`./${movie.id}/edit`], { relativeTo: this.route })
+      // this.router.navigate([`${movie.id}/edit`], { relativeTo: this.route })
       this.dialogRef.close();
     }
     catch (err) {
