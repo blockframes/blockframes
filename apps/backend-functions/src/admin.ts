@@ -24,6 +24,7 @@ import {
 } from './assets/admin-templates';
 import { getAdminIds } from './data/internals';
 import * as backup from './backup';
+import { adminPassword } from './environments/environment';
 
 // TODO(#714): Synchronize data types with the frontend
 const APPS = ['delivery', 'movie-financing', 'stories-and-more', 'catalog'];
@@ -51,6 +52,26 @@ export async function onRequestAccessToAppWrite(
   return Promise.all(
     requestedApps.map(appId => sendMail(organizationRequestedAccessToApp(orgId, appId)))
   );
+}
+
+/**
+ * Decorates another function, this will check that the password is valid
+ * for admin operations.
+ *
+ * See issue#700 for details.
+ *
+ * @param f a function to protect, should be post'd.
+ */
+function checkPasswordOnPost(f: any) {
+  return (req: express.Request, res: express.Response) => {
+    const password = req.body.password;
+
+    if (password === adminPassword) {
+      return f(req, res);
+    } else {
+      return res.status(403).send('Invalid password');
+    }
+  };
 }
 
 // We serve an express app at the /admin URL
@@ -90,14 +111,14 @@ adminApp.get(
 // When an admin submit the "accept org" form, it'll update the organization, send mails, etc.
 adminApp.post(
   `${ADMIN_ACCEPT_ORG_PATH}/:organizationId`,
-  async (req: express.Request, res: express.Response) => {
+  checkPasswordOnPost(async (req: express.Request, res: express.Response) => {
     const { organizationId } = req.params;
     const organizationRef = db.collection('orgs').doc(organizationId);
 
     await acceptOrganization(organizationRef);
     await mailOrganizationAdminOnAccept(organizationId);
     return res.send(acceptNewOrgPageComplete(organizationId));
-  }
+  })
 );
 
 // Organization Administration: allow apps for orgs
@@ -135,13 +156,13 @@ adminApp.get(
 
 adminApp.post(
   `${ADMIN_ACCESS_TO_APP_PATH}/:orgId/:appId`,
-  async (req: express.Request, res: express.Response) => {
+  checkPasswordOnPost(async (req: express.Request, res: express.Response) => {
     const { orgId, appId } = req.params;
 
     await allowAccessToApp(orgId, appId);
     await mailOrganizationAdminOnAccessToApp(orgId, appId);
     return res.send(allowAccessToAppPageComplete(orgId, appId));
-  }
+  })
 );
 
 // Backups / Restore the database
@@ -151,10 +172,10 @@ adminApp.get(`${ADMIN_DATA_PATH}/backup`, async (req: express.Request, res: expr
   return res.send(dataBackupPage());
 });
 
-adminApp.post(`${ADMIN_DATA_PATH}/backup`, backup.freeze);
+adminApp.post(`${ADMIN_DATA_PATH}/backup`, checkPasswordOnPost(backup.freeze));
 
 adminApp.get(`${ADMIN_DATA_PATH}/restore`, async (req: express.Request, res: express.Response) => {
   return res.send(dataRestorePage());
 });
 
-adminApp.post(`${ADMIN_DATA_PATH}/restore`, backup.restore);
+adminApp.post(`${ADMIN_DATA_PATH}/restore`, checkPasswordOnPost(backup.restore));
