@@ -325,15 +325,14 @@
           <mat-icon>grid_on</mat-icon>
         </ng-container>
       </button>
-      <!--      TODO #1306 - remove when algolia is ready -->
-      <!--       <mat-form-field>
+      <mat-form-field>
         <mat-label>Sort by</mat-label>
         <mat-select [formControl]="sortByControl">
           <mat-option *ngFor="let option of sortOptions" [value]="option">
             {{option}}
           </mat-option>
         </mat-select>
-      </mat-form-field> -->
+      </mat-form-field>
     </div>
     <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column"
       fxLayoutAlign.lt-md="center center">

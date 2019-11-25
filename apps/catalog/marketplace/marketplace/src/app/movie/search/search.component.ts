@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
-import { Movie, MovieQuery, MovieService } from '@blockframes/movie';
+import { Movie, MovieService } from '@blockframes/movie/movie/+state';
 import {
   GenresLabel,
   GENRES_LABEL,
@@ -37,12 +37,9 @@ import {
   MOVIE_STATUS_LABEL
 } from '@blockframes/movie/movie/static-model/types';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
-import {
-  languageValidator,
-  ControlErrorStateMatcher,
-  MoviesIndex,
-  MovieAlgoliaResult
-} from '@blockframes/utils';
+import { languageValidator } from '@blockframes/utils/form/validators/validators';
+import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
+import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
@@ -117,14 +114,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
 
-  /* Observable to combine for the UI */
-  // TODO #1306 - remove when algolia is ready
-/*   private sortBy$ = this.sortByControl.valueChanges.pipe(
-    startWith('All films'),
-    switchMap(sortIdentifier =>
-      this.movieQuery.selectAll({ sortBy: (a, b) => sortMovieBy(a, b, sortIdentifier) })
-    )
-  ); */
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
 
   /* Arrays for showing the selected entities in the UI */
@@ -158,7 +147,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public autoComplete: MatAutocompleteTrigger;
 
   constructor(
-    private movieQuery: MovieQuery,
     private router: Router,
     private movieService: MovieService,
     private basketService: BasketService,
@@ -191,7 +179,27 @@ export class MarketplaceSearchComponent implements OnInit {
           //TODO #1146 : remove the two line for movieGenres
           const removeGenre = ['TV Show', 'Web Series'];
           this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          return movies.filter(index => filterMovie(index.movie, filterOptions));
+          const sortedMovies = movies.sort((a, b) => {
+            switch (this.sortByControl.value) {
+              case 'Title':
+                return a.movie.main.title.international.localeCompare(
+                  b.movie.main.title.international
+                );
+              case 'Director':
+                return a.movie.main.directors[0].lastName.localeCompare(
+                  b.movie.main.directors[0].lastName
+                );
+              case 'Production Year':
+                if (b.movie.main.productionYear < a.movie.main.productionYear) {
+                  return -1;
+                }
+                if (b.movie.main.productionYear > a.movie.main.productionYear) {
+                  return 1;
+                }
+                return 0;
+            }
+          });
+          return sortedMovies.map(index => filterMovie(index.movie, filterOptions));
         }
       }),
       tap((movies: MovieAlgoliaResult[]) => {
