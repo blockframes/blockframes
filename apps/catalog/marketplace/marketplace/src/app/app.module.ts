@@ -40,6 +40,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
 
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
+
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
@@ -86,6 +90,9 @@ import { intercomId } from '@env';
     AngularFirePerformanceModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+
+    // Analytics
+    sentryDsn ? SentryModule : [],
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

@@ -52,6 +52,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
 
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
   imports: [
@@ -98,6 +102,9 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     AngularFirePerformanceModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+
+    // Analytics
+    sentryDsn ? SentryModule : [],
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),

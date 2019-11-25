@@ -50,6 +50,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
   imports: [
@@ -88,6 +92,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       KeyManagerModule,
       NotificationWidgetModule,
       EmailVerifyModule,
+
+      sentryDsn ? SentryModule : [],
 
       // Firebase
       AngularFireModule.initializeApp(environment.firebase),
