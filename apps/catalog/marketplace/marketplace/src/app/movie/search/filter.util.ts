@@ -42,7 +42,6 @@ function types(movie: Movie, movieGenre: string[]): boolean {
   for (let i = 0; i < movie.main.genres.length; i++) {
     for (let k = 0; k < movieGenreToLowerCase.length; k++) {
       if (movie.main.genres[i] === movieGenreToLowerCase[k]) {
-        console.log(movie.main.genres[i]);
         return true;
       }
     }
