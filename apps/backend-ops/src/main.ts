@@ -9,7 +9,7 @@ import {
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
 import { firebase } from '@env';
-import { updateInvitationDocument, updateOrganizationDocument, updatePicturesMovieDocument } from './firestoreMigrations/0002';
+import { updateInvitationDocument, updateOrganizationDocument, updatePicturesMovieDocument, updateAvatarUserDocument } from './firestoreMigrations/0002';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
@@ -71,6 +71,7 @@ function migrateToV2() {
   updateInvitationDocument(db);
   updateOrganizationDocument(db);
   updatePicturesMovieDocument(db);
+  updateAvatarUserDocument(db);
 }
 
 const args = process.argv.slice(2);
