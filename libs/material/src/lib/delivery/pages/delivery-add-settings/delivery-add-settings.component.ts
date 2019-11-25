@@ -4,6 +4,7 @@ import { DeliveryOption, DeliveryQuery, DeliveryService, DeliveryStore } from '.
 import { TemplateQuery } from '../../../template/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 /**
  * Page for the flow: "create a delivery"
@@ -37,20 +38,24 @@ export class DeliveryAddSettingsComponent {
     private movieQuery: MovieQuery,
     private router: Router,
     private store: DeliveryStore,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) {}
 
   public picked(options: DeliveryOption[]) {
     this.store.updateWizard({ options });
     this.options = options;
   }
-  //TODO: remove dead code from delivery-add-complete
+
   public async onCompleteFlow() {
     const { wizard } = this.query;
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
-    this.store.setActive(deliveryId);
-    return this.router.navigate([`../../../${movieId}/${deliveryId}`], {relativeTo: this.route});
+
+    // Checks if a the url contains a templateId to navigate to the delivery.
+    return (!!this.routerQuery.getParams().templateId)
+      ? this.router.navigate([`../../../../${movieId}/${deliveryId}`], {relativeTo: this.route})
+      : this.router.navigate([`../../../${movieId}/${deliveryId}`], {relativeTo: this.route})
   }
 }
