@@ -60,7 +60,7 @@ export const baseMenu = [
     ]
   },
   {
-    route: `${baseRoute}/movie/:movieId/:movie/list`,
+    route: `${baseRoute}/movie/:movieId/:deliveryId/list`,
     items: [
       { name: 'deliveries', path: `${baseRoute}/movie/:movieId/list` },
       { name: 'information', path: `${baseRoute}/movie/:movieId/:deliveryId/informations` },
