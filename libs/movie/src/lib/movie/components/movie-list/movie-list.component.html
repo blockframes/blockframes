@@ -2,7 +2,7 @@
 <ng-template #loaded>
   <article fxLayout="row wrap" fxLayoutAlign="start space-between">
     <!-- Movie Card -->
-    <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="linkToAppList(movie.id)">
+    <movie-card *ngFor="let movie of movies" [movie]="movie" [app]="appName">
       <ng-container movieCardAction>
         <div fxLayout="row" fxLayoutAlign="end end">
           <button mat-icon-button [matMenuTriggerFor]="menu">
