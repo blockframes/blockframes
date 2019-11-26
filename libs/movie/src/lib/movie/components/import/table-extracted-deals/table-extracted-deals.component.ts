@@ -6,34 +6,34 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService, MovieQuery, cleanModel, createMovie } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SpreadsheetImportError, SalesImportState } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 
-const hasImportErrors = (importState: SalesImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
 @Component({
-  selector: 'movie-table-extracted-sales',
-  templateUrl: './table-extracted-sales.component.html',
-  styleUrls: ['./table-extracted-sales.component.scss'],
+  selector: 'movie-table-extracted-deals',
+  templateUrl: './table-extracted-deals.component.html',
+  styleUrls: ['./table-extracted-deals.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedSalesComponent implements OnInit {
+export class TableExtractedDealsComponent implements OnInit {
 
-  @Input() rows: MatTableDataSource<SalesImportState>;
+  @Input() rows: MatTableDataSource<DealsImportState>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public selection = new SelectionModel<SalesImportState>(true, []);
+  public selection = new SelectionModel<DealsImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
     'movieInternalRef',
     'movieTitle',
-    'sale.rights.from',
-    'sale.rights.to',
-    'sale.exclusive',
+    'distributionDeal.rights.from',
+    'distributionDeal.rights.to',
+    'distributionDeal.exclusive',
     'errors',
     'warnings',
     'actions',
@@ -54,24 +54,24 @@ export class TableExtractedSalesComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createSale(importState: SalesImportState): Promise<boolean> {
+  async createDeal(importState: DealsImportState): Promise<boolean> {
     const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
     const data = this.rows.data;
 
-    await this.movieService.addDistributionDeal(existingMovie.id, importState.sale);
+    await this.movieService.addDistributionDeal(existingMovie.id, importState.distributionDeal);
     importState.errors.push({
       type: 'error',
-      field: 'sale',
-      name: 'Sale',
-      reason: 'Sale already added',
-      hint: 'Sale already added'
+      field: 'distributionDeal',
+      name: 'Distribution deal',
+      reason: 'Distribution deal already added',
+      hint: 'Distribution deal already added'
     });
     this.rows.data = data;
-    this.snackBar.open('Movie sale added!', 'close', { duration: 3000 });
+    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
     return true;
   }
 
-  async createSelectedSales(): Promise<boolean> {
+  async createSelectedDeals(): Promise<boolean> {
     try {
       const data = this.rows.data;
       const movies = {};
@@ -86,25 +86,25 @@ export class TableExtractedSalesComponent implements OnInit {
           }
           importState.errors.push({
             type: 'error',
-            field: 'sale',
-            name: 'Sale',
-            reason: 'Sale already added',
-            hint: 'Sale already added'
+            field: 'distributionDeal',
+            name: 'Distribution deal',
+            reason: 'Distribution deal already added',
+            hint: 'Distribution deal already added'
           });
 
-          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.sale));
+          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal));
         });
       this.rows.data = data;
 
       await Promise.all(promises); // @todo #1178
-      this.snackBar.open(`${promises.length} sales inserted!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${promises.length} distribution deals inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not insert sales`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not insert distribution deals`, 'close', { duration: 3000 });
     }
   }
 
-  errorCount(data: SalesImportState, type: string = 'error') {
+  errorCount(data: DealsImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
@@ -112,7 +112,7 @@ export class TableExtractedSalesComponent implements OnInit {
   // POPINS
   ///////////////////
 
-  displayErrors(importState: SalesImportState) {
+  displayErrors(importState: DealsImportState) {
     const data = { title: importState.movieTitle ? importState.movieTitle : '--', errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
@@ -142,7 +142,7 @@ export class TableExtractedSalesComponent implements OnInit {
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: SalesImportState): string {
+  checkboxLabel(row?: DealsImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -171,8 +171,8 @@ export class TableExtractedSalesComponent implements OnInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: SalesImportState, filter) {
-    const dataStr = data.movieInternalRef + data.movieTitle + data.sale.rights.from + data.sale.rights.to;
+  filterPredicate(data: DealsImportState, filter) {
+    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.rights.from + data.distributionDeal.rights.to;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

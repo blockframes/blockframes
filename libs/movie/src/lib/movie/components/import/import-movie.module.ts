@@ -35,7 +35,7 @@ import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
-import { TableExtractedSalesComponent } from './table-extracted-sales/table-extracted-sales.component';
+import { TableExtractedDealsComponent } from './table-extracted-deals/table-extracted-deals.component';
 import { MovieOrganizationListGuard } from '../../guards/movie-organization-list.guard';
 
 const routes: Routes = [
@@ -53,7 +53,7 @@ const routes: Routes = [
     ImportSpreadsheetComponent,
     ViewExtractedElementsComponent,
     TableExtractedMoviesComponent,
-    TableExtractedSalesComponent,
+    TableExtractedDealsComponent,
     PreviewSheetComponent,
     PreviewMovieComponent,
     ViewImportErrorsComponent,

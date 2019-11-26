@@ -1,5 +1,5 @@
 import { CatalogSearch } from './search.form';
-import { Movie, MovieSale } from '@blockframes/movie/movie/+state';
+import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state';
 import { AFM_DISABLE } from '@env';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
@@ -92,23 +92,23 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
   }
 }
 // TODO #979 - check if availabilities filter is needed
-function availabilities(deals: MovieSale[], range: { from: Date; to: Date }): boolean {
+function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date }): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
   return (
-    deals.some(sale => {
-      if (sale.rights) {
-        const from: Date = (sale.rights.from as any).toDate();
+    deals.some(deal => {
+      if (deal.rights) {
+        const from: Date = (deal.rights.from as any).toDate();
         /**
-         * Check if range.from is inside of a sales
+         * Check if range.from is inside of a deal
          */
         return from.getTime() < range.from.getTime();
       }
     }) &&
-    deals.some(sale => {
-      if (sale.rights) {
-        const to: Date = (sale.rights.to as any).toDate();
+    deals.some(deal => {
+      if (deal.rights) {
+        const to: Date = (deal.rights.to as any).toDate();
         return to.getTime() > range.to.getTime();
       }
     })
@@ -129,7 +129,7 @@ function media(movie: Movie, movieMediaType: string): boolean {
 }
 
 // TODO #1306 - remove when algolia is ready
-export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSale[]): boolean {
+export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
       ...filter.languages[name],

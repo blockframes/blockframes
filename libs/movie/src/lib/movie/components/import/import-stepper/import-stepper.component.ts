@@ -17,7 +17,7 @@ export class ImportStepperComponent {
   next(importEvent : SpreadsheetImportEvent) {
     importEvent.fileType === 'movies' ?
       this.viewExtractedElementsComponent.formatMovies(importEvent.sheet) :
-      this.viewExtractedElementsComponent.formatSales(importEvent.sheet);
+      this.viewExtractedElementsComponent.formatDistributionDeals(importEvent.sheet);
   }
 
 }
