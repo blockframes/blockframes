@@ -45,5 +45,5 @@ export function onMovieUpdate(
     throw new Error('movie id can not be changed!');
   }
 
-  return Promise.resolve(true);
+  return storeSearchableMovie(after);
 }
