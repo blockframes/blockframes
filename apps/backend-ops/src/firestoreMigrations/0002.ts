@@ -1,36 +1,5 @@
 import { Firestore } from '../admin';
-import { firestore as fs } from 'firebase/app';
 
-
-/**
- * Update invitation collection with organization object and user object instead of organizationId and userId
- */
-export async function updateInvitationDocument(db: Firestore) {
-  const invitations = await db.collection('invitations').get();
-
-  const newInvitationDoc = invitations.docs.map( async (invitDocSnapshot: any): Promise<any> => {
-    const invitationData = invitDocSnapshot.data();
-    const {organizationId, userId} = invitationData;
-
-    const org = await db.doc(`orgs/${organizationId}`).get();
-    const orgName = org.data().name;
-
-    const user = await db.doc(`users/${userId}`).get();
-    const userData = user.data();
-
-    delete invitationData.organizationId;
-    delete invitationData.userId;
-
-    const newData = {
-      ...invitationData,
-      organization: {id: organizationId, name: '' || orgName},
-      user: {id: userData.uid, email: userData.email, name: '' || userData.name, surname: '' || userData.surname, avatar: '' || userData.avatar}
-    }
-    return invitDocSnapshot.ref.set(newData);
-  });
-  await Promise.all(newInvitationDoc);
-  console.log('Updating organisation in invitation collection done');
-}
 
 /**
  * Update organisation document from AFM information to today master information (18/11/19)
@@ -63,8 +32,8 @@ export async function updateOrganizationDocument(db: Firestore) {
       created: new Date(created),
       logo: {
         originalRef: '',
-        ref: '',
-        url: logo
+        ref: logo,
+        url: ''
       },
       updated: new Date(updated)
     };
@@ -85,6 +54,7 @@ export async function updatePicturesMovieDocument(db: Firestore) {
     const movieData = movieDocSnapshot.data();
 
     const { poster } = movieData.main;
+    const { logo } = movieData.salesAgentDeal.salesAgent;
 
     const newData = {
       ...movieData,
@@ -123,8 +93,18 @@ export async function updatePicturesMovieDocument(db: Firestore) {
           }
         })
       },
+      salesAgentDeal: {
+        ...movieData.salesAgentDeal,
+        salesAgent: {
+          ...movieData.salesAgentDeal.salesAgent,
+          logo: {
+            originalRef: '',
+            ref: '',
+            url: logo
+          }
+        }
+      }
     };
-
 
     return movieDocSnapshot.ref.set(newData);
   });
@@ -147,8 +127,8 @@ export async function updateAvatarUserDocument(db: Firestore) {
       ...userData,
       avatar: {
         originalRef: '',
-        ref: '',
-        url: avatar || ''
+        ref: avatar || '',
+        url: ''
       }
     };
 
