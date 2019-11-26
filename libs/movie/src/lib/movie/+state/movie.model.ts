@@ -93,7 +93,7 @@ export function createMoviePromotionalElements(
     promotionalElements: [],
     ...params
   };
-}
+} // @TODO #1052 faire sauter la section car actuellement il y a movie.promotionalElements.promotionalElements et movie.promotionalElements.images  mais je vais fusionner les deux pour ne plus avoir que `movie.promotionalElements`
 
 export function createMoviePromotionalDescription(
   params: Partial<MoviePromotionalDescription> = {}

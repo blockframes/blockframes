@@ -257,6 +257,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           if (salesInDateRange.length === 0) {
             // We have no intersection with other sales, so we are OK !
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
+            this.step = this.steps.POSSIBLE;
             return true; // End of process
           }
 
@@ -288,12 +289,14 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
                 return false; // End of process
               } else {
                 console.log('YOU CAN BUY YOUR DIST RIGHT, since you do not require exclusivity');
+                this.step = this.steps.POSSIBLE;
                 return true; // End of process
               }
             }
           } else {
             // There is no sales with territories AND medias in common, we are OK.
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS, TERRITORIES AND LANGUAGES OVERLAPPINGS FOUND');
+            this.step = this.steps.POSSIBLE;
             return true; // End of process
           }
 

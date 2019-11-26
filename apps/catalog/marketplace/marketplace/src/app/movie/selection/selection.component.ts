@@ -48,7 +48,7 @@ export class MarketplaceSelectionComponent implements OnInit {
       this.currencyList = MOVIE_CURRENCIES_SLUG;
       // TODO #922: make an observable out of the basketquery
       this.basketQuery.getAll().forEach(basket =>
-        basket.rights.forEach(right => {
+        basket.sales.forEach(right => {
           // TODO issue#1146
           // this.movieDistributionRights.push(this.createRightDetail(right));
         })
@@ -89,7 +89,7 @@ export class MarketplaceSelectionComponent implements OnInit {
     } else {
       const findBasket: CatalogBasket[] = [];
       this.basketQuery.getAll().forEach(baskets =>
-        baskets.rights.forEach(right => {
+        baskets.sales.forEach(right => {
           if (right.id === rightId) {
             findBasket.push(baskets);
           }

@@ -1,5 +1,6 @@
 
 import { firestore } from "firebase/app";
+import { CatalogBasket } from "@blockframes/marketplace";
 
 type Timestamp = firestore.Timestamp;
 
@@ -20,6 +21,7 @@ interface OrganizationRaw<D> {
   fiscalNumber: string;
   activity: string;
   wishlist: WishlistRaw<D>[];
+  cart: CatalogBasket[];
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
@@ -51,7 +53,8 @@ export interface Location {
 export interface WishlistRaw<D> {
   status: WishlistStatus,
   movieIds: string[],
-  sent?: D
+  sent?: D,
+  name?: string, // TODO #1061 draw.io
 }
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
@@ -102,6 +105,7 @@ export function createOrganizationRaw(
     updated: new Date(),
     logo: PLACEHOLDER_LOGO,
     wishlist: [],
+    cart: [],
     ...params
   };
 }

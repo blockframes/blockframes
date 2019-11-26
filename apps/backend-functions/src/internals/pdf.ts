@@ -313,7 +313,7 @@ export async function onGenerateDeliveryPDFRequest(req: any, resp: any) {
   );
 
   const orgs = await Promise.all(
-    stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`))
+    stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`)) // #1061 ici
   );
 
   const materials = await getCollection<MaterialDocument>(`deliveries/${deliveryId}/materials`);

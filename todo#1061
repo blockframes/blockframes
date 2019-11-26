@@ -1,0 +1,23 @@
+=> remove wishlist
+=> btn add to cart => ké passa après ?
+=> collection group pour distribution deal
+=> rebuy request
+=> re-check avails process ? à terminer ? (check process notion.so)
+=> basket => cart | distributionDeals => MovieSaleRaw ?
+=> stakeholder licensee | licensor
+
+
+
+TODO =>
+créer un MovieSale (distributiondeal) au lieu d'un DistributionRight
+
+moviesale => rename => distributiondeal
+
+
+Licensor => va etre cascade8 (mandaté par charade par exemple, info a mettre dans movies)
+
+
+promotional Element => ajouter langue / pays
+
+
+=> modéliser les static dans draw.io

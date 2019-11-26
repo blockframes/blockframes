@@ -55,7 +55,7 @@ export class BasketService extends CollectionService<BasketState> {
     const newBasket: CatalogBasket = createBasket({
       id,
       price: { amount: 0, currency: 'euro' },
-      rights: basket.rights
+      sales: basket.sales
     });
     this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${id}`).set(newBasket);
   }
@@ -106,7 +106,7 @@ export class BasketService extends CollectionService<BasketState> {
   public removeDistributionRight(rightId: string, basketId: string) {
     const findDistributionRight: DistributionRight[] = [];
     this.basketQuery.getAll().forEach(baskets =>
-      baskets.rights.forEach(right => {
+      baskets.sales.forEach(right => {
         if (right.id === rightId) {
           findDistributionRight.push(right);
         }
@@ -117,7 +117,7 @@ export class BasketService extends CollectionService<BasketState> {
       this.db.doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${basketId}`).delete();
     } else {
       this.basketQuery.getAll().forEach(baskets =>
-        baskets.rights.forEach(right => {
+        baskets.sales.forEach(right => {
           if (right.id !== rightId) {
             this.db
               .doc<CatalogBasket>(`orgs/${this.organizationQuery.getActiveId()}/baskets/${basketId}`)

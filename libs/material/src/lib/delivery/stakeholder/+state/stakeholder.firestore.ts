@@ -1,7 +1,6 @@
 /** Stakeholder model as it appears in Firestore. */
 export interface StakeholderDocument {
-  id: string;
-  role: string
+  orgId: string;
   isAccepted: boolean;
   processedId?: string;
 }
@@ -9,8 +8,7 @@ export interface StakeholderDocument {
 /** A factory function that create a stakeholder. */
 export function createStakeholder(params: Partial<StakeholderDocument> = {}): StakeholderDocument {
   return {
-    id: '',
-    role: '',
+    orgId: '',
     isAccepted: false,
     ...params,
   }
