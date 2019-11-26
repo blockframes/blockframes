@@ -23,8 +23,8 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>URL</mat-label>
-          <input formControlName="url" type="url" matInput placeholder="https://" />
-          <mat-error *ngIf="element.get('url').hasError('pattern')"> Invalid url. </mat-error>
+          <input formControlName="media" type="url" matInput placeholder="https://" />
+          <mat-error *ngIf="element.get('media').hasError('pattern')"> Invalid url. </mat-error>
         </mat-form-field>
         <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
           <mat-icon>add_circle</mat-icon>
