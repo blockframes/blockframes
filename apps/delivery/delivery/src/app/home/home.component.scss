@@ -1,8 +1,17 @@
-section {
-  width: 60%;
-  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+:host {
+  margin-left: 20%;
+  margin-right: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 mat-divider {
-  margin: 0 20px;
+  margin: 20px;
+}
+
+movie-card {
+  height: 390px;
+  width: 310px;
+  margin: 15px;
 }

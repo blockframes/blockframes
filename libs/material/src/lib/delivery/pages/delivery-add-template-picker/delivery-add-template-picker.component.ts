@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionPickerItem } from '@blockframes/ui';
-import { Template, TemplateQuery } from '../../../template/+state';
+import { Template, TemplateQuery, TemplateStore } from '../../../template/+state';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
 
 /** Turn an array of templates into a list of ActionPickerItem */
@@ -32,8 +31,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
 
   constructor(
     private templateQuery: TemplateQuery,
-    private router: Router,
-    private route: ActivatedRoute,
+    private templateStore: TemplateStore,
     private store: DeliveryStore
   ) {}
 
@@ -47,8 +45,13 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     this.currentTemplate = template;
   }
 
-  public navigateToSettings() {
-    const templateId = this.currentTemplate.id;
-    return this.router.navigate([`../${templateId}/4-settings`], { relativeTo: this.route });
+  public get continueURL(): string {
+    if (!this.currentTemplate) {
+      return '#';
+    }
+
+    this.templateStore.setActive(this.currentTemplate.id);
+    console.log(this.currentTemplate.id)
+    return `../4-settings`;
   }
 }

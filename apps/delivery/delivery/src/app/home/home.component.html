@@ -1,18 +1,55 @@
-<main fxLayout="row" fxLayoutAlign="center">
-  <section *ngIf="(movies$ | async) as movies">
-    <ng-container *ngIf="movies.length; else noMovies">
-      <article fxLayout="row" fxLayoutAlign="space-between center">
+<ng-container *ngIf="movies$ | async as movies">
+  <ng-container *ngIf="movies.length; else noMovies">
+    <article fxLayout="column">
+
+      <!-- Delivery Homepage Header -->
+      <span fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
         <h2>Welcome to Delivery</h2>
         <mat-divider fxFlex></mat-divider>
-        <a test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
+        <button test-id="add-movie" mat-stroked-button color="primary" (click)="addNewMovie()">
           <mat-icon>add</mat-icon>
           <span>Add a movie</span>
-        </a>
-      </article>
-      <movie-list [movies]="movies"></movie-list>
-    </ng-container>
-    <ng-template #noMovies>
-      <movie-create (addMovie)="addNewMovie()"></movie-create>
-    </ng-template>
-  </section>
-</main>
+        </button>
+      </span>
+
+      <ng-container *ngIf="loading$ | async; else loaded"> Loading </ng-container>
+
+      <ng-template #loaded>
+        <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
+          <!-- Movie Cards -->
+          <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/layout/o/delivery/movie', movie.id]">
+            <ng-container movieCardAction>
+              <div fxLayout="row" fxLayoutAlign="end end">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon color="primary">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item [matMenuTriggerFor]="subMenu">
+                    <mat-icon color="primary">control_camera</mat-icon>
+                    <span>Open in...</span>
+                  </button>
+                  <a mat-menu-item [routerLink]="[movie.id, 'edit']">
+                    <mat-icon color="primary">edit</mat-icon>
+                    <span>Edit</span>
+                  </a>
+                  <button mat-menu-item (click)="remove(movie)">
+                    <mat-icon color="primary">delete_outline</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+                <mat-menu #subMenu="matMenu">
+                  <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
+                </mat-menu>
+              </div>
+            </ng-container>
+          </movie-card>
+        </article>
+      </ng-template>
+    </article>
+  </ng-container>
+
+  <!-- Component to display if there is no movie -->
+  <ng-template #noMovies>
+    <movie-create (addMovie)="addNewMovie()"></movie-create>
+  </ng-template>
+</ng-container>

@@ -96,11 +96,13 @@ export class MaterialService extends CollectionService<MaterialState> {
 
   /** Create a material in a movie. */
   public setNewMaterial(material: Material, delivery: Delivery) {
+    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
     this.add({ ...material, deliveryIds: [delivery.id] })
   }
 
   /** Update deliveryIds of a material when this one has the same values that an other. */
   public updateMaterialDeliveryIds(sameValuesMaterial: Material, delivery: Delivery) {
+    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
     if (!sameValuesMaterial.deliveryIds.includes(delivery.id)) {
       this.update(sameValuesMaterial.id, { deliveryIds: [...sameValuesMaterial.deliveryIds, delivery.id] })
     }
@@ -108,6 +110,7 @@ export class MaterialService extends CollectionService<MaterialState> {
 
   /** Checks if the material belongs to multiple delivery, if so: update the deliveryIds, otherwise just delete it. */
   public removeMaterial(material: Material, delivery: Delivery, sameIdMaterial: Material) {
+    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
     if (sameIdMaterial.deliveryIds.length === 1) {
       return this.remove(material.id)
     } else {
@@ -224,8 +227,7 @@ export class MaterialService extends CollectionService<MaterialState> {
 
   /** Convert a MaterialDocument into a MaterialTemplateDocument if the subcollectionPath is set on templates. */
   formatToFirestore(material: Material): any {
-    const collection = this.subcollectionPath.split('/');
-    return collection[0] === 'templates'
+    return this.subcollectionPath.includes('templates')
       ? createMaterialTemplate(material)
       : material;
   }
