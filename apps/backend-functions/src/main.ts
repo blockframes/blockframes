@@ -178,7 +178,33 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
   onOrganizationDelete
 );
 
+//--------------------------------
+//        Movies Management     //
+//--------------------------------
 
+/**
+ * Trigger: when a movie is created
+ */
+export const onMovieCreateEvent = onDocumentCreate(
+  'movies/{movieId}',
+  onMovieCreate
+);
+
+/**
+ * Trigger: when a movie is deleted
+ */
+export const onMovieDeleteEvent = onDocumentDelete(
+  'movies/{movieId}',
+  onMovieDelete
+)
+
+/**
+ * Trigger: when a movie is updated
+ */
+export const onMovieUpdateEvent = onDocumentUpdate(
+  'movies/{movieId}',
+  onMovieUpdate
+)
 //--------------------------------
 //        GENERATE PDF          //
 //--------------------------------
