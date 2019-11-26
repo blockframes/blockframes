@@ -11,7 +11,6 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 
 // Angular Fire
-import { AngularFireAnalyticsModule, ANALYTICS, Analytics } from '@blockframes/utils';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -20,13 +19,13 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
+import { AngularFireAnalyticsModule, ANALYTICS, Analytics } from '@blockframes/utils/analytics/analytics.module';
 import { ToolbarModule } from '@blockframes/ui';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletWidgetModule } from '@blockframes/ethers';
-import { KeyManagerModule } from '@blockframes/ethers';
+import { WalletWidgetModule, KeyManagerModule } from '@blockframes/ethers';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { EmailVerifyModule } from '@blockframes/auth';
+import { EmailVerifyModule } from '@blockframes/auth/components/email-verify/email-verify.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
