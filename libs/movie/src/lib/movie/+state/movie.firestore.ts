@@ -38,7 +38,7 @@ export interface PromotionalElement {
   type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
-  url: ImgRef
+  media: ImgRef
 }
 
 export interface MoviePromotionalElements {
