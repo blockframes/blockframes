@@ -5,7 +5,8 @@ import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImgRef } from '@blockframes/utils/image-uploader';
-import { Analytics, ANALYTICS, AppAnalytics } from '@blockframes/utils';
+import { Analytics, ANALYTICS } from '@blockframes/utils/analytics/analytics.module';
+import { AppAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AuthQuery } from '@blockframes/auth';
 
 interface CarouselSection {

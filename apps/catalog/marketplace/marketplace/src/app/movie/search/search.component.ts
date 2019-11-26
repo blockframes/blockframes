@@ -39,7 +39,11 @@ import {
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
-import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { AuthQuery } from '@blockframes/auth';
+import { AppAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { Analytics, ANALYTICS } from '@blockframes/utils/analytics/analytics.module';
+import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
@@ -59,7 +63,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit {
+export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /** Algolia search results */
@@ -155,8 +159,12 @@ export class MarketplaceSearchComponent implements OnInit {
     private basketService: BasketService,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver,
+    authQuery: AuthQuery,
+    @Inject(ANALYTICS) analytics: Analytics,
     @Inject(MoviesIndex) private movieIndex: Index
-  ) {}
+  ) {
+    super(analytics, authQuery);
+  }
 
   ngOnInit() {
     this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
@@ -187,7 +195,11 @@ export class MarketplaceSearchComponent implements OnInit {
         );
       })
     );
-    this.movieSearchResults$ = combineLatest([this.algoliaSearchResults$, this.filterBy$, this.sortBy$]).pipe(
+    this.movieSearchResults$ = combineLatest([
+      this.algoliaSearchResults$,
+      this.filterBy$,
+      this.sortBy$
+    ]).pipe(
       map(([movies, filterOptions, sortBy]) => {
         if (AFM_DISABLE) {
           //TODO #1146
@@ -373,6 +385,9 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
+      this.event('added_language', {
+        language: language
+      });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
@@ -385,6 +400,9 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
+    this.event('removed_language', {
+      language: language
+    });
   }
 
   public hasStatus(status: MovieStatusLabel) {
@@ -398,19 +416,14 @@ export class MarketplaceSearchComponent implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
+      this.event('added_movie_status', {
+        status: status
+      });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-    }
-  }
-
-  public hasSalesAgent(salesAgent: string) {
-    if (
-      this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.get('salesAgent').value.includes(salesAgent)
-    ) {
-      this.filterForm.addStatus(salesAgent);
-    } else {
-      this.filterForm.removeStatus(salesAgent);
+      this.event('removed_movie_status', {
+        status: status
+      });
     }
   }
 
@@ -475,6 +488,9 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
+    this.event('added_genre', {
+      genre: event.option.viewValue
+    });
   }
 
   public removeGenre(genre: string) {
@@ -483,6 +499,9 @@ export class MarketplaceSearchComponent implements OnInit {
       this.selectedGenres.splice(index, 1);
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
+      this.event('removed_genre', {
+        genre: genre
+      });
     }
   }
 
@@ -496,6 +515,9 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addSalesAgent(value);
     this.salesAgentControl.setValue('');
     this.salesAgentInput.nativeElement.value = '';
+    this.event('removed_sales_agent', {
+      sales_agent: event.option.viewValue
+    });
   }
 
   public removeSalesAgent(salesAgent: string) {
@@ -504,6 +526,9 @@ export class MarketplaceSearchComponent implements OnInit {
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
+      this.event('removed_sales_agent', {
+        sales_agent: salesAgent
+      });
     }
   }
 
@@ -518,6 +543,9 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
+    this.event('added_to_wishlist', {
+      movie: movie.main.title.original
+    });
   }
 
   public removeFromWishlist(movie: Movie) {
@@ -527,6 +555,9 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
+    this.event('removed_from_wishlist', {
+      movie: movie.main.title.original
+    });
   }
 
   public addSearchbarValue(value: MatAutocompleteSelectedEvent) {
@@ -536,6 +567,9 @@ export class MarketplaceSearchComponent implements OnInit {
   public selectSearchType(value: any) {
     if (this.searchbarForm.value !== value) {
       this.searchbarTypeForm.setValue(value);
+      this.event('searchbar_search_type', {
+        type: value
+      });
     } else {
       this.searchbarTypeForm.setValue('');
     }
