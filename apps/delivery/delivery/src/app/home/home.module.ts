@@ -9,12 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // Pages
 import { DeliveryHomeComponent } from './home.component';
 
 // Components
-import { MovieListModule } from '@blockframes/movie/movie/components/movie-list/movie-list.module';
+import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { MovieTitleFormComponent } from '@blockframes/movie/movie/components/movie-title-form/movie-title-form.component';
 
@@ -27,12 +29,14 @@ import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.g
   imports: [
     CommonModule,
     FlexLayoutModule,
-    MovieListModule,
+    MovieCardModule,
     MovieCreateModule,
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
     MatInputModule,
+    MatMenuModule,
+    MatDialogModule,
     RouterModule.forChild([
       {
         path: '',

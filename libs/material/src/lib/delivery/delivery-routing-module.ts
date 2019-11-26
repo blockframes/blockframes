@@ -67,19 +67,6 @@ const routes: Routes = [
             pathMatch: 'full',
             component: DeliveryAddSettingsComponent,
             data: { animation: 'DeliveryAddSettingsPage' }
-          },
-          {
-            path: ':templateId',
-            canActivate: [TemplateActiveGuard],
-            canDeactivate: [TemplateActiveGuard],
-            children: [
-              {
-                path: '4-settings',
-                pathMatch: 'full',
-                component: DeliveryAddSettingsComponent,
-                data: { animation: 'DeliveryAddSettingsPage' }
-              }
-            ]
           }
         ]
       }
@@ -127,7 +114,7 @@ const routes: Routes = [
           {
             path: 'stakeholders',
             component: DeliveryStakeholdersEditableComponent,
-            data: { animation: 'DeliveryStakeholdersEditablePage' } //animation test, find the corresponding file in ./utils/lib/animations/router-animations
+            data: { animation: 'DeliveryStakeholdersEditablePage' }
           },
           {
             path: 'informations',

@@ -38,7 +38,7 @@ export class DeliveryListComponent implements OnInit {
    * Navigates directly to second step of delivery creation flow as we already are on a movie
    */
   public addDelivery() {
-    // TODO: We are redirected by DeliveryActiveGuard here, will be fixed with akita-ng-fire version of it
+    // TODO: We are redirected by DeliveryActiveGuard here, will be fixed with akita-ng-fire version of it => ISSUE #1334
     // this.router.navigate(['../2-choose-starter'], { relativeTo: this.route });
 
     // Temporary route

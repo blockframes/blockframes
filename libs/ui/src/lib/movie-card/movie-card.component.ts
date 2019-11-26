@@ -11,7 +11,7 @@ import { App } from '@blockframes/utils';
 export class MovieCardComponent {
   @HostBinding('attr.page-id') pageId = 'display-card';
   @Input() movie: Movie;
-  @Input() app: string;
+  @Input() link: string;
 
   public get posterSrc() {
     return this.movie.main.poster || '/assets/images/default-movie-poster.png';
@@ -22,16 +22,6 @@ export class MovieCardComponent {
       return this.movie.festivalPrizes.prizes[0].logo;
     } else {
       return '';
-    }
-  }
-
-  /** Redirect depending of the app using movie-card. */
-  public get appLink() {
-    if (this.app === App.mediaDelivering) {
-      return `/layout/o/${this.app}/movie/${this.movie.id}`;
-    }
-    if (this.app === App.biggerBoat) {
-      return `/layout/o/${this.app}/${this.movie.id}`;
     }
   }
 }

@@ -32,7 +32,7 @@ export class MovieTitleFormComponent {
       const movie = await this.service.addMovie(movieName);
 
       this.router.navigate([`${appsRoute}/${App.mediaDelivering}/home/${movie.id}/edit`]);
-      // TODO: Find out why { relativeTo: this.route } is not working as intended.
+      // TODO: Find out why { relativeTo: this.route } is not working as intended => ISSUE #1332
       // this.router.navigate([`${movie.id}/edit`], { relativeTo: this.route })
       this.dialogRef.close();
     }
