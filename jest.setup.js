@@ -6,4 +6,3 @@ global.beforeEach(() => {
   cy.visit('/');
   cy.viewport('macbook-15');
 });
-
