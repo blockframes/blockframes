@@ -1,11 +1,12 @@
 import ViewPage from "./ViewPage";
 import { Dates, Availabilities } from "../utils/type";
+import NavbarPage from "./NavbarPage";
 
-export default class SearchPage {
+export default class SearchPage extends NavbarPage {
 
   constructor() {
+    super();
     cy.get('[page-id=catalog-search]', { timeout: 10000 });
-    cy.wait(2000);
   }
 
   public fillProductionYear(years: Dates) {
@@ -58,6 +59,11 @@ export default class SearchPage {
   public selectMovie(movieName: string) {
     cy.get('[page-id=display-card]').contains('movie-card', movieName).find('a').click();
     return new ViewPage();
+  }
+
+  public addMovieToWishlist(movieName: string) {
+    cy.get('[page-id=display-card]').contains('movie-card', movieName).find('button').click();
+    cy.wait(2000);
   }
 }
 

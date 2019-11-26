@@ -3,7 +3,8 @@ import { RouterModule, NoPreloading } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout.component';
 import { createRoutes } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils';
+import { App } from '@blockframes/utils/apps';
+import { MovieCollectionGuard } from '@blockframes/movie/movie/guards/movie-collection.guard';
 
 /** Scaffold a marketplace application routing for this application */
 const routes = createRoutes({
@@ -17,6 +18,8 @@ const routes = createRoutes({
     },
     {
       path: App.biggerBoat,
+      canActivate: [MovieCollectionGuard],
+      canDeactivate: [MovieCollectionGuard],
       loadChildren: () =>
         import('./marketplace.module').then(m => m.CatalogMarketplaceAppModule)
     }

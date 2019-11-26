@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, NoPreloading } from '@angular/router';
 
-import { App } from '@blockframes/organization';
 import { LayoutComponent } from './layout/layout.component';
 import { createRoutes } from '@blockframes/utils/routes';
+import { App } from '@blockframes/utils/apps';
 
 /** Scaffold a dashboard like application routing for this application */
 const routes = createRoutes({

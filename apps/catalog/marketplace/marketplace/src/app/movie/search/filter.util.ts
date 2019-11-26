@@ -1,7 +1,6 @@
 import { CatalogSearch } from './search.form';
 import { Movie, MovieSale } from '@blockframes/movie/movie/+state';
 import { AFM_DISABLE } from '@env';
-import startCase from 'lodash/startCase';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -40,10 +39,9 @@ function types(movie: Movie, movieGenre: string[]): boolean {
   }
   // we have to make it lowercase to make sure we are comparing correctly
   const movieGenreToLowerCase = movieGenre.map(type => type.toLowerCase());
-  const movieTypesToLowerCase = movie.main.genres.map(genre => genre.toLowerCase());
-  for (let i = 0; i < movieTypesToLowerCase.length; i++) {
+  for (let i = 0; i < movie.main.genres.length; i++) {
     for (let k = 0; k < movieGenreToLowerCase.length; k++) {
-      if (movieTypesToLowerCase[i] === movieGenreToLowerCase[k]) {
+      if (movie.main.genres[i] === movieGenreToLowerCase[k]) {
         return true;
       }
     }
@@ -130,55 +128,7 @@ function media(movie: Movie, movieMediaType: string): boolean {
   return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
 }
 
-/**
- * @description filtering function for the searchbar in the header of the movie search page
- * @param movie current movie to filter on,
- * @param text the string that got input in the searchbar
- * @param type determine for what properties we should search
- */
-function textSearch(movie: Movie, text: string, type: string): boolean {
-  /* If searchbar is empty, return all movies */
-  if (!text || !type) {
-    return true;
-  }
-  switch (type) {
-    case 'director':
-      for (const director of movie.main.directors) {
-        if (
-          director.firstName.includes(startCase(text)) ||
-          director.lastName.includes(startCase(text))
-        ) {
-          return true;
-        } else {
-          /**
-           * If the user is typing the whole name of the directory
-           * we can't be sure if he types the last name first and the first name
-           * last, so wee need to concat the names and use some regex to remove
-           * the whitespaces which might be there.
-           */
-          const concatedName = concatingStrings(director.firstName, director.lastName);
-          return concatedName.toLowerCase().includes(text.toLowerCase().replace(/\s+/g, ''));
-        }
-      }
-      break;
-    case 'title':
-      const filterValue = text.toLowerCase();
-      return movie.main.title.international.toLowerCase().includes(filterValue);
-    case 'keywords':
-      for (const word of movie.promotionalDescription.keywords) {
-        // TODO #1268 store keywords in lowercase in DB so we dont need starCase form lodash
-        if (word.includes(startCase(text))) {
-          return true;
-        }
-      }
-      break;
-  }
-}
-
-function concatingStrings(first: string, last: string): string {
-  return first.replace(/\s+/g, '') + last.replace(/\s+/g, '');
-}
-// TODO #1271 - remove when algolia is ready
+// TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSale[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
     .map(name => ({
@@ -205,8 +155,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: MovieSa
       hasEveryLanguage &&
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent) &&
-      textSearch(movie, filter.searchbar.text, filter.searchbar.type)
+      salesAgent(movie, filter.salesAgent)
     );
   }
 }

@@ -27,7 +27,7 @@ export class IdentityComponent {
     name: new FormControl(''),
     surname: new FormControl(''),
     avatar: new FormControl(''),
-    email: new FormControl({ value: this.query.getValue().user.email, disabled: true }),
+    email: new FormControl({ value: this.query.user.email, disabled: true }),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
   });
@@ -52,7 +52,7 @@ export class IdentityComponent {
         this.form.get('newPassword').value
       );
       const uid = this.query.userId;
-      await this.service.update(uid, {
+      await this.service.update({
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
         avatar: this.form.get('avatar').value

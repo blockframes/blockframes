@@ -1,14 +1,18 @@
-import { prepareFirebase, restore, syncUsers } from './firebaseSetup';
+import { restore, syncUsers } from './firebaseSetup';
 import { MIGRATIONS } from './firestoreMigrations';
 import { updateDBVersion } from './migrations';
 import { loadAdminServices } from './admin';
-import { USERS } from './users.toronto.fixture';
-import { storeSearchableOrg } from '../../backend-functions/src/internals/algolia';
+import { USERS as USERS_TORONTO } from './users.toronto.fixture';
+import { USERS } from './users.fixture';
+import {
+  storeSearchableOrg,
+  storeSearchableMovie
+} from '../../backend-functions/src/internals/algolia';
 import { firebase } from '@env';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
-  await syncUsers(USERS);
+  await syncUsers(USERS_TORONTO);
   console.info('Users synced!');
 
   console.info('Restoring backup...');
@@ -45,9 +49,20 @@ async function upgradeAlgoliaOrgs() {
 }
 
 async function prepareToronto() {
-  await syncUsers(USERS);
+  await syncUsers(USERS_TORONTO);
   console.info('done.');
   process.exit(0);
+}
+
+async function upgradeAlgoliaMovies() {
+  const { db } = loadAdminServices();
+  const movies = await db.collection('movies').get();
+
+  const promises = [];
+  movies.forEach(movie => {
+    promises.push(storeSearchableMovie(movie.data(), process.env['ALGOLIA_API_KEY']));
+  });
+  return Promise.all(promises);
 }
 
 const args = process.argv.slice(2);
@@ -61,4 +76,8 @@ if (cmd === 'prepareForTesting') {
   prepareToronto();
 } else if (cmd === 'upgradeAlgoliaOrgs') {
   upgradeAlgoliaOrgs();
+} else if (cmd === 'syncUsers') {
+  syncUsers(USERS).then(() => process.exit(0));
+} else if (cmd === 'upgradeAlgoliaMovies') {
+  upgradeAlgoliaMovies();
 }

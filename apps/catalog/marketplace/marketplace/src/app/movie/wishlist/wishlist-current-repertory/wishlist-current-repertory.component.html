@@ -80,6 +80,6 @@
 </table>
 <!-- TODO: issue#1111 add sending email -->
 <div *ngIf="isCurrent" fxLayout="row" fxLayoutAlign="center">
-  <button class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Submit to sellers</button>
+  <button test-id="submit-to-sellers" class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Submit to sellers</button>
 </div>
 

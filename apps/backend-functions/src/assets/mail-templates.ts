@@ -4,6 +4,7 @@
 import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
+import { RequestToJoinOrganization } from '../data/types';
 
 const ORG_HOME = '/layout/o/organization/';
 const USER_ORG_INVITATION = '/layout/organization/home';
@@ -101,15 +102,15 @@ export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: str
 }
 
 /** Generates a transactional email to let an admin now that a user requested to join their org */
-export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: string, orgName: string, orgId: string, userFirstName: string, userLastName: string): EmailTemplateRequest { // TODO
+export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): EmailTemplateRequest { // TODO
   const data = {
-    adminFirstName: adminName,
-    userFirstName,
-    userLastName,
-    orgName,
-    pageURL: `${appUrl}${ORG_HOME}${orgId}/members`
+    adminFirstName: request.adminName,
+    userFirstName: request.userFirstname,
+    userLastName: request.userLastname,
+    orgName: request.organizationName,
+    pageURL: `${appUrl}${ORG_HOME}${request.organizationId}/members`
   };
-  return { to: orgAdminEmail, templateId: templateIds.joinYourOrg, data };
+  return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }
 
 // ------------------------- //

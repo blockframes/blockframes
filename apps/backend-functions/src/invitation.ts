@@ -1,12 +1,7 @@
 /**
  * Manage invitations updates.
  */
-import {
-  createOrganizationDocPermissions,
-  createUserDocPermissions,
-  getDocument,
-  getSuperAdminIds
-} from './data/internals';
+import { getDocument, getAdminIds } from './data/internals';
 import { db, functions, getUserMail, getUser } from './internals/firebase';
 import {
   DeliveryDocument,
@@ -18,7 +13,9 @@ import {
   InvitationStatus,
   InvitationType,
   OrganizationDocument,
-  MovieDocument
+  MovieDocument,
+  createOrganizationDocPermissions,
+  createUserDocPermissions,
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -29,6 +26,7 @@ import {
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { UserRole } from '@blockframes/permissions/types';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -72,6 +70,9 @@ async function addUserToOrg(userId: string, organizationId: string) {
       return;
     }
 
+    // Add the new user and his role to the permissions object.
+    permissionData.roles[userId] = UserRole.member;
+
     return Promise.all([
       // Update user's orgId
       tx.set(userRef, { ...userData, orgId: organizationId }),
@@ -81,14 +82,14 @@ async function addUserToOrg(userId: string, organizationId: string) {
         userIds: [...organizationData.userIds, userId]
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, userId] })
+      tx.set(permissionsRef, { ...permissionData, roles: permissionData.roles })
     ]);
   });
 }
 
 async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
-  const adminIds = await getSuperAdminIds(organizationId);
+  const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
 
   const adminEmailPromises = adminEmails
@@ -99,10 +100,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({
-  user,
-  organization
-}: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
@@ -110,7 +108,11 @@ async function onInvitationToOrgAccept({
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ user, organization, id }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgCreate({
+  user,
+  organization,
+  id
+}: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(user.uid);
 
   if (!userMail) {
@@ -166,9 +168,11 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
     // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
     // Only if organization doesn't already have access to this movie.
     if (!organization.movieIds.includes(delivery.movieId)) {
-      promises.push(tx.update(organizationSnap.ref, {
-        movieIds: [...organization.movieIds, delivery.movieId]
-      }))
+      promises.push(
+        tx.update(organizationSnap.ref, {
+          movieIds: [...organization.movieIds, delivery.movieId]
+        })
+      );
     }
 
     return Promise.all([
@@ -198,7 +202,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
           return createNotification({
             userId,
             docId,
-            movie: {id: movie.id, title: movie.main.title},
+            movie: { id: movie.id, title: movie.main.title },
             type: NotificationType.pathToDocument
           });
         })
@@ -235,18 +239,29 @@ async function onInvitationFromUserToJoinOrgCreate({
     throw new Error(`no email for userId: ${user.uid}`);
   }
 
-  const superAdminIds = await getSuperAdminIds(organization.id);
+  const adminIds = await getAdminIds(organization.id);
 
-  const superAdmins = await Promise.all(superAdminIds.map(getUser));
+  const admins = await Promise.all(adminIds.map(getUser));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
-  await sendMailFromTemplate(userJoinOrgPendingRequest(userData.email, organization.name, userData.name!));
+  await sendMailFromTemplate(
+    userJoinOrgPendingRequest(userData.email, organization.name, userData.name!)
+  );
 
   // send invitation received to every org admin
   return Promise.all(
-    superAdmins.map(admin =>
-      sendMailFromTemplate(userRequestedToJoinYourOrg(admin.email, admin.name!, organization.name, organization.id, userData.name!, userData.surname!))
+    admins.map(admin =>
+      sendMailFromTemplate(
+        userRequestedToJoinYourOrg({
+          adminEmail: admin.email,
+          adminName: admin.name!,
+          organizationName: organization.name,
+          organizationId: organization.id,
+          userFirstname: userData.name!,
+          userLastname: userData.surname!
+        })
+      )
     )
   );
 }
@@ -258,7 +273,7 @@ async function onInvitationFromUserToJoinOrgAccept({
 }: InvitationFromUserToOrganization) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id))
+  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id));
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
@@ -323,7 +338,9 @@ export async function onInvitationWrite(
   }
 
   // Prevent duplicate events with the processedId workflow
-  const invitation: InvitationDocument = await getDocument<InvitationDocument>(`invitations/${invitationDoc.id}`);
+  const invitation: InvitationDocument = await getDocument<InvitationDocument>(
+    `invitations/${invitationDoc.id}`
+  );
   const processedId = invitation.processedId;
 
   if (processedId === context.eventId) {
@@ -343,11 +360,7 @@ export async function onInvitationWrite(
       case InvitationType.fromOrganizationToUser:
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromUserToOrganization:
-        return onInvitationFromUserToJoinOrgUpdate(
-          invitationDocBefore,
-          invitationDoc,
-          invitation
-        );
+        return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

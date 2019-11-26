@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU, CONTEXT_MENU_AFM } from './context-menu';
+import { CONTEXT_MENU, CONTEXT_MENU_AFM } from '@blockframes/utils/routes/context-menu/catalog-marketplace';
 import { AFM_DISABLE } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
@@ -52,7 +52,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public async logout() {
-    await this.service.logout();
+    await this.service.signOut();
     // TODO: issue#879, navigate with router
     window.location.reload();
   }

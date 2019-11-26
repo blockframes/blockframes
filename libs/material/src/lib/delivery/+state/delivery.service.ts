@@ -6,17 +6,18 @@ import {
   Movie,
   MovieQuery
 } from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService, StakeholderService, Stakeholder } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
-import { StakeholderDocument, createStakeholder } from '@blockframes/organization/stakeholder/types';
+import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
+import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
+import { StakeholderDocument } from '../stakeholder/+state/stakeholder.firestore';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -434,32 +435,5 @@ export class DeliveryService {
       }
     });
     return tx;
-  }
-
-  ////////////////////////
-  // CRUD STAKEHOLDERS //
-  //////////////////////
-
-  /** Add a stakeholder to the delivery */
-  public addStakeholder(movieStakeholder: Stakeholder) {
-    const delivery = this.query.getActive();
-    const deliveryStakeholder = delivery.stakeholders.find(
-      stakeholder => stakeholder.id === movieStakeholder.id
-    );
-
-    // If deliveryStakeholder doesn't exist yet, we need to create him
-    if (!deliveryStakeholder) {
-      const newDeliveryStakeholder = createStakeholder({ id: movieStakeholder.id, isAccepted: false });
-
-      return this.deliveryStakeholderDoc(delivery.id, newDeliveryStakeholder.id).set(
-        newDeliveryStakeholder
-      );
-    }
-  }
-
-  /** Delete stakeholder delivery */
-  public removeStakeholder(stakeholderId: string) {
-    const deliveryId = this.query.getActiveId();
-    return this.deliveryStakeholderDoc(deliveryId, stakeholderId).delete();
   }
 }

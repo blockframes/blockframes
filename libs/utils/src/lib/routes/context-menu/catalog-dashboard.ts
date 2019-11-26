@@ -1,11 +1,12 @@
-import { appsRoute } from '@blockframes/utils/routes';
+import { appsRoute } from '../create-routes';
 import { App } from '@blockframes/utils';
+import { ctxMenu } from './helpers';
 
-const baseRoute = `${appsRoute}/${App.catalogDashboard}`;
+export const baseRoute = `${appsRoute}/${App.catalogDashboard}`;
 
-export const CONTEXT_MENU = [
+export const baseMenu = [
   {
-    route: 'default',
+    route: baseRoute,
     items: [
       {
         name: 'movie list',
@@ -28,3 +29,5 @@ export const CONTEXT_MENU = [
     ]
   }
 ];
+
+export const CONTEXT_MENU = ctxMenu(baseMenu);

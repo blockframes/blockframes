@@ -1,10 +1,10 @@
-import { QueryEntity } from "@datorama/akita";
-import { Injectable } from "@angular/core";
-import { MemberState, MemberStore } from "./member.store";
-import { Observable, combineLatest } from "rxjs";
-import { PermissionsQuery } from "../../permissions/+state";
-import { map } from "rxjs/operators";
-import { OrganizationMember, UserRole } from "./member.model";
+import { QueryEntity } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+import { MemberState, MemberStore } from './member.store';
+import { Observable, combineLatest } from 'rxjs';
+import { PermissionsQuery } from '../../permissions/+state/permissions.query';
+import { map } from 'rxjs/operators';
+import { OrganizationMember } from './member.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +16,11 @@ export class MemberQuery extends QueryEntity<MemberState, OrganizationMember> {
 
   public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
     this.selectAll(),
-    this.permissionsQuery.superAdmins$
+    this.permissionsQuery.selectActive()
   ]).pipe(
-    map(([members, superAdmins]) => {
-      return members.map(member => ({
-        ...member,
-        role: superAdmins.includes(member.uid) ? UserRole.admin : UserRole.member
-      }));
+    map(([members, permissions]) => {
+      // Get the role of each member in permissions.roles and add it to member.
+      return members.map(member => ({...member, role: permissions.roles[member.uid]}));
     })
   );
 }

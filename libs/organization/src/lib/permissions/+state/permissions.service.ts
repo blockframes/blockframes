@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BFDoc, FireQuery } from '@blockframes/utils';
-import { createOrgDocPermissions, createUserDocPermissions, Permissions } from './permissions.model';
+import { BFDoc } from '@blockframes/utils';
 import { PermissionsQuery } from './permissions.query';
 import { Organization } from '../../+state';
-import { OrganizationMember, UserRole } from '../../member/+state/member.model';
+import { OrganizationMember } from '../../member/+state/member.model';
+import { createOrganizationDocPermissions, createUserDocPermissions, UserRole } from './permissions.firestore';
+import { PermissionsState, PermissionsStore } from './permissions.store';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PermissionsService {
-  constructor(private db: FireQuery, private query: PermissionsQuery) {}
+@CollectionConfig({ path: 'permissions'})
+export class PermissionsService extends CollectionService<PermissionsState> {
+  constructor(private query: PermissionsQuery, store: PermissionsStore) {
+    super(store)
+  }
 
   //////////////////////
   // DOC TRANSACTIONS //
@@ -22,8 +27,8 @@ export class PermissionsService {
     tx: firebase.firestore.Transaction
   ) {
     const promises = [];
-    const orgDocPermissions = createOrgDocPermissions(document.id, organization.id);
-    const userDocPermissions = createUserDocPermissions(document.id);
+    const orgDocPermissions = createOrganizationDocPermissions({id: document.id, ownerId: organization.id});
+    const userDocPermissions = createUserDocPermissions({id : document.id});
 
     const orgDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/orgDocsPermissions/${document.id}`).ref;
     promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
@@ -38,34 +43,29 @@ export class PermissionsService {
   }
 
   /** Update roles of members of the organization */
-  public async updateMembersRole(members: OrganizationMember[]) {
-    const orgId = this.query.getValue().orgId;
-    const orgPermissionsDocRef = this.db.doc<Permissions>(`permissions/${orgId}`).ref;
+  public async updateMembersRole(organizationMembers: OrganizationMember[]) {
+    const orgId = this.query.getActiveId();
+    const permissions = await this.getValue(orgId);
 
-    return this.db.firestore.runTransaction(async tx => {
-      const orgPermissionsDoc = await tx.get(orgPermissionsDocRef);
-      let {superAdmins, admins} = orgPermissionsDoc.data() as Permissions;
+    organizationMembers.forEach(({ uid, role }) => {
+      switch(role) {
+        case UserRole.superAdmin:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.superAdmin;
+          break;
+        case UserRole.admin:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.admin;
+          break;
+        case UserRole.member:
+          delete permissions.roles[uid];
+          permissions.roles[uid] = UserRole.member;
+          break;
+        default:
+          throw new Error(`User with id : ${uid} have no role.`);
+      }
+    });
 
-      const isAdmin = (uid) => admins.includes(uid)
-      const isSuperAdmin = (uid) => superAdmins.includes(uid)
-
-      members.forEach(({uid, role}) => {
-        // Case of role = 'admin': we remove the memberId of admins and insert it in superAdmins
-        if (role === UserRole.admin) {
-          if (isAdmin(uid) && !isSuperAdmin(uid)) {
-            admins = admins.filter(admin => admin !== uid);
-            superAdmins = [...superAdmins, uid];
-          }
-        }
-        // Case of role = 'member': we remove the memberId of superAdmins and insert it in admins
-        else {
-          if (!isAdmin(uid) && isSuperAdmin(uid)) {
-            superAdmins = superAdmins.filter(superAdmin => superAdmin !== uid);
-            admins = [...admins, uid]
-          };
-        }
-      });
-      return tx.update(orgPermissionsDocRef, { admins, superAdmins });
-    })
+    return this.update(orgId, { roles: permissions.roles })
   }
 }

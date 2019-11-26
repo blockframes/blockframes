@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { LandingPage, LoginPage, HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../support/pages';
+import { WelcomeViewPage, LoginViewPage, HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../support/pages';
 import { User, Availabilities } from "../support/utils/type";
 
 const LOGIN_CREDENTIALS: Partial<User> = {
@@ -40,8 +40,8 @@ beforeEach(() => {
 describe('test select movie from catalog', () => {
   it.skip('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
     // Connexion
-    const p1: LandingPage = new LandingPage();
-    const p2: LoginPage = p1.clickCallToAction();
+    const p1: WelcomeViewPage = new WelcomeViewPage();
+    const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(LOGIN_CREDENTIALS);
     const p3: HomePage = p2.clickSignIn();
     // Go to search page and apply filters

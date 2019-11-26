@@ -1,59 +1,39 @@
 import { Injectable } from '@angular/core';
-import { FireQuery, Query } from '@blockframes/utils';
-import { Permissions, PermissionsStore } from '../+state';
-import { Router, UrlTree } from '@angular/router';
-import { switchMap, tap } from 'rxjs/operators';
+import { PermissionsState, PermissionsService, PermissionsQuery } from '../+state';
+import { Router } from '@angular/router';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
-import { Subscription } from 'rxjs';
-
-export const permissionsQuery = (orgId: string): Query<Permissions> => ({
-  path: `permissions/${orgId}`,
-  userAppsPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/userAppsPermissions`
-  }),
-  userDocsPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/userDocsPermissions`
-  }),
-  orgDocsPermissions: (permissions: Permissions) => ({
-    path: `permissions/${permissions.orgId}/orgDocsPermissions`
-  })
-});
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class PermissionsGuard {
-  private subscription: Subscription;
-
+@CollectionGuardConfig({ awaitSync: true })
+export class PermissionsGuard extends CollectionGuard<PermissionsState> {
   constructor(
-    private fireQuery: FireQuery,
-    private auth: AuthQuery,
-    private store: PermissionsStore,
-    private router: Router
-  ) {}
-
-  isUrlTree(result: Permissions | UrlTree) {
-    return result instanceof UrlTree;
+    protected service: PermissionsService,
+    protected router: Router,
+    private authQuery: AuthQuery,
+    private query: PermissionsQuery
+  ) {
+    super(service);
   }
 
-  canActivate() {
-    return new Promise(res => {
-      // TODO: handle cases where we create multiple instances of subscription without unsubscribing
-      this.subscription = this.auth.user$
-        .pipe(
-          switchMap(user => {
-            if (!user.orgId) throw new Error('User has no orgId');
-            return this.fireQuery.fromQuery<Permissions>(permissionsQuery(user.orgId));
-          }),
-          tap(permissions => this.store.update(permissions))
-        )
-        .subscribe({
-          next: (result: Permissions) => res(!!result),
-          error: () => res(this.router.parseUrl('layout/organization'))
-        });
-    });
-  }
-
-  canDeactivate() {
-    this.subscription.unsubscribe();
-    return true;
+  sync() {
+    return this.authQuery.user$.pipe(
+      switchMap(user => {
+        if (!user.orgId) {
+          return of('layout/organization');
+        } else {
+          return this.service.syncActive({ id: user.orgId }).pipe(
+            map(_ => this.query.getActive()),
+            map(permissions => {
+              if (!permissions) {
+                return 'layout/organization';
+              }
+            })
+          );
+        }
+      })
+    );
   }
 }

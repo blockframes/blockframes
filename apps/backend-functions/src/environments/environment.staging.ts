@@ -7,7 +7,7 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { backupBucket, relayer, firebase, appUrl } from '@env';
+export { backupBucket, relayer, firebase, appUrl, sentryDsn } from '@env';
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;

@@ -30,6 +30,7 @@ export interface InvitationToWorkOnDocumentOptions {
 /** Factory function that create an Invitation of type fromUserToOrganization. */
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {
+    id: '',
     app: 'main',
     type: InvitationType.fromUserToOrganization,
     status: InvitationStatus.pending,

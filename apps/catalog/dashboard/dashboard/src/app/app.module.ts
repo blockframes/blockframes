@@ -38,6 +38,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
   imports: [
@@ -71,6 +75,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     AngularFirePerformanceModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+
+    // Analytics
+    sentryDsn ? SentryModule : [],
 
     // Akita
     AkitaNgRouterStoreModule.forRoot()

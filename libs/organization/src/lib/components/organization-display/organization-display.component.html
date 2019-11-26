@@ -21,7 +21,7 @@
           <li><b class="bf-dark-text">Activity</b> {{organizationInformations.activity}}</li>
         </ul>
         <div class="action-button">
-          <button *ngIf="isSuperAdmin" mat-icon-button (click)="editing.emit()" color="primary">
+          <button *ngIf="isAdmin" mat-icon-button (click)="editing.emit()" color="primary">
             <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
           </button>
         </div>

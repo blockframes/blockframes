@@ -3,11 +3,11 @@ import { ControlContainer } from '@angular/forms';
 import { OrganizationService, OrganizationQuery } from '../../+state';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
-import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
+import { TxFeedback } from '@blockframes/ethers/types';
 import { Router } from '@angular/router';
-import { PermissionsQuery, PermissionsService } from '../../permissions/+state';
-import { MemberQuery } from '../../member/+state/member.query';
-import { UserRole, OrganizationMember } from '../../member/+state/member.model';
+import { PermissionsQuery } from '../../permissions/+state/permissions.query';
+import { AuthQuery } from '@blockframes/auth';
+import { UserRole } from '@blockframes/permissions/types';
 
 @Component({
   selector: '[formGroup] member-form-role',
@@ -20,11 +20,10 @@ export class MemberFormRoleComponent {
     public controlContainer: ControlContainer,
     private service: OrganizationService,
     private organizationQuery: OrganizationQuery,
-    private query: MemberQuery,
     private walletService: WalletService,
-    private permissionsService: PermissionsService,
     private permissionsQuery: PermissionsQuery,
-    private router: Router,
+    private authQuery: AuthQuery,
+    private router: Router
   ) {}
 
   get control() {
@@ -32,69 +31,33 @@ export class MemberFormRoleComponent {
   }
 
   public get name() {
-    const {name} = this.control.value;
-    return name;
+    return this.control.value.name;
   }
 
   public get role() {
     return this.control.get('role');
   }
 
+  public get userId() {
+    return this.control.value.uid;
+  }
+
+  /** Return false when the a Super Admin try to change the role of the last organization Super Admin. */
   public get canChangeRole() {
     const cannotChange =
-      this.role.value === UserRole.admin
-      && this.permissionsQuery.superAdminCount <= 1;
+      this.role.value === UserRole.superAdmin &&
+      this.permissionsQuery.superAdminCount <= 1 &&
+      this.permissionsQuery.getActive().roles[this.userId] === UserRole.superAdmin;
     return !cannotChange;
   }
 
-  public async changeRole(role: UserRole) {
-    if (!this.canChangeRole) {
-      throw new Error('You can not change the role of the last Admin of an organization');
-    }
-    const { uid, email } = this.control.value;
-    const userEthAddress = await this.service.getMemberEthAddress(email);
-    const orgEthAddress = await this.service.getOrganizationEthAddress();
-    let tx: ActionTx;
-    const callback = () => {
-      const members = this.query.getAll()
-        .filter(member => member.uid !== uid)
-        .map(member => {
-          if (!member.role) {
-            return {...member, role: this.permissionsQuery.isUserSuperAdmin(member.uid) ? UserRole.admin : UserRole.member} as OrganizationMember;
-          }
-          return member;
-        });
-      const memberToUpdate = this.query.getAll().find(member => member.uid === uid);
-
-      const newMember: OrganizationMember = {...memberToUpdate, role};
-      members.push(newMember);
-      this.permissionsService.updateMembersRole(members);
-    };
-
-    const orgName = this.organizationQuery.getActive().name;
-    const orgId = this.organizationQuery.getActiveId();
-    let feedback: TxFeedback;
-    if (role === UserRole.admin){
-      tx = CreateTx.addAdmin(orgEthAddress, userEthAddress, callback);
-      feedback = {
-        confirmation: `You are about to promote ${this.name} as an Admin of ${orgName}`,
-        success: `${this.name} has been successfully promoted to the Admin role !`,
-        redirectName: 'Back to Administration',
-        redirectRoute: `/layout/o/organization/${orgId}/members`,
-      }
-    } else if (role === UserRole.member && this.permissionsQuery.superAdminCount >= 2) {
-      tx = CreateTx.removeAdmin(orgEthAddress, userEthAddress, callback);
-      feedback = {
-        confirmation: `You are about to revoke ${this.name} as an Admin of ${orgName}`,
-        success: `${this.name} has been successfully revoked from the Admin role !`,
-        redirectName: 'Back to Administration',
-        redirectRoute: `/layout/o/organization/${orgId}/members`,
-      }
-    }
-
-    this.walletService.setTx(tx);
-    this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+  /** Display a message if a Super Admin is about to downgrade himself. */
+  public get willDowngrade() {
+    return (
+      this.permissionsQuery.getActive().roles[this.authQuery.userId] === UserRole.superAdmin &&
+      this.role.value !== UserRole.superAdmin &&
+      this.userId === this.authQuery.userId
+    );
   }
 
   /** Instantiate the transaction to destroy a member's wallet, then redirect to the send tunnel */
@@ -110,7 +73,7 @@ export class MemberFormRoleComponent {
       success: `${this.name}'s Wallet has been successfully destroyed!`,
       redirectName: 'Back to Members',
       redirectRoute: `/layout/o/organization/${orgId}/members`
-    }
+    };
 
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);

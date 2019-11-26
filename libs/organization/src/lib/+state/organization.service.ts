@@ -1,8 +1,7 @@
-import firebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth';
-import { App, createAppPermissions, createPermissions, PermissionsQuery } from '../permissions/+state';
+import { PermissionsQuery } from '../permissions/+state';
 import {
   Organization,
   OrganizationOperation,
@@ -31,7 +30,9 @@ import {
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { MemberQuery } from '../member/+state/member.query';
 import { OrganizationMember } from '../member/+state/member.model';
-import { APPS_DETAILS } from '@blockframes/utils';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { APPS_DETAILS, App } from '@blockframes/utils';
+import { createOrgPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.firestore';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -88,7 +89,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     store: OrganizationStore,
     private permissionsQuery: PermissionsQuery,
     private authQuery: AuthQuery,
-    private memberQuery: MemberQuery
+    private memberQuery: MemberQuery,
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -135,7 +137,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   async onCreate(org: Organization, { write }: WriteOptions) {
     const user = this.authQuery.user;
     const orgId: string = org.id;
-    const permissions = createPermissions({ orgId, superAdmins: [user.uid] });
+    const permissions = createOrgPermissions({
+      id: orgId,
+      roles: { [user.uid]: UserRole.superAdmin }
+    });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
@@ -154,7 +159,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>): Promise<string> {
+  public async addOrganization(organization: Partial<Organization>) {
     const user = this.authQuery.user;
     const newOrganization = createOrganization({
       userIds: [user.uid],
@@ -166,8 +171,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Returns a list of organizations whose part of name match with @param prefix */
   public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
-    const call = firebase.functions().httpsCallable('findOrgByName');
-    return call({ prefix }).then(matchingOrganizations => matchingOrganizations.data);
+    const call = this.functions.httpsCallable('findOrgByName');
+    return call({ prefix }).toPromise().then(matchingOrganizations => matchingOrganizations.data);
   }
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly
@@ -398,7 +403,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     // re construct members list
     const promises: Promise<number>[] = [];
     this.memberQuery.getAll()
-      .filter(member => !this.permissionsQuery.isUserSuperAdmin(member.uid))
+      .filter(member => !this.permissionsQuery.isUserAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)

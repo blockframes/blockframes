@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 export type DocumentReference = admin.firestore.DocumentReference;
 
 import { backupBucket } from '../environments/environment';
-import { PublicUser } from '@blockframes/auth/types';
+import { PublicUser } from '../data/types';
 
 admin.initializeApp(functions.config().firebase);
 export const db = admin.firestore();
@@ -30,6 +30,6 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
  * Throws if the user does not exists.
  */
 export async function getUser(userId: string): Promise<PublicUser> {
-  const user = await db.doc(`/users/${userId}`).get();
+  const user = await db.doc(`users/${userId}`).get();
   return user.data()! as PublicUser;
 }

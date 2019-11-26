@@ -1,3 +1,5 @@
+import { UserRole } from "@blockframes/permissions/types";
+
 export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
@@ -9,9 +11,4 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   surname?: string;
   avatar?: string;
   role?: UserRole;
-}
-
-export const enum UserRole {
-  admin = 'admin',
-  member = 'member'
 }

@@ -9,6 +9,11 @@ export const persistenceSettings = {
   synchronizeTabs: true
 };
 
+// Analytics
+// =========
+
+export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
+
 // Firebase
 // ========
 
@@ -29,7 +34,8 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'prod_orgs'
+  indexNameOrganizations: 'prod_orgs',
+  indexNameMovies: 'prod_movies'
 };
 
 // Ethereum

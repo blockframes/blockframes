@@ -43,6 +43,7 @@
 
       // ORGANIZATION
       "@blockframes/organization": ["libs/organization/src/index.ts"],
+      "@blockframes/organization/*": ["libs/organization/src/lib/*"],
 
       // FIRESTORE DATA MODEL
       "@blockframes/organization/types": [
@@ -61,13 +62,14 @@
       "@blockframes/material/template/types": [
         "libs/material/src/lib/template/+state/template.firestore.ts"
       ],
-      "@blockframes/organization/stakeholder/types": [
-        "libs/organization/src/lib/stakeholder/+state/stakeholder.firestore.ts"
+      "@blockframes/material/delivery/stakeholder/types": [
+        "libs/material/src/lib/delivery/stakeholder/+state/stakeholder.firestore.ts"
       ],
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
       "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
+      "@blockframes/permissions/types": ["libs/organization/src/lib/permissions/+state/permissions.firestore.ts"],
 
       "@blockframes/account": ["libs/account/src/index.ts"],
 

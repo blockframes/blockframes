@@ -3,7 +3,11 @@ import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
 export { MovieDocument } from '@blockframes/movie/types';
-export { OrganizationDocument, OrganizationStatus, createOrganizationDocument } from '@blockframes/organization/types';
+export {
+  OrganizationDocument,
+  OrganizationStatus,
+  createOrganizationDocument
+} from '@blockframes/organization/types';
 export {
   InvitationDocument,
   InvitationOrUndefined,
@@ -14,13 +18,23 @@ export {
   InvitationToWorkOnDocument
 } from '@blockframes/invitation/types';
 export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';
 export {
   DeliveryDocument,
   StepDocument,
   StepDocumentWithDate,
   convertStepDocumentToStepDocumentWithDate
 } from '@blockframes/material/delivery/types';
+export {
+  PermissionsDocument,
+  AppPermissions,
+  UserDocPermissions,
+  OrganizationDocPermissions,
+  createAppPermissions,
+  createOrganizationDocPermissions,
+  createUserDocPermissions
+} from '@blockframes/permissions/types';
+export { PublicUser } from '@blockframes/auth/types';
 
 /**
  * Types used by the firebase backend.
@@ -41,28 +55,6 @@ interface DocWithID {
 // ======================
 // Business & App Related
 
-export interface OrganizationPermissions {
-  superAdmins: string[];
-}
-
-export interface OrganizationDocPermissions {
-  id: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-  owner: boolean;
-}
-
-export interface UserDocPermissions {
-  id: string;
-  admins: string[];
-  canCreate: string[];
-  canDelete: string[];
-  canRead: string[];
-  canUpdate: string[];
-}
-
 export enum AppAccessStatus {
   requested = 'requested',
   pending = 'pending',
@@ -75,6 +67,16 @@ export interface SnapObject {
   movie: PublicMovie;
   docId: string;
   type: NotificationType;
+}
+
+/** Custom object used to create an invitation. */
+export interface RequestToJoinOrganization {
+  adminEmail: string;
+  adminName: string;
+  organizationName: string;
+  organizationId: string;
+  userFirstname: string;
+  userLastname: string;
 }
 
 /**

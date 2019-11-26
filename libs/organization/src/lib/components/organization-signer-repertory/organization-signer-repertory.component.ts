@@ -9,8 +9,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { OrganizationOperation } from '../../+state';
-import { PermissionsQuery } from '../../permissions/+state';
-import { OrganizationMember, UserRole } from '../../member/+state/member.model';
+import { OrganizationMember } from '../../member/+state/member.model';
 
 interface OperationMember extends OrganizationMember {
   operationIds: string[];
@@ -59,8 +58,6 @@ export class OrganizationSignerRepertoryComponent {
    */
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private permissionQuery: PermissionsQuery) {}
-
   private joinMemberAndOperation() {
 
     const getOperationIds = (member: OrganizationMember) => this._operations
@@ -69,9 +66,7 @@ export class OrganizationSignerRepertoryComponent {
 
     const operationMembers: OperationMember[] = this._members.map(member => {
       const operationIds = getOperationIds(member);
-      const isAdmin = this.permissionQuery.isUserSuperAdmin(member.uid);
-      const role = isAdmin ? UserRole.admin : UserRole.member;
-      return { ...member, operationIds, role };
+      return { ...member, operationIds };
     });
 
     this.dataSource = new MatTableDataSource(operationMembers);
