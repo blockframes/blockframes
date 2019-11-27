@@ -7,17 +7,15 @@ import {
   MovieQuery
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
-import { BFDoc, FireQuery } from '@blockframes/utils';
+import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
-import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
-import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
-import { StakeholderDocument } from '../stakeholder/+state/stakeholder.firestore';
 import { CollectionService, syncQuery, CollectionConfig, Query } from 'akita-ng-fire';
 import { tap, switchMap } from 'rxjs/operators';
 
@@ -66,8 +64,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    protected store: DeliveryStore,
-    protected db: FireQuery
+    protected store: DeliveryStore
   ) {
     super(store);
   }
@@ -106,17 +103,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
   private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryWithTimestamps> {
     return this.db.doc(`deliveries/${deliveryId}`);
-  }
-
-  private deliveryStakeholderDoc(
-    deliveryId: string,
-    stakeholderId: string
-  ): AngularFirestoreDocument<StakeholderDocument> {
-    return this.deliveryStakeholdersCollection(deliveryId).doc(stakeholderId);
-  }
-
-  private deliveryStakeholdersCollection(deliveryId: string): AngularFirestoreCollection<Stakeholder> {
-    return this.deliveryDoc(deliveryId).collection('stakeholders');
   }
 
   ///////////////////
@@ -405,9 +391,10 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
-    const materials = await this.db.snapshot<Material[]>(
-      `${document._type}/${document.id}/materials`
-    );
+    const materials = await this.materialService.getMovieMaterials(document.id);
+    // const materials = await this.db.snapshot<Material[]>(
+    //   `${document._type}/${document.id}/materials`
+    // );
 
     materials.forEach(material => {
       const targetRef = this.db.doc<Material>(`movies/${document.id}/materials/${material.id}`).ref;
@@ -425,8 +412,9 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   ) {
     // NOTE: There is no way to query a collection within the transaction
     // So we accept a race condition here
-    const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`);
-    const movieMaterials = await this.db.snapshot<Material[]>(`movies/${delivery.movieId}/materials`);
+    const materials = await this.materialService.getTemplateMaterials(document.id);
+    //const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`);
+    const movieMaterials = await this.materialService.getMovieMaterials(delivery.movieId);
 
     materials.forEach(material => {
       const sameValuesMaterial = movieMaterials.find(movieMaterial => this.materialService.isTheSame(movieMaterial, material));
