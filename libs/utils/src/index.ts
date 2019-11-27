@@ -11,7 +11,7 @@ export * from './lib/form/matchers';
 export * from './lib/pipes/translate-slug.module';
 export * from './lib/intercom.module';
 export * from './lib/analytics/analytics.module';
-export { AppAnalytics } from './lib/analytics/app-analytics';
+export { FireAnalytics } from './lib/analytics/app-analytics';
 
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
