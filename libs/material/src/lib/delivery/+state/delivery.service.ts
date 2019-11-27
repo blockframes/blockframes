@@ -16,7 +16,7 @@ import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
-import { CollectionService, syncQuery, CollectionConfig, Query } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig, Query, awaitSyncQuery } from 'akita-ng-fire';
 import { tap, switchMap } from 'rxjs/operators';
 
 interface AddDeliveryOptions {
@@ -74,7 +74,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     return this.movieQuery.selectActiveId().pipe(
       // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
-      switchMap(movieId => syncQuery.call(this, deliveriesQuery(movieId)))
+      switchMap(movieId => awaitSyncQuery.call(this, deliveriesQuery(movieId)))
     );
   }
 
@@ -82,7 +82,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   public syncDeliveryQuery(deliveryId: string) {
     // Reset the store everytime the deliveryId changes
     this.store.reset();
-    return syncQuery.call(this, deliveryQuery(deliveryId));
+    return awaitSyncQuery.call(this, deliveryQuery(deliveryId));
   }
 
   ///////////////////////////
