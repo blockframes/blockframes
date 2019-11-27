@@ -25,10 +25,10 @@ import {
 import { DateRange } from '@blockframes/utils/date-range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
-  getSalesInDateRange,
-  exclusiveMovieSales,
+  getDistributionDealsInDateRange,
+  exclusiveDistributionDeals,
   salesAgentHasDateRange,
-  getSalesWithMediasTerritoriesAndLanguagesInCommon
+  getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
@@ -251,39 +251,39 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           // SALES CHECKS
           ///////////////
 
-          // Do we have others sales overrlapping current daterange ?
+          // Do we have others distribution deals overrlapping current daterange ?
           const deals = await this.movieService.getDistributionDeals(this.movie.id);
-          const salesInDateRange = getSalesInDateRange(value.duration, deals);
-          if (salesInDateRange.length === 0) {
-            // We have no intersection with other sales, so we are OK !
+          const dealsInDateRange = getDistributionDealsInDateRange(value.duration, deals);
+          if (dealsInDateRange.length === 0) {
+            // We have no intersection with other deals, so we are OK !
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
             return true; // End of process
           }
 
-          // We have territories and medias in common with some existing sales,
-          // Lets check if territories and medias in common belongs to the same sales and if those sales are exclusives.
-          const salesWithMediasTerritoriesAndLanguagesInCommon = getSalesWithMediasTerritoriesAndLanguagesInCommon(
+          // We have territories and medias in common with some existing distribution deals,
+          // Lets check if territories and medias in common belongs to the same deals and if those deals are exclusives.
+          const dealsWithMediasTerritoriesAndLanguagesInCommon = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
             value.territories,
             value.medias,
             value.languages,
-            salesInDateRange
+            dealsInDateRange
           );
 
-          if (salesWithMediasTerritoriesAndLanguagesInCommon.length) {
-            const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveMovieSales(
-              salesWithMediasTerritoriesAndLanguagesInCommon
+          if (dealsWithMediasTerritoriesAndLanguagesInCommon.length) {
+            const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveDistributionDeals(
+              dealsWithMediasTerritoriesAndLanguagesInCommon
             );
             if (exclusiveSalesWithMediasAndTerritoriesInCommon.length) {
               console.log(
-                'There is some exclusive sales blocking your request :',
+                'There is some exclusive deals blocking your request :',
                 exclusiveSalesWithMediasAndTerritoriesInCommon
               );
               return false; // End of process
             } else {
               if (value.exclusive) {
                 console.log(
-                  'There is some sales blocking your exclusivity request :',
-                  salesWithMediasTerritoriesAndLanguagesInCommon
+                  'There is some deals blocking your exclusivity request :',
+                  dealsWithMediasTerritoriesAndLanguagesInCommon
                 );
                 return false; // End of process
               } else {
@@ -292,7 +292,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
               }
             }
           } else {
-            // There is no sales with territories AND medias in common, we are OK.
+            // There is no deals with territories AND medias in common, we are OK.
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS, TERRITORIES AND LANGUAGES OVERLAPPINGS FOUND');
             return true; // End of process
           }

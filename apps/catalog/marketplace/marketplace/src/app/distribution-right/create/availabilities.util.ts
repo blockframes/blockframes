@@ -1,15 +1,17 @@
 import { MovieLanguageSpecification } from './../../movie/search/search.form';
 import { DateRange } from '@blockframes/utils/date-range';
-import { MovieSale, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
+import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
 
 /**
- * These function should be used in connection. For instance, we look for movie sales in
+ * These function should be used in connection. For instance, we look for movie distribution deals in
  * a date range which get specified by the customer. Then we go on to put the array we got back
  * from the function and put that into the next function where we look for territories, for instance.
  * Like that we make sure that we only search in a relevant date range.
  * Because of that flow, all properties which can be specified by the customer are mandatory.
  * That is why we need to implement a good error handeling and show results and solution
  * in the UI.
+ * 
+ * @dev workflow is described here : https://www.notion.so/cascade8/Avails-Search-ad38ce0bca424b6fa3036b0ab36164a0## 
  */
 
 /**
@@ -33,45 +35,45 @@ export function salesAgentHasDateRange(
 }
 
 /**
- * @description Fetches you all the exclusive sales of a movie
- * @param sales The movie sales property
+ * @description Fetches you all the exclusive deals of a movie
+ * @param distributionDeals The distribution deal property
  */
-export function exclusiveMovieSales(sales: MovieSale[]): MovieSale[] {
-  return sales.filter(sale => sale.exclusive === true);
+export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]): DistributionDeal[] {
+  return distributionDeals.filter(deal => deal.exclusive === true);
 }
 /**
- * @description This function checks if there are intersections in the sales
+ * @description This function checks if there are intersections in the deals
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
- * @param sales Array of the movie sales property.
- * Note don't put the exclusive sales array in here
+ * @param distributionDeals Array of the movie distribution deals.
+ * Note don't put the exclusive deals array in here
  */
-export function getSalesInDateRange(formDates: DateRange, sales: MovieSale[]): MovieSale[] {
-  const intersectedDateRangeSales: MovieSale[] = [];
+export function getDistributionDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+  const intersectedDateRangeDeals: DistributionDeal[] = [];
 
-  for (const sale of sales) {
-    const salesFrom: Date = new Date(sale.rights.from);
-    const salesTo: Date = new Date(sale.rights.to);
+  for (const deal of distributionDeals) {
+    const dealsFrom: Date = new Date(deal.rights.from);
+    const dealsTo: Date = new Date(deal.rights.to);
     /**
-     * If the form date 'from' is between a sales from and to, it means that there
-     * are already sales made, but it is still possible to buy a distribution right
+     * If the form date 'from' is between a deal from and to, it means that there
+     * are already deals made, but it is still possible to buy a distribution right
      * at this point.
      */
     if (
-      formDates.from.getTime() >= salesFrom.getTime() &&
-      formDates.from.getTime() <= salesTo.getTime()
+      formDates.from.getTime() >= dealsFrom.getTime() &&
+      formDates.from.getTime() <= dealsTo.getTime()
     ) {
-      intersectedDateRangeSales.push(sale);
+      intersectedDateRangeDeals.push(deal);
     }
     /**
      * If 'to' date is older than sales agent 'to' date
      * and 'to' date is younger than sales agent 'from' date, it is in range
      */
     if (
-      formDates.to.getTime() <= salesTo.getTime() &&
-      formDates.to.getTime() >= salesFrom.getTime()
+      formDates.to.getTime() <= dealsTo.getTime() &&
+      formDates.to.getTime() >= dealsFrom.getTime()
     ) {
-      intersectedDateRangeSales.push(sale);
+      intersectedDateRangeDeals.push(deal);
     }
 
     /**
@@ -79,37 +81,37 @@ export function getSalesInDateRange(formDates: DateRange, sales: MovieSale[]): M
      * 'to' date if younger than sales agent 'to' date , it is in range
      */
     if (
-      formDates.from.getTime() <= salesFrom.getTime() &&
-      formDates.to.getTime() >= salesTo.getTime()
+      formDates.from.getTime() <= dealsFrom.getTime() &&
+      formDates.to.getTime() >= dealsTo.getTime()
     ) {
-      intersectedDateRangeSales.push(sale);
+      intersectedDateRangeDeals.push(deal);
     }
   }
-  return intersectedDateRangeSales;
+  return intersectedDateRangeDeals;
 }
 
 /**
  * @description We want to check if user search and salesAgentMedias have medias and territories in common
  * @param formTerritories The territories which got specified by the buyer
  * @param formMedias The medias which got specified by the buyer
- * @param sales The array of sales from a movie in the previously specified date range
+ * @param deals The array of deals from a movie in the previously specified date range
  */
-export function getSalesWithMediasTerritoriesAndLanguagesInCommon(
+export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
   formTerritories: string[],
   formMedias: string[],
   formLanguages: MovieLanguageSpecification,
-  sales: MovieSale[]
-): MovieSale[] {
+  deals: DistributionDeal[]
+): DistributionDeal[] {
+
   /**
    * We have to look on the already exisitng
-   * sales in the movie and check if there is any overlapping medias
+   * deals in the movie and check if there is any overlapping medias
    */
-
-  const salesWithMediasTerritoriesAndLanguagesInCommon: MovieSale[] = [];
-  for (const sale of sales) {
+  const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
+  for (const deal of deals) {
     let mediasInCommon = false;
     for (const media of formMedias) {
-      for (const saleMedia of sale.medias) {
+      for (const saleMedia of deal.medias) {
         if (saleMedia === media) {
           mediasInCommon = true;
         }
@@ -118,26 +120,26 @@ export function getSalesWithMediasTerritoriesAndLanguagesInCommon(
 
     let territoriesInCommon = false;
     for (const territory of formTerritories) {
-      for (const saleTerritory of sale.territories) {
+      for (const saleTerritory of deal.territories) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
         }
       }
     }
 
-    // TODO: Add language when language is moved inside of sales object
+    // TODO: Add language when language is moved inside of deals object
     const languagesName: string[] = Object.keys(formLanguages);
 
     let dubbingInCommon = false;
     for (const language of languagesName) {
-      if (sale.dubbings.includes(language)) {
+      if (deal.dubbings.includes(language)) {
         dubbingInCommon = true;
       }
     }
 
     let subtitlesInCommon = false;
     for (const language of languagesName) {
-      if (sale.subtitles.includes(language)) {
+      if (deal.subtitles.includes(language)) {
         subtitlesInCommon = true;
       }
     }
@@ -147,10 +149,10 @@ export function getSalesWithMediasTerritoriesAndLanguagesInCommon(
       territoriesInCommon &&
       dubbingInCommon &&
       subtitlesInCommon &&
-      !salesWithMediasTerritoriesAndLanguagesInCommon.includes(sale)
+      !dealsWithMediasTerritoriesAndLanguagesInCommon.includes(deal)
     ) {
-      salesWithMediasTerritoriesAndLanguagesInCommon.push(sale);
+      dealsWithMediasTerritoriesAndLanguagesInCommon.push(deal);
     }
   }
-  return salesWithMediasTerritoriesAndLanguagesInCommon;
+  return dealsWithMediasTerritoriesAndLanguagesInCommon;
 }

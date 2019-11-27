@@ -4,12 +4,12 @@
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mollis velit consectetur felis malesuada, id
       maximus
       neque mattis. Vivamus quis massa eros. Integer in euismod nunc.</p>
-    <div  fxLayout="column"  fxLayoutAlign="center">
+    <div fxLayout="column" fxLayoutAlign="center">
       <button mat-button color="primary" (click)="downloadTemplate('movie')">
         Download our excel movie template
       </button>
-      <button mat-button color="primary" (click)="downloadTemplate('sales')">
-        Download our excel sales template
+      <button mat-button color="primary" (click)="downloadTemplate('deals')">
+        Download our excel deals template
       </button>
     </div>
   </section>
@@ -19,7 +19,7 @@
       <mat-label>Select import type</mat-label>
       <mat-select [formControl]="fileType">
         <mat-option value="movies">Movies</mat-option>
-        <mat-option value="sales">Sales</mat-option>
+        <mat-option value="deals">Deals</mat-option>
       </mat-select>
     </mat-form-field>
   </section>

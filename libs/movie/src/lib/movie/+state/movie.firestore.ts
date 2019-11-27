@@ -81,7 +81,8 @@ export interface MovieBudget {
   detailledBudget?: any // WIP #1052
 }
 
-interface MovieSaleRaw<D> {
+// Distribution deal raw interface, formerly called MovieSaleRaw
+interface DistributionDealRaw<D> {  
   operatorName: string;
   showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
   rights: DateRangeRaw<D>;
@@ -93,7 +94,7 @@ interface MovieSaleRaw<D> {
   price: number;
 }
 
-export interface MovieSaleDocumentWithDates extends MovieSaleRaw<Date> {
+export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
 }
 
 export interface MovieMain {

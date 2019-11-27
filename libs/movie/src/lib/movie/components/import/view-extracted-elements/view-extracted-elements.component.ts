@@ -3,8 +3,7 @@ import { MatTableDataSource } from '@angular/material';
 import {
   Movie,
   MovieQuery,
-  MovieSale,
-  Prize,
+  DistributionDeal,
   createMovieMain,
   createMoviePromotionalDescription,
   createMovieSalesCast,
@@ -13,7 +12,7 @@ import {
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   cleanModel,
-  createMovieSale,
+  createDistributionDeal,
   MovieService,
   createPromotionalElement,
   createCredit,
@@ -41,8 +40,8 @@ export interface MovieImportState {
   errors?: SpreadsheetImportError[];
 }
 
-export interface SalesImportState {
-  sale: MovieSale;
+export interface DealsImportState {
+  distributionDeal: DistributionDeal;
   errors?: SpreadsheetImportError[];
   movieTitle: String;
   movieInternalRef?: string;
@@ -94,7 +93,7 @@ enum SpreadSheetMovie {
   reservedTerritories
 }
 
-enum SpreadSheetSale {
+enum SpreadSheetDistributionDeal {
   internalRef,
   internationalTitle, // unused
   operatorName,
@@ -119,7 +118,7 @@ export class ViewExtractedElementsComponent {
 
   public moviesToCreate = new MatTableDataSource<MovieImportState>();
   public moviesToUpdate = new MatTableDataSource<MovieImportState>();
-  public sales = new MatTableDataSource<SalesImportState>();
+  public deals = new MatTableDataSource<DealsImportState>();
   private separator = ';';
 
   constructor(
@@ -1012,51 +1011,51 @@ export class ViewExtractedElementsComponent {
   }
 
 
-  public formatSales(sheetTab: SheetTab) {
+  public formatDistributionDeals(sheetTab: SheetTab) {
     this.clearDataSources();
     sheetTab.rows.forEach(async spreadSheetRow => {
 
-      if (spreadSheetRow[SpreadSheetSale.internalRef]) {
+      if (spreadSheetRow[SpreadSheetDistributionDeal.internalRef]) {
 
-        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetSale.internalRef]);
-        const sale = createMovieSale();
+        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
+        const distributionDeal = createDistributionDeal();
         const importErrors = {
-          sale,
+          distributionDeal,
           errors: [],
-          movieInternalRef: spreadSheetRow[SpreadSheetSale.internalRef],
+          movieInternalRef: spreadSheetRow[SpreadSheetDistributionDeal.internalRef],
           movieTitle: movie ? movie.main.title.original : undefined
-        } as SalesImportState;
+        } as DealsImportState;
 
         if (movie) {
           // OPERATOR NAME
-          if (spreadSheetRow[SpreadSheetSale.operatorName]) {
-            sale.operatorName = spreadSheetRow[SpreadSheetSale.operatorName];
+          if (spreadSheetRow[SpreadSheetDistributionDeal.operatorName]) {
+            distributionDeal.operatorName = spreadSheetRow[SpreadSheetDistributionDeal.operatorName];
           }
 
           // SHOW OPERATOR NAME
-          if (spreadSheetRow[SpreadSheetSale.showOperatorName]) {
-            sale.showOperatorName = spreadSheetRow[SpreadSheetSale.showOperatorName].toLowerCase() === 'yes' ? true : false;
+          if (spreadSheetRow[SpreadSheetDistributionDeal.showOperatorName]) {
+            distributionDeal.showOperatorName = spreadSheetRow[SpreadSheetDistributionDeal.showOperatorName].toLowerCase() === 'yes' ? true : false;
           }
 
           // BEGINNING OF RIGHTS
-          if (spreadSheetRow[SpreadSheetSale.rightsStart]) {
-            const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.rightsStart]);
-            sale.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+          if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
+            const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
+            distributionDeal.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
           }
 
           // END OF RIGHTS
-          if (spreadSheetRow[SpreadSheetSale.rightsEnd]) {
-            const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetSale.rightsEnd]);
-            sale.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+          if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
+            const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
+            distributionDeal.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
           }
 
           // TERRITORIES (Mandate Territories)
-          if (spreadSheetRow[SpreadSheetSale.territories]) {
-            sale.territories = [];
-            spreadSheetRow[SpreadSheetSale.territories].split(this.separator).forEach((c: string) => {
+          if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
+            distributionDeal.territories = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: string) => {
               const territory = getCodeIfExists('TERRITORIES', c);
               if (territory) {
-                sale.territories.push(territory);
+                distributionDeal.territories.push(territory);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1070,12 +1069,12 @@ export class ViewExtractedElementsComponent {
           }
 
           // MEDIAS (Mandate Medias)
-          if (spreadSheetRow[SpreadSheetSale.medias]) {
-            sale.medias = [];
-            spreadSheetRow[SpreadSheetSale.medias].split(this.separator).forEach((c: string) => {
+          if (spreadSheetRow[SpreadSheetDistributionDeal.medias]) {
+            distributionDeal.medias = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.medias].split(this.separator).forEach((c: string) => {
               const media = getCodeIfExists('MEDIAS', c);
               if (media) {
-                sale.medias.push(media);
+                distributionDeal.medias.push(media);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1089,12 +1088,12 @@ export class ViewExtractedElementsComponent {
           }
 
           // DUBS (Authorized language(s))
-          if (spreadSheetRow[SpreadSheetSale.dubbings]) {
-            sale.dubbings = [];
-            spreadSheetRow[SpreadSheetSale.dubbings].split(this.separator).forEach((g: string) => {
+          if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
+            distributionDeal.dubbings = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: string) => {
               const dubbing = getCodeIfExists('LANGUAGES', g);
               if (dubbing) {
-                sale.dubbings.push(dubbing);
+                distributionDeal.dubbings.push(dubbing);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1109,12 +1108,12 @@ export class ViewExtractedElementsComponent {
           }
 
           // SUBTILES (Available subtitle(s))
-          if (spreadSheetRow[SpreadSheetSale.subtitles]) {
-            sale.subtitles = [];
-            spreadSheetRow[SpreadSheetSale.subtitles].split(this.separator).forEach((g: string) => {
+          if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
+            distributionDeal.subtitles = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: string) => {
               const subtitle = getCodeIfExists('LANGUAGES', g);
               if (!!subtitle) {
-                sale.subtitles.push(subtitle);
+                distributionDeal.subtitles.push(subtitle);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1129,23 +1128,23 @@ export class ViewExtractedElementsComponent {
           }
 
           // EXCLUSIVE DEAL
-          if (spreadSheetRow[SpreadSheetSale.exclusive]) {
-            sale.exclusive = spreadSheetRow[SpreadSheetSale.exclusive].toLowerCase() === 'yes' ? true : false;
+          if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
+            distributionDeal.exclusive = spreadSheetRow[SpreadSheetDistributionDeal.exclusive].toLowerCase() === 'yes' ? true : false;
           }
 
           // PRICE
-          if (!isNaN(Number(spreadSheetRow[SpreadSheetSale.price]))) {
-            sale.price = parseInt(spreadSheetRow[SpreadSheetSale.price], 10);
+          if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.price]))) {
+            distributionDeal.price = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
           }
 
           // Checks if sale already exists
-          if (await this.movieService.existingDistributionDeal(movie.id, sale)) {
+          if (await this.movieService.existingDistributionDeal(movie.id, distributionDeal)) {
             importErrors.errors.push({
               type: 'error',
-              field: 'sale',
-              name: 'Sale',
-              reason: 'Sale already added',
-              hint: 'Sale already added'
+              field: 'distributionDeal',
+              name: 'Distribution deal',
+              reason: 'Distribution deal already added',
+              hint: 'Distribution deal already added'
             });
           }
 
@@ -1160,16 +1159,16 @@ export class ViewExtractedElementsComponent {
         }
 
         const saleWithErrors = this.validateMovieSale(importErrors);
-        this.sales.data.push(saleWithErrors);
-        this.sales.data = [... this.sales.data];
+        this.deals.data.push(saleWithErrors);
+        this.deals.data = [... this.deals.data];
 
       }
 
     });
   }
 
-  private validateMovieSale(importErrors: SalesImportState): SalesImportState {
-    const sale = importErrors.sale;
+  private validateMovieSale(importErrors: DealsImportState): DealsImportState {
+    const distributionDeal = importErrors.distributionDeal;
 
     const errors = importErrors.errors;
 
@@ -1183,7 +1182,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  OPERATOR NAME
-    if (!sale.operatorName) {
+    if (!distributionDeal.operatorName) {
       errors.push({
         type: 'error',
         field: 'operatorName',
@@ -1194,7 +1193,7 @@ export class ViewExtractedElementsComponent {
     }
 
     //  OPERATOR NAME
-    if (!sale.operatorName) {
+    if (!distributionDeal.operatorName) {
       errors.push({
         type: 'error',
         field: 'operatorName',
@@ -1205,7 +1204,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // SHOW OPERATOR NAME
-    if (sale.showOperatorName === undefined) {
+    if (distributionDeal.showOperatorName === undefined) {
       errors.push({
         type: 'error',
         field: 'showOperatorName',
@@ -1216,7 +1215,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // BEGINNING OF RIGHTS
-    if (!sale.rights.from) {
+    if (!distributionDeal.rights.from) {
       errors.push({
         type: 'error',
         field: 'rights.from',
@@ -1227,7 +1226,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // END OF RIGHTS
-    if (!sale.rights.to) {
+    if (!distributionDeal.rights.to) {
       errors.push({
         type: 'error',
         field: 'rights.to',
@@ -1238,7 +1237,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // TERRITORIES
-    if (!sale.territories) {
+    if (!distributionDeal.territories) {
       errors.push({
         type: 'error',
         field: 'territories',
@@ -1249,7 +1248,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // MEDIAS
-    if (!sale.medias) {
+    if (!distributionDeal.medias) {
       errors.push({
         type: 'error',
         field: 'medias',
@@ -1260,7 +1259,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // DUBBINGS
-    if (sale.dubbings.length === 0) {
+    if (distributionDeal.dubbings.length === 0) {
       errors.push({
         type: 'error',
         field: 'dubbings',
@@ -1271,7 +1270,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // SUBTITLES
-    if (sale.subtitles.length === 0) {
+    if (distributionDeal.subtitles.length === 0) {
       errors.push({
         type: 'error',
         field: 'subtitles',
@@ -1282,7 +1281,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // EXCLUSIVE
-    if (sale.exclusive === undefined) {
+    if (distributionDeal.exclusive === undefined) {
       errors.push({
         type: 'error',
         field: 'exclusive',
@@ -1297,11 +1296,11 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // PRICE
-    if (!sale.price) {
+    if (!distributionDeal.price) {
       errors.push({
         type: 'warning',
         field: 'price',
-        name: "Sale price",
+        name: "Distribution deal price",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1313,6 +1312,6 @@ export class ViewExtractedElementsComponent {
   private clearDataSources() {
     this.moviesToCreate.data = [];
     this.moviesToUpdate.data = [];
-    this.sales.data = [];
+    this.deals.data = [];
   }
 }
