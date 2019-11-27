@@ -9,7 +9,6 @@ import {
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
 import { CatalogBasket } from '@blockframes/marketplace';
-import { OrganizationMember } from '../member/+state/member.model';
 export {
   OrganizationStatus,
   WishlistStatus,
@@ -30,38 +29,14 @@ export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
 }
 
-export interface OrganizationOperation {
-  id: string;
-  name: string;
-  quorum: number;
-  members: OrganizationMember[];
-}
-
-export interface OrganizationAction {
-  id: string;
-  opId: string;
-  name: string;
-  signers: OrganizationMember[];
-  isApproved: boolean;
-  approvalDate?: string;
-}
-
 export interface OrganizationWithTimestamps extends OrganizationDocument {
   /** Shopping cart list of movies in catalog-marketplace */
   baskets: CatalogBasket[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
-  /** Represent the rules of possible actions on the blockchain */
-  operations?: OrganizationOperation[];
-  /** Possible actions on the blockchain (example: sign a specific delivery) */
-  actions?: OrganizationAction[];
   /** Shopping cart list of movies in catalog-marketplace */
   baskets: CatalogBasket[];
-  /** Is the smart contract of organization being deploy or not */
-  isDeploying?: boolean;
-  /** The current step of the status of the smart contract of organization */
-  deployStep?: DeploySteps;
 }
 
 export interface Wishlist extends WishlistDocumentWithDates {
@@ -71,8 +46,6 @@ export interface Wishlist extends WishlistDocumentWithDates {
 export interface OrganizationForm {
   name: string;
 }
-
-export const enum DeploySteps { notDeployed, registered, resolved, ready };
 
 export interface PublicOrganization {
   id: string;
@@ -92,27 +65,13 @@ export function createOrganization(
     updated: new Date(),
     // Init "akita" fields
     baskets: [],
-    actions: [],
-    operations: [],
   }
 }
 
 /** Cleans an organization of its optional parameters */
 export function cleanOrganization(organization: Organization) {
   delete organization.baskets;
-  delete organization.actions;
-  delete organization.operations;
   return organization;
-}
-
-export function createOperation(
-  operation: Partial<OrganizationOperation> = {}
-): OrganizationOperation {
-  return {
-    quorum: 0,
-    members: [],
-    ...operation
-  } as OrganizationOperation;
 }
 
 /** Convert an OrganizationWithTimestamps to an Organization (that uses Date). */
@@ -121,8 +80,8 @@ export function convertOrganizationWithTimestampsToOrganization(
 ): Organization {
   return {
     ...org,
-    created: org.created.toDate(),
-    updated: org.updated.toDate(),
+    created: (org.created instanceof Date) ? org.created : org.created.toDate(), // prevent error in case the guard is wrongly called twice in a row
+    updated: (org.updated instanceof Date) ? org.updated : org.updated.toDate(),
     wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
   };
 }

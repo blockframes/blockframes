@@ -1,9 +1,9 @@
 import { FormList, FormEntity } from "@blockframes/utils";
-import { OrganizationOperation, createOperation } from "../+state";
+import { DaoOperation, createOperation } from "../+state";
 import { FormControl } from "@angular/forms";
 
-function createOperationControl(operation: Partial<OrganizationOperation> = {}) {
-   const op = createOperation(operation);
+function createOperationControl(operation: Partial<DaoOperation> = {}) {
+   const op = createOperation(operation.id, operation.name);
    return {
     id: new FormControl(op.id),
     name: new FormControl(op.name),
@@ -14,7 +14,7 @@ function createOperationControl(operation: Partial<OrganizationOperation> = {}) 
 export type OperationControl = ReturnType<typeof createOperationControl>;
 
 export function createOperationFormList() {
-  return FormList.factory([], (operation: OrganizationOperation) => {
+  return FormList.factory([], (operation: DaoOperation) => {
     const control = createOperationControl(operation);
     return new FormEntity<OperationControl>(control);
   });

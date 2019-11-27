@@ -16,6 +16,7 @@ import { applyTransaction } from '@datorama/akita';
 import { id as keccak256 } from '@ethersproject/hash';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormEntity } from '@blockframes/utils';
+import { DaoService } from 'libs/ethers/src/lib/dao/+state';
 
 @Component({
   selector: 'delivery-editable',
@@ -43,7 +44,7 @@ export class DeliveryEditableComponent implements OnInit {
     private materialService: MaterialService,
     private service: DeliveryService,
     private materialStore: MaterialStore,
-    private organizationService: OrganizationService,
+    private daoService: DaoService,
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute
@@ -224,7 +225,7 @@ export class DeliveryEditableComponent implements OnInit {
     const jsonMaterials = JSON.stringify(materials);
 
     const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
-    const orgEthAddress = await this.organizationService.getOrganizationEthAddress();
+    const orgEthAddress = await this.daoService.getOrganizationEthAddress();
     const movieId = this.movieQuery.getValue().active;
 
     this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, movieId);
