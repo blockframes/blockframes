@@ -1,4 +1,4 @@
-import { switchMap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { BasketQuery } from './basket.query';
 import { Injectable } from '@angular/core';

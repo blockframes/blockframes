@@ -27,12 +27,12 @@ export {
 } from '@blockframes/material/delivery/types';
 export {
   PermissionsDocument,
-  AppPermissions,
-  UserDocPermissions,
-  OrganizationDocPermissions,
+  AppPermissionsDocument,
+  UserPermissionsDocument,
+  DocPermissionsDocument,
   createAppPermissions,
-  createOrganizationDocPermissions,
-  createUserDocPermissions
+  createDocPermissions,
+  createUserPermissions
 } from '@blockframes/permissions/types';
 export { PublicUser } from '@blockframes/auth/types';
 

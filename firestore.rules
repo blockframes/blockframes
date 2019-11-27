@@ -17,7 +17,7 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
     	allow read, update: if userId() == existingData().userId
-      	|| currentUser().orgId == existingData().organization.id;
+      	|| userOrgId().orgId == existingData().organization.id;
     	allow create, delete: if false;
     }
 
@@ -34,10 +34,10 @@ service cloud.firestore {
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-        // TODO(issue#697): allow create only if state is pending.
-        // TODO(issue#697): allow update only if state is not changed (admin will change it).
     	allow create: if isSignedIn() && incomingData().status == 'pending';
-      allow update: if isSignedIn() && incomingData().status == existingData().status;
+      allow update: if isSignedIn()
+        && isOrgAdmin(userId(), orgId)
+        && incomingData().status == existingData().status;
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
@@ -50,7 +50,7 @@ service cloud.firestore {
     }
 
     /// PERMISSIONS RULES ///
-
+    // We should create/update/delete with firebase functions only
     match /permissions/{orgId} {
     	allow read: if isOrgMember(orgId);
       allow write: if isOrgAdmin(userId(), orgId) && incomingData().id == orgId;
@@ -87,16 +87,12 @@ service cloud.firestore {
       return request.resource.data;
     }
 
-    function currentUser() {
-      return request.auth;
-    }
-
     function userId() {
-      return currentUser().uid;
+      return request.auth.uid;
     }
 
     function isSignedIn() {
-      return currentUser() != null;
+      return request.auth != null;
     }
 
   	function userOrgId() {
