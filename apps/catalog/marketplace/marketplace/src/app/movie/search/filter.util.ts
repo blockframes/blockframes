@@ -99,17 +99,15 @@ function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date
   return (
     deals.some(deal => {
       if (deal.rights) {
-        const from: Date = (deal.rights.from as any).toDate();
         /**
          * Check if range.from is inside of a deal
          */
-        return from.getTime() < range.from.getTime();
+        return deal.rights.from.getTime() < range.from.getTime();
       }
     }) &&
     deals.some(deal => {
       if (deal.rights) {
-        const to: Date = (deal.rights.to as any).toDate();
-        return to.getTime() > range.to.getTime();
+        return deal.rights.to.getTime() > range.to.getTime();
       }
     })
   );
