@@ -17,7 +17,7 @@ export const sentryDsn = undefined;
 // Firebase
 // ========
 
-export const appUrl = 'https://ci.blockframes.io';
+export const appUrl = 'https://blockframes-ci.web.app/';
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
