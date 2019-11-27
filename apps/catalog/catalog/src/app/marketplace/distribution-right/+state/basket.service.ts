@@ -134,10 +134,6 @@ export class BasketService extends CollectionService<BasketState> {
       .update(basket);
   }
 
-  get createFireStoreId(): string {
-    return this.db.createId();
-  }
-
   public removeMovieFromWishlist(id: string): boolean | Error {
     try {
       const wishlist = this.organizationQuery.getActive().wishlist.map(w => {
