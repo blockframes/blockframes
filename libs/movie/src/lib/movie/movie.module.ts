@@ -32,16 +32,13 @@ import { MovieDisplayModule } from './display/display.module';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { MovieListComponent } from './pages/movie-list/movie-list.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
-import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 
@@ -51,11 +48,8 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
 @NgModule({
   declarations: [
     MovieEditableComponent,
-    MovieListComponent,
-    MovieTitleFormComponent,
     HomeEmptyComponent,
-    MovieCreateComponent,
-    MovieViewComponent,
+    MovieViewComponent
   ],
   imports: [
     CommonModule,
@@ -98,7 +92,6 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-  ],
-  entryComponents: [MovieTitleFormComponent]
+  ]
 })
 export class MovieModule {}

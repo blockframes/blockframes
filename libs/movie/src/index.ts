@@ -13,7 +13,7 @@ export * from './lib/movie/movie.module';
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
-export { MovieListComponent } from './lib/movie/pages/movie-list/movie-list.component';
+export { MovieCreateModule } from './lib/movie/components/movie-create/movie-create.module';
 export * from './lib/movie/static-model';
 
 // Movie Component Module

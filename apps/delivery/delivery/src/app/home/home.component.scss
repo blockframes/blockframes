@@ -1,0 +1,17 @@
+:host {
+  margin-left: 20%;
+  margin-right: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-divider {
+  margin: 20px;
+}
+
+movie-card {
+  height: 390px;
+  width: 310px;
+  margin: 15px;
+}

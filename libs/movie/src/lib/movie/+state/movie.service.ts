@@ -6,7 +6,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { firestore } from 'firebase';
 import objectHash from 'object-hash';
 import { switchMap } from 'rxjs/operators';
-import { createMovie, Movie, MovieSale } from './movie.model';
+import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 
 /**
@@ -85,7 +85,7 @@ export class MovieService extends CollectionService<MovieState> {
    *
    * @param movieId
    */
-  private distributionDealsCollection(movieId: string): AngularFirestoreCollection<MovieSale> {
+  private distributionDealsCollection(movieId: string): AngularFirestoreCollection<DistributionDeal> {
     return this.movieDoc(movieId).collection('distributiondeals');
   }
 
@@ -94,9 +94,9 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId
    * @param distributionDeal
    */
-  public addDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<void> {
-    // Create an id from MovieSale content.
-    // A same MovieSale document will always have the same hash to prevent multiple insertion of same deal
+  public addDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<void> {
+    // Create an id from DistributionDeal content.
+    // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     const dealId = objectHash(distributionDeal);
     return this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
   }
@@ -106,16 +106,16 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId
    * @param distributionDeal
    */
-  public async existingDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<MovieSale> {
+  public async existingDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<DistributionDeal> {
     const dealId = objectHash(distributionDeal);
     const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
-    return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as MovieSale : undefined;
+    return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as DistributionDeal : undefined;
   }
 
   /**
    * @param movieId
    */
-  public async getDistributionDeals(movieId: string): Promise<MovieSale[]> {
+  public async getDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
     const deals = await this.distributionDealsCollection(movieId).get().toPromise();
     return deals.docs.map(doc => {
       const data = doc.data();
@@ -127,7 +127,7 @@ export class MovieService extends CollectionService<MovieState> {
       if(data.rights.to instanceof firestore.Timestamp) {
         data.rights.to = data.rights.to.toDate();
       }
-      return data as MovieSale;
+      return data as DistributionDeal;
     })
   }
 }

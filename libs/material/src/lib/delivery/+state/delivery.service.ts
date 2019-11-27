@@ -366,9 +366,7 @@ export class DeliveryService {
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
-    const materials = await this.db.snapshot<Material[]>(
-      `${document._type}/${document.id}/materials`
-    );
+    const materials = await this.materialService.getTemplateMaterials(document.id)
 
     materials.forEach(material => {
       tx.set(this.materialDeliveryDoc(delivery.id, material.id).ref, {

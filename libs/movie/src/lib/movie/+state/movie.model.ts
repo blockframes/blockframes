@@ -5,7 +5,7 @@ import {
   MovieMain,
   MoviePromotionalDescription,
   MoviePromotionalElements,
-  MovieSaleDocumentWithDates,
+  DistributionDealDocumentWithDates,
   MovieSalesAgentDealDocumentWithDates,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates,
@@ -40,7 +40,7 @@ export type Credit = Person;
 
 export type SalesAgent = Person;
 
-export type MovieSale = MovieSaleDocumentWithDates;
+export type DistributionDeal = DistributionDealDocumentWithDates;
 
 export type MovieSalesInfo = MovieSalesInfoDocumentWithDates;
 
@@ -200,7 +200,7 @@ export function createMovieSalesAgentDeal(
   };
 }
 
-export function createMovieSale(params: Partial<MovieSale> = {}): MovieSale {
+export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
     operatorName: '',
     showOperatorName: false,

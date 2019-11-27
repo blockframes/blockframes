@@ -1,18 +1,23 @@
 <section>
-  <form [formGroup]="titleForm">
     <article mat-dialog-content fxLayout="column" fxLayoutAlign="space-between center">
       <h3>New movie title</h3>
       <span>Choose a title for your movie</span>
       <mat-form-field appearance="outline">
         <mat-label>Movie title</mat-label>
-        <input matInput #movieName test-id="movie-name" type="string" placeholder="Movie title" formControlName="title"/>
+        <input matInput test-id="movie-name" #movieName type="string" placeholder="Movie title"/>
       </mat-form-field>
-      <img src="/assets/images/add-movie.png" />
+      <img src="/assets/images/add-movie.png" alt="Add Movie Illustration"/>
     </article>
 
     <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
-      <button test-id="movie-create" mat-flat-button color="accent" [disabled]="!movieName.value" (click)="newMovie()">Next</button>
-      <button mat-button color="primary" (click)="cancel()">Cancel</button>
+      <a
+        test-id="movie-create"
+        mat-flat-button
+        color="accent"
+        (click)="newMovie(movieName.value)"
+        [disabled]="!movieName.value">
+        Next
+      </a>
+      <a mat-button color="primary" (click)="cancel()">Cancel</a>
     </article>
-  </form>
-</section>
+  </section>

@@ -44,13 +44,14 @@ export class DeliveryAddSettingsComponent {
     this.store.updateWizard({ options });
     this.options = options;
   }
-  //TODO: remove dead code from delivery-add-complete
+
+  /** Generate the delivery with all previously selected settings and navigate on it. */
   public async onCompleteFlow() {
     const { wizard } = this.query;
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
-    this.store.setActive(deliveryId);
-    return this.router.navigate([`../../${movieId}/${deliveryId}/list`], {relativeTo: this.route});
+
+    return this.router.navigate([`../../../${movieId}/${deliveryId}`], {relativeTo: this.route})
   }
 }
