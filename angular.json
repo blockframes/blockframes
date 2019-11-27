@@ -999,7 +999,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.ci.ts"
                 }
               ]
             },
@@ -1008,7 +1008,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.prod.ts"
                 }
               ]
             },
