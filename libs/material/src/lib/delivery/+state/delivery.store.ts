@@ -1,6 +1,7 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { EntityStore, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Delivery } from './delivery.model';
+import { Delivery, convertDeliveryWithTimestampsToDelivery } from './delivery.model';
+import { CollectionState } from 'akita-ng-fire';
 
 export const enum DeliveryOption {
   mustChargeMaterials = 'mustChargeMaterials',
@@ -27,7 +28,7 @@ export interface DeliveryWizard {
   options: DeliveryOption[];
 }
 
-export interface DeliveryState extends EntityState<Delivery>, ActiveState<string> {
+export interface DeliveryState extends CollectionState<Delivery> {
   wizard?: DeliveryWizard;
 }
 
@@ -42,6 +43,16 @@ const initialState = {
 export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
   constructor() {
     super(initialState);
+  }
+
+  // TODO: #issue1288, type correctly delivery
+  akitaPreAddEntity(delivery: any): Delivery {
+    return convertDeliveryWithTimestampsToDelivery(delivery);
+  }
+
+  // TODO: #issue1288, type correctly delivery
+  akitaPreUpdateEntity(currentDelivery: any, nextDelivery: any): Delivery {
+    return convertDeliveryWithTimestampsToDelivery(nextDelivery);
   }
 
   public updateWizard(content?: Partial<DeliveryWizard>) {

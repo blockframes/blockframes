@@ -10,7 +10,7 @@ import { OrganizationQuery, PermissionsService} from '@blockframes/organization'
 import { BFDoc, FireQuery } from '@blockframes/utils';
 import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
 import { TemplateQuery } from '../../template/+state';
-import { DeliveryOption, DeliveryWizard, DeliveryWizardKind } from './delivery.store';
+import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
@@ -18,6 +18,8 @@ import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
 import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 import { StakeholderDocument } from '../stakeholder/+state/stakeholder.firestore';
+import { CollectionService, syncQuery, CollectionConfig, Query } from 'akita-ng-fire';
+import { tap, switchMap } from 'rxjs/operators';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -26,36 +28,34 @@ interface AddDeliveryOptions {
   mustBeSigned?: boolean;
 }
 
-export function timestampObjectsToDate(docs: any[]) {
-  if (!docs) {
-    return [];
-  }
+// TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
+// e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
+const deliveriesQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
+  path: 'deliveries',
+  queryFn: ref => ref.where('movieId', '==', movieId),
+  stakeholders: delivery => ({
+    path: `deliveries/${delivery.id}/stakeholders`,
+    organization: stakeholder => ({
+      path: `orgs/${stakeholder.id}`
+    })
+  })
+})
 
-  return docs.map(doc => {
-    if (doc.date) {
-      return { ...doc, date: doc.date.toDate() };
-    } else {
-      return doc;
-    }
-  });
-}
-
-/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
-export function modifyTimestampToDate(delivery: DeliveryWithTimestamps): Delivery {
-  const mgDeadlines = delivery.mgDeadlines || [];
-
-  return {
-    ...delivery,
-    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
-    steps: timestampObjectsToDate(delivery.steps),
-    mgDeadlines: timestampObjectsToDate(mgDeadlines)
-  };
-}
+export const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
+  path: `deliveries/${deliveryId}`,
+  stakeholders: delivery => ({
+    path: `deliveries/${delivery.id}/stakeholders`,
+    organization: stakeholder => ({
+      path: `orgs/${stakeholder.id}`
+    })
+  })
+});
 
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryService {
+@CollectionConfig({ path: 'deliveries' })
+export class DeliveryService extends CollectionService<DeliveryState> {
   constructor(
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
@@ -66,8 +66,27 @@ export class DeliveryService {
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    private db: FireQuery
-  ) {}
+    protected store: DeliveryStore,
+    protected db: FireQuery
+  ) {
+    super(store);
+  }
+
+  /** Sync the store with every deliveries of the active movie. */
+  public syncDeliveriesQuery() {
+    return this.movieQuery.selectActiveId().pipe(
+      // Reset the store everytime the movieId changes
+      tap(_ => this.store.reset()),
+      switchMap(movieId => syncQuery.call(this, deliveriesQuery(movieId)))
+    );
+  }
+
+  /** Sync the store with the given delivery. */
+  public syncDeliveryQuery(deliveryId: string) {
+    // Reset the store everytime the deliveryId changes
+    this.store.reset();
+    return syncQuery.call(this, deliveryQuery(deliveryId));
+  }
 
   ///////////////////////////
   // Document manipulation //
