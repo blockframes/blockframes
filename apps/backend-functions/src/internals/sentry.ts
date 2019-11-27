@@ -15,13 +15,10 @@ if (sentryDsn) {
  * as of today (2019-07-02).
  */
 export function logErrors(f: any): any {
-  console.log('avant try');
   return async (...args: any[]) => {
     try {
-      console.log('dans try');
       return f(...args);
     } catch (err) {
-      console.log('dans catch');
       // Send the exception to sentry IF we have a configuration.
       if (sentryDsn) {
         captureException(err);
