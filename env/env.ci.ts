@@ -25,7 +25,8 @@ export const firebase = {
   databaseURL: 'https://blockframes-ci.firebaseio.com',
   projectId: 'blockframes-ci',
   storageBucket: 'blockframes-ci.appspot.com',
-  messagingSenderId: '973979650792'
+  messagingSenderId: '973979650792',
+  measurementId: "G-GE7LPQ7MBX"
 };
 
 // Algolia
