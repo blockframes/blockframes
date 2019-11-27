@@ -544,13 +544,10 @@ export class MarketplaceSearchComponent implements OnInit {
     this.searchbarForm.get('text').setValue(value.option.viewValue);
   }
 
-  public selectSearchType(value: any) {
-    console.log(value, typeof value);
-    if (this.searchbarForm.value !== value) {
-      this.searchbarTypeForm.setValue(value);
-      this.analytics.event('searchbar_search_type', {
-        type: value
-      });
+  public selectSearchType(type: string) {
+    if (this.searchbarForm.value !== type) {
+      this.searchbarTypeForm.setValue(type);
+      this.analytics.event('searchbar_search_type', { type });
     } else {
       this.searchbarTypeForm.setValue('');
     }
