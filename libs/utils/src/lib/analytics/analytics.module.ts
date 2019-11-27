@@ -16,7 +16,7 @@ export const APP = new InjectionToken('Firebase app');
     { provide: APP, useFactory: () => _firebaseAppFactory(firebase, 'blockframes-max') },
     // Fill the analytics token on this app
     { provide: ANALYTICS, useFactory: app => app.analytics(), deps: [APP] }
-  ]
+  ],
 })
 export class AngularFireAnalyticsModule {
   constructor(@Inject(ANALYTICS) _) {

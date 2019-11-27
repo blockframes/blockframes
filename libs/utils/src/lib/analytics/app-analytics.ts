@@ -1,8 +1,9 @@
 import { ANALYTICS, Analytics } from './analytics.module';
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
 
-export class AppAnalytics {
+@Injectable({providedIn: 'root'})
+export class FireAnalytics {
   constructor(@Inject(ANALYTICS) public analytics: Analytics, private authQuery: AuthQuery) {}
 
   public event(name: string, params: Record<string, any>) {

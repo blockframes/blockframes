@@ -1,3 +1,4 @@
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -40,9 +41,7 @@ import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticMod
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
-import { AuthQuery } from '@blockframes/auth';
-import { AppAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { Analytics, ANALYTICS } from '@blockframes/utils/analytics/analytics.module';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
@@ -63,7 +62,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
+export class MarketplaceSearchComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /** Algolia search results */
@@ -159,12 +158,9 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
     private basketService: BasketService,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver,
-    authQuery: AuthQuery,
-    @Inject(ANALYTICS) analytics: Analytics,
-    @Inject(MoviesIndex) private movieIndex: Index
-  ) {
-    super(analytics, authQuery);
-  }
+    @Inject(MoviesIndex) private movieIndex: Index,
+    private analytics: FireAnalytics
+  ) {}
 
   ngOnInit() {
     this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
@@ -385,7 +381,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
-      this.event('added_language', {
+      this.analytics.event('added_language', {
         language: language
       });
     } else {
@@ -400,7 +396,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
-    this.event('removed_language', {
+    this.analytics.event('removed_language', {
       language: language
     });
   }
@@ -416,12 +412,12 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
-      this.event('added_movie_status', {
+      this.analytics.event('added_movie_status', {
         status: status
       });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-      this.event('removed_movie_status', {
+      this.analytics.event('removed_movie_status', {
         status: status
       });
     }
@@ -488,7 +484,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
     this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
-    this.event('added_genre', {
+    this.analytics.event('added_genre', {
       genre: event.option.viewValue
     });
   }
@@ -499,7 +495,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
       this.selectedGenres.splice(index, 1);
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
-      this.event('removed_genre', {
+      this.analytics.event('removed_genre', {
         genre: genre
       });
     }
@@ -515,7 +511,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
     this.filterForm.addSalesAgent(value);
     this.salesAgentControl.setValue('');
     this.salesAgentInput.nativeElement.value = '';
-    this.event('removed_sales_agent', {
+    this.analytics.event('removed_sales_agent', {
       sales_agent: event.option.viewValue
     });
   }
@@ -526,7 +522,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
-      this.event('removed_sales_agent', {
+      this.analytics.event('removed_sales_agent', {
         sales_agent: salesAgent
       });
     }
@@ -543,7 +539,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.event('added_to_wishlist', {
+    this.analytics.event('added_to_wishlist', {
       movie: movie.main.title.original
     });
   }
@@ -555,7 +551,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.event('removed_from_wishlist', {
+    this.analytics.event('removed_from_wishlist', {
       movie: movie.main.title.original
     });
   }
@@ -567,7 +563,7 @@ export class MarketplaceSearchComponent extends AppAnalytics implements OnInit {
   public selectSearchType(value: any) {
     if (this.searchbarForm.value !== value) {
       this.searchbarTypeForm.setValue(value);
-      this.event('searchbar_search_type', {
+      this.analytics.event('searchbar_search_type', {
         type: value
       });
     } else {

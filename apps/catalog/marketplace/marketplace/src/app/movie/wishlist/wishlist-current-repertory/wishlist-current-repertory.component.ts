@@ -1,4 +1,4 @@
-import { ANALYTICS, Analytics, AppAnalytics } from '@blockframes/utils';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,
@@ -13,7 +13,6 @@ import {
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
 import { BasketService } from '../../../distribution-right/+state/basket.service';
-import { AuthQuery } from '@blockframes/auth';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -21,7 +20,7 @@ import { AuthQuery } from '@blockframes/auth';
   styleUrls: ['./wishlist-current-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistCurrentRepertoryComponent extends AppAnalytics implements OnInit {
+export class WishlistCurrentRepertoryComponent implements OnInit {
   @HostBinding('attr.test-id') testId = 'sentWishlist';
 
   @Output() sent = new EventEmitter();
@@ -48,11 +47,8 @@ export class WishlistCurrentRepertoryComponent extends AppAnalytics implements O
     private router: Router,
     private service: BasketService,
     private snackbar: MatSnackBar,
-    authQuery: AuthQuery,
-    @Inject(ANALYTICS) analytics: Analytics
-  ) {
-    super(analytics, authQuery);
-  }
+    private analytics: FireAnalytics
+  ) {}
 
   ngOnInit() {
     if (this.isCurrent) {
@@ -74,8 +70,8 @@ export class WishlistCurrentRepertoryComponent extends AppAnalytics implements O
       'close',
       { duration: 2000 }
     );
-    this.event('remove_movie_wishlist', {
-      movie: movie.main.title.original,
+    this.analytics.event('remove_movie_wishlist', {
+      movie: movie.main.title.original
     });
   }
 }
