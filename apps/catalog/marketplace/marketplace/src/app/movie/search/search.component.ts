@@ -1,3 +1,4 @@
+import { SalesAgent } from './../../../../../../../../libs/movie/src/lib/movie/+state/movie.model';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
 import { Router } from '@angular/router';
@@ -41,7 +42,6 @@ import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticMod
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
@@ -381,9 +381,7 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
-      this.analytics.event('added_language', {
-        language: language
-      });
+      this.analytics.event('added_language', { language });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
@@ -396,9 +394,7 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
-    this.analytics.event('removed_language', {
-      language: language
-    });
+    this.analytics.event('removed_language', { language });
   }
 
   public hasStatus(status: MovieStatusLabel) {
@@ -412,14 +408,10 @@ export class MarketplaceSearchComponent implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
-      this.analytics.event('added_movie_status', {
-        status: status
-      });
+      this.analytics.event('added_movie_status', { status });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-      this.analytics.event('removed_movie_status', {
-        status: status
-      });
+      this.analytics.event('removed_movie_status', { status });
     }
   }
 
@@ -471,22 +463,20 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public addGenre(event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
+    const genre = event.option.value;
 
-    if ((value || '').trim() && !this.selectedGenres.includes(value)) {
-      this.selectedGenres.push(value.trim());
+    if ((genre || '').trim() && !this.selectedGenres.includes(genre)) {
+      this.selectedGenres.push(genre.trim());
     }
     /**
      * We want to exchange the label for the slug,
      * because for our backend we need to store the slug.
      */
-    const genreSlug: GenresSlug = getCodeIfExists('GENRES', event.option.viewValue);
+    const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
     this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
-    this.analytics.event('added_genre', {
-      genre: event.option.viewValue
-    });
+    this.analytics.event('added_genre', { genre });
   }
 
   public removeGenre(genre: string) {
@@ -495,25 +485,21 @@ export class MarketplaceSearchComponent implements OnInit {
       this.selectedGenres.splice(index, 1);
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
-      this.analytics.event('removed_genre', {
-        genre: genre
-      });
+      this.analytics.event('removed_genre', { genre });
     }
   }
 
   public addSalesAgent(event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
+    const salesAgent = event.option.value;
 
-    if ((value || '').trim() && !this.selectedSalesAgents.includes(value)) {
-      this.selectedSalesAgents.push(value.trim());
+    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
+      this.selectedSalesAgents.push(salesAgent.trim());
     }
 
-    this.filterForm.addSalesAgent(value);
+    this.filterForm.addSalesAgent(salesAgent);
     this.salesAgentControl.setValue('');
     this.salesAgentInput.nativeElement.value = '';
-    this.analytics.event('removed_sales_agent', {
-      sales_agent: event.option.viewValue
-    });
+    this.analytics.event('removed_sales_agent', { salesAgent });
   }
 
   public removeSalesAgent(salesAgent: string) {
@@ -522,9 +508,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
-      this.analytics.event('removed_sales_agent', {
-        sales_agent: salesAgent
-      });
+      this.analytics.event('removed_sales_agent', { salesAgent });
     }
   }
 
@@ -561,6 +545,7 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public selectSearchType(value: any) {
+    console.log(value, typeof value);
     if (this.searchbarForm.value !== value) {
       this.searchbarTypeForm.setValue(value);
       this.analytics.event('searchbar_search_type', {
