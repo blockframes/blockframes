@@ -14,8 +14,8 @@ import {
   InvitationType,
   OrganizationDocument,
   MovieDocument,
-  createOrganizationDocPermissions,
-  createUserDocPermissions,
+  createDocPermissions,
+  createUserPermissions,
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -153,13 +153,13 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
     getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
   ]);
 
-  const orgDocPermissions = createOrganizationDocPermissions({
+  const orgDocPermissions = createDocPermissions({
     id: docId,
     canUpdate: true
   });
-  const userDocPermissions = createUserDocPermissions({ id: docId });
-  const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
-  const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
+  const userDocPermissions = createUserPermissions({ id: docId });
+  const orgMoviePermissions = createDocPermissions({ id: delivery.movieId });
+  const userMoviePermissions = createUserPermissions({ id: delivery.movieId });
 
   return db.runTransaction(tx => {
     const promises = [];

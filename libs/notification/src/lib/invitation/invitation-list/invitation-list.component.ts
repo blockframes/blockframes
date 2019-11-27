@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 import { Order } from '@datorama/akita';

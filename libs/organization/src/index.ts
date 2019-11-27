@@ -22,3 +22,4 @@ export * from './lib/permissions/+state/permissions.query';
 export * from './lib/permissions/+state/permissions.service';
 export * from './lib/permissions/+state/permissions.store';
 export * from './lib/permissions/+state/permissions.model';
+export * from './lib/permissions/+state/permissions.firestore';
