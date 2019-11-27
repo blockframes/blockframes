@@ -8,6 +8,7 @@ import {
   storeSearchableOrg,
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
+import { updateOrganizationDocument, updatePicturesMovieDocument, updateAvatarUserDocument } from './firestoreMigrations/0002';
 import { appUrl, firebase } from '@env';
 
 async function prepareForTesting() {
