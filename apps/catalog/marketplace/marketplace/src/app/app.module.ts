@@ -1,3 +1,6 @@
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Inject } from '@angular/core';
@@ -19,7 +22,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
-import { AngularFireAnalyticsModule, ANALYTICS, Analytics } from '@blockframes/utils/analytics/analytics.module';
+import { AngularFireAnalyticsModule } from '@blockframes/utils/analytics/analytics.module';
 import { ToolbarModule } from '@blockframes/ui';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
@@ -53,9 +56,7 @@ import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
 
 // Analytics
-import { AuthQuery } from '@blockframes/auth';
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
@@ -99,7 +100,7 @@ import { Subscription } from 'rxjs';
     AngularFireAnalyticsModule,
     // Analytics
     sentryDsn ? SentryModule : [],
-    
+
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
 
@@ -118,23 +119,18 @@ import { Subscription } from 'rxjs';
 export class AppModule {
   private subscription: Subscription;
 
-  constructor(
-    private router: Router,
-    @Inject(ANALYTICS) private analytics: Analytics,
-    private authQuery: AuthQuery
-  ) {
+  constructor(private router: Router, private analytics: FireAnalytics) {
     const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
     this.subscription = navEnds.subscribe((event: NavigationEnd) => {
       try {
-        this.analytics.logEvent('page_view', {
+        this.analytics.event('page_view', {
           page_location: 'marketplace',
-          page_path: event.urlAfterRedirects,
-          uid: this.authQuery.getValue().user.uid
+          page_path: event.urlAfterRedirects
         });
       } catch {
-        this.analytics.logEvent('page_view', {
+        this.analytics.event('page_view', {
           page_location: 'marketplace',
-          page_path: event.urlAfterRedirects,
+          page_path: event.urlAfterRedirects
         });
       }
     });

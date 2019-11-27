@@ -5,9 +5,7 @@ import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { BasketService } from '../../distribution-right/+state/basket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImgRef } from '@blockframes/utils/image-uploader';
-import { Analytics, ANALYTICS } from '@blockframes/utils/analytics/analytics.module';
-import { AppAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AuthQuery } from '@blockframes/auth';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 interface CarouselSection {
   title: string;
@@ -20,7 +18,7 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceHomeComponent extends AppAnalytics implements OnInit {
+export class MarketplaceHomeComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
 
   /** Observable to fetch all movies from the store */
@@ -30,10 +28,8 @@ export class MarketplaceHomeComponent extends AppAnalytics implements OnInit {
     private movieQuery: MovieQuery,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
-    authQuery: AuthQuery,
-    @Inject(ANALYTICS) analytics: Analytics
+    private analytics: FireAnalytics
   ) {
-    super(analytics, authQuery);
   }
 
   ngOnInit() {
@@ -85,12 +81,11 @@ export class MarketplaceHomeComponent extends AppAnalytics implements OnInit {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.basketService.updateWishlist(movie);
-    this.snackbar.open(
-      `${movie.main.title.international} has been added to your selection.`,
+    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`,
       'close',
       { duration: 2000 }
     );
-    this.event('movie_to_wishlist', {
+    this.analytics.event('movie_to_wishlist', {
       movie_name: movie.main.title.original,
     });
   }
@@ -103,7 +98,7 @@ export class MarketplaceHomeComponent extends AppAnalytics implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.event('movie_removed_wishlist', {
+    this.analytics.event('movie_removed_wishlist', {
       movie_name: movie.main.title.original,
     });
   }
