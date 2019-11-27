@@ -12,7 +12,6 @@ import {
   TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
-import { MovieSale } from '@blockframes/movie';
 
 export const enum BasketStatus {
   pending = 'pending',
@@ -40,7 +39,7 @@ export interface DistributionRight { // @todo #1061 => distribution deal with sp
 export interface CatalogBasket {  // @todo #1061 => Cart & add to draw.io => pouvoir avoir n cart sur l'org. Ajouter un "name" au cart. Idem wishlist
   id: string;
   status: BasketStatus;
-  sales: DistributionRight[]; //string[]; // #1061  MovieSaleIds in movies/{$id}/distributiondeals
+  rights: DistributionRight[]; //string[]; // #1061  MovieSaleIds in movies/{$id}/distributiondeals
   price: Price;
   name?: string;
 }
@@ -64,7 +63,7 @@ export function createBasket(basket: Partial<CatalogBasket> = {}) {
     id: basket.id,
     status: BasketStatus.pending,
     price: 0,
-    sales: basket.sales,
+    rights: basket.rights,
     ...basket
   } as CatalogBasket;
 }
