@@ -34,21 +34,31 @@ import { DaoDisplayOperationsComponent } from './components/dao-display-operatio
 import { DaoAdminViewComponent } from './pages/dao-admin-view/dao-admin-view.component';
 import { DaoActivityViewComponent } from './pages/dao-activity-view/dao-activity-view.component';
 
+export const material = [
+  MatProgressBarModule,
+  MatDividerModule,
+  MatSlideToggleModule,
+  MatTableModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatListModule,
+  MatSelectModule,
+  MatButtonModule,
+];
+
 export const daoRoutes: Routes = [
   {
     path: '',
+    canActivate: [DaoGuard],
+    canDeactivate: [DaoGuard],
     children: [
       { path: '', redirectTo: 'administration' },
       {
         path: 'administration',
-        canActivate: [DaoGuard],
-        canDeactivate: [DaoGuard],
         component: DaoAdminViewComponent,
       },
       {
         path: 'history',
-        canActivate: [DaoGuard],
-        canDeactivate: [DaoGuard],
        component: DaoActivityViewComponent,
       },
     ]
@@ -63,15 +73,7 @@ export const daoRoutes: Routes = [
     RouterModule.forChild(daoRoutes),
 
     // MATERIAL
-    MatProgressBarModule,
-    MatDividerModule,
-    MatSlideToggleModule,
-    MatTableModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatListModule,
-    MatSelectModule,
-    MatButtonModule,
+    ...material,
 
     // UI
     AvatarListModule,
