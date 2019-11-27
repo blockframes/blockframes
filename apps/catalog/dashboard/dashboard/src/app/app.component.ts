@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth';
+import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
+import { ThemeService } from '@blockframes/ui/theme';
 import { IconComponent } from '@blockframes/ui';
 
 @Component({
@@ -9,7 +9,10 @@ import { IconComponent } from '@blockframes/ui';
 })
 export class AppComponent {
   constructor(
-    private query: AuthQuery,
-    private icons: IconComponent, // even if not used in component, keep this to load icons
-  ) { }
+    renderer: Renderer2,
+    theme: ThemeService,
+    icons: IconComponent  // even if not used in component, keep this to load icons
+  ) {
+    theme.initTheme(renderer, 'light');
+  }
 }
