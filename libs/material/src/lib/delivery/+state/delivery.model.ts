@@ -41,3 +41,29 @@ export function createDelivery(params: Partial<Delivery>) {
     ...params
   } as Delivery;
 }
+
+export function timestampObjectsToDate(docs: any[]) {
+  if (!docs) {
+    return [];
+  }
+
+  return docs.map(doc => {
+    if (doc.date) {
+      return { ...doc, date: doc.date.toDate() };
+    } else {
+      return doc;
+    }
+  });
+}
+
+/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
+export function convertDeliveryWithTimestampsToDelivery(delivery: DeliveryWithTimestamps): Delivery {
+  const mgDeadlines = delivery.mgDeadlines || [];
+
+  return {
+    ...delivery,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
+    steps: timestampObjectsToDate(delivery.steps),
+    mgDeadlines: timestampObjectsToDate(mgDeadlines)
+  };
+}

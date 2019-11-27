@@ -1,61 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { DeliveryStore, Delivery, modifyTimestampToDate, DeliveryWithTimestamps } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
+import { DeliveryService, DeliveryState, DeliveryQuery } from '../+state';
+import { map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
-import { combineLatest, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 
-// TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
-// e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
-  path: `deliveries/${deliveryId}`,
-  stakeholders: delivery => ({
-    path: `deliveries/${delivery.id}/stakeholders`,
-    organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
-    })
-  })
-});
 
 @Injectable({ providedIn: 'root' })
-export class DeliveryListGuard extends StateListGuard<Delivery> {
+@CollectionGuardConfig({ awaitSync: true })
+export class DeliveryListGuard extends CollectionGuard<DeliveryState> {
   public get urlFallback() {
     return `/layout/o/delivery/movie/add/${this.movieQuery.getActiveId()}/2-choose-starter`;
   }
 
   constructor(
-    private fireQuery: FireQuery,
+    protected service: DeliveryService,
     private movieQuery: MovieQuery,
-    store: DeliveryStore,
-    router: Router
+    private query: DeliveryQuery
   ) {
-    super(store, router);
+    super(service);
   }
 
-  get query() {
-    return this.movieQuery
-      .selectActive(movie => movie.deliveryIds)
-      .pipe(
-        switchMap(ids => {
-          if (!ids || ids.length === 0) return of([]);
-          const queries = ids.map(id => {
-            return this.fireQuery.fromQuery<DeliveryWithTimestamps>(deliveryQuery(id)).pipe(
-              catchError(e => {
-                // TODO: Only catch NotFoundError => ISSUE#627
-                return of(undefined);
-              })
-            );
-          });
-          return combineLatest(queries);
-        }),
-        map((deliveries: DeliveryWithTimestamps[]) => {
-          if (deliveries.length === 0) throw new Error('There is no deliveries');
-          return deliveries
-            .filter(delivery => !!delivery)
-            .map((delivery: DeliveryWithTimestamps) => modifyTimestampToDate(delivery));
-        })
-      );
+  sync() {
+    return this.service.syncDeliveriesQuery().pipe(
+      map(_ => this.query.getCount()),
+      map(count => count === 0 ? this.urlFallback : true)
+    );
   }
 }
