@@ -34,24 +34,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberAddComponent } from './components/member-add/member-add.component';
-import { OrganizationSignerRepertoryComponent } from './components/organization-signer-repertory/organization-signer-repertory.component';
-import { OrganizationSignerFormComponent } from './components/organization-signer-form/organization-signer-form.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
-import { OrganizationFormOperationComponent } from './components/organization-form-operation/organization-form-operation.component';
-import { OrganizationDisplayActionsComponent } from './components/organization-display-actions/organization-display-actions.component';
-import { OrganizationDisplayOperationsComponent } from './components/organization-display-operations/organization-display-operations.component';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
-import { OrganizationActivityViewComponent } from './pages/organization-activity-view/organization-activity-view.component';
-import { OrganizationAdminViewComponent } from './pages/organization-admin-view/organization-admin-view.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
 import { MemberGuard } from './member/guard/member.guard';
 
 export const organizationRoutes: Routes = [
@@ -66,29 +57,14 @@ export const organizationRoutes: Routes = [
         canDeactivate: [MemberGuard],
         component: MemberEditableComponent
       },
+      {
+        path: 'dao',
+        canActivate: [MemberGuard],
+        canDeactivate: [MemberGuard],
+        loadChildren: () => import('../../../ethers/src').then(m => m.DaoModule) },
     ]
   }
 ];
-
-// TODO issue#1146
-if (AFM_DISABLE) {
-  organizationRoutes[0].children.push(
-    {
-      path: 'activityreports',
-      canActivate: [MemberGuard],
-      canDeactivate: [MemberGuard],
-      component: OrganizationActivityViewComponent
-    }
-  );
-  organizationRoutes[0].children.push(
-    {
-      path: 'administration',
-      canActivate: [MemberGuard],
-      canDeactivate: [MemberGuard],
-      component: OrganizationAdminViewComponent
-    }
-  );
-}
 
 @NgModule({
   imports: [
@@ -135,15 +111,7 @@ if (AFM_DISABLE) {
     MemberEditableComponent,
     MemberRepertoryComponent,
     MemberAddComponent,
-    OrganizationActivityViewComponent,
-    OrganizationFormOperationComponent,
-    OrganizationDisplayActionsComponent,
-    OrganizationAdminViewComponent,
-    OrganizationDisplayOperationsComponent,
-    OrganizationSignerRepertoryComponent,
-    OrganizationSignerFormComponent,
     OrganizationEditableComponent,
-    OrganizationActivityViewComponent,
   ]
 })
 export class OrganizationModule {}

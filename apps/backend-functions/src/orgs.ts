@@ -77,10 +77,10 @@ export async function onOrganizationUpdate(
         throw new Error(`This organization has already an ENS name: ${orgENS}`);
       }
 
-    const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-    const provider = getProvider(RELAYER_CONFIG.network);
-    const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-    const orgEthAddress =  await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
+      const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
+      const provider = getProvider(RELAYER_CONFIG.network);
+      const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
+      const orgEthAddress =  await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
       console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
       const res = await relayerRegisterENSLogic({name: orgENS, ethAddress: orgEthAddress}, RELAYER_CONFIG);

@@ -23,18 +23,4 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
     filter(org => !!org),
     map(org => org.status === OrganizationStatus.accepted)
   );
-
-  public pendingActions$ = this.selectActive(org => org.actions).pipe(
-    filter(actions => !!actions),
-    map(actions => actions.filter(action => !action.isApproved))
-  );
-
-  public approvedActions$ = this.selectActive(org => org.actions).pipe(
-    filter(actions => !!actions),
-    map(actions => actions.filter(action => action.isApproved))
-  );
-
-  public getOperationById(id: string) {
-    return this.getActive().operations.find(action => action.id === id);
-  }
 }

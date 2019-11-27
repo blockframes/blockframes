@@ -1,23 +1,22 @@
-import { OrganizationOperation } from './../../+state/organization.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery, DeploySteps } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
+import { createMemberFormList } from '@blockframes/organization/forms/member.form'
+import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
+import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
+import { DaoQuery, DaoOperation, DeploySteps } from '../../+state';
 import { createOperationFormList } from '../../forms/operations.form';
-import { createMemberFormList } from '../../forms/member.form';
-import { OrganizationMember } from '../../member/+state/member.model';
-import { MemberQuery } from '../../member/+state/member.query';
 
 @Component({
-  selector: 'org-admin-view',
-  templateUrl: './organization-admin-view.component.html',
-  styleUrls: ['./organization-admin-view.component.scss'],
+  selector: 'dao-admin-view',
+  templateUrl: './dao-admin-view.component.html',
+  styleUrls: ['./dao-admin-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationAdminViewComponent implements OnInit {
+export class DaoAdminViewComponent implements OnInit {
 
-  public operations$: Observable<OrganizationOperation[]>;
+  public operations$: Observable<DaoOperation[]>;
   private selectedOperationId$ = new BehaviorSubject<string>(null);
   public operationFormList = createOperationFormList();
   public operationFormGroup$: Observable<FormGroup>;
@@ -40,7 +39,7 @@ export class OrganizationAdminViewComponent implements OnInit {
   public deployProgress$: Observable<number>;
 
   constructor(
-    private query: OrganizationQuery,
+    private query: DaoQuery,
     private memberQuery: MemberQuery
   ) {}
 
@@ -71,10 +70,10 @@ export class OrganizationAdminViewComponent implements OnInit {
     );
 
     /** Return the operationFormGroup linked to the selected operation.id */
-    this.operations$ = this.query.selectActive().pipe(
-      tap(organization => this.organizationName = organization.name),
-      filter(organization => !!organization.operations),
-      map(organization => organization.operations),
+    this.operations$ = this.query.select().pipe(
+      tap(dao => this.organizationName = dao.name),
+      filter(dao => !!dao.operations),
+      map(dao => dao.operations),
       tap(operations => this.operationFormList.patchValue(operations)),
       switchMap(operations => this.operationFormList.valueChanges.pipe(startWith(operations)))
     );

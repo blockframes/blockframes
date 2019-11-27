@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { OrganizationService, OrganizationQuery } from '../../+state';
+import { OrganizationQuery } from '../../+state';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { PermissionsQuery } from '../../permissions/+state/permissions.query';
 import { AuthQuery } from '@blockframes/auth';
 import { UserRole } from '@blockframes/permissions/types';
+import { DaoService } from 'libs/ethers/src/lib/dao/+state';
 
 @Component({
   selector: '[formGroup] member-form-role',
@@ -18,7 +19,7 @@ import { UserRole } from '@blockframes/permissions/types';
 export class MemberFormRoleComponent {
   constructor(
     public controlContainer: ControlContainer,
-    private service: OrganizationService,
+    private service: DaoService,
     private organizationQuery: OrganizationQuery,
     private walletService: WalletService,
     private permissionsQuery: PermissionsQuery,

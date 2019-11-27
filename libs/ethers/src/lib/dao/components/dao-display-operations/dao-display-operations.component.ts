@@ -1,4 +1,3 @@
-import { OrganizationOperation } from './../../+state/organization.model';
 import {
   Component,
   Input,
@@ -8,16 +7,17 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { DaoOperation } from '../../+state';
 
 @Component({
-  selector: 'org-display-operations',
-  templateUrl: './organization-display-operations.component.html',
-  styleUrls: ['./organization-display-operations.component.scss'],
+  selector: 'dao-display-operations',
+  templateUrl: './dao-display-operations.component.html',
+  styleUrls: ['./dao-display-operations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationDisplayOperationsComponent {
+export class DaoDisplayOperationsComponent {
 
-  @Input() set operations(operations: OrganizationOperation[]) {
+  @Input() set operations(operations: DaoOperation[]) {
     this.dataSource = new MatTableDataSource(operations);
     this.dataSource.sort = this.sort;
   }
@@ -26,6 +26,6 @@ export class OrganizationDisplayOperationsComponent {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrganizationOperation>;
+  public dataSource: MatTableDataSource<DaoOperation>;
   public displayedColumns: string[] = ['name', 'quorum', 'members', 'action'];
 }

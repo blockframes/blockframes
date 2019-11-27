@@ -38,6 +38,7 @@
 
       // ETHERS
       "@blockframes/ethers": ["libs/ethers/src/index.ts"],
+      "@blockframes/ethers/create-tx": ["libs/ethers/src/lib/create-tx.ts"],
       "@blockframes/ethers/helpers": ["libs/ethers/src/lib/helpers.ts"],
       "@blockframes/ethers/types": ["libs/ethers/src/lib/types.ts"],
 

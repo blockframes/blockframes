@@ -1,18 +1,18 @@
 import { ControlContainer, FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationService, OrganizationQuery } from '../../+state';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
-import { CreateTx } from '@blockframes/ethers';
-import { OrganizationMember } from '../../member/+state/member.model';
+import { CreateTx } from '@blockframes/ethers/create-tx';
+import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
+import { DaoService, DaoQuery } from '../../+state';
 
 @Component({
-  selector: '[formGroup] organization-form-operation, [formGroupName] organization-form-operation',
-  templateUrl: './organization-form-operation.component.html',
-  styleUrls: ['./organization-form-operation.component.scss'],
+  selector: '[formGroup] dao-form-operation, [formGroupName] dao-form-operation',
+  templateUrl: './dao-form-operation.component.html',
+  styleUrls: ['./dao-form-operation.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class OrganizationFormOperationComponent {
+export class DaoFormOperationComponent {
 
   @Input() members: OrganizationMember[];
 
@@ -22,8 +22,8 @@ export class OrganizationFormOperationComponent {
     public router: Router,
     public controlContainer: ControlContainer,
     public walletService: WalletService,
-    public service: OrganizationService,
-    public query: OrganizationQuery,
+    public service: DaoService,
+    public query: DaoQuery,
   ) { }
 
   public get control() {
@@ -49,13 +49,12 @@ export class OrganizationFormOperationComponent {
     const orgEthAddress = await this.service.getOrganizationEthAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getActiveId();
     const tx = CreateTx.addMember(orgEthAddress, operationId, memberEthAddress);
     const feedback = {
       confirmation: `You are about to blacklist ${removedMember.name} for ${operationName}`,
       success: `${removedMember.name} has been successfully blacklisted !`,
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      redirectRoute: `/layout/o/organization/`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
@@ -72,13 +71,12 @@ export class OrganizationFormOperationComponent {
     const orgEthAddress = await this.service.getOrganizationEthAddress();
     const operationId = this.control.get('id').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getActiveId();
     const tx = CreateTx.addMember(orgEthAddress, operationId, memberEthAddress);
     const feedback = {
       confirmation: `You are about to whitelist ${addedMember.name} for ${operationName}`,
       success: `${addedMember.name} has been successfully whitelisted !`,
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      redirectRoute: `/layout/o/organization`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
@@ -90,13 +88,12 @@ export class OrganizationFormOperationComponent {
     const operationId = this.control.get('id').value;
     const newQuorum = this.control.get('quorum').value;
     const operationName = this.control.get('name').value;
-    const orgId = this.query.getActiveId();
     const tx = CreateTx.modifyQuorum(orgEthAddress, operationId, newQuorum);
     const feedback = {
       confirmation: `You are about to set the quorum for ${operationName} to ${newQuorum}`,
       success: 'The quorum has been successfully updated !',
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization/${orgId}/administration`,
+      redirectRoute: `/layout/o/organization`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
