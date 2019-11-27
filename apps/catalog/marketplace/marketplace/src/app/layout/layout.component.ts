@@ -5,7 +5,7 @@ import { AFM_DISABLE } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
-import { BasketQuery } from '../distribution-right/+state/basket.query';
+import { CartQuery } from '../distribution-deal/+state/cart.query';
 import { AuthService } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material';
@@ -27,7 +27,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private routerQuery: RouterQuery,
     private contextMenuService: ContextMenuService,
-    private basketQuery: BasketQuery,
+    private cartQuery: CartQuery,
     private service: AuthService
     ) {
       this.AFM_DISABLE = AFM_DISABLE;
@@ -42,7 +42,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.contextMenuService.setMenu(CONTEXT_MENU);
     }
 
-    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
+    this.currentWishlist$ = this.cartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
       );
     }

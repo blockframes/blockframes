@@ -47,7 +47,7 @@ import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } fr
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
-import { BasketService } from '../../distribution-right/+state/basket.service';
+import { CartService } from '../../distribution-deal/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
@@ -152,7 +152,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private router: Router,
     private routerQuery: RouterQuery,
     private movieService: MovieService,
-    private basketService: BasketService,
+    private cartService: CartService,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index
@@ -508,11 +508,11 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public toggle$(movieId: string) {
-    return this.basketService.isAddedToWishlist(movieId);
+    return this.cartService.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie) {
-    this.basketService.updateWishlist(movie);
+    this.cartService.updateWishlist(movie);
     this.snackbar.open(
       `${movie.main.title.international} has been added to your selection.`,
       'close',
@@ -521,7 +521,7 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public removeFromWishlist(movie: Movie) {
-    this.basketService.updateWishlist(movie);
+    this.cartService.updateWishlist(movie);
     this.snackbar.open(
       `${movie.main.title.international} has been removed from your selection.`,
       'close',

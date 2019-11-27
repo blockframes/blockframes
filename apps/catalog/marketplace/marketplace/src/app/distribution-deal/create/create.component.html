@@ -151,9 +151,7 @@
       <div *ngSwitchCase="steps.POSSIBLE">
         <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
           (rangeSelected)="changeDateFocus($event)"></month-calendar>
-        <a test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionRight()"
-          >Add<!-- [disabled]="!catalogBasket" -->
-          distribution right</a>
+        <a test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionRight()">Add distribution right</a>
       </div>
       <div *ngSwitchCase="steps.ERROR">
         Error

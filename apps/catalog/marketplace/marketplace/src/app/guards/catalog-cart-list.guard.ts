@@ -1,12 +1,12 @@
-import { BasketState } from '../distribution-right/+state/basket.store';
+import { CartState } from '../distribution-deal/+state/cart.store';
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { BasketService } from '../distribution-right/+state/basket.service';
+import { CartService } from '../distribution-deal/+state/cart.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class CatalogBasketGuard extends CollectionGuard<BasketState> {
-  constructor(protected service: BasketService) {
+export class CatalogCartGuard extends CollectionGuard<CartState> { // TODO #1061 rename
+  constructor(protected service: CartService) {
     super(service);
   }
 

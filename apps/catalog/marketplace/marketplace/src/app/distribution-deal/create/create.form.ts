@@ -1,11 +1,6 @@
-import { FormEntity } from '@blockframes/utils';
-import {
-  DistributionRight,
-  createDistributionRight,
-  createDistributionRightControls,
-  DistributionRightControls
-} from '../+state/basket.model';
-import { FormArray, FormGroup, FormControl } from '@angular/forms';
+import { FormEntity, numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
+import { DistributionRight, createDistributionRight } from '../+state/cart.model';
+import { FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
@@ -17,6 +12,39 @@ import {
   createLanguageControl
 } from '../../movie/search/search.form';
 import { MovieMain } from '@blockframes/movie';
+
+export function createDistributionRightControls(right: Partial<DistributionRight> = {}) {
+  // Create controls for the languages
+  const languageControl = Object.keys(right.languages).reduce(
+    (acc, key) => ({
+      ...acc,
+      // Key is the name of the language, english, french etc.
+      [key]: createLanguageControl(right.languages[key])
+    }),
+    {} // Initial value. No controls at the beginning
+  );
+  return {
+    medias: new FormArray(right.medias.map(media => new FormControl(media)), [
+      Validators.required,
+      valueIsInModelValidator('MEDIAS')
+    ]),
+    languages: new FormGroup(languageControl, Validators.required),
+    duration: new FormGroup(
+      {
+        from: new FormControl(right.duration.from, [Validators.required]),
+        to: new FormControl(right.duration.to, [Validators.required])
+      },
+      [Validators.required, numberRangeValidator('from', 'to')]
+    ),
+    territories: new FormArray(right.territories.map(territory => new FormControl(territory)), [
+      Validators.required,
+      valueIsInModelValidator('TERRITORIES')
+    ]),
+    exclusive: new FormControl(right.exclusive)
+  };
+}
+
+export type DistributionRightControls = ReturnType<typeof createDistributionRightControls>;
 
 export class DistributionRightForm extends FormEntity<DistributionRightControls> {
   constructor(distributionRight: Partial<DistributionRight> = {}) {

@@ -2,10 +2,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { AFM_DISABLE } from '@env';
-import { DistributionRight, MovieData } from '../../distribution-right/+state/basket.model';
-import { CatalogBasket, BasketQuery } from '../../distribution-right/+state';
+import { DistributionRight, MovieData } from '../../distribution-deal/+state/cart.model';
+import { CatalogCart, CartQuery } from '../../distribution-deal/+state';
 import { ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { BasketStatus } from '../../distribution-right/+state/basket.model';
+import { CartStatus } from '../../distribution-deal/+state/cart.model';
 import { Component, OnInit } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie';
 import {
@@ -13,7 +13,7 @@ import {
   MovieCurrenciesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { FormControl } from '@angular/forms';
-import { BasketService } from '../../distribution-right/+state/basket.service';
+import { CartService } from '../../distribution-deal/+state/cart.service';
 
 @Component({
   selector: 'catalog-selection',
@@ -31,9 +31,9 @@ export class MarketplaceSelectionComponent implements OnInit {
   public wishlist: Subscription;
 
   constructor(
-    private basketService: BasketService,
+    private cartService: CartService,
     private movieQuery: MovieQuery,
-    private basketQuery: BasketQuery,
+    private cartQuery: CartQuery,
     private orgQuery: OrganizationQuery,
     private matSnackbar: MatSnackBar
   ) {}
@@ -46,9 +46,9 @@ export class MarketplaceSelectionComponent implements OnInit {
       });
     } else {
       this.currencyList = MOVIE_CURRENCIES_SLUG;
-      // TODO #922: make an observable out of the basketquery
-      this.basketQuery.getAll().forEach(basket =>
-        basket.rights.forEach(right => {
+      // TODO #922: make an observable out of the cartquery
+      this.cartQuery.getAll().forEach(cart =>
+        cart.deals.forEach(deal => {
           // TODO issue#1146
           // this.movieDistributionRights.push(this.createRightDetail(right));
         })
@@ -76,10 +76,10 @@ export class MarketplaceSelectionComponent implements OnInit {
     }
   }
 
-  public async deleteDistributionRight(rightId) {
+  public async deleteDistributionRight(dealId) {
     // TODO issue#1146
     if (!AFM_DISABLE) {
-      const result: boolean | Error = this.basketService.removeMovieFromWishlist(rightId);
+      const result: boolean | Error = this.cartService.removeMovieFromWishlist(dealId);
       if (typeof result === 'boolean') {
         return;
       } else {
@@ -87,28 +87,28 @@ export class MarketplaceSelectionComponent implements OnInit {
         return;
       }
     } else {
-      const findBasket: CatalogBasket[] = [];
-      this.basketQuery.getAll().forEach(baskets =>
-        baskets.rights.forEach(right => {
-          if (right.id === rightId) {
-            findBasket.push(baskets);
+      const findCart: CatalogCart[] = [];
+      this.cartQuery.getAll().forEach(carts =>
+        carts.deals.forEach(deal => {
+          if (deal.id === dealId) {
+            findCart.push(carts);
           }
         })
       );
-      let findBasketId: string;
-      findBasket.forEach(basket => (findBasketId = basket.id));
-      this.basketService.removeDistributionRight(rightId, findBasketId);
+      let findCartId: string;
+      findCart.forEach(cart => (findCartId = cart.name));
+      this.cartService.removeDistributionRight(dealId, findCartId);
     }
   }
 
   // TODO#918: We have to think about how we want to bundle/handle multiple pending distrights
   public setPriceCurrency() {
-    const [oldBasket]: CatalogBasket[] = this.basketQuery.getAll();
-    const updatedBasket: CatalogBasket = {
-      ...oldBasket,
+    const [oldCart]: CatalogCart[] = this.cartQuery.getAll();
+    const updatedBasket: CatalogCart = {
+      ...oldCart,
       price: { amount: this.priceControl.value, currency: this.selectedCurrency },
-      status: BasketStatus.submitted
+      status: CartStatus.submitted
     };
-    this.basketService.rewriteBasket(updatedBasket);
+    this.cartService.updateCart(updatedBasket);
   }
 }

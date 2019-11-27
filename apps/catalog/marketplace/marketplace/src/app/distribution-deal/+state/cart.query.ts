@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
-import { BasketStore, BasketState } from './basket.store';
-import { CatalogBasket } from './basket.model';
+import { CartStore, CartState } from './cart.store';
+import { CatalogCart } from './cart.model';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { Observable, combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class BasketQuery extends QueryEntity<BasketState, CatalogBasket> {
-  constructor(protected store: BasketStore, private movieQuery: MovieQuery, private organizationQuery: OrganizationQuery) {
+export class CartQuery extends QueryEntity<CartState, CatalogCart> {
+  constructor(protected store: CartStore, private movieQuery: MovieQuery, private organizationQuery: OrganizationQuery) {
     super(store);
   }
 

@@ -8,7 +8,7 @@ import {
   createOrganizationRaw
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
-import { CatalogBasket } from '@blockframes/marketplace';
+import { CatalogCart } from '@blockframes/marketplace';
 import { OrganizationMember } from '../member/+state/member.model';
 export {
   OrganizationStatus,
@@ -48,7 +48,7 @@ export interface OrganizationAction {
 
 export interface OrganizationWithTimestamps extends OrganizationDocument {
   /** Shopping cart list of movies in catalog-marketplace */
-  baskets: CatalogBasket[];
+  baskets: CatalogCart[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
@@ -57,7 +57,7 @@ export interface Organization extends OrganizationDocumentWithDates {
   /** Possible actions on the blockchain (example: sign a specific delivery) */
   actions?: OrganizationAction[];
   /** Shopping cart list of movies in catalog-marketplace */
-  baskets: CatalogBasket[];
+  baskets: CatalogCart[];
   /** Is the smart contract of organization being deploy or not */
   isDeploying?: boolean;
   /** The current step of the status of the smart contract of organization */

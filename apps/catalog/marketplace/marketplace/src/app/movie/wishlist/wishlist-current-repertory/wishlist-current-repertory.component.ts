@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
-import { BasketService } from '../../../distribution-right/+state/basket.service';
+import { CartService } from '../../../distribution-deal/+state/cart.service';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -43,7 +43,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private service: BasketService,
+    private service: CartService,
     private snackbar: MatSnackBar
   ) {}
 

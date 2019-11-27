@@ -7,7 +7,7 @@ export default class ViewPage {
   }
 
   public clickDistributionRights() {
-    cy.get('a[test-id=distribution-right-link]').click();
+    cy.get('a[test-id=distribution-deal-link]').click();
     return new DistributionPage();
   }
 }

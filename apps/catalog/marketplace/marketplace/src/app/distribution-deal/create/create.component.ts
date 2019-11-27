@@ -32,6 +32,9 @@ import {
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { createDistributionRight } from '../+state/cart.model';
+import { CartService } from '../+state';
+import { MatSnackBar } from '@angular/material';
 
 enum ResearchSteps {
   START = 'Start',
@@ -40,13 +43,13 @@ enum ResearchSteps {
 }
 
 @Component({
-  selector: 'distribution-right-create',
+  selector: 'distribution-deal-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DistributionRightCreateComponent implements OnInit, OnDestroy {
-  @HostBinding('attr.page-id') pageId = 'distribution-right';
+  @HostBinding('attr.page-id') pageId = 'distribution-deal';
 
   // Enum for tracking the current research state
   public steps = ResearchSteps;
@@ -101,6 +104,8 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     private query: MovieQuery,
     private router: Router,
     private movieService: MovieService,
+    private cartService: CartService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -175,7 +180,12 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   }
 
   public addDistributionRight() {
-    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+    const distributionRight = createDistributionRight(this.form.value);
+    // @TODO #1061 save distribution deal into movie sub collection
+    // and add its ID to cart.
+    this.cartService.addDealToCart(distributionRight, 'default');
+    this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
+    //this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   //////////////////////
@@ -184,6 +194,8 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
 
   public startResearch() {
     console.log('todo #1022');
+
+    console.log(this.form.value);
   }
 
   public subscribeOnSearchForm(): Subscription {

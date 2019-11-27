@@ -1,1 +1,1 @@
-export * from './app/distribution-right/+state/index';
+export * from './app/distribution-deal/+state/index';
