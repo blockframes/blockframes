@@ -2,7 +2,7 @@
   <button
     mat-icon-button
     [matMenuTriggerFor]="notifications">
-    <ng-container *ngIf="(totalCount | async) as count; else: empty">
+    <ng-container *ngIf="(totalCount$ | async) as count; else: empty">
       <mat-icon
         [matBadge]="count"
         matBadgeColor="accent"
@@ -19,7 +19,7 @@
   <section class="notification-list" test-id="notification-list">
     <mat-list> <invitation-list></invitation-list> </mat-list>
     <mat-list> <notification-list></notification-list> </mat-list>
-    <article *ngIf="(totalCount | async) == 0" class="container">
+    <article *ngIf="(totalCount$ | async) == 0" class="container">
       <span>You have not yet received any messages</span>
     </article>
   </section>
