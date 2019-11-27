@@ -8,15 +8,15 @@ import {
   storeSearchableOrg,
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
-import { firebase } from '@env';
+import { appUrl, firebase } from '@env';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
-  await syncUsers(USERS_TORONTO);
+  await syncUsers(USERS);
   console.info('Users synced!');
 
   console.info('Restoring backup...');
-  await restore(firebase.projectId);
+  await restore(appUrl);
   console.info('backup restored!');
 
   console.info('Preparing Algolia...');
