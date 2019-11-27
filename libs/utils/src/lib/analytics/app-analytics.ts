@@ -1,6 +1,6 @@
 import { ANALYTICS, Analytics } from './analytics.module';
 import { Inject, Injectable } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Injectable({providedIn: 'root'})
 export class FireAnalytics {
