@@ -242,6 +242,18 @@ export class MaterialService extends CollectionService<MaterialState> {
     return this.getValue();
   }
 
+  /** Returns a snapshot of movie materials and sets the subcollectionPath. */
+  public async getMovieMaterials(movieId: string) {
+    this.subcollectionPath = `movies/${movieId}/materials`;
+    return this.getValue();
+  }
+
+  /** Returns a snapshot of delivery materials and sets the subcollectionPath. */
+  public async getDeliveryMaterials(deliveryId: string) {
+    this.subcollectionPath = `deliveries/${deliveryId}/materials`;
+    return this.getValue();
+  }
+
   /**  Checks properties of two material to tell if they are the same or not. */
   public isTheSame(matA: Material, matB: Material): boolean {
     const getProperties = ({ value, description, category, stepId }: Material) => ({
