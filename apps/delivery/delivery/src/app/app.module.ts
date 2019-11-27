@@ -24,12 +24,15 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
-import { OrganizationWidgetModule } from '@blockframes/organization';
-import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
-import { NotificationWidgetModule } from '@blockframes/notification';
 import { EmailVerifyModule } from '@blockframes/auth';
+
+// Widgets
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+import { NotificationWidgetModule } from '@blockframes/notification';
+import { ThemeWidgetModule } from '@blockframes/ui/theme';
+import { WalletWidgetModule } from '@blockframes/ethers';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -58,53 +61,56 @@ import { sentryDsn } from '@env';
   declarations: [AppComponent, LayoutComponent],
   imports: [
     // Angular
-      BrowserModule,
-      BrowserAnimationsModule,
-      AppRoutingModule,
-      FlexLayoutModule,
-      HttpClientModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    FlexLayoutModule,
+    HttpClientModule,
 
-      // Material
-      MatSnackBarModule,
-      MatCardModule,
-      MatToolbarModule,
-      MatSidenavModule,
-      MatIconModule,
-      MatButtonModule,
-      MatListModule,
-      MatRippleModule,
-      MatDividerModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatSelectModule,
-      MatChipsModule,
-      MatCheckboxModule,
-      MatProgressSpinnerModule,
-      MatMenuModule,
-      MatBadgeModule,
+    // Material
+    MatSnackBarModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    MatListModule,
+    MatRippleModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatBadgeModule,
 
-      // Libraries
-      OrganizationWidgetModule,
-      ToolbarModule,
-      ProfileWidgetModule,
-      ProfileMenuModule,
-      WalletWidgetModule,
-      KeyManagerModule,
-      NotificationWidgetModule,
-      EmailVerifyModule,
+    // Libraries
+    ToolbarModule,
+    ProfileMenuModule,
+    KeyManagerModule,
+    EmailVerifyModule,
 
-      sentryDsn ? SentryModule : [],
+    // Widget
+    OrganizationWidgetModule,
+    ThemeWidgetModule,
+    NotificationWidgetModule,
+    WalletWidgetModule,
+    ProfileWidgetModule,
 
-      // Firebase
-      AngularFireModule.initializeApp(environment.firebase),
-      AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
-      AngularFireFunctionsModule,
-      AngularFirePerformanceModule,
-      AngularFireAuthModule,
-      AngularFireStorageModule,
+    sentryDsn ? SentryModule : [],
 
-      // Akita
-      AkitaNgRouterStoreModule.forRoot(),
+    // Firebase
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+    AngularFireFunctionsModule,
+    AngularFirePerformanceModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
+
+    // Akita
+    AkitaNgRouterStoreModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

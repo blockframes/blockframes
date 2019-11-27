@@ -25,12 +25,15 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
 import { ToolbarModule } from '@blockframes/ui';
-import { OrganizationWidgetModule } from '@blockframes/organization';
-import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
-import { NotificationWidgetModule } from '@blockframes/notification';
 import { EmailVerifyModule } from '@blockframes/auth';
+
+// Widgets
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+import { NotificationWidgetModule } from '@blockframes/notification';
+import { ThemeWidgetModule } from '@blockframes/ui/theme';
+import { WalletWidgetModule } from '@blockframes/ethers';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -86,14 +89,17 @@ import { sentryDsn } from '@env';
     MatBadgeModule,
 
     // Libraries
-    OrganizationWidgetModule,
     ToolbarModule,
-    ProfileWidgetModule,
     ProfileMenuModule,
-    WalletWidgetModule,
     KeyManagerModule,
-    NotificationWidgetModule,
     EmailVerifyModule,
+
+    // Widget
+    OrganizationWidgetModule,
+    ThemeWidgetModule,
+    NotificationWidgetModule,
+    WalletWidgetModule,
+    ProfileWidgetModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
