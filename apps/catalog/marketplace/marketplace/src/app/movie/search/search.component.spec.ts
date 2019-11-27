@@ -100,8 +100,15 @@ describe('MarketplaceSearchComponent test suite', () => {
   });
 
   it('should return the current year when "getCurrentYear" is called', () => {
-    jest.spyOn(spectator.component, 'getCurrentYear', 'get').mockReturnValue(2019);
-    const currentYear = spectator.component.getCurrentYear;
-    expect(currentYear).toBe(2019);
+    /**
+     *  We need to use the jest.spyOn here cause this function is a getters
+     */
+    jest.spyOn(spectator.component, 'getCurrentYear', 'get').mockReturnValue(new Date().getFullYear());
+    expect(spectator.component.getCurrentYear).toBe(2019);
+  });
+
+  it('should return the year 2018 when "getCurrentYear" is called', () => {
+    jest.spyOn(spectator.component, 'getCurrentYear', 'get').mockReturnValue(2018);
+    expect(spectator.component.getCurrentYear).toBe(2018);
   });
 });
