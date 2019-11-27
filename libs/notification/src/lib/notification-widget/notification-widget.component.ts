@@ -29,13 +29,17 @@ export class NotificationWidgetComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.notificationCount$ = this.notificationQuery.selectCount(notification => !notification.isRead);
-    this.invitationCount$ = this.permissionQuery.isAdmin$.pipe(
-      switchMap(isAdmin =>
-        isAdmin
-          ? this.invitationQuery.selectCount(invitation => this.adminInvitations(invitation))
-          : this.invitationQuery.selectCount(invitation => this.memberInvitations(invitation))
-      )
-    );
+    if (!!this.authQuery.orgId) {
+      this.invitationCount$ = this.permissionQuery.isAdmin$.pipe(
+        switchMap(isAdmin =>
+          isAdmin
+            ? this.invitationQuery.selectCount(invitation => this.adminInvitations(invitation))
+            : this.invitationQuery.selectCount(invitation => this.memberInvitations(invitation))
+        )
+      );
+    } else {
+      this.invitationCount$ = this.invitationQuery.selectCount(invitation => this.memberInvitations(invitation));
+    }
   }
 
   private adminInvitations(invitation: Invitation) {
@@ -52,7 +56,7 @@ export class NotificationWidgetComponent implements OnInit {
     );
   }
 
-  public get totalCount() {
+  public get totalCount$() {
     return combineLatest([this.invitationCount$, this.notificationCount$]).pipe(
       map(counts => counts[0] + counts[1])
     );

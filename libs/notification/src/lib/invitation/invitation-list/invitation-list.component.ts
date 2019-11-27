@@ -34,30 +34,30 @@ export class InvitationListComponent implements OnInit, OnDestroy {
      */
     const storeName = this.store.storeName;
     const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-    this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+    if (!!this.authQuery.orgId) {
+      this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+      this.isAdmin$ = this.permissionQuery.isAdmin$;
+      this.userInvitations$ = this.permissionQuery.isAdmin$.pipe(
+        switchMap(isAdmin => {
+          const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
+          if (!isAdmin) {
+            const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
+            // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
+            this.store.remove(ids);
+          }
+          return this.query.selectAll({
+            filterBy,
+            sortBy: 'date',
+            sortByOrder: Order.DESC
+          });
+        })
+      );
+    }
     this.docInvitations$ = this.query.selectAll({
       filterBy: invitation => invitation.type === InvitationType.toWorkOnDocument,
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
-
-    this.isAdmin$ = this.permissionQuery.isAdmin$;
-
-    this.userInvitations$ = this.permissionQuery.isAdmin$.pipe(
-      switchMap((isAdmin) => {
-        const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
-        if (!isAdmin) {
-          const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
-          // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
-          this.store.remove(ids);
-        }
-        return this.query.selectAll({
-          filterBy,
-          sortBy: 'date',
-          sortByOrder: Order.DESC
-        });
-      })
-    );
   }
 
   ngOnDestroy() {
