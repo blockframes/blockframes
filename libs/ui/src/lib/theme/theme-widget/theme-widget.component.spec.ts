@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ThemeWidgetComponent } from './theme-widget.component';
+import { material } from './theme-widget.module';
 
 describe('ThemeWidgetComponent', () => {
   let component: ThemeWidgetComponent;
@@ -8,7 +9,8 @@ describe('ThemeWidgetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ThemeWidgetComponent ]
+      declarations: [ ThemeWidgetComponent ],
+      imports: [...material]
     })
     .compileComponents();
   }));
