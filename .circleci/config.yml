@@ -150,7 +150,7 @@ jobs:
           when: always
       - store_artifacts:
           name: Uploading screenshots
-          path: ~/repo/dist/out-tsc/apps/
+          path: ~/repo/dist/cypress/apps
       - slack/status
   deploy-to-prod:
     executor: blockframes-ci
