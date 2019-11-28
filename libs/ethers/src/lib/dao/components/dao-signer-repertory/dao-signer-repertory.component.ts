@@ -8,20 +8,20 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationOperation } from '../../+state';
-import { OrganizationMember } from '../../member/+state/member.model';
+import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
+import { DaoOperation } from '../../+state';
 
 interface OperationMember extends OrganizationMember {
   operationIds: string[];
 }
 
 @Component({
-  selector: 'org-signer-repertory',
-  templateUrl: './organization-signer-repertory.component.html',
-  styleUrls: ['./organization-signer-repertory.component.scss'],
+  selector: 'dao-signer-repertory',
+  templateUrl: './dao-signer-repertory.component.html',
+  styleUrls: ['./dao-signer-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationSignerRepertoryComponent {
+export class DaoSignerRepertoryComponent {
   /** Headline of the columns in the material table. No Headline means no text.*/
   public displayedColumns: string[] = ['name', 'email', 'operations', 'action'];
 
@@ -35,7 +35,7 @@ export class OrganizationSignerRepertoryComponent {
   };
 
   private _members: OrganizationMember[] = [];
-  private _operations: OrganizationOperation[] = [];
+  private _operations: DaoOperation[] = [];
 
   @Input()
   set members(members: OrganizationMember[]) {
@@ -45,7 +45,7 @@ export class OrganizationSignerRepertoryComponent {
   get members() { return this._members; }
 
   @Input()
-  set operations(operations: OrganizationOperation[]) {
+  set operations(operations: DaoOperation[]) {
     this._operations = operations;
     this.joinMemberAndOperation();
   }

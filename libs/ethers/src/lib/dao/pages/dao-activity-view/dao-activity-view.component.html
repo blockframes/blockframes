@@ -5,11 +5,11 @@
         <mat-divider></mat-divider>
       </header>
       <h4>Pending Approval</h4>
-      <org-display-actions [actions]="pendingActions$ | async" [isApproved]="false" (actionSelected)="openSidenav($event)">
-      </org-display-actions>
+      <dao-display-actions [actions]="pendingActions$ | async" [isApproved]="false" (actionSelected)="openSidenav($event)">
+      </dao-display-actions>
       <h4>Actions Approved</h4>
-      <org-display-actions [actions]="approvedActions$ | async" [isApproved]="true" (actionSelected)="openSidenav($event)">
-      </org-display-actions>
+      <dao-display-actions [actions]="approvedActions$ | async" [isApproved]="true" (actionSelected)="openSidenav($event)">
+      </dao-display-actions>
     </ng-container>
     <ng-container sidenav>
       <section *ngIf="!!selectedAction">

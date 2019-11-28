@@ -21,3 +21,6 @@ export * from './lib/key-manager/key-manager.module';
 export * from './lib/key-manager/+state/key-manager.query';
 export * from './lib/key-manager/+state/key-manager.service';
 export * from './lib/key-manager/+state/key-manager.store';
+
+// DAO
+export * from './lib/dao/dao.module';
