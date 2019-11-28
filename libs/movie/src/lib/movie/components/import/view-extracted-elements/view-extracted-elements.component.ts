@@ -593,7 +593,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
-            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
+            media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
             type: 'banner',
             ratio: 'rectangle'
           });
