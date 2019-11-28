@@ -5,7 +5,7 @@
   "pluginsFile": "../../../dist/out-tsc/apps/main/main-e2e/src/plugins/index.js",
   "supportFile": false,
   "video": true,
-  "videosFolder": "../../../dist/out-tsc/apps/main/main-e2e/videos",
-  "screenshotsFolder": "../../../dist/out-tsc/apps/main/main-e2e/screenshots",
+  "videosFolder": "../../../dist/cypress/apps/main/main-e2e/videos",
+  "screenshotsFolder": "../../../dist/cypress/apps/main/main-e2e/screenshots",
   "chromeWebSecurity": false
 }
