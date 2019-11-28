@@ -21,7 +21,7 @@
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
     "firebase:deploy": "firebase deploy",
-    "test": "npx ng test",
+    "test": "jest",
     "lint": "npx ng lint",
     "e2e": "npm run e2e:main && npm run e2e:delivery && npm run e2e:catalog-marketplace && npm run e2e:movie-financing",
     "pree2e": "ng build backend-ops --configuration=\"${ENV}\" && node dist/apps/backend-ops/main.js",
