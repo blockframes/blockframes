@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses, Step } from './delivery.model';
+import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses } from './delivery.model';
 import {
   Movie,
   MovieQuery
@@ -93,10 +93,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     return this.db.doc<Movie>(`movies/${movieId}`);
   }
 
-  private get currentDeliveryDoc() {
-    return this.deliveryDoc(this.query.getActiveId());
-  }
-
   private materialDeliveryDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
     return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
   }
@@ -110,11 +106,11 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   ///////////////////
 
   public updateDeliveryStatus(index: number): Promise<any> {
-    return this.currentDeliveryDoc.update({ status: deliveryStatuses[index] });
+    return this.update(this.query.getActiveId(), { status: deliveryStatuses[index] });
   }
 
   public updateCurrentMGDeadline(index: number): Promise<any> {
-    return this.currentDeliveryDoc.update({ mgCurrentDeadline: index });
+    return this.update(this.query.getActiveId(), { mgCurrentDeadline: index });
   }
 
   /** Initializes a new delivery in firebase
@@ -233,73 +229,23 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   /** Update informations of delivery */
-  public updateInformations(delivery: Partial<Delivery>) {
-    const batch = this.db.firestore.batch();
+  public async updateInformations(delivery: Partial<Delivery>) {
     const deliveryId = this.query.getActiveId();
-    const deliveryRef = this.deliveryDoc(deliveryId).ref;
 
-    this.updateMGDeadlines(delivery, deliveryRef, batch);
-    this.updateDates(delivery, deliveryRef, batch);
-    this.updateSteps(delivery.steps, deliveryRef, batch);
-
-    return batch.commit();
-  }
-
-  /** Update minimum guaranteed informations of delivery */
-  private updateMGDeadlines(
-    delivery: Partial<Delivery>,
-    deliveryRef: firebase.firestore.DocumentReference,
-    batch: firebase.firestore.WriteBatch
-  ) {
-    return batch.update(deliveryRef, {
-      mgAmount: delivery.mgAmount,
-      mgCurrency: delivery.mgCurrency,
-      mgDeadlines: delivery.mgDeadlines
-    });
-  }
-
-  /** Update dates of delivery */
-  private updateDates(
-    delivery: Partial<Delivery>,
-    deliveryRef: firebase.firestore.DocumentReference,
-    batch: firebase.firestore.WriteBatch
-  ) {
-    return batch.update(deliveryRef, {
-      dueDate: delivery.dueDate,
-      acceptationPeriod: delivery.acceptationPeriod,
-      reWorkingPeriod: delivery.reWorkingPeriod
-    });
-  }
-
-  /** Update steps of delivery */
-  private updateSteps(
-    steps: Step[],
-    deliveryRef: firebase.firestore.DocumentReference,
-    batch: firebase.firestore.WriteBatch
-  ) {
     const oldSteps = this.query.getActive().steps;
 
     // Add an id for new steps
-    const stepsWithId = steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
+    const stepsWithId = delivery.steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
 
     // Find steps that need to be removed
     const deletedSteps = oldSteps.filter(
       oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
     );
 
-    // Remove stepId from the materials according to this array
-    this.removeMaterialsStepId(deletedSteps, batch);
-
-    return batch.update(deliveryRef, { steps: stepsWithId });
-  }
-
-  /** Remove stepId of materials of delivery for an array of steps */
-  private removeMaterialsStepId(steps: Step[], batch: firebase.firestore.WriteBatch) {
-    // TODO(issue#773): Use a transaction to make sure we don't lose data
-    const deliveryId = this.query.getActiveId();
-
-    // We also set the concerned materials stepId to an empty string
-    steps.forEach(step => {
+    // We set the concerned materials stepId to an empty string
+    // TODO: materialDeliveryDoc ? and what happens for materials of movie
+    const batch = this.db.firestore.batch();
+    deletedSteps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
 
       materials.forEach(material => {
@@ -307,17 +253,33 @@ export class DeliveryService extends CollectionService<DeliveryState> {
         batch.update(ref, { stepId: '' });
       });
     });
+    await batch.commit();
+
+    return this.update(this.query.getActiveId(), {
+      // Update minimum guaranteed informations of delivery
+      mgAmount: delivery.mgAmount,
+      mgCurrency: delivery.mgCurrency,
+      mgDeadlines: delivery.mgDeadlines,
+
+      // Update dates of delivery
+      dueDate: delivery.dueDate,
+      acceptationPeriod: delivery.acceptationPeriod,
+      reWorkingPeriod: delivery.reWorkingPeriod,
+
+      // Update steps of delivery
+      steps: stepsWithId
+    });
   }
 
   /** Remove signatures in array validated of delivery */
   public unsealDelivery(): Promise<void> {
     // TODO(issue#775): ask all stakeholders for permission to re-open the delivery form
-    return this.currentDeliveryDoc.update({ validated: [], isSigned: false });
+    return this.update(this.query.getActiveId(), { validated: [], isSigned: false });
   }
 
   /** Deletes delivery and all the sub-collections in firebase */
   public async deleteDelivery(): Promise<any> {
-    return this.currentDeliveryDoc.delete();
+    return this.remove(this.query.getActiveId());
   }
 
   /** Push stakeholder id into validated array as a signature */
@@ -339,7 +301,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
-      return this.deliveryDoc(id).update({ validated: updatedValidated });
+      return this.update(this.query.getActiveId(), { validated: updatedValidated });
     }
   }
 
@@ -392,9 +354,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     tx: firebase.firestore.Transaction
   ) {
     const materials = await this.materialService.getMovieMaterials(document.id);
-    // const materials = await this.db.snapshot<Material[]>(
-    //   `${document._type}/${document.id}/materials`
-    // );
 
     materials.forEach(material => {
       const targetRef = this.db.doc<Material>(`movies/${document.id}/materials/${material.id}`).ref;
@@ -413,7 +372,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     // NOTE: There is no way to query a collection within the transaction
     // So we accept a race condition here
     const materials = await this.materialService.getTemplateMaterials(document.id);
-    //const materials = await this.db.snapshot<Material[]>(`${document._type}/${document.id}/materials`);
+
     const movieMaterials = await this.materialService.getMovieMaterials(delivery.movieId);
 
     materials.forEach(material => {
