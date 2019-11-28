@@ -56,11 +56,12 @@ export async function onRequestAccessToAppWrite(
 
 /**
  * Decorates another function, this will check that the password is valid
- * for admin operations.
+ * for admin operations. We compare the value of the `password` field, submitted with
+ * the request, to the admin password in the environment.
  *
  * See issue#700 for details.
  *
- * @param f a function to protect, should be post'd.
+ * @param f a function to protect, should be a request handler for a POST request.
  */
 function checkPasswordOnPost(f: any) {
   return (req: express.Request, res: express.Response) => {
