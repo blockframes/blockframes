@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeliveryService, DeliveryState, DeliveryQuery, DeliveryStore } from '../+state';
+import { DeliveryService, DeliveryState, DeliveryStore } from '../+state';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { tap } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class DeliveryActiveGuard extends CollectionGuard<DeliveryState> {
-  constructor(protected service: DeliveryService, private query: DeliveryQuery, private store: DeliveryStore) {
+  constructor(protected service: DeliveryService, private store: DeliveryStore) {
     super(service);
   }
 
