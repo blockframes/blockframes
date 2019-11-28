@@ -7,17 +7,24 @@ service cloud.firestore {
     /// USERS RULES ///
 
     match /users/{userId} {
-    	allow read: if isSignedIn() && userId() == existingData().uid;
-    	allow update: if isSignedIn() && userId() == incomingData().uid;
+    	allow read: if isSignedIn()
+        && userExists(userId)
+        && userId() == existingData().uid;
+    	allow update: if isSignedIn()
+        && userExists(userId)
+        && userId() == incomingData().uid,
+        && userId() == existingData().uid;
     	allow create: if userId() == incomingData().uid;
-      allow delete: if userId() == existingData().uid;
+      allow delete: if isSignedIn()
+        && userExists(userId)
+        && userId() == existingData().uid;
     }
 
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
     	allow read, update: if userId() == existingData().userId
-      	|| userOrgId().orgId == existingData().organization.id;
+      	|| userOrgId() == existingData().organization.id;
     	allow create, delete: if false;
     }
 
@@ -34,10 +41,12 @@ service cloud.firestore {
     /// ORGANIZATION RULES ///
 
     match /orgs/{orgId} {
-    	allow create: if isSignedIn() && incomingData().status == 'pending';
+    	allow create: if isSignedIn()
+        && incomingData().status == 'pending';
       allow update: if isSignedIn()
         && isOrgAdmin(userId(), orgId)
-        && incomingData().status == existingData().status;
+        && incomingData().status == existingData().status
+        && incomingData().id == existingData().id;
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
@@ -71,7 +80,12 @@ service cloud.firestore {
       	&& isSuperAdmin(userId(), userOrgId());
 
       match /{documents=**} {
-      	allow read, write: if userHasValidOrg()
+      	allow read: if userHasValidOrg();
+        allow create: if userHasValidOrg();
+        allow update: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
+      	  && isOrgAdmin(userId(), userOrgId());
+        allow delete: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
+      	  && isSuperAdmin(userId(), userOrgId());
       }
     }
 
@@ -93,6 +107,10 @@ service cloud.firestore {
 
     function isSignedIn() {
       return request.auth != null;
+    }
+
+    function userExists(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId));
     }
 
   	function userOrgId() {
