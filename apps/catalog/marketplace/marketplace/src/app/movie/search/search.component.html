@@ -345,7 +345,7 @@
             </mat-card-subtitle>
             <mat-card-content class="table-size-text">
               <b *ngFor="let country of index.movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
-                {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i == 1 && index.movie.main.originCountries.length > 2 ? ',  ' : ''}}
+                {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && index.movie.main.originCountries.length > 2 ? ',  ' : ''}}
               </b>
               <b *ngIf="index.movie.main.originCountries.length > 2">... </b>
               <b *ngIf="index.movie.main.length">| {{ index.movie.main.length }} min </b><b>|

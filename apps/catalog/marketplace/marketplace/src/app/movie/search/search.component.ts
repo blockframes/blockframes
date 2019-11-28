@@ -1,3 +1,4 @@
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { SalesAgent } from './../../../../../../../../libs/movie/src/lib/movie/+state/movie.model';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
@@ -157,6 +158,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private movieService: MovieService,
     private basketService: BasketService,
     private snackbar: MatSnackBar,
+    private movieQuery: MovieQuery,
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
@@ -172,23 +174,6 @@ export class MarketplaceSearchComponent implements OnInit {
             err ? rej(err) : res(result.hits)
           );
         });
-      }),
-      tap((movies: MovieAlgoliaResult[]) => {
-        movies.forEach(index => {
-          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
-            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
-          }
-        });
-        this.availableMovies = movies.length;
-        this.allTitles = movies.map(index => index.movie.main.title.international);
-        this.allKeywords = flatten(
-          movies.map(index => index.movie.promotionalDescription.keywords)
-        );
-        this.allDirectors = flatten(
-          movies.map(index =>
-            index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
-          )
-        );
       })
     );
     this.movieSearchResults$ = combineLatest([
@@ -225,6 +210,25 @@ export class MarketplaceSearchComponent implements OnInit {
         }
       })
     );
+
+    this.movieQuery.selectAll().pipe(
+      tap(movies => {
+        movies.forEach(movie => {
+          if (!this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
+            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
+          }
+        });
+        this.availableMovies = movies.length;
+        this.allTitles = movies.map(movie => movie.main.title.international);
+        this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
+        this.allDirectors = flatten(
+          movies.map(movie =>
+            movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+          )
+        );
+      })
+    );
+
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
       map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
