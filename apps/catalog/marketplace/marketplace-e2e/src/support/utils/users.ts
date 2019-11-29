@@ -1,5 +1,6 @@
 import { User } from "./type";
 
+/** This list of users is linked to backend-ops/users.fixture. */
 export const USERS: Partial<User>[] = [
   {
     uid: '8sIkEsgILVNIk6gET7SyuphCrGp1',

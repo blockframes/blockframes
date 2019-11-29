@@ -1,14 +1,12 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, WelcomeViewPage, HomePage, WishlistPage, SearchPage } from "../support/pages";
+import { LoginViewPage, WelcomeViewPage, HomePage, WishlistPage } from "../support/pages";
 import { User } from "../support/utils/type";
 import { USERS } from "../support/utils/users";
+import { MOVIENAMELIST } from "../support/utils/movies";
 
-// Select user: hello@cascade8.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[16];
-
-const MOVIE_1 = 'A Perfect Enemy';
-const MOVIE_2 = 'Cosmogony';
+// Select user: cytest@blockframes.com
+const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 beforeEach(() => {
   cy.clearCookies();
@@ -18,7 +16,7 @@ beforeEach(() => {
 });
 
 describe('Test submit wishlist to sellers', () => {
-  it('Login into an existing account, verify if the current wishlist is empty, add movies to current wishlist, send wishlist to sellers.', () => {
+  it('Login into an existing account, verify if the current wishlist is empty, add movies to current wishlist from the home page, send wishlist to sellers.', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
@@ -30,24 +28,24 @@ describe('Test submit wishlist to sellers', () => {
     const p4: WishlistPage = p3.clickWishlist();
     p4.assertNoCurrentWishlist();
 
-    // Go to line-up and add movies to the current wishlist
-    const p5: SearchPage = p4.clickContextMenuLineUp();
-    p5.addMovieToWishlist(MOVIE_1);
-    p5.addMovieToWishlist(MOVIE_2);
+    // Go to home page and add movies to the current wishlist
+    const p5: HomePage = p4.clickContextMenuHome();
+    p5.addMovieToWishlist(MOVIENAMELIST[0]);
+    p5.addMovieToWishlist(MOVIENAMELIST[1]);
 
     // Go to wishlist and submit to sellers
     const p6: WishlistPage = p5.clickWishlist();
 
     // Verify current wishlist
-    p6.assertMovieInCurrentWishlist(MOVIE_1);
-    p6.assertMovieInCurrentWishlist(MOVIE_2);
+    p6.assertMovieInCurrentWishlist(MOVIENAMELIST[0]);
+    p6.assertMovieInCurrentWishlist(MOVIENAMELIST[1]);
 
     // Send the current wishlist
     p6.clickSendToSellers();
 
     // Verify sent wishlist
     p6.assertNoCurrentWishlist();
-    p6.assertMovieInSentWishlist(MOVIE_1);
-    p6.assertMovieInSentWishlist(MOVIE_2);
+    p6.assertMovieInSentWishlist(MOVIENAMELIST[0]);
+    p6.assertMovieInSentWishlist(MOVIENAMELIST[1]);
   });
 });
