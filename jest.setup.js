@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import 'jest-preset-angular';
 
 global.beforeEach(() => {
   cy.clearCookies();
