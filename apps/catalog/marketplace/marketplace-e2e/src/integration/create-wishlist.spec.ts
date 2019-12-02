@@ -30,7 +30,7 @@ describe('Test wishlist icon from line-up page', () => {
     // Add two movies to the wishlist
     const p4: SearchPage = p3.clickContextMenuLineUp();
     MOVIENAMELIST.forEach(movieName => {
-      p4.addMovieToWishlist(movieName);
+      p4.clickWishlistButton(movieName);
       p5.checkMessage(movieName + ADD_MESSAGE);
     });
 
@@ -66,7 +66,7 @@ describe('Test wishlist icon from movie view page', () => {
     const p4: SearchPage = p3.clickContextMenuLineUp();
     MOVIENAMELIST.forEach(movieName => {
       const p5: ViewPage = p4.selectMovie(movieName);
-      p5.addMovieToWishlist();
+      p5.clickWishListButton();
       p5.checkMessage(movieName + ADD_MESSAGE);
       p5.clickContextMenuLineUp();
     });
@@ -103,13 +103,13 @@ describe('Test wishlist icon from movie view page', () => {
 
       // Add two movies from home page
       MOVIENAMELIST.forEach(movieName => {
-        p3.addMovieToWishlist(movieName);
+        p3.clickWishlistButton(movieName);
       });
       p3.checkWishListCount(MOVIENAMELIST.length);
 
       // Remove two movies from home page
       MOVIENAMELIST.forEach(movieName => {
-        p3.addMovieToWishlist(movieName);
+        p3.clickWishlistButton(movieName);
       });
       p3.checkWishListCount(0);
 
@@ -119,7 +119,7 @@ describe('Test wishlist icon from movie view page', () => {
       const p4: SearchPage = p3.clickContextMenuLineUp();
       MOVIENAMELIST.forEach(movieName => {
         const p5: ViewPage = p4.selectMovie(movieName);
-        p5.addMovieToWishlist();
+        p5.clickWishListButton();
         p5.clickContextMenuLineUp();
       });
       p4.checkWishListCount(MOVIENAMELIST.length);
@@ -127,7 +127,7 @@ describe('Test wishlist icon from movie view page', () => {
       // Remove two movies from view page
       MOVIENAMELIST.forEach(movieName => {
         const p5: ViewPage = p4.selectMovie(movieName);
-        p5.addMovieToWishlist();
+        p5.clickWishListButton();
         p5.clickContextMenuLineUp();
       });
       p4.checkWishListCount(0);
@@ -136,13 +136,13 @@ describe('Test wishlist icon from movie view page', () => {
 
       // Add two movies from line-up page
       MOVIENAMELIST.forEach(movieName => {
-        p4.addMovieToWishlist(movieName);
+        p4.clickWishlistButton(movieName);
       });
       p4.checkWishListCount(MOVIENAMELIST.length);
 
       // Remove two movies from line-up page
       MOVIENAMELIST.forEach(movieName => {
-        p4.addMovieToWishlist(movieName);
+        p4.clickWishlistButton(movieName);
       });
       p4.checkWishListCount(0);
     });
