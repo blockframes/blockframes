@@ -132,7 +132,7 @@ export async function updateAvatarUserDocument(db: Firestore) {
   console.log('Updating avatar in user documents done');
 }
 
-export async function upgradeV2(db: Firestore) {
+export async function upgrade(db: Firestore) {
   updatePicturesMovieDocument(db);
   updateAdressesOrganizationDocument(db);
 }

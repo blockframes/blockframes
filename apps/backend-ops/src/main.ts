@@ -8,7 +8,7 @@ import {
   storeSearchableOrg,
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
-import { upgradeV2 } from './firestoreMigrations/0002';
+import { upgrade } from './firestoreMigrations/0002';
 import { appUrl } from '@env';
 
 async function prepareForTesting() {
@@ -68,7 +68,7 @@ async function upgradeAlgoliaMovies() {
 
 function migrateToV2() {
   const { db } = loadAdminServices();
-  upgradeV2(db);
+  upgrade(db);
 }
 
 const args = process.argv.slice(2);
