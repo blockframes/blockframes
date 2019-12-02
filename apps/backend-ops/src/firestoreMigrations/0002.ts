@@ -1,15 +1,16 @@
 import { Firestore } from '../admin';
+import { withoutUndefined } from './0001';
 
 
 /**
  * Update organisation document from AFM information to today master information (18/11/19)
  */
-export async function updateOrganizationDocument(db: Firestore) {
+export async function updateAdressesOrganizationDocument(db: Firestore) {
   const organizations = await db.collection('orgs').get();
 
   const newOrgnizationData = organizations.docs.map(async (orgDocSnapshot: any): Promise<any> => {
     const orgData = orgDocSnapshot.data();
-    const {address, phoneNumber, created, updated, logo} = orgData;
+    const {address, phoneNumber, created, updated} = orgData;
 
     delete orgData.address;
     delete orgData.catalog;
@@ -21,20 +22,14 @@ export async function updateOrganizationDocument(db: Firestore) {
       ...orgData,
       addresses: {
         main : {
-          city: address || '',
+          city: address,
           country: '',
-          phoneNumber: phoneNumber || '',
-          region: '',
+          phoneNumber: phoneNumber,
           street: '',
           zipCode: ''
         }
       },
       created: new Date(created),
-      logo: {
-        originalRef: '',
-        ref: logo,
-        url: ''
-      },
       updated: new Date(updated)
     };
 

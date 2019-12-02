@@ -8,8 +8,8 @@ import {
   storeSearchableOrg,
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
-import { updateOrganizationDocument, updatePicturesMovieDocument, updateAvatarUserDocument } from './firestoreMigrations/0002';
-import { appUrl, firebase } from '@env';
+import { updateAdressesOrganizationDocument, updatePicturesMovieDocument } from './firestoreMigrations/0002';
+import { appUrl } from '@env';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
@@ -68,10 +68,8 @@ async function upgradeAlgoliaMovies() {
 
 function migrateToV2() {
   const { db } = loadAdminServices();
-  updateInvitationDocument(db);
-  updateOrganizationDocument(db);
+  updateAdressesOrganizationDocument(db);
   updatePicturesMovieDocument(db);
-  updateAvatarUserDocument(db);
 }
 
 const args = process.argv.slice(2);
