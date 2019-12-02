@@ -7,8 +7,7 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  HostBinding,
-  Inject
+  HostBinding
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
@@ -66,7 +65,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
     event.stopPropagation();
     this.service.removeMovieFromWishlist(movie.id);
     this.snackbar.open(
-      `${movie.main.title.international} has been removed from your selection`,
+      `${movie.main.title.international} has been removed from your selection.`,
       'close',
       { duration: 2000 }
     );

@@ -16,6 +16,10 @@ export default abstract class NavbarPage {
     return new WishlistPage();
   }
 
+  public checkWishListCount(count: number) {
+    cy.get('[page-id=navbar] a[test-id=heartIcon]').should('contain', count);
+  }
+
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
@@ -34,5 +38,9 @@ export default abstract class NavbarPage {
       .contains('home')
       .click();
     return new HomePage();
+  }
+
+  public checkMessage(message: string) {
+    cy.contains(message, { timeout: 3000 });
   }
 }

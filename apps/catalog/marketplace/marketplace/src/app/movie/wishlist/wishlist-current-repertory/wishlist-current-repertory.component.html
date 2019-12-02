@@ -67,7 +67,7 @@
   <!-- Action -->
   <ng-container *ngIf="isCurrent" matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">
+    <td test-id="remove-movie" mat-cell *matCellDef="let element">
       <!-- TODO: issue#1111 add remove function -->
       <button mat-icon-button (click)="remove(element, $event)">
         <mat-icon>clear</mat-icon>
