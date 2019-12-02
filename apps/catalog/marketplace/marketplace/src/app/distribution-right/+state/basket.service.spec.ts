@@ -2,19 +2,11 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { firebase } from '@env';
 import { AngularFireFunctions, AngularFireFunctionsModule } from '@angular/fire/functions';
 import { TestBed, inject } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting
-} from '@angular/platform-browser-dynamic/testing';
-
 import { BasketService } from './basket.service';
 import { AngularFireModule, FirebaseApp } from '@angular/fire';
 
 describe('BasketService', () => {
   beforeEach(() => {
-    TestBed.resetTestEnvironment();
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-
     let app: FirebaseApp;
     let afFns: AngularFireFunctions;
 
@@ -39,7 +31,7 @@ describe('BasketService', () => {
 
   it('should update the wishlist', () => {
     const service: BasketService = TestBed.get(BasketService);
-    const wishlistSpy = jest.spyOn(service, 'updateWishlist');
+    const wishlistSpy = jest.spyOn(service, 'updateWishlist').mockRejectedValue(new Error());
     /**
      * We want to compare the date values, but since
      * the time is passing during the test, we need to have a fixed time
