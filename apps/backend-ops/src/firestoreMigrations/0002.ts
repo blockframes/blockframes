@@ -133,6 +133,6 @@ export async function updateAvatarUserDocument(db: Firestore) {
 }
 
 export async function upgrade(db: Firestore) {
-  updatePicturesMovieDocument(db);
-  updateAdressesOrganizationDocument(db);
+  await updatePicturesMovieDocument(db);
+  await updateAdressesOrganizationDocument(db);
 }

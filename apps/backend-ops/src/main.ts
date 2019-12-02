@@ -66,9 +66,9 @@ async function upgradeAlgoliaMovies() {
   return Promise.all(promises);
 }
 
-function migrateToV2() {
+async function migrateToV2() {
   const { db } = loadAdminServices();
-  upgrade(db);
+  await upgrade(db).then(() => process.exit(0));
 }
 
 const args = process.argv.slice(2);
