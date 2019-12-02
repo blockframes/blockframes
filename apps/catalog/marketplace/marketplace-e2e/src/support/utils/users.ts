@@ -161,5 +161,10 @@ export const USERS: Partial<User>[] = [
     uid: 'z7GwTTzxukhxUiOruEGcWrapRNs2',
     email: 'ynikas@cascade8.com',
     password: 'blockframes'
+  },
+  {
+    uid: 'KbfCqN3vTtcthunMJ1RT6ZZIyFb2',
+    email: 'testyo80@test.com',
+    password: 'testyo80@test.com'
   }
 ];

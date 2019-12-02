@@ -24,13 +24,13 @@
       </article>
     </section>
     <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-      <button class="heart-button" test-id="distribution-right-link" mat-flat-button color="accent" (click)="removeFromWishlist()">
+      <button class="heart-button" test-id="wishlistRemove" mat-flat-button color="accent" (click)="removeFromWishlist()">
         <mat-icon>favorite</mat-icon>
         <span>Remove from list</span>
       </button>
     </ng-container>
     <ng-template #alreadyAdded>
-      <button class="heart-button" test-id="distribution-right-link" mat-flat-button color="accent" (click)="addToWishlist()">
+      <button class="heart-button" test-id="wishlistAdd" mat-flat-button color="accent" (click)="addToWishlist()">
         <mat-icon>favorite_border</mat-icon>
         <span>Add to list</span>
       </button>

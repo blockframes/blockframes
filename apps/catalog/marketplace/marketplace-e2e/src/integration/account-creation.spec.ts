@@ -12,7 +12,7 @@ const USER: Partial<User> = {
 
 const wrongEmailForm = 'wrongform*email!com';
 const wrongPassword = 'wrongpassword';
-const shortPaasword = '123';
+const shortPassword = '123';
 const longPassword = '123456789123456789123456789';
 
 // TEST
@@ -116,8 +116,8 @@ describe('Try password', () => {
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.name);
     p1.fillSurnameInSignup(USER.surname);
-    p1.fillPasswordInSignup(shortPaasword);
-    p1.fillPasswordConfirmInSignup(shortPaasword);
+    p1.fillPasswordInSignup(shortPassword);
+    p1.fillPasswordConfirmInSignup(shortPassword);
     p1.clickTermsAndCondition();
     p1.clickSignup();
     p1.assertStayInLoginview();
