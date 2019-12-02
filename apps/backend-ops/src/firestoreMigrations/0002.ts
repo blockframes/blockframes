@@ -1,5 +1,4 @@
 import { Firestore } from '../admin';
-import { withoutUndefined } from './0001';
 
 
 /**
@@ -83,7 +82,7 @@ export async function updatePicturesMovieDocument(db: Firestore) {
             media: {
               originalRef: '',
               ref: '',
-              url: url
+              url
             }
           }
         })
@@ -104,7 +103,7 @@ export async function updatePicturesMovieDocument(db: Firestore) {
     return movieDocSnapshot.ref.set(newData);
   });
   await Promise.all(newMovieData);
-  console.log('Updating poster in movie documents done');
+  console.log('Updating pictures in movie documents done');
 }
 
 /**
@@ -131,4 +130,9 @@ export async function updateAvatarUserDocument(db: Firestore) {
   });
   await Promise.all(newUserData);
   console.log('Updating avatar in user documents done');
+}
+
+export async function upgradeV2(db: Firestore) {
+  updatePicturesMovieDocument(db);
+  updateAdressesOrganizationDocument(db);
 }
