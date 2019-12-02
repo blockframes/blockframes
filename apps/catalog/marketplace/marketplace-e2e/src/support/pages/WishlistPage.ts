@@ -13,7 +13,7 @@ export default class WishlistPage extends NavbarPage {
   }
 
   public assertNoCurrentWishlist() {
-    cy.get('[test-id=currentWishlist] table').should((table) => expect(table).length(0));
+    cy.get('[test-id=currentWishlist]').should((table) => expect(table).length(0));
   }
 
   public assertMovieInCurrentWishlist(movieName: string) {

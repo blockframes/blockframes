@@ -14,7 +14,7 @@ export default class HomePage extends NavbarPage {
     return new SearchPage();
   }
 
-  public addMovieToWishlist(movieName: string) {
+  public clickWishlistButton(movieName: string) {
     cy.get('[page-id=catalog-marketplace-homepage] li').contains(movieName)
       .parent().parent()
       .within(() => {

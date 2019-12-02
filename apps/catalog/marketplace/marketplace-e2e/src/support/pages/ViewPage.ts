@@ -13,7 +13,7 @@ export default class ViewPage extends NavbarPage {
     return new DistributionPage();
   }
 
-  public addMovieToWishlist() {
+  public clickWishListButton() {
     cy.get('.heart-button').click();
   }
 }
