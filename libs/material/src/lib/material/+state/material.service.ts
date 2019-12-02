@@ -135,10 +135,16 @@ export class MaterialService extends CollectionService<MaterialState> {
     materials.forEach(material => this.update(material.id, { isPaid: !material.isPaid }));
   }
 
-  /** Update materials of a movie (specific fields like 'owner' and 'storage'). */
+  /** Update materials of a movie (specific fields like 'owner', 'storage', 'stepId'). */
   public updateMovieMaterials(materials: Material[], movieId: string) {
     this.subcollectionPath = `movies/${movieId}/materials`;
-      materials.forEach(material => this.update(material.id, material));
+    materials.forEach(material => this.update(material.id, material));
+  }
+
+  /** Update stepId of materials of a delivery to empty string. */
+  public removeStepIdDeliveryMaterials(materials: Material[], deliveryId: string) {
+    this.subcollectionPath = `deliveries/${deliveryId}/materials`;
+    materials.forEach(material => this.update(material.id, { stepId: '' }));
   }
 
   ///////////////////////////////////////////

@@ -230,9 +230,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
   /** Update informations of delivery */
   public async updateInformations(delivery: Partial<Delivery>) {
-    const deliveryId = this.query.getActiveId();
-
     const oldSteps = this.query.getActive().steps;
+    const mustBeSigned = this.query.getActive().mustBeSigned;
 
     // Add an id for new steps
     const stepsWithId = delivery.steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
@@ -243,17 +242,17 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     );
 
     // We set the concerned materials stepId to an empty string
-    // TODO: materialDeliveryDoc ? and what happens for materials of movie
-    const batch = this.db.firestore.batch();
     deletedSteps.forEach(step => {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
-
-      materials.forEach(material => {
-        const ref = this.materialDeliveryDoc(deliveryId, material.id).ref;
-        batch.update(ref, { stepId: '' });
-      });
-    });
-    await batch.commit();
+      // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
+      if (mustBeSigned) {
+        this.materialService.removeStepIdDeliveryMaterials(materials, this.query.getActiveId());
+      // Else, we update stepId of materials in the sub-collection of movie
+      } else {
+        const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
+        this.materialService.updateMovieMaterials(materialsWithoutStep, this.movieQuery.getActiveId());
+      }
+    })
 
     return this.update(this.query.getActiveId(), {
       // Update minimum guaranteed informations of delivery
