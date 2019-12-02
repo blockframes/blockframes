@@ -11,9 +11,9 @@ export class DeliveryActiveGuard extends CollectionGuard<DeliveryState> {
     super(service);
   }
 
-  // TODO: what happens when the deliveryId in the route is bad ? return to 'layout'
   sync(next: ActivatedRouteSnapshot) {
     const deliveryId = next.params.deliveryId;
+    // Custom query to load organization in stakeholders of the delivery
     return this.service.syncDeliveryQuery(deliveryId).pipe(
       // Set active the delivery
       tap(_ => this.store.setActive(deliveryId))
