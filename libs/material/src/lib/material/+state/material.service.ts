@@ -138,12 +138,14 @@ export class MaterialService extends CollectionService<MaterialState> {
   /** Update materials of a movie (specific fields like 'owner', 'storage', 'stepId'). */
   public updateMovieMaterials(materials: Material[], movieId: string) {
     this.subcollectionPath = `movies/${movieId}/materials`;
+    // TODO: issue#1352 use a mutlip update
     materials.forEach(material => this.update(material.id, material));
   }
 
   /** Update stepId of materials of a delivery to empty string. */
   public removeStepIdDeliveryMaterials(materials: Material[], deliveryId: string) {
     this.subcollectionPath = `deliveries/${deliveryId}/materials`;
+    // TODO: issue#1352 use a mutlip update
     materials.forEach(material => this.update(material.id, { stepId: '' }));
   }
 
