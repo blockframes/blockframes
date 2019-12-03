@@ -52,6 +52,9 @@ export interface Title {
   international?: string;
 }
 
+/**
+ * @TODO #1061 add description
+ */
 interface IdentityRaw {
   orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
   displayName?: string, // @todo #1052 "?" is temporary

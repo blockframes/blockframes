@@ -13,7 +13,7 @@ export interface Price {
   currency: MovieCurrenciesSlug;
 }
 
-export interface CatalogCart {  // @todo #1061 => Cart & add to draw.io => pouvoir avoir n cart sur l'org. Ajouter un "name" au cart. Idem wishlist
+export interface CatalogCart {
   name: string;
   status: CartStatus;
   deals: string[];
