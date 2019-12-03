@@ -1,6 +1,7 @@
 import { functions } from './internals/firebase';
 import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia';
 import { MovieDocument } from './data/types';
+import isEqual from 'lodash/isEqual';
 
 export function onMovieCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -13,15 +14,11 @@ export function onMovieCreate(
     console.error('Invalid movie data:', movie);
     throw new Error('movie update function got invalid movie data');
   }
-
-  return Promise.all([
-    // Update algolia's index
-    storeSearchableMovie(movie, process.env['ALGOLIA_API_KEY'])
-  ]);
+  // Update algolia's index
+  return storeSearchableMovie(movie);
 }
 
 export function onMovieDelete(
-  // First param is needed? @Laurent
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
@@ -36,12 +33,12 @@ export function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  if (before === after) {
+  if (isEqual(before, after)) {
     console.error('No changes detected');
     throw new Error('movie update function got invalid movie data');
   }
 
-  if (before.id === after.id) {
+  if (before.id !== after.id) {
     throw new Error('movie id can not be changed!');
   }
 
