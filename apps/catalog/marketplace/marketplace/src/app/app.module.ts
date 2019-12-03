@@ -1,9 +1,13 @@
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Inject } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { Router, NavigationEnd } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -18,14 +22,17 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
+import { AngularFireAnalyticsModule } from '@blockframes/utils/analytics/analytics.module';
 import { ToolbarModule } from '@blockframes/ui';
-import { OrganizationWidgetModule } from '@blockframes/organization';
-import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
-import { WalletWidgetModule } from '@blockframes/ethers';
 import { KeyManagerModule } from '@blockframes/ethers';
-import { NotificationWidgetModule } from '@blockframes/notification';
 import { EmailVerifyModule } from '@blockframes/auth';
 
+// Widgets
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+import { NotificationWidgetModule } from '@blockframes/notification';
+import { ThemeWidgetModule } from '@blockframes/ui/theme';
+import { WalletWidgetModule } from '@blockframes/ethers';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -52,6 +59,9 @@ import { yandexId } from '@env';
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
 
+// Analytics
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
   imports: [
@@ -71,14 +81,17 @@ import { intercomId } from '@env';
     MatMenuModule,
 
     // Libraries
-    OrganizationWidgetModule,
     ToolbarModule,
-    ProfileWidgetModule,
     ProfileMenuModule,
-    WalletWidgetModule,
     KeyManagerModule,
-    NotificationWidgetModule,
     EmailVerifyModule,
+
+    // Widget
+    OrganizationWidgetModule,
+    ThemeWidgetModule,
+    NotificationWidgetModule,
+    WalletWidgetModule,
+    ProfileWidgetModule,
 
     // Intercom
     intercomId ? IntercomAppModule : [],
@@ -88,9 +101,10 @@ import { intercomId } from '@env';
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
+
     AngularFireAuthModule,
     AngularFireStorageModule,
-
+    AngularFireAnalyticsModule,
     // Analytics
     sentryDsn ? SentryModule : [],
 
@@ -100,13 +114,32 @@ import { intercomId } from '@env';
     // Yandex Metrika
     NgxMetrikaModule.forRoot({
       id: yandexId,
-      clickmap:true,
-      trackLinks:true,
-      accurateTrackBounce:true,
-      webvisor:true
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
     })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  private subscription: Subscription;
+
+  constructor(private router: Router, private analytics: FireAnalytics) {
+    const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+    this.subscription = navEnds.subscribe((event: NavigationEnd) => {
+      try {
+        this.analytics.event('page_view', {
+          page_location: 'marketplace',
+          page_path: event.urlAfterRedirects
+        });
+      } catch {
+        this.analytics.event('page_view', {
+          page_location: 'marketplace',
+          page_path: event.urlAfterRedirects
+        });
+      }
+    });
+  }
+}

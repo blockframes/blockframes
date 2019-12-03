@@ -83,8 +83,8 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
 }
 
 
-function getRestoreURL(projectID: string): string {
-  return `https://us-central1-${projectID}.cloudfunctions.net/admin/data/restore`;
+function getRestoreURL(appURL: string): string {
+  return `${appURL}/admin/data/restore`;
 }
 
 export async function syncUsers(expectedUsers: UserConfig[]): Promise<any> {
@@ -98,8 +98,8 @@ export async function syncUsers(expectedUsers: UserConfig[]): Promise<any> {
  *
  * @param projectID
  */
-export async function restore(projectID: string) {
-  const url = getRestoreURL(projectID);
+export async function restore(appURL: string) {
+  const url = getRestoreURL(appURL);
 
   // promisified request
   return new Promise((resolve, reject) => {

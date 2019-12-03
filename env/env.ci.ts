@@ -17,7 +17,7 @@ export const sentryDsn = undefined;
 // Firebase
 // ========
 
-export const appUrl = 'https://ci.blockframes.io';
+export const appUrl = 'https://blockframes-ci.web.app';
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
@@ -25,7 +25,8 @@ export const firebase = {
   databaseURL: 'https://blockframes-ci.firebaseio.com',
   projectId: 'blockframes-ci',
   storageBucket: 'blockframes-ci.appspot.com',
-  messagingSenderId: '973979650792'
+  messagingSenderId: '973979650792',
+  measurementId: "G-GE7LPQ7MBX"
 };
 
 // Algolia

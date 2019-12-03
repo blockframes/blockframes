@@ -1,3 +1,4 @@
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,
@@ -6,7 +7,8 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  HostBinding
+  HostBinding,
+  Inject
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
 import { Router } from '@angular/router';
@@ -44,7 +46,8 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   constructor(
     private router: Router,
     private service: CartService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private analytics: FireAnalytics
   ) {}
 
   ngOnInit() {
@@ -62,6 +65,13 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
   public remove(movie: Movie, event: Event) {
     event.stopPropagation();
     this.service.removeMovieFromWishlist(movie.id);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection`, 'close', { duration: 2000 });
+    this.snackbar.open(
+      `${movie.main.title.international} has been removed from your selection`,
+      'close',
+      { duration: 2000 }
+    );
+    this.analytics.event('remove_movie_wishlist', {
+      movie: movie.main.title.original
+    });
   }
 }

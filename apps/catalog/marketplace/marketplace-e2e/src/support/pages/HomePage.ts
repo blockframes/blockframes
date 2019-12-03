@@ -8,7 +8,18 @@ export default class HomePage extends NavbarPage {
   }
 
   public clickDiscover() {
-    cy.get('[page-id=catalog-marketplace-homepage] a[test-id=discover]', { timeout: 10000 }).click();
+    cy.get('[page-id=catalog-marketplace-homepage] a[test-id=discover]', {
+      timeout: 10000
+    }).click();
     return new SearchPage();
+  }
+
+  public addMovieToWishlist(movieName: string) {
+    cy.get('[page-id=catalog-marketplace-homepage] li').contains(movieName)
+      .parent().parent()
+      .within(() => {
+        cy.get('button').click();
+      });
+    cy.wait(500);
   }
 }

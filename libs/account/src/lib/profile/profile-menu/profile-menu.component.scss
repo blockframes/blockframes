@@ -5,7 +5,14 @@
 }
 
 .logout-btn {
+  padding: 5px;
   color: var(--accent);
+  mat-icon {
+    height: 40px;
+    width: 40px;
+    font-size: 40px;
+    margin-right: 0px;
+  }
 }
 
 .mat-list {

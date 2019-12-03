@@ -1,3 +1,5 @@
+import { SalesAgent } from './../../../../../../../../libs/movie/src/lib/movie/+state/movie.model';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -39,7 +41,8 @@ import {
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
-import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
@@ -155,7 +158,8 @@ export class MarketplaceSearchComponent implements OnInit {
     private cartService: CartService,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver,
-    @Inject(MoviesIndex) private movieIndex: Index
+    @Inject(MoviesIndex) private movieIndex: Index,
+    private analytics: FireAnalytics
   ) {}
 
   ngOnInit() {
@@ -187,7 +191,11 @@ export class MarketplaceSearchComponent implements OnInit {
         );
       })
     );
-    this.movieSearchResults$ = combineLatest([this.algoliaSearchResults$, this.filterBy$, this.sortBy$]).pipe(
+    this.movieSearchResults$ = combineLatest([
+      this.algoliaSearchResults$,
+      this.filterBy$,
+      this.sortBy$
+    ]).pipe(
       map(([movies, filterOptions, sortBy]) => {
         if (AFM_DISABLE) {
           //TODO #1146
@@ -373,6 +381,7 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
+      this.analytics.event('added_language', { language });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
@@ -385,6 +394,7 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
+    this.analytics.event('removed_language', { language });
   }
 
   public hasStatus(status: MovieStatusLabel) {
@@ -398,19 +408,10 @@ export class MarketplaceSearchComponent implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
+      this.analytics.event('added_movie_status', { status });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-    }
-  }
-
-  public hasSalesAgent(salesAgent: string) {
-    if (
-      this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.get('salesAgent').value.includes(salesAgent)
-    ) {
-      this.filterForm.addStatus(salesAgent);
-    } else {
-      this.filterForm.removeStatus(salesAgent);
+      this.analytics.event('removed_movie_status', { status });
     }
   }
 
@@ -462,19 +463,20 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public addGenre(event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
+    const genre = event.option.value;
 
-    if ((value || '').trim() && !this.selectedGenres.includes(value)) {
-      this.selectedGenres.push(value.trim());
+    if ((genre || '').trim() && !this.selectedGenres.includes(genre)) {
+      this.selectedGenres.push(genre.trim());
     }
     /**
      * We want to exchange the label for the slug,
      * because for our backend we need to store the slug.
      */
-    const genreSlug: GenresSlug = getCodeIfExists('GENRES', event.option.viewValue);
+    const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
     this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
+    this.analytics.event('added_genre', { genre });
   }
 
   public removeGenre(genre: string) {
@@ -483,19 +485,21 @@ export class MarketplaceSearchComponent implements OnInit {
       this.selectedGenres.splice(index, 1);
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
+      this.analytics.event('removed_genre', { genre });
     }
   }
 
   public addSalesAgent(event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
+    const salesAgent = event.option.value;
 
-    if ((value || '').trim() && !this.selectedSalesAgents.includes(value)) {
-      this.selectedSalesAgents.push(value.trim());
+    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
+      this.selectedSalesAgents.push(salesAgent.trim());
     }
 
-    this.filterForm.addSalesAgent(value);
+    this.filterForm.addSalesAgent(salesAgent);
     this.salesAgentControl.setValue('');
     this.salesAgentInput.nativeElement.value = '';
+    this.analytics.event('removed_sales_agent', { salesAgent });
   }
 
   public removeSalesAgent(salesAgent: string) {
@@ -504,6 +508,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
+      this.analytics.event('removed_sales_agent', { salesAgent });
     }
   }
 
@@ -518,6 +523,9 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
+    this.analytics.event('added_to_wishlist', {
+      movie: movie.main.title.original
+    });
   }
 
   public removeFromWishlist(movie: Movie) {
@@ -527,15 +535,19 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
+    this.analytics.event('removed_from_wishlist', {
+      movie: movie.main.title.original
+    });
   }
 
   public addSearchbarValue(value: MatAutocompleteSelectedEvent) {
     this.searchbarForm.get('text').setValue(value.option.viewValue);
   }
 
-  public selectSearchType(value: any) {
-    if (this.searchbarForm.value !== value) {
-      this.searchbarTypeForm.setValue(value);
+  public selectSearchType(type: string) {
+    if (this.searchbarForm.value !== type) {
+      this.searchbarTypeForm.setValue(type);
+      this.analytics.event('searchbar_search_type', { type });
     } else {
       this.searchbarTypeForm.setValue('');
     }

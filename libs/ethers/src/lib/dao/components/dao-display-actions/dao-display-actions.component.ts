@@ -7,15 +7,15 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
-import { OrganizationAction } from '../../+state';
+import { DaoAction } from '../../+state';
 
 @Component({
-  selector: 'org-display-actions',
-  templateUrl: './organization-display-actions.component.html',
-  styleUrls: ['./organization-display-actions.component.scss'],
+  selector: 'dao-display-actions',
+  templateUrl: './dao-display-actions.component.html',
+  styleUrls: ['./dao-display-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationDisplayActionsComponent {
+export class DaoDisplayActionsComponent {
   // The columns we want to display
   public displayedColumns: string[] = ['Icon', 'Document name', 'Signers'];
 
@@ -31,18 +31,18 @@ export class OrganizationDisplayActionsComponent {
     return this._isApproved;
   }
 
-  @Input() set actions(actions: OrganizationAction[]) {
+  @Input() set actions(actions: DaoAction[]) {
     if (!actions) return;
     this.dataSource = new MatTableDataSource(actions);
     this.dataSource.sort = this.sort;
   }
 
-  @Output() actionSelected = new EventEmitter<OrganizationAction>();
+  @Output() actionSelected = new EventEmitter<DaoAction>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 
-  getAvatarList(action: OrganizationAction) {
+  getAvatarList(action: DaoAction) {
     return action.signers.map(signer => signer.avatar);
   }
 }

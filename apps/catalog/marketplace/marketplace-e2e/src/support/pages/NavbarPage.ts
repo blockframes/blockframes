@@ -1,4 +1,5 @@
-import { WishlistPage, SearchPage, LoginViewPage } from "./index";
+import { WishlistPage, SearchPage, LoginViewPage, HomePage } from "./index";
+
 export default abstract class NavbarPage {
   constructor() {
     cy.get('[page-id=navbar]', { timeout: 10000 });
@@ -26,5 +27,12 @@ export default abstract class NavbarPage {
       .contains('Line-up')
       .click();
     return new SearchPage();
+  }
+
+  public clickContextMenuHome() {
+    cy.get('[page-id=navbar] a')
+      .contains('home')
+      .click();
+    return new HomePage();
   }
 }

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy } from '@angular/core';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
@@ -21,7 +22,8 @@ export class WishlistViewComponent implements OnInit {
   constructor(
     private cartQuery: CartQuery,
     private cartService: CartService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private analytics: FireAnalytics
   ) {}
 
   ngOnInit() {
@@ -38,6 +40,9 @@ export class WishlistViewComponent implements OnInit {
     try {
       this.cartService.updateWishlistStatus(movies);
       this.snackBar.open('Your current wishlist has been sent.', 'close', { duration: 2000 });
+      this.analytics.event('wishlist_send', {
+        wishlist: movies
+      });
     } catch (err) {
       this.snackBar.open(err.message, 'close', { duration: 2000 });
     }
