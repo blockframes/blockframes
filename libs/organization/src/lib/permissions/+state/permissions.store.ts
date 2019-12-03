@@ -1,10 +1,8 @@
-import { StoreConfig, EntityStore } from '@datorama/akita';
+import { StoreConfig, EntityStore, EntityState, ActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Permissions } from './permissions.model';
-import { CollectionState } from 'akita-ng-fire';
 
-
-export interface PermissionsState extends CollectionState<Permissions> {}
+export interface PermissionsState extends EntityState<Permissions>, ActiveState<string> {}
 
 const initialState: PermissionsState = {
   active: null

@@ -1,9 +1,8 @@
-import { CollectionState } from 'akita-ng-fire';
 import { Injectable } from '@angular/core';
-import { EntityStore, StoreConfig } from '@datorama/akita';
+import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
 import { Movie } from './movie.model';
 
-export interface MovieState extends CollectionState<Movie> {}
+export interface MovieState extends EntityState<Movie>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movies', idKey: 'id' })

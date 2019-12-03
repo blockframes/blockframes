@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {
   StoreConfig,
   EntityStore,
+  ActiveState,
+  EntityState,
 } from '@datorama/akita';
-import { CollectionState } from 'akita-ng-fire';
 
 import {
   Organization,
@@ -13,7 +14,7 @@ import {
 } from './organization.model';
 
 
-export interface OrganizationState extends CollectionState<Organization> {
+export interface OrganizationState extends EntityState<Organization>, ActiveState<string> {
   appsDetails: AppDetailsWithStatus[];
 }
 
