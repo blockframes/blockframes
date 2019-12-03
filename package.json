@@ -67,7 +67,7 @@
     "@angular/platform-browser-dynamic": "^8.2.4",
     "@angular/router": "^8.2.4",
     "@angular/service-worker": "^8.2.4",
-    "@datorama/akita": "^4.10.4",
+    "@datorama/akita": "^4.16.0",
     "@ethersproject/abi": "^5.0.0-beta.138",
     "@ethersproject/abstract-provider": "^5.0.0-beta.132",
     "@ethersproject/abstract-signer": "^5.0.0-beta.133",

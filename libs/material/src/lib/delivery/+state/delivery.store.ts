@@ -1,6 +1,6 @@
 import { EntityStore, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Delivery, createDeliveryFromFirestore } from './delivery.model';
+import { Delivery, createDeliveryFromFirestore, DeliveryWithTimestamps } from './delivery.model';
 import { CollectionState } from 'akita-ng-fire';
 
 export const enum DeliveryOption {
@@ -45,8 +45,7 @@ export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
     super(initialState);
   }
 
-  // TODO: #issue1288, type correctly delivery
-  akitaPreAddEntity(delivery: any): Delivery {
+  akitaPreAddEntity(delivery: DeliveryWithTimestamps): Delivery {
     return createDeliveryFromFirestore(delivery);
   }
 
