@@ -21,7 +21,7 @@ export class DeliveryListGuard extends CollectionGuard<DeliveryState> {
   }
 
   sync() {
-    return this.service.syncDeliveriesQuery().pipe(
+    return this.service.syncDeliveriesListQuery().pipe(
       map(_ => this.query.getCount()),
       map(count => count === 0 ? this.urlFallback : true)
     );
