@@ -8,7 +8,7 @@ import {
 import { union, pickBy, identity } from 'lodash';
 import { PLACEHOLDER_LOGO } from '@blockframes/organization';
 
-const withoutUndefined = x => pickBy(x, identity);
+export const withoutUndefined = x => pickBy(x, value => value !== undefined);
 
 /**
  * Lets you select values from an item while configuring default values.
