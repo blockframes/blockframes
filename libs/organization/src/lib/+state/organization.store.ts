@@ -9,6 +9,7 @@ import {
   Organization,
   convertOrganizationWithTimestampsToOrganization,
   AppDetailsWithStatus,
+  OrganizationWithTimestamps,
 } from './organization.model';
 
 
@@ -28,8 +29,7 @@ export class OrganizationStore extends EntityStore<OrganizationState, Organizati
     super(initialState);
   }
 
-  // TODO: #issue1288, type correctly organization
-  akitaPreAddEntity(organization: any): Organization {
+  akitaPreAddEntity(organization: OrganizationWithTimestamps): Organization {
     return convertOrganizationWithTimestampsToOrganization(organization);
   }
 
