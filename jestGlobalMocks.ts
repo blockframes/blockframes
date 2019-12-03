@@ -1,4 +1,4 @@
-// ng s is complaining about global, so doing this "hackishly"
+// ng is complaining about global, so doing this "hackishly"
 declare var global;
 global['CSS'] = null;
 
@@ -36,18 +36,4 @@ Object.defineProperty(document.body.style, 'transform', {
       configurable: true
     };
   }
-});
-
-// Workaround for error: TypeError: window.matchMedia is not a function
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn()
-  };
 });
