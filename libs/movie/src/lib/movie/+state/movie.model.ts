@@ -14,7 +14,9 @@ import {
   Person,
   Prize,
   PromotionalElement,
-  Title
+  Title,
+  Stakeholder,
+  createStakeholder
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
@@ -39,6 +41,10 @@ export type Prize = Prize;
 export type Credit = Person;
 
 export type SalesAgent = Person;
+
+export type Licensee = Stakeholder;
+
+export type Licensor = Stakeholder;
 
 export type DistributionDeal = DistributionDealDocumentWithDates;
 
@@ -202,6 +208,9 @@ export function createMovieSalesAgentDeal(
 
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
+    id: '',
+    licensee: createStakeholder(),
+    licensor: createStakeholder(),
     operatorName: '',
     showOperatorName: false,
     rights: {

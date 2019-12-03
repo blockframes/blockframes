@@ -94,11 +94,13 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId
    * @param distributionDeal
    */
-  public addDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<void> {
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     const dealId = objectHash(distributionDeal);
-    return this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
+    distributionDeal.id = dealId;
+    await this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
+    return dealId;
   }
 
   /**

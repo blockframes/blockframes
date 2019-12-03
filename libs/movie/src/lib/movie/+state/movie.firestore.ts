@@ -52,13 +52,26 @@ export interface Title {
   international?: string;
 }
 
-export interface Person {
+interface IdentityRaw {
+  orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
+  displayName?: string, // @todo #1052 "?" is temporary
+  showName?: boolean, // @todo #1052 merge credit & stakeholder interface ? or implements?
+}
+
+export interface Stakeholder extends IdentityRaw {
+}
+
+export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholder {
+  return {
+    orgId: '',
+    ...params,
+  }
+}
+
+export interface Person extends IdentityRaw {
   firstName: string, // @todo #1052 replace with displayName
   lastName?: string, // @todo #1052 replace with displayName
   creditRole?: string, // @todo #1052 rename to role
-  displayName?: string, // @todo #1052 "?" is temporary
-  showName?: boolean, // @todo #1052 merge credit & stakeholder interface ? or implements?
-  orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
   logo?: ImgRef,
 }
 
@@ -82,7 +95,10 @@ export interface MovieBudget {
 }
 
 // Distribution deal raw interface, formerly called MovieSaleRaw
-interface DistributionDealRaw<D> {  
+interface DistributionDealRaw<D> {
+  id: string,
+  licensee: Stakeholder,
+  licensor: Stakeholder,
   operatorName: string;
   showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
   rights: DateRangeRaw<D>;

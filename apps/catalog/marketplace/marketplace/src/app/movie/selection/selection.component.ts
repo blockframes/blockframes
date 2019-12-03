@@ -77,6 +77,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   }
 
   public async deleteDistributionRight(dealId) {
+    /*
     // TODO issue#1146
     if (!AFM_DISABLE) {
       const result: boolean | Error = this.cartService.removeMovieFromWishlist(dealId);
@@ -98,7 +99,7 @@ export class MarketplaceSelectionComponent implements OnInit {
       let findCartId: string;
       findCart.forEach(cart => (findCartId = cart.name));
       this.cartService.removeDistributionRight(dealId, findCartId);
-    }
+    }*/
   }
 
   // TODO#918: We have to think about how we want to bundle/handle multiple pending distrights

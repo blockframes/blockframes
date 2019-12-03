@@ -32,7 +32,7 @@ export interface DistributionRight { // @todo #1061 => distribution deal with sp
 export interface CatalogCart {  // @todo #1061 => Cart & add to draw.io => pouvoir avoir n cart sur l'org. Ajouter un "name" au cart. Idem wishlist
   name: string;
   status: CartStatus;
-  deals: DistributionRight[]; //string[]; // #1061  MovieSaleIds in movies/{$id}/distributiondeals
+  deals: string[];
   price: Price;
 }
 

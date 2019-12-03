@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery, MovieService } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieService, createDistributionDeal } from '@blockframes/movie/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -32,9 +32,9 @@ import {
 } from './availabilities.util';
 import { DistributionRightForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
-import { createDistributionRight } from '../+state/cart.model';
 import { CartService } from '../+state';
 import { MatSnackBar } from '@angular/material';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 enum ResearchSteps {
   START = 'Start',
@@ -103,6 +103,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   constructor(
     private query: MovieQuery,
     private router: Router,
+    private organizationQuery: OrganizationQuery,
     private movieService: MovieService,
     private cartService: CartService,
     private snackBar: MatSnackBar
@@ -179,13 +180,15 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  public addDistributionRight() {
-    const distributionRight = createDistributionRight(this.form.value);
-    // @TODO #1061 save distribution deal into movie sub collection
-    // and add its ID to cart.
-    this.cartService.addDealToCart(distributionRight, 'default');
+  public async addDistributionDeal() {
+    const distributionDeal = createDistributionDeal(); // @todo #1061 populate with form values
+    distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
+
+    const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal);
+
+    this.cartService.addDealToCart(dealId, 'default');
     this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
-    //this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+    // @todo #1061 uncomment this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   //////////////////////

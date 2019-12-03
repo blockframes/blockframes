@@ -26,6 +26,7 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -124,6 +125,7 @@ export class ViewExtractedElementsComponent {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
+    private organizationQuery: OrganizationQuery,
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
   ) { }
@@ -594,6 +596,7 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
+            // @todo 1061 when #1325 is merged, rename to media & use  { url, ref: meta.fullPath, originalRef: '' } for video/ pdf etc ..
             type: 'banner',
             ratio: 'rectangle'
           });
@@ -1019,6 +1022,14 @@ export class ViewExtractedElementsComponent {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
+
+        distributionDeal.licensee.displayName = 'licensee example';
+        distributionDeal.licensor.displayName = 'licensor example';
+
+        // @temp #1061
+        distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
+        distributionDeal.licensor.orgId = this.organizationQuery.getActiveId();
+
         const importErrors = {
           distributionDeal,
           errors: [],

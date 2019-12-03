@@ -1,8 +1,8 @@
 import { map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state/movie.model';
 import { CartQuery } from './cart.query';
 import { Injectable } from '@angular/core';
-import { CatalogCart, createCart, DistributionRight } from './cart.model';
+import { CatalogCart, createCart } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
@@ -41,15 +41,15 @@ export class CartService extends CollectionService<CartState> {
    * @param deal 
    * @param name 
    */
-  public async addDealToCart(deal: DistributionRight, name: string) : Promise<CatalogCart> {
+  public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
     const cart = await this.getCart(name);
-    cart.deals.push(deal);
+    cart.deals.push(dealId);
     return this.updateCart(cart);
   }
 
   // TODO #1061 rework
   public removeDistributionRight(rightId: string, basketId: string) {
-    const findDistributionRight: DistributionRight[] = [];
+    /*const findDistributionRight: DistributionRight[] = [];
     this.cartQuery.getAll().forEach(baskets =>
       baskets.deals.forEach(right => {
         if (right.id === rightId) {
@@ -70,7 +70,7 @@ export class CartService extends CollectionService<CartState> {
           }
         })
       );
-    }
+    }*/
   }
 
   /**
@@ -84,13 +84,24 @@ export class CartService extends CollectionService<CartState> {
     return cart;
   }
 
-  public async updateCart(cart: CatalogCart): Promise<CatalogCart>  { // @todo #1061 private when cleaned setPriceCurrency()
+  public async updateCart(cart: CatalogCart): Promise<CatalogCart> { // @todo #1061 private when cleaned setPriceCurrency()
     await this.db
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)
       .update(cart);
 
     return cart;
   }
+
+  /**
+   * Performs a collection group query accross movies to retreive sales
+   * @param type  licensee | licensor
+   */
+  public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
+    const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId())) // @todo #1061 => publicdistributiondeals
+    const myDeals = await query.get().toPromise();
+    return myDeals.docs.map(doc => doc.data() as DistributionDeal); // @TODO #1061 transform timestamps
+  }
+
 
   /**
    * Returns cart for given name if exists or create new one
