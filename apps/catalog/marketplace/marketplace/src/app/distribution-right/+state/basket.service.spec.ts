@@ -2,7 +2,6 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { firebase } from '@env';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
-import { TestBed } from '@angular/core/testing';
 import { BasketService } from './basket.service';
 import { AngularFireModule } from '@angular/fire';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
@@ -24,7 +23,7 @@ describe('BasketService', () => {
   });
 
   it('should be created', () => {
-    const service: BasketService = TestBed.get(BasketService);
+    const service: BasketService = spectator.get(BasketService);
     expect(service).toBeTruthy();
   });
 
@@ -70,7 +69,7 @@ describe('BasketService', () => {
   });
 
   it('should update the wishlist and to have been called only 1 time', () => {
-    const service: BasketService = TestBed.get(BasketService);
+    const service: BasketService = spectator.get(BasketService);
     const wishlistSpy = jest.spyOn(service, 'updateWishlist').mockImplementation();
     /**
      * We want to compare the date values, but since
@@ -146,7 +145,7 @@ describe('BasketService', () => {
   });
 
   it('should have only one function for one task', () => {
-    const service: BasketService = TestBed.get(BasketService);
+    const service: BasketService = spectator.get(BasketService);
     expect(service.updateWishlist).toBeTruthy();
     expect(service.addBasket).toBeTruthy();
     expect(service.updateWishlistStatus).toBeTruthy();
