@@ -28,7 +28,7 @@ interface AddDeliveryOptions {
 
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveriesQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
+const deliveriesListQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
   path: 'deliveries',
   queryFn: ref => ref.where('movieId', '==', movieId),
   stakeholders: delivery => ({
@@ -70,11 +70,11 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   /** Sync the store with every deliveries of the active movie. */
-  public syncDeliveriesQuery() {
+  public syncDeliveriesListQuery() {
     return this.movieQuery.selectActiveId().pipe(
       // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, deliveriesQuery(movieId)))
+      switchMap(movieId => awaitSyncQuery.call(this, deliveriesListQuery(movieId)))
     );
   }
 
@@ -231,7 +231,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   /** Update informations of delivery */
   public async updateInformations(delivery: Partial<Delivery>) {
     const oldSteps = this.query.getActive().steps;
-    const mustBeSigned = this.query.getActive().mustBeSigned;
+    const { mustBeSigned, id } = this.query.getActive();
 
     // Add an id for new steps
     const stepsWithId = delivery.steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
@@ -246,7 +246,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
       // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
       if (mustBeSigned) {
-        this.materialService.removeStepIdDeliveryMaterials(materials, this.query.getActiveId());
+        this.materialService.removeStepIdDeliveryMaterials(materials, id);
       // Else, we update stepId of materials in the sub-collection of movie
       } else {
         const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
@@ -254,7 +254,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       }
     })
 
-    return this.update(this.query.getActiveId(), {
+    return this.update(id, {
       // Update minimum guaranteed informations of delivery
       mgAmount: delivery.mgAmount,
       mgCurrency: delivery.mgCurrency,
@@ -300,7 +300,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
     if (!validated.includes(stakeholderSignee.id)) {
       const updatedValidated = [...validated, stakeholderSignee.id];
-      return this.update(this.query.getActiveId(), { validated: updatedValidated });
+      return this.update(id, { validated: updatedValidated });
     }
   }
 
