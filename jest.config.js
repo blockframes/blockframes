@@ -23,11 +23,8 @@ module.exports = {
     'jest-preset-angular/build/HTMLCommentSerializer.js'
   ],
   testPathIgnorePatterns: [
-    '<rootDir>/apps/catalog/marketplace/marketplace-e2e/*',
-    '<rootDir>/apps/catalog/dashboard/dashboard-e2e/*',
-    '<rootDir>/apps/delivery/delivery-e2e/*',
-    '<rootDir>/apps/main/main-e2e/*',
-    '<rootDir>/apps/movie-financing/movie-financing-e2e/*',
+    '<rootDir>/apps/([^/].*/){1,2}([^/]-e2e/)',
+    '<rootDir>/apps/([^/]+/){1,2}([^/]+-e2e/)',
     '<rootDir>/cypress/*'
   ]
 };
