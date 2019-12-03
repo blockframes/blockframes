@@ -9,7 +9,6 @@ export interface ImgRef {
   originalRef: string
 }
 
-/** TODO(issue#1308): create image reference base on the url string */
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
   const _ref = typeof ref === 'string' ? { url: ref } : ref;
   return {
