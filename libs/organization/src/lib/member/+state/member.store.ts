@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { StoreConfig, EntityStore } from "@datorama/akita";
-import { CollectionState } from "akita-ng-fire";
+import { StoreConfig, EntityStore, EntityState } from "@datorama/akita";
 import { OrganizationMember } from "./member.model";
 
-export interface MemberState extends CollectionState<OrganizationMember> {
+export interface MemberState extends EntityState<OrganizationMember> {
 }
 
 const initialState: MemberState = {
