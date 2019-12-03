@@ -1,6 +1,6 @@
-import { MovieLanguageSpecification } from './../../movie/search/search.form';
 import { DateRange } from '@blockframes/utils/date-range';
 import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -132,7 +132,8 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
 
     let dubbingInCommon = false;
     for (const language of languagesName) {
-      if (deal.dubbings.includes(language)) {
+      deal.dubbings[language].dubbed
+      if (deal.dubbings[language] && deal.dubbings[language].dubbed) {
         dubbingInCommon = true;
       }
     }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { DistributionRight, Price, CartStatus, CatalogCart } from './cart.model';
+import { Price, CartStatus, CatalogCart } from './cart.model';
 
 export interface CartState extends EntityState<CatalogCart> {
-  id: string;
+  name: string;
   price: Price;
   status: CartStatus;
-  rights: DistributionRight[];
+  deals: string[];
 }
 
 @Injectable({ providedIn: 'root' })

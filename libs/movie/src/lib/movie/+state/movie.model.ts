@@ -219,7 +219,7 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     },
     territories: [],
     medias: [],
-    dubbings: [],
+    dubbings: {},
     subtitles: [],
     exclusive: false,
     price: 0,

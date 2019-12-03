@@ -6,7 +6,7 @@ export default class ViewPage {
     cy.get('[page-id=catalog-movie-view]');
   }
 
-  public clickDistributionRights() {
+  public clickDistributionDeals() {
     cy.get('a[test-id=distribution-deal-link]').click();
     return new DistributionPage();
   }

@@ -2,12 +2,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { AFM_DISABLE } from '@env';
-import { DistributionRight, MovieData } from '../../distribution-deal/+state/cart.model';
 import { CatalogCart, CartQuery } from '../../distribution-deal/+state';
 import { ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { CartStatus } from '../../distribution-deal/+state/cart.model';
 import { Component, OnInit } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery, DistributionDeal } from '@blockframes/movie';
 import {
   MOVIE_CURRENCIES_SLUG,
   MovieCurrenciesSlug
@@ -56,15 +55,15 @@ export class MarketplaceSelectionComponent implements OnInit {
     }
   }
 
-  private createRightDetail(detail: DistributionRight) {
-    return {
+  private createRightDetail(detail: DistributionDeal) {
+    /*return {
       id: detail.id,
       movieName: this.getMovieTitle(detail.movieId),
       territory: detail.territories[0],
       rights: detail.medias[0],
       duration: detail.duration
       // TODO#1071: refactor the model after the ui presentation
-    } as MovieData;
+    } as MovieData;*/
   }
 
   private getMovieTitle(id: string): string {
@@ -76,7 +75,7 @@ export class MarketplaceSelectionComponent implements OnInit {
     }
   }
 
-  public async deleteDistributionRight(dealId) {
+  public async deleteDistributionDeal(dealId) {
     /*
     // TODO issue#1146
     if (!AFM_DISABLE) {
@@ -98,7 +97,7 @@ export class MarketplaceSelectionComponent implements OnInit {
       );
       let findCartId: string;
       findCart.forEach(cart => (findCartId = cart.name));
-      this.cartService.removeDistributionRight(dealId, findCartId);
+      this.cartService.removeDistributionDeal(dealId, findCartId);
     }*/
   }
 

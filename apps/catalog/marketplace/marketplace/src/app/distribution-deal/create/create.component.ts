@@ -30,7 +30,7 @@ import {
   salesAgentHasDateRange,
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
-import { DistributionRightForm } from './create.form';
+import { DistributionDealForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { CartService } from '../+state';
 import { MatSnackBar } from '@angular/material';
@@ -48,7 +48,7 @@ enum ResearchSteps {
   styleUrls: ['./create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionRightCreateComponent implements OnInit, OnDestroy {
+export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'distribution-deal';
 
   // Enum for tracking the current research state
@@ -59,7 +59,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   private researchSubscription: Subscription;
 
   // Form for holding users distribution rights choice
-  public form = new DistributionRightForm();
+  public form = new DistributionDealForm();
 
   // Movie for information to display
   public movie$: Observable<Movie>;

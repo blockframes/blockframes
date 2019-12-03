@@ -22,18 +22,13 @@ import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
 import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
 /////////////////////////
 // CatalogGenresFilter //
 /////////////////////////
 
-export interface MovieLanguageSpecification {
-  original: boolean;
-  dubbed: boolean;
-  subtitle: boolean;
-}
-
-export interface CatalogSearch {
+export interface CatalogSearch { // @TODO #1061 check this
   productionYear: {
     from: number;
     to: number;

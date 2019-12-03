@@ -1,4 +1,4 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug } from "@blockframes/movie/movie/static-model";
+import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/date-range";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
@@ -94,6 +94,12 @@ export interface MovieBudget {
   detailledBudget?: any // WIP #1052
 }
 
+export interface MovieLanguageSpecification {
+  original: boolean;
+  dubbed: boolean;
+  subtitle: boolean;
+}
+
 // Distribution deal raw interface, formerly called MovieSaleRaw
 interface DistributionDealRaw<D> {
   id: string,
@@ -101,11 +107,11 @@ interface DistributionDealRaw<D> {
   licensor: Stakeholder,
   operatorName: string;
   showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
-  rights: DateRangeRaw<D>;
-  territories: string[];
-  medias: string[];
-  dubbings: string[];
-  subtitles: string[];
+  rights: DateRangeRaw<D>; // duration: DateRange; => now use Term ?
+  territories: TerritoriesSlug[];
+  medias: MediasSlug[];
+  dubbings: { [language in LanguagesSlug]: MovieLanguageSpecification };
+  subtitles: string[]; // @todo #1061 remove (overlapping dubbings)
   exclusive: boolean;
   price: number;
 }

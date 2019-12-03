@@ -56,7 +56,7 @@ describe('test select movie from catalog', () => {
     // select one movie
     const p5: ViewPage = p4.selectMovie(MOVIE_NAME);
     // create distribution right for one movie
-    const p6: DistributionPage = p5.clickDistributionRights();
+    const p6: DistributionPage = p5.clickDistributionDeals();
     p6.selectDates(DISTRIBUTION_DATES);
     p6.selectTerritory(DISTRIBUTION_TERRITORY);
     p6.selectMedias(DISTRIBUTION_MEDIA_ARRAY);

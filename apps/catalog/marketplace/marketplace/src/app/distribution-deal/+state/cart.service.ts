@@ -48,7 +48,7 @@ export class CartService extends CollectionService<CartState> {
   }
 
   // TODO #1061 rework
-  public removeDistributionRight(rightId: string, basketId: string) {
+  public removeDistributionDeal(rightId: string, basketId: string) {
     /*const findDistributionRight: DistributionRight[] = [];
     this.cartQuery.getAll().forEach(baskets =>
       baskets.deals.forEach(right => {

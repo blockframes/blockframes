@@ -596,7 +596,7 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
             url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
-            // @todo 1061 when #1325 is merged, rename to media & use  { url, ref: meta.fullPath, originalRef: '' } for video/ pdf etc ..
+            // @todo #1061 when #1325 is merged, rename to media & use  { url, ref: meta.fullPath, originalRef: '' } for video/ pdf etc ..
             type: 'banner',
             ratio: 'rectangle'
           });
@@ -1100,11 +1100,12 @@ export class ViewExtractedElementsComponent {
 
           // DUBS (Authorized language(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
-            distributionDeal.dubbings = [];
+            distributionDeal.dubbings = {}; 
             spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: string) => {
               const dubbing = getCodeIfExists('LANGUAGES', g);
               if (dubbing) {
-                distributionDeal.dubbings.push(dubbing);
+                // @todo #1061 => update when new distribution deal model is live
+                distributionDeal.dubbings[dubbing] = { original: false, dubbed: true, subtitle: true };
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1270,7 +1271,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // DUBBINGS
-    if (distributionDeal.dubbings.length === 0) {
+    if (Object.keys(distributionDeal.dubbings).length === 0) {
       errors.push({
         type: 'error',
         field: 'dubbings',
