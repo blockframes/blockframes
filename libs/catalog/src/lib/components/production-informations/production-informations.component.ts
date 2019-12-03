@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
+import { ImgRef } from '@blockframes/utils';
 @Component({
   selector: 'catalog-production-informations',
   templateUrl: './production-informations.component.html',
@@ -7,5 +8,5 @@ import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
 })
 export class CatalogProductionInformationsComponent {
   @Input() productionCompanies: Person[];
-  @Input() salesAgentDealLogo: string;
+  @Input() salesAgentDealLogo: ImgRef;
 }
