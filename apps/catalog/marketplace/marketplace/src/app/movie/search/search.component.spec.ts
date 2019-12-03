@@ -1,3 +1,17 @@
+// Workaround for error: TypeError: window.matchMedia is not a function
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn()
+  };
+});
+
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -29,26 +43,12 @@ import { FirebaseOptionsToken, AngularFireModule, FirebaseApp } from '@angular/f
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { AppModule } from '../../app.module';
 import { RouterModule } from '@angular/router';
-import { Injectable } from '@angular/core';
 
-@Injectable()
-export class FireAnalyticsMock {
-
-}
-
-// Workaround for error: TypeError: window.matchMedia is not a function
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn()
-  };
-});
+/**
+ * Creates a mock instances and all 
+ * the methods are mock methods which return undefined
+ */
+const FireAnalyticsMock = jest.mock('@blockframes/utils/analytics/app-analytics')
 
 describe('MarketplaceSearchComponent test suite', () => {
   let spectator: Spectator<MarketplaceSearchComponent>;
@@ -63,6 +63,7 @@ describe('MarketplaceSearchComponent test suite', () => {
       MovieCardModule,
       ReactiveFormsModule,
       MovieDisplayListModule,
+      AngularFireModule.initializeApp(firebase),
 
       //Material
       MatIconModule,
@@ -81,7 +82,6 @@ describe('MarketplaceSearchComponent test suite', () => {
       MatSelectModule,
       MatDatepickerModule,
       MatOptionModule,
-      AngularFireModule.initializeApp(firebase)
     ],
     providers: [
       AngularFirestore,
@@ -103,9 +103,10 @@ describe('MarketplaceSearchComponent test suite', () => {
   });
 
   it('should only have one "addLanguage" function', () => {
-    const addLanguage = spyOn(spectator.component, 'addLanguage');
+    const addLanguageSpy = spyOn(spectator.component, 'addLanguage');
     spectator.component.addLanguage('German');
-    expect(addLanguage).toHaveBeenCalledWith('German');
+    expect(addLanguageSpy).toHaveBeenCalled();
+    expect(addLanguageSpy).toHaveBeenCalledWith('German');
   });
 
   it('should return the current year when "getCurrentYear" is called', () => {
@@ -123,37 +124,3 @@ describe('MarketplaceSearchComponent test suite', () => {
     expect(spectator.component.getCurrentYear).toBe(2018);
   });
 });
-
-/* Try with the injector and spyOn.
-
-You have to create a mocked service, without the 'HttpClient', that has ALL methods of the Service you want to mock. Then with spyOn you can return what you want.
-
-TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
-        {
-          provide: YourService,
-          useValue: mockedYourService
-        }
-      ]
-      ....
-
- beforeEach(() => {
-   fixture = TestBed.createComponent(YourTestingComponent);
-   component = fixture.componentInstance;
-   element = fixture.nativeElement;
-   fixture.detectChanges();
- });
-
- ...
-      
-describe('methodName', () => {
-  it('message to print',
-    () => {
-      const your_Service = fixture.debugElement.injector.get(YourService);
-      spyOn(your_Service, 'methodName').and.returnValue(true);
-        
-        ..... */
