@@ -30,6 +30,7 @@ describe('BasketService', () => {
 
   it('should not call OrganizationService if no Organization ID is available', () => {
     const serviceBasket = spectator.get(BasketService);
+    const wishlistSpy = jest.spyOn(serviceBasket, 'updateWishlist').mockImplementation();
     const serviceOrg = spyOn(spectator.get<OrganizationService>(OrganizationService), 'update');
     const currentTime: Date = new Date();
     serviceBasket.updateWishlist({
@@ -65,6 +66,7 @@ describe('BasketService', () => {
       }
     });
     expect(serviceOrg).not.toHaveBeenCalled();
+    expect(wishlistSpy).toHaveBeenCalled();
   });
 
   it('should update the wishlist and to have been called only 1 time', () => {
