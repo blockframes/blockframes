@@ -5,6 +5,7 @@ import { MaterialService } from '../+state/material.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { MaterialQuery } from '../+state/material.query';
+import { MovieMaterialService } from '../+state/movie-material.service';
 
 @Injectable({ providedIn: 'root' })
 export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
@@ -12,7 +13,8 @@ export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
     service: MaterialService,
     private store: MaterialStore,
     private materialQuery: MaterialQuery,
-    private deliveryQuery: DeliveryQuery
+    private deliveryQuery: DeliveryQuery,
+    private movieMaterialService: MovieMaterialService
   ) {
     super(service);
   }
@@ -23,10 +25,12 @@ export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
 
   sync(next: ActivatedRouteSnapshot) {
     this.store.reset();
+    const { movieId, deliveryId } = next.params;
+
     return this.deliveryQuery.getActive().mustBeSigned
-      ? this.service.syncCollection(`deliveries/${next.params.deliveryId}/materials`)
-      : this.service.syncCollection(`movies/${next.params.movieId}/materials`, ref =>
-          ref.where('deliveryIds', 'array-contains', next.params.deliveryId)
-          );
+      ? this.service.syncCollection({ params: { deliveryId }})
+      : this.movieMaterialService.syncCollection(
+          ref => ref.where('deliveryIds', 'array-contains', deliveryId)
+        );
   }
 }

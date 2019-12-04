@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Material, MaterialService } from '../../../material/+state';
+import { Material } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { tap, switchMap } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { FormEntity } from '@blockframes/utils';
+import { MovieMaterialService } from '../../../material/+state/movie-material.service';
 
 @Component({
   selector: 'movie-editable',
@@ -25,7 +26,7 @@ export class MovieEditableComponent implements OnInit {
   constructor(
     private materialQuery: MaterialQuery,
     private movieQuery: MovieQuery,
-    private materialService: MaterialService,
+    private movieMaterialService: MovieMaterialService,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -48,8 +49,7 @@ export class MovieEditableComponent implements OnInit {
   public async update() {
     try {
       const materials = this.form.getAll();
-      const movieId = this.movieQuery.getActiveId();
-      this.materialService.updateMovieMaterials(materials, movieId);
+      this.movieMaterialService.updateMovieMaterials(materials);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

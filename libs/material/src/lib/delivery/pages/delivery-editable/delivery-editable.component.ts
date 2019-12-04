@@ -17,6 +17,7 @@ import { id as keccak256 } from '@ethersproject/hash';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormEntity } from '@blockframes/utils';
 import { DaoService } from 'libs/ethers/src/lib/dao/+state';
+import { MovieMaterialService } from '../../../material/+state/movie-material.service';
 
 @Component({
   selector: 'delivery-editable',
@@ -47,7 +48,8 @@ export class DeliveryEditableComponent implements OnInit {
     private daoService: DaoService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private movieMaterialService: MovieMaterialService
   ) {}
 
   ngOnInit() {
@@ -83,7 +85,7 @@ export class DeliveryEditableComponent implements OnInit {
       const materials = this.form.getAll();
       delivery.mustBeSigned
         ? this.materialService.updateDeliveryMaterials(materials, delivery)
-        : this.materialService.updateMaterials(materials, delivery);
+        : this.movieMaterialService.updateMaterials(materials, delivery);
       this.snackBar.open('Material list updated !', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -118,7 +120,7 @@ export class DeliveryEditableComponent implements OnInit {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialStatus(materials, status, delivery.id)
-      : this.materialService.updateStatus(materials, status, delivery.movieId);
+      : this.movieMaterialService.updateStatus(materials, status, delivery.movieId);
     this.snackBar.open(`Material status updated to ${status}`, 'close', { duration: 2000 });
     this.materialStore.returnToInitialState();
   }
@@ -129,7 +131,7 @@ export class DeliveryEditableComponent implements OnInit {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialIsOrdered(materials, delivery.id)
-      : this.materialService.updateIsOrdered(materials, delivery.movieId);
+      : this.movieMaterialService.updateIsOrdered(materials, delivery.movieId);
     this.materialStore.returnToInitialState();
   }
 
@@ -139,7 +141,7 @@ export class DeliveryEditableComponent implements OnInit {
     const delivery = this.query.getActive();
     delivery.mustBeSigned
       ? this.materialService.updateDeliveryMaterialIsPaid(materials, delivery.id)
-      : this.materialService.updateIsPaid(materials, delivery.movieId);
+      : this.movieMaterialService.updateIsPaid(materials, delivery.movieId);
     this.materialStore.returnToInitialState();
   }
 
@@ -173,7 +175,7 @@ export class DeliveryEditableComponent implements OnInit {
       const delivery = this.query.getActive();
       delivery.mustBeSigned
         ? this.materialService.deleteDeliveryMaterial(materialId, delivery.id)
-        : this.materialService.delete(materialId, delivery);
+        : this.movieMaterialService.delete(materialId, delivery);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {
