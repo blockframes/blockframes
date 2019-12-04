@@ -3,7 +3,7 @@ import { MovieCurrenciesSlug } from "@blockframes/movie/movie/static-model/types
 export interface Price {
   amount: number;
   currency: MovieCurrenciesSlug;
-  taxes?: number; // percentage
+  vat?: number; // percentage
 }
 
 export interface Fee {
