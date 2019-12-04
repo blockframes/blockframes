@@ -43,6 +43,7 @@ export function storeSearchableMovie(
   const ALGOLIA_FIELDS = [
     'movie.main.genres',
     'movie.main.title.international',
+    'movie.main.title.original',
     'movie.main.directors',
     'movie.main.language',
     'movie.main.status',

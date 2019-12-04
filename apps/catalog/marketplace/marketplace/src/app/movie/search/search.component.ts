@@ -176,8 +176,12 @@ export class MarketplaceSearchComponent implements OnInit {
         });
       }),
       tap((movies: MovieAlgoliaResult[]) => {
-        const agents = movies.map(index => index.movie.salesAgentDeal.salesAgent.displayName);
-        this.salesAgents = new Set(...agents);
+        movies.forEach(index => {
+          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
+            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
+          }
+        });
+        this.availableMovies = movies.length;
         this.allTitles = movies.map(index => index.movie.main.title.international);
         this.allKeywords = flatten(
           movies.map(index => index.movie.promotionalDescription.keywords)
