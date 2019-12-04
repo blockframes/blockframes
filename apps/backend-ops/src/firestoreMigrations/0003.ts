@@ -127,3 +127,9 @@ export async function upgradeMovieCollection(db: Firestore) {
   await Promise.all(newMovieData);
   console.log('Upgrading movie collection done');
 }
+
+export async function upgrade(db: Firestore) {
+  await upgradeInvitationCollection(db);
+  await upgradeOrganizationCollection(db);
+  await upgradeMovieCollection(db);
+}
