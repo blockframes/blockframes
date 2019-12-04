@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { DeliveryQuery, Delivery } from '../../+state';
-import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { Observable} from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Delivery } from '../../+state/delivery.model';
+import { DeliveryQuery } from '../../+state/delivery.query';
 
 @Component({
   selector: 'delivery-list',

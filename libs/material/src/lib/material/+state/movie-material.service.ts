@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Material, createMaterial, MaterialStatus } from './material.model';
 import { MaterialState, MaterialStore } from './material.store';
 import { MovieQuery } from '@blockframes/movie';
-import { Delivery } from '../../delivery/+state';
+import { Delivery } from '../../delivery/+state/delivery.model';
 
 @Injectable({
   providedIn: 'root'
@@ -128,16 +128,16 @@ export class MovieMaterialService extends CollectionService<MaterialState> {
   }
 
   /** Update the property status of selected materials. */
-  public updateStatus(materials: Material[], status: MaterialStatus, movieId: string) {
+  public updateStatus(materials: Material[], status: MaterialStatus) {
     materials.forEach(material => this.update(material.id, { status }));
   }
 
   /** Update the property isOrdered of selected materials. */
-  public updateIsOrdered(materials: Material[], movieId: string) {
+  public updateIsOrdered(materials: Material[]) {
     materials.forEach(material => this.update(material.id, { isOrdered: !material.isOrdered }));
   }
 
-  public updateIsPaid(materials: Material[], movieId: string) {
+  public updateIsPaid(materials: Material[]) {
     materials.forEach(material => this.update(material.id, { isPaid: !material.isPaid }));
   }
 }

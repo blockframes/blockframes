@@ -1,7 +1,7 @@
 import { Delivery } from '../../delivery/+state';
 import { MaterialStatus, MaterialDocument, MaterialTemplateDocument } from './material.firestore';
 
-export { MaterialStatus } from './material.firestore';
+export { MaterialStatus, MaterialTemplateDocument } from './material.firestore';
 
 export type MaterialTemplate = MaterialTemplateDocument
 

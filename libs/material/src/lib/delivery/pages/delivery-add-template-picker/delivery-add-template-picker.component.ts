@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angula
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionPickerItem } from '@blockframes/ui';
-import { Template, TemplateQuery, TemplateStore } from '../../../template/+state';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
+import { Template } from '../../../template/+state/template.model';
+import { TemplateStore } from '../../../template/+state/template.store';
+import { TemplateQuery } from '../../../template/+state/template.query';
 
 /** Turn an array of templates into a list of ActionPickerItem */
 const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
@@ -51,7 +53,6 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
     }
 
     this.templateStore.setActive(this.currentTemplate.id);
-    console.log(this.currentTemplate.id)
     return `../4-settings`;
   }
 }
