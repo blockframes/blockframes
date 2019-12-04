@@ -7,8 +7,8 @@ export interface DateRangeRaw<D> {
 export interface DateRange extends DateRangeRaw<Date> {
 }
 
- /** check if a date is in a range */
- export function isBetween(date: Date, startRange: Date, endRange: Date){
+/** check if a date is in a range */
+export function isBetween(date: Date, startRange: Date, endRange: Date){
   return date.getTime() >= startRange.getTime() && date.getTime() <= endRange.getTime();
 }
 

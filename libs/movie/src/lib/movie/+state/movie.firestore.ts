@@ -3,9 +3,39 @@ import { DateRangeRaw } from "@blockframes/utils/common-interfaces/date-range";
 import { Person, Credit, SalesAgent, Company, Licensee, Licensor } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { Price } from "@blockframes/utils/common-interfaces/price";
+import { Price, Fee } from "@blockframes/utils/common-interfaces/price";
+import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
+
+export const enum LicenseStatus {
+  unknown = 'unknown',
+  undernegotiation = 'under negotiation',
+  waitingsignature = 'waiting for signature',
+  waitingpaiment = 'waiting for paiment',
+  paid = 'paid',
+}
+
+export enum WorkType {
+  movie = 'Movie',
+  short = 'Short',
+  serie = 'Serie',
+  season = 'Season',
+  volume = 'Volume',
+  episode = 'Episode',
+  collection = 'Collection',
+}
+
+export enum FormatProfile {
+  unknown = 'unknown',
+  HD = 'HD',
+  SD = 'SD',
+  UHD = 'UHD',
+  _3D = '3D',
+  _3DSD = '3DSD',
+  _3DHD = '3DHD',
+  _3UHD = '3DUHD'
+}
 
 export interface MovieVersionInfo {
   dubbings: string[],
@@ -53,14 +83,6 @@ export interface Title {
   international?: string;
 }
 
-export const enum LicenseStatus {
-  unknown = 'unknown',
-  undernegotiation = 'under negotiation',
-  waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
-  paid = 'paid',
-}
-
 export interface MovieStory {
   synopsis: string,
   logline: string,
@@ -86,19 +108,43 @@ export interface MovieLanguageSpecification {
   subtitle: boolean;
 }
 
+export interface HoldbackRaw<D> {
+  terms: TermsRaw<D>,
+  media: MediasSlug,
+}
+
+export interface HoldbackWithDates extends HoldbackRaw<Date> {
+}
+
 // Distribution deal raw interface, formerly called MovieSaleRaw
 interface DistributionDealRaw<D> {
   id: string,
-  licensee: Licensee,
+  publicId?: string,
   licensor: Licensor,
-  rights: DateRangeRaw<D>; // duration: DateRange; => now use Term ?
-  territories: TerritoriesSlug[];
+  licensee: Licensee,
   licenseType: MediasSlug[];
-  dubbings: { [language in LanguagesSlug]: MovieLanguageSpecification };
+  terms: TermsRaw<D>;
+
+  territories: TerritoriesSlug[];
+  // territoryExcluded
+  // assetLanguage FR:subdub EN:sub etc ..
+  dubbings: { [language in LanguagesSlug]: MovieLanguageSpecification }; // @WIP #1061
   subtitles: string[]; // @todo #1061 remove (overlapping dubbings)
+
+  workType: WorkType;
   exclusive: boolean;
   price: Price;
+  titleInternalAlias: string;
+  formatProfile: FormatProfile;
+  download: boolean;
+  contractId?: string;
   licenseStatus: LicenseStatus;
+  reportingId?: string;
+  deliveryIds?: string;
+  multidiffusion?: number;
+  holdbacks?:  HoldbackRaw<D>[];
+  catchUp?: TermsRaw<D>;
+  fees: Fee[];
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {

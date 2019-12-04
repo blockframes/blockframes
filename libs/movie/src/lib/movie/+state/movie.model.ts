@@ -14,11 +14,15 @@ import {
   Prize,
   PromotionalElement,
   Title,
-  LicenseStatus
+  LicenseStatus,
+  HoldbackWithDates,
+  WorkType,
+  FormatProfile
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createStakeholder, Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
+import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 
 export type PromotionalElement = PromotionalElement;
 
@@ -53,6 +57,8 @@ export type MovieSalesInfo = MovieSalesInfoDocumentWithDates;
 export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
 
 export type Movie = MovieDocumentWithDates;
+
+export type Holdback = HoldbackWithDates;
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
@@ -212,16 +218,21 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     licensee: createStakeholder(),
     licensor: createStakeholder(),
     licenseStatus: LicenseStatus.unknown,
-    rights: {
-      from: null,
-      to: null
-    },
-    territories: [],
     licenseType: [],
+    terms: createTerms(),
+
+    territories: [],
     dubbings: {},
     subtitles: [],
+
+    workType: WorkType.movie,
     exclusive: false,
     price: createPrice(),
+    titleInternalAlias: '',
+    formatProfile: FormatProfile.unknown,
+    download: false,
+    holdbacks: [],
+    fees: [],
     ...params
   };
 }
@@ -229,6 +240,14 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
+    ...params
+  };
+}
+
+export function createHoldback(params: Partial<Holdback> = {}): Holdback {
+  return {
+    terms: createTerms(),
+    media: '',
     ...params
   };
 }

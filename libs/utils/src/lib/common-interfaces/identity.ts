@@ -3,8 +3,8 @@ import { CreditRolesSlug, StakeholderRolesSlug, LegalRolesSlug } from "@blockfra
 
 //////////////////////////
 // VARIOUS IDENTIY OBJECTS
-// @dev [WIP] LGBT compatible
-// right now even a company can identify as a human
+// @dev [WIP] Inclusive & LGBT compatible model
+// right now even a company can identify as a human!
 //////////////////////////
 
 /**
