@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
 
-type Firestore = admin.firestore.Firestore
+type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
 type QuerySnapshot = admin.firestore.QuerySnapshot;
 type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
@@ -66,9 +66,9 @@ const getBackupOutput = async (bucket: Bucket, name: string): Promise<Writable> 
  * @param firestore
  */
 const backupedCollections = async (firestore: Firestore): Promise<CollectionReference[]> => {
-  const collections: CollectionReference[] = await firestore.listCollections();
-  return collections
-    .filter(x => !x.path.startsWith('_restore'));
+  // NOTE: this is legacy code, once upon a time we'd skip the backup of the _restore / _META collection
+  // we disabled that, and this function might be useless now.
+  return await firestore.listCollections();
 };
 
 export const freeze = async (req: any, resp: any) => {
@@ -196,11 +196,17 @@ function reEncodeObject(x: any): any {
  * Set the restore timestamp to now.
  */
 export const setRestoreFlag = async () => {
-  return db.collection('_restore').doc('_DOC').set({ restoredAt: admin.firestore.FieldValue.serverTimestamp() });
+  return db
+    .collection('_META')
+    .doc('_RESTORE')
+    .set({ restoredAt: admin.firestore.FieldValue.serverTimestamp() });
 };
 
 const isRestoring = async () => {
-  const docRestoreMeta = await db.collection('_restore').doc('_DOC').get();
+  const docRestoreMeta = await db
+    .collection('_META')
+    .doc('_RESTORE')
+    .get();
   if (docRestoreMeta.exists && docRestoreMeta.data() && docRestoreMeta.data()!.restoredAt) {
     // @ts-ignore: within this block, we know .data() and `restoredAt' are set
     const { restoredAt } = docRestoreMeta.data();
@@ -227,7 +233,6 @@ export const skipWhenRestoring = (f: any) => {
     return f(...args);
   };
 };
-
 
 export const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
