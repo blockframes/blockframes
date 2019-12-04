@@ -1,16 +1,11 @@
-import { DateRange } from '@blockframes/utils/date-range';
-import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 
 export const enum CartStatus {
   pending = 'pending',
   submitted = 'submitted',
   accepted = 'accepted',
   paid = 'paid'
-}
-
-export interface Price {
-  amount: number;
-  currency: MovieCurrenciesSlug;
 }
 
 export interface CatalogCart {
@@ -29,17 +24,6 @@ export interface MovieData {
   languages: string;
   dubbed: string;
   subtitle: string;
-}
-
-/**
- * A factory function that creates Price
- */
-export function createPrice(price: Partial<Price> = {}): Price {
-  return {
-    amount: 0,
-    currency: 'euro',
-    ...price
-  }
 }
 
 /**

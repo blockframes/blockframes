@@ -11,14 +11,14 @@ import {
   MovieSalesInfoDocumentWithDates,
   MovieStory,
   MovieVersionInfo,
-  Person,
   Prize,
   PromotionalElement,
   Title,
-  Stakeholder,
-  createStakeholder
+  LicenseStatus
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createStakeholder, Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
+import { createPrice } from '@blockframes/utils/common-interfaces/price';
 
 export type PromotionalElement = PromotionalElement;
 
@@ -38,13 +38,13 @@ export type MovieVersionInfo = MovieVersionInfo;
 
 export type Prize = Prize;
 
-export type Credit = Person;
+export type Credit = Credit;
 
-export type SalesAgent = Person;
+export type SalesAgent = SalesAgent;
 
-export type Licensee = Stakeholder;
+export type Licensee = Licensee;
 
-export type Licensor = Stakeholder;
+export type Licensor = Licensor;
 
 export type DistributionDeal = DistributionDealDocumentWithDates;
 
@@ -211,28 +211,17 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     id: '',
     licensee: createStakeholder(),
     licensor: createStakeholder(),
-    operatorName: '',
-    showOperatorName: false,
+    licenseStatus: LicenseStatus.unknown,
     rights: {
       from: null,
       to: null
     },
     territories: [],
-    medias: [],
+    licenseType: [],
     dubbings: {},
     subtitles: [],
     exclusive: false,
-    price: 0,
-    ...params
-  };
-}
-
-export function createCredit(params: Partial<Credit> = {}): Credit {
-  return {
-    firstName: '',
-    lastName: '',
-    creditRole: '',
-    logo: createImgRef(),
+    price: createPrice(),
     ...params
   };
 }

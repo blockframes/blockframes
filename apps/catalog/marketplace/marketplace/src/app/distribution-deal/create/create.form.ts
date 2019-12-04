@@ -23,7 +23,7 @@ function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
     {} // Initial value. No controls at the beginning
   );
   return {
-    medias: new FormArray(deal.medias.map(media => new FormControl(media)), [
+    medias: new FormArray(deal.licenseType.map(media => new FormControl(media)), [
       Validators.required,
       valueIsInModelValidator('MEDIAS')
     ]),

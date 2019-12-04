@@ -15,7 +15,6 @@ import {
   createDistributionDeal,
   MovieService,
   createPromotionalElement,
-  createCredit,
   createMovieBudget,
   createMoviePromotionalElements,
   createPrize
@@ -27,6 +26,8 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { LicenseStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -97,12 +98,12 @@ enum SpreadSheetMovie {
 enum SpreadSheetDistributionDeal {
   internalRef,
   internationalTitle, // unused
-  operatorName,
-  showOperatorName,
+  licenseeName, // old operatorName 
+  displayLicenseeName, // old showOperatorName
   rightsStart,
   rightsEnd,
   territories,
-  medias,
+  licenseType, // old medias
   dubbings,
   subtitles,
   exclusive,
@@ -267,7 +268,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.productionCompanies]) {
           movie.main.productionCompanies = [];
           spreadSheetRow[SpreadSheetMovie.productionCompanies].split(this.separator).forEach((p: string) => {
-            movie.main.productionCompanies.push({ firstName: p });
+            movie.main.productionCompanies.push({ displayName: p });
           });
         }
 
@@ -348,7 +349,7 @@ export class ViewExtractedElementsComponent {
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
           movie.salesCast.credits = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
-            .map(credit => ({ ...credit, creditRole: 'actor' }));
+            .map(credit => ({ ...credit, role: 'actor' }));
         }
 
         // SYNOPSIS (Short Synopsis)
@@ -1021,14 +1022,7 @@ export class ViewExtractedElementsComponent {
       if (spreadSheetRow[SpreadSheetDistributionDeal.internalRef]) {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
-        const distributionDeal = createDistributionDeal();
-
-        distributionDeal.licensee.displayName = 'licensee example';
-        distributionDeal.licensor.displayName = 'licensor example';
-
-        // @temp #1061
-        distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
-        distributionDeal.licensor.orgId = this.organizationQuery.getActiveId();
+        const distributionDeal = createDistributionDeal(); 
 
         const importErrors = {
           distributionDeal,
@@ -1038,15 +1032,34 @@ export class ViewExtractedElementsComponent {
         } as DealsImportState;
 
         if (movie) {
-          // OPERATOR NAME
-          if (spreadSheetRow[SpreadSheetDistributionDeal.operatorName]) {
-            distributionDeal.operatorName = spreadSheetRow[SpreadSheetDistributionDeal.operatorName];
+          /////////////////
+          // LICENSE STUFF
+          /////////////////
+
+          /* LICENSOR */
+
+          // @temp Cascade8 will be the licensor for imported movies. Update this if needed
+          distributionDeal.licensor.orgId = this.organizationQuery.getActiveId();
+          distributionDeal.licensor.displayName = 'licensor example';
+
+          /* LICENSEE */
+
+          // DISPLAY NAME
+          if (spreadSheetRow[SpreadSheetDistributionDeal.licenseeName]) {
+            distributionDeal.licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];
           }
 
-          // SHOW OPERATOR NAME
-          if (spreadSheetRow[SpreadSheetDistributionDeal.showOperatorName]) {
-            distributionDeal.showOperatorName = spreadSheetRow[SpreadSheetDistributionDeal.showOperatorName].toLowerCase() === 'yes' ? true : false;
+          // SHOW NAME
+          if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
+            distributionDeal.licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
           }
+
+          /* LICENSE STATUS */
+          distributionDeal.licenseStatus = LicenseStatus.paid;
+
+          /////////////////
+          // TERMS STUFF
+          /////////////////
 
           // BEGINNING OF RIGHTS
           if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
@@ -1080,12 +1093,12 @@ export class ViewExtractedElementsComponent {
           }
 
           // MEDIAS (Mandate Medias)
-          if (spreadSheetRow[SpreadSheetDistributionDeal.medias]) {
-            distributionDeal.medias = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.medias].split(this.separator).forEach((c: string) => {
+          if (spreadSheetRow[SpreadSheetDistributionDeal.licenseType]) {
+            distributionDeal.licenseType = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: string) => {
               const media = getCodeIfExists('MEDIAS', c);
               if (media) {
-                distributionDeal.medias.push(media);
+                distributionDeal.licenseType.push(media);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1146,7 +1159,7 @@ export class ViewExtractedElementsComponent {
 
           // PRICE
           if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.price]))) {
-            distributionDeal.price = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
+            distributionDeal.price.amount = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
           }
 
           // Checks if sale already exists
@@ -1193,8 +1206,8 @@ export class ViewExtractedElementsComponent {
     // REQUIRED FIELDS
     //////////////////
 
-    //  OPERATOR NAME
-    if (!distributionDeal.operatorName) {
+    //  LICENSEE NAME
+    if (!distributionDeal.licensee.displayName) {
       errors.push({
         type: 'error',
         field: 'operatorName',
@@ -1204,19 +1217,8 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    //  OPERATOR NAME
-    if (!distributionDeal.operatorName) {
-      errors.push({
-        type: 'error',
-        field: 'operatorName',
-        name: "Operator name",
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    // SHOW OPERATOR NAME
-    if (distributionDeal.showOperatorName === undefined) {
+    //  LICENSEE SHOW NAME
+    if (distributionDeal.licensee.showName === undefined) {
       errors.push({
         type: 'error',
         field: 'showOperatorName',
@@ -1259,8 +1261,8 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    // MEDIAS
-    if (!distributionDeal.medias) {
+    // LICENSE TYPE
+    if (!distributionDeal.licenseType) {
       errors.push({
         type: 'error',
         field: 'medias',
@@ -1308,7 +1310,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // PRICE
-    if (!distributionDeal.price) {
+    if (!distributionDeal.price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',

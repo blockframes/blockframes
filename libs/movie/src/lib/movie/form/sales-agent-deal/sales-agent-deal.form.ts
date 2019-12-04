@@ -1,6 +1,6 @@
 import { MovieSalesAgentDeal, createMovieSalesAgentDeal } from '../../+state';
 import { FormEntity } from '@blockframes/utils';
-import { DateRange, createDateRange } from '@blockframes/utils/date-range';
+import { DateRange, createDateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { FormControl } from '@angular/forms';
 
 function createRightsFormControl(entity?: Partial<DateRange>) {

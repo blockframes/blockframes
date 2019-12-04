@@ -101,3 +101,10 @@ export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slu
 
 export type ResourceRatioLabel = typeof RESOURCE_RATIOS_LABEL[number];
 export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];
+
+
+export const LEGAL_ROLES_LABEL = models['LEGAL_ROLES'].map(key => key.label);
+export const LEGAL_ROLES_SLUG = models['LEGAL_ROLES'].map(key => key.slug);
+
+export type LegalRolesLabel = typeof LEGAL_ROLES_LABEL[number];
+export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];

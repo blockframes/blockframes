@@ -1,7 +1,8 @@
-import { MovieSalesCast, Credit, createMovieSalesCast, createCredit } from '../../+state';
+import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MovieCreditForm } from '../main/main.form';
+import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 
 function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>){
   const entity = createMovieSalesCast(salesCast);
@@ -13,11 +14,11 @@ function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>){
 type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
 function createCreditControls(credit?: Partial<Credit>) {
-  const { firstName, lastName, creditRole } = createCredit(credit);
+  const { firstName, lastName, role } = createCredit(credit);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
-    creditRole: new FormControl(creditRole),
+    role: new FormControl(role),
   }
 }
 

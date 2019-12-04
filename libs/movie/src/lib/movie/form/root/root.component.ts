@@ -79,10 +79,10 @@ export class MovieFormRootComponent {
 
         // ACTORS
         this.form.get('salesCast').credits.clear();
-        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, creditRole: 'actor' }));
+        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'actor' }));
 
         // WRITERS
-        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, creditRole: 'writer' }));
+        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'writer' }));
 
         // PRODUCTION COMPANY
         this.form.main.productionCompanies.clear();

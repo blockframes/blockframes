@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Company } from "@blockframes/utils/common-interfaces/identity";
 
 @Component({
   selector: 'movie-display-film-info-card',
@@ -20,6 +20,6 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() synopsis;
   @Input() keywords;
   @Input() releaseDate;
-  @Input() productionCompanies: Person[];
+  @Input() productionCompanies: Company[];
   @Input() salesAgent;
 }

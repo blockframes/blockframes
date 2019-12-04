@@ -1,7 +1,9 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
-import { DateRangeRaw } from "@blockframes/utils/date-range";
+import { DateRangeRaw } from "@blockframes/utils/common-interfaces/date-range";
+import { Person, Credit, SalesAgent, Company, Licensee, Licensor } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { Price } from "@blockframes/utils/common-interfaces/price";
 
 type Timestamp = firestore.Timestamp;
 
@@ -14,7 +16,7 @@ interface MovieSalesAgentDealRaw<D> {
   rights: DateRangeRaw<D>;
   territories: string[],
   medias: string[],
-  salesAgent?: Person,
+  salesAgent?: SalesAgent,
   reservedTerritories?: string[],
 }
 
@@ -52,30 +54,12 @@ export interface Title {
   international?: string;
 }
 
-/**
- * @TODO #1061 add description
- */
-interface IdentityRaw {
-  orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
-  displayName?: string, // @todo #1052 "?" is temporary
-  showName?: boolean, // @todo #1052 merge credit & stakeholder interface ? or implements?
-}
-
-export interface Stakeholder extends IdentityRaw {
-}
-
-export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholder {
-  return {
-    orgId: '',
-    ...params,
-  }
-}
-
-export interface Person extends IdentityRaw {
-  firstName: string, // @todo #1052 replace with displayName
-  lastName?: string, // @todo #1052 replace with displayName
-  creditRole?: string, // @todo #1052 rename to role
-  logo?: ImgRef,
+export const enum LicenseStatus {
+  unknown = 'unknown',
+  undernegotiation = 'under negotiation',
+  waitingsignature = 'waiting for signature',
+  waitingpaiment = 'waiting for paiment',
+  paid = 'paid',
 }
 
 export interface MovieStory {
@@ -84,7 +68,7 @@ export interface MovieStory {
 }
 
 export interface MovieSalesCast {
-  credits: Person[],
+  credits: Credit[],
 }
 
 export interface MovieFestivalPrizes {
@@ -106,17 +90,16 @@ export interface MovieLanguageSpecification {
 // Distribution deal raw interface, formerly called MovieSaleRaw
 interface DistributionDealRaw<D> {
   id: string,
-  licensee: Stakeholder,
-  licensor: Stakeholder,
-  operatorName: string;
-  showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
+  licensee: Licensee,
+  licensor: Licensor,
   rights: DateRangeRaw<D>; // duration: DateRange; => now use Term ?
   territories: TerritoriesSlug[];
-  medias: MediasSlug[];
+  licenseType: MediasSlug[];
   dubbings: { [language in LanguagesSlug]: MovieLanguageSpecification };
   subtitles: string[]; // @todo #1061 remove (overlapping dubbings)
   exclusive: boolean;
-  price: number;
+  price: Price;
+  licenseStatus: LicenseStatus;
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
@@ -133,7 +116,7 @@ export interface MovieMain {
   originCountries?: string[],
   languages?: string[],
   status?: MovieStatusSlug,
-  productionCompanies?: Person[],
+  productionCompanies?: Company[],
   length?: number,
   shortSynopsis?: string,
 }

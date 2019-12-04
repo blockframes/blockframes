@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Company } from '@blockframes/utils/common-interfaces/identity';
+
 @Component({
   selector: 'catalog-production-informations',
   templateUrl: './production-informations.component.html',
   styleUrls: ['./production-informations.component.scss']
 })
 export class CatalogProductionInformationsComponent {
-  @Input() productionCompanies: Person[];
+  @Input() productionCompanies: Company[];
   @Input() salesAgentDealLogo: string;
 }

@@ -22,7 +22,7 @@ import {
   LANGUAGES_SLUG,
   LanguagesLabel
 } from '@blockframes/movie/movie/static-model/types';
-import { DateRange } from '@blockframes/utils/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getDistributionDealsInDateRange,

@@ -1,4 +1,4 @@
-import { DateRange } from '@blockframes/utils/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
@@ -111,8 +111,8 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
   for (const deal of deals) {
     let mediasInCommon = false;
     for (const media of formMedias) {
-      for (const saleMedia of deal.medias) {
-        if (saleMedia === media) {
+      for (const licenseType of deal.licenseType) {
+        if (licenseType === media) {
           mediasInCommon = true;
         }
       }

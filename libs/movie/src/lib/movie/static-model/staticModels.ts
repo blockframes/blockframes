@@ -15,6 +15,7 @@ interface Model {
   CERTIFICATIONS: readonly SlugAndLabel[];
   TERRITORIES: readonly SlugAndLabel[];
   MEDIAS: readonly SlugAndLabel[];
+  LEGAL_ROLES: readonly SlugAndLabel[];
 }
 
 export type Scope = keyof Model;
@@ -647,6 +648,19 @@ const models: Model = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
+  ] as const,
+  'LEGAL_ROLES': [
+    { 'slug': 'service-provider', 'label': 'Service provider' },
+    { 'slug': 'licensor', 'label': 'Licensor' },
+    { 'slug': 'licensee', 'label': 'Licensee' },
+    { 'slug': 'seller', 'label': 'Seller' },
+    { 'slug': 'lender', 'label': 'Lender' },
+    { 'slug': 'signatory', 'label': 'Signatory' },
+    { 'slug': 'promisor', 'label': 'Promisor' },
+    { 'slug': 'promisee', 'label': 'Promisee' },
+    { 'slug': 'beneficiary', 'label': 'Beneficiary' },
+    { 'slug': 'third-party', 'label': 'Third party' },
+    { 'slug': 'purchaser', 'label': 'Purchaser' },
   ] as const,
 };
 
