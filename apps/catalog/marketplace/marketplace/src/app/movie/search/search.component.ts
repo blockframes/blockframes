@@ -127,7 +127,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
-  public salesAgents: string[] = [];
+  public salesAgents;
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
@@ -176,11 +176,8 @@ export class MarketplaceSearchComponent implements OnInit {
         });
       }),
       tap((movies: MovieAlgoliaResult[]) => {
-        movies.forEach(index => {
-          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
-            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
-          }
-        });
+        const agents = movies.map(index => index.movie.salesAgentDeal.salesAgent.displayName);
+        this.salesAgents = new Set(...agents);
         this.allTitles = movies.map(index => index.movie.main.title.international);
         this.allKeywords = flatten(
           movies.map(index => index.movie.promotionalDescription.keywords)
