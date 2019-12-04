@@ -10,7 +10,7 @@ import { MaterialState, MaterialStore } from './material.store';
   providedIn: 'root'
 })
 /** Redefining path in guards. */
-@CollectionConfig({ path: 'toBeDefined'})
+@CollectionConfig({ path: 'deliveries/:deliveryId/materials'})
 export class MaterialService extends CollectionService<MaterialState> {
   subcollectionPath: string;
 
@@ -22,9 +22,9 @@ export class MaterialService extends CollectionService<MaterialState> {
     super(store)
   }
 
-  get path() {
-    return this.subcollectionPath;
-  }
+  // get path() {
+  //   return this.subcollectionPath;
+  // }
 
   //////////////////////////////
   // CRUD MATERIAL (DELIVERY) //
@@ -36,116 +36,10 @@ export class MaterialService extends CollectionService<MaterialState> {
     return createMaterial({ id });
   }
 
-  /** Deletes material of the movie sub-collection in firebase. */
-  public async delete(materialId: string, delivery: Delivery) {
-    const material = await this.getValue(`movies/${delivery.movieId}/materials/${materialId}`)
-    this.subcollectionPath = `movies/${delivery.movieId}/materials`
-
-      // Checks if this material belongs to multiple delivery.
-      // If so, update the deliveryIds, otherwise just delete it.
-      if (material.deliveryIds.length === 1) {
-        this.remove(material.id);
-      } else {
-        this.update(material.id, { deliveryIds: material.deliveryIds.filter(id => id !== delivery.id) });
-      }
-      this.db.doc(`deliveries/${delivery.id}`).update({ validated: [] });
-  }
-
-  /** Update materials of a delivery (materials loaded from movie). */
-  public async updateMaterials(materials: Material[], delivery: Delivery) {
-
-    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
-    const movieMaterials = await this.getValue();
-
-    materials.forEach(material => {
-      const sameIdMaterial = movieMaterials.find(movieMaterial => movieMaterial.id === material.id);
-      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.isTheSame(movieMaterial, material));
-      const isNewMaterial = !sameIdMaterial && !sameValuesMaterial;
-
-      // If material from the list have no change and already exists, just return.
-      const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
-      if (isPristine) {
-        return;
-      }
-
-      // We check if material is brand new. If so, we just add it to database and return.
-      if (isNewMaterial) {
-        this.setNewMaterial(material, delivery);
-        return;
-      }
-
-      // If there already is a material with same properties (but different id), we merge this
-      // material with existing one, and push the new deliveryId into deliveryIds.
-      if (!!sameValuesMaterial) {
-        this.updateMaterialDeliveryIds(sameValuesMaterial, delivery);
-      }
-
-      // If values are not the same, this material is considered as new and we have to create
-      // and set a new material (with new Id).
-      if (!sameValuesMaterial) {
-        const newMaterial = createMaterial({...material, id: this.db.createId()});
-        this.setNewMaterial(newMaterial, delivery);
-      }
-
-      // If the Id is the same that an other material, after had created or updated, we have to remove the old material
-      if (!!sameIdMaterial) {
-        this.removeMaterial(material, delivery, sameIdMaterial);
-      }
-    })
-  }
-
-  /** Create a material in a movie. */
-  public setNewMaterial(material: Material, delivery: Delivery) {
-    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
-    this.add({ ...material, deliveryIds: [delivery.id] })
-  }
-
-  /** Update deliveryIds of a material when this one has the same values that an other. */
-  public updateMaterialDeliveryIds(sameValuesMaterial: Material, delivery: Delivery) {
-    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
-    if (!sameValuesMaterial.deliveryIds.includes(delivery.id)) {
-      this.update(sameValuesMaterial.id, { deliveryIds: [...sameValuesMaterial.deliveryIds, delivery.id] })
-    }
-  }
-
-  /** Checks if the material belongs to multiple delivery, if so: update the deliveryIds, otherwise just delete it. */
-  public removeMaterial(material: Material, delivery: Delivery, sameIdMaterial: Material) {
-    this.subcollectionPath = `movies/${delivery.movieId}/materials`;
-    if (sameIdMaterial.deliveryIds.length === 1) {
-      return this.remove(material.id)
-    } else {
-      return this.update(material.id, { deliveryIds: sameIdMaterial.deliveryIds.filter(id => id !== delivery.id) });
-    }
-  }
-
-  /** Update the property status of selected materials. */
-  public updateStatus(materials: Material[], status: MaterialStatus, movieId: string) {
-    this.subcollectionPath = `movies/${movieId}/materials`;
-    materials.forEach(material => this.update(material.id, { status }));
-  }
-
-  /** Update the property isOrdered of selected materials. */
-  public updateIsOrdered(materials: Material[], movieId: string) {
-    this.subcollectionPath = `movies/${movieId}/materials`;
-    materials.forEach(material => this.update(material.id, { isOrdered: !material.isOrdered }));
-  }
-
-  public updateIsPaid(materials: Material[], movieId: string) {
-    this.subcollectionPath = `movies/${movieId}/materials`;
-    materials.forEach(material => this.update(material.id, { isPaid: !material.isPaid }));
-  }
-
-  /** Update materials of a movie (specific fields like 'owner', 'storage', 'stepId'). */
-  public updateMovieMaterials(materials: Material[], movieId: string) {
-    this.subcollectionPath = `movies/${movieId}/materials`;
-    // TODO: issue#1352 use a mutlip update
-    materials.forEach(material => this.update(material.id, material));
-  }
-
   /** Update stepId of materials of a delivery to empty string. */
   public removeStepIdDeliveryMaterials(materials: Material[], deliveryId: string) {
     this.subcollectionPath = `deliveries/${deliveryId}/materials`;
-    // TODO: issue#1352 use a mutlip update
+    // TODO: issue#1352 use a multiple update
     materials.forEach(material => this.update(material.id, { stepId: '' }));
   }
 
@@ -247,12 +141,6 @@ export class MaterialService extends CollectionService<MaterialState> {
   /** Returns a snapshot of template materials and sets the subcollectionPath. */
   public async getTemplateMaterials(templateId: string) {
     this.subcollectionPath = `templates/${templateId}/materials`;
-    return this.getValue();
-  }
-
-  /** Returns a snapshot of movie materials and sets the subcollectionPath. */
-  public async getMovieMaterials(movieId: string) {
-    this.subcollectionPath = `movies/${movieId}/materials`;
     return this.getValue();
   }
 

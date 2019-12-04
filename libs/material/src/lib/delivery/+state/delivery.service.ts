@@ -18,6 +18,7 @@ import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
 import { CollectionService, CollectionConfig, Query, awaitSyncQuery } from 'akita-ng-fire';
 import { tap, switchMap } from 'rxjs/operators';
+import { MovieMaterialService } from '../../material/+state/movie-material.service';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -64,7 +65,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    protected store: DeliveryStore
+    protected store: DeliveryStore,
+    private movieMaterialService: MovieMaterialService
   ) {
     super(store);
   }
@@ -250,7 +252,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       // Else, we update stepId of materials in the sub-collection of movie
       } else {
         const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
-        this.materialService.updateMovieMaterials(materialsWithoutStep, this.movieQuery.getActiveId());
+        this.movieMaterialService.updateMovieMaterials(materialsWithoutStep);
       }
     })
 
@@ -352,7 +354,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
-    const materials = await this.materialService.getMovieMaterials(document.id);
+    const materials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
       const targetRef = this.db.doc<Material>(`movies/${document.id}/materials/${material.id}`).ref;
@@ -372,7 +374,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     // So we accept a race condition here
     const materials = await this.materialService.getTemplateMaterials(document.id);
 
-    const movieMaterials = await this.materialService.getMovieMaterials(delivery.movieId);
+    const movieMaterials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
       const sameValuesMaterial = movieMaterials.find(movieMaterial => this.materialService.isTheSame(movieMaterial, material));
@@ -380,21 +382,21 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
-        this.materialService.setNewMaterial(material, delivery);
+        this.movieMaterialService.setNewMaterial(material, delivery);
         return;
       }
 
       // If there already is a material with same properties (but different id), we merge this
       // material with existing one, and push the new deliveryId into deliveryIds.
       if (!!sameValuesMaterial) {
-        this.materialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery);
+        this.movieMaterialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery);
       }
 
       // If values are not the same, this material is considered as new and we have to create
       // and set a new material (with new Id).
       if (!sameValuesMaterial) {
         const newMaterial = createMaterial({...material, id: this.db.createId()});
-        this.materialService.setNewMaterial(newMaterial, delivery);
+        this.movieMaterialService.setNewMaterial(newMaterial, delivery);
       }
     });
     return tx;
