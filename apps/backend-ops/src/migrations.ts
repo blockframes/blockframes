@@ -2,9 +2,11 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { Firestore } from './admin';
+import { Firestore, loadAdminServices } from './admin';
 import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
+import { backup } from './firebaseSetup';
+import { appUrl } from '@env';
 
 export const VERSION_ZERO = 0;
 
@@ -44,12 +46,19 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
   }));
 }
 
-export async function migrate(db: Firestore) {
+export async function migrate(withBackup: boolean = true) {
   console.info('start the migration process...');
+  const { db } = loadAdminServices();
 
   // TODO: disable the database updates
 
-  // TODO: trigger backup
+  if (withBackup) {
+    console.info('backup the database before doing anything');
+    await backup(appUrl);
+    console.info('backup done, moving on to the migrations...');
+  } else {
+    console.warn('⚠️ skipping the backup before running migrations, are you sure?');
+  }
   try {
     const currentVersion = await loadDBVersion(db);
     const migrations = selectAndOrderMigrations(currentVersion);

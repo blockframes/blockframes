@@ -1,3 +1,8 @@
+/**
+ * Exposes imports and types to access the firebase / firestore / gcloud admin tools.
+ *
+ * Helper to avoid duplicating all the "semi-broken" google type defs.
+ */
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 
