@@ -7,6 +7,7 @@ import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { backup } from './firebaseSetup';
 import { appUrl } from '@env';
+import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
 
 export const VERSION_ZERO = 0;
 
@@ -51,6 +52,7 @@ export async function migrate(withBackup: boolean = true) {
   const { db } = loadAdminServices();
 
   // TODO: disable the database updates
+  await startMaintenance();
 
   if (withBackup) {
     console.info('backup the database before doing anything');
@@ -78,7 +80,6 @@ export async function migrate(withBackup: boolean = true) {
     // TOOD: trigger restore on error
   }
 
-  // TODO: reenable updates
-
+  await endMaintenance();
   console.info('end the migration process...');
 }

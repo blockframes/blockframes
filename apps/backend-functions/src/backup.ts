@@ -4,14 +4,13 @@ import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
+import { endMaintenance, startMaintenance } from './maintenance';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
 type QuerySnapshot = admin.firestore.QuerySnapshot;
 type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
 type DocumentReference = admin.firestore.DocumentReference;
-
-const THIRTY_SECONDS_IN_MS = 30 * 1000;
 
 interface StoredDocument {
   docPath: string;
@@ -192,48 +191,6 @@ function reEncodeObject(x: any): any {
   }
 }
 
-/**
- * Set the restore timestamp to now.
- */
-export const setRestoreFlag = async () => {
-  return db
-    .collection('_META')
-    .doc('_RESTORE')
-    .set({ restoredAt: admin.firestore.FieldValue.serverTimestamp() });
-};
-
-const isRestoring = async () => {
-  const docRestoreMeta = await db
-    .collection('_META')
-    .doc('_RESTORE')
-    .get();
-  if (docRestoreMeta.exists && docRestoreMeta.data() && docRestoreMeta.data()!.restoredAt) {
-    // @ts-ignore: within this block, we know .data() and `restoredAt' are set
-    const { restoredAt } = docRestoreMeta.data();
-
-    const now = admin.firestore.Timestamp.now();
-
-    // If we started the restoration less than twenty seconds ago, we are still in the restore process,
-    return restoredAt.toMillis() + THIRTY_SECONDS_IN_MS > now.toMillis();
-  }
-  return false;
-};
-
-// TODO: take the time to fix the types,
-// probably turn this into a generic (f: T) to and preserve types.
-export const skipWhenRestoring = (f: any) => {
-  // return a new function that is:
-  // the old function + a check that early exits when we are restoring.
-  return async (...args: any[]) => {
-    // early exit
-    if (await isRestoring()) {
-      return true;
-    }
-
-    return f(...args);
-  };
-};
-
 export const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
@@ -248,7 +205,7 @@ export const restore = async (req: any, resp: any) => {
   const lastFile: GFile = sortedFiles[sortedFiles.length - 1];
 
   console.info('Updating restore flag');
-  await setRestoreFlag();
+  await startMaintenance();
 
   console.info('Clearing the database');
   await clear();
@@ -283,7 +240,7 @@ export const restore = async (req: any, resp: any) => {
   promises.push(readerDone);
   await Promise.all(promises);
 
-  await setRestoreFlag();
+  await endMaintenance();
 
   console.info(`Done processing: ${promises.length - 1} lines loaded`);
   return resp.status(200).send('success');
