@@ -17,7 +17,7 @@ const cartsQuery = (organizationId: string): Query<CatalogCart> => ({
 });
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'orgs/:orgId/baskets' })
+@CollectionConfig({ path: 'orgs/:orgId/carts' })
 export class CartService extends CollectionService<CartState> {
   syncQuery = syncQuery.bind(this, cartsQuery(this.organizationQuery.getActiveId()));
 

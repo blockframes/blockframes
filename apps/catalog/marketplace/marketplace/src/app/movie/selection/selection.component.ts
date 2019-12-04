@@ -104,11 +104,11 @@ export class MarketplaceSelectionComponent implements OnInit {
   // TODO#918: We have to think about how we want to bundle/handle multiple pending distrights
   public setPriceCurrency() {
     const [oldCart]: CatalogCart[] = this.cartQuery.getAll();
-    const updatedBasket: CatalogCart = {
+    const updatedCart: CatalogCart = {
       ...oldCart,
       price: { amount: this.priceControl.value, currency: this.selectedCurrency },
       status: CartStatus.submitted
     };
-    this.cartService.updateCart(updatedBasket);
+    this.cartService.updateCart(updatedCart);
   }
 }

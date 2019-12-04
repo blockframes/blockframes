@@ -11,7 +11,7 @@ export interface CartState extends EntityState<CatalogCart> {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'basket', idKey: 'id' })
+@StoreConfig({ name: 'cart', idKey: 'id' })
 export class CartStore extends EntityStore<CartState, CatalogCart> {
   constructor() {
     super();

@@ -31,13 +31,9 @@ export interface AppDetailsWithStatus extends AppDetails {
 }
 
 export interface OrganizationWithTimestamps extends OrganizationDocument {
-  /** Shopping cart list of movies in catalog-marketplace */
-  baskets: CatalogCart[];
 }
 
 export interface Organization extends OrganizationDocumentWithDates {
-  /** Shopping cart list of movies in catalog-marketplace */
-  baskets: CatalogCart[];
 }
 
 export interface Wishlist extends WishlistDocumentWithDates {
@@ -64,14 +60,11 @@ export function createOrganization(
     // Here, "created" & "updated" fields are Date objects
     created: new Date(),
     updated: new Date(),
-    // Init "akita" fields
-    baskets: [],
   }
 }
 
 /** Cleans an organization of its optional parameters */
 export function cleanOrganization(organization: Organization) {
-  delete organization.baskets;
   return organization;
 }
 
