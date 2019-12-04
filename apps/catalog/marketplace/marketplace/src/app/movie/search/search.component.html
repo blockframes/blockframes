@@ -336,34 +336,34 @@
     </div>
     <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column"
       fxLayoutAlign.lt-md="center center">
-      <ng-container *ngFor="let index of movies">
-        <movie-card [movie]="index.movie" [link]="['/layout/o/catalog',  index.movie.id]" *ngIf="!listView">
+      <ng-container *ngFor="let movie of movies">
+        <movie-card [movie]="movie" [link]="['/layout/o/catalog',  movie.id]" *ngIf="!listView">
           <ng-container movieInformation>
             <mat-card-subtitle>
-              <span *ngFor="let director of index.movie.main.directors; let isLast=last">{{ director.firstName }}
+              <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
                 {{ director.lastName }}{{isLast ? '' : ', '}}</span>
             </mat-card-subtitle>
             <mat-card-content class="table-size-text">
-              <b *ngFor="let country of index.movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
-                {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && index.movie.main.originCountries.length > 2 ? ',  ' : ''}}
+              <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+                {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
               </b>
-              <b *ngIf="index.movie.main.originCountries.length > 2">... </b>
-              <b *ngIf="index.movie.main.length">| {{ index.movie.main.length }} min </b><b>|
-                {{ index.movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
-              <p *ngIf="index.movie.salesAgentDeal.salesAgent.displayName">
-                {{ index.movie.salesAgentDeal.salesAgent.displayName}}
+              <b *ngIf="movie.main.originCountries.length > 2">... </b>
+              <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>|
+                {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
+              <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">
+                {{ movie.salesAgentDeal.salesAgent.displayName}}
               </p>
             </mat-card-content>
           </ng-container>
           <ng-container movieCardAction>
             <div fxLayout="row" fxLayoutAlign="end">
-              <ng-container *ngIf="(toggle$(index.movie.id) | async); else alreadyAdded">
-                <button mat-icon-button (click)="removeFromWishlist(index.movie)">
+              <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
+                <button mat-icon-button (click)="removeFromWishlist(movie)">
                   <mat-icon svgIcon="heart_filled"></mat-icon>
                 </button>
               </ng-container>
               <ng-template #alreadyAdded>
-                <button mat-icon-button (click)="addToWishlist(index.movie)">
+                <button mat-icon-button (click)="addToWishlist(movie)">
                   <mat-icon svgIcon="heart"></mat-icon>
                 </button>
               </ng-template>

@@ -1,6 +1,3 @@
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { SalesAgent } from './../../../../../../../../libs/movie/src/lib/movie/+state/movie.model';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -21,6 +18,8 @@ import {
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie, MovieService } from '@blockframes/movie/movie/+state';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
   GenresLabel,
   GENRES_LABEL,
@@ -56,6 +55,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -70,7 +70,7 @@ export class MarketplaceSearchComponent implements OnInit {
   private algoliaSearchResults$: Observable<MovieAlgoliaResult[]>;
 
   /* Observable of all movies */
-  public movieSearchResults$: Observable<MovieAlgoliaResult[]>;
+  public movieSearchResults$: Observable<MovieDocumentWithDates[]>;
 
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
@@ -174,19 +174,43 @@ export class MarketplaceSearchComponent implements OnInit {
             err ? rej(err) : res(result.hits)
           );
         });
+      }),
+      tap((movies: MovieAlgoliaResult[]) => {
+        movies.forEach(index => {
+          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
+            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
+          }
+        });
+        this.allTitles = movies.map(index => index.movie.main.title.international);
+        this.allKeywords = flatten(
+          movies.map(index => index.movie.promotionalDescription.keywords)
+        );
+        this.allDirectors = flatten(
+          movies.map(index =>
+            index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+          )
+        );
       })
     );
+
     this.movieSearchResults$ = combineLatest([
       this.algoliaSearchResults$,
       this.filterBy$,
       this.sortBy$
     ]).pipe(
-      map(([movies, filterOptions, sortBy]) => {
+      map(([algoliaMovies, filterOptions, sortBy]) => {
+        const filteredMovies = algoliaMovies.filter(index =>
+          filterMovie(index.movie, filterOptions)
+        );
+        const movieIds = filteredMovies.map(index => index.objectID);
+        const movies = this.movieQuery.getAll({
+          filterBy: movie => movieIds.includes(movie.id)
+        });
         if (AFM_DISABLE) {
           //TODO #1146
-          return movies.filter(async index => {
-            const deals = await this.movieService.getDistributionDeals(index.movie.id);
-            return filterMovie(index.movie, filterOptions, deals);
+          return movies.filter(async movie => {
+            const deals = await this.movieService.getDistributionDeals(movie.id);
+            return filterMovie(movie, filterOptions, deals);
           });
         } else {
           //TODO #1146 : remove the two line for movieGenres
@@ -195,37 +219,16 @@ export class MarketplaceSearchComponent implements OnInit {
           const sortedMovies = movies.sort((a, b) => {
             switch (sortBy) {
               case 'Title':
-                return a.movie.main.title.international.localeCompare(
-                  b.movie.main.title.international
-                );
+                return a.main.title.international.localeCompare(b.main.title.international);
               case 'Director':
-                return a.movie.main.directors[0].lastName.localeCompare(
-                  b.movie.main.directors[0].lastName
-                );
+                return a.main.directors[0].lastName.localeCompare(b.main.directors[0].lastName);
               default:
                 return 0;
             }
           });
-          return sortedMovies.filter(index => filterMovie(index.movie, filterOptions));
+          this.availableMovies = sortedMovies.length;
+          return sortedMovies;
         }
-      })
-    );
-
-    this.movieQuery.selectAll().pipe(
-      tap(movies => {
-        movies.forEach(movie => {
-          if (!this.salesAgents.includes(movie.salesAgentDeal.salesAgent.displayName)) {
-            this.salesAgents.push(movie.salesAgentDeal.salesAgent.displayName);
-          }
-        });
-        this.availableMovies = movies.length;
-        this.allTitles = movies.map(movie => movie.main.title.international);
-        this.allKeywords = flatten(movies.map(movie => movie.promotionalDescription.keywords));
-        this.allDirectors = flatten(
-          movies.map(movie =>
-            movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
-          )
-        );
       })
     );
 
