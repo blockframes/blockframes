@@ -4,6 +4,7 @@ import { WishlistViewComponent } from './wishlist-view/wishlist-view.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +26,7 @@ import { AngularFireAnalyticsModule } from '@blockframes/utils';
     CommonModule,
     FlexLayoutModule,
     TranslateSlugModule,
+    CropperModule,
     // Material
     MatButtonModule,
     MatDividerModule,

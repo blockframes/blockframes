@@ -116,7 +116,7 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    url: '',
+    media: createImgRef(promotionalElement.media),
     type: 'other',
     ...promotionalElement
   };

@@ -4,10 +4,10 @@ import { FormControl } from '@angular/forms';
 
 
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
-  const { label, url } = createPromotionalElement(promotionalElement);
+  const { label, media } = createPromotionalElement(promotionalElement);
   return {
     label: new FormControl(label),
-    url: new FormControl(url, urlValidators),
+    media: new FormControl(media, urlValidators),
   }
 }
 

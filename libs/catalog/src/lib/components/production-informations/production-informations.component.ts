@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Company } from '@blockframes/utils/common-interfaces/identity';
+import { ImgRef } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-production-informations',
@@ -8,5 +9,5 @@ import { Company } from '@blockframes/utils/common-interfaces/identity';
 })
 export class CatalogProductionInformationsComponent {
   @Input() productionCompanies: Company[];
-  @Input() salesAgentDealLogo: string;
+  @Input() salesAgentDealLogo: ImgRef;
 }
