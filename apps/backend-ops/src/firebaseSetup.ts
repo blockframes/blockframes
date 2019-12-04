@@ -21,11 +21,18 @@ function getBackupURL(appURL: string): string {
  * Trigger a firestore database restore operation for the given project
  */
 export async function restore(appURL: string) {
+  if (process.env['ADMIN_PASSWORD'] === undefined) {
+    throw new Error('no ADMIN_PASSWORD in your env, we need this to trigger backups / restores');
+  }
+
   const url = getRestoreURL(appURL);
+  const form = {
+    password: process.env['ADMIN_PASSWORD']
+  };
 
   // promisified request
   return new Promise((resolve, reject) => {
-    request.post(url, (error, response) => {
+    request.post({ url, form }, (error, response) => {
       if (error) {
         reject(error);
       } else {
@@ -39,11 +46,18 @@ export async function restore(appURL: string) {
  * Trigger a firestore database backup operation for the given project
  */
 export async function backup(appURL: string) {
+  if (process.env['ADMIN_PASSWORD'] === undefined) {
+    throw new Error('no ADMIN_PASSWORD in your env, we need this to trigger backups / restores');
+  }
+
   const url = getBackupURL(appURL);
+  const form = {
+    password: process.env['ADMIN_PASSWORD']
+  };
 
   // promisified request
   return new Promise((resolve, reject) => {
-    request.post(url, (error, response) => {
+    request.post({ url, form }, (error, response) => {
       if (error) {
         reject(error);
       } else {
