@@ -20,9 +20,11 @@
 @import './components/mat-form';
 @import './components/mat-table';
 
+// Typography
+@import './components/h.scss';
+
 * {
   box-sizing: border-box;
-  font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
 }
 
 html,
@@ -32,46 +34,6 @@ body {
 
 body {
   margin: 0;
-}
-
-h1 {
-  font-size: 45px;
-  font-weight: 800;
-}
-
-.light-theme h2 {
-  font-size: 30px;
-  font-weight: 800;
-}
-
-.dark-theme h2 {
-  font-size: 30px;
-  font-weight: 800;
-  color: mat-color($bf-dark-foreground, title);
-}
-
-.light-theme h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: mat-color($bf-light-foreground, subheading);
-}
-
-.dark-theme h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: mat-color($bf-dark-foreground, subheading);
-}
-
-.light-theme h4 {
-  font-size: 16px;
-  font-weight: 700;
-  color: mat-color($bf-light-foreground, subheading);
-}
-
-.dark-theme h4 {
-  font-size: 16px;
-  font-weight: 700;
-  color: mat-color($bf-dark-foreground, text);
 }
 
 p,

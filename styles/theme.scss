@@ -1,9 +1,10 @@
 @import '~@angular/material/theming';
-@include mat-core();
 @import './themes/dark';
 @import './themes/light';
 @import '~saturn-datepicker/theming';
-
+@import './typography.scss';
+@include mat-core();
+@include angular-material-typography($bf-typography);
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
