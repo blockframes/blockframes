@@ -21,7 +21,6 @@ import {
   onDeliveryStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
-import * as migrations from './migrations';
 import {
   onDocumentCreate,
   onDocumentDelete,
@@ -80,10 +79,6 @@ export const findOrgByName = functions.https
 
 /** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
-
-/** Trigger: REST call to migrate the database to V2. */
-export const updateToV2 = functions.https
-  .onRequest(migrations.updateToV2);
 
 /**
  * Trigger: REST call to the /admin app
