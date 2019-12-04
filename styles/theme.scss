@@ -1,5 +1,4 @@
 @import '~@angular/material/theming';
-@include mat-core();
 @import './themes/dark';
 @import './themes/light';
 @import '~saturn-datepicker/theming';
@@ -16,6 +15,9 @@
 @import 'footer';
 @import './components/bf-widget.scss';
 @import './components/mat-sidenav.scss';
+@import './typography.scss';
+@include mat-core();
+@include angular-material-typography($bf-typography);
 
 @mixin bf-material-theme($theme) {
   @include mat-bf-button-theme($theme);
@@ -48,4 +50,3 @@
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
 }
-

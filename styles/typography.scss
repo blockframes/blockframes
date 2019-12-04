@@ -1,0 +1,19 @@
+@import '~@angular/material/theming';
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
+
+$bf-typography: mat-typography-config(
+  $font-family: 'Montserrat, Helvetica Neue,sans-serif',
+  $display-4:     mat-typography-level(96px, 96px, 800, $letter-spacing: -0.05em),
+  $display-3:     mat-typography-level(60px, 60px, 800, $letter-spacing: -0.02em),
+  $display-2:     mat-typography-level(48px, 48px, 800, $letter-spacing: -0.005em),
+  $display-1:     mat-typography-level(34px, 40px, 400),
+  $headline:      mat-typography-level(45px, 45px, 800),
+  $title:         mat-typography-level(30px, 30px, 800),
+  $subheading-2:  mat-typography-level(20px, 20px, 700),
+  $subheading-1:  mat-typography-level(16px, 16px, 700),
+  $body-2:        mat-typography-level(14px, 24px, 500),
+  $body-1:        mat-typography-level(14px, 20px, 400),
+  $caption:       mat-typography-level(12px, 20px, 400),
+  $button:        mat-typography-level(14px, 14px, 500),
+  $input:         mat-typography-level(inherit, 1.125, 400)
+);
