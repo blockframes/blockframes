@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from '../+state/material.store';
-import { MaterialService } from '../+state/material.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { DeliveryQuery } from '../../delivery/+state/delivery.query';
 import { MaterialQuery } from '../+state/material.query';
 import { MovieMaterialService } from '../+state/movie-material.service';
+import { DeliveryMaterialService } from '../+state/delivery-material.service';
 
 @Injectable({ providedIn: 'root' })
 export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
-    service: MaterialService,
+    protected deliveryMaterialService: DeliveryMaterialService,
     private store: MaterialStore,
     private materialQuery: MaterialQuery,
     private deliveryQuery: DeliveryQuery,
     private movieMaterialService: MovieMaterialService
   ) {
-    super(service);
+    super(deliveryMaterialService);
   }
 
   get awaitSync() {
@@ -24,11 +24,10 @@ export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   }
 
   sync(next: ActivatedRouteSnapshot) {
+    const deliveryId = next.params.deliveryId;
     this.store.reset();
-    const { movieId, deliveryId } = next.params;
-
     return this.deliveryQuery.getActive().mustBeSigned
-      ? this.service.syncCollection({ params: { deliveryId }})
+      ? this.deliveryMaterialService.syncCollection()
       : this.movieMaterialService.syncCollection(
           ref => ref.where('deliveryIds', 'array-contains', deliveryId)
         );

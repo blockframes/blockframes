@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
-import { CollectionConfig, CollectionService, WriteOptions, AtomicWrite } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { Material } from '../../material/+state/material.model';
-import { MaterialService } from '../../material/+state/material.service';
 import { createTemplate, Template } from './template.model';
 import { TemplateQuery } from './template.query';
 import { TemplateState, TemplateStore } from './template.store';
+import { TemplateMaterialService } from '../../material/+state/template-material.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'templates' })
@@ -22,7 +22,7 @@ export class TemplateService extends CollectionService<TemplateState>{
   constructor(
     private query: TemplateQuery,
     private organizationQuery: OrganizationQuery,
-    private materialService: MaterialService,
+    private templateMaterialService: TemplateMaterialService,
     store: TemplateStore
   ) {
     super(store)
@@ -68,9 +68,9 @@ export class TemplateService extends CollectionService<TemplateState>{
       // Add a new template
       const template = this.createTemplate(templateName);
 
-      // Add the delivery's materials in the template
-      await this.materialService.getTemplateMaterials(template.id);
-      materials.forEach(material => this.materialService.add(material));
+      // Set active the template, and add the delivery's materials in the template
+      this.store.setActive(template.id);
+      materials.forEach(material => this.templateMaterialService.add(material));
     }
   }
 
@@ -78,13 +78,13 @@ export class TemplateService extends CollectionService<TemplateState>{
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await this.materialService.getTemplateMaterials(selectedTemplate.id);
+    const templateMaterials = await this.templateMaterialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
       // Delete all materials of template
-      templateMaterials.forEach(material => this.materialService.remove(material.id));
+      templateMaterials.forEach(material => this.templateMaterialService.remove(material.id));
       // Add delivery's materials in template
-      materials.forEach(material => this.materialService.add(material));
+      materials.forEach(material => this.templateMaterialService.add(material));
     }
   }
 

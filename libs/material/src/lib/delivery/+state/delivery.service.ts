@@ -8,8 +8,7 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
-import { MaterialQuery, MaterialService, createMaterial } from '../../material/+state';
-import { TemplateQuery } from '../../template/+state';
+import { MaterialQuery, createMaterial } from '../../material/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
@@ -19,6 +18,9 @@ import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
 import { CollectionService, CollectionConfig, Query, awaitSyncQuery } from 'akita-ng-fire';
 import { tap, switchMap } from 'rxjs/operators';
 import { MovieMaterialService } from '../../material/+state/movie-material.service';
+import { DeliveryMaterialService } from '../../material/+state/delivery-material.service';
+import { TemplateMaterialService } from '../../material/+state/template-material.service';
+import { TemplateQuery } from '../../template/+state/template.query';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -59,8 +61,9 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private materialService: MaterialService,
+    private deliveryMaterialService: DeliveryMaterialService,
     private organizationQuery: OrganizationQuery,
+    private templateMaterialService: TemplateMaterialService,
     private query: DeliveryQuery,
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
@@ -248,7 +251,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
       // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
       if (mustBeSigned) {
-        this.materialService.removeStepIdDeliveryMaterials(materials, id);
+        this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials);
       // Else, we update stepId of materials in the sub-collection of movie
       } else {
         const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
@@ -334,7 +337,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     document: BFDoc,
     tx: firebase.firestore.Transaction
   ) {
-    const materials = await this.materialService.getTemplateMaterials(document.id)
+    const materials = await this.templateMaterialService.getTemplateMaterials(document.id);
 
     materials.forEach(material => {
       tx.set(this.materialDeliveryDoc(delivery.id, material.id).ref, {
@@ -372,12 +375,12 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   ) {
     // NOTE: There is no way to query a collection within the transaction
     // So we accept a race condition here
-    const materials = await this.materialService.getTemplateMaterials(document.id);
+    const materials = await this.templateMaterialService.getTemplateMaterials(document.id);
 
     const movieMaterials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
-      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.materialService.isTheSame(movieMaterial, material));
+      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.deliveryMaterialService.isTheSame(movieMaterial, material));
       const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.

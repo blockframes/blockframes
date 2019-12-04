@@ -55,11 +55,23 @@ const routes: Routes = [
   },
   {
     path: ':templateId',
-    component: TemplateEditableComponent,
-    canActivate: [TemplateActiveGuard, TemplateMaterialsGuard],
-    canDeactivate: [TemplateActiveGuard, TemplateMaterialsGuard]
+    canActivate: [TemplateActiveGuard],
+    canDeactivate: [TemplateActiveGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        canActivate: [TemplateMaterialsGuard],
+        canDeactivate: [TemplateMaterialsGuard],
+        component: TemplateEditableComponent,
+      },
+    ]
   }
-];
+]
 
 @NgModule({
   declarations: [

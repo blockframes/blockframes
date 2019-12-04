@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActionPickerListItem } from '@blockframes/ui';
 import { DeliveryOption, DeliveryQuery, DeliveryService, DeliveryStore } from '../../+state';
-import { TemplateQuery } from '../../../template/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie';
+import { TemplateQuery } from '../../../template/+state/template.query';
 
 /**
  * Page for the flow: "create a delivery"
