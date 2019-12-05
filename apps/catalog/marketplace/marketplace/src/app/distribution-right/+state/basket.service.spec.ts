@@ -2,14 +2,14 @@ import { of } from 'rxjs';
 import { BasketQuery } from './basket.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { COMMON_CONFIG } from '@env';
+import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, AngularFireFunctions } from '@angular/fire/functions';
 import { BasketService } from './basket.service';
 import { AngularFireModule } from '@angular/fire';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { OrganizationQuery, WishlistStatus } from '@blockframes/organization';
+import { initializeTestApp } from '@firebase/testing';
 
 /**
  * We want to compare the date values, but since
@@ -68,15 +68,23 @@ const mockOrg = {
   wishlist: [{ status: WishlistStatus.pending, movieIds: ['xyz'] }]
 };
 
+const initTestApp = initializeTestApp({
+  projectId: 'my-test-project',
+  auth: { uid: 'alice', email: 'alice@example.com' }
+});
+
 describe('BasketService', () => {
   let spectator: SpectatorService<BasketService>;
+  let serviceBasket: BasketService;
+
   const createService = createServiceFactory({
     service: BasketService,
     imports: [
-      AngularFireModule.initializeApp(COMMON_CONFIG),
+      AngularFireModule.initializeApp(initTestApp),
       AngularFireFunctionsModule,
       AngularFirestoreModule
     ],
+    mocks: [AngularFirestore],
     providers: [
       BasketQuery,
       OrganizationService,
@@ -88,7 +96,7 @@ describe('BasketService', () => {
 
   beforeEach(() => {
     spectator = createService();
-    const serviceBasket = spectator.get(BasketService);
+    serviceBasket = spectator.get(BasketService);
   });
 
   afterEach(() => {
@@ -96,8 +104,7 @@ describe('BasketService', () => {
   });
 
   it('should be created', () => {
-    const service: BasketService = spectator.get(BasketService);
-    expect(service).toBeTruthy();
+    expect(serviceBasket).toBeTruthy();
   });
 
   it('should not call OrganizationService if no Organization ID is available', async () => {
@@ -107,27 +114,27 @@ describe('BasketService', () => {
     const getAcitveOrgSpy = jest
       .spyOn(spectator.get(OrganizationQuery), 'getActive')
       .mockReturnValue(mockOrg);
-    await this.serviceBasket.updateWishlist(mockMovie);
+    await serviceBasket.updateWishlist(mockMovie);
     expect(getAcitveOrgSpy).toHaveBeenCalled();
-    expect(serviceOrg).toHaveBeenCalled();
+    expect(serviceOrg).not.toHaveBeenCalled();
   });
 
   it('should have only one function for one task', () => {
-    expect(this.service.updateWishlist).toBeTruthy();
-    expect(this.service.addBasket).toBeTruthy();
-    expect(this.service.updateWishlistStatus).toBeTruthy();
-    expect(this.service.updateWishlist).toBeTruthy();
-    expect(this.service.isAddedToWishlist).toBeTruthy();
-    expect(this.service.removeDistributionRight).toBeTruthy();
-    expect(this.service.removeMovieFromWishlist).toBeTruthy();
-    expect(this.service.rewriteBasket).toBeTruthy();
+    expect(serviceBasket.updateWishlist).toBeTruthy();
+    expect(serviceBasket.addBasket).toBeTruthy();
+    expect(serviceBasket.updateWishlistStatus).toBeTruthy();
+    expect(serviceBasket.updateWishlist).toBeTruthy();
+    expect(serviceBasket.isAddedToWishlist).toBeTruthy();
+    expect(serviceBasket.removeDistributionRight).toBeTruthy();
+    expect(serviceBasket.removeMovieFromWishlist).toBeTruthy();
+    expect(serviceBasket.rewriteBasket).toBeTruthy();
   });
 
   it('should return true if a movie Id is already on the wishlist', () => {
     const orgQuerySpy = jest
       .spyOn(spectator.get(OrganizationQuery), 'selectActive')
       .mockReturnValue(of(true));
-    this.service.isAddedToWishlist('testId');
+    serviceBasket.isAddedToWishlist('testId');
     expect(orgQuerySpy).toHaveBeenCalled();
   });
 
@@ -135,7 +142,7 @@ describe('BasketService', () => {
     const orgQuerySpy = jest
       .spyOn(spectator.get(OrganizationQuery), 'getActive')
       .mockReturnValue(mockOrg);
-    const result = this.service.removeMovieFromWishlist('test');
+    const result = serviceBasket.removeMovieFromWishlist('test');
     expect(orgQuerySpy).toHaveBeenCalled();
     expect(result).toBe(true);
   });
