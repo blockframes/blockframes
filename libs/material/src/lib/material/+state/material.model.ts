@@ -48,3 +48,14 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate> | Par
     currency: material.currency || null
   };
 }
+
+/**  Checks properties of two material to tell if they are the same or not. */
+export function isTheSame(matA: Material, matB: Material): boolean {
+  const getProperties = ({ value, description, category, stepId }: Material) => ({
+    value,
+    description,
+    category,
+    stepId
+  });
+  return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
+}

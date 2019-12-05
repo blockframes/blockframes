@@ -8,7 +8,7 @@ import {
 } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
-import { MaterialQuery, createMaterial } from '../../material/+state';
+import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
@@ -58,24 +58,24 @@ export const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps>
 @CollectionConfig({ path: 'deliveries' })
 export class DeliveryService extends CollectionService<DeliveryState> {
   constructor(
+    protected store: DeliveryStore,
+    private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private templateQuery: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private deliveryMaterialService: DeliveryMaterialService,
     private organizationQuery: OrganizationQuery,
+    private deliveryMaterialService: DeliveryMaterialService,
     private templateMaterialService: TemplateMaterialService,
-    private query: DeliveryQuery,
     private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    protected store: DeliveryStore,
     private movieMaterialService: MovieMaterialService
   ) {
     super(store);
   }
 
   /** Sync the store with every deliveries of the active movie. */
-  public syncDeliveriesListQuery() {
+  public syncDeliveryListQuery() {
     return this.movieQuery.selectActiveId().pipe(
       // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
@@ -380,7 +380,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const movieMaterials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
-      const sameValuesMaterial = movieMaterials.find(movieMaterial => this.deliveryMaterialService.isTheSame(movieMaterial, material));
+      const sameValuesMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, material));
       const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.

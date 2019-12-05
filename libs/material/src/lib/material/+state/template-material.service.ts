@@ -9,6 +9,7 @@ import {
 } from './material.model';
 import { MaterialQuery } from './material.query';
 import { TemplateQuery } from '../../template/+state/template.query';
+import { firestore } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -39,17 +40,26 @@ export class TemplateMaterialService extends CollectionService<MaterialState> {
     return createMaterialTemplate({ id });
   }
 
+  /** If material is already exists we update, if not we create it. */
+  public upsertTemplateMaterials(
+      material: MaterialTemplate,
+      isExisting: boolean,
+      batch: firestore.WriteBatch
+    ) {
+    return isExisting
+      ? this.update(material.id, material, { write: batch })
+      : this.add(createMaterial(material), { write: batch })
+  }
+
   /** Update all materials of a template. */
   public updateTemplateMaterials(materials: MaterialTemplate[]) {
+    const batch = this.db.firestore.batch();
     const oldMaterials = this.materialQuery.getAll();
     materials.forEach(material => {
-      // If material is already exists we update, if not we create it.
-      if (!oldMaterials.find(oldMaterial => oldMaterial.id === material.id)) {
-        this.add(createMaterial(material));
-      } else {
-        return this.update(material.id, material);
-      }
+      const isExisting = !!oldMaterials.find(oldMaterial => oldMaterial.id === material.id);
+      this.upsertTemplateMaterials(material, isExisting, batch);
     });
+    batch.commit();
   }
 
   /** Convert a MaterialDocument into a MaterialTemplateDocument. */
