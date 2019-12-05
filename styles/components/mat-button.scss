@@ -7,13 +7,6 @@
     }
 }
 
-.dark-theme {
-  mat-chip.movie-chip { // TODO: Get rid of the !important
-    background: rgba(0, 0, 0, 0.288) !important;
-    color: #FFFFFF !important;
-  }
-}
-
 @mixin mat-bf-button-theme($theme) {
   $accent: map-get($theme, accent);
 

@@ -1,0 +1,26 @@
+@mixin mat-bf-chips-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .mat-chip.mat-standard-chip {
+    &.mat-primary {
+      @include mat-chips-theme-color($primary);
+    }
+
+    &.mat-warn {
+      @include mat-chips-theme-color($warn);
+    }
+
+    &.mat-accent {
+      @include mat-chips-theme-color($accent);
+    }
+  }
+}
+
+.dark-theme {
+  mat-chip.movie-chip { // TODO: Get rid of the !important
+    background: rgba(0, 0, 0, 0.288) !important;
+    color: #FFFFFF !important;
+  }
+}

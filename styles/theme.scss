@@ -11,6 +11,9 @@
 @import './components/mat-toolbar';
 @import './components/mat-button';
 @import './components/mat-expansion-panel';
+@import './components/mat-form';
+@import './components/mat-chips';
+
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
@@ -18,6 +21,8 @@
   @include mat-bf-card-theme($bf-light-theme);
   @include mat-bf-table-theme($bf-light-theme);
   @include mat-bf-expansion-panel-theme($bf-light-theme);
+  @include mat-bf-form-field-theme($bf-light-theme);
+  @include mat-bf-chips-theme($bf-light-theme);
 }
 
 .dark-theme {
@@ -29,4 +34,6 @@
   @include mat-bf-toolbar-theme($bf-dark-theme);
   @include mat-bf-button-theme($bf-dark-theme);
   @include mat-bf-expansion-panel-theme($bf-dark-theme);
+  @include mat-bf-form-field-theme($bf-dark-theme);
+  @include mat-bf-chips-theme($bf-dark-theme);
 }
