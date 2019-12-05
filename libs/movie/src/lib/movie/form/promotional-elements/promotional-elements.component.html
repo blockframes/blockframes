@@ -1,8 +1,8 @@
 <form [formGroup]="promotionalElements">
   <!-- IMAGES -->
   <h3> Images </h3>
-  <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index">
-    <drop-cropper [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i" [useFileuploader]="false" [useDelete]="false"></drop-cropper>
+  <div formArrayName="images" class="full-width" *ngFor="let image of promotionalElements.images.controls; let i = index">
+    <drop-cropper class="full-width" [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i" [useFileuploader]="false" [useDelete]="false"></drop-cropper>
     <button mat-flat-button color="warn" (click)="promotionalElements.removeImage(i)">
         <mat-icon>delete_circle</mat-icon> Remove
       </button>

@@ -1,5 +1,4 @@
 import { Directive, Renderer2, ElementRef, Input } from '@angular/core'
-import { AngularFireStorage } from '@angular/fire/storage';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
 @Directive({
@@ -26,7 +25,7 @@ export class ImageReferenceDirective {
     this.updateSrc()
   };
 
-  constructor(private _renderer: Renderer2, private _elementRef: ElementRef, private storage: AngularFireStorage) {}
+  constructor(private _renderer: Renderer2, private _elementRef: ElementRef) {}
 
   updateSrc() {
     this._renderer.setProperty(this._elementRef.nativeElement, 'src', this.url || this.placeholder || '')
