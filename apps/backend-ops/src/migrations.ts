@@ -2,10 +2,9 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { Firestore, loadAdminServices } from './admin';
+import { backup, Firestore, loadAdminServices, restore } from './admin';
 import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
-import { backup } from './firebaseSetup';
 import { appUrl } from '@env';
 import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
 
@@ -77,7 +76,7 @@ export async function migrate(withBackup: boolean = true) {
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error("the migration failed, revert'ing!");
-    // TOOD: trigger restore on error
+    await restore(appUrl);
   }
 
   await endMaintenance();

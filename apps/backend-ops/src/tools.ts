@@ -8,7 +8,10 @@ export const exitable = (f: () => Promise<any | void>) => {
   return () =>
     f()
       .then(() => process.exit(0))
-      .catch(() => process.exit(1));
+      .catch(e => {
+        console.error(e);
+        process.exit(1);
+      });
 };
 
 export function showHelp() {
