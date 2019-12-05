@@ -45,10 +45,10 @@ import { AppModule } from '../../app.module';
 import { RouterModule } from '@angular/router';
 
 /**
- * Creates a mock instances and all 
+ * Creates a mock instances and all
  * the methods are mock methods which return undefined
  */
-const FireAnalyticsMock = jest.mock('@blockframes/utils/analytics/app-analytics')
+const FireAnalyticsMock = jest.mock('@blockframes/utils/analytics/app-analytics');
 
 describe('MarketplaceSearchComponent test suite', () => {
   let spectator: Spectator<MarketplaceSearchComponent>;
@@ -81,7 +81,7 @@ describe('MarketplaceSearchComponent test suite', () => {
       MatCardModule,
       MatSelectModule,
       MatDatepickerModule,
-      MatOptionModule,
+      MatOptionModule
     ],
     providers: [
       AngularFirestore,
@@ -100,27 +100,10 @@ describe('MarketplaceSearchComponent test suite', () => {
 
   beforeEach(() => {
     spectator = createComponent();
+    const component = spectator.get(MarketplaceSearchComponent);
   });
 
-  it('should only have one "addLanguage" function', () => {
-    const addLanguageSpy = spyOn(spectator.component, 'addLanguage');
-    spectator.component.addLanguage('German');
-    expect(addLanguageSpy).toHaveBeenCalled();
-    expect(addLanguageSpy).toHaveBeenCalledWith('German');
-  });
-
-  it('should return the current year when "getCurrentYear" is called', () => {
-    /**
-     *  We need to use the jest.spyOn here cause this function is a getters
-     */
-    jest
-      .spyOn(spectator.component, 'getCurrentYear', 'get')
-      .mockReturnValue(new Date().getFullYear());
-    expect(spectator.component.getCurrentYear).toBe(2019);
-  });
-
-  it('should return the year 2018 when "getCurrentYear" is called', () => {
-    jest.spyOn(spectator.component, 'getCurrentYear', 'get').mockReturnValue(2018);
-    expect(spectator.component.getCurrentYear).toBe(2018);
+  it('should create MarketplaceSearchComponent', () => {
+    expect(this.component).toBeTruthy();
   });
 });
