@@ -18,14 +18,14 @@ export async function prepareForTesting() {
   await restore(appUrl);
   console.info('backup restored!');
 
+  console.info('Preparing the database...');
+  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('database ready for testing...');
+
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();
   console.info('Algolia ready for testing!');
-
-  console.info('Preparing the database...');
-  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
-  console.info('database ready for testing...');
 
   process.exit(0);
 }
