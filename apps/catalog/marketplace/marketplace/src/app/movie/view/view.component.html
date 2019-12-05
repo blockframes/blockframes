@@ -3,7 +3,8 @@
 </ng-template>
 <div *ngIf="(movie$ | async) as movie;" test-id="content">
   <!-- TODO(issue#1309) create image directive for background image -->
-  <header [style.background-image]="getBackgroundImage(movie.promotionalElements.promotionalElements)" class="banner">
+  <!-- <header [backgroundImage]="movie.promotionalElements.promotionalElements.media" placeholderUrl="/assets/images/banner_movie_view.png" type="banner" class="banner"> -->
+   <header [style.background-image]="getBackgroundImage(movie.promotionalElements.promotionalElements)" class="banner">
     <section fxLayout="row" fxLayoutAlign="center">
       <article class="titles" fxLayout="column" fxLayoutAlign="start start">
         <h1>{{movie.main.title.international}}</h1>

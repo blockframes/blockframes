@@ -56,7 +56,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   public getBackgroundImage(promotionalElements: PromotionalElement[]) {
+    console.log('promotionalElem', promotionalElements)
     const element = promotionalElements.find(promo => promo.type === 'banner');
+    console.log('elem', element)
     /** TODO(issue#1309) create image directive for background image*/
     return element
     ? `url(${element.media.url})`
