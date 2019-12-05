@@ -1,5 +1,4 @@
 // import * as gcs from '@google-cloud/storage';
-import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
@@ -43,18 +42,7 @@ export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPubli
  *
  * NOTE: we will need to refactor the function to dispatch
  * depending on the file path. Or use different storage buckets
- * (one per app maybe).
- */
-export const generateHash = functions.storage
-  .object()
-  .onFinalize(hashToFirestore);
-
-/**
- * Trigger: when user creates an account.
- *
- * We create a corresponding document in `users/userID`.
- */
-export const onUserCreate = functions.auth
+ * (one per app maybe).onOrganizationUpdateEventfunctions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
 
@@ -100,7 +88,7 @@ export const admin = functions.https
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
 
-/** Trigger: when a stakeholder is added to a delivery. */
+/** Trigger: when a stakeholonOrganizationUpdateEventder is added to a delivery. */
 export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
   'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
   onDeliveryStakeholderCreate
