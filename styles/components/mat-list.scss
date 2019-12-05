@@ -2,38 +2,16 @@
   border-radius: 10px;
 }
 
-.dark-theme .mat-nav-list .mat-list-item.mat-list-item-with-avatar,
-.light-theme .mat-nav-list .mat-list-item.mat-list-item-with-avatar {
-  height: 72px;
-}
+@mixin mat-bf-list-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme , foreground);
 
-.light-theme .mat-nav-list,
-.light-theme .mat-list,
-.light-theme .mat-selection-list {
-  background-color: mat-color($bf-light-background, app-bar);
-  border: 1px solid mat-color($bf-light-background, border);
-}
-
-.dark-theme .mat-list.bf-list,
-.dark-theme .mat-nav-list,
-.dark-theme .mat-selection-list {
-  background-color: mat-color($bf-dark-background, app-bar);
-  border: 1px solid mat-color($bf-dark-foreground, border);
-}
-
-.dark-theme .mat-list [matlistitem] {
-  height: 60px;
-  border-bottom: 1px solid mat-color($bf-dark-foreground, border);
-  &:last-of-type {
-    border-bottom: none;
+  .mat-list-base {
+    background: mat-color($background, app-bar);
+    border: 1px solid mat-color($foreground, divider);
   }
-}
 
-.dark-theme .mat-menu-content,
-.dark-theme .mat-select-panel {
-  background: mat-color($bf-dark-background, autocomplete);
-}
-
-.active-list-item mat-icon {
-  color: mat-color($bf-light-primary) !important;
+  .mat-nav-list .mat-list-item.mat-list-item-with-avatar {
+    height: 72px;
+  }
 }

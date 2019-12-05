@@ -1,58 +1,27 @@
-.light-theme {
-  table {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  td.mat-cell:first-of-type {
-    border-left: solid 1px mat-color($bf-light-foreground, divider);
-  }
-  td.mat-cell:last-of-type {
-    border-right: solid 1px mat-color($bf-light-foreground, divider);
-  }
-
-  .mat-header-cell {
-    border-top: solid 1px mat-color($bf-light-foreground, divider);
-    &:first-of-type {
-      border-radius: 10px 0 0 0;
-      border-left: solid 1px mat-color($bf-light-foreground, divider);
-    }
-    &:last-of-type {
-      border-right: solid 1px mat-color($bf-light-foreground, divider);
-      border-radius: 0 10px 0 0;
-    }
-  }
-}
-
-.dark-theme {
-  table {
-    width: 100%;
-    border-radius: 10px;
-  }
-  mat-row, mat-header-row, mat-footer-row,
-  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
-    border-bottom-color: mat-color($bf-dark-foreground, border);
-  }
-  td.mat-cell:first-of-type {
-    border-left: solid 1px mat-color($bf-dark-foreground, border);
-  }
-  td.mat-cell:last-of-type {
-    border-right: solid 1px mat-color($bf-dark-foreground, border);
-  }
-
-  .mat-header-cell {
-    border-top: solid 1px mat-color($bf-dark-foreground, border);
-    &:first-of-type {
-      border-radius: 10px 0 0 0;
-      border-left: solid 1px mat-color($bf-dark-foreground, border);
-    }
-    &:last-of-type {
-      border-right: solid 1px mat-color($bf-dark-foreground, border);
-      border-radius: 0 10px 0 0;
-    }
-  }
-}
-
 td.mat-cell, td span {
   font-size: 12px;
+}
+
+@mixin mat-bf-table-theme($theme) {
+  $foreground: map-get($theme, foreground);
+
+  td.mat-cell:first-of-type {
+    border-left: solid 1px mat-color($foreground, divider);
+  }
+
+  td.mat-cell:last-of-type {
+    border-right: solid 1px mat-color($foreground, divider);
+  }
+
+  .mat-header-cell {
+    border-top: solid 1px mat-color($foreground, divider);
+    &:first-of-type {
+      border-radius: 10px 0 0 0;
+      border-left: solid 1px mat-color($foreground, divider);
+    }
+    &:last-of-type {
+      border-right: solid 1px mat-color($foreground, divider);
+      border-radius: 0 10px 0 0;
+    }
+  }
 }
