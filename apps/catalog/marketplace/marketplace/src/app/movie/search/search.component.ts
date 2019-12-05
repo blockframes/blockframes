@@ -127,7 +127,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
-  public salesAgents;
+  public salesAgents: string[] = [];
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
