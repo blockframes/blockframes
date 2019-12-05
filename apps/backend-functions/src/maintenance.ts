@@ -15,11 +15,11 @@ const maintenanceRef = () => {
 };
 
 export async function startMaintenance() {
-  maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
+  return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
 }
 
 export async function endMaintenance() {
-  maintenanceRef().set({
+  return maintenanceRef().set({
     endedAt: admin.firestore.FieldValue.serverTimestamp(),
     startedAt: null
   });
