@@ -481,7 +481,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Screener link',
-            url: spreadSheetRow[SpreadSheetMovie.screenerLink],
+            media: spreadSheetRow[SpreadSheetMovie.screenerLink],
             type: 'screener'
           });
 
@@ -500,7 +500,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Promo reel link',
-            url: spreadSheetRow[SpreadSheetMovie.promoReelLink],
+            media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
             type: 'reel'
           });
 
@@ -519,7 +519,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Trailer link',
-            url: spreadSheetRow[SpreadSheetMovie.trailerLink],
+            media: spreadSheetRow[SpreadSheetMovie.trailerLink],
             type: 'trailer'
           });
 
@@ -538,7 +538,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Pitch teaser link',
-            url: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
+            media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
             type: 'teaser'
           });
 
@@ -557,7 +557,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Scenario link',
-            url: spreadSheetRow[SpreadSheetMovie.scenarioLink],
+            media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
             type: 'scenario'
           });
 
@@ -593,7 +593,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Banner link',
-            url: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
+            media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
             type: 'banner',
             ratio: 'rectangle'
           });

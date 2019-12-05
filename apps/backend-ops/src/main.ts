@@ -8,7 +8,8 @@ import {
   storeSearchableOrg,
   storeSearchableMovie
 } from '../../backend-functions/src/internals/algolia';
-import { appUrl, firebase } from '@env';
+import { upgrade } from './firestoreMigrations/0002';
+import { appUrl } from '@env';
 
 async function prepareForTesting() {
   console.info('Syncing users...');
@@ -65,6 +66,11 @@ async function upgradeAlgoliaMovies() {
   return Promise.all(promises);
 }
 
+async function migrateToV2() {
+  const { db } = loadAdminServices();
+  await upgrade(db).then(() => process.exit(0));
+}
+
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
 
@@ -80,4 +86,6 @@ if (cmd === 'prepareForTesting') {
   syncUsers(USERS).then(() => process.exit(0));
 } else if (cmd === 'upgradeAlgoliaMovies') {
   upgradeAlgoliaMovies();
+} else if (cmd === 'migrateToV2') {
+  migrateToV2();
 }

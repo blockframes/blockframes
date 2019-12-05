@@ -9,12 +9,13 @@ export interface ImgRef {
   originalRef: string
 }
 
-export function createImgRef(ref: Partial<ImgRef> = {}): ImgRef {
+export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
+  const _ref = typeof ref === 'string' ? { url: ref } : ref;
   return {
     url: '',
     ref: '',
     originalRef: '',
-    ...ref
+    ..._ref
   };
 }
 
@@ -28,8 +29,8 @@ export class ImageUploader {
 
   /**
    * Fetchs a remote image and uploads it to firestore
-   * @param imageUrl 
-   * @param afPath 
+   * @param imageUrl
+   * @param afPath
    */
   public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef|undefined> {
     try {
