@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';

@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ProfileMenuComponent } from './profile-menu.component';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';

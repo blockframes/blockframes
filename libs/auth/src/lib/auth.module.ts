@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';

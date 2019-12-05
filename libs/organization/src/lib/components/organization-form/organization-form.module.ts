@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { UiFormModule } from '@blockframes/ui';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
   imports: [CommonModule, ImageReferenceModule, MatCardModule, MatIconModule, MatMenuModule, RouterModule, MatButtonModule, MatDividerModule, MatChipsModule, TranslateSlugModule],

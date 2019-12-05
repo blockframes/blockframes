@@ -14,7 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Components
 import { CropperComponent } from './cropper/cropper.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [DropZoneDirective, CropperComponent],
