@@ -255,7 +255,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       // Else, we update stepId of materials in the sub-collection of movie
       } else {
         const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
-        this.movieMaterialService.updateMovieMaterials(materialsWithoutStep);
+        this.movieMaterialService.update(materialsWithoutStep);
       }
     })
 
@@ -385,21 +385,21 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
-        this.movieMaterialService.setNewMaterial(material, delivery);
+        this.movieMaterialService.setNewMaterial(material, delivery, tx);
         return;
       }
 
       // If there already is a material with same properties (but different id), we merge this
       // material with existing one, and push the new deliveryId into deliveryIds.
       if (!!sameValuesMaterial) {
-        this.movieMaterialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery);
+        this.movieMaterialService.updateMaterialDeliveryIds(sameValuesMaterial, delivery, tx);
       }
 
       // If values are not the same, this material is considered as new and we have to create
       // and set a new material (with new Id).
       if (!sameValuesMaterial) {
         const newMaterial = createMaterial({...material, id: this.db.createId()});
-        this.movieMaterialService.setNewMaterial(newMaterial, delivery);
+        this.movieMaterialService.setNewMaterial(newMaterial, delivery, tx);
       }
     });
     return tx;

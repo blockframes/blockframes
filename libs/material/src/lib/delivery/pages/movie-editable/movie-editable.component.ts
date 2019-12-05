@@ -49,7 +49,7 @@ export class MovieEditableComponent implements OnInit {
   public async update() {
     try {
       const materials = this.form.getAll();
-      this.movieMaterialService.updateMovieMaterials(materials);
+      this.movieMaterialService.update(materials);
       this.snackBar.open('Material updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

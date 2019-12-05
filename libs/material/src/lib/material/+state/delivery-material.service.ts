@@ -29,37 +29,38 @@ export class DeliveryMaterialService extends CollectionService<MaterialState> {
 
   /** Update stepId of materials of a delivery to empty string. */
   public removeStepIdDeliveryMaterials(materials: Material[]) {
-    // TODO: issue#1352 use a multiple update
-    materials.forEach(material => this.update(material.id, { stepId: '' }));
+    const ids = materials.map(m => m.id);
+    this.update(ids, { stepId: '' });
   }
 
   /** Deletes material of the delivery sub-collection in firebase. */
   public deleteDeliveryMaterial(materialId: string) {
-    this.remove(materialId)
+    this.remove(materialId);
   }
 
   /** Update materials of a delivery (materials loaded from delivery). */
-  public async updateDeliveryMaterials(materials: Material[]) {
-    // TODO: (ISSUE#773) We should load an update the data within a transaction.
-    const deliveryMaterials = await this.getValue();
+  public updateDeliveryMaterials(materials: Material[]) {
+    return this.db.firestore.runTransaction(async tx => {
+      const deliveryMaterials = await this.getValue();
 
-    materials.forEach(material => {
-      const sameIdMaterial = deliveryMaterials.find(deliveryMaterial => deliveryMaterial.id === material.id);
-      const sameValuesMaterial = deliveryMaterials.find(deliveryMaterial => isTheSame(deliveryMaterial, material));
-      const isNewMaterial = !deliveryMaterials.find(deliveryMaterial => deliveryMaterial.id === material.id) && !sameValuesMaterial;
+      materials.forEach(material => {
+        const sameIdMaterial = deliveryMaterials.find(deliveryMaterial => deliveryMaterial.id === material.id);
+        const sameValuesMaterial = deliveryMaterials.find(deliveryMaterial => isTheSame(deliveryMaterial, material));
+        const isNewMaterial = !deliveryMaterials.find(deliveryMaterial => deliveryMaterial.id === material.id) && !sameValuesMaterial;
 
-      // If material from the list have no change and already exists, just return.
-      const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
-      if (isPristine) {
-        return;
-      }
+        // If material from the list have no change and already exists, just return.
+        const isPristine = !!sameIdMaterial && !!sameValuesMaterial && sameIdMaterial.id === sameValuesMaterial.id;
+        if (isPristine) {
+          return;
+        }
 
-      // We check if material is brand new. If so, we just add it to database and return.
-      if (isNewMaterial) {
-        this.add(material);
-        return;
-      }
-      return this.update(material.id, material);
+        // We check if material is brand new. If so, we just add it to database and return.
+        if (isNewMaterial) {
+          this.add(material, { write: tx });
+          return;
+        }
+        return this.update(material.id, material,{ write: tx });
+      });
     });
   }
 
