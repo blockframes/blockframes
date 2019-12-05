@@ -8,7 +8,7 @@ import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestore
 import { appUrl } from '@env';
 import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
 
-export const VERSION_ZERO = 0;
+export const VERSION_ZERO = 1;
 
 export interface IVersionDoc {
   currentVersion: number;
@@ -42,7 +42,7 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
 
   return versions.map(version => ({
     version,
-    upgrade: MIGRATIONS[version].update
+    upgrade: MIGRATIONS[version].upgrade
   }));
 }
 
@@ -75,6 +75,7 @@ export async function migrate(withBackup: boolean = true) {
 
     await updateDBVersion(db, lastVersion);
   } catch (e) {
+    console.error(e);
     console.error("the migration failed, revert'ing!");
     await restore(appUrl);
   }
