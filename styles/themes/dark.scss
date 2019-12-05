@@ -103,11 +103,6 @@ $bf-dark-background: (
   disabled-button-toggle: rgba(155, 177, 255, 0.12),
   unselected-chip:    map_get($mat-grey, 700),
   disabled-list-option: rgba(155, 177, 255, 0.12),
-
-  // Custom variables
-  border:           #34364c,
-  autocomplete:     #242737,
-  stroked-button:   rgba(255, 255, 255, 0.1)
 );
 
 ////////////////
@@ -133,9 +128,6 @@ $bf-dark-foreground: (
   slider-off-active: rgba(#000000, 0.3),
 
   // Custom variables
-  title:        #e2e8ff,
-  subheading:   #CFD8FF,
-  dynamic:      #3b414d,
   blue-icon:    #9eb1ff,
   dark-text:    #80818a,
 );

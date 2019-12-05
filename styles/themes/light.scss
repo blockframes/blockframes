@@ -121,10 +121,6 @@ $bf-light-background: (
   disabled-button-toggle: #B9C2CB,
   unselected-chip: map_get($mat-grey, 300),
   disabled-list-option: #B9C2CB,
-
-  // Custom variables
-  border:     #E4E4E4,
-  stroked-button: map-get($mat-light-bf-blue, 50),
 );
 
 ////////////////
@@ -147,11 +143,6 @@ $bf-light-foreground: (
   slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
-
-  // Custom variables
-  dynamic:           #5F697A,
-  subheading:        #4D5664,
-  link:              mat-color($mat-light-bf-blue, 500),
 );
 
 ///////////
