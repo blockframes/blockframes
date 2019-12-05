@@ -138,7 +138,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public removable = true;
 
   /* Number of available movies in the database */
-  public availableMovies: number;
+  public movieCount: number;
 
   public selectedGenres: string[] = [];
   @ViewChild('genreInput', { static: false }) genreInput: ElementRef<HTMLInputElement>;
@@ -181,7 +181,6 @@ export class MarketplaceSearchComponent implements OnInit {
             this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
           }
         });
-        this.availableMovies = movies.length;
         this.allTitles = movies.map(index => index.movie.main.title.international);
         this.allKeywords = flatten(
           movies.map(index => index.movie.promotionalDescription.keywords)
@@ -227,7 +226,7 @@ export class MarketplaceSearchComponent implements OnInit {
                 return 0;
             }
           });
-          this.availableMovies = sortedMovies.length;
+          this.movieCount = sortedMovies.length;
           return sortedMovies;
         }
       })
