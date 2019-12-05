@@ -1,31 +1,14 @@
-.dark-theme .mat-accordion .mat-expansion-panel,
-.light-theme .mat-accordion .mat-expansion-panel {
-  box-shadow: none;
-  border-radius: 0;
-  background-color: transparent;
-}
+@mixin mat-bf-expansion-panel-theme($theme) {
+  $foreground: map-get($theme, foreground);
 
-.dark-theme .mat-accordion .mat-expansion-panel {
-  border-bottom: solid 1px mat-color($bf-dark-foreground, divider);
-}
+  .mat-expansion-panel {
+    @include _mat-theme-overridable-elevation(0, $theme);
+  }
 
-.light-theme .mat-accordion .mat-expansion-panel {
-  border-bottom: solid 1px mat-color($bf-light-foreground, divider);
-}
-
-.mat-accordion .mat-expansion-panel:last-of-type {
-  border-bottom: none;
-}
-
-.dark-theme .mat-autocomplete-panel:not([class*='mat-elevation-z']) {
-  background: #02000f;
-}
-
-.dark-theme .mat-datepicker-content .mat-calendar {
-  background: #02000f;
-}
-
-.dark-theme .mat-panel-title {
-  font-size: 12px;
-  color: mat-color($bf-dark-foreground, text);
+  .mat-accordion .mat-expansion-panel {
+    border-bottom: solid 1px mat-color($foreground, divider);
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
 }

@@ -4,13 +4,29 @@
 @import './themes/light';
 @import '~saturn-datepicker/theming';
 
+// Components
+@import './components/mat-list';
+@import './components/mat-card';
+@import './components/mat-table';
+@import './components/mat-toolbar';
+@import './components/mat-button';
+@import './components/mat-expansion-panel';
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
+  @include mat-bf-card-theme($bf-light-theme);
+  @include mat-bf-table-theme($bf-light-theme);
+  @include mat-bf-expansion-panel-theme($bf-light-theme);
 }
+
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
+  @include mat-bf-list-theme($bf-dark-theme);
+  @include mat-bf-card-theme($bf-dark-theme);
+  @include mat-bf-table-theme($bf-dark-theme);
+  @include mat-bf-toolbar-theme($bf-dark-theme);
+  @include mat-bf-button-theme($bf-dark-theme);
+  @include mat-bf-expansion-panel-theme($bf-dark-theme);
 }
-

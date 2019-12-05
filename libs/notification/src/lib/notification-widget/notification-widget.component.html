@@ -4,7 +4,6 @@
     [matMenuTriggerFor]="notifications">
     <ng-container *ngIf="(totalCount | async) as count; else: empty">
       <mat-icon
-        bf-icon
         [matBadge]="count"
         matBadgeColor="accent"
         matBadgeSize="small">
@@ -12,7 +11,7 @@
       </mat-icon>
     </ng-container>
     <ng-template #empty>
-      <mat-icon bf-icon>notifications_none</mat-icon>
+      <mat-icon>notifications_none</mat-icon>
     </ng-template>
   </button>
 </section>

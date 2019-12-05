@@ -1,54 +1,25 @@
-mat-button { // TODO: Get rid of the !important and apply this on mat-raised-button
-  padding: 8px 24px !important;
-  font-size: 12px !important;
-}
-
-.mat-icon-button {
-  padding: 0 !important;
-}
-
 .light-theme {
-
-  a {
-    color: mat-color($bf-light-foreground, link);
-  }
-
   .mat-stroked-button {
     border-radius: 50px;
     box-shadow: none;
     border: none;
     background-color: mat-color($bf-light-background, stroked-button);
     }
-
-  [bf-icon] {
-    color: mat-color($bf-light-foreground, icon);
-  }
 }
 
 .dark-theme {
-
-  .mat-stroked-button {
-    box-shadow: none;
-    &.mat-accent {
-      border-color: mat-color($bf-dark-accent);
-    }
-  }
-
-  .bf-icon {
-    color: mat-color($bf-dark-foreground, blue-icon);
-  }
-
-  .bf-bg-icon {
-    border: 1px solid mat-color($bf-dark-background, border);
-    background: mat-color($bf-dark-background, background);
-  }
-
-  [mat-fab].mat-fab {
-    background: mat-color($bf-dark-background, raised-button);
-  }
-
   mat-chip.movie-chip { // TODO: Get rid of the !important
     background: rgba(0, 0, 0, 0.288) !important;
     color: #FFFFFF !important;
+  }
+}
+
+@mixin mat-bf-button-theme($theme) {
+  $accent: map-get($theme, accent);
+
+  .mat-stroked-button {
+    &.mat-accent {
+      border-color: mat-color($accent);
+    }
   }
 }

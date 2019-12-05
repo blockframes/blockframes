@@ -93,8 +93,8 @@ $bf-dark-background: (
   status-bar:   black,
   background:   #010314,
   card:         #0D0F1F,
-  hover:        rgba(255,255,255,0.08),
-  dialog:             map_get($mat-grey, 800),
+  hover:        rgba(93, 110, 132, 0.08),
+  dialog:           #0d0f1f,
   disabled-button:  rgba(155,177,255,0.12),
   raised-button:    rgba(0,0,0,0.3),
   focused-button:     $light-focused,
@@ -138,7 +138,6 @@ $bf-dark-foreground: (
   dynamic:      #3b414d,
   blue-icon:    #9eb1ff,
   dark-text:    #80818a,
-  border:       #1A1B2E,
 );
 
 ///////////
