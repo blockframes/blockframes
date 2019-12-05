@@ -34,8 +34,7 @@ export class OrganizationStore extends EntityStore<OrganizationState, Organizati
     return convertOrganizationWithTimestampsToOrganization(organization);
   }
 
-  // TODO: #issue1288, type correctly organization
-  akitaPreUpdateEntity(currentOrg: any, nextOrg: any) {
+  akitaPreUpdateEntity(currentOrg: Organization, nextOrg: OrganizationWithTimestamps) {
     return convertOrganizationWithTimestampsToOrganization(nextOrg);
   }
 }

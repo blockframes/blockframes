@@ -48,8 +48,7 @@ export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
     return createDeliveryFromFirestore(delivery);
   }
 
-  // TODO: #issue1288, type correctly delivery
-  akitaPreUpdateEntity(currentDelivery: any, nextDelivery: any): Delivery {
+  akitaPreUpdateEntity(currentDelivery: Delivery, nextDelivery: DeliveryWithTimestamps): Delivery {
     return createDeliveryFromFirestore(nextDelivery);
   }
 
