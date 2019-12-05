@@ -8,8 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
 import { FeedbackMessageModule } from '@blockframes/ui';
 import { UploadModule, UiFormModule } from '@blockframes/ui';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
 
 // Material

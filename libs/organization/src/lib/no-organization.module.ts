@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
 
 // Material

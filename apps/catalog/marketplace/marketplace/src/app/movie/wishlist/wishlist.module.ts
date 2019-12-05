@@ -4,7 +4,7 @@ import { WishlistViewComponent } from './wishlist-view/wishlist-view.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { ImageReferenceModule } from '@blockframes/ui/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
