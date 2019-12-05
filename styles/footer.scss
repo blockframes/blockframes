@@ -1,7 +1,7 @@
 .light-theme {
   footer {
     background: mat-color($bf-light-background, app-bar);
-    border-top: 1px solid mat-color($bf-light-background, border);
+    border-top: 1px solid mat-color($bf-light-foreground, divider);
 
     a {
       color: mat-color($bf-light-background, text);
@@ -12,7 +12,7 @@
 .dark-theme {
   footer {
     background: mat-color($bf-dark-background, app-bar);
-    border-top: 1px solid mat-color($bf-dark-background, border);
+    border-top: 1px solid mat-color($bf-dark-foreground, divider);
 
     a {
       color: mat-color($bf-dark-background, text);
