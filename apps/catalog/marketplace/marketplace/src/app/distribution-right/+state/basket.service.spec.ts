@@ -116,7 +116,7 @@ describe('BasketService', () => {
       .mockReturnValue(mockOrg);
     await serviceBasket.updateWishlist(mockMovie);
     expect(getAcitveOrgSpy).toHaveBeenCalled();
-    expect(serviceOrg).not.toHaveBeenCalled();
+    expect(serviceOrg).toHaveBeenCalled();
   });
 
   it('should have only one function for one task', () => {
