@@ -246,32 +246,35 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       oldStep => !stepsWithId.some(newStep => newStep.id === oldStep.id)
     );
 
+    return this.db.firestore.runTransaction(async tx => {
     // We set the concerned materials stepId to an empty string
-    deletedSteps.forEach(step => {
-      const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
-      // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
-      if (mustBeSigned) {
-        this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials);
-      // Else, we update stepId of materials in the sub-collection of movie
-      } else {
-        const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
-        this.movieMaterialService.update(materialsWithoutStep);
-      }
-    })
+      deletedSteps.forEach(step => {
+        const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+        // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
+        if (mustBeSigned) {
+          this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials, tx);
+        // Else, we update stepId of materials in the sub-collection of movie
+        } else {
+          const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
+          this.movieMaterialService.update(materialsWithoutStep, { write: tx });
+        }
+      })
 
-    return this.update(id, {
-      // Update minimum guaranteed informations of delivery
-      mgAmount: delivery.mgAmount,
-      mgCurrency: delivery.mgCurrency,
-      mgDeadlines: delivery.mgDeadlines,
+      return this.update(id, {
+        // Update minimum guaranteed informations of delivery
+        mgAmount: delivery.mgAmount,
+        mgCurrency: delivery.mgCurrency,
+        mgDeadlines: delivery.mgDeadlines,
 
-      // Update dates of delivery
-      dueDate: delivery.dueDate,
-      acceptationPeriod: delivery.acceptationPeriod,
-      reWorkingPeriod: delivery.reWorkingPeriod,
+        // Update dates of delivery
+        dueDate: delivery.dueDate,
+        acceptationPeriod: delivery.acceptationPeriod,
+        reWorkingPeriod: delivery.reWorkingPeriod,
 
-      // Update steps of delivery
-      steps: stepsWithId
+        // Update steps of delivery
+        steps: stepsWithId
+      },
+      { write: tx });
     });
   }
 

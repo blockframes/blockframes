@@ -28,9 +28,9 @@ export class DeliveryMaterialService extends CollectionService<MaterialState> {
   }
 
   /** Update stepId of materials of a delivery to empty string. */
-  public removeStepIdDeliveryMaterials(materials: Material[]) {
+  public removeStepIdDeliveryMaterials(materials: Material[], tx: firebase.firestore.Transaction) {
     const ids = materials.map(m => m.id);
-    this.update(ids, { stepId: '' });
+    this.update(ids, { stepId: '' }, { write: tx });
   }
 
   /** Deletes material of the delivery sub-collection in firebase. */
