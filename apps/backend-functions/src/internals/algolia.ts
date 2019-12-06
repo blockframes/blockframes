@@ -53,6 +53,8 @@ export function storeSearchableMovie(
     'versionInfo.dubbings',
     'versionInfo.subtitles'
   ];
+  console.log(pickBy(movie, ALGOLIA_FIELDS));
+  console.log(movie)
   return indexMoviesBuilder(adminKey).saveObject({
     objectID: movie.id,
     movie: pick(movie, ALGOLIA_FIELDS)
