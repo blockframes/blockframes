@@ -30,7 +30,8 @@ export const routes: Routes = [{ path: '', component: CatalogLandingPageComponen
     CatalogKeyFeaturesComponent,
     CatalogHowItWorksComponent,
     CatalogViewMarketplaceComponent,
-    CatalogSignUpComponent
+    CatalogSignUpComponent,
+    CatalogHowItWorksComponent
   ],
   imports: [
     CommonModule,
