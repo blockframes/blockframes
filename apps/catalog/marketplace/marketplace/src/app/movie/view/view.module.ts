@@ -24,7 +24,6 @@ import { MovieDisplayKeywordsModule } from '@blockframes/movie/movie/components/
 import { MovieDisplayVersionInfoModule } from '@blockframes/movie/movie/components/display-version-info/display-version-info.module';
 import { MovieDisplayFilmInfoCardModule } from '@blockframes/movie/movie/components/display-film-info-card/display-film-info-card.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { BackgroundImageModule } from '@blockframes/ui/media/backgraound-image/background-image.module';
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -54,7 +53,6 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
     CatalogPromotionalElementsModule,
     MovieDisplayFilmInfoCardModule,
     ImageReferenceModule,
-    BackgroundImageModule,
     //Material
     MatCardModule,
     MatDividerModule,
