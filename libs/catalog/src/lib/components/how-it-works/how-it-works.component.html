@@ -1,0 +1,72 @@
+<section>
+  <h1>How it works?</h1>
+  <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+    <mat-tab label="Seller">
+      <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+        <div>
+          <h3>
+            Mutualize forces to access volume content buyers.
+          </h3>
+          <h3>
+            Make the most of your library, maximize its potential and benefit from the potential of
+            libraries that you don’t own / of other rights holders.
+          </h3>
+          <h6>PRICING</h6>
+          <p>
+            A simple commission on all successful transactions : 50% off the primary sales fee for
+            mandated Sellers (Sales Agents and Distributors), and a flat 10% commission for
+            Producers/Library Owners.
+          </p>
+        </div>
+        <img src="https://media.makeameme.org/created/the-goodest-boy.jpg" alt="Goodest boy" />
+      </article>
+      <h6>FEATURES</h6>
+      <article fxLayout="row wrap" fxLayoutAlign="space-between space-between" fxLayout.lt-md="column" >
+        <mat-card *ngFor="let feature of features">
+          <article fxLayout="row" fxLayoutAlign="space-between start">
+            <span class="circle"></span>
+            <div>
+              <span><b>{{ feature.title }}</b></span>
+              <p class="table-size-text">{{ feature.description }}</p>
+            </div>
+          </article>
+        </mat-card>
+      </article>
+    </mat-tab>
+    <mat-tab label="Buyer">
+      <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+        <div>
+          <h3>
+            Lorem Ipsum is the single greatest threat.
+          </h3>
+          <h3>
+            We are not - we are not keeping up with other websites. Lorem Ipsum best not make any
+            more threats to your website. It will be met with fire and fury like the world has never
+            seen.
+          </h3>
+          <h6>PRICING</h6>
+          <p>
+            Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has
+            called my office and told me that Barack Obama’s placeholder text is a fraud.
+          </p>
+        </div>
+        <img
+          src="http://1.bp.blogspot.com/-1lL2122IDMs/VE5bu4QYrqI/AAAAAAAAAzM/HPBEnvp9Y8E/s640/1.jpg"
+          alt="Hover cat"
+        />
+      </article>
+      <h6>FEATURES</h6>
+      <article fxLayout="row wrap" fxLayoutAlign="space-between space-between" fxLayout.lt-md="column">
+        <mat-card *ngFor="let feature of features">
+          <article fxLayout="row" fxLayoutAlign="space-between start">
+            <span class="circle"></span>
+            <div>
+              <span><b>{{ feature.title }}</b></span>
+              <p class="table-size-text">{{ feature.description }}</p>
+            </div>
+          </article>
+        </mat-card>
+      </article>
+    </mat-tab>
+  </mat-tab-group>
+</section>
