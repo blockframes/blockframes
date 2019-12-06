@@ -1,0 +1,28 @@
+<toolbar-header id="navbar">
+  <ng-container app-icon>
+    <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/welcome">
+      <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+    </button>
+  </ng-container>
+</toolbar-header>
+<header
+  fxLayout="column"
+  fxLayoutAlign="center start"
+  fxLayoutAlign.xs="center center"
+  fxLayoutGap="20px">
+  <h3>Archipel Content</h3>
+  <span class="first-header-text">The only marketplace offering package deals</span>
+  <span class="second-header-text">for TV, VOD and ancillary rights</span>
+  <a mat-flat-button color="accent" test-id="discover" routerLink="/auth/connexion">Join now</a>
+</header>
+<main>
+
+  <!-- COMPONENTS HERE DUDE -->
+
+</main>
+<footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
+  <a routerLink="/layout/o/catalog/terms">Terms and Conditions</a>
+  <a routerLink="/layout/o/catalog/about">About</a>
+  <a routerLink="/layout/o/catalog/who-are-we">Who are we?</a>
+  <a routerLink="/layout/o/catalog/contact">Contact</a>
+</footer>

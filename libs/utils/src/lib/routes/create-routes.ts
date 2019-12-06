@@ -18,6 +18,10 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
   return [
     { path: '', redirectTo: rootPath, pathMatch: 'full' },
     {
+      path: 'welcome',
+      loadChildren: () => import('@blockframes/catalog').then(m => m.CatalogModule)
+    },
+    {
       path: 'auth',
       loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
     },
