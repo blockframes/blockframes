@@ -1,6 +1,5 @@
 import algoliasearch from 'algoliasearch';
 import { algolia } from '../environments/environment';
-import pickBy from 'lodash/pickBy';
 
 const indexOrganizationsBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -52,8 +51,7 @@ export function storeSearchableMovie(
         directors: movie.main.directors,
         languages: movie.main.language,
         status: movie.main.status,
-        originCountries: movie.main.originCountries,
-        length: movie.main.length
+        originCountries: movie.main.originCountries
       },
       promotionalDescription: {
         keywords: movie.promotionalDescription.keywords
