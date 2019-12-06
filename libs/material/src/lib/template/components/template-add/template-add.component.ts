@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { TemplateService } from '../../+state/template.service';
 
 @Component({
@@ -15,14 +15,14 @@ export class TemplateAddComponent {
   constructor(
     public dialogRef: MatDialogRef<TemplateAddComponent>,
     private service: TemplateService,
-    private router: Router,
-    private routes: ActivatedRoute
+    private router: Router
   ) {}
 
   public addTemplate(templateName: string) {
     const template = this.service.createTemplate(templateName);
     this.close();
-    this.router.navigate([`../${template.id}`], { relativeTo: this.routes })
+    // TODO: issue#1332, relative path doesn't work.
+    this.router.navigate([`layout/o/delivery/templates/${template.id}`]);
   }
 
   public close(): void {
