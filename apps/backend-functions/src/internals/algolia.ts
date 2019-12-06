@@ -1,5 +1,6 @@
 import algoliasearch from 'algoliasearch';
 import { algolia } from '../environments/environment';
+import pick from 'lodash/pick';
 
 const indexOrganizationsBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -39,28 +40,21 @@ export function storeSearchableMovie(
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
+  const ALGOLIA_FIELDS: string[] = [
+    'main.genres',
+    'main.title.international',
+    'main.title.original',
+    'main.directors',
+    'main.language',
+    'main.status',
+    'main.originCountries',
+    'promotionalDescription.keywords',
+    'salesAgentDeal.salesAgent.displayName',
+    'versionInfo.dubbings',
+    'versionInfo.subtitles'
+  ];
   return indexMoviesBuilder(adminKey).saveObject({
-    objectId: movie.id,
-    movie: {
-      main: {
-        genres: movie.main.genres,
-        title: {
-          international: movie.main.title.international,
-          original: movie.main.title.original
-        },
-        directors: movie.main.directors,
-        languages: movie.main.language,
-        status: movie.main.status,
-        originCountries: movie.main.originCountries
-      },
-      promotionalDescription: {
-        keywords: movie.promotionalDescription.keywords
-      },
-      salesAgentDeal: { salesAgent: { displayName: movie.salesAgentDeal.salesAgent.displayName } },
-      versionInfo: {
-        dubbings: movie.versionInfo.dubbings,
-        subtitles: movie.versionInfo.subtitles
-      }
-    }
+    objectID: movie.id,
+    movie: pick(movie, ALGOLIA_FIELDS)
   });
 }
