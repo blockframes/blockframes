@@ -1,4 +1,12 @@
 footer {
-    width: 100%;
-    background-color: var(--lightGrey);
+  width: 100%;
+  background-color: var(--lightGrey);
+
+  .partner-logos {
+    height: 50px;
+    margin: 10px 20px;
+    img {
+      width: 25%;
+    }
+  }
 }
