@@ -24,6 +24,7 @@ mat-form-field {
     .mat-form-field-outline {
       color: mat-color($foreground, divider);
     }
+    // This one is when mat-form-field is hovered
     .mat-form-field-outline-thick {
       color: mat-color($primary);
 
