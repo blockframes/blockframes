@@ -2,8 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-//Pages
+// Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
+
+// Components
+import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
 
 // Libs
 import { ToolbarModule } from '@blockframes/ui/toolbar/toolbar.module';
@@ -16,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 export const routes: Routes = [{ path: '', component: CatalogLandingPageComponent }];
 
 @NgModule({
-  declarations: [CatalogLandingPageComponent],
+  declarations: [CatalogLandingPageComponent, CatalogKeyFeaturesComponent],
   imports: [
     CommonModule,
     ToolbarModule,
