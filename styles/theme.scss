@@ -13,27 +13,28 @@
 @import './components/mat-expansion-panel';
 @import './components/mat-form';
 @import './components/mat-chips';
+@import 'footer';
 
+@mixin bf-material-theme($theme) {
+  @include mat-bf-button-theme($theme);
+  @include mat-bf-card-theme($theme);
+  @include mat-bf-chips-theme($theme);
+  @include mat-bf-expansion-panel-theme($theme);
+  @include mat-bf-form-field-theme($theme);
+  @include mat-bf-list-theme($theme);
+  @include mat-bf-table-theme($theme);
+  @include mat-bf-toolbar-theme($theme);
+  @include bf-footer-theme($theme);
+}
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
-  @include mat-bf-card-theme($bf-light-theme);
-  @include mat-bf-table-theme($bf-light-theme);
-  @include mat-bf-expansion-panel-theme($bf-light-theme);
-  @include mat-bf-form-field-theme($bf-light-theme);
-  @include mat-bf-chips-theme($bf-light-theme);
+  @include bf-material-theme($bf-light-theme);
 }
 
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
-  @include mat-bf-list-theme($bf-dark-theme);
-  @include mat-bf-card-theme($bf-dark-theme);
-  @include mat-bf-table-theme($bf-dark-theme);
-  @include mat-bf-toolbar-theme($bf-dark-theme);
-  @include mat-bf-button-theme($bf-dark-theme);
-  @include mat-bf-expansion-panel-theme($bf-dark-theme);
-  @include mat-bf-form-field-theme($bf-dark-theme);
-  @include mat-bf-chips-theme($bf-dark-theme);
+  @include bf-material-theme($bf-dark-theme);
 }

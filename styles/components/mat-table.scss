@@ -1,7 +1,3 @@
-td.mat-cell, td span {
-  font-size: 12px;
-}
-
 @mixin mat-bf-table-theme($theme) {
   $foreground: map-get($theme, foreground);
 

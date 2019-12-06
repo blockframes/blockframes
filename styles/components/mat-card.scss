@@ -4,7 +4,7 @@
 
   .mat-card {
     @include _mat-theme-overridable-elevation(0, $theme);
-    background: mat-color($background, card);
+    background-color: mat-color($background, card);
     border: 1px solid mat-color($foreground, divider);
   }
 }

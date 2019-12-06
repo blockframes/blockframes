@@ -1,21 +1,13 @@
-.light-theme {
+@mixin bf-footer-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
   footer {
-    background: mat-color($bf-light-background, app-bar);
-    border-top: 1px solid mat-color($bf-light-foreground, divider);
+    background-color: mat-color($background, app-bar);
+    border-top: 1px solid mat-color($foreground, divider);
 
     a {
-      color: mat-color($bf-light-background, text);
-    }
-  }
-}
-
-.dark-theme {
-  footer {
-    background: mat-color($bf-dark-background, app-bar);
-    border-top: 1px solid mat-color($bf-dark-foreground, divider);
-
-    a {
-      color: mat-color($bf-dark-background, text);
+      color: mat-color($background, text);
     }
   }
 }

@@ -7,7 +7,7 @@
   $foreground: map-get($theme , foreground);
 
   .mat-list-base {
-    background: mat-color($background, app-bar);
+    background-color: mat-color($background, app-bar);
     border: 1px solid mat-color($foreground, divider);
   }
 
