@@ -40,7 +40,6 @@ export async function upgradeOrganizationCollection(db: Firestore) {
 
     const newData = {
       ...organizationData,
-      cart: [],
       denomination: {
         full: name,
         public: name
