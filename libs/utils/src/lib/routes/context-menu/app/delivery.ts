@@ -13,6 +13,14 @@ export const baseMenu = [
     items: []
   },
   {
+    route: '/welcome',
+    items: [
+      { name: 'home', path: `${baseRoute}/home` },
+      { name: 'templates', path: `${baseRoute}/templates` },
+      { name: 'add a delivery', path: `${baseRoute}/movie/add/1-find-movie` }
+    ]
+  },
+  {
     route: `${baseRoute}/home`,
     items: [
       { name: 'home', path: `${baseRoute}/home` },
