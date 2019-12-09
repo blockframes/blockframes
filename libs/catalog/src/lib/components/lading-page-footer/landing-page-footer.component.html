@@ -1,25 +1,39 @@
 <footer fxLayout="column" fxLayoutAlign="start center">
-  <section fxLayout="row" fxLayoutGap="20px">
-    <article fxLayout="column"><mat-icon svgIcon="applications"></mat-icon></article>
-    <article fxLayout="column"><h6>Learn more</h6></article>
-    <article fxLayout="column">
-      <h6>Follow us</h6>
-      <span fxLayout="row">icons</span>
+  <section [fxLayout]="layout" [fxLayoutAlign]="alignLayout" [fxLayoutGap]="flexGap">
+    <article fxLayout="column" fxLayoutAlign="start center">
+      <h4>
+        <mat-icon svgIcon="LogoAC" class="ac-logo"></mat-icon>
+      </h4>
     </article>
-    <article fxLayout="column">
-      <h6>Keep informed</h6>
+    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
+      <h4>Learn more</h4>
+        <a routerLink="/layout/o/catalog/about">About us</a>
+        <a routerLink="/layout/o/catalog/faq">FAQ</a>
+        <a routerLink="/layout/o/catalog/contact">Contact</a>
+    </article>
+    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
+      <h4>Follow us</h4>
+      <span fxLayout="row" [fxLayoutAlign]="socialMediaIconsAlign" class="social-media-icons">
+        <mat-icon svgIcon="twitter"></mat-icon>
+        <mat-icon svgIcon="facebook"></mat-icon>
+        <mat-icon svgIcon="linkedin"></mat-icon>
+        <mat-icon svgIcon="instagram"></mat-icon>
+      </span>
+    </article>
+    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
+      <h4>Keep informed</h4>
       <mat-form-field>
-        <input matInput type="email" placeholder="Email address" autocomplete="off" />
+        <input matInput type="email" placeholder="Email address" autocomplete="off" [formControl]="emailControl" />
       </mat-form-field>
-      <button mat-raised-button color="primarys">Send</button>
+      <button mat-raised-button color="primary" (click)="registerEmailForNewsletter()">Send</button>
     </article>
   </section>
   <section fxLayout="column" fxLayoutAlign="start center">
-    <h6>Proudly associated with the following partners</h6>
-    <span fxLayout="row" class="partner-logos" fxLayoutGap="30px">
+    <div class="partner-header">Proudly associated with the following partners</div>
+    <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" class="partner-logos" fxLayoutGap="30px">
       <img src="/assets/logo/CNC_logo.png" />
       <img src="/assets/logo/BPIfrance.png" />
-      <img src="/assets/logo/creativemediaeurope.png"/>
+      <img src="/assets/logo/creativemediaeurope.png" />
     </span>
   </section>
 </footer>
