@@ -255,7 +255,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
           this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials, tx);
         // Else, we update stepId of materials in the sub-collection of movie
         } else {
-          const materialsWithoutStep = materials.map(material => ({ ...material, stepId: ''}));
+          const materialsWithoutStep = materials.map(material => ({ ...material, stepId: '' }));
           this.movieMaterialService.update(materialsWithoutStep, { write: tx });
         }
       })

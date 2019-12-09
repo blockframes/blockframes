@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { Material } from '../../material/+state/material.model';
@@ -20,10 +20,11 @@ export class TemplateService extends CollectionService<TemplateState>{
   );
 
   constructor(
-    private query: TemplateQuery,
-    private organizationQuery: OrganizationQuery,
+    store: TemplateStore,
     private templateMaterialService: TemplateMaterialService,
-    store: TemplateStore
+    private organizationService: OrganizationService,
+    private query: TemplateQuery,
+    private organizationQuery: OrganizationQuery
   ) {
     super(store)
   }
@@ -51,7 +52,7 @@ export class TemplateService extends CollectionService<TemplateState>{
   /** Hook that triggers when a template is added to the database. */
   onCreate(template: Template, write: WriteOptions) {
     const organization = this.organizationQuery.getActive();
-    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
+    this.organizationService.update(organization.id, { templateIds: [...organization.templateIds, template.id] });
    }
 
   /** Hook that triggers when a template is removed from the database. */
@@ -59,7 +60,7 @@ export class TemplateService extends CollectionService<TemplateState>{
     const organization = this.organizationQuery.getActive();
     const templateIds = organization.templateIds.filter(id => id !== templateId);
 
-    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds});
+    this.organizationService.update(organization.id, { templateIds });
   }
 
   /** Save a delivery as new template. */
@@ -70,7 +71,7 @@ export class TemplateService extends CollectionService<TemplateState>{
 
       // Set active the template, and add the delivery's materials in the template
       this.store.setActive(template.id);
-      materials.forEach(material => this.templateMaterialService.add(material));
+      this.templateMaterialService.add(materials);
     }
   }
 
@@ -81,10 +82,12 @@ export class TemplateService extends CollectionService<TemplateState>{
     const templateMaterials = await this.templateMaterialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
+      const batch = this.db.firestore.batch();
       // Delete all materials of template
-      templateMaterials.forEach(material => this.templateMaterialService.remove(material.id));
+      templateMaterials.forEach(material => this.templateMaterialService.remove(material.id, { write: batch }));
       // Add delivery's materials in template
-      materials.forEach(material => this.templateMaterialService.add(material));
+      this.templateMaterialService.add(materials, { write: batch });
+      return batch.commit();
     }
   }
 

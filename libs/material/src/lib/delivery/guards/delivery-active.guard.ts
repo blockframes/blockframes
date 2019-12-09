@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class DeliveryActiveGuard extends CollectionGuard<DeliveryState> {
-  constructor(protected service: DeliveryService, private store: DeliveryStore) {
+  constructor(private store: DeliveryStore, protected service: DeliveryService) {
     super(service);
   }
 
