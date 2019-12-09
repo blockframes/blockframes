@@ -1,6 +1,9 @@
-import { appsRoute } from '../create-routes';
+import { appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
-import { ctxMenu } from './helpers';
+import { ctxMenu } from '../helpers';
+
+// common
+import * as common from '../common/common';
 
 export const baseRoute = `${appsRoute}/${App.catalogDashboard}`;
 
@@ -30,4 +33,7 @@ export const baseMenu = [
   }
 ];
 
-export const CONTEXT_MENU = ctxMenu(baseMenu);
+export const CONTEXT_MENU = ctxMenu([
+  ...common.CONTEXT_MENU,
+  ...baseMenu
+]);
