@@ -17,7 +17,7 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 // components
 import { MovieFormMainComponent } from './main/main.component';
