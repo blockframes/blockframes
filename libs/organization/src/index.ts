@@ -2,6 +2,7 @@
 export * from './lib/organization.module';
 export * from './lib/no-organization.module';
 export * from './lib/guard/organization.guard';
+export * from './lib/guard/active-dao.guard';
 
 // Organization Components Modules
 export * from './lib/components/organization-widget/organization-widget.module';

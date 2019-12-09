@@ -20,6 +20,7 @@ interface OrganizationRaw<D> {
   fiscalNumber: string;
   activity: string;
   wishlist: WishlistRaw<D>[];
+  isBlockchainEnabled: boolean;
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
@@ -102,6 +103,7 @@ export function createOrganizationRaw(
     updated: new Date(),
     logo: PLACEHOLDER_LOGO,
     wishlist: [],
+    isBlockchainEnabled: false,
     ...params
   };
 }
