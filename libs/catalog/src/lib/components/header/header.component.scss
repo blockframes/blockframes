@@ -1,0 +1,49 @@
+:host {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+}
+
+.transparent-toolbar {
+  background-color: transparent;
+  transition-duration: 0;
+}
+
+.plain-toolbar {
+  transition-duration: 1000ms;
+}
+
+.app-icon {
+  width: 80px;
+}
+
+nav {
+  height: 64px;
+  margin-left: 50px;
+
+  // ::ng-deep is deprecated but did'nt found any workaround
+  ::ng-deep .mat-tab-links {
+    height: 100%;
+
+    .mat-tab-link {
+      font-size: 14px;
+      height: 100%;
+      min-width: 150px;
+      font-weight: 600;
+      font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
+      padding: 0px;
+      opacity: 1;
+    }
+  }
+}
+
+// @include medium {
+//   .context-menu {
+
+//     .mat-tab-link {
+//       padding: 0;
+//       min-width: 135px;
+//     }
+//   }
+// }
