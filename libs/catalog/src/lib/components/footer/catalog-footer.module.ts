@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LandingPageFooterComponent } from './landing-page-footer.component';
+import { CatalogFooterComponent } from './footer.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [LandingPageFooterComponent],
+  declarations: [CatalogFooterComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -25,6 +25,6 @@ import { RouterModule } from '@angular/router';
     MatIconModule,
     MatSnackBarModule
   ],
-  exports: [LandingPageFooterComponent]
+  exports: [CatalogFooterComponent]
 })
-export class LandingPageFooterModule {}
+export class CatalogFooterModule {}

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
-import { LandingPageFooterModule } from './components/lading-page-footer/landing-page-footer.module';
+import { CatalogFooterModule } from './components/footer/catalog-footer.module';
 
 // Components
 import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
@@ -32,7 +32,7 @@ export const routes: Routes = [{ path: '', component: CatalogLandingPageComponen
     CommonModule,
     ToolbarModule,
     FlexLayoutModule,
-    LandingPageFooterModule,
+    CatalogFooterModule,
 
     //Material
     MatIconModule,
