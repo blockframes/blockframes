@@ -4,11 +4,11 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'catalog-landing-page-footer',
-  templateUrl: './landing-page-footer.component.html',
-  styleUrls: ['./landing-page-footer.component.scss']
+  selector: 'catalog-footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss']
 })
-export class LandingPageFooterComponent implements OnInit {
+export class CatalogFooterComponent implements OnInit {
   public emailControl: FormControl = new FormControl('', Validators.email);
 
   constructor(private breakpoint: BreakpointObserver, private snackbar: MatSnackBar) { }
