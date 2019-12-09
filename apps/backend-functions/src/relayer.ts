@@ -1,5 +1,6 @@
 import { SignedMetaTx } from "@blockframes/ethers/types";
-import { getProvider, emailToEnsDomain } from "@blockframes/ethers/helpers";
+import { getProvider } from "@blockframes/ethers/helpers";
+
 import { Wallet } from '@ethersproject/wallet';
 import { Contract, ContractFactory } from '@ethersproject/contracts';
 import { TransactionResponse, TransactionReceipt } from '@ethersproject/abstract-provider';
@@ -12,7 +13,6 @@ import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from '@blockframes/c
 import { abi as ENS_REGISTRY_ABI } from '@blockframes/contracts/ENSRegistry.json';
 import { abi as ENS_RESOLVER_ABI } from '@blockframes/contracts/PublicResolver.json';
 import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from '@blockframes/contracts/Organization.json';
-import { db } from './internals/firebase';
 
 type TxResponse = TransactionResponse;
 type TxReceipt = TransactionReceipt;
@@ -53,8 +53,8 @@ export interface SignDeliveryParams {
 interface DeployParams {
   username: string;
   key: string;
+  orgAddress: string;
   erc1077address: string;
-  orgId: string;
 }
 
 interface RegisterParams {
@@ -105,51 +105,53 @@ export async function isENSNameRegistered(ensName: string, config: RelayerConfig
 //---------------------------------------------------
 
 export async function relayerDeployLogic(
-  { username, key, erc1077address, orgId }: DeployParams,
+  { username, key, orgAddress, erc1077address }: DeployParams,
   config: RelayerConfig
 ) {
   const relayer: Relayer = initRelayer(config);
 
   // check required params
-  if (!username || !key || !erc1077address || !orgId) {
+  if (!username || !key || !orgAddress || !erc1077address) {
     throw new Error('"username", "key", "erc1077address", and "orgAddress" are mandatory parameters !');
   }
 
   try {
     getAddress(key);
+    getAddress(orgAddress);
     getAddress(erc1077address);
   } catch (error) {
-    throw new Error('"key" and/or "erc1077address" should be a valid ethereum address !');
+    throw new Error('"key", "orgAddress" and/or "erc1077address" should be a valid ethereum address !');
   }
 
   // compute needed values
   const hash = keccak256(toUtf8Bytes(username));
-  const orgName = await db.doc(`/orgs/${orgId}`).get().then(org => org.get('name')) as string;
-  const orgEns = emailToEnsDomain(orgName.replace(' ', '-'), relayer.baseEnsDomain);
-  const orgAddress = await relayer.wallet.provider.resolveName(orgEns);
 
-  try {
+  const result: Record<string, TxReceipt> = {};
+  const codeAtAddress = await relayer.wallet.provider.getCode(erc1077address);
+  if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
 
-    const result: Record<string, TxReceipt> = {};
-
-    const codeAtAddress = await relayer.wallet.provider.getCode(erc1077address);
-    if (codeAtAddress === '0x') { // if there is already some code at this address : skip deploy
+    try {
       const deployTx: TxResponse = await relayer.contractFactory.deploy(
         hash,
         `0x${ERC1077_BYTECODE}`,
-        key.toLocaleLowerCase(),
-        orgAddress.toLocaleLowerCase(),
-      )
-
-      result['deploy'] = await deployTx.wait();
+        key.toLowerCase(),
+        orgAddress.toLowerCase(),
+      );
+      try {
+        result['deploy'] = await deployTx.wait();
+      } catch(error) {
+        // do nothing, there is a bug in ethers, catch is expected here
+      }
       console.log(`(D) tx sent (deploy) : ${deployTx.hash}`);
+    } catch (error) {
+      console.error('Transaction failed to be broadcasted or execution reverted', error);
+      throw new Error(error);
     }
-
-    return result;
-  } catch (error) {
-    console.error(error);
-    throw new Error(error);
   }
+
+  const ensResult = await relayerRegisterENSLogic({name: username, ethAddress: erc1077address}, config);
+
+  return {...result, ...ensResult};
 };
 
 //---------------------------------------------------
