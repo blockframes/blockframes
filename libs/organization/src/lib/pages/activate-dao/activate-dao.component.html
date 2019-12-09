@@ -1,0 +1,19 @@
+
+<h1>Activate Blockchain Features</h1>
+<ng-container *ngIf="(isSuperAdmin$ | async) as isSuperAdmin; else loading">
+
+  <ng-container *ngIf="isSuperAdmin; else notAdmin">
+    <button mat-button color="primary" (click)="activate()">Activate</button>
+  </ng-container>
+  <ng-template #notAdmin>
+    <p>You are not authorized to activate blockchain features for your organization, please contact an Admin of your org.</p>
+  </ng-template>
+
+</ng-container>
+<ng-template #loading>
+  <div class="loading">
+    <p>We are loading your information...</p>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
+

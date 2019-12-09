@@ -1,7 +1,9 @@
 import { toASCII } from "punycode";
 import { keccak256 } from '@ethersproject/keccak256'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Provider, InfuraProvider, EtherscanProvider, NodesmithProvider, FallbackProvider } from '@ethersproject/providers'
+import { Filter } from '@ethersproject/abstract-provider'
+import { Provider, InfuraProvider } from '@ethersproject/providers'
+
 import { toUtf8Bytes } from '@ethersproject/strings'
 import { bytecode as ERC1077_BYTECODE } from '@blockframes/contracts/ERC1077.json';
 
@@ -10,8 +12,6 @@ export function getProvider(network: string) {
 
   // we only use these providers, because the other doesn't supports Goerli
   const infura = new InfuraProvider(network);
-  const etherscan = new EtherscanProvider(network);
-  const nodesmith = new NodesmithProvider(network);
 
   // A Fallback provider is composed of an array of providers
   // for each query, every providers will be queried,
@@ -20,7 +20,7 @@ export function getProvider(network: string) {
 
   // this Fallback provider is optimized for speed, it will return the first answer it get back
   // if needed we could instead optimized it for consensus (i.e. wait until at least 2 providers agree on the answer)
-  return new FallbackProvider([infura, etherscan, nodesmith], 1);
+  return infura;
 }
 
 /** Get first part of an ens domain : `alice.blockframes.eth` -> `alice` */
@@ -90,4 +90,13 @@ export function padTo256Bits(hexString: string) {
 export function numberTo256Bits(num: number) {
   const hex = numberToHexString(num);
   return padTo256Bits(hex);
+}
+
+/** instantiate an ethers event filter from some eth event topic */
+export function getFilterFromTopics(address: string, topics: string[]): Filter {
+  return {
+    address,
+    fromBlock: 0, toBlock: 'latest',
+    topics
+  }
 }

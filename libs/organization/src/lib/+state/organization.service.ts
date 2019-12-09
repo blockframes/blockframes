@@ -137,4 +137,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       }
     });
   }
+
+  public async setBlockchainFeature(value: boolean) {
+    const orgId = this.query.getActiveId();
+    return this.db.doc(`orgs/${orgId}`).update({ isBlockchainEnabled: value });
+  }
 }
