@@ -1,6 +1,9 @@
 import { appsRoute } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils';
-import { ctxMenu } from './helpers';
+import { ctxMenu } from '../helpers';
+
+// common
+import * as common from '../common/common';
 
 export const baseRoute = `${appsRoute}/${App.biggerBoat}`;
 
@@ -38,7 +41,10 @@ export const baseMenu = [
   }
 ];
 
-export const CONTEXT_MENU = ctxMenu(baseMenu);
+export const CONTEXT_MENU = ctxMenu([
+  ...common.CONTEXT_MENU,
+  ...baseMenu
+]);
 
 export const baseMenuAfm = [ // TODO #1146
   {
@@ -74,4 +80,7 @@ export const baseMenuAfm = [ // TODO #1146
   }
 ];
 
-export const CONTEXT_MENU_AFM = ctxMenu(baseMenuAfm);
+export const CONTEXT_MENU_AFM = ctxMenu([
+  ...common.CONTEXT_MENU,
+  ...baseMenuAfm
+]);
