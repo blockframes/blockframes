@@ -295,6 +295,18 @@ const ICONS_SVG = [
   {
     name: 'search_sidebar',
     url: 'assets/icons/search-sidebar.svg'
+  },{
+    name: 'facebook',
+    url: 'assets/icons/facebook.svg'
+  },{
+    name: 'twitter',
+    url: 'assets/icons/twitter.svg'
+  },{
+    name: 'linkedin',
+    url: 'assets/icons/linkedin.svg'
+  },{
+    name: 'instagram',
+    url: 'assets/icons/instagram.svg'
   }
 ];
 
