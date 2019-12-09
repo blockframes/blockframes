@@ -13,16 +13,19 @@ import { arrayify } from '@ethersproject/bytes';
 import { AbiCoder } from '@ethersproject/abi';
 import {
   TransactionRequest,
-  FallbackProvider
+  InfuraProvider,
+  Log
 } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
-import { getProvider, emailToEnsDomain, precomputeAddress, getNameFromENS } from '../../helpers';
+import { getProvider, emailToEnsDomain, precomputeAddress, getNameFromENS, getFilterFromTopics, orgNameToEnsDomain } from '../../helpers';
+
+const deployedTopic    = '0xb03c53b28e78a88e31607a27e1fa48234dce28d5d9d9ec7b295aeb02e674a1e1'; // 'Deployed (address addr, uint256 salt)' event
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
 
-  provider: FallbackProvider;
+  provider: InfuraProvider;
 
   constructor(
     private query: WalletQuery,
@@ -77,7 +80,7 @@ export class WalletService {
    * @param pubKey the address of the first key to put in the smart-wallet
    * @param orgId the id of the user's org, it will be used to put the org address as the recover address
    */
-  public async deployERC1077(ensDomain: string, pubKey: string, orgId: string) {
+  public async deployERC1077(ensDomain: string, pubKey: string, orgName: string) {
     this._requireProvider();
     if (this.query.getValue().hasERC1077) {
       throw new Error('Your smart-wallet is already deployed');
@@ -86,11 +89,31 @@ export class WalletService {
     try {
       const name =  getNameFromENS(ensDomain);
       const erc1077Address = await precomputeAddress(ensDomain, this.provider, factoryContract);
-      const result = await this.relayer.deploy(name, pubKey, erc1077Address, orgId);
-      this.relayer.registerENSName(name, erc1077Address); // do not wait for ens register, this can be done in the background
-      this.store.update({hasERC1077: true})
+      const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
+      const orgAddress = await this.provider.resolveName(orgENS);
+      if(!orgAddress) throw new Error('Org contract deploy is not finished!');
+
+      const deployPromise = new Promise( resolve => {
+        this.provider.on(getFilterFromTopics(factoryContract, [deployedTopic]), (log: Log) => {
+          if(`0x${log.data.substr(26, 40)}` === erc1077Address) {
+            this.provider.removeAllListeners(getFilterFromTopics(factoryContract, [deployedTopic]));
+            resolve(true);
+          }
+        });
+      });
+      const timeoutPromise = new Promise( resolve => setTimeout(resolve, 60000, false));
+
+      await this.relayer.deploy(name, pubKey, orgAddress, erc1077Address);
+
+      const success = await Promise.race([deployPromise, timeoutPromise]);
+      if (success) {
+        this.store.update({hasERC1077: true});
+      } else {
+        throw new Error('Timeout promise');
+      }
+
+
       this.store.setLoading(false);
-      return result;
     } catch(err) {
       this.store.setLoading(false);
       console.error(err);

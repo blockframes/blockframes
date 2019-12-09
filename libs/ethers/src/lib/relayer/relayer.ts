@@ -13,12 +13,12 @@ export class Relayer {
    * @param key first address of the user (management key)
    * @param erc1077address first address of the user (management key)
    */
-  public deploy(username: string, key: string, erc1077address: string, orgId: string): Promise<Object> {
+  public deploy(username: string, key: string, orgAddress: string, erc1077address: string): Promise<Object> {
     if (username.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
       username = username.split('.')[0]
     }
     const callDeploy = this.functions.httpsCallable('relayerDeploy');
-    const deploy =  callDeploy({ username, key, erc1077address, orgId }).toPromise();
+    const deploy =  callDeploy({ username, key, orgAddress, erc1077address }).toPromise();
     return deploy;
   }
 
@@ -29,7 +29,7 @@ export class Relayer {
    */
   public registerENSName(name: string, ethAddress: string): Promise<Object> {
     if (name.split('.').length > 1) { // if you provide a full ENS domain anyway, we've got your back !
-    name = name.split('.')[0]
+      name = name.split('.')[0]
     }
     const callRegister = this.functions.httpsCallable('relayerRegister');
     const registration = callRegister({ name, ethAddress }).toPromise();
