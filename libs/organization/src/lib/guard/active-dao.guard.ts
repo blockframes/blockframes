@@ -14,10 +14,10 @@ export class ActiveDaoGuard {
   ) {}
 
   async canActivate() {
-    const { isBlockchainEnabled } = this.orgQuery.getActive();
+    const { id, isBlockchainEnabled } = this.orgQuery.getActive();
     if (isBlockchainEnabled) {
       return true;
     }
-    return this.router.parseUrl(`/`);
+    return this.router.parseUrl(`/layout/o/organization/${id}/activate`);
   }
 }
