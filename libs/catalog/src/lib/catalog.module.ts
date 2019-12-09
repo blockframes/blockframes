@@ -10,6 +10,7 @@ import { CatalogFooterModule } from './components/footer/catalog-footer.module';
 import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
 import { CatalogHowItWorksComponent } from './components/how-it-works/how-it-works.component';
 import { CatalogViewMarketplaceComponent } from './components/view-marketplace/view-marketplace.component';
+import { CatalogSignUpComponent } from './components/sign-up/sign-up.component';
 
 // Libs
 import { ToolbarModule } from '@blockframes/ui/toolbar/toolbar.module';
@@ -28,7 +29,8 @@ export const routes: Routes = [{ path: '', component: CatalogLandingPageComponen
     CatalogLandingPageComponent,
     CatalogKeyFeaturesComponent,
     CatalogHowItWorksComponent,
-    CatalogViewMarketplaceComponent
+    CatalogViewMarketplaceComponent,
+    CatalogSignUpComponent
   ],
   imports: [
     CommonModule,
