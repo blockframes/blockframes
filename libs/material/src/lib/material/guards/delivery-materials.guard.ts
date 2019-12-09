@@ -10,11 +10,11 @@ import { DeliveryMaterialService } from '../+state/delivery-material.service';
 @Injectable({ providedIn: 'root' })
 export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
-    protected deliveryMaterialService: DeliveryMaterialService,
     private store: MaterialStore,
+    protected deliveryMaterialService: DeliveryMaterialService,
+    private movieMaterialService: MovieMaterialService,
     private materialQuery: MaterialQuery,
-    private deliveryQuery: DeliveryQuery,
-    private movieMaterialService: MovieMaterialService
+    private deliveryQuery: DeliveryQuery
   ) {
     super(deliveryMaterialService);
   }
