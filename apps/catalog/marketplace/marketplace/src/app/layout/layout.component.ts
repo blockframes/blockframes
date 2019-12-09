@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU, CONTEXT_MENU_AFM } from '@blockframes/utils/routes/context-menu/catalog-marketplace';
+import { CONTEXT_MENU, CONTEXT_MENU_AFM } from '@blockframes/utils/routes/context-menu/app/catalog-marketplace';
 import { AFM_DISABLE } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
