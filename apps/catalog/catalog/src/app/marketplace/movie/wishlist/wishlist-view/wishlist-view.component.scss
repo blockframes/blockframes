@@ -1,0 +1,9 @@
+mat-divider {
+  width: 100%;
+  margin-left: 30px;
+}
+
+section {
+  padding: 100px;
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+}

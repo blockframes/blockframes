@@ -1,0 +1,11 @@
+table {
+    width: 100%;
+  }
+  
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+  }

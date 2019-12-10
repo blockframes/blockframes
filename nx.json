@@ -71,11 +71,17 @@
     "catalog-marketplace": {
       "tags": []
     },
-    "catalog": {
+    "catalog-lib": {
       "tags": ["catalog"]
     },
     "notification": {
       "tags": ["notification"]
+    },
+    "catalog": {
+      "tags": ["catalog"]
+    },
+    "catalog-e2e": {
+      "tags": []
     }
   }
 }

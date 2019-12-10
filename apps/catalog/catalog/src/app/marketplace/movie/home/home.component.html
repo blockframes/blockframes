@@ -1,0 +1,62 @@
+<!-- TODO(#838): Use HostBinding instead of root div -->
+<div test-id="content">
+  <header class="banner" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px">
+    <h3>Archipel Content</h3>
+    <span class="first-header-text">The only marketplace offering package deals</span>
+    <span class="second-header-text">for TV, VOD and ancillary rights</span>
+    <a mat-flat-button color="accent" test-id="discover" routerLink="/layout/o/catalog/search">View the line-up</a>
+  </header>
+
+  <section fxLayout="column" fxLayoutAlign="start center">
+    <ng-container *ngFor="let section of moviesBySections$ | async; let i = index">
+      <!-- We want by every iteration of the keys array that the text switches side-->
+      <article [fxLayout]="layout(i)" fxLayout.lt-md="column" fxLayoutAlign="center start">
+        <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
+          <h1>{{ section.title }}</h1>
+          <h4>{{ section.subline}} </h4>
+          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/layout/o/catalog/search">See more</a>
+        </aside>
+        <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
+          <!-- We only want to use the first image in the promotinalElements.images array-->
+            <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies" [image]="getBanner(movie)">
+              <div
+                fxLayout="column"
+                fxLayoutAlign="end start"
+                class="black-bg-opacity-30 overlay"
+                [routerLink]="['/layout/o/catalog', movie.id]">
+                <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
+                  <button mat-icon-button (click)="removeFromWishlist(movie, $event)">
+                    <mat-icon svgIcon="heart_filled"></mat-icon>
+                  </button>
+                </ng-container>
+                <ng-template #alreadyAdded>
+                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
+                    <mat-icon svgIcon="heart"></mat-icon>
+                  </button>
+                </ng-template>
+                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
+                  <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b>
+                  <h2>{{ movie.main.title.international }}</h2>
+                  <div>
+                    <span *ngFor="let director of movie.main.directors; let isLast=last">
+                      {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
+                    </span>
+                  </div>
+                  <b>
+                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
+                    </span>
+                    <span *ngIf="movie.main.originCountries.length > 2">... </span>
+                    <span *ngIf="movie.main.length">| {{ movie.main.length }} min </span>
+                    <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
+                  </b>
+                  <span *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent">{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+                </div>
+              </div>
+            </mat-carousel-slide>
+        </mat-carousel>
+      </article>
+    </ng-container>
+  </section>
+
+</div>
