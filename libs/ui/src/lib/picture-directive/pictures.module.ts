@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PicturesThemePathDirective } from './pictures.directive';
+import { PicturesThemeDirective } from './pictures.directive';
 
 
 @NgModule({
-  declarations: [PicturesThemePathDirective],
+  declarations: [PicturesThemeDirective],
   imports: [
     CommonModule
   ],
-  exports: [PicturesThemePathDirective]
+  exports: [PicturesThemeDirective]
 })
-export class PicturesModule {}
+export class PicturesThemeModule {}
