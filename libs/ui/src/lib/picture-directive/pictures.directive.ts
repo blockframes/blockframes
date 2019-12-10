@@ -1,14 +1,25 @@
 import { Directive, Renderer2, ElementRef, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ThemeService } from '../theme';
 
 @Directive({
-  selector: 'img[picturesThemePath]'
+  selector: 'img[picturesThemeName]'
 })
-export class PicturesThemePathDirective {
+export class PicturesThemeDirective {
+  private sub: Subscription;
+  private themeService: ThemeService;
 
-  @Input() set picturesThemePath(imageName: string) {
+  @Input() set picturesThemeName(imageName: string) {
     const theme = localStorage.getItem('theme');
     this.updateSrc(imageName, theme);
   }
+
+  // @Input() set picturesThemeName(imageName: string) {
+  //   this.sub = this.themeService.theme$.subscribe((theme) => {
+  //     this.updateSrc(imageName, theme);
+  //   });
+  // }
+
 
   constructor(
     private _renderer: Renderer2,
@@ -17,5 +28,9 @@ export class PicturesThemePathDirective {
 
   updateSrc(imageName: string, theme: string) {
     this._renderer.setProperty(this._element.nativeElement, 'src', `assets/images/${theme}/${imageName}`)
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
