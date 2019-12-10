@@ -1,0 +1,19 @@
+<section>
+  <h3>Activity feed</h3>
+  <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+    <mat-tab [label]="['All (' + (activities$ | async).length + ')']">
+      <article *ngFor="let activity of (activities$ | async)">
+        <h6>{{ activity.user.email}}</h6>
+        <span>{{ activity.date | date: 'h:mm a'}}</span>
+      </article>
+    </mat-tab>
+    <mat-tab label="Titles">
+    </mat-tab>
+    <mat-tab label="Deals">
+    </mat-tab>
+    <mat-tab label="Archipel">
+    </mat-tab>
+    <mat-tab [label]="organizationName">
+    </mat-tab>
+  </mat-tab-group>
+</section>
