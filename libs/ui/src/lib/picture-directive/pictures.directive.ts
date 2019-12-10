@@ -7,23 +7,18 @@ import { ThemeService } from '../theme';
 })
 export class PicturesThemeDirective {
   private sub: Subscription;
-  private themeService: ThemeService;
 
   @Input() set picturesThemeName(imageName: string) {
-    const theme = localStorage.getItem('theme');
-    this.updateSrc(imageName, theme);
+    this.sub = this.themeService.theme$.subscribe((theme) => {
+      console.log(theme);
+      this.updateSrc(imageName, theme);
+    });
   }
-
-  // @Input() set picturesThemeName(imageName: string) {
-  //   this.sub = this.themeService.theme$.subscribe((theme) => {
-  //     this.updateSrc(imageName, theme);
-  //   });
-  // }
-
 
   constructor(
     private _renderer: Renderer2,
-    private _element: ElementRef
+    private _element: ElementRef,
+    private themeService: ThemeService
   ) { }
 
   updateSrc(imageName: string, theme: string) {
