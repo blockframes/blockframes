@@ -40,7 +40,7 @@ export interface StakeholderRaw extends IdentityRaw {
 
 export interface Stakeholder extends StakeholderRaw {
   role?: StakeholderRolesSlug, // overrided role scope from Person interface
-  logo: ImgRef;
+  logo?: ImgRef;
 }
 
 /**
