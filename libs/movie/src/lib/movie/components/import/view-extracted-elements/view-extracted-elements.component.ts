@@ -1063,13 +1063,13 @@ export class ViewExtractedElementsComponent {
           // BEGINNING OF RIGHTS
           if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
             const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
-            distributionDeal.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+            distributionDeal.terms.start = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
           }
 
           // END OF RIGHTS
           if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
             const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
-            distributionDeal.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+            distributionDeal.terms.end = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
           }
 
           // TERRITORIES (Mandate Territories)
@@ -1217,7 +1217,7 @@ export class ViewExtractedElementsComponent {
     }
 
     //  LICENSEE SHOW NAME
-    if (distributionDeal.licensee.showName === undefined) {
+    if (typeof distributionDeal.licensee.showName !== 'boolean') {
       errors.push({
         type: 'error',
         field: 'showOperatorName',
@@ -1228,7 +1228,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // BEGINNING OF RIGHTS
-    if (!distributionDeal.rights.from) {
+    if (!distributionDeal.terms.start) {
       errors.push({
         type: 'error',
         field: 'rights.from',
@@ -1239,7 +1239,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // END OF RIGHTS
-    if (!distributionDeal.rights.to) {
+    if (!distributionDeal.terms.end) {
       errors.push({
         type: 'error',
         field: 'rights.to',
@@ -1272,7 +1272,7 @@ export class ViewExtractedElementsComponent {
     }
 
     // DUBBINGS
-    if (Object.keys(distributionDeal.dubbings).length === 0) {
+    if (!Object.keys(distributionDeal.dubbings).length) {
       errors.push({
         type: 'error',
         field: 'dubbings',

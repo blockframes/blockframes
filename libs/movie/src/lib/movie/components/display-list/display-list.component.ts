@@ -5,6 +5,7 @@ import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { CartService } from 'apps/catalog/marketplace/marketplace/src/app/distribution-deal/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CatalogCartQuery } from '@blockframes/marketplace';
 
 @Component({
   selector: '[movies] movie-display-list',
@@ -23,10 +24,14 @@ export class MovieDisplayListComponent {
 
   @Output() navigate = new EventEmitter<string>();
 
-  constructor(private cartService: CartService, private snackbar: MatSnackBar) {}
+  constructor(
+    private cartService: CartService,
+    private snackbar: MatSnackBar,
+    private catalogCartQuery: CatalogCartQuery,
+  ) {}
 
   public toggle$(movieId: string) {
-    return this.cartService.isAddedToWishlist(movieId);
+    return this.catalogCartQuery.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie, event: Event) {

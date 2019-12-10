@@ -97,6 +97,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
   };
 }
 
+// @TODO #1052 remove this section .
+// merge movie.promotionalElements.promotionalElements and movie.promotionalElements.images  into `movie.promotionalElements`
 export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
@@ -105,7 +107,7 @@ export function createMoviePromotionalElements(
     promotionalElements: [],
     ...params
   };
-} // @TODO #1052 faire sauter la section car actuellement il y a movie.promotionalElements.promotionalElements et movie.promotionalElements.images  mais je vais fusionner les deux pour ne plus avoir que `movie.promotionalElements`
+}
 
 export function createMoviePromotionalDescription(
   params: Partial<MoviePromotionalDescription> = {}

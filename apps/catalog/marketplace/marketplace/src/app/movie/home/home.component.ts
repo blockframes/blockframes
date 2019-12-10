@@ -1,11 +1,11 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { CartService } from '../../distribution-deal/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImgRef } from '@blockframes/utils/image-uploader';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { CatalogCartQuery } from '../../distribution-deal/+state';
 
 interface CarouselSection {
   title: string;
@@ -28,7 +28,8 @@ export class MarketplaceHomeComponent implements OnInit {
     private movieQuery: MovieQuery,
     private cartService: CartService,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics
+    private analytics: FireAnalytics,
+    private catalogCartQuery: CatalogCartQuery,
   ) {
   }
 
@@ -75,7 +76,7 @@ export class MarketplaceHomeComponent implements OnInit {
   }
 
   public toggle$(movieId: string) {
-    return this.cartService.isAddedToWishlist(movieId);
+    return this.catalogCartQuery.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie, event: Event) {

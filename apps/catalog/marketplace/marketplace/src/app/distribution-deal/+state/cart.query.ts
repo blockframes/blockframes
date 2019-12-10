@@ -8,13 +8,13 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class CartQuery extends QueryEntity<CartState, CatalogCart> {
+export class CatalogCartQuery extends QueryEntity<CartState, CatalogCart> {
   constructor(protected store: CartStore, private movieQuery: MovieQuery, private organizationQuery: OrganizationQuery) {
     super(store);
   }
 
   /** Return an observable of a WishList array containing the movies */
-  public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([
+  public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([ // @todo(#1061)
     this.organizationQuery.selectActive(),
     this.movieQuery.selectAll()
   ]).pipe(
@@ -26,4 +26,20 @@ export class CartQuery extends QueryEntity<CartState, CatalogCart> {
       })
     })
   );
+
+
+  //////////////////
+  /// WISHLIST STUFF
+  //////////////////
+
+  /** Checks if a movie is or is not in the organization wishlist. */
+  public isAddedToWishlist(movieId: string): Observable<boolean> {
+    return this.organizationQuery.selectActive().pipe(
+      map(org => {
+        return org.wishlist
+          .filter(({ status }) => status === 'pending')
+          .some(({ movieIds }) => movieIds.includes(movieId))
+      })
+    );
+  }
 }

@@ -55,11 +55,6 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
       this.columnsToDisplay.push('delete');
       this.testId = 'currentWishlist';
     }
-
-    // @todo #1061 test zone => REMOVE
-    const myDeals = await this.service.getMyDeals();
-    console.log(myDeals);
-
   }
 
   // TODO: issue#1203 use a relative path

@@ -49,7 +49,6 @@ enum ResearchSteps {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DistributionDealCreateComponent implements OnInit, OnDestroy {
-  @HostBinding('attr.page-id') pageId = 'distribution-deal';
 
   // Enum for tracking the current research state
   public steps = ResearchSteps;
@@ -197,8 +196,6 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
 
   public startResearch() {
     console.log('todo #1022');
-
-    console.log(this.form.value);
   }
 
   public subscribeOnSearchForm(): Subscription {

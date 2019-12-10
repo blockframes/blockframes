@@ -1,29 +1,20 @@
-import { map } from 'rxjs/operators';
 import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state/movie.model';
-import { CartQuery } from './cart.query';
 import { Injectable } from '@angular/core';
-import { CatalogCart, createCart } from './cart.model';
+import { CatalogCart, createCart, CartStatus } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { CartState, CartStore } from './cart.store';
-import { CollectionConfig, syncQuery, Query, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
-import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
-
-const cartsQuery = (organizationId: string): Query<CatalogCart> => ({
-  path: `orgs/${organizationId}/cart`,
-  queryFn: ref => ref.where('status', '==', 'pending')
-});
+import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/carts' })
 export class CartService extends CollectionService<CartState> {
-  syncQuery = syncQuery.bind(this, cartsQuery(this.organizationQuery.getActiveId()));
 
   constructor(
     private organizationQuery: OrganizationQuery,
-    private cartQuery: CartQuery,
     private organizationService: OrganizationService,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
@@ -38,7 +29,7 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Adds a deal to cart identified by "name"
-   * @param deal 
+   * @param dealId 
    * @param name 
    */
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
@@ -47,30 +38,21 @@ export class CartService extends CollectionService<CartState> {
     return this.updateCart(cart);
   }
 
-  // TODO #1061 rework
-  public removeDistributionDeal(rightId: string, basketId: string) {
-    /*const findDistributionRight: DistributionRight[] = [];
-    this.cartQuery.getAll().forEach(baskets =>
-      baskets.deals.forEach(right => {
-        if (right.id === rightId) {
-          findDistributionRight.push(right);
-        }
-      })
-    );
-    // if there is only one distribution right in the basket, delete the basket
-    if (findDistributionRight.length <= 1) {
-      this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${basketId}`).delete();
-    } else {
-      this.cartQuery.getAll().forEach(baskets =>
-        baskets.deals.forEach(right => {
-          if (right.id !== rightId) {
-            this.db
-              .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${basketId}`)
-              .update(baskets);
-          }
-        })
-      );
-    }*/
+  /**
+   * 
+   * @param amount 
+   * @param currency
+   * @param _name
+   */
+  public async submitCart(amount: number, currency: MovieCurrenciesSlug, _name?: string) {
+    const name = _name ? _name : 'default';
+    const cart = await this.getCart(name);
+    const updatedCart: CatalogCart = {
+      ...cart,
+      price: { amount, currency },
+      status: CartStatus.submitted
+    };
+    this.updateCart(updatedCart);
   }
 
   /**
@@ -84,7 +66,7 @@ export class CartService extends CollectionService<CartState> {
     return cart;
   }
 
-  public async updateCart(cart: CatalogCart): Promise<CatalogCart> { // @todo #1061 private when cleaned setPriceCurrency()
+  private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)
       .update(cart);
@@ -96,6 +78,7 @@ export class CartService extends CollectionService<CartState> {
    * Performs a collection group query accross movies to retreive sales
    * @param type  licensee | licensor
    */
+  // @TODO #1061 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
     const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId())) // @todo #1061 => publicdistributiondeals
     const myDeals = await query.get().toPromise();
@@ -107,6 +90,7 @@ export class CartService extends CollectionService<CartState> {
    * Returns cart for given name if exists or create new one
    * @param name 
    */
+  // @TODO #1061 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async getCart(name: string): Promise<CatalogCart> {
     const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).ref.get();
     const cart = snap.data() as CatalogCart;
@@ -121,18 +105,11 @@ export class CartService extends CollectionService<CartState> {
   /// WISHLIST STUFF
   //////////////////
 
-  /** Checks if a movie is or is not in the organization wishlist. */
-  public isAddedToWishlist(movieId: string): Observable<boolean> {
-    return this.organizationQuery.selectActive().pipe(
-      map(org => {
-        return org.wishlist
-          .filter(({ status }) => status === 'pending')
-          .some(({ movieIds }) => movieIds.includes(movieId))
-      })
-    );
-  }
-
-  /** Update the status of the wishlist to 'sent' and create new date at this moment. */
+  /**
+   * Update the status of the wishlist to 'sent' and create new date at this moment.
+   * @param movies 
+   */
+  // @TODO #1061 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
     const org = this.organizationQuery.getActive();
@@ -150,6 +127,11 @@ export class CartService extends CollectionService<CartState> {
     return this.organizationService.update({ ...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist)) });
   }
 
+  /**
+   * 
+   * @param id 
+   */
+  // @TODO #1061 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public removeMovieFromWishlist(id: string): boolean | Error {
     try {
       const wishlist = this.organizationQuery.getActive().wishlist.map(w => {
@@ -169,6 +151,10 @@ export class CartService extends CollectionService<CartState> {
     }
   }
 
+  /**
+   * 
+   * @param movie 
+   */
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();
     const pendingWishlist = this.organizationQuery

@@ -1,4 +1,3 @@
-import { SalesAgent } from './../../../../../../../../libs/movie/src/lib/movie/+state/movie.model';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 // Angular
 import { Router } from '@angular/router';
@@ -55,6 +54,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { CatalogCartQuery } from '../../distribution-deal/+state';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -156,6 +156,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private routerQuery: RouterQuery,
     private movieService: MovieService,
     private cartService: CartService,
+    private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
@@ -513,7 +514,7 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public toggle$(movieId: string) {
-    return this.cartService.isAddedToWishlist(movieId);
+    return this.catalogCartQuery.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie) {

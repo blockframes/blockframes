@@ -14,7 +14,7 @@ import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movi
 
 function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
   // Create controls for the languages
-  const languageControl = Object.keys(deal.dubbings).reduce(
+  const languageControl = Object.keys(deal.dubbings).reduce( // @TODO better to mutate it to avoid double loop
     (acc, key) => ({
       ...acc,
       // Key is the name of the language, english, french etc.
@@ -30,8 +30,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
     languages: new FormGroup(languageControl, Validators.required),
     duration: new FormGroup(
       {
-        from: new FormControl(deal.rights.from, [Validators.required]),
-        to: new FormControl(deal.rights.to, [Validators.required])
+        from: new FormControl(deal.terms.start, [Validators.required]),
+        to: new FormControl(deal.terms.end, [Validators.required])
       },
       [Validators.required, numberRangeValidator('from', 'to')]
     ),

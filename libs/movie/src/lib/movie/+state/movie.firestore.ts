@@ -16,7 +16,7 @@ export const enum LicenseStatus {
   paid = 'paid',
 }
 
-export enum WorkType {
+export const enum WorkType {
   movie = 'Movie',
   short = 'Short',
   serie = 'Serie',
@@ -26,7 +26,7 @@ export enum WorkType {
   collection = 'Collection',
 }
 
-export enum FormatProfile {
+export const enum FormatProfile {
   unknown = 'unknown',
   HD = 'HD',
   SD = 'SD',
