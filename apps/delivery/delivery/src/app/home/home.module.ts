@@ -19,6 +19,7 @@ import { DeliveryHomeComponent } from './home.component';
 import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { MovieTitleFormComponent } from '@blockframes/movie/movie/components/movie-title-form/movie-title-form.component';
+import { PicturesModule } from '@blockframes/ui';
 
 // Guard
 import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.guard';
@@ -37,6 +38,7 @@ import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.g
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
+    PicturesModule,
     RouterModule.forChild([
       {
         path: '',
