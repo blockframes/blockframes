@@ -8,9 +8,6 @@ import { MOVIENAMELIST } from "../support/utils/movies";
 // Select user: cytest.thejokers@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[1];
 
-const REMOVE_MESSAGE = ' has been removed from your selection.'
-const ADD_MESSAGE = ' has been added to your selection.'
-
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
@@ -31,7 +28,6 @@ describe('Test wishlist icon from line-up page', () => {
     const p4: SearchPage = p3.clickContextMenuLineUp();
     MOVIENAMELIST.forEach(movieName => {
       p4.clickWishlistButton(movieName);
-      p5.checkMessage(movieName + ADD_MESSAGE);
     });
 
     // Go to wishlist and verify movies are here
@@ -44,7 +40,6 @@ describe('Test wishlist icon from line-up page', () => {
     // Remove movies from the current wishlist
     MOVIENAMELIST.forEach(movieName => {
       p5.removeMovieFromWishlist(movieName);
-      p5.checkMessage(movieName + REMOVE_MESSAGE);
     })
 
     // Check that current wishlist is empty
@@ -67,7 +62,6 @@ describe('Test wishlist icon from movie view page', () => {
     MOVIENAMELIST.forEach(movieName => {
       const p5: ViewPage = p4.selectMovie(movieName);
       p5.clickWishListButton();
-      p5.checkMessage(movieName + ADD_MESSAGE);
       p5.clickContextMenuLineUp();
     });
 
@@ -81,7 +75,6 @@ describe('Test wishlist icon from movie view page', () => {
     // Remove movies from the current wishlist
     MOVIENAMELIST.forEach(movieName => {
       p6.removeMovieFromWishlist(movieName);
-      p6.checkMessage(movieName + REMOVE_MESSAGE);
     })
 
     // Check that current wishlist is empty

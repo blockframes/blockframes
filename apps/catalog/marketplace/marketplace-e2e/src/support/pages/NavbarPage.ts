@@ -39,8 +39,4 @@ export default abstract class NavbarPage {
       .click();
     return new HomePage();
   }
-
-  public checkMessage(message: string) {
-    cy.contains(message, { timeout: 3000 });
-  }
 }
