@@ -23,4 +23,9 @@ export class TemplateRepertoryComponent {
 
   public dataSource: MatTableDataSource<Template>;
   public displayedColumns: string[] = ['name', 'created', 'action'];
+
+  public removeTemplate(template: Template, event: Event) {
+    this.delete.emit(template);
+    event.stopPropagation();
+  };
 }

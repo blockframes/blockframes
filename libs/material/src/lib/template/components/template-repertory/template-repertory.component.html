@@ -18,7 +18,7 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let template">
-      <button mat-button (click)="delete.emit(template); $event.stopPropagation()"><mat-icon>delete_outline</mat-icon></button>
+      <button mat-button (click)="removeTemplate(template, $event)"><mat-icon>delete_outline</mat-icon></button>
     </td>
   </ng-container>
 

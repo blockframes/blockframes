@@ -68,9 +68,7 @@ export class TemplateMaterialService extends CollectionService<MaterialState> {
   }
 
   async getTemplateMaterials(templateId: string) {
-    const materialsSnapshot = await this.db.firestore.collection(`templates/${templateId}/materials`).get();
-    const materials = [];
-    materialsSnapshot.forEach(material => materials.push(material.data()));
-    return materials as Material[];
+    const materialsSnapshot = await this.db.collection(`templates/${templateId}/materials`).ref.get();
+    return materialsSnapshot.docs.map(doc => doc.data() as Material);
   }
 }

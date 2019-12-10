@@ -38,10 +38,8 @@ export class MovieMaterialService extends CollectionService<MaterialState> {
       if (material.deliveryIds.length === 1) {
         this.remove(material.id, { write: tx });
       } else {
-        this.update(material.id, {
-          deliveryIds: material.deliveryIds.filter(id => id !== delivery.id)
-          },
-          { write: tx });
+        const deliveryIds = material.deliveryIds.filter(id => id !== delivery.id);
+        this.update(material.id, { deliveryIds }, { write: tx });
       }
       const deliveryRef = this.db.doc(`deliveries/${delivery.id}`).ref;
       tx.update(deliveryRef, { validated: [] })
@@ -102,11 +100,8 @@ export class MovieMaterialService extends CollectionService<MaterialState> {
   /** Update deliveryIds of a material when this one has the same values that an other. */
   public updateMaterialDeliveryIds(sameValuesMaterial: Material, delivery: Delivery, tx: firebase.firestore.Transaction) {
     if (!sameValuesMaterial.deliveryIds.includes(delivery.id)) {
-      this.update(sameValuesMaterial.id, {
-        deliveryIds: [...sameValuesMaterial.deliveryIds, delivery.id]
-        },
-        { write: tx }
-      );
+      const deliveryIds = [ ...sameValuesMaterial.deliveryIds, delivery.id ];
+      this.update(sameValuesMaterial.id, { deliveryIds }, { write: tx });
     }
   }
 
@@ -115,11 +110,8 @@ export class MovieMaterialService extends CollectionService<MaterialState> {
     if (sameIdMaterial.deliveryIds.length === 1) {
       return this.remove(material.id, { write: tx });
     } else {
-      return this.update(material.id, {
-        deliveryIds: sameIdMaterial.deliveryIds.filter(id => id !== delivery.id)
-      },
-      { write: tx }
-      );
+      const deliveryIds = sameIdMaterial.deliveryIds.filter(id => id !== delivery.id);
+      return this.update(material.id, { deliveryIds }, { write: tx });
     }
   }
 
