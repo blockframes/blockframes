@@ -1,6 +1,6 @@
 @import 'mixins';
 
-section {
+.video-section {
   background-image: url('/assets/images/banner_empty.png');
   background-attachment: fixed;
   background-size: cover;
@@ -10,6 +10,10 @@ section {
   video {
     outline: none;
   }
+}
+
+.join-section {
+  padding: 50px 0;
 }
 
 @include mobile {

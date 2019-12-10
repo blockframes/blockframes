@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,16 +8,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class CatalogFooterComponent implements OnInit {
+export class CatalogFooterComponent {
   public emailControl: FormControl = new FormControl('', Validators.email);
 
   constructor(private breakpoint: BreakpointObserver, private snackbar: MatSnackBar) { }
 
-  ngOnInit() { }
-
   public registerEmailForNewsletter() {
     if (this.emailControl.valid) {
-      // TODO #1366 
+      // TODO #1366
       this.snackbar.open('Thanks for subscribing to the newsletter', 'close',
         { duration: 3000 })
     }

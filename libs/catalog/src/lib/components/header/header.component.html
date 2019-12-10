@@ -1,33 +1,13 @@
-<mat-toolbar id="header" class="mat-elevation-z2 transparent-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
-  <span fxLayout="row" fxLayoutAlign="space-between center">
-    <ng-container>
-      <button fxHide.xs mat-icon-button routerLink="/welcome">
-        <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
-      </button>
-    </ng-container>
-
-    <ng-container>
-      <div fxHide.gt-xs>
-        <button mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
-    </ng-container>
-
-    <nav fxHide.xs mat-tab-nav-bar mat-align-tabs="center">
-      <a mat-tab-link [href]="">
-        About us
-      </a>
-      <a mat-tab-link [href]="">
-        FAQ
-      </a>
-      <a mat-tab-link [href]="">
-        Schedule a demo
-      </a>
-    </nav>
-  </span>
-  <span>
-    <a mat-button routerLink="/auth/connexion"><span class="bf-strong">Login</span></a>
-    <a mat-stroked-button routerLink="/auth/connexion"><span class="bf-strong">Sign up</span></a>
-  </span>
-</mat-toolbar>
+<header
+  fxLayout="column"
+  fxLayoutAlign="center start"
+  fxLayoutAlign.xs="center center"
+  fxLayoutGap="20px">
+  <h3>Archipel Content</h3>
+  <span class="first-header-text">The only marketplace offering package deals</span>
+  <span class="second-header-text">for TV, VOD and ancillary rights</span>
+  <a mat-flat-button color="accent" test-id="discover" routerLink="/auth/connexion">
+    <span>Join now</span>
+    <mat-icon>arrow_forward</mat-icon>
+  </a>
+</header>

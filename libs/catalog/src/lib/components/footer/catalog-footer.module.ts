@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [CatalogFooterComponent],
@@ -16,7 +15,6 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    RouterModule,
 
     // Material
     MatInputModule,
