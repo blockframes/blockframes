@@ -1,0 +1,171 @@
+@import 'mixins';
+
+header {
+  padding: 50px 0;
+  background-size: cover;
+  text-align: center;
+
+  h1 {
+    text-align: start;
+  }
+}
+
+.view-content {
+  margin-top: 60px;
+  margin-left: 100px;
+  margin-right: 200px;
+  &.heart {
+    margin: 30px 200px;
+  }
+}
+
+.mat-divider {
+  margin: 0 20px;
+  width: 100%;
+}
+
+.titles {
+  width: 500px;
+}
+
+.mat-card .mat-divider-horizontal.mat-divider-inset {
+  margin-top: 20px;
+}
+
+.film-informations {
+  margin-top: 15px;
+}
+
+.poster-column {
+  width: 50%;
+  margin-right: 15px;
+}
+
+.information-column {
+  width: 100%;
+  margin-left: 15px;
+}
+
+.movie-poster {
+  width: 410px;
+  height: 545px;
+}
+
+.movie-presentation {
+  padding: 50px;
+  border-radius: 10px;
+}
+
+.informations {
+  padding: 50px;
+  padding-top: 20px;
+  border-radius: 10px;
+}
+
+.mat-flat-button {
+  margin: 10px;
+}
+
+h1 {
+  margin-bottom: 8px;
+}
+
+.sub-title span {
+  font-size: 24px;
+}
+
+.movie-info {
+  margin-top: 60px;
+  width: 100%;
+}
+
+.heart-button {
+  width: 200px;
+  float: right;
+  right: 200px;
+  bottom: 40px;
+  span {
+    margin-left: 10px;
+    font-size: 16px;
+  }
+}
+
+@include mobile {
+  .view-content {
+    margin-left: 0;
+    margin-right: 0;
+    &.heart {
+      margin: 0;
+    }
+    .poster-column {
+      width: 80%;
+      margin-right: 0;
+    }
+
+    .information-column {
+      margin-top: 20px;
+      width: 80%;
+      margin-left: 0;
+      padding: 0;
+    }
+  }
+
+  .movie-poster {
+    width: 200px;
+    height: auto;
+  }
+
+  .heart-button {
+    width: auto;
+    right: 10px;
+    bottom: 0px;
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
+@include tablet {
+  .view-content {
+    margin-left: 10px;
+    margin-right: 10px;
+    &.heart {
+      margin: 20px 100px;
+    }
+    .poster-column {
+      width: 80%;
+      margin-right: 0;
+    }
+    .movie-presentation mat-divider {
+      width: 70%;
+    }
+
+    .information-column {
+      margin-top: 50px;
+      width: 80%;
+      margin-left: 0;
+      padding: 0;
+    }
+  }
+  .movie-poster {
+    width: 400px;
+    height: auto;
+  }
+  .heart-button {
+    right: 20px;
+  }
+}
+
+@include medium {
+  .view-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+  .movie-poster {
+    width: 350px;
+    height: auto;
+  }
+  .heart-button {
+    right: 50px;
+  }
+}
