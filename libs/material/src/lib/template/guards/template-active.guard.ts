@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { TemplateState, TemplateService } from "../+state";
+import { TemplateService } from "../+state/template.service";
+import { TemplateState } from "../+state/template.store";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })

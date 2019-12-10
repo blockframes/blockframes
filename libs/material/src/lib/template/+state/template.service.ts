@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationQuery } from '@blockframes/organization';
-import { CollectionConfig, CollectionService, WriteOptions, AtomicWrite } from 'akita-ng-fire';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { Material } from '../../material/+state/material.model';
-import { MaterialService } from '../../material/+state/material.service';
 import { createTemplate, Template } from './template.model';
 import { TemplateQuery } from './template.query';
 import { TemplateState, TemplateStore } from './template.store';
+import { TemplateMaterialService } from '../../material/+state/template-material.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'templates' })
@@ -20,10 +20,11 @@ export class TemplateService extends CollectionService<TemplateState>{
   );
 
   constructor(
+    store: TemplateStore,
+    private templateMaterialService: TemplateMaterialService,
+    private organizationService: OrganizationService,
     private query: TemplateQuery,
-    private organizationQuery: OrganizationQuery,
-    private materialService: MaterialService,
-    store: TemplateStore
+    private organizationQuery: OrganizationQuery
   ) {
     super(store)
   }
@@ -51,7 +52,7 @@ export class TemplateService extends CollectionService<TemplateState>{
   /** Hook that triggers when a template is added to the database. */
   onCreate(template: Template, write: WriteOptions) {
     const organization = this.organizationQuery.getActive();
-    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds: [...organization.templateIds, template.id]});
+    this.organizationService.update(organization.id, { templateIds: [...organization.templateIds, template.id] });
    }
 
   /** Hook that triggers when a template is removed from the database. */
@@ -59,7 +60,7 @@ export class TemplateService extends CollectionService<TemplateState>{
     const organization = this.organizationQuery.getActive();
     const templateIds = organization.templateIds.filter(id => id !== templateId);
 
-    this.db.doc<Organization>(`orgs/${organization.id}`).update({templateIds});
+    this.organizationService.update(organization.id, { templateIds });
   }
 
   /** Save a delivery as new template. */
@@ -68,9 +69,9 @@ export class TemplateService extends CollectionService<TemplateState>{
       // Add a new template
       const template = this.createTemplate(templateName);
 
-      // Add the delivery's materials in the template
-      await this.materialService.getTemplateMaterials(template.id);
-      materials.forEach(material => this.materialService.add(material));
+      // Set active the template, and add the delivery's materials in the template
+      this.store.setActive(template.id);
+      this.templateMaterialService.add(materials);
     }
   }
 
@@ -78,13 +79,16 @@ export class TemplateService extends CollectionService<TemplateState>{
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await this.materialService.getTemplateMaterials(selectedTemplate.id);
+    const templateMaterials = await this.templateMaterialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
+      const batch = this.db.firestore.batch();
       // Delete all materials of template
-      templateMaterials.forEach(material => this.materialService.remove(material.id));
+      const ids = templateMaterials.map(({ id }) => id);
+      this.templateMaterialService.remove(ids, { write: batch });
       // Add delivery's materials in template
-      materials.forEach(material => this.materialService.add(material));
+      this.templateMaterialService.add(materials, { write: batch });
+      return batch.commit();
     }
   }
 

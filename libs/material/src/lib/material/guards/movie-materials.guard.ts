@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard } from 'akita-ng-fire';
 import { MaterialState, MaterialStore } from '../+state/material.store';
-import { MaterialService } from '../+state/material.service';
-import { ActivatedRouteSnapshot } from '@angular/router';
 import { MaterialQuery } from '../+state/material.query';
+import { MovieMaterialService } from '../+state/movie-material.service';
 
 @Injectable({ providedIn: 'root' })
 export class MovieMaterialsGuard extends CollectionGuard<MaterialState> {
-  constructor(service: MaterialService, private store: MaterialStore, private query: MaterialQuery) {
+  constructor(
+    service: MovieMaterialService,
+    private store: MaterialStore,
+    private query: MaterialQuery,
+  ) {
     super(service);
   }
 
@@ -15,8 +18,8 @@ export class MovieMaterialsGuard extends CollectionGuard<MaterialState> {
     return this.query.getCount() === 0;
   }
 
-  sync(next: ActivatedRouteSnapshot) {
+  sync() {
     this.store.reset();
-    return this.service.syncCollection(`movies/${next.params.movieId}/materials`);
+    return this.service.syncCollection();
   }
 }

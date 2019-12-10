@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, HostBinding } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { Currencies } from '../../../delivery/+state';
 import { MaterialControl } from '../../forms/material.form';
 import { FormEntity } from '@blockframes/utils';
 import { MaterialTemplate } from '../../../material/+state';
+import { Currencies } from '../../../delivery/+state/delivery.model';
 
 @Component({
   selector: '[formGroup] template-material-form',

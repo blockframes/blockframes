@@ -7,8 +7,8 @@ import { Template } from '../../+state/template.model';
 import { TemplateQuery } from '../../+state/template.query';
 import { createMaterialTemplate, MaterialTemplate } from '../../../material/+state/material.model';
 import { MaterialQuery } from '../../../material/+state/material.query';
-import { MaterialService } from '../../../material/+state/material.service';
 import { MaterialControl, MaterialForm } from '../../forms/material.form';
+import { TemplateMaterialService } from '../../../material/+state/template-material.service';
 
 @Component({
   selector: 'template-editable',
@@ -28,7 +28,7 @@ export class TemplateEditableComponent implements OnInit {
   constructor(
     private query: TemplateQuery,
     private materialQuery: MaterialQuery,
-    private materialService: MaterialService,
+    private templateMaterialService: TemplateMaterialService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -52,7 +52,7 @@ export class TemplateEditableComponent implements OnInit {
   public async updateMaterials() {
     try {
       const materials = this.form.getAll();
-      await this.materialService.updateTemplateMaterials(materials);
+      await this.templateMaterialService.updateTemplateMaterials(materials);
       this.snackBar.open('Materials updated', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
@@ -60,7 +60,7 @@ export class TemplateEditableComponent implements OnInit {
   }
 
   public addMaterial() {
-    const newMaterial = this.materialService.addTemplateMaterial();
+    const newMaterial = this.templateMaterialService.addTemplateMaterial();
     this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }
@@ -73,7 +73,7 @@ export class TemplateEditableComponent implements OnInit {
         this.opened = false;
         return;
       }
-      this.materialService.deleteTemplateMaterial(materialId);
+      this.templateMaterialService.deleteTemplateMaterial(materialId);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {

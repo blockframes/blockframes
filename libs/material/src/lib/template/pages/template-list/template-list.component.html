@@ -7,7 +7,7 @@
       <span>Add a template</span>
     </a>
   </article>
-  <article *ngIf="(templates$ | async) as template">
-    <template-repertory [templates]="template" (delete)="deleteTemplate($event, template)"></template-repertory>
+  <article *ngIf="(templates$ | async) as templates">
+    <template-repertory [templates]="templates" (delete)="deleteTemplate($event)"></template-repertory>
   </article>
 </section>

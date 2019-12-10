@@ -2,17 +2,19 @@ import { Injectable } from '@angular/core';
 import {
   StoreConfig,
   EntityStore,
+  ActiveState,
+  EntityState,
 } from '@datorama/akita';
-import { CollectionState } from 'akita-ng-fire';
 
 import {
   Organization,
   convertOrganizationWithTimestampsToOrganization,
   AppDetailsWithStatus,
+  OrganizationWithTimestamps,
 } from './organization.model';
 
 
-export interface OrganizationState extends CollectionState<Organization> {
+export interface OrganizationState extends EntityState<Organization>, ActiveState<string> {
   appsDetails: AppDetailsWithStatus[];
 }
 
@@ -28,13 +30,11 @@ export class OrganizationStore extends EntityStore<OrganizationState, Organizati
     super(initialState);
   }
 
-  // TODO: #issue1288, type correctly organization
-  akitaPreAddEntity(organization: any): Organization {
+  akitaPreAddEntity(organization: OrganizationWithTimestamps): Organization {
     return convertOrganizationWithTimestampsToOrganization(organization);
   }
 
-  // TODO: #issue1288, type correctly organization
-  akitaPreUpdateEntity(currentOrg: any, nextOrg: any) {
+  akitaPreUpdateEntity(currentOrg: Organization, nextOrg: OrganizationWithTimestamps) {
     return convertOrganizationWithTimestampsToOrganization(nextOrg);
   }
 }
