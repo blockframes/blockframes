@@ -1,0 +1,22 @@
+<mat-toolbar id="toolbar" class="mat-elevation-z2 transparent-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+  <span fxLayout="row" fxLayoutAlign="space-between center">
+    <ng-container>
+      <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+    </ng-container>
+    <nav mat-tab-nav-bar mat-align-tabs="center" fxLayout="row" fxLayoutAlign="center center">
+      <a mat-tab-link routerLink="">
+        About us
+      </a>
+      <a mat-tab-link routerLink="">
+        FAQ
+      </a>
+      <a mat-tab-link routerLink="">
+        Schedule a demo
+      </a>
+    </nav>
+  </span>
+  <span>
+    <a mat-button routerLink="/auth/welcome"><span class="bf-strong">Login</span></a>
+    <a mat-stroked-button routerLink="/auth/welcome"><span class="bf-strong">Sign up</span></a>
+  </span>
+</mat-toolbar>

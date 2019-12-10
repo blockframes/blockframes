@@ -1,0 +1,47 @@
+<section>
+  <h1>Want to learn more?</h1>
+  <h3>Schedule a demo with our team!</h3>
+  <p>
+    Program a personalized demonstration of the platform with a member of the Archipel Content team.
+  </p>
+  <p>
+    Please fill out the form and we will get back to you to choose the best time.
+  </p>
+  <form fxLayout="column" [formGroup]="form" (ngSubmit)="sendRequest.emit(form)">
+    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+      <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+        <mat-error *ngIf="form.errors && form.get('firstName').hasError('required')">
+          First name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <mat-error *ngIf="form.errors && form.get('lastName').hasError('required')">
+          Last name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </article>
+    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+      <mat-form-field appearance="outline">
+        <mat-label>Company name</mat-label>
+        <input matInput type="text" placeholder="Company name" formControlName="companyName" required />
+        <mat-error *ngIf="form.errors && form.get('conpanyName').hasError('required')">
+          Company name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select placeholder="Role" formControlName="role" required>
+          <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.errors && form.get('role').hasError('required')">
+          Role is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </article>
+    <button fxFlexAlign="center" mat-flat-button color="accent" type="submit"><span>Send a demo request</span></button>
+  </form>
+</section>

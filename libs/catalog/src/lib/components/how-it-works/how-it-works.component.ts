@@ -9,7 +9,7 @@ export class CatalogHowItWorksComponent {
   public features = [
     {
       title: 'Bulk Import',
-      description: 'Import large amounts of data easily (either by directly filling a predefined template or with the help of an    Archipel Content team member).'
+      description: 'Import large amounts of data easily (either by directly filling a predefined template or with the help of an Archipel Content team member).'
     },
     {
       title: 'Deals Management',

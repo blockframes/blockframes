@@ -1,3 +1,14 @@
+.app-icon,
+.app-icon-button {
+  border-radius: 0;
+  width: 157px;
+}
+
+button {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 header {
   padding-top: calc(var(--toolbarHeight) * 2);
   padding-bottom: 5%;
@@ -28,4 +39,8 @@ header {
   a {
     margin-top: 20px;
   }
+}
+
+main {
+  height: 100%;
 }

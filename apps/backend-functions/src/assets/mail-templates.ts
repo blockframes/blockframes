@@ -162,3 +162,11 @@ export function sendWishlist(userName: string, orgName: string, wishlist: string
     text: wishlistSent(userName, orgName, wishlist)
   }
 }
+
+export function sendDemoRequestMail(firstName: string, lastName: string, companyName: string, role: string) {
+  return {
+    to: adminEmail,
+    subject: 'A demo has been requested',
+    text: `${firstName} ${lastName}, ${role} from ${companyName} wants to schedule a demo of Archipel Content.`
+  }
+}

@@ -80,6 +80,9 @@ export const findOrgByName = functions.https
 /** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
 
+/** Trigger: REST call to send a mail to an admin for demo request. */
+export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
+
 /**
  * Trigger: REST call to the /admin app
  *
