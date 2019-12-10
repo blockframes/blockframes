@@ -84,7 +84,8 @@ export class TemplateService extends CollectionService<TemplateState>{
     if (materials.length > 0) {
       const batch = this.db.firestore.batch();
       // Delete all materials of template
-      templateMaterials.forEach(material => this.templateMaterialService.remove(material.id, { write: batch }));
+      const ids = templateMaterials.map(({ id }) => id);
+      this.templateMaterialService.remove(ids, { write: batch });
       // Add delivery's materials in template
       this.templateMaterialService.add(materials, { write: batch });
       return batch.commit();
