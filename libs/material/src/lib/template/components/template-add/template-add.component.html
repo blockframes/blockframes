@@ -6,7 +6,8 @@
       <mat-label>Template title</mat-label>
       <input matInput testId="templateName" #templateName placeholder="Template title" />
     </mat-form-field>
-    <img src="/assets/images/create_template_380.png" alt="Add Template Illustration"/>
+    <!-- TODO #1387 -->
+    <img [picturesThemePath]="'AddTemplate_380.png'" alt="Add Template Illustration"/>
   </article>
 
   <article mat-dialog-actions fxLayout="column" fxLayoutAlign="center center">
