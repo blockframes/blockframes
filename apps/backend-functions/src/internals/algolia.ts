@@ -1,6 +1,6 @@
 import algoliasearch from 'algoliasearch';
-
 import { algolia } from '../environments/environment';
+import pick from 'lodash/pick';
 
 const indexOrganizationsBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -40,5 +40,21 @@ export function storeSearchableMovie(
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
-  return indexMoviesBuilder(adminKey).saveObject({ objectID: movie.id, movie });
+  const ALGOLIA_FIELDS: string[] = [
+    'main.genres',
+    'main.title.international',
+    'main.title.original',
+    'main.directors',
+    'main.language',
+    'main.status',
+    'main.originCountries',
+    'promotionalDescription.keywords',
+    'salesAgentDeal.salesAgent.displayName',
+    'versionInfo.dubbings',
+    'versionInfo.subtitles'
+  ];
+  return indexMoviesBuilder(adminKey).saveObject({
+    objectID: movie.id,
+    movie: pick(movie, ALGOLIA_FIELDS)
+  });
 }

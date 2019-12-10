@@ -14,7 +14,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
-import {CropperModule} from '@blockframes/ui/cropper/cropper.module'
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module'
 
 @NgModule({
   declarations: [MarketplaceHomeComponent],

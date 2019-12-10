@@ -6,81 +6,35 @@ export const baseRoute = `${appsRoute}/${App.biggerBoat}`;
 
 export const baseMenu = [
   {
-    route: `${baseRoute}/home`,
+    route: 'default',
     items: [
       {
         name: 'home',
-        path: `${baseRoute}/home`
+        path: `${baseRoute}/home`,
+        icon: 'home_sidebar'
       },
       {
         name: 'Line-up',
-        path: `${baseRoute}/search`
-      },
-      {
-        name: 'wishlist',
-        path: `${baseRoute}/wishlist/overview`
+        path: `${baseRoute}/search`,
+        icon: 'search_sidebar'
       }
     ]
   },
   {
-    route: `${baseRoute}/search`,
-    items: [
-      {
-        name: 'home',
-        path: `${baseRoute}/home`
-      },
-      {
-        name: 'Line-up',
-        path: `${baseRoute}/search`
-      },
-      {
-        name: 'wishlist',
-        path: `${baseRoute}/wishlist/overview`
-      }
-    ]
-  },
-  {    // TODO issue#1146
-    route: `${baseRoute}/wishlist/overview`,
-    items: [
-      {
-        name: 'home',
-        path: `${baseRoute}/home`
-      },
-      {
-        name: 'Line-up',
-        path: `${baseRoute}/search`
-      },
-      {
-        name: 'wishlist',
-        path: `${baseRoute}/wishlist/overview`
-      }
-    ]
+    route: '/layout/organization/home',
+    items: []
   },
   {
-    route: `${baseRoute}/:movieId/create`,
-    items: [
-      {
-        name: 'view',
-        path: `${baseRoute}/:movieId/view`
-      },
-      {
-        name: 'create',
-        path: `${baseRoute}/:movieId/create`
-      }
-    ]
+    route: '/layout/organization/create',
+    items: []
   },
   {
-    route: `${baseRoute}/:movieId/view`,
-    items: [
-      {
-        name: 'view',
-        path: `${baseRoute}/:movieId/view`
-      },
-      {
-        name: 'create',
-        path: `${baseRoute}/:movieId/create`
-      }
-    ]
+    route: '/layout/organization/find',
+    items: []
+  },
+  {
+    route: '/layout/organization/congratulations',
+    items: []
   }
 ];
 

@@ -61,7 +61,7 @@ export default class SearchPage extends NavbarPage {
     return new ViewPage();
   }
 
-  public addMovieToWishlist(movieName: string) {
+  public clickWishlistButton(movieName: string) {
     cy.get('[page-id=display-card]').contains('movie-card', movieName).find('button').click();
     cy.wait(2000);
   }

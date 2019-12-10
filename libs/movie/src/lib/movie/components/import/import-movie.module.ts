@@ -25,7 +25,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Libraries
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { MovieDisplayModule } from '../../display/display.module';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -87,6 +88,7 @@ const routes: Routes = [
     UiFormModule,
     MovieDisplayModule,
     CropperModule,
+    ImageReferenceModule
   ],
   entryComponents: [
     PreviewSheetComponent,

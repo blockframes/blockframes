@@ -14,12 +14,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Components
 import { CropperComponent } from './cropper/cropper.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ImageReferenceDirective } from './image-reference.directive';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
-  declarations: [DropZoneDirective, CropperComponent, ImageReferenceDirective],
+  declarations: [DropZoneDirective, CropperComponent],
   imports: [
     CommonModule,
+    ImageReferenceModule,
     HttpClientModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -28,6 +29,6 @@ import { ImageReferenceDirective } from './image-reference.directive';
     ImageCropperModule,
     FlexLayoutModule
   ],
-  exports: [DropZoneDirective, CropperComponent, ImageReferenceDirective]
+  exports: [DropZoneDirective, CropperComponent]
 })
 export class CropperModule {}

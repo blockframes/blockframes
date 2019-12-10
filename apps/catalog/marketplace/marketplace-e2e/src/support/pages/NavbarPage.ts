@@ -16,6 +16,10 @@ export default abstract class NavbarPage {
     return new WishlistPage();
   }
 
+  public checkWishListCount(count: number) {
+    cy.get('[page-id=navbar] a[test-id=heartIcon]').should('contain', count);
+  }
+
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();

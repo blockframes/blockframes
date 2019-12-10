@@ -20,7 +20,18 @@ export default class WishlistPage extends NavbarPage {
     cy.get('[test-id=currentWishlist] td').contains(movieName);
   }
 
+  public assertNoMovieInWishlist() {
+    cy.get('[test-id=currentWishlist] table').children('tr').should((tr) => expect(tr).to.not.exist);
+  }
+
   public assertMovieInSentWishlist(movieName: string) {
     cy.get('[test-id=sentWishlist] td').contains(movieName);
+  }
+
+  public removeMovieFromWishlist(movieName: string) {
+    cy.get('[test-id=currentWishlist]').contains(movieName).parent('td').parent('tr').within(() => {
+      cy.get('button').click();
+    });
+    cy.wait(1000);
   }
 }

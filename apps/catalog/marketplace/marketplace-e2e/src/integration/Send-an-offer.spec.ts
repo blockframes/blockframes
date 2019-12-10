@@ -30,8 +30,8 @@ describe('Test submit wishlist to sellers', () => {
 
     // Go to home page and add movies to the current wishlist
     const p5: HomePage = p4.clickContextMenuHome();
-    p5.addMovieToWishlist(MOVIENAMELIST[0]);
-    p5.addMovieToWishlist(MOVIENAMELIST[1]);
+    p5.clickWishlistButton(MOVIENAMELIST[0]);
+    p5.clickWishlistButton(MOVIENAMELIST[1]);
 
     // Go to wishlist and submit to sellers
     const p6: WishlistPage = p5.clickWishlist();
