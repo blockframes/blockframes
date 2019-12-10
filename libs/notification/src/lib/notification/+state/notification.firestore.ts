@@ -1,8 +1,9 @@
 import { PublicOrganization } from '@blockframes/organization/types';
 import { PublicMovie } from '@blockframes/movie/types';
-import * as admin from 'firebase-admin';
-import { App } from '@blockframes/utils/apps';
-import { PublicUser } from 'apps/backend-functions/src/data/types';
+import { App } from '@blockframes/movie/movie/static-model/staticModels';
+import { firestore } from 'firebase/app';
+import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
+type Timestamp = firestore.Timestamp;
 
 /** Type of Notification depending of its origin. */
 export const enum NotificationType {
@@ -10,6 +11,7 @@ export const enum NotificationType {
   finalSignature = 'finalSignature',
   createDocument = 'createDocument',
   deleteDocument = 'deleteDocument',
+  updateDocument = 'updateDocument',
   inviteOrganization = 'inviteOrganization',
   removeOrganization = 'removeOrganization',
   pathToDocument = 'pathToDocument',
@@ -38,15 +40,15 @@ export interface NotificationOptions {
 export interface NotificationDocument extends NotificationOptions {
   id: string;
   isRead: boolean;
-  date: FirebaseFirestore.FieldValue;
+  date: Timestamp;
 };
 
 /** Createa a Notification with required and generic informations. */
 export function createNotification(notification: NotificationOptions): NotificationDocument {
   return {
-    id: admin.firestore().collection('notifications').doc().id,
+    id: firestore().collection('notifications').doc().id,
     isRead: false,
-    date: admin.firestore.FieldValue.serverTimestamp(),
+    date: firestore.Timestamp.now(),
     ...notification
   };
 }
