@@ -62,7 +62,7 @@ export class MovieService extends CollectionService<MovieState> {
   async onCreate(movie: Movie, write: WriteOptions) {
     const organizationId = this.organizationQuery.getActiveId();
     const organization = await this.organizationService.getValue(organizationId);
-    return this.db.doc<Organization>(`orgs/${organizationId}`).update({movieIds: [...organization.movieIds, movie.id]})
+    return this.db.doc<Organization>(`orgs/${organizationId}`).update({ movieIds: [...organization.movieIds, movie.id] })
   }
 
   public updateById(id: string, movie: any): Promise<void> {
@@ -97,7 +97,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
-    // @TODO #1061 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
+    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
     const dealId = objectHash(distributionDeal);
     distributionDeal.id = dealId;
     await this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
@@ -120,17 +120,18 @@ export class MovieService extends CollectionService<MovieState> {
    */
   public async getDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
     const deals = await this.distributionDealsCollection(movieId).get().toPromise();
-    return deals.docs.map(doc => {
-      const data = doc.data();
-      // Dates from firebase are Timestamps, we convert it to Dates.
-      if(data.rights.from instanceof firestore.Timestamp) {
-        data.rights.from = data.rights.from.toDate();
-      }
+    return deals.docs.map(doc => this.formatDistributionDeal(doc.data()));
+  }
 
-      if(data.rights.to instanceof firestore.Timestamp) {
-        data.rights.to = data.rights.to.toDate();
-      }
-      return data as DistributionDeal;
-    })
+  public formatDistributionDeal(deal: any) : DistributionDeal{
+    // Dates from firebase are Timestamps, we convert it to Dates.
+    if (deal.terms.start instanceof firestore.Timestamp) {
+      deal.terms.start = deal.terms.start.toDate();
+    }
+
+    if (deal.terms.end instanceof firestore.Timestamp) {
+      deal.terms.end = deal.terms.end.toDate();
+    }
+    return deal as DistributionDeal;
   }
 }

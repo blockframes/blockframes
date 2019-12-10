@@ -88,7 +88,7 @@ export class MovieFormRootComponent {
         this.form.main.productionCompanies.clear();
         movie.production.split(',').forEach((a: string) => {
           this.form.main.productionCompanies.push(new FormEntity<CreditFormControl>({
-            firstName: new FormControl(a.trim()),
+            displayName: new FormControl(a.trim()),
           }));
         })
 

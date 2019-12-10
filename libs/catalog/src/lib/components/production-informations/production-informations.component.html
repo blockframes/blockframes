@@ -4,14 +4,13 @@
       Production {{productionCompanies.length <= 1 ? 'company':'companies'}}
     </p>
     <div *ngFor="let company of productionCompanies; let i = index" fxLayout="row nowrap">
-      {{company.firstName}}
-      {{company.lastName}}
+      {{company.displayName}}
     </div>
   </article>
   <article fxLayout="column">
     <p class="bf-dark-text">Sales agent</p>
-    <ng-container *ngIf="salesAgentDealLogo; else placeholder">
-      <img [imgRef]="salesAgentDealLogo">
+    <ng-container *ngIf="salesAgentDealAvatar; else placeholder">
+      <img [imgRef]="salesAgentDealAvatar">
     </ng-container>
     <ng-template #placeholder>
       <b>-</b>

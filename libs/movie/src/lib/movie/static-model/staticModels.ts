@@ -164,7 +164,7 @@ const models: Model = {
       'label': 'Completed'
     }
   ] as const,
-  'LANGUAGES': [
+  'LANGUAGES': [ // @TODO (#1388) transform to RFC-5646
     { 'slug': 'albanian', 'label': 'Albanian' },
     { 'slug': 'arabic', 'label': 'Arabic' },
     { 'slug': 'armenian', 'label': 'Armenian' },
@@ -364,7 +364,7 @@ const models: Model = {
       'label': 'EOF'
     }
   ] as const,
-  'TERRITORIES': [
+  'TERRITORIES': [ // @TODO (#1388) transform to ISO-3166
     { 'slug': 'world', 'label': 'World' },
     { 'slug': 'afghanistan', 'label': 'Afghanistan' },
     { 'slug': 'albania', 'label': 'Albania' },

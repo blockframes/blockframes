@@ -180,14 +180,14 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   }
 
   public async addDistributionDeal() {
-    const distributionDeal = createDistributionDeal(); // @todo #1061 populate with form values
+    const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
     distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
 
     const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal);
 
     this.cartService.addDealToCart(dealId, 'default');
     this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
-    // @todo #1061 uncomment this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
   //////////////////////

@@ -52,8 +52,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
-    const dealsFrom: Date = new Date(deal.rights.from);
-    const dealsTo: Date = new Date(deal.rights.to);
+    const dealsFrom: Date = new Date(deal.terms.start);
+    const dealsTo: Date = new Date(deal.terms.end);
     /**
      * If the form date 'from' is between a deal from and to, it means that there
      * are already deals made, but it is still possible to buy a distribution right
@@ -120,7 +120,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
 
     let territoriesInCommon = false;
     for (const territory of formTerritories) {
-      for (const saleTerritory of deal.territories) {
+      for (const saleTerritory of deal.territory) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
         }
@@ -132,15 +132,14 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
 
     let dubbingInCommon = false;
     for (const language of languagesName) {
-      deal.dubbings[language].dubbed
-      if (deal.dubbings[language] && deal.dubbings[language].dubbed) {
+      if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
         dubbingInCommon = true;
       }
     }
 
     let subtitlesInCommon = false;
     for (const language of languagesName) {
-      if (deal.subtitles.includes(language)) {
+      if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
         subtitlesInCommon = true;
       }
     }

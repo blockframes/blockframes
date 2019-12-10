@@ -9,5 +9,5 @@ import { ImgRef } from '@blockframes/utils';
 })
 export class CatalogProductionInformationsComponent {
   @Input() productionCompanies: Company[];
-  @Input() salesAgentDealLogo: ImgRef;
+  @Input() salesAgentDealAvatar: ImgRef;
 }

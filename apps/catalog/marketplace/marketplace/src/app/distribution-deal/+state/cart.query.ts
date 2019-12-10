@@ -13,8 +13,14 @@ export class CatalogCartQuery extends QueryEntity<CartState, CatalogCart> {
     super(store);
   }
 
-  /** Return an observable of a WishList array containing the movies */
-  public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([ // @todo(#1061)
+  //////////////////
+  /// WISHLIST STUFF
+  //////////////////
+
+  /**
+   * @dev Return an observable of a WishList array containing the movies
+   */
+  public wishlistWithMovies$: Observable<Wishlist[]> = combineLatest([
     this.organizationQuery.selectActive(),
     this.movieQuery.selectAll()
   ]).pipe(
@@ -26,11 +32,6 @@ export class CatalogCartQuery extends QueryEntity<CartState, CatalogCart> {
       })
     })
   );
-
-
-  //////////////////
-  /// WISHLIST STUFF
-  //////////////////
 
   /** Checks if a movie is or is not in the organization wishlist. */
   public isAddedToWishlist(movieId: string): Observable<boolean> {

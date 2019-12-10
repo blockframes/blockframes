@@ -4,7 +4,7 @@ import { CreditRolesSlug, StakeholderRolesSlug, LegalRolesSlug } from "@blockfra
 //////////////////////////
 // VARIOUS IDENTIY OBJECTS
 // @dev [WIP] Inclusive & LGBT compatible model
-// right now even a company can identify as a human!
+// right now even a company can identify as a human! @TODO (#1388)
 //////////////////////////
 
 /**
@@ -23,8 +23,6 @@ interface IdentityRaw {
    * can be used for various usages: credit role, stakeholder role (for contracts) 
    */
   role?: string,
-
-  logo?: ImgRef, // @todo #1061 logo or avatar ? => avatar is more suitable
 }
 
 /**
@@ -32,8 +30,9 @@ interface IdentityRaw {
  * Use a more representative interface entity (like Credit, SalesAgent) instead of this one if possible
  */
 export interface Person extends IdentityRaw {
-  firstName: string, // @todo #1052 replace with displayName
-  lastName?: string, // @todo #1052 replace with displayName
+  firstName: string,
+  lastName?: string,
+  avatar?: ImgRef,
 }
 
 export interface StakeholderRaw extends IdentityRaw {
@@ -41,6 +40,7 @@ export interface StakeholderRaw extends IdentityRaw {
 
 export interface Stakeholder extends StakeholderRaw {
   role?: StakeholderRolesSlug, // overrided role scope from Person interface
+  logo: ImgRef;
 }
 
 /**
@@ -76,6 +76,7 @@ export type Licensor = Stakeholder;
 export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholder {
   return {
     orgId: '',
+    logo: createImgRef(),
     ...params,
   }
 }
@@ -86,7 +87,7 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     lastName: '',
     role: '',
     shortBiography: '',
-    logo: createImgRef(),
+    avatar: createImgRef(),
     ...params
   };
 }

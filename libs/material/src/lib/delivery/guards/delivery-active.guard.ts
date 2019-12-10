@@ -9,7 +9,7 @@ export const deliveryActiveQuery = (deliveryId: string): Query<DeliveryWithTimes
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
+      path: `orgs/${stakeholder.orgId}`
     })
   })
 });

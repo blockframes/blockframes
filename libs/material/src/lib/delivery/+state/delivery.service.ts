@@ -329,11 +329,11 @@ export class DeliveryService {
     const { id, validated, stakeholders } = delivery;
 
     const stakeholderSignee = stakeholders.find(
-      ({ id: stakeholderId }) => organizationId === stakeholderId // #1061 here
+      ({ orgId: stakeholderId }) => organizationId === stakeholderId
     );
 
-    if (!validated.includes(stakeholderSignee.id)) { // #1061 here
-      const updatedValidated = [...validated, stakeholderSignee.id]; // #1061 here
+    if (!validated.includes(stakeholderSignee.orgId)) {
+      const updatedValidated = [...validated, stakeholderSignee.orgId];
       return this.deliveryDoc(id).update({ validated: updatedValidated });
     }
   }

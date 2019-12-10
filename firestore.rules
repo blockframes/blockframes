@@ -92,10 +92,9 @@ service cloud.firestore {
 
     /// DISTRIBUTION DEALS RULES ///
 
-    match /{path=**}/distributiondeals/{dealId} { // @TODO #1061 idem pr publicDistributiondeals
-    	allow write: if true; // @TODO #1061
-      allow read: if true; // @TODO #1061
-      // @TODO #1061 check / updates firestore.indexes.json
+    match /{path=**}/distributiondeals/{dealId} {
+    	allow write: if true; // @TODO #1388 Only if licenseStatus === 'unknown'
+      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
     }
 
     /// FUNCTIONS ///

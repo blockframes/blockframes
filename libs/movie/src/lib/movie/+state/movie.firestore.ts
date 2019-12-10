@@ -102,6 +102,12 @@ export interface MovieBudget {
   detailledBudget?: any // WIP #1052
 }
 
+export const enum MovieLanguageTypes {
+  original = 'original',
+  dubbed = 'dubbed',
+  subtitle = 'subtitle',
+}
+
 export interface MovieLanguageSpecification {
   original: boolean;
   dubbed: boolean;
@@ -124,13 +130,9 @@ interface DistributionDealRaw<D> {
   licensee: Licensee,
   licenseType: MediasSlug[];
   terms: TermsRaw<D>;
-
-  territories: TerritoriesSlug[];
-  // territoryExcluded
-  // assetLanguage FR:subdub EN:sub etc ..
-  dubbings: { [language in LanguagesSlug]: MovieLanguageSpecification }; // @WIP #1061
-  subtitles: string[]; // @todo #1061 remove (overlapping dubbings)
-
+  territory: TerritoriesSlug[];
+  territoryExcluded : TerritoriesSlug[];
+  assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
   workType: WorkType;
   exclusive: boolean;
   price: Price;
@@ -148,6 +150,9 @@ interface DistributionDealRaw<D> {
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
+}
+
+export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {
 }
 
 export interface MovieMain {

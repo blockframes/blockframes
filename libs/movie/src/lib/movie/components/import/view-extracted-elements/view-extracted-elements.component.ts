@@ -17,7 +17,8 @@ import {
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
-  createPrize
+  createPrize,
+  populateMovieLanguageSpecification
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -26,7 +27,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { LicenseStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 
 export interface SpreadsheetImportError {
@@ -618,9 +619,9 @@ export class ViewExtractedElementsComponent {
           salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
         }
 
-        // SALES AGENT (logo)
+        // SALES AGENT (avatar)
         if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
-          salesAgent.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
+          salesAgent.avatar = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
         }
 
         movie.salesAgentDeal.salesAgent = salesAgent;
@@ -1021,7 +1022,7 @@ export class ViewExtractedElementsComponent {
       if (spreadSheetRow[SpreadSheetDistributionDeal.internalRef]) {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
-        const distributionDeal = createDistributionDeal(); 
+        const distributionDeal = createDistributionDeal();
 
         const importErrors = {
           distributionDeal,
@@ -1037,7 +1038,7 @@ export class ViewExtractedElementsComponent {
 
           /* LICENSOR */
 
-          // @temp Cascade8 will be the licensor for imported movies. Update this if needed
+          // @TODO #1388 Cascade8 will be the licensor for imported movies. Update this if needed
           distributionDeal.licensor.orgId = this.organizationQuery.getActiveId();
           distributionDeal.licensor.displayName = 'licensor example';
 
@@ -1074,11 +1075,11 @@ export class ViewExtractedElementsComponent {
 
           // TERRITORIES (Mandate Territories)
           if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
-            distributionDeal.territories = [];
+            distributionDeal.territory = [];
             spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: string) => {
               const territory = getCodeIfExists('TERRITORIES', c);
               if (territory) {
-                distributionDeal.territories.push(territory);
+                distributionDeal.territory.push(territory);
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1112,12 +1113,14 @@ export class ViewExtractedElementsComponent {
 
           // DUBS (Authorized language(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
-            distributionDeal.dubbings = {}; 
             spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: string) => {
               const dubbing = getCodeIfExists('LANGUAGES', g);
               if (dubbing) {
-                // @todo #1061 => update when new distribution deal model is live
-                distributionDeal.dubbings[dubbing] = { original: false, dubbed: true, subtitle: true };
+                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                  distributionDeal.assetLanguage,
+                  dubbing,
+                  MovieLanguageTypes.dubbed
+                );
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1133,11 +1136,14 @@ export class ViewExtractedElementsComponent {
 
           // SUBTILES (Available subtitle(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
-            distributionDeal.subtitles = [];
             spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: string) => {
               const subtitle = getCodeIfExists('LANGUAGES', g);
               if (!!subtitle) {
-                distributionDeal.subtitles.push(subtitle);
+                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                  distributionDeal.assetLanguage,
+                  subtitle,
+                  MovieLanguageTypes.subtitle
+                );
               } else {
                 importErrors.errors.push({
                   type: 'error',
@@ -1250,10 +1256,10 @@ export class ViewExtractedElementsComponent {
     }
 
     // TERRITORIES
-    if (!distributionDeal.territories) {
+    if (!distributionDeal.territory) {
       errors.push({
         type: 'error',
-        field: 'territories',
+        field: 'territory',
         name: "Territories sold",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1272,22 +1278,11 @@ export class ViewExtractedElementsComponent {
     }
 
     // DUBBINGS
-    if (!Object.keys(distributionDeal.dubbings).length) {
+    if (!Object.keys(distributionDeal.assetLanguage).length) {
       errors.push({
         type: 'error',
         field: 'dubbings',
         name: "Authorized language(s)",
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    // SUBTITLES
-    if (distributionDeal.subtitles.length === 0) {
-      errors.push({
-        type: 'error',
-        field: 'subtitles',
-        name: "Authorized subtitle(s)",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });

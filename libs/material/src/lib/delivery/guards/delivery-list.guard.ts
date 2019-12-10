@@ -14,7 +14,7 @@ const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
+      path: `orgs/${stakeholder.orgId}`
     })
   })
 });

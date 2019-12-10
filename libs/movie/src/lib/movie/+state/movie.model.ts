@@ -17,12 +17,15 @@ import {
   LicenseStatus,
   HoldbackWithDates,
   WorkType,
-  FormatProfile
+  FormatProfile,
+  MovieLanguageSpecification,
+  MovieLanguageTypes
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createStakeholder, Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
+import { LanguagesSlug } from '../static-model';
 
 export type PromotionalElement = PromotionalElement;
 
@@ -124,9 +127,9 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    media: createImgRef(promotionalElement.media),
     type: 'other',
-    ...promotionalElement
+    ...promotionalElement,
+    media: createImgRef(promotionalElement.media),
   };
 }
 
@@ -222,11 +225,9 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     licenseStatus: LicenseStatus.unknown,
     licenseType: [],
     terms: createTerms(),
-
-    territories: [],
-    dubbings: {},
-    subtitles: [],
-
+    territory: [],
+    territoryExcluded: [],
+    assetLanguage: {},
     workType: WorkType.movie,
     exclusive: false,
     price: createPrice(),
@@ -252,4 +253,22 @@ export function createHoldback(params: Partial<Holdback> = {}): Holdback {
     media: '',
     ...params
   };
+}
+
+export function createMovieLanguageSpecification(params: Partial<MovieLanguageSpecification> = {}): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...params
+  };
+}
+
+export function populateMovieLanguageSpecification(spec: { [language in LanguagesSlug]: MovieLanguageSpecification }, slug: LanguagesSlug, type: MovieLanguageTypes, value: boolean = true) {
+  if (!spec[slug]) {
+    spec[slug] = createMovieLanguageSpecification();
+  }
+
+  spec[slug][type] = value;
+  return spec;
 }

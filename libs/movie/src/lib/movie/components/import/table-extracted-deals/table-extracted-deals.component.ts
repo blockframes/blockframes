@@ -31,8 +31,8 @@ export class TableExtractedDealsComponent implements OnInit {
     'select',
     'movieInternalRef',
     'movieTitle',
-    'distributionDeal.rights.from',
-    'distributionDeal.rights.to',
+    'distributionDeal.terms.start',
+    'distributionDeal.terms.end',
     'distributionDeal.exclusive',
     'errors',
     'warnings',
@@ -96,7 +96,7 @@ export class TableExtractedDealsComponent implements OnInit {
         });
       this.rows.data = data;
 
-      await Promise.all(promises); // @todo #1178
+      await Promise.all(promises); // @TODO #1389
       this.snackBar.open(`${promises.length} distribution deals inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
@@ -172,7 +172,7 @@ export class TableExtractedDealsComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: DealsImportState, filter) {
-    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.rights.from + data.distributionDeal.rights.to;
+    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.terms.start + data.distributionDeal.terms.end;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

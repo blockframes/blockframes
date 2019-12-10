@@ -18,7 +18,7 @@
     <th mat-header-cell *matHeaderCellDef>Sales agent</th>
     <td mat-cell *matCellDef="let element">
       <div fxLayout="row" fxLayoutAlign="none center">
-        <img *ngIf="element.salesAgentDeal.salesAgent && element.salesAgentDeal.salesAgent.logo; else defaultPicture" class="picture" [imgRef]="element.salesAgentDeal.salesAgent.logo" alt="Picture of sales agent" />
+        <img *ngIf="element.salesAgentDeal.salesAgent && element.salesAgentDeal.salesAgent.avatar; else defaultPicture" class="picture" [imgRef]="element.salesAgentDeal.salesAgent.avatar" alt="Picture of sales agent" />
         <ng-template #defaultPicture>
           <img src="/assets/images/placeHolder_logo.png" alt="Default picture of sales agent" />
         </ng-template>

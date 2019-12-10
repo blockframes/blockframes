@@ -54,7 +54,7 @@ export interface WishlistRaw<D> {
   status: WishlistStatus,
   movieIds: string[],
   sent?: D,
-  name?: string, // TODO #1061 draw.io
+  name?: string,
 }
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 

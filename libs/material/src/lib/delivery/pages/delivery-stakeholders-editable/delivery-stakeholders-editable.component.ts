@@ -31,6 +31,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
 
   public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    this.stakeholderService.add(createDeliveryStakeholder({id: objectID}));
+    this.stakeholderService.add(createDeliveryStakeholder({orgId: objectID}));
   }
 }

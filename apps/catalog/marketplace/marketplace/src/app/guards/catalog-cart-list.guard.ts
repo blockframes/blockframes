@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class CatalogCartGuard extends CollectionGuard<CartState> { // TODO #1061 rename
+export class CatalogCartGuard extends CollectionGuard<CartState> {
   constructor(
     protected service: CartService,
     private organizationQuery: OrganizationQuery,
@@ -15,7 +15,7 @@ export class CatalogCartGuard extends CollectionGuard<CartState> { // TODO #1061
     super(service);
   }
 
-  sync() { // TODO #1061 test this
+  sync() {
     return this.organizationQuery.selectActiveId().pipe(
       switchMap(orgId => this.service.syncCollection(ref => ref.where('status', '==', 'pending'), { params: { orgId }}))
     )

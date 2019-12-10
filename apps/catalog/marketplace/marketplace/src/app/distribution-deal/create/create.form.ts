@@ -14,11 +14,11 @@ import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movi
 
 function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
   // Create controls for the languages
-  const languageControl = Object.keys(deal.dubbings).reduce( // @TODO better to mutate it to avoid double loop
+  const languageControl = Object.keys(deal.assetLanguage).reduce( // @TODO better to mutate it to avoid double loop
     (acc, key) => ({
       ...acc,
       // Key is the name of the language, english, french etc.
-      [key]: createLanguageControl(deal.dubbings[key])
+      [key]: createLanguageControl(deal.assetLanguage[key])
     }),
     {} // Initial value. No controls at the beginning
   );
@@ -35,7 +35,7 @@ function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
       },
       [Validators.required, numberRangeValidator('from', 'to')]
     ),
-    territories: new FormArray(deal.territories.map(territory => new FormControl(territory)), [
+    territories: new FormArray(deal.territory.map(territory => new FormControl(territory)), [
       Validators.required,
       valueIsInModelValidator('TERRITORIES')
     ]),

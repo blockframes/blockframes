@@ -28,7 +28,7 @@ import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movi
 // CatalogGenresFilter //
 /////////////////////////
 
-export interface CatalogSearch { // @TODO #1061 check this
+export interface CatalogSearch {
   productionYear: {
     from: number;
     to: number;
