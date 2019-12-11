@@ -36,8 +36,7 @@ export interface Person extends IdentityRaw {
   avatar?: ImgRef,
 }
 
-export interface StakeholderRaw extends IdentityRaw {
-}
+export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
   role?: StakeholderRolesSlug, // overrided role scope from Person interface
