@@ -85,7 +85,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
 export function createParty(params: Partial<Party> = {}): Party {
   return {
     ...createStakeholder(params),
-    role: params.role,
+    role: '',
     showName: false,
     ...params,
   }
