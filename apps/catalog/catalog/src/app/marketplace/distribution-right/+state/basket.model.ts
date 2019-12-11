@@ -11,7 +11,7 @@ import {
   LanguagesSlug,
   TerritoriesSlug
 } from '@blockframes/movie/movie/static-model/types';
-import { numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
+import { numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils/form/validators/validators';
 
 export const enum BasketStatus {
   pending = 'pending',

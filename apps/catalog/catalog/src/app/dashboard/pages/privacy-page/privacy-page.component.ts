@@ -6,7 +6,4 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PrivacyPageComponent {
-
-  constructor() {}
-}
+export class PrivacyPageComponent {}
