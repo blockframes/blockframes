@@ -34,7 +34,7 @@
         <ng-template #isDeployed>
           <h2>Are you sure ?</h2>
           <!-- TODO #1387 -->
-          <img [asset]="'Wait_380.png'">
+          <img asset="Wait_380.png">
           <p>{{wallet.feedback.confirmation}}</p>
           <button mat-flat-button color="accent" (click)="handleConfirmation()">Yes</button>
           <a mat-button color="primary" [routerLink]="wallet.feedback.redirectRoute">No</a>
