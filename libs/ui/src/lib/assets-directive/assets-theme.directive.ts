@@ -1,28 +1,30 @@
-import { Directive, Renderer2, ElementRef, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Directive, Input, HostBinding, ChangeDetectorRef } from '@angular/core';
+import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '../theme';
 
 @Directive({
-  selector: 'img[picturesThemeName]'
+  selector: 'img[asset]'
 })
-export class AssetsThemeDirective {
+export class AssetDirective {
   private sub: Subscription;
+  // Create a local variable to subscribe to
+  private asset$ = new BehaviorSubject('');
 
-  @Input() set picturesThemeName(imageName: string) {
-    this.sub = this.themeService.theme$.subscribe((theme) => {
-      console.log(theme);
-      this.updateSrc(imageName, theme);
-    });
+  // The "src" property of the img will be associated with that
+  @HostBinding('src') src: string;
+
+  // Whenever the asset name is provided update the local value
+  @Input() set asset(name: string) {
+    this.asset$.next(name);
   }
 
-  constructor(
-    private _renderer: Renderer2,
-    private _element: ElementRef,
-    private themeService: ThemeService
-  ) { }
+  constructor(private theme: ThemeService, private cdr: ChangeDetectorRef) {}
 
-  updateSrc(imageName: string, theme: string) {
-    this._renderer.setProperty(this._element.nativeElement, 'src', `assets/images/${theme}/${imageName}`)
+  ngOnInit() {
+    this.sub = combineLatest([this.asset$, this.theme.theme$]).subscribe(([ asset, theme ]) => {
+      this.src = `assets/images/${theme}/${asset}`;
+      this.cdr.markForCheck();
+    })
   }
 
   ngOnDestroy() {
