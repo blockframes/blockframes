@@ -1,6 +1,5 @@
 import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
-import { App } from '@blockframes/utils';
 
 @Component({
   selector: '[movie] movie-card',
@@ -18,7 +17,6 @@ export class MovieCardComponent {
   }
 
   public get firstFestivalPrizeLogo() {
-    console.log(this.movie)
     if(this.movie.festivalPrizes.prizes.length && this.movie.festivalPrizes.prizes[0].logo) {
       return this.movie.festivalPrizes.prizes[0].logo;
     } else {

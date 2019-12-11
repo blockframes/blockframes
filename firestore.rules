@@ -6,10 +6,12 @@ service cloud.firestore {
     // Add schemas validators for document update/create => ISSUE#650
 
     /// USERS RULES ///
+    // TODO: Create a "public users" collection to get non sensitive user data => ISSUE#1359
 
     match /users/{userId} {
-    	allow read: if isSignedIn()
-      	&& userId() == existingData().uid;
+    	allow read: if userId() == existingData().uid
+      	|| (isSignedIn() && isOrgMember(userId, userOrgId()));
+    	// We can read user data from the same organization as us until we got public users collection.
     	allow update: if isSignedIn()
       	&& userId() == incomingData().uid
         && incomingData().uid == existingData().uid
@@ -22,7 +24,7 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
     	allow read, update: if userId() == existingData().userId
-      	|| userOrgId() == existingData().organization.id;
+      	|| currentUser().orgId == existingData().organization.id;
     	allow create, delete: if false;
     }
 
@@ -109,13 +111,17 @@ service cloud.firestore {
       return request.resource.data;
     }
 
+    function currentUser() {
+      return request.auth;
+    }
+
     function userId() {
-      return request.auth.uid;
+      return currentUser().uid;
     }
 
   	// Check if the user is logged in the app.
     function isSignedIn() {
-      return request.auth != null;
+      return currentUser() != null;
     }
 
   	function userOrgId() {
@@ -129,7 +135,7 @@ service cloud.firestore {
 
     // Check if the param ID is equal to the data ID.
     function documentIdChecked(docId, collection) {
-    	return docId == get(/databases/$(database)/documents/$(collection)/$(docId)).data.id;
+    	return docId == getAfter(/databases/$(database)/documents/$(collection)/$(docId)).data.id;
     }
 
   	function isSuperAdmin(userId, orgId) {
