@@ -1,6 +1,6 @@
-import { MovieStore } from '@blockframes/movie/movie/+state';
+import { MovieStore } from '@blockframes/movie/movie/+state/movie.store';
 import { Injectable } from '@angular/core';
-import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
+import { SpectatorService, createServiceFactory, mockProvider, SpyObject } from '@ngneat/spectator/jest';
 
 @Injectable()
 class BasketService {
@@ -14,20 +14,27 @@ class BasketService {
 }
 
 describe('BasketService', () => {
-  let spectator: SpectatorService<any>;
+  let spectator: SpectatorService<BasketService>;
+  let service: BasketService;
+  let store: SpyObject<MovieStore>;
   const createService = createServiceFactory({
     service: BasketService,
-    mocks: [MovieStore]
+    providers: [MovieStore]
   });
 
-  beforeEach(() => (spectator = createService()));
+  beforeEach(() => {
+    spectator = createService();
+    service = spectator.service;
+    store = spectator.get(MovieStore);
+  });
 
   it('should create firestore id', () => {
-    expect(spectator.service.createFireStoreId).toBeTruthy();
+    expect(service.createFireStoreId()).toBeTruthy();
   });
 
   it('create movie', () => {
-    spectator.service.createMovie();
-    expect(spectator.get(MovieStore).add).toHaveBeenCalled();
+    const spy = spyOn(store, 'add');
+    service.createMovie();
+    expect(spy).toHaveBeenCalled();
   });
 });
