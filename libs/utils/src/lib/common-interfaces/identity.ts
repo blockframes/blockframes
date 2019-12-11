@@ -1,5 +1,6 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { CreditRolesSlug, StakeholderRolesSlug, LegalRolesSlug } from "@blockframes/movie";
+import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug } from "@blockframes/movie/movie/static-model/types";
+
 
 //////////////////////////
 // VARIOUS IDENTIY OBJECTS

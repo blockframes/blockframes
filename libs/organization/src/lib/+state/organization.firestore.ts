@@ -1,6 +1,6 @@
 
 import { firestore } from "firebase/app";
-import { CatalogCart } from "@blockframes/marketplace";
+import { CatalogCart } from "@blockframes/marketplace/app/distribution-deal/+state/cart.model";
 
 type Timestamp = firestore.Timestamp;
 

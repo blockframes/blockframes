@@ -50,7 +50,7 @@ async function stakeholdersCollectionEvent(
 
     try {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: context.eventId });
       const organizationsOfDocument = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
@@ -71,7 +71,7 @@ async function stakeholdersCollectionEvent(
       return Promise.all([triggerNotifications(notifications)]);
     } catch (e) {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: null });
       throw e;
     }
