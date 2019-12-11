@@ -35,7 +35,7 @@ import { WalletImportKeyComponent } from './components/wallet-import-key/wallet-
 import { WalletNoKeyComponent } from './pages/wallet-no-key/wallet-no-key.component';
 import { WalletRevealMnemonicComponent } from './pages/wallet-reveal-mnemonic/wallet-reveal-mnemonic.component';
 import { WalletTxGuard } from './guards/wallet-tx.guard';
-import { PicturesThemeModule } from '@blockframes/ui';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 
 export const walletRoutes: Routes = [
@@ -85,7 +85,7 @@ export const walletRoutes: Routes = [
     UiFormModule,
     FeedbackMessageModule,
     MatDividerModule,
-    PicturesThemeModule
+    AssetsThemeModule
   ],
   declarations: [
     WalletViewComponent,

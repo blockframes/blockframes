@@ -13,7 +13,7 @@ export * from './lib/editable-sidenav/editable-sidenav.module';
 export * from './lib/avatar-list/avatar-list.module';
 export * from './lib/icon-component';
 export * from './lib/movie-card/movie-card.module';
-export * from './lib/picture-directive/pictures.module';
+export * from './lib/assets-directive/assets-theme.module';
 // toolbar State
 export * from './lib/toolbar/+state/context-menu.model';
 export * from './lib/toolbar/+state/context-menu.query';

@@ -5,7 +5,7 @@ import { ThemeService } from '../theme';
 @Directive({
   selector: 'img[picturesThemeName]'
 })
-export class PicturesThemeDirective {
+export class AssetsThemeDirective {
   private sub: Subscription;
 
   @Input() set picturesThemeName(imageName: string) {

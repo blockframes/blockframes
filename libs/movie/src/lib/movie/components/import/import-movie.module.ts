@@ -27,7 +27,7 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { MovieDisplayModule } from '../../display/display.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { PicturesThemeModule } from '@blockframes/ui';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -90,7 +90,7 @@ const routes: Routes = [
     MovieDisplayModule,
     CropperModule,
     ImageReferenceModule
-    PicturesThemeModule,
+    AssetsThemeModule,
   ],
   entryComponents: [
     PreviewSheetComponent,
