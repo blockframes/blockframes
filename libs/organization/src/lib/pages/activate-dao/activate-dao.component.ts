@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PermissionsQuery } from '@blockframes/organization/permissions/+state';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'activate-dao',
@@ -15,14 +15,13 @@ export class ActivateDaoComponent {
 
   constructor(
     private permissionsQuery: PermissionsQuery,
-    private query: OrganizationQuery,
     private service: OrganizationService,
     private router: Router,
+    private routes: ActivatedRoute,
   ) {}
 
   async activate() {
-    const orgId = this.query.getActiveId();
     await this.service.setBlockchainFeature(true);
-    this.router.navigateByUrl(`/layout/o/organization/${orgId}/dao`);
+    this.router.navigate(['../dao'], {relativeTo: this.routes});
   }
 }
