@@ -6,7 +6,7 @@ import { MovieCreateComponent } from '@blockframes/movie/movie/components/movie-
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'catalog',
     pathMatch: 'full'
   },
   {
@@ -28,10 +28,6 @@ const routes: Routes = [
   {
     path: 'no-movies',
     component: MovieCreateComponent
-  },
-  {
-    path: 'home',
-    loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
   },
   {
     path: 'import',
