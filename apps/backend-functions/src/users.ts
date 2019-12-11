@@ -4,6 +4,7 @@ import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
 import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail } from './assets/mail-templates';
 import { sendMailFromTemplate, sendMail } from './internals/email';
+import { RequestDemoInformations } from './data/types';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -174,9 +175,9 @@ export const sendDemoRequest = async (
   data: any,
   context: CallableContext
 ): Promise<any> => {
-  const { firstName, lastName, companyName, role } = data;
+  const informations: RequestDemoInformations = data;
 
-  await sendMail(sendDemoRequestMail(firstName, lastName, companyName, role))
+  await sendMail(sendDemoRequestMail(informations))
 
-  return { firstName, lastName, companyName, role };
+  return informations;
 }

@@ -4,19 +4,21 @@
       <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
     </ng-container>
     <nav mat-tab-nav-bar mat-align-tabs="center" fxLayout="row" fxLayoutAlign="center center">
+      <!-- ISSUE#1391 -->
       <a mat-tab-link routerLink="">
         About us
       </a>
+      <!-- ISSUE#1391 -->
       <a mat-tab-link routerLink="">
         FAQ
       </a>
-      <a mat-tab-link routerLink="">
+      <a mat-tab-link routerLink="/welcome" fragment="demo">
         Schedule a demo
       </a>
     </nav>
   </span>
   <span>
-    <a mat-button routerLink="/auth/welcome"><span class="bf-strong">Login</span></a>
-    <a mat-stroked-button routerLink="/auth/welcome"><span class="bf-strong">Sign up</span></a>
+    <a mat-button routerLink="/auth/connexion" fragment="signin"><span class="bf-strong">Login</span></a>
+    <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><span class="bf-strong">Sign up</span></a>
   </span>
 </mat-toolbar>
