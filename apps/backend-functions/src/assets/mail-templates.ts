@@ -4,7 +4,7 @@
 import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
-import { RequestToJoinOrganization } from '../data/types';
+import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
 
 const ORG_HOME = '/layout/o/organization/';
 const USER_ORG_INVITATION = '/layout/organization/home';
@@ -163,10 +163,19 @@ export function sendWishlist(userName: string, orgName: string, wishlist: string
   }
 }
 
-export function sendDemoRequestMail(firstName: string, lastName: string, companyName: string, role: string) {
+export function sendDemoRequestMail(informations: RequestDemoInformations) {
   return {
     to: adminEmail,
     subject: 'A demo has been requested',
-    text: `${firstName} ${lastName}, ${role} from ${companyName} wants to schedule a demo of Archipel Content.`
+    text: `A user wants to schedule a demo of Archipel Content.
+
+    User informations
+
+    First name: ${informations.firstName}
+    Last name: ${informations.lastName}
+    Email: ${informations.email}
+    Phone number: ${informations.phoneNumber}
+    Company name: ${informations.companyName}
+    Role: ${informations.role}`
   }
 }

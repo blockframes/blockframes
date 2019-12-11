@@ -4,16 +4,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Pages
-import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
+import { CatalogLandingPageComponent } from './landing-page/pages/landing-page/landing-page.component';
 
 // Components
-import { CatalogToolbarComponent } from './components/toolbar/toolbar.component';
-import { CatalogHeaderComponent } from './components/header/header.component';
-import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
-import { CatalogHowItWorksComponent } from './components/how-it-works/how-it-works.component';
-import { CatalogViewMarketplaceComponent } from './components/view-marketplace/view-marketplace.component';
-import { CatalogLearnMoreComponent } from './components/learn-more/learn-more.component';
-import { CatalogFooterModule } from './components/footer/catalog-footer.module';
+import { CatalogToolbarComponent } from './landing-page/components/toolbar/toolbar.component';
+import { CatalogHeaderComponent } from './landing-page/components/header/header.component';
+import { CatalogKeyFeaturesComponent } from './landing-page/components/key-features/key-features.component';
+import { CatalogHowItWorksComponent } from './landing-page/components/how-it-works/how-it-works.component';
+import { CatalogViewMarketplaceComponent } from './landing-page/components/view-marketplace/view-marketplace.component';
+import { CatalogLearnMoreComponent } from './landing-page/components/learn-more/learn-more.component';
+import { CatalogFooterModule } from './landing-page/components/footer/catalog-footer.module';
 
 // Libs
 import { FlexLayoutModule } from '@angular/flex-layout';
