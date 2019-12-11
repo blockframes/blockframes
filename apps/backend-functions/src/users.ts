@@ -174,7 +174,7 @@ export const getOrCreateUserByMail = async (
 export const sendDemoRequest = async (
   data: any,
   context: CallableContext
-): Promise<any> => {
+): Promise<RequestDemoInformations> => {
   const informations: RequestDemoInformations = data;
 
   await sendMail(sendDemoRequestMail(informations))

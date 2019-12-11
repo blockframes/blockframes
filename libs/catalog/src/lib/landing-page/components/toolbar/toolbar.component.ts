@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /** Transition from transparent to plain toolbar and vice versa. */
 window.addEventListener('scroll', function(e) {
@@ -15,6 +15,7 @@ window.addEventListener('scroll', function(e) {
 @Component({
   selector: 'catalog-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss']
+  styleUrls: ['./toolbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogToolbarComponent {}

@@ -5,27 +5,13 @@ header {
   padding-right: 20%;
   background-image: url('/assets/images/banner_home.png');
   background-size: cover;
-  text-align: center;
-
-  h3 {
-    margin: 0;
-  }
-
-  span {
-    text-align: left;
-  }
 
   .first-header-text {
-    font-size: 80px;
+    font-size: 96px;
     font-weight: 800;
   }
 
   .second-header-text {
-    font-size: 22px;
-    font-weight: 300;
-  }
-
-  a {
-    margin-top: 20px;
+    font-size: 20px;
   }
 }

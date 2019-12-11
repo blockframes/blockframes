@@ -2,27 +2,12 @@
 
 footer {
   width: 100%;
-  background-color: var(--lightGrey);
 
   section {
     width: 100%;
+
     article {
       width: 100%;
-      a {
-        cursor: pointer;
-        margin: 5px 0px;
-        font-size: 14px;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .social-media-icons {
-        width: 100%;
-      }
-      .social-media-icons > * {
-        width: 36px;
-        height: 36px;
-      }
     }
 
     .ac-logo {
@@ -30,14 +15,9 @@ footer {
       height: 36px;
     }
 
-    .partner-logos {
-      height: 50px;
-      margin: 10px 20px;
-
-      img {
-        height: 40px;
-        margin-top: 50px;
-      }
+    img {
+      height: 40px;
+      margin-top: 50px;
     }
 
     .partner-header {
@@ -47,14 +27,5 @@ footer {
 
   section:last-child {
     margin: 50px 0px;
-  }
-}
-@include mobile {
-  footer {
-    section {
-      .partner-logos {
-        height: auto;
-      }
-    }
   }
 }

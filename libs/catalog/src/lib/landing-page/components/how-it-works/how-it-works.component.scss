@@ -2,28 +2,12 @@ section {
   margin-left: 20%;
   margin-right: 20%;
 
-  img {
-    margin: 20px;
-  }
-
   mat-card {
     width: 400px;
-    margin-bottom: 30px;
-
-    article {
-      margin: 5px;
-    }
+    margin: 15px 0;
 
     div {
       width: 50%;
     }
-  }
-
-  .circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 1px solid #eeeeee;
-    display: inline-block;
   }
 }
