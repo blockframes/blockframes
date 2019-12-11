@@ -1,18 +1,10 @@
-.light-theme .mat-toolbar {
-  background: mat-color($bf-light-background, app-bar);
-  box-shadow: none;
-  border-bottom: 1px solid mat-color($bf-light-background, border);
-}
-
-.dark-theme {
+@mixin mat-bf-toolbar-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
   .mat-toolbar {
-    background: mat-color($bf-dark-background, app-bar);
     box-shadow: none;
-    border-bottom: 1px solid mat-color($bf-dark-background, border);
-  }
-
-  .mat-sidenav {
-    background: mat-color($bf-dark-background, background);
+    border-bottom: 1px solid mat-color($foreground, divider);
+    background-color: mat-color($background, app-bar);
   }
 }
