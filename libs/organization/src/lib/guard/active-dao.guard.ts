@@ -13,7 +13,7 @@ export class ActiveDaoGuard {
     protected router: Router
   ) {}
 
-  async canActivate() {
+  canActivate() {
     const { id, isBlockchainEnabled } = this.orgQuery.getActive();
     if (isBlockchainEnabled) {
       return true;

@@ -20,6 +20,7 @@ import { Contract } from '@ethersproject/contracts';
 import { Wallet as EthersWallet } from '@ethersproject/wallet';
 import { getProvider, emailToEnsDomain, precomputeAddress, getNameFromENS, getFilterFromTopics, orgNameToEnsDomain } from '../../helpers';
 
+/** This is the blockchain event to listen to know when the user's smart-wallet deploy is finished */
 const deployedTopic    = '0xb03c53b28e78a88e31607a27e1fa48234dce28d5d9d9ec7b295aeb02e674a1e1'; // 'Deployed (address addr, uint256 salt)' event
 
 @Injectable({ providedIn: 'root' })
@@ -101,7 +102,7 @@ export class WalletService {
           }
         });
       });
-      const timeoutPromise = new Promise( resolve => setTimeout(resolve, 60000, false));
+      const timeoutPromise = new Promise( resolve => setTimeout(resolve, 540000, false)); // 540s (9min) corresponding to the firebase function timeout
 
       await this.relayer.deploy(name, pubKey, orgAddress, erc1077Address);
 
