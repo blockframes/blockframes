@@ -89,7 +89,7 @@ const routes: Routes = [
     UiFormModule,
     MovieDisplayModule,
     CropperModule,
-    ImageReferenceModule
+    ImageReferenceModule,
     AssetsThemeModule,
   ],
   entryComponents: [
