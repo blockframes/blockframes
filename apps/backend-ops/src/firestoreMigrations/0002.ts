@@ -82,7 +82,7 @@ export async function updatePicturesMovieDocument(db: Firestore) {
             media: {
               originalRef: '',
               ref: '',
-              url
+              url: url || ''
             }
           }
         })
