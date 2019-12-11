@@ -22,16 +22,16 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentWishlist$: Observable<Wishlist>;
   public subscription: Subscription;
 
-  @ViewChild(MatSidenav, {static: false}) sidenav: MatSidenav;
+  @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
 
   constructor(
     private routerQuery: RouterQuery,
     private contextMenuService: ContextMenuService,
     private catalogCartQuery: CatalogCartQuery,
     private service: AuthService
-    ) {
-      this.AFM_DISABLE = AFM_DISABLE;
-    }
+  ) {
+    this.AFM_DISABLE = AFM_DISABLE;
+  }
 
   ngOnInit() {
     this.contextMenuService.setMenu(CONTEXT_MENU);
@@ -44,8 +44,8 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
-      );
-    }
+    );
+  }
 
   ngAfterViewInit() {
     this.subscription = this.routerQuery.select('navigationId').subscribe(() => this.sidenav.close());

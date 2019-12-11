@@ -55,11 +55,11 @@
     </td>
   </ng-container>
 
-  <!-- Length -->
-  <ng-container matColumnDef="length">
+  <!-- Total Run Time -->
+  <ng-container matColumnDef="totalRunTime">
     <th mat-header-cell *matHeaderCellDef>Running time</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.main.length; else noLength">{{ element.main.length }} min</ng-container>
+      <ng-container *ngIf="element.main.totalRunTime; else noLength">{{ element.main.totalRunTime }} min</ng-container>
       <ng-template #noLength>TBC</ng-template>
     </td>
   </ng-container>

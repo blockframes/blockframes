@@ -8,6 +8,7 @@ import objectHash from 'object-hash';
 import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
+import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 
 /**
  * @see #483
@@ -94,12 +95,25 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<string> {
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: Contract): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
-    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
     const dealId = objectHash(distributionDeal);
     distributionDeal.id = dealId;
+
+    // Populate distribution deal contract
+    contract.titles[movieId] = createContractTitleDetail();
+    contract.titles[movieId].titleId = movieId;
+    contract.titles[movieId].distributionDealIds.push(dealId);
+    // @todo #1397 change this price calculus
+    contract.titles[movieId].price = contract.price;
+
+    const contractId = await this.addContract(contract);
+
+    // Link distributiondeal with contract
+    distributionDeal.contractId = contractId;
+
+    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
     await this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
     return dealId;
   }
@@ -133,5 +147,22 @@ export class MovieService extends CollectionService<MovieState> {
       deal.terms.end = deal.terms.end.toDate();
     }
     return deal as DistributionDeal;
+  }
+
+
+  //////////////////
+  /// CONTRACT STUFF
+  //////////////////
+
+  /**
+   * @param contract
+   */
+  public async addContract(contract: Contract): Promise<string> {
+    if(!contract.id) {
+      contract.id  = this.db.createId();
+    }
+
+    await this.db.collection('contracts').doc(contract.id).set(contract);
+    return contract.id;
   }
 }

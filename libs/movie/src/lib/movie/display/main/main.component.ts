@@ -22,7 +22,7 @@ export class MovieDisplayMainComponent {
       this.data.languages.length > 0 ||
       this.data.productionCompanies.length > 0 ||
       this.data.shortSynopsis ||
-      this.data.length ||
+      this.data.totalRunTime ||
       this.data.status
   }
 }

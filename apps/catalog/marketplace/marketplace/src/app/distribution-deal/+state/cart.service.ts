@@ -8,7 +8,7 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
-import { MovieService } from '@blockframes/movie';
+import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/carts' })

@@ -348,7 +348,7 @@
                 {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
               </b>
               <b *ngIf="movie.main.originCountries.length > 2">... </b>
-              <b *ngIf="movie.main.length">| {{ movie.main.length }} min </b><b>|
+              <b *ngIf="movie.main.totalRunTime">| {{ movie.main.totalRunTime }} min </b><b>|
                 {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
               <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">
                 {{ movie.salesAgentDeal.salesAgent.displayName}}
