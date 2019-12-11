@@ -1,5 +1,5 @@
 import { firebase } from '@env';
-import { InjectionToken, NgModule, Inject } from '@angular/core';
+import { InjectionToken, NgModule, Inject, NgZone } from '@angular/core';
 // Import firebase analytics
 import { analytics } from 'firebase/app'; // <- Types
 import 'firebase/analytics'; // <- Content
@@ -13,7 +13,7 @@ export const APP = new InjectionToken('Firebase app');
 @NgModule({
   providers: [
     // Fill the app token with the function provided by @angular/fire
-    { provide: APP, useFactory: () => _firebaseAppFactory(firebase, firebase.projectId) },
+    { provide: APP, useFactory: (zone) => _firebaseAppFactory(firebase, zone, firebase.projectId), deps: [NgZone] },
     // Fill the analytics token on this app
     { provide: ANALYTICS, useFactory: app => app.analytics(), deps: [APP] }
   ],
