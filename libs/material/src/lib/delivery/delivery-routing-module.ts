@@ -19,7 +19,6 @@ import { MovieMaterialsGuard, DeliveryMaterialsGuard } from '../material';
 import { DeliveryListGuard } from './guards/delivery-list.guard';
 import { DeliveryActiveGuard } from './guards/delivery-active.guard';
 import { TemplateListGuard } from '../template/guards/template-list.guard';
-import { TemplateActiveGuard } from '../template/guards/template-active.guard';
 
 const routes: Routes = [
   {

@@ -43,8 +43,10 @@ import { MemberFormRoleComponent } from './components/member-form-role/member-fo
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
+import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
 
 import { MemberGuard } from './member/guard/member.guard';
+import { ActiveDaoGuard } from './guard/active-dao.guard';
 
 export const organizationRoutes: Routes = [
   {
@@ -59,10 +61,16 @@ export const organizationRoutes: Routes = [
         component: MemberEditableComponent
       },
       {
-        path: 'dao',
+        path: 'activate',
         canActivate: [MemberGuard],
         canDeactivate: [MemberGuard],
-        loadChildren: () => import('../../../ethers/src').then(m => m.DaoModule) },
+        component: ActivateDaoComponent
+      },
+      {
+        path: 'dao',
+        canActivate: [MemberGuard, ActiveDaoGuard],
+        canDeactivate: [MemberGuard],
+        loadChildren: () => import('@blockframes/ethers').then(m => m.DaoModule) },
     ]
   }
 ];
@@ -114,6 +122,7 @@ export const organizationRoutes: Routes = [
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationEditableComponent,
+    ActivateDaoComponent,
   ]
 })
 export class OrganizationModule {}

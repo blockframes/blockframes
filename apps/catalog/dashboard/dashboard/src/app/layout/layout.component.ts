@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/catalog-dashboard';
+import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog-dashboard';
 
 @Component({
   selector: 'catalog-layout',

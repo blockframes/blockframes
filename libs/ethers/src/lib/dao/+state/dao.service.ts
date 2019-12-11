@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
-import { Log, Filter } from '@ethersproject/abstract-provider'
+import { Log } from '@ethersproject/abstract-provider'
 import { namehash, id as keccak256 } from '@ethersproject/hash';
 import { network, relayer, baseEnsDomain, factoryContract } from '@env';
 import {
@@ -10,7 +10,8 @@ import {
   orgNameToEnsDomain,
   getNameFromENS,
   emailToEnsDomain,
-  precomputeAddress as precomputeEthAddress
+  precomputeAddress as precomputeEthAddress,
+  getFilterFromTopics
 } from '@blockframes/ethers/helpers';
 import { DaoQuery } from './dao.query';
 import { DaoStore } from './dao.store';
@@ -54,17 +55,6 @@ const memberAddedTopic      = '0xf328ac0f8bcae00933fe87ba0aa2d0d505c1df94bc9c1aa
 const memberRemovedTopic    = '0x1c4c9d2e56d0635d11bc47c997c6909a0d7061f55cbb8f4b27386db37553191c'; // 'MemberRemoved(uint256,address)' event
 const actionApprovedTopic   = '0x4eb2529dfaf5a7847cb1209edb2e7d95cf4c91f833762c3b7234771db8539f9b'; // 'ActionApproved(bytes32,address)' event
 const actionExecutedTopic   = '0x27bfac0e8b79713f577faf36f24c58597bacaa93ef1b54da177e07bf10b32cb9'; // 'ActionExecuted(bytes32,bool,bytes)' event
-
-//--------------------------------------
-//     ETHEREUM ORGS EVENT FILTERS
-//--------------------------------------
-function getFilterFromTopics(address: string, topics: string[]): Filter {
-  return {
-    address,
-    fromBlock: 0, toBlock: 'latest',
-    topics
-  }
-}
 
 @Injectable({ providedIn: 'root' })
 export class DaoService {

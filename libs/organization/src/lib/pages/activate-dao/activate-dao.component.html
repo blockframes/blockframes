@@ -1,0 +1,8 @@
+
+<h3>Activate Blockchain Features</h3>
+<ng-container *ngIf="(isSuperAdmin$ | async) as isSuperAdmin; else notAdmin">
+  <button mat-button color="primary" (click)="activate()">Activate</button>
+</ng-container>
+<ng-template #notAdmin>
+  <p>You are not authorized to activate blockchain features for your organization, please contact an Admin of your org.</p>
+</ng-template>

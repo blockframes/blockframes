@@ -22,6 +22,7 @@ interface OrganizationRaw<D> {
   activity: string;
   wishlist: WishlistRaw<D>[];
   cart: CatalogCart[];
+  isBlockchainEnabled: boolean;
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
@@ -106,6 +107,7 @@ export function createOrganizationRaw(
     logo: PLACEHOLDER_LOGO,
     wishlist: [],
     cart: [],
+    isBlockchainEnabled: false,
     ...params
   };
 }
