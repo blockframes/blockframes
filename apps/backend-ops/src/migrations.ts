@@ -50,7 +50,6 @@ export async function migrate(withBackup: boolean = true) {
   console.info('start the migration process...');
   const { db } = loadAdminServices();
 
-  // TODO: disable the database updates
   await startMaintenance();
 
   if (withBackup) {
@@ -78,8 +77,9 @@ export async function migrate(withBackup: boolean = true) {
     console.error(e);
     console.error("the migration failed, revert'ing!");
     await restore(appUrl);
+    throw e;
+  } finally {
+    await endMaintenance();
+    console.info('end the migration process...');
   }
-
-  await endMaintenance();
-  console.info('end the migration process...');
 }
