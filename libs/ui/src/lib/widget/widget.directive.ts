@@ -1,5 +1,5 @@
-import { Directive, Input, TemplateRef, HostListener, ViewContainerRef, ElementRef } from '@angular/core';
-import { Overlay, BlockScrollStrategy, ViewportRuler, NoopScrollStrategy } from '@angular/cdk/overlay';
+import { Directive, Input, HostListener, ViewContainerRef, ElementRef, OnDestroy } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { WidgetComponent } from './widget.component';
 
@@ -7,34 +7,46 @@ import { WidgetComponent } from './widget.component';
   selector: "[widgetTarget]"
 })
 
-export class WidgetDirective {
+export class WidgetDirective implements OnDestroy{
+  private overlayRef: OverlayRef;
+  private widget: TemplatePortal;
+
   @Input() widgetTarget: WidgetComponent;
   @HostListener('click')
     open() {
-      const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this._elementRef)
-      .withPositions([{
-        originX: 'start',
-        originY: 'bottom',
-        overlayX: 'start',
-        overlayY: 'top'
-      }]);
-      const overlayRef = this.overlay.create({
-        hasBackdrop: true,
-        backdropClass: 'cdk-overlay-transparent-backdrop',
-        positionStrategy,
-        scrollStrategy: new NoopScrollStrategy(),
-        // maxHeight: '10px'
-      });
-      const widget = new TemplatePortal(this.widgetTarget.ref, this.viewContainerRef);  // Use the template ref of the widget component instead.
-      overlayRef.attach(widget);
-      overlayRef.backdropClick().subscribe(() => overlayRef.detach());
+      if (!this.overlayRef) {
+        const positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo(this._elementRef)
+        .withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
+        this.overlayRef = this.overlay.create({
+          hasBackdrop: true,
+          backdropClass: 'cdk-overlay-transparent-backdrop',
+          positionStrategy,
+        });
+        this.widget = new TemplatePortal(this.widgetTarget.ref, this.viewContainerRef);
+        this.overlayRef.backdropClick().subscribe(() => this.overlayRef.detach());
+      }
+
+      this.overlayRef.attach(this.widget);
     }
 constructor(
   private overlay : Overlay,
   private viewContainerRef: ViewContainerRef,
   private _elementRef: ElementRef,
-  private _viewportRuler: ViewportRuler
 ){}
+
+// Destroy the reference from the DOM if it exists and clean up overlayRef
+ngOnDestroy() {
+  if (this.overlayRef) {
+    this.overlayRef.dispose();
+    delete this.overlayRef;
+  }
+}
+
 }
