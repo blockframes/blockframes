@@ -1,0 +1,130 @@
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<div *ngIf="(movie$ | async) as movie;" test-id="content">
+  <!-- TODO(issue#1309) create image directive for background image -->
+  <header [style.background-image]="getBackgroundImage(movie.promotionalElements.promotionalElements)" class="banner">
+    <section fxLayout="row" fxLayoutAlign="center">
+      <article class="titles" fxLayout="column" fxLayoutAlign="start start">
+        <h1>{{movie.main.title.international}}</h1>
+        <div class="sub-title">
+          <span>a film by</span>
+          <span *ngFor="let director of movie.main.directors; let isLast = last"> {{ director.firstName }} {{ director.lastName }}<span *ngIf="!isLast">, </span>
+        </span>
+        </div>
+        <div  class="movie-info" fxLayout="row" fxLayoutAlign="space-between center">
+          <div>
+            <span *ngIf="movie.main.productionYear">{{ movie.main.productionYear }}</span>
+            <span *ngIf="movie.main.status || movie.main.length"> | </span>
+            <span *ngIf="movie.main.status">{{ movie.main.status | translateSlug: 'MOVIE_STATUS'}}</span>
+            <span *ngIf="movie.main.length && movie.main.status"> | </span>
+            <span *ngIf="movie.main.length">{{ movie.main.length }} min</span>
+          </div>
+        </div>
+      </article>
+    </section>
+    <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
+      <button class="heart-button" mat-flat-button color="accent" (click)="removeFromWishlist()">
+        <mat-icon>favorite</mat-icon>
+        <span>Remove from list</span>
+      </button>
+    </ng-container>
+    <ng-template #alreadyAdded>
+      <button class="heart-button" mat-flat-button color="accent" (click)="addToWishlist()">
+        <mat-icon>favorite_border</mat-icon>
+        <span>Add to list</span>
+      </button>
+    </ng-template>
+  </header>
+
+  <section fxLayout="row" class="view-content" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+
+    <div fxLayout="column" class="poster-column" >
+      <mat-card class="movie-presentation" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+        <!-- poster -->
+        <ng-container *ngIf="movie.main.poster as poster">
+          <img class="movie-poster" [imgRef]="poster" alt="movie poster" />
+        </ng-container>
+        <!-- Promotional elements -->
+        <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
+          <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
+          </catalog-promotional-elements>
+        </ng-container>
+        <!-- Reserved territories -->
+        <ng-container
+          *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.reservedTerritories && movie.salesAgentDeal.reservedTerritories.length">
+          <catalog-reserved-territories [reservedTerritories]="movie.salesAgentDeal.reservedTerritories">
+          </catalog-reserved-territories>
+        </ng-container>
+        <!-- Production information -->
+        <catalog-production-informations *ngIf="
+          movie.main &&
+          movie.main.productionCompanies &&
+          movie.salesAgentDeal &&
+          movie.salesAgentDeal.salesAgent"
+          [productionCompanies]="movie.main.productionCompanies"
+          [salesAgentDealLogo]="movie.salesAgentDeal.salesAgent.logo">
+        </catalog-production-informations>
+        <!-- Key Assets -->
+        <ng-container *ngIf="movie.promotionalDescription.keyAssets.length">
+          <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container>
+      </mat-card>
+    </div>
+
+    <div fxLayout="column" class="information-column">
+      <mat-card class="informations" fxLayout="column">
+        <!-- TODO #1146 -->
+        <movie-display-film-info-card
+          [main]="movie.main"
+          [salesCast]="movie.salesCast"
+          [budget]="movie.budget"
+          [salesInfo]="movie.salesInfo"
+          [color]="color"
+          [europeanQualification]="europeanQualification"
+          [versionInfo]="movie.versionInfo"
+          [prizes]="movie.festivalPrizes.prizes"
+          [synopsis]="movie.main.shortSynopsis"
+          [keywords]="movie.promotionalDescription.keywords"
+          [releaseDate]="movie.AFMOriginCountryReleaseDate"
+          [productionCompanies]="movie.main.productionCompanies"
+          [salesAgent]="movie.salesAgentDeal.salesAgent">
+        </movie-display-film-info-card>
+        <!-- Promotional elements -->
+        <!-- <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
+          <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
+          </catalog-promotional-elements>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container> -->
+        <!-- Main informations -->
+        <!-- <movie-display-principal-informations [main]="movie.main" [salesCast]="movie.salesCast" [budget]="movie.budget"
+          [salesInfo]="movie.salesInfo"></movie-display-principal-informations>
+        <mat-divider [inset]="true"></mat-divider> -->
+        <!-- Film details -->
+        <!-- <movie-display-film-details [main]="movie.main" [salesInfo]="movie.salesInfo" [color]="color"
+          [europeanQualification]="europeanQualification" [movieSalesInfo]="movie.salesInfo">
+        </movie-display-film-details>
+        <mat-divider [inset]="true"></mat-divider> -->
+        <!-- Festival Prizes -->
+        <!-- <ng-container *ngIf="movie.festivalPrizes.prizes.length">
+          <movie-display-prizes [prizes]="movie.festivalPrizes.prizes"></movie-display-prizes>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container> -->
+        <!-- Languages -->
+        <!-- <movie-display-version-info [main]="movie.main" [versionInfo]="movie.versionInfo">
+        </movie-display-version-info>
+        <mat-divider [inset]="true"></mat-divider> -->
+        <!-- Synopsis -->
+        <!-- <ng-container *ngIf="movie.main.shortSynopsis">
+          <movie-display-synopsis [synopsis]="movie.main.shortSynopsis"></movie-display-synopsis>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container> -->
+        <!-- Keywords -->
+        <!-- <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
+        <mat-divider [inset]="true"></mat-divider> -->
+      </mat-card>
+    </div>
+  </section>
+
+</div>

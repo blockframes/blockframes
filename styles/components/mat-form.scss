@@ -5,19 +5,6 @@ mat-form-field {
     }
   }
 
-  &.ng-invalid,
-  &.mat-form-field-invalid {
-    .mat-form-field-wrapper {
-      padding-bottom: 7px;
-    }
-  }
-
-  &.ng-untouched {
-    .mat-form-field-wrapper {
-      padding-bottom: 1.25em;
-    }
-  }
-
   .mat-form-field {
     &-underline {
       position: static;
@@ -29,39 +16,23 @@ mat-form-field {
   }
 }
 
-.light-theme .mat-form-field-appearance-outline {
-  .mat-form-field-outline {
-    color: mat-color($bf-light-foreground, dynamic);
-  }
-  .mat-form-field-outline-thick {
-    color: mat-color($bf-light-primary);
-    .mat-form-field-outline-start,
-    .mat-form-field-outline-end,
-    .mat-form-field-outline-gap {
-      border-width: 1px;
+@mixin mat-bf-form-field-theme($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+
+  .mat-form-field-appearance-outline {
+    .mat-form-field-outline {
+      color: mat-color($foreground, divider);
+    }
+    // This one is when mat-form-field is hovered
+    .mat-form-field-outline-thick {
+      color: mat-color($primary);
+
+      .mat-form-field-outline-start,
+      .mat-form-field-outline-end,
+      .mat-form-field-outline-gap {
+        border-width: 1px;
+      }
     }
   }
-
-}
-
-.dark-theme .mat-form-field-appearance-outline {
-  .mat-form-field-outline {
-    color: mat-color($bf-dark-foreground, dynamic);
-  }
-  .mat-form-field-outline-thick {
-    color: mat-color($bf-dark-primary);
-    .mat-form-field-outline-start,
-    .mat-form-field-outline-end,
-    .mat-form-field-outline-gap {
-      border-width: 1px;
-    }
-  }
-
-}
-
-// Autocomplete CSS
-.dark-theme .mat-autocomplete-panel.mat-autocomplete-visible {
-  background: mat-color($bf-dark-background, autocomplete);
-  border: 1px solid mat-color($bf-dark-background, border);
-  border-radius: 10px;
 }

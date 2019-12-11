@@ -59,12 +59,13 @@
     "@angular/common": "^8.2.4",
     "@angular/compiler": "^8.2.4",
     "@angular/core": "^8.2.4",
-    "@angular/fire": "^5.2.1",
+    "@angular/fire": "^5.2.3",
     "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/forms": "^8.2.4",
     "@angular/material": "^8.0.0",
     "@angular/platform-browser": "^8.2.4",
     "@angular/platform-browser-dynamic": "^8.2.4",
+    "@angular/pwa": "^0.803.20",
     "@angular/router": "^8.2.4",
     "@angular/service-worker": "^8.2.4",
     "@datorama/akita": "^4.17.0",
@@ -171,7 +172,8 @@
     "tslib": "^1.9.0",
     "tslint": "~5.20.0",
     "typescript": "^3.4.5",
-    "webpack-bundle-analyzer": "^3.4.1"
+    "webpack-bundle-analyzer": "^3.4.1",
+    "ts-jest": "24.0.0"
   },
   "pwmetrics": {
     "url": "http://localhost:4200/"

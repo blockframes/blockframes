@@ -610,7 +610,10 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/notification/tsconfig.lib.json", "libs/notification/tsconfig.spec.json"],
+            "tsConfig": [
+              "libs/notification/tsconfig.lib.json",
+              "libs/notification/tsconfig.spec.json"
+            ],
             "exclude": ["**/node_modules/**"]
           }
         }
@@ -1457,7 +1460,7 @@
         }
       }
     },
-    "catalog": {
+    "catalog-lib": {
       "projectType": "library",
       "root": "libs/catalog",
       "sourceRoot": "libs/catalog/src",
@@ -1482,6 +1485,199 @@
       "schematics": {
         "@nrwl/angular:component": {
           "styleext": "scss"
+        }
+      }
+    },
+    "catalog": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/catalog/catalog",
+      "sourceRoot": "apps/catalog/catalog/src",
+      "prefix": "catalog",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/catalog",
+            "index": "apps/catalog/catalog/src/index.html",
+            "main": "apps/catalog/catalog/src/main.ts",
+            "polyfills": "apps/catalog/catalog/src/polyfills.ts",
+            "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
+            "aot": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/catalog/catalog/src/favicon.ico",
+              "apps/catalog/catalog/src/assets",
+              "apps/catalog/catalog/src/manifest.webmanifest",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": ["apps/catalog/catalog/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                },
+                {
+                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
+                  "with": "apps/catalog/catalog/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "apps/catalog/catalog/ngsw-config.json"
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
+                  "with": "apps/catalog/catalog/src/environments/environment.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
+                  "with": "apps/catalog/catalog/src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                }
+              ],
+              "serviceWorker": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "catalog:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "catalog:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "catalog:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/catalog/catalog/tsconfig.app.json", "apps/catalog/catalog/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!apps/catalog/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/catalog/catalog/jest.config.js",
+            "tsConfig": "apps/catalog/catalog/tsconfig.spec.json",
+            "setupFile": "apps/catalog/catalog/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "catalog-e2e": {
+      "root": "apps/catalog/catalog-e2e",
+      "sourceRoot": "apps/catalog/catalog-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
+            "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
+            "devServerTarget": "catalog:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "catalog:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/catalog/catalog-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/catalog/catalog-e2e/**"]
+          }
         }
       }
     }

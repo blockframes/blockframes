@@ -1,10 +1,10 @@
-.dark-theme mat-card {
-  border-radius: 10px;
-  border: 1px solid mat-color($bf-dark-background, border);
-}
+@mixin mat-bf-card-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
-.light-theme .mat-card:not([class*="mat-elevation-z"]) {
-  border-radius: 10px;
-  box-shadow: none;
-  border: 1px solid mat-color($bf-light-background, border);
+  .mat-card {
+    @include _mat-theme-overridable-elevation(0, $theme);
+    background-color: mat-color($background, card);
+    border: 1px solid mat-color($foreground, divider);
+  }
 }
