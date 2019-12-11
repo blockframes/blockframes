@@ -1,36 +1,41 @@
-<footer fxLayout="column" fxLayoutAlign="start center">
-  <section [fxLayout]="layout" [fxLayoutAlign]="alignLayout" [fxLayoutGap]="flexGap">
+<footer fxLayout="column">
+
+  <!-- Top part of the footer: links to pages, social medias an newsletter input -->
+  <section fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <article fxLayout="column" fxLayoutAlign="start center">
-      <h4>
+      <a routerLink="/">
         <mat-icon svgIcon="LogoAC" class="ac-logo"></mat-icon>
-      </h4>
+      </a>
     </article>
-    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
-      <h4>Learn more</h4>
-        <a routerLink="">About us</a>
-        <a routerLink="">FAQ</a><!-- TODO #1370 add FAQ page-->
-        <a routerLink="">Contact</a>
+    <article fxLayout="column" fxLayoutAlign="start center">
+      <p class="bf-strong">Learn more</p><!-- TODO #1396 change for custom typo -->
+      <a routerLink="/"><span>About us</span></a>
+      <a routerLink="/"><span>FAQ</span></a><!-- TODO #1370 add FAQ page-->
+      <a routerLink="/"><span>Contact</span></a>
     </article>
-    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
-      <h4>Follow us</h4>
-      <span fxLayout="row" [fxLayoutAlign]="socialMediaIconsAlign" class="social-media-icons">
+    <article fxLayout="column" fxLayoutAlign="start center">
+      <p class="bf-strong">Follow us</p><!-- TODO #1396 change for custom typo -->
+      <span fxLayout="row" class="social-media-icons">
         <mat-icon svgIcon="twitter"></mat-icon>
         <mat-icon svgIcon="facebook"></mat-icon>
         <mat-icon svgIcon="linkedin"></mat-icon>
         <mat-icon svgIcon="instagram"></mat-icon>
       </span>
     </article>
-    <article fxLayout="column" [fxLayoutAlign]="alignLayout">
-      <h4>Keep informed</h4>
-      <mat-form-field>
+    <article fxLayout="column" fxLayoutAlign="start center">
+      <p class="bf-strong">Keep me informed</p><!-- TODO #1396 change for custom typo -->
+      <mat-form-field appearance="outline">
+          <mat-label>Email address</mat-label>
         <input matInput type="email" placeholder="Email address" autocomplete="off" [formControl]="emailControl" />
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="registerEmailForNewsletter()">Send</button>
     </article>
   </section>
-  <section fxLayout="column" fxLayoutAlign="start center">
+
+  <!-- Bottom part of the footer: partners -->
+  <section fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
     <div class="partner-header">Proudly associated with the following partners</div>
-    <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" class="partner-logos" fxLayoutGap="30px">
+    <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="30px">
       <img src="/assets/logo/CNC_logo.png" />
       <img src="/assets/logo/BPIfrance.png" />
       <img src="/assets/logo/creativemediaeurope.png" />

@@ -3,31 +3,28 @@
   position: fixed;
   top: 0;
   z-index: 2;
-}
 
-.transparent-toolbar {
-  background-color: transparent;
-  transition-duration: 0;
-}
-
-.plain-toolbar {
-  transition-duration: 1000ms;
-}
-
-.app-icon {
-  width: 80px;
-}
-
-nav {
-  height: 64px;
-  margin-left: 50px;
-
-  a {
-    font-size: 14px;
-    min-width: 150px;
-    font-weight: 600;
-    font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
-    opacity: 1;
+  .transparent-toolbar {
+    background-color: transparent;
+    transition-duration: 0;
   }
 
+  .plain-toolbar {
+    transition-duration: 1000ms;
+  }
+
+  .app-icon {
+    width: 100px;
+    height: 36px;
+  }
+
+  nav {
+    height: 64px;
+    margin-left: 50px;
+
+    a {
+      font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
+      opacity: 1;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,8 @@ import { RequestDemoRole } from '../../demo-request.model';
 @Component({
   selector: 'catalog-learn-more',
   templateUrl: './learn-more.component.html',
-  styleUrls: ['./learn-more.component.scss']
+  styleUrls: ['./learn-more.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogLearnMoreComponent implements OnDestroy {
   @Output() sendRequest = new EventEmitter<FormGroup>();
