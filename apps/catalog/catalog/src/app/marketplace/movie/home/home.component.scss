@@ -1,0 +1,142 @@
+@import 'mixins';
+
+header {
+  padding: 50px;
+  background-image: url('/assets/images/banner_home.png');
+  background-size: cover;
+  text-align: center;
+
+  h3 {
+    margin: 0;
+  }
+
+  span {
+    width: 35%;
+    text-align: left;
+  }
+
+  .first-header-text {
+    font-size: 40px;
+    font-weight: 300;
+  }
+
+  .second-header-text {
+    font-size: 28px;
+    font-weight: 300;
+  }
+
+  a {
+    margin-top: 20px;
+  }
+}
+
+article {
+  width: 80%;
+  margin: 75px 0;
+
+  aside {
+    width: 31%;
+
+    a {
+      margin-top: 20px;
+    }
+  }
+
+  mat-carousel {
+    flex: 1;
+    margin: 10px;
+
+    h2 {
+      margin: 0;
+    }
+
+    .overlay {
+      height: 100%;
+    }
+
+    .informations {
+      width: 100%;
+      padding: 10px 30px;
+    }
+
+    button.mat-icon-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+  }
+}
+
+@include mobile {
+  header {
+    padding: 50px 0;
+    span {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 0;
+
+    aside {
+      width: 100%;
+      text-align: center;
+    }
+
+    mat-carousel {
+      width: 100%;
+      margin: 0;
+      margin-top: 10px;
+    }
+  }
+}
+
+@include tablet {
+  header {
+    padding: 20px;
+    span {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 50px;
+
+    aside {
+      width: 100%;
+      text-align: center;
+      h1 {
+        margin: 0;
+      }
+    }
+
+    mat-carousel {
+      width: 100%;
+      margin: 0;
+      margin-top: 10px;
+    }
+  }
+}
+
+@include medium {
+  header {
+    padding: 20px;
+    span {
+      width: 70%;
+      text-align: left;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 50px 0;
+
+    aside {
+      margin: 10px;
+    }
+  }
+}

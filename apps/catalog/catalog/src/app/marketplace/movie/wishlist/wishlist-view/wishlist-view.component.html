@@ -1,0 +1,19 @@
+<section>
+  <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <h2>My selections</h2>
+    <mat-divider fxFlex></mat-divider>
+  </article>
+  <article *ngIf="(currentWishlist$ | async) as wishlist">
+    <catalog-wishlist-current-repertory
+      [movies]="wishlist.movies"
+      isCurrent="true"
+      (sent)="updateWishlistStatus(wishlist.movies)" >
+    </catalog-wishlist-current-repertory>
+  </article>
+  <article *ngFor="let wishlist of wishlists$ | async">
+    <catalog-wishlist-current-repertory
+      [movies]="wishlist.movies"
+      [date]="wishlist.sent" >
+    </catalog-wishlist-current-repertory>
+  </article>
+</section>
