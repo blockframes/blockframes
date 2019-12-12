@@ -13,7 +13,7 @@ export const APP = new InjectionToken('Firebase app');
 @NgModule({
   providers: [
     // Fill the app token with the function provided by @angular/fire
-    { provide: APP, useFactory: (zone) => _firebaseAppFactory(firebase, zone, firebase.projectId), deps: [NgZone] },
+    { provide: APP, useFactory: (zone) => _firebaseAppFactory(firebase, zone), deps: [NgZone] },
     // Fill the analytics token on this app
     { provide: ANALYTICS, useFactory: app => app.analytics(), deps: [APP] }
   ],
