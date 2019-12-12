@@ -24,7 +24,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Sentry
-import { SentryModule } from '@blockframes/utils';
+import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
 @NgModule({

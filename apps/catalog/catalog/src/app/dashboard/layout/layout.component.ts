@@ -1,6 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog-dashboard';
 
 @Component({
   selector: 'catalog-layout',
@@ -9,11 +7,5 @@ import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class LayoutComponent implements OnInit {
-
-  constructor(private contextMenuService: ContextMenuService) {}
-
-  ngOnInit() {
-    this.contextMenuService.setMenu(CONTEXT_MENU);
-  }
+export class LayoutComponent {
 }
