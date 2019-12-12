@@ -5,9 +5,10 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
 import { MovieMaterialService } from './movie-material.service';
-import { MovieQuery } from '@blockframes/movie';
 import { CollectionService } from 'akita-ng-fire';
 import { Material, MaterialStatus } from './material.model';
+import { DeliveryMaterialService } from './delivery-material.service';
+import { DeliveryQuery } from '../../delivery/+state';
 
 const initTestApp = initializeTestApp({
   projectId: 'my-test-project',
@@ -21,7 +22,7 @@ const materialsMock = [
     description: 'des1',
     id: '6hjACiAe2dOZ8Vab1L3u',
     isOrdered: false,
-    isPaid: false,
+    isPaid: true,
     owner: null,
     price: 40,
     status: 'pending',
@@ -34,7 +35,7 @@ const materialsMock = [
     currency: 'CAD',
     description: 'des2',
     id: 'KfN4o33h4mK212ZnOO5m',
-    isOrdered: false,
+    isOrdered: true,
     isPaid: false,
     owner: null,
     price: 10,
@@ -58,47 +59,47 @@ const materialsMock = [
   }
 ] as Material[];
 
-describe('MovieMaterialService unit test', () => {
-  let spectator: SpectatorService<MovieMaterialService>;
-  let movieMaterialService: MovieMaterialService;
+describe('DeliveryMaterialService unit test', () => {
+  let spectator: SpectatorService<DeliveryMaterialService>;
+  let deliveryMaterialService: DeliveryMaterialService;
 
   const createService = createServiceFactory({
-    service: MovieMaterialService,
+    service: DeliveryMaterialService,
     imports: [
       AngularFireModule.initializeApp(initTestApp),
       AngularFireFunctionsModule,
       AngularFirestoreModule
     ],
     mocks: [AngularFirestore],
-    providers: [MovieQuery, MaterialStore]
+    providers: [DeliveryQuery, MaterialStore]
   });
 
   beforeEach(() => {
     spectator = createService();
-    movieMaterialService = spectator.get(MovieMaterialService);
+    deliveryMaterialService = spectator.get(DeliveryMaterialService);
   });
 
   it('should be created', () => {
-    expect(movieMaterialService).toBeTruthy();
+    expect(deliveryMaterialService).toBeTruthy();
   });
 
-  it('should update status of materials from a movie', () => {
+  it('should update status of materials from a delivery', () => {
     const spy = jest.spyOn(CollectionService.prototype, 'update').mockImplementation();
-    movieMaterialService.updateStatus(materialsMock, MaterialStatus.available);
+    deliveryMaterialService.updateDeliveryMaterialStatus(materialsMock, MaterialStatus.available, 'deliveryId');
     expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { status: MaterialStatus.available });
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should update isOrdered materials from a movie', () => {
+  it('should update isOrdered materials from a delivery', () => {
     const spy = jest.spyOn(CollectionService.prototype, 'update').mockImplementation();
-    movieMaterialService.updateIsOrdered(materialsMock);
+    deliveryMaterialService.updateDeliveryMaterialIsOrdered(materialsMock);
     expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], (() => ({ isOrdered: true })));
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
-  it('should update isPaid materials from a movie', () => {
+  it('should update isPaid materials from a delivery', () => {
     const spy = jest.spyOn(CollectionService.prototype, 'update').mockImplementation();
-    movieMaterialService.updateIsPaid(materialsMock);
+    deliveryMaterialService.updateDeliveryMaterialIsPaid(materialsMock);
     expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { isPaid: true });
     expect(spy).toHaveBeenCalledTimes(3);
   });
