@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -12,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CatalogFooterComponent {
   public emailControl: FormControl = new FormControl('', Validators.email);
 
-  constructor(private breakpoint: BreakpointObserver, private snackbar: MatSnackBar) { }
+  constructor(private snackbar: MatSnackBar) { }
 
   public registerEmailForNewsletter() {
     if (this.emailControl.valid) {

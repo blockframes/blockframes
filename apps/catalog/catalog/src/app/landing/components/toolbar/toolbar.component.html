@@ -1,0 +1,20 @@
+<mat-toolbar id="toolbar" class="mat-elevation-z2 transparent-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+  <!-- Burger menu -->
+  <button fxHide.gt-xs mat-icon-button (click)="sidenav.toggle();">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span fxHide.xs fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+    <nav mat-tab-nav-bar mat-align-tabs="center" fxLayout="row" fxLayoutAlign="center center">
+      <!-- ISSUE#1391 -->
+      <a mat-tab-link routerLink=""><b>About us</b></a>
+      <!-- ISSUE#1391 -->
+      <a mat-tab-link routerLink=""><b>FAQ</b></a>
+      <a mat-tab-link routerLink="/welcome" fragment="demo"><b>Schedule a demo</b></a>
+    </nav>
+  </span>
+  <span>
+    <a mat-button routerLink="/auth/connexion" fragment="signin"><span><b>Login</b></span></a>
+    <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><span><b>Sign up</b></span></a>
+  </span>
+</mat-toolbar>
