@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieCreateComponent } from '@blockframes/movie/movie/components/movie-create/movie-create.component';
+import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
+import { LayoutModule } from './layout/layout.module';
+import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    component: LayoutComponent
   },
   {
     path: 'about',
@@ -45,6 +46,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes)]
+  imports: [LayoutModule, MovieCreateModule, RouterModule.forChild(routes)]
 })
 export class DashboardModule {}

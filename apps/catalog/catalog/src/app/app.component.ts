@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
-import { IconComponent } from '@blockframes/ui';
+import { IconComponent } from '@blockframes/ui/icon-component';
 
 @Component({
   selector: 'catalog-root',
   template: '<router-outlet></router-outlet>',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {

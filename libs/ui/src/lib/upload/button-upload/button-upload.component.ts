@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { sanitizeFileName } from '@blockframes/utils';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 // TODO create a component who will be use by button-upload and file-upload
 @Component({

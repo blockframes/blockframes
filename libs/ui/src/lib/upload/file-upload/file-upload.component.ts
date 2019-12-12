@@ -9,7 +9,7 @@ import {
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { sanitizeFileName } from '@blockframes/utils';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 @Component({
   selector: 'file-upload',
