@@ -21,9 +21,9 @@ export async function updateAdressesOrganizationDocument(db: Firestore) {
       ...orgData,
       addresses: {
         main : {
-          city: address,
+          city: address || '',
           country: '',
-          phoneNumber: phoneNumber,
+          phoneNumber: phoneNumber || '',
           street: '',
           zipCode: ''
         }
