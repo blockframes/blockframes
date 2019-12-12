@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 /** Transition from transparent to plain toolbar and vice versa. */
 window.addEventListener('scroll', function(e) {
@@ -18,4 +19,7 @@ window.addEventListener('scroll', function(e) {
   styleUrls: ['./toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogToolbarComponent {}
+export class CatalogToolbarComponent {
+
+  @Input() sidenav: MatSidenav;
+}
