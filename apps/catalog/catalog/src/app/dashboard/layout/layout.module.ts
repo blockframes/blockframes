@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
+import { WidgetModule } from '@blockframes/ui/widget/widget.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 const material = [
   MatButtonModule,
@@ -20,12 +22,14 @@ const material = [
   MatListModule,
   MatIconModule,
   MatSidenavModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatCardModule
 ]
 
 @NgModule({
   declarations: [LayoutComponent],
   imports: [CommonModule,
+    WidgetModule,
   ...material
   ],
   exports: [LayoutComponent]

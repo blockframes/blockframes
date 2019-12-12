@@ -6,14 +6,97 @@
       <mat-nav-list>
         <a mat-list-item>
           <mat-icon matListIcon>add</mat-icon>
-          <span matLine>menu 1</span>
-          <mat-chip>10</mat-chip>
+          <span matLine>Overview</span>
         </a>
+        <a mat-list-item>
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Titles</span>
+          <mat-chip>18</mat-chip>
+        </a>
+        <a mat-list-item>
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Deals</span>
+          <mat-chip>18</mat-chip>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item>
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Marketplace</span>
+        </a>
+        <mat-divider></mat-divider>
+          <a mat-list-item>
+            <mat-icon matListIcon>add</mat-icon>
+            <span matLine>FAQ</span>
+          </a>
+          <a mat-list-item>
+            <mat-icon matListIcon>add</mat-icon>
+            <span matLine>Contact</span>
+          </a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
       <mat-toolbar>
-
+        <form>
+          <mat-form-field>
+            <input matInput placeholder="Search" [widgetTarget]="search">
+          </mat-form-field>
+          <bf-widget #search>
+            <mat-card>
+              <mat-card-content>
+                <mat-list>
+                  <h3 mat-subheader>Film</h3>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>add</mat-icon>
+                    <span mat-line>MovieName | Year | Director</span>
+                    <span mat-line>Published</span>
+                  </mat-list-item>
+                  <mat-divider [inset]="true"></mat-divider>
+                  <h3 mat-subheader>Deals</h3>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>add</mat-icon>
+                    <span mat-line>MovieName | Year | Director</span>
+                    <span mat-line>Published</span>
+                  </mat-list-item>
+                </mat-list>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-flat-button>view all search result <mat-icon>arrow_forward</mat-icon></button>
+              </mat-card-actions>
+            </mat-card>
+          </bf-widget>
+        </form>
+        <mat-icon matListIcon [widgetTarget]="notification">add</mat-icon>
+        <bf-widget #notification>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Recent Activity</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Today</p>
+              <span>Archipel Content accepted your organization</span>
+              <mat-divider></mat-divider>
+              <p>Yesterday</p>
+              <mat-card>
+                <mat-card-header>
+                  <div mat-card-avatar class="card-avatar"></div>
+                  <mat-card-title>notification</mat-card-title>
+                  <mat-card-subtitle>time</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-flat-button>view all notification <mat-icon>arrow_forward</mat-icon></button>
+            </mat-card-actions>
+          </mat-card>
+        </bf-widget>
+        <div class="profile">
+          <div>
+            <span matLine>Name</span>
+            <span matLine>Role</span>
+          </div>
+          <img class="avatar" src="#" />
+          <mat-icon>add</mat-icon>
+        </div>
       </mat-toolbar>
     </mat-sidenav-content>
   </mat-sidenav-container>
