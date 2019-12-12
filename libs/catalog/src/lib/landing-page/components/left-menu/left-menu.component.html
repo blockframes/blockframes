@@ -1,0 +1,20 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <button test-id="home" mat-button routerLink="/welcome" aria-label="Archipel Content Logo">
+    <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+  </button>
+  <div>
+    <button mat-icon-button (click)="sidenav.toggle()" aria-label="toggle button">
+      <mat-icon svgIcon="chevronLeft" class="left-chevron"></mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-divider></mat-divider>
+<section>
+  <nav fxLayout="column" fxLayoutAlign="center start">
+    <!-- ISSUE#1391 -->
+    <a routerLink="" class="bf-strong">About us</a>
+    <!-- ISSUE#1391 -->
+    <a routerLink="" class="bf-strong">FAQ</a>
+    <a routerLink="/welcome" fragment="demo" class="bf-strong">Schedule a demo</a>
+  </nav>
+</section>

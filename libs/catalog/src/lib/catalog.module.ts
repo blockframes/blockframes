@@ -14,6 +14,7 @@ import { CatalogHowItWorksComponent } from './landing-page/components/how-it-wor
 import { CatalogViewMarketplaceComponent } from './landing-page/components/view-marketplace/view-marketplace.component';
 import { CatalogLearnMoreComponent } from './landing-page/components/learn-more/learn-more.component';
 import { CatalogFooterModule } from './landing-page/components/footer/catalog-footer.module';
+import { CatalogLeftMenuComponent } from './landing-page/components/left-menu/left-menu.component';
 
 // Libs
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -27,6 +28,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDividerModule } from '@angular/material/divider';
 
 export const routes: Routes = [{ path: '', component: CatalogLandingPageComponent }];
 
@@ -39,7 +42,8 @@ export const routes: Routes = [{ path: '', component: CatalogLandingPageComponen
     CatalogHowItWorksComponent,
     CatalogViewMarketplaceComponent,
     CatalogHowItWorksComponent,
-    CatalogLearnMoreComponent
+    CatalogLearnMoreComponent,
+    CatalogLeftMenuComponent
   ],
   imports: [
     CommonModule,
@@ -56,6 +60,8 @@ export const routes: Routes = [{ path: '', component: CatalogLandingPageComponen
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSidenavModule,
+    MatDividerModule,
 
     RouterModule.forChild(routes)
   ]

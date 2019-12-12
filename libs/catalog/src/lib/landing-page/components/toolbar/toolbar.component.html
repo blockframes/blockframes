@@ -1,5 +1,13 @@
 <mat-toolbar id="toolbar" class="mat-elevation-z2 transparent-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
-  <span fxLayout="row" fxLayoutAlign="space-between center">
+  <!-- Burger menu -->
+  <ng-container>
+    <div fxHide.gt-xs>
+      <button mat-icon-button (click)="sidenav.toggle();">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+  <span fxHide.xs fxLayout="row" fxLayoutAlign="space-between center">
     <ng-container>
       <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
     </ng-container>
