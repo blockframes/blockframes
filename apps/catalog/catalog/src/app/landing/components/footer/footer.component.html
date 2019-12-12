@@ -8,13 +8,13 @@
       </a>
     </article>
     <article fxLayout="column" fxLayoutAlign="start center">
-      <p class="bf-strong">Learn more</p><!-- TODO #1396 change for custom typo -->
+      <p><b>Learn more</b></p><!-- TODO #1396 change for custom typo -->
       <a routerLink="/"><span>About us</span></a>
       <a routerLink="/"><span>FAQ</span></a><!-- TODO #1370 add FAQ page-->
       <a routerLink="/"><span>Contact</span></a>
     </article>
     <article fxLayout="column" fxLayoutAlign="start center">
-      <p class="bf-strong">Follow us</p><!-- TODO #1396 change for custom typo -->
+      <p><b>Follow us</b></p><!-- TODO #1396 change for custom typo -->
       <span fxLayout="row" class="social-media-icons">
         <mat-icon svgIcon="twitter"></mat-icon>
         <mat-icon svgIcon="facebook"></mat-icon>
@@ -23,18 +23,18 @@
       </span>
     </article>
     <article fxLayout="column" fxLayoutAlign="start center">
-      <p class="bf-strong">Keep me informed</p><!-- TODO #1396 change for custom typo -->
+      <p><b>Keep me informed</b></p><!-- TODO #1396 change for custom typo -->
       <mat-form-field appearance="outline">
-          <mat-label>Email address</mat-label>
-        <input matInput type="email" placeholder="Email address" autocomplete="off" [formControl]="emailControl" />
+        <mat-label>Email address</mat-label>
+        <input matInput type="email" placeholder="Email address" [formControl]="emailControl" />
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="registerEmailForNewsletter()">Send</button>
+      <button mat-flat-button color="primary" (click)="registerEmailForNewsletter()">Send</button>
     </article>
   </section>
 
   <!-- Bottom part of the footer: partners -->
   <section fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-    <div class="partner-header">Proudly associated with the following partners</div>
+    <header class="partner-header">Proudly associated with the following partners</header>
     <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="30px">
       <img src="/assets/logo/CNC_logo.png" />
       <img src="/assets/logo/BPIfrance.png" />

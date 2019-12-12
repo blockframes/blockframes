@@ -1,12 +1,14 @@
 <section>
-  <h1>Want to learn more?</h1>
-  <h3>Schedule a demo with our team!</h3>
-  <p>
-    Program a personalized demonstration of the platform with a member of the Archipel Content team.
-  </p>
-  <p>
-    Please fill out the form and we will get back to you to choose the best time.
-  </p>
+  <article fxLayout="column" fxLayoutAlign="start center">
+    <span class="mat-display-2">Want to learn more?</span>
+    <h3>Schedule a demo with our team!</h3>
+    <p>
+      Program a personalized demonstration of the platform with a member of the Archipel Content team.
+    </p>
+    <p>
+      Please fill out the form and we will get back to you to choose the best time.
+    </p>
+  </article>
   <form fxLayout="column" [formGroup]="form" (ngSubmit)="sendRequest.emit(form)">
     <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
       <mat-form-field appearance="outline">
@@ -55,6 +57,6 @@
         </mat-error>
       </mat-form-field>
     </article>
-    <button fxFlexAlign="center" mat-flat-button color="accent" type="submit"><span>Send a demo request</span></button>
+    <button fxFlexAlign="center" mat-flat-button color="accent" type="submit">Send a demo request</button>
   </form>
 </section>
