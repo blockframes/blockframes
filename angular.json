@@ -1616,7 +1616,6 @@
             "main": "apps/catalog/catalog/src/main.ts",
             "polyfills": "apps/catalog/catalog/src/polyfills.ts",
             "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
-            "aot": true,
             "stylePreprocessorOptions": {
               "includePaths": [
                 "styles"
