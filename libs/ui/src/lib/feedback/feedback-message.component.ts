@@ -15,7 +15,8 @@ export class FeedbackMessageComponent {
   @Input() public subTitle: string;
 
   /** The url of image which should be displayed when this component is called. */
-  @Input() public imageUrl = '/assets/images/ppl_celebrating.png';
+  @Input() public imageUrl = 'Congrats_380.png';
+  // TODO #1387
 
   /** The message of button which should be displayed when this component is called. */
   @Input() public buttonMessage = 'Explore your dashboard';
