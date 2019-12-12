@@ -5,3 +5,26 @@ mat-sidenav-container {
 mat-sidenav {
   width: 300px;
 }
+
+mat-form-field {
+  width: 100%;
+}
+
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+.card-avatar {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}
+
+.bottom-button {
+  width: 100%;
+}
+
+.more {
+  margin-left: 20px;
+}

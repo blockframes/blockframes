@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
 import { WidgetModule } from '@blockframes/ui/widget/widget.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +31,7 @@ const material = [
   declarations: [LayoutComponent],
   imports: [CommonModule,
     WidgetModule,
+    FlexLayoutModule,
   ...material
   ],
   exports: [LayoutComponent]
