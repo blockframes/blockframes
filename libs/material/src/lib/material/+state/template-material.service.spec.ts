@@ -4,18 +4,17 @@ import { AngularFireModule } from "@angular/fire";
 import { initializeTestApp } from "@firebase/testing";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 import { AngularFirestoreModule, AngularFirestore } from "@angular/fire/firestore";
-import { CollectionService } from "akita-ng-fire";
 import { TemplateQuery } from "../../template/+state/template.query";
 import { MaterialQuery } from "./material.query";
 import { MaterialStore } from "./material.store";
-import { Material, MaterialTemplate } from "./material.model";
+import { createMaterial, createMaterialTemplate } from "./material.model";
 
 const initTestApp = initializeTestApp({
   projectId: 'my-test-project',
   auth: { uid: 'alice', email: 'alice@example.com' }
 });
 
-const materialMock = {
+const materialMock = createMaterial({
   id: 'id',
   category: 'category1',
   value: 'value1',
@@ -26,20 +25,20 @@ const materialMock = {
   isPaid: false,
   deliveryIds: ['deliveryId'],
   storage: 'store'
-} as Material;
+});
 
-const materialTemplateMock = {
+const materialTemplateMock = createMaterialTemplate({
   id: 'id',
   category: 'category1',
   value: 'value1',
   description: 'description1',
   price: 60,
   currency: null
-} as MaterialTemplate;
+});
 
 describe('TemplateMaterialService unit test', () => {
   let spectator: SpectatorService<TemplateMaterialService>;
-  let templateMaterialService: TemplateMaterialService;
+  let service: TemplateMaterialService;
 
   const createService = createServiceFactory({
       service: TemplateMaterialService,
@@ -58,21 +57,25 @@ describe('TemplateMaterialService unit test', () => {
 
   beforeEach(() => {
     spectator = createService();
-    templateMaterialService = spectator.get(TemplateMaterialService);
+    service = spectator.service;
   })
 
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('should be created', () => {
-    expect(templateMaterialService).toBeTruthy();
+    expect(service).toBeTruthy();
   });
 
   it('should remove a material from a template', () => {
-      const spy = jest.spyOn(CollectionService.prototype, 'remove').mockImplementation();
-      templateMaterialService.deleteTemplateMaterial('id');
+      const spy = jest.spyOn(service, 'remove').mockImplementation();
+      service.deleteTemplateMaterial('id');
       expect(spy).toHaveBeenCalledTimes(1);
   })
 
   it('create material template', () => {
-    const material = templateMaterialService.addTemplateMaterial();
+    const material = service.addTemplateMaterial();
     // Check if the material is created like we expect and with the same id.
     const materialTemplate = {
       id: material.id,
@@ -86,7 +89,7 @@ describe('TemplateMaterialService unit test', () => {
   })
 
   it('should take a Material and return a MaterialTemplate', () => {
-    const materialTemplate = templateMaterialService.formatToFirestore(materialMock);
+    const materialTemplate = service.formatToFirestore(materialMock);
     expect(materialTemplate).toEqual(materialTemplateMock);
   })
 })
