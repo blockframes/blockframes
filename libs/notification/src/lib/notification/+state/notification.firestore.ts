@@ -3,7 +3,6 @@ import { PublicMovie } from '@blockframes/movie/types';
 import { firestore } from 'firebase/app';
 import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
 import { App } from '@blockframes/utils/apps';
-type Timestamp = firestore.Timestamp;
 
 /** Type of Notification depending of its origin. */
 export const enum NotificationType {
@@ -40,5 +39,5 @@ export interface NotificationOptions {
 export interface NotificationDocument extends NotificationOptions {
   id: string;
   isRead: boolean;
-  date: Timestamp;
+  date: firestore.FieldValue;
 };
