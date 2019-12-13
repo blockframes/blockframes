@@ -10,6 +10,19 @@ mat-form-field {
   width: 100%;
 }
 
+mat-form-field.mat-form-field {
+  font-size: 10px;
+}
+
+mat-form-field input {
+  font-size: 15px;
+}
+.app-icon,
+.app-icon-button {
+  border-radius: 0;
+  width: 157px;
+}
+
 .example-fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
      Every toolbar row uses a flexbox row layout. */
@@ -21,10 +34,35 @@ mat-form-field {
     background-size: cover;
 }
 
+.avatar {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+.user-name {
+  margin: 0 20px 0 20px;
+}
+
 .bottom-button {
   width: 100%;
 }
 
-.more {
-  margin-left: 20px;
+.notification-icon {
+  margin-right: 20px;
+}
+
+.more-icon {
+  margin: 0 20px 0 20px;
+}
+
+.custom-badge {
+
+  .mat-badge-content {
+
+    width: fit-content;
+    text-align: center;
+    border-radius: 7px;
+    left: 13px;
+  }
 }
