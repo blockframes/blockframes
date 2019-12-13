@@ -1,8 +1,8 @@
 import { PublicOrganization } from '@blockframes/organization/types';
 import { PublicMovie } from '@blockframes/movie/types';
-import { App } from '@blockframes/movie/movie/static-model/staticModels';
 import { firestore } from 'firebase/app';
 import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
+import { App } from '@blockframes/utils/apps';
 type Timestamp = firestore.Timestamp;
 
 /** Type of Notification depending of its origin. */

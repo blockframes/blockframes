@@ -32,6 +32,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
@@ -45,6 +46,7 @@ import { MemberRepertoryComponent } from './components/member-repertory/member-r
 import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
 import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
+import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.component';
 
 import { MemberGuard } from './member/guard/member.guard';
 import { ActiveDaoGuard } from './guard/active-dao.guard';
@@ -72,6 +74,9 @@ export const organizationRoutes: Routes = [
         canActivate: [MemberGuard, ActiveDaoGuard],
         canDeactivate: [MemberGuard],
         loadChildren: () => import('@blockframes/ethers').then(m => m.DaoModule) },
+        loadChildren: () => import('../../../ethers/src').then(m => m.DaoModule)
+      },
+      { path: 'activity', component: ActivityFeedComponent }
     ]
   }
 ];
@@ -113,6 +118,7 @@ export const organizationRoutes: Routes = [
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTabsModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
@@ -125,6 +131,7 @@ export const organizationRoutes: Routes = [
     MemberAddComponent,
     OrganizationEditableComponent,
     ActivateDaoComponent,
+    ActivityFeedComponent
   ]
 })
 export class OrganizationModule {}
