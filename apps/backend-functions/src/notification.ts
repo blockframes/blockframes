@@ -1,13 +1,12 @@
 import { NotificationDocument, NotificationOptions } from './data/types';
-import { db } from './internals/firebase'
-import { firestore } from 'firebase/app';
+import { db, serverTimestamp } from './internals/firebase'
 
 /** Createa a Notification with required and generic informations. */
 export function createNotification(notification: NotificationOptions): NotificationDocument {
   return {
     id: db.collection('notifications').doc().id,
     isRead: false,
-    date: firestore.Timestamp.now(),
+    date: serverTimestamp(),
     ...notification
   };
 }

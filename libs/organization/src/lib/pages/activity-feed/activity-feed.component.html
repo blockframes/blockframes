@@ -3,8 +3,8 @@
   <mat-tab-group animationDuration="1000ms" selectedIndex="0">
     <mat-tab [label]="['All (' + (notifications$ | async).length + ')']">
       <article *ngFor="let notification of notifications$ | async">
-        <h6>{{ notification.organization.name }}</h6>
-        <span>{{ notification.date | date: 'h:mm a' }}</span>
+        <h6>{{ notification.type }}</h6>
+        <span>{{ notification.date.toDate() | date: 'h:mm a' }}</span>
       </article>
     </mat-tab>
     <mat-tab label="Titles"> </mat-tab>
