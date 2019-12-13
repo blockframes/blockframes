@@ -4,8 +4,7 @@ import { initializeTestApp } from '@firebase/testing';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
-import { CollectionService } from 'akita-ng-fire';
-import { Material, MaterialStatus, createMaterial } from './material.model';
+import { MaterialStatus, createMaterial } from './material.model';
 import { DeliveryMaterialService } from './delivery-material.service';
 import { DeliveryQuery } from '../../delivery/+state';
 
@@ -67,6 +66,28 @@ describe('DeliveryMaterialService unit test', () => {
     expect(service).toBeTruthy();
   });
 
+  it('create material', () => {
+    const material = service.createMaterial();
+    // Check if the material is created like we expect and with the same id.
+    const materialMock = {
+      id: material.id,
+      category: '',
+      value: '',
+      description: '',
+      status: MaterialStatus.pending,
+      isOrdered: false,
+      isPaid: false,
+      deliveryIds: []
+    };
+    expect(material).toEqual(materialMock);
+  })
+
+  it('should remove a material from a delivery', () => {
+    const spy = jest.spyOn(service, 'remove').mockImplementation();
+    service.deleteDeliveryMaterial('id');
+    expect(spy).toHaveBeenCalledTimes(1);
+  })
+
   it('should update status of materials from a delivery', () => {
     const spy = jest.spyOn(service, 'update').mockImplementation();
     service.updateDeliveryMaterialStatus(materialsMock, MaterialStatus.available, 'deliveryId');
@@ -77,23 +98,12 @@ describe('DeliveryMaterialService unit test', () => {
   it('should update isOrdered materials from a delivery', () => {
     const spy = jest.spyOn(service, 'update').mockImplementation();
     service.updateDeliveryMaterialIsOrdered(materialsMock);
-    const ok = (material: Material) => ({ isOrdered: !material.isOrdered});
-    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK']);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should update isPaid materials from a delivery', () => {
     const spy = jest.spyOn(service, 'update').mockImplementation();
     service.updateDeliveryMaterialIsPaid(materialsMock);
-    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK']);
     expect(spy).toHaveBeenCalledTimes(1);
-  });
-
-  it('should update materials of a delivery', () => {
-    const spyUpdate = jest.spyOn(service, 'update').mockImplementation();
-    const spyAdd = jest.spyOn(service, 'add').mockImplementation();
-    service.updateDeliveryMaterials(materialsMock);
-    expect(spyUpdate).toHaveBeenCalledTimes(1);
-    expect(spyAdd).toHaveBeenCalledTimes(1);
   });
 });
