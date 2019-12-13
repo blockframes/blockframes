@@ -16,13 +16,12 @@ import {
   MovieDocument,
   createDocPermissions,
   createUserPermissions,
-  createNotification,
   NotificationType,
   UserRole,
   App,
   PublicUser
 } from './data/types';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { sendMailFromTemplate } from './internals/email';
 import {
   userJoinedAnOrganization,
@@ -114,14 +113,12 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
   // Create a notification for the organization members.
   const { userIds } = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
   const notifications = userIds.map(userId => {
-    console.log(userId)
     return createNotification({
       userId,
       app: App.blockframes,
       type: NotificationType.addOrgMember
     });
   })
-  console.log(notifications)
   await triggerNotifications(notifications)
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
