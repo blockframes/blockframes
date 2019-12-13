@@ -13,6 +13,6 @@ export class AppComponent {
     theme: ThemeService,
     icons: IconComponent  // even if not used in component, keep this to load icons
   ) {
-    theme.initTheme(renderer, 'light');
+    theme.initTheme(renderer, 'dark');
   }
 }
