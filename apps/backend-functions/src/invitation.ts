@@ -15,6 +15,11 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
+  createUserPermissions,
+  createNotification,
+  NotificationType,
+  UserRole,
+  App,
   PublicUser
 } from './data/types';
 import { triggerNotifications } from './notification';
@@ -25,9 +30,6 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
-import { UserRole } from '@blockframes/permissions/types';
-import { App } from '@blockframes/utils/apps';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -111,15 +113,16 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
   await addUserToOrg(user.uid, organization.id);
   // Create a notification for the organization members.
   const { userIds } = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
-  await triggerNotifications(
-    userIds.map(userId => {
-      return createNotification({
-        userId,
-        app: App.blockframes,
-        type: NotificationType.addOrgMember
-      });
-    })
-  )
+  const notifications = userIds.map(userId => {
+    console.log(userId)
+    return createNotification({
+      userId,
+      app: App.blockframes,
+      type: NotificationType.addOrgMember
+    });
+  })
+  console.log(notifications)
+  await triggerNotifications(notifications)
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }
@@ -249,8 +252,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
             docId,
             app: App.mediaDelivering,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument,
-            app: App.mediaDelivering
+            type: NotificationType.pathToDocument
           });
         })
       )

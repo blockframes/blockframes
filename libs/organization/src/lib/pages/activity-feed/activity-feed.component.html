@@ -2,22 +2,79 @@
   <h3>Activity feed</h3>
   <mat-tab-group animationDuration="1000ms" selectedIndex="0">
     <mat-tab [label]="['All (' + (notifications$ | async).length + ')']">
-      <article *ngFor="let notification of (notifications$ | async)">
-        <h6>{{ notification.organization.name}}</h6>
-        <span>{{ notification.date | date: 'h:mm a'}}</span>
+      <article *ngFor="let notification of notifications$ | async">
+        <h6>{{ notification.organization.name }}</h6>
+        <span>{{ notification.date | date: 'h:mm a' }}</span>
       </article>
     </mat-tab>
-    <mat-tab label="Titles">
-    </mat-tab>
-    <mat-tab *ngIf="app == 'catalog'" label="Deals">
-    </mat-tab>
-    <mat-tab [label]="app | titlecase">
-    </mat-tab>
+    <mat-tab label="Titles"> </mat-tab>
+    <mat-tab *ngIf="app == 'catalog'" label="Deals"> </mat-tab>
+    <mat-tab [label]="app | titlecase"> </mat-tab>
     <mat-tab [label]="[organizationName + ' (' + (invitations$ | async).length + ')']">
-      <article *ngFor="let invitation of (invitations$ | async)">
-        <h6>{{ invitation.user.email }}</h6>
-        <span>{{ invitation.date.toDate() | date: 'h:mm a'}}</span>
-      </article>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-subtitle><b>Today</b></mat-card-subtitle>
+        </mat-card-header>
+        <ng-container *ngIf="(todayInvitations$ | async).length; else noTodayInvitations">
+          <article fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let invitation of todayInvitations$ | async">
+            <mat-card-content>
+              <h6>{{ invitation.user.email }}</h6>
+              <p>{{ invitation.date.toDate() | date: 'shortTime' }}</p>
+            </mat-card-content>
+            <mat-card-actions *ngIf="invitation.type == 'fromUserToOrganization'" fxLayoutAlign="start" fxLayoutGap="15px">
+              <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+                <mat-icon bf-icon>done</mat-icon>
+              </a>
+              <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+                <mat-icon bf-icon>clear</mat-icon>
+              </a>
+            </mat-card-actions>
+          </article>
+        </ng-container>
+        <ng-template #noTodayInvitations>
+          <mat-card-content><span>No new invitations today</span></mat-card-content>
+        </ng-template>
+        <mat-divider></mat-divider>
+        <ng-container *ngIf="(yesterdayInvitations$ | async).length">
+          <mat-card-header>
+            <mat-card-subtitle><b>Yesterday</b></mat-card-subtitle>
+          </mat-card-header>
+          <article fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let invitation of yesterdayInvitations$ | async">
+            <mat-card-content>
+              <h6>{{ invitation.user.email }}</h6>
+              <p>{{ invitation.date.toDate() | date: 'shortTime' }}</p>
+            </mat-card-content>
+            <mat-card-actions *ngIf="invitation.type == 'fromUserToOrganization'" fxLayoutAlign="start" fxLayoutGap="15px">
+              <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+                <mat-icon bf-icon>done</mat-icon>
+              </a>
+              <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+                <mat-icon bf-icon>clear</mat-icon>
+              </a>
+            </mat-card-actions>
+          </article>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="(olderInvitations$ | async).length">
+          <mat-card-header>
+            <mat-card-subtitle><b>Older</b></mat-card-subtitle>
+          </mat-card-header>
+          <article fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let invitation of olderInvitations$ | async">
+            <mat-card-content>
+              <h6>{{ invitation.user.email }}</h6>
+              <p>{{ invitation.date.toDate() | date: 'shortTime' }}</p>
+            </mat-card-content>
+            <mat-card-actions *ngIf="invitation.type == 'fromUserToOrganization'" fxLayoutAlign="start" fxLayoutGap="15px">
+              <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+                <mat-icon bf-icon>done</mat-icon>
+              </a>
+              <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+                <mat-icon bf-icon>clear</mat-icon>
+              </a>
+            </mat-card-actions>
+          </article>
+        </ng-container>
+      </mat-card>
     </mat-tab>
   </mat-tab-group>
 </section>
