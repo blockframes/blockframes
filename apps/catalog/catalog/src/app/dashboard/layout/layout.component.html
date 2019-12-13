@@ -1,13 +1,13 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
-    <mat-toolbar>
-      <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
-          <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
-          logo
-        </button>
-      </ng-container>
-    </mat-toolbar>
+    <!-- <mat-toolbar> -->
+    <ng-container app-icon>
+      <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
+        <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+        logo
+      </button>
+    </ng-container>
+    <!-- </mat-toolbar> -->
     <mat-nav-list>
       <a mat-list-item>
         <mat-icon matListIcon>add</mat-icon>
@@ -80,7 +80,7 @@
             </mat-card-content>
             <mat-card-footer>
               <a mat-line>
-                <button mat-flat-button class="bottom-button" color="primary">view all search result <mat-icon>arrow_forward</mat-icon></button>
+                <button mat-button class="bottom-button" color="primary">view all search result <mat-icon>arrow_forward</mat-icon></button>
               </a>
             </mat-card-footer>
           </mat-card>
@@ -108,8 +108,8 @@
                   <h3 matLine>Notification</h3>
                   <p matLine class="mat-caption">Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
                   <div matLine>
-                    <a mat-icon-button><mat-icon>thumb_up</mat-icon></a>
-                    <a mat-icon-button><mat-icon>thumb_down</mat-icon></a>
+                    <a mat-mini-fab color="primary"><mat-icon>thumb_up</mat-icon></a>
+                    <a mat-mini-fab><mat-icon>thumb_down</mat-icon></a>
                   </div>
                 </a>
                 <mat-divider [inset]="true"></mat-divider>
@@ -134,9 +134,9 @@
                 </a>
               </mat-nav-list>
             </mat-card-content>
-            <mat-card-footer>
+            <mat-card-footer matButton color="primary">
               <a matLine>
-                <button mat-flat-button class="bottom-button" color="primary">view all the notification <mat-icon>arrow_forward</mat-icon></button>
+                <button class="bottom-button">view all the notification <mat-icon>arrow_forward</mat-icon></button>
               </a>
             </mat-card-footer>
           </mat-card>
