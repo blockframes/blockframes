@@ -2,7 +2,10 @@
   <mat-sidenav mode="side" opened>
     <mat-toolbar>
       <ng-container app-icon>
-
+        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
+          <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
+          logo
+        </button>
       </ng-container>
     </mat-toolbar>
     <mat-nav-list>
@@ -40,11 +43,11 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar fxLayout="row">
-      <form fxFlex="70">
-        <mat-form-field>
+      <form fxFlex="60" fxLayoutAlign=" end">
+        <mat-form-field floatLabel="never">
           <input matInput
           placeholder="Search for clients, negotiations, titles instead of listings..."
-          [widgetTarget]="search">
+          [widgetTarget]="search" />
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
         <bf-widget #search>
@@ -53,6 +56,11 @@
               <mat-list>
                 <h3 mat-subheader>Film</h3>
                 <mat-list-item>
+                  <a matLine fxLayoutAlign="start center">
+                    <mat-icon mat-list-icon>add</mat-icon>
+                    <span>MovieName | Year | Director</span>
+                    <span>Published</span>
+                  </a>
                   <a matLine fxLayoutAlign="start center">
                     <mat-icon mat-list-icon>add</mat-icon>
                     <span>MovieName | Year | Director</span>
@@ -72,7 +80,7 @@
             </mat-card-content>
             <mat-card-footer>
               <a mat-line>
-                <button mat-flat-button class="bottom-button">view all search result <mat-icon>arrow_forward</mat-icon></button>
+                <button mat-flat-button class="bottom-button" color="primary">view all search result <mat-icon>arrow_forward</mat-icon></button>
               </a>
             </mat-card-footer>
           </mat-card>
@@ -82,25 +90,28 @@
       <span class="example-fill-remaining-space"></span>
       <div fxLayout="row" fxLayoutAlign="start center">
         <a mat-icon-button>
-          <mat-icon matListIcon [widgetTarget]="notification">notification_important</mat-icon>
+          <mat-icon matListIcon [widgetTarget]="notification" matBadge="3" class="notification-icon">notification_important</mat-icon>
         </a>
         <bf-widget #notification>
           <mat-card>
-            <mat-card-header>
+            <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
               <mat-card-title>Recent Activity</mat-card-title>
+              <a mat-icon-button class="more">
+                <mat-icon>more_vert</mat-icon>
+              </a>
             </mat-card-header>
             <mat-card-content>
-                <mat-nav-list>
-                    <p matSubheader>Today</p>
-                    <a mat-list-item>
-                      <div matListAvatar class="card-avatar"></div>
-                      <h3 matLine>Notification</h3>
-                      <p matLine>Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
-                      <div matLine>
-                        <a mat-icon-button><mat-icon>thumb_up</mat-icon></a>
-                        <a mat-icon-button><mat-icon>thumb_down</mat-icon></a>
-                      </div>
-                    </a>
+              <mat-nav-list>
+                <p matSubheader>Today</p>
+                <a mat-list-item>
+                  <div matListAvatar class="card-avatar" matBadge="22" matBadgePosition="below"></div>
+                  <h3 matLine>Notification</h3>
+                  <p matLine class="mat-caption">Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
+                  <div matLine>
+                    <a mat-icon-button><mat-icon>thumb_up</mat-icon></a>
+                    <a mat-icon-button><mat-icon>thumb_down</mat-icon></a>
+                  </div>
+                </a>
                 <mat-divider [inset]="true"></mat-divider>
                 <p matSubheader>Yesterday</p>
                 <a mat-list-item>
@@ -125,18 +136,18 @@
             </mat-card-content>
             <mat-card-footer>
               <a matLine>
-                <button mat-flat-button class="bottom-button">view all the notification <mat-icon>arrow_forward</mat-icon></button>
+                <button mat-flat-button class="bottom-button" color="primary">view all the notification <mat-icon>arrow_forward</mat-icon></button>
               </a>
             </mat-card-footer>
           </mat-card>
         </bf-widget>
         <div fxLayout="row" fxLayoutAlign="start center">
-          <div fxLayout="column">
+          <div fxLayout="column" class="user-name">
             <div>Name</div>
             <div>role</div>
           </div>
-        <div class="card-avatar">avatar</div>
-        <a mat-icon-button class="more">
+        <img class="avatar" src="https://material.angular.io/assets/img/examples/shiba1.jpg" />
+        <a mat-icon-button class="more-icon">
           <mat-icon>more_vert</mat-icon>
         </a>
         </div>
