@@ -109,6 +109,17 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
+  // Create a notification for the organization members.
+  const { userIds } = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
+  await triggerNotifications(
+    userIds.map(userId => {
+      return createNotification({
+        userId,
+        app: App.blockframes,
+        type: NotificationType.addOrgMember
+      });
+    })
+  )
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }
@@ -236,6 +247,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
           return createNotification({
             userId,
             docId,
+            app: App.mediaDelivering,
             movie: { id: movie.id, title: movie.main.title },
             type: NotificationType.pathToDocument,
             app: App.mediaDelivering

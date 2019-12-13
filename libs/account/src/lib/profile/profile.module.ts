@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
@@ -22,12 +21,10 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
 import { EditableSidenavModule, UiFormModule, UploadModule } from '@blockframes/ui';
 import { PasswordFormComponent } from './components/password-form/password-form.component';
-import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.component';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'edit', pathMatch: 'full' },
-  { path: 'edit', component: ProfileEditableComponent },
-  { path: 'activity', component: ActivityFeedComponent }
+  { path: 'edit', component: ProfileEditableComponent }
 ];
 @NgModule({
   imports: [
@@ -46,7 +43,6 @@ export const profileRoutes: Routes = [
     MatInputModule,
     MatDialogModule,
     MatMenuModule,
-    MatTabsModule,
     EditableSidenavModule,
     UiFormModule,
     UploadModule,
@@ -56,7 +52,6 @@ export const profileRoutes: Routes = [
     ProfileDisplayComponent,
     ProfileFormComponent,
     ProfileEditableComponent,
-    ActivityFeedComponent,
     PasswordFormComponent
   ],
 })
