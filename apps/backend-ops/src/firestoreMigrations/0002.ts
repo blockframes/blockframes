@@ -35,11 +35,11 @@ export async function updateAdressesOrganizationDocument(db: Firestore) {
     return orgDocSnapshot.ref.set(newData);
   });
   await Promise.all(newOrgnizationData);
-  console.log('Updating organization documents done');
+  console.log('Updating organization documents done.');
 }
 
 /**
- * Update poster url in movie documents
+ * Update poster url in movie documents.
  */
 export async function updatePicturesMovieDocument(db: Firestore) {
   const movies = await db.collection('movies').get();
@@ -103,11 +103,11 @@ export async function updatePicturesMovieDocument(db: Firestore) {
     return movieDocSnapshot.ref.set(newData);
   });
   await Promise.all(newMovieData);
-  console.log('Updating pictures in movie documents done');
+  console.log('Updating pictures in movie documents done.');
 }
 
 /**
- * Update user's avatar in user documents
+ * Update user's avatar in user documents.
  */
 export async function updateAvatarUserDocument(db: Firestore) {
   const users = await db.collection('users').get();
@@ -129,10 +129,38 @@ export async function updateAvatarUserDocument(db: Firestore) {
     return userDocSnapshot.ref.set(newData);
   });
   await Promise.all(newUserData);
-  console.log('Updating avatar in user documents done');
+  console.log('Updating avatar in user documents done.');
+}
+
+/**
+ * Update organisation permissions data model.
+ */
+export async function updateOrganizationPermissionsModel(db: Firestore) {
+  const permissions = await db.collection('permissions').get();
+  const newPermissionsData = permissions.docs.map(async (permissionsSnap: any): Promise<any> => {
+    const permissionsData = permissionsSnap.data();
+    const updatedPermissionsData = {
+      ...permissionsData,
+      id: permissionsData.orgId,
+      roles: {}
+    }
+
+    permissionsData.superAdmins.forEach((uid:string) => updatedPermissionsData.roles[uid] = 'superAdmin');
+    permissionsData.admins.forEach((uid:string) => updatedPermissionsData.roles[uid] = 'superAdmin');
+
+    delete updatedPermissionsData.superAdmins;
+    delete updatedPermissionsData.admins;
+    delete updatedPermissionsData.orgId;
+
+    return permissionsSnap.ref.set(updatedPermissionsData);
+  });
+
+  await Promise.all(newPermissionsData);
+  console.log('Organization permissions model updated.');
 }
 
 export async function upgrade(db: Firestore) {
   await updatePicturesMovieDocument(db);
   await updateAdressesOrganizationDocument(db);
+  await updateOrganizationPermissionsModel(db);
 }

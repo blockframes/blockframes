@@ -17,8 +17,6 @@ if (cmd === 'prepareForTesting') {
   exitable(upgradeAlgoliaOrgs)();
 } else if (cmd === 'upgradeAlgoliaMovies') {
   exitable(upgradeAlgoliaMovies)();
-} else if (cmd === 'upgradePermissionsModel') {
-  migrate['4'].updateOrganizationPermissionsModel();
 } else {
   showHelp();
   process.exit(1);
