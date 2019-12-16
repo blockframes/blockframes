@@ -15,7 +15,7 @@
     (optionSelected)="submit($event)">
     <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization">
       <span fxLayout="row" fxLayoutAlign="space-between center">
-        <span>{{ organization.denomination.publicName }}</span>
+        <span>{{ organization.denomination.full }}</span>
         <mat-icon color="primary" svgIcon="add"></mat-icon>
       </span>
     </mat-option>

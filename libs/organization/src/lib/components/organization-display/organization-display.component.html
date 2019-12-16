@@ -4,7 +4,7 @@
       <!-- using organizationInformations to update display as user type in the form -->
       <img mat-card-avatar [imgRef]="organizationInformations.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <h4>{{ organization.denomination.publicName }}</h4>
+        <h4>{{ organization.denomination.full }}</h4>
         <h3>Main address</h3>
         <ul>
           <li><b class="bf-dark-text">Street</b> {{organizationInformations.addresses.main.street}}</li>

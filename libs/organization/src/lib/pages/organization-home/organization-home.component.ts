@@ -14,14 +14,14 @@ import { MatSnackBar } from '@angular/material';
 
 const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
   matIcon: 'alternate_email',
-  title: `Pending request to ${invitation.organization.denomination.publicName}`,
+  title: `Pending request to ${invitation.organization.denomination.full}`,
   routerLink: './',
   description: ''
 });
 
 const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
   matIcon: 'alternate_email',
-  title: `Join ${invitation.organization.denomination.publicName}`,
+  title: `Join ${invitation.organization.denomination.full}`,
   action,
   description: ''
 });

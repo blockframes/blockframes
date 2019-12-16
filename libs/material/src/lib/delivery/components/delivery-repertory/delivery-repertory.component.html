@@ -7,7 +7,7 @@
       <span fxLayout="row" fxLayoutAlign="start center">
         <ng-container *ngFor="let stakeholder of delivery.stakeholders">
           <avatar-list [urls]="[stakeholder.organization.logo]"></avatar-list>
-          {{ stakeholder.organization.denomination.publicName }}
+          {{ stakeholder.organization.denomination.full }}
         </ng-container>
       </span>
     </td>
