@@ -33,6 +33,7 @@ import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { onMovieUpdate } from './movie';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -116,6 +117,14 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+/**
+ * Trigger: when a movie is updated
+ */
+export const onMovieUpdateEvent = onDocumentUpdate(
+  'movies/{movieId}',
+  onMovieUpdate
+)
 
 //--------------------------------
 //       Apps Management        //

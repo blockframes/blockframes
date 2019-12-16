@@ -14,6 +14,7 @@ export const enum NotificationType {
   pathToDocument = 'pathToDocument',
   // Organization acceptation by Archipel Content
   organizationAccepted = 'organizationAccepted',
+  movieTitleUpdated = 'movieTitleUpdated'
 }
 
 /** Minimum required informations to create a Notification. */
