@@ -25,6 +25,7 @@ module.exports = {
   testPathIgnorePatterns: [
     '<rootDir>/apps/([^/].*/){1,2}([^/]-e2e/)',
     '<rootDir>/apps/([^/]+/){1,2}([^/]+-e2e/)',
-    '<rootDir>/cypress/*'
+    '<rootDir>/cypress/*',
+    '<rootDir>/Cypress\/.*\/Cypress\/resources\/app\/packages\/.*'
   ]
 };
