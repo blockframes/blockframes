@@ -28,7 +28,17 @@ function createLoactionControls(location: Partial<Location> = {}) {
   }
 }
 
-type LocationControl = ReturnType<typeof createLoactionControls>
+function createDenominationFormControl(denomination: Partial<Denomination>, service: OrganizationService) {
+  const { full, publicName } = createDenomination(denomination);
+
+  return {
+    full: new FormControl(full, {
+      validators: [Validators.required],
+      asyncValidators: [UniqueOrgName(service)],
+    }),
+    publicName: new FormControl(publicName),
+  }
+}
 
 export class AddressForm extends FormEntity<LocationControl>{
   constructor(location: Location) {
@@ -36,22 +46,16 @@ export class AddressForm extends FormEntity<LocationControl>{
   }
 }
 
-function createOrganizationDenomination(denomination: Partial<Denomination>) {
-  const { full, publicName } = createDenomination(denomination);
-
-  return {
-    full: new FormControl(full),
-    public: new FormControl(publicName),
+export class DenominationForm extends FormEntity<OrganizationDenominationControl> {
+  constructor(denomination: Denomination, service: OrganizationService) {
+    super(createDenominationFormControl(denomination, service));
   }
 }
 
 function createOrganizationFormControl(service: OrganizationService, params?: Organization) {
   const organization = createOrganization(params);
   return {
-    denomination: new FormControl(organization.denomination, {
-      validators: [Validators.required],
-      asyncValidators: [UniqueOrgName(service)],
-    }),
+    denomination: new DenominationForm(organization.denomination, service),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
@@ -81,3 +85,5 @@ function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}
 
 
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
+type OrganizationDenominationControl = ReturnType<typeof createDenominationFormControl>
+type LocationControl = ReturnType<typeof createLoactionControls>

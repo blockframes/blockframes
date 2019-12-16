@@ -7,19 +7,21 @@
   <article>
     <h2>Create your organization</h2>
     <form [formGroup]="form">
-      <h3>Your company</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Organization name</mat-label>
-        <input
-          matInput
-          placeholder="Organization name"
-          aria-label="organization name"
-          formControlName="fullDenomination"
-          required
-        />
-        <mat-error *ngIf="notProvided">You must enter a name</mat-error>
-        <mat-error *ngIf="notUnique">{{ name }} is already taken, please use another name</mat-error>
-      </mat-form-field>
+      <section formGroupName="denomination">
+        <h3>Your company</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Organization name</mat-label>
+          <input
+            matInput
+            placeholder="Organization name"
+            aria-label="organization name"
+            formControlName="full"
+            required
+          />
+          <mat-error *ngIf="notProvided">You must enter a name</mat-error>
+          <mat-error *ngIf="notUnique">{{ name }} is already taken, please use another name</mat-error>
+        </mat-form-field>
+      </section>
 
       <h3>Contact information</h3>
       <organization-form-address [formGroup]="form.addresses.main"></organization-form-address>

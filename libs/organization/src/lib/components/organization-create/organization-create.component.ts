@@ -25,6 +25,10 @@ export class OrganizationCreateComponent {
   ) {
   }
 
+  ngOnInit() {
+    console.log(this.form);
+  }
+
   public get name() {
     return this.form.get('denomination').value;
   }
