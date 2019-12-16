@@ -14,26 +14,30 @@ export class NotificationItemComponent {
 
   constructor(private router: Router, private service: NotificationService) {}
 
+  public get movieName() {
+    return this.notification.movie.title.original;
+  }
+
   /** Creates a message based on the notification.type. */
   public get message(): string {
 
-    const movieName = this.notification.movie.title.original;
-
     switch (this.notification.type) {
       case NotificationType.inviteOrganization:
-        return `${this.notification.organization.name} has been invited to work on ${movieName}'s delivery.`;
+        return `${this.notification.organization.name} has been invited to work on ${this.movieName}'s delivery.`;
       case NotificationType.removeOrganization:
-        return `${this.notification.organization.name} has been removed from ${movieName}'s delivery.`;
+        return `${this.notification.organization.name} has been removed from ${this.movieName}'s delivery.`;
       case NotificationType.newSignature:
-        return `${this.notification.organization.name} has signed ${movieName}'s delivery.`;
+        return `${this.notification.organization.name} has signed ${this.movieName}'s delivery.`;
       case NotificationType.finalSignature:
-        return `Every stakeholders have signed ${movieName}'s delivery.`;
+        return `Every stakeholders have signed ${this.movieName}'s delivery.`;
       case NotificationType.createDocument:
-        return `A new delivery has been created for ${movieName}.`;
+        return `A new delivery has been created for ${this.movieName}.`;
       case NotificationType.deleteDocument:
-        return `${movieName}'s delivery has been deleted.`;
+        return `${this.movieName}'s delivery has been deleted.`;
       case NotificationType.pathToDocument:
         return `You accepted the invitation. Now you can work on the document.`;
+      case NotificationType.organizationAccepted:
+        return 'Your organization has been accepted by Archipel Content !';
     }
   }
 

@@ -12,6 +12,9 @@ import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic,
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { PublicUser } from '@blockframes/auth/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { App } from '@blockframes/utils/apps';
+import { triggerNotifications } from './notification';
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -63,6 +66,12 @@ export async function onOrganizationUpdate(
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.name));
+    const notification = createNotification({
+      userId: after.userIds[0],
+      type: NotificationType.organizationAccepted,
+      app: App.blockframes
+    });
+    await triggerNotifications([notification]);
   }
 
   if (blockchainBecomeEnabled) {
