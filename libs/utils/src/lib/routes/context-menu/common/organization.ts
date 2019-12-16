@@ -9,6 +9,7 @@ export const baseMenu = [
     items: [
       { name: 'info', path: `${baseRoute}/:orgId/edit` },
       { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'activity', path: `${baseRoute}/:orgId/activity` },
       { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
     ]
   },
@@ -17,6 +18,25 @@ export const baseMenu = [
     items: [
       { name: 'info', path: `${baseRoute}/:orgId/edit` },
       { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'activity', path: `${baseRoute}/:orgId/activity` },
+      { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
+    ]
+  },
+  {
+    route: `${baseRoute}/:orgId/activity`,
+    items: [
+      { name: 'info', path: `${baseRoute}/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'activity', path: `${baseRoute}/:orgId/activity` },
+      { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
+    ]
+  },
+  {
+    route: `${baseRoute}/:orgId/dao`,
+    items: [
+      { name: 'info', path: `${baseRoute}/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'activity', path: `${baseRoute}/:orgId/activity` },
       { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
     ]
   }
