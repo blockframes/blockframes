@@ -27,6 +27,7 @@ import {
 } from './assets/mail-templates';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { UserRole } from '@blockframes/permissions/types';
+import { App } from '@blockframes/utils/apps';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -203,7 +204,8 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
             userId,
             docId,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument
+            type: NotificationType.pathToDocument,
+            app: App.mediaDelivering
           });
         })
       )
