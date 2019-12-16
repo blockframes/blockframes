@@ -3,11 +3,13 @@
     <h4>Logo</h4>
     <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo"></drop-cropper>
     <mat-divider [inset]="true"></mat-divider>
-    <h4>Your Company</h4>
-    <mat-form-field appearance="outline">
-      <mat-label>Organization name</mat-label>
-      <input matInput placeholder="Organization name" type="text" formControlName="denomination"/>
-    </mat-form-field>
+    <section formGroupName="denomination">
+      <h4>Your Company</h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization name</mat-label>
+        <input matInput placeholder="Organization name" type="text" formControlName="full"/>
+      </mat-form-field>
+    </section>
     <mat-divider [inset]="true"></mat-divider>
     <h4>Contact Information</h4>
     <organization-form-address [formGroup]="mainAddress"></organization-form-address>
