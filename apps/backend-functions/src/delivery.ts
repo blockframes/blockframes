@@ -69,7 +69,7 @@ export async function onDeliveryUpdate(
     const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];
 
     const snapObject: SnapObject = {
-      organization: {id: '', denomination: {full: '', public: ''}}, // leaving undefined will cause firebase to throw
+      organization: {id: '', denomination: {full: '', publicName: ''}}, // leaving undefined will cause firebase to throw
       movie: { id: movie.id, title: movie.main.title },
       docId: delivery.id,
       type: NotificationType.finalSignature

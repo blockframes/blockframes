@@ -40,7 +40,7 @@ export class OrganizationSearchComponent implements OnInit {
   }
 
   public displayFn(organization?: Organization): string | undefined {
-    return organization ? organization.denomination.public : undefined;
+    return organization ? organization.denomination.publicName : undefined;
   }
 
   public submit(event: MatAutocompleteSelectedEvent) {

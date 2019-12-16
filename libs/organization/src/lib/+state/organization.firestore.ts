@@ -60,7 +60,7 @@ export interface WishlistRaw<D> {
 
 export interface Denomination {
   full: string,
-  public: string
+  publicName: string
 }
 
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
@@ -99,7 +99,7 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    denomination: {full: '', public: ''},
+    denomination: {full: '', publicName: ''},
     email: '',
     fiscalNumber: '',
     activity: '',
@@ -137,4 +137,13 @@ export function createLocation(params: Partial<Location> = {}): Location {
     region: '',
     ...params
   };
+}
+
+/** A function that create a denomination object for Organization */
+export function createDenomination(params: Partial<Denomination> = {}): Denomination {
+  return {
+    full: '',
+    publicName: '',
+    ...params
+  }
 }

@@ -21,11 +21,11 @@ export class NotificationItemComponent {
 
     switch (this.notification.type) {
       case NotificationType.inviteOrganization:
-        return `${this.notification.organization.denomination.public} has been invited to work on ${movieName}'s delivery.`;
+        return `${this.notification.organization.denomination.publicName} has been invited to work on ${movieName}'s delivery.`;
       case NotificationType.removeOrganization:
-        return `${this.notification.organization.denomination.public} has been removed from ${movieName}'s delivery.`;
+        return `${this.notification.organization.denomination.publicName} has been removed from ${movieName}'s delivery.`;
       case NotificationType.newSignature:
-        return `${this.notification.organization.denomination.public} has signed ${movieName}'s delivery.`;
+        return `${this.notification.organization.denomination.publicName} has signed ${movieName}'s delivery.`;
       case NotificationType.finalSignature:
         return `Every stakeholders have signed ${movieName}'s delivery.`;
       case NotificationType.createDocument:
