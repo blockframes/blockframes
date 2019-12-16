@@ -4,12 +4,6 @@ import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
 import { syncUsers } from './users';
 
-async function migrateToV3() {
-  const { db } = loadAdminServices();
-  // this upgradeV3 function name will change when we automatize migration script
-  await upgradeV3(db).then(() => process.exit(0));
-}
-
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
 
