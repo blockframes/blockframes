@@ -8,7 +8,7 @@ type Timestamp = firestore.Timestamp;
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
   id: string;
-  name: string;
+  denomination: Denomination;
   addresses: AddressSet;
   email: string;
   created: D;
@@ -57,6 +57,12 @@ export interface WishlistRaw<D> {
   sent?: D,
   name?: string,
 }
+
+export interface Denomination {
+  full: string,
+  public: string
+}
+
 export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
 export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
@@ -72,7 +78,7 @@ export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
   id: string;
-  name: string;
+  denomination: Denomination;
 }
 
 /** A factory function that creates an OrganizationDocument. */
@@ -93,7 +99,7 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    name: '',
+    denomination: {full: '', public: ''},
     email: '',
     fiscalNumber: '',
     activity: '',

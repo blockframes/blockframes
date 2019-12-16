@@ -69,7 +69,7 @@ export async function onDeliveryUpdate(
     const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];
 
     const snapObject: SnapObject = {
-      organization: {id: '', name: ''}, // leaving undefined will cause firebase to throw
+      organization: {id: '', denomination: {full: '', public: ''}}, // leaving undefined will cause firebase to throw
       movie: { id: movie.id, title: movie.main.title },
       docId: delivery.id,
       type: NotificationType.finalSignature
@@ -116,7 +116,7 @@ async function notifyOnNewSignee(
   }
 
   const snapObject: SnapObject = {
-    organization: { id: newStakeholderOrg.id, name: newStakeholderOrg.name },
+    organization: { id: newStakeholderOrg.id, denomination: newStakeholderOrg.denomination },
     movie: { id: movie.id, title: movie.main.title },
     docId: delivery.id,
     type: NotificationType.newSignature

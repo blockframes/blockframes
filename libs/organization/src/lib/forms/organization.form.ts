@@ -36,7 +36,7 @@ export class AddressForm extends FormEntity<LocationControl>{
 function createOrganizationFormControl(service: OrganizationService, params?: Organization) {
   const organization = createOrganization(params);
   return {
-    name: new FormControl(organization.name, {
+    denomination: new FormControl(organization.denomination.full, {
       validators: [Validators.required],
       asyncValidators: [UniqueOrgName(service)],
     }),

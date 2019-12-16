@@ -5,7 +5,8 @@ import {
   WishlistDocumentWithDates,
   WishlistDocument,
   OrganizationDocument,
-  createOrganizationRaw
+  createOrganizationRaw,
+  Denomination
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
 import { CatalogCart } from '@blockframes/marketplace';
@@ -44,7 +45,7 @@ export interface OrganizationForm {
 
 export interface PublicOrganization {
   id: string;
-  name: string;
+  denomination: Denomination;
 }
 
 /** A factory function that creates an Organization. */

@@ -14,8 +14,8 @@
       />
       <mat-icon matSuffix svgIcon="magnifyingGlass"></mat-icon>
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
-          <b>{{ org.name }}</b>
+        <mat-option *ngFor="let org of searchResults$ | async" [value]="org.denomination.full" (click)="selectOrganization(org)">
+          <b>{{ org.denomination.full }}</b>
           <mat-divider></mat-divider>
         </mat-option>
       </mat-autocomplete>

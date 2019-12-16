@@ -20,7 +20,7 @@ export function onOrganizationCreate(
   const org = snap.data();
   const orgID = context.params.orgID;
 
-  if (!org || !org.name) {
+  if (!org || !org.denomination.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
@@ -29,7 +29,7 @@ export function onOrganizationCreate(
     // Send a mail to c8 admin to accept the organization
     sendMail(organizationCreated(org.id)),
     // Update algolia's index
-    storeSearchableOrg(orgID, org.name)
+    storeSearchableOrg(orgID, org.denomination.full)
   ]);
 }
 
@@ -44,13 +44,13 @@ export async function onOrganizationUpdate(
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
-  if (!before || !after || !after.name) {
+  if (!before || !after || !after.denomination.full) {
     console.error('Invalid org data, before:', before, 'after:', after);
     throw new Error('organization update function got invalid org data');
   }
 
   // Update algolia's index
-  if (before.name !== after.name) {
+  if (before.denomination.full !== after.denomination.full) {
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
 
@@ -66,7 +66,7 @@ export async function onOrganizationUpdate(
   }
 
   if (blockchainBecomeEnabled) {
-    const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
+    const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
     const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 

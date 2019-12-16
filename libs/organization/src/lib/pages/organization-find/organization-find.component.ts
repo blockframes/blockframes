@@ -31,9 +31,9 @@ export class OrganizationFindComponent implements OnInit {
     this.searchResults$ = this.orgControl.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(name => {
+      switchMap(denomination => {
         return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
+          this.organizationIndex.search(denomination, (err, result) => (err ? rej(err) : res(result.hits)));
         });
       })
     )

@@ -22,6 +22,6 @@ export class OrganizationFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.control.get('name').disable();
+    this.control.get('denomination').disable();
   }
 }

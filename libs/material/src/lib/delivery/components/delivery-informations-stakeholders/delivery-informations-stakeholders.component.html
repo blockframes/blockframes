@@ -7,7 +7,7 @@
       <td mat-cell *matCellDef="let stakeholder" class="bf-strong">
         <span fxLayout="row" fxLayoutAlign="start center">
           <img [src]="stakeholder.organization.logo" alt="Organization Logo"/>
-          {{ stakeholder.organization.name }}
+          {{ stakeholder.organization.denomination.public }}
         </span>
       </td>
     </ng-container>

@@ -60,7 +60,7 @@ async function stakeholdersCollectionEvent(
           : NotificationType.removeOrganization;
 
       const snapObject: SnapObject = {
-        organization: {id: organization.id, name: organization.name} as PublicOrganization,
+        organization: {id: organization.id, denomination: organization.denomination} as PublicOrganization,
         movie: {id: movie.id, title: movie.main.title} as PublicMovie,
         docId: delivery.id,
         type

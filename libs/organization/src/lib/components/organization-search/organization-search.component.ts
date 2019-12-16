@@ -31,16 +31,16 @@ export class OrganizationSearchComponent implements OnInit {
     this.searchResults$ = this.organizationForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(name => {
+      switchMap(denomination => {
         return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
+          this.organizationIndex.search(denomination.full, (err, result) => (err ? rej(err) : res(result.hits)));
         });
       })
     );
   }
 
   public displayFn(organization?: Organization): string | undefined {
-    return organization ? organization.name : undefined;
+    return organization ? organization.denomination.public : undefined;
   }
 
   public submit(event: MatAutocompleteSelectedEvent) {

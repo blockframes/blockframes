@@ -24,7 +24,7 @@ import { UserRole } from '@blockframes/permissions/types';
 export class MemberEditableComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
-  public orgName: string = this.query.getActive().name
+  public orgName: string = this.query.getActive().denomination.public
 
   /** Observable of the selected memberId */
   private selectedMemberId$ = new BehaviorSubject<string>(null);

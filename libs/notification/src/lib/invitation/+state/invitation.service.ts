@@ -25,7 +25,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const { uid, name, surname, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
-      organization: {id: organization.id, name: organization.name},
+      organization: {id: organization.id, denomination: organization.denomination},
       user: { uid, name, surname, email }
     });
     return this.add(invitation);
@@ -36,20 +36,20 @@ export class InvitationService extends CollectionService<InvitationState> {
     // Get a user or create a ghost user when needed
     const invitationId = this.db.createId();
     const organization = await snapshot<Organization>(`orgs/${organizationId}`);
-    const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
+    const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full, invitationId);
     const invitation = createInvitationFromOrganizationToUser({
       id: this.db.createId(),
-      organization: {id: organization.id, name: organization.name},
+      organization: {id: organization.id, denomination: organization.denomination},
       user: { uid, email }
     });
     return this.add(invitation);
   }
 
   /** Create an Invitation when an Organization is invited to work on a document. */
-  public sendDocumentInvitationToOrg({id, name}: PublicOrganization, docId: string) {
+  public sendDocumentInvitationToOrg({id, denomination}: PublicOrganization, docId: string) {
     const invitation = createInvitationToDocument({
       id: this.db.createId(),
-      organization: {id, name},
+      organization: {id, denomination},
       docId
     });
     return this.add(invitation);

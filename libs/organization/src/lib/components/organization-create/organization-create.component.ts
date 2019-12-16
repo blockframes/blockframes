@@ -26,15 +26,15 @@ export class OrganizationCreateComponent {
   }
 
   public get name() {
-    return this.form.get('name').value;
+    return this.form.get('denomination').value;
   }
 
   public get notProvided() {
-    return this.form.get('name').hasError('required');
+    return this.form.get('denomination').hasError('required');
   }
 
   public get notUnique() {
-    return this.form.get('name').hasError('notUnique');
+    return this.form.get('denomination').hasError('notUnique');
   }
 
   /** Add a new Organization */
@@ -49,7 +49,7 @@ export class OrganizationCreateComponent {
 
     await this.service.addOrganization(this.form.value);
 
-    this.snackBar.open(`The organization ${this.form.get('name').value} has been created`, 'close', { duration: 2000 });
+    this.snackBar.open(`The organization ${this.form.get('denomination').value} has been created`, 'close', { duration: 2000 });
 
     this.router.navigate(['../congratulations'], { relativeTo: this.route });
   }

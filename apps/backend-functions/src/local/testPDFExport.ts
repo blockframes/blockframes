@@ -10,7 +10,7 @@ const testData = {
   },
   orgs: {
     id1: createOrganizationDocument({
-      name: 'John Doe',
+      denomination: {full: 'John Doe', public: 'John Doe'},
       addresses: {
         main: {
           street: 'LogicalPicture',
@@ -26,7 +26,7 @@ const testData = {
       status: OrganizationStatus.accepted
     }),
     id2: createOrganizationDocument({
-      name: 'Tomme Hardy',
+      denomination: {full: 'Tomme Hardy', public: 'Tomme Hardy'},
       addresses: {
         main: {
           street: '20Th Century Fox',
@@ -42,7 +42,7 @@ const testData = {
       status: OrganizationStatus.accepted
     }),
     id3: createOrganizationDocument({
-      name: 'Francis Munster',
+      denomination: {full: 'Francis Munster', public: 'Francis Munster'},
       addresses: {
         main: {
           street: 'Disney',
