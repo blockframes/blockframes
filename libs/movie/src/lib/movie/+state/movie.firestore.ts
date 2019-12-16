@@ -200,6 +200,7 @@ export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date>
 interface MovieRaw<D> {
   // @todo #643 add new fields to Draw.io
   _type: 'movies';
+  processedId?: string;
   id: string;
 
   // @todo #643 not main movie attributes WIP

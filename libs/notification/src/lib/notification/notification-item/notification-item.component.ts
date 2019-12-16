@@ -38,6 +38,8 @@ export class NotificationItemComponent {
         return `You accepted the invitation. Now you can work on the document.`;
       case NotificationType.organizationAccepted:
         return 'Your organization has been accepted by Archipel Content !';
+      case NotificationType.movieTitleUpdated:
+        return `The title of the film ${this.notification.movie.title.international} has been changed.`;
     }
   }
 
