@@ -12,6 +12,8 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { AssetsThemeModule } from '@blockframes/ui';
+import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -50,6 +52,7 @@ import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.compo
 
 import { MemberGuard } from './member/guard/member.guard';
 import { ActiveDaoGuard } from './guard/active-dao.guard';
+import { NotificationModule, InvitationModule } from '@blockframes/notification';
 
 export const organizationRoutes: Routes = [
   {
@@ -97,6 +100,10 @@ export const organizationRoutes: Routes = [
     ImageReferenceModule,
     OrganizationFormModule,
     ImgAssetModule,
+    AssetsThemeModule,
+    NotificationModule,
+    InvitationModule,
+    ReverseModule,
 
     // Material
     MatFormFieldModule,

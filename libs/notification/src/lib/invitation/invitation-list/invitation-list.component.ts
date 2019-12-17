@@ -14,9 +14,7 @@ import { InvitationType, Invitation } from '@blockframes/invitation/types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-  public docInvitations$: Observable<Invitation[]>;
-  public userInvitations$: Observable<Invitation[]>;
-  public isAdmin$: Observable<boolean>;
+  public invitations$: Observable<Invitation[]>
   private sub: Subscription;
 
   constructor(
@@ -28,36 +26,27 @@ export class InvitationListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    /**
-     * Checks if the user is admin before populating the invitations arrays. If so, we populate
-     * both docInvitations and userInvitations. If not, we populate only docInvitations.
-     */
     const storeName = this.store.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+    const queryFn = ref =>
+      ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
     if (!!this.authQuery.orgId) {
       this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-      this.isAdmin$ = this.permissionQuery.isAdmin$;
-      this.userInvitations$ = this.permissionQuery.isAdmin$.pipe(
+      this.invitations$ = this.permissionQuery.isAdmin$.pipe(
         switchMap(isAdmin => {
-          const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
-          if (!isAdmin) {
-            const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
-            // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
-            this.store.remove(ids);
+          const filterBy = invitation =>
+            invitation.type === InvitationType.fromUserToOrganization ||
+            invitation.type === InvitationType.toWorkOnDocument;
+          if (isAdmin) {
+            return this.query.selectAll({
+              filterBy,
+              sortBy: 'date',
+              sortByOrder: Order.DESC
+            });
           }
-          return this.query.selectAll({
-            filterBy,
-            sortBy: 'date',
-            sortByOrder: Order.DESC
-          });
         })
       );
     }
-    this.docInvitations$ = this.query.selectAll({
-      filterBy: invitation => invitation.type === InvitationType.toWorkOnDocument,
-      sortBy: 'date',
-      sortByOrder: Order.DESC
-    });
+
   }
 
   ngOnDestroy() {

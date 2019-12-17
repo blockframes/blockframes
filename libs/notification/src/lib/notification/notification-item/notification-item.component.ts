@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationService, Notification } from '../+state';
 import { NotificationType } from '../+state/notification.firestore';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 @Component({
   selector: 'notification-item',
@@ -11,8 +12,9 @@ import { NotificationType } from '../+state/notification.firestore';
 })
 export class NotificationItemComponent {
   @Input() notification: Notification;
+  @Input() inWidget: boolean;
 
-  constructor(private router: Router, private service: NotificationService) {}
+  constructor(private router: Router, private service: NotificationService, private movieQuery: MovieQuery) {}
 
   public get movieTitleOriginal() {
     return this.notification.movie.title.original;
@@ -23,8 +25,7 @@ export class NotificationItemComponent {
   }
 
   /** Creates a message based on the notification.type. */
-  public get message(): string {
-
+  public get informations(): {} {
     switch (this.notification.type) {
       case NotificationType.inviteOrganization:
         return `${this.notification.organization.name} has been invited to work on ${this.movieTitleOriginal}'s delivery.`;
@@ -59,6 +60,11 @@ export class NotificationItemComponent {
     }
   }
 
+  public getPoster(id: string) {
+    const movie = this.movieQuery.getEntity(id)
+    return movie.main.poster
+  }
+
   public goToPath() {
     try {
       const path =
@@ -74,5 +80,9 @@ export class NotificationItemComponent {
 
   public read() {
     this.service.readNotification(this.notification);
+  }
+
+  public getDate() {
+    return this.notification.date.toDate();
   }
 }

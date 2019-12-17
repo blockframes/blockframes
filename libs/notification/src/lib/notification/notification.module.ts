@@ -33,6 +33,6 @@ import { MatListModule } from '@angular/material/list';
     MatBadgeModule,
     MatListModule
   ],
-  exports: [NotificationListComponent]
+  exports: [NotificationListComponent, NotificationItemComponent]
 })
 export class NotificationModule {}

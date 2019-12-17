@@ -21,7 +21,7 @@ import {
   App,
   PublicUser
 } from './data/types';
-import { triggerNotifications, createNotification } from './notification';
+import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
 import {
   userJoinedAnOrganization,
@@ -29,6 +29,8 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
+import { createNotification } from '@blockframes/notification/types';
+import { User } from '@blockframes/auth/+state/auth.firestore';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -112,11 +114,13 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
   await addUserToOrg(user.uid, organization.id);
   // Create a notification for the organization members.
   const { userIds } = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
+  const { name, surname } = await getDocument<User>(`users/${user.uid}`);
   const notifications = userIds.map(userId => {
     return createNotification({
       userId,
       app: App.blockframes,
-      type: NotificationType.addOrgMember
+      type: NotificationType.addOrgMember,
+      user: { ...user, name, surname }
     });
   })
   await triggerNotifications(notifications)

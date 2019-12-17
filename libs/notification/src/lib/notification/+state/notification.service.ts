@@ -13,6 +13,6 @@ export class NotificationService extends CollectionService<NotificationState> {
   }
 
   public readNotification(notification: Notification) {
-    this.update(notification.id, {...notification, isRead: true });
+    this.update(notification.id, { ...notification, isRead: true });
   }
 }

@@ -33,6 +33,6 @@ import { MatListModule } from '@angular/material/list';
     MatBadgeModule,
     MatListModule
   ],
-  exports: [InvitationListComponent]
+  exports: [InvitationListComponent, InvitationItemComponent]
 })
 export class InvitationModule {}
