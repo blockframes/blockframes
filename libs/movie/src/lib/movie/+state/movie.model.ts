@@ -23,7 +23,6 @@ import {
   StoreConfig,
   StoreType,
   MovieLanguageSpecificationContainer,
-  Freshness,
   MovieOfficialIds
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -104,7 +103,6 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     status: '',
     ...params,
     storeConfig: createStoreConfig(params.storeConfig),
-    freshness: params.freshness ? params.freshness : Freshness.lineup,
     officialIds: createOfficialIds(params.officialIds)
   };
 }
@@ -281,7 +279,7 @@ export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificat
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     display: true,
-    storeType: StoreType.movie,
+    storeType: StoreType.catalog,
     ...params
   };
 }

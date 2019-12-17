@@ -1,20 +1,23 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { MoviePromotionalElementsForm } from './promotional-elements.form';
+import { default as staticModels } from '../../static-model/staticModels';
 
 @Component({
   selector: '[formGroup] movie-form-promotional-elements, [formGroupName] movie-form-promotional-elements',
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormPromotionalElementsComponent implements OnInit {
+  public staticModels: any;
 
-  constructor(public controlContainer: ControlContainer) { }
+  constructor(public controlContainer: ControlContainer) {
+    this.staticModels = staticModels;
+  }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  get promotionalElements() : MoviePromotionalElementsForm {
+  get promotionalElements(): MoviePromotionalElementsForm {
     return this.controlContainer.control as MoviePromotionalElementsForm;
   }
 

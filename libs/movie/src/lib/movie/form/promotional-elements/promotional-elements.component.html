@@ -23,6 +23,46 @@
           <input matInput formControlName="label" placeholder="Label">
         </mat-form-field>
         <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type" placeholder="Type">
+            <mat-option *ngFor="let el of staticModels.PROMOTIONAL_ELEMENT_TYPES" [value]="el.slug">
+              {{ el.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Size</mat-label>
+          <mat-select formControlName="size" placeholder="Size">
+            <mat-option *ngFor="let el of staticModels.RESOURCE_SIZES" [value]="el.slug">
+              {{ el.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Ratio</mat-label>
+          <mat-select formControlName="ratio" placeholder="Ratio">
+            <mat-option *ngFor="let el of staticModels.RESOURCE_RATIOS" [value]="el.slug">
+              {{ el.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Language</mat-label>
+          <mat-select formControlName="language" placeholder="Language">
+            <mat-option *ngFor="let el of staticModels.LANGUAGES" [value]="el.slug">
+              {{ el.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <mat-select formControlName="country" placeholder="Country">
+            <mat-option *ngFor="let el of staticModels.TERRITORIES" [value]="el.slug">
+              {{ el.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>URL</mat-label>
           <input formControlName="media" type="url" matInput placeholder="https://" />
           <mat-error *ngIf="element.get('media').hasError('pattern')"> Invalid url. </mat-error>

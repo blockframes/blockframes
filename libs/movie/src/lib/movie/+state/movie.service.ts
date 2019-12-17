@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { createImgRef } from '@blockframes/utils';
 
 /**
  * @see #483
@@ -65,7 +66,7 @@ export class MovieService extends CollectionService<MovieState> {
     // Push the movie id into organization.movieIds.
     const organizationId = this.organizationQuery.getActiveId();
     const organization = await this.organizationService.getValue(this.organizationQuery.getActiveId());
-    this.organizationService.update({...organization, movieIds: [...organization.movieIds, movie.id]})
+    this.organizationService.update({ ...organization, movieIds: [...organization.movieIds, movie.id] })
 
     // Create organization related permissions for this document.
     return this.permissionsService.createDocPermissions(movie.id, organizationId);
@@ -75,6 +76,15 @@ export class MovieService extends CollectionService<MovieState> {
     // we don't want to keep orgId in our Movie object
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
+
+    // transform { media: string } into { media: ImgRef }
+    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
+      movie.promotionalElements.promotionalElements.forEach(el => {
+        if (typeof el.media === typeof 'string') {
+          el.media = createImgRef(el.media);
+        }
+      });
+    }
 
     return this.update(id, cleanModel(movie));
   }
@@ -143,7 +153,7 @@ export class MovieService extends CollectionService<MovieState> {
     return deals.docs.map(doc => this.formatDistributionDeal(doc.data()));
   }
 
-  public formatDistributionDeal(deal: any) : DistributionDeal{
+  public formatDistributionDeal(deal: any): DistributionDeal {
     // Dates from firebase are Timestamps, we convert it to Dates.
     if (deal.terms.start instanceof firestore.Timestamp) {
       deal.terms.start = deal.terms.start.toDate();
@@ -164,8 +174,8 @@ export class MovieService extends CollectionService<MovieState> {
    * @param contract
    */
   public async addContract(contract: Contract): Promise<string> {
-    if(!contract.id) {
-      contract.id  = this.db.createId();
+    if (!contract.id) {
+      contract.id = this.db.createId();
     }
 
     await this.db.collection('contracts').doc(contract.id).set(contract);

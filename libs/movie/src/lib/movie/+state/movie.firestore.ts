@@ -26,8 +26,8 @@ export const enum WorkType {
 }
 
 export const enum StoreType {
-  tv = 'TV',
-  movie = 'Movie',
+  catalog = 'Catalog',
+  lineup = 'Line-up',
 }
 
 export const enum FormatProfile {
@@ -39,11 +39,6 @@ export const enum FormatProfile {
   _3DSD = '3DSD',
   _3DHD = '3DHD',
   _3UHD = '3DUHD'
-}
-
-export const enum Freshness {
-  lineup = 'Line-Up',
-  catalog = 'Catalog'
 }
 
 export interface MovieVersionInfo {
@@ -84,7 +79,9 @@ export interface PromotionalElement {
   type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
-  media: ImgRef
+  media: ImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
 }
 
 export interface MoviePromotionalElements {
@@ -169,6 +166,9 @@ export interface DistributionDealDocument extends DistributionDealRaw<Timestamp>
 export interface MovieOfficialIds {
   isan: string;
   eidr: string;
+  imdb?: string;
+  custom?: string;
+  internal?: string;
 }
 
 export interface MovieMain {
@@ -176,8 +176,7 @@ export interface MovieMain {
   isan?: string,
   title: Title,
   directors?: Person[],
-  freshness: Freshness,
-  officialIds: MovieOfficialIds,
+  officialIds?: MovieOfficialIds,
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],
